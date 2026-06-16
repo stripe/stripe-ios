@@ -212,6 +212,19 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         }
         waitForExpectations(timeout: 1)
     }
+
+    func testWarningAlertViewModelInitiallyNil() {
+        let vc = makeViewController()
+
+        XCTAssertNil(vc.warningAlertViewModel)
+    }
+
+    func testWarningAlertViewModelAfterUploadStarts() {
+        let vc = makeViewController()
+        mockDocumentUploader.frontUploadStatus = .inProgress
+
+        XCTAssertNotNil(vc.warningAlertViewModel)
+    }
 }
 
 extension DocumentFileUploadViewControllerTest {

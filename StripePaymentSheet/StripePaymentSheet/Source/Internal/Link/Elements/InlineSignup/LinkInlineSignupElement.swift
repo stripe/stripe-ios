@@ -36,6 +36,10 @@ final class LinkInlineSignupElement: Element {
         return viewModel.action
     }
 
+    func updateBrand(_ brand: LinkBrand) {
+        signupView.updateBrand(brand)
+    }
+
     convenience init(
         configuration: PaymentElementConfiguration,
         brand: LinkBrand,
@@ -43,6 +47,7 @@ final class LinkInlineSignupElement: Element {
         country: String?,
         showCheckbox: Bool,
         accountService: LinkAccountServiceProtocol,
+        resolvedLinkBrand: @escaping (PaymentSheetLinkAccount?) -> LinkBrand,
         allowsDefaultOptIn: Bool,
         signupOptInFeatureEnabled: Bool,
         signupOptInInitialValue: Bool,
@@ -53,6 +58,7 @@ final class LinkInlineSignupElement: Element {
             brand: brand,
             showCheckbox: showCheckbox,
             accountService: accountService,
+            resolvedLinkBrand: resolvedLinkBrand,
             allowsDefaultOptIn: allowsDefaultOptIn,
             signupOptInFeatureEnabled: signupOptInFeatureEnabled,
             signupOptInInitialValue: signupOptInInitialValue,

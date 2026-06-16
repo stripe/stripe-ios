@@ -4,12 +4,13 @@
 //
 //  Created by Nick Porter on 4/10/26.
 
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 struct CheckoutSessionPlaygroundView: View {
     @State var viewModel: PaymentSheetTestPlaygroundSettings
+    @Binding var currencySelectorAppearance: Checkout.CurrencySelectorView.Appearance
+    @State private var showCurrencySelectorAppearance = false
     var doneAction: ((PaymentSheetTestPlaygroundSettings) -> Void) = { _ in }
 
     var body: some View {
@@ -63,6 +64,53 @@ struct CheckoutSessionPlaygroundView: View {
                         }
                     }
 
+                    if viewModel.csAdaptivePricing == .on {
+                        Divider()
+
+                        // MARK: - Adaptive Pricing
+                        Group {
+                            Text("Adaptive Pricing")
+                                .font(.headline)
+
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Simulate Customer Country")
+                                    .font(.subheadline)
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 8) {
+                                        ForEach(Self.adaptivePricingCountries, id: \.code) { country in
+                                            Button(country.label) {
+                                                if country.code.isEmpty {
+                                                    viewModel.csCustomerEmail = nil
+                                                } else {
+                                                    viewModel.csCustomerEmail = "test+location_\(country.code)@example.com"
+                                                }
+                                            }
+                                            .font(.caption.weight(.medium))
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 6)
+                                            .background(isCountrySelected(country.code) ? Color.blue : Color.blue.opacity(0.1))
+                                            .foregroundColor(isCountrySelected(country.code) ? .white : .blue)
+                                            .cornerRadius(12)
+                                        }
+                                    }
+                                }
+                            }
+
+                            Button("Customize Currency Selector Appearance") {
+                                showCurrencySelectorAppearance = true
+                            }
+                        }
+                        .sheet(isPresented: $showCurrencySelectorAppearance) {
+                            CurrencySelectorAppearancePlaygroundView(
+                                appearance: currencySelectorAppearance,
+                                doneAction: { updatedAppearance in
+                                    currencySelectorAppearance = updatedAppearance
+                                    showCurrencySelectorAppearance = false
+                                }
+                            )
+                        }
+                    }
+
                     Divider()
 
                     // MARK: - Advanced
@@ -100,5 +148,23 @@ struct CheckoutSessionPlaygroundView: View {
                 .padding()
             }
         }
+    }
+
+    private static let adaptivePricingCountries: [(label: String, code: String)] = [
+        ("None", ""),
+        ("US", "US"),
+        ("DE", "DE"),
+        ("JP", "JP"),
+        ("GB", "GB"),
+    ]
+
+    private func isCountrySelected(_ code: String) -> Bool {
+        guard let email = viewModel.csCustomerEmail else {
+            return code.isEmpty
+        }
+        if code.isEmpty {
+            return !email.contains("+location_")
+        }
+        return email.contains("+location_\(code)@")
     }
 }

@@ -130,12 +130,8 @@ extension LinkPaymentMethodPicker {
 
             setupUI()
 
-            if #available(iOS 14.0, *) {
-                let interaction = UIContextMenuInteraction(delegate: self)
-                addInteraction(interaction)
-            } else {
-                addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(onCellLongPressed)))
-            }
+            let interaction = UIContextMenuInteraction(delegate: self)
+            addInteraction(interaction)
         }
 
         required init?(coder: NSCoder) {
@@ -263,10 +259,6 @@ extension LinkPaymentMethodPicker {
 
         @objc func onMenuButtonTapped(_ sender: UIButton) {
             delegate?.savedPaymentPickerCell(self, didTapMenuButton: sender)
-        }
-
-        @objc func onCellLongPressed() {
-            delegate?.savedPaymentPickerCell(self, didTapMenuButton: menuButton)
         }
 
         override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {

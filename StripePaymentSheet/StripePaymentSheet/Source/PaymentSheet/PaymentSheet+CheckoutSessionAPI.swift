@@ -14,16 +14,17 @@ extension PaymentSheet {
     /// Confirms a checkout session with a new payment method
     @MainActor
     static func handleCheckoutSessionConfirmation(
-        checkoutSession: STPCheckoutSession,
+        checkout: Checkout,
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
         elementsSession: STPElementsSession
     ) async -> PaymentSheetResult {
+        let checkoutSession: STPCheckoutSession = checkout.stpSession
         do {
             let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-                intent: .checkoutSession(checkoutSession),
+                intent: .checkout(checkout),
                 elementsSession: elementsSession
             )
 
@@ -55,7 +56,7 @@ extension PaymentSheet {
             }
 
             // 2. Get expected amount and save_payment_method from checkout session
-            let expectedAmount = try checkoutSession.expectedAmount()
+            let expectedAmount = checkoutSession.expectedAmount()
             let savePaymentMethod: Bool? = {
                 switch checkoutSession.mode {
                 case .setup:
@@ -82,8 +83,8 @@ extension PaymentSheet {
                 clientAttributionMetadata: clientAttributionMetadata
             )
 
-            // Update the Checkout session with the latest response
-            checkoutSession.onConfirmed?(response)
+            // Update the Checkout instance with the confirmed session response
+            checkout.updateSession(response)
 
             // 4. Handle response based on checkout session mode
             return try await handleCheckoutSessionConfirmResponse(

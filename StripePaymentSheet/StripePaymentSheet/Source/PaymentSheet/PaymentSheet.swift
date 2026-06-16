@@ -48,13 +48,13 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
-        case checkoutSession(STPCheckoutSession)
+        case checkout(Checkout)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {
             case .deferredIntent(let intentConfig):
                 return intentConfig
-            case .paymentIntentClientSecret, .setupIntentClientSecret, .checkoutSession:
+            case .paymentIntentClientSecret, .setupIntentClientSecret, .checkout:
                 return nil
             }
         }
@@ -68,7 +68,7 @@ public class PaymentSheet {
     }
 
     /// This contains all configurable properties of PaymentSheet
-    public let configuration: Configuration
+    public private(set) var configuration: Configuration
 
     /// The most recent error encountered by the customer, if any.
     public internal(set) var mostRecentError: Error?
@@ -102,26 +102,6 @@ public class PaymentSheet {
             mode: .deferredIntent(intentConfiguration),
             configuration: configuration
         )
-    }
-
-    /// Initializes PaymentSheet with a Checkout object
-    /// - Parameter checkout: A loaded Checkout instance.
-    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    @_spi(STP)
-    @_spi(ReactNativeSDK)
-    @MainActor
-    public convenience init(checkout: Checkout, configuration: Configuration) {
-        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
-            fatalError("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-        }
-        var config = configuration
-        stpSession.applyAddressOverrides(to: &config)
-        self.init(
-            mode: .checkoutSession(stpSession),
-            configuration: config
-        )
-        self.checkout = checkout
-        checkout.integrationDelegate = self
     }
 
     required init(mode: InitializationMode, configuration: Configuration) {
@@ -165,13 +145,6 @@ public class PaymentSheet {
                 completion(.failed(error: error))
                 return
             }
-            if let checkout, checkout.state.isLoading {
-                let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.present(from:completion:)."
-                assertionFailure(message)
-                completion(.failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: message)))
-                return
-            }
-
             // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
             PaymentSheetLoader.load(
                 mode: mode,
@@ -197,7 +170,7 @@ public class PaymentSheet {
                         let verificationController = LinkVerificationController(
                             mode: .inlineLogin,
                             linkAccount: linkAccount,
-                            brand: self.configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession),
+                            brand: self.configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession, linkAccount: linkAccount),
                             configuration: self.configuration
                         )
 
@@ -254,9 +227,6 @@ public class PaymentSheet {
 
     /// The initialization mode this instance was initialized with
     let mode: InitializationMode
-
-    /// The Checkout that backs checkout-session mode integrations, if any.
-    private weak var checkout: Checkout?
 
     /// A user-supplied completion block. Nil until `present` is called.
     var completion: ((PaymentSheetResult) -> Void)?
@@ -409,14 +379,6 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         }
     }
 
-}
-
-// MARK: - CheckoutIntegrationDelegate
-
-extension PaymentSheet: CheckoutIntegrationDelegate {
-    var isSheetPresented: Bool {
-        bottomSheetViewController.presentingViewController != nil
-    }
 }
 
 extension PaymentSheet: LoadingViewControllerDelegate {

@@ -6,7 +6,7 @@
 //
 
 @testable@_spi(STP) import StripeCore
-import StripeCoreTestUtils
+@_spi(STP) import StripeCoreTestUtils
 @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
@@ -662,6 +662,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
             elementsSession: elementsSession,
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         let sut = EmbeddedPaymentElement(
@@ -695,6 +696,62 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // ...the label should read "Cartes Bancaire ****1001"
         sut.updateChangeButtonAndSublabelState(for: .new(paymentMethodType: .stripe(.card)))
         XCTAssertEqual(sut.embeddedPaymentMethodsView.selectedRowChangeButtonState?.sublabel, "Cartes Bancaires •••• 1001")
+    }
+
+    func testPMMExperimentExposureLogged() async throws {
+        let analyticsClientV2 = MockAnalyticsClientV2()
+        let arbId = "arb_pmm_embedded_789"
+        let experimentsData = ExperimentsData(
+            arbId: arbId,
+            experimentAssignments: [
+                PaymentMethodMessagingPromotionsExperiment.experimentName: .treatment,
+            ],
+            allResponseFields: [:]
+        )
+        let analyticsHelper = PaymentSheetAnalyticsHelper(
+            integrationShape: .embedded,
+            configuration: EmbeddedPaymentElement.Configuration(),
+            analyticsClient: STPTestingAnalyticsClient(),
+            analyticsClientV2: analyticsClientV2
+        )
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let elementsSession = STPElementsSession._testValue(experimentsData: experimentsData)
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let promotionsHelper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: configuration,
+            paymentMethodTypes: [.stripe(.card)],
+            analyticsHelper: analyticsHelper
+        ))
+        promotionsHelper.fetchData()
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: promotionsHelper,
+            paymentMethodOrientation: .vertical
+        )
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        await FormSpecProvider.shared.load()
+        let sut = EmbeddedPaymentElement(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
+        )
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Verify PMM experiment exposure was logged exactly once with correct params
+        let exposurePayloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName)
+        XCTAssertEqual(exposurePayloads.count, 1)
+        if let payload = exposurePayloads.first {
+            XCTAssertEqual(payload["arb_id"] as? String, arbId)
+            XCTAssertEqual(payload["experiment_retrieved"] as? String, PaymentMethodMessagingPromotionsExperiment.experimentName)
+            XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
+        }
     }
 
     func testDelegatePaymentOptionUpdate() async throws {

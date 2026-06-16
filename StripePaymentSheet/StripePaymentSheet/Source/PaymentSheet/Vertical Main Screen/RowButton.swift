@@ -24,8 +24,8 @@ class RowButton: UIView, EventHandler {
     let imageView: UIImageView
     /// The main label for the payment method name
     let label: UILabel
-    /// The subtitle label, e.g. “Pay over time with Affirm”
-    let sublabel: UILabel
+    /// The subtitle, e.g. “Pay over time with Affirm”
+    var sublabel: SublabelView
     /// For layout convenience: if we have an accessory view on the bottom (e.g. a brand logo, etc.)
     let accessoryView: UIView?
     /// The label indicating if this is the default saved payment method
@@ -35,11 +35,8 @@ class RowButton: UIView, EventHandler {
 
     // MARK: State
 
-    var isSelected: Bool = false {
-        didSet {
-            updateSelectedState()
-        }
-    }
+    private(set) var isSelected: Bool = false
+
     /// When enabled the `didTap` closure will be called when the button is tapped. When false the `didTap` closure will not be called on taps
     var isEnabled: Bool = true {
         didSet {
@@ -50,11 +47,6 @@ class RowButton: UIView, EventHandler {
     var isFlatWithCheckmarkOrChevronStyle: Bool {
         let rowStyle = appearance.embeddedPaymentElement.row.style
         return (rowStyle == .flatWithCheckmark || rowStyle == .flatWithDisclosure) && isEmbedded
-    }
-
-    var hasSubtext: Bool {
-        guard let subtext = sublabel.text else { return false }
-        return !subtext.isEmpty
     }
 
     var isDisplayingAccessoryView: Bool {
@@ -85,7 +77,7 @@ class RowButton: UIView, EventHandler {
         type: RowButtonType,
         imageView: UIImageView,
         text: String,
-        subtext: String? = nil,
+        sublabel: SublabelView,
         badgeText: String? = nil,
         promoBadge: PromoBadgeView? = nil,
         accessoryView: UIView? = nil,
@@ -100,7 +92,7 @@ class RowButton: UIView, EventHandler {
         self.isEmbedded = isEmbedded
         self.imageView = imageView
         self.label = RowButton.makeRowButtonLabel(text: text, appearance: appearance, isEmbedded: isEmbedded)
-        self.sublabel = RowButton.makeRowButtonSublabel(text: subtext, appearance: appearance, isEmbedded: isEmbedded)
+        self.sublabel = sublabel
         self.accessoryView = accessoryView
         self.defaultBadgeLabel = RowButton.makeRowButtonDefaultBadgeLabel(badgeText: badgeText, appearance: appearance)
         self.promoBadge = promoBadge
@@ -174,27 +166,20 @@ class RowButton: UIView, EventHandler {
     }
 
     func setSublabel(text: String?, animated: Bool = true) {
-        guard text != sublabel.text else {
+        sublabel.setSublabel(text: text, animated: animated)
+    }
+
+    func setLabel(text: String) {
+        guard label.text != text else {
             return
         }
-        let duration = animated ? 0.2 : 0
-        guard let text else {
-            UIView.animate(withDuration: duration) { [self] in
-                self.sublabel.text = nil
-                self.sublabel.isHidden = true
-                self.setNeedsLayout()
-                self.layoutIfNeeded()
-            }
-            return
-        }
-        self.sublabel.text = text
-        self.sublabel.alpha = 0
-        UIView.animate(withDuration: duration) { [self] in
-            self.sublabel.isHidden = text.isEmpty
-        }
-        UIView.animate(withDuration: duration / 2, delay: duration / 2) { [self] in
-            self.sublabel.alpha = 1
-        }
+        label.text = text
+        accessibilityIdentifier = text
+        accessibilityHelperView.accessibilityIdentifier = text
+    }
+
+    func setPrimaryAccessibilityLabel(_ text: String?) {
+        accessibilityHelperView.accessibilityLabel = text
     }
 
     func setKeyContent(alpha: CGFloat) {
@@ -203,10 +188,14 @@ class RowButton: UIView, EventHandler {
         }
     }
 
-    func updateSelectedState() {
+    func updateSelectedState(_ isSelected: Bool, willDisplayForm: Bool) {
+        self.isSelected = isSelected
+
         // Default badge font is heavier when the row is selected
         defaultBadgeLabel?.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
         updateAccessibilityTraits()
+
+        sublabel.updateSelectedState(isSelected, willDisplayForm: willDisplayForm)
     }
 
     // MARK: EventHandler
@@ -250,14 +239,20 @@ class RowButton: UIView, EventHandler {
     // MARK: Helper
 
     func makeSameHeightAsOtherRowButtonsIfNecessary() {
-        // To make all RowButtons the same height, set our height to the tallest variant (a RowButton w/ text and subtext)
-        // Don't do this if we are flat_with_checkmark or flat_with_chevron style and have an accessory view - this row button is allowed to be taller than the rest
-        if isFlatWithCheckmarkOrChevronStyle && isDisplayingAccessoryView {
+        // To make all RowButtons the same height, set our height to the tallest
+        // standard variant (a RowButton with text and a plain sublabel).
+
+        // Allow the row to be taller than the rest when either:
+        //   1. flat_with_checkmark/chevron style with an accessory view
+        //   2. The sublabel variant requires unlimited height
+        if (isFlatWithCheckmarkOrChevronStyle && isDisplayingAccessoryView)
+            || sublabel.needsUnlimitedHeight {
             heightConstraint?.isActive = false
             return
         }
-        // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
-        guard !hasSubtext else {
+
+        // Don't constrain if we *are* the tallest variant; otherwise we'll infinite loop!
+        guard !sublabel.hasText else {
             heightConstraint?.isActive = false
             return
         }
@@ -293,95 +288,102 @@ extension RowButton {
                        type: RowButtonType,
                        imageView: UIImageView,
                        text: String,
-                       subtext: String? = nil,
+                       sublabel: SublabelView,
                        badgeText: String? = nil,
                        promoBadge: PromoBadgeView? = nil,
                        accessoryView: UIView? = nil,
                        shouldAnimateOnPress: Bool = false,
                        isEmbedded: Bool = false,
                        didTap: @escaping DidTapClosure) -> RowButton {
-          // When not using embedded, always use floating style
-          if !isEmbedded {
-              return RowButtonFloating(
-                  appearance: appearance,
-                  type: type,
-                  imageView: imageView,
-                  text: text,
-                  subtext: subtext,
-                  badgeText: badgeText,
-                  promoBadge: promoBadge,
-                  accessoryView: accessoryView,
-                  shouldAnimateOnPress: shouldAnimateOnPress,
-                  isEmbedded: isEmbedded,
-                  didTap: didTap
-              )
-          }
+        if !isEmbedded {
+            return RowButtonFloating(
+                appearance: appearance,
+                type: type,
+                imageView: imageView,
+                text: text,
+                sublabel: sublabel,
+                badgeText: badgeText,
+                promoBadge: promoBadge,
+                accessoryView: accessoryView,
+                shouldAnimateOnPress: shouldAnimateOnPress,
+                isEmbedded: isEmbedded,
+                didTap: didTap
+            )
+        }
 
-          // If embedded, switch on the style
-          switch appearance.embeddedPaymentElement.row.style {
-          case .flatWithRadio:
-              return RowButtonFlatWithRadioView(
-                  appearance: appearance,
-                  type: type,
-                  imageView: imageView,
-                  text: text,
-                  subtext: subtext,
-                  badgeText: badgeText,
-                  promoBadge: promoBadge,
-                  accessoryView: accessoryView,
-                  shouldAnimateOnPress: shouldAnimateOnPress,
-                  isEmbedded: isEmbedded,
-                  didTap: didTap
-              )
-          case .floatingButton:
-              return RowButtonFloating(
-                  appearance: appearance,
-                  type: type,
-                  imageView: imageView,
-                  text: text,
-                  subtext: subtext,
-                  badgeText: badgeText,
-                  promoBadge: promoBadge,
-                  accessoryView: accessoryView,
-                  shouldAnimateOnPress: shouldAnimateOnPress,
-                  isEmbedded: isEmbedded,
-                  didTap: didTap
-              )
-          case .flatWithCheckmark:
-              return RowButtonFlatWithCheckmark(
-                  appearance: appearance,
-                  type: type,
-                  imageView: imageView,
-                  text: text,
-                  subtext: subtext,
-                  badgeText: badgeText,
-                  promoBadge: promoBadge,
-                  accessoryView: accessoryView,
-                  shouldAnimateOnPress: shouldAnimateOnPress,
-                  isEmbedded: isEmbedded,
-                  didTap: didTap
-              )
-          case .flatWithDisclosure:
-              return RowButtonFlatWithDisclosure(
-                  appearance: appearance,
-                  type: type,
-                  imageView: imageView,
-                  text: text,
-                  subtext: subtext,
-                  badgeText: badgeText,
-                  promoBadge: promoBadge,
-                  accessoryView: accessoryView,
-                  shouldAnimateOnPress: shouldAnimateOnPress,
-                  isEmbedded: isEmbedded,
-                  didTap: didTap
-              )
-          }
-      }
+        switch appearance.embeddedPaymentElement.row.style {
+        case .flatWithRadio:
+            return RowButtonFlatWithRadioView(
+                appearance: appearance,
+                type: type,
+                imageView: imageView,
+                text: text,
+                sublabel: sublabel,
+                badgeText: badgeText,
+                promoBadge: promoBadge,
+                accessoryView: accessoryView,
+                shouldAnimateOnPress: shouldAnimateOnPress,
+                isEmbedded: isEmbedded,
+                didTap: didTap
+            )
+        case .floatingButton:
+            return RowButtonFloating(
+                appearance: appearance,
+                type: type,
+                imageView: imageView,
+                text: text,
+                sublabel: sublabel,
+                badgeText: badgeText,
+                promoBadge: promoBadge,
+                accessoryView: accessoryView,
+                shouldAnimateOnPress: shouldAnimateOnPress,
+                isEmbedded: isEmbedded,
+                didTap: didTap
+            )
+        case .flatWithCheckmark:
+            return RowButtonFlatWithCheckmark(
+                appearance: appearance,
+                type: type,
+                imageView: imageView,
+                text: text,
+                sublabel: sublabel,
+                badgeText: badgeText,
+                promoBadge: promoBadge,
+                accessoryView: accessoryView,
+                shouldAnimateOnPress: shouldAnimateOnPress,
+                isEmbedded: isEmbedded,
+                didTap: didTap
+            )
+        case .flatWithDisclosure:
+            return RowButtonFlatWithDisclosure(
+                appearance: appearance,
+                type: type,
+                imageView: imageView,
+                text: text,
+                sublabel: sublabel,
+                badgeText: badgeText,
+                promoBadge: promoBadge,
+                accessoryView: accessoryView,
+                shouldAnimateOnPress: shouldAnimateOnPress,
+                isEmbedded: isEmbedded,
+                didTap: didTap
+            )
+        }
+    }
 
     static func calculateTallestHeight(appearance: PaymentSheet.Appearance, isEmbedded: Bool) -> CGFloat {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
-        let tallestRowButton = RowButton.create(appearance: appearance, type: .new(paymentMethodType: .stripe(.afterpayClearpay)), imageView: imageView, text: "Dummy text", subtext: "Dummy subtext", isEmbedded: isEmbedded) { _ in }
+        let sublabel = PlainSublabelView(text: "Dummy subtext", appearance: appearance, isEmbedded: isEmbedded)
+        let tallestRowButton = RowButton.create(
+            appearance: appearance,
+            type: .new(paymentMethodType: .stripe(.afterpayClearpay)),
+            imageView: imageView,
+            text: "Dummy text",
+            sublabel: sublabel,
+            isEmbedded: isEmbedded,
+            didTap: { _ in }
+        )
         let size = tallestRowButton.systemLayoutSizeFitting(.init(width: 320, height: UIView.noIntrinsicMetric))
         return size.height
     }
@@ -414,36 +416,6 @@ extension RowButton {
         return label
     }
 
-    static func makeRowButtonSublabel(text: String?, appearance: PaymentSheet.Appearance, isEmbedded: Bool) -> UILabel {
-        let sublabel = UILabel()
-        if isEmbedded, let customFont = appearance.embeddedPaymentElement.row.subtitleFont {
-            sublabel.font = customFont
-        } else {
-            sublabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
-        }
-        sublabel.numberOfLines = 1
-        sublabel.adjustsFontSizeToFitWidth = true
-        sublabel.adjustsFontForContentSizeCategory = true
-        sublabel.text = text
-
-        let textColor: UIColor = {
-            guard isEmbedded else {
-                return appearance.colors.componentPlaceholderText
-            }
-
-            switch appearance.embeddedPaymentElement.row.style {
-            case .flatWithRadio, .flatWithCheckmark, .flatWithDisclosure:
-                return appearance.colors.textSecondary
-            case .floatingButton:
-                return appearance.colors.componentPlaceholderText
-            }
-        }()
-
-        sublabel.textColor = textColor
-        sublabel.isHidden = text?.isEmpty ?? true
-        return sublabel
-    }
-
     static func makeRowButtonDefaultBadgeLabel(badgeText: String?, appearance: PaymentSheet.Appearance) -> UILabel? {
         guard let badgeText else { return nil }
         let defaultBadge = UILabel()
@@ -460,6 +432,7 @@ extension RowButton {
         hasSavedCard: Bool,
         accessoryView: UIView? = nil,
         promoText: String? = nil,
+        promotionsHelper: PaymentMethodMessagingPromotionsHelper?,
         appearance: PaymentSheet.Appearance,
         originalCornerRadius: CGFloat? = nil,
         shouldAnimateOnPress: Bool,
@@ -472,33 +445,43 @@ extension RowButton {
                                                    iconStyle: appearance.iconStyle)
         imageView.contentMode = .scaleAspectFit
 
-        // Special case "New card" vs "Card" title
         let text: String = {
             if hasSavedCard && paymentMethodType == .stripe(.card) {
                 return .Localized.new_card
             }
             return paymentMethodType.displayName
         }()
-        let subtext: String? = {
-            switch paymentMethodType {
-            case .stripe(.klarna):
-                return String.Localized.buy_now_or_pay_later_with_klarna
-            case .stripe(.afterpayClearpay):
-                if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
-                    return String.Localized.buy_now_or_pay_later_with_clearpay
-                } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
-                    return String.Localized.buy_now_or_pay_later_with_cash_app_afterpay
-                } else {
-                    return String.Localized.buy_now_or_pay_later_with_afterpay
+
+        let sublabel: SublabelView
+        if let promotionsHelper, promotionsHelper.isInTreatmentGroup, PaymentMethodMessagingPromotionsHelper.supportedPaymentMethods.contains(paymentMethodType) {
+            sublabel = PaymentMethodMessagingSublabelView(
+                appearance: appearance,
+                paymentMethodType: paymentMethodType,
+                promotionsHelper: promotionsHelper
+            )
+        } else {
+            let subtext: String? = {
+                switch paymentMethodType {
+                case .stripe(.klarna):
+                    return String.Localized.buy_now_or_pay_later_with_klarna
+                case .stripe(.afterpayClearpay):
+                    if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
+                        return String.Localized.buy_now_or_pay_later_with_clearpay
+                    } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
+                        return String.Localized.buy_now_or_pay_later_with_cash_app_afterpay
+                    } else {
+                        return String.Localized.buy_now_or_pay_later_with_afterpay
+                    }
+                case .stripe(.affirm):
+                    return String.Localized.pay_over_time_with_affirm
+                case .external(let externalPaymentOption):
+                    return externalPaymentOption.displaySubtext
+                default:
+                    return nil
                 }
-            case .stripe(.affirm):
-                return String.Localized.pay_over_time_with_affirm
-            case .external(let externalPaymentOption):
-                return externalPaymentOption.displaySubtext
-            default:
-                return nil
-            }
-        }()
+            }()
+            sublabel = PlainSublabelView(text: subtext, appearance: appearance, isEmbedded: isEmbedded)
+        }
 
         let promoBadge: PromoBadgeView? = {
             guard let promoText else { return nil }
@@ -515,7 +498,7 @@ extension RowButton {
             type: .new(paymentMethodType: paymentMethodType),
             imageView: imageView,
             text: text,
-            subtext: subtext,
+            sublabel: sublabel,
             promoBadge: promoBadge,
             accessoryView: accessoryView,
             shouldAnimateOnPress: shouldAnimateOnPress,
@@ -527,7 +510,8 @@ extension RowButton {
     static func makeForApplePay(appearance: PaymentSheet.Appearance, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView(image: Image.apple_pay_mark.makeImage())
         imageView.contentMode = .scaleAspectFit
-        return RowButton.create(appearance: appearance, type: .applePay, imageView: imageView, text: String.Localized.apple_pay, isEmbedded: isEmbedded, didTap: didTap)
+        let sublabel = PlainSublabelView(text: nil, appearance: appearance, isEmbedded: isEmbedded)
+        return RowButton.create(appearance: appearance, type: .applePay, imageView: imageView, text: String.Localized.apple_pay, sublabel: sublabel, isEmbedded: isEmbedded, didTap: didTap)
     }
 
     static func makeForLink(
@@ -542,7 +526,8 @@ extension RowButton {
         if let linkAccount = LinkAccountContext.shared.account, linkAccount.isRegistered {
             subtext = linkAccount.email
         }
-        let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: linkBrand.displayName, subtext: subtext, isEmbedded: isEmbedded, didTap: didTap)
+        let sublabel = PlainSublabelView(text: subtext, appearance: appearance, isEmbedded: isEmbedded)
+        let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: linkBrand.displayName, sublabel: sublabel, isEmbedded: isEmbedded, didTap: didTap)
         button.accessibilityHelperView.accessibilityLabel = String.Localized.pay_with_link(brand: linkBrand)
         return button
     }
@@ -559,26 +544,34 @@ extension RowButton {
             ? linkBrand.displayName
             : paymentMethod.paymentSheetLabel(brand: linkBrand)
 
+        let sublabel = PlainSublabelView(
+            text: paymentMethod.linkSpecificSublabel(brand: linkBrand) ?? subtext,
+            appearance: appearance,
+            isEmbedded: isEmbedded
+        )
+
         let button = RowButton.create(
             appearance: appearance,
             type: .saved(paymentMethod: paymentMethod),
             imageView: imageView,
             text: text,
-            subtext: paymentMethod.linkSpecificSublabel(brand: linkBrand) ?? subtext,
+            sublabel: sublabel,
             badgeText: badgeText,
             accessoryView: accessoryView,
             isEmbedded: isEmbedded,
             didTap: didTap
         )
         button.accessibilityHelperView.accessibilityLabel = {
+            let accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
+                .map { linkBrand.accessibilityText(from: $0) }
             if let badgeText {
-                if let accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel {
+                if let accessibilityLabel {
                     return "\(accessibilityLabel), \(badgeText)"
                 } else {
                     return "\(badgeText)"
                 }
             }
-            return paymentMethod.paymentSheetAccessibilityLabel
+            return accessibilityLabel
         }()
         return button
     }
@@ -671,5 +664,26 @@ private extension STPPaymentMethod {
             return paymentSheetLabel(brand: brand)
         }
         return nil
+    }
+}
+
+// MARK: - SublabelView protocol
+
+extension RowButton {
+
+    static let sublabelIsHiddenAnimationDuration: TimeInterval = 0.2
+    static let sublabelAlphaAnimationDuration: TimeInterval = 0.1
+
+    /// Defines the interface for sublabel views displayed beneath the primary label in a `RowButton`.
+    /// Conforming types manage their own visibility transitions and text state.
+    protocol SublabelView: UIView {
+        /// Whether this sublabel variant needs to expand beyond the standard row height.
+        var needsUnlimitedHeight: Bool { get }
+        /// Whether the sublabel currently contains displayable content.
+        var hasText: Bool { get }
+        /// Updates the displayed text, optionally animating the visibility transition.
+        func setSublabel(text: String?, animated: Bool)
+        /// Notifies the sublabel that the parent row's selection state changed.
+        func updateSelectedState(_ isRowSelected: Bool, willDisplayForm: Bool)
     }
 }

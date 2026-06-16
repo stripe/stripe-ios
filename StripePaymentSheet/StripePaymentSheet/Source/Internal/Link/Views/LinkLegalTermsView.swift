@@ -41,7 +41,7 @@ final class LinkLegalTermsView: UIView {
 
     weak var delegate: LinkLegalTermsViewDelegate?
     private let mode: LinkInlineSignupViewModel.Mode
-    private let brand: LinkBrand
+    private var brand: LinkBrand
     /// If true, we're in a separate Link VC (instead of the inline PS one)
     private let isStandalone: Bool
     private let emailWasPrefilled: Bool
@@ -70,6 +70,7 @@ final class LinkLegalTermsView: UIView {
         textView.isEditable = false
         textView.backgroundColor = .clear
         textView.attributedText = formattedLegalText()
+        textView.accessibilityLabel = brand.accessibilityText(from: textView.attributedText?.string ?? "")
         textView.textColor = .linkTextTertiary
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
@@ -100,6 +101,15 @@ final class LinkLegalTermsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    func updateBrand(_ brand: LinkBrand) {
+        guard self.brand != brand else {
+            return
+        }
+        self.brand = brand
+        textView.attributedText = formattedLegalText()
+        textView.accessibilityLabel = brand.accessibilityText(from: textView.attributedText?.string ?? "")
+    }
+
     private func formattedLegalText() -> NSAttributedString? {
         let string: String? = {
             if isStandalone {
@@ -128,14 +138,19 @@ final class LinkLegalTermsView: UIView {
         }
 
         let leadingIcon: NSTextAttachment? = {
-            guard mode == .checkboxWithDefaultOptIn else {
+            guard !isStandalone else {
                 return nil
             }
-            return LinkUI.inlineLogo(
-                withScale: 1.3,
-                forFont: LinkUI.font(forTextStyle: .caption),
-                brand: brand
-            )
+            switch mode {
+            case .checkbox, .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+                return LinkUI.inlineLogo(
+                    withScale: 1.3,
+                    forFont: LinkUI.font(forTextStyle: .caption),
+                    brand: brand
+                )
+            case .signupOptIn:
+                return nil
+            }
         }()
 
         let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)

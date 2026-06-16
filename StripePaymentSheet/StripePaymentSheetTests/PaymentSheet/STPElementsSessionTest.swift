@@ -79,13 +79,13 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.linkBrand, .link)
     }
 
-    func testDecodedObjectFromAPIResponseMapping_linkBrandNotlink() {
+    func testDecodedObjectFromAPIResponseMapping_linkBrandOnelink() {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
-        elementsSessionJson[jsonDict: "link_settings"]?["link_brand"] = "notlink"
+        elementsSessionJson[jsonDict: "link_settings"]?["link_brand"] = "onelink"
 
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
 
-        XCTAssertEqual(LinkBrand.onelink.rawValue, "notlink")
+        XCTAssertEqual(LinkBrand.onelink.rawValue, "onelink")
         XCTAssertEqual(elementsSession.linkSettings?.brand, .onelink)
         XCTAssertEqual(elementsSession.linkBrand, .onelink)
     }
@@ -713,6 +713,22 @@ class STPElementsSessionTest: XCTestCase {
             "exp_year": "2040",
         ],
     ] as [AnyHashable: Any]
+    private let testCardWithLinkWalletJSON = [
+        "id": "pm_123card_link_wallet",
+        "type": "card",
+        "created": "12345",
+        "card": [
+            "last4": "4242",
+            "brand": "visa",
+            "fingerprint": "B8XXs2y2JsVBtB9f",
+            "networks": ["available": ["visa"]],
+            "exp_month": "01",
+            "exp_year": "2040",
+            "wallet": [
+                "type": "link",
+            ],
+        ],
+    ] as [AnyHashable: Any]
     private let testCardAmexJSON = [
         "id": "pm_123amexcard",
         "type": "card",
@@ -789,7 +805,7 @@ class STPElementsSessionTest: XCTestCase {
             ],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false, includeCardArt: true)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
         XCTAssertNotNil(customer)
         let pm = customer?.paymentMethods.first
         XCTAssertNotNil(pm?.card?.cardArt)
@@ -808,7 +824,7 @@ class STPElementsSessionTest: XCTestCase {
             ],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false, includeCardArt: true)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
         XCTAssertNotNil(customer)
         XCTAssertNil(customer?.paymentMethods.first?.card?.cardArt)
     }
@@ -818,7 +834,7 @@ class STPElementsSessionTest: XCTestCase {
             "payment_methods": [testCardJSON],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false, includeCardArt: true)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
         XCTAssertNotNil(customer)
         XCTAssertNil(customer?.paymentMethods.first?.card?.cardArt)
     }
@@ -838,7 +854,7 @@ class STPElementsSessionTest: XCTestCase {
             ],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false, includeCardArt: true)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
         let pms = customer?.paymentMethods
         XCTAssertEqual(pms?.count, 2)
         XCTAssertEqual(pms?[0].card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/visa")
@@ -856,7 +872,7 @@ class STPElementsSessionTest: XCTestCase {
             ],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false, includeCardArt: true)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
         let pms = customer?.paymentMethods
         XCTAssertEqual(pms?.count, 2)
         XCTAssertNotNil(pms?[0].card?.cardArt)
@@ -870,15 +886,42 @@ class STPElementsSessionTest: XCTestCase {
             "card_art": [] as [[AnyHashable: Any]],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false, includeCardArt: true)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
         XCTAssertNotNil(customer)
         XCTAssertNil(customer?.paymentMethods.first?.card?.cardArt)
     }
 
     // MARK: Link-wrapped format (enableLinkInSPM: true)
 
-    private func linkWrappedPM(_ pmJSON: [AnyHashable: Any]) -> [AnyHashable: Any] {
-        return ["payment_method": pmJSON]
+    private func linkWrappedPM(_ pmJSON: [AnyHashable: Any], isLinkOrigin: Bool = false) -> [AnyHashable: Any] {
+        return [
+            "payment_method": pmJSON,
+            "is_link_origin": isLinkOrigin,
+        ]
+    }
+
+    func testMergeCardArt_flatFormat_linkWalletSkipsCardArt() throws {
+        var linkWalletCardJSON = testCardJSON
+        linkWalletCardJSON[jsonDict: "card"]?["wallet"] = [
+            "type": "link",
+        ]
+
+        let response: [AnyHashable: Any] = [
+            "payment_methods": [linkWalletCardJSON],
+            "card_art": [
+                ["payment_method": "pm_123card",
+                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/abc123"],
+                 "program_name": "Test Program",
+                ],
+            ],
+            "customer_session": customerSessionJSON,
+        ]
+
+        let customer = try XCTUnwrap(ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false))
+        let paymentMethod = try XCTUnwrap(customer.paymentMethods.first)
+
+        XCTAssertTrue(paymentMethod.isLinkPassthroughMode)
+        XCTAssertNil(paymentMethod.card?.cardArt)
     }
 
     private func linkWrappedUnknownPM(_ pmJSON: [AnyHashable: Any]) -> [AnyHashable: Any] {
@@ -908,11 +951,26 @@ class STPElementsSessionTest: XCTestCase {
             ],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true, includeCardArt: true)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true)
         XCTAssertNotNil(customer)
         let pm = customer?.paymentMethods.first
         XCTAssertNotNil(pm?.card?.cardArt)
         XCTAssertEqual(pm?.card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/abc123")
+    }
+
+    func testDecodeLinkWrappedPaymentMethod_setsLinkOriginWithoutLinkPaymentDetails() {
+        let response: [AnyHashable: Any] = [
+            "payment_methods_with_link_details": [linkWrappedPM(testCardJSON, isLinkOrigin: true)],
+            "customer_session": customerSessionJSON,
+        ]
+
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true)
+        let paymentMethod = customer?.paymentMethods.first
+
+        XCTAssertEqual(customer?.paymentMethods.count, 1)
+        XCTAssertTrue(paymentMethod?.isLinkOrigin ?? false)
+        XCTAssertTrue(paymentMethod?.isLinkPassthroughMode ?? false)
+        XCTAssertFalse(paymentMethod?.isLinkPaymentMethod ?? true)
     }
 
     func testMergeCardArt_linkFormat_nonMatchingId() {
@@ -926,9 +984,29 @@ class STPElementsSessionTest: XCTestCase {
             ],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true, includeCardArt: true)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true)
         XCTAssertNotNil(customer)
         XCTAssertNil(customer?.paymentMethods.first?.card?.cardArt)
+    }
+
+    func testMergeCardArt_linkFormat_linkOriginSkipsCardArt() throws {
+        let response: [AnyHashable: Any] = [
+            "payment_methods_with_link_details": [linkWrappedPM(testCardJSON, isLinkOrigin: true)],
+            "card_art": [
+                ["payment_method": "pm_123card",
+                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/abc123"],
+                 "program_name": "Test Program",
+                ],
+            ],
+            "customer_session": customerSessionJSON,
+        ]
+
+        let customer = try XCTUnwrap(ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true))
+        let paymentMethod = try XCTUnwrap(customer.paymentMethods.first)
+
+        XCTAssertTrue(paymentMethod.isLinkOrigin)
+        XCTAssertTrue(paymentMethod.isLinkPassthroughMode)
+        XCTAssertNil(paymentMethod.card?.cardArt)
     }
 
     func testMergeCardArt_linkFormat_multiplePaymentMethods() {
@@ -946,7 +1024,7 @@ class STPElementsSessionTest: XCTestCase {
             ],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true, includeCardArt: true)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true)
         let pms = customer?.paymentMethods
         XCTAssertEqual(pms?.count, 2)
         XCTAssertEqual(pms?[0].card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/visa")
@@ -969,11 +1047,12 @@ class STPElementsSessionTest: XCTestCase {
             "customer_session": customerSessionJSON,
         ]
 
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true, includeCardArt: true)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true)
         XCTAssertEqual(customer?.paymentMethods.count, 1)
         let paymentMethod = try XCTUnwrap(customer?.paymentMethods.first)
         XCTAssertEqual(paymentMethod.type, .link)
         XCTAssertTrue(paymentMethod.isLinkPaymentMethod)
+        XCTAssertFalse(paymentMethod.isLinkPassthroughMode)
         guard case .generic(let genericDetails) = paymentMethod.linkPaymentDetails else {
             return XCTFail("Expected generic Link payment details")
         }
@@ -981,145 +1060,18 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(genericDetails.sublabel, "000••••••••")
     }
 
-    // MARK: - includeCardArt gating
-
-    func testMergeCardArt_strippedWhenIncludeCardArtIsFalse() {
+    func testDecodeFlatPaymentMethod_derivesLinkPassthroughFromWallet() throws {
         let response: [AnyHashable: Any] = [
-            "payment_methods": [testCardJSON],
-            "card_art": [
-                ["payment_method": "pm_123card",
-                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/abc123"],
-                 "program_name": "Test Program",
-                ],
-            ],
+            "payment_methods": [testCardWithLinkWalletJSON],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false, includeCardArt: false)
-        XCTAssertNotNil(customer)
-        XCTAssertNil(customer?.paymentMethods.first?.card?.cardArt)
-    }
 
-    func testMergeCardArt_linkFormat_strippedWhenIncludeCardArtIsFalse() {
-        let response: [AnyHashable: Any] = [
-            "payment_methods_with_link_details": [
-                ["payment_method": testCardJSON],
-            ],
-            "card_art": [
-                ["payment_method": "pm_123card",
-                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/abc123"],
-                 "program_name": "Test Program",
-                ],
-            ],
-            "customer_session": customerSessionJSON,
-        ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true, includeCardArt: false)
-        XCTAssertNotNil(customer)
-        XCTAssertNil(customer?.paymentMethods.first?.card?.cardArt)
-    }
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
+        let paymentMethod = try XCTUnwrap(customer?.paymentMethods.first)
 
-    // MARK: - STPElementsSession experiment-gated card art deserialization
-
-    func testDeserialize_cardArtIncluded_whenExperimentIsTreatment() {
-        var json = STPTestUtils.jsonNamed("ElementsSession")!
-        json["experiments_data"] = [
-            "arb_id": "arb_test",
-            "experiment_assignments": [
-                CardArtExperiment.experimentName: "treatment",
-            ],
-        ] as [AnyHashable: Any]
-        json["customer"] = [
-            "payment_methods": [testCardJSON],
-            "card_art": [
-                ["payment_method": "pm_123card",
-                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/visa_gold"],
-                 "program_name": "Visa Gold",
-                ] as [AnyHashable: Any],
-            ],
-            "customer_session": customerSessionJSON,
-        ] as [AnyHashable: Any]
-
-        let session = STPElementsSession.decodedObject(fromAPIResponse: json)!
-        XCTAssertNotNil(session.customer, "Customer should be deserialized")
-        let pm = session.customer?.paymentMethods.first
-        XCTAssertNotNil(pm, "Payment method should exist")
-        XCTAssertNotNil(pm?.card?.cardArt, "Card art should be present when experiment is treatment")
-        XCTAssertEqual(pm?.card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/visa_gold")
-    }
-
-    func testDeserialize_cardArtExcluded_whenExperimentIsControl() {
-        var json = STPTestUtils.jsonNamed("ElementsSession")!
-        json["experiments_data"] = [
-            "arb_id": "arb_test",
-            "experiment_assignments": [
-                CardArtExperiment.experimentName: "control",
-            ],
-        ] as [AnyHashable: Any]
-        json["customer"] = [
-            "payment_methods": [testCardJSON],
-            "card_art": [
-                ["payment_method": "pm_123card",
-                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/visa_gold"],
-                 "program_name": "Visa Gold",
-                ],
-            ],
-            "customer_session": [
-                "id": "id123",
-                "livemode": false,
-                "api_key": "ek_12345",
-                "api_key_expiry": 12345,
-                "customer": "cus_123",
-                "components": [
-                    "mobile_payment_element": [
-                        "enabled": true,
-                        "features": [
-                            "payment_method_save": "enabled",
-                            "payment_method_remove": "enabled",
-                            "payment_method_set_as_default": "enabled",
-                        ],
-                    ],
-                    "customer_sheet": ["enabled": false],
-                ],
-            ] as [AnyHashable: Any],
-        ] as [AnyHashable: Any]
-
-        let session = STPElementsSession.decodedObject(fromAPIResponse: json)!
-        let pm = session.customer?.paymentMethods.first
-        XCTAssertNil(pm?.card?.cardArt)
-    }
-
-    func testDeserialize_cardArtExcluded_whenNoExperimentAssignment() {
-        var json = STPTestUtils.jsonNamed("ElementsSession")!
-        json["experiments_data"] = nil
-        json["customer"] = [
-            "payment_methods": [testCardJSON],
-            "card_art": [
-                ["payment_method": "pm_123card",
-                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/visa_gold"],
-                 "program_name": "Visa Gold",
-                ],
-            ],
-            "customer_session": [
-                "id": "id123",
-                "livemode": false,
-                "api_key": "ek_12345",
-                "api_key_expiry": 12345,
-                "customer": "cus_123",
-                "components": [
-                    "mobile_payment_element": [
-                        "enabled": true,
-                        "features": [
-                            "payment_method_save": "enabled",
-                            "payment_method_remove": "enabled",
-                            "payment_method_set_as_default": "enabled",
-                        ],
-                    ],
-                    "customer_sheet": ["enabled": false],
-                ],
-            ] as [AnyHashable: Any],
-        ] as [AnyHashable: Any]
-
-        let session = STPElementsSession.decodedObject(fromAPIResponse: json)!
-        let pm = session.customer?.paymentMethods.first
-        XCTAssertNil(pm?.card?.cardArt)
+        XCTAssertEqual(customer?.paymentMethods.count, 1)
+        XCTAssertFalse(paymentMethod.isLinkOrigin)
+        XCTAssertTrue(paymentMethod.isLinkPassthroughMode)
+        XCTAssertFalse(paymentMethod.isLinkPaymentMethod)
     }
 }

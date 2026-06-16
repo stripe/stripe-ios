@@ -6,6 +6,8 @@
 
 "App Settings" = "Paramètres de l'application";
 
+"Auto" = "Automatique";
+
 "Back %@ photo successfully uploaded" = "Photo du verso de %@ téléversée avec succès";
 
 "Back identity document photo successfully uploaded" = "La photo du verso de la pièce d'identité a été téléversée avec succès";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "L’image est floue. Stabilisez votre téléphone puis réessayez.";
 
+"Image taken" = "Image prise";
+
 "Individual CPF" = "Numéro CPF";
 
 "Invalid document" = "Document non valide";
@@ -85,6 +89,8 @@
 "Loading" = "Chargement en cours";
 
 "Make sure you're in a well lit space." = "Installez-vous dans un endroit bien éclairé.";
+
+"Manual" = "Manuel";
 
 "Move closer" = "Rapprochez le document";
 

@@ -4,10 +4,9 @@
 //
 //  Created by Nick Porter on 2/24/26.
 
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 extension CheckoutPlayground {
     @MainActor
     final class ViewModel: ObservableObject {
@@ -30,6 +29,7 @@ extension CheckoutPlayground {
         @Published var checkoutSessionPaymentMethodRemove = true
         @Published var adaptivePricingCountry: AdaptivePricingCountry = .none
         @Published var paymentMethodTypes: Set<String> = ["card"]
+        @Published var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
         @Published var checkoutEndpointOption: EndpointOption = .hosted
         @Published var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
 

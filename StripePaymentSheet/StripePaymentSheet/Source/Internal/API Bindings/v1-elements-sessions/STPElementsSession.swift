@@ -188,13 +188,6 @@ extension STPElementsSession: STPAPIResponseDecodable {
             fromAPIResponse: response["experiments_data"] as? [AnyHashable: Any]
         )
 
-        let cardArtExperimentInTreatment: Bool = {
-            guard let group = experimentsData?.experimentAssignments[CardArtExperiment.experimentName] else {
-                return false
-            }
-            return group == .treatment
-        }()
-
         let customer: ElementsCustomer? = {
             let customerDataKey = "customer"
             guard response[customerDataKey] != nil, !(response[customerDataKey] is NSNull) else {
@@ -202,7 +195,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             }
             let enableLinkInSPM = flags["elements_enable_link_spm"] ?? false
             guard let customerJSON = response[customerDataKey] as? [AnyHashable: Any],
-                  let decoded = ElementsCustomer.decoded(fromAPIResponse: customerJSON, enableLinkInSPM: enableLinkInSPM, includeCardArt: cardArtExperimentInTreatment) else {
+                  let decoded = ElementsCustomer.decoded(fromAPIResponse: customerJSON, enableLinkInSPM: enableLinkInSPM) else {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionCustomerDeserializeFailed)
                 return nil
             }
@@ -407,6 +400,10 @@ extension STPElementsSession {
 
     var forceVerticalPaymentMethodLayout: Bool {
         flags["elements_mobile_force_vertical_payment_method_layout"] == true
+    }
+
+    var shouldUseAutocompleteProxyEndpoints: Bool {
+        flags["ocs_mobile_should_use_autocomplete_proxy_endpoints"] == true
     }
 }
 

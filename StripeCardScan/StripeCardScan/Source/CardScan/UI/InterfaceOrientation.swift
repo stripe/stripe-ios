@@ -9,10 +9,9 @@ import UIKit
 
 extension UIWindow {
     static var interfaceOrientation: UIInterfaceOrientation {
-        return
-            UIApplication.shared.windows
+        return UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
             .first?
-            .windowScene?
             .interfaceOrientation ?? .unknown
     }
 

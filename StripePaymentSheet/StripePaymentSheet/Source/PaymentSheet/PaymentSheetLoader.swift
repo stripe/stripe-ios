@@ -20,22 +20,6 @@ final class PaymentSheetLoader {
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
         let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
-
-        init(
-            intent: Intent,
-            elementsSession: STPElementsSession,
-            savedPaymentMethods: [STPPaymentMethod],
-            paymentMethodTypes: [PaymentSheet.PaymentMethodType],
-            paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
-            paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
-        ) {
-            self.intent = intent
-            self.elementsSession = elementsSession
-            self.savedPaymentMethods = savedPaymentMethods
-            self.paymentMethodTypes = paymentMethodTypes
-            self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
-            self.paymentMethodOrientation = paymentMethodOrientation
-        }
     }
 
     enum IntegrationShape {
@@ -96,14 +80,9 @@ final class PaymentSheetLoader {
                let error = intentConfiguration.validate() {
                 throw error
             }
-            if case .checkoutSession = mode, configuration.customer != nil {
+            if case .checkout = mode, configuration.customer != nil {
                 stpAssertionFailure("Configuration.customer must not be set when using a CheckoutSession. The CheckoutSession manages its own customer.")
                 throw PaymentSheetError.integrationError(nonPIIDebugDescription: "PaymentSheet.Configuration.customer must not be set when using a CheckoutSession.")
-            }
-            // defaultBillingDetails.email is populated from the CheckoutSession's customerEmail (if not already set) by applyAddressOverrides, which runs before the loader.
-            if case .checkoutSession = mode, configuration.defaultBillingDetails.email == nil {
-                stpAssertionFailure("An email address is required when using a CheckoutSession. Set configuration.defaultBillingDetails.email or ensure the CheckoutSession has a customer_email.")
-                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "An email address is required when using a CheckoutSession. Set PaymentSheet.Configuration.defaultBillingDetails.email or ensure the CheckoutSession has a customer_email.")
             }
 
             // Fetch ElementsSession
@@ -132,7 +111,7 @@ final class PaymentSheetLoader {
             // Overwrite the form specs that were already loaded from disk
             loadTimings.logStart("loadFormSpecs")
             switch intent {
-            case .paymentIntent, .deferredIntent, .checkoutSession:
+            case .paymentIntent, .deferredIntent, .checkout:
                 if !elementsSession.isBackupInstance {
                     _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
                 }
@@ -157,7 +136,7 @@ final class PaymentSheetLoader {
                 if isLinkEnabled {
                     LinkAccountContext.shared.account = linkAccount
                 }
-                Self.logLinkExperimentExposures(
+                Self.logExperimentExposures(
                     elementsSession: elementsSession,
                     configuration: configuration,
                     linkAccount: linkAccount,
@@ -189,7 +168,7 @@ final class PaymentSheetLoader {
             let isFcLiteKillswitchEnabled = elementsSession.flags["elements_disable_fc_lite"] == true
             FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = isFcLiteKillswitchEnabled
 
-            let remoteFcLiteOverrideEnabled = elementsSession.flags["elements_prefer_fc_lite"] == true
+            let remoteFcLiteOverrideEnabled = shouldPreferFCLite(elementsSession: elementsSession)
             FinancialConnectionsSDKAvailability.remoteFcLiteOverride = remoteFcLiteOverrideEnabled
 
             let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
@@ -215,12 +194,14 @@ final class PaymentSheetLoader {
             let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
             let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
 
-            let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(elementsSession: elementsSession)
-            paymentMethodMessagingPromotionsHelper.prefetchIfNeeded(
+            let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(
+                elementsSession: elementsSession,
                 intent: intent,
                 configuration: configuration,
-                paymentMethodTypes: paymentMethodTypes
+                paymentMethodTypes: paymentMethodTypes,
+                analyticsHelper: analyticsHelper
             )
+            paymentMethodMessagingPromotionsHelper?.fetchData()
 
             let paymentMethodOrientation = configuration.resolveLayout(
                 elementsSession: elementsSession,
@@ -237,19 +218,6 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
             )
-
-            // Log card art experiment exposure
-            if let cardArtExperiment = CardArtExperiment.create(
-                elementsSession: elementsSession,
-                configuration: configuration,
-                analyticsHelper: analyticsHelper,
-                paymentMethodTypes: paymentMethodTypes,
-                savedPaymentMethods: filteredSavedPaymentMethods,
-                paymentMethodOrientation: paymentMethodOrientation,
-                selectedPaymentOption: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex)
-            ) {
-                analyticsHelper.logExposure(experiment: cardArtExperiment)
-            }
 
             // Temporary band-aid for pre-loading card art: fire-and-forget fetch to warm the in-meory cache for PS.FC
             // and embedded PaymentOptionDisplayData APIs.
@@ -365,15 +333,21 @@ final class PaymentSheetLoader {
         }
 
         let linkAccountService = LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession)
-        return try await linkAccountService.lookupAccount(
+        let linkAccount = try await linkAccountService.lookupAccount(
             withEmail: lookupEmail.email,
             emailSource: lookupEmail.source,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
         )
+        // PaymentSheet can be torn down and rebuilt while the customer is still using the same Link account.
+        // Preserve the verified session across the second lookup so the user does not need to OTP again.
+        if let currentLinkAccount = LinkAccountContext.shared.account {
+            linkAccount?.reuseVerifiedSession(from: currentLinkAccount)
+        }
+        return linkAccount
     }
 
     @MainActor
-    private static func logLinkExperimentExposures(
+    private static func logExperimentExposures(
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         linkAccount: PaymentSheetLinkAccount?,
@@ -383,32 +357,35 @@ final class PaymentSheetLoader {
             guard let arbId = elementsSession.experimentsData?.arbId else {
                 return
             }
-            let linkGlobalHoldbackExperiment = LinkGlobalHoldback(
+            analyticsHelper.logExposure(experiment: LinkGlobalHoldback(
                 arbId: arbId,
                 session: elementsSession,
                 configuration: configuration,
                 linkAccount: linkAccount,
                 integrationShape: analyticsHelper.integrationShape
-            )
-            analyticsHelper.logExposure(experiment: linkGlobalHoldbackExperiment)
-
-            let linkGlobalHoldbackAAExperiment = LinkGlobalHoldbackAA(
+            ))
+            analyticsHelper.logExposure(experiment: LinkGlobalHoldbackAA(
                 arbId: arbId,
                 session: elementsSession,
                 configuration: configuration,
                 linkAccount: linkAccount,
                 integrationShape: analyticsHelper.integrationShape
-            )
-            analyticsHelper.logExposure(experiment: linkGlobalHoldbackAAExperiment)
-
-            let linkAbTestExperiment = LinkABTest(
+            ))
+            analyticsHelper.logExposure(experiment: LinkABTest(
                 arbId: arbId,
                 session: elementsSession,
                 configuration: configuration,
                 linkAccount: linkAccount,
                 integrationShape: analyticsHelper.integrationShape
-            )
-            analyticsHelper.logExposure(experiment: linkAbTestExperiment)
+            ))
+            analyticsHelper.logExposure(experiment: ConnectionsFCLiteVsNative(
+                arbId: arbId,
+                session: elementsSession
+            ))
+            analyticsHelper.logExposure(experiment: ConnectionsFCLiteVsNativeAA(
+                arbId: arbId,
+                session: elementsSession
+            ))
         }
     }
 
@@ -506,13 +483,13 @@ final class PaymentSheetLoader {
                 elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
                 intent = .deferredIntent(intentConfig: intentConfig)
             }
-        case .checkoutSession(let checkoutSession):
-            guard let elementsSessionJSON = checkoutSession.allResponseFields["elements_session"] as? [AnyHashable: Any],
+        case .checkout(let checkout):
+            guard let elementsSessionJSON = checkout.stpSession.allResponseFields["elements_session"] as? [AnyHashable: Any],
                   let decodedElementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJSON) else {
                 throw PaymentSheetError.unknown(debugDescription: "Failed to decode elements session from provided checkout session object")
             }
             elementsSession = decodedElementsSession
-            intent = .checkoutSession(checkoutSession)
+            intent = .checkout(checkout)
         }
 
         // Warn the merchant if we see unactivated payment method types in the Intent
@@ -564,8 +541,8 @@ final class PaymentSheetLoader {
         if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
             // A. SPMs are on ElementSessions object when using CustomerSession.
             savedPaymentMethods = elementsSessionPaymentMethods
-        } else if case let .checkoutSession(checkoutSession) = intent,
-                  let customerPaymentMethods = checkoutSession.customer?.paymentMethods {
+        } else if case let .checkout(checkout) = intent,
+                  let customerPaymentMethods = checkout.stpSession.customer?.paymentMethods {
             // B. SPMs are on CheckoutSession object
             savedPaymentMethods = customerPaymentMethods
         } else if let prefetchedSPMs {
@@ -692,6 +669,13 @@ final class PaymentSheetLoader {
         }
 
         return allowedCountries.contains(billingCountry)
+    }
+
+    static func shouldPreferFCLite(elementsSession: STPElementsSession) -> Bool {
+        let flagPrefersFCLite = elementsSession.flags["elements_prefer_fc_lite"] == true
+        let experimentPrefersFCLite =
+            elementsSession.experimentsData?.experimentAssignments[ConnectionsFCLiteVsNative.experimentName] == .treatment
+        return flagPrefersFCLite || experimentPrefersFCLite
     }
 }
 

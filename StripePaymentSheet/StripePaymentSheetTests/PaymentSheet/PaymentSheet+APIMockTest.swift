@@ -15,6 +15,7 @@ import XCTest
 import OHHTTPStubs
 import OHHTTPStubsSwift
 
+@MainActor
 final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     enum MockJson {
         static let cardPaymentMethod = STPTestUtils.jsonNamed("CardPaymentMethod")!
@@ -76,13 +77,13 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         static var linkPaymentOption: PaymentSheet.PaymentOption {
             let exampleBillingEmail = "test@example.com"
             return .link(option: .withPaymentDetails(
-                brand: .link,
-                account: .init(
-                    email: exampleBillingEmail,
-                    session: .init(
-                        clientSecret: "cs_xxx",
-                        emailAddress: exampleBillingEmail,
-                        redactedFormattedPhoneNumber: "(***) *** **55",
+                    brand: .link,
+                    account: .init(
+                        email: exampleBillingEmail,
+                        session: .make(
+                            clientSecret: "cs_xxx",
+                            emailAddress: exampleBillingEmail,
+                            redactedFormattedPhoneNumber: "(***) *** **55",
                         unredactedPhoneNumber: "(555) 555-5555",
                         phoneNumberCountry: "US",
                         verificationSessions: [.init(type: .sms, state: .verified)],
@@ -141,7 +142,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         }
 
         stub { urlRequest in
-            guard let pathComponents = urlRequest.url?.pathComponents else { return false }
+            guard let pathComponents = urlRequest.url?.pathComponents, pathComponents.count >= 3 else { return false }
             return pathComponents[2] == "payment_intents" && pathComponents.last != "confirm"
         } response: { request in
             var json = MockJson.paymentIntent
@@ -156,7 +157,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         }
 
         stub { urlRequest in
-            guard let pathComponents = urlRequest.url?.pathComponents else { return false }
+            guard let pathComponents = urlRequest.url?.pathComponents, pathComponents.count >= 3 else { return false }
             return pathComponents[2] == "setup_intents" && pathComponents.last != "confirm"
         } response: { request in
             var json = MockJson.setupIntent
@@ -188,7 +189,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                     brand: .link,
                     account: .init(
                         email: "test@example.com",
-                        session: .init(
+                        session: .make(
                             clientSecret: "cs_xxx",
                             emailAddress: "test@example.com",
                             redactedFormattedPhoneNumber: "(***) *** **55",
@@ -317,7 +318,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                 brand: .link,
                 account: .init(
                     email: "test@example.com",
-                    session: .init(
+                    session: .make(
                         clientSecret: "cs_xxx",
                         emailAddress: "test@example.com",
                         redactedFormattedPhoneNumber: "(***) *** **55",
@@ -356,7 +357,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
+            intent: .checkout(Checkout(session: checkoutSession)),
             elementsSession: elementsSession,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
@@ -389,7 +390,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
+            intent: .checkout(Checkout(session: checkoutSession)),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
@@ -422,7 +423,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
+            intent: .checkout(Checkout(session: checkoutSession)),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
@@ -454,7 +455,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
+            intent: .checkout(Checkout(session: checkoutSession)),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
@@ -489,7 +490,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
+            intent: .checkout(Checkout(session: checkoutSession)),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
@@ -528,7 +529,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
+            intent: .checkout(Checkout(session: checkoutSession)),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
@@ -563,7 +564,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
+            intent: .checkout(Checkout(session: checkoutSession)),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,

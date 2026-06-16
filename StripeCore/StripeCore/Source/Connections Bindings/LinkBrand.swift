@@ -9,8 +9,7 @@ import Foundation
 
 @_spi(STP) @frozen public enum LinkBrand: String, SafeEnumCodable, Equatable {
     case link = "link"
-    // Keep the backend-facing raw value unchanged until the rollout is ready.
-    case onelink = "notlink"
+    case onelink = "onelink"
     case unparsable
 
     /// Brand names are proper nouns, so keep the source-of-truth user-facing value here.
@@ -23,21 +22,30 @@ import Foundation
         }
     }
 
+    @_spi(STP) public var accessibilityDisplayName: String {
+        switch self {
+        case .link, .unparsable:
+            return "Link"
+        case .onelink:
+            return "One-link"
+        }
+    }
+
+    @_spi(STP) public func accessibilityText(from text: String) -> String {
+        guard self == .onelink else {
+            return text
+        }
+        return text
+            .replacingOccurrences(of: displayName, with: accessibilityDisplayName)
+            .replacingOccurrences(of: displayName.lowercased(), with: accessibilityDisplayName)
+    }
+
     @_spi(STP) public var websiteURL: URL {
         switch self {
         case .link, .unparsable:
             return URL(string: "https://link.com")!
         case .onelink:
             return URL(string: "https://onelink.com")!
-        }
-    }
-
-    @_spi(STP) public var checkoutURL: URL {
-        switch self {
-        case .link, .unparsable:
-            return URL(string: "https://checkout.link.com/")!
-        case .onelink:
-            return URL(string: "https://checkout.onelink.com/")!
         }
     }
 

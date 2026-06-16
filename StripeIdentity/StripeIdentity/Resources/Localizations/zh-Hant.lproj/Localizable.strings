@@ -6,6 +6,8 @@
 
 "App Settings" = "應用設定";
 
+"Auto" = "自動";
+
 "Back of identity document" = "身分證件背面";
 
 "Camera permission" = "攝像機許可";
@@ -40,6 +42,8 @@
 
 "ID Number" = "證件號碼";
 
+"Image taken" = "拍攝的影像";
+
 "Individual CPF" = "個人 CPF";
 
 "Keep ID level" = "保持證件水平";
@@ -49,6 +53,8 @@
 "Loading" = "正在載入";
 
 "Make sure you're in a well lit space." = "確保光線充足。";
+
+"Manual" = "手動";
 
 "Move closer" = "請靠近一點";
 

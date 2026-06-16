@@ -27,13 +27,23 @@ class AutoCompleteViewController: UIViewController {
     let addressSpecProvider: AddressSpecProvider
     /// Vertical offset for the view controller content. Negative values move content up, positive values move content down.
     let verticalOffset: CGFloat
+    /// Session token for grouping autocomplete and place details calls.
+    let sessionToken: String = UUID().uuidString
 
+    private let indendationWidth: CGFloat = 5
     private lazy var addressSearchCompleter: MKLocalSearchCompleter = {
        let searchCompleter = MKLocalSearchCompleter()
         searchCompleter.delegate = self
         searchCompleter.resultTypes = .address
         return searchCompleter
     }()
+
+    private var fetchTask: Task<Void, Never>?
+    private var debounceTask: Task<Void, Never>?
+    private var lastFetchedQuery: String = ""
+    var currentSource: String?
+    private var autocompleteStartTime: Date?
+    private var mapKitQueryStartTime: Date?
 
     weak var delegate: AutoCompleteViewControllerDelegate?
 
@@ -42,6 +52,8 @@ class AutoCompleteViewController: UIViewController {
         didSet {
             separatorView.isHidden = results.isEmpty
             tableView.reloadData()
+            let showGoogleAttribution = !results.isEmpty && currentSource?.lowercased() == "google"
+            tableView.tableFooterView = showGoogleAttribution ? googleAttributionFooterView : nil
             latestError = nil // reset latest error whenever we get new results
         }
     }
@@ -95,6 +107,24 @@ class AutoCompleteViewController: UIViewController {
         label.isHidden = true
         return label
     }()
+    lazy var googleAttributionFooterView: UIView = {
+        let image = Image.google_maps_mark.makeImage()
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+
+        let container = UIView()
+        container.addSubview(imageView)
+
+        var constraints = [
+            imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: tableView.layoutMargins.left + indendationWidth),
+            imageView.heightAnchor.constraint(equalToConstant: UIFont.preferredFont(forTextStyle: .footnote).lineHeight),
+            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: image.size.width / image.size.height),
+            imageView.topAnchor.constraint(equalTo: container.topAnchor, constant: tableView.layoutMargins.top),
+        ]
+        NSLayoutConstraint.activate(constraints)
+        return container
+    }()
 
     // MARK: - Elements
     lazy var autoCompleteLine: TextFieldElement = {
@@ -111,20 +141,30 @@ class AutoCompleteViewController: UIViewController {
         return form
     }()
 
+    /// The country code selected in the address form's country dropdown, used to narrow autocomplete results.
+    let selectedCountry: String?
+
     // MARK: - Initializers
     required init(
         configuration: AddressViewController.Configuration,
         initialLine1Text: String?,
+        selectedCountry: String?,
         addressSpecProvider: AddressSpecProvider = .shared,
         verticalOffset: CGFloat = 0
     ) {
         self.configuration = configuration
         self.initialLine1Text = initialLine1Text
+        self.selectedCountry = selectedCountry
         self.addressSpecProvider = addressSpecProvider
         self.verticalOffset = verticalOffset
         super.init(nibName: nil, bundle: nil)
         if let initialLine1Text = initialLine1Text, !initialLine1Text.isEmpty {
-            self.addressSearchCompleter.queryFragment = initialLine1Text
+            if configuration.useAutocompleteEndpoints {
+                fetchAPIResults(query: initialLine1Text)
+            } else {
+                mapKitQueryStartTime = Date()
+                self.addressSearchCompleter.queryFragment = initialLine1Text
+            }
         }
     }
 
@@ -220,6 +260,8 @@ class AutoCompleteViewController: UIViewController {
         super.viewWillAppear(animated)
         registerForKeyboardNotifications()
         autoCompleteLine.beginEditing()
+        autocompleteStartTime = Date()
+        STPAnalyticsClient.sharedClient.logAddressAutocompleteStart(apiClient: configuration.apiClient)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -228,6 +270,28 @@ class AutoCompleteViewController: UIViewController {
     }
 
     // MARK: Private functions
+
+    /// Sets source and results together so `results.didSet` always sees the correct source.
+    private func setResults(_ newResults: [AddressSearchResult], source: String?, requestLatency: TimeInterval? = nil) {
+        currentSource = source
+        results = newResults
+        if let source {
+            STPAnalyticsClient.sharedClient.logAddressAutocompleteSuggestions(
+                characterCount: autoCompleteLine.text.count,
+                sessionToken: sessionToken,
+                source: source,
+                duration: elapsedTimeSinceAutocompleteStart,
+                latency: requestLatency,
+                apiClient: configuration.apiClient
+            )
+        }
+    }
+
+    private var elapsedTimeSinceAutocompleteStart: TimeInterval {
+        guard let startTime = autocompleteStartTime else { return 0 }
+        return Date().timeIntervalSince(startTime)
+    }
+
     @objc private func manualEntryButtonTapped() {
         // Populate address with partial for line 1
         delegate?.didSelectManualEntry(autoCompleteLine.text)
@@ -237,20 +301,70 @@ class AutoCompleteViewController: UIViewController {
 // MARK: ElementDelegate
 extension AutoCompleteViewController: ElementDelegate {
     func didUpdate(element: Element) {
-        if !autoCompleteLine.text.isEmpty {
-            addressSearchCompleter.queryFragment = autoCompleteLine.text
+        let query = autoCompleteLine.text
+        if configuration.useAutocompleteEndpoints {
+            guard query != lastFetchedQuery else { return }
+            lastFetchedQuery = query
+            guard query.count >= 2 else {
+                debounceTask?.cancel()
+                fetchTask?.cancel()
+                setResults([], source: nil)
+                return
+            }
+            debounceTask?.cancel()
+            debounceTask = Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 100_000_000)
+                guard !Task.isCancelled else { return }
+                fetchAPIResults(query: query)
+            }
+        } else if !query.isEmpty {
+            mapKitQueryStartTime = Date()
+            addressSearchCompleter.queryFragment = query
         }
     }
 
     func continueToNextField(element: Element) {
         // no-op
     }
+
+    private func fetchAPIResults(query: String) {
+        fetchTask?.cancel()
+        fetchTask = Task { @MainActor in
+            do {
+                let countryCodes = selectedCountry.flatMap { $0.isEmpty ? nil : [$0] }
+                let requestStart = Date()
+                let response = try await configuration.apiClient.getAddressSuggestions(
+                    searchText: query,
+                    countryCodes: countryCodes,
+                    sessionToken: sessionToken
+                )
+                guard !Task.isCancelled else { return }
+                let latency = Date().timeIntervalSince(requestStart)
+                self.setResults(response.suggestions, source: response.source, requestLatency: latency)
+            } catch {
+                guard !Task.isCancelled else { return }
+                STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
+                    error: error,
+                    sessionToken: self.sessionToken,
+                    duration: self.elapsedTimeSinceAutocompleteStart,
+                    apiClient: self.configuration.apiClient
+                )
+                // Fall back to MapKit on API failure
+                self.mapKitQueryStartTime = Date()
+                self.addressSearchCompleter.queryFragment = query
+            }
+        }
+    }
 }
 
 // MARK: MKLocalSearchCompleterDelegate
 extension AutoCompleteViewController: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        self.results = completer.results
+        var latency: TimeInterval?
+        if let mapKitQueryStartTime {
+            latency = Date().timeIntervalSince(mapKitQueryStartTime)
+        }
+        setResults(completer.results, source: "apple", requestLatency: latency)
     }
 
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
@@ -258,7 +372,7 @@ extension AutoCompleteViewController: MKLocalSearchCompleterDelegate {
 
         // Making a query with an empty string causes a server error and doesn't update search results
         if completer.queryFragment.isEmpty && nsError.code == MKError.serverFailure.rawValue {
-            results.removeAll()
+            setResults([], source: "apple")
             return
         }
 
@@ -291,10 +405,10 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                                                                             textStyle: .footnote,
                                                                             appearance: configuration.appearance,
                                                                             isSubtitle: true)
-        cell.indentationWidth = 5 // hardcoded value to align with searchbar textfield
+        cell.indentationWidth = indendationWidth // hardcoded value to align with searchbar textfield
 
         cell.contentView.directionalLayoutMargins = .insets(
-            leading: configuration.appearance.formInsets.leading - 5, // adjust for the indentation
+            leading: configuration.appearance.formInsets.leading - indendationWidth, // adjust for the indentation
             trailing: configuration.appearance.formInsets.trailing)
         cell.contentView.preservesSuperviewLayoutMargins = false
 
@@ -310,9 +424,77 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        results[indexPath.row].asAddress { [weak self] address in
-            DispatchQueue.main.async {
-                self?.delegate?.didSelectAddress(address)
+        debounceTask?.cancel()
+        fetchTask?.cancel()
+
+        let result = results[indexPath.row]
+        let typedText = autoCompleteLine.text
+        let characterCount = typedText.count
+        let source = currentSource ?? ""
+        let duration = elapsedTimeSinceAutocompleteStart
+
+        if let suggestion = result as? AddressSuggestion {
+            // If the suggestion returned with a full address, complete with that address
+            if let address = suggestion.address {
+                STPAnalyticsClient.sharedClient.logAddressAutocompleteComplete(
+                    characterCount: characterCount,
+                    sessionToken: sessionToken,
+                    source: source,
+                    duration: duration,
+                    latency: nil,
+                    apiClient: configuration.apiClient
+                )
+                delegate?.didSelectAddress(address)
+            } else { // If the suggestion did not return with a full address, it must have a place id and source to fetch the address details
+                guard let placeId = suggestion.placeId, let currentSource else {
+                    delegate?.didSelectAddress(nil)
+                    return
+                }
+                fetchTask = Task { @MainActor [weak self] in
+                    guard let self else { return }
+                    do {
+                        let requestStart = Date()
+                        let details = try await configuration.apiClient.getAddressDetails(
+                            placeId: placeId,
+                            source: currentSource,
+                            displayTitle: suggestion.title,
+                            sessionToken: sessionToken
+                        )
+                        let latency = Date().timeIntervalSince(requestStart)
+                        STPAnalyticsClient.sharedClient.logAddressAutocompleteComplete(
+                            characterCount: characterCount,
+                            sessionToken: sessionToken,
+                            source: source,
+                            duration: duration,
+                            latency: latency,
+                            apiClient: configuration.apiClient
+                        )
+                        delegate?.didSelectAddress(details.address)
+                    } catch {
+                      STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
+                            error: error,
+                            sessionToken: sessionToken,
+                            duration: elapsedTimeSinceAutocompleteStart,
+                            apiClient: configuration.apiClient
+                        )
+                        delegate?.didSelectAddress(nil)
+                    }
+                }
+            }
+        } else {
+            result.asAddress { [weak self] address in
+                DispatchQueue.main.async {
+                    guard let self else { return }
+                    STPAnalyticsClient.sharedClient.logAddressAutocompleteComplete(
+                        characterCount: characterCount,
+                        sessionToken: self.sessionToken,
+                        source: source,
+                        duration: duration,
+                        latency: nil,
+                        apiClient: self.configuration.apiClient
+                    )
+                    self.delegate?.didSelectAddress(address)
+                }
             }
         }
     }

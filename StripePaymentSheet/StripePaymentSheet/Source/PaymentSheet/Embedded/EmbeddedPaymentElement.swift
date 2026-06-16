@@ -60,7 +60,10 @@ public final class EmbeddedPaymentElement {
             mandateText: embeddedPaymentMethodsView.mandateText,
             currency: intent.currency,
             iconStyle: configuration.appearance.iconStyle,
-            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession)
+            linkBrand: configuration.resolvedLinkBrand(
+                elementsSession: elementsSession,
+                linkAccount: LinkAccountContext.shared.account
+            )
         )
     }
 
@@ -108,17 +111,9 @@ public final class EmbeddedPaymentElement {
         checkout: Checkout,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-            throw PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")
-        }
-        if checkout.state.isLoading {
-            let message = "A Checkout operation is already in progress. Wait for it to complete before calling EmbeddedPaymentElement.create(checkout:configuration:)."
-            assertionFailure(message)
-            throw PaymentSheetError.integrationError(nonPIIDebugDescription: message)
-        }
+        try await checkout.awaitPendingOperations()
         var config = configuration
-        stpSession.applyAddressOverrides(to: &config)
+        checkout.stpSession.applyAddressOverrides(to: &config)
 
         try validateRowSelectionConfiguration(configuration: config)
 
@@ -127,7 +122,7 @@ public final class EmbeddedPaymentElement {
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: config)
 
         let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
-            mode: .checkoutSession(stpSession),
+            mode: .checkout(checkout),
             configuration: config,
             analyticsHelper: analyticsHelper,
             integrationShape: .embedded
@@ -139,6 +134,7 @@ public final class EmbeddedPaymentElement {
             analyticsHelper: analyticsHelper
         )
         embeddedPaymentElement.clearPaymentOptionIfNeeded()
+        embeddedPaymentElement.checkout = checkout
         checkout.integrationDelegate = embeddedPaymentElement
         return embeddedPaymentElement
     }
@@ -176,17 +172,13 @@ public final class EmbeddedPaymentElement {
     public func update(
         checkout: Checkout
     ) async -> UpdateResult {
-        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-            return .failed(error: PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
+        do {
+            try await checkout.awaitPendingOperations()
+        } catch {
+            return .failed(error: error)
         }
-        if checkout.state.isLoading {
-            let message = "A Checkout operation is already in progress. Wait for it to complete before calling EmbeddedPaymentElement.update(checkout:)."
-            assertionFailure(message)
-            return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: message))
-        }
-        stpSession.applyAddressOverrides(to: &configuration)
-        return await performUpdate(mode: .checkoutSession(stpSession))
+        checkout.stpSession.applyAddressOverrides(to: &configuration)
+        return await performUpdate(mode: .checkout(checkout))
     }
 
     private func performUpdate(mode: PaymentSheet.InitializationMode) async -> UpdateResult {
@@ -395,6 +387,7 @@ public final class EmbeddedPaymentElement {
     internal var hasConfirmedIntent = false
     /// Tracks info about the currently in-flight or most recent update attempt.
     internal var latestUpdateContext: EmbeddedUpdateContext?
+    internal weak var checkout: Checkout?
 #if DEBUG
     internal var _test_paymentOption: PaymentOption? // for testing only
 #endif
@@ -416,7 +409,7 @@ public final class EmbeddedPaymentElement {
         case .applePay:
             return .applePay
         case .link:
-            return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)))
+            return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)))
         case let .new(paymentMethodType: paymentMethodType):
             let params = IntentConfirmParams(type: paymentMethodType)
             params.setDefaultBillingDetailsIfNecessary(for: configuration)
@@ -444,6 +437,7 @@ public final class EmbeddedPaymentElement {
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
     internal var confirmationChallenge: ConfirmationChallenge?
+    internal var linkAccountObserver: LinkAccountContextObserver?
 
     internal init(
         configuration: Configuration,
@@ -464,6 +458,14 @@ public final class EmbeddedPaymentElement {
             guard let self else { return }
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
+        self.linkAccountObserver = LinkAccountContextObserver { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.embeddedPaymentMethodsView.updateLinkRow(for: LinkAccountContext.shared.account, animated: true)
+                self.informDelegateIfPaymentOptionUpdated()
+            }
+        }
+        _ = self.linkAccountObserver
         self.lastUpdatedPaymentOption = paymentOption
     }
 }

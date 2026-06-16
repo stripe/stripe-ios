@@ -40,6 +40,7 @@ import Foundation
     case paymentHandlerConfirmFinished = "stripeios.paymenthandler.confirm.finished"
     case paymentHandlerHandleNextActionStarted = "stripeios.paymenthandler.handle_next_action.started"
     case paymentHandlerHandleNextActionFinished = "stripeios.paymenthandler.handle_next_action.finished"
+    case paymentHandlerCanceledPollingDurationExceeded = "stripeios.paymenthandler.canceled.polling_duration_exceeded"
 
     // MARK: - Card Metadata
     case cardMetadataLoadedTooSlow = "stripeios.card_metadata_loaded_too_slow"
@@ -213,6 +214,16 @@ import Foundation
     case addressShow = "mc_address_show"
     case addressCompleted = "mc_address_completed"
 
+    // MARK: - Billing Address
+    case mcbillingAddressCompleted = "mc_billing_address_completed"
+    case csbillingAddressCompleted = "cs_billing_address_completed"
+
+    // MARK: - Autocomplete
+    case addressAutocompleteStart = "mc_address_autocomplete_start"
+    case addressAutocompleteSuggestions = "mc_address_autocomplete_suggestions"
+    case addressAutocompleteComplete = "mc_address_autocomplete_complete"
+    case addressAutocompleteError = "mc_address_autocomplete_error"
+
     // MARK: - PaymentSheet Force Success
     case paymentSheetForceSuccess = "mc_force_success"
 
@@ -232,6 +243,10 @@ import Foundation
     case paymentSheetFormCompleted = "mc_form_completed"
     case paymentSheetCardNumberCompleted = "mc_card_number_completed"
     case paymentSheetDeferredIntentPaymentMethodMismatch = "mc_deferred_intent_payment_method_mismatch"
+
+    // MARK: - PaymentSheet payment method messaging
+    case paymentMethodMessagingFetchBegin = "payment_method_messaging_fetch_begin"
+    case paymentMethodMessagingDisplayed = "payment_method_messaging_displayed"
 
     // MARK: - v1/elements/session
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
@@ -313,11 +328,6 @@ import Foundation
     // MARK: - Custom Payment Methods
     case paymentSheetInvalidCPM = "mc_invalid_cpm"
 
-    // MARK: - Shop Pay Webview
-    case shopPayWebviewLoadAttempt = "mc_shoppay_webview_load_attempt"
-    case shopPayWebviewConfirmSuccess = "mc_shoppay_webview_confirm_success"
-    case shopPayWebviewCancelled = "mc_shoppay_webview_cancelled"
-
     // MARK: - Captcha
     case passiveCaptchaInit = "elements.captcha.passive.init"
     case passiveCaptchaExecute = "elements.captcha.passive.execute"
@@ -348,9 +358,13 @@ import Foundation
     // MARK: - Synthetic latency tests
     case mpeSyntheticLatency = "mpe.synthetic_latency"
 
+    // MARK: - InstantBankPaymentsController
+    case instantBankPaymentsControllerInit = "mc_instant_bank_payments_controller_init"
+
     // MARK: - Adaptive Pricing
     case adaptivePricingCurrencySelectorInit = "elements.adaptive_pricing.currency_selector_init"
     case adaptivePricingCurrencyToggled = "elements.adaptive_pricing.currency_toggled"
     case adaptivePricingCurrencyToggledFailed = "elements.adaptive_pricing.currency_toggled.failed"
+    case adaptivePricingFlagImageLoadFailed = "elements.adaptive_pricing.flag_image_load.failed"
 
 }

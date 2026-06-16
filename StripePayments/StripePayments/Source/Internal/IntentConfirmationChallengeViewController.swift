@@ -18,7 +18,6 @@ enum IntentType {
 /// View controller for handling intent confirmation challenges via WebView
 /// This handles the `intent_confirmation_challenge` next action type by loading
 /// a Stripe-hosted web page that performs authentication via Stripe.js
-@available(iOS 14.0, *)
 class IntentConfirmationChallengeViewController: UIViewController {
 
     // MARK: - Properties
@@ -240,7 +239,6 @@ class IntentConfirmationChallengeViewController: UIViewController {
 }
 
 // MARK: - WKScriptMessageHandlerWithReply
-@available(iOS 14.0, *)
 extension IntentConfirmationChallengeViewController: WKScriptMessageHandlerWithReply {
     func userContentController(
         _ userContentController: WKUserContentController,
@@ -269,7 +267,6 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandlerWithR
 }
 
 // MARK: - WKScriptMessageHandler
-@available(iOS 14.0, *)
 extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
     func userContentController(
         _ userContentController: WKUserContentController,
@@ -306,7 +303,6 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
 }
 
 // MARK: - WKNavigationDelegate
-@available(iOS 14.0, *)
 extension IntentConfirmationChallengeViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
         // Open links (e.g., Privacy, Terms) in Safari instead of navigating within the webview
@@ -328,7 +324,6 @@ extension IntentConfirmationChallengeViewController: WKNavigationDelegate {
 }
 
 // MARK: - Liquid Glass
-@available(iOS 14.0, *)
 extension IntentConfirmationChallengeViewController {
     private static var shouldApplyLiquidGlass: Bool {
         #if compiler(>=6.2)

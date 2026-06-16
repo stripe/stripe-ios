@@ -170,6 +170,7 @@ final class MPELatencyTest: XCTestCase {
 
         try await _measureLoadLatency(configuration: configuration)
         XCTAssertTrue(didCallLinkLookupEndpoint, "Did not expect Link lookup endpoint to be called because there is no customer email to look up")
+        XCTAssertNotNil(LinkAccountContext.shared.account, "Expected the test email to have a Link account")
     }
 
     /// Link: enabled
@@ -183,6 +184,7 @@ final class MPELatencyTest: XCTestCase {
 
         try await _measureLoadLatency(configuration: configuration)
         XCTAssertTrue(didCallLinkLookupEndpoint, "Expected Link lookup endpoint to be called")
+        XCTAssertNotNil(LinkAccountContext.shared.account, "Expected the test email to have a Link account")
     }
 
     /// Link: enabled
@@ -206,6 +208,7 @@ final class MPELatencyTest: XCTestCase {
 
         try await _measureLoadLatency(configuration: configuration)
         XCTAssertTrue(didCallLinkLookupEndpoint, "Expected Link lookup endpoint to be called")
+        XCTAssertNotNil(LinkAccountContext.shared.account, "Expected the test email to have a Link account")
     }
 
     // MARK: - Tests w/ Link enabled + default billing email
@@ -225,6 +228,7 @@ final class MPELatencyTest: XCTestCase {
 
         try await _measureLoadLatency(configuration: configuration)
         XCTAssertTrue(didCallLinkLookupEndpoint, "Expected Link lookup endpoint to be called")
+        XCTAssertNotNil(LinkAccountContext.shared.account, "Expected the test email to have a Link account")
     }
 
     /// Link: enabled
@@ -249,7 +253,7 @@ final class MPELatencyTest: XCTestCase {
 
         try await _measureLoadLatency(configuration: configuration)
         XCTAssertTrue(didCallLinkLookupEndpoint, "Expected Link lookup endpoint to be called")
-
+        XCTAssertNotNil(LinkAccountContext.shared.account, "Expected the test email to have a Link account")
     }
 }
 

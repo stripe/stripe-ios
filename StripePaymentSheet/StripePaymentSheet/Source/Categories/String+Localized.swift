@@ -779,8 +779,8 @@ extension String.Localized {
         STPLocalizedString("Declarations", "Title label for a screen showing CRS/CARF tax declarations")
     }
 
-    static var agree_and_accept: String {
-        STPLocalizedString("Agree and accept", "Label for a button that confirms the user agrees to and accepts a declaration")
+    static var accept: String {
+        STPLocalizedString("Accept", "Label for a button that confirms the user accepts a declaration")
     }
 
     static var last_4_digits_of_ssn: String {
@@ -791,6 +791,26 @@ extension String.Localized {
         STPLocalizedString(
             "Exchange rate and fees of your bank may apply.",
             "Disclaimer shown when the customer selects the merchant's currency, meaning their bank will handle any currency conversion"
+        )
+    }
+
+    static func exchangeRate(localCurrency: String, rate: String, integrationCurrency: String) -> String {
+        String(
+            format: STPLocalizedString(
+                "1 %@ = %@ %@",
+                "Exchange rate caption, e.g. '1 GBP = 1.2871 USD'"
+            ),
+            localCurrency, rate, integrationCurrency
+        )
+    }
+
+    static func exchangeRateWithConversionFee(localCurrency: String, rate: String, integrationCurrency: String, feePercent: String) -> String {
+        String(
+            format: STPLocalizedString(
+                "1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee).",
+                "Exchange rate with conversion fee disclosure, e.g. '1 GBP = 1.2871 USD (includes 4% conversion fee).'"
+            ),
+            localCurrency, rate, integrationCurrency, feePercent
         )
     }
 

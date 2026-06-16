@@ -66,11 +66,7 @@ class ImageCompressionTests: XCTestCase {
         XCTAssertEqual(newImage?.size, originalImageSize)
         XCTAssertNotNil(newImage?.cgImage?.utType)
         if let type = newImage?.cgImage?.utType {
-            if #available(iOS 14.0, *) {
-                XCTAssertEqual(type as String, UTType.jpeg.identifier)
-            } else {
-                XCTAssertEqual(type, kUTTypeJPEG)
-            }
+            XCTAssertEqual(type as String, UTType.jpeg.identifier)
         }
         XCTAssertTrue(verificationFrame.viewfinderMargins.equal(to: roiRectangle))
     }
@@ -97,11 +93,7 @@ class ImageCompressionTests: XCTestCase {
         XCTAssertEqual(newImage?.size, originalImageSize)
         XCTAssertNotNil(newImage?.cgImage?.utType)
         if let type = newImage?.cgImage?.utType {
-            if #available(iOS 14.0, *) {
-                XCTAssertEqual(type as String, UTType.heic.identifier)
-            } else {
-                XCTAssertEqual(type as String, "public.heic")
-            }
+            XCTAssertEqual(type as String, UTType.heic.identifier)
         }
         XCTAssertTrue(verificationFrame.viewfinderMargins.equal(to: roiRectangle))
     }

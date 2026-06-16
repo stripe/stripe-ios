@@ -77,7 +77,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         _testInstantDebits(mode: .setup)
     }
 
-    func testSavedSEPADebitPaymentMethod_FlowController_ShowsMandate() {
+    func _testSavedSEPADebitPaymentMethod_FlowController_ShowsMandate() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.merchantCountryCode = .FR

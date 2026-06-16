@@ -58,7 +58,6 @@ import PassKit
 
     /// Called when the user has entered or updated a coupon code. You should validate the
     /// coupon and must invoke the completion block with a PKPaymentRequestCouponCodeUpdate object.
-    @available(iOS 15.0, *)
     @MainActor @preconcurrency
     @objc optional func applePayContext(
         _ context: STPApplePayContext,
@@ -68,7 +67,6 @@ import PassKit
 
     /// Called when the user has entered or updated a coupon code. You should validate the
     /// coupon and return a PKPaymentRequestCouponCodeUpdate object.
-    @available(iOS 15.0, *)
     @objc optional func applePayContext(
         _ context: STPApplePayContext,
         didChangeCouponCode couponCode: String
@@ -173,14 +171,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     ) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPApplePayContext.self)
         STPTelemetryClient.shared.sendTelemetryData()
-        let canMakePayments: Bool = {
-            if #available(iOS 15.0, *) {
-                // On iOS 15+, Apple Pay can be displayed even though there are no cards because Apple added the ability for customers to add cards in the payment sheet (see WWDC '21 "What's new in Wallet and Apple Pay")
-                return PKPaymentAuthorizationController.canMakePayments()
-            } else {
-                return PKPaymentAuthorizationController.canMakePayments(usingNetworks: StripeAPI.supportedPKPaymentNetworks())
-            }
-        }()
+        // On iOS 15+, Apple Pay can be displayed even though there are no cards because Apple added the ability for customers to add cards in the payment sheet (see WWDC '21 "What's new in Wallet and Apple Pay")
+        let canMakePayments = PKPaymentAuthorizationController.canMakePayments()
 
         assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantIdentifier` on your payment request.")
 
@@ -222,16 +214,11 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     @available(macCatalystApplicationExtension, unavailable)
     @objc(presentApplePayWithCompletion:)
     public func presentApplePay(completion: STPVoidBlock? = nil) {
-        #if os(visionOS)
         // This isn't great: We should encourage the use of presentApplePay(from window:) instead.
-        let windows = UIApplication.shared.connectedScenes
-            .compactMap { ($0 as? UIWindowScene)?.windows }
-            .flatMap { $0 }
-            .sorted { firstWindow, _ in firstWindow.isKeyWindow }
-        let window = windows.first
-        #else
-        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
-        #endif
+        let window = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }
         self.presentApplePay(from: window, completion: completion)
     }
 
@@ -409,15 +396,13 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             pk_didSelectShippingContact: [stp_didSelectShippingContact, stp_didSelectShippingContact_async],
         ]
 
-        if #available(iOS 15.0, *) {
-            // On iOS 15+, Apple Pay can now accept coupon codes directly, so we need to broker the
-            // new coupon delegate functions between the host app and Apple Pay.
-            let pk_didChangeCouponCode = #selector(PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(_:didChangeCouponCode:handler:))
-            let stp_didChangeCouponCode = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didChangeCouponCode:handler:))
-            let stp_didChangeCouponCode_async = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didChangeCouponCode:))
+        // Apple Pay can accept coupon codes directly, so we need to broker the
+        // coupon delegate functions between the host app and Apple Pay.
+        let pk_didChangeCouponCode = #selector(PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(_:didChangeCouponCode:handler:))
+        let stp_didChangeCouponCode = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didChangeCouponCode:handler:))
+        let stp_didChangeCouponCode_async = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didChangeCouponCode:))
 
-            delegateToAppleDelegateMapping[pk_didChangeCouponCode] = [stp_didChangeCouponCode, stp_didChangeCouponCode_async]
-        }
+        delegateToAppleDelegateMapping[pk_didChangeCouponCode] = [stp_didChangeCouponCode, stp_didChangeCouponCode_async]
 
         return delegateToAppleDelegateMapping
     }
@@ -554,7 +539,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }
     }
 
-    @available(iOS 15.0, *)
     @objc
     public func paymentAuthorizationController(
         _ controller: PKPaymentAuthorizationController,

@@ -64,3 +64,11 @@ enum ConfirmCRSCARFDeclarationResponseMock: String, MockData {
 
     case confirmCRSCARFDeclarationResponse_200 = "ConfirmCRSCARFDeclarationResponse_200"
 }
+
+enum StripeAPIErrorResponseMock: String, MockData {
+    var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    typealias ResponseType = StripeAPIErrorResponse
+
+    case appAttestationFailure = "AppAttestationFailure_400"
+}

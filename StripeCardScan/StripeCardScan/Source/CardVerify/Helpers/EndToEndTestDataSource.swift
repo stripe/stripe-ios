@@ -23,7 +23,10 @@
         }()
 
         func nextSquareAndFullImage() -> CGImage? {
-            guard let targetSize = UIApplication.shared.windows.first?.frame.size else {
+            guard let targetSize = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .flatMap({ $0.windows })
+            .first?.frame.size else {
                 return nil
             }
 

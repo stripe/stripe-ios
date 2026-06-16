@@ -6,6 +6,8 @@
 
 "App Settings" = "Appindstillinger";
 
+"Auto" = "Automatisk";
+
 "Back %@ photo successfully uploaded" = "Billedet på bagsiden %@ er uploadet";
 
 "Back identity document photo successfully uploaded" = "Billedet af identitetsdokumentet på bagsiden er uploadet";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Billedet er sløret. Hold din telefon stabil, og prøv igen.";
 
+"Image taken" = "Billede taget";
+
 "Individual CPF" = "Individuel CPF";
 
 "Invalid document" = "Ugyldigt dokument";
@@ -85,6 +89,8 @@
 "Loading" = "Indlæser";
 
 "Make sure you're in a well lit space." = "Sørg for, at du er et sted, der er ordentligt oplyst.";
+
+"Manual" = "Manuelt";
 
 "Move closer" = "Flyt tættere på";
 

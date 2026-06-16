@@ -58,7 +58,10 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
 
     var rootViewController: UIViewController {
         // Hack, should do this in SwiftUI
-        return UIApplication.shared.windows.first!.rootViewController!
+        return UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }!.rootViewController!
     }
 
     func makeAlertController() -> UIAlertController {
@@ -82,18 +85,12 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     }
 
     func appearanceButtonTapped() {
-        if #available(iOS 14.0, *) {
-            let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { [weak self] updatedAppearance in
-                self?.appearance = updatedAppearance
-                self?.rootViewController.dismiss(animated: true, completion: nil)
-                self?.load()
-            }))
-            rootViewController.present(vc, animated: true, completion: nil)
-        } else {
-            let alert = UIAlertController(title: "Unavailable", message: "Appearance playground is only available in iOS 14+.", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-            rootViewController.present(alert, animated: true, completion: nil)
-        }
+        let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { [weak self] updatedAppearance in
+            self?.appearance = updatedAppearance
+            self?.rootViewController.dismiss(animated: true, completion: nil)
+            self?.load()
+        }))
+        rootViewController.present(vc, animated: true, completion: nil)
     }
 
     func presentCustomerSheet() {
@@ -160,6 +157,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
+        configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
 
         return configuration
     }

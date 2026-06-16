@@ -14,53 +14,21 @@ struct PaymentMethodMessagingPromotionsExperiment: LoggableExperiment {
     let arbId: String
     let group: ExperimentGroup
 
-    let selectedPaymentMethodType: String?
-    let promotionDisplayedSuccessfully: Bool?
-    let layout: String?
+    let layout: String
 
     var dimensions: [String: String] {
-        var dimensions: [String: String] = [:]
-        if let selectedPaymentMethodType {
-            dimensions["selected_payment_method_type"] = selectedPaymentMethodType
-        }
-        if let promotionDisplayedSuccessfully {
-            dimensions["promotion_displayed_successfully"] = promotionDisplayedSuccessfully.description
-        }
-        if let layout {
-            dimensions["in_app_elements_layout"] = layout
-        }
-        return dimensions
+        ["in_app_elements_layout": layout]
     }
 
-    init(
+    init?(
         elementsSession: STPElementsSession,
-        selectedPaymentMethodType: String? = nil,
-        promotionDisplayedSuccessfully: Bool? = nil,
-        layout: String? = nil
+        layout: String
     ) {
-        let assignment = elementsSession.experimentsData?.experimentAssignments[Self.experimentName]
+        guard let assignment = elementsSession.experimentsData?.experimentAssignments[Self.experimentName] else {
+            return nil
+        }
         self.arbId = elementsSession.experimentsData?.arbId ?? ""
-        self.group = assignment ?? .control
-        self.selectedPaymentMethodType = selectedPaymentMethodType
-        self.promotionDisplayedSuccessfully = promotionDisplayedSuccessfully
+        self.group = assignment
         self.layout = layout
-    }
-
-    init(
-        arbId: String,
-        group: ExperimentGroup,
-        selectedPaymentMethodType: String? = nil,
-        promotionDisplayedSuccessfully: Bool? = nil,
-        layout: String? = nil
-    ) {
-        self.arbId = arbId
-        self.group = group
-        self.selectedPaymentMethodType = selectedPaymentMethodType
-        self.promotionDisplayedSuccessfully = promotionDisplayedSuccessfully
-        self.layout = layout
-    }
-
-    var isInTreatment: Bool {
-        group == .treatment
     }
 }

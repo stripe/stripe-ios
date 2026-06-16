@@ -155,7 +155,6 @@ class BackendViewModel: ObservableObject {
 }
 
 // MARK: - MyEmbeddedCheckoutView
-@available(iOS 15.0, *)
 struct MyEmbeddedCheckoutView: View {
     @StateObject var embeddedViewModel = EmbeddedPaymentElementViewModel()
     @StateObject var backendViewModel = BackendViewModel()
@@ -373,7 +372,6 @@ extension Int {
 }
 
 // MARK: - Preview
-@available(iOS 15.0, *)
 struct MyEmbeddedCheckoutView_Previews: PreviewProvider {
     static var previews: some View {
         MyEmbeddedCheckoutView()

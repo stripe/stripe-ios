@@ -220,7 +220,7 @@ extension PaymentSheet {
                             sublabel: confirmParams.paymentSheetSublabel
                         )
                     } else {
-                        labels = Labels(label: option.brand.displayName, sublabel: option.displayPaymentSheetSubLabel())
+                        labels = Labels(label: linkBrand.displayName, sublabel: option.displayPaymentSheetSubLabel(brand: linkBrand))
                     }
                     label = option.paymentSheetLabel(brand: linkBrand)
                     paymentMethodType = option.paymentMethodType
@@ -302,10 +302,12 @@ extension PaymentSheet {
             }
         }
 
+        private weak var checkout: Checkout?
         private var isPresented = false
         private(set) var didPresentAndContinue: Bool = false
         private var confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
+        private var linkAccountObserver: LinkAccountContextObserver?
 
         // MARK: - Initializer (Internal)
 
@@ -327,6 +329,12 @@ extension PaymentSheet {
             )
             self.viewController.flowControllerDelegate = self
             self.confirmationChallenge = confirmationChallenge
+            self.linkAccountObserver = LinkAccountContextObserver { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.updatePaymentOption()
+                }
+            }
+            _ = self.linkAccountObserver
 
             updatePaymentOption()
         }
@@ -398,26 +406,24 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            guard let stpSession = checkout.state.session as? STPCheckoutSession else {
-                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-                completion(.failure(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")))
-                return
-            }
-            if checkout.state.isLoading {
-                let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.FlowController.create(checkout:configuration:completion:)."
-                assertionFailure(message)
-                completion(.failure(PaymentSheetError.integrationError(nonPIIDebugDescription: message)))
-                return
-            }
-            var config = configuration
-            stpSession.applyAddressOverrides(to: &config)
-            create(mode: .checkoutSession(stpSession),
-                   configuration: config
-            ) { result in
-                if case .success(let flowController) = result {
-                    checkout.integrationDelegate = flowController
+            Task { @MainActor in
+                do {
+                    try await checkout.awaitPendingOperations()
+                } catch {
+                    completion(.failure(error))
+                    return
                 }
-                completion(result)
+                var config = configuration
+                checkout.stpSession.applyAddressOverrides(to: &config)
+                create(mode: .checkout(checkout),
+                       configuration: config
+                ) { result in
+                    if case .success(let flowController) = result {
+                        flowController.checkout = checkout
+                        checkout.integrationDelegate = flowController
+                    }
+                    completion(result)
+                }
             }
         }
 
@@ -581,6 +587,16 @@ extension PaymentSheet {
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.confirm must be called from the main thread.")
 
+            // assumeIsolated needed because FlowController isn't @MainActor but we assert main thread above.
+            if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
+                assertionFailure("`confirm` should not be called while the Checkout session is loading.")
+                let error = PaymentSheetError.flowControllerConfirmFailed(
+                    message: "confirmPayment was called while the Checkout session is still loading. Wait until the Checkout state is .loaded before calling confirm."
+                )
+                completion(.failed(error: error))
+                return
+            }
+
             switch latestUpdateContext?.status {
             case .inProgress:
                 assertionFailure("`confirm` should only be called when the last update has completed.")
@@ -678,24 +694,47 @@ extension PaymentSheet {
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
             assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
-            guard let stpSession = checkout.state.session as? STPCheckoutSession else {
-                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-                completion(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
-                return
+            let updateID = beginUpdate()
+            Task { @MainActor in
+                do {
+                    try await checkout.awaitPendingOperations()
+                } catch {
+                    self.failUpdate(updateID)
+                    completion(error)
+                    return
+                }
+                guard !self.isPresented else {
+                    let message = "PaymentSheet.FlowController.update must be called when PaymentSheet is not presented."
+                    assertionFailure(message)
+                    let error = PaymentSheetError.integrationError(nonPIIDebugDescription: message)
+                    self.failUpdate(updateID)
+                    completion(error)
+                    return
+                }
+                checkout.stpSession.applyAddressOverrides(to: &configuration)
+                performUpdate(mode: .checkout(checkout), updateID: updateID, completion: completion)
             }
-            if checkout.state.isLoading {
-                let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.FlowController.update(checkout:completion:)."
-                assertionFailure(message)
-                completion(PaymentSheetError.integrationError(nonPIIDebugDescription: message))
-                return
-            }
-            stpSession.applyAddressOverrides(to: &configuration)
-            performUpdate(mode: .checkoutSession(stpSession), completion: completion)
         }
 
-        private func performUpdate(mode: PaymentSheet.InitializationMode, completion: @escaping (Error?) -> Void) {
-            let updateID = UUID()
+        @discardableResult
+        private func beginUpdate(updateID: UUID = UUID()) -> UUID {
             latestUpdateContext = UpdateContext(id: updateID)
+            return updateID
+        }
+
+        private func failUpdate(_ updateID: UUID) {
+            guard latestUpdateContext?.id == updateID else {
+                return
+            }
+            latestUpdateContext?.status = .failed
+        }
+
+        private func performUpdate(
+            mode: PaymentSheet.InitializationMode,
+            updateID: UUID = UUID(),
+            completion: @escaping (Error?) -> Void
+        ) {
+            beginUpdate(updateID: updateID)
 
             // 1. Load the intent, payment methods, and link data from the Stripe API
             PaymentSheetLoader.load(
@@ -772,7 +811,10 @@ extension PaymentSheet {
                     paymentOption: selectedPaymentOption,
                     currency: intent.currency,
                     iconStyle: configuration.appearance.iconStyle,
-                    linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession)
+                    linkBrand: configuration.resolvedLinkBrand(
+                        elementsSession: elementsSession,
+                        linkAccount: LinkAccountContext.shared.account
+                    )
                 )
             } else {
                 paymentOption = nil

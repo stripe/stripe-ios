@@ -214,7 +214,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
 
     private func setIdentifierRequirements(_ requirements: ComplianceIdentifierRequirements) {
         identifierRequirements = requirements
-        hasSubmittedIdentifiers = requirements.isEmpty
+        hasSubmittedIdentifiers = !requirements.requiresIdentifierCollection
     }
 
     private func advanceToNextStep() {
@@ -238,7 +238,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
             isEUCustomer,
             !hasSubmittedIdentifiers,
             let identifierRequirements,
-            !identifierRequirements.isEmpty {
+            identifierRequirements.requiresIdentifierCollection {
             path.append(.complianceIdentifiers(requirements: identifierRequirements))
         } else if isEUCustomer && !hasAcceptedCRSCARFDeclaration {
             path.append(.crsCarfDeclaration)
@@ -303,7 +303,7 @@ extension CryptoOnrampFlowCoordinator.Route {
 }
 
 private extension ComplianceIdentifierRequirements {
-    var isEmpty: Bool {
-        identifiers.isEmpty
+    var requiresIdentifierCollection: Bool {
+        !identifiers.isEmpty || carfTinRequired
     }
 }

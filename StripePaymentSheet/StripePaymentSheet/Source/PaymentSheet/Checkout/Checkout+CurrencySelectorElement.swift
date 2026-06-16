@@ -25,7 +25,6 @@ extension Checkout {
     /// ```swift
     /// Checkout.CurrencySelectorElement(checkout: checkout)
     /// ```
-    @available(iOS 15.0, *)
     @MainActor
     public struct CurrencySelectorElement: View {
         @ObservedObject private var checkout: Checkout
@@ -54,14 +53,13 @@ extension Checkout {
         }
 
         private var isAdaptivePricingAvailable: Bool {
-            return CurrencySelectorUtilities.adaptivePricingData(from: checkout.state.session) != nil
+            return CurrencySelectorUtilities.adaptivePricingData(from: checkout.stpSession) != nil
         }
     }
 }
 
 // MARK: - UIViewRepresentable
 
-@available(iOS 15.0, *)
 private struct CurrencySelectorViewRepresentable: UIViewRepresentable {
     let checkout: Checkout
     let appearance: Checkout.CurrencySelectorView.Appearance

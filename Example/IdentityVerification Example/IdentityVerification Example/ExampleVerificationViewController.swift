@@ -8,7 +8,6 @@
 import StripeIdentity
 import UIKit
 
-@available(iOS 14.3, *)
 class ExampleVerificationViewController: UIViewController {
 
     // Constants
