@@ -104,23 +104,6 @@ public class PaymentSheet {
         )
     }
 
-    /// Initializes PaymentSheet with a Checkout object
-    /// - Parameter checkout: A loaded Checkout instance.
-    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    @_spi(STP)
-    @_spi(ReactNativeSDK)
-    @MainActor
-    public convenience init(checkout: Checkout, configuration: Configuration) {
-        var config = configuration
-        checkout.stpSession.applyAddressOverrides(to: &config)
-        self.init(
-            mode: .checkout(checkout),
-            configuration: config
-        )
-        self.checkout = checkout
-        checkout.integrationDelegate = self
-    }
-
     required init(mode: InitializationMode, configuration: Configuration) {
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
@@ -162,21 +145,9 @@ public class PaymentSheet {
                 completion(.failed(error: error))
                 return
             }
-            var loadMode = mode
-            if let checkout {
-                do {
-                    try await checkout.awaitPendingOperations()
-                } catch {
-                    completion(.failed(error: error))
-                    return
-                }
-                loadMode = .checkout(checkout)
-                checkout.stpSession.applyAddressOverrides(to: &self.configuration)
-            }
-
             // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
             PaymentSheetLoader.load(
-                mode: loadMode,
+                mode: mode,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
                 integrationShape: .paymentSheet
@@ -256,9 +227,6 @@ public class PaymentSheet {
 
     /// The initialization mode this instance was initialized with
     let mode: InitializationMode
-
-    /// The Checkout that backs checkout-session mode integrations, if any.
-    private weak var checkout: Checkout?
 
     /// A user-supplied completion block. Nil until `present` is called.
     var completion: ((PaymentSheetResult) -> Void)?
@@ -411,14 +379,6 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         }
     }
 
-}
-
-// MARK: - CheckoutIntegrationDelegate
-
-extension PaymentSheet: CheckoutIntegrationDelegate {
-    var isSheetPresented: Bool {
-        bottomSheetViewController.presentingViewController != nil
-    }
 }
 
 extension PaymentSheet: LoadingViewControllerDelegate {

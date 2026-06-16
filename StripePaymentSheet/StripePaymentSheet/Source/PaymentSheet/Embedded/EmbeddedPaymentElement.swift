@@ -134,6 +134,7 @@ public final class EmbeddedPaymentElement {
             analyticsHelper: analyticsHelper
         )
         embeddedPaymentElement.clearPaymentOptionIfNeeded()
+        embeddedPaymentElement.checkout = checkout
         checkout.integrationDelegate = embeddedPaymentElement
         return embeddedPaymentElement
     }
@@ -386,6 +387,7 @@ public final class EmbeddedPaymentElement {
     internal var hasConfirmedIntent = false
     /// Tracks info about the currently in-flight or most recent update attempt.
     internal var latestUpdateContext: EmbeddedUpdateContext?
+    internal weak var checkout: Checkout?
 #if DEBUG
     internal var _test_paymentOption: PaymentOption? // for testing only
 #endif

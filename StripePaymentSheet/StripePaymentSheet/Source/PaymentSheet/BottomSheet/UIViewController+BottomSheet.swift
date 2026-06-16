@@ -19,11 +19,7 @@ extension UIViewController {
             return true
             #else
             // Present as form sheet in larger devices (iPad/Mac).
-            if #available(iOS 14.0, macCatalyst 14.0, *) {
-                return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
-            } else {
-                return UIDevice.current.userInterfaceIdiom == .pad
-            }
+            return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
             #endif
         }
 

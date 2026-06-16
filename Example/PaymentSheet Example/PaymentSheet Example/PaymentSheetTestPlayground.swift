@@ -9,7 +9,6 @@ import StripePaymentSheet
 import SwiftUI
 
 // MARK: - PaymentSheetTestPlayground
-@available(iOS 15.0, *)
 struct PaymentSheetTestPlayground: View {
     @StateObject var playgroundController: PlaygroundController
     @StateObject var analyticsLogObserver: AnalyticsLogObserver = .shared
@@ -28,7 +27,11 @@ struct PaymentSheetTestPlayground: View {
 
     @ViewBuilder
     func clientSettings(searchText: Binding<String>) -> some View {
-        SearchableSettingView(setting: uiStyleBinding, searchText: searchText)
+        SearchableSettingView(
+            setting: uiStyleBinding,
+            disabledSettings: playgroundController.settings.integrationType == .checkoutSession ? [.paymentSheet] : [],
+            searchText: searchText
+        )
         if playgroundController.settings.uiStyle != .embedded {
             SearchableSettingView(setting: $playgroundController.settings.layout, searchText: searchText)
         }
@@ -448,6 +451,10 @@ struct PaymentSheetTestPlayground: View {
             if newIntegrationType == .normal && playgroundController.settings.uiStyle == .embedded {
                 playgroundController.settings.uiStyle = .paymentSheet
             }
+            // PaymentSheet does not support checkout session; switch to flow controller
+            if newIntegrationType == .checkoutSession && playgroundController.settings.uiStyle == .paymentSheet {
+                playgroundController.settings.uiStyle = .flowController
+            }
             playgroundController.settings.integrationType = newIntegrationType
         }
     }
@@ -496,7 +503,6 @@ struct EmbeddedSettingsView: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct PaymentSheetButtons: View {
     @EnvironmentObject var playgroundController: PlaygroundController
     @State private var psIsPresented: Bool = false
@@ -519,19 +525,13 @@ struct PaymentSheetButtons: View {
     @ViewBuilder
     var cartButton: some View {
         if playgroundController.checkout != nil {
-            if #available(iOS 15.0, *) {
-                Button {
-                    showingCart = true
-                } label: {
-                    Label("Cart", systemImage: "cart.fill")
-                        .font(.callout.smallCaps())
-                }
-                .buttonStyle(.bordered)
-            } else {
-                Button("Cart") {
-                    showingCart = true
-                }
+            Button {
+                showingCart = true
+            } label: {
+                Label("Cart", systemImage: "cart.fill")
+                    .font(.callout.smallCaps())
             }
+            .buttonStyle(.bordered)
         }
     }
 
@@ -667,7 +667,7 @@ struct PaymentSheetButtons: View {
             }
         }
         .sheet(isPresented: $showingCart) {
-            if #available(iOS 15.0, *), let checkout = playgroundController.checkout {
+            if let checkout = playgroundController.checkout {
                 CheckoutCartSheet(checkout: checkout, currencySelectorAppearance: playgroundController.currencySelectorAppearance)
             }
         }
@@ -786,27 +786,26 @@ struct AttestationResetButtonView: View {
     @EnvironmentObject var playgroundController: PlaygroundController
 
     var body: some View {
-        if #available(iOS 15.0, *) {
-            Button {
-                playgroundController.didTapResetAttestation()
-                presentingAlert = true
-            } label: {
-                Text("Reset attestation")
-            }.buttonStyle(.bordered)
-                .alert("Attestation key has been reset", isPresented: $presentingAlert, actions: {})
-        }
+        Button {
+            playgroundController.didTapResetAttestation()
+            presentingAlert = true
+        } label: {
+            Text("Reset attestation")
+        }.buttonStyle(.bordered)
+            .alert("Attestation key has been reset", isPresented: $presentingAlert, actions: {})
     }
 }
 
 struct SettingView<S: PickerEnum>: View {
     var setting: Binding<S>
     var title: String?
+    var disabledSettings: [S] = []
 
     var body: some View {
         HStack {
             Text(title ?? S.enumName).font(.subheadline)
             Picker(title ?? S.enumName, selection: setting) {
-                ForEach(S.allCases, id: \.self) { t in
+                ForEach(S.allCases.filter({ !disabledSettings.contains($0) }), id: \.self) { t in
                     Text(t.displayName)
                 }
             }.pickerStyle(.segmented)
@@ -837,7 +836,6 @@ struct SettingPickerView<S: PickerEnum>: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct PaymentSheetTestPlayground_Previews: PreviewProvider {
     static var previews: some View {
         PaymentSheetTestPlayground()

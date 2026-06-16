@@ -9,7 +9,6 @@
 @_spi(AppearanceAPIAdditionsPreview)@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct AppearancePlaygroundView: View {
     @State var appearance: PaymentSheet.Appearance
     var doneAction: ((PaymentSheet.Appearance) -> Void) = { _ in }
@@ -529,8 +528,6 @@ struct AppearancePlaygroundView: View {
 
 struct AppearancePlaygroundView_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOS 14.0, *) {
-            AppearancePlaygroundView(appearance: PaymentSheet.Appearance(), doneAction: { _ in })
-        }
+        AppearancePlaygroundView(appearance: PaymentSheet.Appearance(), doneAction: { _ in })
     }
 }

@@ -557,7 +557,6 @@ class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
     }
 }
 
-@available(iOS 15.0, *)
 struct DebugLogView: View {
     let logs: [String]
     let onClearLogs: () -> Void

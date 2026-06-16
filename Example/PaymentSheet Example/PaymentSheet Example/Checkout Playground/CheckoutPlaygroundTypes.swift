@@ -6,7 +6,6 @@
 
 import Foundation
 
-@available(iOS 15.0, *)
 enum CheckoutPlayground {
     enum EndpointOption: String, CaseIterable, Identifiable {
         case hosted

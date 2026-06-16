@@ -6,7 +6,6 @@
 
 import SwiftUI
 
-@available(iOS 15.0, *)
 struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var mode: CheckoutPlayground.SessionMode
     @Binding var currency: CheckoutPlayground.Currency
@@ -76,7 +75,6 @@ struct CheckoutPlaygroundConfigurationSection: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct CheckoutPlaygroundLineItemsSection: View {
     let lineItems: [CheckoutPlayground.LineItemConfig]
     let currency: CheckoutPlayground.Currency
@@ -97,7 +95,6 @@ struct CheckoutPlaygroundLineItemsSection: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct CheckoutPlaygroundLineItemCard: View {
     let item: CheckoutPlayground.LineItemConfig
     let currency: CheckoutPlayground.Currency
@@ -150,7 +147,6 @@ struct CheckoutPlaygroundLineItemCard: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct CheckoutPlaygroundFeaturesSection: View {
     let mode: CheckoutPlayground.SessionMode
     let customerType: CheckoutPlayground.CustomerType
@@ -242,7 +238,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct CheckoutPlaygroundPaymentMethodSection: View {
     @Binding var selectedMethods: Set<String>
     let availableMethods: [String]
@@ -317,7 +312,6 @@ struct CheckoutPlaygroundPaymentMethodSection: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
     @Binding var selectedMethods: Set<String>
     let availableMethods: [String]

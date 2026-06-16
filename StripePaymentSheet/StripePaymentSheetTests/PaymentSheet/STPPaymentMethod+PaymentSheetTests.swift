@@ -44,6 +44,30 @@ class STPPPaymentMethodPaymentSheetTests: XCTestCase {
         XCTAssertFalse(linkPaymentMethod.isLinkPassthroughMode)
     }
 
+    func testUpdateLocalFields_preservesLinkPresentationState() {
+        let originalPaymentMethod = STPPaymentMethod._testCard()
+        originalPaymentMethod.linkPaymentDetails = .card(
+            LinkPaymentDetails.Card(
+                id: "csmrpd_123",
+                displayName: "Visa",
+                expMonth: 12,
+                expYear: 2030,
+                last4: "4242",
+                brand: .visa
+            )
+        )
+        originalPaymentMethod.isLinkOrigin = true
+
+        let updatedPaymentMethod = STPPaymentMethod.stubbedPaymentMethod()
+        XCTAssertNil(updatedPaymentMethod.linkPaymentDetails)
+        XCTAssertFalse(updatedPaymentMethod.isLinkOrigin)
+
+        updatedPaymentMethod.updateLocalFields(from: originalPaymentMethod)
+
+        XCTAssertEqual(updatedPaymentMethod.linkPaymentDetailsFormattedString, originalPaymentMethod.linkPaymentDetailsFormattedString)
+        XCTAssertTrue(updatedPaymentMethod.isLinkOrigin)
+    }
+
     func testHasUpdatedCardParams() {
         XCTAssertFalse(_testHasUpdatedCardParams(STPPaymentMethod._testCard(), expMonth: 01, expYear: 40))
         XCTAssertTrue(_testHasUpdatedCardParams(STPPaymentMethod._testCard(), expMonth: 01, expYear: 41))

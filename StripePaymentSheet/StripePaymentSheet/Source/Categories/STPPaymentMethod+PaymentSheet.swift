@@ -77,6 +77,12 @@ extension STPPaymentMethod {
         return components.joined(separator: " ")
     }
 
+    func updateLocalFields(from original: STPPaymentMethod) {
+        // The update endpoint returns a plain PaymentMethod, so preserve Link presentation state.
+        linkPaymentDetails = original.linkPaymentDetails
+        isLinkOrigin = original.isLinkOrigin
+    }
+
     func hasUpdatedCardParams(_ updatedParams: STPPaymentMethodCardParams?) -> Bool {
         guard let currCard = self.card,
               let updatedParams = updatedParams else {

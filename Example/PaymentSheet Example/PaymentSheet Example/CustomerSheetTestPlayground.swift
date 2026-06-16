@@ -14,7 +14,6 @@ import StripePaymentSheet
 import SwiftUI
 import UIKit
 
-@available(iOS 15.0, *)
 struct CustomerSheetTestPlayground: View {
     @StateObject var playgroundController: CustomerSheetTestPlaygroundController
     @StateObject var analyticsLogObserver: AnalyticsLogObserver = .shared
@@ -218,7 +217,6 @@ extension View {
     }
 }
 
-@available(iOS 14.0, *)
 struct CustomerSheetButtons: View {
     @EnvironmentObject var playgroundController: CustomerSheetTestPlaygroundController
     @State var csIsPresented: Bool = false

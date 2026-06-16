@@ -14,15 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)init {
     WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
-#if !TARGET_OS_VISION
-    if (@available(iOS 15.0, *)) {
-        WKWebpagePreferences *pagePreferences = [[WKWebpagePreferences alloc] init];
-        pagePreferences.allowsContentJavaScript = NO;
-        configuration.defaultWebpagePreferences = pagePreferences;
-    } else {
-        configuration.preferences.javaScriptEnabled = NO;
-    }
-#endif
+    WKWebpagePreferences *pagePreferences = [[WKWebpagePreferences alloc] init];
+    pagePreferences.allowsContentJavaScript = NO;
+    configuration.defaultWebpagePreferences = pagePreferences;
     return [super initWithFrame:CGRectZero configuration:configuration];
 }
 

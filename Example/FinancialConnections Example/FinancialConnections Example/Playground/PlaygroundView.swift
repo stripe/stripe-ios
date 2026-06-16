@@ -8,7 +8,6 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct PlaygroundView: View {
 
     @StateObject var viewModel = PlaygroundViewModel()
@@ -261,7 +260,6 @@ struct PlaygroundView: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct PlaygroundView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
