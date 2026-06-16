@@ -513,6 +513,12 @@ extension EmbeddedPaymentElement {
             return (.failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent), nil)
         }
 
+        if let checkout, !checkout.pendingOperations.isEmpty {
+            let errorMessage = "confirm was called while a Checkout mutation (e.g. applyPromotionCode) is still in progress. Wait for it to finish before calling confirm."
+            let error = PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)
+            return (.failed(error: error), nil)
+        }
+
         if let latestUpdateContext {
             switch latestUpdateContext.status {
             case .inProgress:
