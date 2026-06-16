@@ -302,6 +302,7 @@ extension PaymentSheet {
             }
         }
 
+        private weak var checkout: Checkout?
         private var isPresented = false
         private(set) var didPresentAndContinue: Bool = false
         private var confirmationChallenge: ConfirmationChallenge?
@@ -418,6 +419,7 @@ extension PaymentSheet {
                        configuration: config
                 ) { result in
                     if case .success(let flowController) = result {
+                        flowController.checkout = checkout
                         checkout.integrationDelegate = flowController
                     }
                     completion(result)
@@ -584,6 +586,16 @@ extension PaymentSheet {
             completion: @escaping (PaymentSheetResult) -> Void
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.confirm must be called from the main thread.")
+
+            // assumeIsolated needed because FlowController isn't @MainActor but we assert main thread above.
+            if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
+                assertionFailure("`confirm` should not be called while the Checkout session is loading.")
+                let error = PaymentSheetError.flowControllerConfirmFailed(
+                    message: "confirmPayment was called while the Checkout session is still loading. Wait until the Checkout state is .loaded before calling confirm."
+                )
+                completion(.failed(error: error))
+                return
+            }
 
             switch latestUpdateContext?.status {
             case .inProgress:
