@@ -464,21 +464,21 @@ extension String.Localized {
         )
     }
 
-    static var buy_now_or_pay_later_with_cash_app_afterpay: String {
+    static var buy_now_pay_later_with_cash_app_afterpay: String {
         STPLocalizedString(
             "Buy Now, Pay Later with Cash App Afterpay",
             "Subtitle shown on a button allowing a user to select to pay with Afterpay."
         )
     }
 
-    static var buy_now_or_pay_later_with_afterpay: String {
+    static var buy_now_pay_later_with_afterpay: String {
         STPLocalizedString(
             "Buy Now, Pay Later with Afterpay",
             "Subtitle shown on a button allowing a user to select to pay with Afterpay."
         )
     }
 
-    static var buy_now_or_pay_later_with_clearpay: String {
+    static var buy_now_pay_later_with_clearpay: String {
         STPLocalizedString(
             "Buy Now, Pay Later with Clearpay",
             "Subtitle shown on a button allowing a user to select to pay with Clearpay."
