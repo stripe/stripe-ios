@@ -74,6 +74,13 @@ final class SelfieScanningView: UIView {
     }
 
     struct ViewModel {
+        enum CaptureGuideHighlight: Equatable {
+            case none
+            case front
+            case left
+            case right
+        }
+
         enum StatusText {
             case placeFace
             case holdStill
@@ -144,7 +151,7 @@ final class SelfieScanningView: UIView {
                 CameraSessionProtocol,
                 showFlashAnimation: Bool,
                 statusText: StatusText?,
-                showCaptureGuideShadow: Bool
+                captureGuideHighlight: CaptureGuideHighlight
             )
             /// Display scanned selfie images
             case scanned(
@@ -410,7 +417,7 @@ final class SelfieScanningView: UIView {
             previewContainerView.isHidden = false
             havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
 
-        case .videoPreview(let cameraSession, _, let statusText, let showCaptureGuideShadow):
+        case .videoPreview(let cameraSession, _, let statusText, let captureGuideHighlight):
             instructionLabelView.isHidden = true
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
@@ -419,7 +426,7 @@ final class SelfieScanningView: UIView {
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
             captureTickMarksView.isHidden = false
-            captureTickMarksView.setShowsCenteredShadow(showCaptureGuideShadow, animated: true)
+            captureTickMarksView.setCaptureGuideHighlight(captureGuideHighlight, animated: true)
             if let statusText {
                 configureStatusLabel(statusText)
             }
@@ -680,9 +687,10 @@ private final class CaptureTickMarksView: UIView {
     struct Styling {
         static let tickCount = 77
         static let tickLength: CGFloat = 10
+        static let highlightedTickLength: CGFloat = 12
         static let tickWidth: CGFloat = 2
         static let horizontalDiameterToWidthRatio: CGFloat = 0.72
-        static let verticalDiameterToHeightRatio: CGFloat = 0.54
+        static let verticalDiameterToHeightRatio: CGFloat = 0.66
         static let centerYRatio: CGFloat = 0.42
         static let tickColor = UIColor.white.withAlphaComponent(0.8)
         static let acceptedTickColor = UIColor.systemGreen
@@ -698,7 +706,7 @@ private final class CaptureTickMarksView: UIView {
         static let centeredShadowFadeInDuration: TimeInterval = SelfieScanningView.Styling.captureGuideShadowFadeInDuration
     }
 
-    private var showsCenteredShadow: Bool = false
+    private var captureGuideHighlight: SelfieScanningView.ViewModel.CaptureGuideHighlight = .none
     private var centeredShadowOpacity: CGFloat = 0 {
         didSet {
             setNeedsDisplay()
@@ -712,16 +720,23 @@ private final class CaptureTickMarksView: UIView {
     }
 
     func setShowsCenteredShadow(_ showsCenteredShadow: Bool, animated: Bool) {
-        guard showsCenteredShadow != self.showsCenteredShadow else {
+        setCaptureGuideHighlight(showsCenteredShadow ? .front : .none, animated: animated)
+    }
+
+    func setCaptureGuideHighlight(
+        _ captureGuideHighlight: SelfieScanningView.ViewModel.CaptureGuideHighlight,
+        animated: Bool
+    ) {
+        guard captureGuideHighlight != self.captureGuideHighlight else {
             return
         }
 
-        self.showsCenteredShadow = showsCenteredShadow
+        self.captureGuideHighlight = captureGuideHighlight
         centeredShadowDisplayLink?.invalidate()
         centeredShadowDisplayLink = nil
         centeredShadowAnimationStartTime = nil
 
-        guard showsCenteredShadow else {
+        guard captureGuideHighlight != .none else {
             centeredShadowOpacity = 0
             return
         }
@@ -782,7 +797,7 @@ private final class CaptureTickMarksView: UIView {
             y: bounds.height * Styling.centerYRatio
         )
 
-        if showsCenteredShadow, centeredShadowOpacity > 0 {
+        if captureGuideHighlight != .none, centeredShadowOpacity > 0 {
             drawCenteredShadow(
                 in: context,
                 center: center,
@@ -794,17 +809,55 @@ private final class CaptureTickMarksView: UIView {
 
         context.setLineWidth(Styling.tickWidth)
         context.setLineCap(.butt)
-        context.setStrokeColor(
-            (showsCenteredShadow ? Styling.acceptedTickColor : Styling.tickColor).cgColor
-        )
         context.setShadow(
             offset: Styling.shadowOffset,
             blur: Styling.shadowBlur,
             color: Styling.shadowColor.cgColor
         )
 
+        context.setStrokeColor(Styling.tickColor.cgColor)
+        drawTicks(
+            in: context,
+            center: center,
+            horizontalRadius: horizontalRadius,
+            verticalRadius: verticalRadius,
+            tickLength: Styling.tickLength,
+            shouldDrawTick: { _ in true }
+        )
+        context.strokePath()
+
+        guard captureGuideHighlight != .none else {
+            return
+        }
+
+        context.setStrokeColor(Styling.acceptedTickColor.cgColor)
+        drawTicks(
+            in: context,
+            center: center,
+            horizontalRadius: horizontalRadius,
+            verticalRadius: verticalRadius,
+            tickLength: Styling.highlightedTickLength,
+            shouldDrawTick: { [weak self] angle in
+                self?.isTickHighlighted(at: angle) ?? false
+            }
+        )
+        context.strokePath()
+    }
+
+    private func drawTicks(
+        in context: CGContext,
+        center: CGPoint,
+        horizontalRadius: CGFloat,
+        verticalRadius: CGFloat,
+        tickLength: CGFloat,
+        shouldDrawTick: (CGFloat) -> Bool
+    ) {
         for index in 0..<Styling.tickCount {
             let angle = (CGFloat(index) / CGFloat(Styling.tickCount)) * .pi * 2
+            guard shouldDrawTick(angle) else {
+                continue
+            }
+
             let cosAngle = cos(angle)
             let sinAngle = sin(angle)
             let tickCenter = CGPoint(
@@ -820,7 +873,7 @@ private final class CaptureTickMarksView: UIView {
                 dx: normal.dx / normalLength,
                 dy: normal.dy / normalLength
             )
-            let halfTickLength = Styling.tickLength / 2
+            let halfTickLength = tickLength / 2
             let startPoint = CGPoint(
                 x: tickCenter.x - unitNormal.dx * halfTickLength,
                 y: tickCenter.y - unitNormal.dy * halfTickLength
@@ -833,8 +886,19 @@ private final class CaptureTickMarksView: UIView {
             context.move(to: startPoint)
             context.addLine(to: endPoint)
         }
+    }
 
-        context.strokePath()
+    private func isTickHighlighted(at angle: CGFloat) -> Bool {
+        switch captureGuideHighlight {
+        case .none:
+            return false
+        case .front:
+            return true
+        case .left:
+            return angle > .pi * 0.5 && angle < .pi * 1.5
+        case .right:
+            return angle < .pi * 0.5 || angle > .pi * 1.5
+        }
     }
 
     private func drawCenteredShadow(

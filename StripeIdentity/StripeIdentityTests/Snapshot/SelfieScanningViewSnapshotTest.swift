@@ -60,7 +60,7 @@ final class SelfieScanningViewSnapshotTest: STPSnapshotTestCase {
                     mockCameraSession,
                     showFlashAnimation: false,
                     statusText: nil,
-                    showCaptureGuideShadow: false
+                    captureGuideHighlight: .none
                 ),
                 instructionalText: SelfieScanningViewSnapshotTest.mockText
             )
@@ -74,7 +74,7 @@ final class SelfieScanningViewSnapshotTest: STPSnapshotTestCase {
                     mockSelfieCameraSession,
                     showFlashAnimation: false,
                     statusText: .holdStill,
-                    showCaptureGuideShadow: true
+                    captureGuideHighlight: .front
                 ),
                 instructionalText: SelfieScanningViewSnapshotTest.mockText
             )

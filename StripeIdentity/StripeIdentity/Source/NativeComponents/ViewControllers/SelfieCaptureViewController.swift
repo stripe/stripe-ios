@@ -22,6 +22,10 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     >
     typealias State = SelfieImageScanningSession.State
 
+    private enum Constants {
+        static let captureAcknowledgementDuration: TimeInterval = 0.35
+    }
+
     // MARK: View Models
     override var warningAlertViewModel: WarningAlertViewModel? {
         switch imageScanningSession.state {
@@ -128,7 +132,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                         imageScanningSession.cameraSession,
                         showFlashAnimation: scanningState.frontSamples.count == 1,
                         statusText: statusText(for: scanningState),
-                        showCaptureGuideShadow: isFaceCenteredInCaptureGuide
+                        captureGuideHighlight: currentCaptureGuideHighlight
                     ),
                     instructionalText: instructionalText(for: scanningState),
                     havingTroubleHandler: { [weak self] in
@@ -201,9 +205,9 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
 
     /// This timer will be nil if it's time to take another sample from the camera feed
     private var sampleTimer: Timer?
+    private var captureAcknowledgementTimer: Timer?
 
-    /// Whether the most recent selfie scanner output had a valid centered face.
-    private var isFaceCenteredInCaptureGuide = false
+    private var currentCaptureGuideHighlight: SelfieScanningView.ViewModel.CaptureGuideHighlight = .none
     private var latestScanningState = FaceCaptureScanningState.initialValue()
 
     // MARK: Init
@@ -326,6 +330,11 @@ extension SelfieCaptureViewController {
         sampleTimer = nil
     }
 
+    func stopCaptureAcknowledgementTimer() {
+        captureAcknowledgementTimer?.invalidate()
+        captureAcknowledgementTimer = nil
+    }
+
     func saveDataAndTransitionToNextScreen(
         faceCaptureData: FaceCaptureData
     ) {
@@ -408,7 +417,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
     func imageScanningSessionShouldScanCameraOutput(
         _ scanningSession: SelfieImageScanningSession
     ) -> Bool {
-        return sampleTimer == nil
+        return sampleTimer == nil && captureAcknowledgementTimer == nil
     }
 
     func imageScanningSessionDidUpdate(_ scanningSession: SelfieImageScanningSession) {
@@ -418,7 +427,8 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
     }
 
     func imageScanningSessionDidReset(_ scanningSession: SelfieImageScanningSession) {
-        isFaceCenteredInCaptureGuide = false
+        currentCaptureGuideHighlight = .none
+        stopCaptureAcknowledgementTimer()
         latestScanningState = .initialValue()
         selfieUploader.reset()
     }
@@ -436,7 +446,8 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         _ scanningSession: SelfieImageScanningSession,
         willStartScanningForClassification classification: EmptyClassificationType
     ) {
-        isFaceCenteredInCaptureGuide = false
+        currentCaptureGuideHighlight = .none
+        stopCaptureAcknowledgementTimer()
         latestScanningState = .initialValue()
         // Focus the accessibility VoiceOver back onto the capture view
         UIAccessibility.post(notification: .layoutChanged, argument: self.selfieCaptureView)
@@ -468,6 +479,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
 
     func imageScanningSessionDidStopScanning(_ scanningSession: SelfieImageScanningSession) {
         stopSampleTimer()
+        stopCaptureAcknowledgementTimer()
     }
 
     func imageScanningSessionDidScanImage(
@@ -483,9 +495,10 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         }
 
         guard scannerOutput.isValid else {
-            isFaceCenteredInCaptureGuide = false
+            currentCaptureGuideHighlight = .none
             latestScanningState = scanningState
             scanningSession.updateScanningState(scanningState)
+            updateUI()
             return
         }
 
@@ -530,7 +543,7 @@ extension SelfieCaptureViewController {
         scannerOutput: FaceScannerOutput,
         exifMetadata: CameraExifMetadata?
     ) {
-        isFaceCenteredInCaptureGuide = true
+        currentCaptureGuideHighlight = .front
         var nextState = scanningState
         if scannerOutput.facePose != nil {
             nextState.supportsPoseCapture = true
@@ -559,11 +572,20 @@ extension SelfieCaptureViewController {
         }
 
         nextState.supportsPoseCapture = true
-        nextState.phase = .left
         latestScanningState = nextState
         notifyCaptureAccepted()
-        scanningSession.startTimeoutTimer()
         scanningSession.updateScanningState(nextState)
+        scheduleCaptureAcknowledgement { [weak self, weak scanningSession] in
+            guard let self = self, let scanningSession = scanningSession else {
+                return
+            }
+            var rightPoseState = nextState
+            rightPoseState.phase = .right
+            self.currentCaptureGuideHighlight = .none
+            self.latestScanningState = rightPoseState
+            scanningSession.startTimeoutTimer()
+            scanningSession.updateScanningState(rightPoseState)
+        }
     }
 
     fileprivate func handlePoseCapture(
@@ -575,20 +597,22 @@ extension SelfieCaptureViewController {
         exifMetadata: CameraExifMetadata?
     ) {
         guard let facePose = scannerOutput.facePose else {
-            isFaceCenteredInCaptureGuide = false
+            currentCaptureGuideHighlight = .none
             latestScanningState = scanningState
             scanningSession.updateScanningState(scanningState)
+            updateUI()
             return
         }
 
         guard facePose.direction == expectedPose else {
-            isFaceCenteredInCaptureGuide = false
+            currentCaptureGuideHighlight = .none
             latestScanningState = scanningState
             scanningSession.updateScanningState(scanningState)
+            updateUI()
             return
         }
 
-        isFaceCenteredInCaptureGuide = true
+        currentCaptureGuideHighlight = captureGuideHighlight(for: expectedPose)
         var nextState = scanningState
         let capturedSample = FaceScannerInputOutput(
             image: image,
@@ -602,7 +626,6 @@ extension SelfieCaptureViewController {
             assertionFailure("Front captures should be handled by `handleFrontCapture`")
         case .left:
             nextState.leftSide = capturedSample
-            nextState.phase = .right
         case .right:
             nextState.rightSide = capturedSample
         }
@@ -610,18 +633,56 @@ extension SelfieCaptureViewController {
         scanningSession.stopTimeoutTimer()
         latestScanningState = nextState
         notifyCaptureAccepted()
+        scanningSession.updateScanningState(nextState)
 
         guard nextState.isComplete,
             let faceCaptureData = nextState.captureData()
         else {
-            scanningSession.startTimeoutTimer()
-            startSampleTimer()
-            scanningSession.updateScanningState(nextState)
+            scheduleCaptureAcknowledgement { [weak self, weak scanningSession] in
+                guard let self = self, let scanningSession = scanningSession else {
+                    return
+                }
+                var leftPoseState = nextState
+                leftPoseState.phase = .left
+                self.currentCaptureGuideHighlight = .none
+                self.latestScanningState = leftPoseState
+                scanningSession.startTimeoutTimer()
+                scanningSession.updateScanningState(leftPoseState)
+            }
             return
         }
 
-        selfieUploader.uploadImages(faceCaptureData)
-        saveDataAndTransitionToNextScreen(faceCaptureData: faceCaptureData)
+        scheduleCaptureAcknowledgement { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.selfieUploader.uploadImages(faceCaptureData)
+            self.saveDataAndTransitionToNextScreen(faceCaptureData: faceCaptureData)
+        }
+    }
+
+    fileprivate func scheduleCaptureAcknowledgement(_ block: @escaping () -> Void) {
+        stopCaptureAcknowledgementTimer()
+        captureAcknowledgementTimer = Timer.scheduledTimer(
+            withTimeInterval: Constants.captureAcknowledgementDuration,
+            repeats: false
+        ) { [weak self] _ in
+            self?.captureAcknowledgementTimer = nil
+            block()
+        }
+    }
+
+    fileprivate func captureGuideHighlight(
+        for pose: FaceCapturePose
+    ) -> SelfieScanningView.ViewModel.CaptureGuideHighlight {
+        switch pose {
+        case .front:
+            return .front
+        case .left:
+            return .left
+        case .right:
+            return .right
+        }
     }
 
     fileprivate func notifyCaptureAccepted() {
