@@ -687,7 +687,7 @@ private final class CaptureTickMarksView: UIView {
     struct Styling {
         static let tickCount = 77
         static let tickLength: CGFloat = 10
-        static let highlightedTickLength: CGFloat = 12
+        static let highlightedTickLength: CGFloat = 15
         static let tickWidth: CGFloat = 2
         static let horizontalDiameterToWidthRatio: CGFloat = 0.72
         static let verticalDiameterToHeightRatio: CGFloat = 0.66
