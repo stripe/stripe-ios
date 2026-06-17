@@ -1,5 +1,5 @@
 //
-//  CRSCARFDeclarationViewController.swift
+//  UserAttestationViewController.swift
 //  StripePaymentSheet
 //
 //  Created by Michael Liberatore on 4/23/26.
@@ -8,12 +8,12 @@
 @_spi(STP) import StripeCore
 import UIKit
 
-/// Container view controller that displays the CRS/CARF declaration HTML in a Link-styled bottom sheet.
-final class CRSCARFDeclarationViewController: BottomSheetViewController {
-    private weak var contentViewController: CRSCARFDeclarationContentViewController?
+/// Container view controller that displays the user attestation HTML in a Link-styled bottom sheet.
+final class UserAttestationViewController: BottomSheetViewController {
+    private weak var contentViewController: UserAttestationContentViewController?
 
-    /// Closure called when a user takes action on the declaration.
-    var onResult: ((LinkController.CRSCARFDeclarationResult) -> Void)? {
+    /// Closure called when a user takes action on the attestation.
+    var onResult: ((LinkController.UserAttestationResult) -> Void)? {
         didSet {
             contentViewController?.onResult = onResult
         }
@@ -23,12 +23,12 @@ final class CRSCARFDeclarationViewController: BottomSheetViewController {
         LinkUI.largeCornerRadius
     }
 
-    /// Creates a new instance of `CRSCARFDeclarationViewController`.
+    /// Creates a new instance of `UserAttestationViewController`.
     /// - Parameters:
-    ///   - html: The declaration HTML to display.
+    ///   - html: The attestation HTML to display.
     ///   - appearance: Determines the colors, corner radius, and height of the confirmation button and the user interface style.
     init(html: String, appearance: LinkAppearance, brand: LinkBrand) {
-        let contentViewController = CRSCARFDeclarationContentViewController(html: html, appearance: appearance, brand: brand)
+        let contentViewController = UserAttestationContentViewController(html: html, appearance: appearance, brand: brand)
         self.contentViewController = contentViewController
 
         super.init(
@@ -54,7 +54,7 @@ final class CRSCARFDeclarationViewController: BottomSheetViewController {
     }
 }
 
-extension CRSCARFDeclarationContentViewController: SheetNavigationBarDelegate {
+extension UserAttestationContentViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
         onResult?(.canceled)
     }

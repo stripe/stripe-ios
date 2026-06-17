@@ -775,12 +775,12 @@ extension String.Localized {
         STPLocalizedString("Confirm your information", "Title label for a know-your-customer (KYC) verification screen")
     }
 
-    static var declarations: String {
-        STPLocalizedString("Declarations", "Title label for a screen showing CRS/CARF tax declarations")
+    static var user_attestation: String {
+        STPLocalizedString("Declarations", "Title label for a screen showing user attestation")
     }
 
     static var accept: String {
-        STPLocalizedString("Accept", "Label for a button that confirms the user accepts a declaration")
+        STPLocalizedString("Accept", "Label for a button that confirms the user accepts an attestation")
     }
 
     static var last_4_digits_of_ssn: String {

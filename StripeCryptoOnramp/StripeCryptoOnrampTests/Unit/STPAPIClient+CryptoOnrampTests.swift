@@ -102,7 +102,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         ]
 
         // /v1/crypto/internal/crs_carf_declaration
-        static let crsCarfDeclarationAPIPath = "/v1/crypto/internal/crs_carf_declaration"
+        static let userAttestationAPIPath = "/v1/crypto/internal/crs_carf_declaration"
 
         // /v1/crypto/internal/refresh_consumer_person
         static let refreshKYCInfoAPIPath = "/v1/crypto/internal/refresh_consumer_person"
@@ -559,11 +559,11 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         )
     }
 
-    func testRetrieveCRSCARFDeclarationSuccess() async throws {
-        let mockResponseData = try RetrieveCRSCARFDeclarationResponseMock.retrieveCRSCARFDeclarationResponse_200.data()
+    func testRetrieveUserAttestationSuccess() async throws {
+        let mockResponseData = try RetrieveUserAttestationResponseMock.retrieveUserAttestationResponse_200.data()
 
         stub { request in
-            XCTAssertEqual(request.url?.path, Constant.crsCarfDeclarationAPIPath)
+            XCTAssertEqual(request.url?.path, Constant.userAttestationAPIPath)
             XCTAssertEqual(request.httpMethod, "GET")
 
             guard let queryParametersString = request.url?.query else {
@@ -581,29 +581,29 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         }
 
         let apiClient = stubbedAPIClient()
-        let response = try await apiClient.retrieveCRSCARFDeclaration(linkAccountInfo: Constant.validLinkAccountInfo)
+        let response = try await apiClient.retrieveUserAttestation(linkAccountInfo: Constant.validLinkAccountInfo)
 
         XCTAssertEqual(response.html, "<p>test</p>")
         XCTAssertEqual(response.version, "0")
     }
 
-    func testRetrieveCRSCARFDeclarationThrowsWithInvalidArguments() async {
+    func testRetrieveUserAttestationThrowsWithInvalidArguments() async {
         let apiClient = stubbedAPIClient()
 
         var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
         noSecretLinkAccountInfo.consumerSessionClientSecret = nil
-        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveCRSCARFDeclaration(linkAccountInfo: noSecretLinkAccountInfo))
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveUserAttestation(linkAccountInfo: noSecretLinkAccountInfo))
 
         var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
-        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveCRSCARFDeclaration(linkAccountInfo: unverifiedLinkAccountInfo))
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveUserAttestation(linkAccountInfo: unverifiedLinkAccountInfo))
     }
 
-    func testConfirmCRSCARFDeclarationSuccess() async throws {
-        let mockResponseData = try ConfirmCRSCARFDeclarationResponseMock.confirmCRSCARFDeclarationResponse_200.data()
+    func testConfirmUserAttestationSuccess() async throws {
+        let mockResponseData = try ConfirmUserAttestationResponseMock.confirmUserAttestationResponse_200.data()
 
         stub { request in
-            XCTAssertEqual(request.url?.path, Constant.crsCarfDeclarationAPIPath)
+            XCTAssertEqual(request.url?.path, Constant.userAttestationAPIPath)
             XCTAssertEqual(request.httpMethod, "POST")
 
             guard let httpBody = request.ohhttpStubs_httpBody else {
@@ -622,19 +622,19 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         }
 
         let apiClient = stubbedAPIClient()
-        _ = try await apiClient.confirmCRSCARFDeclaration(linkAccountInfo: Constant.validLinkAccountInfo)
+        _ = try await apiClient.confirmUserAttestation(linkAccountInfo: Constant.validLinkAccountInfo)
     }
 
-    func testConfirmCRSCARFDeclarationThrowsWithInvalidArguments() async {
+    func testConfirmUserAttestationThrowsWithInvalidArguments() async {
         let apiClient = stubbedAPIClient()
 
         var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
         noSecretLinkAccountInfo.consumerSessionClientSecret = nil
-        await XCTAssertThrowsErrorAsync(_ = try await apiClient.confirmCRSCARFDeclaration(linkAccountInfo: noSecretLinkAccountInfo))
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.confirmUserAttestation(linkAccountInfo: noSecretLinkAccountInfo))
 
         var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
-        await XCTAssertThrowsErrorAsync(_ = try await apiClient.confirmCRSCARFDeclaration(linkAccountInfo: unverifiedLinkAccountInfo))
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.confirmUserAttestation(linkAccountInfo: unverifiedLinkAccountInfo))
     }
 
     func testRefreshKycInfoSuccess() async throws {
