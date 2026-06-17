@@ -24,14 +24,10 @@ extension StripeAPI {
         let lastHighResImage: String
         /// File ID of uploaded image for last selfie frame. This will be un-cropped.
         let lastLowResImage: String
-        /// File ID of uploaded image for left side selfie frame. This will be cropped to the bounds of the face in the image.
-        let leftHighResImage: String?
-        /// File ID of uploaded image for left side selfie frame. This will be un-cropped.
-        let leftLowResImage: String?
-        /// File ID of uploaded image for right side selfie frame. This will be cropped to the bounds of the face in the image.
-        let rightHighResImage: String?
-        /// File ID of uploaded image for right side selfie frame. This will be un-cropped.
-        let rightLowResImage: String?
+        /// File ID of uploaded full-frame image for left side selfie frame.
+        let leftFullFrame: String?
+        /// File ID of uploaded full-frame image for right side selfie frame.
+        let rightFullFrame: String?
         /// FaceDetector score for the best selfie frame.
         let bestFaceScore: TwoDecimalFloat
         /// Variance of the FaceDetector scores over all selfie frames.
@@ -51,7 +47,11 @@ extension StripeAPI {
         /// If the best selfie frame was taken by a virtual camera.
         let bestIsVirtualCamera: Bool?
         /// Capture metadata for the accepted selfie frames.
-        let captureFrames: [VerificationPageDataFaceCaptureFrame]?
+        let bestFrameData: VerificationPageDataFaceFrameData?
+        let firstFrameData: VerificationPageDataFaceFrameData?
+        let lastFrameData: VerificationPageDataFaceFrameData?
+        let leftFrameData: VerificationPageDataFaceFrameData?
+        let rightFrameData: VerificationPageDataFaceFrameData?
         /// Whether the user consents for their selfie to be used for training purposes
         let trainingConsent: Bool
 
@@ -62,10 +62,8 @@ extension StripeAPI {
             firstLowResImage: String,
             lastHighResImage: String,
             lastLowResImage: String,
-            leftHighResImage: String? = nil,
-            leftLowResImage: String? = nil,
-            rightHighResImage: String? = nil,
-            rightLowResImage: String? = nil,
+            leftFullFrame: String? = nil,
+            rightFullFrame: String? = nil,
             bestFaceScore: TwoDecimalFloat,
             faceScoreVariance: TwoDecimalFloat,
             numFrames: Int,
@@ -75,7 +73,11 @@ extension StripeAPI {
             bestExposureIso: TwoDecimalFloat?,
             bestFocalLength: TwoDecimalFloat?,
             bestIsVirtualCamera: Bool?,
-            captureFrames: [VerificationPageDataFaceCaptureFrame]? = nil,
+            bestFrameData: VerificationPageDataFaceFrameData? = nil,
+            firstFrameData: VerificationPageDataFaceFrameData? = nil,
+            lastFrameData: VerificationPageDataFaceFrameData? = nil,
+            leftFrameData: VerificationPageDataFaceFrameData? = nil,
+            rightFrameData: VerificationPageDataFaceFrameData? = nil,
             trainingConsent: Bool
         ) {
             self.bestHighResImage = bestHighResImage
@@ -84,10 +86,8 @@ extension StripeAPI {
             self.firstLowResImage = firstLowResImage
             self.lastHighResImage = lastHighResImage
             self.lastLowResImage = lastLowResImage
-            self.leftHighResImage = leftHighResImage
-            self.leftLowResImage = leftLowResImage
-            self.rightHighResImage = rightHighResImage
-            self.rightLowResImage = rightLowResImage
+            self.leftFullFrame = leftFullFrame
+            self.rightFullFrame = rightFullFrame
             self.bestFaceScore = bestFaceScore
             self.faceScoreVariance = faceScoreVariance
             self.numFrames = numFrames
@@ -97,16 +97,28 @@ extension StripeAPI {
             self.bestExposureIso = bestExposureIso
             self.bestFocalLength = bestFocalLength
             self.bestIsVirtualCamera = bestIsVirtualCamera
-            self.captureFrames = captureFrames
+            self.bestFrameData = bestFrameData
+            self.firstFrameData = firstFrameData
+            self.lastFrameData = lastFrameData
+            self.leftFrameData = leftFrameData
+            self.rightFrameData = rightFrameData
             self.trainingConsent = trainingConsent
         }
     }
 
-    struct VerificationPageDataFaceCaptureFrame: Encodable, Equatable {
-        let pose: String
-        let faceScore: TwoDecimalFloat
+    struct VerificationPageDataFaceFrameData: Encodable, Equatable {
+        let faceScore: TwoDecimalFloat?
+        let faceScoreVariance: TwoDecimalFloat?
+        let blurScore: TwoDecimalFloat?
+        let blurScoreVariance: TwoDecimalFloat?
         let yaw: TwoDecimalFloat?
         let pitch: TwoDecimalFloat?
         let roll: TwoDecimalFloat?
+        let bbox: [Int]?
+        let inputSize: [Int]?
+        let faceLandmarkResult: String?
+        let capturedAt: Int?
+        let captureOrder: Int?
+        let cameraInfo: String?
     }
 }

@@ -387,6 +387,41 @@ extension SelfieCaptureViewController {
             return SelfieCaptureViewController.lookRightInstructionText
         }
     }
+
+    var poseCaptureSequence: [FaceCapturePose] {
+        let apiSequence = apiConfig.poseSequence?
+            .compactMap { FaceCapturePose(rawValue: $0) }
+            .filter { $0 != .front } ?? []
+        return apiSequence.isEmpty ? [.right, .left] : apiSequence
+    }
+
+    func nextPose(
+        after scanningState: FaceCaptureScanningState
+    ) -> FaceCapturePose? {
+        return poseCaptureSequence.first { pose in
+            switch pose {
+            case .front:
+                return false
+            case .left:
+                return scanningState.leftSide == nil
+            case .right:
+                return scanningState.rightSide == nil
+            }
+        }
+    }
+
+    func scanningPhase(
+        for pose: FaceCapturePose
+    ) -> FaceCaptureScanningState.Phase {
+        switch pose {
+        case .front:
+            return .front
+        case .left:
+            return .left
+        case .right:
+            return .right
+        }
+    }
 }
 
 // MARK: - ImageScanningSessionDelegate
@@ -585,6 +620,13 @@ extension SelfieCaptureViewController {
             return
         }
 
+        guard let firstPose = nextPose(after: nextState) else {
+            latestScanningState = nextState
+            notifyCaptureAccepted()
+            uploadAndSave(faceCaptureData: faceCaptureData)
+            return
+        }
+
         nextState.supportsPoseCapture = true
         latestScanningState = nextState
         notifyCaptureAccepted()
@@ -593,12 +635,12 @@ extension SelfieCaptureViewController {
             guard let self = self, let scanningSession = scanningSession else {
                 return
             }
-            var rightPoseState = nextState
-            rightPoseState.phase = .right
+            var nextPoseState = nextState
+            nextPoseState.phase = self.scanningPhase(for: firstPose)
             self.currentCaptureGuideHighlight = .none
-            self.latestScanningState = rightPoseState
+            self.latestScanningState = nextPoseState
             scanningSession.startTimeoutTimer()
-            scanningSession.updateScanningState(rightPoseState)
+            scanningSession.updateScanningState(nextPoseState)
         }
     }
 
@@ -649,20 +691,26 @@ extension SelfieCaptureViewController {
         notifyCaptureAccepted()
         scanningSession.updateScanningState(nextState)
 
-        guard nextState.isComplete,
-            let faceCaptureData = nextState.captureData()
-        else {
+        if let nextPose = nextPose(after: nextState) {
             scheduleCaptureAcknowledgement { [weak self, weak scanningSession] in
                 guard let self = self, let scanningSession = scanningSession else {
                     return
                 }
-                var leftPoseState = nextState
-                leftPoseState.phase = .left
+                var nextPoseState = nextState
+                nextPoseState.phase = self.scanningPhase(for: nextPose)
                 self.currentCaptureGuideHighlight = .none
-                self.latestScanningState = leftPoseState
+                self.latestScanningState = nextPoseState
                 scanningSession.startTimeoutTimer()
-                scanningSession.updateScanningState(leftPoseState)
+                scanningSession.updateScanningState(nextPoseState)
             }
+            return
+        }
+
+        guard let faceCaptureData = FaceCaptureData(
+            samples: nextState.frontSamples,
+            leftSide: nextState.leftSide,
+            rightSide: nextState.rightSide
+        ) else {
             return
         }
 

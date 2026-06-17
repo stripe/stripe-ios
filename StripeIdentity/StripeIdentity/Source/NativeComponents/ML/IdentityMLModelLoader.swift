@@ -196,7 +196,9 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
                     FaceScanner(
                         faceDetectorModel: faceDetectorModel,
                         configuration: .init(from: selfiePageConfig),
-                        facePoseDetector: FacePoseDetectorFactory.makeDefaultDetector()
+                        facePoseDetector: selfiePageConfig.enable3DFaceCapture
+                            ? FacePoseDetectorFactory.makeDefaultDetector()
+                            : nil
                     )
                 )
             )

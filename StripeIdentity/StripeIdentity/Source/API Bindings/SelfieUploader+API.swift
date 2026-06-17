@@ -40,10 +40,8 @@ extension StripeAPI.VerificationPageDataFace {
             firstLowResImage: uploadedFiles.firstLowResFile.id,
             lastHighResImage: uploadedFiles.lastHighResFile.id,
             lastLowResImage: uploadedFiles.lastLowResFile.id,
-            leftHighResImage: uploadedFiles.leftHighResFile?.id,
-            leftLowResImage: uploadedFiles.leftLowResFile?.id,
-            rightHighResImage: uploadedFiles.rightHighResFile?.id,
-            rightLowResImage: uploadedFiles.rightLowResFile?.id,
+            leftFullFrame: uploadedFiles.leftFullFrameFile?.id,
+            rightFullFrame: uploadedFiles.rightFullFrameFile?.id,
             bestFaceScore: .init(capturedImages.bestMiddle.scannerOutput.faceScore),
             faceScoreVariance: .init(capturedImages.faceScoreVariance),
             numFrames: capturedImages.numSamples,
@@ -68,9 +66,23 @@ extension StripeAPI.VerificationPageDataFace {
             },
             bestIsVirtualCamera: capturedImages.bestMiddle.scannerOutput.cameraProperties?
                 .isVirtualDevice,
-            captureFrames: capturedImages.shouldIncludeCaptureFrameMetadata
-                ? capturedImages.toArray.map {
-                    StripeAPI.VerificationPageDataFaceCaptureFrame(capturedImage: $0)
+            bestFrameData: capturedImages.shouldIncludeCaptureFrameMetadata
+                ? .init(capturedImage: capturedImages.bestMiddle, faceScoreVariance: capturedImages.faceScoreVariance)
+                : nil,
+            firstFrameData: capturedImages.shouldIncludeCaptureFrameMetadata
+                ? .init(capturedImage: capturedImages.first, faceScoreVariance: capturedImages.faceScoreVariance)
+                : nil,
+            lastFrameData: capturedImages.shouldIncludeCaptureFrameMetadata
+                ? .init(capturedImage: capturedImages.last, faceScoreVariance: capturedImages.faceScoreVariance)
+                : nil,
+            leftFrameData: capturedImages.shouldIncludeCaptureFrameMetadata
+                ? capturedImages.leftSide.map {
+                    .init(capturedImage: $0, faceScoreVariance: capturedImages.faceScoreVariance)
+                }
+                : nil,
+            rightFrameData: capturedImages.shouldIncludeCaptureFrameMetadata
+                ? capturedImages.rightSide.map {
+                    .init(capturedImage: $0, faceScoreVariance: capturedImages.faceScoreVariance)
                 }
                 : nil,
             trainingConsent: trainingConsent
@@ -86,14 +98,34 @@ private extension FaceCaptureData {
     }
 }
 
-extension StripeAPI.VerificationPageDataFaceCaptureFrame {
-    init(capturedImage: FaceScannerInputOutput) {
+extension StripeAPI.VerificationPageDataFaceFrameData {
+    init(
+        capturedImage: FaceScannerInputOutput,
+        faceScoreVariance: Float
+    ) {
+        let faceRect = capturedImage.scannerOutput.faceRect
+        let imageWidth = CGFloat(capturedImage.image.width)
+        let imageHeight = CGFloat(capturedImage.image.height)
+
         self.init(
-            pose: capturedImage.capturePose.rawValue,
             faceScore: .init(capturedImage.scannerOutput.faceScore),
+            faceScoreVariance: .init(faceScoreVariance),
+            blurScore: nil,
+            blurScoreVariance: nil,
             yaw: capturedImage.scannerOutput.facePose.map { .init($0.yaw) },
             pitch: capturedImage.scannerOutput.facePose.map { .init($0.pitch) },
-            roll: capturedImage.scannerOutput.facePose.map { .init($0.roll) }
+            roll: capturedImage.scannerOutput.facePose.map { .init($0.roll) },
+            bbox: [
+                Int(faceRect.minX * imageWidth),
+                Int(faceRect.minY * imageHeight),
+                Int(faceRect.width * imageWidth),
+                Int(faceRect.height * imageHeight),
+            ],
+            inputSize: nil,
+            faceLandmarkResult: nil,
+            capturedAt: nil,
+            captureOrder: nil,
+            cameraInfo: nil
         )
     }
 }

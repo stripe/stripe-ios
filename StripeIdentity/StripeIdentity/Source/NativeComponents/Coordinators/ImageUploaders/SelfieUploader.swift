@@ -31,10 +31,8 @@ final class SelfieUploader: SelfieUploaderProtocol {
         let firstLowResFile: StripeFile
         let lastHighResFile: StripeFile
         let lastLowResFile: StripeFile
-        let leftHighResFile: StripeFile?
-        let leftLowResFile: StripeFile?
-        let rightHighResFile: StripeFile?
-        let rightLowResFile: StripeFile?
+        let leftFullFrameFile: StripeFile?
+        let rightFullFrameFile: StripeFile?
 
         init(
             bestHighResFile: StripeFile,
@@ -43,10 +41,8 @@ final class SelfieUploader: SelfieUploaderProtocol {
             firstLowResFile: StripeFile,
             lastHighResFile: StripeFile,
             lastLowResFile: StripeFile,
-            leftHighResFile: StripeFile? = nil,
-            leftLowResFile: StripeFile? = nil,
-            rightHighResFile: StripeFile? = nil,
-            rightLowResFile: StripeFile? = nil
+            leftFullFrameFile: StripeFile? = nil,
+            rightFullFrameFile: StripeFile? = nil
         ) {
             self.bestHighResFile = bestHighResFile
             self.bestLowResFile = bestLowResFile
@@ -54,10 +50,8 @@ final class SelfieUploader: SelfieUploaderProtocol {
             self.firstLowResFile = firstLowResFile
             self.lastHighResFile = lastHighResFile
             self.lastLowResFile = lastLowResFile
-            self.leftHighResFile = leftHighResFile
-            self.leftLowResFile = leftLowResFile
-            self.rightHighResFile = rightHighResFile
-            self.rightLowResFile = rightLowResFile
+            self.leftFullFrameFile = leftFullFrameFile
+            self.rightFullFrameFile = rightFullFrameFile
         }
     }
 
@@ -80,14 +74,14 @@ final class SelfieUploader: SelfieUploaderProtocol {
         let bestUploadFuture = uploadImages(capturedImages.bestMiddle, ofType: .best)
         let firstUploadFuture = uploadImages(capturedImages.first, ofType: .first)
         let lastUploadFuture = uploadImages(capturedImages.last, ofType: .last)
-        let leftUploadFuture = capturedImages.leftSide.map { uploadImages($0, ofType: .left) }
-        let rightUploadFuture = capturedImages.rightSide.map { uploadImages($0, ofType: .right) }
+        let leftUploadFuture = capturedImages.leftSide.map { uploadFullFrameImage($0, ofType: .left) }
+        let rightUploadFuture = capturedImages.rightSide.map { uploadFullFrameImage($0, ofType: .right) }
 
         uploadFuture = bestUploadFuture.chained { bestFiles in
             return firstUploadFuture.chained { firstFiles in
                 return lastUploadFuture.chained { lastFiles in
-                    return Self.uploadedOptionalFiles(from: leftUploadFuture).chained { leftFiles in
-                        return Self.uploadedOptionalFiles(from: rightUploadFuture).chained { rightFiles in
+                    return Self.uploadedOptionalFile(from: leftUploadFuture).chained { leftFile in
+                        return Self.uploadedOptionalFile(from: rightUploadFuture).chained { rightFile in
                             return Promise(
                                 value: FileData(
                                     bestHighResFile: bestFiles.highRes,
@@ -96,10 +90,8 @@ final class SelfieUploader: SelfieUploaderProtocol {
                                     firstLowResFile: firstFiles.lowRes,
                                     lastHighResFile: lastFiles.highRes,
                                     lastLowResFile: lastFiles.lowRes,
-                                    leftHighResFile: leftFiles?.highRes,
-                                    leftLowResFile: leftFiles?.lowRes,
-                                    rightHighResFile: rightFiles?.highRes,
-                                    rightLowResFile: rightFiles?.lowRes
+                                    leftFullFrameFile: leftFile,
+                                    rightFullFrameFile: rightFile
                                 )
                             )
                         }
@@ -109,15 +101,15 @@ final class SelfieUploader: SelfieUploaderProtocol {
         }
     }
 
-    static func uploadedOptionalFiles(
-        from future: Future<IdentityImageUploader.LowHighResFiles>?
-    ) -> Future<IdentityImageUploader.LowHighResFiles?> {
+    static func uploadedOptionalFile(
+        from future: Future<StripeFile>?
+    ) -> Future<StripeFile?> {
         guard let future else {
             return Promise(value: nil)
         }
 
-        return future.chained { files in
-            return Promise(value: files)
+        return future.chained { file in
+            return Promise(value: file)
         }
     }
 
@@ -138,6 +130,20 @@ final class SelfieUploader: SelfieUploaderProtocol {
                 with: imageUploader.apiClient.verificationSessionId,
                 for: type,
                 resolution: .high
+            )
+        )
+    }
+
+    func uploadFullFrameImage(
+        _ capturedImage: FaceScannerInputOutput,
+        ofType type: ImageType
+    ) -> Future<StripeFile> {
+        return imageUploader.uploadLowResImage(
+            capturedImage.image,
+            fileName: SelfieUploader.fileName(
+                with: imageUploader.apiClient.verificationSessionId,
+                for: type,
+                resolution: .low
             )
         )
     }
