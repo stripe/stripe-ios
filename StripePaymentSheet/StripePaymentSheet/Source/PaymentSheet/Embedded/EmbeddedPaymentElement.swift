@@ -173,7 +173,9 @@ public final class EmbeddedPaymentElement {
         checkout: Checkout
     ) async -> UpdateResult {
         do {
-            try await checkout.awaitPendingOperations()
+            // Exclude the last pending operation (the current mutation that triggered
+            // this update) to avoid deadlocking on ourselves.
+            try await checkout.awaitPendingOperations(excludingCurrent: true)
         } catch {
             return .failed(error: error)
         }

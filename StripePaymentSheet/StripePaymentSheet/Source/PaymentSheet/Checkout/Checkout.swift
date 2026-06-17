@@ -148,9 +148,13 @@ public final class Checkout: ObservableObject {
     ///
     /// - Parameter timeout: Maximum time to wait, in seconds.
     func awaitPendingOperations(
-        timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout
+        timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout,
+        excludingCurrent: Bool = false
     ) async throws {
-        let snapshot = pendingOperations
+        var snapshot = pendingOperations
+        if excludingCurrent {
+            snapshot = Array(snapshot.dropLast(1))
+        }
         guard !snapshot.isEmpty else { return }
 
         let result = await withTimeout(timeout) {
