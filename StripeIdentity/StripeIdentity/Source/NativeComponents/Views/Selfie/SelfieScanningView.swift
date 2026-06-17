@@ -112,7 +112,7 @@ final class SelfieScanningView: UIView {
                     )
                 case .uploading:
                     return STPLocalizedString(
-                        "Great! Checking your scan...",
+                        "Great! Checking your images....",
                         "Status text displayed over the blurred selfie while checking uploaded selfie images"
                     )
                 }
