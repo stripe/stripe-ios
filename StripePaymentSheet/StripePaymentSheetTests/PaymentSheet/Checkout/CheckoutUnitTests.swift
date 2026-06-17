@@ -455,6 +455,12 @@ final class CheckoutUnitTests: XCTestCase {
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
 
+        // Set a billing address that should survive both session swaps
+        checkout.stpSession.billingAddress = Checkout.ContactAddress(
+            name: "Jane Doe",
+            address: .init(country: "US")
+        )
+
         // First update
         var firstResponse = CheckoutTestHelpers.makeOpenSessionJSON()
         firstResponse["status"] = "complete"
@@ -463,15 +469,17 @@ final class CheckoutUnitTests: XCTestCase {
 
         try await checkout.updateSession(firstConfirm)
         XCTAssertEqual(checkout.state.session.status?.type, .complete)
+        XCTAssertEqual(checkout.state.session.billingAddress?.name, "Jane Doe")
 
-        // Second update still works on the same Checkout instance
+        // Second update
         var secondResponse = CheckoutTestHelpers.makeOpenSessionJSON()
-        secondResponse["status"] = "complete"
-        secondResponse["payment_status"] = "paid"
-        let secondConfirm = STPCheckoutSession.decodedObject(fromAPIResponse: secondResponse)!
+        secondResponse["status"] = "open"
+        let secondSession = STPCheckoutSession.decodedObject(fromAPIResponse: secondResponse)!
 
-        try await checkout.updateSession(secondConfirm)
-        XCTAssertEqual(checkout.state.session.status?.type, .complete)
+        try await checkout.updateSession(secondSession)
+        XCTAssertEqual(checkout.state.session.status?.type, .open)
+        XCTAssertEqual(checkout.state.session.billingAddress?.name, "Jane Doe")
+        XCTAssertEqual(delegate.changeStateCallCount, 2)
     }
 
     // MARK: - State Convenience Tests
@@ -526,7 +534,8 @@ final class CheckoutUnitTests: XCTestCase {
         integrationDelegate.onUpdate = { callOrder.append("integration") }
         checkout.integrationDelegate = integrationDelegate
 
-        let delegate = OrderTrackingCheckoutDelegate { callOrder.append("regular") }
+        let delegate = MockCheckoutDelegate()
+        delegate.onChangeState = { callOrder.append("regular") }
         checkout.delegate = delegate
 
         var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
@@ -578,10 +587,14 @@ final class CheckoutUnitTests: XCTestCase {
 private class MockCheckoutDelegate: CheckoutDelegate {
     var didChangeStateCalled = false
     var lastState: Checkout.State?
+    var changeStateCallCount = 0
+    var onChangeState: (() -> Void)?
 
     func checkout(_ checkout: Checkout, didChangeState state: Checkout.State) {
         didChangeStateCalled = true
+        changeStateCallCount += 1
         lastState = state
+        onChangeState?()
     }
 }
 
@@ -598,18 +611,5 @@ private class MockCheckoutIntegrationDelegate: CheckoutIntegrationDelegate {
         lastCheckout = checkout
         onUpdate?()
         if let error = shouldThrow { throw error }
-    }
-}
-
-@MainActor
-private class OrderTrackingCheckoutDelegate: CheckoutDelegate {
-    let onChangeState: () -> Void
-
-    init(onChangeState: @escaping () -> Void) {
-        self.onChangeState = onChangeState
-    }
-
-    func checkout(_ checkout: Checkout, didChangeState state: Checkout.State) {
-        onChangeState()
     }
 }

@@ -478,7 +478,7 @@ extension EmbeddedPaymentElement: CheckoutIntegrationDelegate {
     }
 
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
-        let result = await performUpdate(mode: .checkout(checkout))
+        let result = await update(checkout: checkout)
         switch result {
         case .succeeded, .canceled:
             break
