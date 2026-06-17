@@ -242,17 +242,14 @@ public final class Checkout: ObservableObject {
         guard currentSession.billingAddress != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "billing") {
             try await enqueueSessionUpdate {
-                try await self.performAPIUpdate(.setTaxRegion(address), applyOverrides: { session in
-                    // Set the local address override on the refreshed session after a successful API call.
-                    session.billingAddress = contactAddress
-                })
+                self.stpSession?.billingAddress = contactAddress
+                try await self.performAPIUpdate(.setTaxRegion(address))
             }
         } else {
-            try await enqueueSessionUpdate { @MainActor in
+            try await enqueueSessionUpdate {
+                self.stpSession?.billingAddress = contactAddress
                 guard let session = self.stpSession else { return }
-                session.billingAddress = contactAddress
-                self.setSession(session)
-                self.delegate?.checkout(self, didChangeState: self.state)
+                try await self.updateSession(session)
             }
         }
     }
@@ -281,17 +278,14 @@ public final class Checkout: ObservableObject {
         guard currentSession.shippingAddress != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "shipping") {
             try await enqueueSessionUpdate {
-                try await self.performAPIUpdate(.setTaxRegion(address), applyOverrides: { session in
-                    // Set the local address override on the refreshed session after a successful API call.
-                    session.shippingAddress = contactAddress
-                })
+                self.stpSession?.shippingAddress = contactAddress
+                try await self.performAPIUpdate(.setTaxRegion(address))
             }
         } else {
-            try await enqueueSessionUpdate { @MainActor in
+            try await enqueueSessionUpdate {
+                self.stpSession?.shippingAddress = contactAddress
                 guard let session = self.stpSession else { return }
-                session.shippingAddress = contactAddress
-                self.setSession(session)
-                self.delegate?.checkout(self, didChangeState: self.state)
+                try await self.updateSession(session)
             }
         }
     }

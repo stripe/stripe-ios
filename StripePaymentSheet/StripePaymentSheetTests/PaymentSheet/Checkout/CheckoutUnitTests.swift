@@ -505,16 +505,17 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(integrationDelegate.lastCheckout === checkout)
     }
 
-    func testCheckoutDidUpdateNotCalledWhenSessionUnchanged() async throws {
+    func testCheckoutDidUpdateCalledEvenWhenSessionUnchanged() async throws {
         let checkout = await makeCheckoutWithOpenSession()
         let integrationDelegate = MockCheckoutIntegrationDelegate()
         checkout.integrationDelegate = integrationDelegate
 
-        // Update with same session — no change
+        // Update with same session data — delegates still fire because the caller
+        // decided an update occurred (e.g. after an API call).
         let sameSession = STPCheckoutSession.decodedObject(fromAPIResponse: CheckoutTestHelpers.makeOpenSessionJSON())!
         try await checkout.updateSession(sameSession)
 
-        XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 0)
+        XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 1)
     }
 
     func testCheckoutDidUpdateCalledBeforeRegularDelegate() async throws {
