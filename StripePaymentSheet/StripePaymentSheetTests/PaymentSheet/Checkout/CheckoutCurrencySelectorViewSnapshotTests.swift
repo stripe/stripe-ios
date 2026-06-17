@@ -131,6 +131,18 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         verify(view)
     }
 
+    func testDetailExpanded_localCurrencySelected() async {
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp")
+        expandDetail(in: view)
+        verify(view)
+    }
+
+    func testDetailExpanded_darkMode() async {
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp")
+        expandDetail(in: view)
+        verify(view, darkMode: true)
+    }
+
     func testFullyCustomized() async {
         var appearance = Checkout.CurrencySelectorView.Appearance()
         appearance.contentVerticalPadding = 9
@@ -185,6 +197,16 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         window.layoutIfNeeded()
 
         STPSnapshotVerifyView(view, file: file, line: line)
+    }
+
+    @MainActor
+    private func expandDetail(in view: Checkout.CurrencySelectorView) {
+        let selectorView = view.subviews
+            .compactMap { ($0 as? UIStackView)?.arrangedSubviews.compactMap { $0 as? TwoOptionSelectorView }.first }
+            .first
+        selectorView?.toggleDetail()
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
     }
 
     @MainActor

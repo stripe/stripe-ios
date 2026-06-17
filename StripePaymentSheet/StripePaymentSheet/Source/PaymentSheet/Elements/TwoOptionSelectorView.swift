@@ -4,6 +4,7 @@
 //
 //  Created by Nick Porter on 3/20/26.
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -67,7 +68,19 @@ final class TwoOptionSelectorView: UIView {
     private let trackView = UIView()
     private let buttonsStackView = UIStackView()
     private let selectionIndicatorView = UIView()
-    private(set) var captionLabel = UILabel()
+    private(set) var captionLabel = TappableAttributedLabel()
+    private var detailText: String?
+    private var currentCaption: String?
+    private var isDetailExpanded = false
+    private var detailHeightConstraint: NSLayoutConstraint?
+    private let detailLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.isHidden = true
+        label.alpha = 0
+        label.clipsToBounds = true
+        return label
+    }()
     private var leftButton = UIButton(type: .custom)
     private var rightButton = UIButton(type: .custom)
 
@@ -165,6 +178,12 @@ final class TwoOptionSelectorView: UIView {
         captionLabel.numberOfLines = 0
         captionLabel.isHidden = true
         mainStackView.addArrangedSubview(captionLabel)
+
+        detailLabel.font = appearance.scaledFont(for: appearance.font, style: .caption1)
+        detailLabel.textColor = appearance.captionColor
+        mainStackView.addArrangedSubview(detailLabel)
+        detailHeightConstraint = detailLabel.heightAnchor.constraint(equalToConstant: 0)
+        detailHeightConstraint?.isActive = true
 
         NSLayoutConstraint.activate([
             mainStackView.topAnchor.constraint(equalTo: topAnchor),
@@ -267,14 +286,140 @@ final class TwoOptionSelectorView: UIView {
 
     // MARK: - Caption
 
-    func updateCaption(_ caption: String?) {
-        if let caption, !caption.isEmpty {
-            captionLabel.text = caption
-            captionLabel.isHidden = false
-        } else {
-            captionLabel.text = nil
+    func updateCaption(_ caption: String?, detailText: String? = nil) {
+        self.currentCaption = caption
+        self.detailText = detailText
+
+        guard let caption, !caption.isEmpty else {
             captionLabel.isHidden = true
+            detailLabel.text = nil
+            collapseDetail()
+            return
         }
+
+        captionLabel.isHidden = false
+
+        if let detailText, !detailText.isEmpty {
+            rebuildCaptionWithToggle()
+            detailLabel.text = detailText
+        } else {
+            captionLabel.setText(
+                caption,
+                baseFont: appearance.scaledFont(for: appearance.font, style: .caption1),
+                baseColor: appearance.captionColor,
+                highlights: []
+            )
+            detailLabel.text = nil
+            collapseDetail()
+        }
+    }
+
+    private func rebuildCaptionWithToggle() {
+        guard let caption = currentCaption else { return }
+        let toggleText = isDetailExpanded ? String.Localized.hideDetails : String.Localized.showDetails
+        let fullText = "\(caption) \(toggleText)"
+        let baseFont = appearance.scaledFont(for: appearance.font, style: .caption1)
+
+        captionLabel.setText(
+            fullText,
+            baseFont: baseFont,
+            baseColor: appearance.captionColor,
+            highlights: [
+                TappableAttributedLabel.TappableHighlight(
+                    text: toggleText,
+                    font: nil,
+                    color: nil,
+                    action: { [weak self] in self?.toggleDetail() }
+                ),
+            ]
+        )
+
+        guard let attrText = captionLabel.attributedText else { return }
+        let mutable = NSMutableAttributedString(attributedString: attrText)
+        let range = (fullText as NSString).range(of: toggleText)
+        if range.location != NSNotFound {
+            mutable.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range)
+        }
+        captionLabel.attributedText = mutable
+    }
+
+    func toggleDetail() {
+        guard let detailText, !detailText.isEmpty else { return }
+        isDetailExpanded.toggle()
+        rebuildCaptionWithToggle()
+
+        let layoutContainer = layoutAnimationContainer()
+        let targetDetailHeight = expandedDetailHeight()
+
+        if isDetailExpanded {
+            detailHeightConstraint?.isActive = true
+            detailHeightConstraint?.constant = 0
+            detailLabel.setHiddenIfNecessary(false)
+            detailLabel.alpha = 0
+            invalidateIntrinsicContentSizeUpHierarchy()
+            layoutContainer.layoutIfNeeded()
+        } else {
+            detailHeightConstraint?.isActive = true
+            detailHeightConstraint?.constant = detailLabel.bounds.height
+            invalidateIntrinsicContentSizeUpHierarchy()
+            layoutContainer.layoutIfNeeded()
+        }
+
+        UIView.animate(
+            withDuration: 0.35,
+            delay: 0,
+            usingSpringWithDamping: 0.9,
+            initialSpringVelocity: 0,
+            options: .curveEaseInOut
+        ) {
+            self.detailHeightConstraint?.constant = self.isDetailExpanded ? targetDetailHeight : 0
+            self.detailLabel.alpha = self.isDetailExpanded ? 1.0 : 0.0
+            self.invalidateIntrinsicContentSizeUpHierarchy()
+            layoutContainer.layoutIfNeeded()
+        } completion: { _ in
+            if self.isDetailExpanded {
+                self.detailHeightConstraint?.isActive = false
+            } else {
+                self.detailLabel.setHiddenIfNecessary(true)
+            }
+            self.invalidateIntrinsicContentSizeUpHierarchy()
+            UIAccessibility.post(notification: .layoutChanged, argument: self.captionLabel)
+        }
+    }
+
+    private func collapseDetail() {
+        guard isDetailExpanded || !detailLabel.isHidden else { return }
+        isDetailExpanded = false
+        detailHeightConstraint?.isActive = true
+        detailHeightConstraint?.constant = 0
+        detailLabel.setHiddenIfNecessary(true)
+        detailLabel.alpha = 0
+        invalidateIntrinsicContentSizeUpHierarchy()
+    }
+
+    private func expandedDetailHeight() -> CGFloat {
+        let fittingWidth = max(detailLabel.bounds.width, bounds.width)
+        guard fittingWidth > 0 else {
+            return detailLabel.intrinsicContentSize.height
+        }
+        return ceil(detailLabel.sizeThatFits(CGSize(width: fittingWidth, height: .greatestFiniteMagnitude)).height)
+    }
+
+    private func invalidateIntrinsicContentSizeUpHierarchy() {
+        var view: UIView? = self
+        while let currentView = view {
+            currentView.invalidateIntrinsicContentSize()
+            currentView.setNeedsLayout()
+            view = currentView.superview
+        }
+    }
+
+    private func layoutAnimationContainer() -> UIView {
+        var container: UIView = self
+        while let superview = container.superview, !(superview is UIWindow) {
+            container = superview
+        }
+        return container
     }
 
     // MARK: - Selection
