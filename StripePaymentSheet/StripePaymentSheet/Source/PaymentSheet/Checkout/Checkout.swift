@@ -146,7 +146,9 @@ public final class Checkout: ObservableObject {
     /// - If any pending operation throws, the first such error is rethrown.
     /// - If the wait exceeds `timeout`, throws ``CheckoutError.timedOut``.
     ///
-    /// - Parameter timeout: Maximum time to wait, in seconds.
+    /// - Parameters:
+    ///   - timeout: Maximum time to wait, in seconds.
+    ///   - excludingCurrent: If true, excludes the last enqueued operation from the wait.
     func awaitPendingOperations(
         timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout,
         excludingCurrent: Bool = false
