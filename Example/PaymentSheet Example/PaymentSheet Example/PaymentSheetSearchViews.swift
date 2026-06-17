@@ -81,6 +81,7 @@ private func pickerEnumMatchesSearch<S: PickerEnum>(_ enumType: S.Type, searchTe
 struct SearchableSettingView<S: PickerEnum>: View {
     var setting: Binding<S>
     var title: String?
+    var disabledSettings: [S] = []
     @Binding var searchText: String
 
     private var isVisible: Bool {
@@ -93,7 +94,7 @@ struct SearchableSettingView<S: PickerEnum>: View {
     var body: some View {
         Group {
             if isVisible {
-                SettingView(setting: setting, title: title)
+                SettingView(setting: setting, title: title, disabledSettings: disabledSettings)
             }
         }
         .preference(key: VisibleSettingsCountKey.self, value: isVisible ? 1 : 0)

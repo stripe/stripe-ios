@@ -466,11 +466,11 @@ extension RowButton {
                     return String.Localized.buy_now_or_pay_later_with_klarna
                 case .stripe(.afterpayClearpay):
                     if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
-                        return String.Localized.buy_now_or_pay_later_with_clearpay
+                        return String.Localized.buy_now_pay_later_with_clearpay
                     } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
-                        return String.Localized.buy_now_or_pay_later_with_cash_app_afterpay
+                        return String.Localized.buy_now_pay_later_with_cash_app_afterpay
                     } else {
-                        return String.Localized.buy_now_or_pay_later_with_afterpay
+                        return String.Localized.buy_now_pay_later_with_afterpay
                     }
                 case .stripe(.affirm):
                     return String.Localized.pay_over_time_with_affirm
