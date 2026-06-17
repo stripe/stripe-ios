@@ -353,6 +353,13 @@ extension SelfieCaptureViewController {
         ) {}
     }
 
+    func uploadAndSave(
+        faceCaptureData: FaceCaptureData
+    ) {
+        selfieUploader.uploadImages(faceCaptureData)
+        saveDataAndTransitionToNextScreen(faceCaptureData: faceCaptureData)
+    }
+
     func statusText(
         for scanningState: FaceCaptureScanningState
     ) -> SelfieScanningView.ViewModel.StatusText? {
@@ -562,12 +569,19 @@ extension SelfieCaptureViewController {
         scanningSession.stopTimeoutTimer()
 
         guard nextState.frontSamples.count >= apiConfig.numSamples,
-            FaceCaptureData(samples: nextState.frontSamples) != nil
+            let faceCaptureData = FaceCaptureData(samples: nextState.frontSamples)
         else {
             scanningSession.startTimeoutTimer()
             startSampleTimer()
             latestScanningState = nextState
             scanningSession.updateScanningState(nextState)
+            return
+        }
+
+        guard apiConfig.enable3DFaceCapture else {
+            latestScanningState = nextState
+            notifyCaptureAccepted()
+            uploadAndSave(faceCaptureData: faceCaptureData)
             return
         }
 
@@ -656,8 +670,7 @@ extension SelfieCaptureViewController {
             guard let self = self else {
                 return
             }
-            self.selfieUploader.uploadImages(faceCaptureData)
-            self.saveDataAndTransitionToNextScreen(faceCaptureData: faceCaptureData)
+            self.uploadAndSave(faceCaptureData: faceCaptureData)
         }
     }
 

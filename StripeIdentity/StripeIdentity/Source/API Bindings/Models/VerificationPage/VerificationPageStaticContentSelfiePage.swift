@@ -29,6 +29,10 @@ extension StripeAPI {
         let sampleInterval: Int
         let trainingConsentText: String
         let blurThreshold: Decimal?
+
+        var enable3DFaceCapture: Bool {
+            return false
+        }
     }
 
 }
