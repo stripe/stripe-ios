@@ -511,7 +511,7 @@ extension PaymentSheet {
             }
             presentPaymentOptionsCompletionWithResult = wrappedCompletion
 
-            // If Checkout mutations are in-flight, present a loading sheet and await them.
+            // Mutations in-flight: show loading, await them, then present payment options internally.
             // TODO(porter): Remove assumeIsolated once presentPaymentOptions is @MainActor (blocked on new FC API designs)
             if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
                 presentPaymentOptionsAwaitingMutations(
@@ -519,6 +519,7 @@ extension PaymentSheet {
                     checkout: checkout,
                     completion: wrappedCompletion
                 )
+                // Early exit, presentPaymentOptionsAwaitingMutations will present after awaiting mutations
                 return
             }
 
