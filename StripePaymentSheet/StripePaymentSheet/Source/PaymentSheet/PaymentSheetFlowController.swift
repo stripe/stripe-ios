@@ -697,8 +697,8 @@ extension PaymentSheet {
             let updateID = beginUpdate()
             Task { @MainActor in
                 do {
-                    // Exclude the current pending operation (the mutation that triggered
-                    // this update) to avoid deadlocking on ourselves.
+                    // The calling mutation is still in the queue (it awaits us before returning),
+                    // so exclude it to avoid a deadlock.
                     try await checkout.awaitPendingOperations(excludingCurrent: true)
                 } catch {
                     self.failUpdate(updateID)
