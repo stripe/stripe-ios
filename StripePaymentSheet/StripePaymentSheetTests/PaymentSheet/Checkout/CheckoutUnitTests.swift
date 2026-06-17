@@ -517,6 +517,27 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 0)
     }
 
+    func testCheckoutDidUpdateCalledBeforeRegularDelegate() async throws {
+        let checkout = await makeCheckoutWithOpenSession()
+        var callOrder: [String] = []
+
+        let integrationDelegate = MockCheckoutIntegrationDelegate()
+        integrationDelegate.onUpdate = { callOrder.append("integration") }
+        checkout.integrationDelegate = integrationDelegate
+
+        let delegate = OrderTrackingCheckoutDelegate { callOrder.append("regular") }
+        checkout.delegate = delegate
+
+        var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
+        updatedJSON["status"] = "complete"
+        updatedJSON["payment_status"] = "paid"
+        let updatedSession = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
+
+        try await checkout.updateSession(updatedSession)
+
+        XCTAssertEqual(callOrder, ["integration", "regular"])
+    }
+
     func testCheckoutDidUpdateErrorBubblesUp() async {
         let checkout = await makeCheckoutWithOpenSession()
         let integrationDelegate = MockCheckoutIntegrationDelegate()
@@ -569,10 +590,25 @@ private class MockCheckoutIntegrationDelegate: CheckoutIntegrationDelegate {
     var checkoutDidUpdateCallCount = 0
     var lastCheckout: Checkout?
     var shouldThrow: Error?
+    var onUpdate: (() -> Void)?
 
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
         checkoutDidUpdateCallCount += 1
         lastCheckout = checkout
+        onUpdate?()
         if let error = shouldThrow { throw error }
+    }
+}
+
+@MainActor
+private class OrderTrackingCheckoutDelegate: CheckoutDelegate {
+    let onChangeState: () -> Void
+
+    init(onChangeState: @escaping () -> Void) {
+        self.onChangeState = onChangeState
+    }
+
+    func checkout(_ checkout: Checkout, didChangeState state: Checkout.State) {
+        onChangeState()
     }
 }

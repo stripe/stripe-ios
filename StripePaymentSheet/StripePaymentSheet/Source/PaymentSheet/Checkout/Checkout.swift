@@ -19,7 +19,7 @@ import Foundation
 /// ```
 ///
 /// The async initializer loads the session from Stripe before returning,
-/// so ``state`` is guaranteed to be ``State/loaded(_:)`` immediately after initialization.
+/// so ``state`` is guaranteed to be ``State.loaded(_:)`` immediately after initialization.
 ///
 /// Observe session changes with SwiftUI by using ``state`` (published via `ObservableObject`),
 /// or in UIKit by setting a ``delegate``.

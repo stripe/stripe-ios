@@ -35,12 +35,9 @@ extension Checkout {
         newSession.billingAddress = stpSession?.billingAddress
         newSession.shippingAddress = stpSession?.shippingAddress
         applyOverrides?(newSession)
-        let changed = stpSession?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
         setSession(newSession)
-        if changed {
-            delegate?.checkout(self, didChangeState: state)
-            try await integrationDelegate?.checkoutDidUpdate(self)
-        }
+        try await integrationDelegate?.checkoutDidUpdate(self)
+        delegate?.checkout(self, didChangeState: state)
     }
 
     /// Runs `body` as a tracked session update, serialized behind any in-flight ops.
