@@ -1,7 +1,10 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+
+### CryptoOnramp (Alpha)
+* [Added] Added `AppAttestationUnavailableError`, a rich `StripeCryptoOnrampError` for configuration failures caused by missing app attestation or native Link being unavailable.
 
 ## 26.0.0 2026-06-12
 ### All
@@ -9,9 +12,6 @@ PATCH
 
 ### AddressElement
 * [Changed] Added IN, JP, MY, NZ, PH, SG to `AddressViewController.Configuration.autocompleteCountries` list. 
-
-### CryptoOnramp (Alpha)
-* [Added] Added `AppAttestationUnavailableError`, a rich `StripeCryptoOnrampError` for configuration failures caused by missing app attestation or native Link being unavailable.
 
 ## 25.17.0 2026-06-08
 
