@@ -101,9 +101,9 @@ struct CryptoOnrampExampleView: View {
                             ) {
                                 flowCoordinator.advanceAfterIdentifiers()
                             }
-                        case .crsCarfDeclaration:
-                            CRSCARFDeclarationPresentingView(coordinator: coordinator) {
-                                flowCoordinator.advanceAfterCRSCARFDeclaration()
+                        case .userAttestation:
+                            UserAttestationPresentingView(coordinator: coordinator) {
+                                flowCoordinator.advanceAfterUserAttestation()
                             }
                         case .identity:
                             IdentityVerificationView(coordinator: coordinator) {

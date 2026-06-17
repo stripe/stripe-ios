@@ -5,6 +5,7 @@ MINOR
 
 ### CryptoOnramp (Alpha)
 * [Added] Added `AppAttestationUnavailableError`, a rich `StripeCryptoOnrampError` for configuration failures caused by missing app attestation or native Link being unavailable.
+* [Changed] Renamed `CryptoOnrampCoordinator.presentCRSCARFDeclaration(from:)` to `presentUserAttestation(from:)`, and renamed `CRSCARFDeclarationResult` to `UserAttestationResult`.
 
 ## 26.0.0 2026-06-12
 ### All

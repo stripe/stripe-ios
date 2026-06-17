@@ -20,7 +20,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         case registration(email: String, oAuthScopes: [OAuthScopes])
         case kycInfo(collectionMode: KYCInfoView.CollectionMode)
         case complianceIdentifiers(requirements: ComplianceIdentifierRequirements)
-        case crsCarfDeclaration
+        case userAttestation
         case identity
         case wallets
         case payment(wallet: CustomerWalletsResponse.Wallet)
@@ -40,7 +40,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     private var isIdDocumentVerified = false
     private var isEUCustomer = false
     private var hasSubmittedIdentifiers = false
-    private var hasAcceptedCRSCARFDeclaration = false
+    private var hasAcceptedUserAttestation = false
     private var identifierRequirements: ComplianceIdentifierRequirements?
     private var kycInfoCollectionMode: KYCInfoView.CollectionMode = .original
     private var createOnrampSessionResponse: CreateOnrampSessionResponse?
@@ -104,7 +104,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         kycLevel = collectedKYCLevel
         self.isEUCustomer = isEUCustomer
         hasSubmittedIdentifiers = false
-        hasAcceptedCRSCARFDeclaration = false
+        hasAcceptedUserAttestation = false
         identifierRequirements = nil
         if kycInfoCollectionMode == .original {
             isKycVerified = true
@@ -124,9 +124,9 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         advanceToNextStep()
     }
 
-    /// Advances after accepting the CRS/CARF declaration.
-    func advanceAfterCRSCARFDeclaration() {
-        hasAcceptedCRSCARFDeclaration = true
+    /// Advances after accepting the user attestation.
+    func advanceAfterUserAttestation() {
+        hasAcceptedUserAttestation = true
         advanceToNextStep()
     }
 
@@ -173,7 +173,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
             isIdDocumentVerified = info.isIdDocumentVerified
             isEUCustomer = info.isEUCustomer
             hasSubmittedIdentifiers = info.hasSubmittedIdentifiers
-            hasAcceptedCRSCARFDeclaration = info.hasAcceptedCRSCARFDeclaration
+            hasAcceptedUserAttestation = info.hasAcceptedUserAttestation
             if shouldRetrieveIdentifierRequirements && hasCollectedInitialKYCInfo {
                 setIdentifierRequirements(try await coordinator.retrieveMissingIdentifiers())
             }
@@ -240,8 +240,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
             let identifierRequirements,
             identifierRequirements.requiresIdentifierCollection {
             path.append(.complianceIdentifiers(requirements: identifierRequirements))
-        } else if isEUCustomer && !hasAcceptedCRSCARFDeclaration {
-            path.append(.crsCarfDeclaration)
+        } else if isEUCustomer && !hasAcceptedUserAttestation {
+            path.append(.userAttestation)
         } else if shouldShowIdentity {
             path.append(.identity)
         } else if let successfulCheckoutMessage {
@@ -268,7 +268,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         isIdDocumentVerified = false
         isEUCustomer = false
         hasSubmittedIdentifiers = false
-        hasAcceptedCRSCARFDeclaration = false
+        hasAcceptedUserAttestation = false
         identifierRequirements = nil
         kycInfoCollectionMode = .original
         selectedWallet = nil
@@ -286,7 +286,7 @@ extension CryptoOnrampFlowCoordinator.Route {
         switch self {
         case .registration, .payment, .paymentSummary:
             true
-        case .wallets, .kycInfo, .complianceIdentifiers, .crsCarfDeclaration, .identity, .checkoutSuccess:
+        case .wallets, .kycInfo, .complianceIdentifiers, .userAttestation, .identity, .checkoutSuccess:
             false
         }
     }
@@ -294,7 +294,7 @@ extension CryptoOnrampFlowCoordinator.Route {
     /// Whether to display the toolbar item for authenticated user actions, such as logging out.
     var showsAuthenticatedUserToolbarItem: Bool {
         switch self {
-        case .wallets, .kycInfo, .complianceIdentifiers, .crsCarfDeclaration, .identity, .payment, .paymentSummary, .checkoutSuccess:
+        case .wallets, .kycInfo, .complianceIdentifiers, .userAttestation, .identity, .payment, .paymentSummary, .checkoutSuccess:
             true
         case .registration:
             false
