@@ -1,7 +1,10 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+
+### CryptoOnramp (Alpha)
+* [Changed] Renamed `CryptoOnrampCoordinator.presentCRSCARFDeclaration(from:)` to `presentUserAttestation(from:)`, and renamed `CRSCARFDeclarationResult` to `UserAttestationResult`.
 
 ## 26.0.0 2026-06-12
 ### All
@@ -9,9 +12,6 @@ PATCH
 
 ### AddressElement
 * [Changed] Added IN, JP, MY, NZ, PH, SG to `AddressViewController.Configuration.autocompleteCountries` list. 
-
-### CryptoOnramp (Alpha)
-* [Changed] Renamed `CryptoOnrampCoordinator.presentCRSCARFDeclaration(from:)` to `presentUserAttestation(from:)`, and renamed `CRSCARFDeclarationResult` to `UserAttestationResult`.
 
 ## 25.17.0 2026-06-08
 
