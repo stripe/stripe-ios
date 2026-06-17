@@ -512,6 +512,7 @@ extension PaymentSheet {
             presentPaymentOptionsCompletionWithResult = wrappedCompletion
 
             // If Checkout mutations are in-flight, present a loading sheet and await them.
+            // TODO(porter): Remove assumeIsolated once presentPaymentOptions is @MainActor (blocked on new FC API designs)
             if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
                 presentPaymentOptionsAwaitingMutations(
                     from: presentingViewController,
@@ -649,7 +650,7 @@ extension PaymentSheet {
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.confirm must be called from the main thread.")
 
-            // assumeIsolated needed because FlowController isn't @MainActor but we assert main thread above.
+            // TODO(porter): Remove assumeIsolated once confirm is @MainActor (blocked on new FC API designs)
             if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
                 assertionFailure("`confirm` should not be called while the Checkout session is loading.")
                 let error = PaymentSheetError.flowControllerConfirmFailed(
