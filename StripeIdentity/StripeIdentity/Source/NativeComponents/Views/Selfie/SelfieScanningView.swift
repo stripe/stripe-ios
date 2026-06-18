@@ -426,6 +426,7 @@ final class SelfieScanningView: UIView {
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
             captureTickMarksView.isHidden = false
+            captureTickMarksView.setShowsCenteredShadow(true, animated: true)
             captureTickMarksView.setCaptureGuideHighlight(captureGuideHighlight, animated: true)
             if let statusText {
                 configureStatusLabel(statusText)
@@ -707,6 +708,7 @@ private final class CaptureTickMarksView: UIView {
     }
 
     private var captureGuideHighlight: SelfieScanningView.ViewModel.CaptureGuideHighlight = .none
+    private var showsCenteredShadow: Bool = false
     private var centeredShadowOpacity: CGFloat = 0 {
         didSet {
             setNeedsDisplay()
@@ -720,23 +722,16 @@ private final class CaptureTickMarksView: UIView {
     }
 
     func setShowsCenteredShadow(_ showsCenteredShadow: Bool, animated: Bool) {
-        setCaptureGuideHighlight(showsCenteredShadow ? .front : .none, animated: animated)
-    }
-
-    func setCaptureGuideHighlight(
-        _ captureGuideHighlight: SelfieScanningView.ViewModel.CaptureGuideHighlight,
-        animated: Bool
-    ) {
-        guard captureGuideHighlight != self.captureGuideHighlight else {
+        guard showsCenteredShadow != self.showsCenteredShadow else {
             return
         }
 
-        self.captureGuideHighlight = captureGuideHighlight
+        self.showsCenteredShadow = showsCenteredShadow
         centeredShadowDisplayLink?.invalidate()
         centeredShadowDisplayLink = nil
         centeredShadowAnimationStartTime = nil
 
-        guard captureGuideHighlight != .none else {
+        guard showsCenteredShadow else {
             centeredShadowOpacity = 0
             return
         }
@@ -753,6 +748,18 @@ private final class CaptureTickMarksView: UIView {
         )
         displayLink.add(to: .main, forMode: .common)
         centeredShadowDisplayLink = displayLink
+    }
+
+    func setCaptureGuideHighlight(
+        _ captureGuideHighlight: SelfieScanningView.ViewModel.CaptureGuideHighlight,
+        animated _: Bool
+    ) {
+        guard captureGuideHighlight != self.captureGuideHighlight else {
+            return
+        }
+
+        self.captureGuideHighlight = captureGuideHighlight
+        setNeedsDisplay()
     }
 
     @objc private func updateCenteredShadowFadeIn(_ displayLink: CADisplayLink) {
@@ -797,7 +804,7 @@ private final class CaptureTickMarksView: UIView {
             y: bounds.height * Styling.centerYRatio
         )
 
-        if captureGuideHighlight != .none, centeredShadowOpacity > 0 {
+        if showsCenteredShadow, centeredShadowOpacity > 0 {
             drawCenteredShadow(
                 in: context,
                 center: center,
