@@ -18,9 +18,7 @@ extension Checkout {
     /// - Throws: ``CheckoutError`` if the update fails.
     func selectCurrency(_ currency: String) async throws {
         try requireOpenSessionForInSheetUpdate()
-        try await enqueueSessionUpdate {
-            try await self.performAPIUpdate(.setCurrency(currency))
-        }
+        try await performUpdate(.setCurrency(currency))
     }
 
     // MARK: - Session Updates
@@ -63,19 +61,53 @@ extension Checkout {
         try await operation.value
     }
 
-    /// Sends a mutation to the Stripe API and updates the session from the response.
-    func performAPIUpdate(_ update: SessionUpdate) async throws {
-        let sessionId = Self.extractSessionId(from: clientSecret)
-        let updatedSession: STPCheckoutSession
-        do {
-            updatedSession = try await apiClient.updateCheckoutSession(
-                checkoutSessionId: sessionId,
-                parameters: update.parameters
-            )
-        } catch {
-            throw CheckoutError.apiError(message: error.nonGenericDescription)
+    /// Enqueues a serialized API mutation and updates the session from the response.
+    func performUpdate(_ update: SessionUpdate) async throws {
+        try await enqueueSessionUpdate {
+            let sessionId = Self.extractSessionId(from: self.clientSecret)
+            let updatedSession: STPCheckoutSession
+            do {
+                updatedSession = try await self.apiClient.updateCheckoutSession(
+                    checkoutSessionId: sessionId,
+                    parameters: update.parameters
+                )
+            } catch {
+                throw CheckoutError.apiError(message: error.nonGenericDescription)
+            }
+            try await self.updateSession(updatedSession)
         }
-        try await updateSession(updatedSession)
+    }
+
+    /// Enqueues a serialized API mutation with a local state change applied before the API call.
+    func performUpdate(
+        _ update: SessionUpdate,
+        applying sideEffect: @MainActor @Sendable @escaping () -> Void
+    ) async throws {
+        try await enqueueSessionUpdate {
+            sideEffect()
+            let sessionId = Self.extractSessionId(from: self.clientSecret)
+            let updatedSession: STPCheckoutSession
+            do {
+                updatedSession = try await self.apiClient.updateCheckoutSession(
+                    checkoutSessionId: sessionId,
+                    parameters: update.parameters
+                )
+            } catch {
+                throw CheckoutError.apiError(message: error.nonGenericDescription)
+            }
+            try await self.updateSession(updatedSession)
+        }
+    }
+
+    /// Enqueues a local-only session update (no API call) and notifies delegates.
+    func performUpdate(
+        applying sideEffect: @MainActor @Sendable @escaping () -> Void
+    ) async throws {
+        try await enqueueSessionUpdate {
+            sideEffect()
+            guard let session = self.stpSession else { return }
+            try await self.updateSession(session)
+        }
     }
 
     /// Fetches the latest Checkout Session from Stripe and publishes it to observers.

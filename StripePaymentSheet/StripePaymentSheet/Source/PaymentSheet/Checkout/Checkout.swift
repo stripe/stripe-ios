@@ -182,18 +182,14 @@ public final class Checkout: ObservableObject {
     /// - Throws: ``CheckoutError`` if applying the promotion code fails.
     public func applyPromotionCode(_ code: String) async throws {
         try requireOpenSession()
-        try await enqueueSessionUpdate {
-            try await self.performAPIUpdate(.setPromotionCode(code))
-        }
+        try await performUpdate(.setPromotionCode(code))
     }
 
     /// Removes the currently applied promotion code.
     /// - Throws: ``CheckoutError`` if removing the promotion code fails.
     public func removePromotionCode() async throws {
         try requireOpenSession()
-        try await enqueueSessionUpdate {
-            try await self.performAPIUpdate(.setPromotionCode(""))
-        }
+        try await performUpdate(.setPromotionCode(""))
     }
 
     // MARK: - Line Items
@@ -205,9 +201,7 @@ public final class Checkout: ObservableObject {
     /// - Throws: ``CheckoutError`` if the update fails.
     public func updateQuantity(lineItemId: String, quantity: Int) async throws {
         try requireOpenSession()
-        try await enqueueSessionUpdate {
-            try await self.performAPIUpdate(.setLineItemQuantity(lineItemId: lineItemId, quantity: quantity))
-        }
+        try await performUpdate(.setLineItemQuantity(lineItemId: lineItemId, quantity: quantity))
     }
 
     // MARK: - Shipping
@@ -217,9 +211,7 @@ public final class Checkout: ObservableObject {
     /// - Throws: ``CheckoutError`` if the update fails.
     public func selectShippingOption(_ optionId: String) async throws {
         try requireOpenSession()
-        try await enqueueSessionUpdate {
-            try await self.performAPIUpdate(.setShippingRate(optionId))
-        }
+        try await performUpdate(.setShippingRate(optionId))
     }
 
     // MARK: - Addresses
@@ -247,16 +239,13 @@ public final class Checkout: ObservableObject {
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
         guard currentSession.billingAddress != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "billing") {
-            try await enqueueSessionUpdate {
+            try await performUpdate(.setTaxRegion(address), applying: {
                 self.stpSession?.billingAddress = contactAddress
-                try await self.performAPIUpdate(.setTaxRegion(address))
-            }
+            })
         } else {
-            try await enqueueSessionUpdate {
+            try await performUpdate(applying: {
                 self.stpSession?.billingAddress = contactAddress
-                guard let session = self.stpSession else { return }
-                try await self.updateSession(session)
-            }
+            })
         }
     }
 
@@ -283,16 +272,13 @@ public final class Checkout: ObservableObject {
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
         guard currentSession.shippingAddress != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "shipping") {
-            try await enqueueSessionUpdate {
+            try await performUpdate(.setTaxRegion(address), applying: {
                 self.stpSession?.shippingAddress = contactAddress
-                try await self.performAPIUpdate(.setTaxRegion(address))
-            }
+            })
         } else {
-            try await enqueueSessionUpdate {
+            try await performUpdate(applying: {
                 self.stpSession?.shippingAddress = contactAddress
-                guard let session = self.stpSession else { return }
-                try await self.updateSession(session)
-            }
+            })
         }
     }
 
