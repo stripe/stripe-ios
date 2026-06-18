@@ -250,6 +250,9 @@ to be saved and used in future checkout sessions. */
 /* Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]' */
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Get %@ back when you pay with your bank. <terms>See terms</terms>";
 
+/* Button label to collapse and hide additional exchange rate details */
+"Hide details" = "Hide details";
+
 /* Bacs Debit mandate text */
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.";
 
@@ -475,6 +478,9 @@ to be saved and used in future checkout sessions. */
 /* Text for an error that is shown when a user selects a shipping address that
 is not supported by the merchant */
 "Shipping to %@ is not supported." = "Shipping to %@ is not supported.";
+
+/* Button label to expand and show additional exchange rate details */
+"Show details" = "Show details";
 
 /* Accessibility label for an action or a button that shows a menu. */
 "Show menu" = "Show menu";
