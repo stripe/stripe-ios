@@ -377,12 +377,6 @@ final class TwoOptionSelectorView: UIView {
             self.invalidateIntrinsicContentSizeUpHierarchy()
             layoutContainer.layoutIfNeeded()
         } completion: { _ in
-            if self.isDetailExpanded {
-                self.detailHeightConstraint?.isActive = false
-            } else {
-                self.detailLabel.setHiddenIfNecessary(true)
-            }
-            self.invalidateIntrinsicContentSizeUpHierarchy()
             UIAccessibility.post(notification: .layoutChanged, argument: self.captionLabel)
         }
     }
