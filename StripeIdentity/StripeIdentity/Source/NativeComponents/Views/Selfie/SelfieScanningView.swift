@@ -688,7 +688,8 @@ private final class CaptureTickMarksView: UIView {
     struct Styling {
         static let tickCount = 77
         static let tickLength: CGFloat = 10
-        static let highlightedTickLength: CGFloat = 15
+        static let highlightedTickLength: CGFloat = 17
+        static let highlightedTickAnimationDuration: TimeInterval = 0.18
         static let tickWidth: CGFloat = 2
         static let horizontalDiameterToWidthRatio: CGFloat = 0.72
         static let verticalDiameterToHeightRatio: CGFloat = 0.66
@@ -708,16 +709,24 @@ private final class CaptureTickMarksView: UIView {
     }
 
     private var captureGuideHighlight: SelfieScanningView.ViewModel.CaptureGuideHighlight = .none
+    private var highlightedTickProgress: CGFloat = 0 {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
     private var showsCenteredShadow: Bool = false
     private var centeredShadowOpacity: CGFloat = 0 {
         didSet {
             setNeedsDisplay()
         }
     }
+    private var highlightedTickDisplayLink: CADisplayLink?
+    private var highlightedTickAnimationStartTime: CFTimeInterval?
     private var centeredShadowDisplayLink: CADisplayLink?
     private var centeredShadowAnimationStartTime: CFTimeInterval?
 
     deinit {
+        highlightedTickDisplayLink?.invalidate()
         centeredShadowDisplayLink?.invalidate()
     }
 
@@ -752,14 +761,57 @@ private final class CaptureTickMarksView: UIView {
 
     func setCaptureGuideHighlight(
         _ captureGuideHighlight: SelfieScanningView.ViewModel.CaptureGuideHighlight,
-        animated _: Bool
+        animated: Bool
     ) {
         guard captureGuideHighlight != self.captureGuideHighlight else {
             return
         }
 
         self.captureGuideHighlight = captureGuideHighlight
-        setNeedsDisplay()
+        highlightedTickDisplayLink?.invalidate()
+        highlightedTickDisplayLink = nil
+        highlightedTickAnimationStartTime = nil
+
+        guard captureGuideHighlight != .none else {
+            highlightedTickProgress = 0
+            return
+        }
+
+        guard animated, window != nil else {
+            highlightedTickProgress = 1
+            return
+        }
+
+        highlightedTickProgress = 0
+        let displayLink = CADisplayLink(
+            target: self,
+            selector: #selector(updateHighlightedTickAnimation)
+        )
+        displayLink.add(to: .main, forMode: .common)
+        highlightedTickDisplayLink = displayLink
+    }
+
+    @objc private func updateHighlightedTickAnimation(_ displayLink: CADisplayLink) {
+        if highlightedTickAnimationStartTime == nil {
+            highlightedTickAnimationStartTime = displayLink.timestamp
+        }
+        guard let highlightedTickAnimationStartTime else {
+            return
+        }
+
+        let elapsedTime = displayLink.timestamp - highlightedTickAnimationStartTime
+        let progress = min(
+            max(elapsedTime / Styling.highlightedTickAnimationDuration, 0),
+            1
+        )
+        highlightedTickProgress = progress
+
+        if progress >= 1 {
+            displayLink.invalidate()
+            highlightedTickDisplayLink = nil
+            self.highlightedTickAnimationStartTime = nil
+            highlightedTickProgress = 1
+        }
     }
 
     @objc private func updateCenteredShadowFadeIn(_ displayLink: CADisplayLink) {
@@ -833,17 +885,22 @@ private final class CaptureTickMarksView: UIView {
         )
         context.strokePath()
 
-        guard captureGuideHighlight != .none else {
+        guard captureGuideHighlight != .none, highlightedTickProgress > 0 else {
             return
         }
 
-        context.setStrokeColor(Styling.acceptedTickColor.cgColor)
+        let highlightedTickLength = Styling.tickLength
+            + ((Styling.highlightedTickLength - Styling.tickLength) * highlightedTickProgress)
+        let highlightedTickOpacity = 1 - pow(1 - highlightedTickProgress, 2)
+        context.setStrokeColor(
+            Styling.acceptedTickColor.withAlphaComponent(highlightedTickOpacity).cgColor
+        )
         drawTicks(
             in: context,
             center: center,
             horizontalRadius: horizontalRadius,
             verticalRadius: verticalRadius,
-            tickLength: Styling.highlightedTickLength,
+            tickLength: highlightedTickLength,
             shouldDrawTick: { [weak self] angle in
                 self?.isTickHighlighted(at: angle) ?? false
             }

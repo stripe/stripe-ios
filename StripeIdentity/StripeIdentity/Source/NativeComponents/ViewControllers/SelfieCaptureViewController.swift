@@ -23,7 +23,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     typealias State = SelfieImageScanningSession.State
 
     private enum Constants {
-        static let captureAcknowledgementDuration: TimeInterval = 0.35
+        static let captureAcknowledgementDuration: TimeInterval = 0.55
     }
 
     // MARK: View Models
