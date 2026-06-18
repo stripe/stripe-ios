@@ -15,7 +15,7 @@ import UIKit
 #if canImport(MediaPipeTasksVision)
 @_implementationOnly import MediaPipeTasksVision
 
-final class MediaPipeFacePoseDetector: FacePoseDetector {
+final class MediaPipeFacePoseDetector: FaceGeometryDetector {
     private enum Configuration {
         static let maxNumFaces = 1
         static let scoreThreshold: Float = 0.5
@@ -37,18 +37,33 @@ final class MediaPipeFacePoseDetector: FacePoseDetector {
         faceLandmarker = try FaceLandmarker(options: options)
     }
 
-    func detectPose(pixelBuffer: CVPixelBuffer) throws -> FacePose? {
+    func detectFace(pixelBuffer: CVPixelBuffer) throws -> FaceGeometry? {
         guard let image = try Self.makeImage(pixelBuffer: pixelBuffer) else {
             return nil
         }
 
         let result = try faceLandmarker.detect(image: image)
 
-        guard let matrix = result.facialTransformationMatrixes.first else {
+        guard let landmarks = result.faceLandmarks.first,
+            let rect = Self.faceRect(from: landmarks)
+        else {
             return nil
         }
 
-        return Self.rotationMatrixToPose(matrix)
+        let facePose = result.facialTransformationMatrixes.first.flatMap {
+            Self.rotationMatrixToPose($0)
+        }
+        return .init(
+            faceDetectorOutput: .init(
+                predictions: [
+                    .init(
+                        rect: rect,
+                        score: Self.faceScore(from: landmarks)
+                    ),
+                ]
+            ),
+            facePose: facePose
+        )
     }
 
     func reset() {}
@@ -73,6 +88,43 @@ private extension MediaPipeFacePoseDetector {
 
     static func clamp(_ value: Float, min: Float, max: Float) -> Float {
         return Swift.max(min, Swift.min(max, value))
+    }
+
+    static func faceRect(from landmarks: [NormalizedLandmark]) -> CGRect? {
+        guard !landmarks.isEmpty else {
+            return nil
+        }
+
+        let minX = landmarks.map { CGFloat($0.x) }.min() ?? 0
+        let minY = landmarks.map { CGFloat($0.y) }.min() ?? 0
+        let maxX = landmarks.map { CGFloat($0.x) }.max() ?? 0
+        let maxY = landmarks.map { CGFloat($0.y) }.max() ?? 0
+        let rect = CGRect(
+            x: min(max(minX, 0), 1),
+            y: min(max(minY, 0), 1),
+            width: min(max(maxX - minX, 0), 1),
+            height: min(max(maxY - minY, 0), 1)
+        )
+        guard rect.width > 0, rect.height > 0 else {
+            return nil
+        }
+        return rect
+    }
+
+    static func faceScore(from landmarks: [NormalizedLandmark]) -> Float {
+        let scores = landmarks.compactMap { landmark -> Float? in
+            if let presence = landmark.presence {
+                return presence.floatValue
+            }
+            if let visibility = landmark.visibility {
+                return visibility.floatValue
+            }
+            return nil
+        }
+        guard !scores.isEmpty else {
+            return 1
+        }
+        return scores.reduce(0, +) / Float(scores.count)
     }
 
     static func rotationMatrixToPose(_ matrix: TransformMatrix) -> FacePose? {
@@ -110,8 +162,8 @@ private extension MediaPipeFacePoseDetector {
 }
 #endif
 
-enum FacePoseDetectorFactory {
-    static func makeDefaultDetector() -> FacePoseDetector? {
+enum FaceGeometryDetectorFactory {
+    static func makeDefaultDetector() -> FaceGeometryDetector? {
         guard let modelPath = StripeIdentityBundleLocator.resourcesBundle.path(
             forResource: "face_landmarker",
             ofType: "task"

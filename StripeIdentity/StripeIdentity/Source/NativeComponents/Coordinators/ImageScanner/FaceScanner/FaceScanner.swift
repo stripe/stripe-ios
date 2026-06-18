@@ -19,18 +19,17 @@ final class FaceScanner {
         static let minDuration: Double = 0.1
     }
 
-    private let faceDetector: FaceDetector
-    private let facePoseDetector: FacePoseDetector?
+    private let faceDetector: FaceDetector?
+    private let faceGeometryDetector: FaceGeometryDetector?
     private let configuration: Configuration
     private let motionBlurDetector: MotionBlurDetector
 
     init(
         faceDetector: FaceDetector,
-        facePoseDetector: FacePoseDetector? = nil,
         configuration: Configuration
     ) {
         self.faceDetector = faceDetector
-        self.facePoseDetector = facePoseDetector
+        self.faceGeometryDetector = nil
         self.configuration = configuration
         self.motionBlurDetector = MotionBlurDetector(
             minIOU: MotionBlurGate.minIOU,
@@ -40,8 +39,7 @@ final class FaceScanner {
 
     convenience init(
         faceDetectorModel: VNCoreMLModel,
-        configuration: Configuration,
-        facePoseDetector: FacePoseDetector? = nil
+        configuration: Configuration
     ) {
         self.init(
             faceDetector: .init(
@@ -51,8 +49,20 @@ final class FaceScanner {
                     minIOU: configuration.faceDetectorMinIOU
                 )
             ),
-            facePoseDetector: facePoseDetector,
             configuration: configuration
+        )
+    }
+
+    init(
+        faceGeometryDetector: FaceGeometryDetector,
+        configuration: Configuration
+    ) {
+        self.faceDetector = nil
+        self.faceGeometryDetector = faceGeometryDetector
+        self.configuration = configuration
+        self.motionBlurDetector = MotionBlurDetector(
+            minIOU: MotionBlurGate.minIOU,
+            minTime: MotionBlurGate.minDuration
         )
     }
 }
@@ -61,7 +71,7 @@ extension FaceScanner: ImageScanner {
     typealias Output = FaceScannerOutput
 
     var mlModelMetricsTrackers: [MLDetectorMetricsTrackerProtocol] {
-        return [faceDetector].compactMap { $0.metricsTracker }
+        return [faceDetector].compactMap { $0?.metricsTracker }
     }
 
     func scanImage(
@@ -70,8 +80,19 @@ extension FaceScanner: ImageScanner {
         cameraProperties: CameraSession.DeviceProperties?
     ) -> StripeCore.Future<FaceScannerOutput> {
         do {
-            let faceDetectorOutput = try faceDetector.scanImage(pixelBuffer: pixelBuffer)
-            let facePose = try? facePoseDetector?.detectPose(pixelBuffer: pixelBuffer)
+            let faceDetectorOutput: FaceDetectorOutput
+            let facePose: FacePose?
+            if let faceGeometryDetector {
+                let faceGeometry = try faceGeometryDetector.detectFace(pixelBuffer: pixelBuffer)
+                faceDetectorOutput = faceGeometry?.faceDetectorOutput ?? .init(predictions: [])
+                facePose = faceGeometry?.facePose
+            } else if let faceDetector {
+                faceDetectorOutput = try faceDetector.scanImage(pixelBuffer: pixelBuffer)
+                facePose = nil
+            } else {
+                faceDetectorOutput = .init(predictions: [])
+                facePose = nil
+            }
             return Promise(
                 value: .init(
                     faceDetectorOutput: faceDetectorOutput,
@@ -91,8 +112,8 @@ extension FaceScanner: ImageScanner {
 
     func reset() {
         motionBlurDetector.reset()
-        faceDetector.metricsTracker?.reset()
-        facePoseDetector?.reset()
+        faceDetector?.metricsTracker?.reset()
+        faceGeometryDetector?.reset()
     }
 }
 

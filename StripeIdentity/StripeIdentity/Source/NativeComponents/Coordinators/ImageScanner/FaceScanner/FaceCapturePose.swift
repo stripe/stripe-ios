@@ -38,11 +38,16 @@ struct FacePose: Equatable {
     }
 }
 
-protocol FacePoseDetector {
-    func detectPose(pixelBuffer: CVPixelBuffer) throws -> FacePose?
+struct FaceGeometry: Equatable {
+    let faceDetectorOutput: FaceDetectorOutput
+    let facePose: FacePose?
+}
+
+protocol FaceGeometryDetector {
+    func detectFace(pixelBuffer: CVPixelBuffer) throws -> FaceGeometry?
     func reset()
 }
 
-extension FacePoseDetector {
+extension FaceGeometryDetector {
     func reset() {}
 }
