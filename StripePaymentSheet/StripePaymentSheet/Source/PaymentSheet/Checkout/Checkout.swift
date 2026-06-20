@@ -33,7 +33,7 @@ public final class Checkout: ObservableObject {
     ///
     /// After initialization this is always ``State.loaded(_:)``. It transitions to
     /// ``State.loading(_:)`` while a mutation is in flight.
-    @Published public private(set) var state: State
+    @Published public internal(set) var state: State
 
     /// The configuration supplied at initialization.
     public let configuration: Configuration
@@ -51,7 +51,7 @@ public final class Checkout: ObservableObject {
     /// because they go through `Checkout`'s MainActor-isolated mutation methods.
     /// Requiring full MainActor isolation would propagate `@MainActor` through nearly all of
     /// PaymentSheet's internal types, which is not warranted by the actual concurrency risk.
-    nonisolated(unsafe) private(set) var stpSession: STPCheckoutSession!
+    nonisolated(unsafe) internal(set) var stpSession: STPCheckoutSession!
 
     weak var integrationDelegate: CheckoutIntegrationDelegate?
 

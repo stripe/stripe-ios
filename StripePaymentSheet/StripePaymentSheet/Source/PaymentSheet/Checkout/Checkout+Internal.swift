@@ -58,7 +58,7 @@ extension Checkout {
         defer {
             pendingOperations.removeAll { $0 == operation }
         }
-        
+
         try await operation.value
     }
 
@@ -77,26 +77,30 @@ extension Checkout {
         applying localMutation: (@MainActor @Sendable () -> Void)? = nil
     ) async throws {
         try await enqueueSessionUpdate {
-            let updatedSession: STPCheckoutSession? = try await {
-                // Apply the update on the server if required
+            // Transition to loading before the async work begins so observers show a loading state.
+            self.state = .loading(self.state.session)
+
+            do {
+                let updatedSession: STPCheckoutSession
                 if let update {
                     let sessionId = Checkout.extractSessionId(from: self.clientSecret)
-                    do {
-                        return try await self.apiClient.updateCheckoutSession(
-                            checkoutSessionId: sessionId,
-                            parameters: update.parameters
-                        )
-                    } catch {
-                        throw CheckoutError.apiError(message: error.nonGenericDescription)
-                    }
+                    updatedSession = try await self.apiClient.updateCheckoutSession(
+                        checkoutSessionId: sessionId,
+                        parameters: update.parameters
+                    )
                 } else {
-                    return self.stpSession
+                    guard let session = self.stpSession else { return }
+                    updatedSession = session
                 }
-            }()
-            
-            // Apply local mutations after running the API update
-            localMutation?()
-            try await self.commitSession(updatedSession)
+
+                localMutation?()
+                try await self.commitSession(updatedSession)
+            } catch {
+                // Restore loaded state on failure so the UI doesn't stay stuck in loading.
+                self.state = .loaded(self.state.session)
+                throw CheckoutError.apiError(message: error.nonGenericDescription)
+            }
+        }
     }
 
     /// Fetches the latest Checkout Session from Stripe and publishes it to observers.
