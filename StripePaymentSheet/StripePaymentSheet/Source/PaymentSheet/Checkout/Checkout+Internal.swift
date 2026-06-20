@@ -77,6 +77,7 @@ extension Checkout {
         applying localMutation: (@MainActor @Sendable () -> Void)? = nil
     ) async throws {
         try await enqueueSessionUpdate {
+            try self.requireSheetNotPresented()
             // Transition to loading before the async work begins so observers show a loading state.
             self.state = .loading(self.state.session)
 
@@ -134,20 +135,11 @@ extension Checkout {
         return currentSession
     }
 
-    /// Validates that the session is open and no sheet is presented.
-    @discardableResult
-    func requireOpenSession() throws -> STPCheckoutSession {
-        guard let currentSession = stpSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: state.session))")
-            throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
-        }
-        guard currentSession.status?.type == .open else {
-            throw CheckoutError.sessionNotOpen
-        }
+    /// Validates that no payment sheet is currently presented.
+    func requireSheetNotPresented() throws {
         guard integrationDelegate?.isSheetPresented != true else {
             throw CheckoutError.sheetCurrentlyPresented
         }
-        return currentSession
     }
 
     // MARK: - Client Secrets

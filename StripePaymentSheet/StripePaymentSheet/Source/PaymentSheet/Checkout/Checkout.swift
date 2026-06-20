@@ -174,14 +174,12 @@ public final class Checkout: ObservableObject {
     /// - Parameter code: The promotion code to apply.
     /// - Throws: ``CheckoutError`` if applying the promotion code fails.
     public func applyPromotionCode(_ code: String) async throws {
-        try requireOpenSession()
         try await performUpdate(.setPromotionCode(code))
     }
 
     /// Removes the currently applied promotion code.
     /// - Throws: ``CheckoutError`` if removing the promotion code fails.
     public func removePromotionCode() async throws {
-        try requireOpenSession()
         try await performUpdate(.setPromotionCode(""))
     }
 
@@ -193,7 +191,6 @@ public final class Checkout: ObservableObject {
     ///   - quantity: The new quantity to set.
     /// - Throws: ``CheckoutError`` if the update fails.
     public func updateQuantity(lineItemId: String, quantity: Int) async throws {
-        try requireOpenSession()
         try await performUpdate(.setLineItemQuantity(lineItemId: lineItemId, quantity: quantity))
     }
 
@@ -203,7 +200,6 @@ public final class Checkout: ObservableObject {
     /// - Parameter optionId: The ID of the shipping rate to select.
     /// - Throws: ``CheckoutError`` if the update fails.
     public func selectShippingOption(_ optionId: String) async throws {
-        try requireOpenSession()
         try await performUpdate(.setShippingRate(optionId))
     }
 
@@ -228,7 +224,7 @@ public final class Checkout: ObservableObject {
         phone: String? = nil,
         address: Address
     ) async throws {
-        let currentSession = try requireOpenSession()
+        guard let currentSession = stpSession else { return }
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
         guard currentSession.billingAddress != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "billing") {
@@ -261,7 +257,7 @@ public final class Checkout: ObservableObject {
         phone: String? = nil,
         address: Address
     ) async throws {
-        let currentSession = try requireOpenSession()
+        guard let currentSession = stpSession else { return }
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
         guard currentSession.shippingAddress != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "shipping") {
@@ -290,8 +286,8 @@ public final class Checkout: ObservableObject {
     public func runServerUpdate(
         _ updateFunction: @escaping () async throws -> Void
     ) async throws {
-        try requireOpenSession()
         try await enqueueSessionUpdate {
+            try self.requireSheetNotPresented()
             let result = await withTimeout(Self.serverUpdateTimeout) {
                 try await updateFunction()
             }
@@ -301,7 +297,6 @@ public final class Checkout: ObservableObject {
                 }
                 throw CheckoutError.apiError(message: error.localizedDescription)
             }
-            try self.requireOpenSession()
             try await self.refreshSession()
         }
     }
