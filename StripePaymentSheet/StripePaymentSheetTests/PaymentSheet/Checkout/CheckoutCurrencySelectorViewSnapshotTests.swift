@@ -139,7 +139,10 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testDetailExpanded_darkMode() async {
-        let view = await makeCurrencySelectorView(selectedCurrency: "gbp")
+        var appearance = Checkout.CurrencySelectorView.Appearance()
+        appearance.textSecondary = .darkText
+
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
         view.autosizeHeight(width: 320)
         expandDetail(in: view)
         verify(view, darkMode: true)
