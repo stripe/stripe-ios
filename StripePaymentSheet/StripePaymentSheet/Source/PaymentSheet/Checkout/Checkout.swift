@@ -68,13 +68,6 @@ public final class Checkout: ObservableObject {
     /// Timeout enforced on the merchant's closure in ``runServerUpdate(_:)``.
     nonisolated static let serverUpdateTimeout: TimeInterval = 20
 
-    /// The single state writer. Stores the STPCheckoutSession, publishes the public session.
-    func setSession(_ session: STPCheckoutSession) {
-        stpSession = session
-        let publicSession = session.makePublicSession()
-        state = pendingOperations.isEmpty ? .loaded(publicSession) : .loading(publicSession)
-    }
-
     // MARK: - Initialization
 
     /// Loads a Checkout Session from Stripe and returns a ready-to-use instance.

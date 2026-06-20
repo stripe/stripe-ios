@@ -406,7 +406,7 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 1000)
     }
 
-    // MARK: - updateSession Tests
+    // MARK: - commitSession Tests
 
     func testUpdateSessionNotifiesDelegate() async throws {
         let checkout = await makeCheckoutWithOpenSession()
@@ -419,7 +419,7 @@ final class CheckoutUnitTests: XCTestCase {
         updatedJSON["payment_status"] = "paid"
         let confirmResponse = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
 
-        try await checkout.updateSession(confirmResponse)
+        try await checkout.commitSession(confirmResponse)
 
         // Verify session was updated with the confirm response data
         XCTAssertEqual(checkout.state.session.status?.type, .complete)
@@ -443,7 +443,7 @@ final class CheckoutUnitTests: XCTestCase {
         updatedJSON["payment_status"] = "paid"
         let confirmResponse = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
 
-        try await checkout.updateSession(confirmResponse)
+        try await checkout.commitSession(confirmResponse)
 
         // Address overrides should be carried over to the new session
         XCTAssertEqual(checkout.state.session.billingAddress?.name, "Jane Doe")
@@ -467,7 +467,7 @@ final class CheckoutUnitTests: XCTestCase {
         firstResponse["payment_status"] = "paid"
         let firstConfirm = STPCheckoutSession.decodedObject(fromAPIResponse: firstResponse)!
 
-        try await checkout.updateSession(firstConfirm)
+        try await checkout.commitSession(firstConfirm)
         XCTAssertEqual(checkout.state.session.status?.type, .complete)
         XCTAssertEqual(checkout.state.session.billingAddress?.name, "Jane Doe")
 
@@ -476,7 +476,7 @@ final class CheckoutUnitTests: XCTestCase {
         secondResponse["status"] = "open"
         let secondSession = STPCheckoutSession.decodedObject(fromAPIResponse: secondResponse)!
 
-        try await checkout.updateSession(secondSession)
+        try await checkout.commitSession(secondSession)
         XCTAssertEqual(checkout.state.session.status?.type, .open)
         XCTAssertEqual(checkout.state.session.billingAddress?.name, "Jane Doe")
         XCTAssertEqual(delegate.changeStateCallCount, 2)
@@ -507,7 +507,7 @@ final class CheckoutUnitTests: XCTestCase {
         updatedJSON["payment_status"] = "paid"
         let updatedSession = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
 
-        try await checkout.updateSession(updatedSession)
+        try await checkout.commitSession(updatedSession)
 
         XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 1)
         XCTAssertTrue(integrationDelegate.lastCheckout === checkout)
@@ -521,7 +521,7 @@ final class CheckoutUnitTests: XCTestCase {
         // Update with same session data — delegates still fire because the caller
         // decided an update occurred (e.g. after an API call).
         let sameSession = STPCheckoutSession.decodedObject(fromAPIResponse: CheckoutTestHelpers.makeOpenSessionJSON())!
-        try await checkout.updateSession(sameSession)
+        try await checkout.commitSession(sameSession)
 
         XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 1)
     }
@@ -543,7 +543,7 @@ final class CheckoutUnitTests: XCTestCase {
         updatedJSON["payment_status"] = "paid"
         let updatedSession = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
 
-        try await checkout.updateSession(updatedSession)
+        try await checkout.commitSession(updatedSession)
 
         XCTAssertEqual(callOrder, ["integration", "regular"])
     }
@@ -561,7 +561,7 @@ final class CheckoutUnitTests: XCTestCase {
         let updatedSession = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
 
         do {
-            try await checkout.updateSession(updatedSession)
+            try await checkout.commitSession(updatedSession)
             XCTFail("Expected error to propagate")
         } catch {
             XCTAssertEqual((error as NSError).code, 42)

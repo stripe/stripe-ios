@@ -27,11 +27,13 @@ extension Checkout {
     ///
     /// Client-side address overrides are copied from the current session to `newSession`
     /// automatically. To update an address, set it on `stpSession` before calling this method.
-    func updateSession(_ newSession: STPCheckoutSession) async throws {
+    func commitSession(_ newSession: STPCheckoutSession) async throws {
         // Preserve client-side address overrides on the new session.
         newSession.billingAddress = stpSession?.billingAddress
         newSession.shippingAddress = stpSession?.shippingAddress
-        setSession(newSession)
+        stpSession = newSession
+        let publicSession = newSession.makePublicSession()
+        state = pendingOperations.isEmpty ? .loaded(publicSession) : .loading(publicSession)
         try await integrationDelegate?.checkoutDidUpdate(self)
         delegate?.checkout(self, didChangeState: state)
     }
@@ -52,12 +54,11 @@ extension Checkout {
         }
 
         pendingOperations.append(operation)
-        if let session = stpSession { setSession(session) }
 
         defer {
             pendingOperations.removeAll { $0 == operation }
-            if let session = stpSession { setSession(session) }
         }
+        
         try await operation.value
     }
 
@@ -70,30 +71,32 @@ extension Checkout {
     ///
     /// - Parameters:
     ///   - update: The API mutation to perform, or nil for a local-only update.
-    ///   - localMutation: A local state change to apply before the API call (or on its own).
+    ///   - localMutation: A local state change to apply prior to the API call (or on its own).
     func performUpdate(
         _ update: SessionUpdate? = nil,
         applying localMutation: (@MainActor @Sendable () -> Void)? = nil
     ) async throws {
         try await enqueueSessionUpdate {
-            localMutation?()
-            if let update {
-                let sessionId = Self.extractSessionId(from: self.clientSecret)
-                let updatedSession: STPCheckoutSession
-                do {
-                    updatedSession = try await self.apiClient.updateCheckoutSession(
-                        checkoutSessionId: sessionId,
-                        parameters: update.parameters
-                    )
-                } catch {
-                    throw CheckoutError.apiError(message: error.nonGenericDescription)
+            let updatedSession: STPCheckoutSession? = try await {
+                // Apply the update on the server if required
+                if let update {
+                    let sessionId = Checkout.extractSessionId(from: self.clientSecret)
+                    do {
+                        return try await self.apiClient.updateCheckoutSession(
+                            checkoutSessionId: sessionId,
+                            parameters: update.parameters
+                        )
+                    } catch {
+                        throw CheckoutError.apiError(message: error.nonGenericDescription)
+                    }
+                } else {
+                    return self.stpSession
                 }
-                try await self.updateSession(updatedSession)
-            } else {
-                guard let session = self.stpSession else { return }
-                try await self.updateSession(session)
-            }
-        }
+            }()
+            
+            // Apply local mutations after running the API update
+            localMutation?()
+            try await self.commitSession(updatedSession)
     }
 
     /// Fetches the latest Checkout Session from Stripe and publishes it to observers.
@@ -108,7 +111,7 @@ extension Checkout {
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
-        try await updateSession(refreshedCheckoutSession)
+        try await commitSession(refreshedCheckoutSession)
     }
 
     // MARK: - Validation
