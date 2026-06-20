@@ -133,12 +133,14 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
 
     func testDetailExpanded_localCurrencySelected() async {
         let view = await makeCurrencySelectorView(selectedCurrency: "gbp")
+        view.autosizeHeight(width: 320)
         expandDetail(in: view)
         verify(view)
     }
 
     func testDetailExpanded_darkMode() async {
         let view = await makeCurrencySelectorView(selectedCurrency: "gbp")
+        view.autosizeHeight(width: 320)
         expandDetail(in: view)
         verify(view, darkMode: true)
     }
