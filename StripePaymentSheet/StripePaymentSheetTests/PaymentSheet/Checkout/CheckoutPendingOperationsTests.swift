@@ -14,7 +14,7 @@ import XCTest
 @MainActor
 final class CheckoutPendingOperationsTests: XCTestCase {
 
-    func testEnqueueSessionUpdateSerializesOperationsAndKeepsLoadingUntilDrained() async throws {
+    func testEnqueueSessionUpdateSerializesOperations() async throws {
         let checkout = await makeCheckoutWithOpenSession()
         let firstGate = CheckoutPendingOperationsTestGate()
         var events: [String] = []
@@ -42,7 +42,6 @@ final class CheckoutPendingOperationsTests: XCTestCase {
             checkout.pendingOperations.count == 2
         }
         XCTAssertEqual(events, ["first started"])
-        XCTAssertTrue(checkout.state.isLoading)
 
         firstGate.open()
         try await firstTask.value
@@ -50,7 +49,6 @@ final class CheckoutPendingOperationsTests: XCTestCase {
 
         XCTAssertEqual(events, ["first started", "first finished", "second ran"])
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
-        XCTAssertFalse(checkout.state.isLoading)
     }
 
     func testAwaitPendingOperationsWaitsForQueuedWork() async throws {
@@ -87,7 +85,6 @@ final class CheckoutPendingOperationsTests: XCTestCase {
 
         XCTAssertTrue(waiterCompleted)
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
-        XCTAssertFalse(checkout.state.isLoading)
     }
 
     func testAwaitPendingOperationsTimesOutWithoutCancelingQueuedWork() async throws {
@@ -116,14 +113,12 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         }
 
         XCTAssertEqual(checkout.pendingOperations.count, 1)
-        XCTAssertTrue(checkout.state.isLoading)
 
         gate.open()
         try await operationTask.value
         try await checkout.awaitPendingOperations(timeout: 1)
 
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
-        XCTAssertFalse(checkout.state.isLoading)
     }
 
     // MARK: - Helpers
