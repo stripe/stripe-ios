@@ -61,52 +61,38 @@ extension Checkout {
         try await operation.value
     }
 
-    /// Enqueues a serialized API mutation and updates the session from the response.
-    func performUpdate(_ update: SessionUpdate) async throws {
-        try await enqueueSessionUpdate {
-            let sessionId = Self.extractSessionId(from: self.clientSecret)
-            let updatedSession: STPCheckoutSession
-            do {
-                updatedSession = try await self.apiClient.updateCheckoutSession(
-                    checkoutSessionId: sessionId,
-                    parameters: update.parameters
-                )
-            } catch {
-                throw CheckoutError.apiError(message: error.nonGenericDescription)
-            }
-            try await self.updateSession(updatedSession)
-        }
-    }
-
-    /// Enqueues a serialized API mutation with a local state change applied before the API call.
+    /// Enqueues a serialized session update.
+    ///
+    /// - If `update` is non-nil, the side effect (if any) is applied first, then the
+    ///   API mutation is performed and the session is updated from the response.
+    /// - If `update` is nil, the side effect is applied locally and delegates are
+    ///   notified without making a network request.
+    ///
+    /// - Parameters:
+    ///   - update: The API mutation to perform, or nil for a local-only update.
+    ///   - localMutation: A local state change to apply before the API call (or on its own).
     func performUpdate(
-        _ update: SessionUpdate,
-        applying sideEffect: @MainActor @Sendable @escaping () -> Void
+        _ update: SessionUpdate? = nil,
+        applying localMutation: (@MainActor @Sendable () -> Void)? = nil
     ) async throws {
         try await enqueueSessionUpdate {
-            sideEffect()
-            let sessionId = Self.extractSessionId(from: self.clientSecret)
-            let updatedSession: STPCheckoutSession
-            do {
-                updatedSession = try await self.apiClient.updateCheckoutSession(
-                    checkoutSessionId: sessionId,
-                    parameters: update.parameters
-                )
-            } catch {
-                throw CheckoutError.apiError(message: error.nonGenericDescription)
+            localMutation?()
+            if let update {
+                let sessionId = Self.extractSessionId(from: self.clientSecret)
+                let updatedSession: STPCheckoutSession
+                do {
+                    updatedSession = try await self.apiClient.updateCheckoutSession(
+                        checkoutSessionId: sessionId,
+                        parameters: update.parameters
+                    )
+                } catch {
+                    throw CheckoutError.apiError(message: error.nonGenericDescription)
+                }
+                try await self.updateSession(updatedSession)
+            } else {
+                guard let session = self.stpSession else { return }
+                try await self.updateSession(session)
             }
-            try await self.updateSession(updatedSession)
-        }
-    }
-
-    /// Enqueues a local-only session update (no API call) and notifies delegates.
-    func performUpdate(
-        applying sideEffect: @MainActor @Sendable @escaping () -> Void
-    ) async throws {
-        try await enqueueSessionUpdate {
-            sideEffect()
-            guard let session = self.stpSession else { return }
-            try await self.updateSession(session)
         }
     }
 
