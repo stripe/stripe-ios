@@ -51,7 +51,7 @@ public final class Checkout: ObservableObject {
     /// because they go through `Checkout`'s MainActor-isolated mutation methods.
     /// Requiring full MainActor isolation would propagate `@MainActor` through nearly all of
     /// PaymentSheet's internal types, which is not warranted by the actual concurrency risk.
-    nonisolated(unsafe) internal(set) var stpSession: STPCheckoutSession!
+    nonisolated(unsafe) var stpSession: STPCheckoutSession!
 
     weak var integrationDelegate: CheckoutIntegrationDelegate?
 
