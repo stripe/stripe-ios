@@ -68,7 +68,7 @@ final class TwoOptionSelectorView: UIView {
     private let trackView = UIView()
     private let buttonsStackView = UIStackView()
     private let selectionIndicatorView = UIView()
-    private lazy var expandableDetail = ExpandableDetailSection(appearance: appearance)
+    private lazy var expandableDetailView = ExpandableDetailView(appearance: appearance)
     private var leftButton = UIButton(type: .custom)
     private var rightButton = UIButton(type: .custom)
 
@@ -161,7 +161,7 @@ final class TwoOptionSelectorView: UIView {
         heightConstraint.priority = UILayoutPriority(999)
         heightConstraint.isActive = true
 
-        expandableDetail.install(in: mainStackView)
+        mainStackView.addArrangedSubview(expandableDetailView)
 
         NSLayoutConstraint.activate([
             mainStackView.topAnchor.constraint(equalTo: topAnchor),
@@ -265,11 +265,11 @@ final class TwoOptionSelectorView: UIView {
     // MARK: - Caption
 
     func updateCaption(_ caption: String?, detailText: String? = nil) {
-        expandableDetail.update(caption: caption, expandableContent: detailText, in: self)
+        expandableDetailView.update(caption: caption, detail: detailText)
     }
 
-    func toggleDetail() {
-        expandableDetail.toggle(in: self)
+    func toggleExpansion() {
+        expandableDetailView.toggleExpansion()
     }
 
     // MARK: - Selection
