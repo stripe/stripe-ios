@@ -209,7 +209,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         let selectorView = view.subviews
             .compactMap { ($0 as? UIStackView)?.arrangedSubviews.compactMap { $0 as? TwoOptionSelectorView }.first }
             .first
-        selectorView?.toggleExpansion()
+        selectorView?.expandableDetailView.toggleExpansion()
         view.setNeedsLayout()
         view.layoutIfNeeded()
     }

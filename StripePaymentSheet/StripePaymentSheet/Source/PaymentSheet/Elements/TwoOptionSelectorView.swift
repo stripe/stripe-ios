@@ -68,7 +68,7 @@ final class TwoOptionSelectorView: UIView {
     private let trackView = UIView()
     private let buttonsStackView = UIStackView()
     private let selectionIndicatorView = UIView()
-    private lazy var expandableDetailView = ExpandableDetailView(appearance: appearance)
+    private(set) lazy var expandableDetailView = ExpandableDetailView(appearance: appearance)
     private var leftButton = UIButton(type: .custom)
     private var rightButton = UIButton(type: .custom)
 
@@ -266,10 +266,6 @@ final class TwoOptionSelectorView: UIView {
 
     func updateCaption(_ caption: String?, detailText: String? = nil) {
         expandableDetailView.update(caption: caption, detail: detailText)
-    }
-
-    func toggleExpansion() {
-        expandableDetailView.toggleExpansion()
     }
 
     // MARK: - Selection
