@@ -19,7 +19,7 @@ import Foundation
 /// ```
 ///
 /// The async initializer loads the session from Stripe before returning,
-/// so ``state`` is guaranteed to be ``State/loaded(_:)`` immediately after initialization.
+/// so ``state`` is guaranteed to be ``State.loaded(_:)`` immediately after initialization.
 ///
 /// Observe session changes with SwiftUI by using ``state`` (published via `ObservableObject`),
 /// or in UIKit by setting a ``delegate``.
@@ -146,11 +146,17 @@ public final class Checkout: ObservableObject {
     /// - If any pending operation throws, the first such error is rethrown.
     /// - If the wait exceeds `timeout`, throws ``CheckoutError.timedOut``.
     ///
-    /// - Parameter timeout: Maximum time to wait, in seconds.
+    /// - Parameters:
+    ///   - timeout: Maximum time to wait, in seconds.
+    ///   - excludingCurrent: If true, excludes the last enqueued operation from the wait.
     func awaitPendingOperations(
-        timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout
+        timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout,
+        excludingCurrent: Bool = false
     ) async throws {
-        let snapshot = pendingOperations
+        var snapshot = pendingOperations
+        if excludingCurrent {
+            snapshot = Array(snapshot.dropLast(1))
+        }
         guard !snapshot.isEmpty else { return }
 
         let result = await withTimeout(timeout) {
@@ -242,17 +248,14 @@ public final class Checkout: ObservableObject {
         guard currentSession.billingAddress != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "billing") {
             try await enqueueSessionUpdate {
-                try await self.performAPIUpdate(.setTaxRegion(address), applyOverrides: { session in
-                    // Set the local address override on the refreshed session after a successful API call.
-                    session.billingAddress = contactAddress
-                })
+                self.stpSession?.billingAddress = contactAddress
+                try await self.performAPIUpdate(.setTaxRegion(address))
             }
         } else {
-            try await enqueueSessionUpdate { @MainActor in
+            try await enqueueSessionUpdate {
+                self.stpSession?.billingAddress = contactAddress
                 guard let session = self.stpSession else { return }
-                session.billingAddress = contactAddress
-                self.setSession(session)
-                self.delegate?.checkout(self, didChangeState: self.state)
+                try await self.updateSession(session)
             }
         }
     }
@@ -281,17 +284,14 @@ public final class Checkout: ObservableObject {
         guard currentSession.shippingAddress != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "shipping") {
             try await enqueueSessionUpdate {
-                try await self.performAPIUpdate(.setTaxRegion(address), applyOverrides: { session in
-                    // Set the local address override on the refreshed session after a successful API call.
-                    session.shippingAddress = contactAddress
-                })
+                self.stpSession?.shippingAddress = contactAddress
+                try await self.performAPIUpdate(.setTaxRegion(address))
             }
         } else {
-            try await enqueueSessionUpdate { @MainActor in
+            try await enqueueSessionUpdate {
+                self.stpSession?.shippingAddress = contactAddress
                 guard let session = self.stpSession else { return }
-                session.shippingAddress = contactAddress
-                self.setSession(session)
-                self.delegate?.checkout(self, didChangeState: self.state)
+                try await self.updateSession(session)
             }
         }
     }

@@ -304,6 +304,7 @@ extension PaymentSheet {
 
         private weak var checkout: Checkout?
         private var isPresented = false
+        private var pendingPresentTask: Task<Void, Never>?
         private(set) var didPresentAndContinue: Bool = false
         private var confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -510,6 +511,18 @@ extension PaymentSheet {
             }
             presentPaymentOptionsCompletionWithResult = wrappedCompletion
 
+            // Mutations in-flight: show loading, await them, then present payment options internally.
+            // TODO(porter): Remove assumeIsolated once presentPaymentOptions is @MainActor (blocked on new FC API designs)
+            if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
+                presentPaymentOptionsAwaitingMutations(
+                    from: presentingViewController,
+                    checkout: checkout,
+                    completion: wrappedCompletion
+                )
+                // Early exit, presentPaymentOptionsAwaitingMutations will present after awaiting mutations
+                return
+            }
+
             let showPaymentOptions: () -> Void = { [weak self] in
                 guard let self = self else { return }
 
@@ -537,6 +550,57 @@ extension PaymentSheet {
             }
 
             showPaymentOptions()
+        }
+
+        /// Presents a loading sheet while awaiting in-flight Checkout mutations,
+        /// then swaps to the payment options view controller on success or dismisses on failure.
+        private func presentPaymentOptionsAwaitingMutations(
+            from presentingViewController: UIViewController,
+            checkout: Checkout,
+            completion: @escaping (Bool) -> Void
+        ) {
+            let loadingVC = LoadingViewController(
+                delegate: self,
+                appearance: configuration.appearance,
+                isTestMode: configuration.apiClient.isTestmode
+            )
+            let bottomSheetVC = Self.makeBottomSheetViewController(
+                loadingVC,
+                configuration: configuration,
+                didCancelNative3DS2: { [weak self] in
+                    self?.paymentHandler.cancel3DS2ChallengeFlow()
+                }
+            )
+            presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+
+            pendingPresentTask = Task { @MainActor [weak self] in
+                guard let self else { return }
+                do {
+                    try await checkout.awaitPendingOperations()
+                } catch {
+                    guard !Task.isCancelled else { return }
+                    bottomSheetVC.dismiss(animated: true) {
+                        completion(true)
+                    }
+                    return
+                }
+                guard !Task.isCancelled else { return }
+                self.isPresented = true
+                checkout.stpSession.applyAddressOverrides(to: &self.configuration)
+                let updateID = UUID()
+                self.performUpdate(mode: .checkout(checkout), updateID: updateID) { [weak self] error in
+                    guard let self else { return }
+                    if error != nil {
+                        self.isPresented = false
+                        bottomSheetVC.dismiss(animated: true) {
+                            completion(true)
+                        }
+                    } else {
+                        self.viewController.flowControllerDelegate = self
+                        bottomSheetVC.setViewControllers([self.viewController])
+                    }
+                }
+            }
         }
 
         private func presentNativeLinkInPlaceOfFlowController(
@@ -587,7 +651,7 @@ extension PaymentSheet {
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.confirm must be called from the main thread.")
 
-            // assumeIsolated needed because FlowController isn't @MainActor but we assert main thread above.
+            // TODO(porter): Remove assumeIsolated once confirm is @MainActor (blocked on new FC API designs)
             if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
                 assertionFailure("`confirm` should not be called while the Checkout session is loading.")
                 let error = PaymentSheetError.flowControllerConfirmFailed(
@@ -697,7 +761,9 @@ extension PaymentSheet {
             let updateID = beginUpdate()
             Task { @MainActor in
                 do {
-                    try await checkout.awaitPendingOperations()
+                    // The calling mutation is still in the queue (it awaits us before returning),
+                    // so exclude it to avoid a deadlock.
+                    try await checkout.awaitPendingOperations(excludingCurrent: true)
                 } catch {
                     self.failUpdate(updateID)
                     completion(error)
@@ -911,6 +977,23 @@ extension PaymentSheet {
 extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
     var isSheetPresented: Bool {
         isPresented
+    }
+
+    func checkoutDidUpdate(_ checkout: Checkout) async throws {
+        try await update(checkout: checkout)
+    }
+}
+
+// MARK: - LoadingViewControllerDelegate
+
+extension PaymentSheet.FlowController: LoadingViewControllerDelegate {
+    func shouldDismiss(_ loadingViewController: LoadingViewController) {
+        pendingPresentTask?.cancel()
+        pendingPresentTask = nil
+        loadingViewController.dismiss(animated: true) {
+            self.presentPaymentOptionsCompletionWithResult?(true)
+            self.updatePaymentOption()
+        }
     }
 }
 

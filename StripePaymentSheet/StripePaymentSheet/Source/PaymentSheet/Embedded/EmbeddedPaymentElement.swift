@@ -173,7 +173,9 @@ public final class EmbeddedPaymentElement {
         checkout: Checkout
     ) async -> UpdateResult {
         do {
-            try await checkout.awaitPendingOperations()
+            // The calling mutation is still in the queue (it awaits us before returning),
+            // so exclude it to avoid a deadlock.
+            try await checkout.awaitPendingOperations(excludingCurrent: true)
         } catch {
             return .failed(error: error)
         }
@@ -475,6 +477,16 @@ public final class EmbeddedPaymentElement {
 extension EmbeddedPaymentElement: CheckoutIntegrationDelegate {
     var isSheetPresented: Bool {
         presentingViewController?.presentedViewController is BottomSheetViewController
+    }
+
+    func checkoutDidUpdate(_ checkout: Checkout) async throws {
+        let result = await update(checkout: checkout)
+        switch result {
+        case .succeeded, .canceled:
+            break
+        case .failed(let error):
+            throw error
+        }
     }
 }
 

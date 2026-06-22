@@ -25,21 +25,17 @@ extension Checkout {
 
     // MARK: - Session Updates
 
-    /// Replaces the current session, preserves client-side overrides, and notifies the delegate.
+    /// Replaces the current session, preserves client-side overrides, and notifies delegates.
     ///
-    /// - Parameter applyOverrides: Called with the new session after existing overrides are
-    ///   preserved but before state is published. Use this to set client-side properties
-    ///   (e.g. address overrides) that should be visible to the delegate and observers.
-    func updateSession(_ newSession: STPCheckoutSession, applyOverrides: ((STPCheckoutSession) -> Void)? = nil) {
+    /// Client-side address overrides are copied from the current session to `newSession`
+    /// automatically. To update an address, set it on `stpSession` before calling this method.
+    func updateSession(_ newSession: STPCheckoutSession) async throws {
         // Preserve client-side address overrides on the new session.
         newSession.billingAddress = stpSession?.billingAddress
         newSession.shippingAddress = stpSession?.shippingAddress
-        applyOverrides?(newSession)
-        let changed = stpSession?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
         setSession(newSession)
-        if changed {
-            delegate?.checkout(self, didChangeState: state)
-        }
+        try await integrationDelegate?.checkoutDidUpdate(self)
+        delegate?.checkout(self, didChangeState: state)
     }
 
     /// Runs `body` as a tracked session update, serialized behind any in-flight ops.
@@ -68,40 +64,33 @@ extension Checkout {
     }
 
     /// Sends a mutation to the Stripe API and updates the session from the response.
-    ///
-    /// - Parameter applyOverrides: Forwarded to ``updateSession(_:applyOverrides:)``.
-    ///   Runs only after a successful API call — use this to set client-side overrides
-    ///   on the updated session so local state stays in sync with the backend.
-    func performAPIUpdate(
-        _ update: SessionUpdate,
-        applyOverrides: ((STPCheckoutSession) -> Void)? = nil
-    ) async throws {
+    func performAPIUpdate(_ update: SessionUpdate) async throws {
+        let sessionId = Self.extractSessionId(from: clientSecret)
+        let updatedSession: STPCheckoutSession
         do {
-            let sessionId = Self.extractSessionId(from: clientSecret)
-            let updatedSession = try await apiClient.updateCheckoutSession(
+            updatedSession = try await apiClient.updateCheckoutSession(
                 checkoutSessionId: sessionId,
                 parameters: update.parameters
             )
-            updateSession(updatedSession, applyOverrides: applyOverrides)
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
+        try await updateSession(updatedSession)
     }
 
     /// Fetches the latest Checkout Session from Stripe and publishes it to observers.
-    func refreshSession(
-        applyOverrides: ((STPCheckoutSession) -> Void)? = nil
-    ) async throws {
+    func refreshSession() async throws {
+        let sessionId = Self.extractSessionId(from: clientSecret)
+        let refreshedCheckoutSession: STPCheckoutSession
         do {
-            let sessionId = Self.extractSessionId(from: clientSecret)
-            let refreshedCheckoutSession = try await apiClient.initCheckoutSession(
+            refreshedCheckoutSession = try await apiClient.initCheckoutSession(
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
             )
-            updateSession(refreshedCheckoutSession, applyOverrides: applyOverrides)
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
+        try await updateSession(refreshedCheckoutSession)
     }
 
     // MARK: - Validation

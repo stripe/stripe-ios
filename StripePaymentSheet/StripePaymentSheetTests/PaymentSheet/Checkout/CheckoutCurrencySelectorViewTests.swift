@@ -22,10 +22,10 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         XCTAssertTrue(view.isHidden)
     }
 
-    func testHiddenWhenAdaptivePricingNotActive() async {
+    func testHiddenWhenAdaptivePricingNotActive() async throws {
         let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let session = makeSession(adaptivePricingActive: false)
-        checkout.updateSession(session)
+        try await checkout.updateSession(session)
 
         let view = Checkout.CurrencySelectorView(checkout: checkout)
 
@@ -38,10 +38,10 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 1.0)
     }
 
-    func testHiddenWhenLocalizedPricesEmpty() async {
+    func testHiddenWhenLocalizedPricesEmpty() async throws {
         let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let session = makeSession(includeLocalizedPrices: false)
-        checkout.updateSession(session)
+        try await checkout.updateSession(session)
 
         let view = Checkout.CurrencySelectorView(checkout: checkout)
 
@@ -53,10 +53,10 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 1.0)
     }
 
-    func testHiddenWhenExchangeRateMetaNil() async {
+    func testHiddenWhenExchangeRateMetaNil() async throws {
         let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let session = makeSession(includeExchangeRateFields: false)
-        checkout.updateSession(session)
+        try await checkout.updateSession(session)
 
         let view = Checkout.CurrencySelectorView(checkout: checkout)
 
@@ -68,10 +68,10 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 1.0)
     }
 
-    func testVisibleWhenAdaptivePricingActive() async {
+    func testVisibleWhenAdaptivePricingActive() async throws {
         let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let session = makeSession()
-        checkout.updateSession(session)
+        try await checkout.updateSession(session)
 
         let view = Checkout.CurrencySelectorView(checkout: checkout)
 
@@ -83,7 +83,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 1.0)
     }
 
-    func testTransitionsFromHiddenToVisibleOnSessionUpdate() async {
+    func testTransitionsFromHiddenToVisibleOnSessionUpdate() async throws {
         let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let view = Checkout.CurrencySelectorView(checkout: checkout)
 
@@ -92,7 +92,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
         // Update with AP session
         let session = makeSession()
-        checkout.updateSession(session)
+        try await checkout.updateSession(session)
 
         let expectation = expectation(description: "View becomes visible")
         DispatchQueue.main.async {
@@ -104,10 +104,10 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
     // MARK: - Label update tests
 
-    func testLabelsUpdateWhenSessionAmountChanges() async {
+    func testLabelsUpdateWhenSessionAmountChanges() async throws {
         let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let session = makeSession(integrationAmount: 1200, localAmount: 1000)
-        checkout.updateSession(session)
+        try await checkout.updateSession(session)
 
         var appearance = Checkout.CurrencySelectorView.Appearance()
         appearance.labelContent = .amount
@@ -127,7 +127,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
         // Update session with new amounts
         let updatedSession = makeSession(integrationAmount: 2400, localAmount: 2000)
-        checkout.updateSession(updatedSession)
+        try await checkout.updateSession(updatedSession)
 
         let updated = expectation(description: "Labels updated")
         DispatchQueue.main.async {
