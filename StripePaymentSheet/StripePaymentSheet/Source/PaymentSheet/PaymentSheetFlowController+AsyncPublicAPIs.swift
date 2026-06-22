@@ -92,10 +92,8 @@ extension PaymentSheet.FlowController {
         from presentingViewController: UIViewController
     ) async {
         return await withCheckedContinuation { continuation in
-            Task { @MainActor in
-                presentPaymentOptions(from: presentingViewController) {
-                    continuation.resume()
-                }
+            presentPaymentOptions(from: presentingViewController) {
+                continuation.resume()
             }
         }
     }
@@ -107,10 +105,8 @@ extension PaymentSheet.FlowController {
         from presentingViewController: UIViewController
     ) async -> PaymentSheetResult {
         return await withCheckedContinuation { continuation in
-            Task { @MainActor in
-                confirm(from: presentingViewController) { result in
-                    continuation.resume(returning: result)
-                }
+            confirm(from: presentingViewController) { result in
+                continuation.resume(returning: result)
             }
         }
     }
@@ -123,13 +119,11 @@ extension PaymentSheet.FlowController {
     /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
     public func update(intentConfiguration: PaymentSheet.IntentConfiguration) async throws {
         return try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                update(intentConfiguration: intentConfiguration) { error in
-                    if let error {
-                        continuation.resume(throwing: error)
-                    } else {
-                        continuation.resume()
-                    }
+            update(intentConfiguration: intentConfiguration) { error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
                 }
             }
         }
@@ -145,13 +139,11 @@ extension PaymentSheet.FlowController {
     @_spi(ReactNativeSDK)
     public func update(checkout: Checkout) async throws {
         return try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                update(checkout: checkout) { error in
-                    if let error {
-                        continuation.resume(throwing: error)
-                    } else {
-                        continuation.resume()
-                    }
+            update(checkout: checkout) { error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
                 }
             }
         }

@@ -9,6 +9,7 @@ import SwiftUI
 typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
 
 @available(iOS 16.0, *)
+@MainActor
 @_spi(STP) public struct WalletButtonsView: View {
     /// Handler called when a wallet button is tapped. Return `true` to proceed with checkout, `false` to cancel.
     /// The parameter is the wallet type as a string: "apple_pay" or "link"
@@ -222,6 +223,7 @@ struct WalletButtonsView_Previews: PreviewProvider {
 }
 
 fileprivate extension PaymentSheet.FlowController {
+    @MainActor
     static func _mockFlowController() -> PaymentSheet.FlowController {
         let psConfig = PaymentSheet.Configuration()
         let elementsSession = STPElementsSession(allResponseFields: [:], sessionID: "", configID: "", orderedPaymentMethodTypes: [], orderedPaymentMethodTypesAndWallets: ["card", "link", "apple_pay"], unactivatedPaymentMethodTypes: [], countryCode: nil, merchantCountryCode: nil, merchantLogoUrl: nil, linkSettings: nil, experimentsData: nil, flags: [:], paymentMethodSpecs: nil, cardBrandChoice: nil, isApplePayEnabled: true, externalPaymentMethods: [], customPaymentMethods: [], passiveCaptchaData: nil, customer: nil)

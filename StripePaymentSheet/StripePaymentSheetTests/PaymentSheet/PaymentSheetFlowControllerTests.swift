@@ -396,6 +396,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
     // MARK: - Enhanced Completion Block Tests
 
+    @MainActor
     func testPresentPaymentOptions_EnhancedCompletion_BothMethodsExist() {
         // Given a FlowController with mocked dependencies
         let configuration = PaymentSheet.Configuration()

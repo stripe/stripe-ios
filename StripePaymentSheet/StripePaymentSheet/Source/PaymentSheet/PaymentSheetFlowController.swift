@@ -136,6 +136,7 @@ extension PaymentSheet {
     }
 
     /// A class that presents the individual steps of a payment flow
+    @MainActor
     public class FlowController: ObservableObject {
         // MARK: - Public properties
         /// Contains details about a payment method that can be displayed to the customer
@@ -447,7 +448,7 @@ extension PaymentSheet {
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
                 integrationShape: .flowController
-            ) { result in
+            ) { @MainActor result in
                 switch result {
                 case .success(let (loadResult, confirmationChallenge)):
                     let flowController = FlowController(
@@ -512,8 +513,7 @@ extension PaymentSheet {
             presentPaymentOptionsCompletionWithResult = wrappedCompletion
 
             // Mutations in-flight: show loading, await them, then present payment options internally.
-            // TODO(porter): Remove assumeIsolated once presentPaymentOptions is @MainActor (blocked on new FC API designs)
-            if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
+            if let checkout, !checkout.pendingOperations.isEmpty {
                 presentPaymentOptionsAwaitingMutations(
                     from: presentingViewController,
                     checkout: checkout,
@@ -651,8 +651,7 @@ extension PaymentSheet {
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.confirm must be called from the main thread.")
 
-            // TODO(porter): Remove assumeIsolated once confirm is @MainActor (blocked on new FC API designs)
-            if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
+            if let checkout, !checkout.pendingOperations.isEmpty {
                 assertionFailure("`confirm` should not be called while the Checkout session is loading.")
                 let error = PaymentSheetError.flowControllerConfirmFailed(
                     message: "confirmPayment was called while the Checkout session is still loading. Wait until the Checkout state is .loaded before calling confirm."
@@ -809,7 +808,7 @@ extension PaymentSheet {
                 analyticsHelper: analyticsHelper,
                 integrationShape: .flowController,
                 isUpdate: true
-            ) { [weak self] result in
+            ) { @MainActor [weak self] result in
                 assert(Thread.isMainThread, "PaymentSheet.FlowController.update load callback must be called from the main thread.")
                 guard let self = self else {
                     assertionFailure("The PaymentSheet.FlowController instance was destroyed during a call to `update`")
@@ -999,6 +998,7 @@ extension PaymentSheet.FlowController: LoadingViewControllerDelegate {
 
 // MARK: - FlowControllerViewControllerDelegate
 
+@MainActor
 protocol FlowControllerViewControllerDelegate: AnyObject {
     func flowControllerViewControllerShouldClose(
         _ PaymentSheetFlowControllerViewController: FlowControllerViewControllerProtocol, didCancel: Bool)

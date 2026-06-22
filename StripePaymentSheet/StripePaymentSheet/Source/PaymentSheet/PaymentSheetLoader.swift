@@ -43,7 +43,7 @@ final class PaymentSheetLoader {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape,
         isUpdate: Bool = false,
-        completion: @escaping (Result<(LoadResult, ConfirmationChallenge), Error>) -> Void
+        completion: @escaping @MainActor (Result<(LoadResult, ConfirmationChallenge), Error>) -> Void
     ) {
         Task { @MainActor in
             do {
