@@ -17,7 +17,6 @@ extension Checkout {
     /// - Parameter currency: The three-letter ISO currency code to switch to (e.g. "gbp").
     /// - Throws: ``CheckoutError`` if the update fails.
     func selectCurrency(_ currency: String) async throws {
-        try requireOpenSessionForInSheetUpdate()
         try await enqueueSessionUpdate {
             try await self.performAPIUpdate(.setCurrency(currency))
         }
@@ -94,20 +93,6 @@ extension Checkout {
     }
 
     // MARK: - Validation
-
-    /// Validates that the session is open (but allows the sheet to be presented).
-    /// Used by mutations triggered from inside the presented sheet (e.g. currency selection).
-    @discardableResult
-    func requireOpenSessionForInSheetUpdate() throws -> STPCheckoutSession {
-        guard let currentSession = stpSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: state.session))")
-            throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
-        }
-        guard currentSession.status?.type == .open else {
-            throw CheckoutError.sessionNotOpen
-        }
-        return currentSession
-    }
 
     /// Validates that the session is open and no sheet is presented.
     @discardableResult
