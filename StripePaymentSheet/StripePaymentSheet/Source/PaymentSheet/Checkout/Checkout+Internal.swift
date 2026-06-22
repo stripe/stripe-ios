@@ -22,21 +22,6 @@ extension Checkout {
 
     // MARK: - Session Updates
 
-    /// Replaces the current session, preserves client-side overrides, and notifies delegates.
-    ///
-    /// Client-side address overrides are copied from the current session to `newSession`
-    /// automatically. To update an address, set it on `stpSession` before calling this method.
-    func commitSession(_ newSession: STPCheckoutSession) async throws {
-        // Preserve client-side address overrides on the new session.
-        newSession.billingAddress = stpSession?.billingAddress
-        newSession.shippingAddress = stpSession?.shippingAddress
-        stpSession = newSession
-        let publicSession = newSession.makePublicSession()
-        state = pendingOperations.isEmpty ? .loaded(publicSession) : .loading(publicSession)
-        try await integrationDelegate?.checkoutDidUpdate(self)
-        delegate?.checkout(self, didChangeState: state)
-    }
-
     /// Runs `body` as a tracked session update, serialized behind any in-flight ops.
     ///
     /// Operations execute in strict FIFO order: each task waits for the previous

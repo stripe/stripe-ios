@@ -51,7 +51,7 @@ public final class Checkout: ObservableObject {
     /// because they go through `Checkout`'s MainActor-isolated mutation methods.
     /// Requiring full MainActor isolation would propagate `@MainActor` through nearly all of
     /// PaymentSheet's internal types, which is not warranted by the actual concurrency risk.
-    nonisolated(unsafe) var stpSession: STPCheckoutSession!
+    nonisolated(unsafe) private(set) var stpSession: STPCheckoutSession!
 
     weak var integrationDelegate: CheckoutIntegrationDelegate?
 
@@ -309,6 +309,23 @@ public final class Checkout: ObservableObject {
             }
             try await self.commitSession(refreshedCheckoutSession)
         }
+    }
+
+    // MARK: - State updates
+
+    /// Replaces the current session, preserves client-side overrides, and notifies delegates.
+    ///
+    /// Client-side address overrides are copied from the current session to `newSession`
+    /// automatically. To update an address, set it on `stpSession` before calling this method.
+    func commitSession(_ newSession: STPCheckoutSession) async throws {
+        // Preserve client-side address overrides on the new session.
+        newSession.billingAddress = stpSession?.billingAddress
+        newSession.shippingAddress = stpSession?.shippingAddress
+        stpSession = newSession
+        let publicSession = newSession.makePublicSession()
+        state = pendingOperations.isEmpty ? .loaded(publicSession) : .loading(publicSession)
+        try await integrationDelegate?.checkoutDidUpdate(self)
+        delegate?.checkout(self, didChangeState: state)
     }
 
 }
