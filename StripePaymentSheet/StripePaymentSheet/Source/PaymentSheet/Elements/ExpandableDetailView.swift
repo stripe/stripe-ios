@@ -72,7 +72,7 @@ final class ExpandableDetailView: UIView {
             expandedContentLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        isHidden = true
+        setHiddenIfNecessary(true)
     }
 
     // MARK: - Internal
@@ -82,13 +82,13 @@ final class ExpandableDetailView: UIView {
         self.detail = detail
 
         guard let caption, !caption.isEmpty else {
-            isHidden = true
+            setHiddenIfNecessary(true)
             expandedContentLabel.text = nil
             collapse()
             return
         }
 
-        isHidden = false
+        setHiddenIfNecessary(false)
 
         if let detail, !detail.isEmpty {
             rebuildCaptionLabelText()
@@ -179,7 +179,7 @@ final class ExpandableDetailView: UIView {
         guard isExpanded || !expandedContentLabel.isHidden else { return }
         isExpanded = false
         detailHeightConstraint?.constant = 0
-        expandedContentLabel.isHidden = true
+        expandedContentLabel.setHiddenIfNecessary(true)
         expandedContentLabel.alpha = 0
         invalidateLayoutUpHierarchy()
     }
