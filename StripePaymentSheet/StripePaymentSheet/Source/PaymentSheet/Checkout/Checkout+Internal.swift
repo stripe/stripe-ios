@@ -90,19 +90,6 @@ extension Checkout {
 
     // MARK: - Validation
 
-    /// Validates that the session is open and no sheet is presented.
-    @discardableResult
-    func requireOpenSession() throws -> STPCheckoutSession {
-        guard let currentSession = stpSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: state.session))")
-            throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
-        }
-        guard currentSession.status?.type == .open else {
-            throw CheckoutError.sessionNotOpen
-        }
-        return currentSession
-    }
-
     func requireSheetNotPresented() throws {
         guard integrationDelegate?.isSheetPresented != true else {
             throw CheckoutError.sheetCurrentlyPresented
