@@ -75,7 +75,7 @@ final class ExpandableDetailView: UIView {
         isHidden = true
     }
 
-    // MARK: - Public
+    // MARK: - Internal
 
     func update(caption: String?, detail: String?) {
         self.currentCaption = caption
@@ -91,7 +91,7 @@ final class ExpandableDetailView: UIView {
         isHidden = false
 
         if let detail, !detail.isEmpty {
-            rebuildCaptionWithToggle()
+            rebuildCaptionLabelText()
             expandedContentLabel.text = detail
         } else {
             captionLabel.setText(
@@ -109,7 +109,7 @@ final class ExpandableDetailView: UIView {
         guard !isAnimating else { return }
         guard let detail, !detail.isEmpty else { return }
         isExpanded.toggle()
-        rebuildCaptionWithToggle()
+        rebuildCaptionLabelText()
 
         let layoutContainer = Self.layoutAnimationContainer(for: self)
         let targetHeight = expandedDetailHeight()
@@ -146,7 +146,7 @@ final class ExpandableDetailView: UIView {
 
     // MARK: - Private
 
-    private func rebuildCaptionWithToggle() {
+    private func rebuildCaptionLabelText() {
         guard let caption = currentCaption else { return }
         let toggleText = isExpanded ? String.Localized.hideDetails : String.Localized.showDetails
         let fullText = "\(caption) \(toggleText)"
@@ -179,7 +179,7 @@ final class ExpandableDetailView: UIView {
         guard isExpanded || !expandedContentLabel.isHidden else { return }
         isExpanded = false
         detailHeightConstraint?.constant = 0
-        expandedContentLabel.setHiddenIfNecessary(true)
+        expandedContentLabel.isHidden = true
         expandedContentLabel.alpha = 0
         invalidateLayoutUpHierarchy()
     }
