@@ -103,21 +103,6 @@ extension Checkout {
         }
     }
 
-    /// Fetches the latest Checkout Session from Stripe and publishes it to observers.
-    func refreshSession() async throws {
-        let sessionId = Self.extractSessionId(from: clientSecret)
-        let refreshedCheckoutSession: STPCheckoutSession
-        do {
-            refreshedCheckoutSession = try await apiClient.initCheckoutSession(
-                checkoutSessionId: sessionId,
-                adaptivePricingAllowed: configuration.adaptivePricing.allowed
-            )
-        } catch {
-            throw CheckoutError.apiError(message: error.nonGenericDescription)
-        }
-        try await commitSession(refreshedCheckoutSession)
-    }
-
     // MARK: - Validation
 
     /// Validates that the session is open and no sheet is presented.

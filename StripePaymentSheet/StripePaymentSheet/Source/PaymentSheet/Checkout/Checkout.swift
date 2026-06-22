@@ -297,7 +297,17 @@ public final class Checkout: ObservableObject {
                 }
                 throw CheckoutError.apiError(message: error.localizedDescription)
             }
-            try await self.refreshSession()
+            let sessionId = Self.extractSessionId(from: self.clientSecret)
+            let refreshedCheckoutSession: STPCheckoutSession
+            do {
+                refreshedCheckoutSession = try await self.apiClient.initCheckoutSession(
+                    checkoutSessionId: sessionId,
+                    adaptivePricingAllowed: self.configuration.adaptivePricing.allowed
+                )
+            } catch {
+                throw CheckoutError.apiError(message: error.nonGenericDescription)
+            }
+            try await self.commitSession(refreshedCheckoutSession)
         }
     }
 
