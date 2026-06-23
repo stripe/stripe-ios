@@ -10,23 +10,27 @@ final class LinkControllerPreviewAPITests: XCTestCase {
     @MainActor
     func testPreviewSPISurfaceCompiles() {
         _ = LinkPaymentMethodType.card
+        _ = LinkConfiguration(supportedPaymentMethodTypes: [.card])
 
         let result: LinkController.PaymentMethodResult = .canceled
         _ = result
 
         if false {
-            LinkController.create(mode: .payment) { result in
+            LinkController.create(
+                configuration: .init(supportedPaymentMethodTypes: [.card])
+            ) { result in
                 _ = result
             }
 
             Task { @MainActor in
-                let controller = try await LinkController.create(mode: .payment)
+                let controller = try await LinkController.create(
+                    configuration: .init(supportedPaymentMethodTypes: [.card])
+                )
                 _ = controller.paymentMethodPreview
 
                 controller.present(
                     email: "jenny.rosen@example.com",
                     phoneNumber: "+14155551234",
-                    supportedPaymentMethodTypes: [.card],
                     from: UIViewController()
                 ) { result in
                     _ = result
@@ -35,7 +39,6 @@ final class LinkControllerPreviewAPITests: XCTestCase {
                 _ = try await controller.present(
                     email: "jenny.rosen@example.com",
                     phoneNumber: "+14155551234",
-                    supportedPaymentMethodTypes: [.card],
                     from: UIViewController()
                 )
             }

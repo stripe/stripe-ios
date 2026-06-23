@@ -20,7 +20,7 @@ import UIKit
     @_spi(STP) @_spi(LinkControllerPreview) public struct PaymentMethodPreview {
 
         /// Represents the type of selected payment method.
-        @_spi(STP) @_spi(LinkControllerPreview) public enum PaymentMethodType {
+        @_spi(STP) public enum PaymentMethodType {
 
             /// The user chose a card-based payment method, such as a debit or credit card.
             case card
@@ -30,7 +30,7 @@ import UIKit
         }
 
         /// The type of the selected payment method.
-        @_spi(STP) @_spi(LinkControllerPreview) public let paymentMethodType: PaymentMethodType
+        @_spi(STP) public let paymentMethodType: PaymentMethodType
 
         /// The Link icon to render in your screen.
         @_spi(STP) @_spi(LinkControllerPreview) public let icon: UIImage
@@ -92,7 +92,7 @@ import UIKit
     }
 
     /// The intent for which the `LinkController` collects a payment method.
-    @_spi(STP) @_spi(LinkControllerPreview) public enum Mode {
+    @_spi(STP) public enum Mode {
         case payment
         case paymentAndSetupFutureUse
         case setup
@@ -102,10 +102,10 @@ import UIKit
     private let mode: Mode
     private let elementsSession: STPElementsSession
     private let intent: Intent
-    private let configuration: PaymentElementConfiguration
+    private let paymentElementConfiguration: PaymentElementConfiguration
     private let initialLinkBrand: LinkBrand
     private let appearance: LinkAppearance?
-    private let linkConfiguration: LinkConfiguration?
+    private let configuration: LinkConfiguration?
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let requestSurface: LinkRequestSurface
 
@@ -151,10 +151,10 @@ import UIKit
         mode: Mode,
         elementsSession: STPElementsSession,
         intent: Intent,
-        configuration: PaymentElementConfiguration,
+        paymentElementConfiguration: PaymentElementConfiguration,
         linkBrand: LinkBrand,
         appearance: LinkAppearance?,
-        linkConfiguration: LinkConfiguration?,
+        configuration: LinkConfiguration?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         requestSurface: LinkRequestSurface
     ) {
@@ -162,10 +162,10 @@ import UIKit
         self.mode = mode
         self.elementsSession = elementsSession
         self.intent = intent
-        self.configuration = configuration
+        self.paymentElementConfiguration = paymentElementConfiguration
         self.initialLinkBrand = linkBrand
         self.appearance = appearance
-        self.linkConfiguration = linkConfiguration
+        self.configuration = configuration
         self.analyticsHelper = analyticsHelper
         self.requestSurface = requestSurface
 
@@ -193,6 +193,12 @@ import UIKit
         case .unparsable:
             return Self.linkIcon
         }
+    }
+
+    private func resolvedSupportedPaymentMethodTypes(
+        override supportedPaymentMethodTypes: [LinkPaymentMethodType]?
+    ) -> [LinkPaymentMethodType]? {
+        supportedPaymentMethodTypes ?? configuration?.supportedPaymentMethodTypes
     }
 
     private func updatePaymentMethodPreview() {
@@ -228,26 +234,32 @@ import UIKit
         apiClient: STPAPIClient = .shared,
         mode: LinkController.Mode,
         appearance: LinkAppearance? = nil,
-        linkConfiguration: LinkConfiguration? = nil,
+        linkConfiguration configuration: LinkConfiguration? = nil,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<LinkController, Error>) -> Void
     ) {
         Task {
             do {
-                var configuration = PaymentSheet.Configuration()
-                configuration.apiClient = apiClient
+                var paymentElementConfiguration = PaymentSheet.Configuration()
+                paymentElementConfiguration.apiClient = apiClient
                 if let appearance = appearance {
-                    configuration.style = appearance.style
+                    paymentElementConfiguration.style = appearance.style
                 }
 
-                let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .linkController, configuration: configuration)
+                let analyticsHelper = PaymentSheetAnalyticsHelper(
+                    integrationShape: .linkController,
+                    configuration: paymentElementConfiguration
+                )
 
                 let loadResult = try await Self.loadElementsSession(
-                    configuration: configuration,
+                    paymentElementConfiguration: paymentElementConfiguration,
                     analyticsHelper: analyticsHelper
                 )
 
-                guard deviceCanUseNativeLink(elementsSession: loadResult.elementsSession, configuration: configuration) else {
+                guard deviceCanUseNativeLink(
+                    elementsSession: loadResult.elementsSession,
+                    configuration: paymentElementConfiguration
+                ) else {
                     completion(.failure(IntegrationError.missingAppAttestation))
                     return
                 }
@@ -257,10 +269,13 @@ import UIKit
                     mode: mode,
                     elementsSession: loadResult.elementsSession,
                     intent: loadResult.intent,
-                    configuration: configuration,
-                    linkBrand: configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession, linkAccount: LinkAccountContext.shared.account),
+                    paymentElementConfiguration: paymentElementConfiguration,
+                    linkBrand: paymentElementConfiguration.resolvedLinkBrand(
+                        elementsSession: loadResult.elementsSession,
+                        linkAccount: LinkAccountContext.shared.account
+                    ),
                     appearance: appearance,
-                    linkConfiguration: linkConfiguration,
+                    configuration: configuration,
                     analyticsHelper: analyticsHelper,
                     requestSurface: requestSurface
                 )
@@ -271,20 +286,20 @@ import UIKit
         }
     }
 
-    /// Creates a `LinkController` for the specified `mode`.
+    /// Creates a `LinkController` with the specified preview `configuration`.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
-    /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
+    /// - Parameter configuration: Configuration for Link behavior and content. If not specified, default behavior is used.
     /// - Parameter completion: A closure that is called with the result of the creation. It returns a `LinkController` if successful, or an error if the creation failed.
     @_spi(LinkControllerPreview) public static func create(
         apiClient: STPAPIClient = .shared,
-        mode: LinkController.Mode,
+        configuration: LinkConfiguration = .init(),
         completion: @escaping (Result<LinkController, Error>) -> Void
     ) {
         self.create(
             apiClient: apiClient,
-            mode: mode,
-            linkConfiguration: nil,
+            mode: .setup,
+            linkConfiguration: configuration,
             completion: completion
         )
     }
@@ -387,7 +402,7 @@ import UIKit
             mode: .inlineLogin,
             linkAccount: linkAccount,
             brand: resolvedLinkBrand,
-            configuration: configuration,
+            configuration: paymentElementConfiguration,
             appearance: appearance
         )
 
@@ -417,11 +432,11 @@ import UIKit
         collectName: Bool = false,
         completion: @escaping (_ didSelectPaymentMethod: Bool) -> Void
     ) {
-        var configuration = self.configuration
-        configuration.defaultBillingDetails.email = email
+        var paymentElementConfiguration = self.paymentElementConfiguration
+        paymentElementConfiguration.defaultBillingDetails.email = email
 
         if collectName {
-            configuration.billingDetailsCollectionConfiguration.name = .always
+            paymentElementConfiguration.billingDetailsCollectionConfiguration.name = .always
         }
 
         // TODO: We need a way to override Link's default primary button label, since we don't want to show "Pay $xx.xx" even for payment mode.
@@ -429,13 +444,15 @@ import UIKit
 
         presentingViewController.presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentDetails?.stripeID,
-            configuration: configuration,
+            configuration: paymentElementConfiguration,
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
-            supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+            supportedPaymentMethodTypes: resolvedSupportedPaymentMethodTypes(
+                override: supportedPaymentMethodTypes
+            ),
             linkAppearance: appearance,
-            linkConfiguration: linkConfiguration,
+            linkConfiguration: configuration,
             shouldShowSecondaryCta: false
         ) { [weak self] confirmOption, shouldClearSelection in
             guard let confirmOption else {
@@ -462,14 +479,12 @@ import UIKit
     ///
     /// - Parameter email: The email address to look up and associate with the Link account.
     /// - Parameter phoneNumber: Optional phone number in E.164 format to prefill during signup.
-    /// - Parameter supportedPaymentMethodTypes: The payment method types to support. If `nil`, all available types are shown.
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter completion: A closure called with `.success(.completed(paymentMethod))` on selection,
     ///   `.success(.canceled)` if the user dismisses the flow, or `.failure(error)` on API or network errors.
     @_spi(STP) @_spi(LinkControllerPreview) public func present(
         email: String,
         phoneNumber: String? = nil,
-        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         from presentingViewController: UIViewController,
         completion: @escaping (Result<PaymentMethodResult, Error>) -> Void
     ) {
@@ -478,21 +493,21 @@ import UIKit
 
         let presentWallet = { [weak self] in
             guard let self else { return }
-            var configuration = self.configuration
-            configuration.defaultBillingDetails.email = email
+            var paymentElementConfiguration = self.paymentElementConfiguration
+            paymentElementConfiguration.defaultBillingDetails.email = email
             if let phoneNumber {
-                configuration.defaultBillingDetails.phone = phoneNumber
+                paymentElementConfiguration.defaultBillingDetails.phone = phoneNumber
             }
 
             presentingViewController.presentNativeLink(
                 selectedPaymentDetailsID: nil,
-                configuration: configuration,
+                configuration: paymentElementConfiguration,
                 intent: self.intent,
                 elementsSession: self.elementsSession,
                 analyticsHelper: self.analyticsHelper,
-                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+                supportedPaymentMethodTypes: self.resolvedSupportedPaymentMethodTypes(override: nil),
                 linkAppearance: self.appearance,
-                linkConfiguration: self.linkConfiguration,
+                linkConfiguration: self.configuration,
                 shouldShowSecondaryCta: false
             ) { [weak self] confirmOption, _ in
                 guard let self else { return }
@@ -846,7 +861,7 @@ import UIKit
             mode: .inlineLogin,
             linkAccount: linkAccount,
             brand: resolvedLinkBrand,
-            configuration: configuration,
+            configuration: paymentElementConfiguration,
             appearance: appearance,
             consentViewModel: consentViewModel
         )
@@ -919,7 +934,7 @@ import UIKit
     }
 
     private static func loadElementsSession(
-        configuration: PaymentElementConfiguration,
+        paymentElementConfiguration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) async throws -> PaymentSheetLoader.LoadResult {
         // Always load as setup mode, even if the merchant specifies another mode.
@@ -936,7 +951,7 @@ import UIKit
 
         let (result, _) = try await PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfiguration),
-            configuration: configuration,
+            configuration: paymentElementConfiguration,
             analyticsHelper: analyticsHelper,
             // TODO: Add a non-logging integration shape or something
             integrationShape: .paymentSheet
@@ -1024,7 +1039,7 @@ import UIKit
 
         let bottomSheetViewController = BottomSheetViewController(
             contentViewController: fullConsentViewController,
-            appearance: configuration.appearance,
+            appearance: paymentElementConfiguration.appearance,
             isTestMode: false,
             didCancelNative3DS2: {}
         )
@@ -1032,7 +1047,10 @@ import UIKit
         // Store completion handler for use in delegate method
         self.fullConsentCompletion = completion
 
-        viewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
+        viewController.presentAsBottomSheet(
+            bottomSheetViewController,
+            appearance: paymentElementConfiguration.appearance
+        )
     }
 }
 
@@ -1073,11 +1091,17 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
         apiClient: STPAPIClient = .shared,
         mode: LinkController.Mode,
         appearance: LinkAppearance? = nil,
-        linkConfiguration: LinkConfiguration? = nil,
+        linkConfiguration configuration: LinkConfiguration? = nil,
         requestSurface: LinkRequestSurface = .default
     ) async throws -> LinkController {
         return try await withCheckedThrowingContinuation { continuation in
-            create(apiClient: apiClient, mode: mode, appearance: appearance, linkConfiguration: linkConfiguration, requestSurface: requestSurface) { result in
+            create(
+                apiClient: apiClient,
+                mode: mode,
+                appearance: appearance,
+                linkConfiguration: configuration,
+                requestSurface: requestSurface
+            ) { result in
                 switch result {
                 case .success(let controller):
                     continuation.resume(returning: controller)
@@ -1277,18 +1301,18 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
 }
 
 @_spi(LinkControllerPreview) public extension LinkController {
-    
-    /// Creates a `LinkController` for the specified `mode`.
+
+    /// Creates a `LinkController` with the specified preview `configuration`.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
-    /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
+    /// - Parameter configuration: Configuration for Link behavior and content. If not specified, default behavior is used.
     /// - Returns: A `LinkController` if successful, or throws an error if the creation failed.
     static func create(
         apiClient: STPAPIClient = .shared,
-        mode: LinkController.Mode
+        configuration: LinkConfiguration = .init()
     ) async throws -> LinkController {
         return try await withCheckedThrowingContinuation { continuation in
-            create(apiClient: apiClient, mode: mode) { result in
+            create(apiClient: apiClient, configuration: configuration) { result in
                 switch result {
                 case .success(let controller):
                     continuation.resume(returning: controller)
@@ -1298,6 +1322,7 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
             }
         }
     }
+
 }
 
 @_spi(STP) @_spi(LinkControllerPreview) public extension LinkController {
@@ -1313,21 +1338,18 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     ///
     /// - Parameter email: The email address to look up and associate with the Link account.
     /// - Parameter phoneNumber: Optional phone number in E.164 format to prefill during signup.
-    /// - Parameter supportedPaymentMethodTypes: The payment method types to support. If `nil`, all available types are shown.
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Returns: `.completed(paymentMethod)` on selection, or `.canceled` if the user dismisses the flow.
     /// - Throws: An error if the lookup fails or payment method creation fails.
     func present(
         email: String,
         phoneNumber: String? = nil,
-        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         from presentingViewController: UIViewController
     ) async throws -> PaymentMethodResult {
         try await withCheckedThrowingContinuation { continuation in
             present(
                 email: email,
                 phoneNumber: phoneNumber,
-                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 from: presentingViewController
             ) { result in
                 switch result {
