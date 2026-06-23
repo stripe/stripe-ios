@@ -15,20 +15,17 @@ public struct AppAttestationUnavailableError: StripeCryptoOnrampError {
     /// The original error that was mapped to this error.
     public let underlyingError: Swift.Error?
 
-    /// SDK versions included in developer diagnostics, including Stripe iOS and any additional wrapper SDK versions.
-    public let sdkVersions: [SDKVersion]
+    /// Local SDK context used to expose diagnostics.
+    let diagnosticContext: DiagnosticContext
 
     /// Creates an app attestation availability error.
     ///
     /// - Parameters:
     ///   - underlyingError: The original error that was mapped to this error.
-    ///   - additionalSDKVersions: Additional wrapper SDK versions to include in developer diagnostics.
-    public init(
-        underlyingError: Swift.Error,
-        additionalSDKVersions: [SDKVersion] = []
-    ) {
+    ///   - diagnosticContext: Local SDK context used to expose diagnostics.
+    init(underlyingError: Swift.Error, diagnosticContext: DiagnosticContext) {
         self.underlyingError = underlyingError
-        self.sdkVersions = [.stripeIOS] + additionalSDKVersions
+        self.diagnosticContext = diagnosticContext
     }
 
     // MARK: - StripeCryptoOnrampError
@@ -51,7 +48,7 @@ public struct AppAttestationUnavailableError: StripeCryptoOnrampError {
             code: code,
             nextStep: "Confirm app attestation is enabled for this Stripe account and that the app identifier is registered as trusted, then call configure again.",
             docURL: docURL,
-            sdkVersions: sdkVersions
+            diagnosticContext: diagnosticContext
         )
     }
 

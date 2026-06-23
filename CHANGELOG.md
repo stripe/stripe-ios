@@ -4,7 +4,9 @@ MINOR
 ## X.Y.Z - changes pending release
 
 ### CryptoOnramp (Alpha)
-* [Added] Added `AppAttestationUnavailableError`, a rich `StripeCryptoOnrampError` for configuration failures caused by missing app attestation or native Link being unavailable.
+* [Added] Added `AppAttestationUnavailableError`, a rich `StripeCryptoOnrampError` surfaced when configuration fails because app attestation is missing or native Link is unavailable.
+* [Removed] Removed public diagnostic-only properties from rich Crypto Onramp errors: `sdkVersions` from `StripeCryptoOnrampError` and concrete error types; `operation`, `appIdentifier`, and `mode` from `StripeCryptoOnrampAPIError`, `AppAttestationAPIError`, and `UncategorizedAPIError`; and `operation`, `appIdentifier`, `mode`, and `sdkVersions` from `APIErrorContext`. These diagnostics are still included in `developerMessage`.
+* [Changed] Removed public initializers from `AppAttestationAPIError` and `UncategorizedAPIError`, and updated the public `APIErrorContext` initializer to match its remaining API-backed fields.
 * [Changed] Renamed `CryptoOnrampCoordinator.presentCRSCARFDeclaration(from:)` to `presentUserAttestation(from:)`, and renamed `CRSCARFDeclarationResult` to `UserAttestationResult`.
 
 ## 26.0.0 2026-06-12

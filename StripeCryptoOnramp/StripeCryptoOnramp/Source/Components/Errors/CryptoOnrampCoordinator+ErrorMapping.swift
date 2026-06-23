@@ -25,7 +25,11 @@ extension CryptoOnrampCoordinator {
            case .missingAppAttestation = integrationError {
             return appAttestationUnavailableError(
                 from: error,
-                additionalSDKVersions: additionalSDKVersions
+                diagnosticContext: diagnosticContext(
+                    during: operation,
+                    apiClient: apiClient,
+                    additionalSDKVersions: additionalSDKVersions
+                )
             )
         } else if let stripeError = error as? StripeError,
            case let .apiError(apiError) = stripeError {
@@ -43,9 +47,11 @@ extension CryptoOnrampCoordinator {
                     context: apiErrorContext(
                         from: error,
                         apiError: apiError,
+                        docURL: apiError.docUrl
+                    ),
+                    diagnosticContext: diagnosticContext(
                         during: operation,
                         apiClient: apiClient,
-                        docURL: apiError.docUrl,
                         additionalSDKVersions: additionalSDKVersions
                     )
                 )
@@ -66,9 +72,11 @@ extension CryptoOnrampCoordinator {
             context: apiErrorContext(
                 from: error,
                 apiError: apiError,
+                docURL: apiError.docUrl
+            ),
+            diagnosticContext: diagnosticContext(
                 during: operation,
                 apiClient: apiClient,
-                docURL: apiError.docUrl,
                 additionalSDKVersions: additionalSDKVersions
             )
         )
@@ -76,34 +84,40 @@ extension CryptoOnrampCoordinator {
 
     private static func appAttestationUnavailableError(
         from error: Swift.Error,
-        additionalSDKVersions: [SDKVersion]
+        diagnosticContext: DiagnosticContext
     ) -> Swift.Error {
         return AppAttestationUnavailableError(
             underlyingError: error,
-            additionalSDKVersions: additionalSDKVersions
+            diagnosticContext: diagnosticContext
         )
     }
 
     private static func apiErrorContext(
         from error: Swift.Error,
         apiError: StripeAPIError,
-        during operation: CryptoOnrampOperation,
-        apiClient: STPAPIClient,
-        docURL: URL?,
-        additionalSDKVersions: [SDKVersion]
+        docURL: URL?
     ) -> APIErrorContext {
         return APIErrorContext(
             reason: apiError.allResponseFields["reason"] as? String,
-            operation: operation.rawValue,
-            appIdentifier: Bundle.main.bundleIdentifier,
-            mode: apiClient.publishableKey.flatMap(Self.publishableKeyMode),
             apiErrorCode: apiError.code,
             apiErrorType: apiErrorType(from: apiError),
             apiErrorMessage: apiError.message,
             apiUserMessage: apiError.allResponseFields["user_message"] as? String,
             docURL: docURL,
-            underlyingError: error,
-            sdkVersions: [.stripeIOS] + additionalSDKVersions
+            underlyingError: error
+        )
+    }
+
+    private static func diagnosticContext(
+        during operation: CryptoOnrampOperation,
+        apiClient: STPAPIClient,
+        additionalSDKVersions: [SDKVersion]
+    ) -> DiagnosticContext {
+        return DiagnosticContext(
+            sdkVersions: [.stripeIOS] + additionalSDKVersions,
+            operation: operation.rawValue,
+            appPackageName: Bundle.main.bundleIdentifier,
+            mode: apiClient.publishableKey.flatMap(Self.publishableKeyMode)
         )
     }
 

@@ -56,9 +56,6 @@ public protocol StripeCryptoOnrampError: Error, LocalizedError, CustomDebugStrin
 
     /// The original error that was mapped to this error, if one is available.
     var underlyingError: Swift.Error? { get }
-
-    /// SDK versions included in developer diagnostics, including Stripe iOS and any additional wrapper SDK versions.
-    var sdkVersions: [SDKVersion] { get }
 }
 
 /// Default surfaces for rich Crypto Onramp errors.
