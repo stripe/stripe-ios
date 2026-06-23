@@ -1,7 +1,10 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+
+### StripeConnect
+* [Changed] `PaymentsViewController`, `PaymentsViewControllerDelegate`, `PayoutsViewController`, `PayoutsViewControllerDelegate`, and `EmbeddedComponentManager.PaymentsListDefaultFiltersOptions` are now part of the public API and no longer require `@_spi(PreviewConnect)` to access.
 
 ## 26.2.0 2026-07-06
 ### CryptoOnramp (Alpha)

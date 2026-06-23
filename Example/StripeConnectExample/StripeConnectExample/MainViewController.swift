@@ -54,12 +54,8 @@ class MainViewController: UITableViewController {
 
         var stageQualifier: String? {
             switch self {
-            case .onboarding:
-                return nil  // GA
-            case .payouts:
-                return "Beta"
-            case .payments:
-                return "Beta"
+            case .onboarding, .payouts, .payments:
+                return nil
             case .checkScanning:
                 return "Private Preview"
             }
