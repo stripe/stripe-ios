@@ -29,12 +29,7 @@ struct DiagnosticContext {
     ///   - operation: The SDK operation that was running when this error occurred.
     ///   - appPackageName: The app identifier using the SDK, if one is available.
     ///   - mode: The Stripe mode associated with this error, if it can be determined.
-    init(
-        sdkVersions: [SDKVersion] = [],
-        operation: String,
-        appPackageName: String?,
-        mode: String?
-    ) {
+    init(sdkVersions: [SDKVersion] = [], operation: String, appPackageName: String?, mode: String?) {
         self.sdkVersions = sdkVersions.isEmpty ? [.stripeIOS] : sdkVersions
         self.operation = operation
         self.appPackageName = appPackageName
