@@ -3,6 +3,9 @@ MINOR
 
 ## X.Y.Z - changes pending release
 
+### StripeConnect
+* [Changed] `PaymentsViewController`, `PaymentsViewControllerDelegate`, `PayoutsViewController`, `PayoutsViewControllerDelegate`, and `EmbeddedComponentManager.PaymentsListDefaultFiltersOptions` are now part of the public API and no longer require `@_spi(PreviewConnect)` to access.
+
 ### CryptoOnramp (Alpha)
 * [Changed] Renamed `CryptoOnrampCoordinator.presentCRSCARFDeclaration(from:)` to `presentUserAttestation(from:)`, and renamed `CRSCARFDeclarationResult` to `UserAttestationResult`.
 
