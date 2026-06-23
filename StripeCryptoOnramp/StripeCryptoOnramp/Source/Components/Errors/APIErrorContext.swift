@@ -15,7 +15,7 @@ import Foundation
 public protocol APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
-    var context: APIErrorContext { get }
+    var apiErrorContext: APIErrorContext { get }
 }
 
 @_spi(CryptoOnrampAlpha)
@@ -23,37 +23,37 @@ public extension APIErrorContextProviding {
 
     /// A URL to documentation for this error, if one is available.
     var docURL: URL? {
-        return context.docURL
+        return apiErrorContext.docURL
     }
 
     /// The original error that was mapped to this error, if one is available.
     var underlyingError: Swift.Error? {
-        return context.underlyingError
+        return apiErrorContext.underlyingError
     }
 
     /// The backend `reason` value associated with this error, if one is available.
     var reason: String? {
-        return context.reason
+        return apiErrorContext.reason
     }
 
     /// The backend API error type associated with this error, if one is available.
     var type: String? {
-        return context.apiErrorType
+        return apiErrorContext.apiErrorType
     }
 
     /// The Stripe API request ID associated with this error, if one is available.
     var requestID: String? {
-        return context.requestID
+        return apiErrorContext.requestID
     }
 
     /// The backend developer-facing API error message associated with this error, if one is available.
     var apiMessage: String? {
-        return context.apiErrorMessage
+        return apiErrorContext.apiErrorMessage
     }
 
     /// The backend user-facing API error message associated with this error, if one is available.
     var apiUserMessage: String? {
-        return context.apiUserMessage
+        return apiErrorContext.apiUserMessage
     }
 
 }

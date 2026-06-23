@@ -140,7 +140,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
     }
 
     func testAPIErrorCodeFallsBackWhenBackendCodeIsUnavailable() {
-        let context = APIErrorContext(
+        let apiErrorContext = APIErrorContext(
             reason: nil,
             apiErrorCode: nil,
             apiErrorType: nil,
@@ -157,14 +157,14 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
 
         XCTAssertEqual(
             AppAttestationAPIError(
-                context: context,
+                apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
             "link_failed_to_attest_request"
         )
         XCTAssertEqual(
             UncategorizedAPIError(
-                context: context,
+                apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
             "uncategorized_api_error"

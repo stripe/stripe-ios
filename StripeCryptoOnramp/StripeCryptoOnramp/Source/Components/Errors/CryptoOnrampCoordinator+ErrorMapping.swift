@@ -44,7 +44,7 @@ extension CryptoOnrampCoordinator {
                 )
             default:
                 return UncategorizedAPIError(
-                    context: apiErrorContext(
+                    apiErrorContext: makeAPIErrorContext(
                         from: error,
                         apiError: apiError,
                         docURL: apiError.docUrl
@@ -69,7 +69,7 @@ extension CryptoOnrampCoordinator {
         additionalSDKVersions: [SDKVersion]
     ) -> Swift.Error {
         return AppAttestationAPIError(
-            context: apiErrorContext(
+            apiErrorContext: makeAPIErrorContext(
                 from: error,
                 apiError: apiError,
                 docURL: apiError.docUrl
@@ -92,7 +92,7 @@ extension CryptoOnrampCoordinator {
         )
     }
 
-    private static func apiErrorContext(
+    private static func makeAPIErrorContext(
         from error: Swift.Error,
         apiError: StripeAPIError,
         docURL: URL?

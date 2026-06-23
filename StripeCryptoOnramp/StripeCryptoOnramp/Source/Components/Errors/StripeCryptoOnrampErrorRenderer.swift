@@ -46,7 +46,7 @@ enum StripeCryptoOnrampErrorRenderer {
     }
 
     static func renderAPIErrorDeveloperMessage(
-        context: APIErrorContext,
+        apiErrorContext: APIErrorContext,
         diagnosticContext: DiagnosticContext,
         summary: String,
         code: String,
@@ -56,11 +56,11 @@ enum StripeCryptoOnrampErrorRenderer {
             developerBody: developerBodyWithContext(
                 summary: summary,
                 contextTitle: "Request Context:",
-                contextLines: requestContextLines(context, diagnosticContext: diagnosticContext)
+                contextLines: requestContextLines(apiErrorContext, diagnosticContext: diagnosticContext)
             ),
             code: code,
             nextStep: nextStep,
-            docURL: context.docURL,
+            docURL: apiErrorContext.docURL,
             sdkVersions: diagnosticContext.sdkVersions
         )
     }
@@ -117,11 +117,11 @@ enum StripeCryptoOnrampErrorRenderer {
         ].compactMap { $0 }
     }
 
-    private static func requestContextLines(_ context: APIErrorContext, diagnosticContext: DiagnosticContext) -> [String] {
+    private static func requestContextLines(_ apiErrorContext: APIErrorContext, diagnosticContext: DiagnosticContext) -> [String] {
         return diagnosticContextLines(diagnosticContext) + [
-            context.reason.map { "reason: \($0)" },
-            context.requestID.map { "request_id: \($0)" },
-            context.apiErrorType.map { "type: \($0)" },
+            apiErrorContext.reason.map { "reason: \($0)" },
+            apiErrorContext.requestID.map { "request_id: \($0)" },
+            apiErrorContext.apiErrorType.map { "type: \($0)" },
         ].compactMap { $0 }
     }
 }
