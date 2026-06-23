@@ -194,8 +194,8 @@ struct ExampleLinkControllerPreviewView: View {
             isLoading = false
 
             switch result {
-            case .completed(let paymentMethod):
-                statusMessage = "Payment method created (ID: \(paymentMethod.stripeId))"
+            case .completed(let confirmationToken):
+                statusMessage = "Confirmation token created (ID: \(confirmationToken.stripeId))"
             case .canceled:
                 statusMessage = "Present flow canceled"
             }

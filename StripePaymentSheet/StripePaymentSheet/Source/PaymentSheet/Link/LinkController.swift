@@ -13,7 +13,7 @@ import UIKit
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
-/// A controller that presents the Link flow to collect and create a customer's payment method.
+/// A controller that presents the Link flow to collect a customer's payment details.
 @MainActor @_spi(STP) @_spi(LinkControllerPreview) public class LinkController: ObservableObject {
 
     /// Represents the payment method currently selected by the user.
@@ -49,11 +49,11 @@ import UIKit
         case canceled
     }
 
-    /// The result of presenting Link to collect a payment method.
-    @frozen @_spi(STP) @_spi(LinkControllerPreview) public enum PaymentMethodResult {
-        /// The user selected a payment method. The associated value is the resulting `STPPaymentMethod`.
-        case completed(STPPaymentMethod)
-        /// The user dismissed the flow without selecting a payment method.
+    /// The result of presenting Link to collect payment details.
+    @frozen @_spi(STP) @_spi(LinkControllerPreview) public enum PresentResult {
+        /// The user selected payment details. The associated value is the resulting `STPConfirmationToken`.
+        case completed(STPConfirmationToken)
+        /// The user dismissed the flow without selecting payment details.
         case canceled
     }
 
@@ -469,24 +469,24 @@ import UIKit
     }
 
     /// Presents the full Link payment method selection flow, handling lookup, authentication or signup,
-    /// wallet display, and payment method creation in a single call.
+    /// wallet display, and confirmation token creation in a single call.
     ///
     /// Under the hood, this method:
     /// 1. Looks up the consumer by email, unless an authenticated session for that email already exists.
     /// 2. Presents the Link sheet, routing to signup, OTP verification, or the wallet based on account state.
     ///    If `phoneNumber` is provided, it is prefilled in the signup form.
-    /// 3. Once the user selects a payment method, creates and returns an `STPPaymentMethod`.
+    /// 3. Once the user selects a payment method, creates and returns an `STPConfirmationToken`.
     ///
     /// - Parameter email: The email address to look up and associate with the Link account.
     /// - Parameter phoneNumber: Optional phone number in E.164 format to prefill during signup.
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
-    /// - Parameter completion: A closure called with `.success(.completed(paymentMethod))` on selection,
+    /// - Parameter completion: A closure called with `.success(.completed(confirmationToken))` on selection,
     ///   `.success(.canceled)` if the user dismisses the flow, or `.failure(error)` on API or network errors.
     @_spi(STP) @_spi(LinkControllerPreview) public func present(
         email: String,
         phoneNumber: String? = nil,
         from presentingViewController: UIViewController,
-        completion: @escaping (Result<PaymentMethodResult, Error>) -> Void
+        completion: @escaping (Result<PresentResult, Error>) -> Void
     ) {
         let alreadyAuthenticated = linkAccount?.sessionState == .verified
             && linkAccount?.email.lowercased() == email.lowercased()
@@ -516,11 +516,11 @@ import UIKit
                     return
                 }
                 self.internalPaymentOption = .link(option: confirmOption)
-                self.createPaymentMethod { result in
-                    switch result {
-                    case .success(let paymentMethod):
-                        completion(.success(.completed(paymentMethod)))
-                    case .failure(let error):
+                Task { @MainActor in
+                    do {
+                        let confirmationToken = try await self.createConfirmationToken()
+                        completion(.success(.completed(confirmationToken)))
+                    } catch {
                         completion(.failure(error))
                     }
                 }
@@ -878,6 +878,65 @@ import UIKit
                 completion(.failure(error))
             }
         }
+    }
+
+    static func makeConfirmationTokenParams(
+        paymentMethod: STPPaymentMethod,
+        mode: Mode,
+        configuration: PaymentElementConfiguration
+    ) -> STPConfirmationTokenParams {
+        let confirmationTokenParams = STPConfirmationTokenParams()
+        confirmationTokenParams.paymentMethod = paymentMethod.stripeId
+        confirmationTokenParams.returnURL = configuration.returnURL
+        confirmationTokenParams.shipping = configuration.shippingDetails()?.paymentIntentShippingDetailsParams
+
+        let setupFutureUsage = setupFutureUsage(for: mode)
+        if let setupFutureUsage {
+            confirmationTokenParams.setupFutureUsage = setupFutureUsage
+        }
+
+        switch mode {
+        case .payment, .paymentAndSetupFutureUse:
+            if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethod.type),
+               let setupFutureUsage,
+               [.offSession, .onSession].contains(setupFutureUsage)
+            {
+                confirmationTokenParams.mandateData = .makeWithInferredValues()
+            }
+
+            if confirmationTokenParams.mandateData == nil {
+                confirmationTokenParams.mandateData = STPPaymentIntentConfirmParams.mandateDataIfRequired(for: paymentMethod.type)
+            }
+        case .setup:
+            if STPPaymentMethodType.requiresMandateDataForSetupIntent.contains(paymentMethod.type) {
+                confirmationTokenParams.mandateData = .makeWithInferredValues()
+            }
+
+            if confirmationTokenParams.mandateData == nil {
+                confirmationTokenParams.mandateData = STPSetupIntentConfirmParams.mandateDataIfRequired(for: paymentMethod.type)
+            }
+        }
+
+        return confirmationTokenParams
+    }
+
+    private static func setupFutureUsage(for mode: Mode) -> STPPaymentIntentSetupFutureUsage? {
+        switch mode {
+        case .payment:
+            return nil
+        case .paymentAndSetupFutureUse, .setup:
+            return .offSession
+        }
+    }
+
+    private func createConfirmationToken() async throws -> STPConfirmationToken {
+        let paymentMethod = try await createPaymentMethod()
+        let confirmationTokenParams = Self.makeConfirmationTokenParams(
+            paymentMethod: paymentMethod,
+            mode: mode,
+            configuration: paymentElementConfiguration
+        )
+        return try await apiClient.createConfirmationToken(with: confirmationTokenParams)
     }
 
     private func createPaymentMethodInPassthroughMode(
@@ -1328,24 +1387,24 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
 @_spi(STP) @_spi(LinkControllerPreview) public extension LinkController {
 
     /// Presents the full Link payment method selection flow, handling lookup, authentication or signup,
-    /// wallet display, and payment method creation in a single call.
+    /// wallet display, and confirmation token creation in a single call.
     ///
     /// Under the hood, this method:
     /// 1. Looks up the consumer by email.
     /// 2. Presents the Link sheet, routing to signup, OTP verification, or the wallet based on account state.
     ///    If `phoneNumber` is provided, it is prefilled in the signup form.
-    /// 3. Once the user selects a payment method, creates and returns an `STPPaymentMethod`.
+    /// 3. Once the user selects a payment method, creates and returns an `STPConfirmationToken`.
     ///
     /// - Parameter email: The email address to look up and associate with the Link account.
     /// - Parameter phoneNumber: Optional phone number in E.164 format to prefill during signup.
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
-    /// - Returns: `.completed(paymentMethod)` on selection, or `.canceled` if the user dismisses the flow.
-    /// - Throws: An error if the lookup fails or payment method creation fails.
+    /// - Returns: `.completed(confirmationToken)` on selection, or `.canceled` if the user dismisses the flow.
+    /// - Throws: An error if the lookup fails or confirmation token creation fails.
     func present(
         email: String,
         phoneNumber: String? = nil,
         from presentingViewController: UIViewController
-    ) async throws -> PaymentMethodResult {
+    ) async throws -> PresentResult {
         try await withCheckedThrowingContinuation { continuation in
             present(
                 email: email,
@@ -1353,8 +1412,8 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
                 from: presentingViewController
             ) { result in
                 switch result {
-                case .success(let paymentMethodResult):
-                    continuation.resume(returning: paymentMethodResult)
+                case .success(let presentResult):
+                    continuation.resume(returning: presentResult)
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }

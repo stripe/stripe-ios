@@ -551,8 +551,8 @@ struct ExampleLinkControllerView: View {
             await MainActor.run {
                 self.isLoading = false
                 switch result {
-                case .completed(let paymentMethod):
-                    self.statusMessage = "Payment method created (ID: \(paymentMethod.stripeId))"
+                case .completed(let confirmationToken):
+                    self.statusMessage = "Confirmation token created (ID: \(confirmationToken.stripeId))"
                 case .canceled:
                     self.statusMessage = "Present flow canceled"
                 }
