@@ -23,7 +23,8 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     typealias State = SelfieImageScanningSession.State
 
     private enum Constants {
-        static let captureAcknowledgementDuration: TimeInterval = 0.55
+        static let legacyCaptureAcknowledgementDuration: TimeInterval = 0.55
+        static let threeDCaptureAcknowledgementDuration: TimeInterval = 0.8
     }
 
     // MARK: View Models
@@ -132,7 +133,10 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                         imageScanningSession.cameraSession,
                         showFlashAnimation: scanningState.frontSamples.count == 1,
                         statusText: statusText(for: scanningState),
-                        captureGuideHighlight: currentCaptureGuideHighlight
+                        captureGuideHighlight: currentCaptureGuideHighlight,
+                        uses3DCaptureAnimations: apiConfig.enable3DFaceCapture,
+                        captureGuideTarget: captureGuideTarget(for: scanningState.phase),
+                        captureGuideProgress: currentCaptureGuideProgress
                     ),
                     instructionalText: instructionalText(for: scanningState),
                     havingTroubleHandler: { [weak self] in
@@ -208,6 +212,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     private var captureAcknowledgementTimer: Timer?
 
     private var currentCaptureGuideHighlight: SelfieScanningView.ViewModel.CaptureGuideHighlight = .none
+    private var currentCaptureGuideProgress: CGFloat = 0
     private var latestScanningState = FaceCaptureScanningState.initialValue()
 
     // MARK: Init
@@ -422,6 +427,39 @@ extension SelfieCaptureViewController {
             return .right
         }
     }
+
+    func captureGuideTarget(
+        for phase: FaceCaptureScanningState.Phase
+    ) -> SelfieScanningView.ViewModel.CaptureGuideTarget {
+        guard apiConfig.enable3DFaceCapture else {
+            return .none
+        }
+
+        switch phase {
+        case .front:
+            return .none
+        case .left:
+            return .left
+        case .right:
+            return .right
+        }
+    }
+
+    func captureGuideProgress(
+        for facePose: FacePose,
+        expectedPose: FaceCapturePose
+    ) -> CGFloat {
+        let progress: Float
+        switch expectedPose {
+        case .front:
+            return 0
+        case .left:
+            progress = facePose.yaw / FacePose.Thresholds.yawLeftMax
+        case .right:
+            progress = facePose.yaw / FacePose.Thresholds.yawRightMin
+        }
+        return CGFloat(min(max(progress, 0), 1))
+    }
 }
 
 // MARK: - ImageScanningSessionDelegate
@@ -470,6 +508,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
 
     func imageScanningSessionDidReset(_ scanningSession: SelfieImageScanningSession) {
         currentCaptureGuideHighlight = .none
+        currentCaptureGuideProgress = 0
         stopCaptureAcknowledgementTimer()
         latestScanningState = .initialValue()
         selfieUploader.reset()
@@ -489,6 +528,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         willStartScanningForClassification classification: EmptyClassificationType
     ) {
         currentCaptureGuideHighlight = .none
+        currentCaptureGuideProgress = 0
         stopCaptureAcknowledgementTimer()
         latestScanningState = .initialValue()
         // Focus the accessibility VoiceOver back onto the capture view
@@ -538,6 +578,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
 
         guard scannerOutput.isValid else {
             currentCaptureGuideHighlight = .none
+            currentCaptureGuideProgress = 0
             latestScanningState = scanningState
             scanningSession.updateScanningState(scanningState)
             updateUI()
@@ -585,7 +626,10 @@ extension SelfieCaptureViewController {
         scannerOutput: FaceScannerOutput,
         exifMetadata: CameraExifMetadata?
     ) {
-        currentCaptureGuideHighlight = .front
+        if !apiConfig.enable3DFaceCapture {
+            currentCaptureGuideHighlight = .front
+        }
+        currentCaptureGuideProgress = 0
         var nextState = scanningState
         if scannerOutput.facePose != nil {
             nextState.supportsPoseCapture = true
@@ -621,6 +665,7 @@ extension SelfieCaptureViewController {
         }
 
         guard let firstPose = nextPose(after: nextState) else {
+            currentCaptureGuideHighlight = .front
             latestScanningState = nextState
             notifyCaptureAccepted()
             uploadAndSave(faceCaptureData: faceCaptureData)
@@ -628,6 +673,7 @@ extension SelfieCaptureViewController {
         }
 
         nextState.supportsPoseCapture = true
+        currentCaptureGuideHighlight = .front
         latestScanningState = nextState
         notifyCaptureAccepted()
         scanningSession.updateScanningState(nextState)
@@ -638,6 +684,7 @@ extension SelfieCaptureViewController {
             var nextPoseState = nextState
             nextPoseState.phase = self.scanningPhase(for: firstPose)
             self.currentCaptureGuideHighlight = .none
+            self.currentCaptureGuideProgress = 0
             self.latestScanningState = nextPoseState
             scanningSession.startTimeoutTimer()
             scanningSession.updateScanningState(nextPoseState)
@@ -654,11 +701,17 @@ extension SelfieCaptureViewController {
     ) {
         guard let facePose = scannerOutput.facePose else {
             currentCaptureGuideHighlight = .none
+            currentCaptureGuideProgress = 0
             latestScanningState = scanningState
             scanningSession.updateScanningState(scanningState)
             updateUI()
             return
         }
+
+        currentCaptureGuideProgress = captureGuideProgress(
+            for: facePose,
+            expectedPose: expectedPose
+        )
 
         guard facePose.direction == expectedPose else {
             currentCaptureGuideHighlight = .none
@@ -669,6 +722,7 @@ extension SelfieCaptureViewController {
         }
 
         currentCaptureGuideHighlight = captureGuideHighlight(for: expectedPose)
+        currentCaptureGuideProgress = 1
         var nextState = scanningState
         let capturedSample = FaceScannerInputOutput(
             image: image,
@@ -699,6 +753,7 @@ extension SelfieCaptureViewController {
                 var nextPoseState = nextState
                 nextPoseState.phase = self.scanningPhase(for: nextPose)
                 self.currentCaptureGuideHighlight = .none
+                self.currentCaptureGuideProgress = 0
                 self.latestScanningState = nextPoseState
                 scanningSession.startTimeoutTimer()
                 scanningSession.updateScanningState(nextPoseState)
@@ -724,8 +779,11 @@ extension SelfieCaptureViewController {
 
     fileprivate func scheduleCaptureAcknowledgement(_ block: @escaping () -> Void) {
         stopCaptureAcknowledgementTimer()
+        let duration = apiConfig.enable3DFaceCapture
+            ? Constants.threeDCaptureAcknowledgementDuration
+            : Constants.legacyCaptureAcknowledgementDuration
         captureAcknowledgementTimer = Timer.scheduledTimer(
-            withTimeInterval: Constants.captureAcknowledgementDuration,
+            withTimeInterval: duration,
             repeats: false
         ) { [weak self] _ in
             self?.captureAcknowledgementTimer = nil

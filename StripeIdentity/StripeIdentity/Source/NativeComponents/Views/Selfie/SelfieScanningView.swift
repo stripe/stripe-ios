@@ -81,6 +81,12 @@ final class SelfieScanningView: UIView {
             case right
         }
 
+        enum CaptureGuideTarget: Equatable {
+            case none
+            case left
+            case right
+        }
+
         enum StatusText {
             case placeFace
             case holdStill
@@ -151,7 +157,10 @@ final class SelfieScanningView: UIView {
                 CameraSessionProtocol,
                 showFlashAnimation: Bool,
                 statusText: StatusText?,
-                captureGuideHighlight: CaptureGuideHighlight
+                captureGuideHighlight: CaptureGuideHighlight,
+                uses3DCaptureAnimations: Bool = false,
+                captureGuideTarget: CaptureGuideTarget = .none,
+                captureGuideProgress: CGFloat = 0
             )
             /// Display scanned selfie images
             case scanned(
@@ -417,7 +426,15 @@ final class SelfieScanningView: UIView {
             previewContainerView.isHidden = false
             havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
 
-        case .videoPreview(let cameraSession, _, let statusText, let captureGuideHighlight):
+        case .videoPreview(
+            let cameraSession,
+            _,
+            let statusText,
+            let captureGuideHighlight,
+            let uses3DCaptureAnimations,
+            let captureGuideTarget,
+            let captureGuideProgress
+        ):
             instructionLabelView.isHidden = true
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
@@ -427,6 +444,12 @@ final class SelfieScanningView: UIView {
             cameraPreviewView.session = cameraSession
             captureTickMarksView.isHidden = false
             captureTickMarksView.setShowsCenteredShadow(true, animated: true)
+            captureTickMarksView.setUses3DCaptureAnimations(uses3DCaptureAnimations)
+            captureTickMarksView.setCaptureGuideTarget(
+                captureGuideTarget,
+                progress: captureGuideProgress,
+                animated: true
+            )
             captureTickMarksView.setCaptureGuideHighlight(captureGuideHighlight, animated: true)
             if let statusText {
                 configureStatusLabel(statusText)
@@ -689,8 +712,16 @@ private final class CaptureTickMarksView: UIView {
         static let tickCount = 77
         static let tickLength: CGFloat = 10
         static let highlightedTickLength: CGFloat = 17
-        static let highlightedTickAnimationDuration: TimeInterval = 0.18
         static let tickWidth: CGFloat = 2
+        static let highlightedTickWidth: CGFloat = 3
+        static let legacyHighlightAnimationDuration: TimeInterval = 0.18
+        static let instructionAnimationDuration: TimeInterval = 0.8
+        static let feedbackAnimationDuration: TimeInterval = 0.15
+        static let successAnimationDuration: TimeInterval = 0.5
+        static let successFadeOutDuration: TimeInterval = 0.3
+        static let successCheckmarkSize: CGFloat = 32
+        static let successCheckmarkInitialOffset: CGFloat = 20
+        static let successCheckmarkInitialScale: CGFloat = 0.8
         static let horizontalDiameterToWidthRatio: CGFloat = 0.72
         static let verticalDiameterToHeightRatio: CGFloat = 0.66
         static let centerYRatio: CGFloat = 0.42
@@ -708,8 +739,29 @@ private final class CaptureTickMarksView: UIView {
         static let centeredShadowFadeInDuration: TimeInterval = SelfieScanningView.Styling.captureGuideShadowFadeInDuration
     }
 
+    private var uses3DCaptureAnimations = false
     private var captureGuideHighlight: SelfieScanningView.ViewModel.CaptureGuideHighlight = .none
+    private var captureGuideTarget: SelfieScanningView.ViewModel.CaptureGuideTarget = .none
+    private var targetProgress: CGFloat = 0
+    private var displayedTargetProgress: CGFloat = 0 {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    private var targetProgressAnimationStartValue: CGFloat = 0
+    private var targetProgressAnimationStartTime: CFTimeInterval?
+    private var directionalPulseProgress: CGFloat = 0 {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    private var directionalPulseAnimationStartTime: CFTimeInterval?
     private var highlightedTickProgress: CGFloat = 0 {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    private var highlightedTickOpacity: CGFloat = 0 {
         didSet {
             setNeedsDisplay()
         }
@@ -722,12 +774,86 @@ private final class CaptureTickMarksView: UIView {
     }
     private var highlightedTickDisplayLink: CADisplayLink?
     private var highlightedTickAnimationStartTime: CFTimeInterval?
+    private var targetTickDisplayLink: CADisplayLink?
     private var centeredShadowDisplayLink: CADisplayLink?
     private var centeredShadowAnimationStartTime: CFTimeInterval?
 
+    private let successCheckmarkView: UIImageView = {
+        let imageView = UIImageView(
+            image: UIImage(systemName: "checkmark.circle.fill")?.withRenderingMode(.alwaysTemplate)
+        )
+        imageView.tintColor = .white
+        imageView.contentMode = .scaleAspectFit
+        imageView.alpha = 0
+        imageView.isHidden = true
+        imageView.layer.shadowColor = UIColor.black.cgColor
+        imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        imageView.layer.shadowRadius = 8
+        imageView.layer.shadowOpacity = 0.4
+        return imageView
+    }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        addSubview(successCheckmarkView)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     deinit {
         highlightedTickDisplayLink?.invalidate()
+        targetTickDisplayLink?.invalidate()
         centeredShadowDisplayLink?.invalidate()
+    }
+
+    func setUses3DCaptureAnimations(_ uses3DCaptureAnimations: Bool) {
+        guard uses3DCaptureAnimations != self.uses3DCaptureAnimations else {
+            return
+        }
+
+        self.uses3DCaptureAnimations = uses3DCaptureAnimations
+        resetTargetAnimation()
+        resetHighlightAnimation()
+    }
+
+    func setCaptureGuideTarget(
+        _ captureGuideTarget: SelfieScanningView.ViewModel.CaptureGuideTarget,
+        progress: CGFloat,
+        animated: Bool
+    ) {
+        let clampedProgress = min(max(progress, 0), 1)
+        let didChangeTarget = captureGuideTarget != self.captureGuideTarget
+        guard didChangeTarget || clampedProgress != targetProgress else {
+            return
+        }
+
+        self.captureGuideTarget = captureGuideTarget
+        targetProgress = clampedProgress
+
+        guard uses3DCaptureAnimations, captureGuideTarget != .none else {
+            resetTargetAnimation()
+            return
+        }
+
+        if didChangeTarget {
+            displayedTargetProgress = 0
+            directionalPulseProgress = 0
+            directionalPulseAnimationStartTime = CACurrentMediaTime()
+        }
+
+        guard animated, window != nil else {
+            displayedTargetProgress = clampedProgress
+            targetProgressAnimationStartTime = nil
+            directionalPulseProgress = 0
+            directionalPulseAnimationStartTime = nil
+            return
+        }
+
+        targetProgressAnimationStartValue = displayedTargetProgress
+        targetProgressAnimationStartTime = CACurrentMediaTime()
+        startTargetTickDisplayLinkIfNeeded()
     }
 
     func setShowsCenteredShadow(_ showsCenteredShadow: Bool, animated: Bool) {
@@ -774,15 +900,22 @@ private final class CaptureTickMarksView: UIView {
 
         guard captureGuideHighlight != .none else {
             highlightedTickProgress = 0
+            highlightedTickOpacity = 0
+            successCheckmarkView.alpha = 0
+            successCheckmarkView.isHidden = true
             return
         }
 
         guard animated, window != nil else {
             highlightedTickProgress = 1
+            highlightedTickOpacity = 1
+            configureSuccessCheckmark(progress: 1, opacity: 1)
             return
         }
 
         highlightedTickProgress = 0
+        highlightedTickOpacity = 0
+        successCheckmarkView.isHidden = !uses3DCaptureAnimations
         let displayLink = CADisplayLink(
             target: self,
             selector: #selector(updateHighlightedTickAnimation)
@@ -800,18 +933,188 @@ private final class CaptureTickMarksView: UIView {
         }
 
         let elapsedTime = displayLink.timestamp - highlightedTickAnimationStartTime
-        let progress = min(
-            max(elapsedTime / Styling.highlightedTickAnimationDuration, 0),
-            1
-        )
-        highlightedTickProgress = progress
+        if uses3DCaptureAnimations {
+            let fadeInProgress = min(
+                max(elapsedTime / Styling.successAnimationDuration, 0),
+                1
+            )
+            highlightedTickProgress = materialEase(fadeInProgress)
 
+            if elapsedTime <= Styling.successAnimationDuration {
+                highlightedTickOpacity = highlightedTickProgress
+            } else {
+                let fadeOutProgress = min(
+                    max(
+                        (elapsedTime - Styling.successAnimationDuration)
+                            / Styling.successFadeOutDuration,
+                        0
+                    ),
+                    1
+                )
+                highlightedTickOpacity = 1 - fadeOutProgress
+            }
+            configureSuccessCheckmark(
+                progress: highlightedTickProgress,
+                opacity: highlightedTickOpacity
+            )
+
+            if elapsedTime >= Styling.successAnimationDuration + Styling.successFadeOutDuration {
+                displayLink.invalidate()
+                highlightedTickDisplayLink = nil
+                self.highlightedTickAnimationStartTime = nil
+                highlightedTickProgress = 1
+                highlightedTickOpacity = 0
+                successCheckmarkView.alpha = 0
+                successCheckmarkView.isHidden = true
+            }
+            return
+        }
+
+        let progress = min(max(elapsedTime / Styling.legacyHighlightAnimationDuration, 0), 1)
+        highlightedTickProgress = progress
+        highlightedTickOpacity = 1 - pow(1 - progress, 2)
         if progress >= 1 {
             displayLink.invalidate()
             highlightedTickDisplayLink = nil
             self.highlightedTickAnimationStartTime = nil
             highlightedTickProgress = 1
+            highlightedTickOpacity = 1
         }
+    }
+
+    @objc private func updateTargetTickAnimation(_ displayLink: CADisplayLink) {
+        if let directionalPulseAnimationStartTime {
+            let progress = min(
+                max(
+                    (displayLink.timestamp - directionalPulseAnimationStartTime)
+                        / Styling.instructionAnimationDuration,
+                    0
+                ),
+                1
+            )
+            if progress < 0.5 {
+                directionalPulseProgress = materialEase(progress * 2)
+            } else {
+                directionalPulseProgress = 1 - materialEase((progress - 0.5) * 2)
+            }
+            if progress >= 1 {
+                self.directionalPulseAnimationStartTime = nil
+                directionalPulseProgress = 0
+            }
+        }
+
+        if let targetProgressAnimationStartTime {
+            let progress = min(
+                max(
+                    (displayLink.timestamp - targetProgressAnimationStartTime)
+                        / Styling.feedbackAnimationDuration,
+                    0
+                ),
+                1
+            )
+            let easedProgress = 1 - pow(1 - progress, 3)
+            displayedTargetProgress = targetProgressAnimationStartValue
+                + ((targetProgress - targetProgressAnimationStartValue) * easedProgress)
+            if progress >= 1 {
+                self.targetProgressAnimationStartTime = nil
+                displayedTargetProgress = targetProgress
+            }
+        }
+
+        if directionalPulseAnimationStartTime == nil && targetProgressAnimationStartTime == nil {
+            displayLink.invalidate()
+            targetTickDisplayLink = nil
+        }
+    }
+
+    private func startTargetTickDisplayLinkIfNeeded() {
+        guard targetTickDisplayLink == nil,
+            directionalPulseAnimationStartTime != nil || targetProgressAnimationStartTime != nil
+        else {
+            return
+        }
+
+        let displayLink = CADisplayLink(
+            target: self,
+            selector: #selector(updateTargetTickAnimation)
+        )
+        displayLink.add(to: .main, forMode: .common)
+        targetTickDisplayLink = displayLink
+    }
+
+    private func resetTargetAnimation() {
+        targetTickDisplayLink?.invalidate()
+        targetTickDisplayLink = nil
+        captureGuideTarget = .none
+        targetProgress = 0
+        displayedTargetProgress = 0
+        targetProgressAnimationStartTime = nil
+        directionalPulseProgress = 0
+        directionalPulseAnimationStartTime = nil
+    }
+
+    private func resetHighlightAnimation() {
+        highlightedTickDisplayLink?.invalidate()
+        highlightedTickDisplayLink = nil
+        highlightedTickAnimationStartTime = nil
+        captureGuideHighlight = .none
+        highlightedTickProgress = 0
+        highlightedTickOpacity = 0
+        successCheckmarkView.alpha = 0
+        successCheckmarkView.isHidden = true
+    }
+
+    private func configureSuccessCheckmark(progress: CGFloat, opacity: CGFloat) {
+        guard uses3DCaptureAnimations else {
+            successCheckmarkView.isHidden = true
+            return
+        }
+
+        successCheckmarkView.isHidden = false
+        successCheckmarkView.alpha = opacity
+        let scale = Styling.successCheckmarkInitialScale
+            + ((1 - Styling.successCheckmarkInitialScale) * progress)
+        let translation = Styling.successCheckmarkInitialOffset * (1 - progress)
+        successCheckmarkView.transform = CGAffineTransform(
+            translationX: 0,
+            y: translation
+        ).scaledBy(x: scale, y: scale)
+    }
+
+    private func materialEase(_ progress: CGFloat) -> CGFloat {
+        let clampedProgress = min(max(progress, 0), 1)
+        var parameter = clampedProgress
+        for _ in 0..<5 {
+            let x = cubicBezier(parameter, controlPoint1: 0.4, controlPoint2: 0.2)
+            let slope = cubicBezierSlope(parameter, controlPoint1: 0.4, controlPoint2: 0.2)
+            guard abs(slope) > 0.0001 else {
+                break
+            }
+            parameter = min(max(parameter - ((x - clampedProgress) / slope), 0), 1)
+        }
+        return cubicBezier(parameter, controlPoint1: 0, controlPoint2: 1)
+    }
+
+    private func cubicBezier(
+        _ progress: CGFloat,
+        controlPoint1: CGFloat,
+        controlPoint2: CGFloat
+    ) -> CGFloat {
+        let inverseProgress = 1 - progress
+        return (3 * inverseProgress * inverseProgress * progress * controlPoint1)
+            + (3 * inverseProgress * progress * progress * controlPoint2)
+            + (progress * progress * progress)
+    }
+
+    private func cubicBezierSlope(
+        _ progress: CGFloat,
+        controlPoint1: CGFloat,
+        controlPoint2: CGFloat
+    ) -> CGFloat {
+        let inverseProgress = 1 - progress
+        return (3 * inverseProgress * inverseProgress * controlPoint1)
+            + (6 * inverseProgress * progress * (controlPoint2 - controlPoint1))
+            + (3 * progress * progress * (1 - controlPoint2))
     }
 
     @objc private func updateCenteredShadowFadeIn(_ displayLink: CADisplayLink) {
@@ -839,6 +1142,17 @@ private final class CaptureTickMarksView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        successCheckmarkView.bounds = CGRect(
+            origin: .zero,
+            size: CGSize(
+                width: Styling.successCheckmarkSize,
+                height: Styling.successCheckmarkSize
+            )
+        )
+        successCheckmarkView.center = CGPoint(
+            x: bounds.midX,
+            y: bounds.height * Styling.centerYRatio
+        )
         setNeedsDisplay()
     }
 
@@ -885,27 +1199,76 @@ private final class CaptureTickMarksView: UIView {
         )
         context.strokePath()
 
-        guard captureGuideHighlight != .none, highlightedTickProgress > 0 else {
-            return
+        if uses3DCaptureAnimations,
+            captureGuideTarget != .none,
+            directionalPulseProgress > 0
+        {
+            let tickLength = Styling.tickLength
+                + ((Styling.highlightedTickLength - Styling.tickLength)
+                    * directionalPulseProgress)
+            context.setLineWidth(Styling.tickWidth)
+            context.setStrokeColor(Styling.tickColor.cgColor)
+            drawTicks(
+                in: context,
+                center: center,
+                horizontalRadius: horizontalRadius,
+                verticalRadius: verticalRadius,
+                tickLength: tickLength,
+                growsOutward: true,
+                outwardGrowthScale: { abs(cos($0)) },
+                shouldDrawTick: { [weak self] angle in
+                    self?.isTickInTargetHalf(at: angle) ?? false
+                }
+            )
+            context.strokePath()
         }
 
-        let highlightedTickLength = Styling.tickLength
-            + ((Styling.highlightedTickLength - Styling.tickLength) * highlightedTickProgress)
-        let highlightedTickOpacity = 1 - pow(1 - highlightedTickProgress, 2)
-        context.setStrokeColor(
-            Styling.acceptedTickColor.withAlphaComponent(highlightedTickOpacity).cgColor
-        )
-        drawTicks(
-            in: context,
-            center: center,
-            horizontalRadius: horizontalRadius,
-            verticalRadius: verticalRadius,
-            tickLength: highlightedTickLength,
-            shouldDrawTick: { [weak self] angle in
-                self?.isTickHighlighted(at: angle) ?? false
-            }
-        )
-        context.strokePath()
+        if uses3DCaptureAnimations,
+            captureGuideTarget != .none,
+            displayedTargetProgress > 0
+        {
+            context.setLineWidth(Styling.highlightedTickWidth)
+            context.setStrokeColor(Styling.acceptedTickColor.cgColor)
+            drawTicks(
+                in: context,
+                center: center,
+                horizontalRadius: horizontalRadius,
+                verticalRadius: verticalRadius,
+                tickLength: Styling.highlightedTickLength,
+                growsOutward: true,
+                shouldDrawTick: { [weak self] angle in
+                    self?.isTickRevealedByProgress(at: angle) ?? false
+                }
+            )
+            context.strokePath()
+        }
+
+        if captureGuideHighlight != .none,
+            highlightedTickProgress > 0,
+            highlightedTickOpacity > 0
+        {
+            let highlightedTickLength = Styling.tickLength
+                + ((Styling.highlightedTickLength - Styling.tickLength)
+                    * highlightedTickProgress)
+            context.setLineWidth(
+                uses3DCaptureAnimations ? Styling.highlightedTickWidth : Styling.tickWidth
+            )
+            context.setStrokeColor(
+                Styling.acceptedTickColor.withAlphaComponent(highlightedTickOpacity).cgColor
+            )
+            drawTicks(
+                in: context,
+                center: center,
+                horizontalRadius: horizontalRadius,
+                verticalRadius: verticalRadius,
+                tickLength: highlightedTickLength,
+                growsOutward: uses3DCaptureAnimations,
+                shouldDrawTick: { [weak self] angle in
+                    self?.isTickHighlighted(at: angle) ?? false
+                }
+            )
+            context.strokePath()
+        }
     }
 
     private func drawTicks(
@@ -914,6 +1277,8 @@ private final class CaptureTickMarksView: UIView {
         horizontalRadius: CGFloat,
         verticalRadius: CGFloat,
         tickLength: CGFloat,
+        growsOutward: Bool = false,
+        outwardGrowthScale: ((CGFloat) -> CGFloat)? = nil,
         shouldDrawTick: (CGFloat) -> Bool
     ) {
         for index in 0..<Styling.tickCount {
@@ -937,19 +1302,56 @@ private final class CaptureTickMarksView: UIView {
                 dx: normal.dx / normalLength,
                 dy: normal.dy / normalLength
             )
-            let halfTickLength = tickLength / 2
+            let growthScale = min(max(outwardGrowthScale?(angle) ?? 1, 0), 1)
+            let scaledTickLength = Styling.tickLength
+                + ((tickLength - Styling.tickLength) * growthScale)
+            let innerTickLength = growsOutward ? Styling.tickLength / 2 : scaledTickLength / 2
+            let outerTickLength = growsOutward
+                ? scaledTickLength - innerTickLength
+                : scaledTickLength / 2
             let startPoint = CGPoint(
-                x: tickCenter.x - unitNormal.dx * halfTickLength,
-                y: tickCenter.y - unitNormal.dy * halfTickLength
+                x: tickCenter.x - unitNormal.dx * innerTickLength,
+                y: tickCenter.y - unitNormal.dy * innerTickLength
             )
             let endPoint = CGPoint(
-                x: tickCenter.x + unitNormal.dx * halfTickLength,
-                y: tickCenter.y + unitNormal.dy * halfTickLength
+                x: tickCenter.x + unitNormal.dx * outerTickLength,
+                y: tickCenter.y + unitNormal.dy * outerTickLength
             )
 
             context.move(to: startPoint)
             context.addLine(to: endPoint)
         }
+    }
+
+    private func isTickInTargetHalf(at angle: CGFloat) -> Bool {
+        switch captureGuideTarget {
+        case .none:
+            return false
+        case .left:
+            return angle >= .pi * 0.5 && angle <= .pi * 1.5
+        case .right:
+            return angle <= .pi * 0.5 || angle >= .pi * 1.5
+        }
+    }
+
+    private func isTickRevealedByProgress(at angle: CGFloat) -> Bool {
+        guard isTickInTargetHalf(at: angle) else {
+            return false
+        }
+
+        let centerAngle: CGFloat
+        switch captureGuideTarget {
+        case .none:
+            return false
+        case .left:
+            centerAngle = .pi
+        case .right:
+            centerAngle = 0
+        }
+
+        let angularDistance = abs(atan2(sin(angle - centerAngle), cos(angle - centerAngle)))
+        let hiddenAngle = (1 - displayedTargetProgress) * .pi * 0.5
+        return angularDistance >= hiddenAngle && angularDistance <= .pi * 0.5
     }
 
     private func isTickHighlighted(at angle: CGFloat) -> Bool {
