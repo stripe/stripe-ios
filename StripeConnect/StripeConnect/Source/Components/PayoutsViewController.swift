@@ -7,7 +7,6 @@
 
 import UIKit
 
-@_spi(PreviewConnect)
 public class PayoutsViewController: UIViewController {
     private(set) var webVC: ConnectComponentWebViewController!
 
@@ -36,7 +35,6 @@ public class PayoutsViewController: UIViewController {
 }
 
 /// Delegate of an `PayoutsViewController`
-@_spi(PreviewConnect)
 public protocol PayoutsViewControllerDelegate: AnyObject {
 
     /**
