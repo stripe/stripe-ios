@@ -64,7 +64,6 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
           type: invalid_request_error
 
         Code: link_failed_to_attest_request
-
         Next step: Register this app's bundle ID or package name as a trusted application with Stripe, then retry the Onramp flow.
         SDK: stripe-ios@\(STPAPIClient.STPSDKVersion)
         """)
@@ -109,7 +108,6 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
           mode: live
 
         Code: app_attestation_unavailable
-
         Next step: Confirm app attestation is enabled for this Stripe account and that the app identifier is registered as trusted, then call configure again.
         SDK: stripe-ios@\(STPAPIClient.STPSDKVersion), stripe-react-native@1.2.3
         """)
@@ -185,7 +183,6 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         Developer body.
 
         Code: test_code
-
         Next step: Fix the integration.
         Docs: https://stripe.com/docs/test
         SDK: stripe-ios@\(STPAPIClient.STPSDKVersion)
