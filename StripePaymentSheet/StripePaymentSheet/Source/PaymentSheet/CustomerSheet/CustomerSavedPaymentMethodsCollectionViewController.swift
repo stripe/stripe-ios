@@ -452,7 +452,8 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                                                                            cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter,
                                                                            canRemove: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                                                            canUpdate: configuration.paymentMethodUpdate,
-                                                                           isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible)
+                                                                           isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible,
+                                                                           defaultBillingDetails: savedPaymentMethodsConfiguration.defaultBillingDetails)
         let removeSavedPaymentMethodMessage = UpdatePaymentMethodViewController.resolveRemoveMessage(
             removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
             paymentMethodRemoveIsPartial: configuration.paymentMethodRemoveIsPartial,

@@ -372,7 +372,8 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
                                                                            canUpdate: paymentMethodUpdate,
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && isCBCEligible,
                                                                            allowsSetAsDefaultPM: paymentMethodSetAsDefault,
-                                                                           isDefault: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId))
+                                                                           isDefault: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId),
+                                                                           defaultBillingDetails: configuration.defaultBillingDetails)
         let removeSavedPaymentMethodMessage = UpdatePaymentMethodViewController.resolveRemoveMessage(
             removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
             paymentMethodRemoveIsPartial: elementsSession.paymentMethodRemoveIsPartialForPaymentSheet(),

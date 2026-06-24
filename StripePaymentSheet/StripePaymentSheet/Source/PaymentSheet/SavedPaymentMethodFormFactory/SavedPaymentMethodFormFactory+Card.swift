@@ -111,7 +111,8 @@ extension SavedPaymentMethodFormFactory {
             let section = AddressSectionElement(
                 title: String.Localized.billing_address_lowercase,
                 countries: countries,
-                defaults: currentBillingDetails(paymentMethod: configuration.paymentMethod),
+                defaults: currentBillingDetails(paymentMethod: configuration.paymentMethod,
+                                               defaultBillingDetails: configuration.defaultBillingDetails),
                 collectionMode: collectionMode,
                 additionalFields: .init(
                     billingSameAsShippingCheckbox: .disabled
@@ -121,13 +122,28 @@ extension SavedPaymentMethodFormFactory {
             return PaymentSheetFormFactory.makeBillingAddressPaymentMethodWrapper(section: section, countryAPIPath: nil)
     }
 
-    func currentBillingDetails(paymentMethod: STPPaymentMethod) -> AddressSectionElement.AddressDetails {
-        let address = AddressSectionElement.AddressDetails.Address(city: paymentMethod.billingDetails?.address?.city,
-                                                                   country: paymentMethod.billingDetails?.address?.country,
-                                                                   line1: paymentMethod.billingDetails?.address?.line1,
-                                                                   line2: paymentMethod.billingDetails?.address?.line2,
-                                                                   postalCode: paymentMethod.billingDetails?.address?.postalCode,
-                                                                   state: paymentMethod.billingDetails?.address?.state)
+    func currentBillingDetails(paymentMethod: STPPaymentMethod,
+                               defaultBillingDetails: PaymentSheet.BillingDetails) -> AddressSectionElement.AddressDetails {
+        let currentPMHasBillingDetails = paymentMethod.billingDetails?.address?.city != nil
+        || paymentMethod.billingDetails?.address?.country != nil
+        || paymentMethod.billingDetails?.address?.line1 != nil
+        || paymentMethod.billingDetails?.address?.line2 != nil
+        || paymentMethod.billingDetails?.address?.postalCode != nil
+        || paymentMethod.billingDetails?.address?.state != nil
+
+        let address = currentPMHasBillingDetails
+        ? AddressSectionElement.AddressDetails.Address(city: paymentMethod.billingDetails?.address?.city,
+                                                       country: paymentMethod.billingDetails?.address?.country,
+                                                       line1: paymentMethod.billingDetails?.address?.line1,
+                                                       line2: paymentMethod.billingDetails?.address?.line2,
+                                                       postalCode: paymentMethod.billingDetails?.address?.postalCode,
+                                                       state: paymentMethod.billingDetails?.address?.state)
+        : AddressSectionElement.AddressDetails.Address(city: defaultBillingDetails.address.city,
+                                                       country: defaultBillingDetails.address.country,
+                                                       line1: defaultBillingDetails.address.line1,
+                                                       line2: defaultBillingDetails.address.line2,
+                                                       postalCode: defaultBillingDetails.address.postalCode,
+                                                       state: defaultBillingDetails.address.state)
         return AddressSectionElement.AddressDetails(name: nil, phone: nil, address: address)
     }
 }

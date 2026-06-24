@@ -787,7 +787,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                                                                                canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                                                                               isDefault: paymentMethod == defaultPaymentMethod)
+                                                                               isDefault: paymentMethod == defaultPaymentMethod,
+                                                                               defaultBillingDetails: configuration.defaultBillingDetails)
             let removeSavedPaymentMethodMessage = UpdatePaymentMethodViewController.resolveRemoveMessage(
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 paymentMethodRemoveIsPartial: elementsSession.paymentMethodRemoveIsPartialForPaymentSheet(),

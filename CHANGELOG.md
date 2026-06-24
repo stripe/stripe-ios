@@ -2,6 +2,11 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### PaymentSheet
+* [Fixed] Fixed defaultBillingDetails not being applied when editing a saved payment method that has no billing address.
+
+### CustomerSheet
+* [Fixed] Fixed defaultBillingDetails not being applied when editing a saved payment method that has no billing address.
 
 ### CryptoOnramp (Alpha)
 * [Changed] Renamed `CryptoOnrampCoordinator.presentCRSCARFDeclaration(from:)` to `presentUserAttestation(from:)`, and renamed `CRSCARFDeclarationResult` to `UserAttestationResult`.
