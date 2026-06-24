@@ -113,6 +113,7 @@ let package = Package(
             path: "StripeIdentity/StripeIdentity",
             exclude: ["Info.plist"],
             resources: [
+                .process("Resources/Audio"),
                 .process("Resources/Images"),
                 .copy("Resources/face_landmarker.task")
             ]

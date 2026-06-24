@@ -204,6 +204,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     let apiConfig: StripeAPI.VerificationPageStaticContentSelfiePage
     let imageScanningSession: SelfieImageScanningSession
     let selfieUploader: SelfieUploaderProtocol
+    let captureAcceptanceFeedbackGenerator: SelfieCaptureFeedbackGeneratorProtocol
     /// The user's training consent selection
     private var consentSelection: Bool
 
@@ -222,12 +223,14 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         trainingConsent: Bool?,
         imageScanningSession: SelfieImageScanningSession,
         selfieUploader: SelfieUploaderProtocol,
+        captureAcceptanceFeedbackGenerator: SelfieCaptureFeedbackGeneratorProtocol,
         sheetController: VerificationSheetControllerProtocol
     ) {
         self.apiConfig = apiConfig
         self.consentSelection = trainingConsent ?? false
         self.imageScanningSession = imageScanningSession
         self.selfieUploader = selfieUploader
+        self.captureAcceptanceFeedbackGenerator = captureAcceptanceFeedbackGenerator
         super.init(sheetController: sheetController, analyticsScreenName: .selfieCapture)
         imageScanningSession.setDelegate(delegate: self)
     }
@@ -240,6 +243,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         selfieUploader: SelfieUploaderProtocol,
         anyFaceScanner: AnyFaceScanner,
         trainingConsent: Bool? = nil,
+        captureAcceptanceFeedbackGenerator: SelfieCaptureFeedbackGeneratorProtocol = SelfieCaptureFeedbackGenerator(),
         concurrencyManager: ImageScanningConcurrencyManagerProtocol? = nil,
         cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager
             .shared,
@@ -265,6 +269,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                 appSettingsHelper: appSettingsHelper
             ),
             selfieUploader: selfieUploader,
+            captureAcceptanceFeedbackGenerator: captureAcceptanceFeedbackGenerator,
             sheetController: sheetController
         )
         updateUI()
@@ -817,7 +822,7 @@ extension SelfieCaptureViewController {
     }
 
     fileprivate func notifyCaptureAccepted() {
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        captureAcceptanceFeedbackGenerator.notifyCaptureAccepted()
     }
 }
 
