@@ -368,6 +368,18 @@ extension SelfieCaptureViewController {
     func statusText(
         for scanningState: FaceCaptureScanningState
     ) -> SelfieScanningView.ViewModel.StatusText? {
+        if apiConfig.enable3DFaceCapture {
+            switch currentCaptureGuideHighlight {
+            case .none:
+                break
+            case .front:
+                return .capturedFront
+            case .left:
+                return .capturedLeft
+            case .right:
+                return .capturedRight
+            }
+        }
         switch scanningState.phase {
         case .front:
             return scanningState.frontSamples.isEmpty ? .placeFace : .holdStill

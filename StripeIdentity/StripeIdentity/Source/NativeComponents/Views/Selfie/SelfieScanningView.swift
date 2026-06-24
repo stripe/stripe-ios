@@ -92,6 +92,9 @@ final class SelfieScanningView: UIView {
             case holdStill
             case lookLeft
             case lookRight
+            case capturedFront
+            case capturedLeft
+            case capturedRight
             case uploading
 
             var text: String {
@@ -108,13 +111,28 @@ final class SelfieScanningView: UIView {
                     )
                 case .lookLeft:
                     return STPLocalizedString(
-                        "← Look left",
+                        "← Turn head left",
                         "Status text displayed over the selfie viewfinder while capturing the left side of a face"
                     )
                 case .lookRight:
                     return STPLocalizedString(
-                        "Look right →",
+                        "Turn head right →",
                         "Status text displayed over the selfie viewfinder while capturing the right side of a face"
+                    )
+                case .capturedFront:
+                    return STPLocalizedString(
+                        "Captured front",
+                        "Status text displayed over the selfie viewfinder after capturing the front of a face"
+                    )
+                case .capturedLeft:
+                    return STPLocalizedString(
+                        "Captured left",
+                        "Status text displayed over the selfie viewfinder after capturing the left side of a face"
+                    )
+                case .capturedRight:
+                    return STPLocalizedString(
+                        "Captured right",
+                        "Status text displayed over the selfie viewfinder after capturing the right side of a face"
                     )
                 case .uploading:
                     return STPLocalizedString(
@@ -129,7 +147,10 @@ final class SelfieScanningView: UIView {
                 case .placeFace,
                     .holdStill,
                     .lookLeft,
-                    .lookRight:
+                    .lookRight,
+                    .capturedFront,
+                    .capturedLeft,
+                    .capturedRight:
                     return false
                 case .uploading:
                     return true
@@ -140,9 +161,13 @@ final class SelfieScanningView: UIView {
                 switch self {
                 case .placeFace,
                     .holdStill,
-                    .lookLeft,
-                    .lookRight:
+                    .capturedFront,
+                    .capturedLeft,
+                    .capturedRight:
                     return false
+                case .lookLeft,
+                    .lookRight:
+                    return true
                 case .uploading:
                     return true
                 }
@@ -442,6 +467,11 @@ final class SelfieScanningView: UIView {
             havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
+            capturedImageBlurView.isHidden = !(
+                uses3DCaptureAnimations
+                    && captureGuideTarget != .none
+                    && captureGuideHighlight == .none
+            )
             captureTickMarksView.isHidden = false
             captureTickMarksView.setShowsCenteredShadow(true, animated: true)
             captureTickMarksView.setUses3DCaptureAnimations(uses3DCaptureAnimations)
@@ -710,23 +740,30 @@ extension SelfieScanningView: CheckboxButtonDelegate {
 private final class CaptureTickMarksView: UIView {
     struct Styling {
         static let tickCount = 77
-        static let tickLength: CGFloat = 10
-        static let highlightedTickLength: CGFloat = 17
+        static let tickLength: CGFloat = 9
+        static let highlightedTickLength: CGFloat = 18
         static let tickWidth: CGFloat = 2
-        static let highlightedTickWidth: CGFloat = 3
+        static let highlightedTickWidth: CGFloat = 2.8
+        static let acceptedTickGlowWidth: CGFloat = 7
+        static let acceptedTickGlowBlur: CGFloat = 7
+        static let acceptedTickGlowAlpha: CGFloat = 0.28
         static let legacyHighlightAnimationDuration: TimeInterval = 0.18
-        static let instructionAnimationDuration: TimeInterval = 0.8
+        static let instructionAnimationDuration: TimeInterval = 0.72
         static let feedbackAnimationDuration: TimeInterval = 0.15
-        static let successAnimationDuration: TimeInterval = 0.5
-        static let successFadeOutDuration: TimeInterval = 0.3
-        static let successCheckmarkSize: CGFloat = 32
-        static let successCheckmarkInitialOffset: CGFloat = 20
-        static let successCheckmarkInitialScale: CGFloat = 0.8
-        static let horizontalDiameterToWidthRatio: CGFloat = 0.72
-        static let verticalDiameterToHeightRatio: CGFloat = 0.66
-        static let centerYRatio: CGFloat = 0.42
-        static let tickColor = UIColor.white.withAlphaComponent(0.8)
-        static let acceptedTickColor = UIColor.systemGreen
+        static let successAnimationDuration: TimeInterval = 0.42
+        static let successFadeOutDuration: TimeInterval = 0.34
+        static let successCheckmarkSize: CGFloat = 28
+        static let successCheckmarkInitialScale: CGFloat = 0.72
+        static let horizontalDiameterToWidthRatio: CGFloat = 0.64
+        static let verticalDiameterToHeightRatio: CGFloat = 0.60
+        static let centerYRatio: CGFloat = 0.43
+        static let tickColor = UIColor.white.withAlphaComponent(0.88)
+        static let acceptedTickColor = UIColor(
+            red: 0x31 / 255,
+            green: 0xC9 / 255,
+            blue: 0x5F / 255,
+            alpha: 1
+        )
         static let shadowColor = UIColor.black.withAlphaComponent(0.3)
         static let shadowOffset = CGSize(width: 0, height: 1)
         static let shadowBlur: CGFloat = 4
@@ -778,19 +815,17 @@ private final class CaptureTickMarksView: UIView {
     private var centeredShadowDisplayLink: CADisplayLink?
     private var centeredShadowAnimationStartTime: CFTimeInterval?
 
-    private let successCheckmarkView: UIImageView = {
-        let imageView = UIImageView(
-            image: UIImage(systemName: "checkmark.circle.fill")?.withRenderingMode(.alwaysTemplate)
-        )
-        imageView.tintColor = .white
-        imageView.contentMode = .scaleAspectFit
-        imageView.alpha = 0
-        imageView.isHidden = true
-        imageView.layer.shadowColor = UIColor.black.cgColor
-        imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        imageView.layer.shadowRadius = 8
-        imageView.layer.shadowOpacity = 0.4
-        return imageView
+    private let successCheckmarkView: CaptureSuccessCheckmarkView = {
+        let view = CaptureSuccessCheckmarkView()
+        view.alpha = 0
+        view.isHidden = true
+        view.backgroundColor = .clear
+        view.isUserInteractionEnabled = false
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowRadius = 8
+        view.layer.shadowOpacity = 0.28
+        return view
     }()
 
     override init(frame: CGRect) {
@@ -1074,11 +1109,7 @@ private final class CaptureTickMarksView: UIView {
         successCheckmarkView.alpha = opacity
         let scale = Styling.successCheckmarkInitialScale
             + ((1 - Styling.successCheckmarkInitialScale) * progress)
-        let translation = Styling.successCheckmarkInitialOffset * (1 - progress)
-        successCheckmarkView.transform = CGAffineTransform(
-            translationX: 0,
-            y: translation
-        ).scaledBy(x: scale, y: scale)
+        successCheckmarkView.transform = CGAffineTransform(scaleX: scale, y: scale)
     }
 
     private func materialEase(_ progress: CGFloat) -> CGFloat {
@@ -1181,7 +1212,7 @@ private final class CaptureTickMarksView: UIView {
         }
 
         context.setLineWidth(Styling.tickWidth)
-        context.setLineCap(.butt)
+        context.setLineCap(.round)
         context.setShadow(
             offset: Styling.shadowOffset,
             blur: Styling.shadowBlur,
@@ -1227,20 +1258,18 @@ private final class CaptureTickMarksView: UIView {
             captureGuideTarget != .none,
             displayedTargetProgress > 0
         {
-            context.setLineWidth(Styling.highlightedTickWidth)
-            context.setStrokeColor(Styling.acceptedTickColor.cgColor)
-            drawTicks(
+            drawAcceptedTicks(
                 in: context,
                 center: center,
                 horizontalRadius: horizontalRadius,
                 verticalRadius: verticalRadius,
                 tickLength: Styling.highlightedTickLength,
                 growsOutward: true,
+                opacity: 1,
                 shouldDrawTick: { [weak self] angle in
                     self?.isTickRevealedByProgress(at: angle) ?? false
                 }
             )
-            context.strokePath()
         }
 
         if captureGuideHighlight != .none,
@@ -1250,25 +1279,77 @@ private final class CaptureTickMarksView: UIView {
             let highlightedTickLength = Styling.tickLength
                 + ((Styling.highlightedTickLength - Styling.tickLength)
                     * highlightedTickProgress)
-            context.setLineWidth(
-                uses3DCaptureAnimations ? Styling.highlightedTickWidth : Styling.tickWidth
-            )
-            context.setStrokeColor(
-                Styling.acceptedTickColor.withAlphaComponent(highlightedTickOpacity).cgColor
-            )
-            drawTicks(
+            drawAcceptedTicks(
                 in: context,
                 center: center,
                 horizontalRadius: horizontalRadius,
                 verticalRadius: verticalRadius,
                 tickLength: highlightedTickLength,
                 growsOutward: uses3DCaptureAnimations,
+                opacity: highlightedTickOpacity,
                 shouldDrawTick: { [weak self] angle in
                     self?.isTickHighlighted(at: angle) ?? false
                 }
             )
-            context.strokePath()
         }
+    }
+
+    private func drawAcceptedTicks(
+        in context: CGContext,
+        center: CGPoint,
+        horizontalRadius: CGFloat,
+        verticalRadius: CGFloat,
+        tickLength: CGFloat,
+        growsOutward: Bool,
+        opacity: CGFloat,
+        shouldDrawTick: (CGFloat) -> Bool
+    ) {
+        let clampedOpacity = min(max(opacity, 0), 1)
+
+        context.saveGState()
+        context.setLineCap(.round)
+        context.setLineWidth(Styling.acceptedTickGlowWidth)
+        context.setShadow(
+            offset: .zero,
+            blur: Styling.acceptedTickGlowBlur,
+            color: Styling.acceptedTickColor
+                .withAlphaComponent(Styling.acceptedTickGlowAlpha * clampedOpacity)
+                .cgColor
+        )
+        context.setStrokeColor(
+            Styling.acceptedTickColor
+                .withAlphaComponent(Styling.acceptedTickGlowAlpha * clampedOpacity)
+                .cgColor
+        )
+        drawTicks(
+            in: context,
+            center: center,
+            horizontalRadius: horizontalRadius,
+            verticalRadius: verticalRadius,
+            tickLength: tickLength,
+            growsOutward: growsOutward,
+            shouldDrawTick: shouldDrawTick
+        )
+        context.strokePath()
+        context.restoreGState()
+
+        context.saveGState()
+        context.setLineCap(.round)
+        context.setLineWidth(Styling.highlightedTickWidth)
+        context.setStrokeColor(
+            Styling.acceptedTickColor.withAlphaComponent(clampedOpacity).cgColor
+        )
+        drawTicks(
+            in: context,
+            center: center,
+            horizontalRadius: horizontalRadius,
+            verticalRadius: verticalRadius,
+            tickLength: tickLength,
+            growsOutward: growsOutward,
+            shouldDrawTick: shouldDrawTick
+        )
+        context.strokePath()
+        context.restoreGState()
     }
 
     private func drawTicks(
@@ -1430,5 +1511,28 @@ private final class CaptureTickMarksView: UIView {
 
     private func shadowColor(_ color: UIColor, opacity: CGFloat) -> CGColor {
         return color.withAlphaComponent(color.cgColor.alpha * opacity).cgColor
+    }
+}
+
+private final class CaptureSuccessCheckmarkView: UIView {
+    override func draw(_ rect: CGRect) {
+        guard let context = UIGraphicsGetCurrentContext(),
+              bounds.width > 0,
+              bounds.height > 0 else {
+            return
+        }
+
+        context.setFillColor(UIColor.white.cgColor)
+        context.fillEllipse(in: bounds.insetBy(dx: 1, dy: 1))
+
+        let checkmarkPath = UIBezierPath()
+        checkmarkPath.move(to: CGPoint(x: bounds.width * 0.31, y: bounds.height * 0.52))
+        checkmarkPath.addLine(to: CGPoint(x: bounds.width * 0.44, y: bounds.height * 0.65))
+        checkmarkPath.addLine(to: CGPoint(x: bounds.width * 0.70, y: bounds.height * 0.38))
+        checkmarkPath.lineCapStyle = .round
+        checkmarkPath.lineJoinStyle = .round
+        checkmarkPath.lineWidth = 2.6
+        CaptureTickMarksView.Styling.acceptedTickColor.setStroke()
+        checkmarkPath.stroke()
     }
 }

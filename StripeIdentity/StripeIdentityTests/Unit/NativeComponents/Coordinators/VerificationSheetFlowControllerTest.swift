@@ -7,8 +7,8 @@
 //
 
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 import StripeCoreTestUtils
+@_spi(STP) import StripeUICore
 import UIKit
 import Vision
 import XCTest
