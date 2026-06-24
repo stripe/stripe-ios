@@ -438,4 +438,57 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         // Wait for legacy callback
         wait(for: [legacyExpectation], timeout: 2.0)
     }
+
+    // MARK: - Cancel Discards Selection Tests
+
+    func testCancelDiscardsSelectionChange() {
+        // Given a FlowController with a saved payment method
+        let configuration = PaymentSheet.Configuration()
+        let savedCard = STPPaymentMethod._testCard()
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        let elementsSession = STPElementsSession._testCardValue()
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: [savedCard],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .vertical
+        )
+
+        let flowController = PaymentSheet.FlowController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+
+        // The initial payment option should reflect the saved card
+        flowController.updatePaymentOption()
+        let originalPaymentOption = flowController.paymentOption
+        XCTAssertNotNil(originalPaymentOption, "Should have a payment option from the saved card")
+
+        let mockViewController = UIViewController()
+        let cancelExpectation = expectation(description: "Cancel completion called")
+
+        // Present and then cancel
+        flowController.presentPaymentOptions(from: mockViewController) { didCancel in
+            XCTAssertTrue(didCancel)
+            cancelExpectation.fulfill()
+        }
+
+        // Simulate a selection change in the VC by clearing the selection
+        flowController.viewController.clearSelection()
+
+        // Fire cancel dismissal
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: true)
+
+        wait(for: [cancelExpectation], timeout: 2.0)
+
+        // After cancel, the payment option should still reflect the original saved card
+        XCTAssertNotNil(flowController.paymentOption, "Payment option should not be nil after cancel")
+        XCTAssertEqual(flowController.paymentOption?.label, originalPaymentOption?.label)
+
+        // The restored VC should also reflect the original selection
+        XCTAssertNotNil(flowController.viewController.selectedPaymentOption, "VC should have restored the original selection")
+    }
 }

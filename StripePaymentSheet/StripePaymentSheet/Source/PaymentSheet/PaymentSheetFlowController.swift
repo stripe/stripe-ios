@@ -303,6 +303,7 @@ extension PaymentSheet {
         }
 
         private weak var checkout: Checkout?
+        private var paymentOptionBeforePresent: PaymentOption?
         private var isPresented = false
         private var pendingPresentTask: Task<Void, Never>?
         private(set) var didPresentAndContinue: Bool = false
@@ -535,6 +536,7 @@ extension PaymentSheet {
                     }
                 )
 
+                self.paymentOptionBeforePresent = self.internalPaymentOption
                 self.isPresented = true
                 presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
             }
@@ -1013,6 +1015,25 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
             self.didPresentAndContinue = true
         }
         flowControllerViewController.dismiss(animated: true) {
+            if didCancel {
+                // Recreate the view controller from snapshot to discard any selection changes
+                let updatedLoadResult = PaymentSheetLoader.LoadResult(
+                    intent: self.viewController.loadResult.intent,
+                    elementsSession: self.viewController.loadResult.elementsSession,
+                    savedPaymentMethods: self.viewController.savedPaymentMethods,
+                    paymentMethodTypes: self.viewController.loadResult.paymentMethodTypes,
+                    paymentMethodMessagingPromotionsHelper: self.viewController.loadResult.paymentMethodMessagingPromotionsHelper,
+                    paymentMethodOrientation: self.viewController.loadResult.paymentMethodOrientation
+                )
+                self.viewController = Self.makeViewController(
+                    configuration: self.configuration,
+                    loadResult: updatedLoadResult,
+                    analyticsHelper: self.analyticsHelper,
+                    walletButtonsViewState: self.walletButtonsViewState,
+                    previousPaymentOption: self.paymentOptionBeforePresent
+                )
+                self.viewController.flowControllerDelegate = self
+            }
             self.presentPaymentOptionsCompletionWithResult?(didCancel)
             self.updatePaymentOption()
             self.isPresented = false
