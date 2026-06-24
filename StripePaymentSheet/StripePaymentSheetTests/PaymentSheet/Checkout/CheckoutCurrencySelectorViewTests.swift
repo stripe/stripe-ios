@@ -25,7 +25,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     func testHiddenWhenAdaptivePricingNotActive() async throws {
         let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let session = makeSession(adaptivePricingActive: false)
-        try await checkout.updateSession(session)
+        try await checkout.commitSession(session)
 
         let view = Checkout.CurrencySelectorView(checkout: checkout)
 
@@ -41,7 +41,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     func testHiddenWhenLocalizedPricesEmpty() async throws {
         let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let session = makeSession(includeLocalizedPrices: false)
-        try await checkout.updateSession(session)
+        try await checkout.commitSession(session)
 
         let view = Checkout.CurrencySelectorView(checkout: checkout)
 
@@ -56,7 +56,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     func testHiddenWhenExchangeRateMetaNil() async throws {
         let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let session = makeSession(includeExchangeRateFields: false)
-        try await checkout.updateSession(session)
+        try await checkout.commitSession(session)
 
         let view = Checkout.CurrencySelectorView(checkout: checkout)
 
@@ -71,7 +71,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     func testVisibleWhenAdaptivePricingActive() async throws {
         let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let session = makeSession()
-        try await checkout.updateSession(session)
+        try await checkout.commitSession(session)
 
         let view = Checkout.CurrencySelectorView(checkout: checkout)
 
@@ -92,7 +92,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
         // Update with AP session
         let session = makeSession()
-        try await checkout.updateSession(session)
+        try await checkout.commitSession(session)
 
         let expectation = expectation(description: "View becomes visible")
         DispatchQueue.main.async {
@@ -107,7 +107,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     func testLabelsUpdateWhenSessionAmountChanges() async throws {
         let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let session = makeSession(integrationAmount: 1200, localAmount: 1000)
-        try await checkout.updateSession(session)
+        try await checkout.commitSession(session)
 
         var appearance = Checkout.CurrencySelectorView.Appearance()
         appearance.labelContent = .amount
@@ -127,7 +127,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
         // Update session with new amounts
         let updatedSession = makeSession(integrationAmount: 2400, localAmount: 2000)
-        try await checkout.updateSession(updatedSession)
+        try await checkout.commitSession(updatedSession)
 
         let updated = expectation(description: "Labels updated")
         DispatchQueue.main.async {

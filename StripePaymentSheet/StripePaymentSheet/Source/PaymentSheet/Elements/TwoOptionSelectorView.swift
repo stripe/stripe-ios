@@ -4,6 +4,7 @@
 //
 //  Created by Nick Porter on 3/20/26.
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -67,7 +68,7 @@ final class TwoOptionSelectorView: UIView {
     private let trackView = UIView()
     private let buttonsStackView = UIStackView()
     private let selectionIndicatorView = UIView()
-    private(set) var captionLabel = UILabel()
+    private(set) lazy var expandableDetailView = ExpandableDetailView(appearance: appearance)
     private var leftButton = UIButton(type: .custom)
     private var rightButton = UIButton(type: .custom)
 
@@ -160,11 +161,7 @@ final class TwoOptionSelectorView: UIView {
         heightConstraint.priority = UILayoutPriority(999)
         heightConstraint.isActive = true
 
-        captionLabel.font = appearance.scaledFont(for: appearance.font, style: .caption1)
-        captionLabel.textColor = appearance.captionColor
-        captionLabel.numberOfLines = 0
-        captionLabel.isHidden = true
-        mainStackView.addArrangedSubview(captionLabel)
+        mainStackView.addArrangedSubview(expandableDetailView)
 
         NSLayoutConstraint.activate([
             mainStackView.topAnchor.constraint(equalTo: topAnchor),
@@ -267,14 +264,8 @@ final class TwoOptionSelectorView: UIView {
 
     // MARK: - Caption
 
-    func updateCaption(_ caption: String?) {
-        if let caption, !caption.isEmpty {
-            captionLabel.text = caption
-            captionLabel.isHidden = false
-        } else {
-            captionLabel.text = nil
-            captionLabel.isHidden = true
-        }
+    func updateCaption(_ caption: String?, detailText: String? = nil) {
+        expandableDetailView.update(caption: caption, detail: detailText)
     }
 
     // MARK: - Selection

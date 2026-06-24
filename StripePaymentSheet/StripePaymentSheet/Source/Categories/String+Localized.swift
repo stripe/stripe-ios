@@ -814,6 +814,14 @@ extension String.Localized {
         )
     }
 
+    static var showDetails: String {
+        STPLocalizedString("Show details", "Button label to expand and show additional exchange rate details")
+    }
+
+    static var hideDetails: String {
+        STPLocalizedString("Hide details", "Button label to collapse and hide additional exchange rate details")
+    }
+
     static var subtotal: String {
         STPLocalizedString(
             "Subtotal",

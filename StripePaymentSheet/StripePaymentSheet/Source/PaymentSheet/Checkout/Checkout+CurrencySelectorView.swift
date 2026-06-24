@@ -216,7 +216,8 @@ extension Checkout {
                 forSelectedCurrency: currency.apiValue,
                 exchangeRateMeta: exchangeRateMeta
             )
-            selectorView?.updateCaption(caption)
+            let detailText = CurrencySelectorUtilities.detailText(exchangeRateMeta: exchangeRateMeta)
+            selectorView?.updateCaption(caption, detailText: detailText)
         }
 
         private func tearDown() {
