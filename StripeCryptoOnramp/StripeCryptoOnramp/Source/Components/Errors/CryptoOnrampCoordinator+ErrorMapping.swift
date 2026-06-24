@@ -7,6 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentSheet
 
 extension CryptoOnrampCoordinator {
 
@@ -20,7 +21,17 @@ extension CryptoOnrampCoordinator {
         apiClient: STPAPIClient,
         additionalSDKVersions: [SDKVersion] = []
     ) -> Swift.Error {
-        if let stripeError = error as? StripeError,
+        if let integrationError = error as? LinkController.IntegrationError,
+           case .missingAppAttestation = integrationError {
+            return appAttestationUnavailableError(
+                from: error,
+                diagnosticContext: diagnosticContext(
+                    during: operation,
+                    apiClient: apiClient,
+                    additionalSDKVersions: additionalSDKVersions
+                )
+            )
+        } else if let stripeError = error as? StripeError,
            case let .apiError(apiError) = stripeError {
             switch apiError.code {
             case "link_failed_to_attest_request":
@@ -33,12 +44,14 @@ extension CryptoOnrampCoordinator {
                 )
             default:
                 return UncategorizedAPIError(
-                    context: apiErrorContext(
+                    apiErrorContext: makeAPIErrorContext(
                         from: error,
                         apiError: apiError,
+                        docURL: apiError.docUrl
+                    ),
+                    diagnosticContext: diagnosticContext(
                         during: operation,
                         apiClient: apiClient,
-                        docURL: apiError.docUrl,
                         additionalSDKVersions: additionalSDKVersions
                     )
                 )
@@ -56,37 +69,55 @@ extension CryptoOnrampCoordinator {
         additionalSDKVersions: [SDKVersion]
     ) -> Swift.Error {
         return AppAttestationAPIError(
-            context: apiErrorContext(
+            apiErrorContext: makeAPIErrorContext(
                 from: error,
                 apiError: apiError,
+                docURL: apiError.docUrl
+            ),
+            diagnosticContext: diagnosticContext(
                 during: operation,
                 apiClient: apiClient,
-                docURL: apiError.docUrl,
                 additionalSDKVersions: additionalSDKVersions
             )
         )
     }
 
-    private static func apiErrorContext(
+    private static func appAttestationUnavailableError(
+        from error: Swift.Error,
+        diagnosticContext: DiagnosticContext
+    ) -> Swift.Error {
+        return AppAttestationUnavailableError(
+            underlyingError: error,
+            diagnosticContext: diagnosticContext
+        )
+    }
+
+    private static func makeAPIErrorContext(
         from error: Swift.Error,
         apiError: StripeAPIError,
-        during operation: CryptoOnrampOperation,
-        apiClient: STPAPIClient,
-        docURL: URL?,
-        additionalSDKVersions: [SDKVersion]
+        docURL: URL?
     ) -> APIErrorContext {
         return APIErrorContext(
             reason: apiError.allResponseFields["reason"] as? String,
-            operation: operation.rawValue,
-            appIdentifier: Bundle.main.bundleIdentifier,
-            mode: apiClient.publishableKey.flatMap(Self.publishableKeyMode),
             apiErrorCode: apiError.code,
             apiErrorType: apiErrorType(from: apiError),
             apiErrorMessage: apiError.message,
             apiUserMessage: apiError.allResponseFields["user_message"] as? String,
             docURL: docURL,
-            underlyingError: error,
-            sdkVersions: [.stripeIOS] + additionalSDKVersions
+            underlyingError: error
+        )
+    }
+
+    private static func diagnosticContext(
+        during operation: CryptoOnrampOperation,
+        apiClient: STPAPIClient,
+        additionalSDKVersions: [SDKVersion]
+    ) -> DiagnosticContext {
+        return DiagnosticContext(
+            sdkVersions: [.stripeIOS] + additionalSDKVersions,
+            operation: operation.rawValue,
+            appPackageName: Bundle.main.bundleIdentifier,
+            mode: apiClient.publishableKey.flatMap(Self.publishableKeyMode)
         )
     }
 

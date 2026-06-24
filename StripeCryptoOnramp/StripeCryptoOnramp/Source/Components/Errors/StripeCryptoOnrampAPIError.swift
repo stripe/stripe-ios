@@ -14,15 +14,6 @@ public protocol StripeCryptoOnrampAPIError: StripeCryptoOnrampError {
     /// The backend `reason` value associated with this error, if one is available.
     var reason: String? { get }
 
-    /// The SDK operation that was running when this error occurred.
-    var operation: String { get }
-
-    /// The bundle identifier for the app using the SDK, if one is available.
-    var appIdentifier: String? { get }
-
-    /// The Stripe mode associated with this error, if it can be determined.
-    var mode: String? { get }
-
     /// The backend API error type associated with this error, if one is available.
     var type: String? { get }
 
