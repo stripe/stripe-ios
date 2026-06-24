@@ -26,6 +26,27 @@ extension String.Localized {
         )
     }
 
+    static var cryptoOnrampErrorInvalidWalletOwnershipSignature: String {
+        return STPLocalizedString(
+            "We couldn't verify ownership of this wallet. Please try again.",
+            "Error message shown when the submitted wallet ownership signature is invalid"
+        )
+    }
+
+    static var cryptoOnrampErrorWalletOwnershipChallengeExpired: String {
+        return STPLocalizedString(
+            "This wallet verification request expired. Please try again.",
+            "Error message shown when the wallet ownership challenge has expired"
+        )
+    }
+
+    static var cryptoOnrampErrorInvalidWalletOwnershipChallenge: String {
+        return STPLocalizedString(
+            "This wallet verification request is no longer valid. Please try again.",
+            "Error message shown when the wallet ownership challenge is invalid"
+        )
+    }
+
     static var debitIsMostLikelyToBeAccepted: String {
         return STPLocalizedString(
             "Debit cards are most likely to be accepted.",

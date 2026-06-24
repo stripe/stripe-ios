@@ -42,6 +42,30 @@ extension CryptoOnrampCoordinator {
                     apiClient: apiClient,
                     additionalSDKVersions: additionalSDKVersions
                 )
+            case "invalid_wallet_ownership_signature":
+                return invalidWalletOwnershipSignatureError(
+                    from: error,
+                    apiError: apiError,
+                    during: operation,
+                    apiClient: apiClient,
+                    additionalSDKVersions: additionalSDKVersions
+                )
+            case "wallet_ownership_challenge_expired":
+                return walletOwnershipChallengeExpiredError(
+                    from: error,
+                    apiError: apiError,
+                    during: operation,
+                    apiClient: apiClient,
+                    additionalSDKVersions: additionalSDKVersions
+                )
+            case "invalid_wallet_ownership_challenge":
+                return invalidWalletOwnershipChallengeError(
+                    from: error,
+                    apiError: apiError,
+                    during: operation,
+                    apiClient: apiClient,
+                    additionalSDKVersions: additionalSDKVersions
+                )
             default:
                 return UncategorizedAPIError(
                     apiErrorContext: makeAPIErrorContext(
@@ -69,6 +93,69 @@ extension CryptoOnrampCoordinator {
         additionalSDKVersions: [SDKVersion]
     ) -> Swift.Error {
         return AppAttestationAPIError(
+            apiErrorContext: makeAPIErrorContext(
+                from: error,
+                apiError: apiError,
+                docURL: apiError.docUrl
+            ),
+            diagnosticContext: diagnosticContext(
+                during: operation,
+                apiClient: apiClient,
+                additionalSDKVersions: additionalSDKVersions
+            )
+        )
+    }
+
+    private static func invalidWalletOwnershipSignatureError(
+        from error: Swift.Error,
+        apiError: StripeAPIError,
+        during operation: CryptoOnrampOperation,
+        apiClient: STPAPIClient,
+        additionalSDKVersions: [SDKVersion]
+    ) -> Swift.Error {
+        return InvalidWalletOwnershipSignatureAPIError(
+            apiErrorContext: makeAPIErrorContext(
+                from: error,
+                apiError: apiError,
+                docURL: apiError.docUrl
+            ),
+            diagnosticContext: diagnosticContext(
+                during: operation,
+                apiClient: apiClient,
+                additionalSDKVersions: additionalSDKVersions
+            )
+        )
+    }
+
+    private static func walletOwnershipChallengeExpiredError(
+        from error: Swift.Error,
+        apiError: StripeAPIError,
+        during operation: CryptoOnrampOperation,
+        apiClient: STPAPIClient,
+        additionalSDKVersions: [SDKVersion]
+    ) -> Swift.Error {
+        return WalletOwnershipChallengeExpiredAPIError(
+            apiErrorContext: makeAPIErrorContext(
+                from: error,
+                apiError: apiError,
+                docURL: apiError.docUrl
+            ),
+            diagnosticContext: diagnosticContext(
+                during: operation,
+                apiClient: apiClient,
+                additionalSDKVersions: additionalSDKVersions
+            )
+        )
+    }
+
+    private static func invalidWalletOwnershipChallengeError(
+        from error: Swift.Error,
+        apiError: StripeAPIError,
+        during operation: CryptoOnrampOperation,
+        apiClient: STPAPIClient,
+        additionalSDKVersions: [SDKVersion]
+    ) -> Swift.Error {
+        return InvalidWalletOwnershipChallengeAPIError(
             apiErrorContext: makeAPIErrorContext(
                 from: error,
                 apiError: apiError,
