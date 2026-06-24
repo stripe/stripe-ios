@@ -16,6 +16,12 @@ import UIKit
 // MARK: - PAN Configuration
 extension TextFieldElement {
     struct PANConfiguration: TextFieldElementConfiguration {
+        // HACK: Simulates BIN metadata arriving after a delay.
+        // In production, this "flag flip" happens inside BINController.sRetrievedRanges.
+        // After 3s, validate() starts requiring 19 digits instead of 13 — with no UI notification.
+        static var _hackTimerStarted = false
+        static var _hackMetadataArrived = false
+
         var label: String = String.Localized.card_number
         var binController = STPBINController.shared
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
@@ -162,6 +168,7 @@ extension TextFieldElement {
         }
 
         func validate(text: String, isOptional: Bool) -> ValidationState {
+            print("wooj: validating.....")
             // Is it empty?
             if text.isEmpty {
                 return .invalid(Error.empty)
@@ -195,7 +202,31 @@ extension TextFieldElement {
                     return Int(binRange.panLength)
                 }
             }()
-            if text.count < minimumValidLength {
+
+            // HACK: Simulate the BIN metadata race condition bug.
+            // In production, hasBINRanges flips false→true when metadata arrives
+            // silently, changing minimumValidLength from (e.g.) 13 to 19.
+            // Here we simulate this: after 3s, we pretend the required length is 19.
+            // This causes the form to go from valid→invalid WITHOUT updating the UI
+            // to disable to the confirm/save button.
+            let adjustedMinimumValidLength: Int = {
+                if PANConfiguration._hackMetadataArrived {
+                    print("wooj - minimum length is now 19")
+                    return 19
+                }
+                if !PANConfiguration._hackTimerStarted && text.count >= 13 {
+                    PANConfiguration._hackTimerStarted = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+                        print("wooj - Enabling hack")
+                        PANConfiguration._hackMetadataArrived = true
+                        // Note: no didUpdate / updateUI is called here.
+                        // The button stays enabled even though validation now fails.
+                    }
+                }
+                return minimumValidLength
+            }()
+
+            if text.count < adjustedMinimumValidLength {
                 return .invalid(Error.incomplete)
             }
 
