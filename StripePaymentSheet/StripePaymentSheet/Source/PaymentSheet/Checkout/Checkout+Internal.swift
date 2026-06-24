@@ -30,10 +30,18 @@ extension Checkout {
     internal func enqueueSessionUpdate(
         _ body: @MainActor @escaping () async throws -> Void
     ) async throws {
+        // Update the loading state to `isLoading = true`.
+        // Avoid triggering the `checkoutDidBeginLoading` delegate if we were already loading.
+        if !isLoading {
+            isLoading = true
+        }
+
         let predecessor = pendingOperations.last
         let operation = Task<Void, Error> { @MainActor in
-            // Keep later ops moving even if an earlier queued op failed.
+            // Wait for the previous operation, if one exists, to finish.
+            // Use `try?` so that we still continue even if the predecessor throws an error.
             if let predecessor { _ = try? await predecessor.value }
+
             try await body()
         }
 
@@ -41,6 +49,11 @@ extension Checkout {
 
         defer {
             pendingOperations.removeAll { $0 == operation }
+
+            // If the queue is now empty, update the loading state to `isLoading = false`.
+            if pendingOperations.isEmpty {
+                isLoading = false
+            }
         }
 
         try await operation.value
@@ -62,9 +75,6 @@ extension Checkout {
     ) async throws {
         try await enqueueSessionUpdate {
             try self.requireSheetNotPresented()
-            // Transition to loading before the async work begins so observers show a loading state.
-            self.state = .loading(self.state.session)
-
             do {
                 let updatedSession: STPCheckoutSession
                 if let update {
@@ -82,7 +92,6 @@ extension Checkout {
                 try await self.commitSession(updatedSession)
             } catch {
                 // Restore loaded state on failure so the UI doesn't stay stuck in loading.
-                self.state = .loaded(self.state.session)
                 throw CheckoutError.apiError(message: error.nonGenericDescription)
             }
         }

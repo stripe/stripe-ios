@@ -6,6 +6,7 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
+import Combine
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
@@ -121,6 +122,138 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
     }
 
+    // MARK: - Loading & Emission Tests
+
+    func testLoadingStatePersistsAcrossConsecutiveQueuedOperations() async throws {
+        let checkout = await makeCheckoutWithOpenSession()
+        let delegate = CheckoutPendingOperationsTestDelegate()
+        checkout.delegate = delegate
+
+        var sessionEmissions: [Checkout.Session] = []
+        let sessionSub = checkout.$session.dropFirst().sink { sessionEmissions.append($0) }
+        var loadingEmissions: [Bool] = []
+        let loadingSub = checkout.$isLoading.dropFirst().sink { loadingEmissions.append($0) }
+
+        let firstGate = CheckoutPendingOperationsTestGate()
+        let secondGate = CheckoutPendingOperationsTestGate()
+
+        var firstJSON = CheckoutTestHelpers.makeOpenSessionJSON()
+        firstJSON["currency"] = "eur"
+        let firstSession = STPCheckoutSession.decodedObject(fromAPIResponse: firstJSON)!
+
+        var secondJSON = CheckoutTestHelpers.makeOpenSessionJSON()
+        secondJSON["currency"] = "gbp"
+        let secondSession = STPCheckoutSession.decodedObject(fromAPIResponse: secondJSON)!
+
+        // Enqueue first operation
+        let firstTask = Task { @MainActor in
+            try await checkout.enqueueSessionUpdate {
+                await firstGate.wait()
+                try await checkout.commitSession(firstSession)
+            }
+        }
+
+        try await waitUntil { checkout.pendingOperations.count == 1 && firstGate.isWaiting }
+
+        // Enqueue second operation before first finishes
+        let secondTask = Task { @MainActor in
+            try await checkout.enqueueSessionUpdate {
+                await secondGate.wait()
+                try await checkout.commitSession(secondSession)
+            }
+        }
+
+        try await waitUntil { checkout.pendingOperations.count == 2 }
+
+        // While first is in progress: isLoading=true emitted once, no session or finishLoading yet
+        XCTAssertTrue(checkout.isLoading)
+        XCTAssertEqual(loadingEmissions, [true])
+        XCTAssertEqual(sessionEmissions.count, 0)
+        XCTAssertEqual(delegate.beginLoadingCallCount, 1)
+        XCTAssertEqual(delegate.finishLoadingCallCount, 0)
+        XCTAssertEqual(delegate.updateSessionCallCount, 0)
+
+        // Complete first operation, wait for second to start
+        firstGate.open()
+        try await waitUntil { secondGate.isWaiting }
+
+        // While second is in progress: isLoading still true, session emitted once from first op
+        XCTAssertTrue(checkout.isLoading)
+        XCTAssertEqual(loadingEmissions, [true])
+        XCTAssertEqual(sessionEmissions.count, 1)
+        XCTAssertEqual(sessionEmissions[0].currency, "eur")
+        XCTAssertEqual(delegate.beginLoadingCallCount, 1)
+        XCTAssertEqual(delegate.finishLoadingCallCount, 0)
+        XCTAssertEqual(delegate.updateSessionCallCount, 1)
+
+        // Complete second operation
+        secondGate.open()
+        try await firstTask.value
+        try await secondTask.value
+
+        // After both complete: isLoading=false, both sessions emitted
+        XCTAssertFalse(checkout.isLoading)
+        XCTAssertEqual(loadingEmissions, [true, false])
+        XCTAssertEqual(sessionEmissions.count, 2)
+        XCTAssertEqual(sessionEmissions[1].currency, "gbp")
+        XCTAssertEqual(delegate.beginLoadingCallCount, 1)
+        XCTAssertEqual(delegate.finishLoadingCallCount, 1)
+        XCTAssertEqual(delegate.updateSessionCallCount, 2)
+
+        sessionSub.cancel()
+        loadingSub.cancel()
+    }
+
+    func testThrowingOperationEmitsLoadingButNoSessionUpdate() async throws {
+        let checkout = await makeCheckoutWithOpenSession()
+        let delegate = CheckoutPendingOperationsTestDelegate()
+        checkout.delegate = delegate
+
+        var sessionEmissions: [Checkout.Session] = []
+        let sessionSub = checkout.$session.dropFirst().sink { sessionEmissions.append($0) }
+        var loadingEmissions: [Bool] = []
+        let loadingSub = checkout.$isLoading.dropFirst().sink { loadingEmissions.append($0) }
+
+        do {
+            try await checkout.enqueueSessionUpdate {
+                throw NSError(domain: "test", code: 42)
+            }
+            XCTFail("Expected error to propagate")
+        } catch {
+            XCTAssertEqual((error as NSError).code, 42)
+        }
+
+        XCTAssertFalse(checkout.isLoading)
+        XCTAssertEqual(loadingEmissions, [true, false])
+        XCTAssertEqual(sessionEmissions.count, 0)
+        XCTAssertEqual(delegate.beginLoadingCallCount, 1)
+        XCTAssertEqual(delegate.finishLoadingCallCount, 1)
+        XCTAssertEqual(delegate.updateSessionCallCount, 0)
+
+        sessionSub.cancel()
+        loadingSub.cancel()
+    }
+
+    func testNoOpOperationStillEmitsSessionUpdate() async throws {
+        let checkout = await makeCheckoutWithOpenSession()
+        let delegate = CheckoutPendingOperationsTestDelegate()
+        checkout.delegate = delegate
+
+        var sessionEmissions: [Checkout.Session] = []
+        let sessionSub = checkout.$session.dropFirst().sink { sessionEmissions.append($0) }
+
+        // Enqueue an operation that commits the same session (no actual mutation)
+        let existingSession = checkout.stpSession!
+        try await checkout.enqueueSessionUpdate {
+            try await checkout.commitSession(existingSession)
+        }
+
+        XCTAssertEqual(delegate.updateSessionCallCount, 1)
+        XCTAssertEqual(sessionEmissions.count, 1)
+
+        sessionSub.cancel()
+    }
+
     // MARK: - Helpers
 
     private func makeCheckoutWithOpenSession() async -> Checkout {
@@ -163,5 +296,24 @@ private final class CheckoutPendingOperationsTestGate {
     func open() {
         continuation?.resume()
         continuation = nil
+    }
+}
+
+@MainActor
+private class CheckoutPendingOperationsTestDelegate: CheckoutDelegate {
+    var beginLoadingCallCount = 0
+    var finishLoadingCallCount = 0
+    var updateSessionCallCount = 0
+
+    func checkoutDidBeginLoading(_ checkout: Checkout) {
+        beginLoadingCallCount += 1
+    }
+
+    func checkoutDidFinishLoading(_ checkout: Checkout) {
+        finishLoadingCallCount += 1
+    }
+
+    func checkoutDidUpdateSession(_ checkout: Checkout, session: Checkout.Session) {
+        updateSessionCallCount += 1
     }
 }

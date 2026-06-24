@@ -29,11 +29,22 @@ import Foundation
 public final class Checkout: ObservableObject {
     // MARK: - Public Properties
 
-    /// The current state of the checkout session.
+    /// The current loading state of the checkout session.
     ///
-    /// After initialization this is always ``State.loaded(_:)``. It transitions to
-    /// ``State.loading(_:)`` while a mutation is in flight.
-    @Published public internal(set) var state: State
+    /// After initialization this is always ``false``. It transitions to ``true``
+    /// while a mutation is in flight.
+    @Published public internal(set) var isLoading: Bool = false {
+        didSet {
+            isLoading ? delegate?.checkoutDidBeginLoading(self) : delegate?.checkoutDidFinishLoading(self)
+        }
+    }
+
+    /// The Checkout Session, updated from Stripe after every mutation.
+    @Published public internal(set) var session: Session {
+        didSet {
+            delegate?.checkoutDidUpdateSession(self, session: session)
+        }
+    }
 
     /// The configuration supplied at initialization.
     public let configuration: Configuration
@@ -91,13 +102,13 @@ public final class Checkout: ObservableObject {
 
         let sessionId = Self.extractSessionId(from: clientSecret)
         do {
-            let checkoutSession = try await apiClient.initCheckoutSession(
+            let session = try await apiClient.initCheckoutSession(
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
             )
-            await flagImageManager.prefetchFlagImages(for: checkoutSession)
-            self.stpSession = checkoutSession
-            self.state = .loaded(checkoutSession.makePublicSession())
+            await flagImageManager.prefetchFlagImages(for: session)
+            self.stpSession = session
+            self.session = session.makePublicSession()
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
@@ -116,7 +127,7 @@ public final class Checkout: ObservableObject {
         self.apiClient = apiClient
         await flagImageManager.prefetchFlagImages(for: session)
         self.stpSession = session
-        self.state = .loaded(session.makePublicSession())
+        self.session = session.makePublicSession()
     }
 
     /// Synchronous test-only initializer that wraps a pre-loaded session without async work.
@@ -125,7 +136,7 @@ public final class Checkout: ObservableObject {
         self.configuration = Configuration()
         self.apiClient = .shared
         self.stpSession = session
-        self.state = .loaded(session.makePublicSession())
+        self.session = session.makePublicSession()
     }
 #endif
 
@@ -322,10 +333,7 @@ public final class Checkout: ObservableObject {
         newSession.billingAddress = stpSession?.billingAddress
         newSession.shippingAddress = stpSession?.shippingAddress
         stpSession = newSession
-        let publicSession = newSession.makePublicSession()
-        state = pendingOperations.isEmpty ? .loaded(publicSession) : .loading(publicSession)
         try await integrationDelegate?.checkoutDidUpdate(self)
-        delegate?.checkout(self, didChangeState: state)
+        session = newSession.makePublicSession()
     }
-
 }
