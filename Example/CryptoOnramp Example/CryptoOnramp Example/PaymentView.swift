@@ -931,7 +931,8 @@ private extension PaymentTokensResponse.PaymentToken {
                 object: "",
                 livemode: false,
                 network: "solana",
-                walletAddress: ""
+                walletAddress: "",
+                verifiedOwnership: false
             ),
             onContinue: { _, _, _ in }
         )
