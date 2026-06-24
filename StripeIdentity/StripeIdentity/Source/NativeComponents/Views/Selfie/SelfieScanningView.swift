@@ -744,9 +744,6 @@ private final class CaptureTickMarksView: UIView {
         static let highlightedTickLength: CGFloat = 18
         static let tickWidth: CGFloat = 2
         static let highlightedTickWidth: CGFloat = 2.8
-        static let acceptedTickGlowWidth: CGFloat = 7
-        static let acceptedTickGlowBlur: CGFloat = 7
-        static let acceptedTickGlowAlpha: CGFloat = 0.28
         static let legacyHighlightAnimationDuration: TimeInterval = 0.18
         static let instructionAnimationDuration: TimeInterval = 0.72
         static let feedbackAnimationDuration: TimeInterval = 0.15
@@ -1308,34 +1305,8 @@ private final class CaptureTickMarksView: UIView {
 
         context.saveGState()
         context.setLineCap(.round)
-        context.setLineWidth(Styling.acceptedTickGlowWidth)
-        context.setShadow(
-            offset: .zero,
-            blur: Styling.acceptedTickGlowBlur,
-            color: Styling.acceptedTickColor
-                .withAlphaComponent(Styling.acceptedTickGlowAlpha * clampedOpacity)
-                .cgColor
-        )
-        context.setStrokeColor(
-            Styling.acceptedTickColor
-                .withAlphaComponent(Styling.acceptedTickGlowAlpha * clampedOpacity)
-                .cgColor
-        )
-        drawTicks(
-            in: context,
-            center: center,
-            horizontalRadius: horizontalRadius,
-            verticalRadius: verticalRadius,
-            tickLength: tickLength,
-            growsOutward: growsOutward,
-            shouldDrawTick: shouldDrawTick
-        )
-        context.strokePath()
-        context.restoreGState()
-
-        context.saveGState()
-        context.setLineCap(.round)
         context.setLineWidth(Styling.highlightedTickWidth)
+        context.setShadow(offset: .zero, blur: 0, color: nil)
         context.setStrokeColor(
             Styling.acceptedTickColor.withAlphaComponent(clampedOpacity).cgColor
         )
