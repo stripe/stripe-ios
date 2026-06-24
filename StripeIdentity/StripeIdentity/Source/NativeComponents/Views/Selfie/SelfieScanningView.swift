@@ -1275,7 +1275,9 @@ private final class CaptureTickMarksView: UIView {
             horizontalRadius: horizontalRadius,
             verticalRadius: verticalRadius,
             tickLength: Styling.tickLength,
-            shouldDrawTick: { _ in true }
+            shouldDrawTick: { [weak self] angle in
+                self?.shouldDrawBaseTick(at: angle) ?? true
+            }
         )
         context.strokePath()
 
@@ -1297,7 +1299,7 @@ private final class CaptureTickMarksView: UIView {
                 growsOutward: true,
                 outwardGrowthScale: { abs(cos($0)) },
                 shouldDrawTick: { [weak self] angle in
-                    self?.isTickInTargetHalf(at: angle) ?? false
+                    self?.shouldDrawDirectionalPulseTick(at: angle) ?? false
                 }
             )
             context.strokePath()
@@ -1456,6 +1458,25 @@ private final class CaptureTickMarksView: UIView {
         let angularDistance = abs(atan2(sin(angle - centerAngle), cos(angle - centerAngle)))
         let hiddenAngle = (1 - displayedTargetProgress) * .pi * 0.5
         return angularDistance >= hiddenAngle && angularDistance <= .pi * 0.5
+    }
+    private func shouldDrawBaseTick(at angle: CGFloat) -> Bool {
+        return !isTickCoveredByAcceptedState(at: angle)
+    }
+
+    private func shouldDrawDirectionalPulseTick(at angle: CGFloat) -> Bool {
+        return isTickInTargetHalf(at: angle) && !isTickCoveredByAcceptedState(at: angle)
+    }
+
+    private func isTickCoveredByAcceptedState(at angle: CGFloat) -> Bool {
+        let isAcceptedTargetTick = uses3DCaptureAnimations
+            && captureGuideTarget != .none
+            && displayedTargetProgress > 0
+            && isTickRevealedByProgress(at: angle)
+        let isAcceptedHighlightTick = captureGuideHighlight != .none
+            && highlightedTickProgress > 0
+            && highlightedTickOpacity > 0
+            && isTickHighlighted(at: angle)
+        return isAcceptedTargetTick || isAcceptedHighlightTick
     }
 
     private func isTickHighlighted(at angle: CGFloat) -> Bool {
