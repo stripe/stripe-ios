@@ -33,7 +33,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.address = billingAddress
         billingDetails.email = "email@email.com"
-        billingDetails.name = "Isaac Asimov"
+        billingDetails.name = "Jenny Rosen"
         billingDetails.phone = "555-555-5555"
 
         let params = STPPaymentMethodParams(
@@ -53,7 +53,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
 
             // Billing Details
                 XCTAssertEqual(paymentMethod?.billingDetails!.email, "email@email.com")
-            XCTAssertEqual(paymentMethod?.billingDetails!.name, "Isaac Asimov")
+            XCTAssertEqual(paymentMethod?.billingDetails!.name, "Jenny Rosen")
             XCTAssertEqual(paymentMethod?.billingDetails!.phone, "555-555-5555")
 
             // Billing Details Address
@@ -100,7 +100,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.address = billingAddress
         billingDetails.email = "email@email.com"
-        billingDetails.name = "Isaac Asimov"
+        billingDetails.name = "Jenny Rosen"
         billingDetails.phone = "555-555-5555"
 
         let params = STPPaymentMethodParams(
@@ -115,7 +115,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         XCTAssertFalse(paymentMethod.liveMode)
         XCTAssertEqual(paymentMethod.type, .card)
         XCTAssertEqual(paymentMethod.billingDetails!.email, "email@email.com")
-        XCTAssertEqual(paymentMethod.billingDetails!.name, "Isaac Asimov")
+        XCTAssertEqual(paymentMethod.billingDetails!.name, "Jenny Rosen")
         XCTAssertEqual(paymentMethod.billingDetails!.phone, "555-555-5555")
         XCTAssertEqual(paymentMethod.billingDetails!.address!.line1, "150 Townsend St")
         XCTAssertEqual(paymentMethod.billingDetails!.address!.line2, "4th Floor")
@@ -244,18 +244,18 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
 
         let createSepaPaymentMethod = {
             let sepaDebitParams = STPPaymentMethodSEPADebitParams()
-            sepaDebitParams.iban =  "AT611904300234573201"
+            sepaDebitParams.iban = "GB29NWBK60161331926819"
 
             let billingAddress = STPPaymentMethodAddress()
             billingAddress.city = "London"
             billingAddress.country = "GB"
-            billingAddress.line1 = "Stripe, 7th Floor The Bower Warehouse"
-            billingAddress.postalCode = "EC1V 9NR"
+            billingAddress.line1 = "123 Test Street"
+            billingAddress.postalCode = "E1W 1AF"
 
             let billingDetails = STPPaymentMethodBillingDetails()
             billingDetails.address = billingAddress
-            billingDetails.email = "email@email.com"
-            billingDetails.name = "Isaac Asimov"
+            billingDetails.email = "jenny@example.com"
+            billingDetails.name = "Jenny Rosen"
             billingDetails.phone = "555-555-5555"
 
             let params = STPPaymentMethodParams(sepaDebit: sepaDebitParams, billingDetails: billingDetails, metadata: nil)
@@ -378,13 +378,13 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         let billingAddress = STPPaymentMethodAddress()
         billingAddress.city = "London"
         billingAddress.country = "GB"
-        billingAddress.line1 = "Stripe, 7th Floor The Bower Warehouse"
+        billingAddress.line1 = "123 Test Street"
         billingAddress.postalCode = "EC1V 9NR"
 
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.address = billingAddress
         billingDetails.email = "email@email.com"
-        billingDetails.name = "Isaac Asimov"
+        billingDetails.name = "Jenny Rosen"
         billingDetails.phone = "555-555-5555"
 
         let params = STPPaymentMethodParams(bacsDebit: bacs, billingDetails: billingDetails, metadata: nil)

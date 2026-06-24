@@ -436,7 +436,7 @@ Content-Type: application/json
   },
   "apple_pay_merchant_token_webhook_url" : null,
   "customer" : {
-    "email" : "email@email.com",
+    "email" : "jenny@example.com",
     "payment_methods" : [
       {
         "object" : "payment_method",
@@ -453,17 +453,17 @@ Content-Type: application/json
         },
         "id" : "pm_1TUSHMFY0qyl6XeWZuVYw0Lr",
         "billing_details" : {
-          "email" : "email@email.com",
+          "email" : "jenny@example.com",
           "phone" : "555-555-5555",
           "tax_id" : null,
-          "name" : "Isaac Asimov",
+          "name" : "Jenny Rosen",
           "address" : {
             "state" : null,
             "country" : "GB",
             "line2" : null,
             "city" : "London",
-            "line1" : "Stripe, 7th Floor The Bower Warehouse",
-            "postal_code" : "EC1V 9NR"
+            "line1" : "123 Test Street",
+            "postal_code" : "E1W 1AF"
           }
         },
         "livemode" : false,
@@ -492,17 +492,17 @@ Content-Type: application/json
           },
           "id" : "pm_1TUSHMFY0qyl6XeWZuVYw0Lr",
           "billing_details" : {
-            "email" : "email@email.com",
+            "email" : "jenny@example.com",
             "phone" : "555-555-5555",
             "tax_id" : null,
-            "name" : "Isaac Asimov",
+            "name" : "Jenny Rosen",
             "address" : {
               "state" : null,
               "country" : "GB",
               "line2" : null,
               "city" : "London",
-              "line1" : "Stripe, 7th Floor The Bower Warehouse",
-              "postal_code" : "EC1V 9NR"
+              "line1" : "123 Test Street",
+              "postal_code" : "E1W 1AF"
             }
           },
           "livemode" : false,

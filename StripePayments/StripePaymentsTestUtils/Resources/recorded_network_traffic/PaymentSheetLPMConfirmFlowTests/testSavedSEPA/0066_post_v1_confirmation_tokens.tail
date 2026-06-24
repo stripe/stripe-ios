@@ -48,17 +48,17 @@ X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=
   "payment_method_preview" : {
     "allow_redisplay" : "unspecified",
     "billing_details" : {
-      "email" : "email@email.com",
+      "email" : "jenny@example.com",
       "phone" : "555-555-5555",
       "tax_id" : null,
-      "name" : "Isaac Asimov",
+      "name" : "Jenny Rosen",
       "address" : {
         "state" : null,
         "country" : "GB",
         "line2" : null,
         "city" : "London",
-        "line1" : "Stripe, 7th Floor The Bower Warehouse",
-        "postal_code" : "EC1V 9NR"
+        "line1" : "123 Test Street",
+        "postal_code" : "E1W 1AF"
       }
     },
     "customer" : "cus_UTP5I7g3DXW8DJ",

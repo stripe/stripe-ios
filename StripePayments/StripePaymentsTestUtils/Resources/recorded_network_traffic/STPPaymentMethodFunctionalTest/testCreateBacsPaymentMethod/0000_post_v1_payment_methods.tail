@@ -23,7 +23,7 @@ access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&bacs_debit\[account_number]=00012345&bacs_debit\[sort_code]=108800&billing_details\[address]\[city]=London&billing_details\[address]\[country]=GB&billing_details\[address]\[line1]=Stripe%2C%207th%20Floor%20The%20Bower%20Warehouse&billing_details\[address]\[postal_code]=EC1V%209NR&billing_details\[email]=email%40email\.com&billing_details\[name]=Isaac%20Asimov&billing_details\[phone]=555-555-5555&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=bacs_debit
+X-Stripe-Mock-Request: allow_redisplay=unspecified&bacs_debit\[account_number]=00012345&bacs_debit\[sort_code]=108800&billing_details\[address]\[city]=London&billing_details\[address]\[country]=GB&billing_details\[address]\[line1]=123%20Test%20Street&billing_details\[address]\[postal_code]=EC1V%209NR&billing_details\[email]=email%40email\.com&billing_details\[name]=Jenny%20Rosen&billing_details\[phone]=555-555-5555&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=bacs_debit
 
 {
   "object" : "payment_method",
@@ -32,13 +32,13 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&bacs_debit\[account_number]=0
     "email" : "email@email.com",
     "phone" : "555-555-5555",
     "tax_id" : null,
-    "name" : "Isaac Asimov",
+    "name" : "Jenny Rosen",
     "address" : {
       "state" : null,
       "country" : "GB",
       "line2" : null,
       "city" : "London",
-      "line1" : "Stripe, 7th Floor The Bower Warehouse",
+      "line1" : "123 Test Street",
       "postal_code" : "EC1V 9NR"
     }
   },

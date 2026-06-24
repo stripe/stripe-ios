@@ -125,18 +125,18 @@ public extension STPPaymentMethodParams {
 
     static func _testSEPA() -> STPPaymentMethodParams {
         let sepaDebitParams = STPPaymentMethodSEPADebitParams()
-        sepaDebitParams.iban =  "AT611904300234573201"
+        sepaDebitParams.iban = "GB29NWBK60161331926819"
 
         let billingAddress = STPPaymentMethodAddress()
         billingAddress.city = "London"
         billingAddress.country = "GB"
-        billingAddress.line1 = "Stripe, 7th Floor The Bower Warehouse"
-        billingAddress.postalCode = "EC1V 9NR"
+        billingAddress.line1 = "123 Test Street"
+        billingAddress.postalCode = "E1W 1AF"
 
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.address = billingAddress
-        billingDetails.email = "email@email.com"
-        billingDetails.name = "Isaac Asimov"
+        billingDetails.email = "jenny@example.com"
+        billingDetails.name = "Jenny Rosen"
         billingDetails.phone = "555-555-5555"
 
         return STPPaymentMethodParams(sepaDebit: sepaDebitParams, billingDetails: billingDetails, metadata: nil)
@@ -279,8 +279,8 @@ public extension STPPaymentMethod {
                 "routing_number": "110000000",
             ] as [String: Any],
             "billing_details": [
-                "name": "Sam Stripe",
-                "email": "sam@stripe.com",
+                "name": "Jenny Rosen",
+                "email": "jenny@example.com",
             ] as [String: Any],
         ])!
     }
@@ -294,8 +294,8 @@ public extension STPPaymentMethod {
                 "last4": "1234",
             ],
             "billing_details": [
-                "name": "Sam Stripe",
-                "email": "sam@stripe.com",
+                "name": "Jenny Rosen",
+                "email": "jenny@example.com",
             ] as [String: Any],
         ])!
     }
@@ -309,8 +309,8 @@ public extension STPPaymentMethod {
                 "last4": "1234",
             ],
             "billing_details": [
-                "name": "Sam Stripe",
-                "email": "sam@stripe.com",
+                "name": "Jenny Rosen",
+                "email": "jenny@example.com",
             ] as [String: Any],
         ])!
         paymentMethod.linkPaymentDetails = .card(

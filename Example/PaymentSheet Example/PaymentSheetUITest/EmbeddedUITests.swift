@@ -912,7 +912,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.textFields["Full name"].waitForExistenceAndTap()
         app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
         app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("AT611904300234573201" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("GB29NWBK60161331926819" + XCUIKeyboardKey.return.rawValue)
 
         app.fillAddressWithAutocomplete()
         app.buttons["Pay €50.99"].tap()

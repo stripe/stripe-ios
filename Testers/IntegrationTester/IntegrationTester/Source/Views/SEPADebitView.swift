@@ -14,7 +14,7 @@ struct SEPADebitView: View {
   @State var isConfirmingPayment = false
   @State var name: String = "Jane Diaz"
   @State var email: String = "jane@example.com"
-  @State var iban: String = "AT611904300234573201"
+  @State var iban: String = "GB29NWBK60161331926819"
 
   var body: some View {
       VStack {

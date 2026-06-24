@@ -96,7 +96,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         // Save SEPA
         app.buttons["+ Add"].waitForExistenceAndTap()
         tapPaymentMethod("SEPA Debit")
-        try! fillSepaData(app, iban: "AT611904300234573201", tapCheckboxWithText: "Save this account for future Example, Inc. payments")
+        try! fillSepaData(app, iban: "GB29NWBK60161331926819", tapCheckboxWithText: "Save this account for future Example, Inc. payments")
         app.swipeUp()
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].waitForExistenceAndTap()

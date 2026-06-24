@@ -23,7 +23,7 @@ access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[city]=San%20Francisco&billing_details\[address]\[country]=US&billing_details\[address]\[line1]=150%20Townsend%20St&billing_details\[address]\[line2]=4th%20Floor&billing_details\[address]\[postal_code]=94103&billing_details\[address]\[state]=CA&billing_details\[email]=email%40email\.com&billing_details\[name]=Isaac%20Asimov&billing_details\[phone]=555-555-5555&card\[cvc]=100&card\[exp_month]=10&card\[exp_year]=2028&card\[number]=4242424242424242&guid=.*&metadata\[test_key]=test_value&muid=.*&payment_user_agent=.*&sid=.*&type=card
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[city]=San%20Francisco&billing_details\[address]\[country]=US&billing_details\[address]\[line1]=150%20Townsend%20St&billing_details\[address]\[line2]=4th%20Floor&billing_details\[address]\[postal_code]=94103&billing_details\[address]\[state]=CA&billing_details\[email]=email%40email\.com&billing_details\[name]=Jenny%20Rosen&billing_details\[phone]=555-555-5555&card\[cvc]=100&card\[exp_month]=10&card\[exp_year]=2028&card\[number]=4242424242424242&guid=.*&metadata\[test_key]=test_value&muid=.*&payment_user_agent=.*&sid=.*&type=card
 
 {
   "object" : "payment_method",
@@ -32,7 +32,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[ci
     "email" : "email@email.com",
     "phone" : "555-555-5555",
     "tax_id" : null,
-    "name" : "Isaac Asimov",
+    "name" : "Jenny Rosen",
     "address" : {
       "state" : "CA",
       "country" : "US",

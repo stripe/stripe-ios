@@ -114,7 +114,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
     "payment_methods" : [
 
     ],
-    "email" : "email@email.com",
+    "email" : "jenny@example.com",
     "has_fallback_payment_method" : false,
     "individual_name" : null,
     "customer_provided" : true,
@@ -153,7 +153,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
     "after_submit" : null
   },
   "route_to_orchestration_interface" : false,
-  "customer_email" : "email@email.com",
+  "customer_email" : "jenny@example.com",
   "custom_components" : [
 
   ],
@@ -983,17 +983,17 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
       },
       "id" : "pm_1TUSHMFY0qyl6XeWZuVYw0Lr",
       "billing_details" : {
-        "email" : "email@email.com",
+        "email" : "jenny@example.com",
         "phone" : "555-555-5555",
         "tax_id" : null,
-        "name" : "Isaac Asimov",
+        "name" : "Jenny Rosen",
         "address" : {
           "state" : null,
           "country" : "GB",
           "line2" : null,
           "city" : "London",
-          "line1" : "Stripe, 7th Floor The Bower Warehouse",
-          "postal_code" : "EC1V 9NR"
+          "line1" : "123 Test Street",
+          "postal_code" : "E1W 1AF"
         }
       },
       "livemode" : false,

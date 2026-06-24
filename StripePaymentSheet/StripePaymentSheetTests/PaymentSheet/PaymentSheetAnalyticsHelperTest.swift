@@ -183,8 +183,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
                     "routing_number": "110000000",
                 ] as [String: Any],
                 "billing_details": [
-                    "name": "Sam Stripe",
-                    "email": "sam@stripe.com",
+                    "name": "Jenny Rosen",
+                    "email": "jenny@example.com",
                 ] as [String: Any],
             ] as [AnyHashable: Any]
             let elementsSession: STPElementsSession = ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON])
@@ -279,8 +279,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
                 "routing_number": "110000000",
             ] as [String: Any],
             "billing_details": [
-                "name": "Sam Stripe",
-                "email": "sam@stripe.com",
+                "name": "Jenny Rosen",
+                "email": "jenny@example.com",
             ] as [String: Any],
         ] as [AnyHashable: Any]
         // Load started -> succeeded

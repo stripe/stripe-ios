@@ -33,7 +33,7 @@ x-content-type-options: nosniff
   "billing_details" : {
     "email" : "email@email.com",
     "phone" : "555-555-5555",
-    "name" : "Isaac Asimov",
+    "name" : "Jenny Rosen",
     "address" : {
       "state" : "CA",
       "country" : "US",

@@ -38,7 +38,7 @@ class STPPaymentMethodModernTest: XCTestCase {
         var billingDetails = StripeAPI.BillingDetails()
         billingDetails.address = billingAddress
         billingDetails.email = "email@email.com"
-        billingDetails.name = "Isaac Asimov"
+        billingDetails.name = "Jenny Rosen"
         billingDetails.phone = "555-555-5555"
 
         params.card = card
@@ -73,7 +73,7 @@ class STPPaymentMethodModernTest: XCTestCase {
         var billingDetails = StripeAPI.BillingDetails()
         billingDetails.address = billingAddress
         billingDetails.email = "email@email.com"
-        billingDetails.name = "Isaac Asimov"
+        billingDetails.name = "Jenny Rosen"
         billingDetails.phone = "555-555-5555"
 
         params.card = card

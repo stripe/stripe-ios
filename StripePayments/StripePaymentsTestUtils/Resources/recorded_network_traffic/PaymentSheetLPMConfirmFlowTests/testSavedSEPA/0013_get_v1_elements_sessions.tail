@@ -410,7 +410,7 @@ Content-Type: application/json
   },
   "apple_pay_merchant_token_webhook_url" : "https:\/\/pm-hooks.stripe.com\/apple_pay\/merchant_token\/pDq7tf9uieoQWMVJixFwuOve\/acct_1G6m1pFY0qyl6XeW\/",
   "customer" : {
-    "email" : "email@email.com",
+    "email" : "jenny@example.com",
     "payment_methods" : [
 
     ],
