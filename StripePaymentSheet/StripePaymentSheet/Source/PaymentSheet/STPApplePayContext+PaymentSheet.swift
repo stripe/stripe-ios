@@ -6,6 +6,7 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
+import Contacts
 import Foundation
 import PassKit
 @_spi(STP) import StripeApplePay
@@ -411,6 +412,12 @@ extension STPApplePayContext {
             paymentRequest.merchantCapabilities = merchantCapabilities
         }
 
+        // Pre-populate billingContact from the CheckoutSession's billing address if available
+        if case .checkout(let checkout) = intent,
+           let billingAddress = checkout.stpSession.billingAddress {
+            paymentRequest.billingContact = makeBillingContact(from: billingAddress)
+        }
+
         return paymentRequest
     }
 }
@@ -432,6 +439,46 @@ private func makeShippingDetails(from configuration: PaymentElementConfiguration
         name: name,
         phone: shippingDetails.phone
     )
+}
+
+/// Converts a `Checkout.ContactAddress` into a `PKContact` for pre-populating the Apple Pay sheet.
+private func makeBillingContact(from contactAddress: Checkout.ContactAddress) -> PKContact {
+    let contact = PKContact()
+
+    if let name = contactAddress.name {
+        contact.name = PersonNameComponentsFormatter().personNameComponents(from: name)
+    }
+
+    if let phone = contactAddress.phone {
+        contact.phoneNumber = CNPhoneNumber(stringValue: phone)
+    }
+
+    let postalAddress = CNMutablePostalAddress()
+    let address = contactAddress.address
+    postalAddress.isoCountryCode = address.country
+
+    if let line1 = address.line1 {
+        if let line2 = address.line2 {
+            postalAddress.street = "\(line1)\n\(line2)"
+        } else {
+            postalAddress.street = line1
+        }
+    }
+
+    if let city = address.city {
+        postalAddress.city = city
+    }
+
+    if let state = address.state {
+        postalAddress.state = state
+    }
+
+    if let postalCode = address.postalCode {
+        postalAddress.postalCode = postalCode
+    }
+
+    contact.postalAddress = postalAddress
+    return contact
 }
 
 private func makeRequiredBillingDetails(from configuration: PaymentElementConfiguration) -> Set<PKContactField> {
