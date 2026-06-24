@@ -84,7 +84,7 @@ extension PaymentSheet {
             )
 
             // Update the Checkout instance with the confirmed session response
-            checkout.updateSession(response)
+            try await checkout.commitSession(response)
 
             // 4. Handle response based on checkout session mode
             return try await handleCheckoutSessionConfirmResponse(

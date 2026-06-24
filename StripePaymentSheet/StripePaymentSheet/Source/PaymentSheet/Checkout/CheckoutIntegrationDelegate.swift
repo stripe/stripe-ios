@@ -12,4 +12,9 @@
 protocol CheckoutIntegrationDelegate: AnyObject {
     /// Whether the integration is currently presenting a payment sheet or form.
     var isSheetPresented: Bool { get }
+
+    /// Called by ``Checkout`` whenever its underlying session changes.
+    /// Implementors should re-render their UI to reflect the updated session
+    /// and throw if the re-render fails (e.g. zero supported payment methods).
+    func checkoutDidUpdate(_ checkout: Checkout) async throws
 }
