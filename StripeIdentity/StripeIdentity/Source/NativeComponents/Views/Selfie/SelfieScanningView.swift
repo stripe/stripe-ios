@@ -172,6 +172,21 @@ final class SelfieScanningView: UIView {
                     return true
                 }
             }
+
+            var usesLivePreviewBlur: Bool {
+                switch self {
+                case .placeFace,
+                    .holdStill,
+                    .lookLeft,
+                    .lookRight,
+                    .uploading:
+                    return false
+                case .capturedFront,
+                    .capturedLeft,
+                    .capturedRight:
+                    return true
+                }
+            }
         }
 
         enum State {
@@ -467,13 +482,13 @@ final class SelfieScanningView: UIView {
             havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
-            capturedImageBlurView.isHidden = !(
-                uses3DCaptureAnimations
-                    && captureGuideTarget != .none
-                    && captureGuideHighlight == .none
-            )
+            let shouldBlurLivePreview = statusText?.usesLivePreviewBlur == true
+            capturedImageBlurView.isHidden = !shouldBlurLivePreview
             captureTickMarksView.isHidden = false
-            captureTickMarksView.setShowsCenteredShadow(true, animated: true)
+            captureTickMarksView.setShowsCenteredShadow(
+                !shouldBlurLivePreview,
+                animated: true
+            )
             captureTickMarksView.setUses3DCaptureAnimations(uses3DCaptureAnimations)
             captureTickMarksView.setCaptureGuideTarget(
                 captureGuideTarget,
