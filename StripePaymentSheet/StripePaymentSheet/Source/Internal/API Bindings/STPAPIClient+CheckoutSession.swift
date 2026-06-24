@@ -155,24 +155,24 @@ extension STPAPIClient {
             "payment_method_to_update[payment_method_id]": paymentMethodId,
         ]
         if let billing = billingDetails {
-            let p = "payment_method_to_update[billing_details]"
-            if let name = billing.name { params["\(p)[name]"] = name }
-            if let email = billing.email { params["\(p)[email]"] = email }
-            if let phone = billing.phone { params["\(p)[phone]"] = phone }
+            let billingPrefix = "payment_method_to_update[billing_details]"
+            if let name = billing.name { params["\(billingPrefix)[name]"] = name }
+            if let email = billing.email { params["\(billingPrefix)[email]"] = email }
+            if let phone = billing.phone { params["\(billingPrefix)[phone]"] = phone }
             if let address = billing.address {
-                let a = "\(p)[address]"
-                if let v = address.line1 { params["\(a)[line1]"] = v }
-                if let v = address.line2 { params["\(a)[line2]"] = v }
-                if let v = address.city { params["\(a)[city]"] = v }
-                if let v = address.state { params["\(a)[state]"] = v }
-                if let v = address.postalCode { params["\(a)[postal_code]"] = v }
-                if let v = address.country { params["\(a)[country]"] = v }
+                let addressPrefix = "\(billingPrefix)[address]"
+                if let line1 = address.line1 { params["\(addressPrefix)[line1]"] = line1 }
+                if let line2 = address.line2 { params["\(addressPrefix)[line2]"] = line2 }
+                if let city = address.city { params["\(addressPrefix)[city]"] = city }
+                if let state = address.state { params["\(addressPrefix)[state]"] = state }
+                if let postalCode = address.postalCode { params["\(addressPrefix)[postal_code]"] = postalCode }
+                if let country = address.country { params["\(addressPrefix)[country]"] = country }
             }
         }
         if let expiry = expiryDetails {
-            let p = "payment_method_to_update[expiry_details]"
-            params["\(p)[exp_month]"] = expiry.expMonth
-            params["\(p)[exp_year]"] = expiry.expYear
+            let expiryPrefix = "payment_method_to_update[expiry_details]"
+            params["\(expiryPrefix)[exp_month]"] = expiry.expMonth
+            params["\(expiryPrefix)[exp_year]"] = expiry.expYear
         }
         return params
     }
