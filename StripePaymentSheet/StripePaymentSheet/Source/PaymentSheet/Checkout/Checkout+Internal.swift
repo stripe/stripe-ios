@@ -91,7 +91,11 @@ extension Checkout {
                 localMutation?()
                 try await self.commitSession(updatedSession)
             } catch {
-                // Restore loaded state on failure so the UI doesn't stay stuck in loading.
+                // If a prior op skipped the delegate and we're failing before we
+                // get to commitSession ourselves, still notify so the UI updates.
+                if self.isLastPendingOperation {
+                    try? await self.integrationDelegate?.checkoutDidUpdate(self)
+                }
                 throw CheckoutError.apiError(message: error.nonGenericDescription)
             }
         }
