@@ -141,9 +141,7 @@ extension PaymentSheet.FlowController {
     /// - Parameter checkout: The Checkout instance whose session has been updated.
     /// - Throws: An error if the update fails. You should retry the update; the FlowController instance is not usable until the update succeeds.
     /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
-    @_spi(STP)
-    @_spi(ReactNativeSDK)
-    public func update(checkout: Checkout) async throws {
+    internal func update(checkout: Checkout) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             Task { @MainActor in
                 update(checkout: checkout) { error in

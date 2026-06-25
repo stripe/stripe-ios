@@ -749,10 +749,8 @@ extension PaymentSheet {
         /// - Parameter checkout: The Checkout instance whose session has been updated.
         /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry.
         /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
-        @_spi(STP)
-        @_spi(ReactNativeSDK)
         @MainActor
-        public func update(
+        internal func update(
             checkout: Checkout,
             completion: @escaping (Error?) -> Void
         ) {

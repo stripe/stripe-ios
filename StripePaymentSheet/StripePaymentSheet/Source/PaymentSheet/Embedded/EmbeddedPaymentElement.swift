@@ -167,9 +167,7 @@ public final class EmbeddedPaymentElement {
     /// - Returns: The result of the update.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
     /// - Note: If you call `update` while a previous call to `update` is still in progress, the previous call returns `.canceled`.
-    @_spi(STP)
-    @_spi(ReactNativeSDK)
-    public func update(
+    internal func update(
         checkout: Checkout
     ) async -> UpdateResult {
         do {
@@ -551,9 +549,7 @@ extension EmbeddedPaymentElement {
     /// - Parameter completion: A completion block containing the result of the update. Called on the main thread.
     /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
-    @_spi(STP)
-    @_spi(ReactNativeSDK)
-    public func update(
+    internal func update(
         checkout: Checkout,
         completion: @escaping (UpdateResult) -> Void
     ) {
