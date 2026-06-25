@@ -744,6 +744,42 @@ extension PaymentSheet {
             performUpdate(mode: .deferredIntent(intentConfiguration), completion: completion)
         }
 
+        /// Call this method when the CheckoutSession you used to initialize `FlowController` changes.
+        /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
+        /// - Parameter checkout: The Checkout instance whose session has been updated.
+        /// - Note: This method may update `paymentOption` to nil if it's no longer available.
+        @MainActor
+        internal func update(checkout: Checkout) async throws {
+            assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
+            assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
+            let updateID = beginUpdate()
+            do {
+                // The calling mutation is still in the queue (it awaits us before returning),
+                // so exclude it to avoid a deadlock.
+                try await checkout.awaitPendingOperations(excludingCurrent: true)
+            } catch {
+                failUpdate(updateID)
+                throw error
+            }
+            guard !isPresented else {
+                let message = "PaymentSheet.FlowController.update must be called when PaymentSheet is not presented."
+                assertionFailure(message)
+                let error = PaymentSheetError.integrationError(nonPIIDebugDescription: message)
+                failUpdate(updateID)
+                throw error
+            }
+            checkout.stpSession.applyAddressOverrides(to: &configuration)
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                performUpdate(mode: .checkout(checkout), updateID: updateID) { error in
+                    if let error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume()
+                    }
+                }
+            }
+        }
+
         @discardableResult
         private func beginUpdate(updateID: UUID = UUID()) -> UUID {
             latestUpdateContext = UpdateContext(id: updateID)
@@ -942,34 +978,7 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
     }
 
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
-        assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
-        assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
-        let updateID = beginUpdate()
-        do {
-            // The calling mutation is still in the queue (it awaits us before returning),
-            // so exclude it to avoid a deadlock.
-            try await checkout.awaitPendingOperations(excludingCurrent: true)
-        } catch {
-            failUpdate(updateID)
-            throw error
-        }
-        guard !isPresented else {
-            let message = "PaymentSheet.FlowController.update must be called when PaymentSheet is not presented."
-            assertionFailure(message)
-            let error = PaymentSheetError.integrationError(nonPIIDebugDescription: message)
-            failUpdate(updateID)
-            throw error
-        }
-        checkout.stpSession.applyAddressOverrides(to: &configuration)
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            performUpdate(mode: .checkout(checkout), updateID: updateID) { error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume()
-                }
-            }
-        }
+        try await update(checkout: checkout)
     }
 }
 

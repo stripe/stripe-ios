@@ -1150,6 +1150,46 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: 10)
     }
 
+    // MARK: - Checkout Session update tests
+
+    @MainActor
+    func testUpdateCheckoutSession() async throws {
+        let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
+        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
+        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
+
+        var config = PaymentSheet.Configuration()
+        config.apiClient = apiClient
+        config.defaultBillingDetails.email = "test@example.com"
+
+        let sut = try await PaymentSheet.FlowController.create(checkout: checkout, configuration: config)
+        try await sut.update(checkout: checkout)
+    }
+
+    @MainActor
+    func testUpdateCheckoutSessionFails() async throws {
+        let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
+        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
+        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
+
+        var config = PaymentSheet.Configuration()
+        config.apiClient = apiClient
+        config.defaultBillingDetails.email = "test@example.com"
+
+        let sut = try await PaymentSheet.FlowController.create(checkout: checkout, configuration: config)
+
+        // Update with an invalid intent config should fail
+        let invalidIntentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "Invalid currency", setupFutureUsage: .offSession)) { _, _ in return "" }
+        do {
+            try await sut.update(intentConfiguration: invalidIntentConfig)
+            XCTFail("Expected update to fail")
+        } catch {
+            // Expected
+        }
+
+        // Update with the valid checkout should succeed after a failure
+        try await sut.update(checkout: checkout)
+    }
 
     // MARK: - other tests
 
