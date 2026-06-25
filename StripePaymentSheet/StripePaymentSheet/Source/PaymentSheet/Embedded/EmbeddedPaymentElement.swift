@@ -167,9 +167,7 @@ public final class EmbeddedPaymentElement {
     /// - Returns: The result of the update.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
     /// - Note: If you call `update` while a previous call to `update` is still in progress, the previous call returns `.canceled`.
-    @_spi(STP)
-    @_spi(ReactNativeSDK)
-    public func update(
+    func update(
         checkout: Checkout
     ) async -> UpdateResult {
         do {
@@ -539,26 +537,6 @@ extension EmbeddedPaymentElement {
     ) {
         Task {
             let result = await update(intentConfiguration: intentConfiguration)
-            DispatchQueue.main.async {
-                completion(result)
-            }
-        }
-    }
-
-    /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElement` changes.
-    /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
-    /// - Parameter checkout: The Checkout instance whose session has been updated.
-    /// - Parameter completion: A completion block containing the result of the update. Called on the main thread.
-    /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
-    /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
-    @_spi(STP)
-    @_spi(ReactNativeSDK)
-    public func update(
-        checkout: Checkout,
-        completion: @escaping (UpdateResult) -> Void
-    ) {
-        Task {
-            let result = await update(checkout: checkout)
             DispatchQueue.main.async {
                 completion(result)
             }
