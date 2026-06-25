@@ -56,7 +56,7 @@ struct CheckoutCartContentView: View {
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            let items = checkout.state.session.lineItems
+            let items = checkout.session.lineItems
             if items.isEmpty {
                 Text("No items")
                     .foregroundColor(.secondary)
@@ -113,7 +113,7 @@ struct CheckoutCartContentView: View {
                             Spacer()
                             Text(formatCartCurrency(
                                 amount: (item.unitAmount?.minorUnitsAmount ?? 0) * item.quantity,
-                                currency: checkout.state.session.currency
+                                currency: checkout.session.currency
                             ))
                                 .font(.headline)
                         }
@@ -139,7 +139,7 @@ struct CheckoutCartContentView: View {
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            let options = checkout.state.session.shippingOptions
+            let options = checkout.session.shippingOptions
             if options.isEmpty {
                 Text("No shipping options available")
                     .foregroundColor(.secondary)
@@ -196,7 +196,7 @@ struct CheckoutCartContentView: View {
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            if let override = checkout.state.session.shippingAddress {
+            if let override = checkout.session.shippingAddress {
                 addressCard(
                     name: override.name,
                     address: override.address,
@@ -211,7 +211,7 @@ struct CheckoutCartContentView: View {
                 address: shippingAddressBinding,
                 configuration: makeAddressConfiguration(
                     title: "Shipping Address",
-                    override: checkout.state.session.shippingAddress
+                    override: checkout.session.shippingAddress
                 )
             )
         }
@@ -224,7 +224,7 @@ struct CheckoutCartContentView: View {
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            if let override = checkout.state.session.billingAddress {
+            if let override = checkout.session.billingAddress {
                 addressCard(
                     name: override.name,
                     address: override.address,
@@ -239,7 +239,7 @@ struct CheckoutCartContentView: View {
                 address: billingAddressBinding,
                 configuration: makeAddressConfiguration(
                     title: "Billing Address",
-                    override: checkout.state.session.billingAddress
+                    override: checkout.session.billingAddress
                 )
             )
         }
@@ -428,8 +428,8 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var orderSummarySection: some View {
-        if let total = checkout.state.session.total {
-            let currency = checkout.state.session.currency
+        if let total = checkout.session.total {
+            let currency = checkout.session.currency
             let taxAmount = total.taxExclusive.minorUnitsAmount + total.taxInclusive.minorUnitsAmount
             VStack(alignment: .leading, spacing: 16) {
                 Text("Order Summary")
@@ -495,11 +495,11 @@ struct CheckoutCartContentView: View {
     }
 
     private var selectedShippingOptionId: String? {
-        let options = checkout.state.session.shippingOptions
+        let options = checkout.session.shippingOptions
         guard !options.isEmpty else {
             return nil
         }
-        guard let shippingAmount = checkout.state.session.total?.shippingRate.minorUnitsAmount else {
+        guard let shippingAmount = checkout.session.total?.shippingRate.minorUnitsAmount else {
             return lastSelectedShippingOptionId
         }
         let matchingOptions = options.filter { $0.amount.minorUnitsAmount == shippingAmount }
@@ -510,7 +510,7 @@ struct CheckoutCartContentView: View {
     }
 
     private var appliedPromotionCode: String? {
-        checkout.state.session.discountAmounts.first(where: { $0.promotionCode != nil })?.promotionCode
+        checkout.session.discountAmounts.first(where: { $0.promotionCode != nil })?.promotionCode
     }
 
     // MARK: - Actions
