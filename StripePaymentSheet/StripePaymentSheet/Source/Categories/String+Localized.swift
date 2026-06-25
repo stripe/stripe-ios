@@ -629,12 +629,12 @@ extension String.Localized {
     static func log_out_of_brand(_ brand: LinkBrand) -> String {
         switch brand {
         case .link, .unparsable:
-            return STPLocalizedString("Log out of Link", "Title of the logout action.")
+            return STPLocalizedString("Sign out of Link", "Title of the sign-out action.")
         case .onelink:
             return String(
                 format: STPLocalizedString(
-                    "Log out of %@",
-                    "Title of the logout action. The placeholder is a Stripe brand name and should not be translated."
+                    "Sign out of %@",
+                    "Title of the sign-out action. The placeholder is a Stripe brand name and should not be translated."
                 ),
                 brand.displayName
             )
