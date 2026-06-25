@@ -192,7 +192,7 @@ private final class AwaitsPendingOpsIntegrationDelegate: CheckoutIntegrationDele
     var isSheetPresented: Bool = false
 
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
-        try await checkout.awaitPendingOperations(excludingCurrent: true)
+        try await checkout.awaitPendingOperations()
     }
 }
 

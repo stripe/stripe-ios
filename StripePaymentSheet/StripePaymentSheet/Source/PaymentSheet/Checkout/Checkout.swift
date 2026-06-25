@@ -145,13 +145,10 @@ public final class Checkout: ObservableObject {
     ///
     /// - Parameters:
     ///   - timeout: Maximum time to wait, in seconds.
-    ///   - excludingCurrent: If true, skips the currently executing operation.
     func awaitPendingOperations(
-        timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout,
-        excludingCurrent: Bool = false
+        timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout
     ) async throws {
-        // First element is always the currently executing op (it awaits its predecessor, removed on completion).
-        let snapshot = excludingCurrent ? Array(pendingOperations.dropFirst()) : pendingOperations
+        let snapshot = pendingOperations
         guard !snapshot.isEmpty else { return }
 
         let result = await withTimeout(timeout) {
