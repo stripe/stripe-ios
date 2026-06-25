@@ -62,6 +62,10 @@ public final class Checkout: ObservableObject {
     /// Serial queue of in-flight session updates. Each task waits for the previous task before running.
     var pendingOperations: [Task<Void, Error>] = []
 
+    var isLastPendingOperation: Bool {
+        pendingOperations.count <= 1
+    }
+
     /// Default timeout used by ``awaitPendingOperations(timeout:)``.
     nonisolated static let defaultPendingOperationsTimeout: TimeInterval = 30
 
@@ -141,15 +145,13 @@ public final class Checkout: ObservableObject {
     ///
     /// - Parameters:
     ///   - timeout: Maximum time to wait, in seconds.
-    ///   - excludingCurrent: If true, excludes the last enqueued operation from the wait.
+    ///   - excludingCurrent: If true, skips the currently executing operation.
     func awaitPendingOperations(
         timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout,
         excludingCurrent: Bool = false
     ) async throws {
-        var snapshot = pendingOperations
-        if excludingCurrent {
-            snapshot = Array(snapshot.dropLast(1))
-        }
+        // First element is always the currently executing op (it awaits its predecessor, removed on completion).
+        let snapshot = excludingCurrent ? Array(pendingOperations.dropFirst()) : pendingOperations
         guard !snapshot.isEmpty else { return }
 
         let result = await withTimeout(timeout) {
@@ -324,7 +326,10 @@ public final class Checkout: ObservableObject {
         stpSession = newSession
         let publicSession = newSession.makePublicSession()
         state = pendingOperations.isEmpty ? .loaded(publicSession) : .loading(publicSession)
-        try await integrationDelegate?.checkoutDidUpdate(self)
+        // Skip delegate if another op is queued—it'll notify when it commits.
+        if isLastPendingOperation {
+            try await integrationDelegate?.checkoutDidUpdate(self)
+        }
         delegate?.checkout(self, didChangeState: state)
     }
 

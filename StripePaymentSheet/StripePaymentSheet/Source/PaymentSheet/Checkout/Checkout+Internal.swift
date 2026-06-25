@@ -83,6 +83,9 @@ extension Checkout {
             } catch {
                 // Restore loaded state on failure so the UI doesn't stay stuck in loading.
                 self.state = .loaded(self.state.session)
+                if self.isLastPendingOperation {
+                    try? await self.integrationDelegate?.checkoutDidUpdate(self)
+                }
                 throw CheckoutError.apiError(message: error.nonGenericDescription)
             }
         }
