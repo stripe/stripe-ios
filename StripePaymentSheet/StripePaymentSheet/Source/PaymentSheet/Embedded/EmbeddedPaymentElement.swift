@@ -161,26 +161,6 @@ public final class EmbeddedPaymentElement {
         return await performUpdate(mode: .deferredIntent(intentConfiguration))
     }
 
-    /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElement` changes.
-    /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
-    /// - Parameter checkout: The Checkout instance whose session has been updated.
-    /// - Returns: The result of the update.
-    /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
-    /// - Note: If you call `update` while a previous call to `update` is still in progress, the previous call returns `.canceled`.
-    internal func update(
-        checkout: Checkout
-    ) async -> UpdateResult {
-        do {
-            // The calling mutation is still in the queue (it awaits us before returning),
-            // so exclude it to avoid a deadlock.
-            try await checkout.awaitPendingOperations(excludingCurrent: true)
-        } catch {
-            return .failed(error: error)
-        }
-        checkout.stpSession.applyAddressOverrides(to: &configuration)
-        return await performUpdate(mode: .checkout(checkout))
-    }
-
     private func performUpdate(mode: PaymentSheet.InitializationMode) async -> UpdateResult {
         let newUpdateContext = EmbeddedUpdateContext(status: .inProgress)
         self.latestUpdateContext = newUpdateContext
@@ -478,7 +458,15 @@ extension EmbeddedPaymentElement: CheckoutIntegrationDelegate {
     }
 
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
-        let result = await update(checkout: checkout)
+        do {
+            // The calling mutation is still in the queue (it awaits us before returning),
+            // so exclude it to avoid a deadlock.
+            try await checkout.awaitPendingOperations(excludingCurrent: true)
+        } catch {
+            throw error
+        }
+        checkout.stpSession.applyAddressOverrides(to: &configuration)
+        let result = await performUpdate(mode: .checkout(checkout))
         switch result {
         case .succeeded, .canceled:
             break
@@ -537,24 +525,6 @@ extension EmbeddedPaymentElement {
     ) {
         Task {
             let result = await update(intentConfiguration: intentConfiguration)
-            DispatchQueue.main.async {
-                completion(result)
-            }
-        }
-    }
-
-    /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElement` changes.
-    /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
-    /// - Parameter checkout: The Checkout instance whose session has been updated.
-    /// - Parameter completion: A completion block containing the result of the update. Called on the main thread.
-    /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
-    /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
-    internal func update(
-        checkout: Checkout,
-        completion: @escaping (UpdateResult) -> Void
-    ) {
-        Task {
-            let result = await update(checkout: checkout)
             DispatchQueue.main.async {
                 completion(result)
             }

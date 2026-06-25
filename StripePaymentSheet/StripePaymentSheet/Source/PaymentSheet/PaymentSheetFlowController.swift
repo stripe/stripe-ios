@@ -744,42 +744,6 @@ extension PaymentSheet {
             performUpdate(mode: .deferredIntent(intentConfiguration), completion: completion)
         }
 
-        /// Call this method when the CheckoutSession you used to initialize PaymentSheet.FlowController changes.
-        /// This ensures the appropriate payment methods are displayed, etc.
-        /// - Parameter checkout: The Checkout instance whose session has been updated.
-        /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry.
-        /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
-        @MainActor
-        internal func update(
-            checkout: Checkout,
-            completion: @escaping (Error?) -> Void
-        ) {
-            assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
-            assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
-            let updateID = beginUpdate()
-            Task { @MainActor in
-                do {
-                    // The calling mutation is still in the queue (it awaits us before returning),
-                    // so exclude it to avoid a deadlock.
-                    try await checkout.awaitPendingOperations(excludingCurrent: true)
-                } catch {
-                    self.failUpdate(updateID)
-                    completion(error)
-                    return
-                }
-                guard !self.isPresented else {
-                    let message = "PaymentSheet.FlowController.update must be called when PaymentSheet is not presented."
-                    assertionFailure(message)
-                    let error = PaymentSheetError.integrationError(nonPIIDebugDescription: message)
-                    self.failUpdate(updateID)
-                    completion(error)
-                    return
-                }
-                checkout.stpSession.applyAddressOverrides(to: &configuration)
-                performUpdate(mode: .checkout(checkout), updateID: updateID, completion: completion)
-            }
-        }
-
         @discardableResult
         private func beginUpdate(updateID: UUID = UUID()) -> UUID {
             latestUpdateContext = UpdateContext(id: updateID)
@@ -978,7 +942,34 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
     }
 
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
-        try await update(checkout: checkout)
+        assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
+        assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
+        let updateID = beginUpdate()
+        do {
+            // The calling mutation is still in the queue (it awaits us before returning),
+            // so exclude it to avoid a deadlock.
+            try await checkout.awaitPendingOperations(excludingCurrent: true)
+        } catch {
+            failUpdate(updateID)
+            throw error
+        }
+        guard !isPresented else {
+            let message = "PaymentSheet.FlowController.update must be called when PaymentSheet is not presented."
+            assertionFailure(message)
+            let error = PaymentSheetError.integrationError(nonPIIDebugDescription: message)
+            failUpdate(updateID)
+            throw error
+        }
+        checkout.stpSession.applyAddressOverrides(to: &configuration)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            performUpdate(mode: .checkout(checkout), updateID: updateID) { error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
     }
 }
 
