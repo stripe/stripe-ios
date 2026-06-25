@@ -583,13 +583,18 @@ extension String.Localized {
     }
 
     static func log_out_of_brand(_ brand: LinkBrand) -> String {
-        String(
-            format: STPLocalizedString(
-                "Log out of %@",
-                "Title of the logout action. The placeholder is a Stripe brand name and should not be translated."
-            ),
-            brand.displayName
-        )
+        switch brand {
+        case .link, .unparsable:
+            return STPLocalizedString("Sign out of Link", "Title of the sign-out action.")
+        case .onelink:
+            return String(
+                format: STPLocalizedString(
+                    "Sign out of %@",
+                    "Title of the sign-out action. The placeholder is a Stripe brand name and should not be translated."
+                ),
+                brand.displayName
+            )
+        }
     }
 
     static func by_joining_brand_you_agree_to_the_terms_and_privacy_policy(brand: LinkBrand) -> String {
