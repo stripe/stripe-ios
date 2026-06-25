@@ -83,6 +83,8 @@ extension Checkout {
             } catch {
                 // Restore loaded state on failure so the UI doesn't stay stuck in loading.
                 self.state = .loaded(self.state.session)
+                // If a prior op skipped the delegate and we're failing before we
+                // get to commitSession ourselves, still notify so the UI updates.
                 if self.isLastPendingOperation {
                     try? await self.integrationDelegate?.checkoutDidUpdate(self)
                 }
