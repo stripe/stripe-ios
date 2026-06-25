@@ -5,6 +5,9 @@ MINOR
 ### PaymentSheet
 * [Changed] Disables `allowsNumberPadPopover` on text fields to opt-out of the number pad popover for iOS26+
 
+### CustomerSheet
+* [Fixed] Fixed an issue where a nil payment option was returned if the sheet was dismissed while loading.
+
 ### CryptoOnramp (Alpha)
 * [Changed] Renamed `CryptoOnrampCoordinator.presentCRSCARFDeclaration(from:)` to `presentUserAttestation(from:)`, and renamed `CRSCARFDeclarationResult` to `UserAttestationResult`.
 

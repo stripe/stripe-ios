@@ -136,6 +136,13 @@ public class CustomerSheet {
     public func present(from presentingViewController: UIViewController,
                         completion csCompletion: @escaping (CustomerSheetResult) -> Void
     ) {
+        present(from: presentingViewController, completion: csCompletion, onDismiss: nil)
+    }
+
+    func present(from presentingViewController: UIViewController,
+                 completion csCompletion: @escaping (CustomerSheetResult) -> Void,
+                 onDismiss: (() -> Void)?
+    ) {
         let loadingStartDate = Date()
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.initEvent)
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadStarted)
@@ -149,6 +156,7 @@ public class CustomerSheet {
                 presentingViewController.dismiss(animated: true)
             }
             self.bottomSheetViewController.setViewControllers([self.loadingViewController])
+            onDismiss?()
             self.completion = nil
         }
         self.completion = completion
@@ -273,7 +281,6 @@ public class CustomerSheet {
 
     // MARK: - Internal Properties
     var completion: (() -> Void)?
-    var userCompletion: ((Result<PaymentOptionSelection?, Error>) -> Void)?
 }
 
 extension CustomerSheet {
@@ -322,7 +329,6 @@ extension CustomerSheet: LoadingViewControllerDelegate {
     func shouldDismiss(_ loadingViewController: LoadingViewController) {
         loadingViewController.dismiss(animated: true) {
             self.completion?()
-            self.csCompletion?(.canceled(nil))
         }
     }
 }
