@@ -30,12 +30,6 @@ extension Checkout {
     internal func enqueueSessionUpdate(
         _ body: @MainActor @escaping () async throws -> Void
     ) async throws {
-        // Update the loading state to `isLoading = true`.
-        // Avoid triggering the `checkoutDidBeginLoading` delegate if we were already loading.
-        if !isLoading {
-            isLoading = true
-        }
-
         let predecessor = pendingOperations.last
         let operation = Task<Void, Error> { @MainActor in
             // Wait for the previous operation, if one exists, to finish.
@@ -49,11 +43,6 @@ extension Checkout {
 
         defer {
             pendingOperations.removeAll { $0 == operation }
-
-            // If the queue is now empty, update the loading state to `isLoading = false`.
-            if pendingOperations.isEmpty {
-                isLoading = false
-            }
         }
 
         try await operation.value

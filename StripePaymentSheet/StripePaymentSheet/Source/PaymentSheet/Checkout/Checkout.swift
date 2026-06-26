@@ -71,7 +71,23 @@ public final class Checkout: ObservableObject {
     let apiClient: STPAPIClient
 
     /// Serial queue of in-flight session updates. Each task waits for the previous task before running.
-    var pendingOperations: [Task<Void, Error>] = []
+    var pendingOperations: [Task<Void, Error>] = [] {
+        didSet {
+            // If the queue has gone from empty to non-empty, we set
+            //  isLoading to true. We avoid setting it if the queue
+            //  was already non-empty to prevent duplicate delegate calls
+            if !pendingOperations.isEmpty && !isLoading {
+                isLoading = true
+            }
+
+            // If the queue has gone from non-empty to empty, we set
+            //  isLoading to false. There shouldn't be a situation in
+            //  which the isLoading is already false, but we check just in case.
+            if pendingOperations.isEmpty && isLoading {
+                isLoading = false
+            }
+        }
+    }
 
     var isLastPendingOperation: Bool {
         pendingOperations.count <= 1
@@ -332,10 +348,10 @@ public final class Checkout: ObservableObject {
         newSession.billingAddress = stpSession?.billingAddress
         newSession.shippingAddress = stpSession?.shippingAddress
         stpSession = newSession
+        session = newSession.makePublicSession()
         // Skip delegate if another op is queued—it'll notify when it commits.
         if isLastPendingOperation {
             try await integrationDelegate?.checkoutDidUpdate(self)
         }
-        session = newSession.makePublicSession()
     }
 }
