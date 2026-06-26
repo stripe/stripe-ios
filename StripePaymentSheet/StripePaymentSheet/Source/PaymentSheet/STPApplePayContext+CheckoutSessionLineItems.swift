@@ -6,6 +6,7 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
+import Contacts
 import Foundation
 import PassKit
 @_spi(STP) import StripeApplePay
@@ -99,5 +100,44 @@ extension STPApplePayContext {
         )
 
         return summaryItems
+    }
+
+    /// Converts a `Checkout.ContactAddress` into a `PKContact` for pre-populating the Apple Pay sheet.
+    static func makeBillingContact(from contactAddress: Checkout.ContactAddress) -> PKContact {
+        let contact = PKContact()
+
+        if let name = contactAddress.name {
+            contact.name = PersonNameComponentsFormatter().personNameComponents(from: name)
+        }
+
+        if let phone = contactAddress.phone {
+            contact.phoneNumber = CNPhoneNumber(stringValue: phone)
+        }
+
+        let postalAddress = CNMutablePostalAddress()
+        let address = contactAddress.address
+        postalAddress.isoCountryCode = address.country
+
+        var streetComponents: [String] = []
+        if let line1 = address.line1 { streetComponents.append(line1) }
+        if let line2 = address.line2 { streetComponents.append(line2) }
+        if !streetComponents.isEmpty {
+            postalAddress.street = streetComponents.joined(separator: "\n")
+        }
+
+        if let city = address.city {
+            postalAddress.city = city
+        }
+
+        if let state = address.state {
+            postalAddress.state = state
+        }
+
+        if let postalCode = address.postalCode {
+            postalAddress.postalCode = postalCode
+        }
+
+        contact.postalAddress = postalAddress
+        return contact
     }
 }
