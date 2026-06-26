@@ -208,7 +208,8 @@ extension STPTestingAPIClient {
         automaticTax: Bool = false,
         enableTaxIdCollection: Bool = false,
         adaptivePricingEnabled: Bool = false,
-        customerEmailLocation: String? = nil
+        customerEmailLocation: String? = nil,
+        enablePaymentMethodSave: Bool = false
     ) -> [String: Any] {
         var additionalParameters: [String: Any] = [:]
         if allowPromotionCodes {
@@ -286,6 +287,11 @@ extension STPTestingAPIClient {
                 ]
             }
         }
+        if enablePaymentMethodSave {
+            additionalParameters["saved_payment_method_options"] = [
+                "payment_method_save": "enabled",
+            ]
+        }
         return additionalParameters
     }
 
@@ -305,7 +311,8 @@ extension STPTestingAPIClient {
         automaticTax: Bool = false,
         enableTaxIdCollection: Bool = false,
         adaptivePricingEnabled: Bool = false,
-        customerEmailLocation: String? = nil
+        customerEmailLocation: String? = nil,
+        enablePaymentMethodSave: Bool = false
     ) async throws -> CreateCheckoutSessionResponse {
         let additionalParameters = Self.checkoutSessionAdditionalParameters(
             currency: currency,
@@ -320,7 +327,8 @@ extension STPTestingAPIClient {
             automaticTax: automaticTax,
             enableTaxIdCollection: enableTaxIdCollection,
             adaptivePricingEnabled: adaptivePricingEnabled,
-            customerEmailLocation: customerEmailLocation
+            customerEmailLocation: customerEmailLocation,
+            enablePaymentMethodSave: enablePaymentMethodSave
         )
         let params: [String: Any?] = [
             "account": merchantCountry,

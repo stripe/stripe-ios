@@ -528,6 +528,99 @@ final class CheckoutUnitTests: XCTestCase {
         }
     }
 
+    // MARK: - updatePaymentMethod Parameter Encoding Tests
+
+    func testUpdatePaymentMethodParameters_expiryOnly() {
+        let params = STPAPIClient.updatePaymentMethodParameters(
+            paymentMethodId: "pm_123",
+            billingDetails: nil,
+            expiryDetails: CheckoutPaymentMethodExpiryDetails(expMonth: 12, expYear: 2028)
+        )
+
+        XCTAssertEqual(params["payment_method_to_update[payment_method_id]"] as? String, "pm_123")
+        XCTAssertEqual(params["payment_method_to_update[expiry_details][exp_month]"] as? Int, 12)
+        XCTAssertEqual(params["payment_method_to_update[expiry_details][exp_year]"] as? Int, 2028)
+        XCTAssertNil(params["payment_method_to_update[billing_details][name]"])
+        XCTAssertEqual(params.count, 3)
+    }
+
+    func testUpdatePaymentMethodParameters_billingDetailsOnly() {
+        let billing = CheckoutPaymentMethodBillingDetails(
+            name: "Jane Doe",
+            email: "jane@example.com",
+            phone: "+15551234567",
+            address: CheckoutPaymentMethodBillingAddress(
+                line1: "123 Main St",
+                line2: "Apt 4",
+                city: "San Francisco",
+                state: "CA",
+                postalCode: "94105",
+                country: "US"
+            )
+        )
+        let params = STPAPIClient.updatePaymentMethodParameters(
+            paymentMethodId: "pm_456",
+            billingDetails: billing,
+            expiryDetails: nil
+        )
+
+        XCTAssertEqual(params["payment_method_to_update[payment_method_id]"] as? String, "pm_456")
+        XCTAssertEqual(params["payment_method_to_update[billing_details][name]"] as? String, "Jane Doe")
+        XCTAssertEqual(params["payment_method_to_update[billing_details][email]"] as? String, "jane@example.com")
+        XCTAssertEqual(params["payment_method_to_update[billing_details][phone]"] as? String, "+15551234567")
+        XCTAssertEqual(params["payment_method_to_update[billing_details][address][line1]"] as? String, "123 Main St")
+        XCTAssertEqual(params["payment_method_to_update[billing_details][address][line2]"] as? String, "Apt 4")
+        XCTAssertEqual(params["payment_method_to_update[billing_details][address][city]"] as? String, "San Francisco")
+        XCTAssertEqual(params["payment_method_to_update[billing_details][address][state]"] as? String, "CA")
+        XCTAssertEqual(params["payment_method_to_update[billing_details][address][postal_code]"] as? String, "94105")
+        XCTAssertEqual(params["payment_method_to_update[billing_details][address][country]"] as? String, "US")
+        XCTAssertNil(params["payment_method_to_update[expiry_details][exp_month]"])
+        XCTAssertEqual(params.count, 10)
+    }
+
+    func testUpdatePaymentMethodParameters_billingAndExpiry() {
+        let billing = CheckoutPaymentMethodBillingDetails(
+            name: "John Smith",
+            address: nil
+        )
+        let expiry = CheckoutPaymentMethodExpiryDetails(expMonth: 3, expYear: 2026)
+        let params = STPAPIClient.updatePaymentMethodParameters(
+            paymentMethodId: "pm_789",
+            billingDetails: billing,
+            expiryDetails: expiry
+        )
+
+        XCTAssertEqual(params["payment_method_to_update[payment_method_id]"] as? String, "pm_789")
+        XCTAssertEqual(params["payment_method_to_update[billing_details][name]"] as? String, "John Smith")
+        XCTAssertEqual(params["payment_method_to_update[expiry_details][exp_month]"] as? Int, 3)
+        XCTAssertEqual(params["payment_method_to_update[expiry_details][exp_year]"] as? Int, 2026)
+        XCTAssertNil(params["payment_method_to_update[billing_details][email]"])
+        XCTAssertNil(params["payment_method_to_update[billing_details][address][line1]"])
+        XCTAssertEqual(params.count, 4)
+    }
+
+    func testUpdatePaymentMethodParameters_partialBillingAddress() {
+        let billing = CheckoutPaymentMethodBillingDetails(
+            address: CheckoutPaymentMethodBillingAddress(
+                postalCode: "94105",
+                country: "US"
+            )
+        )
+        let params = STPAPIClient.updatePaymentMethodParameters(
+            paymentMethodId: "pm_abc",
+            billingDetails: billing,
+            expiryDetails: nil
+        )
+
+        XCTAssertEqual(params["payment_method_to_update[payment_method_id]"] as? String, "pm_abc")
+        XCTAssertEqual(params["payment_method_to_update[billing_details][address][postal_code]"] as? String, "94105")
+        XCTAssertEqual(params["payment_method_to_update[billing_details][address][country]"] as? String, "US")
+        XCTAssertNil(params["payment_method_to_update[billing_details][name]"])
+        XCTAssertNil(params["payment_method_to_update[billing_details][address][line1]"])
+        XCTAssertNil(params["payment_method_to_update[billing_details][address][city]"])
+        XCTAssertEqual(params.count, 3)
+    }
+
     // MARK: - Helpers
 
     private func makeCheckoutWithOpenSession() async -> Checkout {
