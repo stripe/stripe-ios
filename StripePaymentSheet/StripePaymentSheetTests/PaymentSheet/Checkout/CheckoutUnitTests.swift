@@ -478,7 +478,7 @@ final class CheckoutUnitTests: XCTestCase {
         sessionSub.cancel()
     }
 
-    func testCheckoutDidUpdateCalledBeforeRegularDelegate() async throws {
+    func testCommitSessionNotifiesRegularDelegateThenIntegrationDelegate() async throws {
         let checkout = await makeCheckoutWithOpenSession()
         var callOrder: [String] = []
 
@@ -500,7 +500,7 @@ final class CheckoutUnitTests: XCTestCase {
 
         try await checkout.commitSession(updatedSession)
 
-        XCTAssertEqual(callOrder, ["integration", "regular"])
+        XCTAssertEqual(callOrder, ["regular", "integration"])
         XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 1)
         XCTAssertEqual(delegate.updateSessionCallCount, 1)
         XCTAssertEqual(sessionEmissions.count, 1)
