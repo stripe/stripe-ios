@@ -37,16 +37,22 @@ import Foundation
 @_spi(STP) public class Future<Value> {
     public typealias Result = Swift.Result<Value, Error>
 
+    private var _result: Result?
     fileprivate var result: Result? {
-        // Observe whenever a result is assigned, and report it:
-        didSet {
+        get {
+            propertyAccessQueue.sync { _result }
+        }
+        set {
             propertyAccessQueue.async { [self] in
-                result.map(report)
+                _result = newValue
+                if let _result {
+                    callbacks.forEach { $0(_result) }
+                    callbacks = []
+                }
             }
         }
     }
     private var callbacks = [(Result) -> Void]()
-    // Since our methods can be called on different threads and our methods access our properties, we need to protect access to prevent race conditions.
     let propertyAccessQueue = DispatchQueue(label: "FutureQueue", qos: .userInitiated)
 
     public func observe(
@@ -60,19 +66,11 @@ import Foundation
         }
 
         propertyAccessQueue.async { [self] in
-            // If a result has already been set, call the callback directly:
-            if let result {
-                return wrappedCallback(result)
+            if let _result {
+                return wrappedCallback(_result)
             }
 
             callbacks.append(wrappedCallback)
-        }
-    }
-
-    private func report(result: Result) {
-        propertyAccessQueue.async { [self] in
-            callbacks.forEach { $0(result) }
-            callbacks = []
         }
     }
 
