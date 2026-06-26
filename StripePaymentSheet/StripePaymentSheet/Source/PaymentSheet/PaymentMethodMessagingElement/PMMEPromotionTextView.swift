@@ -30,7 +30,7 @@ class PMMEPromotionTextView: UITextView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // Block double-tap gestures to the system menu from showing:
+    // Block double-tap gestures to the system menu from showing
     override var selectedTextRange: UITextRange? {
         get { super.selectedTextRange }
         set {
