@@ -4,6 +4,7 @@ MINOR
 ## X.Y.Z - changes pending release
 ### PaymentSheet
 * [Changed] Disables `allowsNumberPadPopover` on text fields to opt-out of the number pad popover for iOS26+
+* [Fixed] Fixes dyld crash with LinkOpeningTextView when integrating via Swift Package Manager
 
 ### CustomerSheet
 * [Fixed] Fixed an issue where a nil payment option was returned if the sheet was dismissed while loading.
