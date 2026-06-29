@@ -70,6 +70,7 @@ import Foundation
     /// A flag that indicates that this instance was created as a best-effort
     let isBackupInstance: Bool
 
+    // TODO(joyceqin) Re-enable as part of the ECE workstream
     // Link doesn't support automatic tax from billing address
     var disableLinkForAutomaticTaxBilling: Bool = false
 
