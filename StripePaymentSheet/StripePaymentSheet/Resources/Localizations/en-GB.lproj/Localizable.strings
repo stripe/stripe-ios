@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "Bank account details cannot be changed.";
 
-"Buy now or pay later with  <img/>" = "Buy now or pay later with  <img/>";
+"Buy Now, Pay Later with  <img/>" = "Buy Now, Pay Later with  <img/>";
 
-"Buy now or pay later with Afterpay" = "Buy now or pay later with Afterpay";
+"Buy Now, Pay Later with Afterpay" = "Buy Now, Pay Later with Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Buy now or pay later with Cash App Afterpay";
+"Buy Now, Pay Later with Cash App Afterpay" = "Buy Now, Pay Later with Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "Buy now or pay later with Clearpay";
+"Buy Now, Pay Later with Clearpay" = "Buy Now, Pay Later with Clearpay";
 
 "Buy now or pay later with Klarna" = "Buy now or pay later with Klarna";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Get %@ back when you pay with your bank. <terms>See terms</terms>";
+
+"Hide details" = "Hide details";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.";
 
@@ -307,6 +309,8 @@
 "Shipping" = "Shipping";
 
 "Shipping to %@ is not supported." = "Shipping to %@ is not supported.";
+
+"Show details" = "Show details";
 
 "Show menu" = "Show menu";
 

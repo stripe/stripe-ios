@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "Không thể thay đổi thông tin tài khoản ngân hàng.";
 
-"Buy now or pay later with  <img/>" = "Mua ngay hoặc thanh toán sau bằng <img/>";
+"Buy Now, Pay Later with  <img/>" = "Mua ngay trả sau với  <img/>";
 
-"Buy now or pay later with Afterpay" = "Mua ngay hoặc thanh toán sau bằng Afterpay";
+"Buy Now, Pay Later with Afterpay" = "Mua ngay trả sau với Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Mua ngay hoặc thanh toán sau bằng Ứng dụng Thanh toán Afterpay";
+"Buy Now, Pay Later with Cash App Afterpay" = "Mua ngay trả sau với Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "Mua ngay hoặc thanh toán sau bằng Clearpay";
+"Buy Now, Pay Later with Clearpay" = "Mua ngay trả sau với Clearpay";
 
 "Buy now or pay later with Klarna" = "Mua ngay hoặc thanh toán sau bằng Klarna";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Được hoàn %@ khi thanh toán lần đầu tiên với ngân hàng. <terms>Xem điều khoản</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Được hoàn %@ khi thanh toán bằng ngân hàng.<terms>Xem điều khoản</terms>";
+
+"Hide details" = "Ẩn chi tiết";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tôi hiểu rằng Stripe sẽ thu Ghi nợ Trực tiếp thay mặt %@ và tôi xác nhận rằng tôi là chủ tài khoản và là người duy nhất cần có để ủy quyền ghi nợ từ tài khoản này.";
 
@@ -307,6 +309,8 @@
 "Shipping" = "Vận chuyển";
 
 "Shipping to %@ is not supported." = "Chuyển hàng đến %@ không được hỗ trợ.";
+
+"Show details" = "Hiển thị chi tiết";
 
 "Show menu" = "Hiển thị trình đơn";
 

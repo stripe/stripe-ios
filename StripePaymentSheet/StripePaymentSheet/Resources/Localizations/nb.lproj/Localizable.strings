@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "Bankkontoopplysninger kan ikke endres.";
 
-"Buy now or pay later with  <img/>" = "Kjøp nå eller betal senere med  <img/>";
+"Buy Now, Pay Later with  <img/>" = "Kjøp nå, betal senere med <img/>";
 
-"Buy now or pay later with Afterpay" = "Kjøp nå eller betal senere med Afterpay";
+"Buy Now, Pay Later with Afterpay" = "Kjøp nå, betal senere med Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Kjøp nå eller betal senere med Cash App Afterpay";
+"Buy Now, Pay Later with Cash App Afterpay" = "Kjøp nå, betal senere med Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "Kjøp nå eller betal senere med Clearpay";
+"Buy Now, Pay Later with Clearpay" = "Kjøp nå, betal senere med Clearpay";
 
 "Buy now or pay later with Klarna" = "Kjøp nå eller betal senere med Klarna";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Få %@ tilbake når du betaler for første gang med banken din.<terms>Se vilkår</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Få %@ tilbake når du betaler med banken din. <terms>Se vilkår</terms>";
+
+"Hide details" = "Skjul detaljer";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jeg forstår at Stripe vil direktedebitere på vegne av %@ og bekrefter at jeg er kontoinnehaver og den eneste personen som må godkjenne debiteringer fra denne kontoen.";
 
@@ -307,6 +309,8 @@
 "Shipping" = "Frakt";
 
 "Shipping to %@ is not supported." = "Levering til %@ støttes ikke.";
+
+"Show details" = "Vis detaljer";
 
 "Show menu" = "Vis meny";
 

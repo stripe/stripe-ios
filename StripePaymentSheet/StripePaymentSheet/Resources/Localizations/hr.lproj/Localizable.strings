@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "Podaci o bankovnom računu ne mogu se mijenjati.";
 
-"Buy now or pay later with  <img/>" = "Kupite sada ili platite kasnije s  <img/>";
+"Buy Now, Pay Later with  <img/>" = "Kupi sada, plati kasnije uz <img/>";
 
-"Buy now or pay later with Afterpay" = "Kupite odmah ili platite kasnije pomoću Afterpaya";
+"Buy Now, Pay Later with Afterpay" = "Kupi sada, plati kasnije uz Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Kupite sada ili platite kasnije s Cash App Afterpay";
+"Buy Now, Pay Later with Cash App Afterpay" = "Kupi sada, plati kasnije uz Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "Kupite odmah ili platite kasnije pomoću Clearpaya";
+"Buy Now, Pay Later with Clearpay" = "Kupi sada, plati kasnije uz Clearpay";
 
 "Buy now or pay later with Klarna" = "Kupite sada ili platite kasnije pomoću Klarne";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Dobit ćete %@ povrat kada prvi put platite bankovnim prijenosom. <terms>Pogledajte uvjete</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Dobit ćete %@ povrat ako platite bankovnim prijenosom. <terms>Pogledajte uvjete</terms>";
+
+"Hide details" = "Sakrij pojedinosti";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Razumijem da će Stripe naplaćivati izravna terećenja u ime %@ i potvrđujem da sam vlasnik računa i jedina osoba koja mora autorizirati terećenja s ovog računa.";
 
@@ -307,6 +309,8 @@
 "Shipping" = "Dostava";
 
 "Shipping to %@ is not supported." = "Dostava do %@ nije podržana.";
+
+"Show details" = "Prikaži pojedinosti";
 
 "Show menu" = "Prikaži izbornik";
 
