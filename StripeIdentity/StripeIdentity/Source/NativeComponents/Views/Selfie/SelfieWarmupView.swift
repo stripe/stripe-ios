@@ -39,6 +39,12 @@ class SelfieWarmupView: UIView {
 
     private let cardWrapperView: UIView = {
         let view = UIView()
+        view.backgroundColor = .systemBackground
+        return view
+    }()
+
+    private let cardTopBackgroundView: UIView = {
+        let view = UIView()
         view.backgroundColor = .black
         return view
     }()
@@ -48,6 +54,7 @@ class SelfieWarmupView: UIView {
         view.backgroundColor = .systemBackground
         view.layer.cornerRadius = Styling.cardCornerRadius
         view.layer.cornerCurve = .continuous
+        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.clipsToBounds = true
         return view
     }()
@@ -101,13 +108,14 @@ class SelfieWarmupView: UIView {
 
 extension SelfieWarmupView {
     fileprivate func installViews() {
-        backgroundColor = .black
+        backgroundColor = .systemBackground
         addAndPinSubview(stackView)
 
         stackView.addArrangedSubview(heroView)
         stackView.addArrangedSubview(cardWrapperView)
 
         heroView.addSubview(selfieWarmupIconImageView)
+        cardWrapperView.addSubview(cardTopBackgroundView)
         cardWrapperView.addSubview(cardView)
         cardView.addAndPinSubview(cardStackView, insets: Styling.cardInsets)
 
@@ -116,6 +124,7 @@ extension SelfieWarmupView {
         cardStackView.setCustomSpacing(Styling.warmupTitleSpacing, after: selfieWarmupTitleLabel)
 
         selfieWarmupIconImageView.translatesAutoresizingMaskIntoConstraints = false
+        cardTopBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         cardView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
@@ -124,6 +133,10 @@ extension SelfieWarmupView {
             selfieWarmupIconImageView.centerYAnchor.constraint(equalTo: heroView.centerYAnchor),
             selfieWarmupIconImageView.widthAnchor.constraint(equalToConstant: Styling.iconSize),
             selfieWarmupIconImageView.heightAnchor.constraint(equalToConstant: Styling.iconSize),
+            cardTopBackgroundView.topAnchor.constraint(equalTo: cardWrapperView.topAnchor),
+            cardTopBackgroundView.leadingAnchor.constraint(equalTo: cardWrapperView.leadingAnchor),
+            cardTopBackgroundView.trailingAnchor.constraint(equalTo: cardWrapperView.trailingAnchor),
+            cardTopBackgroundView.heightAnchor.constraint(equalToConstant: Styling.cardCornerRadius),
             cardView.topAnchor.constraint(equalTo: cardWrapperView.topAnchor),
             cardView.leadingAnchor.constraint(
                 equalTo: cardWrapperView.leadingAnchor,
