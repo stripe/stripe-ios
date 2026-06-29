@@ -796,6 +796,9 @@ private final class CaptureTickMarksView: UIView {
         static let highlightedTickLength: CGFloat = 18
         static let tickWidth: CGFloat = 2
         static let highlightedTickWidth: CGFloat = 2.8
+        static let baseTickFadeAnimationDuration: TimeInterval = 1.0
+        static let baseTickOppositeSideMinOpacityMultiplier: CGFloat = 0.02
+        static let baseTickOppositeSideFadeExponent: CGFloat = 0.25
         static let legacyHighlightAnimationDuration: TimeInterval = 0.18
         static let instructionAnimationDuration: TimeInterval = 0.72
         static let feedbackAnimationDuration: TimeInterval = 0.15
@@ -836,6 +839,12 @@ private final class CaptureTickMarksView: UIView {
     }
     private var targetProgressAnimationStartValue: CGFloat = 0
     private var targetProgressAnimationStartTime: CFTimeInterval?
+    private var baseTickFadeProgress: CGFloat = 0 {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    private var baseTickFadeAnimationStartTime: CFTimeInterval?
     private var directionalPulseProgress: CGFloat = 0 {
         didSet {
             setNeedsDisplay()
@@ -923,12 +932,16 @@ private final class CaptureTickMarksView: UIView {
 
         if didChangeTarget {
             displayedTargetProgress = 0
+            baseTickFadeProgress = 0
+            baseTickFadeAnimationStartTime = CACurrentMediaTime()
             directionalPulseProgress = 0
             directionalPulseAnimationStartTime = CACurrentMediaTime()
         }
 
         guard animated, window != nil else {
             displayedTargetProgress = clampedProgress
+            baseTickFadeProgress = 1
+            baseTickFadeAnimationStartTime = nil
             targetProgressAnimationStartTime = nil
             directionalPulseProgress = 0
             directionalPulseAnimationStartTime = nil
@@ -1104,8 +1117,26 @@ private final class CaptureTickMarksView: UIView {
                 displayedTargetProgress = targetProgress
             }
         }
+        if let baseTickFadeAnimationStartTime {
+            let progress = min(
+                max(
+                    (displayLink.timestamp - baseTickFadeAnimationStartTime)
+                        / Styling.baseTickFadeAnimationDuration,
+                    0
+                ),
+                1
+            )
+            baseTickFadeProgress = materialEase(progress)
+            if progress >= 1 {
+                self.baseTickFadeAnimationStartTime = nil
+                baseTickFadeProgress = 1
+            }
+        }
 
-        if directionalPulseAnimationStartTime == nil && targetProgressAnimationStartTime == nil {
+        if directionalPulseAnimationStartTime == nil
+            && targetProgressAnimationStartTime == nil
+            && baseTickFadeAnimationStartTime == nil
+        {
             displayLink.invalidate()
             targetTickDisplayLink = nil
         }
@@ -1113,7 +1144,9 @@ private final class CaptureTickMarksView: UIView {
 
     private func startTargetTickDisplayLinkIfNeeded() {
         guard targetTickDisplayLink == nil,
-            directionalPulseAnimationStartTime != nil || targetProgressAnimationStartTime != nil
+            directionalPulseAnimationStartTime != nil
+                || targetProgressAnimationStartTime != nil
+                || baseTickFadeAnimationStartTime != nil
         else {
             return
         }
@@ -1132,6 +1165,8 @@ private final class CaptureTickMarksView: UIView {
         captureGuideTarget = .none
         targetProgress = 0
         displayedTargetProgress = 0
+        baseTickFadeProgress = 0
+        baseTickFadeAnimationStartTime = nil
         targetProgressAnimationStartTime = nil
         directionalPulseProgress = 0
         directionalPulseAnimationStartTime = nil
@@ -1260,26 +1295,12 @@ private final class CaptureTickMarksView: UIView {
             )
         }
 
-        context.setLineWidth(Styling.tickWidth)
-        context.setLineCap(.round)
-        context.setShadow(
-            offset: Styling.shadowOffset,
-            blur: Styling.shadowBlur,
-            color: Styling.shadowColor.cgColor
-        )
-
-        context.setStrokeColor(Styling.tickColor.cgColor)
-        drawTicks(
+        drawBaseTicks(
             in: context,
             center: center,
             horizontalRadius: horizontalRadius,
-            verticalRadius: verticalRadius,
-            tickLength: Styling.tickLength,
-            shouldDrawTick: { [weak self] angle in
-                self?.shouldDrawBaseTick(at: angle) ?? true
-            }
+            verticalRadius: verticalRadius
         )
-        context.strokePath()
 
         if uses3DCaptureAnimations,
             captureGuideTarget != .none,
@@ -1377,6 +1398,38 @@ private final class CaptureTickMarksView: UIView {
         context.restoreGState()
     }
 
+    private func drawBaseTicks(
+        in context: CGContext,
+        center: CGPoint,
+        horizontalRadius: CGFloat,
+        verticalRadius: CGFloat
+    ) {
+        context.saveGState()
+        context.setLineWidth(Styling.tickWidth)
+        context.setLineCap(.round)
+        context.setShadow(
+            offset: Styling.shadowOffset,
+            blur: Styling.shadowBlur,
+            color: Styling.shadowColor.cgColor
+        )
+
+        forEachTick(
+            center: center,
+            horizontalRadius: horizontalRadius,
+            verticalRadius: verticalRadius,
+            tickLength: Styling.tickLength,
+            shouldDrawTick: { [weak self] angle in
+                self?.shouldDrawBaseTick(at: angle) ?? true
+            }
+        ) { angle, startPoint, endPoint in
+            context.setStrokeColor(baseTickColor(at: angle).cgColor)
+            context.move(to: startPoint)
+            context.addLine(to: endPoint)
+            context.strokePath()
+        }
+        context.restoreGState()
+    }
+
     private func drawTicks(
         in context: CGContext,
         center: CGPoint,
@@ -1386,6 +1439,31 @@ private final class CaptureTickMarksView: UIView {
         growsOutward: Bool = false,
         outwardGrowthScale: ((CGFloat) -> CGFloat)? = nil,
         shouldDrawTick: (CGFloat) -> Bool
+    ) {
+        forEachTick(
+            center: center,
+            horizontalRadius: horizontalRadius,
+            verticalRadius: verticalRadius,
+            tickLength: tickLength,
+            growsOutward: growsOutward,
+            outwardGrowthScale: outwardGrowthScale,
+            shouldDrawTick: shouldDrawTick
+        ) { _, startPoint, endPoint in
+
+            context.move(to: startPoint)
+            context.addLine(to: endPoint)
+        }
+    }
+
+    private func forEachTick(
+        center: CGPoint,
+        horizontalRadius: CGFloat,
+        verticalRadius: CGFloat,
+        tickLength: CGFloat,
+        growsOutward: Bool = false,
+        outwardGrowthScale: ((CGFloat) -> CGFloat)? = nil,
+        shouldDrawTick: (CGFloat) -> Bool,
+        _ body: (CGFloat, CGPoint, CGPoint) -> Void
     ) {
         for index in 0..<Styling.tickCount {
             let angle = (CGFloat(index) / CGFloat(Styling.tickCount)) * .pi * 2
@@ -1424,8 +1502,7 @@ private final class CaptureTickMarksView: UIView {
                 y: tickCenter.y + unitNormal.dy * outerTickLength
             )
 
-            context.move(to: startPoint)
-            context.addLine(to: endPoint)
+            body(angle, startPoint, endPoint)
         }
     }
 
@@ -1458,6 +1535,40 @@ private final class CaptureTickMarksView: UIView {
         let angularDistance = abs(atan2(sin(angle - centerAngle), cos(angle - centerAngle)))
         let hiddenAngle = (1 - displayedTargetProgress) * .pi * 0.5
         return angularDistance >= hiddenAngle && angularDistance <= .pi * 0.5
+    }
+
+    private func baseTickColor(at angle: CGFloat) -> UIColor {
+        return Styling.tickColor.withAlphaComponent(
+            Styling.tickColor.cgColor.alpha * baseTickOpacity(at: angle)
+        )
+    }
+
+    private func baseTickOpacity(at angle: CGFloat) -> CGFloat {
+        guard uses3DCaptureAnimations,
+            let oppositeSideAngle = oppositeSideAngleForBaseFade()
+        else {
+            return 1
+        }
+
+        let oppositeSideAlignment = max(0, cos(angle - oppositeSideAngle))
+        let oppositeSideFadeStrength = pow(
+            oppositeSideAlignment,
+            Styling.baseTickOppositeSideFadeExponent
+        )
+        let fadedOpacity = 1
+            - ((1 - Styling.baseTickOppositeSideMinOpacityMultiplier) * oppositeSideFadeStrength)
+        return baseTickFadeProgress * fadedOpacity
+    }
+
+    private func oppositeSideAngleForBaseFade() -> CGFloat? {
+        switch captureGuideTarget {
+        case .none:
+            return nil
+        case .left:
+            return 0
+        case .right:
+            return .pi
+        }
     }
     private func shouldDrawBaseTick(at angle: CGFloat) -> Bool {
         return !isTickCoveredByAcceptedState(at: angle)
