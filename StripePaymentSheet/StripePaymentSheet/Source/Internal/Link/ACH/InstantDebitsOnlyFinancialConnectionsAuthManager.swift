@@ -116,13 +116,11 @@ final class InstantDebitsOnlyAuthenticationSessionManager: NSObject {
         authSession.prefersEphemeralWebBrowserSession = true
 
         self.authSession = authSession
-        if #available(iOS 13.4, *) {
-            if !authSession.canStart {
-                promise.reject(
-                    with: InstantDebitsOnlyAuthenticationSessionManager.Error.failedToStart
-                )
-                return promise
-            }
+        if !authSession.canStart {
+            promise.reject(
+                with: InstantDebitsOnlyAuthenticationSessionManager.Error.failedToStart
+            )
+            return promise
         }
 
         if !authSession.start() {

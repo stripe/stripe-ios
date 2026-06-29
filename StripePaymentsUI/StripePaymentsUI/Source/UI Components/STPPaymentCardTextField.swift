@@ -903,10 +903,8 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     }
 
     func setupBrandTapGestureRecognizers() {
-        if #available(iOS 14.0, *) {
-            self.showsMenuAsPrimaryAction = true
-            self.isContextMenuInteractionEnabled = true
-        }
+        self.showsMenuAsPrimaryAction = true
+        self.isContextMenuInteractionEnabled = true
         brandImageView.addGestureRecognizer(
             UITapGestureRecognizer(
                 target: self,

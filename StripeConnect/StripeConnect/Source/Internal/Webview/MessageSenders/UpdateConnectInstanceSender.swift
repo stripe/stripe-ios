@@ -8,7 +8,6 @@
 import Foundation
 
 /// Updates appearance and locale options.
-@available(iOS 15, *)
 struct UpdateConnectInstanceSender: MessageSender {
     struct Payload: Encodable {
         let locale: String

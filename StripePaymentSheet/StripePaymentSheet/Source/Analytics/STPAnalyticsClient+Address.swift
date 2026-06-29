@@ -44,6 +44,64 @@ extension STPAnalyticsClient {
 
         self.logAddressControllerEvent(event: .addressCompleted, addressAnalyticData: analyticData, apiClient: apiClient)
     }
+
+    func logBillingAddressCompleted(addressCountryCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, apiClient: STPAPIClient) {
+        assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
+        let analyticData = AddressAnalyticData(addressCountryCode: addressCountryCode,
+                                               autoCompleteResultedSelected: autoCompleteResultedSelected,
+                                               editDistance: editDistance)
+
+        self.logAddressControllerEvent(event: .mcbillingAddressCompleted, addressAnalyticData: analyticData, apiClient: apiClient)
+    }
+
+    func logCustomerSheetBillingAddressCompleted(addressCountryCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, apiClient: STPAPIClient) {
+        assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
+        let analyticData = AddressAnalyticData(addressCountryCode: addressCountryCode,
+                                               autoCompleteResultedSelected: autoCompleteResultedSelected,
+                                               editDistance: editDistance)
+
+        self.logAddressControllerEvent(event: .csbillingAddressCompleted, addressAnalyticData: analyticData, apiClient: apiClient)
+    }
+
+    // MARK: - Autocomplete
+
+    func logAddressAutocompleteStart(apiClient: STPAPIClient) {
+        assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
+        log(analytic: AddressAnalytic(event: .addressAutocompleteStart, params: [:]), apiClient: apiClient)
+    }
+
+    func logAddressAutocompleteSuggestions(characterCount: Int, sessionToken: String, source: String, duration: TimeInterval, latency: TimeInterval?, apiClient: STPAPIClient) {
+        assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
+        var params: [String: Any] = [
+            "character_count": characterCount,
+            "session_token": sessionToken,
+            "source": source,
+            "duration": duration,
+        ]
+        if let latency { params["latency"] = latency }
+        log(analytic: AddressAnalytic(event: .addressAutocompleteSuggestions, params: params), apiClient: apiClient)
+    }
+
+    func logAddressAutocompleteComplete(characterCount: Int, sessionToken: String, source: String, duration: TimeInterval, latency: TimeInterval?, apiClient: STPAPIClient) {
+        assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
+        var params: [String: Any] = [
+            "character_count": characterCount,
+            "session_token": sessionToken,
+            "source": source,
+            "duration": duration,
+        ]
+        if let latency { params["latency"] = latency }
+        log(analytic: AddressAnalytic(event: .addressAutocompleteComplete, params: params), apiClient: apiClient)
+    }
+
+    func logAddressAutocompleteError(error: Error, sessionToken: String, duration: TimeInterval, apiClient: STPAPIClient) {
+        assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
+        log(analytic: AddressAnalytic(event: .addressAutocompleteError, params: [
+            "error": error.localizedDescription,
+            "session_token": sessionToken,
+            "duration": duration,
+        ]), apiClient: apiClient)
+    }
 }
 
 struct AddressAnalyticData {

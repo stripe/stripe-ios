@@ -60,9 +60,9 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             return paymentIntent.clientSecret
         case .setupIntent(let setupIntent):
             return setupIntent.clientSecret
-        case .checkoutSession(let checkoutSession):
+        case .checkout(let checkout):
             return try await handleCheckoutSessionApplePay(
-                checkoutSession: checkoutSession,
+                checkout: checkout,
                 paymentMethod: paymentMethod,
                 paymentInformation: paymentInformation,
                 context: context
@@ -169,11 +169,13 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
     /// Handles Apple Pay confirmation for CheckoutSession by calling the confirm API with the payment method.
     private func handleCheckoutSessionApplePay(
-        checkoutSession: STPCheckoutSession,
+        checkout: Checkout,
         paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment,
         context: STPApplePayContext
     ) async throws -> String {
+        let checkoutSession: STPCheckoutSession = checkout.stpSession
+
         // 1. Build client attribution metadata
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
             intent: intent,
@@ -181,7 +183,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         )
 
         // 2. Get expected amount from checkout session
-        let expectedAmount = try checkoutSession.expectedAmount()
+        let expectedAmount = checkoutSession.expectedAmount()
 
         // 3. Extract shipping details from PKPayment (if provided)
         let shipping = makeShippingDetailsParams(from: paymentInformation)
@@ -198,8 +200,8 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             clientAttributionMetadata: clientAttributionMetadata
         )
 
-        // 5. Update the Checkout session with the latest response
-        checkoutSession.onConfirmed?(response)
+        // 5. Update the Checkout instance with the confirmed session response
+        try await checkout.commitSession(response)
 
         // 6. Return client secret based on checkout session mode
         return try response.clientSecret(for: checkoutSession.mode)
@@ -365,11 +367,11 @@ extension STPApplePayContext {
         if let paymentSummaryItems = applePay.paymentSummaryItems {
             // Use the merchant supplied paymentSummaryItems
             paymentRequest.paymentSummaryItems = paymentSummaryItems
-        } else if case .checkoutSession(let session) = intent,
-                  !session.lineItems.isEmpty,
-                  let total = session.total {
+        } else if case .checkout(let checkout) = intent,
+                  !checkout.stpSession.lineItems.isEmpty,
+                  let total = checkout.stpSession.total {
             paymentRequest.paymentSummaryItems = STPApplePayContext.makeApplePayPaymentSummaryItems(
-                lineItems: session.lineItems,
+                lineItems: checkout.stpSession.lineItems,
                 total: total,
                 totalLabel: label,
                 currency: intent.currency
@@ -407,6 +409,12 @@ extension STPApplePayContext {
         // Only override if a specific funding type filter is configured
         if let merchantCapabilities = cardFundingFilter.applePayMerchantCapabilities() {
             paymentRequest.merchantCapabilities = merchantCapabilities
+        }
+
+        // Pre-populate billingContact from the CheckoutSession's billing address if available
+        if case .checkout(let checkout) = intent,
+           let billingAddress = checkout.stpSession.billingAddress {
+            paymentRequest.billingContact = Self.makeBillingContact(from: billingAddress)
         }
 
         return paymentRequest

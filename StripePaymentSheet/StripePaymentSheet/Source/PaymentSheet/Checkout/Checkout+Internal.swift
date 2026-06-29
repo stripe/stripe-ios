@@ -17,33 +17,10 @@ extension Checkout {
     /// - Parameter currency: The three-letter ISO currency code to switch to (e.g. "gbp").
     /// - Throws: ``CheckoutError`` if the update fails.
     func selectCurrency(_ currency: String) async throws {
-        try requireOpenSessionForInSheetUpdate()
-        try await enqueueSessionUpdate {
-            try await self.performAPIUpdate(.setCurrency(currency))
-        }
+        try await performUpdate(.setCurrency(currency))
     }
 
     // MARK: - Session Updates
-
-    /// Replaces the current session, preserves client-side overrides, and notifies the delegate.
-    ///
-    /// - Parameter applyOverrides: Called with the new session after existing overrides are
-    ///   preserved but before state is published. Use this to set client-side properties
-    ///   (e.g. address overrides) that should be visible to the delegate and observers.
-    func updateSession(_ newSession: STPCheckoutSession, applyOverrides: ((STPCheckoutSession) -> Void)? = nil) {
-        // Preserve client-side address overrides on the new session.
-        newSession.billingAddress = stpSession?.billingAddress
-        newSession.shippingAddress = stpSession?.shippingAddress
-        applyOverrides?(newSession)
-        newSession.onConfirmed = { [weak self] response in
-            self?.updateSession(response)
-        }
-        let changed = stpSession?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
-        setSession(newSession)
-        if changed {
-            delegate?.checkout(self, didChangeState: state)
-        }
-    }
 
     /// Runs `body` as a tracked session update, serialized behind any in-flight ops.
     ///
@@ -61,85 +38,67 @@ extension Checkout {
         }
 
         pendingOperations.append(operation)
-        if let session = stpSession { setSession(session) }
 
         defer {
             pendingOperations.removeAll { $0 == operation }
-            if let session = stpSession { setSession(session) }
         }
+
         try await operation.value
     }
 
-    /// Sends a mutation to the Stripe API and refreshes the session.
+    /// Enqueues a serialized session update.
     ///
-    /// The update endpoint returns partial data, so we always re-fetch the full session
-    /// afterward to keep ``state`` as the single source of truth.
+    /// - If `update` is non-nil, the side effect (if any) is applied first, then the
+    ///   API mutation is performed and the session is updated from the response.
+    /// - If `update` is nil, the side effect is applied locally and delegates are
+    ///   notified without making a network request.
     ///
-    /// - Parameter applyOverrides: Forwarded to ``updateSession(_:applyOverrides:)``.
-    ///   Runs only after a successful API call — use this to set client-side overrides
-    ///   on the refreshed session so local state stays in sync with the backend.
-    func performAPIUpdate(
-        _ update: SessionUpdate,
-        applyOverrides: ((STPCheckoutSession) -> Void)? = nil
+    /// - Parameters:
+    ///   - update: The API mutation to perform, or nil for a local-only update.
+    ///   - localMutation: A local state change to apply prior to the API call (or on its own).
+    func performUpdate(
+        _ update: SessionUpdate? = nil,
+        applying localMutation: (@MainActor @Sendable () -> Void)? = nil
     ) async throws {
-        do {
-            let sessionId = Self.extractSessionId(from: clientSecret)
-            _ = try await apiClient.updateCheckoutSession(
-                checkoutSessionId: sessionId,
-                parameters: update.parameters
-            )
-        } catch {
-            throw CheckoutError.apiError(message: error.nonGenericDescription)
-        }
-        try await refreshSession(applyOverrides: applyOverrides)
-    }
+        try await enqueueSessionUpdate {
+            try self.requireSheetNotPresented()
+            // Transition to loading before the async work begins so observers show a loading state.
+            self.state = .loading(self.state.session)
 
-    /// Fetches the latest Checkout Session from Stripe and publishes it to observers.
-    func refreshSession(
-        applyOverrides: ((STPCheckoutSession) -> Void)? = nil
-    ) async throws {
-        do {
-            let sessionId = Self.extractSessionId(from: clientSecret)
-            let refreshedCheckoutSession = try await apiClient.initCheckoutSession(
-                checkoutSessionId: sessionId,
-                adaptivePricingAllowed: configuration.adaptivePricing.allowed
-            )
-            updateSession(refreshedCheckoutSession, applyOverrides: applyOverrides)
-        } catch {
-            throw CheckoutError.apiError(message: error.nonGenericDescription)
+            do {
+                let updatedSession: STPCheckoutSession
+                if let update {
+                    let sessionId = Checkout.extractSessionId(from: self.clientSecret)
+                    updatedSession = try await self.apiClient.updateCheckoutSession(
+                        checkoutSessionId: sessionId,
+                        parameters: update.parameters
+                    )
+                } else {
+                    guard let session = self.stpSession else { return }
+                    updatedSession = session
+                }
+
+                localMutation?()
+                try await self.commitSession(updatedSession)
+            } catch {
+                // Restore loaded state on failure so the UI doesn't stay stuck in loading.
+                self.state = .loaded(self.state.session)
+                // If a prior op skipped the delegate and we're failing before we
+                // get to commitSession ourselves, still notify so the UI updates.
+                if self.isLastPendingOperation {
+                    try? await self.integrationDelegate?.checkoutDidUpdate(self)
+                }
+                throw CheckoutError.apiError(message: error.nonGenericDescription)
+            }
         }
     }
 
     // MARK: - Validation
 
-    /// Validates that the session is open (but allows the sheet to be presented).
-    /// Used by mutations triggered from inside the presented sheet (e.g. currency selection).
-    @discardableResult
-    func requireOpenSessionForInSheetUpdate() throws -> STPCheckoutSession {
-        guard let currentSession = stpSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: state.session))")
-            throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
-        }
-        guard currentSession.status?.type == .open else {
-            throw CheckoutError.sessionNotOpen
-        }
-        return currentSession
-    }
-
-    /// Validates that the session is open and no sheet is presented.
-    @discardableResult
-    func requireOpenSession() throws -> STPCheckoutSession {
-        guard let currentSession = stpSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: state.session))")
-            throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
-        }
-        guard currentSession.status?.type == .open else {
-            throw CheckoutError.sessionNotOpen
-        }
+    func requireSheetNotPresented() throws {
         guard integrationDelegate?.isSheetPresented != true else {
             throw CheckoutError.sheetCurrentlyPresented
         }
-        return currentSession
     }
 
     // MARK: - Client Secrets

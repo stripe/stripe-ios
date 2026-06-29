@@ -23,7 +23,6 @@ enum ConnectWebViewControllerError: Int, Error {
  - Opening email links
  - Downloads 
  */
-@available(iOS 15, *)
 class ConnectWebViewController: UIViewController {
 
     let webView: WKWebView
@@ -167,7 +166,6 @@ class ConnectWebViewController: UIViewController {
 
 // MARK: - Private
 
-@available(iOS 15, *)
 private extension ConnectWebViewController {
     // Opens the given navigation in a PopupWebViewController
     func openInPopup(configuration: WKWebViewConfiguration,
@@ -234,7 +232,6 @@ private extension ConnectWebViewController {
 
 // MARK: - WKUIDelegate
 
-@available(iOS 15, *)
 extension ConnectWebViewController: WKUIDelegate {
     func webView(_ webView: WKWebView,
                  createWebViewWith configuration: WKWebViewConfiguration,
@@ -293,7 +290,6 @@ extension ConnectWebViewController: WKUIDelegate {
 
 // MARK: - WKNavigationDelegate
 
-@available(iOS 15, *)
 extension ConnectWebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         /*
@@ -388,7 +384,6 @@ extension ConnectWebViewController: WKNavigationDelegate {
 
 // MARK: - WKDownloadDelegate implementation
 
-@available(iOS 15, *)
 extension ConnectWebViewController {
     // This extension is an abstraction layer to implement `WKDownloadDelegate`
     // functionality and make it testable. There's no way to instantiate
@@ -446,7 +441,6 @@ extension ConnectWebViewController {
 
 // MARK: - WKDownloadDelegate
 
-@available(iOS 15, *)
 extension ConnectWebViewController: WKDownloadDelegate {
     func download(_ download: WKDownload,
                   decideDestinationUsing response: URLResponse,
@@ -466,7 +460,6 @@ extension ConnectWebViewController: WKDownloadDelegate {
     }
 }
 
-@available(iOS 15, *)
 extension ConnectWebViewController.Alert {
     static func from(message: String, isConfirmationAlert: Bool) -> ConnectWebViewController.Alert {
         var alert = decodeAlert(from: message) ?? .init(title: nil, message: message, buttons: nil)

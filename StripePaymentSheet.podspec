@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '25.16.0'
+  s.version                        = '26.0.0'
 
   s.summary                        = "Stripe's prebuilt payment UI."
   s.license                        = { type: 'MIT', file: 'LICENSE' }
@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.frameworks                     = 'Foundation', 'UIKit'
   s.requires_arc                   = true
   s.platform                       = :ios
-  s.ios.deployment_target          = '13.0'
+  s.ios.deployment_target          = '15.0'
   s.swift_version = '5.0'
   s.weak_framework                 = 'SwiftUI'
   s.source_files                   = 'StripePaymentSheet/StripePaymentSheet/Source/**/*.swift'

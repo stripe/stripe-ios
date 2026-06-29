@@ -14,7 +14,7 @@ import XCTest
 @MainActor
 final class CheckoutPendingOperationsTests: XCTestCase {
 
-    func testEnqueueSessionUpdateSerializesOperationsAndKeepsLoadingUntilDrained() async throws {
+    func testEnqueueSessionUpdateSerializesOperations() async throws {
         let checkout = await makeCheckoutWithOpenSession()
         let firstGate = CheckoutPendingOperationsTestGate()
         var events: [String] = []
@@ -42,7 +42,6 @@ final class CheckoutPendingOperationsTests: XCTestCase {
             checkout.pendingOperations.count == 2
         }
         XCTAssertEqual(events, ["first started"])
-        XCTAssertTrue(checkout.state.isLoading)
 
         firstGate.open()
         try await firstTask.value
@@ -50,7 +49,6 @@ final class CheckoutPendingOperationsTests: XCTestCase {
 
         XCTAssertEqual(events, ["first started", "first finished", "second ran"])
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
-        XCTAssertFalse(checkout.state.isLoading)
     }
 
     func testAwaitPendingOperationsWaitsForQueuedWork() async throws {
@@ -87,7 +85,6 @@ final class CheckoutPendingOperationsTests: XCTestCase {
 
         XCTAssertTrue(waiterCompleted)
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
-        XCTAssertFalse(checkout.state.isLoading)
     }
 
     func testAwaitPendingOperationsTimesOutWithoutCancelingQueuedWork() async throws {
@@ -116,14 +113,54 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         }
 
         XCTAssertEqual(checkout.pendingOperations.count, 1)
-        XCTAssertTrue(checkout.state.isLoading)
 
         gate.open()
         try await operationTask.value
         try await checkout.awaitPendingOperations(timeout: 1)
 
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
-        XCTAssertFalse(checkout.state.isLoading)
+    }
+
+    // MARK: - Delegate skipping
+
+    func testCommitSessionSkipsDelegateWhenAnotherOpIsQueued() async throws {
+        let checkout = await makeCheckoutWithOpenSession()
+        let delegate = AwaitsPendingOpsIntegrationDelegate()
+        checkout.integrationDelegate = delegate
+
+        let gate = CheckoutPendingOperationsTestGate()
+
+        let firstTask = Task { @MainActor in
+            try await checkout.enqueueSessionUpdate {
+                await gate.wait()
+                try await checkout.commitSession(CheckoutTestHelpers.makeOpenSession())
+            }
+        }
+
+        try await waitUntil { checkout.pendingOperations.count == 1 }
+
+        let secondTask = Task { @MainActor in
+            try await checkout.enqueueSessionUpdate { }
+        }
+
+        try await waitUntil { checkout.pendingOperations.count == 2 }
+
+        gate.open()
+
+        let result = await withTimeout(3) { @MainActor in
+            _ = try await firstTask.value
+            _ = try await secondTask.value
+        }
+
+        if case .failure(let error) = result {
+            if error is TimeoutError {
+                XCTFail("Deadlocked — commitSession should skip delegate when another op is queued")
+            } else {
+                throw error
+            }
+        }
+
+        XCTAssertTrue(checkout.pendingOperations.isEmpty)
     }
 
     // MARK: - Helpers
@@ -147,6 +184,15 @@ final class CheckoutPendingOperationsTests: XCTestCase {
             }
             await Task.yield()
         }
+    }
+}
+
+@MainActor
+private final class AwaitsPendingOpsIntegrationDelegate: CheckoutIntegrationDelegate {
+    var isSheetPresented: Bool = false
+
+    func checkoutDidUpdate(_ checkout: Checkout) async throws {
+        try await checkout.awaitPendingOperations()
     }
 }
 

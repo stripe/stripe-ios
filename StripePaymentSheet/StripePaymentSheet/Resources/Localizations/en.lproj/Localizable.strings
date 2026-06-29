@@ -13,7 +13,7 @@
 /* Exchange rate caption, e.g. '1 GBP = 1.2871 USD' */
 "1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
 
-/* Label for a button that confirms the user accepts a declaration */
+/* Label for a button that confirms the user accepts an attestation */
 "Accept" = "Accept";
 
 /* Title shown above a card entry form */
@@ -56,20 +56,20 @@
 /* Text on a screen that indicates bank account details cannot be changed. */
 "Bank account details cannot be changed." = "Bank account details cannot be changed.";
 
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with  <img/>" = "Buy now or pay later with  <img/>";
-
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Afterpay" = "Buy now or pay later with Afterpay";
-
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Cash App Afterpay" = "Buy now or pay later with Cash App Afterpay";
-
-/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
-"Buy now or pay later with Clearpay" = "Buy now or pay later with Clearpay";
-
 /* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
 "Buy now or pay later with Klarna" = "Buy now or pay later with Klarna";
+
+/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
+"Buy Now, Pay Later with  <img/>" = "Buy Now, Pay Later with  <img/>";
+
+/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+"Buy Now, Pay Later with Afterpay" = "Buy Now, Pay Later with Afterpay";
+
+/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+"Buy Now, Pay Later with Cash App Afterpay" = "Buy Now, Pay Later with Cash App Afterpay";
+
+/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
+"Buy Now, Pay Later with Clearpay" = "Buy Now, Pay Later with Clearpay";
 
 /* Paypal mandate text */
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
@@ -214,7 +214,7 @@ to be saved and used in future checkout sessions. */
 /* Label shown in the payment type picker describing a card payment */
 "Debit or credit card" = "Debit or credit card";
 
-/* Title label for a screen showing CRS/CARF tax declarations */
+/* Title label for a screen showing user attestation */
 "Declarations" = "Declarations";
 
 /* Label for identifying the default payment method. */
@@ -249,6 +249,9 @@ to be saved and used in future checkout sessions. */
 
 /* Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]' */
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Get %@ back when you pay with your bank. <terms>See terms</terms>";
+
+/* Button label to collapse and hide additional exchange rate details */
+"Hide details" = "Hide details";
 
 /* Bacs Debit mandate text */
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.";
@@ -475,6 +478,9 @@ to be saved and used in future checkout sessions. */
 /* Text for an error that is shown when a user selects a shipping address that
 is not supported by the merchant */
 "Shipping to %@ is not supported." = "Shipping to %@ is not supported.";
+
+/* Button label to expand and show additional exchange rate details */
+"Show details" = "Show details";
 
 /* Accessibility label for an action or a button that shows a menu. */
 "Show menu" = "Show menu";

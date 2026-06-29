@@ -145,7 +145,7 @@ final class SavedPaymentMethodRowButtonTests: XCTestCase {
     func testLinkPassthroughUsesConfiguredBrandForSublabel() {
         let paymentMethod = STPPaymentMethod._testLink()
         paymentMethod.linkPaymentDetails = nil
-        paymentMethod.isLinkPassthroughMode = true
+        paymentMethod.isLinkOrigin = true
 
         let sut = SavedPaymentMethodRowButton(
             paymentMethod: paymentMethod,
@@ -160,7 +160,7 @@ final class SavedPaymentMethodRowButtonTests: XCTestCase {
 
     func testLinkPassthroughPreservesFundingDetailsInAccessibilityLabel() {
         let paymentMethod = STPPaymentMethod._testCard()
-        paymentMethod.isLinkPassthroughMode = true
+        paymentMethod.isLinkOrigin = true
 
         let sut = SavedPaymentMethodRowButton(
             paymentMethod: paymentMethod,

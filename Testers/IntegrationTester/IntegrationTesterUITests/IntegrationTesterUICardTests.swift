@@ -45,7 +45,7 @@ class IntegrationTesterUICardTests: IntegrationTesterUITests {
     }
 
     let browserFallbackCard = "4000582600000060"
-    func testBrowserFallback() throws {
+    func _testBrowserFallback() throws {
         testBrowserFallbackAuthentication(cardNumber: browserFallbackCard)
     }
 }

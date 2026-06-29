@@ -180,13 +180,11 @@ private struct PhoneCountryCodePickerViewUIViewRepresentable: UIViewRepresentabl
 
 struct PhoneCountryCodePickerView_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOS 14.0, *) {
-            VStack(spacing: 0) {
-                PhoneCountryCodePickerViewUIViewRepresentable()
-                Spacer()
-            }
-            .padding(.horizontal, 40)
+        VStack(spacing: 0) {
+            PhoneCountryCodePickerViewUIViewRepresentable()
+            Spacer()
         }
+        .padding(.horizontal, 40)
     }
 }
 

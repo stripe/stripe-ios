@@ -9,6 +9,45 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
+// MARK: - Payment Method Update Types
+
+struct CheckoutPaymentMethodBillingDetails {
+    let name: String?
+    let email: String?
+    let phone: String?
+    let address: CheckoutPaymentMethodBillingAddress?
+
+    init(name: String? = nil, email: String? = nil, phone: String? = nil, address: CheckoutPaymentMethodBillingAddress? = nil) {
+        self.name = name
+        self.email = email
+        self.phone = phone
+        self.address = address
+    }
+}
+
+struct CheckoutPaymentMethodBillingAddress {
+    let line1: String?
+    let line2: String?
+    let city: String?
+    let state: String?
+    let postalCode: String?
+    let country: String?
+
+    init(line1: String? = nil, line2: String? = nil, city: String? = nil, state: String? = nil, postalCode: String? = nil, country: String? = nil) {
+        self.line1 = line1
+        self.line2 = line2
+        self.city = city
+        self.state = state
+        self.postalCode = postalCode
+        self.country = country
+    }
+}
+
+struct CheckoutPaymentMethodExpiryDetails {
+    let expMonth: Int
+    let expYear: Int
+}
+
 extension STPAPIClient {
 
     /// Initializes a CheckoutSession, fetching payment configuration data.
@@ -59,10 +98,14 @@ extension STPAPIClient {
         checkoutSessionId: String,
         parameters: [String: Any]
     ) async throws -> STPCheckoutSession {
+        var params = parameters
+        params["elements_session_client"] = [
+            "is_aggregation_expected": true,
+        ]
         return try await APIRequest<STPCheckoutSession>.post(
             with: self,
             endpoint: "payment_pages/\(checkoutSessionId)",
-            parameters: parameters
+            parameters: params
         )
     }
 
@@ -75,6 +118,63 @@ extension STPAPIClient {
             endpoint: "payment_pages/\(checkoutSessionId)",
             parameters: ["payment_method_to_detach": paymentMethodId]
         )
+    }
+
+    /// Updates a saved payment method's billing details and/or card expiry on a Checkout Session.
+    /// - Parameters:
+    ///   - paymentMethodId: The ID of the payment method to update (e.g., "pm_xxx").
+    ///   - checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx").
+    ///   - billingDetails: Optional billing details to update (name, email, phone, address).
+    ///   - expiryDetails: Optional card expiry to update (month and year).
+    /// - Returns: The updated STPCheckoutSession.
+    func updatePaymentMethod(
+        _ paymentMethodId: String,
+        inCheckoutSession checkoutSessionId: String,
+        billingDetails: CheckoutPaymentMethodBillingDetails? = nil,
+        expiryDetails: CheckoutPaymentMethodExpiryDetails? = nil
+    ) async throws -> STPCheckoutSession {
+        var params = Self.updatePaymentMethodParameters(
+            paymentMethodId: paymentMethodId,
+            billingDetails: billingDetails,
+            expiryDetails: expiryDetails
+        )
+        params["elements_session_client"] = ["is_aggregation_expected": true]
+        return try await APIRequest<STPCheckoutSession>.post(
+            with: self,
+            endpoint: "payment_pages/\(checkoutSessionId)",
+            parameters: params
+        )
+    }
+
+    static func updatePaymentMethodParameters(
+        paymentMethodId: String,
+        billingDetails: CheckoutPaymentMethodBillingDetails?,
+        expiryDetails: CheckoutPaymentMethodExpiryDetails?
+    ) -> [String: Any] {
+        var params: [String: Any] = [
+            "payment_method_to_update[payment_method_id]": paymentMethodId,
+        ]
+        if let billing = billingDetails {
+            let billingPrefix = "payment_method_to_update[billing_details]"
+            if let name = billing.name { params["\(billingPrefix)[name]"] = name }
+            if let email = billing.email { params["\(billingPrefix)[email]"] = email }
+            if let phone = billing.phone { params["\(billingPrefix)[phone]"] = phone }
+            if let address = billing.address {
+                let addressPrefix = "\(billingPrefix)[address]"
+                if let line1 = address.line1 { params["\(addressPrefix)[line1]"] = line1 }
+                if let line2 = address.line2 { params["\(addressPrefix)[line2]"] = line2 }
+                if let city = address.city { params["\(addressPrefix)[city]"] = city }
+                if let state = address.state { params["\(addressPrefix)[state]"] = state }
+                if let postalCode = address.postalCode { params["\(addressPrefix)[postal_code]"] = postalCode }
+                if let country = address.country { params["\(addressPrefix)[country]"] = country }
+            }
+        }
+        if let expiry = expiryDetails {
+            let expiryPrefix = "payment_method_to_update[expiry_details]"
+            params["\(expiryPrefix)[exp_month]"] = expiry.expMonth
+            params["\(expiryPrefix)[exp_year]"] = expiry.expYear
+        }
+        return params
     }
 
     /// Confirms a CheckoutSession with the provided payment method and parameters.

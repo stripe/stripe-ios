@@ -8,7 +8,6 @@
 import UIKit
 
 @_spi(PreviewConnect)
-@available(iOS 15, *)
 public class PayoutsViewController: UIViewController {
     private(set) var webVC: ConnectComponentWebViewController!
 
@@ -38,7 +37,6 @@ public class PayoutsViewController: UIViewController {
 
 /// Delegate of an `PayoutsViewController`
 @_spi(PreviewConnect)
-@available(iOS 15, *)
 public protocol PayoutsViewControllerDelegate: AnyObject {
 
     /**
@@ -52,7 +50,6 @@ public protocol PayoutsViewControllerDelegate: AnyObject {
 
 }
 
-@available(iOS 15, *)
 public extension PayoutsViewControllerDelegate {
     // Default implementation to make optional
     func payouts(_ payouts: PayoutsViewController,

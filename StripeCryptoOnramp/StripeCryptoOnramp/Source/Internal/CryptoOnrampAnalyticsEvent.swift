@@ -17,7 +17,7 @@ enum CryptoOnrampOperation: String {
     case attachKycInfo = "attach_kyc_info"
     case retrieveMissingIdentifiers = "retrieve_missing_identifiers"
     case submitIdentifiers = "submit_identifiers"
-    case presentCRSCARFDeclaration = "prompt_for_crs_carf_declaration"
+    case presentUserAttestation = "present_user_attestation"
     case verifyKycInfo = "verify_kyc_info"
     case verifyIdentity = "verify_identity"
     case registerWalletAddress = "register_wallet_address"
@@ -39,9 +39,9 @@ enum CryptoOnrampAnalyticsEvent {
     case identityVerificationCompleted
     case kycInfoSubmitted
     case identifierRequirementsRetrieved
-    case identifiersSubmitted(valid: Bool)
-    case crsCarfDeclarationStarted
-    case crsCarfDeclarationCompleted
+    case identifiersSubmitted(completed: Bool)
+    case userAttestationStarted
+    case userAttestationCompleted
     case kycInfoVerificationStarted
     case kycInfoVerificationCompleted
     case walletRegistered(network: String)
@@ -79,10 +79,10 @@ enum CryptoOnrampAnalyticsEvent {
             return "onramp.identifier_requirements_retrieved"
         case .identifiersSubmitted:
             return "onramp.identifiers_submitted"
-        case .crsCarfDeclarationStarted:
-            return "onramp.crs_carf_declaration_started"
-        case .crsCarfDeclarationCompleted:
-            return "onramp.crs_carf_declaration_completed"
+        case .userAttestationStarted:
+            return "onramp.user_attestation_started"
+        case .userAttestationCompleted:
+            return "onramp.user_attestation_completed"
         case .kycInfoVerificationStarted:
             return "onramp.kyc_info_verification_started"
         case .kycInfoVerificationCompleted:
@@ -116,15 +116,15 @@ enum CryptoOnrampAnalyticsEvent {
              .identityVerificationStarted,
              .identityVerificationCompleted,
              .kycInfoSubmitted,
-             .crsCarfDeclarationCompleted,
+             .userAttestationCompleted,
              .identifierRequirementsRetrieved,
-             .crsCarfDeclarationStarted,
+             .userAttestationStarted,
              .kycInfoVerificationStarted,
              .kycInfoVerificationCompleted,
              .userLoggedOut:
             return [:]
-        case let .identifiersSubmitted(valid):
-            return ["valid": valid]
+        case let .identifiersSubmitted(completed):
+            return ["completed": completed]
         case let .linkAccountLookupCompleted(hasLinkAccount):
             return ["has_link_account": hasLinkAccount]
         case let .linkAuthorizationCompleted(consented):

@@ -32,7 +32,6 @@ class STPApplePayTestDelegateiOS11: NSObject, STPApplePayContextDelegate {
         completion(PKPaymentRequestShippingMethodUpdate())
     }
 
-    @available(iOS 15.0, *)
     func applePayContext(
         _ context: STPApplePayContext,
         didChangeCouponCode couponCode: String,
@@ -136,17 +135,13 @@ class STPApplePayContextTest: XCTestCase {
         )
 
         // 3) ..didChangeCouponCode.. delegate method
-        if #available(iOS 15.0, *) {
-            XCTAssertFalse(delegate.didChangeCouponCodeCalled)
-            let couponCodeExpectation = expectation(description: "didChangeCouponCode forwarded")
-            context.paymentAuthorizationController(vc, didChangeCouponCode: "coupon_123") { _ in
-                couponCodeExpectation.fulfill()
-            }
-            wait(for: [couponCodeExpectation], timeout: 1)
-            XCTAssertTrue(delegate.didChangeCouponCodeCalled)
-        } else {
-            // Fallback on earlier versions
+        XCTAssertFalse(delegate.didChangeCouponCodeCalled)
+        let couponCodeExpectation = expectation(description: "didChangeCouponCode forwarded")
+        context.paymentAuthorizationController(vc, didChangeCouponCode: "coupon_123") { _ in
+            couponCodeExpectation.fulfill()
         }
+        wait(for: [couponCodeExpectation], timeout: 1)
+        XCTAssertTrue(delegate.didChangeCouponCodeCalled)
 
         waitForExpectations(timeout: 2, handler: nil)
     }

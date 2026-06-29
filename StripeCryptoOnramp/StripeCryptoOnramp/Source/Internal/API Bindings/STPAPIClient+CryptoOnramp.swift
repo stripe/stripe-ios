@@ -112,10 +112,10 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
-    /// Retrieves compliance identifiers still required for MiCA and CRS/CARF compliance.
+    /// Retrieves compliance identifiers still required for MiCA and whether CRS/CARF tax identification numbers are still required.
     /// - Parameters:
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
-    /// - Returns: An instance of `ComplianceIdentifierRequirements` containing missing identifier requirements.
+    /// - Returns: An instance of `ComplianceIdentifierRequirements` containing missing MiCA identifier requirements and CRS/CARF TIN status.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     func retrieveMissingIdentifiers(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> ComplianceIdentifierRequirements {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
@@ -135,7 +135,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - identifiers: Compliance identifiers collected for MiCA and CRS/CARF compliance.
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
-    /// - Returns: An instance of `SubmitIdentifiersResult` describing whether the identifiers were accepted.
+    /// - Returns: An instance of `SubmitIdentifiersResult` describing whether identifier collection is complete.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     @discardableResult
     func submitIdentifiers(
@@ -157,12 +157,12 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
-    /// Retrieves the CRS/CARF declaration HTML for the current Link user.
+    /// Retrieves the user attestation HTML for the current Link user.
     /// - Parameters:
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
-    /// - Returns: An instance of `CRSCARFDeclaration` containing the declaration HTML and version.
+    /// - Returns: An instance of `UserAttestation` containing the attestation HTML and version.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
-    func retrieveCRSCARFDeclaration(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> CRSCARFDeclaration {
+    func retrieveUserAttestation(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> UserAttestation {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
@@ -176,13 +176,13 @@ extension STPAPIClient {
         )
     }
 
-    /// Confirms the current Link user accepted the CRS/CARF declaration.
+    /// Confirms the current Link user accepted the user attestation.
     /// - Parameters:
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
     /// - Returns: An empty response.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     @discardableResult
-    func confirmCRSCARFDeclaration(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> EmptyResponse {
+    func confirmUserAttestation(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> EmptyResponse {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
@@ -281,7 +281,8 @@ extension STPAPIClient {
         let endpoint = "crypto/internal/platform_settings"
 
         let parameters: [String: Any] = [
-            "crypto_customer_id": cryptoCustomerId
+            "crypto_customer_id": cryptoCustomerId,
+            "ui_mode": "headless",
         ]
         return try await get(resource: endpoint, parameters: parameters)
     }

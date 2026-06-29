@@ -230,6 +230,20 @@ extension String.Localized {
         )
     }
 
+    static var liveCaptureMode: String {
+        STPLocalizedString(
+            "Auto",
+            "Segmented control option for automatic identity document capture"
+        )
+    }
+
+    static var manualCaptureMode: String {
+        STPLocalizedString(
+            "Manual",
+            "Segmented control option for manual identity document upload"
+        )
+    }
+
     // MARK: - Camera Capturing
 
     static var upload_a_photo: String {

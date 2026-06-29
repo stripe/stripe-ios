@@ -315,7 +315,7 @@ extension PaymentSheetUITestCase {
                 .matching(NSPredicate(format: "label CONTAINS 'Email address'"))
                 .firstMatch
                 .waitForExistenceAndTap(timeout: 10)
-            let email = "linkpaymentcontrolleruitest-\(UUID().uuidString)@example.com"
+            let email = "instantbankpaymentscontrolleruitest-\(UUID().uuidString)@example.com"
             app.typeText(email + XCUIKeyboardKey.return.rawValue)
         }
 

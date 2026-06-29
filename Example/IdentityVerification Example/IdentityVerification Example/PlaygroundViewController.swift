@@ -129,12 +129,7 @@ class PlaygroundViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if #available(iOS 14.3, *) {
-            nativeOrWebSelector.isEnabled = true
-        } else {
-            nativeOrWebSelector.isEnabled = false
-            nativeComponentsOptionsContainerView.isHidden = false
-        }
+        nativeOrWebSelector.isEnabled = true
 
         mockDocumentCameraForSimulator()
 
@@ -330,9 +325,7 @@ class PlaygroundViewController: UIViewController {
         } else {
             let shouldUseNativeComponents = invocationType == .native
 
-            if !shouldUseNativeComponents,
-                #available(iOS 14.3, *)
-            {
+            if !shouldUseNativeComponents {
                 setupVerificationSheetWebUI(responseJson: responseJson)
             } else {
                 setupVerificationSheetNativeUI(responseJson: responseJson)
@@ -376,7 +369,6 @@ class PlaygroundViewController: UIViewController {
         )
     }
 
-    @available(iOS 14.3, *)
     func setupVerificationSheetWebUI(responseJson: [String: String]) {
         guard let clientSecret = responseJson["client_secret"] else {
             assertionFailure("Did not receive a valid client secret.")
@@ -575,12 +567,15 @@ class PlaygroundViewController: UIViewController {
 
     func applyUIAppearance() {
         // Changes to UIAppearance are only applied when the view is added to the window hierarchy
-        UIApplication.shared.windows.forEach { window in
-            window.subviews.forEach { view in
-                view.removeFromSuperview()
-                window.addSubview(view)
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .forEach { window in
+                window.subviews.forEach { view in
+                    view.removeFromSuperview()
+                    window.addSubview(view)
+                }
             }
-        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {

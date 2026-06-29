@@ -8,7 +8,6 @@
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 struct CurrencySelectorAppearancePlaygroundView: View {
     @State var appearance: Checkout.CurrencySelectorView.Appearance
     var doneAction: ((Checkout.CurrencySelectorView.Appearance) -> Void)
@@ -42,8 +41,8 @@ struct CurrencySelectorAppearancePlaygroundView: View {
     private var dimensionsSection: some View {
         Section("Dimensions") {
             VStack(alignment: .leading) {
-                Text("Height: \(appearance.height, specifier: "%.0f")")
-                Slider(value: $appearance.height, in: 24...60, step: 1)
+                Text("Vertical Padding: \(appearance.contentVerticalPadding, specifier: "%.0f")")
+                Slider(value: $appearance.contentVerticalPadding, in: 0...20, step: 1)
             }
             VStack(alignment: .leading) {
                 Text("Corner Radius: \(appearance.cornerRadius, specifier: "%.0f")")

@@ -14,7 +14,6 @@ import UIKit
 import XCTest
 
 // ☠️ WARNING: These snapshots do not have capsule corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
-@available(iOS 15.0, *)
 @MainActor
 // @iOS26
 final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {

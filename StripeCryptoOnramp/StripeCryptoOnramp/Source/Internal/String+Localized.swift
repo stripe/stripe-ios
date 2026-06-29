@@ -12,6 +12,13 @@ import Foundation
 @_spi(STP) import StripeUICore
 
 extension String.Localized {
+    static var cryptoOnrampErrorAppAttestationFailed: String {
+        return STPLocalizedString(
+            "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists.",
+            "Error message shown when app attestation fails"
+        )
+    }
+
     static var debitIsMostLikelyToBeAccepted: String {
         return STPLocalizedString(
             "Debit cards are most likely to be accepted.",

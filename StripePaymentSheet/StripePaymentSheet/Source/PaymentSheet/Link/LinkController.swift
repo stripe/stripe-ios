@@ -65,10 +65,10 @@ import UIKit
         case canceled
     }
 
-    @frozen @_spi(STP) public enum CRSCARFDeclarationResult {
-        /// The user accepted the declaration.
+    @frozen @_spi(STP) public enum UserAttestationResult {
+        /// The user accepted the attestation.
         case confirmed
-        /// The user dismissed the declaration without accepting.
+        /// The user dismissed the attestation without accepting.
         case canceled
     }
 
@@ -713,36 +713,36 @@ import UIKit
         }
     }
 
-    /// Presents the CRS/CARF declaration to the user.
+    /// Presents the user attestation to the user.
     ///
-    /// This method presents a bottom sheet displaying the provided declaration HTML for user review.
-    /// The user can confirm the declaration or cancel.
+    /// This method presents a bottom sheet displaying the provided attestation HTML for user review.
+    /// The user can confirm the attestation or cancel.
     ///
     /// - Parameters:
-    ///   - html: The declaration HTML to display to the user.
-    ///   - appearance: Appearance configuration for the declaration UI.
-    ///   - viewController: The view controller from which to present the declaration flow.
+    ///   - html: The attestation HTML to display to the user.
+    ///   - appearance: Appearance configuration for the attestation UI.
+    ///   - viewController: The view controller from which to present the attestation flow.
     ///   - onConfirm: An async closure called when the user confirms. This is called *before* dismissal, allowing the caller to complete any async operations before the sheet is dismissed.
-    /// - Returns: A `CRSCARFDeclarationResult` indicating whether the user confirmed or canceled.
+    /// - Returns: A `UserAttestationResult` indicating whether the user confirmed or canceled.
     /// Throws any error thrown by the `onConfirm` handler.
-    @_spi(STP) public func presentCRSCARFDeclaration(
+    @_spi(STP) public func presentUserAttestation(
         html: String,
         appearance: LinkAppearance,
         from viewController: UIViewController,
         onConfirm: @escaping (() async throws -> Void)
-    ) async throws -> CRSCARFDeclarationResult {
+    ) async throws -> UserAttestationResult {
         return try await withCheckedThrowingContinuation { continuation in
             Task { @MainActor in
-                let declarationViewController = CRSCARFDeclarationViewController(
+                let attestationViewController = UserAttestationViewController(
                     html: html,
                     appearance: appearance,
                     brand: resolvedLinkBrand
                 )
-                declarationViewController.onResult = { [weak declarationViewController] result in
-                    declarationViewController?.onResult = nil
+                attestationViewController.onResult = { [weak attestationViewController] result in
+                    attestationViewController?.onResult = nil
 
                     let dismissAndResumeWithResult = { continuationResult in
-                        declarationViewController?.dismiss(animated: true) {
+                        attestationViewController?.dismiss(animated: true) {
                             continuation.resume(with: continuationResult)
                         }
                     }
@@ -762,7 +762,7 @@ import UIKit
                     }
                 }
 
-                viewController.presentAsBottomSheet(declarationViewController, appearance: .init())
+                viewController.presentAsBottomSheet(attestationViewController, appearance: .init())
             }
         }
     }
@@ -1189,7 +1189,11 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
         collectName: Bool = false
     ) async -> LinkController.PaymentMethodPreview? {
         return await withCheckedContinuation { continuation in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else {
+                    continuation.resume(returning: nil)
+                    return
+                }
                 self.collectPaymentMethod(
                     from: presentingViewController,
                     with: email,

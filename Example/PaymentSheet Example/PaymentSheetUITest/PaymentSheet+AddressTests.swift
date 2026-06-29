@@ -8,14 +8,7 @@
 
 import XCTest
 
-class PaymentSheet_AddressTests: XCTestCase {
-    var app: XCUIApplication!
-
-    override func setUpWithError() throws {
-        continueAfterFailure = false
-        app = XCUIApplication()
-        app.launchEnvironment = ["UITesting": "true"]
-    }
+class PaymentSheet_AddressTests: PaymentSheetUITestCase {
 
     // MARK: - Helper Functions
 
@@ -63,7 +56,8 @@ class PaymentSheet_AddressTests: XCTestCase {
     private func fillAutocompleteAddress(
         name: String = "Jane Doe",
         searchTerm: String = "354 Oyster Point",
-        expectedResult: String = "354 Oyster Point Blvd"
+        expectedResult: String = "354 Oyster Point Blvd",
+        verifyAnalytics: Bool = true
     ) {
         // Fill name field if provided
         if !name.isEmpty {
@@ -73,10 +67,18 @@ class PaymentSheet_AddressTests: XCTestCase {
 
         // Use autocomplete
         app.textFields["Address"].waitForExistenceAndTap()
+        if verifyAnalytics {
+            XCTAssertTrue(analyticsLog.compactMap { $0[string: "event"] }.contains("mc_address_autocomplete_start"))
+        }
         app.typeText(searchTerm)
-
         let searchedCell = app.tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", expectedResult)).element
         _ = searchedCell.waitForExistence(timeout: 5)
+        if verifyAnalytics {
+            let autocompleteSuggestionsAnalytic = analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_suggestions" }
+            XCTAssertNotNil(autocompleteSuggestionsAnalytic)
+            XCTAssertEqual(autocompleteSuggestionsAnalytic?["character_count"] as? Int, 16)
+            XCTAssertNotNil(autocompleteSuggestionsAnalytic?["source"])
+        }
         searchedCell.tap()
     }
 
@@ -86,7 +88,8 @@ class PaymentSheet_AddressTests: XCTestCase {
         line2: String = "",
         city: String,
         state: String,
-        zip: String
+        zip: String,
+        verifyAnalytics: Bool = true
     ) {
         _ = app.textFields["Address line 1"].waitForExistence(timeout: 5)
         XCTAssertEqual(app.textFields["Address line 1"].value as! String, line1)
@@ -94,6 +97,12 @@ class PaymentSheet_AddressTests: XCTestCase {
         XCTAssertEqual(app.textFields["City"].value as! String, city)
         XCTAssertEqual(app.textFields["State"].value as! String, state)
         XCTAssertEqual(app.textFields["ZIP"].value as! String, zip)
+        if verifyAnalytics {
+            let autocompleteCompleteAnalytic = analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_complete" }
+            XCTAssertNotNil(autocompleteCompleteAnalytic)
+            XCTAssertEqual(autocompleteCompleteAnalytic?["character_count"] as? Int, 16)
+            XCTAssertNotNil(autocompleteCompleteAnalytic?["source"])
+        }
     }
 
     /// Helper function to verify collected address display in SwiftUI
@@ -129,14 +138,18 @@ class PaymentSheet_AddressTests: XCTestCase {
     /// Helper function to navigate to SwiftUI AddressElement
     private func navigateToSwiftUIAddressElement() {
         app.launch()
+        // If the app launched directly into AddressElementExampleView (pinned screen),
+        // "Collect Address" is already visible — no navigation needed.
+        if app.buttons["Collect Address"].waitForExistence(timeout: 3) {
+            app.buttons["Collect Address"].tap()
+            return
+        }
         let addressButton = app.staticTexts["AddressElement (SwiftUI)"]
         if !addressButton.exists {
             scrollDown()
         }
-
         XCTAssertTrue(addressButton.waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Collect Address"].waitForExistenceAndTap())
-
     }
 
     /// Helper function to verify save address button state and tap if enabled
@@ -289,6 +302,13 @@ US
 
         // Save address
         saveAddress()
+        if let completedEvent = analyticsLog.first(where: { $0[string: "event"] == "mc_address_completed" }),
+           let blob = completedEvent["address_data_blob"] as? [String: Any] {
+            XCTAssertEqual(blob["auto_complete_result_selected"] as? Bool, true)
+            XCTAssertEqual(blob["edit_distance"] as? Int, 0)
+        } else {
+            XCTFail("mc_address_completed event not found")
+        }
 
         // Verify the merchant app gets the expected address
         let shippingButton = app.buttons["Address"]
@@ -302,8 +322,61 @@ US
         XCTAssertEqual(shippingButton.label, expectedAddress)
     }
 
+    func testAddressAutoComplete_UnitedStates_endpoint() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.uiStyle = .flowController
+        settings.useAutocompleteEndpoints = .on
+        loadPlayground(app, settings)
+
+        navigateToShippingAddress()
+
+        // The Save address button should be disabled initially
+        saveAddress(shouldBeEnabled: false)
+
+        // Fill address using autocomplete (name first, then address)
+        app.textFields["Full name"].tap()
+        app.typeText("Jane Doe")
+
+        fillAutocompleteAddress(name: "", searchTerm: "354 Oyster Point", expectedResult: "354 Oyster Point Boulevard")
+
+        // Verify autocomplete populated the address fields
+        verifyAddressFields(
+            line1: "354 Oyster Point Boulevard",
+            line2: "",
+            city: "South San Francisco",
+            state: "California",
+            zip: "94080"
+        )
+
+        // Add phone number to complete the form
+        app.textFields["Phone number"].tap()
+        app.textFields["Phone number"].typeText("5555555555")
+
+        // Save address
+        saveAddress()
+        if let completedEvent = analyticsLog.first(where: { $0[string: "event"] == "mc_address_completed" }),
+           let blob = completedEvent["address_data_blob"] as? [String: Any] {
+            XCTAssertEqual(blob["auto_complete_result_selected"] as? Bool, true)
+            XCTAssertEqual(blob["edit_distance"] as? Int, 0)
+        } else {
+            XCTFail("mc_address_completed event not found")
+        }
+
+        // Verify the merchant app gets the expected address
+        let shippingButton = app.buttons["Address"]
+        let expectedAddress = """
+Jane Doe
+354 Oyster Point Boulevard
+South San Francisco CA 94080
+US
++15555555555
+"""
+        XCTAssertEqual(shippingButton.label, expectedAddress)
+    }
+
     /// This test ensures we don't show auto complete for an unsupported country
-    func testAddressAutoComplete_NewZeland() throws {
+    func testAddressAutoComplete_UnsupportedCountry() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.uiStyle = .flowController
@@ -323,33 +396,33 @@ US
         app.textFields["Full name"].tap()
         app.textFields["Full name"].typeText("Jane Doe")
 
-        // Set country to New Zealand
+        // Set country to Romania (not in the default autocomplete countries list)
         app.textFields["Country or region"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇳🇿 New Zealand")
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇷🇴 Romania")
         app.stp_dismissKeyboard()
 
-        // Address line 1 field should not contain an autocomplete affordance b/c autocomplete doesn't support New Zealand
+        // Address line 1 field should not contain an autocomplete affordance b/c autocomplete doesn't support Romania
         XCTAssertFalse(app.buttons["autocomplete_affordance"].exists)
 
         // Tapping the address line 1 field...
         app.textFields["Address line 1"].tap()
 
-        // ...should not go to auto complete b/c it's disabled for New Zealand
+        // ...should not go to auto complete b/c it's disabled for Romania
         XCTAssertFalse(app.buttons["Enter address manually"].waitForExistence(timeout: 3))
 
         // Make sure we can still fill out the form
 
         // Tapping the address line 1 field should now just let us enter the field manually
         app.textFields["Address line 1"].tap()
-        app.typeText("1 South Bay Parade")
+        app.typeText("Calea Victoriei 1")
         app.textFields["Address line 2"].tap()
-        app.typeText("Apt 152")
+        app.typeText("Apt 5")
         app.textFields["City"].tap()
-        app.typeText("Kaikōura")
+        app.typeText("Bucharest")
         // The save address button should still be disabled until we fill in all required fields
         XCTAssertFalse(saveAddressButton.isEnabled)
         app.textFields["Postal code"].tap()
-        app.typeText("7300")
+        app.typeText("010061")
         app.textFields["Phone number"].tap()
         app.textFields["Phone number"].typeText("5555555555")
         XCTAssertTrue(saveAddressButton.isEnabled)
@@ -359,10 +432,10 @@ US
         _ = shippingButton.waitForExistence(timeout: 5.0)
         let expectedAddress = """
 Jane Doe
-1 South Bay Parade, Apt 152
-Kaikōura 7300
-NZ
-+645555555555
+Calea Victoriei 1, Apt 5
+Bucharest 010061
+RO
++405555555555
 """
         XCTAssertEqual(shippingButton.label, expectedAddress)
     }
@@ -626,8 +699,8 @@ NZ
         // The Save Address button should be disabled initially
         saveAddressSwiftUI(shouldBeEnabled: false)
 
-        // Fill address using autocomplete
-        fillAutocompleteAddress()
+        // Fill address using autocomplete (analyticsLog not available in SwiftUI example context)
+        fillAutocompleteAddress(verifyAnalytics: false)
 
         // Verify autocomplete populated the address fields correctly
         verifyAddressFields(
@@ -635,7 +708,8 @@ NZ
             line2: "",
             city: "South San Francisco",
             state: "California",
-            zip: "94080"
+            zip: "94080",
+            verifyAnalytics: false
         )
 
         // Save address and verify the collected address display

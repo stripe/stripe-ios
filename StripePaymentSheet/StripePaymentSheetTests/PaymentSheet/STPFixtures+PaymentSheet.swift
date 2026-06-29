@@ -68,6 +68,7 @@ public extension PaymentSheet.Appearance {
 extension STPElementsSession {
     static func _testValue(
         orderedPaymentMethodTypes: [STPPaymentMethodType] = [.card],
+        orderedPaymentMethodTypesAndWallets: [String] = [],
         unactivatedPaymentMethodTypes: [STPPaymentMethodType] = [],
         countryCode: String? = nil,
         merchantCountryCode: String? = nil,
@@ -89,7 +90,7 @@ extension STPElementsSession {
             sessionID: "test_123",
             configID: "test_config",
             orderedPaymentMethodTypes: orderedPaymentMethodTypes,
-            orderedPaymentMethodTypesAndWallets: [],
+            orderedPaymentMethodTypesAndWallets: orderedPaymentMethodTypesAndWallets,
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypes,
             countryCode: countryCode,
             merchantCountryCode: merchantCountryCode,
@@ -232,8 +233,8 @@ extension STPElementsSession {
                 return setupIntent.paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
             case .deferredIntent(let intentConfig):
                 return intentConfig.paymentMethodTypes ?? []
-            case .checkoutSession(let checkoutSession):
-                return checkoutSession.paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
+            case .checkout(let checkout):
+                return checkout.stpSession.paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
             }
         }()
         var customerSessionData: [String: Any]?
@@ -296,7 +297,7 @@ extension Intent {
         return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _ in return "" }))
     }
 
-    static func _testCheckoutSession(
+    @MainActor static func _testCheckoutSession(
         mode: Checkout.Mode = .payment,
         amount: Int? = 2345,
         currency: String = "USD",
@@ -378,7 +379,7 @@ extension Intent {
         }
 
         let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
-        return .checkoutSession(checkoutSession)
+        return .checkout(Checkout(session: checkoutSession))
     }
 }
 
@@ -464,7 +465,7 @@ extension PaymentSheetLoader.LoadResult {
 }
 
 extension PaymentMethodMessagingPromotionsHelper {
-    static func _testValue() -> PaymentMethodMessagingPromotionsHelper {
+    static func _testValue() -> PaymentMethodMessagingPromotionsHelper? {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
@@ -492,17 +493,19 @@ extension PaymentMethodMessagingPromotionsHelper {
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: [],
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
-        )
+        )!
     }
-}
 
-private class MockPromotionsHelper: PaymentMethodMessagingPromotionsHelper {
-    override func promotion(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromotionContent? {
-        return PromotionContent(
-            promotion: "Pay in 4 interest-free payments of $12.50.",
-            learnMoreText: "See if you qualify",
-            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C&locale=en&payment_methods%5B0%5D=affirm&title=See%20if%20you%20qualify")!
-        )
+    class MockPromotionsHelper: PaymentMethodMessagingPromotionsHelper {
+        override func promotion(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromotionContent? {
+            return PromotionContent(
+                promotion: "Pay in 4 interest-free payments of $12.50.",
+                learnMoreText: "See if you qualify",
+                infoUrl: Self.infoUrl
+            )
+        }
+
+        static let infoUrl = URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C&locale=en&payment_methods%5B0%5D=affirm&title=See%20if%20you%20qualify")!
     }
 }
 

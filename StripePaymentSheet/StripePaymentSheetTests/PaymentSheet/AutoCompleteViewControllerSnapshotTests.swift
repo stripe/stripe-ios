@@ -19,6 +19,7 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
     private var configuration: AddressViewController.Configuration {
         var configuration = AddressViewController.Configuration()
         configuration.appearance.applyLiquidGlassIfPossible()
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_1234")
         return configuration
     }
 
@@ -184,6 +185,27 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
         vc.results = mockSearchResults
 
         verify(vc.view)
+    }
+
+    func testAutoCompleteViewController_outOfBoundsHighlightRanges_doesNotCrash() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
+        testWindow.isHidden = false
+        let vc = AutoCompleteViewController(
+            configuration: configuration,
+            initialLine1Text: nil,
+            selectedCountry: nil,
+            addressSpecProvider: addressSpecProvider
+        )
+        vc.results = [
+            MockAddressSearchResult(
+                title: "Hello",
+                subtitle: "World",
+                titleHighlightRanges: [NSValue(range: NSRange(location: 3, length: 10))],
+                subtitleHighlightRanges: [NSValue(range: NSRange(location: 100, length: 5))]
+            ),
+        ]
+        testWindow.rootViewController = vc
+        vc.view.layoutIfNeeded()
     }
 
     func verify(

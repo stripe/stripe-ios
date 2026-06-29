@@ -8,7 +8,6 @@
 import UIKit
 
 /// Delegate of an `AccountOnboardingController`
-@available(iOS 15, *)
 public protocol AccountOnboardingControllerDelegate: AnyObject {
     /**
      The connected account has exited the onboarding process. When this triggers, retrieve account details to check the status of
@@ -30,7 +29,6 @@ public protocol AccountOnboardingControllerDelegate: AnyObject {
 
 }
 
-@available(iOS 15, *)
 public extension AccountOnboardingControllerDelegate {
     // Add default implementation of delegate methods to make them optional
     func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingController) { }
@@ -41,7 +39,6 @@ public extension AccountOnboardingControllerDelegate {
 
 /// A view controller representing an account-onboarding component
 /// - Seealso: [Account onboarding component documentation](https://docs.stripe.com/connect/supported-embedded-components/account-onboarding?platform=ios)
-@available(iOS 15, *)
 public final class AccountOnboardingController {
     struct Props: Encodable {
         let fullTermsOfServiceUrl: URL?

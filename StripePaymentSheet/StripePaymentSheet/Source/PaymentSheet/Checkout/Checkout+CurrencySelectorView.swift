@@ -129,8 +129,8 @@ extension Checkout {
         }
 
         /// Called when the session changes. Builds the selector on the first
-        /// session that has adaptive pricing data, then updates the caption
-        /// on subsequent changes. Hides the view if AP data is unavailable.
+        /// session that has adaptive pricing data, then updates labels and
+        /// caption on subsequent changes. Hides the view if AP data is unavailable.
         private func handleSessionUpdate() {
             guard let (session, exchangeRateMeta, rawCurrency) =
                     CurrencySelectorUtilities.adaptivePricingData(from: checkout.stpSession)
@@ -143,28 +143,29 @@ extension Checkout {
 
             clearError()
 
-            // Build the selector after initial session load; subsequent updates only change the caption
             if selectorView == nil {
                 buildSelectorView(session: session, exchangeRateMeta: exchangeRateMeta, currency: currency)
+            } else {
+                updateSelectorItems(session: session, exchangeRateMeta: exchangeRateMeta)
             }
 
             updateCaption(currency: currency, exchangeRateMeta: exchangeRateMeta)
         }
 
-        private func buildSelectorView(
-            session: STPCheckoutSession,
-            exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
-            currency: CurrencySelectorUtilities.CurrencyCode
-        ) {
-            let resolvedLabelContent: Appearance.LabelContent = {
-                guard case .automatic = appearance.labelContent else {
-                    return appearance.labelContent
-                }
-                return session.mode == .subscription ? .currencyCode : .amount
-            }()
+        private func resolveLabelContent(session: STPCheckoutSession) -> Appearance.LabelContent {
+            guard case .automatic = appearance.labelContent else {
+                return appearance.labelContent
+            }
+            return session.mode == .subscription ? .currencyCode : .amount
+        }
 
+        private func buildSelectorItems(
+            session: STPCheckoutSession,
+            exchangeRateMeta: STPCheckoutSessionExchangeRateMeta
+        ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
+            let resolvedLabelContent = resolveLabelContent(session: session)
             let flagFont = appearance.scaledFont(for: appearance.font, style: .footnote)
-            let (left, right) = CurrencySelectorUtilities.buildSelectorItems(
+            return CurrencySelectorUtilities.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,
                 localizedPricesMetas: session.localizedPricesMetas,
                 labelContent: resolvedLabelContent,
@@ -172,6 +173,22 @@ extension Checkout {
                     checkout?.flagImageManager.flagIcon(for: currency, font: flagFont) ?? NSAttributedString()
                 }
             )
+        }
+
+        private func updateSelectorItems(
+            session: STPCheckoutSession,
+            exchangeRateMeta: STPCheckoutSessionExchangeRateMeta
+        ) {
+            let (left, right) = buildSelectorItems(session: session, exchangeRateMeta: exchangeRateMeta)
+            selectorView?.updateItems(left: left, right: right)
+        }
+
+        private func buildSelectorView(
+            session: STPCheckoutSession,
+            exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
+            currency: CurrencySelectorUtilities.CurrencyCode
+        ) {
+            let (left, right) = buildSelectorItems(session: session, exchangeRateMeta: exchangeRateMeta)
 
             let newSelector = TwoOptionSelectorView(
                 leftItem: left,
@@ -199,7 +216,8 @@ extension Checkout {
                 forSelectedCurrency: currency.apiValue,
                 exchangeRateMeta: exchangeRateMeta
             )
-            selectorView?.updateCaption(caption)
+            let detailText = CurrencySelectorUtilities.detailText(exchangeRateMeta: exchangeRateMeta)
+            selectorView?.updateCaption(caption, detailText: detailText)
         }
 
         private func tearDown() {
@@ -238,7 +256,8 @@ extension Checkout.CurrencySelectorView: TwoOptionSelectorViewDelegate {
         // Disable interaction during the API call
         selectorView?.setEnabled(false)
 
-        Task {
+        Task { [weak self] in
+            guard let self else { return }
             do {
                 try await checkout.selectCurrency(id)
                 STPAnalyticsClient.sharedClient.log(

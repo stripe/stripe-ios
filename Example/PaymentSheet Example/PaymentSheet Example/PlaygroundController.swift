@@ -616,7 +616,10 @@ import UIKit
 
     var rootViewController: UIViewController {
         // Hack, should do this in SwiftUI
-        return UIApplication.shared.windows.first!.rootViewController!
+        return UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }!.rootViewController!
     }
 
     private var subscribers: Set<AnyCancellable> = []
@@ -654,6 +657,14 @@ import UIKit
         updateForcedConsumerLinkBrand(settings)
 
         $settings.removeDuplicates().sink { [weak self] newValue in
+            // PaymentSheet does not support checkout session; auto-correct to flow controller
+            if newValue.integrationType == .checkoutSession && newValue.uiStyle == .paymentSheet {
+                DispatchQueue.main.async {
+                    self?.settings.uiStyle = .flowController
+                }
+                return
+            }
+
             if newValue.autoreload == .on {
                 // This closure is called *before* `settings` is updated! Wait until the next run loop before calling `load`
                 DispatchQueue.main.async {
@@ -709,7 +720,7 @@ import UIKit
         case .deferred_csc, .deferred_ssc, .deferred_mp, .deferred_mc:
             mc = PaymentSheet(intentConfiguration: intentConfig, configuration: configuration)
         case .checkoutSession:
-            mc = PaymentSheet(checkout: self.checkout!, configuration: configuration)
+            fatalError("PaymentSheet does not support checkout session initialization. Use FlowController or EmbeddedPaymentElement instead.")
         }
 
         self.paymentSheet = mc
@@ -741,19 +752,13 @@ import UIKit
     }
 
     func appearanceButtonTapped() {
-        if #available(iOS 14.0, *) {
-            let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
-                self.appearance = updatedAppearance
-                self.rootViewController.dismiss(animated: true, completion: nil)
-                self.load(reinitializeControllers: true)
-            }))
+        let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
+            self.appearance = updatedAppearance
+            self.rootViewController.dismiss(animated: true, completion: nil)
+            self.load(reinitializeControllers: true)
+        }))
 
-            rootViewController.present(vc, animated: true, completion: nil)
-        } else {
-            let alert = UIAlertController(title: "Unavailable", message: "Appearance playground is only available in iOS 14+.", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-            rootViewController.present(alert, animated: true, completion: nil)
-        }
+        rootViewController.present(vc, animated: true, completion: nil)
     }
     func paymentMethodOptionsSetupFutureUsageSettingsTapped() {
         let vc = UIHostingController(rootView: PaymentMethodOptionsSetupFutureUsagePlaygroundView(viewModel: settings, doneAction: { updatedSettings in
@@ -772,22 +777,20 @@ import UIKit
         rootViewController.present(vc, animated: true, completion: nil)
     }
     func checkoutSessionSettingsTapped() {
-        if #available(iOS 15.0, *) {
-            let appearanceBinding = Binding(
-                get: { self.currencySelectorAppearance },
-                set: { self.currencySelectorAppearance = $0 }
-            )
-            let vc = UIHostingController(rootView: CheckoutSessionPlaygroundView(
-                viewModel: settings,
-                currencySelectorAppearance: appearanceBinding,
-                doneAction: { updatedSettings in
-                    self.settings = updatedSettings
-                    self.rootViewController.dismiss(animated: true, completion: nil)
-                    self.load(reinitializeControllers: true)
-                }
-            ))
-            rootViewController.present(vc, animated: true, completion: nil)
-        }
+        let appearanceBinding = Binding(
+            get: { self.currencySelectorAppearance },
+            set: { self.currencySelectorAppearance = $0 }
+        )
+        let vc = UIHostingController(rootView: CheckoutSessionPlaygroundView(
+            viewModel: settings,
+            currencySelectorAppearance: appearanceBinding,
+            doneAction: { updatedSettings in
+                self.settings = updatedSettings
+                self.rootViewController.dismiss(animated: true, completion: nil)
+                self.load(reinitializeControllers: true)
+            }
+        ))
+        rootViewController.present(vc, animated: true, completion: nil)
     }
 
     // Completion
@@ -943,7 +946,6 @@ extension PlaygroundController {
                             clientSecret: checkoutSessionClientSecret,
                             configuration: checkoutConfiguration
                         )
-                        self.checkout?.delegate = self
                     } catch {
                         self.checkout = nil
                         print("Failed to load checkout session: \(error)")
@@ -1407,29 +1409,6 @@ extension AddressViewController.AddressDetails {
         postalAddress.country = address.country
 
         return [name, formatter.string(from: postalAddress), phone].compactMap { $0 }.joined(separator: "\n")
-    }
-}
-
-// MARK: - CheckoutDelegate
-
-extension PlaygroundController: CheckoutDelegate {
-    func checkout(_ checkout: Checkout, didChangeState state: Checkout.State) {
-        switch settings.uiStyle {
-        case .embedded:
-            Task { @MainActor in
-                _ = await embeddedPlaygroundViewController?.embeddedPaymentElement?.update(checkout: checkout)
-            }
-        case .flowController:
-            paymentSheetFlowController?.update(checkout: checkout) { [weak self] error in
-                if let error {
-                    print("PaymentSheet.FlowController.update(checkout:) failed: \(error)")
-                    self?.fail(error: error)
-                }
-            }
-        case .paymentSheet:
-            // PaymentSheet waits for pending Checkout updates and resnapshots the session when presenting.
-            break
-        }
     }
 }
 
