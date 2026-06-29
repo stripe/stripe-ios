@@ -156,9 +156,6 @@ class STPCheckoutSession: NSObject {
     /// Client-side shipping address override.
     var shippingAddress: Checkout.ContactAddress?
 
-    /// Called by confirm handlers with the updated session after a successful confirm.
-    var onConfirmed: ((STPCheckoutSession) -> Void)?
-
     // MARK: - Convenience
 
     /// Returns `true` when the server needs a `tax_region` update for the given address type.
@@ -171,11 +168,12 @@ class STPCheckoutSession: NSObject {
     /// Returns the expectedAmount if in `payment` mode, `nil` if in `setup` mode, and asserts
     /// if in `subscription` or `unknown` mode. Throws if in `payment` mode but expectedAmount
     /// is missing.
-    func expectedAmount() throws -> Int? {
+    func expectedAmount() -> Int? {
         switch mode {
         case .payment:
             guard let total = total?.total.minorUnitsAmount else {
-                throw PaymentSheetError.unknown(debugDescription: "Missing expected amount from checkout session")
+                stpAssertionFailure("Missing expected amount from checkout session")
+                return nil
             }
             return total
         case .setup:

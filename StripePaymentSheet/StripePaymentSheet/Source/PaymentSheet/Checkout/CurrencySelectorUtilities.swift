@@ -130,6 +130,13 @@ enum CurrencySelectorUtilities {
         )
     }
 
+    /// Returns the expandable detail text for the exchange rate, or nil if not applicable.
+    /// This will be replaced by a server-provided string from the translation layer in the future.
+    static func detailText(exchangeRateMeta meta: STPCheckoutSessionExchangeRateMeta) -> String? {
+        guard meta.conversionMarkupBps > 0 else { return nil }
+        return "This string will come from the translation layer in the future"
+    }
+
     private static func formatConversionFeePercent(bps: Int) -> String {
         let percent = Double(bps) / 100.0
         if percent.truncatingRemainder(dividingBy: 1) == 0 {

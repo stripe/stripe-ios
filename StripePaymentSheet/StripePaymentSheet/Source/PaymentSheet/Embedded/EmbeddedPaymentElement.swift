@@ -112,12 +112,8 @@ public final class EmbeddedPaymentElement {
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
         try await checkout.awaitPendingOperations()
-        guard let stpSession = checkout.stpSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-            throw PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")
-        }
         var config = configuration
-        stpSession.applyAddressOverrides(to: &config)
+        checkout.stpSession.applyAddressOverrides(to: &config)
 
         try validateRowSelectionConfiguration(configuration: config)
 
@@ -126,7 +122,7 @@ public final class EmbeddedPaymentElement {
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: config)
 
         let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
-            mode: .checkoutSession(stpSession),
+            mode: .checkout(checkout),
             configuration: config,
             analyticsHelper: analyticsHelper,
             integrationShape: .embedded
@@ -138,6 +134,7 @@ public final class EmbeddedPaymentElement {
             analyticsHelper: analyticsHelper
         )
         embeddedPaymentElement.clearPaymentOptionIfNeeded()
+        embeddedPaymentElement.checkout = checkout
         checkout.integrationDelegate = embeddedPaymentElement
         return embeddedPaymentElement
     }
@@ -170,9 +167,7 @@ public final class EmbeddedPaymentElement {
     /// - Returns: The result of the update.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
     /// - Note: If you call `update` while a previous call to `update` is still in progress, the previous call returns `.canceled`.
-    @_spi(STP)
-    @_spi(ReactNativeSDK)
-    public func update(
+    func update(
         checkout: Checkout
     ) async -> UpdateResult {
         do {
@@ -180,12 +175,8 @@ public final class EmbeddedPaymentElement {
         } catch {
             return .failed(error: error)
         }
-        guard let stpSession = checkout.stpSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-            return .failed(error: PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
-        }
-        stpSession.applyAddressOverrides(to: &configuration)
-        return await performUpdate(mode: .checkoutSession(stpSession))
+        checkout.stpSession.applyAddressOverrides(to: &configuration)
+        return await performUpdate(mode: .checkout(checkout))
     }
 
     private func performUpdate(mode: PaymentSheet.InitializationMode) async -> UpdateResult {
@@ -394,6 +385,7 @@ public final class EmbeddedPaymentElement {
     internal var hasConfirmedIntent = false
     /// Tracks info about the currently in-flight or most recent update attempt.
     internal var latestUpdateContext: EmbeddedUpdateContext?
+    internal weak var checkout: Checkout?
 #if DEBUG
     internal var _test_paymentOption: PaymentOption? // for testing only
 #endif
@@ -482,6 +474,16 @@ extension EmbeddedPaymentElement: CheckoutIntegrationDelegate {
     var isSheetPresented: Bool {
         presentingViewController?.presentedViewController is BottomSheetViewController
     }
+
+    func checkoutDidUpdate(_ checkout: Checkout) async throws {
+        let result = await update(checkout: checkout)
+        switch result {
+        case .succeeded, .canceled:
+            break
+        case .failed(let error):
+            throw error
+        }
+    }
 }
 
 // MARK: - STPAnalyticsProtocol
@@ -533,26 +535,6 @@ extension EmbeddedPaymentElement {
     ) {
         Task {
             let result = await update(intentConfiguration: intentConfiguration)
-            DispatchQueue.main.async {
-                completion(result)
-            }
-        }
-    }
-
-    /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElement` changes.
-    /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
-    /// - Parameter checkout: The Checkout instance whose session has been updated.
-    /// - Parameter completion: A completion block containing the result of the update. Called on the main thread.
-    /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
-    /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
-    @_spi(STP)
-    @_spi(ReactNativeSDK)
-    public func update(
-        checkout: Checkout,
-        completion: @escaping (UpdateResult) -> Void
-    ) {
-        Task {
-            let result = await update(checkout: checkout)
             DispatchQueue.main.async {
                 completion(result)
             }

@@ -48,13 +48,13 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
-        case checkoutSession(STPCheckoutSession)
+        case checkout(Checkout)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {
             case .deferredIntent(let intentConfig):
                 return intentConfig
-            case .paymentIntentClientSecret, .setupIntentClientSecret, .checkoutSession:
+            case .paymentIntentClientSecret, .setupIntentClientSecret, .checkout:
                 return nil
             }
         }
@@ -104,26 +104,6 @@ public class PaymentSheet {
         )
     }
 
-    /// Initializes PaymentSheet with a Checkout object
-    /// - Parameter checkout: A loaded Checkout instance.
-    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    @_spi(STP)
-    @_spi(ReactNativeSDK)
-    @MainActor
-    public convenience init(checkout: Checkout, configuration: Configuration) {
-        guard let stpSession = checkout.stpSession else {
-            fatalError("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-        }
-        var config = configuration
-        stpSession.applyAddressOverrides(to: &config)
-        self.init(
-            mode: .checkoutSession(stpSession),
-            configuration: config
-        )
-        self.checkout = checkout
-        checkout.integrationDelegate = self
-    }
-
     required init(mode: InitializationMode, configuration: Configuration) {
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
@@ -165,23 +145,9 @@ public class PaymentSheet {
                 completion(.failed(error: error))
                 return
             }
-            var loadMode = mode
-            if let checkout {
-                do {
-                    try await checkout.awaitPendingOperations()
-                } catch {
-                    completion(.failed(error: error))
-                    return
-                }
-                if let stpSession = checkout.stpSession {
-                    loadMode = .checkoutSession(stpSession)
-                    stpSession.applyAddressOverrides(to: &self.configuration)
-                }
-            }
-
             // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
             PaymentSheetLoader.load(
-                mode: loadMode,
+                mode: mode,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
                 integrationShape: .paymentSheet
@@ -261,9 +227,6 @@ public class PaymentSheet {
 
     /// The initialization mode this instance was initialized with
     let mode: InitializationMode
-
-    /// The Checkout that backs checkout-session mode integrations, if any.
-    private weak var checkout: Checkout?
 
     /// A user-supplied completion block. Nil until `present` is called.
     var completion: ((PaymentSheetResult) -> Void)?
@@ -416,14 +379,6 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         }
     }
 
-}
-
-// MARK: - CheckoutIntegrationDelegate
-
-extension PaymentSheet: CheckoutIntegrationDelegate {
-    var isSheetPresented: Bool {
-        bottomSheetViewController.presentingViewController != nil
-    }
 }
 
 extension PaymentSheet: LoadingViewControllerDelegate {

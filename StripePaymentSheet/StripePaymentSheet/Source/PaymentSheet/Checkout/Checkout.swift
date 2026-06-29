@@ -19,7 +19,7 @@ import Foundation
 /// ```
 ///
 /// The async initializer loads the session from Stripe before returning,
-/// so ``state`` is guaranteed to be ``State/loaded(_:)`` immediately after initialization.
+/// so ``state`` is guaranteed to be ``State.loaded(_:)`` immediately after initialization.
 ///
 /// Observe session changes with SwiftUI by using ``state`` (published via `ObservableObject`),
 /// or in UIKit by setting a ``delegate``.
@@ -33,7 +33,7 @@ public final class Checkout: ObservableObject {
     ///
     /// After initialization this is always ``State.loaded(_:)``. It transitions to
     /// ``State.loading(_:)`` while a mutation is in flight.
-    @Published public private(set) var state: State
+    @Published public internal(set) var state: State
 
     /// The configuration supplied at initialization.
     public let configuration: Configuration
@@ -45,10 +45,13 @@ public final class Checkout: ObservableObject {
 
     /// The underlying `STPCheckoutSession` backing the current public ``state``.
     ///
-    /// Internal callers that need `STPCheckoutSession`-specific data (e.g.
-    /// `allResponseFields`, address overrides, the expanded intent objects)
-    /// should read this rather than casting from `state.session`.
-    private(set) var stpSession: STPCheckoutSession?
+    /// Marked `nonisolated(unsafe)` because PaymentSheet internals read this from non-MainActor
+    /// contexts. This is safe: reads only occur after the session is loaded and while the payment
+    /// UI is presented, a window during which no mutations occur. Writes are always on MainActor
+    /// because they go through `Checkout`'s MainActor-isolated mutation methods.
+    /// Requiring full MainActor isolation would propagate `@MainActor` through nearly all of
+    /// PaymentSheet's internal types, which is not warranted by the actual concurrency risk.
+    nonisolated(unsafe) private(set) var stpSession: STPCheckoutSession!
 
     weak var integrationDelegate: CheckoutIntegrationDelegate?
 
@@ -59,18 +62,15 @@ public final class Checkout: ObservableObject {
     /// Serial queue of in-flight session updates. Each task waits for the previous task before running.
     var pendingOperations: [Task<Void, Error>] = []
 
+    var isLastPendingOperation: Bool {
+        pendingOperations.count <= 1
+    }
+
     /// Default timeout used by ``awaitPendingOperations(timeout:)``.
     nonisolated static let defaultPendingOperationsTimeout: TimeInterval = 30
 
     /// Timeout enforced on the merchant's closure in ``runServerUpdate(_:)``.
     nonisolated static let serverUpdateTimeout: TimeInterval = 20
-
-    /// The single state writer. Stores the STPCheckoutSession, publishes the public session.
-    func setSession(_ session: STPCheckoutSession) {
-        stpSession = session
-        let publicSession = session.makePublicSession()
-        state = pendingOperations.isEmpty ? .loaded(publicSession) : .loading(publicSession)
-    }
 
     // MARK: - Initialization
 
@@ -102,14 +102,12 @@ public final class Checkout: ObservableObject {
             await flagImageManager.prefetchFlagImages(for: checkoutSession)
             self.stpSession = checkoutSession
             self.state = .loaded(checkoutSession.makePublicSession())
-            checkoutSession.onConfirmed = { [weak self] response in
-                self?.updateSession(response)
-            }
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
     }
 
+#if DEBUG
     /// Internal initializer for unit tests that injects a pre-loaded session.
     init(
         clientSecret: String,
@@ -123,10 +121,17 @@ public final class Checkout: ObservableObject {
         await flagImageManager.prefetchFlagImages(for: session)
         self.stpSession = session
         self.state = .loaded(session.makePublicSession())
-        session.onConfirmed = { [weak self] response in
-            self?.updateSession(response)
-        }
     }
+
+    /// Synchronous test-only initializer that wraps a pre-loaded session without async work.
+    init(session: STPCheckoutSession) {
+        self.clientSecret = ""
+        self.configuration = Configuration()
+        self.apiClient = .shared
+        self.stpSession = session
+        self.state = .loaded(session.makePublicSession())
+    }
+#endif
 
     // MARK: - Pending Operations
 
@@ -138,7 +143,8 @@ public final class Checkout: ObservableObject {
     /// - If any pending operation throws, the first such error is rethrown.
     /// - If the wait exceeds `timeout`, throws ``CheckoutError.timedOut``.
     ///
-    /// - Parameter timeout: Maximum time to wait, in seconds.
+    /// - Parameters:
+    ///   - timeout: Maximum time to wait, in seconds.
     func awaitPendingOperations(
         timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout
     ) async throws {
@@ -167,19 +173,13 @@ public final class Checkout: ObservableObject {
     /// - Parameter code: The promotion code to apply.
     /// - Throws: ``CheckoutError`` if applying the promotion code fails.
     public func applyPromotionCode(_ code: String) async throws {
-        try requireOpenSession()
-        try await enqueueSessionUpdate {
-            try await self.performAPIUpdate(.setPromotionCode(code))
-        }
+        try await performUpdate(.setPromotionCode(code))
     }
 
     /// Removes the currently applied promotion code.
     /// - Throws: ``CheckoutError`` if removing the promotion code fails.
     public func removePromotionCode() async throws {
-        try requireOpenSession()
-        try await enqueueSessionUpdate {
-            try await self.performAPIUpdate(.setPromotionCode(""))
-        }
+        try await performUpdate(.setPromotionCode(""))
     }
 
     // MARK: - Line Items
@@ -190,10 +190,7 @@ public final class Checkout: ObservableObject {
     ///   - quantity: The new quantity to set.
     /// - Throws: ``CheckoutError`` if the update fails.
     public func updateQuantity(lineItemId: String, quantity: Int) async throws {
-        try requireOpenSession()
-        try await enqueueSessionUpdate {
-            try await self.performAPIUpdate(.setLineItemQuantity(lineItemId: lineItemId, quantity: quantity))
-        }
+        try await performUpdate(.setLineItemQuantity(lineItemId: lineItemId, quantity: quantity))
     }
 
     // MARK: - Shipping
@@ -202,10 +199,7 @@ public final class Checkout: ObservableObject {
     /// - Parameter optionId: The ID of the shipping rate to select.
     /// - Throws: ``CheckoutError`` if the update fails.
     public func selectShippingOption(_ optionId: String) async throws {
-        try requireOpenSession()
-        try await enqueueSessionUpdate {
-            try await self.performAPIUpdate(.setShippingRate(optionId))
-        }
+        try await performUpdate(.setShippingRate(optionId))
     }
 
     // MARK: - Addresses
@@ -229,23 +223,17 @@ public final class Checkout: ObservableObject {
         phone: String? = nil,
         address: Address
     ) async throws {
-        let currentSession = try requireOpenSession()
+        guard let currentSession = stpSession else { return }
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
         guard currentSession.billingAddress != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "billing") {
-            try await enqueueSessionUpdate {
-                try await self.performAPIUpdate(.setTaxRegion(address), applyOverrides: { session in
-                    // Set the local address override on the refreshed session after a successful API call.
-                    session.billingAddress = contactAddress
-                })
-            }
+            try await performUpdate(.setTaxRegion(address), applying: {
+                self.stpSession?.billingAddress = contactAddress
+            })
         } else {
-            try await enqueueSessionUpdate { @MainActor in
-                guard let session = self.stpSession else { return }
-                session.billingAddress = contactAddress
-                self.setSession(session)
-                self.delegate?.checkout(self, didChangeState: self.state)
-            }
+            try await performUpdate(applying: {
+                self.stpSession?.billingAddress = contactAddress
+            })
         }
     }
 
@@ -268,23 +256,17 @@ public final class Checkout: ObservableObject {
         phone: String? = nil,
         address: Address
     ) async throws {
-        let currentSession = try requireOpenSession()
+        guard let currentSession = stpSession else { return }
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
         guard currentSession.shippingAddress != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "shipping") {
-            try await enqueueSessionUpdate {
-                try await self.performAPIUpdate(.setTaxRegion(address), applyOverrides: { session in
-                    // Set the local address override on the refreshed session after a successful API call.
-                    session.shippingAddress = contactAddress
-                })
-            }
+            try await performUpdate(.setTaxRegion(address), applying: {
+                self.stpSession?.shippingAddress = contactAddress
+            })
         } else {
-            try await enqueueSessionUpdate { @MainActor in
-                guard let session = self.stpSession else { return }
-                session.shippingAddress = contactAddress
-                self.setSession(session)
-                self.delegate?.checkout(self, didChangeState: self.state)
-            }
+            try await performUpdate(applying: {
+                self.stpSession?.shippingAddress = contactAddress
+            })
         }
     }
 
@@ -303,8 +285,8 @@ public final class Checkout: ObservableObject {
     public func runServerUpdate(
         _ updateFunction: @escaping () async throws -> Void
     ) async throws {
-        try requireOpenSession()
         try await enqueueSessionUpdate {
+            try self.requireSheetNotPresented()
             let result = await withTimeout(Self.serverUpdateTimeout) {
                 try await updateFunction()
             }
@@ -314,23 +296,38 @@ public final class Checkout: ObservableObject {
                 }
                 throw CheckoutError.apiError(message: error.localizedDescription)
             }
-            try self.requireOpenSession()
-            try await self.refreshSession()
+            let sessionId = Self.extractSessionId(from: self.clientSecret)
+            let refreshedCheckoutSession: STPCheckoutSession
+            do {
+                refreshedCheckoutSession = try await self.apiClient.initCheckoutSession(
+                    checkoutSessionId: sessionId,
+                    adaptivePricingAllowed: self.configuration.adaptivePricing.allowed
+                )
+            } catch {
+                throw CheckoutError.apiError(message: error.nonGenericDescription)
+            }
+            try await self.commitSession(refreshedCheckoutSession)
         }
     }
 
-    // MARK: - Tax ID
+    // MARK: - State updates
 
-    /// Sets the customer's tax ID on the session.
-    /// - Parameters:
-    ///   - type: The type of tax ID to set (for example, `"eu_vat"`).
-    ///   - value: The tax ID value to set.
-    /// - Throws: ``CheckoutError`` if the update fails.
-    public func updateTaxId(type: String, value: String) async throws {
-        try requireOpenSession()
-        try await enqueueSessionUpdate {
-            try await self.performAPIUpdate(.setTaxId(type: type, value: value))
+    /// Replaces the current session, preserves client-side overrides, and notifies delegates.
+    ///
+    /// Client-side address overrides are copied from the current session to `newSession`
+    /// automatically. To update an address, set it on `stpSession` before calling this method.
+    func commitSession(_ newSession: STPCheckoutSession) async throws {
+        // Preserve client-side address overrides on the new session.
+        newSession.billingAddress = stpSession?.billingAddress
+        newSession.shippingAddress = stpSession?.shippingAddress
+        stpSession = newSession
+        let publicSession = newSession.makePublicSession()
+        state = pendingOperations.isEmpty ? .loaded(publicSession) : .loading(publicSession)
+        // Skip delegate if another op is queued—it'll notify when it commits.
+        if isLastPendingOperation {
+            try await integrationDelegate?.checkoutDidUpdate(self)
         }
+        delegate?.checkout(self, didChangeState: state)
     }
 
 }

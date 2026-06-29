@@ -325,7 +325,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
     func testPaymentOptionDisplayData_SavedLinkPassthroughUsesOnelinkLabel() {
         let paymentMethod = STPPaymentMethod._testCard()
-        paymentMethod.isLinkPassthroughMode = true
+        paymentMethod.isLinkOrigin = true
 
         let paymentOption = PaymentSheet.PaymentOption.saved(paymentMethod: paymentMethod, confirmParams: nil)
         let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
@@ -391,7 +391,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         // Test labels for Link with bank account payment details - should show "Link" as label and formatted details as sublabel
         XCTAssertEqual(displayData.labels.label, "Link")
         // The sublabel should show the bank account details
-        XCTAssertEqual(displayData.labels.sublabel, "My Checking")
+        XCTAssertEqual(displayData.labels.sublabel, "My Checking •••• 6789")
     }
 
     // MARK: - Enhanced Completion Block Tests

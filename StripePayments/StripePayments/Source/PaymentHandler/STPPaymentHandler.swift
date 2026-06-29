@@ -862,7 +862,6 @@ public class STPPaymentHandler: NSObject {
             .swish,
             .twint,
             .multibanco,
-            .shopPay,
             .payPay,
             .wero,
             .payByBank:
@@ -1646,6 +1645,14 @@ public class STPPaymentHandler: NSObject {
                                     } else if paymentMethodType != .paynow && paymentMethodType != .promptPay {
                                         // For PayNow, we don't want to mark as canceled when the web view dismisses
                                         // Instead we rely on the presented PollingViewController to complete the currentAction
+                                        if let pollingBudget, !pollingBudget.canPoll {
+                                            // Log if we are canceling because we finished polling and the status is not terminal
+                                            self.logPollingDurationExceededCancellation(
+                                                intentID: paymentIntent.stripeId,
+                                                paymentMethodType: paymentMethodType.identifier,
+                                                duration: pollingBudget.elapsedTime
+                                            )
+                                        }
                                         self._markChallengeCanceled(currentAction: currentAction) { _, _ in
                                             // We don't forward cancelation errors
                                             currentAction.complete(with: .canceled, error: nil)
@@ -1724,6 +1731,14 @@ public class STPPaymentHandler: NSObject {
                             } else {
                                 // If the status is still RequiresAction, the user exited from the redirect before the
                                 // setup intent was updated. Consider it a cancel
+                                if let pollingBudget, !pollingBudget.canPoll {
+                                    // Log if we are canceling because we finished polling and the status is not terminal
+                                    self.logPollingDurationExceededCancellation(
+                                        intentID: setupIntent.stripeID,
+                                        paymentMethodType: paymentMethod.type.identifier,
+                                        duration: pollingBudget.elapsedTime
+                                    )
+                                }
                                 self._markChallengeCanceled(currentAction: currentAction) { _, _ in
                                     // We don't forward cancelation errors
                                     currentAction.complete(with: .canceled, error: nil)
@@ -1926,86 +1941,74 @@ public class STPPaymentHandler: NSObject {
             return
         }
 
-        if #available(iOS 14.0, *) {
-            // Extract client secret and intent type
-            let clientSecret: String
-            let intentType: IntentType
-            if let piAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
-                clientSecret = piAction.paymentIntent.clientSecret
-                intentType = .paymentIntent(id: piAction.paymentIntent.stripeId)
-            } else if let siAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
-                clientSecret = siAction.setupIntent.clientSecret
-                intentType = .setupIntent(id: siAction.setupIntent.stripeID)
-            } else {
-                currentAction.complete(
-                    with: .failed,
-                    error: _error(
-                        for: .unexpectedErrorCode,
-                        loggingSafeErrorMessage: "Unable to extract client secret for intent confirmation challenge"
-                    )
-                )
-                return
-            }
-
-            // Extract publishable key
-            guard let publishableKey = apiClient.publishableKey else {
-                currentAction.complete(
-                    with: .failed,
-                    error: _error(
-                        for: .unexpectedErrorCode,
-                        loggingSafeErrorMessage: "Unable to extract publishable key for intent confirmation challenge"
-                    )
-                )
-                return
-            }
-
-            let context = currentAction.authenticationContext
-            var presentationError: NSError?
-            guard _canPresent(with: context, error: &presentationError) else {
-                currentAction.complete(with: .failed, error: presentationError)
-                return
-            }
-
-            let presentingVC = context.authenticationPresentingViewController()
-
-                let challengeVC = IntentConfirmationChallengeViewController(
-                    publishableKey: publishableKey,
-                    clientSecret: clientSecret,
-                    intentType: intentType,
-                    apiClient: apiClient,
-                    stripeJs: stripeJs
-                ) { [weak self] _ in
-                    guard let self = self else { return }
-
-                    // Dismiss the challenge view
-                    presentingVC.dismiss(animated: true) {
-                        // The web page handled the next action via Stripe.js
-                        // Now retrieve the updated intent to check its status
-                        self._retrieveAndCheckIntentForCurrentAction()
-                    }
-                }
-
-            let doChallenge: STPVoidBlock = {
-                challengeVC.modalPresentationStyle = .overFullScreen
-                challengeVC.modalTransitionStyle = .crossDissolve
-                presentingVC.present(challengeVC, animated: true, completion: nil)
-            }
-
-            if context.responds(to: #selector(STPAuthenticationContext.prepare(forPresentation:))) {
-                context.prepare?(forPresentation: doChallenge)
-            } else {
-                doChallenge()
-            }
-        } else { // Intent confirmation challenge should be gated to iOS versions 14.0+
-            let unsupportedVersionErrorMessage = "Unable to perform intent confirmation challenge. Requires iOS version 14.0 or later."
-            stpAssertionFailure(unsupportedVersionErrorMessage)
+        // Extract client secret and intent type
+        let clientSecret: String
+        let intentType: IntentType
+        if let piAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
+            clientSecret = piAction.paymentIntent.clientSecret
+            intentType = .paymentIntent(id: piAction.paymentIntent.stripeId)
+        } else if let siAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
+            clientSecret = siAction.setupIntent.clientSecret
+            intentType = .setupIntent(id: siAction.setupIntent.stripeID)
+        } else {
             currentAction.complete(
                 with: .failed,
                 error: _error(
                     for: .unexpectedErrorCode,
-                    loggingSafeErrorMessage: unsupportedVersionErrorMessage
+                    loggingSafeErrorMessage: "Unable to extract client secret for intent confirmation challenge"
                 )
             )
+            return
+        }
+
+        // Extract publishable key
+        guard let publishableKey = apiClient.publishableKey else {
+            currentAction.complete(
+                with: .failed,
+                error: _error(
+                    for: .unexpectedErrorCode,
+                    loggingSafeErrorMessage: "Unable to extract publishable key for intent confirmation challenge"
+                )
+            )
+            return
+        }
+
+        let context = currentAction.authenticationContext
+        var presentationError: NSError?
+        guard _canPresent(with: context, error: &presentationError) else {
+            currentAction.complete(with: .failed, error: presentationError)
+            return
+        }
+
+        let presentingVC = context.authenticationPresentingViewController()
+
+        let challengeVC = IntentConfirmationChallengeViewController(
+            publishableKey: publishableKey,
+            clientSecret: clientSecret,
+            intentType: intentType,
+            apiClient: apiClient,
+            stripeJs: stripeJs
+        ) { [weak self] _ in
+            guard let self = self else { return }
+
+            // Dismiss the challenge view
+            presentingVC.dismiss(animated: true) {
+                // The web page handled the next action via Stripe.js
+                // Now retrieve the updated intent to check its status
+                self._retrieveAndCheckIntentForCurrentAction()
+            }
+        }
+
+        let doChallenge: STPVoidBlock = {
+            challengeVC.modalPresentationStyle = .overFullScreen
+            challengeVC.modalTransitionStyle = .crossDissolve
+            presentingVC.present(challengeVC, animated: true, completion: nil)
+        }
+
+        if context.responds(to: #selector(STPAuthenticationContext.prepare(forPresentation:))) {
+            context.prepare?(forPresentation: doChallenge)
+        } else {
+            doChallenge()
         }
     }
 

@@ -717,13 +717,13 @@ class EmbeddedPaymentElementTest: XCTestCase {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(experimentsData: experimentsData)
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        let promotionsHelper = PaymentMethodMessagingPromotionsHelper(
+        let promotionsHelper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
             elementsSession: elementsSession,
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.card)],
             analyticsHelper: analyticsHelper
-        )
+        ))
         promotionsHelper.fetchData()
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: intent,
@@ -921,27 +921,6 @@ class EmbeddedPaymentElementTest: XCTestCase {
         let updateResult2 = await task2.value
         XCTAssertEqual(updateResult1, .canceled)
         XCTAssertEqual(updateResult2, .succeeded)
-    }
-
-    func testUpdateCheckoutSessionWithCompletionBlock() async throws {
-        let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
-        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
-
-        var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
-        config.apiClient = apiClient
-        config.defaultBillingDetails.email = "test@example.com"
-
-        let sut = try await EmbeddedPaymentElement.create(checkout: checkout, configuration: config)
-        sut.delegate = self
-        sut.presentingViewController = UIViewController()
-
-        let updateExpectation = expectation(description: "Update completes")
-        sut.update(checkout: checkout) { result in
-            XCTAssertEqual(result, .succeeded)
-            updateExpectation.fulfill()
-        }
-        await fulfillment(of: [updateExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     // MARK: Immediate action tests

@@ -106,6 +106,13 @@ extension DocumentCaptureViewController {
         )
     }
 
+    static var imageTakenInstructionalText: String {
+        STPLocalizedString(
+            "Image taken",
+            "State when a manual identity document image has been captured"
+        )
+    }
+
     var noCameraAccessErrorBodyText: String {
         if apiConfig.requireLiveCapture {
             return .Localized.noCameraAccessErrorBodyText

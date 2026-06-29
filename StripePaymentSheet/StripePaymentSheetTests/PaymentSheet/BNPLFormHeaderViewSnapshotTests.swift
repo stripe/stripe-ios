@@ -4,6 +4,7 @@
 //
 
 import StripeCoreTestUtils
+@_spi(STP) import StripeUICore
 import UIKit
 import XCTest
 
@@ -38,11 +39,12 @@ final class BNPLFormHeaderViewSnapshotTests: STPSnapshotTestCase {
         appearance: PaymentSheet.Appearance = .default,
         interfaceStyle: UIUserInterfaceStyle = .unspecified
     ) -> (BNPLFormHeaderView, UIViewController, UIWindow) {
+        let promotionsHelper = PaymentMethodMessagingPromotionsHelper._testValueInTreatment()
         let headerView = BNPLFormHeaderView(
             appearance: appearance,
-            promotion: "Split your purchase into monthly payments",
-            learnMoreText: "Learn more",
-            infoUrl: URL(string: "https://example.com/affirm")!
+            paymentMethod: .stripe(.affirm),
+            promotionsHelper: promotionsHelper,
+            fallback: SubtitleElement(view: UIView(), isHorizontalMode: false)
         )
         let rootViewController = UIViewController()
         rootViewController.overrideUserInterfaceStyle = interfaceStyle

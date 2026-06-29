@@ -462,7 +462,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                         clientDefaultPaymentMethod: nil,
                         configuration: configuration
                     )
-                case .checkoutSession:
+                case .checkout:
                     elementsSession = ._testValue(intent: intent)
                 }
 
@@ -1018,7 +1018,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             XCTAssertEqual(regeneratedIntentConfirmParams, intentConfirmParams)
 
             // Checkout sessions require a billing email on the payment method
-            if case .checkoutSession = intent {
+            if case .checkout = intent {
                 intentConfirmParams.paymentMethodParams.nonnil_billingDetails.email = "test@example.com"
             }
 
@@ -1137,7 +1137,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             intents = [
                 ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
-                ("CheckoutSession", .checkoutSession(checkoutSession)),
+                ("CheckoutSession", .checkout(Checkout(session: checkoutSession))),
             ]
             guard paymentMethod != .blik else {
                 // Blik doesn't support server-side confirmation
@@ -1278,7 +1278,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     checkoutSessionId: checkoutSessionResponse.id,
                     adaptivePricingAllowed: true
                 )
-                intents.append(("CheckoutSession w/ setup_future_usage", .checkoutSession(checkoutSession)))
+                intents.append(("CheckoutSession w/ setup_future_usage", .checkout(Checkout(session: checkoutSession))))
             }
 
             return intents
@@ -1390,7 +1390,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     checkoutSessionId: checkoutSessionResponse.id,
                     adaptivePricingAllowed: true
                 )
-                intents.append(("CheckoutSession w/ PMO setup_future_usage", .checkoutSession(checkoutSession)))
+                intents.append(("CheckoutSession w/ PMO setup_future_usage", .checkout(Checkout(session: checkoutSession))))
             }
 
             return intents
@@ -1430,7 +1430,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 ("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
                 ("Deferred SetupIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
                 ("Deferred SetupIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
-                ("CheckoutSession", .checkoutSession(checkoutSession)),
+                ("CheckoutSession", .checkout(Checkout(session: checkoutSession))),
             ]
         }
     }

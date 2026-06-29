@@ -8,7 +8,6 @@
 import UIKit
 
 @_spi(DashboardOnly)
-@available(iOS 15, *)
 public class NotificationBannerViewController: UIViewController {
 
     struct Props: Encodable {
@@ -54,7 +53,6 @@ public class NotificationBannerViewController: UIViewController {
 }
 
 @_spi(DashboardOnly)
-@available(iOS 15, *)
 public protocol NotificationBannerViewControllerDelegate: AnyObject {
     /**
      Triggered when an error occurs loading the notification banner component
@@ -78,7 +76,6 @@ public protocol NotificationBannerViewControllerDelegate: AnyObject {
 }
 
 @_spi(DashboardOnly)
-@available(iOS 15, *)
 public extension NotificationBannerViewControllerDelegate {
     // Default implementation to make optional
     func notificationBanner(_ notificationBanner: NotificationBannerViewController,

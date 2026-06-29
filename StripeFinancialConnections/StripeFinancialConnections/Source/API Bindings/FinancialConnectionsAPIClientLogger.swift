@@ -42,14 +42,8 @@ struct FinancialConnectionsAPIClientLogger {
         var parameters: [String: Any] {
             switch self {
             case .attestationInitFailed:
-                var reason: String
-                if #available(iOS 14.0, *) {
-                    // If the iOS version is supported, we assume the device is unsupported (i.e. simulator).
-                    reason = "ios_device_unsupported"
-                } else {
-                    // Otherwise, attestation is unavailable due to the OS version being unsupported.
-                    reason = "ios_os_version_unsupported"
-                }
+                // If the iOS version is supported, we assume the device is unsupported (i.e. simulator).
+                let reason = "ios_device_unsupported"
                 return ["reason": reason]
             case .attestationRequestTokenFailed(let api, let error):
                 var errorReason: String

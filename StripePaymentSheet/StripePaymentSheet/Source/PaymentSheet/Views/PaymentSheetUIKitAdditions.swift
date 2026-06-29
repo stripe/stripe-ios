@@ -61,11 +61,7 @@ enum PaymentSheetUI {
 
 extension PKPaymentButtonStyle {
     static var compatibleAutomatic: PKPaymentButtonStyle {
-        if #available(iOS 14.0, *) {
-            return .automatic
-        } else {
-            return .black
-        }
+        return .automatic
     }
 }
 

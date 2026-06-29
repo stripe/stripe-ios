@@ -128,14 +128,12 @@ private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
 
 struct ConsentFooterView_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOS 14.0, *) {
-            VStack {
-                ConsentFooterViewUIViewRepresentable()
-                    .frame(maxHeight: 200)
-                Spacer()
-            }
-            .padding()
+        VStack {
+            ConsentFooterViewUIViewRepresentable()
+                .frame(maxHeight: 200)
+            Spacer()
         }
+        .padding()
     }
 }
 

@@ -44,17 +44,17 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         verify(view)
     }
 
-    func testCustomHeight_tall() async {
+    func testCustomVerticalPadding_tall() async {
         var appearance = Checkout.CurrencySelectorView.Appearance()
-        appearance.height = 52
+        appearance.contentVerticalPadding = 13
 
         let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
         verify(view)
     }
 
-    func testCustomHeight_compact() async {
+    func testCustomVerticalPadding_compact() async {
         var appearance = Checkout.CurrencySelectorView.Appearance()
-        appearance.height = 28
+        appearance.contentVerticalPadding = 1
 
         let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
         verify(view)
@@ -131,9 +131,26 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         verify(view)
     }
 
+    func testDetailExpanded_localCurrencySelected() async {
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp")
+        view.autosizeHeight(width: 320)
+        expandDetail(in: view)
+        verify(view)
+    }
+
+    func testDetailExpanded_darkMode() async {
+        var appearance = Checkout.CurrencySelectorView.Appearance()
+        appearance.textSecondary = .darkText
+
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
+        view.autosizeHeight(width: 320)
+        expandDetail(in: view)
+        verify(view, darkMode: true)
+    }
+
     func testFullyCustomized() async {
         var appearance = Checkout.CurrencySelectorView.Appearance()
-        appearance.height = 44
+        appearance.contentVerticalPadding = 9
         appearance.cornerRadius = 22
         appearance.borderWidth = 1.5
         appearance.border = .systemPurple
@@ -185,6 +202,16 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         window.layoutIfNeeded()
 
         STPSnapshotVerifyView(view, file: file, line: line)
+    }
+
+    @MainActor
+    private func expandDetail(in view: Checkout.CurrencySelectorView) {
+        let selectorView = view.subviews
+            .compactMap { ($0 as? UIStackView)?.arrangedSubviews.compactMap { $0 as? TwoOptionSelectorView }.first }
+            .first
+        selectorView?.expandableDetailView.toggleExpansion()
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
     }
 
     @MainActor

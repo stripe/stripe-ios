@@ -245,8 +245,8 @@
 /* Class = "UILabel"; text = "€8.99"; ObjectID = "Xxx-yh-jB6"; */
 "Xxx-yh-jB6.text" = "€8.99";
 
-/* Class = "UIButton"; normalTitle = "LinkPaymentController"; ObjectID = "Ysb-4K-dUG"; */
-"Ysb-4K-dUG.normalTitle" = "LinkPaymentController";
+/* Class = "UIButton"; normalTitle = "InstantBankPaymentsController"; ObjectID = "Ysb-4K-dUG"; */
+"Ysb-4K-dUG.normalTitle" = "InstantBankPaymentsController";
 
 /* Class = "UIButton"; normalTitle = "EmbeddedPaymentElement"; ObjectID = "ZXq-dE-S2O"; */
 "ZXq-dE-S2O.normalTitle" = "EmbeddedPaymentElement";

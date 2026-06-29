@@ -6,7 +6,6 @@
 import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 struct PaymentSheetExampleAppRootView: View {
     private var destinationsBySection: [Section: [NavigationDestination]] {
         NavigationDestination.destinationsBySection
@@ -84,7 +83,7 @@ struct PaymentSheetExampleAppRootView: View {
         case paymentSheet_flowController_swiftUI
 
         case customerSheet_swiftUI
-        case linkPaymentController
+        case instantBankPaymentsController
         case linkController
         case linkStandaloneDemo
         case linkPayoutsDemo
@@ -115,7 +114,7 @@ struct PaymentSheetExampleAppRootView: View {
                      .paymentSheet_swiftUI,
                      .paymentSheet_flowController_swiftUI,
                      .customerSheet_swiftUI,
-                     .linkPaymentController,
+                     .instantBankPaymentsController,
                      .linkController,
                      .linkStandaloneDemo,
                      .linkPayoutsDemo,
@@ -152,8 +151,8 @@ struct PaymentSheetExampleAppRootView: View {
 
             case .customerSheet_swiftUI:
                 return "CustomerSheet (SwiftUI)"
-            case .linkPaymentController:
-                return "LinkPaymentController"
+            case .instantBankPaymentsController:
+                return "InstantBankPaymentsController"
             case .linkController:
                 return "LinkController (SwiftUI)"
             case .linkStandaloneDemo:
@@ -226,7 +225,7 @@ struct PaymentSheetExampleAppRootView: View {
         case .customerSheet_swiftUI:
             ExampleSwiftUICustomerSheet()
 
-        case .linkPaymentController:
+        case .instantBankPaymentsController:
             StoryboardSceneView<ExampleLinkPaymentCheckoutViewController>(sceneIdentifier: "ExampleLinkPaymentCheckoutViewController")
         case .linkController:
             if #available(iOS 16.0, *) {
@@ -272,7 +271,6 @@ struct PaymentSheetExampleAppRootView: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct PaymentSheetExampleAppRootView_Previews: PreviewProvider {
     static var previews: some View {
         PaymentSheetExampleAppRootView()

@@ -464,23 +464,23 @@ extension String.Localized {
         )
     }
 
-    static var buy_now_or_pay_later_with_cash_app_afterpay: String {
+    static var buy_now_pay_later_with_cash_app_afterpay: String {
         STPLocalizedString(
-            "Buy now or pay later with Cash App Afterpay",
+            "Buy Now, Pay Later with Cash App Afterpay",
             "Subtitle shown on a button allowing a user to select to pay with Afterpay."
         )
     }
 
-    static var buy_now_or_pay_later_with_afterpay: String {
+    static var buy_now_pay_later_with_afterpay: String {
         STPLocalizedString(
-            "Buy now or pay later with Afterpay",
+            "Buy Now, Pay Later with Afterpay",
             "Subtitle shown on a button allowing a user to select to pay with Afterpay."
         )
     }
 
-    static var buy_now_or_pay_later_with_clearpay: String {
+    static var buy_now_pay_later_with_clearpay: String {
         STPLocalizedString(
-            "Buy now or pay later with Clearpay",
+            "Buy Now, Pay Later with Clearpay",
             "Subtitle shown on a button allowing a user to select to pay with Clearpay."
         )
     }
@@ -775,12 +775,12 @@ extension String.Localized {
         STPLocalizedString("Confirm your information", "Title label for a know-your-customer (KYC) verification screen")
     }
 
-    static var declarations: String {
-        STPLocalizedString("Declarations", "Title label for a screen showing CRS/CARF tax declarations")
+    static var user_attestation: String {
+        STPLocalizedString("Declarations", "Title label for a screen showing user attestation")
     }
 
     static var accept: String {
-        STPLocalizedString("Accept", "Label for a button that confirms the user accepts a declaration")
+        STPLocalizedString("Accept", "Label for a button that confirms the user accepts an attestation")
     }
 
     static var last_4_digits_of_ssn: String {
@@ -812,6 +812,14 @@ extension String.Localized {
             ),
             localCurrency, rate, integrationCurrency, feePercent
         )
+    }
+
+    static var showDetails: String {
+        STPLocalizedString("Show details", "Button label to expand and show additional exchange rate details")
+    }
+
+    static var hideDetails: String {
+        STPLocalizedString("Hide details", "Button label to collapse and hide additional exchange rate details")
     }
 
     static var subtotal: String {

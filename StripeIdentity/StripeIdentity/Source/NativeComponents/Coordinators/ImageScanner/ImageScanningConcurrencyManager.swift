@@ -163,9 +163,9 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
             let scanEndTime = Date()
 
             // Update stateful properties on perfQueue
-            self.perfQueue.async { [weak self] in
-                self?.perfLastScanEndTime = scanEndTime
-                self?.perfNumFramesScanned += 1
+            self.perfQueue.async {
+                self.perfLastScanEndTime = scanEndTime
+                self.perfNumFramesScanned += 1
             }
 
             self.futureQueue.sync {

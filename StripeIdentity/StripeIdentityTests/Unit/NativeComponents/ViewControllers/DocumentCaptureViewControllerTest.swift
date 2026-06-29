@@ -538,6 +538,136 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
     }
 
+    func testCaptureModeControlShownWhenManualCaptureIsAllowed() throws {
+        let vc = makeViewController(state: .initial)
+        XCTAssertNil(vc.navigationItem.titleView)
+        let control = try XCTUnwrap(findCaptureModeControl(in: vc.documentCaptureView))
+        XCTAssertEqual(control.selectedSegmentIndex, 0)
+        XCTAssertTrue(control.isEnabled)
+    }
+
+    func testCaptureModeControlHiddenWhenLiveCaptureIsRequired() throws {
+        let mockResponse = try VerificationPageMock.requireLiveCapture.make()
+        let vc = makeViewController(
+            state: .initial,
+            apiConfig: mockResponse.documentCapture
+        )
+        XCTAssertNil(findCaptureModeControl(in: vc.documentCaptureView))
+
+        XCTAssertNil(vc.navigationItem.titleView)
+    }
+
+    func testCaptureModeControlDisabledWhenScanned() throws {
+        let vc = makeViewController(state: .scanned(.front, UIImage()))
+        let control = try XCTUnwrap(findCaptureModeControl(in: vc.documentCaptureView))
+        XCTAssertFalse(control.isEnabled)
+    }
+
+    func testCaptureModeControlHiddenWhenTimedOut() throws {
+        let vc = makeViewController(state: .timeout(.front))
+
+        XCTAssertNil(findCaptureModeControl(in: vc.documentCaptureView))
+    }
+
+    func testManualCaptureSwitchUpdatesModeWithoutTransitioning() throws {
+        let vc = makeViewController(state: .scanning(.front, nil))
+        let control = try switchToManualCapture(vc)
+
+        XCTAssertEqual(control.selectedSegmentIndex, 1)
+        XCTAssertNil(mockFlowController.replacedWithViewController)
+        XCTAssertEqual(vc.buttonViewModels.count, 1)
+        XCTAssertEqual(vc.buttonViewModels.first?.text, "Take Photo")
+        XCTAssertEqual(vc.buttonViewModels.first?.state, .disabled)
+    }
+
+    func testManualCaptureRequiresExplicitTakePhoto() throws {
+        let vc = makeViewController(state: .scanning(.front, nil))
+        let mockDocumentScannerOutput = makeDocumentScannerOutputLegacy(with: .idCardFront)
+
+        _ = try switchToManualCapture(vc)
+
+        mockCameraFrameCaptured(vc)
+        mockConcurrencyManager.respondToScan(output: mockDocumentScannerOutput)
+
+        XCTAssertStateEqual(
+            vc.imageScanningSession.state,
+            .scanning(.front, nil)
+        )
+        XCTAssertNil(mockDocumentUploader.uploadedSide)
+        XCTAssertEqual(vc.buttonViewModels.first?.state, .enabled)
+        guard case .scan(let viewModel) = vc.viewModel else {
+            return XCTFail("Expected scan view model")
+        }
+        guard case .videoPreview(_, let animateBorder) = viewModel.scanningViewModel else {
+            return XCTFail("Expected video preview while scanning")
+        }
+        XCTAssertFalse(animateBorder)
+        XCTAssertEqual(
+            viewModel.instructionalText,
+            vc.scanningTextWithNoInput(
+                availableIDTypes: DocumentCaptureViewControllerTest.mockVerificationPage
+                    .documentSelect.idDocumentTypeAllowlistKeys,
+                for: .front
+            )
+        )
+
+        vc.buttonViewModels.first?.didTap()
+
+        XCTAssertStateEqual(
+            vc.imageScanningSession.state,
+            .scanned(.front, UIImage())
+        )
+        XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
+        XCTAssertEqual(mockDocumentUploader.uploadMethod, .manualCapture)
+        XCTAssertEqual(
+            mockDocumentUploader.uploadedDocumentScannerOutput,
+            mockDocumentScannerOutput
+        )
+        guard case .scan(let scannedViewModel) = vc.viewModel else {
+            return XCTFail("Expected scan view model after manual capture")
+        }
+        XCTAssertEqual(
+            scannedViewModel.instructionalText,
+            DocumentCaptureViewController.imageTakenInstructionalText
+        )
+        XCTAssertEqual(vc.buttonViewModels.count, 1)
+        XCTAssertEqual(vc.buttonViewModels.first?.text, "Continue")
+    }
+
+    func testManualCaptureCannotBeActivatedWhenLiveCaptureIsRequired() throws {
+        let mockResponse = try VerificationPageMock.requireLiveCapture.make()
+        let vc = makeViewController(
+            state: .scanning(.front, nil),
+            apiConfig: mockResponse.documentCapture
+        )
+        let control = UISegmentedControl(items: ["Live", "Manual"])
+        let mockDocumentScannerOutput = makeDocumentScannerOutputLegacy(with: .idCardFront)
+
+        control.selectedSegmentIndex = 1
+        vc.didChangeCaptureMode(control)
+
+        XCTAssertEqual(vc.buttonViewModels.count, 1)
+        XCTAssertEqual(vc.buttonViewModels.first?.text, "Continue")
+        XCTAssertEqual(vc.buttonViewModels.first?.state, .disabled)
+
+        mockTimeoutTimer(vc)
+        mockCameraFrameCaptured(vc)
+        mockConcurrencyManager.respondToScan(output: mockDocumentScannerOutput)
+
+        XCTAssertStateEqual(
+            vc.imageScanningSession.state,
+            .scanned(.front, UIImage())
+        )
+        XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
+        guard case .scan(let scannedViewModel) = vc.viewModel else {
+            return XCTFail("Expected scan view model after live capture")
+        }
+        XCTAssertEqual(
+            scannedViewModel.instructionalText,
+            DocumentCaptureViewController.scannedInstructionalText
+        )
+    }
+
     func testFileUploadButtonCameraAccess() {
         let vc = makeViewController(state: .noCameraAccess)
         vc.buttonViewModels.first!.didTap()
@@ -874,6 +1004,28 @@ extension DocumentCaptureViewControllerTest {
             didOutput: DocumentCaptureViewControllerTest.mockSampleBuffer,
             from: mockCaptureConnection
         )
+    }
+
+    @discardableResult
+    fileprivate func switchToManualCapture(_ vc: DocumentCaptureViewController) throws -> UISegmentedControl {
+        let control = try XCTUnwrap(findCaptureModeControl(in: vc.documentCaptureView))
+        control.selectedSegmentIndex = 1
+        vc.didChangeCaptureMode(control)
+        return control
+    }
+
+    fileprivate func findCaptureModeControl(in view: UIView) -> UISegmentedControl? {
+        if let control = view as? UISegmentedControl {
+            return control
+        }
+
+        for subview in view.subviews {
+            if let control = findCaptureModeControl(in: subview) {
+                return control
+            }
+        }
+
+        return nil
     }
 
     fileprivate func makeViewController(

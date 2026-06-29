@@ -24,7 +24,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 
-    func testInitialScreen() {
+    func testInitialScreen() throws {
         let analyticsClientV2 = MockAnalyticsClientV2()
         let arbId = "arb_pmm_123"
         let experimentsData = ExperimentsData(
@@ -54,13 +54,13 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         // If there are saved PMs, always show the list, even if there's only one other PM
         let elementsSession = STPElementsSession._testValue(experimentsData: experimentsData)
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
-        let promotionsHelper = PaymentMethodMessagingPromotionsHelper(
+        let promotionsHelper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
             elementsSession: elementsSession,
             intent: intent,
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: [.stripe(.card)],
             analyticsHelper: analyticsHelper
-        )
+        ))
         promotionsHelper.fetchData()
         let savedPMsLoadResult = PaymentSheetLoader.LoadResult(
             intent: intent,

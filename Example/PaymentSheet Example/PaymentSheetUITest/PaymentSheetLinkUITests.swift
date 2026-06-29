@@ -479,7 +479,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         try fillCardData(app)
 
-        app.switches["Save my info for faster checkout with Link"].tap()
+        app.switches["Save my info for faster checkout with One-link"].tap()
 
         let emailField = app.textFields["Email"]
         emailField.tap()

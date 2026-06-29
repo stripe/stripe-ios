@@ -62,7 +62,6 @@ final public class IdentityVerificationSheet {
     ///
     /// - Parameters:
     ///   - verificationSessionClientSecret: The [client secret](https://stripe.com/docs/api/identity/verification_sessions) of a Stripe VerificationSession object.
-    @available(iOS 14.3, *)
     public convenience init(
         verificationSessionClientSecret: String
     ) {
@@ -183,7 +182,7 @@ final public class IdentityVerificationSheet {
             verificationSheetController.loadAndUpdateUI(skipTestMode: false)
 
             verificationSheetController.analyticsClient.logSheetPresented(sheetController: verificationSheetController)
-        } else if #available(iOS 14.3, *) {
+        } else {
             // Validate client secret
             guard let clientSecret = clientSecret else {
                 completion(.flowFailed(error: IdentityVerificationSheetError.invalidClientSecret))
@@ -202,19 +201,6 @@ final public class IdentityVerificationSheet {
                 ),
                 apiClient: .shared
             )
-        } else {
-            assertionFailure(
-                "IdentityVerificationSheet can only be instantiated using a client secret on iOS 14.3 or higher"
-            )
-            completion(
-                .flowFailed(
-                    error: IdentityVerificationSheetError.unknown(
-                        debugDescription:
-                            "IdentityVerificationSheet can only be instantiated using a client secret on iOS 14.3 or higher"
-                    )
-                )
-            )
-            return
         }
         presentingViewController.present(navigationController, animated: true)
     }
@@ -246,7 +232,6 @@ final public class IdentityVerificationSheet {
 
 // MARK: - VerificationFlowWebViewControllerDelegate
 
-@available(iOS 14.3, *)
 extension IdentityVerificationSheet: VerificationFlowWebViewControllerDelegate {
     func verificationFlowWebViewController(
         _ viewController: VerificationFlowWebViewController,

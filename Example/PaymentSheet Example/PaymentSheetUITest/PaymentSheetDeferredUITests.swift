@@ -51,8 +51,8 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
         // filter out async attestation logs
         XCTAssertEqual(
-            analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) && !($0?.contains("attest") ?? false) }).suffix(9),
-            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped", "stripeios.confirmation_token_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
+            analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) && !($0?.contains("attest") ?? false) }).suffix(10),
+            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_billing_address_completed", "mc_confirm_button_tapped", "stripeios.confirmation_token_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
         )
 
         XCTAssertEqual(

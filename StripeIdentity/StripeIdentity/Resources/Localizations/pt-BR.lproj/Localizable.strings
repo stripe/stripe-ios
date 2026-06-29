@@ -6,6 +6,8 @@
 
 "App Settings" = "Ajustes do aplicativo";
 
+"Auto" = "Automática";
+
 "Back %@ photo successfully uploaded" = "Foto do verso %@ carregada com sucesso";
 
 "Back identity document photo successfully uploaded" = "Foto do verso do documento de identidade carregada";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "A imagem está borrada. Segure o celular firme e tente novamente.";
 
+"Image taken" = "Imagem tirada";
+
 "Individual CPF" = "CPF";
 
 "Invalid document" = "Documento inválido";
@@ -85,6 +89,8 @@
 "Loading" = "Carregando";
 
 "Make sure you're in a well lit space." = "Escolha um espaço bem iluminado.";
+
+"Manual" = "Manual";
 
 "Move closer" = "Aproxime";
 

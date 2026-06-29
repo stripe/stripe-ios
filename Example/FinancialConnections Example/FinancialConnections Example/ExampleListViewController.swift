@@ -25,11 +25,8 @@ class ExampleListViewController: UITableViewController {
                 viewControllerIdentifier: "CollectBankAccountTokenViewController"
             ),
         ]
-        if #available(iOS 14.0, *) {
-            // iOS 13 example/playground crashes due to SwiftUI
-            examples.append(Example(title: "Playground", viewControllerIdentifier: "PlaygroundViewController"))
-            examples.append(Example(title: "WebView (not recommended)", viewControllerIdentifier: "WebViewViewController"))
-        }
+        examples.append(Example(title: "Playground", viewControllerIdentifier: "PlaygroundViewController"))
+        examples.append(Example(title: "WebView (not recommended)", viewControllerIdentifier: "WebViewViewController"))
         return examples
     }()
 
@@ -50,13 +47,9 @@ class ExampleListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath)
 
-        if #available(iOS 14.0, *) {
-            var configuration = cell.defaultContentConfiguration()
-            configuration.text = examples[indexPath.row].title
-            cell.contentConfiguration = configuration
-        } else {
-            cell.textLabel?.text = examples[indexPath.row].title
-        }
+        var configuration = cell.defaultContentConfiguration()
+        configuration.text = examples[indexPath.row].title
+        cell.contentConfiguration = configuration
         return cell
     }
 

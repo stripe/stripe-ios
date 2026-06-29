@@ -66,9 +66,15 @@ extension RowButton {
 
         func updateSelectedState(_ isRowSelected: Bool, willDisplayForm: Bool) {
             if isRowSelected && !willDisplayForm {
-                if let promotionContent = promotionsHelper.promotion(for: paymentMethodType) {
+                // If selected, get PMME content, log an attempt to display, and expand if applicable
+                // PMM data is not always available on initial load/display of a RowButton, so we check for it right before attempting to display
+                let promotionContent = promotionsHelper.promotion(for: paymentMethodType)
+                if let promotionContent {
+                    // In this case we want until expand() to log the analytic so that we avoid repeat logging when the row is simply re-selected
                     applyContent(promotionContent)
                     setExpanded(true)
+                } else {
+                    promotionsHelper.logDisplayedAnalytic(displayedSuccessfully: false)
                 }
             } else {
                 setExpanded(false)
@@ -90,6 +96,9 @@ extension RowButton {
         }
 
         private func expand() {
+            // Log analytic
+            promotionsHelper.logDisplayedAnalytic(displayedSuccessfully: true)
+
             promotionTextView.alpha = 0
 
             UIView.animate(withDuration: sublabelIsHiddenAnimationDuration) { [self] in
@@ -128,14 +137,6 @@ extension RowButton {
             self.infoUrl = content.infoUrl
         }
 
-        private func openInfoModal() {
-            guard let infoUrl else {
-                stpAssertionFailure("PMME row sublabel tried to present the PMME info modal without content.")
-                return
-            }
-
-            PMMEInfoModal.present(infoUrl: infoUrl, style: traitCollection.isDarkMode ? .alwaysDark : .alwaysLight, from: self)
-        }
     }
 }
 
@@ -151,7 +152,12 @@ extension RowButton.PaymentMethodMessagingSublabelView: UITextViewDelegate {
             return false
         }
 
-        openInfoModal()
+        guard let infoUrl else {
+            stpAssertionFailure("PMME row sublabel tried to open info link without content.")
+            return false
+        }
+
+        UIApplication.shared.open(infoUrl)
         return false
     }
 #endif

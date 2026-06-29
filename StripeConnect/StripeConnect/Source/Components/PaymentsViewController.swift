@@ -8,7 +8,6 @@
 import UIKit
 
 @_spi(PreviewConnect)
-@available(iOS 15, *)
 public class PaymentsViewController: UIViewController {
 
     struct Props: Encodable {
@@ -50,7 +49,6 @@ public class PaymentsViewController: UIViewController {
 
 /// Delegate of an `PaymentsViewController`
 @_spi(PreviewConnect)
-@available(iOS 15, *)
 public protocol PaymentsViewControllerDelegate: AnyObject {
 
     /**
@@ -64,7 +62,6 @@ public protocol PaymentsViewControllerDelegate: AnyObject {
 
 }
 
-@available(iOS 15, *)
 public extension PaymentsViewControllerDelegate {
     // Default implementation to make optional
     func payments(_ payments: PaymentsViewController,
