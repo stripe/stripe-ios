@@ -486,7 +486,10 @@ final class SelfieScanningView: UIView {
             havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
-            let shouldBlurLivePreview = statusText?.usesLivePreviewBlur == true
+            let shouldBlurLivePreview = shouldBlurLivePreview(
+                for: statusText,
+                uses3DCaptureAnimations: uses3DCaptureAnimations
+            )
             setPreviewBlurVisible(shouldBlurLivePreview, animated: true)
             captureTickMarksView.isHidden = false
             captureTickMarksView.setShowsCenteredShadow(
@@ -549,6 +552,33 @@ final class SelfieScanningView: UIView {
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
         }
+    }
+
+    private func shouldBlurLivePreview(
+        for statusText: ViewModel.StatusText?,
+        uses3DCaptureAnimations: Bool
+    ) -> Bool {
+        guard let statusText else {
+            return false
+        }
+
+        if uses3DCaptureAnimations {
+            switch statusText {
+            case .lookLeft,
+                .lookRight:
+                return true
+            case .capturedFront,
+                .capturedLeft,
+                .capturedRight:
+                return false
+            case .placeFace,
+                .holdStill,
+                .uploading:
+                break
+            }
+        }
+
+        return statusText.usesLivePreviewBlur
     }
 
     private func setPreviewBlurVisible(_ isVisible: Bool, animated: Bool) {

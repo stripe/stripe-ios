@@ -25,6 +25,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     private enum Constants {
         static let legacyCaptureAcknowledgementDuration: TimeInterval = 0.55
         static let threeDCaptureAcknowledgementDuration: TimeInterval = 0.8
+        static let poseInstructionDuration: TimeInterval = 0.8
     }
 
     // MARK: View Models
@@ -49,6 +50,57 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
             .cameraError:
             return nil
         }
+    }
+
+    func updatePoseInstructionState(
+        for scanningState: FaceCaptureScanningState
+    ) {
+        guard apiConfig.enable3DFaceCapture else {
+            clearPoseInstructionState()
+            return
+        }
+
+        switch scanningState.phase {
+        case .front:
+            clearPoseInstructionState()
+        case .left,
+            .right:
+            guard poseInstructionPhase != scanningState.phase else {
+                return
+            }
+            poseInstructionPhase = scanningState.phase
+            poseInstructionStartTime = CACurrentMediaTime()
+            stopPoseInstructionTimer()
+            poseInstructionTimer = Timer.scheduledTimer(
+                withTimeInterval: Constants.poseInstructionDuration,
+                repeats: false
+            ) { [weak self] _ in
+                self?.poseInstructionTimer = nil
+                self?.updateUI()
+            }
+        }
+    }
+
+    func shouldShowPoseInstruction(
+        for phase: FaceCaptureScanningState.Phase
+    ) -> Bool {
+        guard apiConfig.enable3DFaceCapture else {
+            return true
+        }
+
+        guard poseInstructionPhase == phase,
+            let poseInstructionStartTime
+        else {
+            return false
+        }
+
+        return CACurrentMediaTime() - poseInstructionStartTime < Constants.poseInstructionDuration
+    }
+
+    func clearPoseInstructionState() {
+        stopPoseInstructionTimer()
+        poseInstructionPhase = nil
+        poseInstructionStartTime = nil
     }
 
     var flowViewModel: IdentityFlowView.ViewModel {
@@ -126,6 +178,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                 )
             )
         case .scanning(_, let scanningState):
+            updatePoseInstructionState(for: scanningState)
             // Show a flash animation when capturing the first sample image
             return .scan(
                 .init(
@@ -211,10 +264,13 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     /// This timer will be nil if it's time to take another sample from the camera feed
     private var sampleTimer: Timer?
     private var captureAcknowledgementTimer: Timer?
+    private var poseInstructionTimer: Timer?
 
     private var currentCaptureGuideHighlight: SelfieScanningView.ViewModel.CaptureGuideHighlight = .none
     private var currentCaptureGuideProgress: CGFloat = 0
     private var latestScanningState = FaceCaptureScanningState.initialValue()
+    private var poseInstructionPhase: FaceCaptureScanningState.Phase?
+    private var poseInstructionStartTime: CFTimeInterval?
 
     // MARK: Init
 
@@ -345,6 +401,11 @@ extension SelfieCaptureViewController {
         captureAcknowledgementTimer = nil
     }
 
+    func stopPoseInstructionTimer() {
+        poseInstructionTimer?.invalidate()
+        poseInstructionTimer = nil
+    }
+
     func saveDataAndTransitionToNextScreen(
         faceCaptureData: FaceCaptureData
     ) {
@@ -389,9 +450,9 @@ extension SelfieCaptureViewController {
         case .front:
             return scanningState.frontSamples.isEmpty ? .placeFace : .holdStill
         case .left:
-            return .lookLeft
+            return shouldShowPoseInstruction(for: .left) ? .lookLeft : nil
         case .right:
-            return .lookRight
+            return shouldShowPoseInstruction(for: .right) ? .lookRight : nil
         }
     }
 
@@ -527,6 +588,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         currentCaptureGuideHighlight = .none
         currentCaptureGuideProgress = 0
         stopCaptureAcknowledgementTimer()
+        clearPoseInstructionState()
         latestScanningState = .initialValue()
         selfieUploader.reset()
     }
@@ -547,6 +609,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         currentCaptureGuideHighlight = .none
         currentCaptureGuideProgress = 0
         stopCaptureAcknowledgementTimer()
+        clearPoseInstructionState()
         latestScanningState = .initialValue()
         // Focus the accessibility VoiceOver back onto the capture view
         UIAccessibility.post(notification: .layoutChanged, argument: self.selfieCaptureView)
@@ -579,6 +642,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
     func imageScanningSessionDidStopScanning(_ scanningSession: SelfieImageScanningSession) {
         stopSampleTimer()
         stopCaptureAcknowledgementTimer()
+        stopPoseInstructionTimer()
     }
 
     func imageScanningSessionDidScanImage(
