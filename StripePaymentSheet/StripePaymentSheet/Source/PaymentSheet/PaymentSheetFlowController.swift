@@ -133,6 +133,19 @@ extension PaymentSheet {
             }
             return false
         }
+
+        var billingDetails: STPPaymentMethodBillingDetails? {
+            switch self {
+            case .new(let confirmParams):
+                return confirmParams.paymentMethodParams.billingDetails
+            case .saved(_, let confirmParams):
+                return confirmParams?.paymentMethodParams.billingDetails
+            case .external(_, let billingDetails):
+                return billingDetails
+            case .link, .applePay:
+                return nil
+            }
+        }
     }
 
     /// A class that presents the individual steps of a payment flow

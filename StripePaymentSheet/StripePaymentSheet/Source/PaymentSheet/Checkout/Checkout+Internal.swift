@@ -58,10 +58,14 @@ extension Checkout {
     ///   - localMutation: A local state change to apply prior to the API call (or on its own).
     func performUpdate(
         _ update: SessionUpdate? = nil,
+        skipSheetPresentedCheck: Bool = false,
+        notifyIntegrationDelegate: Bool = true,
         applying localMutation: (@MainActor @Sendable () -> Void)? = nil
     ) async throws {
         try await enqueueSessionUpdate {
-            try self.requireSheetNotPresented()
+            if !skipSheetPresentedCheck {
+                try self.requireSheetNotPresented()
+            }
             // Transition to loading before the async work begins so observers show a loading state.
             self.state = .loading(self.state.session)
 
@@ -79,13 +83,13 @@ extension Checkout {
                 }
 
                 localMutation?()
-                try await self.commitSession(updatedSession)
+                try await self.commitSession(updatedSession, notifyIntegrationDelegate: notifyIntegrationDelegate)
             } catch {
                 // Restore loaded state on failure so the UI doesn't stay stuck in loading.
                 self.state = .loaded(self.state.session)
                 // If a prior op skipped the delegate and we're failing before we
                 // get to commitSession ourselves, still notify so the UI updates.
-                if self.isLastPendingOperation {
+                if self.isLastPendingOperation && notifyIntegrationDelegate {
                     try? await self.integrationDelegate?.checkoutDidUpdate(self)
                 }
                 throw CheckoutError.apiError(message: error.nonGenericDescription)

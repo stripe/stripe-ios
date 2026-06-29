@@ -36,7 +36,7 @@ extension Checkout {
                     "tax_region[city]": address.city,
                     "tax_region[state]": address.state,
                     "tax_region[postal_code]": address.postalCode,
-                ] as [String: Any?]).compactMapValues { $0 }
+                ] as [String: String?]).compactMapValues { $0?.isEmpty == true ? nil : $0 }
             case .setCurrency(let currency):
                 return ["updated_currency": currency]
             }

@@ -472,13 +472,47 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
         switch mode {
         case .selectingSaved:
-            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            syncCheckoutBillingIfNeeded {
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            }
         case .addingNew:
             if addPaymentMethodViewController.overridePrimaryButtonState != nil {
                 addPaymentMethodViewController.didTapCallToActionButton(from: self)
             } else {
                 addPaymentMethodViewController.logBillingAddressCompletionIfNeeded()
-                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+                syncCheckoutBillingIfNeeded {
+                    self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+                }
+            }
+        }
+    }
+
+    private func syncCheckoutBillingIfNeeded(completion: @escaping () -> Void) {
+        guard case .checkout(let checkout) = intent,
+              let paymentOption = selectedPaymentOption else {
+            completion()
+            return
+        }
+
+        error = nil
+        updateUI()
+        confirmButton.update(status: .processing)
+        isDismissable = false
+        view.isUserInteractionEnabled = false
+
+        Task { @MainActor [weak self] in
+            do {
+                try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
+                guard let self else { return }
+                self.isDismissable = true
+                self.view.isUserInteractionEnabled = true
+                completion()
+            } catch {
+                guard let self else { return }
+                self.error = error
+                self.isDismissable = true
+                self.view.isUserInteractionEnabled = true
+                self.updateUI()
             }
         }
     }

@@ -223,15 +223,25 @@ public final class Checkout: ObservableObject {
         phone: String? = nil,
         address: Address
     ) async throws {
+        try await updateBillingAddress(name: name, phone: phone, address: address, skipSheetPresentedCheck: false)
+    }
+
+    func updateBillingAddress(
+        name: String? = nil,
+        phone: String? = nil,
+        address: Address,
+        skipSheetPresentedCheck: Bool
+    ) async throws {
         guard let currentSession = stpSession else { return }
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
         guard currentSession.billingAddress != contactAddress else { return }
+        let notifyDelegate = !skipSheetPresentedCheck
         if currentSession.shouldSendTaxRegion(for: "billing") {
-            try await performUpdate(.setTaxRegion(address), applying: {
+            try await performUpdate(.setTaxRegion(address), skipSheetPresentedCheck: skipSheetPresentedCheck, notifyIntegrationDelegate: notifyDelegate, applying: {
                 self.stpSession?.billingAddress = contactAddress
             })
         } else {
-            try await performUpdate(applying: {
+            try await performUpdate(skipSheetPresentedCheck: skipSheetPresentedCheck, notifyIntegrationDelegate: notifyDelegate, applying: {
                 self.stpSession?.billingAddress = contactAddress
             })
         }
@@ -316,7 +326,7 @@ public final class Checkout: ObservableObject {
     ///
     /// Client-side address overrides are copied from the current session to `newSession`
     /// automatically. To update an address, set it on `stpSession` before calling this method.
-    func commitSession(_ newSession: STPCheckoutSession) async throws {
+    func commitSession(_ newSession: STPCheckoutSession, notifyIntegrationDelegate: Bool = true) async throws {
         // Preserve client-side address overrides on the new session.
         newSession.billingAddress = stpSession?.billingAddress
         newSession.shippingAddress = stpSession?.shippingAddress
@@ -324,7 +334,7 @@ public final class Checkout: ObservableObject {
         let publicSession = newSession.makePublicSession()
         state = pendingOperations.isEmpty ? .loaded(publicSession) : .loading(publicSession)
         // Skip delegate if another op is queued—it'll notify when it commits.
-        if isLastPendingOperation {
+        if isLastPendingOperation && notifyIntegrationDelegate {
             try await integrationDelegate?.checkoutDidUpdate(self)
         }
         delegate?.checkout(self, didChangeState: state)

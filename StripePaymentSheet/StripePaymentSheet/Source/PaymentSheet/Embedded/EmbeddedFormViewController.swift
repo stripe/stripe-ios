@@ -377,13 +377,46 @@ class EmbeddedFormViewController: UIViewController {
         // Send analytic when primary button is tapped
         analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
 
-        // If we defer confirmation, simply close the sheet
+        // If we defer confirmation, sync billing address (if checkout) then close
         if shouldDeferConfirmation {
-            self.delegate?.embeddedFormViewControllerDidContinue(self)
+            syncCheckoutBillingIfNeeded {
+                self.delegate?.embeddedFormViewControllerDidContinue(self)
+            }
             return
         }
 
         pay(with: selectedPaymentOption)
+    }
+
+    private func syncCheckoutBillingIfNeeded(completion: @escaping () -> Void) {
+        guard case .checkout(let checkout) = intent,
+              let paymentOption = selectedPaymentOption else {
+            completion()
+            return
+        }
+
+        error = nil
+        isPaymentInFlight = true
+        updateError()
+        updatePrimaryButton()
+        view.isUserInteractionEnabled = false
+
+        Task { @MainActor [weak self] in
+            do {
+                try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
+                guard let self else { return }
+                self.isPaymentInFlight = false
+                self.view.isUserInteractionEnabled = true
+                completion()
+            } catch {
+                guard let self else { return }
+                self.isPaymentInFlight = false
+                self.view.isUserInteractionEnabled = true
+                self.error = error
+                self.updateError()
+                self.updatePrimaryButton()
+            }
+        }
     }
 
     @objc func didTapPrimaryButtonWhenDisabled() {
