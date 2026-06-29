@@ -15,14 +15,13 @@ import Foundation
 ///
 /// ```swift
 /// let checkout = try await Checkout(clientSecret: "cs_xxx_secret_yyy")
-/// print(checkout.state.session)
+/// print(checkout.session)
 /// ```
 ///
-/// The async initializer loads the session from Stripe before returning,
-/// so ``state`` is guaranteed to be ``State.loaded(_:)`` immediately after initialization.
+/// The async initializer loads the session from Stripe before returning.
 ///
-/// Observe session changes with SwiftUI by using ``state`` (published via `ObservableObject`),
-/// or in UIKit by setting a ``delegate``.
+/// Observe loading state and session changes with SwiftUI by using ``isLoading`` and ``session``
+/// (published via `ObservableObject`), or in UIKit by setting a ``delegate``.
 @_spi(STP)
 @_spi(ReactNativeSDK)
 @MainActor
@@ -57,7 +56,7 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Internal Properties
 
-    /// The underlying `STPCheckoutSession` backing the current public ``state``.
+    /// The underlying `STPCheckoutSession` backing the current public ``session``.
     ///
     /// Marked `nonisolated(unsafe)` because PaymentSheet internals read this from non-MainActor
     /// contexts. This is safe: reads only occur after the session is loaded and while the payment
@@ -291,7 +290,7 @@ public final class Checkout: ObservableObject {
     // MARK: - Server Updates
 
     /// Runs an async function that calls your server to update the Checkout Session,
-    /// then automatically refreshes ``state`` with the latest session data.
+    /// then automatically refreshes ``session`` with the latest session data.
     ///
     /// A 20-second timeout is enforced. If `updateFunction` doesn't complete
     /// within 20 seconds, this method throws ``CheckoutError.timedOut``.

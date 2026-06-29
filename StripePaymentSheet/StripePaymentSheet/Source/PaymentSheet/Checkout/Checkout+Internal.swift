@@ -25,8 +25,8 @@ extension Checkout {
     /// Runs `body` as a tracked session update, serialized behind any in-flight ops.
     ///
     /// Operations execute in strict FIFO order: each task waits for the previous
-    /// task before running its body. While the queue is non-empty, ``state`` is
-    /// `.loading`; once the queue drains it returns to `.loaded`.
+    /// task before running its body. While the queue is non-empty, ``isLoading``
+    /// is `true`; once the queue drains it returns to `false.`
     internal func enqueueSessionUpdate(
         _ body: @MainActor @escaping () async throws -> Void
     ) async throws {

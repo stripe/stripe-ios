@@ -514,7 +514,7 @@ extension EmbeddedPaymentElement {
         }
 
         if let checkout, !checkout.pendingOperations.isEmpty {
-            let errorMessage = "confirm was called while the Checkout session is still loading. Wait until the Checkout state is .loaded before calling confirm."
+            let errorMessage = "confirm was called while the Checkout session is still loading. Wait until Checkout.isLoading is false."
             let error = PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)
             return (.failed(error: error), nil)
         }
