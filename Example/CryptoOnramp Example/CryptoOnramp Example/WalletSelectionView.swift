@@ -127,9 +127,27 @@ struct WalletSelectionView: View {
         } label: {
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(wallet.network.localizedCapitalized)
-                        .font(.body)
-                        .foregroundColor(.primary)
+                    HStack(spacing: 8) {
+                        Text(wallet.network.localizedCapitalized)
+                            .font(.body)
+                            .foregroundColor(.primary)
+
+                        if wallet.verifiedOwnership {
+                            Text("Verified")
+                                .font(.caption2.weight(.semibold))
+                                .foregroundStyle(Color.green)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 3)
+                                .background {
+                                    Capsule()
+                                        .fill(Color.green.opacity(0.14))
+                                        .overlay {
+                                            Capsule()
+                                                .stroke(Color.green.opacity(0.42), lineWidth: 1)
+                                        }
+                                }
+                        }
+                    }
 
                     Text(wallet.walletAddress)
                         .font(.caption2.monospaced())
