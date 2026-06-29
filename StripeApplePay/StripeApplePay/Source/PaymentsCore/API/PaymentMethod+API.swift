@@ -37,7 +37,7 @@ extension StripeAPI.PaymentMethod {
     @_spi(STP) public static func create(
         apiClient: STPAPIClient = .shared,
         payment: PKPayment,
-        additionalBillingDetails: StripeAPI.BillingDetails? = nil,
+        fallbackBillingDetails: StripeAPI.BillingDetails? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata?,
         completion: @escaping PaymentMethodCompletionBlock
     ) {
@@ -53,7 +53,7 @@ extension StripeAPI.PaymentMethod {
             var cardParams = StripeAPI.PaymentMethodParams.Card()
             cardParams.token = token.id
             var billingDetails = StripeAPI.BillingDetails(from: payment) ?? StripeAPI.BillingDetails()
-            if let additional = additionalBillingDetails {
+            if let additional = fallbackBillingDetails {
                 billingDetails.email = billingDetails.email ?? additional.email
                 billingDetails.name = billingDetails.name ?? additional.name
                 billingDetails.phone = billingDetails.phone ?? additional.phone

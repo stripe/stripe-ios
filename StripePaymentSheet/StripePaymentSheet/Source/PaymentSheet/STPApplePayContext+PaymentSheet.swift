@@ -340,7 +340,7 @@ extension STPApplePayContext {
             applePayContext.returnUrl = configuration.returnURL
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
             if case .checkout(let checkout) = intent, let email = checkout.stpSession.email {
-                applePayContext.additionalBillingDetails = StripeAPI.BillingDetails(email: email)
+                applePayContext.fallbackBillingDetails = StripeAPI.BillingDetails(email: email)
             }
             return applePayContext
         } else {
