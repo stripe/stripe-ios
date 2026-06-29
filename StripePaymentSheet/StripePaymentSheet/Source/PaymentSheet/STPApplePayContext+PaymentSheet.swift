@@ -339,6 +339,9 @@ extension STPApplePayContext {
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
+            if case .checkout(let checkout) = intent, let email = checkout.stpSession.email {
+                applePayContext.additionalBillingDetails = StripeAPI.BillingDetails(email: email)
+            }
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes

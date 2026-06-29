@@ -5,7 +5,7 @@
 //  Created by Yuki Tokuhiro on 8/2/23.
 //
 
-@testable import StripeApplePay
+@testable @_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @testable @_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
@@ -490,6 +490,25 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     // MARK: - CheckoutSession Line Items Tests
 
+    private func makeApplePayContext(for intent: Intent, file: StaticString = #filePath, line: UInt = #line) -> STPApplePayContext {
+        let elementsSession = STPElementsSession._testValue()
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
+            intent: intent,
+            elementsSession: elementsSession
+        )
+        guard let context = STPApplePayContext.create(
+            intent: intent,
+            elementsSession: elementsSession,
+            configuration: configuration,
+            clientAttributionMetadata: clientAttributionMetadata,
+            completion: { _, _ in }
+        ) else {
+            XCTFail("Failed to create Apple Pay context", file: file, line: line)
+            fatalError("Unreachable")
+        }
+        return context
+    }
+
     private func makeMerchantConfiguration() -> PaymentSheet.Configuration {
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
         config.merchantDisplayName = "Acme"
@@ -714,6 +733,26 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         let intent = Intent._testValue()
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
         XCTAssertNil(sut.billingContact)
+    }
+
+    // MARK: - Checkout session billing details
+
+    func testCreate_CheckoutSessionForwardsEmailToBillingDetails() {
+        let intent = Intent._testCheckoutSession(mode: .payment, amount: 2345, currency: "USD", email: "guest@example.com")
+        let applePayContext = makeApplePayContext(for: intent)
+        XCTAssertEqual(applePayContext.additionalBillingDetails?.email, "guest@example.com")
+    }
+
+    func testCreate_CheckoutSessionWithNoEmail_additionalBillingDetailsNil() {
+        let intent = Intent._testCheckoutSession(mode: .payment, amount: 2345, currency: "USD")
+        let applePayContext = makeApplePayContext(for: intent)
+        XCTAssertNil(applePayContext.additionalBillingDetails)
+    }
+
+    func testCreate_paymentIntent_doesNotSetAdditionalBillingDetails() {
+        let intent = Intent._testValue()
+        let applePayContext = makeApplePayContext(for: intent)
+        XCTAssertNil(applePayContext.additionalBillingDetails)
     }
 
     func testCreatePaymentRequest_CheckoutSession_MerchantPaymentSummaryItemsTakePrecedence() {
