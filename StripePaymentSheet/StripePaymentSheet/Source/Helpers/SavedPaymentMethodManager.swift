@@ -42,8 +42,8 @@ final class SavedPaymentMethodManager {
                 with updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         switch intent {
         case .checkout(let checkout):
-            let billing = checkoutBillingDetails(from: updateParams.billingDetails)
-            let expiry = checkoutExpiryDetails(from: updateParams.card)
+            let billing = Checkout.PaymentMethodBillingDetails(updateParams.billingDetails)
+            let expiry = Checkout.PaymentMethodExpiryDetails(updateParams.card)
             guard billing != nil || expiry != nil else {
                 throw PaymentSheetError.unknown(debugDescription: "Payment method update requires at least billing details or expiry details.")
             }
@@ -68,37 +68,6 @@ final class SavedPaymentMethodManager {
             updatedPaymentMethod.updateLocalFields(from: paymentMethod)
             return updatedPaymentMethod
         }
-    }
-
-    private func checkoutBillingDetails(from billing: STPPaymentMethodBillingDetails?) -> CheckoutPaymentMethodBillingDetails? {
-        guard let billing else { return nil }
-        let address: CheckoutPaymentMethodBillingAddress? = {
-            guard let addr = billing.address else { return nil }
-            return CheckoutPaymentMethodBillingAddress(
-                line1: addr.line1,
-                line2: addr.line2,
-                city: addr.city,
-                state: addr.state,
-                postalCode: addr.postalCode,
-                country: addr.country
-            )
-        }()
-        return CheckoutPaymentMethodBillingDetails(
-            name: billing.name,
-            email: billing.email,
-            phone: billing.phone,
-            address: address
-        )
-    }
-
-    private func checkoutExpiryDetails(from card: STPPaymentMethodCardParams?) -> CheckoutPaymentMethodExpiryDetails? {
-        guard let card,
-              let month = card.expMonth?.intValue,
-              let year = card.expYear?.intValue else {
-            return nil
-        }
-        let fullYear = year < 100 ? year + 2000 : year
-        return CheckoutPaymentMethodExpiryDetails(expMonth: month, expYear: fullYear)
     }
 
     func detach(paymentMethod: STPPaymentMethod) {
