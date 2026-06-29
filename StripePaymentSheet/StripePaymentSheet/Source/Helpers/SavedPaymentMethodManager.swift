@@ -40,15 +40,62 @@ final class SavedPaymentMethodManager {
 
     func update(paymentMethod: STPPaymentMethod,
                 with updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
-        guard let ephemeralKey else {
-            throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key while updating a payment method.")
+        switch intent {
+        case .checkout(let checkout):
+            let billing = checkoutBillingDetails(from: updateParams.billingDetails)
+            let expiry = checkoutExpiryDetails(from: updateParams.card)
+            guard billing != nil || expiry != nil else {
+                throw PaymentSheetError.unknown(debugDescription: "Payment method update requires at least billing details or expiry details.")
+            }
+            // The response doesn't include updated payment methods, so apply locally
+            _ = try await configuration.apiClient.updatePaymentMethod(
+                paymentMethod.stripeId,
+                inCheckoutSession: checkout.stpSession.id,
+                billingDetails: billing,
+                expiryDetails: expiry
+            )
+            paymentMethod.applyUpdate(updateParams)
+            return paymentMethod
+        case .paymentIntent, .setupIntent, .deferredIntent:
+            guard let ephemeralKey else {
+                throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key while updating a payment method.")
+            }
+            let updatedPaymentMethod = try await configuration.apiClient.updatePaymentMethod(with: paymentMethod.stripeId,
+                                                                                             paymentMethodUpdateParams: updateParams,
+                                                                                             ephemeralKeySecret: ephemeralKey)
+            updatedPaymentMethod.updateLocalFields(from: paymentMethod)
+            return updatedPaymentMethod
         }
+    }
 
-        let updatedPaymentMethod = try await configuration.apiClient.updatePaymentMethod(with: paymentMethod.stripeId,
-                                                                                         paymentMethodUpdateParams: updateParams,
-                                                                                         ephemeralKeySecret: ephemeralKey)
-        updatedPaymentMethod.updateLocalFields(from: paymentMethod)
-        return updatedPaymentMethod
+    private func checkoutBillingDetails(from billing: STPPaymentMethodBillingDetails?) -> CheckoutPaymentMethodBillingDetails? {
+        guard let billing else { return nil }
+        let address: CheckoutPaymentMethodBillingAddress? = {
+            guard let addr = billing.address else { return nil }
+            return CheckoutPaymentMethodBillingAddress(
+                line1: addr.line1,
+                line2: addr.line2,
+                city: addr.city,
+                state: addr.state,
+                postalCode: addr.postalCode,
+                country: addr.country
+            )
+        }()
+        return CheckoutPaymentMethodBillingDetails(
+            name: billing.name,
+            email: billing.email,
+            phone: billing.phone,
+            address: address
+        )
+    }
+
+    private func checkoutExpiryDetails(from card: STPPaymentMethodCardParams?) -> CheckoutPaymentMethodExpiryDetails? {
+        guard let card,
+              let month = card.expMonth?.intValue,
+              let year = card.expYear?.intValue else {
+            return nil
+        }
+        return CheckoutPaymentMethodExpiryDetails(expMonth: month, expYear: year)
     }
 
     func detach(paymentMethod: STPPaymentMethod) {
