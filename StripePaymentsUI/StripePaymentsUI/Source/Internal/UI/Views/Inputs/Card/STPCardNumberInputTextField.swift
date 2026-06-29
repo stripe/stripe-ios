@@ -99,7 +99,8 @@ import UIKit
     ) {
         assert(validator.isKind(of: STPCardNumberInputTextFieldValidator.self))
         super.init(formatter: formatter, validator: validator)
-        keyboardType = .asciiCapableNumberPad
+        keyboardType = UIDevice.current.shouldAvoidNumericKeyboard
+            ? .numbersAndPunctuation : .asciiCapableNumberPad
         textContentType = .creditCardNumber
         addAccessoryViews([brandImageView])
         updateRightView()
