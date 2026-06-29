@@ -70,6 +70,9 @@ import Foundation
     /// A flag that indicates that this instance was created as a best-effort
     let isBackupInstance: Bool
 
+    // Link doesn't support automatic tax from billing address
+    var disableLinkForAutomaticTaxBilling: Bool = false
+
     public let allResponseFields: [AnyHashable: Any]
 
     internal init(
