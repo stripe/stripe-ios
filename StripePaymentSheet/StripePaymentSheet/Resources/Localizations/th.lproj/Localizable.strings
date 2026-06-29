@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "เปลี่ยนแปลงรายละเอียดบัญชีธนาคารไม่ได้";
 
-"Buy now or pay later with  <img/>" = "ซื้อตอนนี้หรือจ่ายทีหลังด้วย <img/>";
+"Buy Now, Pay Later with  <img/>" = "ซื้อตอนนี้ จ่ายทีหลังด้วย <img/>";
 
-"Buy now or pay later with Afterpay" = "ซื้อตอนนี้หรือจ่ายทีหลังด้วย Afterpay";
+"Buy Now, Pay Later with Afterpay" = "ซื้อตอนนี้ จ่ายทีหลังด้วย Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "ซื้อตอนนี้หรือจ่ายทีหลังด้วย Cash App Afterpay";
+"Buy Now, Pay Later with Cash App Afterpay" = "ซื้อตอนนี้ จ่ายทีหลังด้วย Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "ซื้อตอนนี้หรือจ่ายทีหลังด้วย Clearpay";
+"Buy Now, Pay Later with Clearpay" = "ซื้อตอนนี้ จ่ายทีหลังด้วย Clearpay";
 
 "Buy now or pay later with Klarna" = "ซื้อตอนนี้หรือจ่ายทีหลังด้วย Klarna";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "รับคืน %@ เมื่อชำระครั้งแรกผ่านธนาคาร <terms>ดูข้อกำหนด</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "รับคืน %@ เมื่อชำระผ่านธนาคาร <terms>ดูข้อกำหนด</terms>";
+
+"Hide details" = "ซ่อนรายละเอียด";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "ฉันเข้าใจว่า Stripe จะดำเนินการหักบัญชีอัตโนมัติในนามของ %@ และยืนยันว่าฉันเป็นเจ้าของบัญชีและเป็นบุคคลเดียวเท่านั้นที่อนุญาตให้หักเงินจากบัญชีนี้ได้";
 
@@ -307,6 +309,8 @@
 "Shipping" = "การจัดส่ง";
 
 "Shipping to %@ is not supported." = "ระบบไม่รองรับการจัดส่งไปยัง%@";
+
+"Show details" = "แสดงรายละเอียด";
 
 "Show menu" = "แสดงเมนู";
 
