@@ -166,18 +166,23 @@ final class CheckoutPendingOperationsTests: XCTestCase {
     // MARK: - Loading & Emission Tests
 
     func testLoadingStatePersistsAcrossConsecutiveQueuedOperations() async throws {
+        // Set up a checkout instance with an open session and a delegate to track callbacks
         let checkout = await makeCheckoutWithOpenSession()
         let delegate = CheckoutPendingOperationsTestDelegate()
         checkout.delegate = delegate
 
+        // Subscribe to session and loading state changes to verify emission order/count.
+        // dropFirst() skips the initial value so we only capture changes.
         var sessionEmissions: [Checkout.Session] = []
         let sessionSub = checkout.$session.dropFirst().sink { sessionEmissions.append($0) }
         var loadingEmissions: [Bool] = []
         let loadingSub = checkout.$isLoading.dropFirst().sink { loadingEmissions.append($0) }
 
+        // Gates let us pause each operation mid-flight so we can assert state at precise moments
         let firstGate = CheckoutPendingOperationsTestGate()
         let secondGate = CheckoutPendingOperationsTestGate()
 
+        // Create two distinct sessions (different currencies) so we can tell them apart
         var firstJSON = CheckoutTestHelpers.makeOpenSessionJSON()
         firstJSON["currency"] = "eur"
         let firstSession = STPCheckoutSession.decodedObject(fromAPIResponse: firstJSON)!
@@ -186,7 +191,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         secondJSON["currency"] = "gbp"
         let secondSession = STPCheckoutSession.decodedObject(fromAPIResponse: secondJSON)!
 
-        // Enqueue first operation
+        // Enqueue first operation — it will block on firstGate until we explicitly open it
         let firstTask = Task { @MainActor in
             try await checkout.enqueueSessionUpdate {
                 await firstGate.wait()
@@ -194,9 +199,10 @@ final class CheckoutPendingOperationsTests: XCTestCase {
             }
         }
 
+        // Wait until the first operation is queued and blocked at its gate
         try await waitUntil { checkout.pendingOperations.count == 1 && firstGate.isWaiting }
 
-        // Enqueue second operation before first finishes
+        // Enqueue second operation while first is still in progress — tests queue behavior
         let secondTask = Task { @MainActor in
             try await checkout.enqueueSessionUpdate {
                 await secondGate.wait()
@@ -204,9 +210,10 @@ final class CheckoutPendingOperationsTests: XCTestCase {
             }
         }
 
+        // Both operations are now queued
         try await waitUntil { checkout.pendingOperations.count == 2 }
 
-        // While first is in progress: isLoading=true emitted once, no session or finishLoading yet
+        // --- Assert: while first op is blocked, loading began exactly once and no session has been committed ---
         XCTAssertTrue(checkout.isLoading)
         XCTAssertEqual(loadingEmissions, [true])
         XCTAssertEqual(sessionEmissions.count, 0)
@@ -214,11 +221,12 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         XCTAssertEqual(delegate.finishLoadingCallCount, 0)
         XCTAssertEqual(delegate.updateSessionCallCount, 0)
 
-        // Complete first operation, wait for second to start
+        // Let the first operation complete, then wait for the second to reach its gate
         firstGate.open()
         try await waitUntil { secondGate.isWaiting }
 
-        // While second is in progress: isLoading still true, session emitted once from first op
+        // --- Assert: between the two ops, loading is STILL true (no false blip) and first session committed ---
+        // This is the key behavior: isLoading doesn't toggle off between queued operations
         XCTAssertTrue(checkout.isLoading)
         XCTAssertEqual(loadingEmissions, [true])
         XCTAssertEqual(sessionEmissions.count, 1)
@@ -227,12 +235,13 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         XCTAssertEqual(delegate.finishLoadingCallCount, 0)
         XCTAssertEqual(delegate.updateSessionCallCount, 1)
 
-        // Complete second operation
+        // Let the second operation complete and await both tasks to ensure they finish
         secondGate.open()
         try await firstTask.value
         try await secondTask.value
 
-        // After both complete: isLoading=false, both sessions emitted
+        // --- Assert: after all operations complete, loading ends with a single false emission ---
+        // The loading state transitioned true→false exactly once across both operations
         XCTAssertFalse(checkout.isLoading)
         XCTAssertEqual(loadingEmissions, [true, false])
         XCTAssertEqual(sessionEmissions.count, 2)
