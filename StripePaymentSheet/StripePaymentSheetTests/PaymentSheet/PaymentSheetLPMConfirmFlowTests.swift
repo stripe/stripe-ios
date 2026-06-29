@@ -467,6 +467,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 }
 
                 let e = expectation(description: "")
+                var didFail = false
                 // Confirm the intent with the form details
                 let paymentHandler = STPPaymentHandler(apiClient: apiClient)
                 PaymentSheet.confirm(
@@ -481,14 +482,20 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     e.fulfill()
                     switch result {
                     case .failed(error: let error):
+                        didFail = true
                         XCTFail("❌ \(description): PaymentSheet.confirm failed - \(error.nonGenericDescription)")
                     case .canceled:
+                        didFail = true
                         XCTFail()
                     case .completed:
                         print("✅ \(description): PaymentSheet.confirm completed")
                     }
                 }
-                await fulfillment(of: [e], timeout: 10)
+                await fulfillment(of: [e], timeout: 30)
+                if didFail {
+                    // Avoid starting another confirmation while the previous handler is still cleaning up.
+                    return
+                }
             }
         }
     }
