@@ -217,8 +217,8 @@ public class PaymentSheet {
     /// Deletes all persisted authentication state associated with a customer.
     ///
     /// You must call this method when the user logs out from your app.
-    /// This will ensure that any persisted authentication state in PaymentSheet,
-    /// such as authentication cookies, is also cleared during logout.
+    /// This will ensure that any persisted authentication state in PaymentSheet
+    /// is also cleared during logout.
     public static func resetCustomer() {
         UserDefaults.standard.clearLinkDefaults()
     }
