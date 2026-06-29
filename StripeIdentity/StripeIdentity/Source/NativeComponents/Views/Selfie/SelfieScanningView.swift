@@ -25,7 +25,10 @@ final class SelfieScanningView: UIView {
         static let preferredPreviewHeightToWidthRatio: CGFloat = 4 / 3
         static let troubleLinkTopPadding: CGFloat = 12
         static let captureGuideShadowFadeInDuration: TimeInterval = 0.6
-        static let livePreviewBlurAnimationDuration: TimeInterval = 0.3
+        static let livePreviewBlurFadeInDuration: TimeInterval = 0.3
+        static let livePreviewBlurFadeOutDuration: TimeInterval = 0.6
+        static let statusLabelFadeInDuration: TimeInterval = 0.18
+        static let statusLabelFadeOutDuration: TimeInterval = 0.6
         static var troubleLinkFont: UIFont {
             IdentityUI.preferredFont(forTextStyle: .body).withSize(12)
         }
@@ -286,13 +289,14 @@ final class SelfieScanningView: UIView {
     }()
 
     private let capturedImageBlurView: UIVisualEffectView = {
-        let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
         blurView.alpha = 0
         blurView.isHidden = true
         return blurView
     }()
 
     private var isPreviewBlurVisible = false
+    private var isStatusLabelVisible = false
 
     private let captureTickMarksView: CaptureTickMarksView = {
         let view = CaptureTickMarksView()
@@ -454,7 +458,6 @@ final class SelfieScanningView: UIView {
         capturedImageView.isHidden = true
         capturedImageView.image = nil
         captureTickMarksView.isHidden = true
-        statusLabelContainerView.isHidden = true
         statusActivityIndicatorView.stopAnimating()
         previewContainerView.isHidden = true
         havingTroubleLabel.isHidden = true
@@ -463,6 +466,7 @@ final class SelfieScanningView: UIView {
         switch viewModel.state {
         case .blank:
             setPreviewBlurVisible(false, animated: false)
+            setStatusLabelVisible(false, animated: false)
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
             retakeSelfieStack.isHidden = true
@@ -504,11 +508,14 @@ final class SelfieScanningView: UIView {
             )
             captureTickMarksView.setCaptureGuideHighlight(captureGuideHighlight, animated: true)
             if let statusText {
-                configureStatusLabel(statusText)
+                configureStatusLabel(statusText, animated: true)
+            } else {
+                setStatusLabelVisible(false, animated: true)
             }
 
         case .scanned(let images, let consentText, let consentHandler, let openURLHandler, let retakeSelfieHandler):
             setPreviewBlurVisible(false, animated: false)
+            setStatusLabelVisible(false, animated: false)
             captureTickMarksView.setShowsCenteredShadow(false, animated: false)
             scannedImageScrollView.isHidden = false
             rebuildImageHStack(with: images)
@@ -548,7 +555,7 @@ final class SelfieScanningView: UIView {
             capturedImageView.image = image
             capturedImageView.isHidden = false
             setPreviewBlurVisible(true, animated: false)
-            configureStatusLabel(statusText)
+            configureStatusLabel(statusText, animated: false)
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
         }
@@ -583,8 +590,17 @@ final class SelfieScanningView: UIView {
 
     private func setPreviewBlurVisible(_ isVisible: Bool, animated: Bool) {
         guard isVisible != isPreviewBlurVisible else {
+            guard !animated else {
+                return
+            }
+            capturedImageBlurView.layer.removeAllAnimations()
+            capturedImageBlurView.alpha = isVisible ? 1 : 0
+            capturedImageBlurView.isHidden = !isVisible
             return
         }
+        let duration = isVisible
+            ? Styling.livePreviewBlurFadeInDuration
+            : Styling.livePreviewBlurFadeOutDuration
 
         isPreviewBlurVisible = isVisible
         if isVisible {
@@ -598,7 +614,7 @@ final class SelfieScanningView: UIView {
         }
 
         UIView.animate(
-            withDuration: Styling.livePreviewBlurAnimationDuration,
+            withDuration: duration,
             delay: 0,
             options: [.allowUserInteraction, .beginFromCurrentState, .curveEaseInOut],
             animations: {
@@ -609,6 +625,47 @@ final class SelfieScanningView: UIView {
                     return
                 }
                 self.capturedImageBlurView.isHidden = true
+            }
+        )
+    }
+
+    private func setStatusLabelVisible(_ isVisible: Bool, animated: Bool) {
+        guard isVisible != isStatusLabelVisible else {
+            guard !animated else {
+                return
+            }
+            statusLabelContainerView.layer.removeAllAnimations()
+            statusLabelContainerView.alpha = isVisible ? 1 : 0
+            statusLabelContainerView.isHidden = !isVisible
+            return
+        }
+
+        isStatusLabelVisible = isVisible
+        if isVisible {
+            statusLabelContainerView.isHidden = false
+        }
+
+        guard animated, window != nil else {
+            statusLabelContainerView.alpha = isVisible ? 1 : 0
+            statusLabelContainerView.isHidden = !isVisible
+            return
+        }
+
+        let duration = isVisible
+            ? Styling.statusLabelFadeInDuration
+            : Styling.statusLabelFadeOutDuration
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            options: [.allowUserInteraction, .beginFromCurrentState, .curveEaseInOut],
+            animations: {
+                self.statusLabelContainerView.alpha = isVisible ? 1 : 0
+            },
+            completion: { [weak self] _ in
+                guard let self = self, !self.isStatusLabelVisible else {
+                    return
+                }
+                self.statusLabelContainerView.isHidden = true
             }
         )
     }
@@ -739,7 +796,7 @@ extension SelfieScanningView {
         ])
     }
 
-    fileprivate func configureStatusLabel(_ statusText: ViewModel.StatusText) {
+    fileprivate func configureStatusLabel(_ statusText: ViewModel.StatusText, animated: Bool) {
         statusLabel.text = statusText.text
         statusLabelBottomConstraint.isActive = !statusText.isCenteredInViewfinder
         statusLabelCenterYConstraint.isActive = statusText.isCenteredInViewfinder
@@ -749,7 +806,7 @@ extension SelfieScanningView {
         } else {
             statusActivityIndicatorView.stopAnimating()
         }
-        statusLabelContainerView.isHidden = false
+        setStatusLabelVisible(true, animated: animated)
     }
 
     fileprivate func configureHavingTroubleLabel() {
