@@ -19,8 +19,8 @@ struct FacePose: Equatable {
     enum Thresholds {
         static let pitchUpMin: Float = 10
         static let pitchDownMax: Float = -7
-        static let yawRightMin: Float = 10
-        static let yawLeftMax: Float = -10
+        static let yawRightMin: Float = 15
+        static let yawLeftMax: Float = -15
     }
 
     let yaw: Float
