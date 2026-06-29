@@ -7,7 +7,7 @@
 
 import Contacts
 import PassKit
-@testable import StripeApplePay
+@_spi(STP) @testable import StripeApplePay
 @_spi(STP) import StripeCore
 import XCTest
 
