@@ -163,8 +163,31 @@ enum CurrencySelectorUtilities {
 
     // MARK: - Flag emoji
 
+    // Most currency codes already start with the country code (USD→US, GBP→GB) per ISO 4217.
+    // ANG is the one exception among Stripe-supported currencies — it maps to NL, not the
+    // defunct "AN" (Netherlands Antilles). X-prefixed codes (XAF, XOF, etc.) are multi-country
+    // so we just skip the flag entirely.
+    // See also: stripe-js CURRENCY_TO_FLAG_CODES in src/lib/inner/components/FlagIcon/
+
+    private static let regionCodeOverrides: [String: String] = [
+        "ang": "NL",
+    ]
+
+    private static let unmappedCurrencies: Set<String> = [
+        "xaf", "xcd", "xof", "xpf",
+    ]
+
+    /// Region code for the currency, or nil for multi-country currencies (XAF, XOF, etc.)
+    static func regionCode(for currency: CurrencyCode) -> String? {
+        if unmappedCurrencies.contains(currency.apiValue) { return nil }
+        if let override = regionCodeOverrides[currency.apiValue] { return override }
+        return String(currency.displayValue.prefix(2))
+    }
+
     static func flagEmoji(for currency: CurrencyCode) -> String {
-        let regionCode = String(currency.displayValue.prefix(2))
+        guard let regionCode = regionCode(for: currency) else {
+            return ""
+        }
         return String.regionFlagEmoji(for: regionCode) ?? ""
     }
 }
