@@ -411,6 +411,12 @@ extension STPApplePayContext {
             paymentRequest.merchantCapabilities = merchantCapabilities
         }
 
+        // Pre-populate billingContact from the CheckoutSession's billing address if available
+        if case .checkout(let checkout) = intent,
+           let billingAddress = checkout.stpSession.billingAddress {
+            paymentRequest.billingContact = Self.makeBillingContact(from: billingAddress)
+        }
+
         return paymentRequest
     }
 }
