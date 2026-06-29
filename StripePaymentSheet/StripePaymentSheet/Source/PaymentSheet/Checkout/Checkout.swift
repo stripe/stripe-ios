@@ -257,6 +257,10 @@ public final class Checkout: ObservableObject {
         address: Address
     ) async throws {
         guard let currentSession = stpSession else { return }
+        if let allowedCountries = currentSession.allowedShippingCountries,
+           !allowedCountries.contains(address.country) {
+            throw CheckoutError.invalidShippingCountry(countryCode: address.country)
+        }
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
         guard currentSession.shippingAddress != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "shipping") {
