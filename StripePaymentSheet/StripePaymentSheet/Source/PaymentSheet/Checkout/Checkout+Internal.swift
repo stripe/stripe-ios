@@ -46,6 +46,30 @@ extension Checkout {
         try await operation.value
     }
 
+    /// Non-throwing variant of ``enqueueSessionUpdate(_:)-throws``.
+    ///
+    /// Use this when the enqueued work cannot fail. The operation is still
+    /// serialized behind any in-flight ops in the same FIFO order.
+    internal func enqueueSessionUpdate(
+        _ body: @MainActor @escaping () async -> Void
+    ) async {
+        let predecessor = pendingOperations.last
+        let operation = Task<Void, Error> { @MainActor in
+            if let predecessor { _ = try? await predecessor.value }
+            await body()
+        }
+
+        pendingOperations.append(operation)
+
+        defer {
+            pendingOperations.removeAll { $0 == operation }
+        }
+
+        // Operation cannot actually throw, but we still need to use `try?`
+        //  because of `pendingOperations`'s type.
+        _ = try? await operation.value
+    }
+
     /// Enqueues a serialized session update.
     ///
     /// - If `update` is non-nil, the side effect (if any) is applied first, then the
