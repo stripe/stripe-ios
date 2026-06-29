@@ -83,35 +83,6 @@ extension STPPaymentMethod {
         isLinkOrigin = original.isLinkOrigin
     }
 
-    /// Applies update params locally (used when the API doesn't return the updated PM).
-    func applyUpdate(_ updateParams: STPPaymentMethodUpdateParams) {
-        if let newBilling = updateParams.billingDetails {
-            var billing = billingDetails ?? STPPaymentMethodBillingDetails()
-            if let name = newBilling.name { billing.name = name }
-            if let email = newBilling.email { billing.email = email }
-            if let phone = newBilling.phone { billing.phone = phone }
-            if let address = newBilling.address {
-                var addr = billing.address ?? STPPaymentMethodAddress()
-                if let line1 = address.line1 { addr.line1 = line1 }
-                if let line2 = address.line2 { addr.line2 = line2 }
-                if let city = address.city { addr.city = city }
-                if let state = address.state { addr.state = state }
-                if let postalCode = address.postalCode { addr.postalCode = postalCode }
-                if let country = address.country { addr.country = country }
-                billing.address = addr
-            }
-            setValue(billing, forKey: "billingDetails")
-        }
-        if let cardParams = updateParams.card {
-            if let expMonth = cardParams.expMonth {
-                card?.setValue(expMonth.intValue, forKey: "expMonth")
-            }
-            if let expYear = cardParams.expYear {
-                card?.setValue(expYear.intValue, forKey: "expYear")
-            }
-        }
-    }
-
     func hasUpdatedCardParams(_ updatedParams: STPPaymentMethodCardParams?) -> Bool {
         guard let currCard = self.card,
               let updatedParams = updatedParams else {

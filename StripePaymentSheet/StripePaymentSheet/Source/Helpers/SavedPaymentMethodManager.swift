@@ -47,15 +47,17 @@ final class SavedPaymentMethodManager {
             guard billing != nil || expiry != nil else {
                 throw PaymentSheetError.unknown(debugDescription: "Payment method update requires at least billing details or expiry details.")
             }
-            // The response doesn't include updated payment methods, so apply locally
-            _ = try await configuration.apiClient.updatePaymentMethod(
+            let updatedSession = try await configuration.apiClient.updatePaymentMethod(
                 paymentMethod.stripeId,
                 inCheckoutSession: checkout.stpSession.id,
                 billingDetails: billing,
                 expiryDetails: expiry
             )
-            paymentMethod.applyUpdate(updateParams)
-            return paymentMethod
+            guard let updatedPM = updatedSession.customer?.paymentMethods.first(where: { $0.stripeId == paymentMethod.stripeId }) else {
+                throw PaymentSheetError.unknown(debugDescription: "Server response missing updated payment method.")
+            }
+            updatedPM.updateLocalFields(from: paymentMethod)
+            return updatedPM
         case .paymentIntent, .setupIntent, .deferredIntent:
             guard let ephemeralKey else {
                 throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key while updating a payment method.")
@@ -95,7 +97,8 @@ final class SavedPaymentMethodManager {
               let year = card.expYear?.intValue else {
             return nil
         }
-        return CheckoutPaymentMethodExpiryDetails(expMonth: month, expYear: year)
+        let fullYear = year < 100 ? year + 2000 : year
+        return CheckoutPaymentMethodExpiryDetails(expMonth: month, expYear: fullYear)
     }
 
     func detach(paymentMethod: STPPaymentMethod) {
