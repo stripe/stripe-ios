@@ -82,7 +82,17 @@ struct WalletSelectionView: View {
                 if !wallets.isEmpty {
                     VStack(spacing: 8) {
                         ForEach(wallets) { wallet in
-                            makeWalletButton(for: wallet)
+                            WalletSelectionRowView(
+                                wallet: wallet,
+                                isSelected: selectedWallet == wallet,
+                                isLoading: isLoading.wrappedValue,
+                                onSelect: {
+                                    selectedWallet = wallet
+                                },
+                                onVerifyWalletOwnership: {
+                                    startWalletOwnershipVerification(for: wallet)
+                                }
+                            )
                         }
                     }
 
@@ -135,95 +145,6 @@ struct WalletSelectionView: View {
     }
 
     // MARK: - WalletSelectionView
-
-    @ViewBuilder
-    private func makeWalletButton(for wallet: Wallet) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Button {
-                selectedWallet = wallet
-            } label: {
-                makeWalletSelectionContent(for: wallet)
-            }
-            .buttonStyle(.plain)
-
-            if shouldShowVerifyWalletButton(for: wallet) {
-                Divider()
-
-                Button {
-                    startWalletOwnershipVerification(for: wallet)
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "checkmark.shield")
-
-                        Text("Verify Wallet Ownership")
-                            .font(.subheadline.weight(.semibold))
-
-                        Spacer()
-                    }
-                    .foregroundStyle(.tint)
-                }
-                .buttonStyle(.plain)
-                .disabled(isLoading.wrappedValue)
-            }
-        }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(selectedWallet == wallet ? Color.accentColor.opacity(0.12) : Color(.systemGroupedBackground))
-        )
-    }
-
-    @ViewBuilder
-    private func makeWalletSelectionContent(for wallet: Wallet) -> some View {
-        HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 8) {
-                    Text(wallet.network.localizedCapitalized)
-                        .font(.body)
-                        .foregroundColor(.primary)
-
-                    if isDisplayedAsVerified(wallet) {
-                        Text("Verified")
-                            .font(.caption2.weight(.semibold))
-                            .foregroundStyle(Color.green)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background {
-                                Capsule()
-                                    .fill(Color.green.opacity(0.14))
-                                    .overlay {
-                                        Capsule()
-                                            .stroke(Color.green.opacity(0.42), lineWidth: 1)
-                                    }
-                            }
-                    }
-                }
-
-                Text(wallet.walletAddress)
-                    .font(.caption2.monospaced())
-                    .foregroundColor(.secondary)
-            }
-
-            Spacer()
-
-            if selectedWallet == wallet {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundStyle(.tint)
-            } else {
-                Image(systemName: "circle")
-                    .foregroundColor(.secondary)
-            }
-        }
-    }
-
-    private func isDisplayedAsVerified(_ wallet: Wallet) -> Bool {
-        // TODO: Remove this Solana override once the demo backend returns `verified_ownership`.
-        wallet.verifiedOwnership || wallet.network == "solana"
-    }
-
-    private func shouldShowVerifyWalletButton(for wallet: Wallet) -> Bool {
-        !isDisplayedAsVerified(wallet)
-    }
 
     private func startWalletOwnershipVerification(for wallet: Wallet) {
         guard let context = WalletOwnershipVerificationContext(wallet: wallet) else {
