@@ -37,11 +37,15 @@ import Foundation
 @_spi(STP) public class Future<Value> {
     public typealias Result = Swift.Result<Value, Error>
 
+    private var _result: Result?
     fileprivate var result: Result? {
-        // Observe whenever a result is assigned, and report it:
-        didSet {
+        get {
+            return propertyAccessQueue.sync { _result }
+        }
+        set {
             propertyAccessQueue.async { [self] in
-                result.map(report)
+                _result = newValue
+                _result.map(report)
             }
         }
     }
@@ -70,10 +74,9 @@ import Foundation
     }
 
     private func report(result: Result) {
-        propertyAccessQueue.async { [self] in
-            callbacks.forEach { $0(result) }
-            callbacks = []
-        }
+        // This method is always called from within propertyAccessQueue context
+        callbacks.forEach { $0(result) }
+        callbacks = []
     }
 
     public func chained<T>(
