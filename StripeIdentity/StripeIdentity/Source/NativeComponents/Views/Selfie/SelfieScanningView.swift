@@ -878,11 +878,11 @@ extension SelfieScanningView: CheckboxButtonDelegate {
 
 private final class CaptureTickMarksView: UIView {
     struct Styling {
-        static let tickCount = 80
-        static let tickLength: CGFloat = 8.25
-        static let highlightedTickLength: CGFloat = 14.75
-        static let tickWidth: CGFloat = 1.95
-        static let highlightedTickWidth: CGFloat = 2.5
+        static let tickCount = 68
+        static let tickLength: CGFloat = 10.25
+        static let highlightedTickLength: CGFloat = 18.75
+        static let tickWidth: CGFloat = 1.9
+        static let highlightedTickWidth: CGFloat = 3.5
         static let baseTickFadeAnimationDuration: TimeInterval = 1.0
         static let baseTickOppositeSideMinOpacityMultiplier: CGFloat = 0.02
         static let baseTickOppositeSideFadeExponent: CGFloat = 0.25
@@ -893,8 +893,8 @@ private final class CaptureTickMarksView: UIView {
         static let successFadeOutDuration: TimeInterval = 0.34
         static let successCheckmarkSize: CGFloat = 28
         static let successCheckmarkInitialScale: CGFloat = 0.72
-        static let horizontalDiameterToWidthRatio: CGFloat = 0.59
-        static let verticalDiameterToHeightRatio: CGFloat = 0.60
+        static let horizontalDiameterToWidthRatio: CGFloat = 0.57
+        static let verticalDiameterToHeightRatio: CGFloat = 0.57
         static let centerYRatio: CGFloat = 0.5
         static let tickColor = UIColor.white.withAlphaComponent(0.9)
         static let acceptedTickColor = UIColor(
