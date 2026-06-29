@@ -34,9 +34,6 @@ public final class Checkout: ObservableObject {
     /// while a mutation is in flight.
     @Published public internal(set) var isLoading: Bool = false {
         didSet {
-            // Only fire delegate methods when the value actually changes
-            // to prevent duplicate delegate calls / Combine change emissions.
-            guard isLoading != oldValue else { return }
             isLoading ? delegate?.checkoutDidBeginLoading(self) : delegate?.checkoutDidFinishLoading(self)
         }
     }
@@ -75,7 +72,19 @@ public final class Checkout: ObservableObject {
     /// Serial queue of in-flight session updates. Each task waits for the previous task before running.
     var pendingOperations: [Task<Void, Error>] = [] {
         didSet {
-            isLoading = !pendingOperations.isEmpty
+            // If the queue has gone from empty to non-empty, we set
+            //  isLoading to true. We avoid setting it if the queue
+            //  was already non-empty to prevent duplicate delegate calls
+            if !pendingOperations.isEmpty && !isLoading {
+                isLoading = true
+            }
+
+            // If the queue has gone from non-empty to empty, we set
+            //  isLoading to false. There shouldn't be a situation in
+            //  which the isLoading is already false, but we check just in case.
+            if pendingOperations.isEmpty && isLoading {
+                isLoading = false
+            }
         }
     }
 
