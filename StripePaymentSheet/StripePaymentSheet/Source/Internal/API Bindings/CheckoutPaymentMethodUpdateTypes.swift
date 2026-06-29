@@ -36,6 +36,9 @@ extension Checkout {
                     country: addr.country
                 )
             }()
+            guard billing.name != nil || billing.email != nil || billing.phone != nil || address != nil else {
+                return nil
+            }
             self.init(
                 name: billing.name,
                 email: billing.email,
