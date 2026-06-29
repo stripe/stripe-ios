@@ -143,6 +143,7 @@ extension PaymentSheet {
             case .external(_, let billingDetails):
                 return billingDetails
             case .link, .applePay:
+                // Link/Apple Pay billing is handled server-side
                 return nil
             }
         }

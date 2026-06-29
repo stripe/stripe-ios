@@ -55,15 +55,16 @@ extension Checkout {
     ///
     /// - Parameters:
     ///   - update: The API mutation to perform, or nil for a local-only update.
+    ///   - calledFromSheet: When true, skips the sheet-presented check and suppresses the
+    ///     integration delegate callback (used for billing syncs triggered from within the sheet).
     ///   - localMutation: A local state change to apply prior to the API call (or on its own).
     func performUpdate(
         _ update: SessionUpdate? = nil,
-        skipSheetPresentedCheck: Bool = false,
-        notifyIntegrationDelegate: Bool = true,
+        calledFromSheet: Bool = false,
         applying localMutation: (@MainActor @Sendable () -> Void)? = nil
     ) async throws {
         try await enqueueSessionUpdate {
-            if !skipSheetPresentedCheck {
+            if !calledFromSheet {
                 try self.requireSheetNotPresented()
             }
             // Transition to loading before the async work begins so observers show a loading state.
@@ -83,13 +84,16 @@ extension Checkout {
                 }
 
                 localMutation?()
-                try await self.commitSession(updatedSession, notifyIntegrationDelegate: notifyIntegrationDelegate)
+                try await self.commitSession(
+                    updatedSession,
+                    notifyIntegrationDelegate: !calledFromSheet
+                )
             } catch {
                 // Restore loaded state on failure so the UI doesn't stay stuck in loading.
                 self.state = .loaded(self.state.session)
                 // If a prior op skipped the delegate and we're failing before we
                 // get to commitSession ourselves, still notify so the UI updates.
-                if self.isLastPendingOperation && notifyIntegrationDelegate {
+                if self.isLastPendingOperation && !calledFromSheet {
                     try? await self.integrationDelegate?.checkoutDidUpdate(self)
                 }
                 throw CheckoutError.apiError(message: error.nonGenericDescription)

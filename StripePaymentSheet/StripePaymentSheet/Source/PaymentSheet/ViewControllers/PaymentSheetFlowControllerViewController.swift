@@ -503,9 +503,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         Task { @MainActor [weak self] in
             do {
                 try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
-                guard let self else { return }
-                self.isDismissable = true
-                self.view.isUserInteractionEnabled = true
+                self?.isDismissable = true
+                self?.view.isUserInteractionEnabled = true
                 completion()
             } catch {
                 guard let self else { return }

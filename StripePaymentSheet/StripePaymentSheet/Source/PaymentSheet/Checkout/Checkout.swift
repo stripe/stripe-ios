@@ -223,27 +223,29 @@ public final class Checkout: ObservableObject {
         phone: String? = nil,
         address: Address
     ) async throws {
-        try await updateBillingAddress(name: name, phone: phone, address: address, skipSheetPresentedCheck: false)
+        try await updateBillingAddress(name: name, phone: phone, address: address, calledFromSheet: false)
     }
 
     func updateBillingAddress(
         name: String? = nil,
         phone: String? = nil,
         address: Address,
-        skipSheetPresentedCheck: Bool
+        calledFromSheet: Bool
     ) async throws {
         guard let currentSession = stpSession else { return }
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
         guard currentSession.billingAddress != contactAddress else { return }
-        let notifyDelegate = !skipSheetPresentedCheck
         if currentSession.shouldSendTaxRegion(for: "billing") {
-            try await performUpdate(.setTaxRegion(address), skipSheetPresentedCheck: skipSheetPresentedCheck, notifyIntegrationDelegate: notifyDelegate, applying: {
-                self.stpSession?.billingAddress = contactAddress
-            })
+            try await performUpdate(
+                .setTaxRegion(address),
+                calledFromSheet: calledFromSheet,
+                applying: { self.stpSession?.billingAddress = contactAddress }
+            )
         } else {
-            try await performUpdate(skipSheetPresentedCheck: skipSheetPresentedCheck, notifyIntegrationDelegate: notifyDelegate, applying: {
-                self.stpSession?.billingAddress = contactAddress
-            })
+            try await performUpdate(
+                calledFromSheet: calledFromSheet,
+                applying: { self.stpSession?.billingAddress = contactAddress }
+            )
         }
     }
 
