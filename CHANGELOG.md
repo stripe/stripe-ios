@@ -1,7 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
+
+## 26.1.0 2026-06-29
 ### PaymentSheet
 * [Changed] Disables `allowsNumberPadPopover` on text fields to opt-out of the number pad popover for iOS26+
 * [Fixed] Fixes dyld crash with LinkOpeningTextView when integrating via Swift Package Manager

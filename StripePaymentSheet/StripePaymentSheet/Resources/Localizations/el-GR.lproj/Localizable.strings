@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "Δεν είναι δυνατή η αλλαγή των στοιχείων τραπεζικού λογαριασμού.";
 
-"Buy now or pay later with  <img/>" = "Αγορά τώρα ή πληρωμή αργότερα με <img/>";
+"Buy Now, Pay Later with  <img/>" = "Αγορά τώρα, πληρωμή αργότερα με <img/>";
 
-"Buy now or pay later with Afterpay" = "Αγορά τώρα ή πληρωμή αργότερα με Afterpay";
+"Buy Now, Pay Later with Afterpay" = "Αγορά τώρα, πληρωμή αργότερα με Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Αγορά τώρα ή πληρωμή αργότερα με Cash App Afterpay";
+"Buy Now, Pay Later with Cash App Afterpay" = "Αγορά τώρα, πληρωμή αργότερα με Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "Αγορά τώρα ή πληρωμή αργότερα με Clearpay";
+"Buy Now, Pay Later with Clearpay" = "Αγορά τώρα, πληρωμή αργότερα με Clearpay";
 
 "Buy now or pay later with Klarna" = "Αγορά τώρα ή πληρωμή αργότερα με Klarna";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Λάβετε επιστροφή %@ όταν πληρώσετε για πρώτη φορά με την τράπεζά σας. <terms>Δείτε τους όρους</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Λάβετε επιστροφή %@ όταν πληρώσετε με την τράπεζά σας. <terms>Δείτε τους όρους</terms>";
+
+"Hide details" = "Απόκρυψη λεπτομερειών";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Κατανοώ ότι η Stripe θα εισπράττει άμεσες χρεώσεις εκ μέρους της %@ και επιβεβαιώνω ότι είμαι ο δικαιούχος του λογαριασμού και το μόνο άτομο που απαιτείται για την έγκριση των χρεώσεων από αυτόν τον λογαριασμό.";
 
@@ -307,6 +309,8 @@
 "Shipping" = "Αποστολή";
 
 "Shipping to %@ is not supported." = "Η αποστολή στη χώρα %@ δεν υποστηρίζεται.";
+
+"Show details" = "Εμφάνιση λεπτομερειών";
 
 "Show menu" = "Εμφάνιση μενού";
 

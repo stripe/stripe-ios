@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "无法更改银行账户详情。";
 
-"Buy now or pay later with  <img/>" = "用 <img/> 先买后付";
+"Buy Now, Pay Later with  <img/>" = "使用 <img/> 先买后付";
 
-"Buy now or pay later with Afterpay" = "用 Afterpay 先买后付";
+"Buy Now, Pay Later with Afterpay" = "使用 Afterpay 先买后付";
 
-"Buy now or pay later with Cash App Afterpay" = "用 Cash App Afterpay 先买后付";
+"Buy Now, Pay Later with Cash App Afterpay" = "使用 Cash App Afterpay 先买后付";
 
-"Buy now or pay later with Clearpay" = "用 Clearpay 先买后付";
+"Buy Now, Pay Later with Clearpay" = "使用 Clearpay 先买后付";
 
 "Buy now or pay later with Klarna" = "用 Klarna 先买后付";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "通过您的银行首次支付时获得 %@ 的返现。<terms>查看条款</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "通过您的银行支付时获得 %@ 的返现。<terms>查看条款</terms>";
+
+"Hide details" = "隐藏详情";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "我理解 Stripe 将代表 %@ 收取直接借记，且确认我是该账户持有人，且是唯一一个需要授权该账户扣款的人。";
 
@@ -307,6 +309,8 @@
 "Shipping" = "配送";
 
 "Shipping to %@ is not supported." = "不支持向 %@ 配送。";
+
+"Show details" = "显示详情";
 
 "Show menu" = "显示菜单";
 
