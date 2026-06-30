@@ -670,9 +670,10 @@ final class SelfieScanningView: UIView {
             case .lookLeft,
                 .lookRight:
                 return true
-            case .capturedFront,
-                .capturedLeft,
+            case .capturedLeft,
                 .capturedRight:
+                return true
+            case .capturedFront:
                 return false
             case .placeFace,
                 .holdStill,

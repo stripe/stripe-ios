@@ -64,6 +64,11 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
             return
         }
 
+        guard captureAcknowledgementTimer == nil else {
+            clearPoseInstructionState()
+            return
+        }
+
         switch scanningState.phase {
         case .front:
             clearPoseInstructionState()
@@ -494,7 +499,6 @@ extension SelfieCaptureViewController {
         currentCaptureGuideProgress = 1
         latestScanningState = scanningState
         imageScanningSession.stopTimeoutTimer()
-        updateUI()
 
         poseBestFramePicker.start(
             expectedPose: expectedPose,
@@ -516,6 +520,7 @@ extension SelfieCaptureViewController {
                 capturedSample: pick.sample
             )
         }
+        updateUI()
     }
 
     func saveDataAndTransitionToNextScreen(
@@ -550,6 +555,20 @@ extension SelfieCaptureViewController {
             poseBestFramePicker.isCollecting(for: scanningState.phase)
         {
             return .holdStill
+        }
+
+        if apiConfig.enable3DFaceCapture {
+            switch scanningState.phase {
+            case .front:
+                break
+            case .left where scanningState.leftSide != nil:
+                return .capturedLeft
+            case .right where scanningState.rightSide != nil:
+                return .capturedRight
+            case .left,
+                .right:
+                break
+            }
         }
 
         if apiConfig.enable3DFaceCapture {
@@ -795,6 +814,10 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         exifMetadata: CameraExifMetadata?,
         expectedClassification: EmptyClassificationType
     ) {
+        guard captureAcknowledgementTimer == nil else {
+            return
+        }
+
         var scanningState = FaceCaptureScanningState.initialValue()
         if case .scanning(_, let currentScanningState) = scanningSession.state {
             scanningState = currentScanningState
@@ -1014,6 +1037,7 @@ extension SelfieCaptureViewController {
     ) {
         clearPoseCaptureFallbackState()
         clearPoseBestFrameState()
+        clearPoseInstructionState()
         currentCaptureGuideHighlight = captureGuideHighlight(for: expectedPose)
         currentCaptureGuideProgress = 1
 
@@ -1027,15 +1051,9 @@ extension SelfieCaptureViewController {
             nextState.rightSide = capturedSample
         }
 
-        scanningSession.stopTimeoutTimer()
-        latestScanningState = nextState
-        notifyCaptureAccepted()
-        scanningSession.updateScanningState(nextState)
-
+        let acknowledgementBlock: () -> Void
         if let nextPose = nextPose(after: nextState) {
-            scheduleCaptureAcknowledgement(
-                duration: Constants.threeDSideCaptureAcknowledgementDuration
-            ) { [weak self, weak scanningSession] in
+            acknowledgementBlock = { [weak self, weak scanningSession] in
                 guard let self = self, let scanningSession = scanningSession else {
                     return
                 }
@@ -1047,25 +1065,31 @@ extension SelfieCaptureViewController {
                 scanningSession.startTimeoutTimer()
                 scanningSession.updateScanningState(nextPoseState)
             }
-            return
-        }
-
-        guard let faceCaptureData = FaceCaptureData(
-            samples: nextState.frontSamples,
-            leftSide: nextState.leftSide,
-            rightSide: nextState.rightSide
-        ) else {
-            return
-        }
-
-        scheduleCaptureAcknowledgement(
-            duration: Constants.threeDSideCaptureAcknowledgementDuration
-        ) { [weak self] in
-            guard let self = self else {
+        } else {
+            guard let faceCaptureData = FaceCaptureData(
+                samples: nextState.frontSamples,
+                leftSide: nextState.leftSide,
+                rightSide: nextState.rightSide
+            ) else {
                 return
             }
-            self.uploadAndSave(faceCaptureData: faceCaptureData)
+
+            acknowledgementBlock = { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                self.uploadAndSave(faceCaptureData: faceCaptureData)
+            }
         }
+
+        scanningSession.stopTimeoutTimer()
+        latestScanningState = nextState
+        notifyCaptureAccepted()
+        scheduleCaptureAcknowledgement(
+            duration: Constants.threeDSideCaptureAcknowledgementDuration,
+            acknowledgementBlock
+        )
+        scanningSession.updateScanningState(nextState)
     }
 
     fileprivate func scheduleCaptureAcknowledgement(
