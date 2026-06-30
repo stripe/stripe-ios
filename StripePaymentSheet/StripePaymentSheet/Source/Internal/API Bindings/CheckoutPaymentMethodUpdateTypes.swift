@@ -27,6 +27,9 @@ extension Checkout {
             guard let billing else { return nil }
             let address: PaymentMethodBillingAddress? = {
                 guard let addr = billing.address else { return nil }
+                guard addr.line1 != nil || addr.line2 != nil || addr.city != nil || addr.state != nil || addr.postalCode != nil || addr.country != nil else {
+                    return nil
+                }
                 return PaymentMethodBillingAddress(
                     line1: addr.line1,
                     line2: addr.line2,
@@ -82,6 +85,7 @@ extension Checkout {
                 return nil
             }
             let fullYear = year < 100 ? year + 2000 : year
+            guard fullYear >= 2000 else { return nil }
             self.init(expMonth: month, expYear: fullYear)
         }
     }

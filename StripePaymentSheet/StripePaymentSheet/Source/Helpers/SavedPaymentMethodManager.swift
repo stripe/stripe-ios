@@ -14,6 +14,7 @@ final class SavedPaymentMethodManager {
 
     enum Error: Swift.Error {
         case missingEphemeralKey
+        case missingUpdatedPaymentMethod
     }
 
     let configuration: PaymentElementConfiguration
@@ -54,6 +55,10 @@ final class SavedPaymentMethodManager {
                 expiryDetails: expiry
             )
             guard let updatedPM = updatedSession.customer?.paymentMethods.first(where: { $0.stripeId == paymentMethod.stripeId }) else {
+                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                                  error: Error.missingUpdatedPaymentMethod,
+                                                  additionalNonPIIParams: ["payment_method_id": paymentMethod.stripeId])
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 throw PaymentSheetError.unknown(debugDescription: "Server response missing updated payment method.")
             }
             updatedPM.updateLocalFields(from: paymentMethod)
