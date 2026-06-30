@@ -15,14 +15,14 @@ extension Checkout {
               let country = billingDetails.address?.country, !country.isEmpty else {
             return
         }
-        let a = billingDetails.address
+        let source = billingDetails.address
         let address = Address(
             country: country,
-            line1: a?.line1?.isEmpty == true ? nil : a?.line1,
-            line2: a?.line2?.isEmpty == true ? nil : a?.line2,
-            city: a?.city?.isEmpty == true ? nil : a?.city,
-            state: a?.state?.isEmpty == true ? nil : a?.state,
-            postalCode: a?.postalCode?.isEmpty == true ? nil : a?.postalCode
+            line1: source?.line1?.isEmpty == true ? nil : source?.line1,
+            line2: source?.line2?.isEmpty == true ? nil : source?.line2,
+            city: source?.city?.isEmpty == true ? nil : source?.city,
+            state: source?.state?.isEmpty == true ? nil : source?.state,
+            postalCode: source?.postalCode?.isEmpty == true ? nil : source?.postalCode
         )
         try await updateBillingAddress(
             name: billingDetails.name,
