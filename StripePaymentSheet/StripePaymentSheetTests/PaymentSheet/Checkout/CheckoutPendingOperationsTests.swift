@@ -9,6 +9,8 @@
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsTestUtils
+@_spi(STP) import StripeUICore
 import XCTest
 
 @MainActor
@@ -161,6 +163,121 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         }
 
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
+    }
+
+    // MARK: - Confirm with pending operations
+
+    func testEPEConfirmFailsWhenCheckoutPendingOperationsExist() async throws {
+        await AddressSpecProvider.shared.loadAddressSpecs()
+
+        let checkout = await makeCheckoutWithOpenSession()
+        let gate = CheckoutPendingOperationsTestGate()
+
+        let operationTask = Task { @MainActor in
+            try await checkout.enqueueSessionUpdate {
+                await gate.wait()
+            }
+        }
+        defer { gate.open() }
+
+        try await waitUntil {
+            checkout.pendingOperations.count == 1 && gate.isWaiting
+        }
+
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        let elementsSession = STPElementsSession._testCardValue()
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .vertical
+        )
+        let configuration = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        let sut = EmbeddedPaymentElement(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+        sut.checkout = checkout
+        sut.presentingViewController = UIViewController()
+        sut._test_paymentOption = .new(confirmParams: IntentConfirmParams(type: .stripe(.card)))
+
+        let result = await sut.confirm()
+        switch result {
+        case .failed(let error):
+            XCTAssertTrue(
+                error.nonGenericDescription.contains("Checkout session is still loading"),
+                "Expected error about pending loading state, got: \(error.nonGenericDescription)"
+            )
+        default:
+            XCTFail("Expected confirm to fail due to pending operations, got: \(result)")
+        }
+
+        gate.open()
+        _ = try? await operationTask.value
+    }
+
+    func testFCConfirmFailsWhenCheckoutPendingOperationsExist() async throws {
+        await AddressSpecProvider.shared.loadAddressSpecs()
+
+        let checkout = await makeCheckoutWithOpenSession()
+        let gate = CheckoutPendingOperationsTestGate()
+
+        let operationTask = Task { @MainActor in
+            try await checkout.enqueueSessionUpdate {
+                await gate.wait()
+            }
+        }
+        defer { gate.open() }
+
+        try await waitUntil {
+            checkout.pendingOperations.count == 1 && gate.isWaiting
+        }
+
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        let elementsSession = STPElementsSession._testCardValue()
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .vertical
+        )
+        let fc = PaymentSheet.FlowController(
+            configuration: PaymentSheet.Configuration(),
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+        fc.checkout = checkout
+
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+
+        let expectation = expectation(description: "Confirm completes")
+        fc.confirm(from: UIViewController()) { result in
+            switch result {
+            case .failed(let error):
+                XCTAssertTrue(
+                    error.nonGenericDescription.contains("Checkout session is still loading"),
+                    "Expected error about pending loading state, got: \(error.nonGenericDescription)"
+                )
+            default:
+                XCTFail("Expected confirm to fail due to pending operations, got: \(result)")
+            }
+            expectation.fulfill()
+        }
+
+        await fulfillment(of: [expectation], timeout: 2.0)
+
+        XCTAssertTrue(
+            STPAssertTestUtil.lastAssertMessage.contains("Checkout session is loading"),
+            "Expected assertion about Checkout session loading, got: \(STPAssertTestUtil.lastAssertMessage)"
+        )
+
+        gate.open()
+        _ = try? await operationTask.value
     }
 
     // MARK: - Helpers

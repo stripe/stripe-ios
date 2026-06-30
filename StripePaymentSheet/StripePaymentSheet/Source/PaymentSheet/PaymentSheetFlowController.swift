@@ -302,7 +302,7 @@ extension PaymentSheet {
             }
         }
 
-        private weak var checkout: Checkout?
+        weak var checkout: Checkout?
         private var isPresented = false
         private var pendingPresentTask: Task<Void, Never>?
         private(set) var didPresentAndContinue: Bool = false
@@ -653,7 +653,7 @@ extension PaymentSheet {
 
             // TODO(porter): Remove assumeIsolated once confirm is @MainActor (blocked on new FC API designs)
             if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
-                assertionFailure("`confirm` should not be called while the Checkout session is loading.")
+                stpAssertionFailure("`confirm` should not be called while the Checkout session is loading.")
                 let error = PaymentSheetError.flowControllerConfirmFailed(
                     message: "confirmPayment was called while the Checkout session is still loading. Wait until the Checkout state is .loaded before calling confirm."
                 )
@@ -663,12 +663,12 @@ extension PaymentSheet {
 
             switch latestUpdateContext?.status {
             case .inProgress:
-                assertionFailure("`confirm` should only be called when the last update has completed.")
+                stpAssertionFailure("`confirm` should only be called when the last update has completed.")
                 let error = PaymentSheetError.flowControllerConfirmFailed(message: "confirmPayment was called with an update API call in progress.")
                 completion(.failed(error: error))
                 return
             case .failed:
-                assertionFailure("`confirm` should only be called when the last update has completed without error.")
+                stpAssertionFailure("`confirm` should only be called when the last update has completed without error.")
                 let error = PaymentSheetError.flowControllerConfirmFailed(message: "confirmPayment was called when the last update API call failed.")
                 completion(.failed(error: error))
                 return

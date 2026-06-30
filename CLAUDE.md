@@ -164,3 +164,7 @@ Run `bundle install && bundle exec fastlane stripeios_tests` initially to instal
 
 ### Special Testing Notes
 - Legacy iOS versions: Separate fastlane lanes for iOS 13-16 compatibility testing
+
+### Acronyms and terms
+- EPE = EmbeddedPaymentElement
+- FC = FlowController(PaymentSheet.FlowController)
