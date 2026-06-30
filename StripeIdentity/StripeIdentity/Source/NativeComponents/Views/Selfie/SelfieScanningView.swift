@@ -1070,8 +1070,8 @@ private final class CaptureTickMarksView: UIView {
         static let shadowColor = UIColor.black.withAlphaComponent(0.22)
         static let shadowOffset = CGSize(width: 0, height: 1)
         static let shadowBlur: CGFloat = 3.5
-        static let centeredShadowOuterOpacity: CGFloat = 0.68
-        static let centeredShadowClearPadding: CGFloat = 8
+        static let centeredShadowOuterOpacity: CGFloat = 0.62
+        static let centeredShadowClearPadding: CGFloat = 6
         static let centeredShadowGradientStepCount = 16
         static let centeredShadowFadeInDuration: TimeInterval = SelfieScanningView.Styling.captureGuideShadowFadeInDuration
     }
