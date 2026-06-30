@@ -28,7 +28,7 @@ final class SelfieScanningView: UIView {
         static let livePreviewBlurFadeInDuration: TimeInterval = 0.3
         static let livePreviewBlurFadeOutDuration: TimeInterval = 0.6
         static var livePreviewBlurEffect: UIBlurEffect {
-            UIBlurEffect(style: .regular)
+            UIBlurEffect(style: .systemUltraThinMaterial)
         }
         static let statusLabelFadeInDuration: TimeInterval = 0.18
         static let statusLabelFadeOutDuration: TimeInterval = 0.6
