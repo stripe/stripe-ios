@@ -484,17 +484,15 @@ final class PaymentSheetLoader {
                 intent = .deferredIntent(intentConfig: intentConfig)
             }
         case .checkout(let checkout):
-            // TODO(gbirch): Remove stpSession extraction once MPE is MainActor-isolated.
-            // This is a temporary stopgap to provide a threadsafe version of the checkout session data.
-            let stpSession: STPCheckoutSession = checkout.stpSession
-            guard let elementsSessionJSON = stpSession.allResponseFields["elements_session"] as? [AnyHashable: Any],
-                  let decodedElementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJSON) else {
+            guard let decodedElementsSession = checkout.stpSession.elementsSession else {
                 throw PaymentSheetError.unknown(debugDescription: "Failed to decode elements session from provided checkout session object")
             }
             elementsSession = decodedElementsSession
-            intent = .checkout(checkout, stpSession)
+            // TODO(gbirch): Remove stpSession extraction once MPE is MainActor-isolated.
+            // This is a temporary stopgap to provide a threadsafe version of the checkout session data.
+            intent = .checkout(checkout, checkout.stpSession)
         }
-
+        
         // Warn the merchant if we see unactivated payment method types in the Intent
         if !elementsSession.unactivatedPaymentMethodTypes.isEmpty {
             let message = """

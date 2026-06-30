@@ -208,4 +208,14 @@ enum Intent {
             return elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         }
     }
+
+    func allowsPaymentMethodUpdate(elementsSession: STPElementsSession) -> Bool {
+        switch self {
+        case .checkout:
+            // Checkout sessions always support PM updates
+            return true
+        case .paymentIntent, .setupIntent, .deferredIntent:
+            return elementsSession.paymentMethodUpdateForPaymentSheet
+        }
+    }
 }

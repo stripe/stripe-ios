@@ -102,6 +102,10 @@ extension PaymentSheet {
             reasons.append(.billingDetailsCollection)
         }
 
+        if elementsSession.disableLinkForAutomaticTaxBilling {
+            reasons.append(.automaticTaxBillingAddress)
+        }
+
         return reasons
     }
 

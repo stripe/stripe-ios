@@ -49,6 +49,18 @@ extension StripeAPI {
 
         public var _additionalParametersStorage: NonEncodableParameters?
         public var _allResponseFieldsStorage: NonEncodableParameters?
+
+        @_spi(STP) public init(
+            address: Address? = nil,
+            email: String? = nil,
+            name: String? = nil,
+            phone: String? = nil
+        ) {
+            self.address = address
+            self.email = email
+            self.name = name
+            self.phone = phone
+        }
     }
 
 }
