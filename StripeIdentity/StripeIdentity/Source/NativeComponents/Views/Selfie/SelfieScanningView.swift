@@ -1044,8 +1044,8 @@ private final class CaptureTickMarksView: UIView {
         static let tickCount = 68
         static let tickLength: CGFloat = 10.25
         static let highlightedTickLength: CGFloat = 18.75
-        static let tickWidth: CGFloat = 1.9
-        static let highlightedTickWidth: CGFloat = 3.5
+        static let tickWidth: CGFloat = 2.09
+        static let highlightedTickWidth: CGFloat = 4.025
         static let baseTickFadeAnimationDuration: TimeInterval = 1.0
         static let baseTickOppositeSideMinOpacityMultiplier: CGFloat = 0.02
         static let baseTickOppositeSideFadeExponent: CGFloat = 0.25

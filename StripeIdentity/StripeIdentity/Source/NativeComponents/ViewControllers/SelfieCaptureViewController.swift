@@ -25,6 +25,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     private enum Constants {
         static let legacyCaptureAcknowledgementDuration: TimeInterval = 0.55
         static let threeDCaptureAcknowledgementDuration: TimeInterval = 0.8
+        static let threeDFrontCaptureAcknowledgementDuration: TimeInterval = 1.4
         static let poseInstructionDuration: TimeInterval = 1.75
         static let poseCaptureFallbackDuration: TimeInterval = 8
     }
@@ -863,7 +864,9 @@ extension SelfieCaptureViewController {
         latestScanningState = nextState
         notifyCaptureAccepted()
         scanningSession.updateScanningState(nextState)
-        scheduleCaptureAcknowledgement { [weak self, weak scanningSession] in
+        scheduleCaptureAcknowledgement(
+            duration: Constants.threeDFrontCaptureAcknowledgementDuration
+        ) { [weak self, weak scanningSession] in
             guard let self = self, let scanningSession = scanningSession else {
                 return
             }
@@ -981,11 +984,14 @@ extension SelfieCaptureViewController {
         }
     }
 
-    fileprivate func scheduleCaptureAcknowledgement(_ block: @escaping () -> Void) {
+    fileprivate func scheduleCaptureAcknowledgement(
+        duration: TimeInterval? = nil,
+        _ block: @escaping () -> Void
+    ) {
         stopCaptureAcknowledgementTimer()
-        let duration = apiConfig.enable3DFaceCapture
+        let duration = duration ?? (apiConfig.enable3DFaceCapture
             ? Constants.threeDCaptureAcknowledgementDuration
-            : Constants.legacyCaptureAcknowledgementDuration
+            : Constants.legacyCaptureAcknowledgementDuration)
         captureAcknowledgementTimer = Timer.scheduledTimer(
             withTimeInterval: duration,
             repeats: false
