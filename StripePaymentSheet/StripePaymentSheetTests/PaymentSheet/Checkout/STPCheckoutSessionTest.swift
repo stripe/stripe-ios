@@ -88,6 +88,8 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.customer?.paymentMethods[1].stripeId, "pm_1Sxae4Lu5o3P18ZplFiKexnM")
         XCTAssertEqual(session.customer?.paymentMethods[1].type, .USBankAccount)
         XCTAssertEqual(session.businessName, "CI Stuff")
+        XCTAssertNotNil(session.elementsSession)
+        XCTAssertEqual(session.elementsSession?.sessionID, "elements_session_test123")
         XCTAssertEqual(session.email, "test@example.com")
         XCTAssertEqual(session.url?.absoluteString, "https://checkout.stripe.com/c/pay/cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(session.returnUrl, "https://example.com/return")
@@ -560,6 +562,46 @@ class STPCheckoutSessionTest: XCTestCase {
             ],
         ])
         XCTAssertEqual(session.tax.status, .ready)
+    }
+
+    // MARK: - Elements Session Tests
+
+    func testElementsSessionNilWhenMissing() {
+        let session = makeCheckoutSession([:])
+        XCTAssertNil(session.elementsSession)
+    }
+
+    func testElementsSessionNilWhenInvalid() {
+        let session = makeCheckoutSession([
+            "elements_session": ["business_name": "Test"],
+        ])
+        XCTAssertNil(session.elementsSession)
+    }
+
+    func testElementsSessionDisableLinkForAutomaticTaxBilling() {
+        let session = makeCheckoutSession([
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
+            "tax_context": [
+                "automatic_tax_enabled": true,
+                "automatic_tax_address_source": "session.billing",
+            ],
+        ])
+        XCTAssertNotNil(session.elementsSession)
+        XCTAssertTrue(session.elementsSession!.disableLinkForAutomaticTaxBilling)
+    }
+
+    func testElementsSessionDoesNotDisableLinkWithoutAutomaticTax() {
+        let session = makeCheckoutSession([
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
+        ])
+        XCTAssertNotNil(session.elementsSession)
+        XCTAssertFalse(session.elementsSession!.disableLinkForAutomaticTaxBilling)
     }
 
 }
