@@ -57,16 +57,16 @@ extension Checkout {
     ///
     /// - Parameters:
     ///   - update: The API mutation to perform, or nil for a local-only update.
-    ///   - calledFromSheet: When true, skips the sheet-presented check and suppresses the
+    ///   - notifyIntegrationDelegate: When false, skips the sheet-presented check and suppresses the
     ///     integration delegate callback (used for billing syncs triggered from within the sheet).
     ///   - localMutation: A local state change to apply prior to the API call (or on its own).
     func performUpdate(
         _ update: SessionUpdate? = nil,
-        calledFromSheet: Bool = false,
+        notifyIntegrationDelegate: Bool = true,
         applying localMutation: (@MainActor @Sendable () -> Void)? = nil
     ) async throws {
         try await enqueueSessionUpdate {
-            if !calledFromSheet {
+            if notifyIntegrationDelegate {
                 try self.requireSheetNotPresented()
             }
             do {
@@ -85,12 +85,12 @@ extension Checkout {
                 localMutation?()
                 try await self.commitSession(
                     updatedSession,
-                    notifyIntegrationDelegate: !calledFromSheet
+                    notifyIntegrationDelegate: notifyIntegrationDelegate
                 )
             } catch {
                 // If a prior op skipped the delegate and we're failing before we
                 // get to commitSession ourselves, still notify so the UI updates.
-                if self.isLastPendingOperation && !calledFromSheet {
+                if self.isLastPendingOperation && notifyIntegrationDelegate {
                     try? await self.integrationDelegate?.checkoutDidUpdate(self)
                 }
                 throw CheckoutError.apiError(message: error.nonGenericDescription)

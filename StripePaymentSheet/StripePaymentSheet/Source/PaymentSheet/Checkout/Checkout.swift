@@ -242,7 +242,7 @@ public final class Checkout: ObservableObject {
     ///   - phone: The customer's phone number.
     ///   - address: The billing address to set. To reset tax computation
     ///     to a country-only region, pass a ``Checkout.Address`` with just the country.
-    ///   - calledFromSheet: When true, skips the sheet-presented check and suppresses
+    ///   - notifyIntegrationDelegate: When false, skips the sheet-presented check and suppresses
     ///     the integration delegate callback.
     /// - Throws: ``CheckoutError`` if the session is not open, or if
     ///   the server request fails.
@@ -250,7 +250,7 @@ public final class Checkout: ObservableObject {
         name: String? = nil,
         phone: String? = nil,
         address: Address,
-        calledFromSheet: Bool = false
+        notifyIntegrationDelegate: Bool = true
     ) async throws {
         guard let currentSession = stpSession else { return }
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
@@ -258,12 +258,12 @@ public final class Checkout: ObservableObject {
         if currentSession.shouldSendTaxRegion(for: "billing") {
             try await performUpdate(
                 .setTaxRegion(address),
-                calledFromSheet: calledFromSheet,
+                notifyIntegrationDelegate: notifyIntegrationDelegate,
                 applying: { self.stpSession?.billingAddress = contactAddress }
             )
         } else {
             try await performUpdate(
-                calledFromSheet: calledFromSheet,
+                notifyIntegrationDelegate: notifyIntegrationDelegate,
                 applying: { self.stpSession?.billingAddress = contactAddress }
             )
         }

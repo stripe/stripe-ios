@@ -28,7 +28,7 @@ extension Checkout {
             name: billingDetails.name,
             phone: billingDetails.phone,
             address: address,
-            calledFromSheet: true
+            notifyIntegrationDelegate: false
         )
     }
 }
