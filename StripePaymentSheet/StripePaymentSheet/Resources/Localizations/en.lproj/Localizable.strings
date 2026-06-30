@@ -95,9 +95,6 @@
 /* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to the Link brand. The first placeholder is a merchant name. The second placeholder is a Stripe brand name and should not be translated. */
 "By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>.";
 
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>.";
-
 /* Text displayed below a credit card entry form when the card will be saved with the merchant. */
 "By continuing, you agree to save your information for future purchases with %@." = "By continuing, you agree to save your information for future purchases with %@.";
 
@@ -113,14 +110,8 @@
 /* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
-/* Legal text shown when creating a Link account. */
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
-
 /* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
 "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
-
-/* Legal text shown when creating a Link account. */
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
 /* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above.";
@@ -131,17 +122,11 @@
 /* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
-/* Legal text shown when creating a Link account. */
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
-
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.";
 
 /* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
-
-/* Legal text shown when creating a Link account. */
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
@@ -207,10 +192,6 @@ with the transaction. */
 /* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
 "Create an account with %@ for faster checkout across the web" = "Create an account with %@ for faster checkout across the web";
 
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Create an account with Link for faster checkout across the web" = "Create an account with Link for faster checkout across the web";
-
 /* Label shown in the payment type picker describing a card payment */
 "Debit or credit card" = "Debit or credit card";
 
@@ -270,9 +251,6 @@ to be saved and used in future checkout sessions. */
 
 /* Title of the logout action. The placeholder is a Stripe brand name and should not be translated. */
 "Log out of %@" = "Log out of %@";
-
-/* Title of the logout action. */
-"Log out of Link" = "Log out of Link";
 
 /* Title shown above a view containing the customer's bank account that they can delete */
 "Manage bank account" = "Manage bank account";
@@ -428,10 +406,6 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
 "Save my info for faster checkout with %@" = "Save my info for faster checkout with %@";
 
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Save my info for faster checkout with Link" = "Save my info for faster checkout with Link";
-
 /* The label of a switch indicating whether to save the user's payment details for future payment */
 "Save payment details to %@ for future purchases" = "Save payment details to %@ for future purchases";
 
@@ -443,10 +417,6 @@ to be saved and used in future checkout sessions. */
 
 /* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
 "Save your info for secure 1-click checkout with %@" = "Save your info for secure 1-click checkout with %@";
-
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Save your info for secure 1-click checkout with Link" = "Save your info for secure 1-click checkout with Link";
 
 /* Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account. */
 "Saved" = "Saved";

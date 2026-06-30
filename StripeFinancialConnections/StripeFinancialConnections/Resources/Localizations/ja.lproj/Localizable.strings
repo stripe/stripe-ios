@@ -28,8 +28,6 @@
 
 "Continue with %@" = "%@ で続行";
 
-"Continue with Link" = "Link で続行";
-
 "Email address" = "メールアドレス";
 
 "Enter bank details" = "銀行口座情報を入力する";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "別の銀行を検索してみてください。あるいは、%@";
 
 "Use information you previously saved with your %@ account." = "%@ アカウントに以前保存した情報を使用する。";
-
-"Use information you previously saved with your Link account." = "Link アカウントにすでに保存されている情報を使用します。";
 
 "Use test account" = "テストアカウントを使用";
 
