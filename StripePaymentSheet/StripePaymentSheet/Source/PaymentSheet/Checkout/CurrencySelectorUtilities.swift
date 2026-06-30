@@ -98,6 +98,13 @@ enum CurrencySelectorUtilities {
         return formatExchangeRate(from: meta)
     }
 
+    private static let exchangeRateFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }()
+
     static func formatExchangeRate(from meta: STPCheckoutSessionExchangeRateMeta) -> String {
         let localCurrency = CurrencyCode(meta.localizedCurrency).displayValue
         let integrationCurrency = CurrencyCode(meta.integrationCurrency).displayValue
@@ -105,16 +112,13 @@ enum CurrencySelectorUtilities {
         let formattedRate: String
         if let rateDouble = Double(meta.exchangeRate) {
             let inverse = 1.0 / rateDouble
-            let formatter = NumberFormatter()
-            formatter.minimumFractionDigits = 2
-            formatter.maximumFractionDigits = 4
-            formattedRate = formatter.string(from: NSNumber(value: inverse)) ?? meta.exchangeRate
+            formattedRate = exchangeRateFormatter.string(from: NSNumber(value: inverse)) ?? meta.exchangeRate
         } else {
             formattedRate = meta.exchangeRate
         }
 
         if meta.conversionMarkupBps > 0 {
-            let feePercent = formatConversionFeePercent(bps: meta.conversionMarkupBps)
+            let feePercent = String(format: "%g", Double(meta.conversionMarkupBps) / 100.0)
             return .Localized.exchangeRateWithConversionFee(
                 localCurrency: localCurrency,
                 rate: formattedRate,
@@ -135,14 +139,6 @@ enum CurrencySelectorUtilities {
     static func detailText(exchangeRateMeta meta: STPCheckoutSessionExchangeRateMeta) -> String? {
         guard meta.conversionMarkupBps > 0 else { return nil }
         return "This string will come from the translation layer in the future"
-    }
-
-    private static func formatConversionFeePercent(bps: Int) -> String {
-        let percent = Double(bps) / 100.0
-        if percent.truncatingRemainder(dividingBy: 1) == 0 {
-            return String(format: "%.0f", percent)
-        }
-        return String(format: "%g", percent)
     }
 
     // MARK: - Availability
