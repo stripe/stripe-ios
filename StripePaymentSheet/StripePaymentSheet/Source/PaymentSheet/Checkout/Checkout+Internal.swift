@@ -69,9 +69,6 @@ extension Checkout {
             if !calledFromSheet {
                 try self.requireSheetNotPresented()
             }
-            // Transition to loading before the async work begins so observers show a loading state.
-            self.state = .loading(self.state.session)
-
             do {
                 let updatedSession: STPCheckoutSession
                 if let update {

@@ -242,21 +242,15 @@ public final class Checkout: ObservableObject {
     ///   - phone: The customer's phone number.
     ///   - address: The billing address to set. To reset tax computation
     ///     to a country-only region, pass a ``Checkout.Address`` with just the country.
+    ///   - calledFromSheet: When true, skips the sheet-presented check and suppresses
+    ///     the integration delegate callback.
     /// - Throws: ``CheckoutError`` if the session is not open, or if
     ///   the server request fails.
-    public func updateBillingAddress(
-        name: String? = nil,
-        phone: String? = nil,
-        address: Address
-    ) async throws {
-        try await updateBillingAddress(name: name, phone: phone, address: address, calledFromSheet: false)
-    }
-
     func updateBillingAddress(
         name: String? = nil,
         phone: String? = nil,
         address: Address,
-        calledFromSheet: Bool
+        calledFromSheet: Bool = false
     ) async throws {
         guard let currentSession = stpSession else { return }
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
