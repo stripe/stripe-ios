@@ -15,25 +15,35 @@ import Foundation
 ///
 /// ```swift
 /// let checkout = try await Checkout(clientSecret: "cs_xxx_secret_yyy")
-/// print(checkout.state.session)
+/// print(checkout.session)
 /// ```
 ///
-/// The async initializer loads the session from Stripe before returning,
-/// so ``state`` is guaranteed to be ``State.loaded(_:)`` immediately after initialization.
+/// The async initializer loads the session from Stripe before returning.
 ///
-/// Observe session changes with SwiftUI by using ``state`` (published via `ObservableObject`),
-/// or in UIKit by setting a ``delegate``.
+/// Observe loading state and session changes with SwiftUI by using ``isLoading`` and ``session``
+/// (published via `ObservableObject`), or in UIKit by setting a ``delegate``.
 @_spi(STP)
 @_spi(ReactNativeSDK)
 @MainActor
 public final class Checkout: ObservableObject {
     // MARK: - Public Properties
 
-    /// The current state of the checkout session.
+    /// The current loading state of the checkout session.
     ///
-    /// After initialization this is always ``State.loaded(_:)``. It transitions to
-    /// ``State.loading(_:)`` while a mutation is in flight.
-    @Published public internal(set) var state: State
+    /// After initialization this is always ``false``. It transitions to ``true``
+    /// while a mutation is in flight.
+    @Published public internal(set) var isLoading: Bool = false {
+        didSet {
+            isLoading ? delegate?.checkoutDidBeginLoading(self) : delegate?.checkoutDidFinishLoading(self)
+        }
+    }
+
+    /// The Checkout Session, updated from Stripe after every mutation.
+    @Published public internal(set) var session: Session {
+        didSet {
+            delegate?.checkoutDidUpdateSession(self, session: session)
+        }
+    }
 
     /// The configuration supplied at initialization.
     public let configuration: Configuration
@@ -43,7 +53,7 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Internal Properties
 
-    /// The underlying `STPCheckoutSession` backing the current public ``state``.
+    /// The underlying `STPCheckoutSession` backing the current public ``session``.
     ///
     /// Marked `nonisolated(unsafe)` because PaymentSheet internals read this from non-MainActor
     /// contexts. This is safe: reads only occur after the session is loaded and while the payment
@@ -60,7 +70,23 @@ public final class Checkout: ObservableObject {
     let apiClient: STPAPIClient
 
     /// Serial queue of in-flight session updates. Each task waits for the previous task before running.
-    var pendingOperations: [Task<Void, Error>] = []
+    var pendingOperations: [Task<Void, Error>] = [] {
+        didSet {
+            // If the queue has gone from empty to non-empty, we set
+            //  isLoading to true. We avoid setting it if the queue
+            //  was already non-empty to prevent duplicate delegate calls
+            if !pendingOperations.isEmpty && !isLoading {
+                isLoading = true
+            }
+
+            // If the queue has gone from non-empty to empty, we set
+            //  isLoading to false. There shouldn't be a situation in
+            //  which the isLoading is already false, but we check just in case.
+            if pendingOperations.isEmpty && isLoading {
+                isLoading = false
+            }
+        }
+    }
 
     var isLastPendingOperation: Bool {
         pendingOperations.count <= 1
@@ -95,13 +121,13 @@ public final class Checkout: ObservableObject {
 
         let sessionId = Self.extractSessionId(from: clientSecret)
         do {
-            let checkoutSession = try await apiClient.initCheckoutSession(
+            let session = try await apiClient.initCheckoutSession(
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
             )
-            await flagImageManager.prefetchFlagImages(for: checkoutSession)
-            self.stpSession = checkoutSession
-            self.state = .loaded(checkoutSession.makePublicSession())
+            await flagImageManager.prefetchFlagImages(for: session)
+            self.stpSession = session
+            self.session = session.makePublicSession()
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
@@ -120,7 +146,7 @@ public final class Checkout: ObservableObject {
         self.apiClient = apiClient
         await flagImageManager.prefetchFlagImages(for: session)
         self.stpSession = session
-        self.state = .loaded(session.makePublicSession())
+        self.session = session.makePublicSession()
     }
 
     /// Synchronous test-only initializer that wraps a pre-loaded session without async work.
@@ -129,7 +155,7 @@ public final class Checkout: ObservableObject {
         self.configuration = Configuration()
         self.apiClient = .shared
         self.stpSession = session
-        self.state = .loaded(session.makePublicSession())
+        self.session = session.makePublicSession()
     }
 #endif
 
@@ -257,6 +283,10 @@ public final class Checkout: ObservableObject {
         address: Address
     ) async throws {
         guard let currentSession = stpSession else { return }
+        if let allowedCountries = currentSession.allowedShippingCountries,
+           !allowedCountries.contains(address.country) {
+            throw CheckoutError.invalidShippingCountry(countryCode: address.country)
+        }
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
         guard currentSession.shippingAddress != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "shipping") {
@@ -273,7 +303,7 @@ public final class Checkout: ObservableObject {
     // MARK: - Server Updates
 
     /// Runs an async function that calls your server to update the Checkout Session,
-    /// then automatically refreshes ``state`` with the latest session data.
+    /// then automatically refreshes ``session`` with the latest session data.
     ///
     /// A 20-second timeout is enforced. If `updateFunction` doesn't complete
     /// within 20 seconds, this method throws ``CheckoutError.timedOut``.
@@ -321,13 +351,10 @@ public final class Checkout: ObservableObject {
         newSession.billingAddress = stpSession?.billingAddress
         newSession.shippingAddress = stpSession?.shippingAddress
         stpSession = newSession
-        let publicSession = newSession.makePublicSession()
-        state = pendingOperations.isEmpty ? .loaded(publicSession) : .loading(publicSession)
+        session = newSession.makePublicSession()
         // Skip delegate if another op is queued—it'll notify when it commits.
         if isLastPendingOperation {
             try await integrationDelegate?.checkoutDidUpdate(self)
         }
-        delegate?.checkout(self, didChangeState: state)
     }
-
 }
