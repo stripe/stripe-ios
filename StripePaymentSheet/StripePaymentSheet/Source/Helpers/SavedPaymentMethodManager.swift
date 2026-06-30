@@ -53,11 +53,11 @@ final class SavedPaymentMethodManager {
 
     func detach(paymentMethod: STPPaymentMethod) {
         switch intent {
-        case .checkout(let checkout):
+        case .checkout(_, let stpSession):
             Task {
                 try? await configuration.apiClient.detachPaymentMethod(
                     paymentMethod.stripeId,
-                    fromCheckoutSession: checkout.stpSession.id
+                    fromCheckoutSession: stpSession.id
                 )
             }
         case .paymentIntent, .setupIntent, .deferredIntent:

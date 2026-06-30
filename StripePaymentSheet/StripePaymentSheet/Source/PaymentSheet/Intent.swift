@@ -21,14 +21,17 @@ enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
-    case checkout(Checkout)
+    // TODO(gbirch): Remove STPCheckoutSession associated value once MPE is MainActor-isolated;
+    // we can then access checkout.session directly. This is a temporary stopgap to provide a
+    // threadsafe version of the checkout session data.
+    case checkout(Checkout, STPCheckoutSession)
 
     var stripeId: String? {
         switch self {
         case .paymentIntent(let intent): intent.stripeId
         case .setupIntent(let intent): intent.stripeID
         case .deferredIntent: nil
-        case .checkout(let checkout): checkout.stpSession.id
+        case .checkout(_, let stpSession): stpSession.id
         }
     }
 
@@ -45,8 +48,8 @@ enum Intent {
             case .setup:
                 return false
             }
-        case .checkout(let checkout):
-            return checkout.stpSession.mode == .payment || checkout.stpSession.mode == .subscription
+        case .checkout(_, let stpSession):
+            return stpSession.mode == .payment || stpSession.mode == .subscription
         }
     }
 
@@ -97,8 +100,8 @@ enum Intent {
             case .setup(let currency, _):
                 return currency
             }
-        case .checkout(let checkout):
-            return checkout.stpSession.currency
+        case .checkout(_, let stpSession):
+            return stpSession.currency
         }
     }
 
@@ -115,8 +118,8 @@ enum Intent {
             case .setup:
                 return nil
             }
-        case .checkout(let checkout):
-            return checkout.stpSession.expectedAmount()
+        case .checkout(_, let stpSession):
+            return stpSession.expectedAmount()
         }
     }
 
@@ -129,10 +132,10 @@ enum Intent {
                 return setupFutureUsage?.rawValue
             }
             return nil
-        case .checkout(let checkout):
-            switch checkout.stpSession.mode {
+        case .checkout(_, let stpSession):
+            switch stpSession.mode {
             case .payment:
-                return checkout.stpSession.setupFutureUsage
+                return stpSession.setupFutureUsage
             case .setup:
                 return nil
             case .subscription, .unknown:
@@ -156,8 +159,8 @@ enum Intent {
                 return !setupFutureUsageValues.isEmpty
             }
             return nil
-        case .checkout(let checkout):
-            return checkout.stpSession.isPaymentMethodOptionsSetupFutureUsageSet
+        case .checkout(_, let stpSession):
+            return stpSession.isPaymentMethodOptionsSetupFutureUsageSet
         case .setupIntent:
             return nil
         }
@@ -181,10 +184,10 @@ enum Intent {
             case .setup:
                 return true
             }
-        case .checkout(let checkout):
-            switch checkout.stpSession.mode {
+        case .checkout(_, let stpSession):
+            switch stpSession.mode {
             case .payment:
-                guard let setupFutureUsage = checkout.stpSession.setupFutureUsage(for: paymentMethodType) else {
+                guard let setupFutureUsage = stpSession.setupFutureUsage(for: paymentMethodType) else {
                     return false
                 }
                 return setupFutureUsage != "none"
@@ -199,8 +202,8 @@ enum Intent {
 
     func allowsPaymentMethodRemoval(elementsSession: STPElementsSession) -> Bool {
         switch self {
-        case .checkout(let checkout):
-            return checkout.stpSession.customer?.canDetachPaymentMethod ?? false
+        case .checkout(_, let stpSession):
+            return stpSession.customer?.canDetachPaymentMethod ?? false
         case .paymentIntent, .setupIntent, .deferredIntent:
             return elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         }

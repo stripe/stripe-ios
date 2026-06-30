@@ -364,10 +364,10 @@ extension PaymentMethodFormViewController {
                 return .setup(setupIntent.stripeID)
             case .deferredIntent:
                 return .deferred(elementsSession.sessionID)
-            case .checkout(let checkout):
+            case .checkout(_, let stpSession):
                 // This ID is used for financial incentive eligibility. Ideally we'd use the underlying
                 // paymentIntentId or setupIntentId, but those are not yet populated on CheckoutSession.
-                return .deferred(checkout.stpSession.id)
+                return .deferred(stpSession.id)
             }
         }()
 
@@ -557,13 +557,13 @@ extension PaymentMethodFormViewController {
                 intentType: .deferred,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .checkout(let checkout):
+        case .checkout(_, let stpSession):
             client.collectBankAccountForDeferredIntentOrCheckoutSession(
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
-                amount: checkout.stpSession.expectedAmount(),
-                currency: checkout.stpSession.currency,
+                amount: stpSession.expectedAmount(),
+                currency: stpSession.currency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
@@ -673,13 +673,13 @@ extension PaymentMethodFormViewController {
                 intentType: .deferred,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .checkout(let checkout):
+        case .checkout(_, let stpSession):
             client.collectBankAccountForDeferredIntentOrCheckoutSession(
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
-                amount: checkout.stpSession.expectedAmount(),
-                currency: checkout.stpSession.currency,
+                amount: stpSession.expectedAmount(),
+                currency: stpSession.currency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,

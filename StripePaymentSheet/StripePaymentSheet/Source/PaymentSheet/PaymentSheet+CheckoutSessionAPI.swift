@@ -12,19 +12,23 @@ import Foundation
 extension PaymentSheet {
 
     /// Confirms a checkout session with a new payment method
+    // TODO(gbirch): Remove stpSession parameter once MPE is MainActor-isolated; we can then
+    // access checkout.session directly. This is a temporary stopgap to provide a threadsafe
+    // version of the checkout session data.
     @MainActor
     static func handleCheckoutSessionConfirmation(
         checkout: Checkout,
+        stpSession: STPCheckoutSession,
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
         elementsSession: STPElementsSession
     ) async -> PaymentSheetResult {
-        let checkoutSession: STPCheckoutSession = checkout.stpSession
+        let checkoutSession = stpSession
         do {
             let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-                intent: .checkout(checkout),
+                intent: .checkout(checkout, stpSession),
                 elementsSession: elementsSession
             )
 

@@ -610,7 +610,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_CheckoutSession_PopulatesBillingContactFromFullAddress() {
         let intent = Intent._testCheckoutSession(mode: .payment, amount: 2345, currency: "USD")
-        guard case .checkout(let checkout) = intent else {
+        guard case .checkout(let checkout, _) = intent else {
             XCTFail("Expected checkout intent")
             return
         }
@@ -650,7 +650,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_CheckoutSession_PopulatesBillingContactWithCountryOnly() {
         let intent = Intent._testCheckoutSession(mode: .payment, amount: 2345, currency: "USD")
-        guard case .checkout(let checkout) = intent else {
+        guard case .checkout(let checkout, _) = intent else {
             XCTFail("Expected checkout intent")
             return
         }
@@ -676,7 +676,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_CheckoutSession_PopulatesBillingContactWithLine1Only() {
         let intent = Intent._testCheckoutSession(mode: .payment, amount: 2345, currency: "USD")
-        guard case .checkout(let checkout) = intent else {
+        guard case .checkout(let checkout, _) = intent else {
             XCTFail("Expected checkout intent")
             return
         }
@@ -697,7 +697,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_CheckoutSession_NoBillingContact_WhenNoBillingAddress() {
         let intent = Intent._testCheckoutSession(mode: .payment, amount: 2345, currency: "USD")
-        guard case .checkout(let checkout) = intent else {
+        guard case .checkout(let checkout, _) = intent else {
             XCTFail("Expected checkout intent")
             return
         }
