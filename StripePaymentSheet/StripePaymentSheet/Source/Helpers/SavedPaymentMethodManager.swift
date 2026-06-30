@@ -46,23 +46,23 @@ final class SavedPaymentMethodManager {
             let billing = Checkout.PaymentMethodBillingDetails(updateParams.billingDetails)
             let expiry = Checkout.PaymentMethodExpiryDetails(updateParams.card)
             guard billing != nil || expiry != nil else {
-                throw PaymentSheetError.unknown(debugDescription: "Payment method update requires at least billing details or expiry details.")
+                throw PaymentSheetError.unknown(debugDescription: "Tried to update a payment method without billing details or expiry details.")
             }
-            let updatedSession = try await configuration.apiClient.updatePaymentMethod(
+            let session = try await configuration.apiClient.updatePaymentMethod(
                 paymentMethod.stripeId,
                 inCheckoutSession: checkout.stpSession.id,
                 billingDetails: billing,
                 expiryDetails: expiry
             )
-            guard let updatedPM = updatedSession.customer?.paymentMethods.first(where: { $0.stripeId == paymentMethod.stripeId }) else {
+            guard let updatedPaymentMethod = session.customer?.paymentMethods.first(where: { $0.stripeId == paymentMethod.stripeId }) else {
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
                                                   error: Error.missingUpdatedPaymentMethod,
                                                   additionalNonPIIParams: ["payment_method_id": paymentMethod.stripeId])
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                throw PaymentSheetError.unknown(debugDescription: "Server response missing updated payment method.")
+                throw PaymentSheetError.unknown(debugDescription: "Checkout session response didn't include the updated payment method.")
             }
-            updatedPM.updateLocalFields(from: paymentMethod)
-            return updatedPM
+            updatedPaymentMethod.updateLocalFields(from: paymentMethod)
+            return updatedPaymentMethod
         case .paymentIntent, .setupIntent, .deferredIntent:
             guard let ephemeralKey else {
                 throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key while updating a payment method.")

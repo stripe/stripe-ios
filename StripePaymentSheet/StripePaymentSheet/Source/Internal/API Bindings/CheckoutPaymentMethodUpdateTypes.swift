@@ -25,20 +25,7 @@ extension Checkout {
 
         init?(_ billing: STPPaymentMethodBillingDetails?) {
             guard let billing else { return nil }
-            let address: PaymentMethodBillingAddress? = {
-                guard let addr = billing.address else { return nil }
-                guard addr.line1 != nil || addr.line2 != nil || addr.city != nil || addr.state != nil || addr.postalCode != nil || addr.country != nil else {
-                    return nil
-                }
-                return PaymentMethodBillingAddress(
-                    line1: addr.line1,
-                    line2: addr.line2,
-                    city: addr.city,
-                    state: addr.state,
-                    postalCode: addr.postalCode,
-                    country: addr.country
-                )
-            }()
+            let address = PaymentMethodBillingAddress(billing.address)
             guard billing.name != nil || billing.email != nil || billing.phone != nil || address != nil else {
                 return nil
             }
@@ -66,6 +53,22 @@ extension Checkout {
             self.state = state
             self.postalCode = postalCode
             self.country = country
+        }
+
+        init?(_ address: STPPaymentMethodAddress?) {
+            guard let address,
+                  address.line1 != nil || address.line2 != nil || address.city != nil
+                    || address.state != nil || address.postalCode != nil || address.country != nil else {
+                return nil
+            }
+            self.init(
+                line1: address.line1,
+                line2: address.line2,
+                city: address.city,
+                state: address.state,
+                postalCode: address.postalCode,
+                country: address.country
+            )
         }
     }
 
