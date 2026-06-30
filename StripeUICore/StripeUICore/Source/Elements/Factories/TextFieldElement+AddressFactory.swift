@@ -190,6 +190,15 @@ import UIKit
                 return .valid
             }
 
+            func makeDisplayText(for text: String) -> NSAttributedString {
+                // Format GB postal codes with a space before the last 3 characters (e.g. "SW1X7XL" -> "SW1X 7XL")
+                guard countryCode == "GB", text.count > 3 else {
+                    return NSAttributedString(string: text)
+                }
+                let splitIndex = text.index(text.endIndex, offsetBy: -3)
+                return NSAttributedString(string: "\(text[..<splitIndex]) \(text[splitIndex...])")
+            }
+
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 // CA and GB use alphanmeric. US uses numeric only
                 return .init(type: countryCode == "US" ? .numberPad : .default, textContentType: .postalCode, autocapitalization: .allCharacters)
