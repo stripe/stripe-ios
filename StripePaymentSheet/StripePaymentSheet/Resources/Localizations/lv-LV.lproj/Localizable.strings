@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "Bankas konta informāciju nevar mainīt.";
 
-"Buy now or pay later with  <img/>" = "Pērciet tagad vai maksājiet vēlāk ar <img/>";
+"Buy Now, Pay Later with  <img/>" = "Pērciet tūlīt, maksājiet vēlāk ar  <img/>";
 
-"Buy now or pay later with Afterpay" = "Pērciet tagad vai maksājiet vēlāk ar Afterpay";
+"Buy Now, Pay Later with Afterpay" = "Pērciet tūlīt, maksājiet vēlāk ar Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Pērciet tagad vai maksājiet vēlāk ar Cash App Afterpay";
+"Buy Now, Pay Later with Cash App Afterpay" = "Pērciet tūlīt, maksājiet vēlāk ar Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "Pērciet tagad vai maksājiet vēlāk ar Clearpay";
+"Buy Now, Pay Later with Clearpay" = "Pērciet tūlīt, maksājiet vēlāk ar Clearpay";
 
 "Buy now or pay later with Klarna" = "Pērciet tagad vai maksājiet vēlāk ar Klarna";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Saņemiet %@ atmaksu, maksājot pirmo reizi ar savu banku. <terms>Skatīt noteikumus</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Saņemiet %@ atmaksu, maksājot ar savu banku. <terms>Skatīt noteikumus</terms>";
+
+"Hide details" = "Paslēpt informāciju";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Es saprotu, ka Stripe iekasēs tiešā debeta maksājumus %@ vārdā, un apstiprinu, ka esmu konta turētājs un vienīgā persona, kurai ir jāautorizē debeti no šī konta.";
 
@@ -307,6 +309,8 @@
 "Shipping" = "Piegāde";
 
 "Shipping to %@ is not supported." = "Piegāde uz %@ netiek atbalstīts.";
+
+"Show details" = "Rādīt informāciju";
 
 "Show menu" = "Rādīt izvēlni";
 

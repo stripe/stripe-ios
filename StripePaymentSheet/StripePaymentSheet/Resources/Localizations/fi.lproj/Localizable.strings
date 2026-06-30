@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "Pankkitilin tietoja ei voi muuttaa.";
 
-"Buy now or pay later with  <img/>" = "Osta nyt tai maksa myöhemmin Afterpaylla/Clearpaylla <img/>";
+"Buy Now, Pay Later with  <img/>" = "Osta nyt, maksa myöhemmin kohteella <img/>";
 
-"Buy now or pay later with Afterpay" = "Osta nyt tai maksa myöhemmin Afterpaylla";
+"Buy Now, Pay Later with Afterpay" = "Osta nyt, maksa myöhemmin Afterpaylla";
 
-"Buy now or pay later with Cash App Afterpay" = "Osta nyt tai maksa myöhemmin Cash App Afterpaylla";
+"Buy Now, Pay Later with Cash App Afterpay" = "Osta nyt, maksa myöhemmin Cash App Afterpaylla";
 
-"Buy now or pay later with Clearpay" = "Osta nyt tai maksa myöhemmin Clearpaylla";
+"Buy Now, Pay Later with Clearpay" = "Osta nyt, maksa myöhemmin Clearpaylla";
 
 "Buy now or pay later with Klarna" = "Osta nyt tai maksa myöhemmin Klarnalla";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Saat %@ takaisin, kun maksat ensimmäistä kertaa pankillasi. <terms>Katso ehdot</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Saat %@ takaisin, kun maksat pankillasi. <terms>Katso ehdot</terms>";
+
+"Hide details" = "Piilota tiedot";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ymmärrän, että Stripe kerää suoraveloituksia yrityksen %@ puolesta sekä vahvistan, että olen tilinhaltija ja ainoa henkilö, jota tarvitaan tämän tilin veloitusten varmentamiseen.";
 
@@ -307,6 +309,8 @@
 "Shipping" = "Toimitus";
 
 "Shipping to %@ is not supported." = "Toimitusta kohteeseen %@ ei tueta.";
+
+"Show details" = "Näytä tiedot";
 
 "Show menu" = "Näytä valikko";
 

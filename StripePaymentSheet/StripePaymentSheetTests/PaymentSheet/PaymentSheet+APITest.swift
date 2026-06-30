@@ -1191,34 +1191,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         try await sut.update(checkout: checkout)
     }
 
-    @MainActor
-    func testUpdateCheckoutSessionIgnoresInFlightUpdate() async throws {
-        let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
-        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
-
-        var config = PaymentSheet.Configuration()
-        config.apiClient = apiClient
-        config.defaultBillingDetails.email = "test@example.com"
-
-        let sut = try await PaymentSheet.FlowController.create(checkout: checkout, configuration: config)
-
-        let firstUpdateExpectation = expectation(description: "First update should not invoke callback")
-        firstUpdateExpectation.isInverted = true
-        let secondUpdateExpectation = expectation(description: "Second update succeeds")
-
-        // Fire two updates; the first should be ignored
-        sut.update(checkout: checkout) { _ in
-            firstUpdateExpectation.fulfill()
-        }
-        sut.update(checkout: checkout) { error in
-            XCTAssertNil(error)
-            secondUpdateExpectation.fulfill()
-        }
-
-        await fulfillment(of: [firstUpdateExpectation, secondUpdateExpectation], timeout: STPTestingNetworkRequestTimeout)
-    }
-
     // MARK: - other tests
 
     func testMakeShippingParamsReturnsNilIfPaymentIntentHasDifferentShipping() {

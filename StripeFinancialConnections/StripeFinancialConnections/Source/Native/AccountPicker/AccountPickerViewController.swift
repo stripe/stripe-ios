@@ -150,6 +150,11 @@ final class AccountPickerViewController: UIViewController {
             .pollAuthSessionAccounts()
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
+
+                // There are scenarios where we want to keep the "Retrieving accounts…" view on the screen
+                // even though retrieval is done, as we otherwise would just render a blank screen.
+                var keepShowingLoadingView = false
+
                 switch result {
                 case .success(let accountsPayload):
                     self.dataSource
@@ -184,6 +189,7 @@ final class AccountPickerViewController: UIViewController {
                     //  `accountsPayload.skipAccountSelection` is true, OR `accountsPayload.skipAccountSelection` nil
                     // AND `authSession.skipAccountSelection` is true
                     let skipAccountSelection = (accountsPayload.skipAccountSelection ?? self.dataSource.authSession.skipAccountSelection ?? false)
+
                     if skipAccountSelection {
                         let selectableAccounts = accounts.filter(\.allowSelectionNonOptional)
                         if self.dataSource.manifest.singleAccount {
@@ -201,6 +207,7 @@ final class AccountPickerViewController: UIViewController {
                             self.dataSource.updateSelectedAccounts(selectableAccounts)
                         }
                         self.didSelectLinkAccounts(isSkipAccountSelection: true)
+                        keepShowingLoadingView = true
                     } else if
                         self.dataSource.manifest.singleAccount,
                         self.dataSource.authSession.institutionSkipAccountSelection ?? false,
@@ -211,6 +218,7 @@ final class AccountPickerViewController: UIViewController {
                         // we had done account selection, and submit.
                         self.dataSource.updateSelectedAccounts(accounts)
                         self.didSelectLinkAccounts(isSkipAccountSelection: true)
+                        keepShowingLoadingView = true
                     } else {
                         let (enabledAccounts, disabledAccounts) =
                             accounts
@@ -252,7 +260,10 @@ final class AccountPickerViewController: UIViewController {
                         self.showAccountLoadErrorView(error: error)
                     }
                 }
-                retreivingAccountsLoadingView.removeFromSuperview()
+
+                if !keepShowingLoadingView {
+                    retreivingAccountsLoadingView.removeFromSuperview()
+                }
             }
     }
 

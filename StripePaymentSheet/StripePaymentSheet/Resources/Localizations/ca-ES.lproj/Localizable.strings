@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "Les dades del compte bancari no es poden canviar.";
 
-"Buy now or pay later with  <img/>" = "Compra ara o paga més endavant amb <img/>";
+"Buy Now, Pay Later with  <img/>" = "Pagament diferit amb  <img/>";
 
-"Buy now or pay later with Afterpay" = "Compra ara o paga més endavant amb Afterpay";
+"Buy Now, Pay Later with Afterpay" = "Pagament diferit amb Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Compra ara o paga més endavant amb Cash App Afterpay";
+"Buy Now, Pay Later with Cash App Afterpay" = "Pagament diferit amb Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "Compra ara o paga més endavant amb Clearpay";
+"Buy Now, Pay Later with Clearpay" = "Pagament diferit amb Clearpay";
 
 "Buy now or pay later with Klarna" = "Compra ara o paga més endavant amb Klarna";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Obteniu %@ de reembossament quan pagueu per primera vegada amb el compte bancari. <terms>Consulteu les condicions</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Recupereu %@ en pagar amb el compte bancari. <terms>Consulteu les condicions</terms>";
+
+"Hide details" = "Oculta els detalls";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entenc que Stripe cobrarà els dèbits directes de part de %@ i confirmo que soc el titular del compte i l'única persona requerida per autoritzar dèbits des d'aquest compte.";
 
@@ -307,6 +309,8 @@
 "Shipping" = "Enviament";
 
 "Shipping to %@ is not supported." = "L'enviament a %@ no s'admet.";
+
+"Show details" = "Mostra els detalls";
 
 "Show menu" = "Mostra el menú";
 
