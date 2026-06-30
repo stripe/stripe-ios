@@ -28,6 +28,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         static let threeDFrontCaptureAcknowledgementDuration: TimeInterval = 1.4
         static let poseInstructionDuration: TimeInterval = 1.75
         static let poseCaptureFallbackDuration: TimeInterval = 8
+        static let poseBestFrameCaptureDuration: TimeInterval = 1.5
     }
 
     // MARK: View Models
@@ -67,6 +68,9 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
             clearPoseInstructionState()
         case .left,
             .right:
+            guard !poseBestFramePicker.isCollecting(for: scanningState.phase) else {
+                return
+            }
             startPoseCaptureFallbackTimerIfNeeded(for: scanningState.phase)
             guard poseInstructionPhase != scanningState.phase else {
                 return
@@ -269,6 +273,9 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     private var captureAcknowledgementTimer: Timer?
     private var poseInstructionTimer: Timer?
     private var poseCaptureFallbackTimer: Timer?
+    private let poseBestFramePicker = FaceCapturePoseBestFramePicker(
+        window: Constants.poseBestFrameCaptureDuration
+    )
 
     private var currentCaptureGuideHighlight: SelfieScanningView.ViewModel.CaptureGuideHighlight = .none
     private var currentCaptureGuideProgress: CGFloat = 0
@@ -425,6 +432,10 @@ extension SelfieCaptureViewController {
         latestPoseCaptureFallbackSample = nil
     }
 
+    func clearPoseBestFrameState() {
+        poseBestFramePicker.reset()
+    }
+
     func startPoseCaptureFallbackTimerIfNeeded(
         for phase: FaceCaptureScanningState.Phase
     ) {
@@ -471,6 +482,41 @@ extension SelfieCaptureViewController {
         return true
     }
 
+    func startPoseBestFrameCapture(
+        scanningState: FaceCaptureScanningState,
+        expectedPose: FaceCapturePose,
+        capturedSample: FaceScannerInputOutput
+    ) {
+        clearPoseCaptureFallbackState()
+        clearPoseBestFrameState()
+        currentCaptureGuideHighlight = .none
+        currentCaptureGuideProgress = 1
+        latestScanningState = scanningState
+        imageScanningSession.stopTimeoutTimer()
+        updateUI()
+
+        poseBestFramePicker.start(
+            expectedPose: expectedPose,
+            initialSample: capturedSample
+        ) { [weak self] pick in
+            guard let self = self else {
+                return
+            }
+            guard case .scanning(_, let scanningState) = self.imageScanningSession.state,
+                scanningState.phase == pick.expectedPose.scanningPhase
+            else {
+                return
+            }
+
+            self.acceptPoseCapture(
+                self.imageScanningSession,
+                scanningState: scanningState,
+                expectedPose: pick.expectedPose,
+                capturedSample: pick.sample
+            )
+        }
+    }
+
     func saveDataAndTransitionToNextScreen(
         faceCaptureData: FaceCaptureData
     ) {
@@ -499,6 +545,12 @@ extension SelfieCaptureViewController {
     func statusText(
         for scanningState: FaceCaptureScanningState
     ) -> SelfieScanningView.ViewModel.StatusText? {
+        if apiConfig.enable3DFaceCapture,
+            poseBestFramePicker.isCollecting(for: scanningState.phase)
+        {
+            return .holdStill
+        }
+
         if apiConfig.enable3DFaceCapture {
             switch currentCaptureGuideHighlight {
             case .none:
@@ -674,6 +726,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         stopCaptureAcknowledgementTimer()
         clearPoseInstructionState()
         clearPoseCaptureFallbackState()
+        clearPoseBestFrameState()
         latestScanningState = .initialValue()
         selfieUploader.reset()
     }
@@ -696,6 +749,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         stopCaptureAcknowledgementTimer()
         clearPoseInstructionState()
         clearPoseCaptureFallbackState()
+        clearPoseBestFrameState()
         latestScanningState = .initialValue()
         // Focus the accessibility VoiceOver back onto the capture view
         UIAccessibility.post(notification: .layoutChanged, argument: self.selfieCaptureView)
@@ -730,6 +784,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         stopCaptureAcknowledgementTimer()
         stopPoseInstructionTimer()
         clearPoseCaptureFallbackState()
+        clearPoseBestFrameState()
     }
 
     func imageScanningSessionDidScanImage(
@@ -745,6 +800,14 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         }
 
         guard scannerOutput.isValid else {
+            if poseBestFramePicker.isCollecting(for: scanningState.phase) {
+                currentCaptureGuideHighlight = .none
+                currentCaptureGuideProgress = 1
+                latestScanningState = scanningState
+                updateUI()
+                return
+            }
+
             currentCaptureGuideHighlight = .none
             currentCaptureGuideProgress = 0
             latestScanningState = scanningState
@@ -763,12 +826,21 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
                 exifMetadata: exifMetadata
             )
         case .left:
-            latestPoseCaptureFallbackSample = FaceScannerInputOutput(
+            let capturedSample = FaceScannerInputOutput(
                 image: image,
                 scannerOutput: scannerOutput,
                 cameraExifMetadata: exifMetadata,
                 capturePose: .left
             )
+            latestPoseCaptureFallbackSample = capturedSample
+            if poseBestFramePicker.isCollecting(for: .left) {
+                poseBestFramePicker.consider(capturedSample)
+                currentCaptureGuideHighlight = .none
+                currentCaptureGuideProgress = 1
+                latestScanningState = scanningState
+                updateUI()
+                return
+            }
             if capturePoseFallbackIfPossible() {
                 return
             }
@@ -781,12 +853,21 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
                 exifMetadata: exifMetadata
             )
         case .right:
-            latestPoseCaptureFallbackSample = FaceScannerInputOutput(
+            let capturedSample = FaceScannerInputOutput(
                 image: image,
                 scannerOutput: scannerOutput,
                 cameraExifMetadata: exifMetadata,
                 capturePose: .right
             )
+            latestPoseCaptureFallbackSample = capturedSample
+            if poseBestFramePicker.isCollecting(for: .right) {
+                poseBestFramePicker.consider(capturedSample)
+                currentCaptureGuideHighlight = .none
+                currentCaptureGuideProgress = 1
+                latestScanningState = scanningState
+                updateUI()
+                return
+            }
             if capturePoseFallbackIfPossible() {
                 return
             }
@@ -910,8 +991,6 @@ extension SelfieCaptureViewController {
             return
         }
 
-        currentCaptureGuideHighlight = captureGuideHighlight(for: expectedPose)
-        currentCaptureGuideProgress = 1
         let capturedSample = FaceScannerInputOutput(
             image: image,
             scannerOutput: scannerOutput,
@@ -919,8 +998,7 @@ extension SelfieCaptureViewController {
             capturePose: expectedPose
         )
 
-        acceptPoseCapture(
-            scanningSession,
+        startPoseBestFrameCapture(
             scanningState: scanningState,
             expectedPose: expectedPose,
             capturedSample: capturedSample
@@ -934,6 +1012,7 @@ extension SelfieCaptureViewController {
         capturedSample: FaceScannerInputOutput
     ) {
         clearPoseCaptureFallbackState()
+        clearPoseBestFrameState()
         currentCaptureGuideHighlight = captureGuideHighlight(for: expectedPose)
         currentCaptureGuideProgress = 1
 
@@ -1029,5 +1108,89 @@ extension SelfieCaptureViewController: IdentityDataCollecting {
     func reset() {
         imageScanningSession.reset()
         clearCollectedFields()
+    }
+}
+
+private final class FaceCapturePoseBestFramePicker {
+    struct Pick {
+        let expectedPose: FaceCapturePose
+        let sample: FaceScannerInputOutput
+    }
+
+    private let window: TimeInterval
+    private var timer: Timer?
+    private var expectedPose: FaceCapturePose?
+    private var bestSample: FaceScannerInputOutput?
+    private var didPick: ((Pick) -> Void)?
+
+    init(window: TimeInterval) {
+        self.window = window
+    }
+
+    func start(
+        expectedPose: FaceCapturePose,
+        initialSample: FaceScannerInputOutput,
+        didPick: @escaping (Pick) -> Void
+    ) {
+        reset()
+        self.expectedPose = expectedPose
+        bestSample = initialSample
+        self.didPick = didPick
+        timer = Timer.scheduledTimer(withTimeInterval: window, repeats: false) { [weak self] _ in
+            self?.pickBestSample()
+        }
+    }
+
+    func reset() {
+        timer?.invalidate()
+        timer = nil
+        expectedPose = nil
+        bestSample = nil
+        didPick = nil
+    }
+
+    func isCollecting(
+        for phase: FaceCaptureScanningState.Phase
+    ) -> Bool {
+        return expectedPose?.scanningPhase == phase
+    }
+
+    func consider(_ sample: FaceScannerInputOutput) {
+        guard sample.scannerOutput.facePose?.direction == expectedPose else {
+            return
+        }
+
+        guard let currentBestSample = bestSample else {
+            bestSample = sample
+            return
+        }
+
+        if sample.scannerOutput.bestFrameScore > currentBestSample.scannerOutput.bestFrameScore {
+            bestSample = sample
+        }
+    }
+
+    private func pickBestSample() {
+        guard let expectedPose, let bestSample else {
+            reset()
+            return
+        }
+
+        let didPick = didPick
+        reset()
+        didPick?(.init(expectedPose: expectedPose, sample: bestSample))
+    }
+}
+
+private extension FaceCapturePose {
+    var scanningPhase: FaceCaptureScanningState.Phase {
+        switch self {
+        case .front:
+            return .front
+        case .left:
+            return .left
+        case .right:
+            return .right
+        }
     }
 }
