@@ -209,7 +209,7 @@ enum Intent {
     func allowsPaymentMethodUpdate(elementsSession: STPElementsSession) -> Bool {
         switch self {
         case .checkout:
-            // Checkout sessions always support PM updates — the server controls which fields are editable per PM type
+            // Checkout sessions always support PM updates
             return true
         case .paymentIntent, .setupIntent, .deferredIntent:
             return elementsSession.paymentMethodUpdateForPaymentSheet
