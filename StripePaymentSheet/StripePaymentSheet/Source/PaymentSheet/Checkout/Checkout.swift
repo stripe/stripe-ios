@@ -62,7 +62,8 @@ public final class Checkout: ObservableObject {
     /// Serial queue of in-flight session updates. Each task waits for the previous task before running.
     var pendingOperations: [Task<Void, Error>] = []
 
-    var isLastPendingOperation: Bool {
+    /// `true` when no other operations are queued after the current one.
+    var isFinalQueuedOperation: Bool {
         pendingOperations.count <= 1
     }
 
@@ -326,9 +327,9 @@ public final class Checkout: ObservableObject {
         newSession.shippingAddress = stpSession?.shippingAddress
         stpSession = newSession
         let publicSession = newSession.makePublicSession()
-        state = pendingOperations.isEmpty ? .loaded(publicSession) : .loading(publicSession)
+        state = isFinalQueuedOperation ? .loaded(publicSession) : .loading(publicSession)
         // Skip delegate if another op is queued—it'll notify when it commits.
-        if isLastPendingOperation {
+        if isFinalQueuedOperation {
             try await integrationDelegate?.checkoutDidUpdate(self)
         }
         delegate?.checkout(self, didChangeState: state)

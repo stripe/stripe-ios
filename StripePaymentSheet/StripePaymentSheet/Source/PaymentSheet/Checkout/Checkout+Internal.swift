@@ -85,7 +85,7 @@ extension Checkout {
                 self.state = .loaded(self.state.session)
                 // If a prior op skipped the delegate and we're failing before we
                 // get to commitSession ourselves, still notify so the UI updates.
-                if self.isLastPendingOperation {
+                if self.isFinalQueuedOperation {
                     try? await self.integrationDelegate?.checkoutDidUpdate(self)
                 }
                 throw CheckoutError.apiError(message: error.nonGenericDescription)
