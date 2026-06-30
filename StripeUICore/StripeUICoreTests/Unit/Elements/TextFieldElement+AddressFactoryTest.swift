@@ -168,6 +168,29 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
                                  matches: .invalid(TextFieldElement.PhoneNumberConfiguration.incompleteError))
         }
     }
+    func testPostalCodeConfigurationDisplayTextGB() {
+        let config = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "GB", label: "Postal", defaultValue: nil, isOptional: false)
+
+        // Standard UK postcodes should have a space inserted before the last 3 characters
+        XCTAssertEqual(config.makeDisplayText(for: "SW1X7XL").string, "SW1X 7XL")
+        XCTAssertEqual(config.makeDisplayText(for: "M11AA").string, "M1 1AA")
+        XCTAssertEqual(config.makeDisplayText(for: "EC1A1BB").string, "EC1A 1BB")
+        XCTAssertEqual(config.makeDisplayText(for: "DN551PT").string, "DN55 1PT")
+
+        // Short input (3 chars or fewer) should not be modified
+        XCTAssertEqual(config.makeDisplayText(for: "SW1").string, "SW1")
+        XCTAssertEqual(config.makeDisplayText(for: "").string, "")
+    }
+
+    func testPostalCodeConfigurationDisplayTextNonGB() {
+        let usConfig = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "US", label: "ZIP", defaultValue: nil, isOptional: false)
+        // US postal codes should not be modified
+        XCTAssertEqual(usConfig.makeDisplayText(for: "94107").string, "94107")
+
+        let caConfig = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "CA", label: "Postal", defaultValue: nil, isOptional: false)
+        // CA postal codes should not be modified
+        XCTAssertEqual(caConfig.makeDisplayText(for: "K1A0B1").string, "K1A0B1")
+    }
 }
 
 // MARK: - Helpers
