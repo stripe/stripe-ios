@@ -488,6 +488,7 @@ final class PaymentSheetLoader {
                   let decodedElementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJSON) else {
                 throw PaymentSheetError.unknown(debugDescription: "Failed to decode elements session from provided checkout session object")
             }
+            decodedElementsSession.disableLinkForAutomaticTaxBilling = checkout.stpSession.shouldSendTaxRegion(for: "billing")
             elementsSession = decodedElementsSession
             intent = .checkout(checkout)
         }
