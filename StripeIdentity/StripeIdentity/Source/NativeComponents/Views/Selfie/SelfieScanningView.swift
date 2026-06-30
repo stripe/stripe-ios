@@ -496,8 +496,13 @@ final class SelfieScanningView: UIView {
             )
             setPreviewBlurVisible(shouldBlurLivePreview, animated: true)
             captureTickMarksView.isHidden = false
+            let shouldShowCenteredShadow = uses3DCaptureAnimations
+                && !shouldBlurLivePreview
+                && (statusText == .holdStill
+                    || captureGuideTarget != .none
+                    || captureGuideHighlight != .none)
             captureTickMarksView.setShowsCenteredShadow(
-                !shouldBlurLivePreview,
+                shouldShowCenteredShadow,
                 animated: true
             )
             captureTickMarksView.setUses3DCaptureAnimations(uses3DCaptureAnimations)
@@ -906,8 +911,8 @@ private final class CaptureTickMarksView: UIView {
         static let shadowColor = UIColor.black.withAlphaComponent(0.22)
         static let shadowOffset = CGSize(width: 0, height: 1)
         static let shadowBlur: CGFloat = 3.5
-        static let centeredShadowOuterOpacity: CGFloat = 0.5525
-        static let centeredShadowClearPadding: CGFloat = 12
+        static let centeredShadowOuterOpacity: CGFloat = 0.68
+        static let centeredShadowClearPadding: CGFloat = 8
         static let centeredShadowGradientStepCount = 16
         static let centeredShadowFadeInDuration: TimeInterval = SelfieScanningView.Styling.captureGuideShadowFadeInDuration
     }
