@@ -562,11 +562,9 @@ extension EmbeddedPaymentElement {
                 let error = PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)
                 return (.failed(error: error), nil)
             }
-            var confirmResult: (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?)!
-            await checkout.enqueueSessionUpdate {
-                confirmResult = await confirmBlock()
+            (result, deferredIntentConfirmationType) = await checkout.enqueueSessionUpdate {
+                await confirmBlock()
             }
-            (result, deferredIntentConfirmationType) = confirmResult
         } else {
             (result, deferredIntentConfirmationType) = await confirmBlock()
         }

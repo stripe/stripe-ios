@@ -24,38 +24,50 @@ extension Checkout {
 
     /// Runs `body` as a tracked session update, serialized behind any in-flight ops.
     ///
+    /// `body` can be of any return type, including `Void`, and  `enqueueSessionUpdate`
+    /// will return that value to the caller.
+    ///
     /// Operations execute in strict FIFO order: each task waits for the previous
     /// task before running its body. While the queue is non-empty, ``state`` is
     /// `.loading`; once the queue drains it returns to `.loaded`.
-    internal func enqueueSessionUpdate(
-        _ body: @MainActor @escaping () async throws -> Void
-    ) async throws {
+    /// - Throws: Any error thrown by `body`.
+    /// - Returns: The value returned by `body`.
+    internal func enqueueSessionUpdate<T>(
+        _ body: @MainActor @escaping () async throws -> T
+    ) async throws -> T {
         let predecessor = pendingOperations.last
-        let operation = Task<Void, Error> { @MainActor in
+
+        // The typed task does the actual work, preserving the return type T.
+        let typedOperation = Task<T, Error> { @MainActor in
             // Keep later ops moving even if an earlier queued op failed.
             if let predecessor { _ = try? await predecessor.value }
-            try await body()
+            return try await body()
         }
 
-        pendingOperations.append(operation)
+        // The erased task discards T so it can be stored in the homogeneous
+        // pendingOperations array. It forwards completion/errors so downstream
+        // predecessors still serialize correctly.
+        let erasedOperation = Task<Void, Error> { _ = try await typedOperation.value }
+        pendingOperations.append(erasedOperation)
 
         defer {
-            pendingOperations.removeAll { $0 == operation }
+            pendingOperations.removeAll { $0 == erasedOperation }
         }
 
-        try await operation.value
+        return try await typedOperation.value
     }
 
     /// Non-throwing variant of ``enqueueSessionUpdate(_:)-throws``.
     ///
     /// Use this when the enqueued work cannot fail. The operation is still
     /// serialized behind any in-flight ops in the same FIFO order.
-    internal func enqueueSessionUpdate(
-        _ body: @MainActor @escaping () async -> Void
-    ) async {
-        // Cast body to `throws` so that we call the underlying throwing version of the
-        //  function instead of recursing
-        try? await enqueueSessionUpdate(body as (() async throws -> Void))
+    internal func enqueueSessionUpdate<T>(
+        _ body: @MainActor @escaping () async -> T
+    ) async -> T {
+        // Cast body to `throws` so that we call the underlying throwing version
+        // instead of recursing. The try! is safe because body cannot throw.
+        // swiftlint:disable:next force_try
+        return try! await enqueueSessionUpdate(body as (() async throws -> T))
     }
 
     /// Enqueues a serialized session update.

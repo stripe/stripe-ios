@@ -733,6 +733,8 @@ extension PaymentSheet {
                         completion(.failed(error: error))
                         return
                     }
+                    // We don't need to await this Task, just kick it off, because confirmBlock uses a completion.
+                    // We do need to open a task to use `Checkout`'s `enqueueSessionUpdate`, which uses Swift concurrency.
                     Task { @MainActor in
                         await checkout.enqueueSessionUpdate {
                             confirmBlock()
