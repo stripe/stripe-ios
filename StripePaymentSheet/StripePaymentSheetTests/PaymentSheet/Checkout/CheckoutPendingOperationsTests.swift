@@ -238,16 +238,19 @@ final class CheckoutPendingOperationsTests: XCTestCase {
 
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
         let elementsSession = STPElementsSession._testCardValue()
+        let savedPaymentMethod = STPPaymentMethod._testCard()
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: intent,
             elementsSession: elementsSession,
-            savedPaymentMethods: [],
+            savedPaymentMethods: [savedPaymentMethod],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "cus_test", ephemeralKeySecret: "ek_test")
         let fc = PaymentSheet.FlowController(
-            configuration: PaymentSheet.Configuration(),
+            configuration: configuration,
             loadResult: loadResult,
             analyticsHelper: ._testValue()
         )
