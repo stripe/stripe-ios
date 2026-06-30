@@ -6,6 +6,7 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
+import Combine
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
@@ -32,12 +33,8 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testInitSetsLoadedState() async {
         let checkout = await makeCheckoutWithOpenSession()
-        guard case .loaded = checkout.state else {
-            XCTFail("Expected .loaded state after init with session")
-            return
-        }
-        XCTAssertEqual(checkout.state.session.status?.type, .open)
-        XCTAssertFalse(checkout.state.isLoading)
+        XCTAssertFalse(checkout.isLoading)
+        XCTAssertEqual(checkout.session.status?.type, .open)
     }
 
     // MARK: - runServerUpdate Tests
@@ -106,15 +103,27 @@ final class CheckoutUnitTests: XCTestCase {
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
 
+        var sessionEmissions: [Checkout.Session] = []
+        let sessionSub = checkout.$session.dropFirst().sink { sessionEmissions.append($0) }
+        var loadingEmissions: [Bool] = []
+        let loadingSub = checkout.$isLoading.dropFirst().sink { loadingEmissions.append($0) }
+
         try await checkout.updateBillingAddress(
             name: "Jane Doe",
             address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
         )
 
-        let stored = checkout.state.session.billingAddress
+        let stored = checkout.session.billingAddress
         XCTAssertEqual(stored?.name, "Jane Doe")
         XCTAssertEqual(stored?.address.country, "US")
-        XCTAssertTrue(delegate.didChangeStateCalled)
+        XCTAssertEqual(delegate.updateSessionCallCount, 1)
+        XCTAssertEqual(delegate.beginLoadingCallCount, 1)
+        XCTAssertEqual(delegate.finishLoadingCallCount, 1)
+        XCTAssertEqual(sessionEmissions.count, 1)
+        XCTAssertEqual(loadingEmissions, [true, false])
+
+        sessionSub.cancel()
+        loadingSub.cancel()
     }
 
     func testUpdateShippingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
@@ -122,15 +131,27 @@ final class CheckoutUnitTests: XCTestCase {
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
 
+        var sessionEmissions: [Checkout.Session] = []
+        let sessionSub = checkout.$session.dropFirst().sink { sessionEmissions.append($0) }
+        var loadingEmissions: [Bool] = []
+        let loadingSub = checkout.$isLoading.dropFirst().sink { loadingEmissions.append($0) }
+
         try await checkout.updateShippingAddress(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )
 
-        let stored = checkout.state.session.shippingAddress
+        let stored = checkout.session.shippingAddress
         XCTAssertEqual(stored?.name, "John Smith")
         XCTAssertEqual(stored?.address.country, "US")
-        XCTAssertTrue(delegate.didChangeStateCalled)
+        XCTAssertEqual(delegate.updateSessionCallCount, 1)
+        XCTAssertEqual(delegate.beginLoadingCallCount, 1)
+        XCTAssertEqual(delegate.finishLoadingCallCount, 1)
+        XCTAssertEqual(sessionEmissions.count, 1)
+        XCTAssertEqual(loadingEmissions, [true, false])
+
+        sessionSub.cancel()
+        loadingSub.cancel()
     }
 
     func testUpdateShippingAddress_disallowedCountry_throws() async throws {
@@ -160,7 +181,7 @@ final class CheckoutUnitTests: XCTestCase {
             address: .init(country: "CA", line1: "80 Spadina Ave", city: "Toronto", state: "ON", postalCode: "M5V 2J4")
         )
 
-        XCTAssertEqual(checkout.state.session.shippingAddress?.address.country, "CA")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.country, "CA")
     }
 
     // MARK: - Sheet Presented Guard Tests
@@ -351,6 +372,9 @@ final class CheckoutUnitTests: XCTestCase {
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
 
+        var sessionEmissions: [Checkout.Session] = []
+        let sessionSub = checkout.$session.dropFirst().sink { sessionEmissions.append($0) }
+
         // Simulate a confirm response with different data
         var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
         updatedJSON["status"] = "complete"
@@ -360,9 +384,12 @@ final class CheckoutUnitTests: XCTestCase {
         try await checkout.commitSession(confirmResponse)
 
         // Verify session was updated with the confirm response data
-        XCTAssertEqual(checkout.state.session.status?.type, .complete)
-        XCTAssertEqual(checkout.state.session.status?.paymentStatus, .paid)
-        XCTAssertTrue(delegate.didChangeStateCalled)
+        XCTAssertEqual(checkout.session.status?.type, .complete)
+        XCTAssertEqual(checkout.session.status?.paymentStatus, .paid)
+        XCTAssertEqual(delegate.updateSessionCallCount, 1)
+        XCTAssertEqual(sessionEmissions.count, 1)
+
+        sessionSub.cancel()
     }
 
     func testUpdateSessionCarriesOverAddressOverrides() async throws {
@@ -384,14 +411,17 @@ final class CheckoutUnitTests: XCTestCase {
         try await checkout.commitSession(confirmResponse)
 
         // Address overrides should be carried over to the new session
-        XCTAssertEqual(checkout.state.session.billingAddress?.name, "Jane Doe")
-        XCTAssertEqual(checkout.state.session.billingAddress?.address.country, "US")
+        XCTAssertEqual(checkout.session.billingAddress?.name, "Jane Doe")
+        XCTAssertEqual(checkout.session.billingAddress?.address.country, "US")
     }
 
     func testUpdateSessionCanBeCalledMultipleTimes() async throws {
         let checkout = await makeCheckoutWithOpenSession()
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
+
+        var sessionEmissions: [Checkout.Session] = []
+        let sessionSub = checkout.$session.dropFirst().sink { sessionEmissions.append($0) }
 
         // Set a billing address that should survive both session swaps
         checkout.stpSession.billingAddress = Checkout.ContactAddress(
@@ -406,8 +436,8 @@ final class CheckoutUnitTests: XCTestCase {
         let firstConfirm = STPCheckoutSession.decodedObject(fromAPIResponse: firstResponse)!
 
         try await checkout.commitSession(firstConfirm)
-        XCTAssertEqual(checkout.state.session.status?.type, .complete)
-        XCTAssertEqual(checkout.state.session.billingAddress?.name, "Jane Doe")
+        XCTAssertEqual(checkout.session.status?.type, .complete)
+        XCTAssertEqual(checkout.session.billingAddress?.name, "Jane Doe")
 
         // Second update
         var secondResponse = CheckoutTestHelpers.makeOpenSessionJSON()
@@ -415,22 +445,24 @@ final class CheckoutUnitTests: XCTestCase {
         let secondSession = STPCheckoutSession.decodedObject(fromAPIResponse: secondResponse)!
 
         try await checkout.commitSession(secondSession)
-        XCTAssertEqual(checkout.state.session.status?.type, .open)
-        XCTAssertEqual(checkout.state.session.billingAddress?.name, "Jane Doe")
-        XCTAssertEqual(delegate.changeStateCallCount, 2)
+        XCTAssertEqual(checkout.session.status?.type, .open)
+        XCTAssertEqual(checkout.session.billingAddress?.name, "Jane Doe")
+        XCTAssertEqual(delegate.updateSessionCallCount, 2)
+        XCTAssertEqual(sessionEmissions.count, 2)
+
+        sessionSub.cancel()
     }
 
     // MARK: - State Convenience Tests
 
-    func testStateSessionAlwaysReturnsSession() async {
+    func testSessionAvailableAfterInit() async {
         let checkout = await makeCheckoutWithOpenSession()
-        XCTAssertNotNil(checkout.state.session)
-        XCTAssertEqual(checkout.state.session.status?.type, .open)
+        XCTAssertEqual(checkout.session.status?.type, .open)
     }
 
-    func testStateIsLoadingReturnsFalseForLoaded() async {
+    func testIsLoadingFalseAfterInit() async {
         let checkout = await makeCheckoutWithOpenSession()
-        XCTAssertFalse(checkout.state.isLoading)
+        XCTAssertFalse(checkout.isLoading)
     }
 
     // MARK: - checkoutDidUpdate Tests
@@ -439,6 +471,9 @@ final class CheckoutUnitTests: XCTestCase {
         let checkout = await makeCheckoutWithOpenSession()
         let integrationDelegate = MockCheckoutIntegrationDelegate()
         checkout.integrationDelegate = integrationDelegate
+
+        var sessionEmissions: [Checkout.Session] = []
+        let sessionSub = checkout.$session.dropFirst().sink { sessionEmissions.append($0) }
 
         var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
         updatedJSON["status"] = "complete"
@@ -449,6 +484,9 @@ final class CheckoutUnitTests: XCTestCase {
 
         XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 1)
         XCTAssertTrue(integrationDelegate.lastCheckout === checkout)
+        XCTAssertEqual(sessionEmissions.count, 1)
+
+        sessionSub.cancel()
     }
 
     func testCheckoutDidUpdateCalledEvenWhenSessionUnchanged() async throws {
@@ -456,15 +494,21 @@ final class CheckoutUnitTests: XCTestCase {
         let integrationDelegate = MockCheckoutIntegrationDelegate()
         checkout.integrationDelegate = integrationDelegate
 
+        var sessionEmissions: [Checkout.Session] = []
+        let sessionSub = checkout.$session.dropFirst().sink { sessionEmissions.append($0) }
+
         // Update with same session data — delegates still fire because the caller
         // decided an update occurred (e.g. after an API call).
         let sameSession = STPCheckoutSession.decodedObject(fromAPIResponse: CheckoutTestHelpers.makeOpenSessionJSON())!
         try await checkout.commitSession(sameSession)
 
         XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 1)
+        XCTAssertEqual(sessionEmissions.count, 1)
+
+        sessionSub.cancel()
     }
 
-    func testCheckoutDidUpdateCalledBeforeRegularDelegate() async throws {
+    func testCommitSessionNotifiesRegularDelegateThenIntegrationDelegate() async throws {
         let checkout = await makeCheckoutWithOpenSession()
         var callOrder: [String] = []
 
@@ -473,8 +517,11 @@ final class CheckoutUnitTests: XCTestCase {
         checkout.integrationDelegate = integrationDelegate
 
         let delegate = MockCheckoutDelegate()
-        delegate.onChangeState = { callOrder.append("regular") }
+        delegate.onUpdateSession = { callOrder.append("regular") }
         checkout.delegate = delegate
+
+        var sessionEmissions: [Checkout.Session] = []
+        let sessionSub = checkout.$session.dropFirst().sink { sessionEmissions.append($0) }
 
         var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
         updatedJSON["status"] = "complete"
@@ -483,7 +530,12 @@ final class CheckoutUnitTests: XCTestCase {
 
         try await checkout.commitSession(updatedSession)
 
-        XCTAssertEqual(callOrder, ["integration", "regular"])
+        XCTAssertEqual(callOrder, ["regular", "integration"])
+        XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 1)
+        XCTAssertEqual(delegate.updateSessionCallCount, 1)
+        XCTAssertEqual(sessionEmissions.count, 1)
+
+        sessionSub.cancel()
     }
 
     func testCheckoutDidUpdateErrorBubblesUp() async {
@@ -612,16 +664,24 @@ final class CheckoutUnitTests: XCTestCase {
 
 @MainActor
 private class MockCheckoutDelegate: CheckoutDelegate {
-    var didChangeStateCalled = false
-    var lastState: Checkout.State?
-    var changeStateCallCount = 0
-    var onChangeState: (() -> Void)?
+    var lastSession: Checkout.Session?
+    var updateSessionCallCount = 0
+    var beginLoadingCallCount = 0
+    var finishLoadingCallCount = 0
+    var onUpdateSession: (() -> Void)?
 
-    func checkout(_ checkout: Checkout, didChangeState state: Checkout.State) {
-        didChangeStateCalled = true
-        changeStateCallCount += 1
-        lastState = state
-        onChangeState?()
+    func checkoutDidBeginLoading(_ checkout: Checkout) {
+        beginLoadingCallCount += 1
+    }
+
+    func checkoutDidFinishLoading(_ checkout: Checkout) {
+        finishLoadingCallCount += 1
+    }
+
+    func checkoutDidUpdateSession(_ checkout: Checkout, session: Checkout.Session) {
+        updateSessionCallCount += 1
+        lastSession = session
+        onUpdateSession?()
     }
 }
 

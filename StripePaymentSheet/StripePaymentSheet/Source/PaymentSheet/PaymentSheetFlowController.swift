@@ -655,7 +655,7 @@ extension PaymentSheet {
             if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
                 stpAssertionFailure("`confirm` should not be called while the Checkout session is loading.")
                 let error = PaymentSheetError.flowControllerConfirmFailed(
-                    message: "confirmPayment was called while the Checkout session is still loading. Wait until the Checkout state is .loaded before calling confirm."
+                    message: "confirmPayment was called while the Checkout session is still loading. Wait until Checkout.isLoading is false."
                 )
                 completion(.failed(error: error))
                 return
