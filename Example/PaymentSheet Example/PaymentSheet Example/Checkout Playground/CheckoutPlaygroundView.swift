@@ -43,10 +43,8 @@ struct CheckoutPlaygroundView: View {
                         CheckoutPlaygroundFeaturesSection(
                             mode: viewModel.mode,
                             customerType: viewModel.customerType,
-                            enableShipping: $viewModel.enableShipping,
                             shippingAddressCollection: $viewModel.shippingAddressCollection,
                             billingAddressCollection: $viewModel.billingAddressCollection,
-                            phoneNumberCollection: $viewModel.phoneNumberCollection,
                             allowPromotionCodes: $viewModel.allowPromotionCodes,
                             automaticTax: $viewModel.automaticTax,
                             adaptivePricing: $viewModel.adaptivePricing,

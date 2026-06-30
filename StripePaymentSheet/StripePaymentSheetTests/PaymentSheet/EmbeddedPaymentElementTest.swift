@@ -923,27 +923,6 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertEqual(updateResult2, .succeeded)
     }
 
-    func testUpdateCheckoutSessionWithCompletionBlock() async throws {
-        let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
-        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
-
-        var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
-        config.apiClient = apiClient
-        config.defaultBillingDetails.email = "test@example.com"
-
-        let sut = try await EmbeddedPaymentElement.create(checkout: checkout, configuration: config)
-        sut.delegate = self
-        sut.presentingViewController = UIViewController()
-
-        let updateExpectation = expectation(description: "Update completes")
-        sut.update(checkout: checkout) { result in
-            XCTAssertEqual(result, .succeeded)
-            updateExpectation.fulfill()
-        }
-        await fulfillment(of: [updateExpectation], timeout: STPTestingNetworkRequestTimeout)
-    }
-
     // MARK: Immediate action tests
 
     func testCreateFails_whenImmediateActionWithConfirmAndCustomer() async throws {

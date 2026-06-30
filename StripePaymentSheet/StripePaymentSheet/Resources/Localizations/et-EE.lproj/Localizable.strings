@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "Pangakonto andmeid ei saa muuta.";
 
-"Buy now or pay later with  <img/>" = "Osta kohe või maksa hiljem makseviisiga <img/>";
+"Buy Now, Pay Later with  <img/>" = "Osta kohe, maksa hiljem  <img/>";
 
-"Buy now or pay later with Afterpay" = "Osta praegu või maksa Afterpay abil hiljem";
+"Buy Now, Pay Later with Afterpay" = "Osta kohe, maksa hiljem Afterpayga";
 
-"Buy now or pay later with Cash App Afterpay" = "Osta praegu või maksa Cash App Afterpay abil hiljem";
+"Buy Now, Pay Later with Cash App Afterpay" = "Osta kohe, maksa hiljem Cash App Afterpay abil";
 
-"Buy now or pay later with Clearpay" = "Osta praegu või maksa Clearpay abil hiljem";
+"Buy Now, Pay Later with Clearpay" = "Osta kohe, maksa hiljem Clearpayga";
 
 "Buy now or pay later with Klarna" = "Ostke nüüd või makske hiljem Klarnaga";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Saate %@ tagasi, kui maksate esimest korda oma panga kaudu. <terms>Vaata tingimusi</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Saate %@ tagasi, kui maksate oma panga kaudu. <terms>Vaata tingimusi</terms>";
+
+"Hide details" = "Peida üksikasjad";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Mõistan, et Stripe kogub ettevõtte %@ nimel otsekorraldusi, ja kinnitan, et olen kontoomanik ja ainus isik, kes peab selle konto debiteerimist autoriseerima.";
 
@@ -307,6 +309,8 @@
 "Shipping" = "Tarnimine";
 
 "Shipping to %@ is not supported." = "Kohaletoimetamist %@ ei ole toetatud.";
+
+"Show details" = "Kuva üksikasjad";
 
 "Show menu" = "Kuva menüü";
 
