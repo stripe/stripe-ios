@@ -27,8 +27,13 @@ final class SelfieScanningView: UIView {
         static let captureGuideShadowFadeInDuration: TimeInterval = 0.6
         static let livePreviewBlurFadeInDuration: TimeInterval = 0.3
         static let livePreviewBlurFadeOutDuration: TimeInterval = 0.6
+        static var livePreviewBlurEffect: UIBlurEffect {
+            UIBlurEffect(style: .regular)
+        }
         static let statusLabelFadeInDuration: TimeInterval = 0.18
         static let statusLabelFadeOutDuration: TimeInterval = 0.6
+        static let turnPromptArrowAnimationDuration: TimeInterval = 0.45
+        static let turnPromptArrowAnimationOffset: CGFloat = 5
         static var troubleLinkFont: UIFont {
             IdentityUI.preferredFont(forTextStyle: .body).withSize(12)
         }
@@ -91,11 +96,13 @@ final class SelfieScanningView: UIView {
             case right
         }
 
-        enum StatusText {
+        enum StatusText: Equatable {
             case placeFace
             case holdStill
             case lookLeft
+            case lookLeftBottom
             case lookRight
+            case lookRightBottom
             case capturedFront
             case capturedLeft
             case capturedRight
@@ -113,14 +120,16 @@ final class SelfieScanningView: UIView {
                         "Hold still...",
                         "Status text displayed over the selfie viewfinder while capturing selfies"
                     )
-                case .lookLeft:
+                case .lookLeft,
+                    .lookLeftBottom:
                     return STPLocalizedString(
-                        "← Turn head left",
+                        "Turn head left",
                         "Status text displayed over the selfie viewfinder while capturing the left side of a face"
                     )
-                case .lookRight:
+                case .lookRight,
+                    .lookRightBottom:
                     return STPLocalizedString(
-                        "Turn head right →",
+                        "Turn head right",
                         "Status text displayed over the selfie viewfinder while capturing the right side of a face"
                     )
                 case .capturedFront:
@@ -151,7 +160,9 @@ final class SelfieScanningView: UIView {
                 case .placeFace,
                     .holdStill,
                     .lookLeft,
+                    .lookLeftBottom,
                     .lookRight,
+                    .lookRightBottom,
                     .capturedFront,
                     .capturedLeft,
                     .capturedRight:
@@ -165,6 +176,8 @@ final class SelfieScanningView: UIView {
                 switch self {
                 case .placeFace,
                     .holdStill,
+                    .lookLeftBottom,
+                    .lookRightBottom,
                     .capturedFront,
                     .capturedLeft,
                     .capturedRight:
@@ -181,6 +194,8 @@ final class SelfieScanningView: UIView {
                 switch self {
                 case .placeFace,
                     .holdStill,
+                    .lookLeftBottom,
+                    .lookRightBottom,
                     .lookLeft,
                     .lookRight,
                     .uploading:
@@ -190,6 +205,45 @@ final class SelfieScanningView: UIView {
                     .capturedRight:
                     return true
                 }
+            }
+
+            var showsCenteredShadowIn3DCapture: Bool {
+                switch self {
+                case .holdStill,
+                    .lookLeftBottom,
+                    .lookRightBottom,
+                    .capturedFront,
+                    .capturedLeft,
+                    .capturedRight:
+                    return true
+                case .placeFace,
+                    .lookLeft,
+                    .lookRight,
+                    .uploading:
+                    return false
+                }
+            }
+
+            var turnPromptArrowText: String? {
+                switch self {
+                case .lookLeft:
+                    return "←"
+                case .lookRight:
+                    return "→"
+                case .placeFace,
+                    .holdStill,
+                    .lookLeftBottom,
+                    .lookRightBottom,
+                    .capturedFront,
+                    .capturedLeft,
+                    .capturedRight,
+                    .uploading:
+                    return nil
+                }
+            }
+
+            var placesTurnPromptArrowAfterText: Bool {
+                return self == .lookRight
             }
         }
 
@@ -240,6 +294,11 @@ final class SelfieScanningView: UIView {
         }
     }
 
+    private struct TurnPromptArrowConfiguration: Equatable {
+        let text: String
+        let placesAfterText: Bool
+    }
+
     // MARK: - Properties
 
     private let vStack: UIStackView = {
@@ -273,6 +332,19 @@ final class SelfieScanningView: UIView {
         return label
     }()
 
+    private let trailingTurnPromptArrowLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.textColor = .white
+        label.adjustsFontForContentSizeCategory = true
+        label.isHidden = true
+        label.layer.shadowColor = UIColor.black.cgColor
+        label.layer.shadowOffset = CGSize(width: 0, height: 1)
+        label.layer.shadowRadius = 4
+        label.layer.shadowOpacity = 0.35
+        return label
+    }()
+
     /// Camera preview
     private let cameraPreviewView = CameraPreviewView()
 
@@ -289,14 +361,18 @@ final class SelfieScanningView: UIView {
     }()
 
     private let capturedImageBlurView: UIVisualEffectView = {
-        let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-        blurView.alpha = 0
+        let blurView = UIVisualEffectView(effect: nil)
+        blurView.backgroundColor = .clear
+        blurView.contentView.backgroundColor = .clear
         blurView.isHidden = true
         return blurView
     }()
 
     private var isPreviewBlurVisible = false
+    private var previewBlurAnimator: UIViewPropertyAnimator?
     private var isStatusLabelVisible = false
+    private var currentTurnPromptArrowConfiguration: TurnPromptArrowConfiguration?
+    private let turnPromptArrowAnimationKey = "TurnPromptArrowAnimation"
 
     private let captureTickMarksView: CaptureTickMarksView = {
         let view = CaptureTickMarksView()
@@ -304,6 +380,19 @@ final class SelfieScanningView: UIView {
         view.isHidden = true
         view.isUserInteractionEnabled = false
         return view
+    }()
+
+    private let leadingTurnPromptArrowLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.textColor = .white
+        label.adjustsFontForContentSizeCategory = true
+        label.isHidden = true
+        label.layer.shadowColor = UIColor.black.cgColor
+        label.layer.shadowOffset = CGSize(width: 0, height: 1)
+        label.layer.shadowRadius = 4
+        label.layer.shadowOpacity = 0.35
+        return label
     }()
 
     private let statusLabel: UILabel = {
@@ -328,8 +417,10 @@ final class SelfieScanningView: UIView {
 
     private lazy var statusContentStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
+            leadingTurnPromptArrowLabel,
             statusActivityIndicatorView,
             statusLabel,
+            trailingTurnPromptArrowLabel,
         ])
         stackView.axis = .horizontal
         stackView.alignment = .center
@@ -498,7 +589,7 @@ final class SelfieScanningView: UIView {
             captureTickMarksView.isHidden = false
             let shouldShowCenteredShadow = uses3DCaptureAnimations
                 && !shouldBlurLivePreview
-                && (statusText == .holdStill
+                && (statusText?.showsCenteredShadowIn3DCapture == true
                     || captureGuideTarget != .none
                     || captureGuideHighlight != .none)
             captureTickMarksView.setShowsCenteredShadow(
@@ -585,6 +676,8 @@ final class SelfieScanningView: UIView {
                 return false
             case .placeFace,
                 .holdStill,
+                .lookLeftBottom,
+                .lookRightBottom,
                 .uploading:
                 break
             }
@@ -598,8 +691,9 @@ final class SelfieScanningView: UIView {
             guard !animated else {
                 return
             }
-            capturedImageBlurView.layer.removeAllAnimations()
-            capturedImageBlurView.alpha = isVisible ? 1 : 0
+            previewBlurAnimator?.stopAnimation(true)
+            previewBlurAnimator = nil
+            capturedImageBlurView.effect = isVisible ? Styling.livePreviewBlurEffect : nil
             capturedImageBlurView.isHidden = !isVisible
             return
         }
@@ -607,31 +701,33 @@ final class SelfieScanningView: UIView {
             ? Styling.livePreviewBlurFadeInDuration
             : Styling.livePreviewBlurFadeOutDuration
 
+        previewBlurAnimator?.stopAnimation(true)
+        previewBlurAnimator = nil
         isPreviewBlurVisible = isVisible
         if isVisible {
             capturedImageBlurView.isHidden = false
         }
 
         guard animated, window != nil else {
-            capturedImageBlurView.alpha = isVisible ? 1 : 0
+            capturedImageBlurView.effect = isVisible ? Styling.livePreviewBlurEffect : nil
             capturedImageBlurView.isHidden = !isVisible
             return
         }
 
-        UIView.animate(
-            withDuration: duration,
-            delay: 0,
-            options: [.allowUserInteraction, .beginFromCurrentState, .curveEaseInOut],
-            animations: {
-                self.capturedImageBlurView.alpha = isVisible ? 1 : 0
-            },
-            completion: { [weak self] _ in
-                guard let self = self, !self.isPreviewBlurVisible else {
-                    return
-                }
+        let animator = UIViewPropertyAnimator(duration: duration, curve: .easeInOut) {
+            self.capturedImageBlurView.effect = isVisible ? Styling.livePreviewBlurEffect : nil
+        }
+        animator.addCompletion { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            self.previewBlurAnimator = nil
+            if !self.isPreviewBlurVisible {
                 self.capturedImageBlurView.isHidden = true
             }
-        )
+        }
+        previewBlurAnimator = animator
+        animator.startAnimation()
     }
 
     private func setStatusLabelVisible(_ isVisible: Bool, animated: Bool) {
@@ -803,6 +899,7 @@ extension SelfieScanningView {
 
     fileprivate func configureStatusLabel(_ statusText: ViewModel.StatusText, animated: Bool) {
         statusLabel.text = statusText.text
+        configureTurnPromptArrow(for: statusText)
         statusLabelBottomConstraint.isActive = !statusText.isCenteredInViewfinder
         statusLabelCenterYConstraint.isActive = statusText.isCenteredInViewfinder
         statusActivityIndicatorView.isHidden = !statusText.showsActivityIndicator
@@ -812,6 +909,67 @@ extension SelfieScanningView {
             statusActivityIndicatorView.stopAnimating()
         }
         setStatusLabelVisible(true, animated: animated)
+    }
+
+    private func configureTurnPromptArrow(for statusText: ViewModel.StatusText) {
+        let configuration = statusText.turnPromptArrowText.map {
+            TurnPromptArrowConfiguration(
+                text: $0,
+                placesAfterText: statusText.placesTurnPromptArrowAfterText
+            )
+        }
+        if configuration == currentTurnPromptArrowConfiguration {
+            if let configuration {
+                let arrowLabel = configuration.placesAfterText
+                    ? trailingTurnPromptArrowLabel
+                    : leadingTurnPromptArrowLabel
+                if arrowLabel.layer.animation(forKey: turnPromptArrowAnimationKey) != nil {
+                    return
+                }
+            } else {
+                return
+            }
+        }
+
+        currentTurnPromptArrowConfiguration = configuration
+        stopTurnPromptArrowAnimation(on: leadingTurnPromptArrowLabel)
+        stopTurnPromptArrowAnimation(on: trailingTurnPromptArrowLabel)
+
+        guard let configuration else {
+            leadingTurnPromptArrowLabel.isHidden = true
+            trailingTurnPromptArrowLabel.isHidden = true
+            return
+        }
+
+        let arrowLabel = configuration.placesAfterText
+            ? trailingTurnPromptArrowLabel
+            : leadingTurnPromptArrowLabel
+        let hiddenArrowLabel = configuration.placesAfterText
+            ? leadingTurnPromptArrowLabel
+            : trailingTurnPromptArrowLabel
+        hiddenArrowLabel.isHidden = true
+        arrowLabel.text = configuration.text
+        arrowLabel.isHidden = false
+
+        let offset = configuration.placesAfterText
+            ? Styling.turnPromptArrowAnimationOffset
+            : -Styling.turnPromptArrowAnimationOffset
+        startTurnPromptArrowAnimation(on: arrowLabel, offset: offset)
+    }
+
+    private func startTurnPromptArrowAnimation(on label: UILabel, offset: CGFloat) {
+        let animation = CABasicAnimation(keyPath: "transform.translation.x")
+        animation.fromValue = 0
+        animation.toValue = offset
+        animation.duration = Styling.turnPromptArrowAnimationDuration
+        animation.autoreverses = true
+        animation.repeatCount = .infinity
+        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        label.layer.add(animation, forKey: turnPromptArrowAnimationKey)
+    }
+
+    private func stopTurnPromptArrowAnimation(on label: UILabel) {
+        label.layer.removeAnimation(forKey: turnPromptArrowAnimationKey)
     }
 
     fileprivate func configureHavingTroubleLabel() {

@@ -26,6 +26,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         static let legacyCaptureAcknowledgementDuration: TimeInterval = 0.55
         static let threeDCaptureAcknowledgementDuration: TimeInterval = 0.8
         static let poseInstructionDuration: TimeInterval = 0.8
+        static let poseCaptureFallbackDuration: TimeInterval = 5
     }
 
     // MARK: View Models
@@ -65,6 +66,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
             clearPoseInstructionState()
         case .left,
             .right:
+            startPoseCaptureFallbackTimerIfNeeded(for: scanningState.phase)
             guard poseInstructionPhase != scanningState.phase else {
                 return
             }
@@ -265,12 +267,16 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     private var sampleTimer: Timer?
     private var captureAcknowledgementTimer: Timer?
     private var poseInstructionTimer: Timer?
+    private var poseCaptureFallbackTimer: Timer?
 
     private var currentCaptureGuideHighlight: SelfieScanningView.ViewModel.CaptureGuideHighlight = .none
     private var currentCaptureGuideProgress: CGFloat = 0
     private var latestScanningState = FaceCaptureScanningState.initialValue()
     private var poseInstructionPhase: FaceCaptureScanningState.Phase?
     private var poseInstructionStartTime: CFTimeInterval?
+    private var poseCaptureFallbackPhase: FaceCaptureScanningState.Phase?
+    private var poseCaptureFallbackDidExpire = false
+    private var latestPoseCaptureFallbackSample: FaceScannerInputOutput?
 
     // MARK: Init
 
@@ -406,6 +412,64 @@ extension SelfieCaptureViewController {
         poseInstructionTimer = nil
     }
 
+    func stopPoseCaptureFallbackTimer() {
+        poseCaptureFallbackTimer?.invalidate()
+        poseCaptureFallbackTimer = nil
+    }
+
+    func clearPoseCaptureFallbackState() {
+        stopPoseCaptureFallbackTimer()
+        poseCaptureFallbackPhase = nil
+        poseCaptureFallbackDidExpire = false
+        latestPoseCaptureFallbackSample = nil
+    }
+
+    func startPoseCaptureFallbackTimerIfNeeded(
+        for phase: FaceCaptureScanningState.Phase
+    ) {
+        guard apiConfig.enable3DFaceCapture,
+            phase != .front,
+            poseCaptureFallbackPhase != phase
+        else {
+            return
+        }
+
+        stopPoseCaptureFallbackTimer()
+        poseCaptureFallbackPhase = phase
+        poseCaptureFallbackDidExpire = false
+        latestPoseCaptureFallbackSample = nil
+        poseCaptureFallbackTimer = Timer.scheduledTimer(
+            withTimeInterval: Constants.poseCaptureFallbackDuration,
+            repeats: false
+        ) { [weak self] _ in
+            self?.poseCaptureFallbackTimer = nil
+            self?.poseCaptureFallbackDidExpire = true
+            self?.capturePoseFallbackIfPossible()
+        }
+    }
+
+    @discardableResult
+    func capturePoseFallbackIfPossible() -> Bool {
+        guard apiConfig.enable3DFaceCapture,
+            poseCaptureFallbackDidExpire,
+            let phase = poseCaptureFallbackPhase,
+            let expectedPose = capturePose(for: phase),
+            let capturedSample = latestPoseCaptureFallbackSample,
+            case .scanning(_, let scanningState) = imageScanningSession.state,
+            scanningState.phase == phase
+        else {
+            return false
+        }
+
+        acceptPoseCapture(
+            imageScanningSession,
+            scanningState: scanningState,
+            expectedPose: expectedPose,
+            capturedSample: capturedSample
+        )
+        return true
+    }
+
     func saveDataAndTransitionToNextScreen(
         faceCaptureData: FaceCaptureData
     ) {
@@ -450,9 +514,15 @@ extension SelfieCaptureViewController {
         case .front:
             return scanningState.frontSamples.isEmpty ? .placeFace : .holdStill
         case .left:
-            return shouldShowPoseInstruction(for: .left) ? .lookLeft : nil
+            guard apiConfig.enable3DFaceCapture else {
+                return .lookLeft
+            }
+            return shouldShowPoseInstruction(for: .left) ? .lookLeft : .lookLeftBottom
         case .right:
-            return shouldShowPoseInstruction(for: .right) ? .lookRight : nil
+            guard apiConfig.enable3DFaceCapture else {
+                return .lookRight
+            }
+            return shouldShowPoseInstruction(for: .right) ? .lookRight : .lookRightBottom
         }
     }
 
@@ -499,6 +569,19 @@ extension SelfieCaptureViewController {
         switch pose {
         case .front:
             return .front
+        case .left:
+            return .left
+        case .right:
+            return .right
+        }
+    }
+
+    func capturePose(
+        for phase: FaceCaptureScanningState.Phase
+    ) -> FaceCapturePose? {
+        switch phase {
+        case .front:
+            return nil
         case .left:
             return .left
         case .right:
@@ -589,6 +672,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         currentCaptureGuideProgress = 0
         stopCaptureAcknowledgementTimer()
         clearPoseInstructionState()
+        clearPoseCaptureFallbackState()
         latestScanningState = .initialValue()
         selfieUploader.reset()
     }
@@ -610,6 +694,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         currentCaptureGuideProgress = 0
         stopCaptureAcknowledgementTimer()
         clearPoseInstructionState()
+        clearPoseCaptureFallbackState()
         latestScanningState = .initialValue()
         // Focus the accessibility VoiceOver back onto the capture view
         UIAccessibility.post(notification: .layoutChanged, argument: self.selfieCaptureView)
@@ -643,6 +728,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         stopSampleTimer()
         stopCaptureAcknowledgementTimer()
         stopPoseInstructionTimer()
+        clearPoseCaptureFallbackState()
     }
 
     func imageScanningSessionDidScanImage(
@@ -676,6 +762,15 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
                 exifMetadata: exifMetadata
             )
         case .left:
+            latestPoseCaptureFallbackSample = FaceScannerInputOutput(
+                image: image,
+                scannerOutput: scannerOutput,
+                cameraExifMetadata: exifMetadata,
+                capturePose: .left
+            )
+            if capturePoseFallbackIfPossible() {
+                return
+            }
             handlePoseCapture(
                 scanningSession,
                 scanningState: scanningState,
@@ -685,6 +780,15 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
                 exifMetadata: exifMetadata
             )
         case .right:
+            latestPoseCaptureFallbackSample = FaceScannerInputOutput(
+                image: image,
+                scannerOutput: scannerOutput,
+                cameraExifMetadata: exifMetadata,
+                capturePose: .right
+            )
+            if capturePoseFallbackIfPossible() {
+                return
+            }
             handlePoseCapture(
                 scanningSession,
                 scanningState: scanningState,
@@ -707,6 +811,7 @@ extension SelfieCaptureViewController {
         scannerOutput: FaceScannerOutput,
         exifMetadata: CameraExifMetadata?
     ) {
+        clearPoseCaptureFallbackState()
         if !apiConfig.enable3DFaceCapture {
             currentCaptureGuideHighlight = .front
         }
@@ -804,7 +909,6 @@ extension SelfieCaptureViewController {
 
         currentCaptureGuideHighlight = captureGuideHighlight(for: expectedPose)
         currentCaptureGuideProgress = 1
-        var nextState = scanningState
         let capturedSample = FaceScannerInputOutput(
             image: image,
             scannerOutput: scannerOutput,
@@ -812,6 +916,25 @@ extension SelfieCaptureViewController {
             capturePose: expectedPose
         )
 
+        acceptPoseCapture(
+            scanningSession,
+            scanningState: scanningState,
+            expectedPose: expectedPose,
+            capturedSample: capturedSample
+        )
+    }
+
+    fileprivate func acceptPoseCapture(
+        _ scanningSession: SelfieImageScanningSession,
+        scanningState: FaceCaptureScanningState,
+        expectedPose: FaceCapturePose,
+        capturedSample: FaceScannerInputOutput
+    ) {
+        clearPoseCaptureFallbackState()
+        currentCaptureGuideHighlight = captureGuideHighlight(for: expectedPose)
+        currentCaptureGuideProgress = 1
+
+        var nextState = scanningState
         switch expectedPose {
         case .front:
             assertionFailure("Front captures should be handled by `handleFrontCapture`")
