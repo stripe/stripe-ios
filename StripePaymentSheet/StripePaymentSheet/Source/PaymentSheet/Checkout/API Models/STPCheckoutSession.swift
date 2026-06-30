@@ -147,6 +147,8 @@ class STPCheckoutSession: NSObject {
     /// The address source used for automatic tax calculation (e.g. `"billing"` or `"shipping"`).
     let automaticTaxAddressSource: String?
 
+    /// TODO(porter or someone else) This is optional b/c we aren't sure if the /confirm endpoint populates this field
+    /// We need to solidify the backend contract to ensure this is always present
     /// The decoded elements session nested within this checkout session response.
     let elementsSession: STPElementsSession?
 
