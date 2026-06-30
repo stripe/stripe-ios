@@ -29,7 +29,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         static let threeDSideCaptureAcknowledgementDuration: TimeInterval = 1.5
         static let poseInstructionDuration: TimeInterval = 1.3
         static let poseCaptureFallbackDuration: TimeInterval = 8
-        static let poseBestFrameCaptureDuration: TimeInterval = 1.5
+        static let poseBestFrameCaptureDuration: TimeInterval = 1
     }
 
     // MARK: View Models
