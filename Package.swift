@@ -53,6 +53,12 @@ let package = Package(
             targets: ["StripeCryptoOnramp"]
         )
     ],
+    dependencies: [
+        .package(
+            url: "https://github.com/paescebu/SwiftTasksVision.git",
+            exact: "0.10.21"
+        )
+    ],
     targets: [
         .target(
             name: "Stripe",
@@ -98,11 +104,18 @@ let package = Package(
         ),
         .target(
             name: "StripeIdentity",
-            dependencies: ["StripeCore", "StripeUICore", "StripeCameraCore"],
+            dependencies: [
+                "StripeCore",
+                "StripeUICore",
+                "StripeCameraCore",
+                .product(name: "SwiftTasksVision", package: "SwiftTasksVision"),
+            ],
             path: "StripeIdentity/StripeIdentity",
             exclude: ["Info.plist"],
             resources: [
-                .process("Resources/Images")
+                .process("Resources/Audio"),
+                .process("Resources/Images"),
+                .copy("Resources/face_landmarker.task")
             ]
         ),
         .target(

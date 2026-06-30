@@ -22,7 +22,22 @@ struct FaceScannerOutput: Equatable {
     let faceDetectorOutput: FaceDetectorOutput
     let cameraProperties: CameraSession.DeviceProperties?
     let motionBlurResult: MotionBlurDetector.Output?
+    let facePose: FacePose?
     let isValid: Bool
+
+    init(
+        faceDetectorOutput: FaceDetectorOutput,
+        cameraProperties: CameraSession.DeviceProperties?,
+        motionBlurResult: MotionBlurDetector.Output?,
+        facePose: FacePose? = nil,
+        isValid: Bool
+    ) {
+        self.faceDetectorOutput = faceDetectorOutput
+        self.cameraProperties = cameraProperties
+        self.motionBlurResult = motionBlurResult
+        self.facePose = facePose
+        self.isValid = isValid
+    }
 
     var faceScore: Float {
         return faceDetectorOutput.predictions.first?.score ?? 0
@@ -80,7 +95,8 @@ extension FaceScannerOutput {
         faceDetectorOutput: FaceDetectorOutput,
         cameraProperties: CameraSession.DeviceProperties?,
         configuration: FaceScanner.Configuration,
-        motionBlurResult: MotionBlurDetector.Output? = nil
+        motionBlurResult: MotionBlurDetector.Output? = nil,
+        facePose: FacePose? = nil
     ) {
         var isValid = false
         if let rect = faceDetectorOutput.predictions.first?.rect {
@@ -107,6 +123,7 @@ extension FaceScannerOutput {
             faceDetectorOutput: faceDetectorOutput,
             cameraProperties: cameraProperties,
             motionBlurResult: motionBlurResult,
+            facePose: facePose,
             isValid: isValid
         )
     }

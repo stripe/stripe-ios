@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.swift_version		               = '5.0'
   s.weak_framework = 'SwiftUI'
   s.source_files                   = 'StripeIdentity/StripeIdentity/**/*.swift'
-  s.ios.resource_bundle            = { 'StripeIdentityBundle' => 'StripeIdentity/StripeIdentity/Resources/**/*.{lproj,json,png,xcassets}' }
+  s.ios.resource_bundle            = { 'StripeIdentityBundle' => 'StripeIdentity/StripeIdentity/Resources/**/*.{lproj,json,png,xcassets,task}' }
   s.dependency                       'StripeCore', "#{s.version}"
   s.dependency                       'StripeUICore', "#{s.version}"
   s.dependency                       'StripeCameraCore', "#{s.version}"

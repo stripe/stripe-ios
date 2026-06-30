@@ -71,7 +71,7 @@ final class SelfieWarmupViewController: IdentityFlowViewController {
             headerViewModel: nil,
             contentViewModel: .init(
                 view: warmupView,
-                inset: nil
+                inset: .zero
             ),
             buttons: buttons,
             buttonTopContentViewModel: buttonTopContentViewModel

@@ -206,7 +206,7 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
             makeViewController(initialState: .initial).buttonViewModels.isEmpty
         )
         XCTAssertTrue(
-            makeViewController(initialState: .scanning(.empty, [])).buttonViewModels.isEmpty
+            makeViewController(initialState: .scanning(.empty, .initialValue())).buttonViewModels.isEmpty
         )
         XCTAssertTrue(
             makeViewController(

@@ -60,7 +60,7 @@ final class SelfieScanningViewSnapshotTest: STPSnapshotTestCase {
                     mockCameraSession,
                     showFlashAnimation: false,
                     statusText: nil,
-                    showCaptureGuideShadow: false
+                    captureGuideHighlight: .none
                 ),
                 instructionalText: SelfieScanningViewSnapshotTest.mockText
             )
@@ -74,10 +74,75 @@ final class SelfieScanningViewSnapshotTest: STPSnapshotTestCase {
                     mockSelfieCameraSession,
                     showFlashAnimation: false,
                     statusText: .holdStill,
-                    showCaptureGuideShadow: true
+                    captureGuideHighlight: .front
                 ),
                 instructionalText: SelfieScanningViewSnapshotTest.mockText
             )
+        )
+    }
+
+    func test3DFaceCaptureCapturedFront() {
+        verify3DFaceCaptureVideoPreview(
+            statusText: .capturedFront,
+            captureGuideHighlight: .front
+        )
+    }
+
+    func test3DFaceCaptureTurnLeftPrompt() {
+        verify3DFaceCaptureVideoPreview(
+            statusText: .lookLeft,
+            captureGuideTarget: .left
+        )
+    }
+
+    func test3DFaceCaptureTurnRightPrompt() {
+        verify3DFaceCaptureVideoPreview(
+            statusText: .lookRight,
+            captureGuideTarget: .right
+        )
+    }
+
+    func test3DFaceCaptureTurnLeftPromptHidden() {
+        verify3DFaceCaptureVideoPreview(
+            captureGuideTarget: .left
+        )
+    }
+
+    func test3DFaceCaptureTurnRightPromptHidden() {
+        verify3DFaceCaptureVideoPreview(
+            captureGuideTarget: .right
+        )
+    }
+
+    func test3DFaceCaptureTurnLeftHalfProgress() {
+        verify3DFaceCaptureVideoPreview(
+            captureGuideTarget: .left,
+            captureGuideProgress: 0.5
+        )
+    }
+
+    func test3DFaceCaptureTurnRightHalfProgress() {
+        verify3DFaceCaptureVideoPreview(
+            captureGuideTarget: .right,
+            captureGuideProgress: 0.5
+        )
+    }
+
+    func test3DFaceCaptureCapturedLeft() {
+        verify3DFaceCaptureVideoPreview(
+            statusText: .capturedLeft,
+            captureGuideHighlight: .left,
+            captureGuideTarget: .left,
+            captureGuideProgress: 1
+        )
+    }
+
+    func test3DFaceCaptureCapturedRight() {
+        verify3DFaceCaptureVideoPreview(
+            statusText: .capturedRight,
+            captureGuideHighlight: .right,
+            captureGuideTarget: .right,
+            captureGuideProgress: 1
         )
     }
 
@@ -210,5 +275,31 @@ extension SelfieScanningViewSnapshotTest {
         view.configure(with: viewModel, sheetController: nil)
         view.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
         STPSnapshotVerifyView(view, file: file, line: line)
+    }
+
+    fileprivate func verify3DFaceCaptureVideoPreview(
+        statusText: SelfieScanningView.ViewModel.StatusText? = nil,
+        captureGuideHighlight: SelfieScanningView.ViewModel.CaptureGuideHighlight = .none,
+        captureGuideTarget: SelfieScanningView.ViewModel.CaptureGuideTarget = .none,
+        captureGuideProgress: CGFloat = 0,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        verifyView(
+            with: .init(
+                state: .videoPreview(
+                    mockSelfieCameraSession,
+                    showFlashAnimation: false,
+                    statusText: statusText,
+                    captureGuideHighlight: captureGuideHighlight,
+                    uses3DCaptureAnimations: true,
+                    captureGuideTarget: captureGuideTarget,
+                    captureGuideProgress: captureGuideProgress
+                ),
+                instructionalText: SelfieScanningViewSnapshotTest.mockText
+            ),
+            file: file,
+            line: line
+        )
     }
 }
