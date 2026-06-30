@@ -6,7 +6,6 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-import Combine
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
@@ -45,11 +44,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
-
-        var sessionEmissions: [Checkout.Session] = []
-        let sessionSub = checkout.$session.dropFirst().sink { sessionEmissions.append($0) }
-        var loadingEmissions: [Bool] = []
-        let loadingSub = checkout.$isLoading.dropFirst().sink { loadingEmissions.append($0) }
+        let recorder = CheckoutEmissionRecorder(checkout)
 
         try await checkout.applyPromotionCode("SAVE25")
 
@@ -58,11 +53,8 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(delegate.finishLoadingCallCount, 1)
         XCTAssertNotNil(delegate.lastSession)
         XCTAssertEqual(promotionCode(in: delegate.lastSession), "SAVE25")
-        XCTAssertEqual(sessionEmissions.count, 1)
-        XCTAssertEqual(loadingEmissions, [true, false])
-
-        sessionSub.cancel()
-        loadingSub.cancel()
+        XCTAssertEqual(recorder.sessions.count, 1)
+        XCTAssertEqual(recorder.loading, [true, false])
     }
 
     func testApplyPromotionCode() async throws {
@@ -296,28 +288,5 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
     private func promotionCode(in session: Checkout.Session?) -> String? {
         session?.discountAmounts.first(where: { $0.promotionCode != nil })?.promotionCode
-    }
-}
-
-// MARK: - Mock Delegate
-
-@MainActor
-private class MockCheckoutDelegate: CheckoutDelegate {
-    var lastSession: Checkout.Session?
-    var updateSessionCallCount = 0
-    var beginLoadingCallCount = 0
-    var finishLoadingCallCount = 0
-
-    func checkoutDidBeginLoading(_ checkout: Checkout) {
-        beginLoadingCallCount += 1
-    }
-
-    func checkoutDidFinishLoading(_ checkout: Checkout) {
-        finishLoadingCallCount += 1
-    }
-
-    func checkoutDidUpdateSession(_ checkout: Checkout, session: Checkout.Session) {
-        updateSessionCallCount += 1
-        lastSession = session
     }
 }
