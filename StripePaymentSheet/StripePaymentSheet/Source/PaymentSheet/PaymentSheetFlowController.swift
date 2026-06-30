@@ -667,7 +667,7 @@ extension PaymentSheet {
             }
 
             guard let paymentOption = internalPaymentOption else {
-                assertionFailure("`confirm` should only be called when `paymentOption` is not nil")
+                stpAssertionFailure("`confirm` should only be called when `paymentOption` is not nil")
                 completion(.failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption))
                 return
             }
