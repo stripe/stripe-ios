@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "Detail rekening bank tidak dapat diubah.";
 
-"Buy now or pay later with  <img/>" = "Beli sekarang atau bayar nanti dengan  <img/>";
+"Buy Now, Pay Later with  <img/>" = "Beli Sekarang, Bayar Nanti dengan  <img/>";
 
-"Buy now or pay later with Afterpay" = "Beli sekarang atau bayar nanti dengan Afterpay";
+"Buy Now, Pay Later with Afterpay" = "Beli Sekarang, Bayar Nanti dengan Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Beli sekarang atau bayar nanti dengan Cash App Afterpay";
+"Buy Now, Pay Later with Cash App Afterpay" = "Beli Sekarang, Bayar Nanti dengan Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "Beli sekarang atau bayar nanti dengan Clearpay";
+"Buy Now, Pay Later with Clearpay" = "Beli Sekarang, Bayar Nanti dengan Clearpay";
 
 "Buy now or pay later with Klarna" = "Beli sekarang atau bayar nanti dengan Klarna";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Dapatkan %@ kembali saat membayar pertama kalinya pada bank Anda. <terms>Lihat ketentuan</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Dapatkan %@ kembali saat membayar pada bank Anda. <terms>Lihat ketentuan</terms>";
+
+"Hide details" = "Sembunyikan detail";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Saya memahami bahwa Stripe akan menagih Debit Langsung atas nama %@ serta mengonfirmasikan bahwa sayalah pemilik akun dan satu-satunya orang yang diperlukan untuk mengotorisasi debit dari akun ini.";
 
@@ -307,6 +309,8 @@
 "Shipping" = "Pengiriman";
 
 "Shipping to %@ is not supported." = "Pengiriman ke %@ tidak didukung.";
+
+"Show details" = "Tampilkan detail";
 
 "Show menu" = "Tampilkan menu";
 

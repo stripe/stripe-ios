@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "Nie można zmienić szczegółów konta bankowego.";
 
-"Buy now or pay later with  <img/>" = "Kup teraz lub zapłać później za pomocą <img/>";
+"Buy Now, Pay Later with  <img/>" = "Kup teraz, zapłać później za pomocą <img/>";
 
-"Buy now or pay later with Afterpay" = "Kup teraz lub zapłać później za pomocą Afterpay";
+"Buy Now, Pay Later with Afterpay" = "Kup teraz, zapłać później za pomocą Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Kup teraz lub zapłać później za pomocą Cash App Afterpay";
+"Buy Now, Pay Later with Cash App Afterpay" = "Kup teraz, zapłać później za pomocą Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "Kup teraz lub zapłać później za pomocą Clearpay";
+"Buy Now, Pay Later with Clearpay" = "Kup teraz, zapłać później za pomocą Clearpay";
 
 "Buy now or pay later with Klarna" = "Kup teraz lub zapłać później z Klarna";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Uzyskaj zwrot %@, gdy płacisz po raz pierwszy poprzez bank. <terms>Zobacz warunki</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Uzyskaj zwrot %@, płacąc za pośrednictwem banku. <terms>Zobacz warunki</terms>";
+
+"Hide details" = "Ukryj szczegóły";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Rozumiem, że Stripe będzie pobierać polecenia zapłaty w imieniu firmy %@ i potwierdzam, że jestem posiadaczem konta i jedyną osobą wymaganą do autoryzowania poleceń zapłaty z tego konta.";
 
@@ -307,6 +309,8 @@
 "Shipping" = "Dostawa";
 
 "Shipping to %@ is not supported." = "Wysyłka do lokalizacji: %@ nie jest obsługiwana";
+
+"Show details" = "Pokaż szczegóły";
 
 "Show menu" = "Pokaż menu";
 

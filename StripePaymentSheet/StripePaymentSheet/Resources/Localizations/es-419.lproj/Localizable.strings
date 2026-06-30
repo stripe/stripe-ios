@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "Los datos de la cuenta bancaria no se pueden modificar.";
 
-"Buy now or pay later with  <img/>" = "Compra ahora y paga después con  <img/>";
+"Buy Now, Pay Later with  <img/>" = "Compra ahora, paga después con <img/>";
 
-"Buy now or pay later with Afterpay" = "Compra ahora o paga después con Afterpay";
+"Buy Now, Pay Later with Afterpay" = "Compra ahora, paga después con Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Compra ahora o paga después con Afterpay";
+"Buy Now, Pay Later with Cash App Afterpay" = "Compra ahora, paga después con Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "Compra ahora o paga después con Clearpay";
+"Buy Now, Pay Later with Clearpay" = "Compra ahora, paga después con Clearpay";
 
 "Buy now or pay later with Klarna" = "Compra ahora o paga después con Klarna";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Obtén %@ cuando pagues por primera vez con tu banco. <terms>Consulta las condiciones</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Obtén %@ al pagar con tu banco. <terms>Consulta las condiciones</terms>";
+
+"Hide details" = "Ocultar detalles";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entiendo que Stripe cobrará débitos directos en nombre de %@ y confirmo que soy el titular de la cuenta y la única persona que se requiere que autorice los débitos a esta cuenta.";
 
@@ -307,6 +309,8 @@
 "Shipping" = "Envío";
 
 "Shipping to %@ is not supported." = "No se aceptan envíos a %@.";
+
+"Show details" = "Mostrar datos";
 
 "Show menu" = "Mostrar menú";
 

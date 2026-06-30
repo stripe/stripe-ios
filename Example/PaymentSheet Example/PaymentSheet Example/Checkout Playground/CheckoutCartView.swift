@@ -34,7 +34,7 @@ struct CheckoutCartView: View {
                         errorMessage: $errorMessage
                     )
                     .overlay(alignment: .bottom) {
-                        if checkout.state.session.total != nil {
+                        if checkout.session.total != nil {
                             CheckoutCartPaymentButton(
                                 checkout: checkout,
                                 onDismiss: { dismiss() }

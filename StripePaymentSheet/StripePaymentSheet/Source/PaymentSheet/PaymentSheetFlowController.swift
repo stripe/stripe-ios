@@ -655,7 +655,7 @@ extension PaymentSheet {
             if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
                 assertionFailure("`confirm` should not be called while the Checkout session is loading.")
                 let error = PaymentSheetError.flowControllerConfirmFailed(
-                    message: "confirmPayment was called while the Checkout session is still loading. Wait until the Checkout state is .loaded before calling confirm."
+                    message: "confirmPayment was called while the Checkout session is still loading. Wait until Checkout.isLoading is false."
                 )
                 completion(.failed(error: error))
                 return
@@ -747,12 +747,10 @@ extension PaymentSheet {
         /// Call this method when the CheckoutSession you used to initialize PaymentSheet.FlowController changes.
         /// This ensures the appropriate payment methods are displayed, etc.
         /// - Parameter checkout: The Checkout instance whose session has been updated.
-        /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry.
+        /// - Parameter completion: Called when the update completes with an optional error.
         /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
-        @_spi(STP)
-        @_spi(ReactNativeSDK)
         @MainActor
-        public func update(
+        func update(
             checkout: Checkout,
             completion: @escaping (Error?) -> Void
         ) {
@@ -761,9 +759,7 @@ extension PaymentSheet {
             let updateID = beginUpdate()
             Task { @MainActor in
                 do {
-                    // The calling mutation is still in the queue (it awaits us before returning),
-                    // so exclude it to avoid a deadlock.
-                    try await checkout.awaitPendingOperations(excludingCurrent: true)
+                    try await checkout.awaitPendingOperations()
                 } catch {
                     self.failUpdate(updateID)
                     completion(error)

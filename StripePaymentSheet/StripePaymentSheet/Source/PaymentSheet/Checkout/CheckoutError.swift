@@ -24,6 +24,8 @@ public enum CheckoutError: Error, LocalizedError, Sendable {
     /// A pending Checkout operation did not complete before the timeout elapsed.
     case timedOut
 
+    case invalidShippingCountry(countryCode: String)
+
     /// The Stripe API returned an error with the given message.
     case apiError(message: String)
 
@@ -39,6 +41,8 @@ public enum CheckoutError: Error, LocalizedError, Sendable {
             return "A payment sheet or form is currently presented. Dismiss it before making changes."
         case .timedOut:
             return "Timed out waiting for a Checkout operation to complete."
+        case .invalidShippingCountry(let countryCode):
+            return "Country code '\(countryCode)' is not in allowedShippingCountries"
         case .apiError(let message):
             return message
         }

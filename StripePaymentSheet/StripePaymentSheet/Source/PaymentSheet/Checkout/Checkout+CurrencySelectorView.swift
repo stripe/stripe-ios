@@ -79,7 +79,7 @@ extension Checkout {
             handleSessionUpdate()
 
             // Observe future session changes
-            sessionCancellable = checkout.$state
+            sessionCancellable = checkout.$session
                 .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
