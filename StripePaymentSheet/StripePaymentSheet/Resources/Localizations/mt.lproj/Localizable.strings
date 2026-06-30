@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "Id-dettalji tal-kont tal-bank ma jistgħux jinbidlu.";
 
-"Buy now or pay later with  <img/>" = "Ixtri issa jew ħallas iktar tard grazzi għal <img/>";
+"Buy Now, Pay Later with  <img/>" = "Ixtri Issa, Ħallas Wara ma’  <img/>";
 
-"Buy now or pay later with Afterpay" = "Ixtri issa jew ħallas iktar tard b'Afterpay";
+"Buy Now, Pay Later with Afterpay" = "Ixtri Issa, Ħallas Wara ma’ Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Ixtri issa jew ħallas iktar tard b'Cash App Afterpay";
+"Buy Now, Pay Later with Cash App Afterpay" = "Ixtri Issa, Ħallas Wara ma’ Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "Ixtri issa jew ħallas iktar tard bi Clearpay";
+"Buy Now, Pay Later with Clearpay" = "Ixtri Issa, Ħallas Wara ma’ Clearpay";
 
 "Buy now or pay later with Klarna" = "Ixtri issa jew ħallas iktar tard bi Klarna";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Ikseb %@ lura meta tħallas bil-bank għall-ewwel darba. <terms>Aqra r-regoli</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Ikseb %@ lura meta tħallas bil-bank. <terms>Aqra r-regoli</terms>";
+
+"Hide details" = "Aħbi d-dettalji";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jiena nifhem li Stripe se tkun qed tiġbor id-Debiti Diretti f'isem %@ u nikkonferma li jiena d-detentur tal-kont u l-unika persuna meħtieġa biex tawtorizza d-debiti minn dan il-kont.";
 
@@ -307,6 +309,8 @@
 "Shipping" = "Kunsinna";
 
 "Shipping to %@ is not supported." = "Ma nistgħux nibagħtu l-affarijiet lejn: %@";
+
+"Show details" = "Uri d-dettalji";
 
 "Show menu" = "Uri l-menù";
 

@@ -13,7 +13,7 @@ struct CheckoutCartPaymentButton: View {
     @ObservedObject var checkout: Checkout
     let onDismiss: () -> Void
 
-    private var session: Checkout.Session { checkout.state.session }
+    private var session: Checkout.Session { checkout.session }
 
     @State private var flowController: PaymentSheet.FlowController?
     @State private var isLoadingFlowController = false

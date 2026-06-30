@@ -43,6 +43,12 @@ enum CheckoutTestHelpers {
         return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
     }
 
+    static func makeOpenSession(allowedCountries: [String]) -> STPCheckoutSession {
+        var json = makeOpenSessionJSON()
+        json["shipping_address_collection"] = ["allowed_countries": allowedCountries]
+        return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+    }
+
     static func makeAdaptivePricingSession(
         currency: String = "usd",
         adaptivePricingActive: Bool = true,
