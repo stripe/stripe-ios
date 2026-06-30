@@ -21,8 +21,8 @@ class CheckoutSessionUITests: PaymentSheetUITestCase {
         app.buttons["Card"].waitForExistenceAndTap()
         try fillCardData(app, postalEnabled: true)
         app.buttons["Continue"].tap()
-        // After dismissing the form, tap the confirm button
-        app.buttons["Checkout"].waitForExistenceAndTap()
+        // After dismissing the form, scroll down and tap the confirm button
+        app.buttons["Checkout"].scrollToAndTap(in: app)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15))
     }
 
