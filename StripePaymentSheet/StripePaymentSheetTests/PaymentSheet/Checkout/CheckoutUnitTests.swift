@@ -181,7 +181,7 @@ final class CheckoutUnitTests: XCTestCase {
             address: .init(country: "CA", line1: "80 Spadina Ave", city: "Toronto", state: "ON", postalCode: "M5V 2J4")
         )
 
-        XCTAssertEqual(checkout.state.session.shippingAddress?.address.country, "CA")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.country, "CA")
     }
 
     // MARK: - Sheet Presented Guard Tests
