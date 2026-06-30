@@ -88,8 +88,7 @@ public final class Checkout: ObservableObject {
         }
     }
 
-    /// `true` when no other operations are queued after the current one.
-    var isFinalQueuedOperation: Bool {
+    var isLastPendingOperation: Bool {
         pendingOperations.count <= 1
     }
 
@@ -354,7 +353,7 @@ public final class Checkout: ObservableObject {
         stpSession = newSession
         session = newSession.makePublicSession()
         // Skip delegate if another op is queued—it'll notify when it commits.
-        if isFinalQueuedOperation {
+        if isLastPendingOperation {
             try await integrationDelegate?.checkoutDidUpdate(self)
         }
     }

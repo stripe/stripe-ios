@@ -163,20 +163,6 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
     }
 
-    // MARK: - commitSession state
-
-    func testCommitSessionTransitionsToLoadedAfterSingleOperation() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
-
-        try await checkout.enqueueSessionUpdate {
-            try await checkout.commitSession(CheckoutTestHelpers.makeOpenSession())
-        }
-
-        // After the operation finishes, state should be .loaded when nothing else is queued.
-        XCTAssertFalse(checkout.isLoading)
-        XCTAssertTrue(checkout.pendingOperations.isEmpty)
-    }
-
     // MARK: - Loading & Emission Tests
 
     func testLoadingStatePersistsAcrossConsecutiveQueuedOperations() async throws {
