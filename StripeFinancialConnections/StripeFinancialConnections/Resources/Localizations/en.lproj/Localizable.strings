@@ -48,8 +48,6 @@
    The placeholder is a Stripe brand name and should not be translated. */
 "Continue with %@" = "Continue with %@";
 
-/* A button title. This button, when pressed, will automatically log-in the user with their e-mail to Link (one-click checkout provider).
-   The title of a screen where users are informed that they can sign-in-to Link. */
 /* The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type an email address. */
 "Email address" = "Email address";
 
