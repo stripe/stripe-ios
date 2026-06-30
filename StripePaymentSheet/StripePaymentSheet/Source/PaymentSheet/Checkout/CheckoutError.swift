@@ -15,9 +15,6 @@ public enum CheckoutError: Error, LocalizedError, Sendable {
     /// The client secret provided to ``Checkout`` is empty.
     case invalidClientSecret
 
-    /// The session is no longer open (e.g. it has been completed or expired).
-    case sessionNotOpen
-
     /// A payment sheet or form is currently presented. Dismiss it before making changes.
     case sheetCurrentlyPresented
 
@@ -35,8 +32,6 @@ public enum CheckoutError: Error, LocalizedError, Sendable {
         switch self {
         case .invalidClientSecret:
             return "Checkout was initialized with an empty client secret."
-        case .sessionNotOpen:
-            return "The session is no longer active."
         case .sheetCurrentlyPresented:
             return "A payment sheet or form is currently presented. Dismiss it before making changes."
         case .timedOut:
