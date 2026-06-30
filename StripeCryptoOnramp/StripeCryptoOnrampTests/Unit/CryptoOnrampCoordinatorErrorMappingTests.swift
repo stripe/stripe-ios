@@ -178,6 +178,32 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         XCTAssertTrue(apiError.developerMessage.contains("Next step: Request a new challenge for the registered wallet"))
     }
 
+    func testMappedErrorMapsWalletNotFoundError() throws {
+        let apiError = try assertMapsWalletOwnershipError(
+            code: "crypto_onramp_wallet_not_found",
+            message: "The wallet was not found for the authenticated consumer.",
+            expectedType: CryptoOnrampWalletNotFoundAPIError.self,
+            expectedUserMessage: "This wallet couldn't be found. Please choose or add a wallet and try again."
+        )
+
+        XCTAssertTrue(apiError.developerMessage.contains("The wallet was not found for the authenticated consumer."))
+        XCTAssertTrue(apiError.developerMessage.contains("Code: crypto_onramp_wallet_not_found"))
+        XCTAssertTrue(apiError.developerMessage.contains("Next step: Use a wallet registered to the authenticated consumer"))
+    }
+
+    func testMappedErrorMapsUnsupportedNetworkError() throws {
+        let apiError = try assertMapsWalletOwnershipError(
+            code: "crypto_onramp_unsupported_network",
+            message: "The wallet network is not supported for this operation.",
+            expectedType: CryptoOnrampUnsupportedNetworkAPIError.self,
+            expectedUserMessage: "This wallet network isn't supported. Please choose a different network."
+        )
+
+        XCTAssertTrue(apiError.developerMessage.contains("The wallet network is not supported for this operation."))
+        XCTAssertTrue(apiError.developerMessage.contains("Code: crypto_onramp_unsupported_network"))
+        XCTAssertTrue(apiError.developerMessage.contains("Next step: Use a network supported by Crypto Onramp"))
+    }
+
     func testAPIErrorCodeFallsBackWhenBackendCodeIsUnavailable() {
         let apiErrorContext = APIErrorContext(
             reason: nil,
@@ -228,6 +254,20 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
                 diagnosticContext: diagnosticContext
             ).code,
             "invalid_wallet_ownership_challenge"
+        )
+        XCTAssertEqual(
+            CryptoOnrampWalletNotFoundAPIError(
+                apiErrorContext: apiErrorContext,
+                diagnosticContext: diagnosticContext
+            ).code,
+            "crypto_onramp_wallet_not_found"
+        )
+        XCTAssertEqual(
+            CryptoOnrampUnsupportedNetworkAPIError(
+                apiErrorContext: apiErrorContext,
+                diagnosticContext: diagnosticContext
+            ).code,
+            "crypto_onramp_unsupported_network"
         )
     }
 

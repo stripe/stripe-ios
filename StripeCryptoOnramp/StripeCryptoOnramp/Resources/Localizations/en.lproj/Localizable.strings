@@ -7,6 +7,12 @@
 /* Error message shown when app attestation is not configured for crypto onramp */
 "This app couldn't be verified. Contact the app developer for help." = "This app couldn't be verified. Contact the app developer for help.";
 
+/* Error message shown when the wallet is not registered for crypto onramp */
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "This wallet couldn't be found. Please choose or add a wallet and try again.";
+
+/* Error message shown when the wallet network is not supported for crypto onramp */
+"This wallet network isn't supported. Please choose a different network." = "This wallet network isn't supported. Please choose a different network.";
+
 /* Error message shown when the wallet ownership challenge has expired */
 "This wallet verification request expired. Please try again." = "This wallet verification request expired. Please try again.";
 

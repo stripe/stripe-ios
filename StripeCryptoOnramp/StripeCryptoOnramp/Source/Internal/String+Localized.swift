@@ -47,6 +47,20 @@ extension String.Localized {
         )
     }
 
+    static var cryptoOnrampErrorWalletNotFound: String {
+        return STPLocalizedString(
+            "This wallet couldn't be found. Please choose or add a wallet and try again.",
+            "Error message shown when the wallet is not registered for crypto onramp"
+        )
+    }
+
+    static var cryptoOnrampErrorUnsupportedNetwork: String {
+        return STPLocalizedString(
+            "This wallet network isn't supported. Please choose a different network.",
+            "Error message shown when the wallet network is not supported for crypto onramp"
+        )
+    }
+
     static var debitIsMostLikelyToBeAccepted: String {
         return STPLocalizedString(
             "Debit cards are most likely to be accepted.",
