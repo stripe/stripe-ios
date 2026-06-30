@@ -33,7 +33,7 @@ class SelfieWarmupView: UIView {
     }()
     private let heroView: UIView = {
         let view = UIView()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         return view
     }()
 
@@ -45,7 +45,7 @@ class SelfieWarmupView: UIView {
 
     private let cardTopBackgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         return view
     }()
 
