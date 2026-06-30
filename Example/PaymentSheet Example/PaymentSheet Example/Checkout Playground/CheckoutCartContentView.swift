@@ -18,7 +18,6 @@ struct CheckoutCartContentView: View {
     @State private var promoCodeInput = ""
     @State private var showShippingAddressSheet = false
     @State private var showBillingAddressSheet = false
-    @State private var lastSelectedShippingOptionId: String?
     @State private var shippingAddressDetails: AddressElement.AddressDetails?
     @State private var billingAddressDetails: AddressElement.AddressDetails?
 
@@ -35,7 +34,6 @@ struct CheckoutCartContentView: View {
 
                 currencySelectorSection
                 lineItemsSection
-                shippingOptionsSection
                 shippingAddressSection
                 billingAddressSection
                 promotionCodeSection
@@ -121,63 +119,6 @@ struct CheckoutCartContentView: View {
 
                         if item.id != items.last?.id {
                             Divider().padding(.leading, 112)
-                        }
-                    }
-                }
-                .background(Color(UIColor.systemBackground))
-                .cornerRadius(16)
-                .padding(.horizontal)
-                .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private var shippingOptionsSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Shipping Options")
-                .font(.title2).bold()
-                .padding(.horizontal)
-
-            let options = checkout.session.shippingOptions
-            if options.isEmpty {
-                Text("No shipping options available")
-                    .foregroundColor(.secondary)
-                    .padding(.horizontal)
-            } else {
-                let selectedId = selectedShippingOptionId ?? ""
-                VStack(spacing: 0) {
-                    ForEach(options) { option in
-                        Button(action: {
-                            selectShippingOption(option.id)
-                        }) {
-                            HStack {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(option.displayName ?? "Shipping")
-                                        .font(.body)
-                                        .foregroundColor(.primary)
-                                    Text(option.amount.amount)
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondary)
-                                }
-                                Spacer()
-                                if option.id == selectedId {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundColor(.blue)
-                                        .font(.system(size: 24))
-                                } else {
-                                    Image(systemName: "circle")
-                                        .foregroundColor(.gray.opacity(0.5))
-                                        .font(.system(size: 24))
-                                }
-                            }
-                            .padding()
-                            .contentShape(Rectangle())
-                        }
-                        .buttonStyle(PlainButtonStyle())
-
-                        if option.id != options.last?.id {
-                            Divider().padding(.leading, 16)
                         }
                     }
                 }
@@ -338,8 +279,7 @@ struct CheckoutCartContentView: View {
                     postalCode: override.address.postalCode,
                     state: override.address.state
                 ),
-                name: override.name,
-                phone: override.phone
+                name: override.name
             )
         }
         return config
@@ -494,21 +434,6 @@ struct CheckoutCartContentView: View {
         }
     }
 
-    private var selectedShippingOptionId: String? {
-        let options = checkout.session.shippingOptions
-        guard !options.isEmpty else {
-            return nil
-        }
-        guard let shippingAmount = checkout.session.total?.shippingRate.minorUnitsAmount else {
-            return lastSelectedShippingOptionId
-        }
-        let matchingOptions = options.filter { $0.amount.minorUnitsAmount == shippingAmount }
-        if matchingOptions.count == 1 {
-            return matchingOptions[0].id
-        }
-        return lastSelectedShippingOptionId
-    }
-
     private var appliedPromotionCode: String? {
         checkout.session.discountAmounts.first(where: { $0.promotionCode != nil })?.promotionCode
     }
@@ -521,21 +446,6 @@ struct CheckoutCartContentView: View {
             errorMessage = nil
             do {
                 try await checkout.updateQuantity(lineItemId: lineItemId, quantity: quantity)
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-            isLoading = false
-        }
-    }
-
-    private func selectShippingOption(_ optionId: String) {
-        guard !optionId.isEmpty else { return }
-        Task {
-            isLoading = true
-            errorMessage = nil
-            do {
-                try await checkout.selectShippingOption(optionId)
-                lastSelectedShippingOptionId = optionId
             } catch {
                 errorMessage = error.localizedDescription
             }
@@ -598,7 +508,7 @@ struct CheckoutCartContentView: View {
             do {
                 try await checkout.updateShippingAddress(
                     name: details.name,
-                    phone: details.phone,
+                    phone: nil,
                     address: checkoutAddress(from: details.address)
                 )
             } catch {
@@ -615,7 +525,7 @@ struct CheckoutCartContentView: View {
             do {
                 try await checkout.updateBillingAddress(
                     name: details.name,
-                    phone: details.phone,
+                    phone: nil,
                     address: checkoutAddress(from: details.address)
                 )
             } catch {

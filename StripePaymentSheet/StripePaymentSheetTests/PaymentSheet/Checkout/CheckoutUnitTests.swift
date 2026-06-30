@@ -154,6 +154,36 @@ final class CheckoutUnitTests: XCTestCase {
         loadingSub.cancel()
     }
 
+    func testUpdateShippingAddress_disallowedCountry_throws() async throws {
+        let session = CheckoutTestHelpers.makeOpenSession(allowedCountries: ["US", "CA"])
+        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
+
+        do {
+            try await checkout.updateShippingAddress(
+                address: .init(country: "DE")
+            )
+            XCTFail("Expected invalidShippingCountry error")
+        } catch let error as CheckoutError {
+            guard case .invalidShippingCountry("DE") = error else {
+                XCTFail("Wrong error case: \(error)")
+                return
+            }
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+    }
+
+    func testUpdateShippingAddress_allowedCountry_succeeds() async throws {
+        let session = CheckoutTestHelpers.makeOpenSession(allowedCountries: ["US", "CA", "GB"])
+        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
+
+        try await checkout.updateShippingAddress(
+            address: .init(country: "CA", line1: "80 Spadina Ave", city: "Toronto", state: "ON", postalCode: "M5V 2J4")
+        )
+
+        XCTAssertEqual(checkout.state.session.shippingAddress?.address.country, "CA")
+    }
+
     // MARK: - Sheet Presented Guard Tests
 
     func testRequireOpenSessionThrowsWhenSheetPresented() async {
