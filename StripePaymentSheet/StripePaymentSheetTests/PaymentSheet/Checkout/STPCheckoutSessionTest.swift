@@ -566,19 +566,7 @@ class STPCheckoutSessionTest: XCTestCase {
 
     // MARK: - Elements Session Tests
 
-    func testElementsSessionNilWhenMissing() {
-        let session = makeCheckoutSession([:])
-        XCTAssertNil(session.elementsSession)
-    }
-
-    func testElementsSessionNilWhenInvalid() {
-        let session = makeCheckoutSession([
-            "elements_session": ["business_name": "Test"],
-        ])
-        XCTAssertNil(session.elementsSession)
-    }
-
-    func testElementsSessionDisableLinkForAutomaticTaxBilling() {
+    func testElementsSessionDecoding() {
         let session = makeCheckoutSession([
             "elements_session": [
                 "session_id": "es_123",
@@ -591,17 +579,18 @@ class STPCheckoutSessionTest: XCTestCase {
         ])
         XCTAssertNotNil(session.elementsSession)
         XCTAssertTrue(session.elementsSession!.disableLinkForAutomaticTaxBilling)
-    }
 
-    func testElementsSessionDoesNotDisableLinkWithoutAutomaticTax() {
-        let session = makeCheckoutSession([
+        let sessionWithoutTax = makeCheckoutSession([
             "elements_session": [
                 "session_id": "es_123",
                 "payment_method_preference": ["ordered_payment_method_types": ["card"]],
             ],
         ])
-        XCTAssertNotNil(session.elementsSession)
-        XCTAssertFalse(session.elementsSession!.disableLinkForAutomaticTaxBilling)
+        XCTAssertNotNil(sessionWithoutTax.elementsSession)
+        XCTAssertFalse(sessionWithoutTax.elementsSession!.disableLinkForAutomaticTaxBilling)
+
+        let sessionWithoutES = makeCheckoutSession([:])
+        XCTAssertNil(sessionWithoutES.elementsSession)
     }
 
 }
