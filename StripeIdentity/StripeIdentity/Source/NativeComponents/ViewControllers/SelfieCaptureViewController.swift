@@ -26,7 +26,8 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         static let legacyCaptureAcknowledgementDuration: TimeInterval = 0.55
         static let threeDCaptureAcknowledgementDuration: TimeInterval = 0.8
         static let threeDFrontCaptureAcknowledgementDuration: TimeInterval = 1.4
-        static let poseInstructionDuration: TimeInterval = 1.75
+        static let threeDSideCaptureAcknowledgementDuration: TimeInterval = 1.5
+        static let poseInstructionDuration: TimeInterval = 1.3
         static let poseCaptureFallbackDuration: TimeInterval = 8
         static let poseBestFrameCaptureDuration: TimeInterval = 1.5
     }
@@ -1032,7 +1033,9 @@ extension SelfieCaptureViewController {
         scanningSession.updateScanningState(nextState)
 
         if let nextPose = nextPose(after: nextState) {
-            scheduleCaptureAcknowledgement { [weak self, weak scanningSession] in
+            scheduleCaptureAcknowledgement(
+                duration: Constants.threeDSideCaptureAcknowledgementDuration
+            ) { [weak self, weak scanningSession] in
                 guard let self = self, let scanningSession = scanningSession else {
                     return
                 }
@@ -1055,7 +1058,9 @@ extension SelfieCaptureViewController {
             return
         }
 
-        scheduleCaptureAcknowledgement { [weak self] in
+        scheduleCaptureAcknowledgement(
+            duration: Constants.threeDSideCaptureAcknowledgementDuration
+        ) { [weak self] in
             guard let self = self else {
                 return
             }
