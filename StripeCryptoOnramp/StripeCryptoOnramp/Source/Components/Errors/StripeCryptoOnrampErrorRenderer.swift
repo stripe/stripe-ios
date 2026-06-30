@@ -16,35 +16,52 @@ enum StripeCryptoOnrampErrorRenderer {
     ///   - nextStep: A suggested action for resolving the error.
     ///   - docURL: Documentation for this error, if available.
     ///   - sdkVersions: SDK versions included in developer diagnostics, including Stripe iOS and any additional wrapper SDK versions.
+    ///   - diagnosticContext: Local SDK context included in developer diagnostics.
     static func render(
         developerBody: String,
         code: String,
         nextStep: String,
         docURL: URL?,
-        sdkVersions: [SDKVersion] = []
+        sdkVersions: [SDKVersion] = [],
+        diagnosticContext: DiagnosticContext? = nil
     ) -> String {
+        let renderedDeveloperBody: String
+        if let diagnosticContext {
+            renderedDeveloperBody = developerBodyWithContext(
+                summary: developerBody,
+                contextTitle: "Request Context:",
+                contextLines: diagnosticContextLines(diagnosticContext)
+            )
+        } else {
+            renderedDeveloperBody = developerBody
+        }
+
         return render(
-            developerBody: developerBody,
+            developerBody: renderedDeveloperBody,
             code: code,
             nextStep: nextStep,
             docURLString: docURL?.absoluteString,
-            sdkVersions: sdkVersions
+            sdkVersions: diagnosticContext?.sdkVersions ?? sdkVersions
         )
     }
 
     static func renderAPIErrorDeveloperMessage(
-        context: APIErrorContext,
+        apiErrorContext: APIErrorContext,
+        diagnosticContext: DiagnosticContext,
         summary: String,
         code: String,
-        sdkVersions: [SDKVersion],
         nextStep: String
     ) -> String {
         return render(
-            developerBody: apiErrorDeveloperBody(summary: summary, context: context),
+            developerBody: developerBodyWithContext(
+                summary: summary,
+                contextTitle: "Request Context:",
+                contextLines: requestContextLines(apiErrorContext, diagnosticContext: diagnosticContext)
+            ),
             code: code,
             nextStep: nextStep,
-            docURL: context.docURL,
-            sdkVersions: sdkVersions
+            docURL: apiErrorContext.docURL,
+            sdkVersions: diagnosticContext.sdkVersions
         )
     }
 
@@ -59,7 +76,6 @@ enum StripeCryptoOnrampErrorRenderer {
             developerBody,
             "",
             "Code: \(code)",
-            "",
             "Next step: \(nextStep)",
         ]
 
@@ -77,27 +93,35 @@ enum StripeCryptoOnrampErrorRenderer {
         return normalizedSDKVersions.map(\.debugDescription).joined(separator: ", ")
     }
 
-    private static func apiErrorDeveloperBody(summary: String, context: APIErrorContext) -> String {
-        let requestContextLines = requestContextLines(context)
-        guard !requestContextLines.isEmpty else {
+    private static func developerBodyWithContext(
+        summary: String,
+        contextTitle: String,
+        contextLines: [String]
+    ) -> String {
+        guard !contextLines.isEmpty else {
             return summary
         }
 
         return ([
             summary,
             "",
-            "Request Context:",
-        ] + requestContextLines.map { "  \($0)" }).joined(separator: "\n")
+            contextTitle,
+        ] + contextLines.map { "  \($0)" }).joined(separator: "\n")
     }
 
-    private static func requestContextLines(_ context: APIErrorContext) -> [String] {
+    private static func diagnosticContextLines(_ diagnosticContext: DiagnosticContext) -> [String] {
         return [
-            "operation: \(context.operation)",
-            context.appIdentifier.map { "app_id: \($0)" },
-            context.mode.map { "mode: \($0)" },
-            context.reason.map { "reason: \($0)" },
-            context.requestID.map { "request_id: \($0)" },
-            context.apiErrorType.map { "type: \($0)" },
+            "operation: \(diagnosticContext.operation)",
+            diagnosticContext.appPackageName.map { "app_id: \($0)" },
+            diagnosticContext.mode.map { "mode: \($0)" },
+        ].compactMap { $0 }
+    }
+
+    private static func requestContextLines(_ apiErrorContext: APIErrorContext, diagnosticContext: DiagnosticContext) -> [String] {
+        return diagnosticContextLines(diagnosticContext) + [
+            apiErrorContext.reason.map { "reason: \($0)" },
+            apiErrorContext.requestID.map { "request_id: \($0)" },
+            apiErrorContext.apiErrorType.map { "type: \($0)" },
         ].compactMap { $0 }
     }
 }

@@ -4,3 +4,6 @@
 /* Error message shown when app attestation fails */
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists.";
 
+/* Error message shown when app attestation is not configured for crypto onramp */
+"This app couldn't be verified. Contact the app developer for help." = "This app couldn't be verified. Contact the app developer for help.";
+
