@@ -13,19 +13,25 @@ import Foundation
 public struct UncategorizedAPIError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
-    public let context: APIErrorContext
+    public let apiErrorContext: APIErrorContext
 
-    /// Creates an uncategorized API error from shared API error context.
+    /// Local SDK context used to expose diagnostics.
+    let diagnosticContext: DiagnosticContext
+
+    /// Creates an uncategorized API error from shared API error and local diagnostic context.
     ///
-    /// - Parameter context: Shared API error context used to expose diagnostics.
-    public init(context: APIErrorContext) {
-        self.context = context
+    /// - Parameters:
+    ///   - apiErrorContext: Shared API error context used to expose diagnostics.
+    ///   - diagnosticContext: Local SDK context used to expose diagnostics.
+    init(apiErrorContext: APIErrorContext, diagnosticContext: DiagnosticContext) {
+        self.apiErrorContext = apiErrorContext
+        self.diagnosticContext = diagnosticContext
     }
 
     // MARK: - StripeCryptoOnrampAPIError
 
     public var code: String {
-        return context.code(fallback: "uncategorized_api_error")
+        return apiErrorContext.code(fallback: "uncategorized_api_error")
     }
 
     // MARK: - UncategorizedAPIError
@@ -38,10 +44,10 @@ public struct UncategorizedAPIError: StripeCryptoOnrampAPIError, APIErrorContext
     /// A developer-facing description with diagnostic details and suggested next steps.
     public var developerMessage: String {
         return StripeCryptoOnrampErrorRenderer.renderAPIErrorDeveloperMessage(
-            context: context,
-            summary: apiMessage ?? context.underlyingError.localizedDescription,
+            apiErrorContext: apiErrorContext,
+            diagnosticContext: diagnosticContext,
+            summary: apiMessage ?? apiErrorContext.underlyingError.localizedDescription,
             code: code,
-            sdkVersions: sdkVersions,
             nextStep: "Inspect the preserved Stripe API error for details and retry after correcting the request."
         )
     }
