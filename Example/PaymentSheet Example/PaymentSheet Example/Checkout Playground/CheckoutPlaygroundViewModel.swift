@@ -18,9 +18,7 @@ extension CheckoutPlayground {
         @Published var currency: Currency = .usd
         @Published var customerType: CustomerType = .guest
         @Published var lineItems: [LineItemConfig] = LineItemConfig.defaults
-        @Published var enableShipping = true
         @Published var allowPromotionCodes = true
-        @Published var phoneNumberCollection = false
         @Published var shippingAddressCollection = true
         @Published var billingAddressCollection = false
         @Published var automaticTax = true
@@ -89,7 +87,6 @@ extension CheckoutPlayground {
             // Send explicit safe values so setup mode never requests unsupported options.
             let supportsAdvancedCollection = mode != .setup
             let allowPromotionCodesForRequest = supportsAdvancedCollection ? allowPromotionCodes : false
-            let phoneNumberCollectionForRequest = supportsAdvancedCollection ? phoneNumberCollection : false
             let automaticTaxForRequest = supportsAdvancedCollection ? automaticTax : false
 
             var body: [String: Any] = [
@@ -98,10 +95,8 @@ extension CheckoutPlayground {
                 "currency": currency.rawValue,
                 "customer": customerType.rawValue,
                 "allow_promotion_codes": allowPromotionCodesForRequest,
-                "phone_number_collection": phoneNumberCollectionForRequest,
                 "shipping_address_collection": shippingAddressCollection,
                 "billing_address_collection": billingAddressCollection,
-                "include_shipping_options": enableShipping,
                 "automatic_tax": automaticTaxForRequest,
                 "payment_method_types": Array(paymentMethodTypes),
                 "adaptive_pricing": adaptivePricing,
