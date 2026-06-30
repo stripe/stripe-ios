@@ -53,21 +53,9 @@ extension Checkout {
     internal func enqueueSessionUpdate(
         _ body: @MainActor @escaping () async -> Void
     ) async {
-        let predecessor = pendingOperations.last
-        let operation = Task<Void, Error> { @MainActor in
-            if let predecessor { _ = try? await predecessor.value }
-            await body()
-        }
-
-        pendingOperations.append(operation)
-
-        defer {
-            pendingOperations.removeAll { $0 == operation }
-        }
-
-        // Operation cannot actually throw, but we still need to use `try?`
-        //  because of `pendingOperations`'s type.
-        _ = try? await operation.value
+        // Cast body to `throws` so that we call the underlying throwing version of the
+        //  function instead of recursing
+        try? await enqueueSessionUpdate(body as (() async throws -> Void))
     }
 
     /// Enqueues a serialized session update.
