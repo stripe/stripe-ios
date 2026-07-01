@@ -558,6 +558,24 @@ final class CheckoutUnitTests: XCTestCase {
         }
     }
 
+    func testPerformUpdateDoesNotWrapIntegrationDelegateErrorAsApiError() async {
+        let checkout = await makeCheckoutWithOpenSession()
+        let integrationDelegate = MockCheckoutIntegrationDelegate()
+        let testError = NSError(domain: "integration", code: 99)
+        integrationDelegate.shouldThrow = testError
+        checkout.integrationDelegate = integrationDelegate
+
+        do {
+            try await checkout.performUpdate()
+            XCTFail("Expected error to propagate")
+        } catch let error as CheckoutError {
+            XCTFail("Integration delegate error should not be wrapped as CheckoutError, got \(error)")
+        } catch {
+            XCTAssertEqual((error as NSError).domain, "integration")
+            XCTAssertEqual((error as NSError).code, 99)
+        }
+    }
+
     // MARK: - updatePaymentMethod Parameter Encoding Tests
 
     func testUpdatePaymentMethodParameters_expiryOnly() {
