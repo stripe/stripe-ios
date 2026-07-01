@@ -291,9 +291,11 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
 
+        // Gates let us pause each operation mid-flight so we can assert state at precise moments
         let firstGate = CheckoutPendingOperationsTestGate()
         let secondGate = CheckoutPendingOperationsTestGate()
 
+        // Two distinct sessions (different currencies) so we can tell them apart
         var firstJSON = CheckoutTestHelpers.makeOpenSessionJSON()
         firstJSON["currency"] = "eur"
         let firstSession = STPCheckoutSession.decodedObject(fromAPIResponse: firstJSON)!
@@ -302,6 +304,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         secondJSON["currency"] = "gbp"
         let secondSession = STPCheckoutSession.decodedObject(fromAPIResponse: secondJSON)!
 
+        // First op blocks on firstGate until we explicitly open it
         let firstTask = Task { @MainActor in
             try await checkout.enqueueSessionUpdate {
                 await firstGate.wait()
@@ -311,6 +314,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
 
         try await waitUntil { checkout.pendingOperations.count == 1 && firstGate.isWaiting }
 
+        // Second op enqueued while first is still in progress
         let secondTask = Task { @MainActor in
             try await checkout.enqueueSessionUpdate {
                 await secondGate.wait()
@@ -332,6 +336,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         firstGate.open()
         try await waitUntil { secondGate.isWaiting }
 
+        // Key behavior: isLoading doesn't toggle off between queued operations
         XCTContext.runActivity(named: "Between ops — loading persists, first session committed") { _ in
             XCTAssertTrue(checkout.isLoading)
             XCTAssertEqual(recorder.loading, [true])
@@ -346,6 +351,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         try await firstTask.value
         try await secondTask.value
 
+        // loading transitioned true→false exactly once across both operations
         XCTContext.runActivity(named: "After both ops complete") { _ in
             XCTAssertFalse(checkout.isLoading)
             XCTAssertEqual(recorder.loading, [true, false])
@@ -386,6 +392,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
 
+        // Commits the same session (no actual mutation) — delegate should still fire
         let existingSession = checkout.stpSession!
         try await checkout.enqueueSessionUpdate {
             try await checkout.commitSession(existingSession)
