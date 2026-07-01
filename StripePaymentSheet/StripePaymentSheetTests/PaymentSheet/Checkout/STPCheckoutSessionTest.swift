@@ -23,6 +23,10 @@ class STPCheckoutSessionTest: XCTestCase {
             "payment_status": "unpaid",
             "payment_method_types": ["card"],
             "customer": ["id": "cus_123"],
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
         ]
         overrides.forEach { json[$0.key] = $0.value }
         return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
@@ -88,8 +92,7 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.customer?.paymentMethods[1].stripeId, "pm_1Sxae4Lu5o3P18ZplFiKexnM")
         XCTAssertEqual(session.customer?.paymentMethods[1].type, .USBankAccount)
         XCTAssertEqual(session.businessName, "CI Stuff")
-        XCTAssertNotNil(session.elementsSession)
-        XCTAssertEqual(session.elementsSession?.sessionID, "elements_session_test123")
+        XCTAssertEqual(session.elementsSession.sessionID, "elements_session_test123")
         XCTAssertEqual(session.email, "test@example.com")
         XCTAssertEqual(session.url?.absoluteString, "https://checkout.stripe.com/c/pay/cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(session.returnUrl, "https://example.com/return")
@@ -203,6 +206,10 @@ class STPCheckoutSessionTest: XCTestCase {
             "mode": "payment",
             "payment_status": "unpaid",
             "payment_method_types": ["card"],
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
             // status is nullable, so we omit it to test that behavior
         ]
 
@@ -240,6 +247,10 @@ class STPCheckoutSessionTest: XCTestCase {
             "payment_status": "no_payment_required",
             "payment_method_types": ["card"],
             "setup_intent": "seti_test123456",
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
         ]
 
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: setupModeJson)
@@ -281,6 +292,10 @@ class STPCheckoutSessionTest: XCTestCase {
     func testDecodedObjectParsesCanDetachPaymentMethodTrue() {
         let json: [String: Any] = [
             "session_id": "cs_test_detach_true",
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
             "livemode": false,
             "mode": "payment",
             "payment_status": "unpaid",
@@ -300,6 +315,10 @@ class STPCheckoutSessionTest: XCTestCase {
     func testDecodedObjectParsesCanDetachPaymentMethodFalse() {
         let json: [String: Any] = [
             "session_id": "cs_test_detach_false",
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
             "livemode": false,
             "mode": "payment",
             "payment_status": "unpaid",
@@ -319,6 +338,10 @@ class STPCheckoutSessionTest: XCTestCase {
     func testDecodedObjectDefaultsCanDetachPaymentMethodToFalse() {
         let json: [String: Any] = [
             "session_id": "cs_test_detach_default",
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
             "livemode": false,
             "mode": "payment",
             "payment_status": "unpaid",
@@ -337,6 +360,10 @@ class STPCheckoutSessionTest: XCTestCase {
     func testTotalsWithTaxFromTaxAmounts() {
         let json: [String: Any] = [
             "session_id": "cs_test_tax",
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
             "livemode": false,
             "mode": "payment",
             "payment_status": "unpaid",
@@ -366,6 +393,10 @@ class STPCheckoutSessionTest: XCTestCase {
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
             "session_id": "cs_test_payment",
             "object": "checkout.session",
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
             "livemode": false,
             "mode": "payment",
             "payment_status": "unpaid",
@@ -380,6 +411,10 @@ class STPCheckoutSessionTest: XCTestCase {
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
             "session_id": "cs_test_payment_sfu",
             "object": "checkout.session",
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
             "livemode": false,
             "mode": "payment",
             "payment_status": "unpaid",
@@ -404,6 +439,10 @@ class STPCheckoutSessionTest: XCTestCase {
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
             "session_id": "cs_test_payment_per_pm_sfu",
             "object": "checkout.session",
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
             "livemode": false,
             "mode": "payment",
             "payment_status": "unpaid",
@@ -423,6 +462,10 @@ class STPCheckoutSessionTest: XCTestCase {
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
             "session_id": "cs_test_payment_no_customer",
             "object": "checkout.session",
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
             "livemode": false,
             "mode": "payment",
             "payment_status": "unpaid",
@@ -437,6 +480,10 @@ class STPCheckoutSessionTest: XCTestCase {
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
             "session_id": "cs_test_setup_customer",
             "object": "checkout.session",
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
             "livemode": false,
             "mode": "setup",
             "payment_status": "no_payment_required",
@@ -451,6 +498,10 @@ class STPCheckoutSessionTest: XCTestCase {
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
             "session_id": "cs_test_setup_no_customer",
             "object": "checkout.session",
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
             "livemode": false,
             "mode": "setup",
             "payment_status": "no_payment_required",
@@ -577,8 +628,8 @@ class STPCheckoutSessionTest: XCTestCase {
                 "automatic_tax_address_source": "session.billing",
             ],
         ])
-        XCTAssertNotNil(session.elementsSession)
-        XCTAssertTrue(session.elementsSession!.disableLinkForAutomaticTaxBilling)
+        XCTAssertEqual(session.elementsSession.sessionID, "es_123")
+        XCTAssertTrue(session.elementsSession.disableLinkForAutomaticTaxBilling)
 
         let sessionWithoutTax = makeCheckoutSession([
             "elements_session": [
@@ -586,11 +637,20 @@ class STPCheckoutSessionTest: XCTestCase {
                 "payment_method_preference": ["ordered_payment_method_types": ["card"]],
             ],
         ])
-        XCTAssertNotNil(sessionWithoutTax.elementsSession)
-        XCTAssertFalse(sessionWithoutTax.elementsSession!.disableLinkForAutomaticTaxBilling)
+        XCTAssertEqual(sessionWithoutTax.elementsSession.sessionID, "es_123")
+        XCTAssertFalse(sessionWithoutTax.elementsSession.disableLinkForAutomaticTaxBilling)
 
-        let sessionWithoutES = makeCheckoutSession([:])
-        XCTAssertNil(sessionWithoutES.elementsSession)
+        // When elements_session is absent from the API response, decoding returns nil.
+        let jsonWithoutES: [String: Any] = [
+            "session_id": "cs_test",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "customer": ["id": "cus_123"],
+        ]
+        XCTAssertNil(STPCheckoutSession.decodedObject(fromAPIResponse: jsonWithoutES))
     }
 
 }

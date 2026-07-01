@@ -848,7 +848,6 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
     @MainActor
     func testPaymentSheetLoadWithDirectCheckoutSessionMissingElementsSession() async throws {
-        let expectation = XCTestExpectation(description: "Load w/ direct CheckoutSession missing elements_session")
         let mockJSON: [AnyHashable: Any] = [
             "session_id": "cs_test_fake",
             "livemode": false,
@@ -856,31 +855,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             "payment_status": "unpaid",
             "payment_method_types": ["card"],
         ]
-        guard let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: mockJSON) else {
-            XCTFail("Failed to create mock STPCheckoutSession")
-            return
-        }
-        let checkout = Checkout(session: checkoutSession)
-        var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        configuration.defaultBillingDetails.email = "test@example.com"
-
-        PaymentSheetLoader.load(
-            mode: .checkout(checkout),
-            configuration: configuration,
-            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
-            integrationShape: .paymentSheet
-        ) { result in
-            expectation.fulfill()
-            switch result {
-            case .success:
-                XCTFail("Expected failure when elements_session is missing")
-            case .failure:
-                // Expected: should fail because elements_session is not in allResponseFields
-                break
-            }
-        }
-        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
+        // When elements_session is missing, decoding should fail and return nil.
+        XCTAssertNil(STPCheckoutSession.decodedObject(fromAPIResponse: mockJSON))
     }
 
     // MARK: - PMO SFU

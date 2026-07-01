@@ -329,6 +329,10 @@ extension Intent {
             "currency": currency.lowercased(),
             "livemode": false,
             "payment_method_types": ["card"],
+            "elements_session": [
+                "session_id": "es_123",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
         ]
         if let email {
             json["customer_email"] = email
