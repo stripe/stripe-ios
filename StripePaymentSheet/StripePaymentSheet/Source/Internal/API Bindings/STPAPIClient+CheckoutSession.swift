@@ -203,6 +203,8 @@ extension STPAPIClient {
             parameters["passive_captcha_token"] = passiveCaptchaToken
         }
 
+        parameters["elements_session_client"] = ["is_aggregation_expected": true]
+
         return try await APIRequest<STPCheckoutSession>.post(
             with: self,
             endpoint: "payment_pages/\(sessionId)/confirm",
