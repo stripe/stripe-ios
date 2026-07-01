@@ -185,11 +185,11 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         // Create two distinct sessions (different currencies) so we can tell them apart
         var firstJSON = CheckoutTestHelpers.makeOpenSessionJSON()
         firstJSON["currency"] = "eur"
-        let firstSession = STPCheckoutSession.decodedObject(fromAPIResponse: firstJSON)!
+        let firstSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: firstJSON)!
 
         var secondJSON = CheckoutTestHelpers.makeOpenSessionJSON()
         secondJSON["currency"] = "gbp"
-        let secondSession = STPCheckoutSession.decodedObject(fromAPIResponse: secondJSON)!
+        let secondSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: secondJSON)!
 
         // Enqueue first operation — it will block on firstGate until we explicitly open it
         let firstTask = Task { @MainActor in
@@ -293,7 +293,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         let sessionSub = checkout.$session.dropFirst().sink { sessionEmissions.append($0) }
 
         // Enqueue an operation that commits the same session (no actual mutation)
-        let existingSession = checkout.stpSession!
+        let existingSession = CheckoutTestHelpers.makeOpenSession()
         try await checkout.enqueueSessionUpdate {
             try await checkout.commitSession(existingSession)
         }
@@ -308,7 +308,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
 
     private func makeCheckoutWithOpenSession() async -> Checkout {
         let session = CheckoutTestHelpers.makeOpenSession()
-        return await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
+        return await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: session)
     }
 
     private func waitUntil(

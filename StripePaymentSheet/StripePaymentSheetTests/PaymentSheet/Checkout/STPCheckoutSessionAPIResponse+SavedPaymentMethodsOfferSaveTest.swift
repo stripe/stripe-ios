@@ -23,7 +23,7 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
             ],
         ]
 
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)
         XCTAssertNotNil(session)
         XCTAssertNotNil(session?.savedPaymentMethodsOfferSave)
         XCTAssertTrue(session!.savedPaymentMethodsOfferSave!.enabled)
@@ -43,7 +43,7 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
             ],
         ]
 
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)
         XCTAssertNotNil(session)
         XCTAssertNotNil(session?.savedPaymentMethodsOfferSave)
         XCTAssertFalse(session!.savedPaymentMethodsOfferSave!.enabled)
@@ -63,7 +63,7 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
             ],
         ]
 
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)
         XCTAssertNotNil(session)
         XCTAssertNotNil(session?.savedPaymentMethodsOfferSave)
         XCTAssertTrue(session!.savedPaymentMethodsOfferSave!.enabled)
@@ -79,7 +79,7 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
             "payment_method_types": ["card"],
         ]
 
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)
         XCTAssertNotNil(session)
         XCTAssertNil(session?.savedPaymentMethodsOfferSave)
     }

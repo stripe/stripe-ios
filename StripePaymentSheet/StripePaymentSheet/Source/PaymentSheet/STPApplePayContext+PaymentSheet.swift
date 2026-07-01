@@ -60,10 +60,10 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             return paymentIntent.clientSecret
         case .setupIntent(let setupIntent):
             return setupIntent.clientSecret
-        case .checkout(let checkout, let stpSession):
+        case .checkout(let checkout, let session):
             return try await handleCheckoutSessionApplePay(
                 checkout: checkout,
-                stpSession: stpSession,
+                session: session,
                 paymentMethod: paymentMethod,
                 paymentInformation: paymentInformation,
                 context: context
@@ -168,18 +168,18 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         return clientSecret
     }
 
-    // TODO(gbirch): Remove stpSession parameter once MPE is MainActor-isolated; we can then
+    // TODO(gbirch): Remove session parameter once MPE is MainActor-isolated; we can then
     // access checkout.session directly. This is a temporary stopgap to provide a threadsafe
     // version of the checkout session data.
     /// Handles Apple Pay confirmation for CheckoutSession by calling the confirm API with the payment method.
     private func handleCheckoutSessionApplePay(
         checkout: Checkout,
-        stpSession: STPCheckoutSession,
+        session: Checkout.Session,
         paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment,
         context: STPApplePayContext
     ) async throws -> String {
-        let checkoutSession = stpSession
+        let checkoutSession = session
 
         // 1. Build client attribution metadata
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
@@ -209,7 +209,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         try await checkout.commitSession(response)
 
         // 6. Return client secret based on checkout session mode
-        return try response.clientSecret(for: checkoutSession.mode)
+        return try response.intentClientSecret()
     }
 
     /// Extracts shipping details from a PKPayment for CheckoutSession confirmation.
@@ -344,7 +344,7 @@ extension STPApplePayContext {
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
-            if case .checkout(let checkout) = intent, let email = checkout.stpSession.email {
+            if case .checkout(_, let session) = intent, let email = session.email {
                 applePayContext.fallbackBillingDetails = StripeAPI.BillingDetails(email: email)
             }
             return applePayContext
@@ -375,11 +375,11 @@ extension STPApplePayContext {
         if let paymentSummaryItems = applePay.paymentSummaryItems {
             // Use the merchant supplied paymentSummaryItems
             paymentRequest.paymentSummaryItems = paymentSummaryItems
-        } else if case .checkout(_, let stpSession) = intent,
-                  !stpSession.lineItems.isEmpty,
-                  let total = stpSession.total {
+        } else if case .checkout(_, let session) = intent,
+                  !session.lineItems.isEmpty,
+                  let total = session.total {
             paymentRequest.paymentSummaryItems = STPApplePayContext.makeApplePayPaymentSummaryItems(
-                lineItems: stpSession.lineItems,
+                lineItems: session.lineItems,
                 total: total,
                 totalLabel: label,
                 currency: intent.currency
@@ -420,8 +420,8 @@ extension STPApplePayContext {
         }
 
         // Pre-populate billingContact from the CheckoutSession's billing address if available
-        if case .checkout(_, let stpSession) = intent,
-           let billingAddress = stpSession.billingAddress {
+        if case .checkout(_, let session) = intent,
+           let billingAddress = session.billingAddress {
             paymentRequest.billingContact = Self.makeBillingContact(from: billingAddress)
         }
 

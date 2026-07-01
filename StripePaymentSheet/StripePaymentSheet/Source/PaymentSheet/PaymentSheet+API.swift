@@ -170,9 +170,9 @@ extension PaymentSheet {
             intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
         }
         let setAllowRedisplay: (IntentConfirmParams, STPPaymentMethodType) -> Void = { confirmParams, paymentMethodType in
-            if case .checkout(_, let stpSession) = intent {
+            if case .checkout(_, let session) = intent {
                 confirmParams.setAllowRedisplayForCheckoutSession(
-                    merchantWillSavePaymentMethod: stpSession.merchantWillSavePaymentMethod(paymentMethodType)
+                    merchantWillSavePaymentMethod: session.merchantWillSavePaymentMethod(paymentMethodType)
                 )
             } else {
                 confirmParams.setAllowRedisplay(
@@ -285,11 +285,11 @@ extension PaymentSheet {
                         completion(result.result, result.deferredIntentConfirmationType)
                     }
                     // MARK: ↪ Checkout
-                case .checkout(let checkout, let stpSession):
+                case .checkout(let checkout, let session):
                     Task { @MainActor in
                         let result = await handleCheckoutSessionConfirmation(
                             checkout: checkout,
-                            stpSession: stpSession,
+                            session: session,
                             confirmType: .new(
                                 params: confirmParams.paymentMethodParams,
                                 paymentOptions: confirmParams.confirmPaymentMethodOptions,
@@ -361,7 +361,7 @@ extension PaymentSheet {
                     completion(result.result, result.deferredIntentConfirmationType)
                 }
                 // MARK: ↪ Checkout
-            case .checkout(let checkout, let stpSession):
+            case .checkout(let checkout, let session):
                 Task { @MainActor in
                     let paymentOptions = intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions != nil
                     // Flow controller and embedded collects CVC using interstitial:
@@ -370,7 +370,7 @@ extension PaymentSheet {
                     : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
                     let result = await handleCheckoutSessionConfirmation(
                         checkout: checkout,
-                        stpSession: stpSession,
+                        session: session,
                         confirmType: .saved(paymentMethod,
                                             paymentOptions: paymentOptions,
                                             clientAttributionMetadata: clientAttributionMetadata,
@@ -454,10 +454,10 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
-                    case .checkout(let checkout, let stpSession):
+                    case .checkout(let checkout, let session):
                         let result = await handleCheckoutSessionConfirmation(
                             checkout: checkout,
-                            stpSession: stpSession,
+                            session: session,
                             confirmType: .new(
                                 params: paymentMethodParams,
                                 paymentOptions: STPConfirmPaymentMethodOptions(),
@@ -547,10 +547,10 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
-                    case .checkout(let checkout, let stpSession):
+                    case .checkout(let checkout, let session):
                         let result = await handleCheckoutSessionConfirmation(
                             checkout: checkout,
-                            stpSession: stpSession,
+                            session: session,
                             confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
                             configuration: configuration,
                             authenticationContext: authenticationContext,

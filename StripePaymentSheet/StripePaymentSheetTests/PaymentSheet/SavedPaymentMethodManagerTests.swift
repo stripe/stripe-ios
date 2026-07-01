@@ -108,7 +108,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkout(Checkout(session: checkoutSession))
+            intent: .checkout(Checkout(apiResponse: checkoutSession), checkoutSession.makePublicSession())
         )
 
         let card = STPPaymentMethodCardParams()
@@ -143,7 +143,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkout(Checkout(session: checkoutSession))
+            intent: .checkout(Checkout(apiResponse: checkoutSession), checkoutSession.makePublicSession())
         )
 
         let card = STPPaymentMethodCardParams()
@@ -167,7 +167,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkout(Checkout(session: checkoutSession))
+            intent: .checkout(Checkout(apiResponse: checkoutSession), checkoutSession.makePublicSession())
         )
 
         do {
@@ -233,12 +233,12 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
             "payment_status": "unpaid",
             "payment_method_types": ["card"],
         ]
-        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: checkoutSessionJSON)!
+        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
 
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkout(Checkout(session: checkoutSession), checkoutSession)
+            intent: .checkout(Checkout(apiResponse: checkoutSession), checkoutSession.makePublicSession())
         )
         sut.detach(paymentMethod: paymentMethod)
 
@@ -292,7 +292,7 @@ extension SavedPaymentMethodManagerTests {
                            responseObject: STPPaymentMethod.paymentMethodsJson)
     }
 
-    func makeCheckoutSession(id: String) -> STPCheckoutSession {
+    func makeCheckoutSession(id: String) -> STPCheckoutSessionAPIResponse {
         let json: [String: Any] = [
             "session_id": id,
             "livemode": false,
@@ -300,7 +300,7 @@ extension SavedPaymentMethodManagerTests {
             "payment_status": "unpaid",
             "payment_method_types": ["card"],
         ]
-        return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        return STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
     }
 
     func stubCheckoutSessionUpdatePaymentMethod(

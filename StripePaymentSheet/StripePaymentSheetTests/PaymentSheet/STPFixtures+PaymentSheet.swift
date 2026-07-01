@@ -233,8 +233,8 @@ extension STPElementsSession {
                 return setupIntent.paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
             case .deferredIntent(let intentConfig):
                 return intentConfig.paymentMethodTypes ?? []
-            case .checkout(_, let stpSession):
-                return stpSession.paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
+            case .checkout(_, let session):
+                return session.elementsSession?.orderedPaymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" } ?? []
             }
         }()
         var customerSessionData: [String: Any]?
@@ -382,8 +382,8 @@ extension Intent {
             json["line_item_group"] = lineItemGroup
         }
 
-        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
-        return .checkout(Checkout(session: checkoutSession), checkoutSession)
+        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
+        return .checkout(Checkout(apiResponse: checkoutSession), checkoutSession.makePublicSession())
     }
 }
 

@@ -18,7 +18,7 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
 
     func testDecodedObjectLineItemsParsing() {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
 
         XCTAssertEqual(session.lineItems.count, 2)
 
@@ -45,7 +45,7 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
             "payment_method_types": ["card"],
         ]
 
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)
         XCTAssertNotNil(session)
         XCTAssertEqual(session?.lineItems.count, 0)
     }
@@ -54,7 +54,7 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
 
     func testDecodedObjectShippingOptionsParsing() {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
 
         XCTAssertEqual(session.shippingOptions.count, 2)
 
@@ -81,7 +81,7 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
             "payment_method_types": ["card"],
         ]
 
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)
         XCTAssertNotNil(session)
         XCTAssertEqual(session?.shippingOptions.count, 0)
     }

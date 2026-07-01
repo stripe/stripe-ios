@@ -1,5 +1,5 @@
 //
-//  STPCheckoutSession+Session.swift
+//  STPCheckoutSessionAPIResponse+Session.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 3/9/26.
@@ -8,14 +8,14 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-extension STPCheckoutSession {
+extension STPCheckoutSessionAPIResponse {
     var minorUnitsAmountDivisor: Int? {
         guard let currency else { return nil }
         let oneMinorUnitInMajor = NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency)
         return Int(truncating: NSDecimalNumber(value: 1).dividing(by: oneMinorUnitInMajor))
     }
 
-    /// Builds a public, read-only ``Checkout.Session`` snapshot from this object.
+    /// Builds a ``Checkout.Session`` from this API response object.
     func makePublicSession() -> Checkout.Session {
         return Checkout.Session(
             id: id,
@@ -34,7 +34,20 @@ extension STPCheckoutSession {
             shippingOptions: shippingOptions,
             status: status,
             tax: tax,
-            total: total
+            total: total,
+            mode: mode,
+            paymentMethodOptions: paymentMethodOptions,
+            customer: customer,
+            savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
+            setupFutureUsage: setupFutureUsage,
+            setupFutureUsageForPaymentMethodType: setupFutureUsageForPaymentMethodType,
+            allowedShippingCountries: allowedShippingCountries,
+            localizedPricesMetas: localizedPricesMetas,
+            exchangeRateMeta: exchangeRateMeta,
+            adaptivePricingActive: adaptivePricingActive,
+            automaticTaxEnabled: automaticTaxEnabled,
+            automaticTaxAddressSource: automaticTaxAddressSource,
+            elementsSession: elementsSession
         )
     }
 }

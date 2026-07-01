@@ -156,7 +156,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testUpdateShippingAddress_disallowedCountry_throws() async throws {
         let session = CheckoutTestHelpers.makeOpenSession(allowedCountries: ["US", "CA"])
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
+        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: session)
 
         do {
             try await checkout.updateShippingAddress(
@@ -175,7 +175,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testUpdateShippingAddress_allowedCountry_succeeds() async throws {
         let session = CheckoutTestHelpers.makeOpenSession(allowedCountries: ["US", "CA", "GB"])
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
+        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: session)
 
         try await checkout.updateShippingAddress(
             address: .init(country: "CA", line1: "80 Spadina Ave", city: "Toronto", state: "ON", postalCode: "M5V 2J4")
@@ -210,7 +210,7 @@ final class CheckoutUnitTests: XCTestCase {
     func testRequiresBillingAddress_whenRequired() {
         var json = CheckoutTestHelpers.makeOpenSessionJSON()
         json["billing_address_collection"] = "required"
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
         XCTAssertTrue(session.requiresBillingAddress)
     }
 
@@ -218,25 +218,25 @@ final class CheckoutUnitTests: XCTestCase {
         // "auto" should not be required
         var jsonAuto = CheckoutTestHelpers.makeOpenSessionJSON()
         jsonAuto["billing_address_collection"] = "auto"
-        let sessionAuto = STPCheckoutSession.decodedObject(fromAPIResponse: jsonAuto)!
+        let sessionAuto = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: jsonAuto)!
         XCTAssertFalse(sessionAuto.requiresBillingAddress)
 
         // absent field should not be required
         let jsonNil = CheckoutTestHelpers.makeOpenSessionJSON()
-        let sessionNil = STPCheckoutSession.decodedObject(fromAPIResponse: jsonNil)!
+        let sessionNil = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: jsonNil)!
         XCTAssertFalse(sessionNil.requiresBillingAddress)
     }
 
     func testAllowedShippingCountries_whenPresent() {
         var json = CheckoutTestHelpers.makeOpenSessionJSON()
         json["shipping_address_collection"] = ["allowed_countries": ["US", "CA", "IE", "GB"]]
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
         XCTAssertEqual(session.allowedShippingCountries, ["US", "CA", "IE", "GB"])
     }
 
     func testAllowedShippingCountries_whenNil() {
         let json = CheckoutTestHelpers.makeOpenSessionJSON()
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
         XCTAssertNil(session.allowedShippingCountries)
     }
 
@@ -258,7 +258,7 @@ final class CheckoutUnitTests: XCTestCase {
                 ],
             ],
         ]
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
         XCTAssertEqual(session.totalTaxAmount, 1185)
         XCTAssertEqual(session.taxAmounts.count, 1)
     }
@@ -289,14 +289,14 @@ final class CheckoutUnitTests: XCTestCase {
                 ],
             ],
         ]
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
         XCTAssertEqual(session.totalTaxAmount, 700)
         XCTAssertEqual(session.taxAmounts.count, 2)
     }
 
     func testTotalTaxAmount_noTaxAmounts() {
         let json = CheckoutTestHelpers.makeOpenSessionJSON()
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
         XCTAssertEqual(session.totalTaxAmount, 0)
         XCTAssertTrue(session.taxAmounts.isEmpty)
     }
@@ -306,13 +306,13 @@ final class CheckoutUnitTests: XCTestCase {
     func testRequiresShippingAddress_whenCountriesPresent() {
         var json = CheckoutTestHelpers.makeOpenSessionJSON()
         json["shipping_address_collection"] = ["allowed_countries": ["US", "CA"]]
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
         XCTAssertTrue(session.requiresShippingAddress)
     }
 
     func testRequiresShippingAddress_whenNil() {
         let json = CheckoutTestHelpers.makeOpenSessionJSON()
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
         XCTAssertFalse(session.requiresShippingAddress)
     }
 
@@ -342,7 +342,7 @@ final class CheckoutUnitTests: XCTestCase {
             "total": 21000,
         ]
 
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
 
         // Verify tax amounts
         XCTAssertEqual(session.taxAmounts.count, 1)
@@ -379,7 +379,7 @@ final class CheckoutUnitTests: XCTestCase {
         var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
         updatedJSON["status"] = "complete"
         updatedJSON["payment_status"] = "paid"
-        let confirmResponse = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
+        let confirmResponse = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: updatedJSON)!
 
         try await checkout.commitSession(confirmResponse)
 
@@ -400,13 +400,13 @@ final class CheckoutUnitTests: XCTestCase {
             name: "Jane Doe",
             address: .init(country: "US")
         )
-        checkout.stpSession.billingAddress = billingUpdate
+        checkout.session = checkout.session.makeCopyOverriding(billingAddress: billingUpdate)
 
         // Simulate a confirm response
         var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
         updatedJSON["status"] = "complete"
         updatedJSON["payment_status"] = "paid"
-        let confirmResponse = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
+        let confirmResponse = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: updatedJSON)!
 
         try await checkout.commitSession(confirmResponse)
 
@@ -424,16 +424,18 @@ final class CheckoutUnitTests: XCTestCase {
         let sessionSub = checkout.$session.dropFirst().sink { sessionEmissions.append($0) }
 
         // Set a billing address that should survive both session swaps
-        checkout.stpSession.billingAddress = Checkout.ContactAddress(
-            name: "Jane Doe",
-            address: .init(country: "US")
+        checkout.session = checkout.session.makeCopyOverriding(
+            billingAddress: Checkout.ContactAddress(
+                name: "Jane Doe",
+                address: .init(country: "US")
+            )
         )
 
         // First update
         var firstResponse = CheckoutTestHelpers.makeOpenSessionJSON()
         firstResponse["status"] = "complete"
         firstResponse["payment_status"] = "paid"
-        let firstConfirm = STPCheckoutSession.decodedObject(fromAPIResponse: firstResponse)!
+        let firstConfirm = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: firstResponse)!
 
         try await checkout.commitSession(firstConfirm)
         XCTAssertEqual(checkout.session.status?.type, .complete)
@@ -442,7 +444,7 @@ final class CheckoutUnitTests: XCTestCase {
         // Second update
         var secondResponse = CheckoutTestHelpers.makeOpenSessionJSON()
         secondResponse["status"] = "open"
-        let secondSession = STPCheckoutSession.decodedObject(fromAPIResponse: secondResponse)!
+        let secondSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: secondResponse)!
 
         try await checkout.commitSession(secondSession)
         XCTAssertEqual(checkout.session.status?.type, .open)
@@ -478,7 +480,7 @@ final class CheckoutUnitTests: XCTestCase {
         var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
         updatedJSON["status"] = "complete"
         updatedJSON["payment_status"] = "paid"
-        let updatedSession = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
+        let updatedSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: updatedJSON)!
 
         try await checkout.commitSession(updatedSession)
 
@@ -499,7 +501,7 @@ final class CheckoutUnitTests: XCTestCase {
 
         // Update with same session data — delegates still fire because the caller
         // decided an update occurred (e.g. after an API call).
-        let sameSession = STPCheckoutSession.decodedObject(fromAPIResponse: CheckoutTestHelpers.makeOpenSessionJSON())!
+        let sameSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: CheckoutTestHelpers.makeOpenSessionJSON())!
         try await checkout.commitSession(sameSession)
 
         XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 1)
@@ -526,7 +528,7 @@ final class CheckoutUnitTests: XCTestCase {
         var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
         updatedJSON["status"] = "complete"
         updatedJSON["payment_status"] = "paid"
-        let updatedSession = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
+        let updatedSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: updatedJSON)!
 
         try await checkout.commitSession(updatedSession)
 
@@ -548,7 +550,7 @@ final class CheckoutUnitTests: XCTestCase {
         var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
         updatedJSON["status"] = "complete"
         updatedJSON["payment_status"] = "paid"
-        let updatedSession = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
+        let updatedSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: updatedJSON)!
 
         do {
             try await checkout.commitSession(updatedSession)
@@ -655,7 +657,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     private func makeCheckoutWithOpenSession() async -> Checkout {
         let session = CheckoutTestHelpers.makeOpenSession()
-        return await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
+        return await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: session)
     }
 
 }

@@ -53,16 +53,6 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Internal Properties
 
-    /// The underlying `STPCheckoutSession` backing the current public ``session``.
-    ///
-    /// Marked `nonisolated(unsafe)` because PaymentSheet internals read this from non-MainActor
-    /// contexts. This is safe: reads only occur after the session is loaded and while the payment
-    /// UI is presented, a window during which no mutations occur. Writes are always on MainActor
-    /// because they go through `Checkout`'s MainActor-isolated mutation methods.
-    /// Requiring full MainActor isolation would propagate `@MainActor` through nearly all of
-    /// PaymentSheet's internal types, which is not warranted by the actual concurrency risk.
-    nonisolated(unsafe) private(set) var stpSession: STPCheckoutSession!
-
     weak var integrationDelegate: CheckoutIntegrationDelegate?
 
     let flagImageManager = AdaptivePricingFlagImageManager()
@@ -121,41 +111,40 @@ public final class Checkout: ObservableObject {
 
         let sessionId = Self.extractSessionId(from: clientSecret)
         do {
-            let session = try await apiClient.initCheckoutSession(
+            let apiResponse = try await apiClient.initCheckoutSession(
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
             )
-            await flagImageManager.prefetchFlagImages(for: session)
-            self.stpSession = session
-            self.session = session.makePublicSession()
+            let loadedSession = apiResponse.makePublicSession()
+            await flagImageManager.prefetchFlagImages(for: loadedSession)
+            self.session = loadedSession
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
     }
 
 #if DEBUG
-    /// Internal initializer for unit tests that injects a pre-loaded session.
+    /// Internal initializer for unit tests that injects a pre-loaded API response.
     init(
         clientSecret: String,
         configuration: Configuration = Configuration(),
-        session: STPCheckoutSession,
+        apiResponse: STPCheckoutSessionAPIResponse,
         apiClient: STPAPIClient = .shared
     ) async {
         self.clientSecret = clientSecret
         self.configuration = configuration
         self.apiClient = apiClient
-        await flagImageManager.prefetchFlagImages(for: session)
-        self.stpSession = session
-        self.session = session.makePublicSession()
+        let loadedSession = apiResponse.makePublicSession()
+        await flagImageManager.prefetchFlagImages(for: loadedSession)
+        self.session = loadedSession
     }
 
-    /// Synchronous test-only initializer that wraps a pre-loaded session without async work.
-    init(session: STPCheckoutSession) {
+    /// Synchronous test-only initializer that wraps a pre-loaded API response without async work.
+    init(apiResponse: STPCheckoutSessionAPIResponse) {
         self.clientSecret = ""
         self.configuration = Configuration()
         self.apiClient = .shared
-        self.stpSession = session
-        self.session = session.makePublicSession()
+        self.session = apiResponse.makePublicSession()
     }
 #endif
 
@@ -249,16 +238,15 @@ public final class Checkout: ObservableObject {
         phone: String? = nil,
         address: Address
     ) async throws {
-        guard let currentSession = stpSession else { return }
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
-        guard currentSession.billingAddress != contactAddress else { return }
-        if currentSession.shouldSendTaxRegion(for: "billing") {
+        guard session.billingAddress != contactAddress else { return }
+        if session.shouldSendTaxRegion(for: "billing") {
             try await performUpdate(.setTaxRegion(address), applying: {
-                self.stpSession?.billingAddress = contactAddress
+                self.session.makeCopyOverriding(billingAddress: contactAddress)
             })
         } else {
             try await performUpdate(applying: {
-                self.stpSession?.billingAddress = contactAddress
+                self.session.makeCopyOverriding(billingAddress: contactAddress)
             })
         }
     }
@@ -282,20 +270,19 @@ public final class Checkout: ObservableObject {
         phone: String? = nil,
         address: Address
     ) async throws {
-        guard let currentSession = stpSession else { return }
-        if let allowedCountries = currentSession.allowedShippingCountries,
+        if let allowedCountries = session.allowedShippingCountries,
            !allowedCountries.contains(address.country) {
             throw CheckoutError.invalidShippingCountry(countryCode: address.country)
         }
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
-        guard currentSession.shippingAddress != contactAddress else { return }
-        if currentSession.shouldSendTaxRegion(for: "shipping") {
+        guard session.shippingAddress != contactAddress else { return }
+        if session.shouldSendTaxRegion(for: "shipping") {
             try await performUpdate(.setTaxRegion(address), applying: {
-                self.stpSession?.shippingAddress = contactAddress
+                self.session.makeCopyOverriding(shippingAddress: contactAddress)
             })
         } else {
             try await performUpdate(applying: {
-                self.stpSession?.shippingAddress = contactAddress
+                self.session.makeCopyOverriding(shippingAddress: contactAddress)
             })
         }
     }
@@ -327,7 +314,7 @@ public final class Checkout: ObservableObject {
                 throw CheckoutError.apiError(message: error.localizedDescription)
             }
             let sessionId = Self.extractSessionId(from: self.clientSecret)
-            let refreshedCheckoutSession: STPCheckoutSession
+            let refreshedCheckoutSession: STPCheckoutSessionAPIResponse
             do {
                 refreshedCheckoutSession = try await self.apiClient.initCheckoutSession(
                     checkoutSessionId: sessionId,
@@ -342,16 +329,30 @@ public final class Checkout: ObservableObject {
 
     // MARK: - State updates
 
-    /// Replaces the current session, preserves client-side overrides, and notifies delegates.
+    /// Replaces the current session from an API response, preserves client-side overrides, and notifies delegates.
     ///
-    /// Client-side address overrides are copied from the current session to `newSession`
-    /// automatically. To update an address, set it on `stpSession` before calling this method.
-    func commitSession(_ newSession: STPCheckoutSession, skipIntegrationNotification: Bool = false) async throws {
+    /// Client-side address overrides are copied from the current session to the new one
+    /// automatically. To update an address, pass a `localMutation` closure.
+    func commitSession(
+        _ apiResponse: STPCheckoutSessionAPIResponse? = nil,
+        applying localMutation: (@MainActor @Sendable () -> Session)? = nil,
+        skipIntegrationNotification: Bool = false
+    ) async throws {
+        // Generate a new session from the API response, or fall back to the current session.
+        let newSession = apiResponse?.makePublicSession() ?? session
+
         // Preserve client-side address overrides on the new session.
-        newSession.billingAddress = stpSession?.billingAddress
-        newSession.shippingAddress = stpSession?.shippingAddress
-        stpSession = newSession
-        session = newSession.makePublicSession()
+        let sessionWithLocalAddress = newSession.makeCopyOverriding(
+            billingAddress: session.billingAddress,
+            shippingAddress: session.shippingAddress
+        )
+
+        // Apply any additional local mutations to the session.
+        let finalSession = localMutation?() ?? sessionWithLocalAddress
+
+        // Update the session and notify delegates.
+        session = finalSession
+
         // Skip delegate if another op is queued—it'll notify when it commits.
         if isLastPendingOperation && !skipIntegrationNotification {
             try await integrationDelegate?.checkoutDidUpdate(self)

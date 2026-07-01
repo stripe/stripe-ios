@@ -484,15 +484,15 @@ final class PaymentSheetLoader {
                 intent = .deferredIntent(intentConfig: intentConfig)
             }
         case .checkout(let checkout):
-            guard let decodedElementsSession = checkout.stpSession.elementsSession else {
+            guard let decodedElementsSession = checkout.session.elementsSession else {
                 throw PaymentSheetError.unknown(debugDescription: "Failed to decode elements session from provided checkout session object")
             }
             elementsSession = decodedElementsSession
-            // TODO(gbirch): Remove stpSession extraction once MPE is MainActor-isolated.
+            // TODO(gbirch): Remove Checkout.Session associated value once MPE is MainActor-isolated.
             // This is a temporary stopgap to provide a threadsafe version of the checkout session data.
-            intent = .checkout(checkout, checkout.stpSession)
+            intent = .checkout(checkout, checkout.session)
         }
-        
+
         // Warn the merchant if we see unactivated payment method types in the Intent
         if !elementsSession.unactivatedPaymentMethodTypes.isEmpty {
             let message = """
@@ -542,8 +542,8 @@ final class PaymentSheetLoader {
         if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
             // A. SPMs are on ElementSessions object when using CustomerSession.
             savedPaymentMethods = elementsSessionPaymentMethods
-        } else if case let .checkout(_, stpSession) = intent,
-                  let customerPaymentMethods = stpSession.customer?.paymentMethods {
+        } else if case let .checkout(_, session) = intent,
+                  let customerPaymentMethods = session.customer?.paymentMethods {
             // B. SPMs are on CheckoutSession object
             savedPaymentMethods = customerPaymentMethods
         } else if let prefetchedSPMs {

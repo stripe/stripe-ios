@@ -415,7 +415,7 @@ extension PaymentSheet {
                     return
                 }
                 var config = configuration
-                checkout.stpSession.applyAddressOverrides(to: &config)
+                checkout.session.applyAddressOverrides(to: &config)
                 create(mode: .checkout(checkout),
                        configuration: config
                 ) { result in
@@ -586,7 +586,7 @@ extension PaymentSheet {
                 }
                 guard !Task.isCancelled else { return }
                 self.isPresented = true
-                checkout.stpSession.applyAddressOverrides(to: &self.configuration)
+                checkout.session.applyAddressOverrides(to: &self.configuration)
                 let updateID = UUID()
                 self.performUpdate(mode: .checkout(checkout), updateID: updateID) { [weak self] error in
                     guard let self else { return }
@@ -786,7 +786,7 @@ extension PaymentSheet {
                     completion(error)
                     return
                 }
-                checkout.stpSession.applyAddressOverrides(to: &configuration)
+                checkout.session.applyAddressOverrides(to: &configuration)
                 performUpdate(mode: .checkout(checkout), updateID: updateID, completion: completion)
             }
         }

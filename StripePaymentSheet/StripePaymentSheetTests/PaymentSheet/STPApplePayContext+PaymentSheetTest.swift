@@ -633,16 +633,18 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTFail("Expected checkout intent")
             return
         }
-        checkout.stpSession.billingAddress = Checkout.ContactAddress(
-            name: "Jane Doe",
-            phone: "+14155551234",
-            address: Checkout.Address(
-                country: "US",
-                line1: "510 Townsend St",
-                line2: "Apt 2",
-                city: "San Francisco",
-                state: "CA",
-                postalCode: "94103"
+        checkout.session = checkout.session.makeCopyOverriding(
+            billingAddress: Checkout.ContactAddress(
+                name: "Jane Doe",
+                phone: "+14155551234",
+                address: Checkout.Address(
+                    country: "US",
+                    line1: "510 Townsend St",
+                    line2: "Apt 2",
+                    city: "San Francisco",
+                    state: "CA",
+                    postalCode: "94103"
+                )
             )
         )
 
@@ -673,8 +675,10 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTFail("Expected checkout intent")
             return
         }
-        checkout.stpSession.billingAddress = Checkout.ContactAddress(
-            address: Checkout.Address(country: "GB")
+        checkout.session = checkout.session.makeCopyOverriding(
+            billingAddress: Checkout.ContactAddress(
+                address: Checkout.Address(country: "GB")
+            )
         )
 
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
@@ -699,11 +703,13 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTFail("Expected checkout intent")
             return
         }
-        checkout.stpSession.billingAddress = Checkout.ContactAddress(
-            name: "John Smith",
-            address: Checkout.Address(
-                country: "US",
-                line1: "123 Main St"
+        checkout.session = checkout.session.makeCopyOverriding(
+            billingAddress: Checkout.ContactAddress(
+                name: "John Smith",
+                address: Checkout.Address(
+                    country: "US",
+                    line1: "123 Main St"
+                )
             )
         )
 
@@ -721,7 +727,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             return
         }
         // billingAddress is nil by default
-        XCTAssertNil(checkout.stpSession.billingAddress)
+        XCTAssertNil(checkout.session.billingAddress)
 
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
 

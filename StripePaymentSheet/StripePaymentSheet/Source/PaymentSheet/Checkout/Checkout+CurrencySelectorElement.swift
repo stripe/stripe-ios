@@ -53,7 +53,7 @@ extension Checkout {
         }
 
         private var isAdaptivePricingAvailable: Bool {
-            return CurrencySelectorUtilities.adaptivePricingData(from: checkout.stpSession) != nil
+            return CurrencySelectorUtilities.adaptivePricingData(from: checkout.session) != nil
         }
     }
 }
