@@ -110,6 +110,8 @@ extension Checkout {
             }
 
             localMutation?()
+            /* Commit the session. Note that the above `catch` block still throws, so this
+             * is not reached in that case, which is why we manually notify the delegate. */
             try await self.commitSession(updatedSession)
         }
     }
