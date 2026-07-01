@@ -77,7 +77,10 @@ extension STPAPIClient {
         _ = try await APIRequest<STPCheckoutSession>.post(
             with: self,
             endpoint: "payment_pages/\(checkoutSessionId)",
-            parameters: ["payment_method_to_detach": paymentMethodId]
+            parameters: [
+                "payment_method_to_detach": paymentMethodId,
+                "elements_session_client": ["is_aggregation_expected": true],
+            ]
         )
     }
 

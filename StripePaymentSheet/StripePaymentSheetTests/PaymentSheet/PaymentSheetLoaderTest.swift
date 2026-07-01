@@ -846,9 +846,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
-    @MainActor
-
     // MARK: - PMO SFU
+    @MainActor
     func testDeferredIntentWithPaymentMethodOptions() async throws {
         let loadExpectation = XCTestExpectation(description: "Load deferred intent with PMO SFU")
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _ in
