@@ -425,6 +425,22 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(recorder.sessions.count, 2)
     }
 
+    func testCommitSessionWithTerminalStatusStillNotifiesIntegrationDelegate() async throws {
+        let checkout = await makeCheckoutWithOpenSession()
+        let integrationDelegate = MockCheckoutIntegrationDelegate()
+        checkout.integrationDelegate = integrationDelegate
+
+        var completedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
+        completedJSON["status"] = "complete"
+        completedJSON["payment_status"] = "paid"
+        let completedSession = STPCheckoutSession.decodedObject(fromAPIResponse: completedJSON)!
+
+        try await checkout.commitSession(completedSession)
+
+        XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 1)
+        XCTAssertEqual(checkout.session.status?.type, .complete)
+    }
+
     // MARK: - State Convenience Tests
 
     func testSessionAvailableAfterInit() async {
@@ -522,7 +538,7 @@ final class CheckoutUnitTests: XCTestCase {
         let params = STPAPIClient.updatePaymentMethodParameters(
             paymentMethodId: "pm_123",
             billingDetails: nil,
-            expiryDetails: CheckoutPaymentMethodExpiryDetails(expMonth: 12, expYear: 2028)
+            expiryDetails: Checkout.PaymentMethodExpiryDetails(expMonth: 12, expYear: 2028)
         )
 
         XCTAssertEqual(params["payment_method_to_update[payment_method_id]"] as? String, "pm_123")
@@ -533,11 +549,11 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testUpdatePaymentMethodParameters_billingDetailsOnly() {
-        let billing = CheckoutPaymentMethodBillingDetails(
+        let billing = Checkout.PaymentMethodBillingDetails(
             name: "Jane Doe",
             email: "jane@example.com",
             phone: "+15551234567",
-            address: CheckoutPaymentMethodBillingAddress(
+            address: Checkout.PaymentMethodBillingAddress(
                 line1: "123 Main St",
                 line2: "Apt 4",
                 city: "San Francisco",
@@ -567,11 +583,11 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testUpdatePaymentMethodParameters_billingAndExpiry() {
-        let billing = CheckoutPaymentMethodBillingDetails(
+        let billing = Checkout.PaymentMethodBillingDetails(
             name: "John Smith",
             address: nil
         )
-        let expiry = CheckoutPaymentMethodExpiryDetails(expMonth: 3, expYear: 2026)
+        let expiry = Checkout.PaymentMethodExpiryDetails(expMonth: 3, expYear: 2026)
         let params = STPAPIClient.updatePaymentMethodParameters(
             paymentMethodId: "pm_789",
             billingDetails: billing,
@@ -588,8 +604,8 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testUpdatePaymentMethodParameters_partialBillingAddress() {
-        let billing = CheckoutPaymentMethodBillingDetails(
-            address: CheckoutPaymentMethodBillingAddress(
+        let billing = Checkout.PaymentMethodBillingDetails(
+            address: Checkout.PaymentMethodBillingAddress(
                 postalCode: "94105",
                 country: "US"
             )

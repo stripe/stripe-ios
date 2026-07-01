@@ -147,6 +147,9 @@ class STPCheckoutSession: NSObject {
     /// The address source used for automatic tax calculation (e.g. `"billing"` or `"shipping"`).
     let automaticTaxAddressSource: String?
 
+    /// The elements session embedded in this checkout session.
+    let elementsSession: STPElementsSession
+
     /// The raw API response used to create this object.
     let allResponseFields: [AnyHashable: Any]
 
@@ -269,6 +272,7 @@ class STPCheckoutSession: NSObject {
         adaptivePricingActive: Bool,
         automaticTaxEnabled: Bool,
         automaticTaxAddressSource: String?,
+        elementsSession: STPElementsSession,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.id = id
@@ -308,6 +312,7 @@ class STPCheckoutSession: NSObject {
         self.adaptivePricingActive = adaptivePricingActive
         self.automaticTaxEnabled = automaticTaxEnabled
         self.automaticTaxAddressSource = automaticTaxAddressSource
+        self.elementsSession = elementsSession
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -490,6 +495,13 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
 
         let businessName = (dict["elements_session"] as? [String: Any])?["business_name"] as? String
 
+        guard let elementsSessionDict = dict["elements_session"] as? [AnyHashable: Any],
+              let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionDict)
+        else { return nil }
+        if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
+            elementsSession.disableLinkForAutomaticTaxBilling = true
+        }
+
         let email = (dict["customer_email"] as? String) ?? customer?.email
 
         return STPCheckoutSession(
@@ -532,6 +544,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             adaptivePricingActive: adaptivePricingActive,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
+            elementsSession: elementsSession,
             allResponseFields: dict
         ) as? Self
     }

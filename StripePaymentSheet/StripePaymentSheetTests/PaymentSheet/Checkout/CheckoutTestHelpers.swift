@@ -93,6 +93,10 @@ enum CheckoutTestHelpers {
             "payment_status": "unpaid",
             "payment_method_types": ["card"],
             "currency": "usd",
+            "elements_session": [
+                "session_id": "es_test",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
         ]
     }
 
@@ -132,6 +136,10 @@ enum CheckoutTestHelpers {
             "payment_status": "unpaid",
             "payment_method_types": ["card"],
             "currency": currency,
+            "elements_session": [
+                "session_id": "es_test",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
             "total_summary": [
                 "subtotal": integrationAmount,
                 "total": integrationAmount,

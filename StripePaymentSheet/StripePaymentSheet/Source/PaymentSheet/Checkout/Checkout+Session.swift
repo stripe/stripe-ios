@@ -14,7 +14,7 @@ import Foundation
 @_spi(ReactNativeSDK)
 extension Checkout {
     /// A read-only representation of a Stripe Checkout Session.
-    public final class Session {
+    public struct Session {
         /// The ID of the Checkout Session.
         public let id: String
 
@@ -71,44 +71,6 @@ extension Checkout {
 
         /// Tax and discount details for the computed total amount.
         public let total: Checkout.Total?
-
-        init(
-            id: String,
-            billingAddress: Checkout.ContactAddress?,
-            businessName: String?,
-            currency: String?,
-            currencyOptions: [Checkout.CurrencyOption],
-            discountAmounts: [Checkout.DiscountAmount],
-            email: String?,
-            lineItems: [Checkout.LineItem],
-            livemode: Bool,
-            minorUnitsAmountDivisor: Int?,
-            savedPaymentMethods: [STPPaymentMethod],
-            shipping: Checkout.SelectedShipping?,
-            shippingAddress: Checkout.ContactAddress?,
-            shippingOptions: [Checkout.ShippingOption],
-            status: Checkout.Status?,
-            tax: Checkout.Tax,
-            total: Checkout.Total?
-        ) {
-            self.id = id
-            self.billingAddress = billingAddress
-            self.businessName = businessName
-            self.currency = currency
-            self.currencyOptions = currencyOptions
-            self.discountAmounts = discountAmounts
-            self.email = email
-            self.lineItems = lineItems
-            self.livemode = livemode
-            self.minorUnitsAmountDivisor = minorUnitsAmountDivisor
-            self.savedPaymentMethods = savedPaymentMethods
-            self.shipping = shipping
-            self.shippingAddress = shippingAddress
-            self.shippingOptions = shippingOptions
-            self.status = status
-            self.tax = tax
-            self.total = total
-        }
     }
 }
 

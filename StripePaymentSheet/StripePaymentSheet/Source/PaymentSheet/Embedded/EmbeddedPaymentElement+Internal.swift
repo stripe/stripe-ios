@@ -34,7 +34,7 @@ extension EmbeddedPaymentElement {
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: loadResult.intent.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
-            allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet,
+            allowsPaymentMethodUpdate: loadResult.intent.allowsPaymentMethodUpdate(elementsSession: loadResult.elementsSession),
             omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
         let initialSelection: RowButtonType? = {
@@ -188,7 +188,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                                hostedSurface: .paymentSheet,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                                canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
-                                                                               canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
+                                                                               canUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                                isDefault: paymentMethod == defaultPaymentMethod)
@@ -333,7 +333,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             isCBCEligible: elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
-            allowsPaymentMethodUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
+            allowsPaymentMethodUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
             omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
     }
@@ -513,12 +513,6 @@ extension EmbeddedPaymentElement {
             return (.failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent), nil)
         }
 
-        if let checkout, !checkout.pendingOperations.isEmpty {
-            let errorMessage = "confirm was called while the Checkout session is still loading. Wait until Checkout.isLoading is false."
-            let error = PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)
-            return (.failed(error: error), nil)
-        }
-
         if let latestUpdateContext {
             switch latestUpdateContext.status {
             case .inProgress:
@@ -545,17 +539,36 @@ extension EmbeddedPaymentElement {
 
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
 
-        let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
-            configuration: configuration,
-            authenticationContext: authContext,
-            intent: intent,
-            elementsSession: elementsSession,
-            paymentOption: paymentOption,
-            paymentHandler: paymentHandler,
-            integrationShape: .embedded,
-            confirmationChallenge: confirmationChallenge,
-            analyticsHelper: analyticsHelper
-        )
+        let confirmBlock: () async -> (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) = {
+            await PaymentSheet.confirm(
+                configuration: self.configuration,
+                authenticationContext: authContext,
+                intent: self.intent,
+                elementsSession: self.elementsSession,
+                paymentOption: paymentOption,
+                paymentHandler: self.paymentHandler,
+                integrationShape: .embedded,
+                confirmationChallenge: self.confirmationChallenge,
+                analyticsHelper: self.analyticsHelper
+            )
+        }
+
+        let result: PaymentSheetResult
+        let deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?
+
+        if let checkout {
+            if !checkout.pendingOperations.isEmpty {
+                let errorMessage = "confirm was called while the Checkout session is still loading. Wait until Checkout.isLoading is false."
+                let error = PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)
+                return (.failed(error: error), nil)
+            }
+            (result, deferredIntentConfirmationType) = await checkout.enqueueSessionUpdate {
+                await confirmBlock()
+            }
+        } else {
+            (result, deferredIntentConfirmationType) = await confirmBlock()
+        }
+
         analyticsHelper.logPayment(
             paymentOption: paymentOption,
             result: result,

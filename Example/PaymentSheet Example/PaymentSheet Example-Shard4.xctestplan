@@ -31,6 +31,7 @@
     {
       "parallelizable" : true,
       "skippedTests" : [
+        "CheckoutSessionUITests",
         "CustomerSheetSnapshotTests",
         "CustomerSheetUITest",
         "FCLiteUITests",

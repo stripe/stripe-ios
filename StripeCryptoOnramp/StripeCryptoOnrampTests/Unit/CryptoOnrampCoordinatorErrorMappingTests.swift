@@ -8,6 +8,7 @@
 import Foundation
 @testable @_spi(STP) import StripeCore
 @testable @_spi(CryptoOnrampAlpha) import StripeCryptoOnramp
+@testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
 final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
@@ -32,8 +33,6 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
 
         XCTAssertEqual(apiError.reason, "app_not_registered")
         XCTAssertEqual(apiError.code, "link_failed_to_attest_request")
-        XCTAssertEqual(apiError.operation, "has_link_account")
-        XCTAssertEqual(apiError.mode, "test")
         XCTAssertEqual(apiError.requestID, "req_attestation_test")
         XCTAssertEqual(apiError.type, "invalid_request_error")
         XCTAssertEqual(
@@ -52,21 +51,65 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         XCTAssertEqual(apiError.errorDescription, apiError.userMessage)
         XCTAssertEqual(apiError.debugDescription, apiError.developerMessage)
 
-        let appIdentifierLine = Bundle.main.bundleIdentifier.map { "  app_id: \($0)\n" } ?? ""
+        let appIdentifier = try XCTUnwrap(Bundle.main.bundleIdentifier)
         XCTAssertEqual(apiError.developerMessage, """
         App attestation failed: this app is not registered as a trusted application.
 
         Request Context:
           operation: has_link_account
-        \(appIdentifierLine)  mode: test
+          app_id: \(appIdentifier)
+          mode: test
           reason: app_not_registered
           request_id: req_attestation_test
           type: invalid_request_error
 
         Code: link_failed_to_attest_request
-
         Next step: Register this app's bundle ID or package name as a trusted application with Stripe, then retry the Onramp flow.
         SDK: stripe-ios@\(STPAPIClient.STPSDKVersion)
+        """)
+    }
+
+    func testMappedErrorMapsMissingAppAttestationIntegrationErrorToRichAttestationError() throws {
+        let apiClient = STPAPIClient(publishableKey: "pk_live_123")
+        let additionalSDKVersions = [
+            SDKVersion(name: "stripe-react-native", version: "1.2.3"),
+        ]
+
+        let mappedError = CryptoOnrampCoordinator.mappedError(
+            LinkController.IntegrationError.missingAppAttestation,
+            during: .createSession,
+            apiClient: apiClient,
+            additionalSDKVersions: additionalSDKVersions
+        )
+        let attestationError = try XCTUnwrap(mappedError as? AppAttestationUnavailableError)
+
+        XCTAssertFalse(mappedError is StripeCryptoOnrampAPIError)
+        XCTAssertEqual(attestationError.code, "app_attestation_unavailable")
+        XCTAssertNil(attestationError.docURL)
+        XCTAssertTrue(attestationError.underlyingError is LinkController.IntegrationError)
+        XCTAssertEqual(attestationError.userMessage, "This app couldn't be verified. Contact the app developer for help.")
+        XCTAssertEqual(attestationError.errorDescription, attestationError.userMessage)
+        XCTAssertEqual(attestationError.debugDescription, attestationError.developerMessage)
+
+        let richError = attestationError as StripeCryptoOnrampError
+        XCTAssertEqual(richError.code, "app_attestation_unavailable")
+        XCTAssertEqual(richError.userMessage, attestationError.userMessage)
+        XCTAssertEqual(richError.developerMessage, attestationError.developerMessage)
+
+        let appIdentifier = try XCTUnwrap(Bundle.main.bundleIdentifier)
+        XCTAssertEqual(attestationError.developerMessage, """
+        App attestation unavailable: this app isn't configured to use Stripe Crypto Onramp.
+
+        This usually means app attestation isn't enabled for this Stripe account, or this app isn't registered as a trusted application. Use your iOS bundle ID and contact Stripe to enable app attestation or register the app for this account.
+
+        Request Context:
+          operation: configure
+          app_id: \(appIdentifier)
+          mode: live
+
+        Code: app_attestation_unavailable
+        Next step: Confirm app attestation is enabled for this Stripe account and that the app identifier is registered as trusted, then call configure again.
+        SDK: stripe-ios@\(STPAPIClient.STPSDKVersion), stripe-react-native@1.2.3
         """)
     }
 
@@ -97,11 +140,8 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
     }
 
     func testAPIErrorCodeFallsBackWhenBackendCodeIsUnavailable() {
-        let context = APIErrorContext(
+        let apiErrorContext = APIErrorContext(
             reason: nil,
-            operation: CryptoOnrampOperation.hasLinkAccount.rawValue,
-            appIdentifier: nil,
-            mode: nil,
             apiErrorCode: nil,
             apiErrorType: nil,
             apiErrorMessage: nil,
@@ -109,9 +149,26 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             docURL: nil,
             underlyingError: NSError(domain: "test", code: 0)
         )
+        let diagnosticContext = DiagnosticContext(
+            operation: CryptoOnrampOperation.hasLinkAccount.rawValue,
+            appPackageName: nil,
+            mode: nil
+        )
 
-        XCTAssertEqual(AppAttestationAPIError(context: context).code, "link_failed_to_attest_request")
-        XCTAssertEqual(UncategorizedAPIError(context: context).code, "uncategorized_api_error")
+        XCTAssertEqual(
+            AppAttestationAPIError(
+                apiErrorContext: apiErrorContext,
+                diagnosticContext: diagnosticContext
+            ).code,
+            "link_failed_to_attest_request"
+        )
+        XCTAssertEqual(
+            UncategorizedAPIError(
+                apiErrorContext: apiErrorContext,
+                diagnosticContext: diagnosticContext
+            ).code,
+            "uncategorized_api_error"
+        )
     }
 
     func testRendererAppendsFooterMetadata() {
@@ -126,14 +183,13 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         Developer body.
 
         Code: test_code
-
         Next step: Fix the integration.
         Docs: https://stripe.com/docs/test
         SDK: stripe-ios@\(STPAPIClient.STPSDKVersion)
         """)
     }
 
-    func testMappedErrorUsesAdditionalSDKVersionsInSDKVersionsAndDeveloperMessage() throws {
+    func testMappedErrorUsesAdditionalSDKVersionsInDeveloperMessage() throws {
         let stripeError = StripeError.apiError(StripeAPIError(
             type: .invalidRequestError,
             code: "link_failed_to_attest_request",
@@ -153,7 +209,6 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         )
         let apiError = try XCTUnwrap(mappedError as? AppAttestationAPIError)
 
-        XCTAssertEqual(apiError.sdkVersions, [.stripeIOS] + additionalSDKVersions)
         XCTAssertTrue(apiError.developerMessage.contains("SDK: stripe-ios@\(STPAPIClient.STPSDKVersion), stripe-react-native@1.2.3"))
     }
 }
