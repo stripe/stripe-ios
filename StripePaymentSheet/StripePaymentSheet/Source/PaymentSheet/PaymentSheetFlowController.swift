@@ -665,16 +665,6 @@ extension PaymentSheet {
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.confirm must be called from the main thread.")
 
-            // TODO(porter): Remove assumeIsolated once confirm is @MainActor (blocked on new FC API designs)
-            if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
-                assertionFailure("`confirm` should not be called while the Checkout session is loading.")
-                let error = PaymentSheetError.flowControllerConfirmFailed(
-                    message: "confirmPayment was called while the Checkout session is still loading. Wait until Checkout.isLoading is false."
-                )
-                completion(.failed(error: error))
-                return
-            }
-
             switch latestUpdateContext?.status {
             case .inProgress:
                 assertionFailure("`confirm` should only be called when the last update has completed.")
@@ -721,28 +711,51 @@ extension PaymentSheet {
             }
 
             func confirm() {
-                PaymentSheet.confirm(
-                    configuration: configuration,
-                    authenticationContext: authenticationContext,
-                    intent: intent,
-                    elementsSession: elementsSession,
-                    paymentOption: paymentOption,
-                    paymentHandler: paymentHandler,
-                    integrationShape: .flowController,
-                    confirmationChallenge: confirmationChallenge,
-                    analyticsHelper: analyticsHelper
-                ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
-                    analyticsHelper.logPayment(
+                let confirmBlock = { [self] in
+                    PaymentSheet.confirm(
+                        configuration: self.configuration,
+                        authenticationContext: authenticationContext,
+                        intent: self.intent,
+                        elementsSession: self.elementsSession,
                         paymentOption: paymentOption,
-                        result: result,
-                        deferredIntentConfirmationType: deferredIntentConfirmationType
-                    )
-                    if case .completed = result, case .link = paymentOption {
-                        // Remember Link as default payment method for users who just created an account.
-                        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
-                    }
+                        paymentHandler: self.paymentHandler,
+                        integrationShape: .flowController,
+                        confirmationChallenge: self.confirmationChallenge,
+                        analyticsHelper: self.analyticsHelper
+                    ) { result, deferredIntentConfirmationType in
+                        self.analyticsHelper.logPayment(
+                            paymentOption: paymentOption,
+                            result: result,
+                            deferredIntentConfirmationType: deferredIntentConfirmationType
+                        )
+                        if case .completed = result, case .link = paymentOption {
+                            // Remember Link as default payment method for users who just created an account.
+                            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: self.configuration.customer?.id)
+                        }
 
-                    completion(result)
+                        completion(result)
+                    }
+                }
+
+                if let checkout {
+                    // TODO(porter): Remove assumeIsolated once confirm is @MainActor (blocked on new FC API designs)
+                    if MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
+                        assertionFailure("`confirm` should not be called while the Checkout session is loading.")
+                        let error = PaymentSheetError.flowControllerConfirmFailed(
+                            message: "confirmPayment was called while the Checkout session is still loading. Wait until Checkout.isLoading is false."
+                        )
+                        completion(.failed(error: error))
+                        return
+                    }
+                    // We don't need to await this Task, just kick it off, because confirmBlock uses a completion.
+                    // We do need to open a task to use `Checkout`'s `enqueueSessionUpdate`, which uses Swift concurrency.
+                    Task { @MainActor in
+                        await checkout.enqueueSessionUpdate {
+                            confirmBlock()
+                        }
+                    }
+                } else {
+                    confirmBlock()
                 }
             }
         }

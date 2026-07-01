@@ -211,6 +211,10 @@
     }
   },
   "elements_session": {
-    "business_name": "CI Stuff"
+    "business_name": "CI Stuff",
+    "session_id": "elements_session_test123",
+    "payment_method_preference": {
+      "ordered_payment_method_types": ["card"]
+    }
   }
 }

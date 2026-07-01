@@ -151,6 +151,8 @@ extension PaymentSheet {
         case cardBrandFiltering = "card_brand_filtering"
         /// Billing details collection is requested and native Link isn't available.
         case billingDetailsCollection = "billing_details_collection"
+        /// Automatic tax with billing address source is incompatible with Link.
+        case automaticTaxBillingAddress = "automatic_tax_billing_address"
     }
 
     enum LinkSignupDisabledReason: String {

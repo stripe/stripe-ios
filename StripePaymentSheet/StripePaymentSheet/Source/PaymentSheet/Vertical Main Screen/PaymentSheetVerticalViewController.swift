@@ -457,7 +457,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: loadResult.intent.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
-            allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet
+            allowsPaymentMethodUpdate: loadResult.intent.allowsPaymentMethodUpdate(elementsSession: loadResult.elementsSession)
         )
         return VerticalPaymentMethodListViewController(
             initialSelection: initialSelection,
@@ -814,7 +814,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                                                                                hostedSurface: .paymentSheet,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                                canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
-                                                                               canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
+                                                                               canUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                                isDefault: paymentMethod == defaultPaymentMethod)

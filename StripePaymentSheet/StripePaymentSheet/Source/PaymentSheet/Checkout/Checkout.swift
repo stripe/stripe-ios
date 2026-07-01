@@ -352,14 +352,14 @@ public final class Checkout: ObservableObject {
     ///
     /// Client-side address overrides are copied from the current session to `newSession`
     /// automatically. To update an address, set it on `stpSession` before calling this method.
-    func commitSession(_ newSession: STPCheckoutSession, notifyIntegrationDelegate: Bool = true) async throws {
+    func commitSession(_ newSession: STPCheckoutSession, skipIntegrationNotification: Bool = false) async throws {
         // Preserve client-side address overrides on the new session.
         newSession.billingAddress = stpSession?.billingAddress
         newSession.shippingAddress = stpSession?.shippingAddress
         stpSession = newSession
         session = newSession.makePublicSession()
         // Skip delegate if another op is queued—it'll notify when it commits.
-        if isLastPendingOperation && notifyIntegrationDelegate {
+        if isLastPendingOperation && !skipIntegrationNotification {
             try await integrationDelegate?.checkoutDidUpdate(self)
         }
     }

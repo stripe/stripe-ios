@@ -98,6 +98,13 @@ enum CurrencySelectorUtilities {
         return formatExchangeRate(from: meta)
     }
 
+    private static let exchangeRateFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }()
+
     static func formatExchangeRate(from meta: STPCheckoutSessionExchangeRateMeta) -> String {
         let localCurrency = CurrencyCode(meta.localizedCurrency).displayValue
         let integrationCurrency = CurrencyCode(meta.integrationCurrency).displayValue
@@ -105,16 +112,13 @@ enum CurrencySelectorUtilities {
         let formattedRate: String
         if let rateDouble = Double(meta.exchangeRate) {
             let inverse = 1.0 / rateDouble
-            let formatter = NumberFormatter()
-            formatter.minimumFractionDigits = 2
-            formatter.maximumFractionDigits = 4
-            formattedRate = formatter.string(from: NSNumber(value: inverse)) ?? meta.exchangeRate
+            formattedRate = exchangeRateFormatter.string(from: NSNumber(value: inverse)) ?? meta.exchangeRate
         } else {
             formattedRate = meta.exchangeRate
         }
 
         if meta.conversionMarkupBps > 0 {
-            let feePercent = formatConversionFeePercent(bps: meta.conversionMarkupBps)
+            let feePercent = String(format: "%g", Double(meta.conversionMarkupBps) / 100.0)
             return .Localized.exchangeRateWithConversionFee(
                 localCurrency: localCurrency,
                 rate: formattedRate,
@@ -137,14 +141,6 @@ enum CurrencySelectorUtilities {
         return "This string will come from the translation layer in the future"
     }
 
-    private static func formatConversionFeePercent(bps: Int) -> String {
-        let percent = Double(bps) / 100.0
-        if percent.truncatingRemainder(dividingBy: 1) == 0 {
-            return String(format: "%.0f", percent)
-        }
-        return String(format: "%g", percent)
-    }
-
     // MARK: - Availability
 
     /// Returns the adaptive pricing data needed to show a currency selector,
@@ -163,8 +159,31 @@ enum CurrencySelectorUtilities {
 
     // MARK: - Flag emoji
 
+    // Most currency codes already start with the country code (USD→US, GBP→GB) per ISO 4217.
+    // ANG is the one exception among Stripe-supported currencies — it maps to NL, not the
+    // defunct "AN" (Netherlands Antilles). X-prefixed codes (XAF, XOF, etc.) are multi-country
+    // so we just skip the flag entirely.
+    // See also: stripe-js CURRENCY_TO_FLAG_CODES in src/lib/inner/components/FlagIcon/
+
+    private static let regionCodeOverrides: [String: String] = [
+        "ang": "NL",
+    ]
+
+    private static let unmappedCurrencies: Set<String> = [
+        "xaf", "xcd", "xof", "xpf",
+    ]
+
+    /// Region code for the currency, or nil for multi-country currencies (XAF, XOF, etc.)
+    static func regionCode(for currency: CurrencyCode) -> String? {
+        if unmappedCurrencies.contains(currency.apiValue) { return nil }
+        if let override = regionCodeOverrides[currency.apiValue] { return override }
+        return String(currency.displayValue.prefix(2))
+    }
+
     static func flagEmoji(for currency: CurrencyCode) -> String {
-        let regionCode = String(currency.displayValue.prefix(2))
+        guard let regionCode = regionCode(for: currency) else {
+            return ""
+        }
         return String.regionFlagEmoji(for: regionCode) ?? ""
     }
 }
