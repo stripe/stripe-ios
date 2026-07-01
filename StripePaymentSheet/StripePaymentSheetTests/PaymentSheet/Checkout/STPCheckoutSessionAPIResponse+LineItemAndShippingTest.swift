@@ -1,5 +1,5 @@
 //
-//  STPCheckoutSessionLineItemAndShippingTest.swift
+//  STPCheckoutSessionAPIResponse+LineItemAndShippingTest.swift
 //  StripePaymentSheetTests
 //
 //  Created by Nick Porter on 3/3/26.

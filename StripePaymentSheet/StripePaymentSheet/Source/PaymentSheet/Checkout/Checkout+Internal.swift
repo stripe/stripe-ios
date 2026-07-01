@@ -110,7 +110,6 @@ extension Checkout {
                 if self.isLastPendingOperation {
                     try? await self.integrationDelegate?.checkoutDidUpdate(self)
                 }
-                // We still throw an error, ending the function
                 throw CheckoutError.apiError(message: error.nonGenericDescription)
             }
         }

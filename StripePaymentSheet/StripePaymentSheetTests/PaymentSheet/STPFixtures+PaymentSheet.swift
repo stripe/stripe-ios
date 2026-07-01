@@ -234,7 +234,7 @@ extension STPElementsSession {
             case .deferredIntent(let intentConfig):
                 return intentConfig.paymentMethodTypes ?? []
             case .checkout(_, let session):
-                return session.elementsSession?.orderedPaymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" } ?? []
+                return session.elementsSession.orderedPaymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
             }
         }()
         var customerSessionData: [String: Any]?

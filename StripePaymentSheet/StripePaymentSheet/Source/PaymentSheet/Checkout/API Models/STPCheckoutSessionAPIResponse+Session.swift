@@ -15,7 +15,7 @@ extension STPCheckoutSessionAPIResponse {
         return Int(truncating: NSDecimalNumber(value: 1).dividing(by: oneMinorUnitInMajor))
     }
 
-    /// Builds a ``Checkout.Session`` from this API response object.
+    /// Builds a public, read-only ``Checkout.Session`` snapshot from this API response object.
     func makePublicSession() -> Checkout.Session {
         return Checkout.Session(
             id: id,

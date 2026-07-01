@@ -1,5 +1,5 @@
 //
-//  STPCheckoutSessionLocalizedPriceMeta.swift
+//  STPCheckoutSessionAPIResponse+LocalizedPriceMeta.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 3/19/26.

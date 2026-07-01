@@ -463,7 +463,7 @@ final class CheckoutUnitTests: XCTestCase {
         var completedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
         completedJSON["status"] = "complete"
         completedJSON["payment_status"] = "paid"
-        let completedSession = STPCheckoutSession.decodedObject(fromAPIResponse: completedJSON)!
+        let completedSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: completedJSON)!
 
         try await checkout.commitSession(completedSession)
 
