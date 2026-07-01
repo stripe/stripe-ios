@@ -83,7 +83,7 @@ extension Checkout {
     ///   - localMutation: A local change to the session to apply after the API call (or on its own).
     func performUpdate(
         _ update: SessionUpdate? = nil,
-        applying localMutation: (@MainActor @Sendable () -> Session)? = nil
+        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil
     ) async throws {
         try await enqueueSessionUpdate {
             try self.requireSheetNotPresented()

@@ -241,12 +241,12 @@ public final class Checkout: ObservableObject {
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
         guard session.billingAddress != contactAddress else { return }
         if session.shouldSendTaxRegion(for: "billing") {
-            try await performUpdate(.setTaxRegion(address), applying: {
-                self.session.makeCopyOverriding(billingAddress: contactAddress)
+            try await performUpdate(.setTaxRegion(address), applying: { session in
+                session.makeCopyOverriding(billingAddress: contactAddress)
             })
         } else {
-            try await performUpdate(applying: {
-                self.session.makeCopyOverriding(billingAddress: contactAddress)
+            try await performUpdate(applying: { session in
+                session.makeCopyOverriding(billingAddress: contactAddress)
             })
         }
     }
@@ -277,12 +277,12 @@ public final class Checkout: ObservableObject {
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
         guard session.shippingAddress != contactAddress else { return }
         if session.shouldSendTaxRegion(for: "shipping") {
-            try await performUpdate(.setTaxRegion(address), applying: {
-                self.session.makeCopyOverriding(shippingAddress: contactAddress)
+            try await performUpdate(.setTaxRegion(address), applying: { session in
+                session.makeCopyOverriding(shippingAddress: contactAddress)
             })
         } else {
-            try await performUpdate(applying: {
-                self.session.makeCopyOverriding(shippingAddress: contactAddress)
+            try await performUpdate(applying: { session in
+                session.makeCopyOverriding(shippingAddress: contactAddress)
             })
         }
     }
@@ -340,7 +340,7 @@ public final class Checkout: ObservableObject {
     /// automatically. To update an address, pass a `localMutation` closure.
     func commitSession(
         _ apiResponse: STPCheckoutSessionAPIResponse? = nil,
-        applying localMutation: (@MainActor @Sendable () -> Session)? = nil,
+        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
         skipIntegrationNotification: Bool = false
     ) async throws {
         // Generate a new session from the API response, or fall back to the current session.
@@ -353,7 +353,7 @@ public final class Checkout: ObservableObject {
         )
 
         // Apply any additional local mutations to the session.
-        let finalSession = localMutation?() ?? sessionWithLocalAddress
+        let finalSession = localMutation?(sessionWithLocalAddress) ?? sessionWithLocalAddress
 
         // Update the session and notify delegates.
         session = finalSession
