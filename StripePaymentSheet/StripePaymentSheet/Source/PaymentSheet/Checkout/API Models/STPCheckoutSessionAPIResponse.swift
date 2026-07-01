@@ -147,10 +147,8 @@ class STPCheckoutSessionAPIResponse: NSObject {
     /// The address source used for automatic tax calculation (e.g. `"billing"` or `"shipping"`).
     let automaticTaxAddressSource: String?
 
-    /// TODO(porter or someone else) This is optional b/c we aren't sure if the /confirm endpoint populates this field
-    /// We need to solidify the backend contract to ensure this is always present
-    /// The decoded elements session nested within this checkout session response.
-    let elementsSession: STPElementsSession?
+    /// The elements session embedded in this checkout session.
+    let elementsSession: STPElementsSession
 
     /// The raw API response used to create this object.
     let allResponseFields: [AnyHashable: Any]
@@ -246,7 +244,7 @@ class STPCheckoutSessionAPIResponse: NSObject {
         adaptivePricingActive: Bool,
         automaticTaxEnabled: Bool,
         automaticTaxAddressSource: String?,
-        elementsSession: STPElementsSession?,
+        elementsSession: STPElementsSession,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.id = id
@@ -469,14 +467,12 @@ extension STPCheckoutSessionAPIResponse: STPAPIResponseDecodable {
 
         let businessName = (dict["elements_session"] as? [String: Any])?["business_name"] as? String
 
-        let elementsSession: STPElementsSession? = {
-            guard let json = dict["elements_session"] as? [AnyHashable: Any] else { return nil }
-            let decoded = STPElementsSession.decodedObject(fromAPIResponse: json)
-            if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
-                decoded?.disableLinkForAutomaticTaxBilling = true
-            }
-            return decoded
-        }()
+        guard let elementsSessionDict = dict["elements_session"] as? [AnyHashable: Any],
+              let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionDict)
+        else { return nil }
+        if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
+            elementsSession.disableLinkForAutomaticTaxBilling = true
+        }
 
         let email = (dict["customer_email"] as? String) ?? customer?.email
 

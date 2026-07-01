@@ -170,6 +170,10 @@ public final class EmbeddedPaymentElement {
     func update(
         checkout: Checkout
     ) async -> UpdateResult {
+        // Session moved to a terminal state (e.g. during confirm), nothing to do.
+        guard checkout.sessionIsOpen else {
+            return .succeeded
+        }
         do {
             try await checkout.awaitPendingOperations()
         } catch {

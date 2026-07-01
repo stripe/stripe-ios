@@ -484,10 +484,7 @@ final class PaymentSheetLoader {
                 intent = .deferredIntent(intentConfig: intentConfig)
             }
         case .checkout(let checkout):
-            guard let decodedElementsSession = checkout.session.elementsSession else {
-                throw PaymentSheetError.unknown(debugDescription: "Failed to decode elements session from provided checkout session object")
-            }
-            elementsSession = decodedElementsSession
+            elementsSession = checkout.session.elementsSession
             // TODO(gbirch): Remove Checkout.Session associated value once MPE is MainActor-isolated.
             // This is a temporary stopgap to provide a threadsafe version of the checkout session data.
             intent = .checkout(checkout, checkout.session)

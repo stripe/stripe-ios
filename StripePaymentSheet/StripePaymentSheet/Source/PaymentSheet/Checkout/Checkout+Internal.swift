@@ -80,7 +80,7 @@ extension Checkout {
     ///
     /// - Parameters:
     ///   - update: The API mutation to perform, or nil for a local-only update.
-    ///   - localMutation: A local state change to apply prior to the API call (or on its own).
+    ///   - localMutation: A local change to the session to apply after the API call (or on its own).
     func performUpdate(
         _ update: SessionUpdate? = nil,
         applying localMutation: (@MainActor @Sendable () -> Session)? = nil

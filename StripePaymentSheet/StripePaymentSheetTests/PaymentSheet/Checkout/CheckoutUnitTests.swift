@@ -455,6 +455,22 @@ final class CheckoutUnitTests: XCTestCase {
         sessionSub.cancel()
     }
 
+    func testCommitSessionWithTerminalStatusStillNotifiesIntegrationDelegate() async throws {
+        let checkout = await makeCheckoutWithOpenSession()
+        let integrationDelegate = MockCheckoutIntegrationDelegate()
+        checkout.integrationDelegate = integrationDelegate
+
+        var completedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
+        completedJSON["status"] = "complete"
+        completedJSON["payment_status"] = "paid"
+        let completedSession = STPCheckoutSession.decodedObject(fromAPIResponse: completedJSON)!
+
+        try await checkout.commitSession(completedSession)
+
+        XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 1)
+        XCTAssertEqual(checkout.session.status?.type, .complete)
+    }
+
     // MARK: - State Convenience Tests
 
     func testSessionAvailableAfterInit() async {

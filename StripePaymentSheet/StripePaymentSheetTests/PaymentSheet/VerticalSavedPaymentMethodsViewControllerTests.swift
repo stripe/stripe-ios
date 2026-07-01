@@ -223,6 +223,10 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             "mode": "payment",
             "payment_status": "unpaid",
             "payment_method_types": ["card"],
+            "elements_session": [
+                "session_id": "es_test",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
             "customer": [
                 "id": "cus_test_123",
                 "payment_methods": [],

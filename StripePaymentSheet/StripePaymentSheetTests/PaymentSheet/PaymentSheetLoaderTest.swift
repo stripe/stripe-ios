@@ -817,8 +817,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
-        let checkout = Checkout(apiResponse: checkoutSession)
+        let checkoutSessionAPIResponse = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
+        let checkout = Checkout(apiResponse: checkoutSessionAPIResponse)
 
         PaymentSheetLoader.load(
             mode: .checkout(checkout),
@@ -884,6 +884,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     }
 
     // MARK: - PMO SFU
+
+    @MainActor
     func testDeferredIntentWithPaymentMethodOptions() async throws {
         let loadExpectation = XCTestExpectation(description: "Load deferred intent with PMO SFU")
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _ in

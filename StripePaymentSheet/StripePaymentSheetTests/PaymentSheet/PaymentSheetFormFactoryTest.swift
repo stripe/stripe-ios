@@ -75,6 +75,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             "currency": "usd",
             "livemode": false,
             "payment_method_types": ["card"],
+            "elements_session": [
+                "session_id": "es_test",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
         ]
         if hasCustomer {
             json["customer"] = [
@@ -2869,6 +2873,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 "payment_status": "unpaid",
                 "payment_method_types": ["paypal"],
                 "customer": ["id": "cus_123"],
+                "elements_session": [
+                    "session_id": "es_test",
+                    "payment_method_preference": ["ordered_payment_method_types": ["paypal"]],
+                ],
             ]
             if let setupFutureUsage {
                 json["setup_future_usage"] = setupFutureUsage

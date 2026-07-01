@@ -329,6 +329,11 @@ public final class Checkout: ObservableObject {
 
     // MARK: - State updates
 
+    /// True if the session is still actionable (open or no status yet).
+    var sessionIsOpen: Bool {
+        session.status?.type == .open || session.status?.type == nil
+    }
+
     /// Replaces the current session from an API response, preserves client-side overrides, and notifies delegates.
     ///
     /// Client-side address overrides are copied from the current session to the new one
@@ -354,7 +359,7 @@ public final class Checkout: ObservableObject {
         session = finalSession
 
         // Skip delegate if another op is queued—it'll notify when it commits.
-        if isLastPendingOperation && !skipIntegrationNotification {
+        if isLastPendingOperation {
             try await integrationDelegate?.checkoutDidUpdate(self)
         }
     }

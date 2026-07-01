@@ -89,7 +89,7 @@ extension Checkout {
         let adaptivePricingActive: Bool
         let automaticTaxEnabled: Bool
         let automaticTaxAddressSource: String?
-        let elementsSession: STPElementsSession?
+        let elementsSession: STPElementsSession
 
         // MARK: - Init
 
@@ -123,7 +123,7 @@ extension Checkout {
             adaptivePricingActive: Bool,
             automaticTaxEnabled: Bool,
             automaticTaxAddressSource: String?,
-            elementsSession: STPElementsSession?
+            elementsSession: STPElementsSession
         ) {
             self.id = id
             self.billingAddress = billingAddress
