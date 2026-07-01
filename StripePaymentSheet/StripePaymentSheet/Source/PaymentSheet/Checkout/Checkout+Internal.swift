@@ -87,29 +87,30 @@ extension Checkout {
     ) async throws {
         try await enqueueSessionUpdate {
             try self.requireSheetNotPresented()
-            do {
-                let updatedSession: STPCheckoutSession
-                if let update {
+
+            let updatedSession: STPCheckoutSession
+            if let update {
+                do {
                     let sessionId = Checkout.extractSessionId(from: self.clientSecret)
                     updatedSession = try await self.apiClient.updateCheckoutSession(
                         checkoutSessionId: sessionId,
                         parameters: update.parameters
                     )
-                } else {
-                    guard let session = self.stpSession else { return }
-                    updatedSession = session
+                } catch {
+                    // If a prior op skipped the delegate and we're failing before we
+                    // get to commitSession ourselves, still notify so the UI updates.
+                    if self.isLastPendingOperation {
+                        try? await self.integrationDelegate?.checkoutDidUpdate(self)
+                    }
+                    throw CheckoutError.apiError(message: error.nonGenericDescription)
                 }
-
-                localMutation?()
-                try await self.commitSession(updatedSession)
-            } catch {
-                // If a prior op skipped the delegate and we're failing before we
-                // get to commitSession ourselves, still notify so the UI updates.
-                if self.isLastPendingOperation {
-                    try? await self.integrationDelegate?.checkoutDidUpdate(self)
-                }
-                throw CheckoutError.apiError(message: error.nonGenericDescription)
+            } else {
+                guard let existingSession = self.stpSession else { return }
+                updatedSession = existingSession
             }
+
+            localMutation?()
+            try await self.commitSession(updatedSession)
         }
     }
 
