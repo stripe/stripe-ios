@@ -1,0 +1,79 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1ToNDeGoesj9fw9QQy77ia6L\?client_secret=seti_1ToNDeGoesj9fw9QQy77ia6L_secret_UnzCiRf5ZvxFaPRIG96HNw9sIt3rl3Q&expand%5B0%5D=payment_method$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=zLGSdR884lKckt8jBEJzSSWoRGTX5AU4LiFuZljdSSNRyxyHH0NhYT1XzPNGq-fbgXYTl2v21NQsulNR; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=zLGSdR884lKckt8jBEJzSSWoRGTX5AU4LiFuZljdSSNRyxyHH0NhYT1XzPNGq-fbgXYTl2v21NQsulNR&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-06-24.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=zLGSdR884lKckt8jBEJzSSWoRGTX5AU4LiFuZljdSSNRyxyHH0NhYT1XzPNGq-fbgXYTl2v21NQsulNR&t=1"}],"include_subdomains":true}
+request-id: req_5MaVYkt1OokUPy
+Content-Length: 1369
+Vary: Origin
+Date: Wed, 01 Jul 2026 12:26:28 GMT
+stripe-version: 2020-08-27
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "id" : "seti_1ToNDeGoesj9fw9QQy77ia6L",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1KmkHbGoesj9fw9Q\/sa_nonce_UnzCzmgrqO5211pEZsssQ4HopuGTlq7"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1ToNDfGoesj9fw9QU9uOhlkH",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "twint" : {
+
+    },
+    "created" : 1782908783,
+    "allow_redisplay" : "unspecified",
+    "shared_payment_granted_token" : null,
+    "customer" : null,
+    "type" : "twint",
+    "customer_account" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "twint"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1782908782,
+  "client_secret" : "seti_1ToNDeGoesj9fw9QQy77ia6L_secret_UnzCiRf5ZvxFaPRIG96HNw9sIt3rl3Q",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}

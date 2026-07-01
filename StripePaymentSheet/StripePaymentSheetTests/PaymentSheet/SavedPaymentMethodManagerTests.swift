@@ -226,14 +226,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
             paymentMethodId: paymentMethod.stripeId
         )
 
-        let checkoutSessionJSON: [String: Any] = [
-            "session_id": checkoutSessionId,
-            "livemode": false,
-            "mode": "payment",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-        ]
-        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: checkoutSessionJSON)!
+        let checkoutSession = makeCheckoutSession(id: checkoutSessionId)
 
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
@@ -299,6 +292,10 @@ extension SavedPaymentMethodManagerTests {
             "mode": "payment",
             "payment_status": "unpaid",
             "payment_method_types": ["card"],
+            "elements_session": [
+                "session_id": "es_test",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
         ]
         return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
     }
@@ -319,6 +316,10 @@ extension SavedPaymentMethodManagerTests {
             "customer": [
                 "id": "cus_test123",
                 "payment_methods": [STPPaymentMethod.paymentMethodJson],
+            ],
+            "elements_session": [
+                "session_id": "es_test",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
             ],
         ]
 

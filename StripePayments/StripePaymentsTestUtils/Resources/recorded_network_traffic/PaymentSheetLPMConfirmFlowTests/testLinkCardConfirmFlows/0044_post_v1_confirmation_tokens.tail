@@ -3,36 +3,37 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Qq7qcaD5LrXEXi4th1tH7E5z83E0P6SBwTVMOgJnDvaPRJONKUMfWYzgUr9UIlx6F60E5L-_ua34XhP7
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=IvUFP0Lx-eIk_wgNeB0I1d_PDpMAz9wjyz7gm9U1FNFaVHe8n2TobqxZfpaw_WY-QRLMx2b0MSBO2OTX; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=Qq7qcaD5LrXEXi4th1tH7E5z83E0P6SBwTVMOgJnDvaPRJONKUMfWYzgUr9UIlx6F60E5L-_ua34XhP7&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=IvUFP0Lx-eIk_wgNeB0I1d_PDpMAz9wjyz7gm9U1FNFaVHe8n2TobqxZfpaw_WY-QRLMx2b0MSBO2OTX&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-06-24.dahlia. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=Qq7qcaD5LrXEXi4th1tH7E5z83E0P6SBwTVMOgJnDvaPRJONKUMfWYzgUr9UIlx6F60E5L-_ua34XhP7&t=1"}],"include_subdomains":true}
-request-id: req_GcNqq9VXWG3qnK
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=IvUFP0Lx-eIk_wgNeB0I1d_PDpMAz9wjyz7gm9U1FNFaVHe8n2TobqxZfpaw_WY-QRLMx2b0MSBO2OTX&t=1"}],"include_subdomains":true}
+request-id: req_1WipxbFflE1wWO
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 1427
 Vary: Origin
-Date: Tue, 05 May 2026 03:19:41 GMT
-original-request: req_GcNqq9VXWG3qnK
+Date: Wed, 01 Jul 2026 12:14:40 GMT
+original-request: req_1WipxbFflE1wWO
 stripe-version: 2020-08-27
-idempotency-key: 18bea256-1815-4f75-a342-5f28e28750c8
+idempotency-key: e6a25d5a-6fb7-41bc-a8bb-d111d9b5ea2e
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[customer]=cus_USUUlBFjXLSWYA&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=card&client_context\[setup_future_usage]=off_session&payment_method=pm_1TTZWLFY0qyl6XeWjy5SJ2wo&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[customer]=cus_UnyziHW5MPWA3K&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=card&client_context\[setup_future_usage]=off_session&payment_method=pm_1ToN2KFY0qyl6XeWbPPvEQLx&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
 
 {
-  "id" : "ctoken_1TTZWLFY0qyl6XeWHIzOmx1o",
+  "id" : "ctoken_1ToN2KFY0qyl6XeWhr4dijmT",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1777994381,
+  "expires_at" : 1782951280,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : "off_session",
   "object" : "confirmation_token",
@@ -82,7 +83,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "type" : "card",
     "customer_account" : null
   },
-  "created" : 1777951181,
+  "created" : 1782908080,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null
