@@ -169,6 +169,7 @@ extension STPAPIClient {
         var parameters: [String: Any] = [
             "payment_method": paymentMethod,
             "expected_payment_method_type": expectedPaymentMethodType,
+            "elements_session_client": ["is_aggregation_expected": true],
             "expand": [
                 "payment_intent",
                 "payment_intent.payment_method",
@@ -205,8 +206,6 @@ extension STPAPIClient {
         if let passiveCaptchaToken {
             parameters["passive_captcha_token"] = passiveCaptchaToken
         }
-
-        parameters["elements_session_client"] = ["is_aggregation_expected": true]
 
         return try await APIRequest<STPCheckoutSession>.post(
             with: self,
