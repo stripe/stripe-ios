@@ -767,6 +767,11 @@ extension PaymentSheet {
             checkout: Checkout,
             completion: @escaping (Error?) -> Void
         ) {
+            // No-op if the session already reached a terminal state (complete/expired).
+            guard checkout.sessionIsOpen else {
+                completion(nil)
+                return
+            }
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
             assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
             let updateID = beginUpdate()

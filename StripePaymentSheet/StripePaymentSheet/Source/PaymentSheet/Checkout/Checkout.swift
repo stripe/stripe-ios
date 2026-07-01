@@ -342,18 +342,23 @@ public final class Checkout: ObservableObject {
 
     // MARK: - State updates
 
+    /// True if the session is still actionable (open or no status yet).
+    var sessionIsOpen: Bool {
+        session.status?.type == .open || session.status?.type == nil
+    }
+
     /// Replaces the current session, preserves client-side overrides, and notifies delegates.
     ///
     /// Client-side address overrides are copied from the current session to `newSession`
     /// automatically. To update an address, set it on `stpSession` before calling this method.
-    func commitSession(_ newSession: STPCheckoutSession, skipIntegrationNotification: Bool = false) async throws {
+    func commitSession(_ newSession: STPCheckoutSession) async throws {
         // Preserve client-side address overrides on the new session.
         newSession.billingAddress = stpSession?.billingAddress
         newSession.shippingAddress = stpSession?.shippingAddress
         stpSession = newSession
         session = newSession.makePublicSession()
         // Skip delegate if another op is queued—it'll notify when it commits.
-        if isLastPendingOperation && !skipIntegrationNotification {
+        if isLastPendingOperation {
             try await integrationDelegate?.checkoutDidUpdate(self)
         }
     }
