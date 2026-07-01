@@ -736,9 +736,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return
         }
 
-        // If FlowController, simply close the sheet
+        // If FlowController, sync billing then close the sheet
         if isFlowController {
-            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            syncCheckoutBillingIfNeeded {
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            }
             return
         }
 
@@ -770,6 +772,34 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 #endif
         if let paymentMethodFormViewController {
             paymentMethodFormViewController.form.showAllValidationErrors()
+        }
+    }
+
+    private func syncCheckoutBillingIfNeeded(completion: @escaping () -> Void) {
+        guard case .checkout(let checkout) = intent,
+              let paymentOption = selectedPaymentOption else {
+            completion()
+            return
+        }
+
+        error = nil
+        isPaymentInFlight = true
+        updateUI()
+        view.isUserInteractionEnabled = false
+
+        Task { @MainActor [weak self] in
+            do {
+                try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
+                self?.isPaymentInFlight = false
+                self?.view.isUserInteractionEnabled = true
+                completion()
+            } catch {
+                guard let self else { return }
+                self.isPaymentInFlight = false
+                self.view.isUserInteractionEnabled = true
+                self.error = error
+                self.updateUI()
+            }
         }
     }
 
