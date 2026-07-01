@@ -167,4 +167,6 @@ Run `bundle install && bundle exec fastlane stripeios_tests` initially to instal
 
 ### Acronyms and terms
 - EPE = EmbeddedPaymentElement
-- FC = FlowController(PaymentSheet.FlowController)
+- PS.FC = FlowController (PaymentSheet.FlowController)
+- FC = FinancialConnections, or occasionally FlowController (see above)
+- MPE = Mobile Payment Element. A umbrella term that encompasses EmbeddedPaymentElement, PaymentSheet, and FlowController
