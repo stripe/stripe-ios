@@ -147,7 +147,7 @@ class STPCheckoutSession: NSObject {
     /// The address source used for automatic tax calculation (e.g. `"billing"` or `"shipping"`).
     let automaticTaxAddressSource: String?
 
-    /// The decoded elements session nested within this checkout session response.
+    /// The elements session embedded in this checkout session.
     let elementsSession: STPElementsSession
 
     /// The raw API response used to create this object.

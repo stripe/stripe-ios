@@ -847,6 +847,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     }
 
     // MARK: - PMO SFU
+
     @MainActor
     func testDeferredIntentWithPaymentMethodOptions() async throws {
         let loadExpectation = XCTestExpectation(description: "Load deferred intent with PMO SFU")

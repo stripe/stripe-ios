@@ -28,10 +28,7 @@ class STPCheckoutSessionTest: XCTestCase {
             "payment_status": "unpaid",
             "payment_method_types": ["card"],
             "customer": ["id": "cus_123"],
-            "elements_session": [
-                "session_id": "es_test",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
-            ],
+            "elements_session": minimalElementsSession,
         ]
         overrides.forEach { json[$0.key] = $0.value }
         return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
@@ -70,12 +67,9 @@ class STPCheckoutSessionTest: XCTestCase {
 
     func testDecodedObjectFromAPIResponseMalformedElementsSession() {
         var json = STPTestUtils.jsonNamed("CheckoutSession")!
-        // Present but invalid — missing required payment_method_preference
+        // Invalid elements_session - missing payment_method_preference
         json["elements_session"] = ["garbage": true]
-        XCTAssertNil(
-            STPCheckoutSession.decodedObject(fromAPIResponse: json),
-            "should fail to decode with a malformed elements_session"
-        )
+        XCTAssertNil(STPCheckoutSession.decodedObject(fromAPIResponse: json))
     }
 
     func testDecodedObjectFromAPIResponseMapping() {
