@@ -14,6 +14,7 @@ extension CheckoutPlayground {
             "card", "us_bank_account", "cashapp", "affirm", "klarna",
         ]
 
+        @Published var integrationType: IntegrationType = .flowController
         @Published var mode: SessionMode = .payment
         @Published var currency: Currency = .usd
         @Published var customerType: CustomerType = .guest
