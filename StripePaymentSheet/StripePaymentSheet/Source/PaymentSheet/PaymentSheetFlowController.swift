@@ -304,6 +304,7 @@ extension PaymentSheet {
 
         weak var checkout: Checkout?
         private var isPresented = false
+        private weak var presentedBottomSheetViewController: BottomSheetViewController?
         private var pendingPresentTask: Task<Void, Never>?
         private(set) var didPresentAndContinue: Bool = false
         private var confirmationChallenge: ConfirmationChallenge?
@@ -536,6 +537,7 @@ extension PaymentSheet {
                 )
 
                 self.isPresented = true
+                self.presentedBottomSheetViewController = bottomSheetVC
                 presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
             }
 
@@ -571,6 +573,7 @@ extension PaymentSheet {
                     self?.paymentHandler.cancel3DS2ChallengeFlow()
                 }
             )
+            self.presentedBottomSheetViewController = bottomSheetVC
             presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
 
             pendingPresentTask = Task { @MainActor [weak self] in
@@ -838,19 +841,9 @@ extension PaymentSheet {
                 switch result {
                 case .success(let (loadResult, confirmationChallenge)):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
+                    self.swapViewController(loadResult: loadResult, confirmationChallenge: confirmationChallenge)
 
-                    self.viewController = Self.makeViewController(
-                        configuration: self.configuration,
-                        loadResult: loadResult,
-                        analyticsHelper: analyticsHelper,
-                        walletButtonsViewState: walletButtonsViewState,
-                        previousPaymentOption: self.internalPaymentOption
-                    )
-                    self.viewController.flowControllerDelegate = self
-                    self.confirmationChallenge = confirmationChallenge
-
-                    // Update the payment option and synchronously pre-load image into cache
-                    self.updatePaymentOption()
+                    // Synchronously pre-load image into cache
                     self.preloadPaymentOptionImage()
 
                     self.latestUpdateContext?.status = .completed
@@ -860,6 +853,25 @@ extension PaymentSheet {
                     completion(error)
                 }
             }
+        }
+
+        /// Rebuilds `viewController` from a freshly loaded result, wiring up the delegate, confirmation challenge,
+        /// and refreshing the published payment option. Preserves the currently selected payment option.
+        private func swapViewController(
+            loadResult: PaymentSheetLoader.LoadResult,
+            confirmationChallenge: ConfirmationChallenge?
+        ) {
+            let newVC = Self.makeViewController(
+                configuration: self.configuration,
+                loadResult: loadResult,
+                analyticsHelper: self.analyticsHelper,
+                walletButtonsViewState: self.walletButtonsViewState,
+                previousPaymentOption: self.internalPaymentOption
+            )
+            newVC.flowControllerDelegate = self
+            self.viewController = newVC
+            self.confirmationChallenge = confirmationChallenge
+            self.updatePaymentOption()
         }
 
         func updateForWalletButtonsView() {
@@ -994,7 +1006,35 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
     }
 
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
-        try await update(checkout: checkout)
+        if isPresented {
+            // When the sheet is already open, we reload in-place rather than using `update`
+            // because `update` asserts !isPresented and rebuilds the VC without presenting it.
+            checkout.stpSession.applyAddressOverrides(to: &configuration)
+            try await performReload(mode: .checkout(checkout))
+        } else {
+            try await update(checkout: checkout)
+        }
+    }
+
+    @MainActor
+    private func performReload(mode: PaymentSheet.InitializationMode) async throws {
+        viewController.setReloading(true)
+
+        do {
+            let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
+                mode: mode,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper,
+                integrationShape: .flowController,
+                isUpdate: true
+            )
+            self.swapViewController(loadResult: loadResult, confirmationChallenge: confirmationChallenge)
+            self.presentedBottomSheetViewController?.setViewControllers([self.viewController])
+        } catch {
+            self.viewController.setReloading(false)
+            self.viewController.setReloadError(error)
+            throw error
+        }
     }
 }
 
@@ -1030,6 +1070,7 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
             self.presentPaymentOptionsCompletionWithResult?(didCancel)
             self.updatePaymentOption()
             self.isPresented = false
+            self.presentedBottomSheetViewController = nil
         }
     }
 }
@@ -1088,6 +1129,10 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
     func clearSelection()
+    /// Freeze the UI and show a spinner on the primary button while we reload the intent.
+    /// If you add new UI, make sure it's also disabled/hidden during reloading.
+    func setReloading(_ isReloading: Bool)
+    func setReloadError(_ error: Error)
 }
 
 extension PaymentOption {
