@@ -809,6 +809,8 @@ extension PaymentSheet {
             latestUpdateContext?.status = .failed
         }
 
+        /// Reloads and rebuilds the view controller offscreen for the not-presented case.
+        /// If a newer update starts mid-flight, this one is silently dropped (last-write-wins).
         private func performUpdate(
             mode: PaymentSheet.InitializationMode,
             updateID: UUID = UUID(),
@@ -838,19 +840,9 @@ extension PaymentSheet {
                 switch result {
                 case .success(let (loadResult, confirmationChallenge)):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
+                    self.swapViewController(loadResult: loadResult, confirmationChallenge: confirmationChallenge)
 
-                    self.viewController = Self.makeViewController(
-                        configuration: self.configuration,
-                        loadResult: loadResult,
-                        analyticsHelper: analyticsHelper,
-                        walletButtonsViewState: walletButtonsViewState,
-                        previousPaymentOption: self.internalPaymentOption
-                    )
-                    self.viewController.flowControllerDelegate = self
-                    self.confirmationChallenge = confirmationChallenge
-
-                    // Update the payment option and synchronously pre-load image into cache
-                    self.updatePaymentOption()
+                    // Synchronously pre-load image into cache
                     self.preloadPaymentOptionImage()
 
                     self.latestUpdateContext?.status = .completed
@@ -860,6 +852,23 @@ extension PaymentSheet {
                     completion(error)
                 }
             }
+        }
+
+        private func swapViewController(
+            loadResult: PaymentSheetLoader.LoadResult,
+            confirmationChallenge: ConfirmationChallenge?
+        ) {
+            let newVC = Self.makeViewController(
+                configuration: self.configuration,
+                loadResult: loadResult,
+                analyticsHelper: self.analyticsHelper,
+                walletButtonsViewState: self.walletButtonsViewState,
+                previousPaymentOption: self.internalPaymentOption
+            )
+            newVC.flowControllerDelegate = self
+            self.viewController = newVC
+            self.confirmationChallenge = confirmationChallenge
+            self.updatePaymentOption()
         }
 
         func updateForWalletButtonsView() {
@@ -994,7 +1003,38 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
     }
 
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
-        try await update(checkout: checkout)
+        if isPresented {
+            // Can't call `update` here — it asserts !isPresented and rebuilds the VC
+            // without swapping it into the presented bottom sheet.
+            checkout.stpSession.applyAddressOverrides(to: &configuration)
+            try await reloadPresentedSheet(mode: .checkout(checkout))
+        } else {
+            try await update(checkout: checkout)
+        }
+    }
+
+    /// Reloads while the sheet is presented: shows a spinner, fetches fresh data, then hot-swaps the new VC into the live bottom sheet.
+    /// This differs from `performUpdate`, which rebuilds the view controller offscreen when nothing is shown.
+    @MainActor
+    private func reloadPresentedSheet(mode: PaymentSheet.InitializationMode) async throws {
+        viewController.setReloading(true)
+
+        do {
+            let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
+                mode: mode,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper,
+                integrationShape: .flowController,
+                isUpdate: true
+            )
+            let bottomSheet = self.viewController.parent as? BottomSheetViewController
+            self.swapViewController(loadResult: loadResult, confirmationChallenge: confirmationChallenge)
+            bottomSheet?.setViewControllers([self.viewController])
+        } catch {
+            self.viewController.setReloading(false)
+            self.viewController.setReloadError(error)
+            throw error
+        }
     }
 }
 
@@ -1088,6 +1128,8 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
     func clearSelection()
+    func setReloading(_ isReloading: Bool)
+    func setReloadError(_ error: Error)
 }
 
 extension PaymentOption {
