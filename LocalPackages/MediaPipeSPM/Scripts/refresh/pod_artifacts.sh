@@ -6,7 +6,10 @@ prepare_pod_workspace() {
   cat >"${POD_WORKSPACE}/Podfile" <<PODFILE
 platform :ios, '${MIN_IOS_VERSION}'
 install! 'cocoapods', :integrate_targets => false
-pod 'MediaPipeTasksVision', '${MEDIAPIPE_VERSION}'
+
+target 'MediaPipeSPMArtifacts' do
+  pod 'MediaPipeTasksVision', '${MEDIAPIPE_VERSION}'
+end
 PODFILE
 }
 
@@ -24,6 +27,9 @@ stage_mediapipe_pod_artifacts() {
   copy_directory_contents \
     "${POD_WORKSPACE}/Pods/MediaPipeTasksCommon/frameworks/MediaPipeTasksCommon.xcframework" \
     "${ARTIFACTS_DIR}/MediaPipeTasksCommon.xcframework"
+
+  strip_intel_simulator_slice "${ARTIFACTS_DIR}/MediaPipeTasksVision.xcframework" "MediaPipeTasksVision"
+  strip_intel_simulator_slice "${ARTIFACTS_DIR}/MediaPipeTasksCommon.xcframework" "MediaPipeTasksCommon"
 }
 
 mediapipe_graph_libraries_dir() {

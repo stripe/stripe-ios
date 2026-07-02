@@ -31,6 +31,7 @@ let package = Package(
                 .linkedFramework("AVFoundation"),
                 .linkedFramework("Accelerate"),
                 .linkedLibrary("c++"),
+                .linkedLibrary("z"),
             ]
         ),
         .binaryTarget(
