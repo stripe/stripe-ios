@@ -286,18 +286,7 @@ extension SavedPaymentMethodManagerTests {
     }
 
     func makeCheckoutSession(id: String) -> STPCheckoutSession {
-        let json: [String: Any] = [
-            "session_id": id,
-            "livemode": false,
-            "mode": "payment",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-            "elements_session": [
-                "session_id": "es_test",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
-            ],
-        ]
-        return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        CheckoutTestHelpers.makeSession(["session_id": id])
     }
 
     func stubCheckoutSessionUpdatePaymentMethod(
