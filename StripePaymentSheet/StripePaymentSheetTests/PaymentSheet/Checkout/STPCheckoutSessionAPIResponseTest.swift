@@ -491,7 +491,7 @@ class STPCheckoutSessionAPIResponseTest: XCTestCase {
             "setup_future_usage": "off_session",
         ])
 
-        XCTAssertEqual(Intent.checkout(Checkout(apiResponse: session), session.makePublicSession()).setupFutureUsageString, "off_session")
+        XCTAssertEqual(Intent.checkout(Checkout(apiResponse: session)).setupFutureUsageString, "off_session")
     }
 
     func testCheckoutSessionIntent_isPaymentMethodOptionsSetupFutureUsageSet() {
@@ -502,7 +502,7 @@ class STPCheckoutSessionAPIResponseTest: XCTestCase {
             "payment_method_types": ["paypal"],
         ])
 
-        XCTAssertEqual(Intent.checkout(Checkout(apiResponse: session), session.makePublicSession()).isPaymentMethodOptionsSetupFutureUsageSet, true)
+        XCTAssertEqual(Intent.checkout(Checkout(apiResponse: session)).isPaymentMethodOptionsSetupFutureUsageSet, true)
     }
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevel() {
@@ -511,7 +511,7 @@ class STPCheckoutSessionAPIResponseTest: XCTestCase {
             "payment_method_types": ["paypal"],
         ])
 
-        XCTAssertTrue(Intent.checkout(Checkout(apiResponse: session), session.makePublicSession()).isSetupFutureUsageSet(for: .payPal))
+        XCTAssertTrue(Intent.checkout(Checkout(apiResponse: session)).isSetupFutureUsageSet(for: .payPal))
     }
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevelNone() {
@@ -520,8 +520,8 @@ class STPCheckoutSessionAPIResponseTest: XCTestCase {
             "payment_method_types": ["paypal"],
         ])
 
-        XCTAssertEqual(Intent.checkout(Checkout(apiResponse: session), session.makePublicSession()).setupFutureUsageString, "none")
-        XCTAssertFalse(Intent.checkout(Checkout(apiResponse: session), session.makePublicSession()).isSetupFutureUsageSet(for: .payPal))
+        XCTAssertEqual(Intent.checkout(Checkout(apiResponse: session)).setupFutureUsageString, "none")
+        XCTAssertFalse(Intent.checkout(Checkout(apiResponse: session)).isSetupFutureUsageSet(for: .payPal))
     }
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_perPaymentMethod() {
@@ -532,7 +532,7 @@ class STPCheckoutSessionAPIResponseTest: XCTestCase {
             "payment_method_types": ["paypal"],
         ])
 
-        XCTAssertTrue(Intent.checkout(Checkout(apiResponse: session), session.makePublicSession()).isSetupFutureUsageSet(for: .payPal))
+        XCTAssertTrue(Intent.checkout(Checkout(apiResponse: session)).isSetupFutureUsageSet(for: .payPal))
     }
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_perPaymentMethodNoneOverridesTopLevel() {
@@ -544,7 +544,7 @@ class STPCheckoutSessionAPIResponseTest: XCTestCase {
             "payment_method_types": ["paypal"],
         ])
 
-        XCTAssertFalse(Intent.checkout(Checkout(apiResponse: session), session.makePublicSession()).isSetupFutureUsageSet(for: .payPal))
+        XCTAssertFalse(Intent.checkout(Checkout(apiResponse: session)).isSetupFutureUsageSet(for: .payPal))
     }
 
     // MARK: - TaxStatus Tests

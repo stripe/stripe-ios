@@ -15,9 +15,6 @@ extension PaymentSheet {
     @MainActor
     static func handleCheckoutSessionConfirmation(
         checkout: Checkout,
-        // TODO(gbirch): Remove session parameter once MPE is MainActor-isolated; we can then
-        // access checkout.session directly. This is a temporary stopgap to provide a threadsafe
-        // version of the checkout session data.
         session: Checkout.Session,
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
@@ -28,7 +25,7 @@ extension PaymentSheet {
         let checkoutSession = session
         do {
             let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-                intent: .checkout(checkout, session),
+                intent: .checkout(checkout),
                 elementsSession: elementsSession
             )
 

@@ -41,6 +41,7 @@ public final class Checkout: ObservableObject {
     /// The Checkout Session, updated from Stripe after every mutation.
     @Published public internal(set) var session: Session {
         didSet {
+            nonisolatedSession = session
             delegate?.checkoutDidUpdateSession(self, session: session)
         }
     }
@@ -52,6 +53,16 @@ public final class Checkout: ObservableObject {
     public weak var delegate: CheckoutDelegate?
 
     // MARK: - Internal Properties
+
+    // TODO(gbirch) TODO(porter) remove this nonisolatedSession
+    //  once MPE is properly MainActor isolated
+    /// A snapshot of the current ``session`` accessible from non-MainActor contexts.
+    ///
+    /// Marked `nonisolated(unsafe)` because PaymentSheet internals read this from non-MainActor
+    /// contexts. This is safe: reads only occur after the session is loaded and while the payment
+    /// UI is presented, a window during which no mutations occur. Writes are always on MainActor
+    /// because they go through `Checkout`'s MainActor-isolated mutation methods.
+    nonisolated(unsafe) private(set) var nonisolatedSession: Session!
 
     weak var integrationDelegate: CheckoutIntegrationDelegate?
 
@@ -118,6 +129,7 @@ public final class Checkout: ObservableObject {
             let loadedSession = apiResponse.makePublicSession()
             await flagImageManager.prefetchFlagImages(for: loadedSession)
             self.session = loadedSession
+            self.nonisolatedSession = session
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
@@ -137,6 +149,7 @@ public final class Checkout: ObservableObject {
         let loadedSession = apiResponse.makePublicSession()
         await flagImageManager.prefetchFlagImages(for: loadedSession)
         self.session = loadedSession
+        self.nonisolatedSession = session
     }
 
     /// Synchronous test-only initializer that wraps a pre-loaded API response without async work.
@@ -145,6 +158,7 @@ public final class Checkout: ObservableObject {
         self.configuration = Configuration()
         self.apiClient = .shared
         self.session = apiResponse.makePublicSession()
+        self.nonisolatedSession = session
     }
 #endif
 

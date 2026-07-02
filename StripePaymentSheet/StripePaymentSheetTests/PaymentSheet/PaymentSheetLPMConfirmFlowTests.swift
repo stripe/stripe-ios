@@ -1137,7 +1137,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             intents = [
                 ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
-                ("CheckoutSession", .checkout(Checkout(apiResponse: checkoutSession), checkoutSession.makePublicSession())),
+                ("CheckoutSession", .checkout(Checkout(apiResponse: checkoutSession))),
             ]
             guard paymentMethod != .blik else {
                 // Blik doesn't support server-side confirmation
@@ -1278,7 +1278,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     checkoutSessionId: checkoutSessionResponse.id,
                     adaptivePricingAllowed: true
                 )
-                intents.append(("CheckoutSession w/ setup_future_usage", .checkout(Checkout(apiResponse: checkoutSession), checkoutSession.makePublicSession())))
+                intents.append(("CheckoutSession w/ setup_future_usage", .checkout(Checkout(apiResponse: checkoutSession))))
             }
 
             return intents
@@ -1390,7 +1390,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     checkoutSessionId: checkoutSessionResponse.id,
                     adaptivePricingAllowed: true
                 )
-                intents.append(("CheckoutSession w/ PMO setup_future_usage", .checkout(Checkout(apiResponse: checkoutSession), checkoutSession.makePublicSession())))
+                intents.append(("CheckoutSession w/ PMO setup_future_usage", .checkout(Checkout(apiResponse: checkoutSession))))
             }
 
             return intents
@@ -1430,7 +1430,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 ("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
                 ("Deferred SetupIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
                 ("Deferred SetupIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
-                ("CheckoutSession", .checkout(Checkout(apiResponse: checkoutSession), checkoutSession.makePublicSession())),
+                ("CheckoutSession", .checkout(Checkout(apiResponse: checkoutSession))),
             ]
         }
     }

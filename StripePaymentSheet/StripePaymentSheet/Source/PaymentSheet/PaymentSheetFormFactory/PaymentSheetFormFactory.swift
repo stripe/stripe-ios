@@ -1099,12 +1099,12 @@ extension PaymentSheetFormFactory {
         intent: Intent,
         elementsSession: STPElementsSession
     ) -> SavePaymentMethodConsentBehavior {
-        guard case .checkout(_, let session) = intent else {
+        guard case .checkout(let checkout) = intent else {
             return elementsSession.savePaymentMethodConsentBehavior
         }
 
-        guard session.customerId != nil,
-              let offerSave = session.savedPaymentMethodsOfferSave,
+        guard checkout.nonisolatedSession.customerId != nil,
+              let offerSave = checkout.nonisolatedSession.savedPaymentMethodsOfferSave,
               offerSave.enabled
         else {
             return .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled

@@ -485,9 +485,7 @@ final class PaymentSheetLoader {
             }
         case .checkout(let checkout):
             elementsSession = checkout.session.elementsSession
-            // TODO(gbirch): Remove Checkout.Session associated value once MPE is MainActor-isolated.
-            // This is a temporary stopgap to provide a threadsafe version of the checkout session data.
-            intent = .checkout(checkout, checkout.session)
+            intent = .checkout(checkout)
         }
 
         // Warn the merchant if we see unactivated payment method types in the Intent
@@ -539,8 +537,8 @@ final class PaymentSheetLoader {
         if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
             // A. SPMs are on ElementSessions object when using CustomerSession.
             savedPaymentMethods = elementsSessionPaymentMethods
-        } else if case let .checkout(_, session) = intent,
-                  let customerPaymentMethods = session.customer?.paymentMethods {
+        } else if case let .checkout(checkout) = intent,
+                  let customerPaymentMethods = checkout.nonisolatedSession.customer?.paymentMethods {
             // B. SPMs are on CheckoutSession object
             savedPaymentMethods = customerPaymentMethods
         } else if let prefetchedSPMs {

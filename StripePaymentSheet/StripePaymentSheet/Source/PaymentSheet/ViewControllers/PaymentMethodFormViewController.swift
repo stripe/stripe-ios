@@ -364,10 +364,10 @@ extension PaymentMethodFormViewController {
                 return .setup(setupIntent.stripeID)
             case .deferredIntent:
                 return .deferred(elementsSession.sessionID)
-            case .checkout(_, let session):
+            case .checkout(let checkout):
                 // This ID is used for financial incentive eligibility. Ideally we'd use the underlying
                 // paymentIntentId or setupIntentId, but those are not yet populated on CheckoutSession.
-                return .deferred(session.id)
+                return .deferred(checkout.nonisolatedSession.id)
             }
         }()
 
@@ -557,13 +557,13 @@ extension PaymentMethodFormViewController {
                 intentType: .deferred,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .checkout(_, let session):
+        case .checkout(let checkout):
             client.collectBankAccountForDeferredIntentOrCheckoutSession(
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
-                amount: session.expectedAmount(),
-                currency: session.currency,
+                amount: checkout.nonisolatedSession.expectedAmount(),
+                currency: checkout.nonisolatedSession.currency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
@@ -673,13 +673,13 @@ extension PaymentMethodFormViewController {
                 intentType: .deferred,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .checkout(_, let session):
+        case .checkout(let checkout):
             client.collectBankAccountForDeferredIntentOrCheckoutSession(
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
-                amount: session.expectedAmount(),
-                currency: session.currency,
+                amount: checkout.nonisolatedSession.expectedAmount(),
+                currency: checkout.nonisolatedSession.currency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,

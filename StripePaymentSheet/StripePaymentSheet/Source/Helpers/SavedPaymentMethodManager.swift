@@ -42,7 +42,7 @@ final class SavedPaymentMethodManager {
     func update(paymentMethod: STPPaymentMethod,
                 with updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         switch intent {
-        case .checkout(let checkout, _):
+        case .checkout(let checkout):
             let billing = Checkout.PaymentMethodBillingDetails(updateParams.billingDetails)
             let expiry = Checkout.PaymentMethodExpiryDetails(updateParams.card)
             guard billing != nil || expiry != nil else {
@@ -77,11 +77,11 @@ final class SavedPaymentMethodManager {
 
     func detach(paymentMethod: STPPaymentMethod) {
         switch intent {
-        case .checkout(_, let session):
+        case .checkout(let checkout):
             Task {
                 try? await configuration.apiClient.detachPaymentMethod(
                     paymentMethod.stripeId,
-                    fromCheckoutSession: session.id
+                    fromCheckoutSession: checkout.nonisolatedSession.id
                 )
             }
         case .paymentIntent, .setupIntent, .deferredIntent:

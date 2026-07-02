@@ -60,10 +60,10 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             return paymentIntent.clientSecret
         case .setupIntent(let setupIntent):
             return setupIntent.clientSecret
-        case .checkout(let checkout, let session):
+        case .checkout(let checkout):
             return try await handleCheckoutSessionApplePay(
                 checkout: checkout,
-                session: session,
+                session: checkout.nonisolatedSession,
                 paymentMethod: paymentMethod,
                 paymentInformation: paymentInformation,
                 context: context
@@ -344,7 +344,7 @@ extension STPApplePayContext {
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
-            if case .checkout(_, let session) = intent, let email = session.email {
+            if case .checkout(let checkout) = intent, let email = checkout.nonisolatedSession.email {
                 applePayContext.fallbackBillingDetails = StripeAPI.BillingDetails(email: email)
             }
             return applePayContext
@@ -375,11 +375,11 @@ extension STPApplePayContext {
         if let paymentSummaryItems = applePay.paymentSummaryItems {
             // Use the merchant supplied paymentSummaryItems
             paymentRequest.paymentSummaryItems = paymentSummaryItems
-        } else if case .checkout(_, let session) = intent,
-                  !session.lineItems.isEmpty,
-                  let total = session.total {
+        } else if case .checkout(let checkout) = intent,
+                  !checkout.nonisolatedSession.lineItems.isEmpty,
+                  let total = checkout.nonisolatedSession.total {
             paymentRequest.paymentSummaryItems = STPApplePayContext.makeApplePayPaymentSummaryItems(
-                lineItems: session.lineItems,
+                lineItems: checkout.nonisolatedSession.lineItems,
                 total: total,
                 totalLabel: label,
                 currency: intent.currency
@@ -420,8 +420,8 @@ extension STPApplePayContext {
         }
 
         // Pre-populate billingContact from the CheckoutSession's billing address if available
-        if case .checkout(_, let session) = intent,
-           let billingAddress = session.billingAddress {
+        if case .checkout(let checkout) = intent,
+           let billingAddress = checkout.nonisolatedSession.billingAddress {
             paymentRequest.billingContact = Self.makeBillingContact(from: billingAddress)
         }
 

@@ -793,7 +793,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             expectation.fulfill()
             switch result {
             case .success(let (loadResult, _)):
-                guard case let .checkout(loadedCheckout, _) = loadResult.intent else {
+                guard case let .checkout(loadedCheckout) = loadResult.intent else {
                     XCTFail("Expected checkout intent type")
                     return
                 }
@@ -829,7 +829,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             expectation.fulfill()
             switch result {
             case .success(let (loadResult, _)):
-                guard case let .checkout(loadedCheckout, _) = loadResult.intent else {
+                guard case let .checkout(loadedCheckout) = loadResult.intent else {
                     XCTFail("Expected checkout intent type")
                     return
                 }
