@@ -99,7 +99,11 @@ enum CheckoutTestHelpers {
     /// Creates an `STPCheckoutSession` from `baseSessionJSON` with top-level key overrides.
     /// To test field *absence*, mutate `baseSessionJSON` directly instead.
     static func makeSession(_ overrides: [String: Any] = [:]) -> STPCheckoutSession {
-        STPCheckoutSession.decodedObject(fromAPIResponse: makeSessionJSON(overrides))!
+        let json = makeSessionJSON(overrides)
+        guard let session = STPCheckoutSession.decodedObject(fromAPIResponse: json) else {
+            fatalError("makeSession: failed to decode STPCheckoutSession from \(json)")
+        }
+        return session
     }
 
     static func makeSessionJSON(_ overrides: [String: Any] = [:]) -> [String: Any] {
