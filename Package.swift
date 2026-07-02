@@ -55,8 +55,7 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/paescebu/SwiftTasksVision.git",
-            exact: "0.10.21"
+            path: "LocalPackages/MediaPipeSPM"
         )
     ],
     targets: [
@@ -108,7 +107,7 @@ let package = Package(
                 "StripeCore",
                 "StripeUICore",
                 "StripeCameraCore",
-                .product(name: "SwiftTasksVision", package: "SwiftTasksVision"),
+                .product(name: "MediaPipeSPM", package: "MediaPipeSPM"),
             ],
             path: "StripeIdentity/StripeIdentity",
             exclude: ["Info.plist"],
