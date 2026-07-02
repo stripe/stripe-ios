@@ -848,8 +848,6 @@ extension PaymentSheet {
             }
         }
 
-        /// Rebuilds `viewController` from a freshly loaded result, wiring up the delegate, confirmation challenge,
-        /// and refreshing the published payment option. Preserves the currently selected payment option.
         private func swapViewController(
             loadResult: PaymentSheetLoader.LoadResult,
             confirmationChallenge: ConfirmationChallenge?
@@ -1000,8 +998,7 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
 
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
         if isPresented {
-            // When the sheet is already open, we reload in-place rather than using `update`
-            // because `update` asserts !isPresented and rebuilds the VC without presenting it.
+            // `update` asserts !isPresented, so reload in-place instead.
             checkout.stpSession.applyAddressOverrides(to: &configuration)
             try await performReload(mode: .checkout(checkout))
         } else {
@@ -1122,8 +1119,6 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
     func clearSelection()
-    /// Freeze the UI and show a spinner on the primary button while we reload the intent.
-    /// If you add new UI, make sure it's also disabled/hidden during reloading.
     func setReloading(_ isReloading: Bool)
     func setReloadError(_ error: Error)
 }

@@ -284,9 +284,7 @@ public final class EmbeddedPaymentElement {
         }
     }
 
-    /// Applies a fresh load result: updates self's state, rebuilds `selectedFormViewController` and `embeddedPaymentMethodsView`,
-    /// preserving the previously selected row/form when it's still available.
-    /// - Returns: The newly created form view controller, if any (i.e. the selected row still has a form).
+    /// Rebuilds the embedded view and form VC from a new load result, keeping the previous selection if it's still available.
     @MainActor
     @discardableResult
     private func applyLoadResultAndRebuildView(
@@ -524,6 +522,7 @@ extension EmbeddedPaymentElement: CheckoutIntegrationDelegate {
 
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
         if isSheetPresented {
+            // `update` asserts the sheet isn't presented, so reload in-place instead.
             checkout.stpSession.applyAddressOverrides(to: &configuration)
             let result = await performReload(mode: .checkout(checkout))
             if case .failed(let error) = result {
