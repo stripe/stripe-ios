@@ -63,7 +63,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         case .checkout(let checkout):
             return try await handleCheckoutSessionApplePay(
                 checkout: checkout,
-                session: checkout.nonisolatedSession,
                 paymentMethod: paymentMethod,
                 paymentInformation: paymentInformation,
                 context: context
@@ -174,12 +173,11 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     /// Handles Apple Pay confirmation for CheckoutSession by calling the confirm API with the payment method.
     private func handleCheckoutSessionApplePay(
         checkout: Checkout,
-        session: Checkout.Session,
         paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment,
         context: STPApplePayContext
     ) async throws -> String {
-        let checkoutSession = session
+        let checkoutSession: Checkout.Session = checkout.nonisolatedSession
 
         // 1. Build client attribution metadata
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(

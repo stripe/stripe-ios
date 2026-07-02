@@ -354,7 +354,7 @@ public final class Checkout: ObservableObject {
     /// automatically. To update an address, pass a `localMutation` closure.
     func commitSession(
         _ apiResponse: STPCheckoutSessionAPIResponse? = nil,
-        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil
+        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
     ) async throws {
         // Generate a new session from the API response, or fall back to the current session.
         let newSession = apiResponse?.makePublicSession() ?? session
