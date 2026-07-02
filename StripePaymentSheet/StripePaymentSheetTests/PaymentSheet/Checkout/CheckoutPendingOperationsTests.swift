@@ -125,6 +125,28 @@ final class CheckoutPendingOperationsTests: XCTestCase {
 
     // MARK: - Delegate skipping
 
+    func testCommitSessionDoesNotDeadlockWhenDelegateAwaitsCurrentOp() async throws {
+        let checkout = await makeCheckoutWithOpenSession()
+        let delegate = AwaitsPendingOpsIntegrationDelegate()
+        checkout.integrationDelegate = delegate
+
+        let result = await withTimeout(3) { @MainActor in
+            try await checkout.enqueueSessionUpdate {
+                try await checkout.commitSession(CheckoutTestHelpers.makeOpenSession())
+            }
+        }
+
+        if case .failure(let error) = result {
+            if error is TimeoutError {
+                XCTFail("Deadlocked — delegate calling awaitPendingOperations inside an operation")
+            } else {
+                throw error
+            }
+        }
+
+        XCTAssertTrue(checkout.pendingOperations.isEmpty)
+    }
+
     func testCommitSessionSkipsDelegateWhenAnotherOpIsQueued() async throws {
         let checkout = await makeCheckoutWithOpenSession()
         let delegate = AwaitsPendingOpsIntegrationDelegate()

@@ -42,7 +42,10 @@ extension Checkout {
             // Wait for the previous operation, if one exists, to finish.
             // Use `try?` so that we still continue even if the predecessor throws an error.
             if let predecessor { _ = try? await predecessor.value }
-            return try await body()
+            // Flag this task so awaitPendingOperations won't try to wait on itself
+            return try await Checkout.$isInsideOperation.withValue(true) {
+                try await body()
+            }
         }
 
         // The erased task discards T so it can be stored in the homogeneous

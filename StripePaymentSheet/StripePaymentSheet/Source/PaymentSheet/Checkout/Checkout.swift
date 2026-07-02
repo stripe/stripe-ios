@@ -92,6 +92,9 @@ public final class Checkout: ObservableObject {
         pendingOperations.count <= 1
     }
 
+    /// True when running inside a queued operation body; prevents awaitPendingOperations from deadlocking on itself.
+    @TaskLocal static var isInsideOperation: Bool = false
+
     /// Default timeout used by ``awaitPendingOperations(timeout:)``.
     nonisolated static let defaultPendingOperationsTimeout: TimeInterval = 30
 
@@ -174,6 +177,8 @@ public final class Checkout: ObservableObject {
     func awaitPendingOperations(
         timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout
     ) async throws {
+        // If we're already inside the current operation, waiting here would deadlock.
+        if Self.isInsideOperation { return }
         let snapshot = pendingOperations
         guard !snapshot.isEmpty else { return }
 
