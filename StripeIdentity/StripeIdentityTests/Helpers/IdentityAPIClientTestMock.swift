@@ -24,7 +24,7 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
         let fileName: String
     }
 
-    let verificationPage = MockAPIRequests<Void, StripeAPI.VerificationPage>()
+    let verificationPage = AsyncMockAPIRequests<Void, StripeAPI.VerificationPage>()
     let verificationPageData = MockAPIRequests<
         StripeAPI.VerificationPageDataUpdate, StripeAPI.VerificationPageData
     >()
@@ -47,8 +47,8 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
         self.ephemeralKeySecret = ephemeralKeySecret
     }
 
-    func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage> {
-        return verificationPage.makeRequest(with: ())
+    func getIdentityVerificationPage() async throws -> StripeAPI.VerificationPage {
+        try await verificationPage.makeRequest(with: ())
     }
 
     func updateIdentityVerificationPageData(
@@ -140,6 +140,31 @@ class MockAPIRequests<ParamsType, ResponseType> {
         requests.forEach { promise in
             promise.fullfill(with: result)
         }
+    }
+
+    func callBackOnRequest(_ block: @escaping () -> Void) {
+        requestCallbacks.append(block)
+    }
+}
+
+class AsyncMockAPIRequests<ParamsType, ResponseType> {
+    private var requests: [CheckedContinuation<ResponseType, Error>] = []
+    private(set) var requestHistory: [ParamsType] = []
+    private var requestCallbacks: [(() -> Void)] = []
+
+    fileprivate func makeRequest(with params: ParamsType) async throws -> ResponseType {
+        return try await withCheckedThrowingContinuation { continuation in
+            requestHistory.append(params)
+            requests.append(continuation)
+            requestCallbacks.forEach { $0() }
+        }
+    }
+
+    func respondToRequests(with result: Result<ResponseType, Error>) {
+        requests.forEach { continuation in
+            continuation.resume(with: result)
+        }
+        requests = []
     }
 
     func callBackOnRequest(_ block: @escaping () -> Void) {
