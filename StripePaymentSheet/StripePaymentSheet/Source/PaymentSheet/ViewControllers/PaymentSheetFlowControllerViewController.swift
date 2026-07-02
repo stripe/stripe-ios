@@ -82,6 +82,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
     private(set) var error: Error?
     private(set) var isDismissable: Bool = true
+    private var isReloading: Bool = false
 
     // MARK: - Private Properties
     enum Mode {
@@ -457,6 +458,25 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     func clearSelection() {
         savedPaymentOptionsViewController.unselectPaymentMethod()
         updateButton()
+    }
+
+    func setReloading(_ isReloading: Bool) {
+        self.isReloading = isReloading
+        view.isUserInteractionEnabled = !isReloading
+        if isReloading {
+            view.endEditing(true)
+            confirmButton.update(status: .processing, animated: true)
+        } else {
+            updateButton()
+        }
+    }
+
+    func setReloadError(_ error: Error) {
+        self.error = error
+        self.errorLabel.text = error.nonGenericDescription
+        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+            self.errorLabel.setHiddenIfNecessary(false)
+        }
     }
 
     @objc
