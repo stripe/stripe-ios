@@ -51,6 +51,7 @@ enum Image: String, CaseIterable, ImageMaker {
     case pm_type_konbini = "icon-pm-konbini"
     case pm_type_mobilepay = "icon-pm-mobilepay"
     case pm_type_multibanco = "icon-pm-multibanco"
+    case pm_type_vipps = "icon-pm-vipps"
     case pm_type_oxxo = "icon-pm-oxxo"
     case pm_type_p24 = "icon-pm-p24"
     case pm_type_paybybank = "icon-pm-paybybank"

@@ -385,6 +385,16 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         ) { _ in }
     }
 
+    func testVippsConfirmFlows() async throws {
+        try await _testConfirm(
+            intentKinds: [.paymentIntent],
+            currency: "NOK",
+            paymentMethodType: .vipps,
+            merchantCountry: .FR,
+            expectedHierarchy: ExpectedFormHierarchy.Vipps.paymentIntent
+        ) { _ in }
+    }
+
     func testTwintConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "CHF",
