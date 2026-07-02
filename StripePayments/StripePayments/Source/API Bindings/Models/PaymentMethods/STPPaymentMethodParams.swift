@@ -113,6 +113,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var wero: STPPaymentMethodWeroParams?
     /// If this is a Pay by Bank PaymentMethod, this contains additional details.
     @objc public var payByBank: STPPaymentMethodPayByBankParams?
+    /// If this is a Vipps PaymentMethod, this contains additional details.
+    @objc public var vipps: STPPaymentMethodVippsParams?
 
     /// Radar options that may contain HCaptcha token
     @objc @_spi(STP) public var radarOptions: STPRadarOptions?
@@ -571,6 +573,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a Vipps PaymentMethod.
+    /// - Parameters:
+    ///   - vipps:               An object containing additional Vipps details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        vipps: STPPaymentMethodVippsParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .vipps
+        self.vipps = vipps
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     /// Creates params for a AmazonPay PaymentMethod.
     /// - Parameters:
     ///   - amazonPay:           An object containing additional AmazonPay details.
@@ -811,6 +831,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: twint)): "twint",
             NSStringFromSelector(#selector(getter: wero)): "wero",
             NSStringFromSelector(#selector(getter: payByBank)): "pay_by_bank",
+            NSStringFromSelector(#selector(getter: vipps)): "vipps",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
@@ -1258,6 +1279,8 @@ extension STPPaymentMethodParams {
             wero = STPPaymentMethodWeroParams()
         case .payByBank:
             payByBank = STPPaymentMethodPayByBankParams()
+        case .vipps:
+            vipps = STPPaymentMethodVippsParams()
         case .cardPresent, .paynow, .zip, .konbini, .promptPay:
             // These payment methods don't have any params
             break
