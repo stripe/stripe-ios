@@ -106,6 +106,32 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
         config.test(text: "1M 1AA", isOptional: false, matches: .invalid(TextFieldElement.Error.invalid(localizedDescription: String.Localized.your_postal_code_is_invalid)))
     }
 
+    func testPostalCodeConfigurationDisplayTextGB() {
+        let config = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "GB", label: "Postal", defaultValue: nil, isOptional: false)
+
+        XCTAssertEqual(config.makeDisplayText(for: "SW1X7XL").string, "SW1X 7XL")
+        XCTAssertEqual(config.makeDisplayText(for: "M11AA").string, "M1 1AA")
+        XCTAssertEqual(config.makeDisplayText(for: "SW1").string, "SW1")
+    }
+
+    func testPostalCodeConfigurationSanitizesSpacedGBDisplayText() {
+        let config = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "GB", label: "Postal", defaultValue: nil, isOptional: false)
+        let element = TextFieldElement(configuration: config)
+
+        element.setText("SW1X 7XL")
+
+        XCTAssertEqual(element.text, "SW1X7XL")
+        XCTAssertEqual(element.viewModel.attributedText.string, "SW1X 7XL")
+    }
+
+    func testPostalCodeConfigurationDisplayTextNonGB() {
+        let usConfig = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "US", label: "ZIP", defaultValue: nil, isOptional: false)
+        XCTAssertEqual(usConfig.makeDisplayText(for: "94107").string, "94107")
+
+        let caConfig = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "CA", label: "Postal", defaultValue: nil, isOptional: false)
+        XCTAssertEqual(caConfig.makeDisplayText(for: "K1A0B1").string, "K1A0B1")
+    }
+
     func testPostalCodeConfigurationValidationCA() {
         let config = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "CA", label: "Postal", defaultValue: nil, isOptional: false)
         XCTAssertEqual(config.keyboardProperties(for: "").type, .default)
