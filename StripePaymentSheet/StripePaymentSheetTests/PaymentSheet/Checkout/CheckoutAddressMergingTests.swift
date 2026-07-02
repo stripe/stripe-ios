@@ -196,5 +196,4 @@ final class CheckoutAddressMergingTests: XCTestCase {
         XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
     }
 
-
 }
