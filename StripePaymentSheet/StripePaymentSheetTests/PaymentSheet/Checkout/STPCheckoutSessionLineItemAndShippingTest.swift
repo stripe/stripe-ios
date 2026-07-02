@@ -36,22 +36,9 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
     }
 
     func testDecodedObjectWithNoLineItems() {
-        let json: [String: Any] = [
-            "session_id": "cs_test_no_items",
-            "object": "checkout.session",
-            "livemode": false,
-            "mode": "payment",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-            "elements_session": [
-                "session_id": "es_test",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
-            ],
-        ]
+        let session = CheckoutTestHelpers.makeSession([:])
 
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
-        XCTAssertNotNil(session)
-        XCTAssertEqual(session?.lineItems.count, 0)
+        XCTAssertEqual(session.lineItems.count, 0)
     }
 
     // MARK: - Shipping Option Tests
@@ -76,22 +63,9 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
     }
 
     func testDecodedObjectWithNoShippingOptions() {
-        let json: [String: Any] = [
-            "session_id": "cs_test_no_shipping",
-            "object": "checkout.session",
-            "livemode": false,
-            "mode": "payment",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-            "elements_session": [
-                "session_id": "es_test",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
-            ],
-        ]
+        let session = CheckoutTestHelpers.makeSession([:])
 
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
-        XCTAssertNotNil(session)
-        XCTAssertEqual(session?.shippingOptions.count, 0)
+        XCTAssertEqual(session.shippingOptions.count, 0)
     }
 
 }

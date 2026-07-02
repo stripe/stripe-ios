@@ -78,6 +78,38 @@ class CheckoutEmissionRecorder {
 // MARK: - Shared Helpers
 
 enum CheckoutTestHelpers {
+
+    // MARK: - Base JSON building blocks
+
+    static let minimalElementsSessionJSON: [String: Any] = [
+        "session_id": "es_test",
+        "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+    ]
+
+    static let baseSessionJSON: [String: Any] = [
+        "session_id": "cs_test",
+        "object": "checkout.session",
+        "livemode": false,
+        "mode": "payment",
+        "payment_status": "unpaid",
+        "payment_method_types": ["card"],
+        "elements_session": minimalElementsSessionJSON,
+    ]
+
+    static func makeSession(_ overrides: [String: Any] = [:]) -> STPCheckoutSession {
+        var json = baseSessionJSON
+        overrides.forEach { json[$0.key] = $0.value }
+        return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+    }
+
+    static func makeSessionJSON(_ overrides: [String: Any] = [:]) -> [String: Any] {
+        var json = baseSessionJSON
+        overrides.forEach { json[$0.key] = $0.value }
+        return json
+    }
+
+    // MARK: - Checkout-flow helpers
+
     static func makeCheckoutWithOpenSession() async -> Checkout {
         let session = makeOpenSession()
         return await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
@@ -93,10 +125,7 @@ enum CheckoutTestHelpers {
             "payment_status": "unpaid",
             "payment_method_types": ["card"],
             "currency": "usd",
-            "elements_session": [
-                "session_id": "es_test",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
-            ],
+            "elements_session": minimalElementsSessionJSON,
         ]
     }
 
@@ -127,28 +156,16 @@ enum CheckoutTestHelpers {
         integrationAmount: Int = 1200,
         localAmount: Int = 1000
     ) -> STPCheckoutSession {
-        var json: [AnyHashable: Any] = [
-            "session_id": "cs_test_123",
-            "client_secret": "cs_test_123_secret_abc",
-            "livemode": false,
-            "mode": "payment",
-            "status": "open",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-            "currency": currency,
-            "elements_session": [
-                "session_id": "es_test",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
-            ],
-            "total_summary": [
-                "subtotal": integrationAmount,
-                "total": integrationAmount,
-                "due": integrationAmount,
-            ],
-            "developer_tool_context": [
-                "adaptive_pricing": [
-                    "active": adaptivePricingActive,
-                ],
+        var json: [AnyHashable: Any] = makeOpenSessionJSON()
+        json["currency"] = currency
+        json["total_summary"] = [
+            "subtotal": integrationAmount,
+            "total": integrationAmount,
+            "due": integrationAmount,
+        ]
+        json["developer_tool_context"] = [
+            "adaptive_pricing": [
+                "active": adaptivePricingActive,
             ],
         ]
 
