@@ -83,6 +83,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private(set) var error: Error?
     private(set) var isDismissable: Bool = true
     private var isReloading: Bool = false
+    private var isBusy: Bool { isReloading }
 
     // MARK: - Private Properties
     enum Mode {
@@ -464,21 +465,21 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         updateButton()
     }
 
+    // Freezes UI and shows a spinner while a reload is in progress.
     func setReloading(_ isReloading: Bool) {
         guard self.isReloading != isReloading else { return }
         self.isReloading = isReloading
-        view.isUserInteractionEnabled = !isReloading
+        view.isUserInteractionEnabled = !isBusy
+        navigationBar.isUserInteractionEnabled = !isBusy
         if isReloading {
             view.endEditing(true)
-            confirmButton.update(status: .processing, animated: true)
-        } else {
-            updateButton()
         }
+        updateButton()
     }
 
     func setReloadError(_ error: Error) {
         self.error = error
-        self.errorLabel.text = error.nonGenericDescription
+        errorLabel.text = error.nonGenericDescription
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(false)
         }
