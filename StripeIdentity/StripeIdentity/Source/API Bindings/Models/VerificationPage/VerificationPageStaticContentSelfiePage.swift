@@ -29,6 +29,59 @@ extension StripeAPI {
         let sampleInterval: Int
         let trainingConsentText: String
         let blurThreshold: Decimal?
+        let poseSequence: [String]?
+        private let apiEnable3DFaceCapture: Bool
+
+        private static let local3DFaceCaptureOverride: Bool? = true
+
+        var enable3DFaceCapture: Bool {
+            return Self.local3DFaceCaptureOverride ?? apiEnable3DFaceCapture
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case autocaptureTimeout
+            case filePurpose
+            case highResImageCompressionQuality
+            case highResImageCropPadding
+            case highResImageMaxDimension
+            case lowResImageCompressionQuality
+            case lowResImageMaxDimension
+            case maxCenteredThresholdX
+            case maxCenteredThresholdY
+            case maxCoverageThreshold
+            case minCoverageThreshold
+            case minEdgeThreshold
+            case models
+            case numSamples
+            case sampleInterval
+            case trainingConsentText
+            case blurThreshold
+            case poseSequence
+            case apiEnable3DFaceCapture = "enable_3d_face_capture"
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            autocaptureTimeout = try container.decode(Int.self, forKey: .autocaptureTimeout)
+            filePurpose = try container.decode(String.self, forKey: .filePurpose)
+            highResImageCompressionQuality = try container.decode(CGFloat.self, forKey: .highResImageCompressionQuality)
+            highResImageCropPadding = try container.decode(CGFloat.self, forKey: .highResImageCropPadding)
+            highResImageMaxDimension = try container.decode(Int.self, forKey: .highResImageMaxDimension)
+            lowResImageCompressionQuality = try container.decode(CGFloat.self, forKey: .lowResImageCompressionQuality)
+            lowResImageMaxDimension = try container.decode(Int.self, forKey: .lowResImageMaxDimension)
+            maxCenteredThresholdX = try container.decode(CGFloat.self, forKey: .maxCenteredThresholdX)
+            maxCenteredThresholdY = try container.decode(CGFloat.self, forKey: .maxCenteredThresholdY)
+            maxCoverageThreshold = try container.decode(CGFloat.self, forKey: .maxCoverageThreshold)
+            minCoverageThreshold = try container.decode(CGFloat.self, forKey: .minCoverageThreshold)
+            minEdgeThreshold = try container.decode(CGFloat.self, forKey: .minEdgeThreshold)
+            models = try container.decode(VerificationPageStaticContentSelfieModels.self, forKey: .models)
+            numSamples = try container.decode(Int.self, forKey: .numSamples)
+            sampleInterval = try container.decode(Int.self, forKey: .sampleInterval)
+            trainingConsentText = try container.decode(String.self, forKey: .trainingConsentText)
+            blurThreshold = try container.decodeIfPresent(Decimal.self, forKey: .blurThreshold)
+            poseSequence = try container.decodeIfPresent([String].self, forKey: .poseSequence)
+            apiEnable3DFaceCapture = try container.decodeIfPresent(Bool.self, forKey: .apiEnable3DFaceCapture) ?? false
+        }
     }
 
 }

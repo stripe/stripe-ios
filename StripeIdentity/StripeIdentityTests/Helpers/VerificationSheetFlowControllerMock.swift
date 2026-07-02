@@ -19,6 +19,7 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     var uncollectedFields: Set<StripeAPI.VerificationPageFieldType>
     var isFinishedCollecting = false
     var analyticsLastScreen: IdentityFlowViewController?
+    var brandColor: UIColor?
 
     var visitedIndividualWelcomePage = false
 
@@ -31,6 +32,7 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     )
     private(set) var transitionedWithStaticContentResult: Result<StripeAPI.VerificationPage, Error>?
     private(set) var transitionedWithUpdateDataResult: Result<StripeAPI.VerificationPageData, Error>?
+    private(set) var didTransitionToFallbackUrlScreen = false
 
     private(set) var replacedWithViewController: UIViewController?
 
@@ -73,7 +75,8 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
 
     func transitionToSelfieCaptureScreen(
         staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
-        sheetController: StripeIdentity.VerificationSheetControllerProtocol
+        sheetController: StripeIdentity.VerificationSheetControllerProtocol,
+        trainingConsent: Bool?
     ) {
         // no-op
     }
@@ -83,6 +86,13 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
         sheetController: StripeIdentity.VerificationSheetControllerProtocol
     ) {
         // no-op
+    }
+
+    func transitionToFallbackUrlScreen(
+        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
+        sheetController: VerificationSheetControllerProtocol
+    ) {
+        didTransitionToFallbackUrlScreen = true
     }
 
     func transitionToErrorScreen(

@@ -24,6 +24,10 @@ extension StripeAPI {
         let lastHighResImage: String
         /// File ID of uploaded image for last selfie frame. This will be un-cropped.
         let lastLowResImage: String
+        /// File ID of uploaded full-frame image for left side selfie frame.
+        let leftFullFrame: String?
+        /// File ID of uploaded full-frame image for right side selfie frame.
+        let rightFullFrame: String?
         /// FaceDetector score for the best selfie frame.
         let bestFaceScore: TwoDecimalFloat
         /// Variance of the FaceDetector scores over all selfie frames.
@@ -42,7 +46,79 @@ extension StripeAPI {
         let bestFocalLength: TwoDecimalFloat?
         /// If the best selfie frame was taken by a virtual camera.
         let bestIsVirtualCamera: Bool?
+        /// Capture metadata for the accepted selfie frames.
+        let bestFrameData: VerificationPageDataFaceFrameData?
+        let firstFrameData: VerificationPageDataFaceFrameData?
+        let lastFrameData: VerificationPageDataFaceFrameData?
+        let leftFrameData: VerificationPageDataFaceFrameData?
+        let rightFrameData: VerificationPageDataFaceFrameData?
         /// Whether the user consents for their selfie to be used for training purposes
         let trainingConsent: Bool
+
+        init(
+            bestHighResImage: String,
+            bestLowResImage: String,
+            firstHighResImage: String,
+            firstLowResImage: String,
+            lastHighResImage: String,
+            lastLowResImage: String,
+            leftFullFrame: String? = nil,
+            rightFullFrame: String? = nil,
+            bestFaceScore: TwoDecimalFloat,
+            faceScoreVariance: TwoDecimalFloat,
+            numFrames: Int,
+            bestBrightnessValue: TwoDecimalFloat?,
+            bestCameraLensModel: String?,
+            bestExposureDuration: Int?,
+            bestExposureIso: TwoDecimalFloat?,
+            bestFocalLength: TwoDecimalFloat?,
+            bestIsVirtualCamera: Bool?,
+            bestFrameData: VerificationPageDataFaceFrameData? = nil,
+            firstFrameData: VerificationPageDataFaceFrameData? = nil,
+            lastFrameData: VerificationPageDataFaceFrameData? = nil,
+            leftFrameData: VerificationPageDataFaceFrameData? = nil,
+            rightFrameData: VerificationPageDataFaceFrameData? = nil,
+            trainingConsent: Bool
+        ) {
+            self.bestHighResImage = bestHighResImage
+            self.bestLowResImage = bestLowResImage
+            self.firstHighResImage = firstHighResImage
+            self.firstLowResImage = firstLowResImage
+            self.lastHighResImage = lastHighResImage
+            self.lastLowResImage = lastLowResImage
+            self.leftFullFrame = leftFullFrame
+            self.rightFullFrame = rightFullFrame
+            self.bestFaceScore = bestFaceScore
+            self.faceScoreVariance = faceScoreVariance
+            self.numFrames = numFrames
+            self.bestBrightnessValue = bestBrightnessValue
+            self.bestCameraLensModel = bestCameraLensModel
+            self.bestExposureDuration = bestExposureDuration
+            self.bestExposureIso = bestExposureIso
+            self.bestFocalLength = bestFocalLength
+            self.bestIsVirtualCamera = bestIsVirtualCamera
+            self.bestFrameData = bestFrameData
+            self.firstFrameData = firstFrameData
+            self.lastFrameData = lastFrameData
+            self.leftFrameData = leftFrameData
+            self.rightFrameData = rightFrameData
+            self.trainingConsent = trainingConsent
+        }
+    }
+
+    struct VerificationPageDataFaceFrameData: Encodable, Equatable {
+        let faceScore: TwoDecimalFloat?
+        let faceScoreVariance: TwoDecimalFloat?
+        let blurScore: TwoDecimalFloat?
+        let blurScoreVariance: TwoDecimalFloat?
+        let yaw: TwoDecimalFloat?
+        let pitch: TwoDecimalFloat?
+        let roll: TwoDecimalFloat?
+        let bbox: [Int]?
+        let inputSize: [Int]?
+        let faceLandmarkResult: String?
+        let capturedAt: Int?
+        let captureOrder: Int?
+        let cameraInfo: String?
     }
 }

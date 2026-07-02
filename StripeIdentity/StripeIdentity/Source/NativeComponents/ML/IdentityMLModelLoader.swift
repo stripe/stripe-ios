@@ -16,6 +16,8 @@ enum IdentityMLModelLoaderError: Error, AnalyticLoggableErrorV2 {
     case malformedURL(String)
     /// The ML model never started loading on the client
     case mlModelNeverLoaded
+    /// MediaPipe face detection is not available.
+    case mediaPipeFaceDetectorUnavailable
 
     func analyticLoggableSerializeForLogging() -> [String: Any] {
         switch self {
@@ -27,6 +29,10 @@ enum IdentityMLModelLoaderError: Error, AnalyticLoggableErrorV2 {
         case .mlModelNeverLoaded:
             return [
                 "type": "ml_model_never_loaded",
+            ]
+        case .mediaPipeFaceDetectorUnavailable:
+            return [
+                "type": "media_pipe_face_detector_unavailable",
             ]
         }
     }
@@ -173,6 +179,31 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
     func startLoadingFaceModels(
         from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage
     ) {
+        if selfiePageConfig.enable3DFaceCapture {
+            guard let faceGeometryDetector = FaceGeometryDetectorFactory.makeDefaultDetector() else {
+                let error = IdentityMLModelLoaderError.mediaPipeFaceDetectorUnavailable
+                Self.logModelLoadingError(
+                    error,
+                    modelType: "face",
+                    stage: "media_pipe_detector"
+                )
+                faceMLModelsPromise.reject(with: error)
+                return
+            }
+
+            faceMLModelsPromise.fullfill(
+                with: .success(
+                    AnyFaceScanner(
+                        FaceScanner(
+                            faceGeometryDetector: faceGeometryDetector,
+                            configuration: .init(from: selfiePageConfig)
+                        )
+                    )
+                )
+            )
+            return
+        }
+
         guard let faceDetectorURL = URL(string: selfiePageConfig.models.faceDetectorUrl) else {
             let error = IdentityMLModelLoaderError.malformedURL(
                 selfiePageConfig.models.faceDetectorUrl
