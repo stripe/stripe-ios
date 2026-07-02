@@ -100,6 +100,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var wero: STPPaymentMethodWero?
     /// If this is a Pay by Bank PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayByBank`), this contains additional details.
     @objc private(set) public var payByBank: STPPaymentMethodPayByBank?
+    /// If this is a Vipps PaymentMethod (i.e. `self.type == STPPaymentMethodTypeVipps`), this contains additional details.
+    @objc private(set) public var vipps: STPPaymentMethodVipps?
 
     /// This field indicates whether this payment method can be shown again to its customer in a checkout flow
     @objc private(set) public var allowRedisplay: STPPaymentMethodAllowRedisplay
@@ -174,6 +176,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "twint = \(String(describing: twint))",
             "wero = \(String(describing: wero))",
             "payByBank = \(String(describing: payByBank))",
+            "vipps = \(String(describing: vipps))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "allowRedisplay = \(allResponseFields["allow_redisplay"] as? String ?? "")",
             "type = \(allResponseFields["type"] as? String ?? "")",
@@ -374,6 +377,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.payByBank = STPPaymentMethodPayByBank.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "pay_by_bank")
+        )
+        paymentMethod.vipps = STPPaymentMethodVipps.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "vipps")
         )
         return paymentMethod
     }

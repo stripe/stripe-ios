@@ -348,6 +348,19 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(types, [.stripe(.card), .stripe(.cashApp), .stripe(.amazonPay), .stripe(.klarna)])
     }
 
+    func testPaymentIntentFilteredPaymentMethodTypes_includesVipps() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .vipps])
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "http://return-to-url"
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: ._testValue(intent: intent),
+            configuration: configuration
+        )
+
+        XCTAssertEqual(types, [.stripe(.card), .stripe(.vipps)])
+    }
+
     func testSetupIntentFilteredPaymentMethodTypes() {
         let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: [.card, .cashApp, .amazonPay, .klarna])
         let intent = Intent.setupIntent(setupIntent)

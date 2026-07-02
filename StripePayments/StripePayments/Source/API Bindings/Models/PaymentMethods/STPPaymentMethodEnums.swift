@@ -102,6 +102,8 @@ import Foundation
     case bizum
     /// An unknown type.
     case unknown
+    /// A Vipps payment method
+    case vipps
 
     /// Localized display name for this payment method type
     @_spi(STP) public var displayName: String {
@@ -198,6 +200,8 @@ import Foundation
             return "MB WAY"
         case .bizum:
             return "Bizum"
+        case .vipps:
+            return "Vipps"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -299,6 +303,8 @@ import Foundation
             return "mb_way"
         case .bizum:
             return "bizum"
+        case .vipps:
+            return "vipps"
         }
     }
 
