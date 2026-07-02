@@ -78,26 +78,52 @@ class CheckoutEmissionRecorder {
 // MARK: - Shared Helpers
 
 enum CheckoutTestHelpers {
+
+    // MARK: - Base JSON building blocks
+
+    static let minimalElementsSessionJSON: [String: Any] = [
+        "session_id": "es_test",
+        "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+    ]
+
+    static let baseSessionJSON: [String: Any] = [
+        "session_id": "cs_test",
+        "object": "checkout.session",
+        "livemode": false,
+        "mode": "payment",
+        "payment_status": "unpaid",
+        "payment_method_types": ["card"],
+        "elements_session": minimalElementsSessionJSON,
+    ]
+
+    /// Creates an `STPCheckoutSession` from `baseSessionJSON` with top-level key overrides.
+    /// To test field *absence*, mutate `baseSessionJSON` directly instead.
+    static func makeSession(_ overrides: [String: Any] = [:]) -> STPCheckoutSession {
+        let json = makeSessionJSON(overrides)
+        guard let session = STPCheckoutSession.decodedObject(fromAPIResponse: json) else {
+            fatalError("makeSession: failed to decode STPCheckoutSession from \(json)")
+        }
+        return session
+    }
+
+    static func makeSessionJSON(_ overrides: [String: Any] = [:]) -> [String: Any] {
+        baseSessionJSON.merging(overrides) { _, new in new }
+    }
+
+    // MARK: - Checkout-flow helpers
+
     static func makeCheckoutWithOpenSession() async -> Checkout {
         let session = makeOpenSession()
         return await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
     }
 
     static func makeOpenSessionJSON() -> [AnyHashable: Any] {
-        [
+        makeSessionJSON([
             "session_id": "cs_test_123",
             "client_secret": "cs_test_123_secret_abc",
-            "livemode": false,
-            "mode": "payment",
             "status": "open",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
             "currency": "usd",
-            "elements_session": [
-                "session_id": "es_test",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
-            ],
-        ]
+        ])
     }
 
     static func makeOpenSession(customerEmail: String? = nil) -> STPCheckoutSession {
@@ -127,28 +153,16 @@ enum CheckoutTestHelpers {
         integrationAmount: Int = 1200,
         localAmount: Int = 1000
     ) -> STPCheckoutSession {
-        var json: [AnyHashable: Any] = [
-            "session_id": "cs_test_123",
-            "client_secret": "cs_test_123_secret_abc",
-            "livemode": false,
-            "mode": "payment",
-            "status": "open",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-            "currency": currency,
-            "elements_session": [
-                "session_id": "es_test",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
-            ],
-            "total_summary": [
-                "subtotal": integrationAmount,
-                "total": integrationAmount,
-                "due": integrationAmount,
-            ],
-            "developer_tool_context": [
-                "adaptive_pricing": [
-                    "active": adaptivePricingActive,
-                ],
+        var json: [AnyHashable: Any] = makeOpenSessionJSON()
+        json["currency"] = currency
+        json["total_summary"] = [
+            "subtotal": integrationAmount,
+            "total": integrationAmount,
+            "due": integrationAmount,
+        ]
+        json["developer_tool_context"] = [
+            "adaptive_pricing": [
+                "active": adaptivePricingActive,
             ],
         ]
 
