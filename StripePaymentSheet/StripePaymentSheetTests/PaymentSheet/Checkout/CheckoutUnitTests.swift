@@ -416,20 +416,18 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testUpdateSessionCanBeCalledMultipleTimes() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
+        // Initialize with billing address already set so it doesn't emit a change
+        let apiResponse = CheckoutTestHelpers.makeOpenSession()
+        apiResponse.billingAddress = Checkout.ContactAddress(
+            name: "Jane Doe",
+            address: .init(country: "US")
+        )
+        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: apiResponse)
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
 
         var sessionEmissions: [Checkout.Session] = []
         let sessionSub = checkout.$session.dropFirst().sink { sessionEmissions.append($0) }
-
-        // Set a billing address that should survive both session swaps
-        checkout.session = checkout.session.makeCopyOverriding(
-            billingAddress: Checkout.ContactAddress(
-                name: "Jane Doe",
-                address: .init(country: "US")
-            )
-        )
 
         // First update
         var firstResponse = CheckoutTestHelpers.makeOpenSessionJSON()

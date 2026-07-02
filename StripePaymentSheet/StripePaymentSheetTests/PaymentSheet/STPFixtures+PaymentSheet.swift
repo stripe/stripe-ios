@@ -306,7 +306,8 @@ extension Intent {
         subtotal: Int? = nil,
         shippingAmount: Int = 0,
         taxAmount: Int = 0,
-        discountAmount: Int = 0
+        discountAmount: Int = 0,
+        billingAddress: Checkout.ContactAddress? = nil
     ) -> Intent {
         let modeParam = switch mode {
         case .payment: "payment"
@@ -387,6 +388,7 @@ extension Intent {
         }
 
         let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
+        checkoutSession.billingAddress = billingAddress
         return .checkout(Checkout(apiResponse: checkoutSession), checkoutSession.makePublicSession())
     }
 }

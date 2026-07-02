@@ -628,12 +628,10 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     // MARK: - CheckoutSession Billing Contact Tests
 
     func testCreatePaymentRequest_CheckoutSession_PopulatesBillingContactFromFullAddress() {
-        let intent = Intent._testCheckoutSession(mode: .payment, amount: 2345, currency: "USD")
-        guard case .checkout(let checkout, _) = intent else {
-            XCTFail("Expected checkout intent")
-            return
-        }
-        checkout.session = checkout.session.makeCopyOverriding(
+        let intent = Intent._testCheckoutSession(
+            mode: .payment,
+            amount: 2345,
+            currency: "USD",
             billingAddress: Checkout.ContactAddress(
                 name: "Jane Doe",
                 phone: "+14155551234",
@@ -670,12 +668,10 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     }
 
     func testCreatePaymentRequest_CheckoutSession_PopulatesBillingContactWithCountryOnly() {
-        let intent = Intent._testCheckoutSession(mode: .payment, amount: 2345, currency: "USD")
-        guard case .checkout(let checkout, _) = intent else {
-            XCTFail("Expected checkout intent")
-            return
-        }
-        checkout.session = checkout.session.makeCopyOverriding(
+        let intent = Intent._testCheckoutSession(
+            mode: .payment,
+            amount: 2345,
+            currency: "USD",
             billingAddress: Checkout.ContactAddress(
                 address: Checkout.Address(country: "GB")
             )
@@ -698,12 +694,10 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     }
 
     func testCreatePaymentRequest_CheckoutSession_PopulatesBillingContactWithLine1Only() {
-        let intent = Intent._testCheckoutSession(mode: .payment, amount: 2345, currency: "USD")
-        guard case .checkout(let checkout, _) = intent else {
-            XCTFail("Expected checkout intent")
-            return
-        }
-        checkout.session = checkout.session.makeCopyOverriding(
+        let intent = Intent._testCheckoutSession(
+            mode: .payment,
+            amount: 2345,
+            currency: "USD",
             billingAddress: Checkout.ContactAddress(
                 name: "John Smith",
                 address: Checkout.Address(
