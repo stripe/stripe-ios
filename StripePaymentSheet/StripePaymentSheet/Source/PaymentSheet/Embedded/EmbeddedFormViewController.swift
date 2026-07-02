@@ -89,9 +89,9 @@ class EmbeddedFormViewController: UIViewController {
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
-    private var error: Swift.Error?
+    private(set) var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
-    private var isReloading: Bool = false
+    private(set) var isReloading: Bool = false
     private var isBusy: Bool { isPaymentInFlight || isReloading }
     /// Previous customer input - in the `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
     private(set) var previousPaymentOption: PaymentOption?
@@ -111,7 +111,7 @@ class EmbeddedFormViewController: UIViewController {
         DynamicHeightContainerView()
     }()
 
-    private lazy var primaryButton: ConfirmButton = {
+    private(set) lazy var primaryButton: ConfirmButton = {
         ConfirmButton(
             callToAction: .setup, // Dummy value; real value is set after init
             appearance: configuration.appearance,
@@ -159,7 +159,7 @@ class EmbeddedFormViewController: UIViewController {
     }()
 
     private lazy var mandateView = SimpleMandateTextView(theme: configuration.appearance.asElementsTheme)
-    private lazy var errorLabel = ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
+    private(set) lazy var errorLabel = ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
     private let stackView: UIStackView = UIStackView()
 
     weak var delegate: EmbeddedFormViewControllerDelegate?
@@ -455,12 +455,6 @@ extension EmbeddedFormViewController: PaymentMethodFormViewControllerDelegate {
         updateError()
     }
 
-#if DEBUG
-    var _test_isReloading: Bool { isReloading }
-    var _test_error: Swift.Error? { error }
-    var _test_primaryButtonStatus: ConfirmButton.Status { primaryButton.status }
-    var _test_errorLabelText: String? { errorLabel.isHidden ? nil : errorLabel.text }
-#endif
 }
 
 extension EmbeddedFormViewController: STPAuthenticationContext {

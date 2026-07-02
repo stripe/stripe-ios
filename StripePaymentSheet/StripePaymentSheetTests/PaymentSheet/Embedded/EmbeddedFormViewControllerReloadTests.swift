@@ -54,10 +54,10 @@ final class EmbeddedFormViewControllerReloadTests: XCTestCase {
 
         formVC.setReloading(true)
 
-        XCTAssertTrue(formVC._test_isReloading)
+        XCTAssertTrue(formVC.isReloading)
         XCTAssertFalse(formVC.isUserInteractionEnabled)
         XCTAssertFalse(formVC.view.isUserInteractionEnabled)
-        XCTAssertEqual(formVC._test_primaryButtonStatus, .processing)
+        XCTAssertEqual(formVC.primaryButton.status, .processing)
         XCTAssertFalse(formVC.allowsDragToDismiss)
     }
 
@@ -69,10 +69,10 @@ final class EmbeddedFormViewControllerReloadTests: XCTestCase {
 
         formVC.setReloading(false)
 
-        XCTAssertFalse(formVC._test_isReloading)
+        XCTAssertFalse(formVC.isReloading)
         XCTAssertTrue(formVC.isUserInteractionEnabled)
         XCTAssertTrue(formVC.view.isUserInteractionEnabled)
-        XCTAssertEqual(formVC._test_primaryButtonStatus, .disabled)
+        XCTAssertEqual(formVC.primaryButton.status, .disabled)
     }
 
     // MARK: - setReloadError
@@ -80,15 +80,15 @@ final class EmbeddedFormViewControllerReloadTests: XCTestCase {
     func testSetReloadError() {
         let formVC = makeFormViewController()
 
-        XCTAssertNil(formVC._test_error)
-        XCTAssertNil(formVC._test_errorLabelText)
+        XCTAssertNil(formVC.error)
+        XCTAssertTrue(formVC.errorLabel.isHidden)
 
         let error = MockError()
         formVC.setReloadError(error)
 
-        XCTAssertNotNil(formVC._test_error)
-        XCTAssertEqual((formVC._test_error as? MockError)?.errorDescription, error.errorDescription)
-        XCTAssertEqual(formVC._test_errorLabelText, error.errorDescription)
+        XCTAssertNotNil(formVC.error)
+        XCTAssertEqual((formVC.error as? MockError)?.errorDescription, error.errorDescription)
+        XCTAssertEqual(formVC.errorLabel.text, error.errorDescription)
     }
 }
 
