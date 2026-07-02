@@ -1007,7 +1007,7 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
     }
 
     /// Reloads while the sheet is presented: shows a spinner, fetches fresh data, then hot-swaps the new VC into the live bottom sheet.
-    /// Unlike `performUpdate`, which rebuilds offscreen when nothing is shown.
+    /// This differs from `performUpdate`, which rebuilds the view controller offscreen when nothing is shown.
     @MainActor
     private func reloadPresentedSheet(mode: PaymentSheet.InitializationMode) async throws {
         viewController.setReloading(true)
