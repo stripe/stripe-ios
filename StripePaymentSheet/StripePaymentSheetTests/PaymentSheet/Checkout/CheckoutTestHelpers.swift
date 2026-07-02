@@ -80,7 +80,7 @@ class CheckoutEmissionRecorder {
 enum CheckoutTestHelpers {
     static func makeCheckoutWithOpenSession() async -> Checkout {
         let session = makeOpenSession()
-        return await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
+        return await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: session)
     }
 
     static func makeOpenSessionJSON() -> [AnyHashable: Any] {
