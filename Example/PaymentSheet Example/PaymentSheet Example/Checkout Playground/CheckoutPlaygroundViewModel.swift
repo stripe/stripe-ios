@@ -61,15 +61,13 @@ extension CheckoutPlayground {
 
                 let (data, response) = try await URLSession.shared.data(for: request)
                 let httpResponse = response as? HTTPURLResponse
-                let responseString = String(data: data, encoding: .utf8) ?? "(not utf8)"
                 print("[CheckoutPlayground] HTTP status: \(httpResponse?.statusCode ?? -1)")
-                print("[CheckoutPlayground] Response body: \(responseString)")
 
                 guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                       let publishableKey = json["publishableKey"] as? String,
                       let clientSecret = json["checkoutSessionClientSecret"] as? String else {
                     throw NSError(domain: "CheckoutPlayground", code: 0, userInfo: [
-                        NSLocalizedDescriptionKey: "Invalid backend response: \(responseString)",
+                        NSLocalizedDescriptionKey: "Invalid backend response.",
                     ])
                 }
 
