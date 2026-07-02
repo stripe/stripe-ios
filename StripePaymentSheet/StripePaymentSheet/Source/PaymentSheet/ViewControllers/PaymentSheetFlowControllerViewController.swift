@@ -383,6 +383,10 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
 
     func updateButton() {
+        if isReloading {
+            confirmButton.update(status: .processing, animated: true)
+            return
+        }
         switch mode {
         case .selectingSaved:
             if selectedPaymentMethodType?.requiresMandateDisplayForSavedSelection ?? false {
@@ -461,6 +465,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
 
     func setReloading(_ isReloading: Bool) {
+        guard self.isReloading != isReloading else { return }
         self.isReloading = isReloading
         view.isUserInteractionEnabled = !isReloading
         if isReloading {
