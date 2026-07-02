@@ -87,7 +87,6 @@ final class PaymentSheetReloadTests: XCTestCase {
     func testSetReloading_vertical_endsEditing() {
         let vc = makeVerticalViewController()
 
-        // Reloading should disable interaction while in progress and restore it after.
         vc.setReloading(true)
         XCTAssertFalse(vc.view.isUserInteractionEnabled)
 
