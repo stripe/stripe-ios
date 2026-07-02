@@ -92,7 +92,7 @@ public final class Checkout: ObservableObject {
         pendingOperations.count <= 1
     }
 
-    /// True when running inside a queued operation body; prevents awaitPendingOperations from deadlocking on itself.
+    /// Only ever true from within a queued operation's own task, so it knows not to await itself.
     @TaskLocal static var isInsideOperation: Bool = false
 
     /// Default timeout used by ``awaitPendingOperations(timeout:)``.
