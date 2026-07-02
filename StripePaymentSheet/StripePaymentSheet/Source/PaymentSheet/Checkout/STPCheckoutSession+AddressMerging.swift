@@ -7,7 +7,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
 extension STPCheckoutSession {
@@ -23,7 +22,9 @@ extension STPCheckoutSession {
             configuration.shippingDetails = { details }
         }
         configuration.defaultBillingDetails.email = configuration.defaultBillingDetails.email ?? email
-        reconcileBillingAddressCollection(on: &configuration.billingDetailsCollectionConfiguration)
+        if requiresBillingAddress && configuration.billingDetailsCollectionConfiguration.address == .automatic {
+            configuration.billingDetailsCollectionConfiguration.address = .full
+        }
     }
 
     private func shippingAddressDetails(from shipping: Checkout.ContactAddress) -> AddressViewController.AddressDetails {
@@ -55,20 +56,4 @@ extension STPCheckoutSession {
         details.address.postalCode = details.address.postalCode ?? billing.address.postalCode
     }
 
-    /// `.never` isn't valid for Checkout — fall back to `.automatic`, then upgrade to `.full` if the session requires billing.
-    private func reconcileBillingAddressCollection(
-        on config: inout PaymentSheet.BillingDetailsCollectionConfiguration
-    ) {
-        if config.address == .never {
-            stpAssertionFailure(
-                "billingDetailsCollectionConfiguration.address = .never is not supported"
-                + " with CheckoutSession. Falling back to .automatic."
-            )
-            config.address = .automatic
-        }
-
-        if requiresBillingAddress && config.address == .automatic {
-            config.address = .full
-        }
-    }
 }

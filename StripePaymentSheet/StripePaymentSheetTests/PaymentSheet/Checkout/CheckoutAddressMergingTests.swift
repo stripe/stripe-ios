@@ -178,37 +178,12 @@ final class CheckoutAddressMergingTests: XCTestCase {
         XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
     }
 
-    func testBillingRequired_neverGetsForcedToFull() {
-        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "required")
-
-        var config = PaymentSheet.Configuration()
-        config.billingDetailsCollectionConfiguration.address = .never
-        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
-        session.applyAddressOverrides(to: &config)
-
-        // .never -> .automatic (with assertion) -> .full (because required)
-        XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
-        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains(".never is not supported"))
-    }
-
     func testBillingAuto_doesntUpgradeAutomatic() {
         let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "auto")
         var config = PaymentSheet.Configuration()
         config.billingDetailsCollectionConfiguration.address = .automatic
         session.applyAddressOverrides(to: &config)
         XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .automatic)
-    }
-
-    func testBillingAuto_neverFallsBackToAutomatic() {
-        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "auto")
-
-        var config = PaymentSheet.Configuration()
-        config.billingDetailsCollectionConfiguration.address = .never
-        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
-        session.applyAddressOverrides(to: &config)
-
-        XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .automatic)
-        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains(".never is not supported"))
     }
 
     // MARK: - Billing address collection (embedded)
@@ -221,27 +196,5 @@ final class CheckoutAddressMergingTests: XCTestCase {
         XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
     }
 
-    func testEmbedded_billingRequired_neverGetsForcedToFull() {
-        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "required")
-
-        var config = EmbeddedPaymentElement.Configuration()
-        config.billingDetailsCollectionConfiguration.address = .never
-        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
-        session.applyAddressOverrides(to: &config)
-
-        XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
-        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains(".never is not supported"))
-    }
-
-    func testEmbedded_billingAuto_neverFallsBackToAutomatic() {
-        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "auto")
-
-        var config = EmbeddedPaymentElement.Configuration()
-        config.billingDetailsCollectionConfiguration.address = .never
-        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
-        session.applyAddressOverrides(to: &config)
-        XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .automatic)
-        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains(".never is not supported"))
-    }
 
 }
