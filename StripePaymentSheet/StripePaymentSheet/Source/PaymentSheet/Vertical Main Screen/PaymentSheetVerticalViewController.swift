@@ -711,6 +711,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         updatePrimaryButton()
     }
 
+    // Freezes UI and shows a spinner while a reload is in progress.
     func setReloading(_ isReloading: Bool) {
         self.isReloading = isReloading
         isUserInteractionEnabled = !isBusy
