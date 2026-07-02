@@ -63,6 +63,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         case .checkout(let checkout):
             return try await handleCheckoutSessionApplePay(
                 checkout: checkout,
+                session: checkout.nonisolatedSession,
                 paymentMethod: paymentMethod,
                 paymentInformation: paymentInformation,
                 context: context
@@ -167,14 +168,18 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         return clientSecret
     }
 
+    // TODO(gbirch): Remove session parameter once MPE is MainActor-isolated; we can then
+    // access checkout.session directly. This is a temporary stopgap to provide a threadsafe
+    // version of the checkout session data.
     /// Handles Apple Pay confirmation for CheckoutSession by calling the confirm API with the payment method.
     private func handleCheckoutSessionApplePay(
         checkout: Checkout,
+        session: Checkout.Session,
         paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment,
         context: STPApplePayContext
     ) async throws -> String {
-        let checkoutSession: STPCheckoutSession = checkout.stpSession
+        let checkoutSession = session
 
         // 1. Build client attribution metadata
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
@@ -204,7 +209,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         try await checkout.commitSession(response)
 
         // 6. Return client secret based on checkout session mode
-        return try response.clientSecret(for: checkoutSession.mode)
+        return try response.intentClientSecret()
     }
 
     /// Extracts shipping details from a PKPayment for CheckoutSession confirmation.
@@ -339,7 +344,7 @@ extension STPApplePayContext {
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
-            if case .checkout(let checkout) = intent, let email = checkout.stpSession.email {
+            if case .checkout(let checkout) = intent, let email = checkout.nonisolatedSession.email {
                 applePayContext.fallbackBillingDetails = StripeAPI.BillingDetails(email: email)
             }
             return applePayContext
@@ -371,10 +376,10 @@ extension STPApplePayContext {
             // Use the merchant supplied paymentSummaryItems
             paymentRequest.paymentSummaryItems = paymentSummaryItems
         } else if case .checkout(let checkout) = intent,
-                  !checkout.stpSession.lineItems.isEmpty,
-                  let total = checkout.stpSession.total {
+                  !checkout.nonisolatedSession.lineItems.isEmpty,
+                  let total = checkout.nonisolatedSession.total {
             paymentRequest.paymentSummaryItems = STPApplePayContext.makeApplePayPaymentSummaryItems(
-                lineItems: checkout.stpSession.lineItems,
+                lineItems: checkout.nonisolatedSession.lineItems,
                 total: total,
                 totalLabel: label,
                 currency: intent.currency
@@ -416,7 +421,7 @@ extension STPApplePayContext {
 
         // Pre-populate billingContact from the CheckoutSession's billing address if available
         if case .checkout(let checkout) = intent,
-           let billingAddress = checkout.stpSession.billingAddress {
+           let billingAddress = checkout.nonisolatedSession.billingAddress {
             paymentRequest.billingContact = Self.makeBillingContact(from: billingAddress)
         }
 

@@ -172,7 +172,7 @@ extension PaymentSheet {
         let setAllowRedisplay: (IntentConfirmParams, STPPaymentMethodType) -> Void = { confirmParams, paymentMethodType in
             if case .checkout(let checkout) = intent {
                 confirmParams.setAllowRedisplayForCheckoutSession(
-                    merchantWillSavePaymentMethod: checkout.stpSession.merchantWillSavePaymentMethod(paymentMethodType)
+                    merchantWillSavePaymentMethod: checkout.nonisolatedSession.merchantWillSavePaymentMethod(paymentMethodType)
                 )
             } else {
                 confirmParams.setAllowRedisplay(
@@ -289,6 +289,7 @@ extension PaymentSheet {
                     Task { @MainActor in
                         let result = await handleCheckoutSessionConfirmation(
                             checkout: checkout,
+                            session: checkout.nonisolatedSession,
                             confirmType: .new(
                                 params: confirmParams.paymentMethodParams,
                                 paymentOptions: confirmParams.confirmPaymentMethodOptions,
@@ -369,6 +370,7 @@ extension PaymentSheet {
                     : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
                     let result = await handleCheckoutSessionConfirmation(
                         checkout: checkout,
+                        session: checkout.nonisolatedSession,
                         confirmType: .saved(paymentMethod,
                                             paymentOptions: paymentOptions,
                                             clientAttributionMetadata: clientAttributionMetadata,
@@ -455,6 +457,7 @@ extension PaymentSheet {
                     case .checkout(let checkout):
                         let result = await handleCheckoutSessionConfirmation(
                             checkout: checkout,
+                            session: checkout.nonisolatedSession,
                             confirmType: .new(
                                 params: paymentMethodParams,
                                 paymentOptions: STPConfirmPaymentMethodOptions(),
@@ -547,6 +550,7 @@ extension PaymentSheet {
                     case .checkout(let checkout):
                         let result = await handleCheckoutSessionConfirmation(
                             checkout: checkout,
+                            session: checkout.nonisolatedSession,
                             confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
                             configuration: configuration,
                             authenticationContext: authenticationContext,

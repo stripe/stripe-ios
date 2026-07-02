@@ -298,11 +298,11 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         // Two distinct sessions (different currencies) so we can tell them apart
         var firstJSON = CheckoutTestHelpers.makeOpenSessionJSON()
         firstJSON["currency"] = "eur"
-        let firstSession = STPCheckoutSession.decodedObject(fromAPIResponse: firstJSON)!
+        let firstSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: firstJSON)!
 
         var secondJSON = CheckoutTestHelpers.makeOpenSessionJSON()
         secondJSON["currency"] = "gbp"
-        let secondSession = STPCheckoutSession.decodedObject(fromAPIResponse: secondJSON)!
+        let secondSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: secondJSON)!
 
         // First op blocks on firstGate until we explicitly open it
         let firstTask = Task { @MainActor in
@@ -392,8 +392,8 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
 
-        // Commits the same session (no actual mutation) — delegate should still fire
-        let existingSession = checkout.stpSession!
+        // Enqueue an operation that commits the same session (no actual mutation)
+        let existingSession = CheckoutTestHelpers.makeOpenSession()
         try await checkout.enqueueSessionUpdate {
             try await checkout.commitSession(existingSession)
         }

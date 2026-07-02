@@ -780,10 +780,10 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        // Fetch the full STPCheckoutSession object (with allResponseFields containing elements_session)
+        // Fetch the full STPCheckoutSessionAPIResponse object (with allResponseFields containing elements_session)
         let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
 
-        let checkout = Checkout(session: checkoutSession)
+        let checkout = Checkout(apiResponse: checkoutSession)
         PaymentSheetLoader.load(
             mode: .checkout(checkout),
             configuration: configuration,
@@ -797,7 +797,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                     XCTFail("Expected checkout intent type")
                     return
                 }
-                XCTAssertEqual(loadedCheckout.stpSession.id, checkoutSessionId)
+                XCTAssertEqual(loadedCheckout.session.id, checkoutSessionId)
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
                 XCTAssertTrue(loadResult.elementsSession.orderedPaymentMethodTypes.contains(.card))
             case .failure(let error):
@@ -817,8 +817,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
-        let checkout = Checkout(session: checkoutSession)
+        let checkoutSessionAPIResponse = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
+        let checkout = Checkout(apiResponse: checkoutSessionAPIResponse)
 
         PaymentSheetLoader.load(
             mode: .checkout(checkout),
@@ -833,10 +833,10 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                     XCTFail("Expected checkout intent type")
                     return
                 }
-                XCTAssertEqual(loadedCheckout.stpSession.id, checkoutSessionId)
-                XCTAssertEqual(loadedCheckout.stpSession.mode, .setup)
-                XCTAssertEqual(loadedCheckout.stpSession.status?.type, .open)
-                XCTAssertEqual(loadedCheckout.stpSession.status?.paymentStatus, .noPaymentRequired)
+                XCTAssertEqual(loadedCheckout.session.id, checkoutSessionId)
+                XCTAssertEqual(loadedCheckout.session.mode, .setup)
+                XCTAssertEqual(loadedCheckout.session.status?.type, .open)
+                XCTAssertEqual(loadedCheckout.session.status?.paymentStatus, .noPaymentRequired)
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
                 XCTAssertTrue(loadResult.elementsSession.orderedPaymentMethodTypes.contains(.card))
             case .failure(let error):

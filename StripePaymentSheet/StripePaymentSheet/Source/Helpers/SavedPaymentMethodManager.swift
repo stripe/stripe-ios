@@ -50,7 +50,7 @@ final class SavedPaymentMethodManager {
             }
             let session = try await configuration.apiClient.updatePaymentMethod(
                 paymentMethod.stripeId,
-                inCheckoutSession: checkout.stpSession.id,
+                inCheckoutSession: checkout.session.id,
                 billingDetails: billing,
                 expiryDetails: expiry
             )
@@ -81,7 +81,7 @@ final class SavedPaymentMethodManager {
             Task {
                 try? await configuration.apiClient.detachPaymentMethod(
                     paymentMethod.stripeId,
-                    fromCheckoutSession: checkout.stpSession.id
+                    fromCheckoutSession: checkout.nonisolatedSession.id
                 )
             }
         case .paymentIntent, .setupIntent, .deferredIntent:

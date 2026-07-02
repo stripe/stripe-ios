@@ -15,13 +15,14 @@ extension PaymentSheet {
     @MainActor
     static func handleCheckoutSessionConfirmation(
         checkout: Checkout,
+        session: Checkout.Session,
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
         elementsSession: STPElementsSession
     ) async -> PaymentSheetResult {
-        let checkoutSession: STPCheckoutSession = checkout.stpSession
+        let checkoutSession = session
         do {
             let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
                 intent: .checkout(checkout),
@@ -101,8 +102,8 @@ extension PaymentSheet {
 
     @MainActor
     private static func handleCheckoutSessionConfirmResponse(
-        response: STPCheckoutSession,
-        checkoutSession: STPCheckoutSession,
+        response: STPCheckoutSessionAPIResponse,
+        checkoutSession: Checkout.Session,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler

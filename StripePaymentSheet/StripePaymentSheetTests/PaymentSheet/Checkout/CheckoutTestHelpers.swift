@@ -14,7 +14,7 @@ import XCTest
 extension Checkout.Amount {
     /// Test helper for constructing a ``Checkout/Amount`` from a minor-units integer.
     static func testValue(_ minorUnits: Int, currency: String = "usd") -> Checkout.Amount {
-        return STPCheckoutSession.makeAmount(minorUnits, currency: currency)
+        return STPCheckoutSessionAPIResponse.makeAmount(minorUnits, currency: currency)
     }
 }
 
@@ -80,7 +80,7 @@ class CheckoutEmissionRecorder {
 enum CheckoutTestHelpers {
     static func makeCheckoutWithOpenSession() async -> Checkout {
         let session = makeOpenSession()
-        return await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
+        return await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: session)
     }
 
     static func makeOpenSessionJSON() -> [AnyHashable: Any] {
@@ -100,23 +100,23 @@ enum CheckoutTestHelpers {
         ]
     }
 
-    static func makeOpenSession(customerEmail: String? = nil) -> STPCheckoutSession {
+    static func makeOpenSession(customerEmail: String? = nil) -> STPCheckoutSessionAPIResponse {
         var json = makeOpenSessionJSON()
         json["customer_email"] = customerEmail
-        return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        return STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
     }
 
-    static func makeClosedSession() -> STPCheckoutSession {
+    static func makeClosedSession() -> STPCheckoutSessionAPIResponse {
         var json = makeOpenSessionJSON()
         json["status"] = "complete"
         json["payment_status"] = "paid"
-        return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        return STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
     }
 
-    static func makeOpenSession(allowedCountries: [String]) -> STPCheckoutSession {
+    static func makeOpenSession(allowedCountries: [String]) -> STPCheckoutSessionAPIResponse {
         var json = makeOpenSessionJSON()
         json["shipping_address_collection"] = ["allowed_countries": allowedCountries]
-        return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        return STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
     }
 
     static func makeAdaptivePricingSession(
@@ -126,7 +126,7 @@ enum CheckoutTestHelpers {
         includeExchangeRateFields: Bool = true,
         integrationAmount: Int = 1200,
         localAmount: Int = 1000
-    ) -> STPCheckoutSession {
+    ) -> STPCheckoutSessionAPIResponse {
         var json: [AnyHashable: Any] = [
             "session_id": "cs_test_123",
             "client_secret": "cs_test_123_secret_abc",
@@ -169,6 +169,6 @@ enum CheckoutTestHelpers {
             ]
         }
 
-        return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        return STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
     }
 }

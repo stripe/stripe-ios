@@ -1,5 +1,5 @@
 //
-//  STPCheckoutSession.swift
+//  STPCheckoutSessionAPIResponse.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 1/14/26.
@@ -13,7 +13,7 @@ import Foundation
 /// A CheckoutSession represents a session for a customer to complete a payment.
 ///
 /// - seealso: https://stripe.com/docs/api/checkout/sessions/object
-class STPCheckoutSession: NSObject {
+class STPCheckoutSessionAPIResponse: NSObject {
 
     // MARK: - Identifiers
 
@@ -159,36 +159,8 @@ class STPCheckoutSession: NSObject {
     /// Client-side shipping address override.
     var shippingAddress: Checkout.ContactAddress?
 
-    // MARK: - Convenience
-
-    /// Returns `true` when the server needs a `tax_region` update for the given address type.
-    ///
-    /// - Parameter addressType: Either `"billing"` or `"shipping"`.
-    func shouldSendTaxRegion(for addressType: String) -> Bool {
-        return automaticTaxEnabled && automaticTaxAddressSource == addressType
-    }
-
-    /// Returns the expectedAmount if in `payment` mode, `nil` if in `setup` mode, and asserts
-    /// if in `subscription` or `unknown` mode. Throws if in `payment` mode but expectedAmount
-    /// is missing.
-    func expectedAmount() -> Int? {
-        switch mode {
-        case .payment:
-            guard let total = total?.total.minorUnitsAmount else {
-                stpAssertionFailure("Missing expected amount from checkout session")
-                return nil
-            }
-            return total
-        case .setup:
-            return nil
-        case .unknown, .subscription:
-            stpAssertionFailure("Unknown and subscription modes are not currently supported with checkout sessions")
-            return nil
-        }
-    }
-
-    /// Extracts the client secret from the expanded intent based on checkout session mode.
-    func clientSecret(for mode: Checkout.Mode) throws -> String {
+    /// Extracts the client secret from the expanded PaymentIntent or SetupIntent based on mode.
+    func intentClientSecret() throws -> String {
         switch mode {
         case .setup:
             guard let setupIntent = setupIntent else {
@@ -210,7 +182,7 @@ class STPCheckoutSession: NSObject {
     /// :nodoc:
     override var description: String {
         let props: [String] = [
-            String(format: "%@: %p", NSStringFromClass(STPCheckoutSession.self), self),
+            String(format: "%@: %p", NSStringFromClass(STPCheckoutSessionAPIResponse.self), self),
             "id = \(id)",
             "total = \(String(describing: total))",
             "clientSecret = <redacted>",
@@ -320,7 +292,7 @@ class STPCheckoutSession: NSObject {
 
 // MARK: - STPAPIResponseDecodable
 
-extension STPCheckoutSession: STPAPIResponseDecodable {
+extension STPCheckoutSessionAPIResponse: STPAPIResponseDecodable {
 
     @objc
     class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
@@ -504,7 +476,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
 
         let email = (dict["customer_email"] as? String) ?? customer?.email
 
-        return STPCheckoutSession(
+        return STPCheckoutSessionAPIResponse(
             id: id,
             clientSecret: clientSecret,
             businessName: businessName,
@@ -550,45 +522,9 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
     }
 }
 
-// MARK: - Setup-future-usage helpers
-
-extension STPCheckoutSession {
-    var isPaymentMethodOptionsSetupFutureUsageSet: Bool {
-        return !setupFutureUsageForPaymentMethodType.isEmpty
-    }
-
-    func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
-        let perPaymentMethodSetupFutureUsage = setupFutureUsageForPaymentMethodType[paymentMethodType.identifier]
-        if let perPaymentMethodSetupFutureUsage {
-            return perPaymentMethodSetupFutureUsage
-        }
-
-        return setupFutureUsage
-    }
-
-    func merchantWillSavePaymentMethod(_ paymentMethodType: STPPaymentMethodType) -> Bool {
-        guard customerId != nil else {
-            return false
-        }
-
-        switch mode {
-        case .setup:
-            return true
-        case .payment:
-            guard let setupFutureUsage = setupFutureUsage(for: paymentMethodType) else {
-                return false
-            }
-            return setupFutureUsage != "none"
-        case .subscription, .unknown:
-            stpAssertionFailure("Unknown and subscription modes are not currently supported with checkout sessions")
-            return false
-        }
-    }
-}
-
 // MARK: - Parsing helpers
 
-extension STPCheckoutSession {
+extension STPCheckoutSessionAPIResponse {
 
     // MARK: Amounts
 

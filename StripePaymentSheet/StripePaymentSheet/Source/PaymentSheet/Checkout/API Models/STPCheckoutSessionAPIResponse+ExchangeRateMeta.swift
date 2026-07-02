@@ -1,5 +1,5 @@
 //
-//  STPCheckoutSessionExchangeRateMeta.swift
+//  STPCheckoutSessionAPIResponse+ExchangeRateMeta.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 3/19/26.
