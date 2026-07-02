@@ -36,7 +36,7 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
     }
 
     func testDecodedObjectWithNoLineItems() {
-        let session = CheckoutTestHelpers.makeSession([:])
+        let session = CheckoutTestHelpers.makeSession()
 
         XCTAssertEqual(session.lineItems.count, 0)
     }
@@ -63,7 +63,7 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
     }
 
     func testDecodedObjectWithNoShippingOptions() {
-        let session = CheckoutTestHelpers.makeSession([:])
+        let session = CheckoutTestHelpers.makeSession()
 
         XCTAssertEqual(session.shippingOptions.count, 0)
     }

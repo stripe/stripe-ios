@@ -96,16 +96,14 @@ enum CheckoutTestHelpers {
         "elements_session": minimalElementsSessionJSON,
     ]
 
+    /// Creates an `STPCheckoutSession` from `baseSessionJSON` with top-level key overrides.
+    /// To test field *absence*, mutate `baseSessionJSON` directly instead.
     static func makeSession(_ overrides: [String: Any] = [:]) -> STPCheckoutSession {
-        var json = baseSessionJSON
-        overrides.forEach { json[$0.key] = $0.value }
-        return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        STPCheckoutSession.decodedObject(fromAPIResponse: makeSessionJSON(overrides))!
     }
 
     static func makeSessionJSON(_ overrides: [String: Any] = [:]) -> [String: Any] {
-        var json = baseSessionJSON
-        overrides.forEach { json[$0.key] = $0.value }
-        return json
+        baseSessionJSON.merging(overrides) { _, new in new }
     }
 
     // MARK: - Checkout-flow helpers
@@ -116,17 +114,12 @@ enum CheckoutTestHelpers {
     }
 
     static func makeOpenSessionJSON() -> [AnyHashable: Any] {
-        [
+        makeSessionJSON([
             "session_id": "cs_test_123",
             "client_secret": "cs_test_123_secret_abc",
-            "livemode": false,
-            "mode": "payment",
             "status": "open",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
             "currency": "usd",
-            "elements_session": minimalElementsSessionJSON,
-        ]
+        ])
     }
 
     static func makeOpenSession(customerEmail: String? = nil) -> STPCheckoutSession {

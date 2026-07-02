@@ -50,7 +50,7 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
     }
 
     func testDecodedObjectWithoutSaveOffer() {
-        let session = CheckoutTestHelpers.makeSession([:])
+        let session = CheckoutTestHelpers.makeSession()
 
         XCTAssertNil(session.savedPaymentMethodsOfferSave)
     }

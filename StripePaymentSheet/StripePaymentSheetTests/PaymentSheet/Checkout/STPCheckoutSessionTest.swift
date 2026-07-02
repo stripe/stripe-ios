@@ -14,10 +14,9 @@ import XCTest
 
 @MainActor
 class STPCheckoutSessionTest: XCTestCase {
+    /// Injects a default customer; use `CheckoutTestHelpers.makeSession` directly for the no-customer case.
     private func makeCheckoutSession(_ overrides: [String: Any]) -> STPCheckoutSession {
-        CheckoutTestHelpers.makeSession([
-            "customer": ["id": "cus_123"],
-        ].merging(overrides) { _, new in new })
+        CheckoutTestHelpers.makeSession(["customer": ["id": "cus_123"]].merging(overrides) { _, new in new })
     }
 
     // MARK: - STPAPIResponseDecodable Tests
