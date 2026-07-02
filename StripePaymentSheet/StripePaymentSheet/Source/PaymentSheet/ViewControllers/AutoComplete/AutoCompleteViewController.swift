@@ -27,6 +27,8 @@ class AutoCompleteViewController: UIViewController {
     let addressSpecProvider: AddressSpecProvider
     /// Vertical offset for the view controller content. Negative values move content up, positive values move content down.
     let verticalOffset: CGFloat
+    /// Whether the keyboard was already visible when this view controller was presented.
+    let keyboardAlreadyShowing: Bool
     /// Session token for grouping autocomplete and place details calls.
     let sessionToken: String = UUID().uuidString
 
@@ -150,13 +152,15 @@ class AutoCompleteViewController: UIViewController {
         initialLine1Text: String?,
         selectedCountry: String?,
         addressSpecProvider: AddressSpecProvider = .shared,
-        verticalOffset: CGFloat = 0
+        verticalOffset: CGFloat = 0,
+        keyboardAlreadyShowing: Bool = false
     ) {
         self.configuration = configuration
         self.initialLine1Text = initialLine1Text
         self.selectedCountry = selectedCountry
         self.addressSpecProvider = addressSpecProvider
         self.verticalOffset = verticalOffset
+        self.keyboardAlreadyShowing = keyboardAlreadyShowing
         super.init(nibName: nil, bundle: nil)
         if let initialLine1Text = initialLine1Text, !initialLine1Text.isEmpty {
             if configuration.useAutocompleteEndpoints {
@@ -259,9 +263,16 @@ class AutoCompleteViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         registerForKeyboardNotifications()
-        autoCompleteLine.beginEditing()
         autocompleteStartTime = Date()
         STPAnalyticsClient.sharedClient.logAddressAutocompleteStart(apiClient: configuration.apiClient)
+
+        if let transitionCoordinator, !keyboardAlreadyShowing {
+            transitionCoordinator.animate(alongsideTransition: nil) { _ in
+                self.autoCompleteLine.beginEditing()
+            }
+        } else {
+            autoCompleteLine.beginEditing()
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
