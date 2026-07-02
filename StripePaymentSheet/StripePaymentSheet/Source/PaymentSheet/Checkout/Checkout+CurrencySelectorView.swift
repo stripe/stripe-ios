@@ -149,6 +149,7 @@ extension Checkout {
                 updateSelectorItems(session: session, exchangeRateMeta: exchangeRateMeta)
             }
 
+            lastSelectedCurrency = currency.apiValue
             updateCaption(currency: currency, exchangeRateMeta: exchangeRateMeta)
         }
 

@@ -301,6 +301,7 @@ extension Intent {
         mode: Checkout.Mode = .payment,
         amount: Int? = 2345,
         currency: String = "USD",
+        email: String? = nil,
         lineItems: [Checkout.LineItem] = [],
         subtotal: Int? = nil,
         shippingAmount: Int = 0,
@@ -328,7 +329,14 @@ extension Intent {
             "currency": currency.lowercased(),
             "livemode": false,
             "payment_method_types": ["card"],
+            "elements_session": [
+                "session_id": "es_test",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
         ]
+        if let email {
+            json["customer_email"] = email
+        }
         if let amount {
             json["total_summary"] = [
                 "due": amount,

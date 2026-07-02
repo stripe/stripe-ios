@@ -44,8 +44,11 @@ final class AdaptivePricingFlagImageManager {
             return
         }
 
-        let localCountry = Self.countryCode(for: local)
-        let integrationCountry = Self.countryCode(for: integration)
+        guard let localCountry = Self.countryCode(for: local),
+              let integrationCountry = Self.countryCode(for: integration) else {
+            imagesByCurrencyCode = nil
+            return
+        }
 
         let localResult = await downloadFlagImage(countryCode: localCountry)
         let integrationResult = await downloadFlagImage(countryCode: integrationCountry)
@@ -101,9 +104,8 @@ final class AdaptivePricingFlagImageManager {
         return (local, integration)
     }
 
-    /// Returns the two-letter country code for the given currency (e.g. `"GB"` from `"GBP"`).
-    private static func countryCode(for currency: CurrencyCode) -> String {
-        String(currency.displayValue.prefix(2))
+    private static func countryCode(for currency: CurrencyCode) -> String? {
+        CurrencySelectorUtilities.regionCode(for: currency)
     }
 
     // MARK: Image download

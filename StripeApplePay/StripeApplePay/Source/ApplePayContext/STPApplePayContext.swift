@@ -326,6 +326,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     @_spi(STP) public var confirmType: ConfirmType?
     /// Contains metadata with identifiers for the session and information about the integration
     @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+    /// Billing details used as fallbacks when Apple Pay's contact info doesn't include a field.
+    @_spi(STP) public var fallbackBillingDetails: StripeAPI.BillingDetails?
 
     // Internal state
     private var startTime: Date?
@@ -642,7 +644,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }
 
         // 1. Create PaymentMethod
-        StripeAPI.PaymentMethod.create(apiClient: apiClient, payment: payment, clientAttributionMetadata: clientAttributionMetadata) { result in
+        StripeAPI.PaymentMethod.create(apiClient: apiClient, payment: payment, fallbackBillingDetails: fallbackBillingDetails, clientAttributionMetadata: clientAttributionMetadata) { result in
             guard !self.didFinish else {
                return // The user canceled mid-payment - just abort
             }

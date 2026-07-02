@@ -185,6 +185,29 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
         XCTAssertFalse(isLinkEnabled, "Link should be disabled when display is set to .never")
     }
 
+    func testIsLinkEnabled_automaticTaxBilling_linkDisabled() {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card", "link"],
+            isLinkPassthroughModeEnabled: true
+        )
+        elementsSession.disableLinkForAutomaticTaxBilling = true
+        let configuration = PaymentSheet.Configuration()
+
+        XCTAssertFalse(PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration))
+        XCTAssertTrue(PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).contains(.automaticTaxBillingAddress))
+    }
+
+    func testIsLinkEnabled_automaticTaxBillingFalse_linkEnabled() {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card", "link"],
+            isLinkPassthroughModeEnabled: true
+        )
+        elementsSession.disableLinkForAutomaticTaxBilling = false
+        let configuration = PaymentSheet.Configuration()
+
+        XCTAssertTrue(PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration))
+    }
+
     func testIsLinkSignupEnabled_enabled_for_linkSignupOptInFeatureEnabled_if_general_signup_disabled() {
         // Lookup happened during initialization and an email was provided
         LinkAccountContext.shared.account = ._testValue(email: "john@doe.com", isRegistered: false)

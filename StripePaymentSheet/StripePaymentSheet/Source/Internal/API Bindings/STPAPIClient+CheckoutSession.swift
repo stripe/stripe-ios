@@ -9,45 +9,6 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-// MARK: - Payment Method Update Types
-
-struct CheckoutPaymentMethodBillingDetails {
-    let name: String?
-    let email: String?
-    let phone: String?
-    let address: CheckoutPaymentMethodBillingAddress?
-
-    init(name: String? = nil, email: String? = nil, phone: String? = nil, address: CheckoutPaymentMethodBillingAddress? = nil) {
-        self.name = name
-        self.email = email
-        self.phone = phone
-        self.address = address
-    }
-}
-
-struct CheckoutPaymentMethodBillingAddress {
-    let line1: String?
-    let line2: String?
-    let city: String?
-    let state: String?
-    let postalCode: String?
-    let country: String?
-
-    init(line1: String? = nil, line2: String? = nil, city: String? = nil, state: String? = nil, postalCode: String? = nil, country: String? = nil) {
-        self.line1 = line1
-        self.line2 = line2
-        self.city = city
-        self.state = state
-        self.postalCode = postalCode
-        self.country = country
-    }
-}
-
-struct CheckoutPaymentMethodExpiryDetails {
-    let expMonth: Int
-    let expYear: Int
-}
-
 extension STPAPIClient {
 
     /// Initializes a CheckoutSession, fetching payment configuration data.
@@ -116,7 +77,10 @@ extension STPAPIClient {
         _ = try await APIRequest<STPCheckoutSession>.post(
             with: self,
             endpoint: "payment_pages/\(checkoutSessionId)",
-            parameters: ["payment_method_to_detach": paymentMethodId]
+            parameters: [
+                "payment_method_to_detach": paymentMethodId,
+                "elements_session_client": ["is_aggregation_expected": true],
+            ]
         )
     }
 
@@ -130,8 +94,8 @@ extension STPAPIClient {
     func updatePaymentMethod(
         _ paymentMethodId: String,
         inCheckoutSession checkoutSessionId: String,
-        billingDetails: CheckoutPaymentMethodBillingDetails? = nil,
-        expiryDetails: CheckoutPaymentMethodExpiryDetails? = nil
+        billingDetails: Checkout.PaymentMethodBillingDetails? = nil,
+        expiryDetails: Checkout.PaymentMethodExpiryDetails? = nil
     ) async throws -> STPCheckoutSession {
         var params = Self.updatePaymentMethodParameters(
             paymentMethodId: paymentMethodId,
@@ -148,8 +112,8 @@ extension STPAPIClient {
 
     static func updatePaymentMethodParameters(
         paymentMethodId: String,
-        billingDetails: CheckoutPaymentMethodBillingDetails?,
-        expiryDetails: CheckoutPaymentMethodExpiryDetails?
+        billingDetails: Checkout.PaymentMethodBillingDetails?,
+        expiryDetails: Checkout.PaymentMethodExpiryDetails?
     ) -> [String: Any] {
         var params: [String: Any] = [
             "payment_method_to_update[payment_method_id]": paymentMethodId,
@@ -205,6 +169,7 @@ extension STPAPIClient {
         var parameters: [String: Any] = [
             "payment_method": paymentMethod,
             "expected_payment_method_type": expectedPaymentMethodType,
+            "elements_session_client": ["is_aggregation_expected": true],
             "expand": [
                 "payment_intent",
                 "payment_intent.payment_method",
