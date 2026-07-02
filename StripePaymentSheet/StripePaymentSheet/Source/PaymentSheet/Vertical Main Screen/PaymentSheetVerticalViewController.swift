@@ -711,6 +711,20 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         updatePrimaryButton()
     }
 
+    func setReloading(_ isReloading: Bool) {
+        self.isReloading = isReloading
+        isUserInteractionEnabled = !isBusy
+        if isReloading {
+            view.endEditing(true)
+        }
+        updatePrimaryButton()
+    }
+
+    func setReloadError(_ error: Swift.Error) {
+        self.error = error
+        updateError()
+    }
+
     @objc func didTapPrimaryButton() {
         // If the form has overridden the primary buy button, hand control over to the form
         guard paymentMethodFormViewController?.overridePrimaryButtonState == nil else {

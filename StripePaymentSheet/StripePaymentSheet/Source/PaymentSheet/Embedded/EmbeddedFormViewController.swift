@@ -91,6 +91,8 @@ class EmbeddedFormViewController: UIViewController {
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     private var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
+    private var isReloading: Bool = false
+    private var isBusy: Bool { isPaymentInFlight || isReloading }
     /// Previous customer input - in the `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
     private(set) var previousPaymentOption: PaymentOption?
 
@@ -212,7 +214,7 @@ class EmbeddedFormViewController: UIViewController {
             return .makeDefaultType(intent: intent)
         }()
         let status: ConfirmButton.Status = {
-            if isPaymentInFlight {
+            if isBusy {
                 return .processing
             }
             if let override = paymentMethodFormViewController.overridePrimaryButtonState {
@@ -256,6 +258,20 @@ class EmbeddedFormViewController: UIViewController {
                 self.bottomSheetController?.contentOffsetPercentage = 1
             }
         })
+    }
+
+    func setReloading(_ isReloading: Bool) {
+        self.isReloading = isReloading
+        isUserInteractionEnabled = !isBusy
+        if isReloading {
+            view.endEditing(true)
+        }
+        updatePrimaryButton()
+    }
+
+    func setReloadError(_ error: Swift.Error) {
+        self.error = error
+        updateError()
     }
 
     private func didCancel() {
@@ -438,6 +454,13 @@ extension EmbeddedFormViewController: PaymentMethodFormViewControllerDelegate {
         self.error = error
         updateError()
     }
+
+#if DEBUG
+    var _test_isReloading: Bool { isReloading }
+    var _test_error: Swift.Error? { error }
+    var _test_primaryButtonStatus: ConfirmButton.Status { primaryButton.status }
+    var _test_errorLabelText: String? { errorLabel.isHidden ? nil : errorLabel.text }
+#endif
 }
 
 extension EmbeddedFormViewController: STPAuthenticationContext {
