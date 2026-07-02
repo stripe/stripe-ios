@@ -22,6 +22,9 @@ extension STPCheckoutSession {
             configuration.shippingDetails = { details }
         }
         configuration.defaultBillingDetails.email = configuration.defaultBillingDetails.email ?? email
+        if requiresBillingAddress && configuration.billingDetailsCollectionConfiguration.address == .automatic {
+            configuration.billingDetailsCollectionConfiguration.address = .full
+        }
     }
 
     private func shippingAddressDetails(from shipping: Checkout.ContactAddress) -> AddressViewController.AddressDetails {
@@ -52,4 +55,5 @@ extension STPCheckoutSession {
         details.address.state = details.address.state ?? billing.address.state
         details.address.postalCode = details.address.postalCode ?? billing.address.postalCode
     }
+
 }

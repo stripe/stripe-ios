@@ -159,4 +159,41 @@ final class CheckoutAddressMergingTests: XCTestCase {
         XCTAssertEqual(config.defaultBillingDetails.email, "config@example.com")
     }
 
+    // MARK: - Billing address collection
+
+    func testBillingRequired_upgradesAutomaticToFull() {
+        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "required")
+
+        var config = PaymentSheet.Configuration()
+        config.billingDetailsCollectionConfiguration.address = .automatic
+        session.applyAddressOverrides(to: &config)
+        XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
+    }
+
+    func testBillingRequired_fullStaysFull() {
+        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "required")
+        var config = PaymentSheet.Configuration()
+        config.billingDetailsCollectionConfiguration.address = .full
+        session.applyAddressOverrides(to: &config)
+        XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
+    }
+
+    func testBillingAuto_doesntUpgradeAutomatic() {
+        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "auto")
+        var config = PaymentSheet.Configuration()
+        config.billingDetailsCollectionConfiguration.address = .automatic
+        session.applyAddressOverrides(to: &config)
+        XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .automatic)
+    }
+
+    // MARK: - Billing address collection (embedded)
+
+    func testEmbedded_billingRequired_upgradesAutomaticToFull() {
+        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "required")
+        var config = EmbeddedPaymentElement.Configuration()
+        config.billingDetailsCollectionConfiguration.address = .automatic
+        session.applyAddressOverrides(to: &config)
+        XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
+    }
+
 }
