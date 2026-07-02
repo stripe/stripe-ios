@@ -98,6 +98,8 @@ import Foundation
     case payByBank
     /// An unknown type.
     case unknown
+    /// A Vipps payment method
+    case vipps
 
     /// Localized display name for this payment method type
     @_spi(STP) public var displayName: String {
@@ -190,6 +192,8 @@ import Foundation
             return "Wero"
         case .payByBank:
             return "Pay by Bank"
+        case .vipps:
+            return "Vipps"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -287,6 +291,8 @@ import Foundation
             return "wero"
         case .payByBank:
             return "pay_by_bank"
+        case .vipps:
+            return "vipps"
         }
     }
 

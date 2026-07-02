@@ -56,6 +56,12 @@ enum ExpectedFormHierarchy {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
 
+    // MARK: - Vipps
+
+    enum Vipps {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+
     // MARK: - Twint
 
     enum Twint {
