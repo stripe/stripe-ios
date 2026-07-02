@@ -304,7 +304,6 @@ extension PaymentSheet {
 
         weak var checkout: Checkout?
         private var isPresented = false
-        private weak var presentedBottomSheetViewController: BottomSheetViewController?
         private var pendingPresentTask: Task<Void, Never>?
         private(set) var didPresentAndContinue: Bool = false
         private var confirmationChallenge: ConfirmationChallenge?
@@ -537,7 +536,6 @@ extension PaymentSheet {
                 )
 
                 self.isPresented = true
-                self.presentedBottomSheetViewController = bottomSheetVC
                 presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
             }
 
@@ -573,7 +571,6 @@ extension PaymentSheet {
                     self?.paymentHandler.cancel3DS2ChallengeFlow()
                 }
             )
-            self.presentedBottomSheetViewController = bottomSheetVC
             presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
 
             pendingPresentTask = Task { @MainActor [weak self] in
@@ -812,6 +809,8 @@ extension PaymentSheet {
             latestUpdateContext?.status = .failed
         }
 
+        /// Reloads and rebuilds the view controller offscreen for the not-presented case.
+        /// If a newer update starts mid-flight, this one is silently dropped (last-write-wins).
         private func performUpdate(
             mode: PaymentSheet.InitializationMode,
             updateID: UUID = UUID(),
@@ -1005,16 +1004,19 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
 
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
         if isPresented {
-            // `update` asserts !isPresented, so reload in-place instead.
+            // Can't call `update` here — it asserts !isPresented and rebuilds the VC
+            // without swapping it into the presented bottom sheet.
             checkout.stpSession.applyAddressOverrides(to: &configuration)
-            try await performReload(mode: .checkout(checkout))
+            try await reloadPresentedSheet(mode: .checkout(checkout))
         } else {
             try await update(checkout: checkout)
         }
     }
 
+    /// Reloads while the sheet is presented: shows a spinner, fetches fresh data, then hot-swaps the new VC into the live bottom sheet.
+    /// Unlike `performUpdate`, which rebuilds offscreen when nothing is shown.
     @MainActor
-    private func performReload(mode: PaymentSheet.InitializationMode) async throws {
+    private func reloadPresentedSheet(mode: PaymentSheet.InitializationMode) async throws {
         viewController.setReloading(true)
 
         do {
@@ -1025,8 +1027,9 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
                 integrationShape: .flowController,
                 isUpdate: true
             )
+            let bottomSheet = self.viewController.parent as? BottomSheetViewController
             self.swapViewController(loadResult: loadResult, confirmationChallenge: confirmationChallenge)
-            self.presentedBottomSheetViewController?.setViewControllers([self.viewController])
+            bottomSheet?.setViewControllers([self.viewController])
         } catch {
             self.viewController.setReloading(false)
             self.viewController.setReloadError(error)
@@ -1067,7 +1070,6 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
             self.presentPaymentOptionsCompletionWithResult?(didCancel)
             self.updatePaymentOption()
             self.isPresented = false
-            self.presentedBottomSheetViewController = nil
         }
     }
 }

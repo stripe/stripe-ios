@@ -254,8 +254,10 @@ public final class EmbeddedPaymentElement {
         return updateResult
     }
 
+    /// Reloads while the sheet is presented: shows a spinner, fetches fresh data, then hot-swaps the new VC into the live bottom sheet.
+    /// Unlike `update`, which rebuilds offscreen when nothing is shown.
     @MainActor
-    private func performReload(mode: PaymentSheet.InitializationMode) async -> UpdateResult {
+    private func reloadPresentedSheet(mode: PaymentSheet.InitializationMode) async -> UpdateResult {
         selectedFormViewController?.setReloading(true)
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
 
@@ -529,7 +531,7 @@ extension EmbeddedPaymentElement: CheckoutIntegrationDelegate {
         if isSheetPresented {
             // `update` asserts the sheet isn't presented, so reload in-place instead.
             checkout.stpSession.applyAddressOverrides(to: &configuration)
-            let result = await performReload(mode: .checkout(checkout))
+            let result = await reloadPresentedSheet(mode: .checkout(checkout))
             if case .failed(let error) = result {
                 throw error
             }
