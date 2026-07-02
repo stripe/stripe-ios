@@ -20,7 +20,6 @@ final class EmbeddedFormViewControllerReloadTests: XCTestCase {
         var errorDescription: String? { "Mock reload error" }
     }
 
-    /// Retained for the lifetime of each test since `EmbeddedFormViewController.delegate` is weak.
     private let mockDelegate = MockDelegate()
 
     override func setUp() async throws {
@@ -49,7 +48,7 @@ final class EmbeddedFormViewControllerReloadTests: XCTestCase {
 
     // MARK: - setReloading
 
-    func testSetReloadingTrueDisablesInteractionAndShowsSpinner() {
+    func testSetReloading_true() {
         let formVC = makeFormViewController()
         XCTAssertTrue(formVC.isUserInteractionEnabled)
 
@@ -58,13 +57,11 @@ final class EmbeddedFormViewControllerReloadTests: XCTestCase {
         XCTAssertTrue(formVC._test_isReloading)
         XCTAssertFalse(formVC.isUserInteractionEnabled)
         XCTAssertFalse(formVC.view.isUserInteractionEnabled)
-        // Reloading shows the processing spinner on the primary button.
         XCTAssertEqual(formVC._test_primaryButtonStatus, .processing)
-        // Dismiss is still allowed during reload (only blocked while a payment is in flight).
         XCTAssertFalse(formVC.allowsDragToDismiss)
     }
 
-    func testSetReloadingFalseReenablesInteraction() {
+    func testSetReloading_false() {
         let formVC = makeFormViewController()
 
         formVC.setReloading(true)
@@ -75,13 +72,12 @@ final class EmbeddedFormViewControllerReloadTests: XCTestCase {
         XCTAssertFalse(formVC._test_isReloading)
         XCTAssertTrue(formVC.isUserInteractionEnabled)
         XCTAssertTrue(formVC.view.isUserInteractionEnabled)
-        // No card entered, so the button returns to the disabled (not processing) state.
         XCTAssertEqual(formVC._test_primaryButtonStatus, .disabled)
     }
 
     // MARK: - setReloadError
 
-    func testSetReloadErrorSetsAndDisplaysError() {
+    func testSetReloadError() {
         let formVC = makeFormViewController()
 
         XCTAssertNil(formVC._test_error)
@@ -101,7 +97,6 @@ final class EmbeddedFormViewControllerReloadTests: XCTestCase {
 @MainActor
 final class EmbeddedPaymentElementCheckoutRoutingTests: XCTestCase {
 
-    /// Retained for the lifetime of each test since `EmbeddedFormViewController.delegate` is weak.
     private let mockFormDelegate = MockDelegate()
 
     private func makeElement() -> EmbeddedPaymentElement {
@@ -135,8 +130,6 @@ final class EmbeddedPaymentElementCheckoutRoutingTests: XCTestCase {
         )
     }
 
-    /// `checkoutDidUpdate` routes to `performReload` (instead of `update`) only when a bottom sheet is
-    /// presented. That branch is gated on `isSheetPresented`, so these verify the flag directly.
     func testIsSheetPresentedFalseWhenNoSheetPresented() {
         let sut = makeElement()
         sut.presentingViewController = UIViewController()
