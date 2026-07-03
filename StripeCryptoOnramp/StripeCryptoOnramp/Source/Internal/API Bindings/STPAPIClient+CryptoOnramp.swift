@@ -239,6 +239,63 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
+    /// Creates a short-lived, server-issued challenge for wallet ownership verification.
+    /// - Parameters:
+    ///   - walletAddress: The crypto wallet address to issue the challenge for.
+    ///   - network: The crypto network for the wallet address.
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: A `WalletOwnershipChallengeResponse` containing the challenge details.
+    /// Throws if a client secret doesn't exist, the session is unverified, or an API error occurs.
+    func createWalletOwnershipChallenge(
+        walletAddress: String,
+        network: CryptoNetwork,
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> WalletOwnershipChallengeResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/wallet_ownership_challenge"
+        let requestObject = RegisterWalletRequest(
+            walletAddress: walletAddress,
+            network: network,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+
+        return try await post(resource: endpoint, object: requestObject)
+    }
+
+    /// Submits a signature over a previously issued wallet ownership challenge.
+    /// - Parameters:
+    ///   - challengeId: The identifier of the challenge to verify.
+    ///   - signature: The signature over the challenge message.
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: A `RegisterWalletResponse` for the verified wallet.
+    /// Throws if a client secret doesn't exist, the session is unverified, or an API error occurs.
+    @discardableResult
+    func submitWalletOwnershipVerification(
+        challengeId: String,
+        signature: String,
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> RegisterWalletResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/wallet_ownership_verification"
+        let requestObject = WalletOwnershipVerificationRequest(
+            challengeId: challengeId,
+            signature: signature,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+
+        return try await post(resource: endpoint, object: requestObject)
+    }
+
     /// Retrieves an onramp session.
     /// - Parameters:
     ///   - sessionId: The onramp session identifier.
