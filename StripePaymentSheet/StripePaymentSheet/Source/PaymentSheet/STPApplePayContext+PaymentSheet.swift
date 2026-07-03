@@ -339,9 +339,7 @@ extension STPApplePayContext {
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
-            if case .checkout(let checkout) = intent, let email = checkout.stpSession.email {
-                applePayContext.fallbackBillingDetails = StripeAPI.BillingDetails(email: email)
-            }
+            applePayContext.fallbackBillingDetails = makeFallbackBillingDetails(intent: intent, configuration: configuration)
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes
@@ -422,6 +420,36 @@ extension STPApplePayContext {
 
         return paymentRequest
     }
+}
+
+private func makeFallbackBillingDetails(intent: Intent, configuration: PaymentElementConfiguration) -> StripeAPI.BillingDetails? {
+    var fallbackBillingDetails = StripeAPI.BillingDetails()
+    var hasFallbackBillingDetails = false
+
+    if configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod {
+        let defaultBillingDetails = configuration.defaultBillingDetails
+        if let email = defaultBillingDetails.email {
+            fallbackBillingDetails.email = email
+            hasFallbackBillingDetails = true
+        }
+        if let name = defaultBillingDetails.name {
+            fallbackBillingDetails.name = name
+            hasFallbackBillingDetails = true
+        }
+        if let phone = defaultBillingDetails.phone {
+            fallbackBillingDetails.phone = phone
+            hasFallbackBillingDetails = true
+        }
+    }
+
+    if case .checkout(let checkout) = intent,
+       fallbackBillingDetails.email == nil,
+       let email = checkout.stpSession.email {
+        fallbackBillingDetails.email = email
+        hasFallbackBillingDetails = true
+    }
+
+    return hasFallbackBillingDetails ? fallbackBillingDetails : nil
 }
 
 private func makeShippingDetails(from configuration: PaymentElementConfiguration) -> StripeAPI.ShippingDetails? {
