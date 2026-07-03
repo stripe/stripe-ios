@@ -72,6 +72,7 @@ extension PaymentSheet {
         confirmHandler: @escaping IntentConfiguration.ConfirmHandler
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
+            let apiClient = configuration.apiClientIncludingVippsPreviewBeta
             var confirmType = confirmType
             // 1. Create PM if necessary
             let paymentMethod: STPPaymentMethod
@@ -86,7 +87,7 @@ extension PaymentSheet {
                     STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 }
                 stpAssert(newPaymentMethod == nil)
-                paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
+                paymentMethod = try await apiClient.createPaymentMethod(with: params, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
                 confirmType = .new(
                     params: params,
                     paymentOptions: paymentOptions,
@@ -105,7 +106,7 @@ extension PaymentSheet {
 
                 // Try to create a radar session for the payment method before calling the handler
                 return await withCheckedContinuation { continuation in
-                    configuration.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: paymentMethod.stripeId) { _, error in
+                    apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: paymentMethod.stripeId) { _, error in
                         // If radar session creation fails, just continue with the payment method directly
                         if let error {
                             // Log the error but don't fail the payment
@@ -140,7 +141,7 @@ extension PaymentSheet {
             let result: (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?)
             switch intentConfig.mode {
             case let .payment(_, _, setupFutureUsage, _, paymentMethodOptions):
-                let paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
+                let paymentIntent = try await apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
 
                 // Check if it needs confirmation
                 if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
@@ -193,7 +194,7 @@ extension PaymentSheet {
                     }
                 }
             case .setup:
-                let setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
+                let setupIntent = try await apiClient.retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
                 if [STPSetupIntentStatus.requiresPaymentMethod, STPSetupIntentStatus.requiresConfirmation].contains(setupIntent.status) {
                     // 4a. Client-side confirmation
                     try PaymentSheetDeferredValidator.validate(intentConfiguration: intentConfig)
