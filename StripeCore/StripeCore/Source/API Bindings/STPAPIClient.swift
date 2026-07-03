@@ -80,6 +80,8 @@ import UIKit
     /// A set of beta headers to add to Stripe API requests e.g. `["alipay_beta=v1"]`.
     public var betas: Set<String> = []
 
+    @_spi(STP) public static let vippsPreviewBetaHeader = "vipps_preview=v1"
+
     /// Returns `true` if `publishableKey` is actually a user key, `false` otherwise.
     @_spi(STP) public var publishableKeyIsUserKey: Bool {
         return publishableKey?.hasPrefix("uk_") ?? false
@@ -164,6 +166,7 @@ import UIKit
             !publishableKey.hasPrefix("rk_"),
             "You are using a restricted key. Use a publishable key instead. For more info, see https://stripe.com/docs/keys"
         )
+
         #if !DEBUG
             if publishableKey.lowercased().hasPrefix("pk_test") && !didShowTestmodeKeyWarning {
                 print(
@@ -252,6 +255,12 @@ import UIKit
         client.urlSession = urlSession
         client.betas = betas
         client.userKeyLiveMode = userKeyLiveMode
+        return client
+    }
+
+    @_spi(STP) public func makeCopy(addingBetas additionalBetas: Set<String>) -> STPAPIClient {
+        let client = makeCopy()
+        client.betas.formUnion(additionalBetas)
         return client
     }
 

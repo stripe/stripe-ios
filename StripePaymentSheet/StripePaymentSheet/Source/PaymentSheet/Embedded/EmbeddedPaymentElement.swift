@@ -433,7 +433,7 @@ public final class EmbeddedPaymentElement {
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
     }()
 
-    internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
+    internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClientIncludingVippsPreviewBeta)
 
     internal var confirmationChallenge: ConfirmationChallenge?
     internal var linkAccountObserver: LinkAccountContextObserver?

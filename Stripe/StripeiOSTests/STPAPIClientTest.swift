@@ -93,6 +93,17 @@ class STPAPIClientTest: XCTestCase {
         XCTAssertEqual(accountHeader, "acct_123")
     }
 
+    func testMakeCopyAddingBetas() {
+        let sut = STPAPIClient(publishableKey: "pk_foo")
+        sut.betas = ["existing_beta=v1"]
+
+        let copiedClient = sut.makeCopy(addingBetas: [STPAPIClient.vippsPreviewBetaHeader])
+
+        XCTAssertFalse(copiedClient === sut)
+        XCTAssertEqual(sut.betas, ["existing_beta=v1"])
+        XCTAssertEqual(copiedClient.betas, ["existing_beta=v1", STPAPIClient.vippsPreviewBetaHeader])
+    }
+
     private struct MockUAUsageClass: STPAnalyticsProtocol {
         static let stp_analyticsIdentifier = "MockUAUsageClass"
     }

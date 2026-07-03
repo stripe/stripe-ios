@@ -23,6 +23,7 @@ extension PaymentSheet {
         isFromLink: Bool = false
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
+            let apiClient = configuration.apiClientIncludingVippsPreviewBeta
             // 1. Create the confirmation token params
             let confirmationTokenParams = createConfirmationTokenParams(confirmType: confirmType,
                                                                         configuration: configuration,
@@ -40,9 +41,9 @@ extension PaymentSheet {
             }()
 
             // 2. Create the ConfirmationToken
-            let confirmationToken = try await configuration.apiClient.createConfirmationToken(with: confirmationTokenParams,
-                                                                                              ephemeralKeySecret: ephemeralKeySecret,
-                                                                                              additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
+            let confirmationToken = try await apiClient.createConfirmationToken(with: confirmationTokenParams,
+                                                                                ephemeralKeySecret: ephemeralKeySecret,
+                                                                                additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
 
             // 3. Vend the ConfirmationToken and fetch the client secret from the merchant
             let clientSecret = try await confirmHandler(confirmationToken)
@@ -68,7 +69,7 @@ extension PaymentSheet {
             let result: (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?)
             switch intentConfig.mode {
             case .payment:
-                let paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
+                let paymentIntent = try await apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
 
                 // Check if it needs confirmation
                 if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
@@ -109,7 +110,7 @@ extension PaymentSheet {
                     }
                 }
             case .setup:
-                let setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
+                let setupIntent = try await apiClient.retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
 
                 if [STPSetupIntentStatus.requiresPaymentMethod, STPSetupIntentStatus.requiresConfirmation].contains(setupIntent.status) {
                     // 6a. Client-side confirmation with confirmation token
