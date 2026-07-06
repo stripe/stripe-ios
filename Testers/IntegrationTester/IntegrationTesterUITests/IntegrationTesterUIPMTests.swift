@@ -33,27 +33,35 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         let tablesQuery = app.collectionViews
 
         let applePayElement = tablesQuery.cells.buttons["Apple Pay"]
-        applePayElement.tap()
+        XCTAssertTrue(applePayElement.waitForExistence(timeout: 10.0))
+        applePayElement.forceTapElement()
         let applePayButton = app.buttons["Buy with Apple Pay"]
         XCTAssertTrue(applePayButton.waitForExistence(timeout: 10.0))
-        applePayButton.tap()
+        applePayButton.forceTapElement()
 
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
-        _ = applePay.wait(for: .runningForeground, timeout: 10)
+        XCTAssertTrue(applePay.wait(for: .runningForeground, timeout: 20), "Apple Pay (PassbookUIService) sheet did not come to foreground")
 
         if ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 {
-            // iOS 26: The Apple Pay sheet shows the selected card and a
-            // "Change Payment Method" button. Tap it to switch cards.
-            let changeButton = applePay.buttons["Change Payment Method"]
-            XCTAssertTrue(changeButton.waitForExistence(timeout: 10.0))
-            changeButton.tap()
-
-            let mastercardPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - MasterCard'")
-            let mastercardButton = applePay.buttons.containing(mastercardPredicate).firstMatch
-            XCTAssertTrue(mastercardButton.waitForExistence(timeout: 10.0))
-            mastercardButton.forceTapElement()
-
+            // iOS 26: The Apple Pay sheet shows the selected card and a "Change Payment Method"
+            // button. The sheet is only fully interactive once its "Pay with Passcode" affordance
+            // exists; wait for that before probing individual controls. The card-switch step is
+            // optional — depending on which simulated card is pre-selected, the "Change Payment
+            // Method" button may not appear. (RUN_MOBILESDK-5432)
             let payButton = applePay.buttons["Pay with Passcode"]
+            XCTAssertTrue(payButton.waitForExistence(timeout: 20.0), "Apple Pay sheet never finished presenting")
+
+            let changeButton = applePay.buttons["Change Payment Method"]
+            if changeButton.waitForExistence(timeout: 5.0) {
+                changeButton.forceTapElement()
+
+                let mastercardPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - MasterCard'")
+                let mastercardButton = applePay.buttons.containing(mastercardPredicate).firstMatch
+                if mastercardButton.waitForExistence(timeout: 10.0) {
+                    mastercardButton.forceTapElement()
+                }
+            }
+
             XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
             payButton.forceTapElement()
         } else {
@@ -73,7 +81,8 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         }
 
         let statusView = app.staticTexts["Payment status view"]
-        XCTAssertTrue(statusView.waitForExistence(timeout: 20.0))
+        // Give the backend time to create + confirm the PaymentIntent. (RUN_MOBILESDK-5432)
+        XCTAssertTrue(statusView.waitForExistence(timeout: 30.0))
         XCTAssertNotNil(statusView.label.range(of: "complete!"))
     }
 
