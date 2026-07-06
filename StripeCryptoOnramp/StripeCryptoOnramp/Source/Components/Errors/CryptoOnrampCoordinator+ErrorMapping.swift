@@ -237,16 +237,6 @@ extension CryptoOnrampCoordinator {
         )
     }
 
-    private static func appAttestationUnavailableError(
-        from error: Swift.Error,
-        diagnosticContext: DiagnosticContext
-    ) -> Swift.Error {
-        return AppAttestationUnavailableError(
-            underlyingError: error,
-            diagnosticContext: diagnosticContext
-        )
-    }
-
     private static func makeAPIErrorContext(
         from error: Swift.Error,
         apiError: StripeAPIError,
