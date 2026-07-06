@@ -489,6 +489,8 @@ workflows:
         - scheme: AllStripeFrameworks
         - destination: generic/platform=iOS Simulator
     - deploy-to-bitrise-io@2: {}
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 17,OS=27.0
     before_run:
     - prep_all
     meta:
