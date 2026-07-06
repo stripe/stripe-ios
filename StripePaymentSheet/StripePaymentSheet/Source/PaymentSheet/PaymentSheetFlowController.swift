@@ -809,8 +809,6 @@ extension PaymentSheet {
             latestUpdateContext?.status = .failed
         }
 
-        /// Reloads and rebuilds the view controller offscreen for the not-presented case.
-        /// If a newer update starts mid-flight, this one is silently dropped (last-write-wins).
         private func performUpdate(
             mode: PaymentSheet.InitializationMode,
             updateID: UUID = UUID(),
@@ -1002,8 +1000,7 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
 
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
         if isPresented {
-            // Can't call `update` here — it asserts !isPresented and rebuilds the VC
-            // without swapping it into the presented bottom sheet.
+            // `update` asserts !isPresented, so reload in-place instead
             checkout.stpSession.applyAddressOverrides(to: &configuration)
             try await reloadPresentedSheet(mode: .checkout(checkout))
         } else {
@@ -1011,8 +1008,7 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
         }
     }
 
-    /// Reloads while the sheet is presented: shows a spinner, fetches fresh data, then hot-swaps the new VC into the live bottom sheet.
-    /// This differs from `performUpdate`, which rebuilds the view controller offscreen when nothing is shown.
+    /// Reloads the sheet in-place while it's presented, swapping in the new VC.
     @MainActor
     private func reloadPresentedSheet(mode: PaymentSheet.InitializationMode) async throws {
         viewController.setReloading(true)
