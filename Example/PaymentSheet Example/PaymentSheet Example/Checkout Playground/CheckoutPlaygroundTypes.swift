@@ -115,6 +115,20 @@ enum CheckoutPlayground {
         }
     }
 
+    enum IntegrationType: String, CaseIterable, Identifiable {
+        case flowController
+        case embedded
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .flowController: return "FlowController"
+            case .embedded: return "Embedded"
+            }
+        }
+    }
+
     struct LineItemConfig: Identifiable {
         let id = UUID()
         var name: String
