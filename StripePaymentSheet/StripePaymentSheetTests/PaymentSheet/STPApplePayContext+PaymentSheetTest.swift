@@ -771,9 +771,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreate_deferredIntentWithAttachDefaults_setsDefaultBillingDetails() {
         var config = configuration
-        config.billingDetailsCollectionConfiguration.email = .never
-        config.billingDetailsCollectionConfiguration.name = .never
-        config.billingDetailsCollectionConfiguration.phone = .never
         config.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
         config.defaultBillingDetails.email = "default@example.com"
         config.defaultBillingDetails.name = "Jane Doe"
