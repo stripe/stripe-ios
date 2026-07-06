@@ -1,7 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
+
+## 26.2.0 2026-07-06
 ### CryptoOnramp (Alpha)
 * [Added] Added `AppAttestationUnavailableError`, a rich `StripeCryptoOnrampError` surfaced when configuration fails because app attestation is missing or native Link is unavailable.
 * [Removed] Removed public diagnostic-only properties from rich Crypto Onramp errors: `sdkVersions` from `StripeCryptoOnrampError` and concrete error types; `operation`, `appIdentifier`, and `mode` from `StripeCryptoOnrampAPIError`, `AppAttestationAPIError`, and `UncategorizedAPIError`; and `operation`, `appIdentifier`, `mode`, and `sdkVersions` from `APIErrorContext`. These diagnostics are still included in `developerMessage`.
