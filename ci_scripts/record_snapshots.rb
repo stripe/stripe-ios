@@ -46,11 +46,25 @@ def require_imagemagick!
 end
 
 def significant_difference?(file_a, file_b)
-  num_diff = `compare -metric AE -fuzz #{FUZZ} '#{file_a}' '#{file_b}' /dev/null 2>&1`.strip.to_i
-  total_pixels = `identify -format '%[fx:w*h]' '#{file_a}' 2>/dev/null`.strip.to_i
-  return true if total_pixels == 0
+  # Treat unreadable images or any dimension change as significant.
+  dims_a = `identify -format '%wx%h' '#{file_a}' 2>/dev/null`.strip
+  dims_b = `identify -format '%wx%h' '#{file_b}' 2>/dev/null`.strip
+  return true if dims_a.empty? || dims_a != dims_b
 
-  (num_diff.to_f / total_pixels * 100) > DIFF_THRESHOLD
+  # Measure the fraction of pixels that actually changed by rendering a composed
+  # difference image (changed pixels white, unchanged black) and reading its mean.
+  #
+  # We deliberately do NOT use `compare -metric AE`: on CI's ImageMagick (a Q16-HDRI
+  # build) that metric is wildly unreliable for these snapshots — it reports tens of
+  # thousands of phantom differences (and nonsensical values in the billions) for
+  # images that are visually near-identical, which flagged nearly every reference
+  # image as changed and produced an endless stream of snapshot-update commits. The
+  # composed difference image matches what is actually visible on every build.
+  fraction = `compare -fuzz #{FUZZ} '#{file_a}' '#{file_b}' \
+    -highlight-color white -lowlight-color black -compose Src png:- 2>/dev/null \
+    | magick - -threshold 50% -format '%[fx:mean]' info: 2>/dev/null`.strip.to_f
+
+  (fraction * 100) > DIFF_THRESHOLD
 end
 
 require_imagemagick!
