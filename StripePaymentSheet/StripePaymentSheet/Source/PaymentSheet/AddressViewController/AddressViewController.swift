@@ -330,7 +330,8 @@ extension AddressViewController {
 
     @objc func presentAutocomplete() {
         assert(navigationController != nil)
-        let autoCompleteViewController = AutoCompleteViewController(configuration: configuration, initialLine1Text: addressSection?.line1?.text, selectedCountry: addressSection?.selectedCountryCode, addressSpecProvider: addressSpecProvider)
+        let keyboardShowing = view.firstResponder() != nil
+        let autoCompleteViewController = AutoCompleteViewController(configuration: configuration, initialLine1Text: addressSection?.line1?.text, selectedCountry: addressSection?.selectedCountryCode, addressSpecProvider: addressSpecProvider, keyboardAlreadyShowing: keyboardShowing)
         autoCompleteViewController.delegate = self
         navigationController?.pushViewController(autoCompleteViewController, animated: true)
     }
