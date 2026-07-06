@@ -103,8 +103,7 @@ struct WalletSelectionRowView: View {
     }
 
     private var isDisplayedAsVerified: Bool {
-        // TODO: Remove this Solana override once the demo backend returns `verified_ownership`.
-        wallet.verifiedOwnership || wallet.network == "solana"
+        wallet.verifiedOwnership
     }
 
     private var shouldShowVerifyWalletButton: Bool {
