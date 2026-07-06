@@ -24,7 +24,7 @@ class ConfirmButton: UIControl {
         case spinnerWithInteractionDisabled
         case succeeded
     }
-    enum CallToActionType {
+    enum CallToActionType: Equatable {
         case pay(amount: Int, currency: String, withLock: Bool = true)
         case add(paymentMethodType: PaymentSheet.PaymentMethodType)
         case `continue`
@@ -297,6 +297,10 @@ class ConfirmButton: UIControl {
     }
 
     func update(status: Status, callToAction: CallToActionType, animated: Bool, completion: (() -> Void)? = nil) {
+        guard status != self.status || callToAction != self.callToAction else {
+            completion?()
+            return
+        }
         self.status = status
         self.callToAction = callToAction
 
