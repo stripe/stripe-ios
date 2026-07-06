@@ -37,7 +37,7 @@ final class AdaptivePricingFlagImageManager {
     ///
     /// This method is a no-op when adaptive pricing is inactive or only one
     /// currency is present. Calling it again replaces any previously cached images.
-    func prefetchFlagImages(for session: STPCheckoutSession) async {
+    func prefetchFlagImages(for session: Checkout.Session) async {
         // Adaptive pricing is inactive or there's only one currency — no flags needed.
         guard let (local, integration) = requiredCurrencyPair(for: session) else {
             imagesByCurrencyCode = nil
@@ -90,7 +90,7 @@ final class AdaptivePricingFlagImageManager {
 
     // MARK: - Private helpers
 
-    private func requiredCurrencyPair(for session: STPCheckoutSession) -> (local: CurrencyCode, integration: CurrencyCode)? {
+    private func requiredCurrencyPair(for session: Checkout.Session) -> (local: CurrencyCode, integration: CurrencyCode)? {
         guard session.adaptivePricingActive,
               session.localizedPricesMetas.count > 1,
               let meta = session.exchangeRateMeta else {

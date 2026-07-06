@@ -88,8 +88,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         if let offerSave {
             json["customer_managed_saved_payment_methods_offer_save"] = offerSave
         }
-        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
-        return .checkout(Checkout(session: checkoutSession))
+        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
+        return .checkout(Checkout(apiResponse: checkoutSession))
     }
 
     func testUpdatesParams() {
@@ -2884,9 +2884,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             if let paymentMethodOptions {
                 json["payment_method_options"] = paymentMethodOptions
             }
-            let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+            let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
             return PaymentSheetFormFactory(
-                intent: .checkout(Checkout(session: checkoutSession)),
+                intent: .checkout(Checkout(apiResponse: checkoutSession)),
                 elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),
                 configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
                 paymentMethod: .stripe(.payPal),

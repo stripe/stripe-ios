@@ -234,10 +234,10 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             ],
         ]
 
-        guard let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json) else {
+        guard let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json) else {
             fatalError("Failed to create checkout session test fixture")
         }
-        return .checkout(Checkout(session: checkoutSession))
+        return .checkout(Checkout(apiResponse: checkoutSession))
     }
 
 }
