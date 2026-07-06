@@ -252,6 +252,7 @@ public final class EmbeddedPaymentElement {
     /// Reloads the sheet in-place while it's presented, swapping in the new form VC.
     @MainActor
     private func reloadPresentedSheet(mode: PaymentSheet.InitializationMode) async -> UpdateResult {
+        let oldFormVC = selectedFormViewController
         selectedFormViewController?.setReloading(true)
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
 
@@ -267,7 +268,10 @@ public final class EmbeddedPaymentElement {
             let newFormViewController = applyLoadResultAndRebuildView(loadResult: loadResult, confirmationChallenge: confirmationChallenge)
 
             if let bottomSheet = presentingViewController?.presentedViewController as? BottomSheetViewController {
-                if let newFormViewController {
+                if oldFormVC?.isDismissing == true {
+                    // The sheet is closing — skip the VC swap to avoid a flash.
+                    // The data is already updated via applyLoadResultAndRebuildView.
+                } else if let newFormViewController {
                     bottomSheet.setViewControllers([newFormViewController])
                 } else {
                     bottomSheet.dismiss(animated: true)
