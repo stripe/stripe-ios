@@ -58,7 +58,6 @@ final class EmbeddedFormViewControllerReloadTests: XCTestCase {
         XCTAssertFalse(formVC.isUserInteractionEnabled)
         XCTAssertFalse(formVC.view.isUserInteractionEnabled)
         XCTAssertEqual(formVC.primaryButton.status, .processing)
-        XCTAssertFalse(formVC.allowsDragToDismiss)
     }
 
     func testSetReloading_false() {

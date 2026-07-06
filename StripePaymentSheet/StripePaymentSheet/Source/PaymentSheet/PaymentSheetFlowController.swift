@@ -835,9 +835,6 @@ extension PaymentSheet {
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
                     self.swapViewController(loadResult: loadResult, confirmationChallenge: confirmationChallenge)
 
-                    // Synchronously pre-load image into cache
-                    self.preloadPaymentOptionImage()
-
                     self.latestUpdateContext?.status = .completed
                     completion(nil)
                 case .failure(let error):
@@ -862,6 +859,7 @@ extension PaymentSheet {
             self.viewController = newVC
             self.confirmationChallenge = confirmationChallenge
             self.updatePaymentOption()
+            self.preloadPaymentOptionImage()
         }
 
         func updateForWalletButtonsView() {
