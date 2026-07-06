@@ -1,5 +1,5 @@
 //
-//  STPCheckoutSessionSavedPaymentMethodsOfferSaveTest.swift
+//  STPCheckoutSessionAPIResponse+SavedPaymentMethodsOfferSaveTest.swift
 //  StripePaymentSheetTests
 //
 

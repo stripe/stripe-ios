@@ -1,5 +1,5 @@
 //
-//  STPCheckoutSessionLineItemAndShippingTest.swift
+//  STPCheckoutSessionAPIResponse+LineItemAndShippingTest.swift
 //  StripePaymentSheetTests
 //
 //  Created by Nick Porter on 3/3/26.
@@ -18,7 +18,7 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
 
     func testDecodedObjectLineItemsParsing() {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
 
         XCTAssertEqual(session.lineItems.count, 2)
 
@@ -45,7 +45,7 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
 
     func testDecodedObjectShippingOptionsParsing() {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
 
         XCTAssertEqual(session.shippingOptions.count, 2)
 

@@ -1,19 +1,19 @@
 //
-//  STPCheckoutSessionDiscountTests.swift
+//  STPCheckoutSessionAPIResponseDiscountTests.swift
 //  StripePaymentSheetTests
 //
 
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
-private extension STPCheckoutSession {
+private extension STPCheckoutSessionAPIResponse {
     static func parseDiscounts(from dict: [AnyHashable: Any]) -> [Checkout.DiscountAmount] {
         let currency = dict["currency"] as? String
         return parseDiscountAmounts(from: dict, currency: currency)
     }
 }
 
-final class STPCheckoutSessionDiscountTests: XCTestCase {
+final class STPCheckoutSessionAPIResponseDiscountTests: XCTestCase {
 
     // MARK: - Valid discount with coupon + promotion code
 
@@ -37,7 +37,7 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = STPCheckoutSession.parseDiscounts(from: dict)
+        let discounts = STPCheckoutSessionAPIResponse.parseDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
 
         let discount = discounts[0]
@@ -65,7 +65,7 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = STPCheckoutSession.parseDiscounts(from: dict)
+        let discounts = STPCheckoutSessionAPIResponse.parseDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
 
         let discount = discounts[0]
@@ -91,7 +91,7 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = STPCheckoutSession.parseDiscounts(from: dict)
+        let discounts = STPCheckoutSessionAPIResponse.parseDiscounts(from: dict)
         XCTAssertTrue(discounts.isEmpty)
     }
 
@@ -104,7 +104,7 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = STPCheckoutSession.parseDiscounts(from: dict)
+        let discounts = STPCheckoutSessionAPIResponse.parseDiscounts(from: dict)
         XCTAssertTrue(discounts.isEmpty)
     }
 
@@ -115,7 +115,7 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
             "session_id": "cs_test_123",
         ]
 
-        let discounts = STPCheckoutSession.parseDiscounts(from: dict)
+        let discounts = STPCheckoutSessionAPIResponse.parseDiscounts(from: dict)
         XCTAssertTrue(discounts.isEmpty)
     }
 
@@ -149,7 +149,7 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = STPCheckoutSession.parseDiscounts(from: dict)
+        let discounts = STPCheckoutSessionAPIResponse.parseDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 2)
 
         XCTAssertEqual(discounts[0].displayName, "First")
@@ -186,7 +186,7 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = STPCheckoutSession.parseDiscounts(from: dict)
+        let discounts = STPCheckoutSessionAPIResponse.parseDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
         XCTAssertEqual(discounts[0].displayName, "Valid")
         XCTAssertEqual(discounts[0].amount.minorUnitsAmount, 300)
@@ -206,7 +206,7 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = STPCheckoutSession.parseDiscounts(from: dict)
+        let discounts = STPCheckoutSessionAPIResponse.parseDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
         XCTAssertEqual(discounts[0].displayName, "Discount")
     }
@@ -229,7 +229,7 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = STPCheckoutSession.parseDiscounts(from: dict)
+        let discounts = STPCheckoutSessionAPIResponse.parseDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
         XCTAssertEqual(discounts[0].displayName, "coupon_no_id")
     }

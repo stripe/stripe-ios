@@ -172,7 +172,7 @@ extension PaymentSheet {
         let setAllowRedisplay: (IntentConfirmParams, STPPaymentMethodType) -> Void = { confirmParams, paymentMethodType in
             if case .checkout(let checkout) = intent {
                 confirmParams.setAllowRedisplayForCheckoutSession(
-                    merchantWillSavePaymentMethod: checkout.stpSession.merchantWillSavePaymentMethod(paymentMethodType)
+                    merchantWillSavePaymentMethod: checkout.nonisolatedSession.merchantWillSavePaymentMethod(paymentMethodType)
                 )
             } else {
                 confirmParams.setAllowRedisplay(

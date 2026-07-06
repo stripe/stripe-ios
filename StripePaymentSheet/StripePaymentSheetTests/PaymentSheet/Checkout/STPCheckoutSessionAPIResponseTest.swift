@@ -1,5 +1,5 @@
 //
-//  STPCheckoutSessionTest.swift
+//  STPCheckoutSessionAPIResponseTest.swift
 //  StripePaymentSheetTests
 //
 //  Created by Nick Porter on 1/14/26.
@@ -13,7 +13,7 @@ import StripePaymentsObjcTestUtils
 import XCTest
 
 @MainActor
-class STPCheckoutSessionTest: XCTestCase {
+class STPCheckoutSessionAPIResponseTest: XCTestCase {
 
     // MARK: - STPAPIResponseDecodable Tests
 
@@ -21,7 +21,7 @@ class STPCheckoutSessionTest: XCTestCase {
         let fullJson = STPTestUtils.jsonNamed("CheckoutSession")
 
         XCTAssertNotNil(
-            STPCheckoutSession.decodedObject(fromAPIResponse: fullJson),
+            STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: fullJson),
             "can decode with full json"
         )
 
@@ -40,7 +40,7 @@ class STPCheckoutSessionTest: XCTestCase {
             XCTAssertNotNil(partialJson?[field])
             partialJson?.removeValue(forKey: field)
             XCTAssertNil(
-                STPCheckoutSession.decodedObject(fromAPIResponse: partialJson),
+                STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: partialJson),
                 "should fail to decode without \(field)"
             )
         }
@@ -50,12 +50,12 @@ class STPCheckoutSessionTest: XCTestCase {
         var json = STPTestUtils.jsonNamed("CheckoutSession")!
         // Invalid elements_session - missing payment_method_preference
         json["elements_session"] = ["garbage": true]
-        XCTAssertNil(STPCheckoutSession.decodedObject(fromAPIResponse: json))
+        XCTAssertNil(STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json))
     }
 
     func testDecodedObjectFromAPIResponseMapping() {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
 
         XCTAssertEqual(session.id, "cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(session.clientSecret, "cs_test_a1b2c3d4e5f6g7h8i9j0_secret_xyz123abc456")
@@ -319,7 +319,7 @@ class STPCheckoutSessionTest: XCTestCase {
     func testMerchantWillSavePaymentMethod_paymentModeWithoutSetupFutureUsage() {
         let session = CheckoutTestHelpers.makeSession([:]).withCustomer()
 
-        XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
+        XCTAssertFalse(session.makePublicSession().merchantWillSavePaymentMethod(.card))
     }
 
     func testMerchantWillSavePaymentMethod_paymentModeWithTopLevelSetupFutureUsage() {
@@ -327,7 +327,7 @@ class STPCheckoutSessionTest: XCTestCase {
             "setup_future_usage": "off_session",
         ]).withCustomer()
 
-        XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
+        XCTAssertTrue(session.makePublicSession().merchantWillSavePaymentMethod(.card))
     }
 
     func testMerchantWillSavePaymentMethod_paymentModeWithTopLevelSetupFutureUsageNone() {
@@ -336,7 +336,7 @@ class STPCheckoutSessionTest: XCTestCase {
         ]).withCustomer()
 
         XCTAssertEqual(session.setupFutureUsage, "none")
-        XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
+        XCTAssertFalse(session.makePublicSession().merchantWillSavePaymentMethod(.card))
     }
 
     func testMerchantWillSavePaymentMethod_paymentModeWithPerPaymentMethodSetupFutureUsage() {
@@ -348,8 +348,8 @@ class STPCheckoutSessionTest: XCTestCase {
             ],
         ]).withCustomer()
 
-        XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
-        XCTAssertFalse(session.merchantWillSavePaymentMethod(.USBankAccount))
+        XCTAssertTrue(session.makePublicSession().merchantWillSavePaymentMethod(.card))
+        XCTAssertFalse(session.makePublicSession().merchantWillSavePaymentMethod(.USBankAccount))
     }
 
     func testMerchantWillSavePaymentMethod_paymentModeWithoutCustomer() {
@@ -357,7 +357,7 @@ class STPCheckoutSessionTest: XCTestCase {
             "setup_future_usage": "off_session",
         ])
 
-        XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
+        XCTAssertFalse(session.makePublicSession().merchantWillSavePaymentMethod(.card))
     }
 
     func testMerchantWillSavePaymentMethod_setupModeWithCustomer() {
@@ -366,7 +366,7 @@ class STPCheckoutSessionTest: XCTestCase {
             "payment_status": "no_payment_required",
         ]).withCustomer()
 
-        XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
+        XCTAssertTrue(session.makePublicSession().merchantWillSavePaymentMethod(.card))
     }
 
     func testMerchantWillSavePaymentMethod_setupModeWithoutCustomer() {
@@ -375,7 +375,7 @@ class STPCheckoutSessionTest: XCTestCase {
             "payment_status": "no_payment_required",
         ])
 
-        XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
+        XCTAssertFalse(session.makePublicSession().merchantWillSavePaymentMethod(.card))
     }
 
     func testCheckoutSessionIntent_setupFutureUsageString() {
@@ -383,7 +383,7 @@ class STPCheckoutSessionTest: XCTestCase {
             "setup_future_usage": "off_session",
         ]).withCustomer()
 
-        XCTAssertEqual(Intent.checkout(Checkout(session: session)).setupFutureUsageString, "off_session")
+        XCTAssertEqual(Intent.checkout(Checkout(apiResponse: session)).setupFutureUsageString, "off_session")
     }
 
     func testCheckoutSessionIntent_isPaymentMethodOptionsSetupFutureUsageSet() {
@@ -394,7 +394,7 @@ class STPCheckoutSessionTest: XCTestCase {
             "payment_method_types": ["paypal"],
         ]).withCustomer()
 
-        XCTAssertEqual(Intent.checkout(Checkout(session: session)).isPaymentMethodOptionsSetupFutureUsageSet, true)
+        XCTAssertEqual(Intent.checkout(Checkout(apiResponse: session)).isPaymentMethodOptionsSetupFutureUsageSet, true)
     }
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevel() {
@@ -403,7 +403,7 @@ class STPCheckoutSessionTest: XCTestCase {
             "payment_method_types": ["paypal"],
         ]).withCustomer()
 
-        XCTAssertTrue(Intent.checkout(Checkout(session: session)).isSetupFutureUsageSet(for: .payPal))
+        XCTAssertTrue(Intent.checkout(Checkout(apiResponse: session)).isSetupFutureUsageSet(for: .payPal))
     }
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevelNone() {
@@ -412,8 +412,8 @@ class STPCheckoutSessionTest: XCTestCase {
             "payment_method_types": ["paypal"],
         ]).withCustomer()
 
-        XCTAssertEqual(Intent.checkout(Checkout(session: session)).setupFutureUsageString, "none")
-        XCTAssertFalse(Intent.checkout(Checkout(session: session)).isSetupFutureUsageSet(for: .payPal))
+        XCTAssertEqual(Intent.checkout(Checkout(apiResponse: session)).setupFutureUsageString, "none")
+        XCTAssertFalse(Intent.checkout(Checkout(apiResponse: session)).isSetupFutureUsageSet(for: .payPal))
     }
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_perPaymentMethod() {
@@ -424,7 +424,7 @@ class STPCheckoutSessionTest: XCTestCase {
             "payment_method_types": ["paypal"],
         ]).withCustomer()
 
-        XCTAssertTrue(Intent.checkout(Checkout(session: session)).isSetupFutureUsageSet(for: .payPal))
+        XCTAssertTrue(Intent.checkout(Checkout(apiResponse: session)).isSetupFutureUsageSet(for: .payPal))
     }
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_perPaymentMethodNoneOverridesTopLevel() {
@@ -436,7 +436,7 @@ class STPCheckoutSessionTest: XCTestCase {
             "payment_method_types": ["paypal"],
         ]).withCustomer()
 
-        XCTAssertFalse(Intent.checkout(Checkout(session: session)).isSetupFutureUsageSet(for: .payPal))
+        XCTAssertFalse(Intent.checkout(Checkout(apiResponse: session)).isSetupFutureUsageSet(for: .payPal))
     }
 
     // MARK: - TaxStatus Tests
@@ -507,7 +507,7 @@ class STPCheckoutSessionTest: XCTestCase {
 
         var jsonWithoutES = CheckoutTestHelpers.baseSessionJSON
         jsonWithoutES.removeValue(forKey: "elements_session")
-        XCTAssertNil(STPCheckoutSession.decodedObject(fromAPIResponse: jsonWithoutES))
+        XCTAssertNil(STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: jsonWithoutES))
     }
 
 }

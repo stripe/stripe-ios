@@ -1,5 +1,5 @@
 //
-//  STPCheckoutSessionTaxAmountTests.swift
+//  STPCheckoutSessionAPIResponse+TaxAmountTests.swift
 //  StripePaymentSheetTests
 //
 //  Created by Nick Porter on 3/5/26.

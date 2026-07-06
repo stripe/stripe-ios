@@ -937,7 +937,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.presentingViewController = UIViewController()
 
         // Simulate the session completing
-        let completedSession = STPCheckoutSession.decodedObject(fromAPIResponse: {
+        let completedSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: {
             var json = CheckoutTestHelpers.openSessionJSON
             json["status"] = "complete"
             json["payment_status"] = "paid"
@@ -965,7 +965,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.delegate = self
         sut.presentingViewController = UIViewController()
 
-        let expiredSession = STPCheckoutSession.decodedObject(fromAPIResponse: {
+        let expiredSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: {
             var json = CheckoutTestHelpers.openSessionJSON
             json["status"] = "expired"
             return json
