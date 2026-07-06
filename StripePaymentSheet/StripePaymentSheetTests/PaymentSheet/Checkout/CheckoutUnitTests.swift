@@ -406,11 +406,6 @@ final class CheckoutUnitTests: XCTestCase {
         checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
 
-        checkout.stpSession.billingAddress = Checkout.ContactAddress(
-            name: "Jane Doe",
-            address: .init(country: "US")
-        )
-
         var firstResponse = CheckoutTestHelpers.openSessionJSON
         firstResponse["status"] = "complete"
         firstResponse["payment_status"] = "paid"
