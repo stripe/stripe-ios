@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '25.15.0'
+  s.version                        = '26.1.0'
 
   s.summary                        = 'StripeFinancialConnectionsLite is a lightweight SDK for connecting financial '\
                                      'accounts to Stripe via a hosted web flow.'
