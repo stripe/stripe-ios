@@ -14,10 +14,6 @@ import XCTest
 
 @MainActor
 class STPCheckoutSessionTest: XCTestCase {
-    /// Injects a default customer; use `CheckoutTestHelpers.makeSession` directly for the no-customer case.
-    private func makeCheckoutSession(_ overrides: [String: Any]) -> STPCheckoutSession {
-        CheckoutTestHelpers.makeSession(["customer": ["id": "cus_123"]].merging(overrides) { _, new in new })
-    }
 
     // MARK: - STPAPIResponseDecodable Tests
 
@@ -238,21 +234,21 @@ class STPCheckoutSessionTest: XCTestCase {
     }
 
     func testDecodedObjectParsesTopLevelSetupFutureUsage() {
-        let session = makeCheckoutSession([
+        let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage": "off_session",
-        ])
+        ]).withCustomer()
 
         XCTAssertEqual(session.setupFutureUsage, "off_session")
     }
 
     func testDecodedObjectParsesPerPaymentMethodSetupFutureUsage() {
-        let session = makeCheckoutSession([
+        let session = CheckoutTestHelpers.makeSession([
             "payment_method_types": ["card", "us_bank_account"],
             "setup_future_usage_for_payment_method_type": [
                 "card": "off_session",
                 "us_bank_account": "none",
             ],
-        ])
+        ]).withCustomer()
 
         XCTAssertEqual(
             session.setupFutureUsageForPaymentMethodType as NSDictionary,
@@ -321,36 +317,36 @@ class STPCheckoutSessionTest: XCTestCase {
     }
 
     func testMerchantWillSavePaymentMethod_paymentModeWithoutSetupFutureUsage() {
-        let session = makeCheckoutSession([:])
+        let session = CheckoutTestHelpers.makeSession([:]).withCustomer()
 
         XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
     }
 
     func testMerchantWillSavePaymentMethod_paymentModeWithTopLevelSetupFutureUsage() {
-        let session = makeCheckoutSession([
+        let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage": "off_session",
-        ])
+        ]).withCustomer()
 
         XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
     }
 
     func testMerchantWillSavePaymentMethod_paymentModeWithTopLevelSetupFutureUsageNone() {
-        let session = makeCheckoutSession([
+        let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage": "none",
-        ])
+        ]).withCustomer()
 
         XCTAssertEqual(session.setupFutureUsage, "none")
         XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
     }
 
     func testMerchantWillSavePaymentMethod_paymentModeWithPerPaymentMethodSetupFutureUsage() {
-        let session = makeCheckoutSession([
+        let session = CheckoutTestHelpers.makeSession([
             "payment_method_types": ["card", "us_bank_account"],
             "setup_future_usage_for_payment_method_type": [
                 "card": "off_session",
                 "us_bank_account": "none",
             ],
-        ])
+        ]).withCustomer()
 
         XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
         XCTAssertFalse(session.merchantWillSavePaymentMethod(.USBankAccount))
@@ -365,10 +361,10 @@ class STPCheckoutSessionTest: XCTestCase {
     }
 
     func testMerchantWillSavePaymentMethod_setupModeWithCustomer() {
-        let session = makeCheckoutSession([
+        let session = CheckoutTestHelpers.makeSession([
             "mode": "setup",
             "payment_status": "no_payment_required",
-        ])
+        ]).withCustomer()
 
         XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
     }
@@ -383,62 +379,62 @@ class STPCheckoutSessionTest: XCTestCase {
     }
 
     func testCheckoutSessionIntent_setupFutureUsageString() {
-        let session = makeCheckoutSession([
+        let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage": "off_session",
-        ])
+        ]).withCustomer()
 
         XCTAssertEqual(Intent.checkout(Checkout(session: session)).setupFutureUsageString, "off_session")
     }
 
     func testCheckoutSessionIntent_isPaymentMethodOptionsSetupFutureUsageSet() {
-        let session = makeCheckoutSession([
+        let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage_for_payment_method_type": [
                 "paypal": "off_session",
             ],
             "payment_method_types": ["paypal"],
-        ])
+        ]).withCustomer()
 
         XCTAssertEqual(Intent.checkout(Checkout(session: session)).isPaymentMethodOptionsSetupFutureUsageSet, true)
     }
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevel() {
-        let session = makeCheckoutSession([
+        let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage": "off_session",
             "payment_method_types": ["paypal"],
-        ])
+        ]).withCustomer()
 
         XCTAssertTrue(Intent.checkout(Checkout(session: session)).isSetupFutureUsageSet(for: .payPal))
     }
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevelNone() {
-        let session = makeCheckoutSession([
+        let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage": "none",
             "payment_method_types": ["paypal"],
-        ])
+        ]).withCustomer()
 
         XCTAssertEqual(Intent.checkout(Checkout(session: session)).setupFutureUsageString, "none")
         XCTAssertFalse(Intent.checkout(Checkout(session: session)).isSetupFutureUsageSet(for: .payPal))
     }
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_perPaymentMethod() {
-        let session = makeCheckoutSession([
+        let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage_for_payment_method_type": [
                 "paypal": "off_session",
             ],
             "payment_method_types": ["paypal"],
-        ])
+        ]).withCustomer()
 
         XCTAssertTrue(Intent.checkout(Checkout(session: session)).isSetupFutureUsageSet(for: .payPal))
     }
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_perPaymentMethodNoneOverridesTopLevel() {
-        let session = makeCheckoutSession([
+        let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage": "off_session",
             "setup_future_usage_for_payment_method_type": [
                 "paypal": "none",
             ],
             "payment_method_types": ["paypal"],
-        ])
+        ]).withCustomer()
 
         XCTAssertFalse(Intent.checkout(Checkout(session: session)).isSetupFutureUsageSet(for: .payPal))
     }
@@ -450,46 +446,46 @@ class STPCheckoutSessionTest: XCTestCase {
             "computation_type": "automatic",
             "status": "requires_location_inputs",
         ]
-        let shipping = makeCheckoutSession([
+        let shipping = CheckoutTestHelpers.makeSession([
             "tax_meta": taxMeta,
             "tax_context": ["automatic_tax_address_source": "session.shipping"],
-        ])
+        ]).withCustomer()
         XCTAssertEqual(shipping.tax.status, .requiresShippingAddress)
 
-        let billing = makeCheckoutSession([
+        let billing = CheckoutTestHelpers.makeSession([
             "tax_meta": taxMeta,
             "tax_context": ["automatic_tax_address_source": "session.billing"],
-        ])
+        ]).withCustomer()
         XCTAssertEqual(billing.tax.status, .requiresBillingAddress)
 
-        let missingSource = makeCheckoutSession(["tax_meta": taxMeta])
+        let missingSource = CheckoutTestHelpers.makeSession(["tax_meta": taxMeta]).withCustomer()
         XCTAssertEqual(missingSource.tax.status, .requiresBillingAddress)
     }
 
     func testTaxStatus_automaticFailed_returnsUnknown() {
-        let session = makeCheckoutSession([
+        let session = CheckoutTestHelpers.makeSession([
             "tax_meta": [
                 "computation_type": "automatic",
                 "status": "failed",
             ],
-        ])
+        ]).withCustomer()
         XCTAssertEqual(session.tax.status, .unknown)
     }
 
     func testTaxStatus_nonAutomaticComputationType_isReady() {
-        let session = makeCheckoutSession([
+        let session = CheckoutTestHelpers.makeSession([
             "tax_meta": [
                 "computation_type": "dynamic",
                 "status": "requires_location_inputs",
             ],
-        ])
+        ]).withCustomer()
         XCTAssertEqual(session.tax.status, .ready)
     }
 
     // MARK: - Elements Session Tests
 
     func testElementsSessionDecoding() {
-        let session = makeCheckoutSession([
+        let session = CheckoutTestHelpers.makeSession([
             "elements_session": [
                 "session_id": "es_123",
                 "payment_method_preference": ["ordered_payment_method_types": ["card"]],
@@ -498,15 +494,15 @@ class STPCheckoutSessionTest: XCTestCase {
                 "automatic_tax_enabled": true,
                 "automatic_tax_address_source": "session.billing",
             ],
-        ])
+        ]).withCustomer()
         XCTAssertTrue(session.elementsSession.disableLinkForAutomaticTaxBilling)
 
-        let sessionWithoutTax = makeCheckoutSession([
+        let sessionWithoutTax = CheckoutTestHelpers.makeSession([
             "elements_session": [
                 "session_id": "es_123",
                 "payment_method_preference": ["ordered_payment_method_types": ["card"]],
             ],
-        ])
+        ]).withCustomer()
         XCTAssertFalse(sessionWithoutTax.elementsSession.disableLinkForAutomaticTaxBilling)
 
         var jsonWithoutES = CheckoutTestHelpers.baseSessionJSON

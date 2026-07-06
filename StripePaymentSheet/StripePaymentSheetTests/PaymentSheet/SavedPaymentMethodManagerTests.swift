@@ -286,7 +286,7 @@ extension SavedPaymentMethodManagerTests {
     }
 
     func makeCheckoutSession(id: String) -> STPCheckoutSession {
-        CheckoutTestHelpers.makeSession(["session_id": id])
+        CheckoutTestHelpers.makeSession().withSessionId(id)
     }
 
     func stubCheckoutSessionUpdatePaymentMethod(

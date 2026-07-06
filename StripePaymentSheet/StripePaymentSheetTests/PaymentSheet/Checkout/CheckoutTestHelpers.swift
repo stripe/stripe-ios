@@ -117,30 +117,34 @@ enum CheckoutTestHelpers {
         return await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
     }
 
-    static func makeOpenSessionJSON() -> [AnyHashable: Any] {
-        makeSessionJSON([
-            "session_id": "cs_test_123",
-            "client_secret": "cs_test_123_secret_abc",
-            "status": "open",
-            "currency": "usd",
-        ])
-    }
+    static let openSessionJSON: [AnyHashable: Any] = [
+        "session_id": "cs_test_123",
+        "object": "checkout.session",
+        "client_secret": "cs_test_123_secret_abc",
+        "livemode": false,
+        "mode": "payment",
+        "status": "open",
+        "payment_status": "unpaid",
+        "payment_method_types": ["card"],
+        "currency": "usd",
+        "elements_session": minimalElementsSessionJSON,
+    ]
 
     static func makeOpenSession(customerEmail: String? = nil) -> STPCheckoutSession {
-        var json = makeOpenSessionJSON()
+        var json = openSessionJSON
         json["customer_email"] = customerEmail
         return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
     }
 
     static func makeClosedSession() -> STPCheckoutSession {
-        var json = makeOpenSessionJSON()
+        var json = openSessionJSON
         json["status"] = "complete"
         json["payment_status"] = "paid"
         return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
     }
 
     static func makeOpenSession(allowedCountries: [String]) -> STPCheckoutSession {
-        var json = makeOpenSessionJSON()
+        var json = openSessionJSON
         json["shipping_address_collection"] = ["allowed_countries": allowedCountries]
         return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
     }
@@ -153,7 +157,7 @@ enum CheckoutTestHelpers {
         integrationAmount: Int = 1200,
         localAmount: Int = 1000
     ) -> STPCheckoutSession {
-        var json: [AnyHashable: Any] = makeOpenSessionJSON()
+        var json: [AnyHashable: Any] = openSessionJSON
         json["currency"] = currency
         json["total_summary"] = [
             "subtotal": integrationAmount,
@@ -183,6 +187,24 @@ enum CheckoutTestHelpers {
             ]
         }
 
+        return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+    }
+}
+
+// MARK: - STPCheckoutSession decorator helpers
+
+extension STPCheckoutSession {
+    func withCustomer(id: String = "cus_123") -> STPCheckoutSession {
+        withOverrides(["customer": ["id": id]])
+    }
+
+    func withSessionId(_ id: String) -> STPCheckoutSession {
+        withOverrides(["session_id": id])
+    }
+
+    private func withOverrides(_ overrides: [String: Any]) -> STPCheckoutSession {
+        let json = (allResponseFields as? [String: Any] ?? [:])
+            .merging(overrides) { _, new in new }
         return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
     }
 }

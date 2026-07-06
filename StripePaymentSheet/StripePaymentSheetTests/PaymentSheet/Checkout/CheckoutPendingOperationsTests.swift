@@ -296,11 +296,11 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         let secondGate = CheckoutPendingOperationsTestGate()
 
         // Two distinct sessions (different currencies) so we can tell them apart
-        var firstJSON = CheckoutTestHelpers.makeOpenSessionJSON()
+        var firstJSON = CheckoutTestHelpers.openSessionJSON
         firstJSON["currency"] = "eur"
         let firstSession = STPCheckoutSession.decodedObject(fromAPIResponse: firstJSON)!
 
-        var secondJSON = CheckoutTestHelpers.makeOpenSessionJSON()
+        var secondJSON = CheckoutTestHelpers.openSessionJSON
         secondJSON["currency"] = "gbp"
         let secondSession = STPCheckoutSession.decodedObject(fromAPIResponse: secondJSON)!
 
