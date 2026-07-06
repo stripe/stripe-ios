@@ -11,6 +11,7 @@ final class LinkControllerPreviewAPITests: XCTestCase {
     func testPreviewSPISurfaceCompiles() {
         _ = LinkPaymentMethodType.card
         _ = LinkConfiguration(supportedPaymentMethodTypes: [.card])
+        _ = LinkConfiguration(supportedPaymentMethodTypes: [.card], allowLogout: false).allowLogout
 
         let result: LinkController.PaymentMethodResult = .canceled
         _ = result

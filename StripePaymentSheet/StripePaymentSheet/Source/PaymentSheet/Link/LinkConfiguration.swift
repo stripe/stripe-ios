@@ -15,7 +15,7 @@ public struct LinkConfiguration {
     @_spi(STP) public let hintMessage: String?
 
     /// Whether to allow the user to log out. When `false`, the logout menu button will be hidden.
-    @_spi(STP) public let allowLogout: Bool
+    @_spi(STP) @_spi(LinkControllerPreview) public let allowLogout: Bool
 
     /// The payment method types to support in the Link sheet. If `nil`, all available types are shown.
     @_spi(LinkControllerPreview) public let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
@@ -34,12 +34,15 @@ public struct LinkConfiguration {
     }
 
     /// Creates a new instance of `LinkConfiguration`.
-    /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. If `nil`, all available types are shown.
+    /// - Parameters:
+    ///   - supportedPaymentMethodTypes: The payment method types to support in the Link sheet. If `nil`, all available types are shown.
+    ///   - allowLogout: Whether to allow the user to log out. When `false`, the logout menu button will be hidden. Defaults to `true`.
     @_spi(LinkControllerPreview) public init(
-        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil
+        supportedPaymentMethodTypes: [LinkPaymentMethodType]?,
+        allowLogout: Bool = true
     ) {
         self.hintMessage = nil
-        self.allowLogout = true
+        self.allowLogout = allowLogout
         self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
     }
 }
