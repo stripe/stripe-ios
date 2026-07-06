@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
 200
 text/html
-Content-Type: text/html;charset=utf-8
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=fix6P1F8TjCfrGvky5CfNDwAW4ie%2FMh4s95tqps%2FAZFZIK%2FORtylq9KcwKaGmL4sbyYg1CQSdxJX5%2BhvsQcMVZsbk6UPLvie3JZgkhXjjR6K2i%2F0QJfBnrhrK7lelObDBJdXOtynHuZDx2hy%2Fx6WHdyjiI8P%2ByhnPQrYbDRCfrf5%2Baj3Gd5Scde%2BsmQHZaMjVoYzYV9zQMEJhLtujMLBwGQLsDtq0VgTHkiyMqBlBts%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: 61cdade014e57d7dd6bc69416e78c5aa
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 15:37:13 GMT
-x-robots-tag: noindex, nofollow
-Content-Length: 358
 x-content-type-options: nosniff
+x-cloud-trace-context: 4fae0b4ee635c6f1231196c5ae8e1587;o=1
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=fZ9UdKXQC70u9DXi%2ByRjm7ehviI7oqc4ywWoYK4BKvYmitAhwuK16W2Jknz%2Fz%2BNSNe5JR%2FQtu1RFCov09jq11CrYx9qG9in59DgRUommta5fWKuFj1N4qTQBVFuOj86OQTyB8Sek75%2B1nGdnbSz8ZCl1ubdB2tsnyaN990gp%2FUEk6VpkFHDN7pIv7s4ZJCAtJgG%2Bd0lpox1HWQnoy%2Bi57PHMUGrRr2oq5SJT0zAUm08%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Wed, 01 Jul 2026 17:27:59 GMT
 x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 358
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 
-{"id":"cs_test_a1ncjXsB62twRsr5fwszrfoNDFMYuGNx52vDHgi9h5V3ddUpmybazBWsOL","client_secret":"cs_test_a1ncjXsB62twRsr5fwszrfoNDFMYuGNx52vDHgi9h5V3ddUpmybazBWsOL_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51T6wBXK8p6Sx2i8adADCFk8mpPEn4UtaTLP3AZS8kzJBgX8ldmV2VCX9oKqXOTH969NHb0zKvYcBK1OC9wBaJE0O00F0x7v2ci"}
+{"id":"cs_test_a1tWSdCHr1zfjAOyoYfEbAHR0u2XTXjmLi9oN31uxVWX8GTS5GC72GuE8Z","client_secret":"cs_test_a1tWSdCHr1zfjAOyoYfEbAHR0u2XTXjmLi9oN31uxVWX8GTS5GC72GuE8Z_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51T6wBXK8p6Sx2i8adADCFk8mpPEn4UtaTLP3AZS8kzJBgX8ldmV2VCX9oKqXOTH969NHb0zKvYcBK1OC9wBaJE0O00F0x7v2ci"}

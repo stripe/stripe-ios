@@ -6,8 +6,10 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
+import Combine
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
+import XCTest
 
 extension Checkout.Amount {
     /// Test helper for constructing a ``Checkout/Amount`` from a minor-units integer.
@@ -16,7 +18,71 @@ extension Checkout.Amount {
     }
 }
 
+// MARK: - Shared Mock Delegates
+
+@MainActor
+class MockCheckoutDelegate: CheckoutDelegate {
+    var lastSession: Checkout.Session?
+    var updateSessionCallCount = 0
+    var beginLoadingCallCount = 0
+    var finishLoadingCallCount = 0
+    var onUpdateSession: (() -> Void)?
+
+    func checkoutDidBeginLoading(_ checkout: Checkout) {
+        beginLoadingCallCount += 1
+    }
+
+    func checkoutDidFinishLoading(_ checkout: Checkout) {
+        finishLoadingCallCount += 1
+    }
+
+    func checkoutDidUpdateSession(_ checkout: Checkout, session: Checkout.Session) {
+        updateSessionCallCount += 1
+        lastSession = session
+        onUpdateSession?()
+    }
+}
+
+@MainActor
+class MockCheckoutIntegrationDelegate: CheckoutIntegrationDelegate {
+    var isSheetPresented: Bool = false
+    var checkoutDidUpdateCallCount = 0
+    var lastCheckout: Checkout?
+    var shouldThrow: Error?
+    var onUpdate: (() -> Void)?
+
+    func checkoutDidUpdate(_ checkout: Checkout) async throws {
+        checkoutDidUpdateCallCount += 1
+        lastCheckout = checkout
+        onUpdate?()
+        if let error = shouldThrow { throw error }
+    }
+}
+
+// MARK: - Emission Recorder
+
+@MainActor
+class CheckoutEmissionRecorder {
+    var sessions: [Checkout.Session] = []
+    var loading: [Bool] = []
+    private var subscriptions = Set<AnyCancellable>()
+
+    init(_ checkout: Checkout) {
+        checkout.$session.dropFirst().sink { [weak self] in self?.sessions.append($0) }
+            .store(in: &subscriptions)
+        checkout.$isLoading.dropFirst().sink { [weak self] in self?.loading.append($0) }
+            .store(in: &subscriptions)
+    }
+}
+
+// MARK: - Shared Helpers
+
 enum CheckoutTestHelpers {
+    static func makeCheckoutWithOpenSession() async -> Checkout {
+        let session = makeOpenSession()
+        return await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
+    }
+
     static func makeOpenSessionJSON() -> [AnyHashable: Any] {
         [
             "session_id": "cs_test_123",
@@ -27,6 +93,10 @@ enum CheckoutTestHelpers {
             "payment_status": "unpaid",
             "payment_method_types": ["card"],
             "currency": "usd",
+            "elements_session": [
+                "session_id": "es_test",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
         ]
     }
 
@@ -66,6 +136,10 @@ enum CheckoutTestHelpers {
             "payment_status": "unpaid",
             "payment_method_types": ["card"],
             "currency": currency,
+            "elements_session": [
+                "session_id": "es_test",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
             "total_summary": [
                 "subtotal": integrationAmount,
                 "total": integrationAmount,

@@ -342,6 +342,11 @@ public final class Checkout: ObservableObject {
 
     // MARK: - State updates
 
+    /// True if the session is still actionable (open or no status yet).
+    var sessionIsOpen: Bool {
+        session.status?.type == .open || session.status?.type == nil
+    }
+
     /// Replaces the current session, preserves client-side overrides, and notifies delegates.
     ///
     /// Client-side address overrides are copied from the current session to `newSession`

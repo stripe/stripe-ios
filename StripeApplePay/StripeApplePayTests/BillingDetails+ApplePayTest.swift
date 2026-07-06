@@ -7,7 +7,7 @@
 
 import Contacts
 import PassKit
-@testable import StripeApplePay
+@_spi(STP) @testable import StripeApplePay
 @_spi(STP) import StripeCore
 import XCTest
 
@@ -134,6 +134,29 @@ final class BillingDetailsApplePayTest: XCTestCase {
         XCTAssertNil(billingDetails?.email) // No email provided
         XCTAssertEqual(billingDetails?.phone, "1234567890") // From shipping
         XCTAssertNil(billingDetails?.address)
+    }
+
+    // MARK: - Memberwise Init
+
+    func testBillingDetailsInitWithEmailOnly() {
+        let billingDetails = StripeAPI.BillingDetails(email: "test@example.com")
+        XCTAssertEqual(billingDetails.email, "test@example.com")
+        XCTAssertNil(billingDetails.name)
+        XCTAssertNil(billingDetails.phone)
+        XCTAssertNil(billingDetails.address)
+    }
+
+    func testBillingDetailsInitWithAllFields() {
+        let billingDetails = StripeAPI.BillingDetails(
+            address: StripeAPI.BillingDetails.Address(),
+            email: "shipping@example.com",
+            name: "Jane Smith",
+            phone: "+14155551234"
+        )
+        XCTAssertEqual(billingDetails.email, "shipping@example.com")
+        XCTAssertEqual(billingDetails.name, "Jane Smith")
+        XCTAssertEqual(billingDetails.phone, "+14155551234")
+        XCTAssertNotNil(billingDetails.address)
     }
 
     // MARK: - Helper Methods

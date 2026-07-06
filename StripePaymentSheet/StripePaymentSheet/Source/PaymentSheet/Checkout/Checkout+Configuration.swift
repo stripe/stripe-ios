@@ -43,7 +43,7 @@ extension Checkout.Configuration {
     /// Options for adaptive pricing behavior.
     ///
     /// Adaptive pricing lets customers see prices converted to their local
-    /// currency. When ``allowed`` is `true` (the default), the Checkout Session
+    /// currency. When ``allowed`` is `true`, the Checkout Session
     /// init request tells Stripe that the integration supports adaptive pricing;
     /// Stripe then decides whether to activate it based on the session's
     /// server-side configuration.

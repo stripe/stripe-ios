@@ -484,11 +484,7 @@ final class PaymentSheetLoader {
                 intent = .deferredIntent(intentConfig: intentConfig)
             }
         case .checkout(let checkout):
-            guard let elementsSessionJSON = checkout.stpSession.allResponseFields["elements_session"] as? [AnyHashable: Any],
-                  let decodedElementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJSON) else {
-                throw PaymentSheetError.unknown(debugDescription: "Failed to decode elements session from provided checkout session object")
-            }
-            elementsSession = decodedElementsSession
+            elementsSession = checkout.stpSession.elementsSession
             intent = .checkout(checkout)
         }
 
