@@ -257,6 +257,12 @@ class RowButton: UIView, EventHandler {
             return
         }
         heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance, isEmbedded: isEmbedded))
+        // Use a below-required priority so that if a taller subview (e.g. a just-shown
+        // "Change >" accessory added via addChangeButton()) needs more height, Auto Layout
+        // grows the row instead of reporting an unsatisfiable constraint conflict. In the
+        // common case (nothing else competes for height) this still fully determines the
+        // row height, preserving equal-height rows. (RUN_MOBILESDK-5410)
+        heightConstraint?.priority = .required - 1
         heightConstraint?.isActive = true
     }
 }
