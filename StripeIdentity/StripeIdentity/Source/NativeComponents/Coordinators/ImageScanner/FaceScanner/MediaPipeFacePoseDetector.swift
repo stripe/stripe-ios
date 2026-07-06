@@ -12,8 +12,8 @@ import Foundation
 @_spi(STP) import StripeCameraCore
 import UIKit
 
-#if canImport(MediaPipeTasksVision)
-@_implementationOnly import MediaPipeTasksVision
+#if canImport(MediaPipeSPMRuntime)
+internal import MediaPipeSPMRuntime
 
 final class MediaPipeFacePoseDetector: FaceGeometryDetector {
     private enum Configuration {
@@ -24,6 +24,8 @@ final class MediaPipeFacePoseDetector: FaceGeometryDetector {
     private let faceLandmarker: FaceLandmarker
 
     init(modelPath: String) throws {
+        prepareMediaPipeSPMFaceLandmarkerGraph()
+
         let options = FaceLandmarkerOptions()
         options.baseOptions.modelAssetPath = modelPath
         options.runningMode = .image
@@ -62,7 +64,10 @@ final class MediaPipeFacePoseDetector: FaceGeometryDetector {
                     ),
                 ]
             ),
-            facePose: facePose
+            facePose: facePose,
+            faceLandmarkResult: Self.encodedFaceLandmarkResult(
+                from: result.faceBlendshapes
+            )
         )
     }
 
@@ -127,6 +132,37 @@ private extension MediaPipeFacePoseDetector {
         return scores.reduce(0, +) / Float(scores.count)
     }
 
+    static func encodedFaceLandmarkResult(
+        from faceBlendshapes: [Classifications]
+    ) -> String? {
+        let categories = faceBlendshapes.flatMap { classifications in
+            classifications.categories.map { category -> [String: Any] in
+                var result: [String: Any] = [
+                    "score": category.score,
+                ]
+                if category.index >= 0 {
+                    result["index"] = category.index
+                }
+                if let categoryName = category.categoryName {
+                    result["category_name"] = categoryName
+                }
+                if let displayName = category.displayName {
+                    result["display_name"] = displayName
+                }
+                return result
+            }
+        }
+        let payload: [String: Any] = [
+            "categories": categories,
+        ]
+        guard JSONSerialization.isValidJSONObject(payload),
+            let data = try? JSONSerialization.data(withJSONObject: payload)
+        else {
+            return nil
+        }
+        return data.base64EncodedString()
+    }
+
     static func rotationMatrixToPose(_ matrix: TransformMatrix) -> FacePose? {
         guard matrix.rows == 4,
             matrix.columns == 4
@@ -162,19 +198,44 @@ private extension MediaPipeFacePoseDetector {
 }
 #endif
 
+enum FaceGeometryDetectorFactoryError: Error, CustomStringConvertible {
+    case mediaPipeModuleUnavailable
+    case missingModelResource(bundlePath: String)
+    case failedToInitializeMediaPipeLandmarker(String)
+
+    var description: String {
+        switch self {
+        case .mediaPipeModuleUnavailable:
+            return "MediaPipeSPMRuntime module is not available to StripeIdentity"
+        case .missingModelResource(let bundlePath):
+            return "face_landmarker.task was not found in \(bundlePath)"
+        case .failedToInitializeMediaPipeLandmarker(let errorDescription):
+            return "FaceLandmarker failed to initialize: \(errorDescription)"
+        }
+    }
+}
+
 enum FaceGeometryDetectorFactory {
-    static func makeDefaultDetector() -> FaceGeometryDetector? {
+    static func makeDefaultDetector() throws -> FaceGeometryDetector {
         guard let modelPath = StripeIdentityBundleLocator.resourcesBundle.path(
             forResource: "face_landmarker",
             ofType: "task"
         ) else {
-            return nil
+            throw FaceGeometryDetectorFactoryError.missingModelResource(
+                bundlePath: StripeIdentityBundleLocator.resourcesBundle.bundlePath
+            )
         }
 
-        #if canImport(MediaPipeTasksVision)
-        return try? MediaPipeFacePoseDetector(modelPath: modelPath)
+        #if canImport(MediaPipeSPMRuntime)
+        do {
+            return try MediaPipeFacePoseDetector(modelPath: modelPath)
+        } catch {
+            throw FaceGeometryDetectorFactoryError.failedToInitializeMediaPipeLandmarker(
+                String(describing: error)
+            )
+        }
         #else
-        return nil
+        throw FaceGeometryDetectorFactoryError.mediaPipeModuleUnavailable
         #endif
     }
 }

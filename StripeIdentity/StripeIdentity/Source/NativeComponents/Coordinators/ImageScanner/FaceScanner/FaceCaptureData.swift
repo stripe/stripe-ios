@@ -15,17 +15,20 @@ struct FaceScannerInputOutput: Equatable {
     let scannerOutput: FaceScannerOutput
     let cameraExifMetadata: CameraExifMetadata?
     let capturePose: FaceCapturePose
+    let capturedAt: Int
 
     init(
         image: CGImage,
         scannerOutput: FaceScannerOutput,
         cameraExifMetadata: CameraExifMetadata?,
-        capturePose: FaceCapturePose = .front
+        capturePose: FaceCapturePose = .front,
+        capturedAt: Int = Int(Date().timeIntervalSince1970 * 1000)
     ) {
         self.image = image
         self.scannerOutput = scannerOutput
         self.cameraExifMetadata = cameraExifMetadata
         self.capturePose = capturePose
+        self.capturedAt = capturedAt
     }
 }
 

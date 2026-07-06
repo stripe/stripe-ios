@@ -618,7 +618,9 @@ extension SelfieCaptureViewController {
         let apiSequence = apiConfig.poseSequence?
             .compactMap { FaceCapturePose(rawValue: $0) }
             .filter { $0 != .front } ?? []
-        return apiSequence.isEmpty ? [.right, .left] : apiSequence
+        return apiSequence.isEmpty && apiConfig.enable3DFaceCapture
+            ? [.right, .left]
+            : apiSequence
     }
 
     func nextPose(

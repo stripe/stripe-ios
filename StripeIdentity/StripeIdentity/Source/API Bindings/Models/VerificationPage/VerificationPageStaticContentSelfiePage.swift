@@ -30,12 +30,17 @@ extension StripeAPI {
         let trainingConsentText: String
         let blurThreshold: Decimal?
         let poseSequence: [String]?
-        private let apiEnable3DFaceCapture: Bool
 
         private static let local3DFaceCaptureOverride: Bool? = true
 
         var enable3DFaceCapture: Bool {
-            return Self.local3DFaceCaptureOverride ?? apiEnable3DFaceCapture
+            return Self.local3DFaceCaptureOverride ?? apiIncludes3DFaceCapturePose
+        }
+
+        private var apiIncludes3DFaceCapturePose: Bool {
+            return poseSequence?.contains {
+                $0 == FaceCapturePose.left.rawValue || $0 == FaceCapturePose.right.rawValue
+            } == true
         }
 
         private enum CodingKeys: String, CodingKey {
@@ -57,7 +62,6 @@ extension StripeAPI {
             case trainingConsentText
             case blurThreshold
             case poseSequence
-            case apiEnable3DFaceCapture = "enable_3d_face_capture"
         }
 
         init(from decoder: Decoder) throws {
@@ -80,7 +84,6 @@ extension StripeAPI {
             trainingConsentText = try container.decode(String.self, forKey: .trainingConsentText)
             blurThreshold = try container.decodeIfPresent(Decimal.self, forKey: .blurThreshold)
             poseSequence = try container.decodeIfPresent([String].self, forKey: .poseSequence)
-            apiEnable3DFaceCapture = try container.decodeIfPresent(Bool.self, forKey: .apiEnable3DFaceCapture) ?? false
         }
     }
 

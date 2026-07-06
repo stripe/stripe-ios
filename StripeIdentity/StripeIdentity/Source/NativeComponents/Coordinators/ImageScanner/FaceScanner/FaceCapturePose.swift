@@ -41,6 +41,17 @@ struct FacePose: Equatable {
 struct FaceGeometry: Equatable {
     let faceDetectorOutput: FaceDetectorOutput
     let facePose: FacePose?
+    let faceLandmarkResult: String?
+
+    init(
+        faceDetectorOutput: FaceDetectorOutput,
+        facePose: FacePose?,
+        faceLandmarkResult: String? = nil
+    ) {
+        self.faceDetectorOutput = faceDetectorOutput
+        self.facePose = facePose
+        self.faceLandmarkResult = faceLandmarkResult
+    }
 }
 
 protocol FaceGeometryDetector {

@@ -15,7 +15,19 @@ let package = Package(
     targets: [
         .target(
             name: "MediaPipeSPMRuntime",
-            dependencies: ["MediaPipeSPMLinkSupport"]
+            dependencies: [
+                "MediaPipeSPMGraphReferences",
+                "MediaPipeSPMLinkSupport",
+                "MediaPipeTasksVision",
+            ]
+        ),
+        .target(
+            name: "MediaPipeSPMGraphReferences",
+            dependencies: [
+                "MediaPipeCommonGraphLibraries",
+                "MediaPipeTasksCommon",
+            ],
+            publicHeadersPath: "include"
         ),
         .target(
             name: "MediaPipeSPMLinkSupport",

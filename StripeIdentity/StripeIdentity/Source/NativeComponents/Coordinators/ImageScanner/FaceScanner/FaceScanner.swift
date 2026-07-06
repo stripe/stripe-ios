@@ -82,16 +82,20 @@ extension FaceScanner: ImageScanner {
         do {
             let faceDetectorOutput: FaceDetectorOutput
             let facePose: FacePose?
+            let faceLandmarkResult: String?
             if let faceGeometryDetector {
                 let faceGeometry = try faceGeometryDetector.detectFace(pixelBuffer: pixelBuffer)
                 faceDetectorOutput = faceGeometry?.faceDetectorOutput ?? .init(predictions: [])
                 facePose = faceGeometry?.facePose
+                faceLandmarkResult = faceGeometry?.faceLandmarkResult
             } else if let faceDetector {
                 faceDetectorOutput = try faceDetector.scanImage(pixelBuffer: pixelBuffer)
                 facePose = nil
+                faceLandmarkResult = nil
             } else {
                 faceDetectorOutput = .init(predictions: [])
                 facePose = nil
+                faceLandmarkResult = nil
             }
             return Promise(
                 value: .init(
@@ -101,7 +105,8 @@ extension FaceScanner: ImageScanner {
                     motionBlurResult: motionBlurResult(
                         faceDetectorOutput: faceDetectorOutput
                     ),
-                    facePose: facePose
+                    facePose: facePose,
+                    faceLandmarkResult: faceLandmarkResult
                 )
             )
         } catch {

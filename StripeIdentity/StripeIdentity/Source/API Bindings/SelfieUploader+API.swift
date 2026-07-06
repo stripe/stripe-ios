@@ -33,6 +33,7 @@ extension StripeAPI.VerificationPageDataFace {
         bestFrameExifMetadata: CameraExifMetadata?,
         trainingConsent: Bool
     ) {
+        let captureOrders = capturedImages.captureOrders
         self.init(
             bestHighResImage: uploadedFiles.bestHighResFile.id,
             bestLowResImage: uploadedFiles.bestLowResFile.id,
@@ -67,27 +68,55 @@ extension StripeAPI.VerificationPageDataFace {
             bestIsVirtualCamera: capturedImages.bestMiddle.scannerOutput.cameraProperties?
                 .isVirtualDevice,
             bestFrameData: capturedImages.shouldIncludeCaptureFrameMetadata
-                ? .init(capturedImage: capturedImages.bestMiddle, faceScoreVariance: capturedImages.faceScoreVariance)
+                ? .init(
+                    capturedImage: capturedImages.bestMiddle,
+                    faceScoreVariance: capturedImages.faceScoreVariance,
+                    captureOrder: captureOrders[.best]
+                )
                 : nil,
             firstFrameData: capturedImages.shouldIncludeCaptureFrameMetadata
-                ? .init(capturedImage: capturedImages.first, faceScoreVariance: capturedImages.faceScoreVariance)
+                ? .init(
+                    capturedImage: capturedImages.first,
+                    faceScoreVariance: capturedImages.faceScoreVariance,
+                    captureOrder: captureOrders[.first]
+                )
                 : nil,
             lastFrameData: capturedImages.shouldIncludeCaptureFrameMetadata
-                ? .init(capturedImage: capturedImages.last, faceScoreVariance: capturedImages.faceScoreVariance)
+                ? .init(
+                    capturedImage: capturedImages.last,
+                    faceScoreVariance: capturedImages.faceScoreVariance,
+                    captureOrder: captureOrders[.last]
+                )
                 : nil,
             leftFrameData: capturedImages.shouldIncludeCaptureFrameMetadata
                 ? capturedImages.leftSide.map {
-                    .init(capturedImage: $0, faceScoreVariance: capturedImages.faceScoreVariance)
+                    .init(
+                        capturedImage: $0,
+                        faceScoreVariance: capturedImages.faceScoreVariance,
+                        captureOrder: captureOrders[.left]
+                    )
                 }
                 : nil,
             rightFrameData: capturedImages.shouldIncludeCaptureFrameMetadata
                 ? capturedImages.rightSide.map {
-                    .init(capturedImage: $0, faceScoreVariance: capturedImages.faceScoreVariance)
+                    .init(
+                        capturedImage: $0,
+                        faceScoreVariance: capturedImages.faceScoreVariance,
+                        captureOrder: captureOrders[.right]
+                    )
                 }
                 : nil,
             trainingConsent: trainingConsent
         )
     }
+}
+
+private enum FaceCaptureFrameSlot: Hashable {
+    case first
+    case best
+    case last
+    case left
+    case right
 }
 
 private extension FaceCaptureData {
@@ -96,12 +125,40 @@ private extension FaceCaptureData {
             $0.capturePose != .front || $0.scannerOutput.facePose != nil
         }
     }
+
+    var captureOrders: [FaceCaptureFrameSlot: Int] {
+        var frames: [(FaceCaptureFrameSlot, FaceScannerInputOutput)] = [
+            (.first, first),
+            (.best, bestMiddle),
+            (.last, last),
+        ]
+        if let leftSide {
+            frames.append((.left, leftSide))
+        }
+        if let rightSide {
+            frames.append((.right, rightSide))
+        }
+
+        let sortedFrames = frames.enumerated().sorted { lhs, rhs in
+            if lhs.element.1.capturedAt == rhs.element.1.capturedAt {
+                return lhs.offset < rhs.offset
+            }
+            return lhs.element.1.capturedAt < rhs.element.1.capturedAt
+        }
+
+        return Dictionary(
+            uniqueKeysWithValues: sortedFrames.enumerated().map { index, frame in
+                (frame.element.0, index + 1)
+            }
+        )
+    }
 }
 
 extension StripeAPI.VerificationPageDataFaceFrameData {
     init(
         capturedImage: FaceScannerInputOutput,
-        faceScoreVariance: Float
+        faceScoreVariance: Float,
+        captureOrder: Int?
     ) {
         let faceRect = capturedImage.scannerOutput.faceRect
         let imageWidth = CGFloat(capturedImage.image.width)
@@ -111,7 +168,7 @@ extension StripeAPI.VerificationPageDataFaceFrameData {
             faceScore: .init(capturedImage.scannerOutput.faceScore),
             faceScoreVariance: .init(faceScoreVariance),
             blurScore: nil,
-            blurScoreVariance: nil,
+            blurScoreVariance: .init(1),
             yaw: capturedImage.scannerOutput.facePose.map { .init($0.yaw) },
             pitch: capturedImage.scannerOutput.facePose.map { .init($0.pitch) },
             roll: capturedImage.scannerOutput.facePose.map { .init($0.roll) },
@@ -121,11 +178,31 @@ extension StripeAPI.VerificationPageDataFaceFrameData {
                 Int(faceRect.width * imageWidth),
                 Int(faceRect.height * imageHeight),
             ],
-            inputSize: nil,
-            faceLandmarkResult: nil,
-            capturedAt: nil,
-            captureOrder: nil,
-            cameraInfo: nil
+            inputSize: [
+                capturedImage.image.width,
+                capturedImage.image.height,
+            ],
+            faceLandmarkResult: capturedImage.scannerOutput.faceLandmarkResult,
+            capturedAt: capturedImage.capturedAt,
+            captureOrder: captureOrder,
+            cameraInfo: Self.encodedCameraInfo(from: capturedImage.cameraExifMetadata)
         )
+    }
+
+    private static func encodedCameraInfo(
+        from exifMetadata: CameraExifMetadata?
+    ) -> String? {
+        guard let cameraLabel = exifMetadata?.lensModel else {
+            return nil
+        }
+        let payload: [String: Any] = [
+            "cameraLabel": cameraLabel,
+        ]
+        guard JSONSerialization.isValidJSONObject(payload),
+            let data = try? JSONSerialization.data(withJSONObject: payload)
+        else {
+            return nil
+        }
+        return data.base64EncodedString()
     }
 }

@@ -17,7 +17,7 @@ enum IdentityMLModelLoaderError: Error, AnalyticLoggableErrorV2 {
     /// The ML model never started loading on the client
     case mlModelNeverLoaded
     /// MediaPipe face detection is not available.
-    case mediaPipeFaceDetectorUnavailable
+    case mediaPipeFaceDetectorUnavailable(String)
 
     func analyticLoggableSerializeForLogging() -> [String: Any] {
         switch self {
@@ -30,9 +30,10 @@ enum IdentityMLModelLoaderError: Error, AnalyticLoggableErrorV2 {
             return [
                 "type": "ml_model_never_loaded",
             ]
-        case .mediaPipeFaceDetectorUnavailable:
+        case .mediaPipeFaceDetectorUnavailable(let reason):
             return [
                 "type": "media_pipe_face_detector_unavailable",
+                "reason": reason,
             ]
         }
     }
@@ -180,8 +181,13 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
         from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage
     ) {
         if selfiePageConfig.enable3DFaceCapture {
-            guard let faceGeometryDetector = FaceGeometryDetectorFactory.makeDefaultDetector() else {
-                let error = IdentityMLModelLoaderError.mediaPipeFaceDetectorUnavailable
+            let faceGeometryDetector: FaceGeometryDetector
+            do {
+                faceGeometryDetector = try FaceGeometryDetectorFactory.makeDefaultDetector()
+            } catch {
+                let error = IdentityMLModelLoaderError.mediaPipeFaceDetectorUnavailable(
+                    String(describing: error)
+                )
                 Self.logModelLoadingError(
                     error,
                     modelType: "face",
