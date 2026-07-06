@@ -994,7 +994,7 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
         if isPresented {
             // `update` asserts !isPresented, so reload in-place instead
-            checkout.stpSession.applyAddressOverrides(to: &configuration)
+            checkout.session.applyAddressOverrides(to: &configuration)
             try await reloadPresentedSheet(mode: .checkout(checkout))
         } else {
             try await update(checkout: checkout)

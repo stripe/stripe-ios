@@ -527,7 +527,7 @@ extension EmbeddedPaymentElement: CheckoutIntegrationDelegate {
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
         if isSheetPresented {
             // `update` asserts the sheet isn't presented, so reload in-place instead.
-            checkout.stpSession.applyAddressOverrides(to: &configuration)
+            checkout.session.applyAddressOverrides(to: &configuration)
             let result = await reloadPresentedSheet(mode: .checkout(checkout))
             if case .failed(let error) = result {
                 throw error
