@@ -249,8 +249,7 @@ public final class EmbeddedPaymentElement {
         return updateResult
     }
 
-    /// Reloads while the sheet is presented: shows a spinner, fetches fresh data, then hot-swaps the new VC into the live bottom sheet.
-    /// Unlike `update`, which rebuilds offscreen when nothing is shown.
+    /// Reloads the sheet in-place while it's presented, swapping in the new form VC.
     @MainActor
     private func reloadPresentedSheet(mode: PaymentSheet.InitializationMode) async -> UpdateResult {
         selectedFormViewController?.setReloading(true)
@@ -286,7 +285,6 @@ public final class EmbeddedPaymentElement {
         }
     }
 
-    /// Rebuilds the embedded view and form VC from a new load result, keeping the previous selection if it's still available.
     @MainActor
     @discardableResult
     private func applyLoadResultAndRebuildView(
