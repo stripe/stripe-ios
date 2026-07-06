@@ -92,6 +92,8 @@ class EmbeddedFormViewController: UIViewController {
     private(set) var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
     private(set) var isReloading: Bool = false
+    /// True when the form has started its closing sequence (e.g. billing sync before dismiss).
+    private(set) var isDismissing: Bool = false
     private var isBusy: Bool { isPaymentInFlight || isReloading }
     /// Previous customer input - in the `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
     private(set) var previousPaymentOption: PaymentOption?
@@ -397,6 +399,7 @@ class EmbeddedFormViewController: UIViewController {
 
         // If we defer confirmation, simply close the sheet
         if shouldDeferConfirmation {
+            isDismissing = true
             self.delegate?.embeddedFormViewControllerDidContinue(self)
             return
         }
