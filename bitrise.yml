@@ -553,7 +553,7 @@ workflows:
               echo "iOS 15.5 runtime already installed"
             else
               echo "Installing iOS 15.5 runtime..."
-              sudo xcodes runtimes install "iOS 15.5"
+              xcodebuild -downloadPlatform iOS -buildVersion 15.5
             fi
   legacy-tests-15:
     steps:
@@ -671,7 +671,7 @@ workflows:
               echo "iOS 16.4 runtime already installed"
             else
               echo "Installing iOS 16.4 runtime..."
-              sudo xcodes runtimes install "iOS 16.4"
+              xcodebuild -downloadPlatform iOS -buildVersion 16.4
             fi
   prep_all:
     steps:
