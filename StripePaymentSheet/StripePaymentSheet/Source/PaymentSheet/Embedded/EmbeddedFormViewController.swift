@@ -91,7 +91,7 @@ class EmbeddedFormViewController: UIViewController {
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     private var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
-    private(set) var isReloading: Bool = false
+    private var isReloading: Bool = false
     private var isBusy: Bool { isPaymentInFlight || isReloading }
     /// Previous customer input - in the `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
     private(set) var previousPaymentOption: PaymentOption?
@@ -111,7 +111,7 @@ class EmbeddedFormViewController: UIViewController {
         DynamicHeightContainerView()
     }()
 
-    private(set) lazy var primaryButton: ConfirmButton = {
+    private lazy var primaryButton: ConfirmButton = {
         ConfirmButton(
             callToAction: .setup, // Dummy value; real value is set after init
             appearance: configuration.appearance,
