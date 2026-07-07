@@ -799,7 +799,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 self.isPaymentInFlight = false
                 self.isUserInteractionEnabled = true
                 self.error = error
-                self.updateUI()
+                self.updateError()
+                self.updatePrimaryButton()
             }
         }
     }
