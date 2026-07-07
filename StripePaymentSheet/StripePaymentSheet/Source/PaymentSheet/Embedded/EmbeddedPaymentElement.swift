@@ -174,11 +174,6 @@ public final class EmbeddedPaymentElement {
         guard checkout.sessionIsOpen else {
             return .succeeded
         }
-        do {
-            try await checkout.awaitPendingOperations()
-        } catch {
-            return .failed(error: error)
-        }
         checkout.session.applyAddressOverrides(to: &configuration)
         return await performUpdate(mode: .checkout(checkout))
     }
