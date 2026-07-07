@@ -24,11 +24,18 @@ extension XCUIElement {
         }
     }
 
-    func scrollToAndTap(in app: XCUIApplication) {
-        while !self.exists {
+    func scrollToAndTap(in app: XCUIApplication, maxScrolls: Int = 20) {
+        // Keep scrolling until the element is actually hittable, not just present in the
+        // accessibility hierarchy. An element `exists` the moment it's partially onscreen
+        // (e.g. peeking in at the bottom edge), but tapping it there is unreliable because
+        // the tap point may be clipped or obscured. Bound the loop so a missing element
+        // fails fast instead of scrolling forever.
+        var scrolls = 0
+        while !self.isHittable && scrolls < maxScrolls {
             app.swipeUp()
+            scrolls += 1
         }
-        self.tap()
+        self.forceTapElement()
     }
 
     func forceTapWhenHittableInTestCase(_ testCase: XCTestCase) {
