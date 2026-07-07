@@ -803,13 +803,6 @@ extension PaymentSheet {
             return updateID
         }
 
-        private func failUpdate(_ updateID: UUID) {
-            guard latestUpdateContext?.id == updateID else {
-                return
-            }
-            latestUpdateContext?.status = .failed
-        }
-
         private func performUpdate(
             mode: PaymentSheet.InitializationMode,
             updateID: UUID = UUID(),
