@@ -268,7 +268,7 @@ public final class EmbeddedPaymentElement {
             let newFormViewController = applyLoadResultAndRebuildView(loadResult: loadResult, confirmationChallenge: confirmationChallenge)
 
             if let bottomSheet = presentingViewController?.presentedViewController as? BottomSheetViewController {
-                if oldFormVC?.isDismissing == true {
+                if bottomSheet.isBeingDismissed {
                     // The sheet is closing — skip the VC swap to avoid a flash.
                     // The data is already updated via applyLoadResultAndRebuildView.
                 } else if let newFormViewController {
@@ -283,7 +283,7 @@ public final class EmbeddedPaymentElement {
             return .succeeded
         } catch {
             selectedFormViewController?.setReloading(false)
-            selectedFormViewController?.setReloadError(error)
+            selectedFormViewController?.updateErrorLabel(for: error)
             embeddedPaymentMethodsView.isUserInteractionEnabled = true
             return .failed(error: error)
         }
@@ -525,21 +525,15 @@ extension EmbeddedPaymentElement: CheckoutIntegrationDelegate {
     }
 
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
+        checkout.session.applyAddressOverrides(to: &configuration)
+        let result: UpdateResult
         if isSheetPresented {
-            // `update` asserts the sheet isn't presented, so reload in-place instead.
-            checkout.session.applyAddressOverrides(to: &configuration)
-            let result = await reloadPresentedSheet(mode: .checkout(checkout))
-            if case .failed(let error) = result {
-                throw error
-            }
+            result = await reloadPresentedSheet(mode: .checkout(checkout))
         } else {
-            let result = await update(checkout: checkout)
-            switch result {
-            case .succeeded, .canceled:
-                break
-            case .failed(let error):
-                throw error
-            }
+            result = await update(checkout: checkout)
+        }
+        if case .failed(let error) = result {
+            throw error
         }
     }
 }

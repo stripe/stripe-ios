@@ -89,11 +89,9 @@ class EmbeddedFormViewController: UIViewController {
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
-    private(set) var error: Swift.Error?
+    private var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
     private(set) var isReloading: Bool = false
-    /// True when the form has started its closing sequence (e.g. billing sync before dismiss).
-    private(set) var isDismissing: Bool = false
     private var isBusy: Bool { isPaymentInFlight || isReloading }
     /// Previous customer input - in the `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
     private(set) var previousPaymentOption: PaymentOption?
@@ -161,7 +159,7 @@ class EmbeddedFormViewController: UIViewController {
     }()
 
     private lazy var mandateView = SimpleMandateTextView(theme: configuration.appearance.asElementsTheme)
-    private(set) lazy var errorLabel = ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
+    private lazy var errorLabel = ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
     private let stackView: UIStackView = UIStackView()
 
     weak var delegate: EmbeddedFormViewControllerDelegate?
@@ -271,11 +269,6 @@ class EmbeddedFormViewController: UIViewController {
             view.endEditing(true)
         }
         updatePrimaryButton()
-    }
-
-    func setReloadError(_ error: Swift.Error) {
-        self.error = error
-        updateError()
     }
 
     private func didCancel() {
@@ -399,7 +392,6 @@ class EmbeddedFormViewController: UIViewController {
 
         // If we defer confirmation, simply close the sheet
         if shouldDeferConfirmation {
-            isDismissing = true
             self.delegate?.embeddedFormViewControllerDidContinue(self)
             return
         }
