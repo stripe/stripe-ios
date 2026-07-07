@@ -466,7 +466,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
         // Move session to complete
         let completedSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: {
-            var json = CheckoutTestHelpers.makeOpenSessionJSON()
+            var json = CheckoutTestHelpers.openSessionJSON
             json["status"] = "complete"
             json["payment_status"] = "paid"
             return json
