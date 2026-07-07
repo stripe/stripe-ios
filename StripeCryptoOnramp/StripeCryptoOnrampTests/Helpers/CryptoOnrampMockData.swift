@@ -65,6 +65,22 @@ enum ConfirmUserAttestationResponseMock: String, MockData {
     case confirmUserAttestationResponse_200 = "ConfirmUserAttestationResponse_200"
 }
 
+enum WalletOwnershipChallengeResponseMock: String, MockData {
+    var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    typealias ResponseType = WalletOwnershipChallenge
+
+    case walletOwnershipChallengeResponse_200 = "WalletOwnershipChallengeResponse_200"
+}
+
+enum SubmitWalletOwnershipSignatureResponseMock: String, MockData {
+    var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    typealias ResponseType = CryptoConsumerWallet
+
+    case submitWalletOwnershipSignatureResponse_200 = "SubmitWalletOwnershipSignatureResponse_200"
+}
+
 enum StripeAPIErrorResponseMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
