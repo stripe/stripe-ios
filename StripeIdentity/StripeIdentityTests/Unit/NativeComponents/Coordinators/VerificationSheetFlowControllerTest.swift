@@ -16,6 +16,7 @@ import XCTest
 
 private let mockError = NSError(domain: "", code: 0, userInfo: nil)
 
+@MainActor
 final class VerificationSheetFlowControllerTest: XCTestCase {
 
     let mockCollectedFields: [Set<StripeAPI.VerificationPageFieldType>] = [
@@ -46,7 +47,7 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
     }
 
     // Tests the navigation stack between screen transitions
-    func testTransitionToNextScreen() throws {
+    func testTransitionToNextScreen() async throws {
         let mockVerificationPage = try VerificationPageMock.response200.make()
         let mockNextViewController1 = UIViewController(nibName: nil, bundle: nil)
         let mockNextViewController2 = UIViewController(nibName: nil, bundle: nil)
@@ -92,10 +93,10 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
             [mockSuccessViewController]
         )
 
-        wait(for: [exp1, exp2, exp3], timeout: 1)
+        await fulfillment(of: [exp1, exp2, exp3], timeout: 1)
     }
 
-    func testNextViewControllerError() throws {
+    func testNextViewControllerError() async throws {
         // API error on data save
         let staticAPIErrExp = expectation(description: "Static API error")
         flowController.nextViewController(
@@ -140,10 +141,10 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
             }
         )
 
-        wait(for: [staticAPIErrExp, updateAPIErrExp, reqDataErrExp], timeout: 1)
+        await fulfillment(of: [staticAPIErrExp, updateAPIErrExp, reqDataErrExp], timeout: 1)
     }
 
-    func testNoMoreMissingFieldsReturnSuccessViewController() throws {
+    func testNoMoreMissingFieldsReturnSuccessViewController() async throws {
         let exp = expectation(description: "No more missing fields")
         flowController.nextViewController(
             skipTestMode: false,
@@ -155,11 +156,11 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
                 exp.fulfill()
             }
         )
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
     // Requires document photo without type - should return DocumentTypeSelectViewController
-    func testMissingDocFrontNoType() throws {
+    func testMissingDocFrontNoType() async throws {
         // Mock that document ML models successfully loaded
         mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
 
@@ -171,10 +172,10 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
                 exp.fulfill()
             }
         )
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
-    func testNoSelfieConfigError() throws {
+    func testNoSelfieConfigError() async throws {
         let exp = expectation(description: "testNoSelfieConfigError")
 
         let nextVC = flowController.makeSelfieCaptureViewController(
@@ -188,10 +189,10 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
             .error(VerificationSheetFlowControllerError.missingSelfieConfig)
         )
         exp.fulfill()
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
-    func testMLModelsNeverLoadedError() throws {
+    func testMLModelsNeverLoadedError() async throws {
         let exp = expectation(description: "testMLModelsNeverLoadedError")
 
         let nextVC = flowController.makeSelfieCaptureViewController(
@@ -209,10 +210,10 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
             )
         )
         exp.fulfill()
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
-    func testTestMode() throws {
+    func testTestMode() async throws {
         let exp = expectation(description: "testTestMode")
         try nextViewController(
             missingRequirements: [.face],
@@ -222,10 +223,10 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
                 exp.fulfill()
             }
         )
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
-    func testNextViewControllerSuccess() throws {
+    func testNextViewControllerSuccess() async throws {
         let exp = expectation(description: "testNextViewControllerSuccess")
         try nextViewController(
             missingRequirements: [],
@@ -235,10 +236,10 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
                 exp.fulfill()
             }
         )
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
-    func testNextViewControllerBiometricConsent() throws {
+    func testNextViewControllerBiometricConsent() async throws {
         let exp = expectation(description: "testNextViewControllerBiometricConsent")
         try nextViewController(
             missingRequirements: [.biometricConsent],
@@ -247,12 +248,12 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
                 exp.fulfill()
             }
         )
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
     // When verification type is document and requires Address, both .biometricConsent, .address will be missing
     // should navigate to BiometricConsent
-    func testNextViewControllerBiometricConsentWithMissingAddress() throws {
+    func testNextViewControllerBiometricConsentWithMissingAddress() async throws {
         let exp = expectation(description: "testNextViewControllerBiometricConsent")
         try nextViewController(
             missingRequirements: [.biometricConsent, .address],
@@ -261,12 +262,12 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
                 exp.fulfill()
             }
         )
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
     // When verification type is document and requires Address, both .biometricConsent, .idNumber will be missing
     // should navigate to BiometricConsent
-    func testNextViewControllerBiometricConsentWithMissingIdNumber() throws {
+    func testNextViewControllerBiometricConsentWithMissingIdNumber() async throws {
         let exp = expectation(description: "testNextViewControllerBiometricConsent")
         try nextViewController(
             missingRequirements: [.biometricConsent, .idNumber],
@@ -275,25 +276,25 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
                 exp.fulfill()
             }
         )
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
-    func testNextViewControllerIndividualFields() throws {
+    func testNextViewControllerIndividualFields() async throws {
         // When verification type is document and address/idNumber is requested,
         // after user submitted consent and document, missing should only remain .address or .idNumber.
         // should navigate to IndividualController
-        try verifyIndividualViewController([.address])
-        try verifyIndividualViewController([.idNumber])
+        try await verifyIndividualViewController([.address])
+        try await verifyIndividualViewController([.idNumber])
     }
 
-    func testNextViewControllerIndividualWelcome() throws {
+    func testNextViewControllerIndividualWelcome() async throws {
         // When verification type is not document, .name or .dob will be missing,
         // should navigate to IndividualWelcomeViewController
-        try verifyIndividualWelcomeViewController([.name, .dob, .idNumber])
-        try verifyIndividualWelcomeViewController([.name, .dob, .address])
+        try await verifyIndividualWelcomeViewController([.name, .dob, .idNumber])
+        try await verifyIndividualWelcomeViewController([.name, .dob, .address])
     }
 
-    func verifyIndividualViewController(_ missingRequirements: Set<StripeAPI.VerificationPageFieldType>) throws {
+    func verifyIndividualViewController(_ missingRequirements: Set<StripeAPI.VerificationPageFieldType>) async throws {
         let exp = expectation(description: "testNextViewControllerIndividual")
         try nextViewController(
             missingRequirements: missingRequirements,
@@ -302,10 +303,10 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
                 exp.fulfill()
             }
         )
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
-    func verifyIndividualWelcomeViewController(_ missingRequirements: Set<StripeAPI.VerificationPageFieldType>) throws {
+    func verifyIndividualWelcomeViewController(_ missingRequirements: Set<StripeAPI.VerificationPageFieldType>) async throws {
         let exp = expectation(description: "testNextViewControllerIndividualWelcome")
         try nextViewController(
             missingRequirements: missingRequirements,
@@ -314,10 +315,10 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
                 exp.fulfill()
             }
         )
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
-    func testNextViewControllerDocumentWarmup() throws {
+    func testNextViewControllerDocumentWarmup() async throws {
         // Mock that user has selected document type
         mockSheetController.collectedData = .init()
 
@@ -342,10 +343,10 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
             }
         )
 
-        wait(for: [frontExp, backExp], timeout: 1)
+        await fulfillment(of: [frontExp, backExp], timeout: 1)
     }
 
-    func testNextViewControllerSelfie() throws {
+    func testNextViewControllerSelfie() async throws {
         // Mock that face ML models successfully loaded
         mockMLModelLoader.faceModelsPromise.resolve(with: .init(FaceScannerMock()))
 
@@ -358,7 +359,7 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
             }
         )
 
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
     func testDelegateChain() {

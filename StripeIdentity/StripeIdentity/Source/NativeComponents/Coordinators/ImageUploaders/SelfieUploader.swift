@@ -13,7 +13,7 @@ import UIKit
 
 /// Dependency-injectable protocol for SelfieUploader
 protocol SelfieUploaderProtocol: AnyObject {
-    var uploadFuture: Future<SelfieUploader.FileData>? { get }
+    func uploadResult() async -> Result<SelfieUploader.FileData, Error>?
 
     func uploadImages(
         _ capturedImages: FaceCaptureData
@@ -35,12 +35,19 @@ final class SelfieUploader: SelfieUploaderProtocol {
 
     let imageUploader: IdentityImageUploader
 
-    private(set) var uploadFuture: Future<FileData>?
+    private var uploadTask: Task<SelfieUploader.FileData, Error>?
 
     init(
         imageUploader: IdentityImageUploader
     ) {
         self.imageUploader = imageUploader
+    }
+
+    func uploadResult() async -> Result<SelfieUploader.FileData, Error>? {
+        guard let uploadTask else {
+            return nil
+        }
+        return await uploadTask.result
     }
 
     /// Uploads a high and low resolution image for each of the captured images.
@@ -50,34 +57,33 @@ final class SelfieUploader: SelfieUploaderProtocol {
         _ capturedImages: FaceCaptureData
     ) {
         // Start uploading all 3 images in parallel
-        let bestUploadFuture = uploadImages(capturedImages.bestMiddle, ofType: .best)
-        let firstUploadFuture = uploadImages(capturedImages.first, ofType: .first)
-        let lastUploadFuture = uploadImages(capturedImages.last, ofType: .last)
-
-        // Combine results when all 3 images are done uploading
-        uploadFuture = bestUploadFuture.chained { bestFiles in
-            return firstUploadFuture.chained { firstFiles in
-                return lastUploadFuture.chained { lastFiles in
-                    return Promise(
-                        value: FileData(
-                            bestHighResFile: bestFiles.highRes,
-                            bestLowResFile: bestFiles.lowRes,
-                            firstHighResFile: firstFiles.highRes,
-                            firstLowResFile: firstFiles.lowRes,
-                            lastHighResFile: lastFiles.highRes,
-                            lastLowResFile: lastFiles.lowRes
-                        )
-                    )
-                }
+        uploadTask = Task {
+            let bestTask = Task {
+                try await uploadImages(capturedImages.bestMiddle, ofType: .best)
             }
+            let firstTask = Task {
+                try await uploadImages(capturedImages.first, ofType: .first)
+            }
+            let lastTask = Task {
+                try await uploadImages(capturedImages.last, ofType: .last)
+            }
+
+            return try await FileData(
+                bestHighResFile: bestTask.value.highRes,
+                bestLowResFile: bestTask.value.lowRes,
+                firstHighResFile: firstTask.value.highRes,
+                firstLowResFile: firstTask.value.lowRes,
+                lastHighResFile: lastTask.value.highRes,
+                lastLowResFile: lastTask.value.lowRes
+            )
         }
     }
 
     func uploadImages(
         _ capturedImage: FaceScannerInputOutput,
         ofType type: ImageType
-    ) -> Future<IdentityImageUploader.LowHighResFiles> {
-        return imageUploader.uploadLowAndHighResImages(
+    ) async throws -> IdentityImageUploader.LowHighResFiles {
+        try await imageUploader.uploadLowAndHighResImages(
             capturedImage.image,
             highResRegionOfInterest: capturedImage.scannerOutput.faceRect,
             cropPaddingComputationMethod: .regionWidth,
@@ -95,7 +101,7 @@ final class SelfieUploader: SelfieUploaderProtocol {
     }
 
     func reset() {
-        uploadFuture = nil
+        uploadTask = nil
     }
 }
 

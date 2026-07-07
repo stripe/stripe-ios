@@ -111,6 +111,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     /// Transitions to the next view controller in the flow with a 'push' animation.
     /// - Note: This may replace the navigation stack or push an additional view
     ///   controller onto the stack, depending on whether on where the user is in the flow.
+    ///   TODO: migrate to async
     func transitionToNextScreen(
         skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
@@ -228,31 +229,32 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         sheetController: VerificationSheetControllerProtocol
     ) {
-        return sheetController.mlModelLoader.faceModelsFuture.observe(on: .main) {
-            [weak self] result in
+        return sheetController.mlModelLoader.faceModelsFuture.observe(on: .main) { [weak self] result in
             guard let self = self else { return }
 
-            let staticContent: StripeAPI.VerificationPage
-            do {
-                staticContent = try staticContentResult.get()
-                self.transition(
-                    to: self.makeSelfieCaptureViewController(
-                        faceScannerResult: result,
-                        staticContent: staticContent,
-                        sheetController: sheetController
-                    ),
-                    shouldAnimate: true,
-                    completion: {}
-                )
-            } catch {
-                self.transition(
-                    to: ErrorViewController(
-                        sheetController: sheetController,
-                        error: .error(error)
-                    ),
-                    shouldAnimate: true,
-                    completion: {}
-                )
+            Task {
+                let staticContent: StripeAPI.VerificationPage
+                do {
+                    staticContent = try staticContentResult.get()
+                    self.transition(
+                        to: await self.makeSelfieCaptureViewController(
+                            faceScannerResult: result,
+                            staticContent: staticContent,
+                            sheetController: sheetController
+                        ),
+                        shouldAnimate: true,
+                        completion: {}
+                    )
+                } catch {
+                    self.transition(
+                        to: await ErrorViewController(
+                            sheetController: sheetController,
+                            error: .error(error)
+                        ),
+                        shouldAnimate: true,
+                        completion: {}
+                    )
+                }
             }
         }
     }
@@ -261,31 +263,32 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         sheetController: VerificationSheetControllerProtocol
     ) {
-        return sheetController.mlModelLoader.documentModelsFuture.observe(on: .main) {
-            [weak self] result in
+        return sheetController.mlModelLoader.documentModelsFuture.observe(on: .main) {[weak self] result in
             guard let self = self else { return }
 
-            let staticContent: StripeAPI.VerificationPage
-            do {
-                staticContent = try staticContentResult.get()
-                self.transition(
-                    to: self.makeDocumentCaptureViewController(
-                        documentScannerResult: result,
-                        staticContent: staticContent,
-                        sheetController: sheetController
-                    ),
-                    shouldAnimate: true,
-                    completion: {}
-                )
-            } catch {
-                self.transition(
-                    to: ErrorViewController(
-                        sheetController: sheetController,
-                        error: .error(error)
-                    ),
-                    shouldAnimate: true,
-                    completion: {}
-                )
+            Task {
+                let staticContent: StripeAPI.VerificationPage
+                do {
+                    staticContent = try staticContentResult.get()
+                    self.transition(
+                        to: await self.makeDocumentCaptureViewController(
+                            documentScannerResult: result,
+                            staticContent: staticContent,
+                            sheetController: sheetController
+                        ),
+                        shouldAnimate: true,
+                        completion: {}
+                    )
+                } catch {
+                    self.transition(
+                        to: await ErrorViewController(
+                            sheetController: sheetController,
+                            error: .error(error)
+                        ),
+                        shouldAnimate: true,
+                        completion: {}
+                    )
+                }
             }
         }
     }
@@ -409,6 +412,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
     /// Instantiates and returns the next view controller to display in the flow.
     /// - Note: This method should not be called directly from outside of this class except for tests
+    /// TODO: migrate to an async function
     func nextViewController(
         skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
@@ -495,16 +499,17 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 )
             )
         case .documentCaptureDestination:
-            return sheetController.mlModelLoader.documentModelsFuture.observe(on: .main) {
-                [weak self] result in
+            return sheetController.mlModelLoader.documentModelsFuture.observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
-                completion(
-                    self.makeDocumentCaptureViewController(
-                        documentScannerResult: result,
-                        staticContent: staticContent,
-                        sheetController: sheetController
+                Task {
+                    completion(
+                        await self.makeDocumentCaptureViewController(
+                            documentScannerResult: result,
+                            staticContent: staticContent,
+                            sheetController: sheetController
+                        )
                     )
-                )
+                }
             }
         case .selfieCaptureDestination:
             completion(makeSelfieWarmupViewController(sheetController: sheetController))
@@ -664,7 +669,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         }
     }
 
-    func makeDocumentCaptureViewController(
+    @MainActor func makeDocumentCaptureViewController(
         documentScannerResult: Result<AnyDocumentScanner, Error>,
         staticContent: StripeAPI.VerificationPage,
         sheetController: VerificationSheetControllerProtocol
@@ -710,7 +715,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         }
     }
 
-    func makeSelfieCaptureViewController(
+    @MainActor func makeSelfieCaptureViewController(
         faceScannerResult: Result<AnyFaceScanner, Error>,
         staticContent: StripeAPI.VerificationPage,
         sheetController: VerificationSheetControllerProtocol
@@ -775,7 +780,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             sheetController: sheetController)
     }
 
-    private func makeDocumentCaptureCameraSession() -> CameraSessionProtocol {
+    @MainActor private func makeDocumentCaptureCameraSession() -> CameraSessionProtocol {
         #if targetEnvironment(simulator)
         return MockSimulatorCameraSession(
             images: IdentityVerificationSheet.simulatorDocumentCameraImages
@@ -785,7 +790,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         #endif
     }
 
-    private func makeSelfieCaptureCameraSession() -> CameraSessionProtocol {
+    @MainActor private func makeSelfieCaptureCameraSession() -> CameraSessionProtocol {
         #if targetEnvironment(simulator)
         return MockSimulatorCameraSession(
             images: IdentityVerificationSheet.simulatorSelfieCameraImages

@@ -322,13 +322,14 @@ extension SelfieCaptureViewController {
             expectedClassification: .empty,
             capturedData: faceCaptureData
         )
-        self.sheetController?.saveSelfieFileDataAndTransition(
-            from: analyticsScreenName,
-            selfieUploader: selfieUploader,
-            capturedImages: faceCaptureData,
-            trainingConsent: consentSelection == true
-        ) { [weak self] in
-            self?.imageScanningSession.setStateScanned(capturedData: faceCaptureData)
+        Task {
+            await sheetController?.saveSelfieFileDataAndTransition(
+                from: analyticsScreenName,
+                selfieUploader: selfieUploader,
+                capturedImages: faceCaptureData,
+                trainingConsent: consentSelection == true
+            )
+            imageScanningSession.setStateScanned(capturedData: faceCaptureData)
         }
     }
 }

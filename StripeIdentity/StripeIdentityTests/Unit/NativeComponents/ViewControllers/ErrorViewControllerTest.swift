@@ -12,6 +12,7 @@ import XCTest
 
 @testable import StripeIdentity
 
+@MainActor
 final class ErrorViewControllerTest: XCTestCase {
 
     var mockAnalyticsClient: MockAnalyticsClientV2!
@@ -52,9 +53,16 @@ final class ErrorViewControllerTest: XCTestCase {
         XCTAssertEqual(errorDict?["line"] as? UInt, 123)
     }
 
-    func testTappingContinueButton() {
+    func testTappingContinueButton() async {
         let continueText = "continue"
         let backText = "back"
+        let forceConfirmStarted = expectation(description: "Force confirm started")
+        let finishForceConfirm = expectation(description: "Finish force confirm")
+        mockSheetController.forceDocumentFrontAndDecideBackHandler = {
+            forceConfirmStarted.fulfill()
+            await self.fulfillment(of: [finishForceConfirm], timeout: 1)
+            return false
+        }
         let vc = ErrorViewController(
             sheetController: mockSheetController,
             error: .inputError(
@@ -73,8 +81,10 @@ final class ErrorViewControllerTest: XCTestCase {
 
         // mock click button tap
         vc.buttonViewModels[0].didTap()
+        await fulfillment(of: [forceConfirmStarted], timeout: 1)
         XCTAssertEqual(vc.buttonViewModels[0].state, .loading)
         XCTAssertEqual(vc.buttonViewModels[1].state, .disabled)
 
+        finishForceConfirm.fulfill()
     }
 }
