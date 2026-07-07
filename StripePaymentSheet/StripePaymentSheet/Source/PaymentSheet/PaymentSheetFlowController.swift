@@ -776,13 +776,6 @@ extension PaymentSheet {
             assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
             let updateID = beginUpdate()
             Task { @MainActor in
-                do {
-                    try await checkout.awaitPendingOperations()
-                } catch {
-                    self.failUpdate(updateID)
-                    completion(error)
-                    return
-                }
                 guard !self.isPresented else {
                     let message = "PaymentSheet.FlowController.update must be called when PaymentSheet is not presented."
                     assertionFailure(message)
