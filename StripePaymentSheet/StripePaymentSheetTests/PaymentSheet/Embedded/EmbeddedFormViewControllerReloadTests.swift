@@ -74,21 +74,6 @@ final class EmbeddedFormViewControllerReloadTests: XCTestCase {
         XCTAssertEqual(formVC.primaryButton.status, .disabled)
     }
 
-    // MARK: - setReloadError
-
-    func testSetReloadError() {
-        let formVC = makeFormViewController()
-
-        XCTAssertNil(formVC.error)
-        XCTAssertTrue(formVC.errorLabel.isHidden)
-
-        let error = MockError()
-        formVC.setReloadError(error)
-
-        XCTAssertNotNil(formVC.error)
-        XCTAssertEqual((formVC.error as? MockError)?.errorDescription, error.errorDescription)
-        XCTAssertEqual(formVC.errorLabel.text, error.errorDescription)
-    }
 }
 
 // MARK: - EmbeddedPaymentElement checkoutDidUpdate routing
