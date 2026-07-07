@@ -175,6 +175,18 @@ struct CheckoutCartEmbeddedPaymentView: View {
         do {
             var configuration = EmbeddedPaymentElement.Configuration()
             configuration.returnURL = "payments-example://stripe-redirect"
+            configuration.billingDetailsCollectionConfiguration.name = .always
+            configuration.billingDetailsCollectionConfiguration.phone = .always
+            configuration.billingDetailsCollectionConfiguration.address = .full
+            configuration.defaultBillingDetails.name = "Jane Doe"
+            configuration.defaultBillingDetails.phone = "+15555555555"
+            configuration.defaultBillingDetails.address = .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "510 Townsend St",
+                postalCode: "94103",
+                state: "CA"
+            )
             try await viewModel.load(checkout: checkout, configuration: configuration)
         } catch {
             loadError = error
