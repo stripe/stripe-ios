@@ -1,5 +1,5 @@
 //
-//  STPCheckoutSession+AddressMerging.swift
+//  STPCheckoutSessionAPIResponse+AddressMerging.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 3/2/26.
@@ -9,7 +9,7 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-extension STPCheckoutSession {
+extension Checkout.Session {
 
     /// Populates empty fields in the configuration with checkout-collected addresses.
     /// Configuration values always take precedence over checkout-collected values.

@@ -217,27 +217,14 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
     }
 
     private func makeCheckoutSessionIntent(canDetachPaymentMethod: Bool) -> Intent {
-        let json: [String: Any] = [
-            "session_id": "cs_test_123",
-            "livemode": false,
-            "mode": "payment",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-            "elements_session": [
-                "session_id": "es_test",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
-            ],
+        let session = CheckoutTestHelpers.makeSession([
             "customer": [
                 "id": "cus_test_123",
                 "payment_methods": [],
                 "can_detach_payment_method": canDetachPaymentMethod,
             ],
-        ]
-
-        guard let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json) else {
-            fatalError("Failed to create checkout session test fixture")
-        }
-        return .checkout(Checkout(session: checkoutSession))
+        ])
+        return .checkout(Checkout(apiResponse: session))
     }
 
 }

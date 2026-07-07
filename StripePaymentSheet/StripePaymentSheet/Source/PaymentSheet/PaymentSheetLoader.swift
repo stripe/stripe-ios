@@ -488,7 +488,7 @@ final class PaymentSheetLoader {
                 intent = .deferredIntent(intentConfig: intentConfig)
             }
         case .checkout(let checkout):
-            elementsSession = checkout.stpSession.elementsSession
+            elementsSession = checkout.session.elementsSession
             intent = .checkout(checkout)
         }
 
@@ -542,7 +542,7 @@ final class PaymentSheetLoader {
             // A. SPMs are on ElementSessions object when using CustomerSession.
             savedPaymentMethods = elementsSessionPaymentMethods
         } else if case let .checkout(checkout) = intent,
-                  let customerPaymentMethods = checkout.stpSession.customer?.paymentMethods {
+                  let customerPaymentMethods = checkout.nonisolatedSession.customer?.paymentMethods {
             // B. SPMs are on CheckoutSession object
             savedPaymentMethods = customerPaymentMethods
         } else if let prefetchedSPMs {

@@ -501,7 +501,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
     func testCheckoutSessionWithCustomerConfigurationThrowsError() {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
 
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = stubbedAPIClient()
@@ -510,7 +510,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let loaded = expectation(description: "Loaded")
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
         PaymentSheetLoader.load(
-            mode: .checkout(Checkout(session: checkoutSession)),
+            mode: .checkout(Checkout(apiResponse: checkoutSession)),
             configuration: configuration,
             analyticsHelper: ._testValue(integrationShape: .complete),
             integrationShape: .paymentSheet
@@ -531,7 +531,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
     func testCheckoutSessionWithBillingAddressNeverThrowsError() {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
 
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = stubbedAPIClient()
@@ -540,7 +540,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let loaded = expectation(description: "Loaded")
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
         PaymentSheetLoader.load(
-            mode: .checkout(Checkout(session: checkoutSession)),
+            mode: .checkout(Checkout(apiResponse: checkoutSession)),
             configuration: configuration,
             analyticsHelper: ._testValue(integrationShape: .complete),
             integrationShape: .paymentSheet

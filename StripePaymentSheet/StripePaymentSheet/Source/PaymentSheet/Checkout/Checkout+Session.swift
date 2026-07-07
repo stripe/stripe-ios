@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
 // MARK: - Session
@@ -15,6 +16,8 @@ import Foundation
 extension Checkout {
     /// A read-only representation of a Stripe Checkout Session.
     public final class Session {
+        // MARK: - Public Properties
+
         /// The ID of the Checkout Session.
         public let id: String
 
@@ -72,6 +75,25 @@ extension Checkout {
         /// Tax and discount details for the computed total amount.
         public let total: Checkout.Total?
 
+        // MARK: - Internal Properties
+
+        let mode: Checkout.Mode
+        let paymentMethodOptions: STPPaymentMethodOptions?
+        let customer: STPCheckoutSessionCustomer?
+        let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
+        let setupFutureUsage: String?
+        let setupFutureUsageForPaymentMethodType: [String: String]
+        let allowedShippingCountries: [String]?
+        let localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
+        let exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
+        let adaptivePricingActive: Bool
+        let requiresBillingAddress: Bool
+        let automaticTaxEnabled: Bool
+        let automaticTaxAddressSource: String?
+        let elementsSession: STPElementsSession
+
+        // MARK: - Init
+
         init(
             id: String,
             billingAddress: Checkout.ContactAddress?,
@@ -89,7 +111,21 @@ extension Checkout {
             shippingOptions: [Checkout.ShippingOption],
             status: Checkout.Status?,
             tax: Checkout.Tax,
-            total: Checkout.Total?
+            total: Checkout.Total?,
+            mode: Checkout.Mode,
+            paymentMethodOptions: STPPaymentMethodOptions?,
+            customer: STPCheckoutSessionCustomer?,
+            savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
+            setupFutureUsage: String?,
+            setupFutureUsageForPaymentMethodType: [String: String],
+            allowedShippingCountries: [String]?,
+            localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
+            exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?,
+            requiresBillingAddress: Bool,
+            adaptivePricingActive: Bool,
+            automaticTaxEnabled: Bool,
+            automaticTaxAddressSource: String?,
+            elementsSession: STPElementsSession
         ) {
             self.id = id
             self.billingAddress = billingAddress
@@ -108,6 +144,20 @@ extension Checkout {
             self.status = status
             self.tax = tax
             self.total = total
+            self.mode = mode
+            self.paymentMethodOptions = paymentMethodOptions
+            self.customer = customer
+            self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
+            self.setupFutureUsage = setupFutureUsage
+            self.setupFutureUsageForPaymentMethodType = setupFutureUsageForPaymentMethodType
+            self.allowedShippingCountries = allowedShippingCountries
+            self.localizedPricesMetas = localizedPricesMetas
+            self.exchangeRateMeta = exchangeRateMeta
+            self.requiresBillingAddress = requiresBillingAddress
+            self.adaptivePricingActive = adaptivePricingActive
+            self.automaticTaxEnabled = automaticTaxEnabled
+            self.automaticTaxAddressSource = automaticTaxAddressSource
+            self.elementsSession = elementsSession
         }
     }
 }

@@ -26,6 +26,7 @@ struct CheckoutPlaygroundView: View {
                         }
 
                         CheckoutPlaygroundConfigurationSection(
+                            integrationType: $viewModel.integrationType,
                             mode: $viewModel.mode,
                             currency: $viewModel.currency,
                             customerType: $viewModel.customerType,
@@ -84,6 +85,7 @@ struct CheckoutPlaygroundView: View {
                     CheckoutCartView(
                         clientSecret: clientSecret,
                         adaptivePricing: viewModel.adaptivePricing,
+                        integrationType: viewModel.integrationType,
                         currencySelectorAppearance: viewModel.currencySelectorAppearance
                     )
                 }

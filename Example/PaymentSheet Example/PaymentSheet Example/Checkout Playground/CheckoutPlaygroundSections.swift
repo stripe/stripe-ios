@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct CheckoutPlaygroundConfigurationSection: View {
+    @Binding var integrationType: CheckoutPlayground.IntegrationType
     @Binding var mode: CheckoutPlayground.SessionMode
     @Binding var currency: CheckoutPlayground.Currency
     @Binding var customerType: CheckoutPlayground.CustomerType
@@ -17,6 +18,13 @@ struct CheckoutPlaygroundConfigurationSection: View {
         VStack(alignment: .leading, spacing: 12) {
             CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
             VStack(spacing: 1) {
+                CheckoutPlayground.PickerRow(
+                    title: "Integration",
+                    icon: "square.stack.3d.up.fill",
+                    selection: $integrationType,
+                    tooltip: "Choose the payment integration.\n\n• FlowController: Uses PaymentSheet.FlowController with a payment method selector and confirm button.\n• Embedded: Uses EmbeddedPaymentElement inline in the checkout flow.",
+                    displayText: { $0.displayName }
+                )
                 CheckoutPlayground.PickerRow(
                     title: "Mode",
                     icon: "arrow.triangle.2.circlepath",

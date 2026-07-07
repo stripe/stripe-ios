@@ -174,7 +174,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         appearance: Checkout.CurrencySelectorView.Appearance = .init()
     ) async -> Checkout.CurrencySelectorView {
         let session = makeSession(selectedCurrency: selectedCurrency)
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
+        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: session)
 
         let view = Checkout.CurrencySelectorView(checkout: checkout, appearance: appearance)
 
@@ -215,7 +215,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     }
 
     @MainActor
-    private func makeSession(selectedCurrency: String) -> STPCheckoutSession {
+    private func makeSession(selectedCurrency: String) -> STPCheckoutSessionAPIResponse {
         CheckoutTestHelpers.makeAdaptivePricingSession(currency: selectedCurrency)
     }
 }
