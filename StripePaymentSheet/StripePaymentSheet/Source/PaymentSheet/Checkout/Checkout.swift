@@ -253,11 +253,11 @@ public final class Checkout: ObservableObject {
         if session.shouldSendTaxRegion(for: "billing") {
             try await performUpdate(.setTaxRegion(address), applying: { session in
                 session.makeCopyOverriding(billingAddress: contactAddress)
-            }, allowWhileSheetPresented: true)
+            }, canUpdateWhileSheetPresented: true)
         } else {
             try await performUpdate(applying: { session in
                 session.makeCopyOverriding(billingAddress: contactAddress)
-            }, allowWhileSheetPresented: true)
+            }, canUpdateWhileSheetPresented: true)
         }
     }
 

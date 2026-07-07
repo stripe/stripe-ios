@@ -81,13 +81,14 @@ extension Checkout {
     /// - Parameters:
     ///   - update: The API mutation to perform, or nil for a local-only update.
     ///   - localMutation: A local change to the session to apply after the API call (or on its own).
+    ///   - canUpdateWhileSheetPresented: Bypasses the sheet-presented guard (e.g. billing sync on dismiss).
     func performUpdate(
         _ update: SessionUpdate? = nil,
         applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
-        allowWhileSheetPresented: Bool = false
+        canUpdateWhileSheetPresented: Bool = false
     ) async throws {
         try await enqueueSessionUpdate {
-            if !allowWhileSheetPresented {
+            if !canUpdateWhileSheetPresented {
                 try self.requireSheetNotPresented()
             }
             do {
