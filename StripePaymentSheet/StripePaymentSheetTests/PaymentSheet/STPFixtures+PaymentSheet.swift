@@ -321,20 +321,12 @@ extension Intent {
         } else {
             fatalError("TODO: add subscription/unknown support")
         }
-        var json: [String: Any] = [
-            "session_id": "cs_test_xxx",
-            "object": "checkout.session",
+        var json = CheckoutTestHelpers.makeSessionJSON([
             "mode": modeParam,
             "status": "open",
             "payment_status": paymentStatus,
             "currency": currency.lowercased(),
-            "livemode": false,
-            "payment_method_types": ["card"],
-            "elements_session": [
-                "session_id": "es_test",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
-            ],
-        ]
+        ])
         if let email {
             json["customer_email"] = email
         }

@@ -89,10 +89,6 @@ public final class Checkout: ObservableObject {
         }
     }
 
-    var isLastPendingOperation: Bool {
-        pendingOperations.count <= 1
-    }
-
     /// Default timeout used by ``awaitPendingOperations(timeout:)``.
     nonisolated static let defaultPendingOperationsTimeout: TimeInterval = 30
 
@@ -371,9 +367,6 @@ public final class Checkout: ObservableObject {
         // Update the session and notify delegates.
         session = finalSession
 
-        // Skip delegate if another op is queued—it'll notify when it commits.
-        if isLastPendingOperation {
-            try await integrationDelegate?.checkoutDidUpdate(self)
-        }
+        try await integrationDelegate?.checkoutDidUpdate(self)
     }
 }
