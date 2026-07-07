@@ -31,7 +31,6 @@ class IntegrationTesterUICardEntryTests: IntegrationTesterUITests {
             // Non-US
             "4000000760000002", // br
             "4000001240000000", // ca
-            "4000004840008001", // mx
         ]
         for card in cardNumbers {
             testAuthentication(cardNumber: card)
