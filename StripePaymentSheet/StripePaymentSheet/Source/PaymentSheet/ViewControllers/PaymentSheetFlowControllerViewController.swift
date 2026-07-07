@@ -83,7 +83,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private(set) var error: Error?
     private(set) var isDismissable: Bool = true
     private var isReloading: Bool = false
-    private var isBusy: Bool { isReloading }
 
     // MARK: - Private Properties
     enum Mode {
@@ -469,8 +468,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     func setReloading(_ isReloading: Bool) {
         guard self.isReloading != isReloading else { return }
         self.isReloading = isReloading
-        view.isUserInteractionEnabled = !isBusy
-        navigationBar.isUserInteractionEnabled = !isBusy
+        view.isUserInteractionEnabled = !isReloading
+        navigationBar.isUserInteractionEnabled = !isReloading
         if isReloading {
             view.endEditing(true)
         }
