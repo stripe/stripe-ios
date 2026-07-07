@@ -1,7 +1,12 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+
+### CryptoOnramp (Alpha)
+* [Added] Added wallet ownership verification APIs to `CryptoOnrampCoordinator`: `getWalletOwnershipChallenge(walletAddress:network:)` and `submitWalletOwnershipSignature(challengeId:signature:)`.
+* [Added] Added `WalletOwnershipChallenge` and `CryptoConsumerWallet`, including `CryptoConsumerWallet.verifiedOwnership`, for wallet ownership verification responses.
+* [Added] Added rich Crypto Onramp API error mapping types: `WalletOwnershipChallengeExpiredAPIError`, `InvalidWalletOwnershipChallengeAPIError`, `InvalidWalletOwnershipSignatureAPIError`, `CryptoOnrampWalletNotFoundAPIError`, and `CryptoOnrampUnsupportedNetworkAPIError`.
 
 ## 26.2.0 2026-07-06
 ### CryptoOnramp (Alpha)

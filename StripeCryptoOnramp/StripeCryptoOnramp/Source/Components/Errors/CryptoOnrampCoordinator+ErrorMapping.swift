@@ -42,7 +42,7 @@ extension CryptoOnrampCoordinator {
                     apiClient: apiClient,
                     additionalSDKVersions: additionalSDKVersions
                 )
-            case "invalid_wallet_ownership_signature":
+            case "crypto_onramp_invalid_wallet_ownership_signature":
                 return invalidWalletOwnershipSignatureError(
                     from: error,
                     apiError: apiError,
@@ -50,7 +50,7 @@ extension CryptoOnrampCoordinator {
                     apiClient: apiClient,
                     additionalSDKVersions: additionalSDKVersions
                 )
-            case "wallet_ownership_challenge_expired":
+            case "crypto_onramp_wallet_ownership_challenge_expired":
                 return walletOwnershipChallengeExpiredError(
                     from: error,
                     apiError: apiError,
@@ -58,7 +58,7 @@ extension CryptoOnrampCoordinator {
                     apiClient: apiClient,
                     additionalSDKVersions: additionalSDKVersions
                 )
-            case "invalid_wallet_ownership_challenge":
+            case "crypto_onramp_invalid_wallet_ownership_challenge":
                 return invalidWalletOwnershipChallengeError(
                     from: error,
                     apiError: apiError,

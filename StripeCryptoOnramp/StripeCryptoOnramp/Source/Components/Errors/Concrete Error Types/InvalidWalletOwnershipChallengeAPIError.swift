@@ -31,7 +31,7 @@ public struct InvalidWalletOwnershipChallengeAPIError: StripeCryptoOnrampAPIErro
     // MARK: - StripeCryptoOnrampAPIError
 
     public var code: String {
-        return apiErrorContext.code(fallback: "invalid_wallet_ownership_challenge")
+        return apiErrorContext.code(fallback: "crypto_onramp_invalid_wallet_ownership_challenge")
     }
 
     // MARK: - InvalidWalletOwnershipChallengeAPIError

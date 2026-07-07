@@ -31,7 +31,7 @@ public struct WalletOwnershipChallengeExpiredAPIError: StripeCryptoOnrampAPIErro
     // MARK: - StripeCryptoOnrampAPIError
 
     public var code: String {
-        return apiErrorContext.code(fallback: "wallet_ownership_challenge_expired")
+        return apiErrorContext.code(fallback: "crypto_onramp_wallet_ownership_challenge_expired")
     }
 
     // MARK: - WalletOwnershipChallengeExpiredAPIError
