@@ -251,14 +251,14 @@ public final class EmbeddedPaymentElement {
 
     /// Reloads the sheet in-place while it's presented, swapping in the new form VC.
     @MainActor
-    private func reloadPresentedSheet(mode: PaymentSheet.InitializationMode) async -> UpdateResult {
-        let oldFormVC = selectedFormViewController
+    private func reloadPresentedSheet(checkout: Checkout) async -> UpdateResult {
+        checkout.session.applyAddressOverrides(to: &configuration)
         selectedFormViewController?.setReloading(true)
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
 
         do {
             let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
-                mode: mode,
+                mode: .checkout(checkout),
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
                 integrationShape: .embedded,
@@ -525,10 +525,9 @@ extension EmbeddedPaymentElement: CheckoutIntegrationDelegate {
     }
 
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
-        checkout.session.applyAddressOverrides(to: &configuration)
         let result: UpdateResult
         if isSheetPresented {
-            result = await reloadPresentedSheet(mode: .checkout(checkout))
+            result = await reloadPresentedSheet(checkout: checkout)
         } else {
             result = await update(checkout: checkout)
         }

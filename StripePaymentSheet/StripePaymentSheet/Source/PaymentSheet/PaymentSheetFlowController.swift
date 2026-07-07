@@ -993,9 +993,7 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
 
     func checkoutDidUpdate(_ checkout: Checkout) async throws {
         if isPresented {
-            // `update` asserts !isPresented, so reload in-place instead
-            checkout.session.applyAddressOverrides(to: &configuration)
-            try await reloadPresentedSheet(mode: .checkout(checkout))
+            try await reloadPresentedSheet(checkout: checkout)
         } else {
             try await update(checkout: checkout)
         }
@@ -1003,12 +1001,13 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
 
     /// Reloads the sheet in-place while it's presented, swapping in the new VC.
     @MainActor
-    private func reloadPresentedSheet(mode: PaymentSheet.InitializationMode) async throws {
+    private func reloadPresentedSheet(checkout: Checkout) async throws {
+        checkout.session.applyAddressOverrides(to: &configuration)
         viewController.setReloading(true)
 
         do {
             let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
-                mode: mode,
+                mode: .checkout(checkout),
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
                 integrationShape: .flowController,
