@@ -128,7 +128,10 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         static let validWalletAddress = "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
         static let validNetwork = CryptoNetwork.bitcoin
         static let registerWalletMockResponseObject = RegisterWalletResponse(
-            id: "ccw_12345"
+            id: "ccw_12345",
+            wallet_address: nil,
+            network: nil,
+            verified_ownership: nil
         )
 
         // /v1/crypto/internal/onramp_session
