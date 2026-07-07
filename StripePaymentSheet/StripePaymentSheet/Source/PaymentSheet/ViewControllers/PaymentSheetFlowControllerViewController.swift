@@ -498,18 +498,18 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         error = nil
         isDismissable = false
         confirmButton.update(status: .processing, animated: true)
+        sendEventToSubviews(.shouldDisableUserInteraction, from: view)
         view.isUserInteractionEnabled = false
         navigationBar.isUserInteractionEnabled = false
 
         Task { @MainActor [weak self] in
             do {
                 try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
-                self?.isDismissable = true
-                self?.view.isUserInteractionEnabled = true
-                self?.navigationBar.isUserInteractionEnabled = true
+                // Don't re-enable UI as we will be dismissing
                 completion()
             } catch {
                 guard let self else { return }
+                sendEventToSubviews(.shouldEnableUserInteraction, from: self.view)
                 self.isDismissable = true
                 self.view.isUserInteractionEnabled = true
                 self.navigationBar.isUserInteractionEnabled = true
