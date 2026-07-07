@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension Checkout {
-    /// Syncs the billing address on the checkout session from the selected payment method's billing details.
+    /// Syncs the billing address from the payment method's billing details onto the checkout session.
     func syncBillingAddress(from billingDetails: STPPaymentMethodBillingDetails?) async throws {
         guard let billingDetails,
               let country = billingDetails.address?.country, !country.isEmpty else {
