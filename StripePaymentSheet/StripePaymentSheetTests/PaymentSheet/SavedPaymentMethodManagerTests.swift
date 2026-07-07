@@ -286,18 +286,7 @@ extension SavedPaymentMethodManagerTests {
     }
 
     func makeCheckoutSession(id: String) -> STPCheckoutSessionAPIResponse {
-        let json: [String: Any] = [
-            "session_id": id,
-            "livemode": false,
-            "mode": "payment",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-            "elements_session": [
-                "session_id": "es_test",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
-            ],
-        ]
-        return STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
+        CheckoutTestHelpers.makeSession().withSessionId(id)
     }
 
     func stubCheckoutSessionUpdatePaymentMethod(
@@ -307,21 +296,13 @@ extension SavedPaymentMethodManagerTests {
         let exp = expectation(description: "POST payment_pages/\(checkoutSessionId) updates payment method")
         let captured = CapturedBody()
 
-        let responseJSON: [String: Any] = [
+        let responseJSON = CheckoutTestHelpers.makeSessionJSON([
             "session_id": checkoutSessionId,
-            "livemode": false,
-            "mode": "payment",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
             "customer": [
                 "id": "cus_test123",
                 "payment_methods": [STPPaymentMethod.paymentMethodJson],
             ],
-            "elements_session": [
-                "session_id": "es_test",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
-            ],
-        ]
+        ])
 
         stub { urlRequest in
             guard urlRequest.url?.absoluteString.contains("/payment_pages/\(checkoutSessionId)") == true,
