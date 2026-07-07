@@ -173,12 +173,26 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
         buyButton.forceTapElement()
 
-        // Klarna uses ASWebAuthenticationSession, tap continue to allow the web view to open:
+        // Klarna uses ASWebAuthenticationSession, tap continue to allow the web view to open.
+        // Confirming the PaymentIntent requires a network round-trip to fetch the redirect URL
+        // before iOS presents the consent sheet, so give it a generous timeout to avoid racing
+        // ahead before the "Continue" button appears.
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        springboard.buttons["Continue"].waitForExistenceAndTap(timeout: 3)
+        XCTAssertTrue(
+            springboard.buttons["Continue"].waitForExistenceAndTap(timeout: 30),
+            "ASWebAuthenticationSession consent (\"Continue\") button never appeared"
+        )
 
-        // This is where we'd fill out Klarna's forms, but we'll just cancel for now
-        app.buttons["Cancel"].waitForExistenceAndTap(timeout: 3)
+        // This is where we'd fill out Klarna's forms, but we'll just cancel for now.
+        // The ASWebAuthenticationSession browser animates in after tapping Continue. Wait for
+        // its Cancel button to become hittable before tapping — tapping mid-animation throws
+        // "Activation point invalid" because the element's hit region isn't settled yet.
+        let cancelButton = app.buttons["Cancel"]
+        XCTAssertTrue(
+            cancelButton.waitForExistence(timeout: 30),
+            "Klarna web view \"Cancel\" button never appeared"
+        )
+        cancelButton.forceTapWhenHittableInTestCase(self)
 
         let statusView = app.staticTexts["Payment status view"]
         XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
