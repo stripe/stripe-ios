@@ -113,7 +113,7 @@ public final class EmbeddedPaymentElement {
     ) async throws -> EmbeddedPaymentElement {
         try await checkout.awaitPendingOperations()
         var config = configuration
-        checkout.stpSession.applyAddressOverrides(to: &config)
+        checkout.session.applyAddressOverrides(to: &config)
 
         try validateRowSelectionConfiguration(configuration: config)
 
@@ -174,12 +174,7 @@ public final class EmbeddedPaymentElement {
         guard checkout.sessionIsOpen else {
             return .succeeded
         }
-        do {
-            try await checkout.awaitPendingOperations()
-        } catch {
-            return .failed(error: error)
-        }
-        checkout.stpSession.applyAddressOverrides(to: &configuration)
+        checkout.session.applyAddressOverrides(to: &configuration)
         return await performUpdate(mode: .checkout(checkout))
     }
 

@@ -1,5 +1,5 @@
 //
-//  STPCheckoutSessionCustomer.swift
+//  STPCheckoutSessionAPIResponse+Customer.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 2/5/26.

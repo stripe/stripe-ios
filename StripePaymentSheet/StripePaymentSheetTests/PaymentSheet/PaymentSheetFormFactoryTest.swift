@@ -66,30 +66,18 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         offerSave: [String: Any]? = nil,
         hasCustomer: Bool = true
     ) -> Intent {
-        var json: [String: Any] = [
-            "session_id": "cs_test_checkout_save",
-            "object": "checkout.session",
-            "mode": "payment",
+        var overrides: [String: Any] = [
             "status": "open",
-            "payment_status": "unpaid",
             "currency": "usd",
-            "livemode": false,
-            "payment_method_types": ["card"],
-            "elements_session": [
-                "session_id": "es_test",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
-            ],
         ]
         if hasCustomer {
-            json["customer"] = [
-                "id": "cus_test_checkout_save",
-            ]
+            overrides["customer"] = ["id": "cus_test_checkout_save"]
         }
         if let offerSave {
-            json["customer_managed_saved_payment_methods_offer_save"] = offerSave
+            overrides["customer_managed_saved_payment_methods_offer_save"] = offerSave
         }
-        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
-        return .checkout(Checkout(session: checkoutSession))
+        let session = CheckoutTestHelpers.makeSession(overrides)
+        return .checkout(Checkout(apiResponse: session))
     }
 
     func testUpdatesParams() {
@@ -2884,9 +2872,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             if let paymentMethodOptions {
                 json["payment_method_options"] = paymentMethodOptions
             }
-            let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+            let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
             return PaymentSheetFormFactory(
-                intent: .checkout(Checkout(session: checkoutSession)),
+                intent: .checkout(Checkout(apiResponse: checkoutSession)),
                 elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),
                 configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
                 paymentMethod: .stripe(.payPal),

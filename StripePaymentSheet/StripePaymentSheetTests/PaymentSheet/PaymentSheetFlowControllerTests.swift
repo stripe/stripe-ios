@@ -462,11 +462,11 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         )
 
         let session = CheckoutTestHelpers.makeOpenSession()
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
+        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: session)
 
         // Move session to complete
-        let completedSession = STPCheckoutSession.decodedObject(fromAPIResponse: {
-            var json = CheckoutTestHelpers.makeOpenSessionJSON()
+        let completedSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: {
+            var json = CheckoutTestHelpers.openSessionJSON
             json["status"] = "complete"
             json["payment_status"] = "paid"
             return json

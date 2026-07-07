@@ -83,31 +83,28 @@ extension Checkout {
     ///   - localMutation: A local change to the session to apply after the API call (or on its own).
     func performUpdate(
         _ update: SessionUpdate? = nil,
-        applying localMutation: (@MainActor @Sendable () -> Void)? = nil
+        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil
     ) async throws {
         try await enqueueSessionUpdate {
             try self.requireSheetNotPresented()
+
             do {
-                let updatedSession: STPCheckoutSession
+                let updatedSessionAPIResponse: STPCheckoutSessionAPIResponse?
                 if let update {
                     let sessionId = Checkout.extractSessionId(from: self.clientSecret)
-                    updatedSession = try await self.apiClient.updateCheckoutSession(
+                    updatedSessionAPIResponse = try await self.apiClient.updateCheckoutSession(
                         checkoutSessionId: sessionId,
                         parameters: update.parameters
                     )
                 } else {
-                    guard let session = self.stpSession else { return }
-                    updatedSession = session
+                    updatedSessionAPIResponse = nil
                 }
 
-                localMutation?()
-                try await self.commitSession(updatedSession)
+                // Errors from here should still get wrapped in API errors since the only way
+                //  the integration delegate throws is if the API returned a session state that
+                //  the UI can't handle.
+                try await self.commitSession(updatedSessionAPIResponse, applying: localMutation)
             } catch {
-                // If a prior op skipped the delegate and we're failing before we
-                // get to commitSession ourselves, still notify so the UI updates.
-                if self.isLastPendingOperation {
-                    try? await self.integrationDelegate?.checkoutDidUpdate(self)
-                }
                 throw CheckoutError.apiError(message: error.nonGenericDescription)
             }
         }
