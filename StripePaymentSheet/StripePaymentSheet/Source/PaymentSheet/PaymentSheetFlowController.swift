@@ -142,7 +142,11 @@ extension PaymentSheet {
                 return confirmParams?.paymentMethodParams.billingDetails
             case .external(_, let billingDetails):
                 return billingDetails
-            case .link, .applePay:
+            case .applePay:
+                // TODO(porter) Get Apple Pay working with automatic tax
+                return nil
+            case .link:
+                // Link does not support automatic tax with billing address as source
                 return nil
             }
         }
