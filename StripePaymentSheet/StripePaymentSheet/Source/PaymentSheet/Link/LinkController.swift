@@ -1277,7 +1277,7 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
 }
 
 @_spi(LinkControllerPreview) public extension LinkController {
-    
+
     /// Creates a `LinkController` for the specified `mode`.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
