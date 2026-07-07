@@ -9,56 +9,17 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-// MARK: - Payment Method Update Types
-
-struct CheckoutPaymentMethodBillingDetails {
-    let name: String?
-    let email: String?
-    let phone: String?
-    let address: CheckoutPaymentMethodBillingAddress?
-
-    init(name: String? = nil, email: String? = nil, phone: String? = nil, address: CheckoutPaymentMethodBillingAddress? = nil) {
-        self.name = name
-        self.email = email
-        self.phone = phone
-        self.address = address
-    }
-}
-
-struct CheckoutPaymentMethodBillingAddress {
-    let line1: String?
-    let line2: String?
-    let city: String?
-    let state: String?
-    let postalCode: String?
-    let country: String?
-
-    init(line1: String? = nil, line2: String? = nil, city: String? = nil, state: String? = nil, postalCode: String? = nil, country: String? = nil) {
-        self.line1 = line1
-        self.line2 = line2
-        self.city = city
-        self.state = state
-        self.postalCode = postalCode
-        self.country = country
-    }
-}
-
-struct CheckoutPaymentMethodExpiryDetails {
-    let expMonth: Int
-    let expYear: Int
-}
-
 extension STPAPIClient {
 
     /// Initializes a CheckoutSession, fetching payment configuration data.
     /// - Parameters:
     ///   - checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx")
     ///   - adaptivePricingAllowed: Whether the integration allows adaptive pricing for this session.
-    /// - Returns: STPCheckoutSession object representing the checkout session.
+    /// - Returns: STPCheckoutSessionAPIResponse object representing the checkout session.
     func initCheckoutSession(
         checkoutSessionId: String,
         adaptivePricingAllowed: Bool
-    ) async throws -> STPCheckoutSession {
+    ) async throws -> STPCheckoutSessionAPIResponse {
         var elementsSessionParameters: [String: Any] = [
             "is_aggregation_expected": true,
             "locale": Locale.current.toLanguageTag(),
@@ -80,7 +41,7 @@ extension STPAPIClient {
             ],
         ]
 
-        let checkoutSession: STPCheckoutSession = try await APIRequest<STPCheckoutSession>.post(
+        let checkoutSession: STPCheckoutSessionAPIResponse = try await APIRequest<STPCheckoutSessionAPIResponse>.post(
             with: self,
             endpoint: "payment_pages/\(checkoutSessionId)/init",
             parameters: parameters
@@ -93,16 +54,16 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx")
     ///   - parameters: The update parameters (e.g., promotion_code)
-    /// - Returns: The updated STPCheckoutSession
+    /// - Returns: The updated STPCheckoutSessionAPIResponse
     func updateCheckoutSession(
         checkoutSessionId: String,
         parameters: [String: Any]
-    ) async throws -> STPCheckoutSession {
+    ) async throws -> STPCheckoutSessionAPIResponse {
         var params = parameters
         params["elements_session_client"] = [
             "is_aggregation_expected": true,
         ]
-        return try await APIRequest<STPCheckoutSession>.post(
+        return try await APIRequest<STPCheckoutSessionAPIResponse>.post(
             with: self,
             endpoint: "payment_pages/\(checkoutSessionId)",
             parameters: params
@@ -113,10 +74,13 @@ extension STPAPIClient {
         _ paymentMethodId: String,
         fromCheckoutSession checkoutSessionId: String
     ) async throws {
-        _ = try await APIRequest<STPCheckoutSession>.post(
+        _ = try await APIRequest<STPCheckoutSessionAPIResponse>.post(
             with: self,
             endpoint: "payment_pages/\(checkoutSessionId)",
-            parameters: ["payment_method_to_detach": paymentMethodId]
+            parameters: [
+                "payment_method_to_detach": paymentMethodId,
+                "elements_session_client": ["is_aggregation_expected": true],
+            ]
         )
     }
 
@@ -126,20 +90,20 @@ extension STPAPIClient {
     ///   - checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx").
     ///   - billingDetails: Optional billing details to update (name, email, phone, address).
     ///   - expiryDetails: Optional card expiry to update (month and year).
-    /// - Returns: The updated STPCheckoutSession.
+    /// - Returns: The updated STPCheckoutSessionAPIResponse.
     func updatePaymentMethod(
         _ paymentMethodId: String,
         inCheckoutSession checkoutSessionId: String,
-        billingDetails: CheckoutPaymentMethodBillingDetails? = nil,
-        expiryDetails: CheckoutPaymentMethodExpiryDetails? = nil
-    ) async throws -> STPCheckoutSession {
+        billingDetails: Checkout.PaymentMethodBillingDetails? = nil,
+        expiryDetails: Checkout.PaymentMethodExpiryDetails? = nil
+    ) async throws -> STPCheckoutSessionAPIResponse {
         var params = Self.updatePaymentMethodParameters(
             paymentMethodId: paymentMethodId,
             billingDetails: billingDetails,
             expiryDetails: expiryDetails
         )
         params["elements_session_client"] = ["is_aggregation_expected": true]
-        return try await APIRequest<STPCheckoutSession>.post(
+        return try await APIRequest<STPCheckoutSessionAPIResponse>.post(
             with: self,
             endpoint: "payment_pages/\(checkoutSessionId)",
             parameters: params
@@ -148,8 +112,8 @@ extension STPAPIClient {
 
     static func updatePaymentMethodParameters(
         paymentMethodId: String,
-        billingDetails: CheckoutPaymentMethodBillingDetails?,
-        expiryDetails: CheckoutPaymentMethodExpiryDetails?
+        billingDetails: Checkout.PaymentMethodBillingDetails?,
+        expiryDetails: Checkout.PaymentMethodExpiryDetails?
     ) -> [String: Any] {
         var params: [String: Any] = [
             "payment_method_to_update[payment_method_id]": paymentMethodId,
@@ -189,7 +153,7 @@ extension STPAPIClient {
     ///   - paymentMethodOptions: Optional payment method options. BLIK code is extracted and passed as top-level `blik_code` parameter.
     ///   - clientAttributionMetadata: Optional client attribution metadata for analytics
     ///   - passiveCaptchaToken: Optional hCaptcha challenge response token
-    /// - Returns: STPCheckoutSession containing the full confirmed session with expanded intents
+    /// - Returns: STPCheckoutSessionAPIResponse containing the full confirmed session with expanded intents
     func confirmCheckoutSession(
         sessionId: String,
         paymentMethod: String,
@@ -201,10 +165,11 @@ extension STPAPIClient {
         paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
         passiveCaptchaToken: String? = nil
-    ) async throws -> STPCheckoutSession {
+    ) async throws -> STPCheckoutSessionAPIResponse {
         var parameters: [String: Any] = [
             "payment_method": paymentMethod,
             "expected_payment_method_type": expectedPaymentMethodType,
+            "elements_session_client": ["is_aggregation_expected": true],
             "expand": [
                 "payment_intent",
                 "payment_intent.payment_method",
@@ -242,7 +207,7 @@ extension STPAPIClient {
             parameters["passive_captcha_token"] = passiveCaptchaToken
         }
 
-        return try await APIRequest<STPCheckoutSession>.post(
+        return try await APIRequest<STPCheckoutSessionAPIResponse>.post(
             with: self,
             endpoint: "payment_pages/\(sessionId)/confirm",
             parameters: parameters

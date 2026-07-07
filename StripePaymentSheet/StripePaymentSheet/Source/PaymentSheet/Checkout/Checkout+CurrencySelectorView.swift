@@ -79,7 +79,7 @@ extension Checkout {
             handleSessionUpdate()
 
             // Observe future session changes
-            sessionCancellable = checkout.$state
+            sessionCancellable = checkout.$session
                 .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
@@ -133,7 +133,7 @@ extension Checkout {
         /// caption on subsequent changes. Hides the view if AP data is unavailable.
         private func handleSessionUpdate() {
             guard let (session, exchangeRateMeta, rawCurrency) =
-                    CurrencySelectorUtilities.adaptivePricingData(from: checkout.stpSession)
+                    CurrencySelectorUtilities.adaptivePricingData(from: checkout.session)
             else {
                 tearDown()
                 return
@@ -149,10 +149,11 @@ extension Checkout {
                 updateSelectorItems(session: session, exchangeRateMeta: exchangeRateMeta)
             }
 
+            lastSelectedCurrency = currency.apiValue
             updateCaption(currency: currency, exchangeRateMeta: exchangeRateMeta)
         }
 
-        private func resolveLabelContent(session: STPCheckoutSession) -> Appearance.LabelContent {
+        private func resolveLabelContent(session: Checkout.Session) -> Appearance.LabelContent {
             guard case .automatic = appearance.labelContent else {
                 return appearance.labelContent
             }
@@ -160,7 +161,7 @@ extension Checkout {
         }
 
         private func buildSelectorItems(
-            session: STPCheckoutSession,
+            session: Checkout.Session,
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta
         ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
             let resolvedLabelContent = resolveLabelContent(session: session)
@@ -176,7 +177,7 @@ extension Checkout {
         }
 
         private func updateSelectorItems(
-            session: STPCheckoutSession,
+            session: Checkout.Session,
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta
         ) {
             let (left, right) = buildSelectorItems(session: session, exchangeRateMeta: exchangeRateMeta)
@@ -184,7 +185,7 @@ extension Checkout {
         }
 
         private func buildSelectorView(
-            session: STPCheckoutSession,
+            session: Checkout.Session,
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
             currency: CurrencySelectorUtilities.CurrencyCode
         ) {

@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
 200
 text/html
-Content-Type: text/html;charset=utf-8
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=39NtW3JE6mPfbqGN9NCMt9kZpynttd7wg44KCA%2B%2FgiKIDpSOCa3meEevIc6qwtPUAe4Pwyf3z6c68uhLCmEj%2BRBIh%2F1iCNLWs7BBFsN0G1vqrNBF1IrptpiTcNsEx3M4sO4%2FYSuLx9vGNwjBh9wT5YjYz4BRCQv36sZ64ExCvmF%2FF2mhubeWU86MFlNJB%2BT8mDSz8WN1zdunn5CM0lD8c41clHfxwsenJ1p6DiJuO40%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: 478c9ab1cfed0e6393b69f3e55715e6c
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 15:37:18 GMT
-x-robots-tag: noindex, nofollow
-Content-Length: 358
 x-content-type-options: nosniff
+x-cloud-trace-context: bc5e343029002297bc74d0fe2b643107;o=1
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=9ezzVn3nlzJBhp9cGJiO21rOEbW04QxxI%2BUgC9ZkvthGbEnVFaAzXDavbD3NssduVSbeTzRbRv12Zf9MhOu7zsw5KWE2dxoGoi0GDDl35SJefVFQ%2FfITjmM3cby%2BqS%2Fpe44qv%2FyDveL1ZvJbDTmbk%2B%2FnVYST8fEB8EPRapYjjxYSUIL4IPi37GVSUJMCkgRvswQhuInORaEHWO0H1j4sorg47UEun%2Bj3cekdxUggBLo%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Wed, 01 Jul 2026 17:28:27 GMT
 x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 358
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 
-{"id":"cs_test_a1C9yztlkqwhfALdJYVYy7yUyG0PCQ80cj85isiQnSfrtWCwfSdAvxcVz9","client_secret":"cs_test_a1C9yztlkqwhfALdJYVYy7yUyG0PCQ80cj85isiQnSfrtWCwfSdAvxcVz9_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51T6wBXK8p6Sx2i8adADCFk8mpPEn4UtaTLP3AZS8kzJBgX8ldmV2VCX9oKqXOTH969NHb0zKvYcBK1OC9wBaJE0O00F0x7v2ci"}
+{"id":"cs_test_a1wKCykhrfV2kbZXci2ZvlV42gSvdIF69ZK6l3zeL1GOauR26FCeeZESo5","client_secret":"cs_test_a1wKCykhrfV2kbZXci2ZvlV42gSvdIF69ZK6l3zeL1GOauR26FCeeZESo5_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51T6wBXK8p6Sx2i8adADCFk8mpPEn4UtaTLP3AZS8kzJBgX8ldmV2VCX9oKqXOTH969NHb0zKvYcBK1OC9wBaJE0O00F0x7v2ci"}

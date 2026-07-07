@@ -26,6 +26,7 @@ struct CheckoutPlaygroundView: View {
                         }
 
                         CheckoutPlaygroundConfigurationSection(
+                            integrationType: $viewModel.integrationType,
                             mode: $viewModel.mode,
                             currency: $viewModel.currency,
                             customerType: $viewModel.customerType,
@@ -43,10 +44,8 @@ struct CheckoutPlaygroundView: View {
                         CheckoutPlaygroundFeaturesSection(
                             mode: viewModel.mode,
                             customerType: viewModel.customerType,
-                            enableShipping: $viewModel.enableShipping,
                             shippingAddressCollection: $viewModel.shippingAddressCollection,
                             billingAddressCollection: $viewModel.billingAddressCollection,
-                            phoneNumberCollection: $viewModel.phoneNumberCollection,
                             allowPromotionCodes: $viewModel.allowPromotionCodes,
                             automaticTax: $viewModel.automaticTax,
                             adaptivePricing: $viewModel.adaptivePricing,
@@ -86,6 +85,7 @@ struct CheckoutPlaygroundView: View {
                     CheckoutCartView(
                         clientSecret: clientSecret,
                         adaptivePricing: viewModel.adaptivePricing,
+                        integrationType: viewModel.integrationType,
                         currencySelectorAppearance: viewModel.currencySelectorAppearance
                     )
                 }

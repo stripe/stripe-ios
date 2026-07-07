@@ -7,11 +7,12 @@ import XCTest
 final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_billingFillsEmptyFields() {
-        let session = CheckoutTestHelpers.makeOpenSession()
-        session.billingAddress = Checkout.ContactAddress(
+        let apiResponse = CheckoutTestHelpers.makeOpenSession()
+        apiResponse.billingAddress = Checkout.ContactAddress(
             name: "Jane Doe",
             address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
         )
+        let session = apiResponse.makePublicSession()
 
         var config = PaymentSheet.Configuration()
         session.applyAddressOverrides(to: &config)
@@ -25,11 +26,12 @@ final class CheckoutAddressMergingTests: XCTestCase {
     }
 
     func testApplyAddressOverrides_billingConfigTakesPrecedence() {
-        let session = CheckoutTestHelpers.makeOpenSession()
-        session.billingAddress = Checkout.ContactAddress(
+        let apiResponse = CheckoutTestHelpers.makeOpenSession()
+        apiResponse.billingAddress = Checkout.ContactAddress(
             name: "Override Name",
             address: .init(country: "GB", line1: "Override Line1")
         )
+        let session = apiResponse.makePublicSession()
 
         var config = PaymentSheet.Configuration()
         config.defaultBillingDetails.name = "Config Name"
@@ -43,11 +45,12 @@ final class CheckoutAddressMergingTests: XCTestCase {
     }
 
     func testApplyAddressOverrides_shippingApplied() {
-        let session = CheckoutTestHelpers.makeOpenSession()
-        session.shippingAddress = Checkout.ContactAddress(
+        let apiResponse = CheckoutTestHelpers.makeOpenSession()
+        apiResponse.shippingAddress = Checkout.ContactAddress(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )
+        let session = apiResponse.makePublicSession()
 
         var config = PaymentSheet.Configuration()
         XCTAssertNil(config.shippingDetails())
@@ -64,11 +67,12 @@ final class CheckoutAddressMergingTests: XCTestCase {
     }
 
     func testApplyAddressOverrides_shippingNotOverriddenWhenConfigHasShipping() {
-        let session = CheckoutTestHelpers.makeOpenSession()
-        session.shippingAddress = Checkout.ContactAddress(
+        let apiResponse = CheckoutTestHelpers.makeOpenSession()
+        apiResponse.shippingAddress = Checkout.ContactAddress(
             name: "Override",
             address: .init(country: "GB")
         )
+        let session = apiResponse.makePublicSession()
 
         var config = PaymentSheet.Configuration()
         let existingDetails = AddressViewController.AddressDetails(
@@ -87,7 +91,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
     // MARK: - Email
 
     func testApplyAddressOverrides_emailPopulatedFromSession() {
-        let session = CheckoutTestHelpers.makeOpenSession(customerEmail: "session@example.com")
+        let session = CheckoutTestHelpers.makeOpenSession(customerEmail: "session@example.com").makePublicSession()
 
         var config = PaymentSheet.Configuration()
         session.applyAddressOverrides(to: &config)
@@ -96,7 +100,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
     }
 
     func testApplyAddressOverrides_configEmailTakesPrecedenceOverSession() {
-        let session = CheckoutTestHelpers.makeOpenSession(customerEmail: "session@example.com")
+        let session = CheckoutTestHelpers.makeOpenSession(customerEmail: "session@example.com").makePublicSession()
 
         var config = PaymentSheet.Configuration()
         config.defaultBillingDetails.email = "config@example.com"
@@ -106,7 +110,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
     }
 
     func testApplyAddressOverrides_noEmailStaysNil() {
-        let session = CheckoutTestHelpers.makeOpenSession()
+        let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
 
         var config = PaymentSheet.Configuration()
         session.applyAddressOverrides(to: &config)
@@ -117,15 +121,16 @@ final class CheckoutAddressMergingTests: XCTestCase {
     // MARK: - EmbeddedPaymentElement.Configuration
 
     func testApplyAddressOverrides_embeddedBillingAndShipping() {
-        let session = CheckoutTestHelpers.makeOpenSession()
-        session.billingAddress = Checkout.ContactAddress(
+        let apiResponse = CheckoutTestHelpers.makeOpenSession()
+        apiResponse.billingAddress = Checkout.ContactAddress(
             name: "Jane Doe",
             address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
         )
-        session.shippingAddress = Checkout.ContactAddress(
+        apiResponse.shippingAddress = Checkout.ContactAddress(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )
+        let session = apiResponse.makePublicSession()
 
         var config = EmbeddedPaymentElement.Configuration()
         session.applyAddressOverrides(to: &config)
@@ -141,7 +146,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
     }
 
     func testApplyAddressOverrides_embeddedEmailPopulatedFromSession() {
-        let session = CheckoutTestHelpers.makeOpenSession(customerEmail: "session@example.com")
+        let session = CheckoutTestHelpers.makeOpenSession(customerEmail: "session@example.com").makePublicSession()
 
         var config = EmbeddedPaymentElement.Configuration()
         session.applyAddressOverrides(to: &config)
@@ -150,7 +155,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
     }
 
     func testApplyAddressOverrides_embeddedConfigEmailTakesPrecedence() {
-        let session = CheckoutTestHelpers.makeOpenSession(customerEmail: "session@example.com")
+        let session = CheckoutTestHelpers.makeOpenSession(customerEmail: "session@example.com").makePublicSession()
 
         var config = EmbeddedPaymentElement.Configuration()
         config.defaultBillingDetails.email = "config@example.com"

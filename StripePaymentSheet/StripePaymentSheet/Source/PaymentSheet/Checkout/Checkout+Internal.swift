@@ -24,26 +24,51 @@ extension Checkout {
 
     /// Runs `body` as a tracked session update, serialized behind any in-flight ops.
     ///
+    /// `body` can be of any return type, including `Void`, and  `enqueueSessionUpdate`
+    /// will return that value to the caller.
+    ///
     /// Operations execute in strict FIFO order: each task waits for the previous
-    /// task before running its body. While the queue is non-empty, ``state`` is
-    /// `.loading`; once the queue drains it returns to `.loaded`.
-    internal func enqueueSessionUpdate(
-        _ body: @MainActor @escaping () async throws -> Void
-    ) async throws {
+    /// task before running its body. While the queue is non-empty, ``isLoading``
+    /// is `true`; once the queue drains it returns to `false.`
+    /// - Throws: Any error thrown by `body`.
+    /// - Returns: The value returned by `body`.
+    internal func enqueueSessionUpdate<T>(
+        _ body: @MainActor @escaping () async throws -> T
+    ) async throws -> T {
         let predecessor = pendingOperations.last
-        let operation = Task<Void, Error> { @MainActor in
-            // Keep later ops moving even if an earlier queued op failed.
+
+        // The typed task does the actual work, preserving the return type T.
+        let typedOperation = Task<T, Error> { @MainActor in
+            // Wait for the previous operation, if one exists, to finish.
+            // Use `try?` so that we still continue even if the predecessor throws an error.
             if let predecessor { _ = try? await predecessor.value }
-            try await body()
+            return try await body()
         }
 
-        pendingOperations.append(operation)
+        // The erased task discards T so it can be stored in the homogeneous
+        // pendingOperations array. It forwards completion/errors so downstream
+        // predecessors still serialize correctly.
+        let erasedOperation = Task<Void, Error> { _ = try await typedOperation.value }
+        pendingOperations.append(erasedOperation)
 
         defer {
-            pendingOperations.removeAll { $0 == operation }
+            pendingOperations.removeAll { $0 == erasedOperation }
         }
 
-        try await operation.value
+        return try await typedOperation.value
+    }
+
+    /// Non-throwing variant of ``enqueueSessionUpdate(_:)-throws``.
+    ///
+    /// Use this when the enqueued work cannot fail. The operation is still
+    /// serialized behind any in-flight ops in the same FIFO order.
+    internal func enqueueSessionUpdate<T>(
+        _ body: @MainActor @escaping () async -> T
+    ) async -> T {
+        // Cast body to `throws` so that we call the underlying throwing version
+        // instead of recursing. The try! is safe because body cannot throw.
+        // swiftlint:disable:next force_try
+        return try! await enqueueSessionUpdate(body as (() async throws -> T))
     }
 
     /// Enqueues a serialized session update.
@@ -55,39 +80,31 @@ extension Checkout {
     ///
     /// - Parameters:
     ///   - update: The API mutation to perform, or nil for a local-only update.
-    ///   - localMutation: A local state change to apply prior to the API call (or on its own).
+    ///   - localMutation: A local change to the session to apply after the API call (or on its own).
     func performUpdate(
         _ update: SessionUpdate? = nil,
-        applying localMutation: (@MainActor @Sendable () -> Void)? = nil
+        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil
     ) async throws {
         try await enqueueSessionUpdate {
             try self.requireSheetNotPresented()
-            // Transition to loading before the async work begins so observers show a loading state.
-            self.state = .loading(self.state.session)
 
             do {
-                let updatedSession: STPCheckoutSession
+                let updatedSessionAPIResponse: STPCheckoutSessionAPIResponse?
                 if let update {
                     let sessionId = Checkout.extractSessionId(from: self.clientSecret)
-                    updatedSession = try await self.apiClient.updateCheckoutSession(
+                    updatedSessionAPIResponse = try await self.apiClient.updateCheckoutSession(
                         checkoutSessionId: sessionId,
                         parameters: update.parameters
                     )
                 } else {
-                    guard let session = self.stpSession else { return }
-                    updatedSession = session
+                    updatedSessionAPIResponse = nil
                 }
 
-                localMutation?()
-                try await self.commitSession(updatedSession)
+                // Errors from here should still get wrapped in API errors since the only way
+                //  the integration delegate throws is if the API returned a session state that
+                //  the UI can't handle.
+                try await self.commitSession(updatedSessionAPIResponse, applying: localMutation)
             } catch {
-                // Restore loaded state on failure so the UI doesn't stay stuck in loading.
-                self.state = .loaded(self.state.session)
-                // If a prior op skipped the delegate and we're failing before we
-                // get to commitSession ourselves, still notify so the UI updates.
-                if self.isLastPendingOperation {
-                    try? await self.integrationDelegate?.checkoutDidUpdate(self)
-                }
                 throw CheckoutError.apiError(message: error.nonGenericDescription)
             }
         }

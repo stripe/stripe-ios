@@ -302,7 +302,7 @@ extension PaymentSheet {
             }
         }
 
-        private weak var checkout: Checkout?
+        weak var checkout: Checkout?
         private var isPresented = false
         private var pendingPresentTask: Task<Void, Never>?
         private(set) var didPresentAndContinue: Bool = false
@@ -415,7 +415,7 @@ extension PaymentSheet {
                     return
                 }
                 var config = configuration
-                checkout.stpSession.applyAddressOverrides(to: &config)
+                checkout.session.applyAddressOverrides(to: &config)
                 create(mode: .checkout(checkout),
                        configuration: config
                 ) { result in
@@ -586,7 +586,7 @@ extension PaymentSheet {
                 }
                 guard !Task.isCancelled else { return }
                 self.isPresented = true
-                checkout.stpSession.applyAddressOverrides(to: &self.configuration)
+                checkout.session.applyAddressOverrides(to: &self.configuration)
                 let updateID = UUID()
                 self.performUpdate(mode: .checkout(checkout), updateID: updateID) { [weak self] error in
                     guard let self else { return }
@@ -651,24 +651,14 @@ extension PaymentSheet {
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.confirm must be called from the main thread.")
 
-            // TODO(porter): Remove assumeIsolated once confirm is @MainActor (blocked on new FC API designs)
-            if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
-                assertionFailure("`confirm` should not be called while the Checkout session is loading.")
-                let error = PaymentSheetError.flowControllerConfirmFailed(
-                    message: "confirmPayment was called while the Checkout session is still loading. Wait until the Checkout state is .loaded before calling confirm."
-                )
-                completion(.failed(error: error))
-                return
-            }
-
             switch latestUpdateContext?.status {
             case .inProgress:
-                assertionFailure("`confirm` should only be called when the last update has completed.")
+                stpAssertionFailure("`confirm` should only be called when the last update has completed.")
                 let error = PaymentSheetError.flowControllerConfirmFailed(message: "confirmPayment was called with an update API call in progress.")
                 completion(.failed(error: error))
                 return
             case .failed:
-                assertionFailure("`confirm` should only be called when the last update has completed without error.")
+                stpAssertionFailure("`confirm` should only be called when the last update has completed without error.")
                 let error = PaymentSheetError.flowControllerConfirmFailed(message: "confirmPayment was called when the last update API call failed.")
                 completion(.failed(error: error))
                 return
@@ -677,7 +667,7 @@ extension PaymentSheet {
             }
 
             guard let paymentOption = internalPaymentOption else {
-                assertionFailure("`confirm` should only be called when `paymentOption` is not nil")
+                stpAssertionFailure("`confirm` should only be called when `paymentOption` is not nil")
                 completion(.failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption))
                 return
             }
@@ -707,28 +697,51 @@ extension PaymentSheet {
             }
 
             func confirm() {
-                PaymentSheet.confirm(
-                    configuration: configuration,
-                    authenticationContext: authenticationContext,
-                    intent: intent,
-                    elementsSession: elementsSession,
-                    paymentOption: paymentOption,
-                    paymentHandler: paymentHandler,
-                    integrationShape: .flowController,
-                    confirmationChallenge: confirmationChallenge,
-                    analyticsHelper: analyticsHelper
-                ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
-                    analyticsHelper.logPayment(
+                let confirmBlock = { [self] in
+                    PaymentSheet.confirm(
+                        configuration: self.configuration,
+                        authenticationContext: authenticationContext,
+                        intent: self.intent,
+                        elementsSession: self.elementsSession,
                         paymentOption: paymentOption,
-                        result: result,
-                        deferredIntentConfirmationType: deferredIntentConfirmationType
-                    )
-                    if case .completed = result, case .link = paymentOption {
-                        // Remember Link as default payment method for users who just created an account.
-                        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
-                    }
+                        paymentHandler: self.paymentHandler,
+                        integrationShape: .flowController,
+                        confirmationChallenge: self.confirmationChallenge,
+                        analyticsHelper: self.analyticsHelper
+                    ) { result, deferredIntentConfirmationType in
+                        self.analyticsHelper.logPayment(
+                            paymentOption: paymentOption,
+                            result: result,
+                            deferredIntentConfirmationType: deferredIntentConfirmationType
+                        )
+                        if case .completed = result, case .link = paymentOption {
+                            // Remember Link as default payment method for users who just created an account.
+                            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: self.configuration.customer?.id)
+                        }
 
-                    completion(result)
+                        completion(result)
+                    }
+                }
+
+                if let checkout {
+                    // TODO(porter): Remove assumeIsolated once confirm is @MainActor (blocked on new FC API designs)
+                    if MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
+                        stpAssertionFailure("`confirm` should not be called while the Checkout session is loading.")
+                        let error = PaymentSheetError.flowControllerConfirmFailed(
+                            message: "confirmPayment was called while the Checkout session is still loading. Wait until Checkout.isLoading is false."
+                        )
+                        completion(.failed(error: error))
+                        return
+                    }
+                    // We don't need to await this Task, just kick it off, because confirmBlock uses a completion.
+                    // We do need to open a task to use `Checkout`'s `enqueueSessionUpdate`, which uses Swift concurrency.
+                    Task { @MainActor in
+                        await checkout.enqueueSessionUpdate {
+                            confirmBlock()
+                        }
+                    }
+                } else {
+                    confirmBlock()
                 }
             }
         }
@@ -754,17 +767,15 @@ extension PaymentSheet {
             checkout: Checkout,
             completion: @escaping (Error?) -> Void
         ) {
+            // No-op if the session already reached a terminal state (complete/expired).
+            guard checkout.sessionIsOpen else {
+                completion(nil)
+                return
+            }
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
             assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
             let updateID = beginUpdate()
             Task { @MainActor in
-                do {
-                    try await checkout.awaitPendingOperations()
-                } catch {
-                    self.failUpdate(updateID)
-                    completion(error)
-                    return
-                }
                 guard !self.isPresented else {
                     let message = "PaymentSheet.FlowController.update must be called when PaymentSheet is not presented."
                     assertionFailure(message)
@@ -773,7 +784,7 @@ extension PaymentSheet {
                     completion(error)
                     return
                 }
-                checkout.stpSession.applyAddressOverrides(to: &configuration)
+                checkout.session.applyAddressOverrides(to: &configuration)
                 performUpdate(mode: .checkout(checkout), updateID: updateID, completion: completion)
             }
         }

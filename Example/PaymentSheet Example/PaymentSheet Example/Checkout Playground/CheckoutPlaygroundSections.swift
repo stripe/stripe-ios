@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct CheckoutPlaygroundConfigurationSection: View {
+    @Binding var integrationType: CheckoutPlayground.IntegrationType
     @Binding var mode: CheckoutPlayground.SessionMode
     @Binding var currency: CheckoutPlayground.Currency
     @Binding var customerType: CheckoutPlayground.CustomerType
@@ -17,6 +18,13 @@ struct CheckoutPlaygroundConfigurationSection: View {
         VStack(alignment: .leading, spacing: 12) {
             CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
             VStack(spacing: 1) {
+                CheckoutPlayground.PickerRow(
+                    title: "Integration",
+                    icon: "square.stack.3d.up.fill",
+                    selection: $integrationType,
+                    tooltip: "Choose the payment integration.\n\n• FlowController: Uses PaymentSheet.FlowController with a payment method selector and confirm button.\n• Embedded: Uses EmbeddedPaymentElement inline in the checkout flow.",
+                    displayText: { $0.displayName }
+                )
                 CheckoutPlayground.PickerRow(
                     title: "Mode",
                     icon: "arrow.triangle.2.circlepath",
@@ -150,10 +158,8 @@ struct CheckoutPlaygroundLineItemCard: View {
 struct CheckoutPlaygroundFeaturesSection: View {
     let mode: CheckoutPlayground.SessionMode
     let customerType: CheckoutPlayground.CustomerType
-    @Binding var enableShipping: Bool
     @Binding var shippingAddressCollection: Bool
     @Binding var billingAddressCollection: Bool
-    @Binding var phoneNumberCollection: Bool
     @Binding var allowPromotionCodes: Bool
     @Binding var automaticTax: Bool
     @Binding var adaptivePricing: Bool
@@ -174,11 +180,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
             CheckoutPlayground.SectionHeader(title: "Features", icon: "slider.horizontal.3")
             VStack(spacing: 1) {
                 CheckoutPlayground.ToggleRow(
-                    title: "Shipping Options",
-                    isOn: $enableShipping,
-                    tooltip: "Populates `shipping_options` with sample rates (e.g., $5.99 Standard). Requires `shipping_address_collection`."
-                )
-                CheckoutPlayground.ToggleRow(
                     title: "Collect Shipping Address",
                     isOn: $shippingAddressCollection,
                     tooltip: "Sets `shipping_address_collection` to allow specific countries (US, CA, GB, AU). Necessary for physical goods."
@@ -189,11 +190,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     tooltip: "Sets `billing_address_collection: 'required'`. If off, defaults to 'auto' (only collected if the payment method needs it)."
                 )
                 if supportsSetupRestrictedFeatures {
-                    CheckoutPlayground.ToggleRow(
-                        title: "Collect Phone Number",
-                        isOn: $phoneNumberCollection,
-                        tooltip: "Sets `phone_number_collection: { enabled: true }`. Useful for SMS notifications or 3DS authentication fallback."
-                    )
                     CheckoutPlayground.ToggleRow(
                         title: "Allow Promo Codes",
                         isOn: $allowPromotionCodes,

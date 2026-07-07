@@ -367,7 +367,7 @@ extension PaymentMethodFormViewController {
             case .checkout(let checkout):
                 // This ID is used for financial incentive eligibility. Ideally we'd use the underlying
                 // paymentIntentId or setupIntentId, but those are not yet populated on CheckoutSession.
-                return .deferred(checkout.stpSession.id)
+                return .deferred(checkout.nonisolatedSession.id)
             }
         }()
 
@@ -562,8 +562,8 @@ extension PaymentMethodFormViewController {
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
-                amount: checkout.stpSession.expectedAmount(),
-                currency: checkout.stpSession.currency,
+                amount: checkout.nonisolatedSession.expectedAmount(),
+                currency: checkout.nonisolatedSession.currency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
@@ -678,8 +678,8 @@ extension PaymentMethodFormViewController {
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
-                amount: checkout.stpSession.expectedAmount(),
-                currency: checkout.stpSession.currency,
+                amount: checkout.nonisolatedSession.expectedAmount(),
+                currency: checkout.nonisolatedSession.currency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,

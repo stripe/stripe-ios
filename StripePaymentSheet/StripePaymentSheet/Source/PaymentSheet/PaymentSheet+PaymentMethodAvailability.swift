@@ -102,6 +102,10 @@ extension PaymentSheet {
             reasons.append(.billingDetailsCollection)
         }
 
+        if elementsSession.disableLinkForAutomaticTaxBilling {
+            reasons.append(.automaticTaxBillingAddress)
+        }
+
         return reasons
     }
 
@@ -210,12 +214,12 @@ extension Intent: PaymentMethodRequirementProvider {
 
             // The session is configured to collect a shipping address, so payment methods
             // that require one can be offered.
-            if checkout.stpSession.requiresShippingAddress {
+            if checkout.nonisolatedSession.requiresShippingAddress {
                 reqs.append(.shippingAddress)
             }
 
             // Mirror PaymentIntent/SetupIntent: valid us bank verification method
-            if let usBankOptions = checkout.stpSession.paymentMethodOptions?.usBankAccount,
+            if let usBankOptions = checkout.nonisolatedSession.paymentMethodOptions?.usBankAccount,
                 usBankOptions.verificationMethod.isValidForPaymentSheet
             {
                 reqs.append(.validUSBankVerificationMethod)

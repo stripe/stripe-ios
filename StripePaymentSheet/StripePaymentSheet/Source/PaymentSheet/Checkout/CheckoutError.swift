@@ -15,14 +15,13 @@ public enum CheckoutError: Error, LocalizedError, Sendable {
     /// The client secret provided to ``Checkout`` is empty.
     case invalidClientSecret
 
-    /// The session is no longer open (e.g. it has been completed or expired).
-    case sessionNotOpen
-
     /// A payment sheet or form is currently presented. Dismiss it before making changes.
     case sheetCurrentlyPresented
 
     /// A pending Checkout operation did not complete before the timeout elapsed.
     case timedOut
+
+    case invalidShippingCountry(countryCode: String)
 
     /// The Stripe API returned an error with the given message.
     case apiError(message: String)
@@ -33,12 +32,12 @@ public enum CheckoutError: Error, LocalizedError, Sendable {
         switch self {
         case .invalidClientSecret:
             return "Checkout was initialized with an empty client secret."
-        case .sessionNotOpen:
-            return "The session is no longer active."
         case .sheetCurrentlyPresented:
             return "A payment sheet or form is currently presented. Dismiss it before making changes."
         case .timedOut:
             return "Timed out waiting for a Checkout operation to complete."
+        case .invalidShippingCountry(let countryCode):
+            return "Country code '\(countryCode)' is not in allowedShippingCountries"
         case .apiError(let message):
             return message
         }

@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "Banka hesabı ayrıntıları değiştirilemiyor.";
 
-"Buy now or pay later with  <img/>" = "Şimdi satın alın veya daha sonra <img/> ile ödeyin.";
+"Buy Now, Pay Later with  <img/>" = "<img/> ile Şimdi Al Sonra Öde";
 
-"Buy now or pay later with Afterpay" = "Şimdi satın alın veya daha sonra Afterpay ile ödeyin";
+"Buy Now, Pay Later with Afterpay" = "Afterpay ile Şimdi Al Sonra Öde";
 
-"Buy now or pay later with Cash App Afterpay" = "Şimdi satın alın veya daha sonra Cash Uygulaması Afterpay ile ödeyin";
+"Buy Now, Pay Later with Cash App Afterpay" = "Cash App Afterpay ile Şimdi Al Sonra Öde";
 
-"Buy now or pay later with Clearpay" = "Şimdi satın alın veya daha sonra Clearpay ile ödeyin";
+"Buy Now, Pay Later with Clearpay" = "Clearpay ile Şimdi Al Sonra Öde";
 
 "Buy now or pay later with Klarna" = "Şimdi satın alın veya daha sonra Klarna ile ödeyin";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Bankanızla ilk kez ödeme yaptığınızda %@ tutarını geri alın. <terms>Şartları görün</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Bankanızla ödeme yaptığınızda %@ tutarını geri alın. <terms>Şartları görün</terms>";
+
+"Hide details" = "Ayrıntıları gizle";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Stripe'ın %@ adına Otomatik Ödeme alacağını anlıyorum. Hesap sahibi ve bu hesaptan ödemeleri yetkilendirmek için gereken tek kişi olduğumu onaylıyorum.";
 
@@ -307,6 +309,8 @@
 "Shipping" = "Gönderim";
 
 "Shipping to %@ is not supported." = "Varış noktası %@ olan gönderimler desteklenmez.";
+
+"Show details" = "Ayrıntıları göster";
 
 "Show menu" = "Menüyü göster";
 

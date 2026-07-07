@@ -36,13 +36,13 @@
 
 "Bank account details cannot be changed." = "Údaje o bankovním účtu nelze měnit.";
 
-"Buy now or pay later with  <img/>" = "Kupte nyní nebo zaplaťte později pomocí <img/>";
+"Buy Now, Pay Later with  <img/>" = "Koupit nyní, zaplatit později pomocí <img/>";
 
-"Buy now or pay later with Afterpay" = "Koupit nyní nebo zaplatit pomocí Afterpay";
+"Buy Now, Pay Later with Afterpay" = "Koupit nyní, zaplatit později pomocí Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Koupit nyní nebo zaplatit později s Cash App Afterpay";
+"Buy Now, Pay Later with Cash App Afterpay" = "Koupit nyní, zaplatit později pomocí Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "Koupit nyní nebo zaplatit pomocí Clearpay";
+"Buy Now, Pay Later with Clearpay" = "Koupit nyní, zaplatit později pomocí Clearpay";
 
 "Buy now or pay later with Klarna" = "Koupit nyní nebo zaplatit pomocí Klarna";
 
@@ -163,6 +163,8 @@
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Získejte %@ zpět při první platbě u své banky. <terms>Viz podmínky</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Získejte %@ zpět, když zaplatíte u své banky. <terms>Viz podmínky</terms>";
+
+"Hide details" = "Skrýt podrobnosti";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Rozumím tomu, že Stripe bude vybírat přímé debety jménem %@, a potvrzuji, že jsem držitelem účtu a jedinou osobou, která je nezbytná k autorizování debetů z tohoto účtu.";
 
@@ -307,6 +309,8 @@
 "Shipping" = "Doprava";
 
 "Shipping to %@ is not supported." = "Dodání do zemí jako %@ není podporováno.";
+
+"Show details" = "Zobrazit podrobnosti";
 
 "Show menu" = "Zobrazit nabídku";
 

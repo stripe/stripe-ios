@@ -18,6 +18,7 @@ struct CheckoutCartView: View {
 
     let clientSecret: String
     let adaptivePricing: Bool
+    let integrationType: CheckoutPlayground.IntegrationType
     var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
 
     var body: some View {
@@ -34,11 +35,19 @@ struct CheckoutCartView: View {
                         errorMessage: $errorMessage
                     )
                     .overlay(alignment: .bottom) {
-                        if checkout.state.session.total != nil {
-                            CheckoutCartPaymentButton(
-                                checkout: checkout,
-                                onDismiss: { dismiss() }
-                            )
+                        if checkout.session.total != nil {
+                            switch integrationType {
+                            case .flowController:
+                                CheckoutCartPaymentButton(
+                                    checkout: checkout,
+                                    onDismiss: { dismiss() }
+                                )
+                            case .embedded:
+                                CheckoutCartEmbeddedPaymentView(
+                                    checkout: checkout,
+                                    onDismiss: { dismiss() }
+                                )
+                            }
                         }
                     }
                 } else if isLoading {
