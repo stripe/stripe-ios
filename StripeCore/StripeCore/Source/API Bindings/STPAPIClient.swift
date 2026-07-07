@@ -534,6 +534,10 @@ extension STPAPIClient {
         if let error {
             return .failure(error)
         }
+
+        // TODO: Remove this temporary response logging after wallet ownership signing debugging is complete.
+        printRawAndPrettyJSONResponse(data)
+
         #if DEBUG
         if let httpResponse = response as? HTTPURLResponse,
            let method = request?.httpMethod,
@@ -562,6 +566,29 @@ extension STPAPIClient {
                 return .failure(error)
             }
         }
+    }
+
+    private static func printRawAndPrettyJSONResponse(_ data: Data?) {
+        guard let data, !data.isEmpty else {
+            return
+        }
+
+        let rawString = String(data: data, encoding: .utf8) ?? "<non-UTF8 response>"
+        print("[Stripe SDK] raw response JSON:\n\(rawString)")
+
+        guard
+            let jsonObject = try? JSONSerialization.jsonObject(with: data),
+            let prettyData = try? JSONSerialization.data(
+                withJSONObject: jsonObject,
+                options: [.prettyPrinted, .sortedKeys]
+            ),
+            let prettyString = String(data: prettyData, encoding: .utf8)
+        else {
+            print("[Stripe SDK] pretty response JSON:\n<invalid JSON response>")
+            return
+        }
+
+        print("[Stripe SDK] pretty response JSON:\n\(prettyString)")
     }
 
     /// Decodes request data to see if it can be parsed as a Stripe error.

@@ -141,40 +141,40 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
 
     func testMappedErrorMapsInvalidWalletOwnershipSignatureError() throws {
         let apiError = try assertMapsWalletOwnershipError(
-            code: "invalid_wallet_ownership_signature",
+            code: "crypto_onramp_invalid_wallet_ownership_signature",
             message: "The submitted signature does not prove ownership of the registered wallet.",
             expectedType: InvalidWalletOwnershipSignatureAPIError.self,
             expectedUserMessage: "We couldn't verify ownership of this wallet. Please try again."
         )
 
         XCTAssertTrue(apiError.developerMessage.contains("The submitted signature does not prove ownership of the registered wallet."))
-        XCTAssertTrue(apiError.developerMessage.contains("Code: invalid_wallet_ownership_signature"))
+        XCTAssertTrue(apiError.developerMessage.contains("Code: crypto_onramp_invalid_wallet_ownership_signature"))
         XCTAssertTrue(apiError.developerMessage.contains("Next step: Sign the exact challenge message with the registered wallet address"))
     }
 
     func testMappedErrorMapsWalletOwnershipChallengeExpiredError() throws {
         let apiError = try assertMapsWalletOwnershipError(
-            code: "wallet_ownership_challenge_expired",
+            code: "crypto_onramp_wallet_ownership_challenge_expired",
             message: "The wallet ownership challenge has expired.",
             expectedType: WalletOwnershipChallengeExpiredAPIError.self,
             expectedUserMessage: "This wallet verification request expired. Please try again."
         )
 
         XCTAssertTrue(apiError.developerMessage.contains("The wallet ownership challenge has expired."))
-        XCTAssertTrue(apiError.developerMessage.contains("Code: wallet_ownership_challenge_expired"))
+        XCTAssertTrue(apiError.developerMessage.contains("Code: crypto_onramp_wallet_ownership_challenge_expired"))
         XCTAssertTrue(apiError.developerMessage.contains("Next step: Request a new wallet ownership challenge"))
     }
 
     func testMappedErrorMapsInvalidWalletOwnershipChallengeError() throws {
         let apiError = try assertMapsWalletOwnershipError(
-            code: "invalid_wallet_ownership_challenge",
+            code: "crypto_onramp_invalid_wallet_ownership_challenge",
             message: "The wallet ownership challenge is invalid.",
             expectedType: InvalidWalletOwnershipChallengeAPIError.self,
             expectedUserMessage: "This wallet verification request is no longer valid. Please try again."
         )
 
         XCTAssertTrue(apiError.developerMessage.contains("The wallet ownership challenge is invalid."))
-        XCTAssertTrue(apiError.developerMessage.contains("Code: invalid_wallet_ownership_challenge"))
+        XCTAssertTrue(apiError.developerMessage.contains("Code: crypto_onramp_invalid_wallet_ownership_challenge"))
         XCTAssertTrue(apiError.developerMessage.contains("Next step: Request a new challenge for the registered wallet"))
     }
 
@@ -239,21 +239,21 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
-            "invalid_wallet_ownership_signature"
+            "crypto_onramp_invalid_wallet_ownership_signature"
         )
         XCTAssertEqual(
             WalletOwnershipChallengeExpiredAPIError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
-            "wallet_ownership_challenge_expired"
+            "crypto_onramp_wallet_ownership_challenge_expired"
         )
         XCTAssertEqual(
             InvalidWalletOwnershipChallengeAPIError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
-            "invalid_wallet_ownership_challenge"
+            "crypto_onramp_invalid_wallet_ownership_challenge"
         )
         XCTAssertEqual(
             CryptoOnrampWalletNotFoundAPIError(
