@@ -298,7 +298,7 @@ class ConfirmButton: UIControl {
 
     func update(status: Status, callToAction: CallToActionType, animated: Bool, completion: (() -> Void)? = nil) {
         // Skip redundant updates while processing to prevent the spinner from resetting mid-animation.
-        if status == .spinnerWithInteractionDisabled,
+        if status == .processing,
            status == self.status,
            callToAction == self.callToAction {
             completion?()
