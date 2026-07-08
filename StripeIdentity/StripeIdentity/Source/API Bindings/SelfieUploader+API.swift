@@ -31,9 +31,16 @@ extension StripeAPI.VerificationPageDataFace {
         uploadedFiles: SelfieUploader.FileData,
         capturedImages: FaceCaptureData,
         bestFrameExifMetadata: CameraExifMetadata?,
-        trainingConsent: Bool
+        trainingConsent: Bool,
+        shouldSubmit3DFaceCaptureData: Bool = false
     ) {
         let captureOrders = capturedImages.captureOrders
+        let leftFullFrame = shouldSubmit3DFaceCaptureData
+            ? uploadedFiles.leftFullFrameFile?.id
+            : nil
+        let rightFullFrame = shouldSubmit3DFaceCaptureData
+            ? uploadedFiles.rightFullFrameFile?.id
+            : nil
         self.init(
             bestHighResImage: uploadedFiles.bestHighResFile.id,
             bestLowResImage: uploadedFiles.bestLowResFile.id,
@@ -41,8 +48,8 @@ extension StripeAPI.VerificationPageDataFace {
             firstLowResImage: uploadedFiles.firstLowResFile.id,
             lastHighResImage: uploadedFiles.lastHighResFile.id,
             lastLowResImage: uploadedFiles.lastLowResFile.id,
-            leftFullFrame: uploadedFiles.leftFullFrameFile?.id,
-            rightFullFrame: uploadedFiles.rightFullFrameFile?.id,
+            leftFullFrame: leftFullFrame,
+            rightFullFrame: rightFullFrame,
             bestFaceScore: .init(capturedImages.bestMiddle.scannerOutput.faceScore),
             faceScoreVariance: .init(capturedImages.faceScoreVariance),
             numFrames: capturedImages.numSamples,
@@ -54,7 +61,7 @@ extension StripeAPI.VerificationPageDataFace {
                 let exposureDuration = properties.exposureDuration
 
                 if exposureDuration.isNumeric {
-                    return Int(properties.exposureDuration.seconds * 1000)
+                    return Int(properties.exposureDuration.seconds * 1_000_000)
                 }
 
                 return nil
@@ -89,18 +96,24 @@ extension StripeAPI.VerificationPageDataFace {
                 )
                 : nil,
             leftFrameData: capturedImages.shouldIncludeCaptureFrameMetadata
-                ? capturedImages.leftSide.map {
-                    .init(
-                        capturedImage: $0,
+                ? capturedImages.leftSide.flatMap { leftSide in
+                    guard leftFullFrame != nil else {
+                        return nil
+                    }
+                    return .init(
+                        capturedImage: leftSide,
                         faceScoreVariance: capturedImages.faceScoreVariance,
                         captureOrder: captureOrders[.left]
                     )
                 }
                 : nil,
             rightFrameData: capturedImages.shouldIncludeCaptureFrameMetadata
-                ? capturedImages.rightSide.map {
-                    .init(
-                        capturedImage: $0,
+                ? capturedImages.rightSide.flatMap { rightSide in
+                    guard rightFullFrame != nil else {
+                        return nil
+                    }
+                    return .init(
+                        capturedImage: rightSide,
                         faceScoreVariance: capturedImages.faceScoreVariance,
                         captureOrder: captureOrders[.right]
                     )
@@ -155,6 +168,10 @@ private extension FaceCaptureData {
 }
 
 extension StripeAPI.VerificationPageDataFaceFrameData {
+    private enum FaceLandmarkResultEncoding {
+        static let maxEncodedLength = 5000
+        static let scorePrecision = 4
+    }
     init(
         capturedImage: FaceScannerInputOutput,
         faceScoreVariance: Float,
@@ -182,11 +199,73 @@ extension StripeAPI.VerificationPageDataFaceFrameData {
                 capturedImage.image.width,
                 capturedImage.image.height,
             ],
-            faceLandmarkResult: capturedImage.scannerOutput.faceLandmarkResult,
+            faceLandmarkResult: Self.compactedFaceLandmarkResult(
+                capturedImage.scannerOutput.faceLandmarkResult
+            ),
             capturedAt: capturedImage.capturedAt,
             captureOrder: captureOrder,
             cameraInfo: Self.encodedCameraInfo(from: capturedImage.cameraExifMetadata)
         )
+    }
+
+    private static func compactedFaceLandmarkResult(
+        _ encodedFaceLandmarkResult: String?
+    ) -> String? {
+        guard let encodedFaceLandmarkResult else {
+            return nil
+        }
+
+        guard
+            let data = Data(base64Encoded: encodedFaceLandmarkResult),
+            let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+            let categories = jsonObject["categories"] as? [[String: Any]]
+        else {
+            return encodedFaceLandmarkResult.count <= FaceLandmarkResultEncoding.maxEncodedLength
+                ? encodedFaceLandmarkResult
+                : nil
+        }
+
+        let compactCategories: [[String: Any]] = categories.compactMap { category in
+            guard let rawScore = category["score"] as? NSNumber else {
+                return nil
+            }
+
+            var compactCategory: [String: Any] = [
+                "score": roundedScore(rawScore.doubleValue),
+            ]
+            if let categoryName = category["category_name"] as? String,
+                !categoryName.isEmpty
+            {
+                compactCategory["category_name"] = categoryName
+            } else if let displayName = category["display_name"] as? String,
+                !displayName.isEmpty
+            {
+                compactCategory["category_name"] = displayName
+            }
+            return compactCategory
+        }
+
+        let compactPayload: [String: Any] = [
+            "categories": compactCategories,
+        ]
+        guard JSONSerialization.isValidJSONObject(compactPayload),
+            let compactData = try? JSONSerialization.data(withJSONObject: compactPayload)
+        else {
+            return nil
+        }
+
+        let compactEncodedFaceLandmarkResult = compactData.base64EncodedString()
+        guard compactEncodedFaceLandmarkResult.count <= FaceLandmarkResultEncoding.maxEncodedLength
+        else {
+            return nil
+        }
+
+        return compactEncodedFaceLandmarkResult
+    }
+
+    private static func roundedScore(_ score: Double) -> Double {
+        let multiplier = pow(10.0, Double(FaceLandmarkResultEncoding.scorePrecision))
+        return (score * multiplier).rounded() / multiplier
     }
 
     private static func encodedCameraInfo(

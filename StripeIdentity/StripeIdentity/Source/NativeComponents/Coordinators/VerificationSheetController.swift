@@ -603,6 +603,12 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         completion: @escaping () -> Void
     ) {
         analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
+        let shouldSubmit3DFaceCaptureData: Bool
+        if case .success(let verificationPage)? = verificationPageResponse {
+            shouldSubmit3DFaceCaptureData = verificationPage.selfie?.shouldSubmit3DFaceCaptureData == true
+        } else {
+            shouldSubmit3DFaceCaptureData = false
+        }
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
         selfieUploader.uploadFuture?.chained {
             [weak self, apiClient] uploadedFiles -> Future<StripeAPI.VerificationPageData> in
@@ -611,7 +617,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                     uploadedFiles: uploadedFiles,
                     capturedImages: capturedImages,
                     bestFrameExifMetadata: capturedImages.bestMiddle.cameraExifMetadata,
-                    trainingConsent: trainingConsent
+                    trainingConsent: trainingConsent,
+                    shouldSubmit3DFaceCaptureData: shouldSubmit3DFaceCaptureData
                 )
             )
             optionalCollectedData = collectedData

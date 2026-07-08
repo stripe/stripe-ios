@@ -37,6 +37,10 @@ extension StripeAPI {
             return Self.local3DFaceCaptureOverride ?? apiIncludes3DFaceCapturePose
         }
 
+        var shouldSubmit3DFaceCaptureData: Bool {
+            return apiIncludes3DFaceCapturePose
+        }
+
         private var apiIncludes3DFaceCapturePose: Bool {
             return poseSequence?.contains {
                 $0 == FaceCapturePose.left.rawValue || $0 == FaceCapturePose.right.rawValue

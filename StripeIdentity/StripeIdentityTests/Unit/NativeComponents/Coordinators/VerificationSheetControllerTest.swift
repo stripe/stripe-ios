@@ -288,6 +288,113 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertEqual(controller.collectedData.face?.trainingConsent, true)
     }
 
+    func testSaveSelfieDataDoesNotInclude3DFieldsWithoutServerSupport() throws {
+        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+
+        let mockResponse = try VerificationPageDataMock.noErrors.make()
+        let selfieUploader = SelfieUploaderMock()
+        let capturedImages = makeFaceCaptureData(includeSideFrames: true)
+
+        let saveRequestExp = expectation(description: "Save selfie request was made")
+        mockAPIClient.verificationPageData.callBackOnRequest {
+            saveRequestExp.fulfill()
+        }
+
+        controller.saveSelfieFileDataAndTransition(
+            from: .selfieCapture,
+            selfieUploader: selfieUploader,
+            capturedImages: capturedImages,
+            trainingConsent: true
+        ) {
+            self.exp.fulfill()
+        }
+
+        selfieUploader.uploadPromise.resolve(with: try makeUploadedSelfieFiles(includeSideFrames: true))
+
+        wait(for: [saveRequestExp], timeout: 1)
+        let face = mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.face
+        XCTAssertNil(face?.leftFullFrame)
+        XCTAssertNil(face?.rightFullFrame)
+        XCTAssertNil(face?.leftFrameData)
+        XCTAssertNil(face?.rightFrameData)
+
+        mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
+
+        let submitRequestExp = expectation(description: "submit request made")
+        mockAPIClient.verificationSessionSubmit.callBackOnRequest {
+            submitRequestExp.fulfill()
+        }
+        wait(for: [submitRequestExp], timeout: 1)
+
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
+        wait(for: [exp], timeout: 1)
+    }
+
+    func testFaceDataIncludes3DFieldsWhenServerSupportIsEnabled() throws {
+        let face = StripeAPI.VerificationPageDataFace(
+            uploadedFiles: try makeUploadedSelfieFiles(includeSideFrames: true),
+            capturedImages: makeFaceCaptureData(includeSideFrames: true),
+            bestFrameExifMetadata: nil,
+            trainingConsent: true,
+            shouldSubmit3DFaceCaptureData: true
+        )
+
+        XCTAssertEqual(face.leftFullFrame, "left_low")
+        XCTAssertEqual(face.rightFullFrame, "right_low")
+        XCTAssertNotNil(face.leftFrameData)
+        XCTAssertNotNil(face.rightFrameData)
+    }
+
+    func testFrameDataCompactsFaceLandmarkResultToFitServerLimit() throws {
+        let verboseFaceLandmarkResult = try makeVerboseFaceLandmarkResult(
+            categoryCount: 52,
+            categoryNameLength: 20,
+            displayNameLength: 20
+        )
+        XCTAssertGreaterThan(verboseFaceLandmarkResult.count, 5000)
+
+        let frameData = StripeAPI.VerificationPageDataFaceFrameData(
+            capturedImage: makeFaceScannerInputOutput(
+                faceLandmarkResult: verboseFaceLandmarkResult
+            ),
+            faceScoreVariance: 0,
+            captureOrder: 1
+        )
+
+        let compactedFaceLandmarkResult = try XCTUnwrap(frameData.faceLandmarkResult)
+        XCTAssertLessThanOrEqual(compactedFaceLandmarkResult.count, 5000)
+        XCTAssertNotEqual(compactedFaceLandmarkResult, verboseFaceLandmarkResult)
+
+        let decodedData = try XCTUnwrap(Data(base64Encoded: compactedFaceLandmarkResult))
+        let decodedObject = try XCTUnwrap(
+            try JSONSerialization.jsonObject(with: decodedData) as? [String: Any]
+        )
+        let categories = try XCTUnwrap(decodedObject["categories"] as? [[String: Any]])
+        XCTAssertEqual(categories.count, 52)
+        XCTAssertNotNil(categories.first?["category_name"])
+        XCTAssertNotNil(categories.first?["score"])
+        XCTAssertNil(categories.first?["index"])
+        XCTAssertNil(categories.first?["display_name"])
+    }
+
+    func testFrameDataOmitsFaceLandmarkResultWhenCompactedPayloadStillTooLarge() throws {
+        let oversizedFaceLandmarkResult = try makeVerboseFaceLandmarkResult(
+            categoryCount: 52,
+            categoryNameLength: 160,
+            displayNameLength: 160
+        )
+
+        let frameData = StripeAPI.VerificationPageDataFaceFrameData(
+            capturedImage: makeFaceScannerInputOutput(
+                faceLandmarkResult: oversizedFaceLandmarkResult
+            ),
+            faceScoreVariance: 0,
+            captureOrder: 1
+        )
+
+        XCTAssertNil(frameData.faceLandmarkResult)
+    }
+
     func testSaveDocumentFrontNotNeedbackSuccess() throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
@@ -990,15 +1097,136 @@ extension VerificationSheetControllerTest {
         return FaceCaptureData(samples: samples)!
     }
 
-    fileprivate func makeUploadedSelfieFiles() throws -> SelfieUploader.FileData {
+    fileprivate func makeFaceCaptureData(includeSideFrames: Bool) -> FaceCaptureData {
+        guard includeSideFrames else {
+            return makeFaceCaptureData()
+        }
+
+        let image = CapturedImageMock.frontDriversLicense.image.cgImage!
+        let faceRect = CGRect(x: 0.3, y: 0.2, width: 0.4, height: 0.4)
+        let samples: [FaceScannerInputOutput] = [0.7, 0.8, 0.9].enumerated().map { index, score in
+            FaceScannerInputOutput(
+                image: image,
+                scannerOutput: .init(
+                    faceDetectorOutput: .init(
+                        predictions: [
+                            .init(
+                                rect: faceRect,
+                                score: score
+                            ),
+                        ]
+                    ),
+                    cameraProperties: nil,
+                    motionBlurResult: nil,
+                    isValid: true
+                ),
+                cameraExifMetadata: nil,
+                capturedAt: index
+            )
+        }
+        let leftSide = FaceScannerInputOutput(
+            image: image,
+            scannerOutput: .init(
+                faceDetectorOutput: .init(
+                    predictions: [
+                        .init(
+                            rect: faceRect,
+                            score: 0.85
+                        ),
+                    ]
+                ),
+                cameraProperties: nil,
+                motionBlurResult: nil,
+                facePose: .init(yaw: -20, pitch: 0, roll: 0),
+                isValid: true
+            ),
+            cameraExifMetadata: nil,
+            capturePose: .left,
+            capturedAt: 3
+        )
+        let rightSide = FaceScannerInputOutput(
+            image: image,
+            scannerOutput: .init(
+                faceDetectorOutput: .init(
+                    predictions: [
+                        .init(
+                            rect: faceRect,
+                            score: 0.86
+                        ),
+                    ]
+                ),
+                cameraProperties: nil,
+                motionBlurResult: nil,
+                facePose: .init(yaw: 20, pitch: 0, roll: 0),
+                isValid: true
+            ),
+            cameraExifMetadata: nil,
+            capturePose: .right,
+            capturedAt: 4
+        )
+        return FaceCaptureData(
+            samples: samples,
+            leftSide: leftSide,
+            rightSide: rightSide
+        )!
+    }
+
+    fileprivate func makeUploadedSelfieFiles(includeSideFrames: Bool = false) throws -> SelfieUploader.FileData {
         return .init(
             bestHighResFile: try makeStripeFile(id: "best_high"),
             bestLowResFile: try makeStripeFile(id: "best_low"),
             firstHighResFile: try makeStripeFile(id: "first_high"),
             firstLowResFile: try makeStripeFile(id: "first_low"),
             lastHighResFile: try makeStripeFile(id: "last_high"),
-            lastLowResFile: try makeStripeFile(id: "last_low")
+            lastLowResFile: try makeStripeFile(id: "last_low"),
+            leftFullFrameFile: includeSideFrames ? try makeStripeFile(id: "left_low") : nil,
+            rightFullFrameFile: includeSideFrames ? try makeStripeFile(id: "right_low") : nil
         )
+    }
+    fileprivate func makeFaceScannerInputOutput(
+        faceLandmarkResult: String?
+    ) -> FaceScannerInputOutput {
+        let image = CapturedImageMock.frontDriversLicense.image.cgImage!
+        let faceRect = CGRect(x: 0.3, y: 0.2, width: 0.4, height: 0.4)
+        return FaceScannerInputOutput(
+            image: image,
+            scannerOutput: .init(
+                faceDetectorOutput: .init(
+                    predictions: [
+                        .init(
+                            rect: faceRect,
+                            score: 1
+                        ),
+                    ]
+                ),
+                cameraProperties: nil,
+                motionBlurResult: nil,
+                facePose: .init(yaw: 1, pitch: 2, roll: 3),
+                faceLandmarkResult: faceLandmarkResult,
+                isValid: true
+            ),
+            cameraExifMetadata: nil
+        )
+    }
+
+    fileprivate func makeVerboseFaceLandmarkResult(
+        categoryCount: Int,
+        categoryNameLength: Int,
+        displayNameLength: Int
+    ) throws -> String {
+        let categories: [[String: Any]] = (0..<categoryCount).map { index in
+            [
+                "score": 0.123456789 + (Double(index) / 1000),
+                "index": index,
+                "category_name": String(repeating: "c", count: categoryNameLength - "\(index)".count) + "\(index)",
+                "display_name": String(repeating: "d", count: displayNameLength - "\(index)".count) + "\(index)",
+            ]
+        }
+        let payload: [String: Any] = [
+            "categories": categories,
+        ]
+        let data = try JSONSerialization.data(withJSONObject: payload)
+        return data.base64EncodedString()
     }
 
     fileprivate func makeStripeFile(id: String) throws -> StripeFile {
