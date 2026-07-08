@@ -191,6 +191,14 @@ public final class EmbeddedPaymentElement {
             return result
         }
 
+        // If we currently have a sheet presented fail the update (unless it's a checkout session update, which may occur during billing sync)
+        if !mode.isCheckout,
+           presentingViewController?.presentedViewController is BottomSheetViewController {
+            let result: EmbeddedPaymentElement.UpdateResult = .failed(error: PaymentSheetError.embeddedPaymentElementUpdateWithFormPresented)
+            analyticsHelper.logEmbeddedUpdateFinished(result: result, duration: Date().timeIntervalSince(startTime))
+            return result
+        }
+
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
         // Cancel the old task and let it finish so that merchants receive update results in order
         latestUpdateTask?.cancel()
