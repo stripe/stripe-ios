@@ -100,10 +100,10 @@ import Foundation
     case mbWay
     /// A Bizum payment method
     case bizum
-    /// An unknown type.
-    case unknown
     /// A Vipps payment method
     case vipps
+    /// An unknown type.
+    case unknown
 
     /// Localized display name for this payment method type
     @_spi(STP) public var displayName: String {
