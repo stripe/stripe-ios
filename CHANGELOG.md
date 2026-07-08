@@ -8,6 +8,9 @@ MINOR
 * [Added] Added `WalletOwnershipChallenge` and `CryptoConsumerWallet`, including `CryptoConsumerWallet.verifiedOwnership`, for wallet ownership verification responses.
 * [Added] Added rich Crypto Onramp API error mapping types: `WalletOwnershipChallengeExpiredAPIError`, `InvalidWalletOwnershipChallengeAPIError`, `InvalidWalletOwnershipSignatureAPIError`, `CryptoOnrampWalletNotFoundAPIError`, and `CryptoOnrampUnsupportedNetworkAPIError`.
 
+### StripeConnect
+* [Changed] `PaymentsViewController`, `PaymentsViewControllerDelegate`, `PayoutsViewController`, `PayoutsViewControllerDelegate`, and `EmbeddedComponentManager.PaymentsListDefaultFiltersOptions` are now part of the public API and no longer require `@_spi(PreviewConnect)` to access.
+
 ## 26.2.0 2026-07-06
 ### CryptoOnramp (Alpha)
 * [Added] Added `AppAttestationUnavailableError`, a rich `StripeCryptoOnrampError` surfaced when configuration fails because app attestation is missing or native Link is unavailable.
