@@ -129,6 +129,27 @@ final class VerificationSheetControllerTest: XCTestCase {
             return XCTFail("Expected failure")
         }
     }
+    func testVerificationPageDoesNotMatchNon3DFaceCaptureExperiment() throws {
+        let mockResponse = try VerificationPageMock.response200.make()
+
+        XCTAssertFalse(mockResponse.has3DFaceCaptureExperiment)
+    }
+
+    func testVerificationPageMatches3DFaceCaptureExperiment() throws {
+        let mockResponse = try VerificationPageMock.response200.make().withExperiments([
+            .init(
+                experimentName: "idprod_3d_face_capture_mobile",
+                eventName: "screen_presented",
+                eventMetadata: [
+                    "screen_name": "selfie",
+                ]
+            ),
+        ])
+
+        XCTAssertTrue(mockResponse.has3DFaceCaptureExperiment)
+        XCTAssertTrue(mockResponse.enable3DFaceCapture)
+        XCTAssertTrue(mockResponse.shouldSubmit3DFaceCaptureData)
+    }
 
     func testLoadAndUpdateUI() throws {
         let mockResponse = try VerificationPageMock.response200.make()
@@ -288,7 +309,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertEqual(controller.collectedData.face?.trainingConsent, true)
     }
 
-    func testSaveSelfieDataDoesNotInclude3DFieldsWithoutServerSupport() throws {
+    func testSaveSelfieDataIncludes3DFieldsWhenLocalOverrideIsEnabled() throws {
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         let mockResponse = try VerificationPageDataMock.noErrors.make()
@@ -313,10 +334,10 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         wait(for: [saveRequestExp], timeout: 1)
         let face = mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.face
-        XCTAssertNil(face?.leftFullFrame)
-        XCTAssertNil(face?.rightFullFrame)
-        XCTAssertNil(face?.leftFrameData)
-        XCTAssertNil(face?.rightFrameData)
+        XCTAssertEqual(face?.leftFullFrame, "left_low")
+        XCTAssertEqual(face?.rightFullFrame, "right_low")
+        XCTAssertNotNil(face?.leftFrameData)
+        XCTAssertNotNil(face?.rightFrameData)
 
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
 
@@ -1068,6 +1089,36 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.isVerificationPageSubmitted = true
         controller.verificationSheetFlowControllerDidDismissNativeView(mockFlowController)
         XCTAssertEqual(mockDelegate.result, .flowCompleted)
+    }
+}
+
+private extension StripeAPI.VerificationPage {
+    func withExperiments(
+        _ experiments: [StripeAPI.VerificationPageStaticContentExperiment]
+    ) -> StripeAPI.VerificationPage {
+        return .init(
+            biometricConsent: biometricConsent,
+            documentCapture: documentCapture,
+            documentSelect: documentSelect,
+            individual: individual,
+            countryNotListed: countryNotListed,
+            individualWelcome: individualWelcome,
+            phoneOtp: phoneOtp,
+            fallbackUrl: fallbackUrl,
+            id: id,
+            livemode: livemode,
+            requirements: requirements,
+            selfie: selfie,
+            status: status,
+            submitted: submitted,
+            success: success,
+            unsupportedClient: unsupportedClient,
+            bottomsheet: bottomsheet,
+            userSessionId: userSessionId,
+            experiments: experiments,
+            isStripe: isStripe,
+            skipSuccessPage: skipSuccessPage
+        )
     }
 }
 

@@ -48,9 +48,7 @@ protocol IdentityMLModelLoaderProtocol {
         with sheetController: VerificationSheetControllerProtocol
     )
 
-    func startLoadingFaceModels(
-        from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage
-    )
+    func startLoadingFaceModels(from verificationPage: StripeAPI.VerificationPage)
 }
 
 /// Loads the ML models used by Identity.
@@ -177,10 +175,12 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
 
     /// Starts loading the ML models needed for face scanning. When the models
     /// are done loading, they can be retrieved by observing `faceModelsFuture`.
-    func startLoadingFaceModels(
-        from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage
-    ) {
-        if selfiePageConfig.enable3DFaceCapture {
+    func startLoadingFaceModels(from verificationPage: StripeAPI.VerificationPage) {
+        guard let selfiePageConfig = verificationPage.selfie else {
+            return
+        }
+
+        if verificationPage.enable3DFaceCapture {
             let faceGeometryDetector: FaceGeometryDetector
             do {
                 faceGeometryDetector = try FaceGeometryDetectorFactory.makeDefaultDetector()

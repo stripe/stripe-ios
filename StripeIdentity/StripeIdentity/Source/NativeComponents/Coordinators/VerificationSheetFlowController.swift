@@ -778,6 +778,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         case .success(let anyFaceScanner):
             return SelfieCaptureViewController(
                 apiConfig: selfiePageConfig,
+                enable3DFaceCapture: staticContent.enable3DFaceCapture,
                 sheetController: sheetController,
                 cameraSession: makeSelfieCaptureCameraSession(),
                 selfieUploader: SelfieUploader(

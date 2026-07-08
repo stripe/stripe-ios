@@ -38,13 +38,11 @@ extension StripeAPI {
         }
 
         var shouldSubmit3DFaceCaptureData: Bool {
-            return apiIncludes3DFaceCapturePose
+            return Self.local3DFaceCaptureOverride ?? apiIncludes3DFaceCapturePose
         }
 
         private var apiIncludes3DFaceCapturePose: Bool {
-            return poseSequence?.contains {
-                $0 == FaceCapturePose.left.rawValue || $0 == FaceCapturePose.right.rawValue
-            } == true
+            return Self.apiIncludes3DFaceCapturePose(in: poseSequence)
         }
 
         private enum CodingKeys: String, CodingKey {
@@ -88,6 +86,12 @@ extension StripeAPI {
             trainingConsentText = try container.decode(String.self, forKey: .trainingConsentText)
             blurThreshold = try container.decodeIfPresent(Decimal.self, forKey: .blurThreshold)
             poseSequence = try container.decodeIfPresent([String].self, forKey: .poseSequence)
+        }
+
+        private static func apiIncludes3DFaceCapturePose(in poseSequence: [String]?) -> Bool {
+            return poseSequence?.contains {
+                $0 == FaceCapturePose.left.rawValue || $0 == FaceCapturePose.right.rawValue
+            } == true
         }
     }
 

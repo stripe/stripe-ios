@@ -59,7 +59,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     func updatePoseInstructionState(
         for scanningState: FaceCaptureScanningState
     ) {
-        guard apiConfig.enable3DFaceCapture else {
+        guard enable3DFaceCapture else {
             clearPoseInstructionState()
             return
         }
@@ -97,7 +97,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     func shouldShowPoseInstruction(
         for phase: FaceCaptureScanningState.Phase
     ) -> Bool {
-        guard apiConfig.enable3DFaceCapture else {
+        guard enable3DFaceCapture else {
             return true
         }
 
@@ -200,7 +200,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                         showFlashAnimation: scanningState.frontSamples.count == 1,
                         statusText: statusText(for: scanningState),
                         captureGuideHighlight: currentCaptureGuideHighlight,
-                        uses3DCaptureAnimations: apiConfig.enable3DFaceCapture,
+                        uses3DCaptureAnimations: enable3DFaceCapture,
                         captureGuideTarget: captureGuideTarget(for: scanningState.phase),
                         captureGuideProgress: currentCaptureGuideProgress
                     ),
@@ -268,6 +268,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
 
     // MARK: Instance Properties
     let apiConfig: StripeAPI.VerificationPageStaticContentSelfiePage
+    let enable3DFaceCapture: Bool
     let imageScanningSession: SelfieImageScanningSession
     let selfieUploader: SelfieUploaderProtocol
     let captureAcceptanceFeedbackGenerator: SelfieCaptureFeedbackGeneratorProtocol
@@ -296,6 +297,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
 
     init(
         apiConfig: StripeAPI.VerificationPageStaticContentSelfiePage,
+        enable3DFaceCapture: Bool? = nil,
         trainingConsent: Bool?,
         imageScanningSession: SelfieImageScanningSession,
         selfieUploader: SelfieUploaderProtocol,
@@ -303,6 +305,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         sheetController: VerificationSheetControllerProtocol
     ) {
         self.apiConfig = apiConfig
+        self.enable3DFaceCapture = enable3DFaceCapture ?? apiConfig.enable3DFaceCapture
         self.consentSelection = trainingConsent ?? false
         self.imageScanningSession = imageScanningSession
         self.selfieUploader = selfieUploader
@@ -314,6 +317,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     convenience init(
         initialState: State = .initial,
         apiConfig: StripeAPI.VerificationPageStaticContentSelfiePage,
+        enable3DFaceCapture: Bool? = nil,
         sheetController: VerificationSheetControllerProtocol,
         cameraSession: CameraSessionProtocol,
         selfieUploader: SelfieUploaderProtocol,
@@ -328,6 +332,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     ) {
         self.init(
             apiConfig: apiConfig,
+            enable3DFaceCapture: enable3DFaceCapture,
             trainingConsent: trainingConsent,
             imageScanningSession: SelfieImageScanningSession(
                 initialState: initialState,
@@ -445,7 +450,7 @@ extension SelfieCaptureViewController {
     func startPoseCaptureFallbackTimerIfNeeded(
         for phase: FaceCaptureScanningState.Phase
     ) {
-        guard apiConfig.enable3DFaceCapture,
+        guard enable3DFaceCapture,
             phase != .front,
             poseCaptureFallbackPhase != phase
         else {
@@ -468,7 +473,7 @@ extension SelfieCaptureViewController {
 
     @discardableResult
     func capturePoseFallbackIfPossible() -> Bool {
-        guard apiConfig.enable3DFaceCapture,
+        guard enable3DFaceCapture,
             poseCaptureFallbackDidExpire,
             let phase = poseCaptureFallbackPhase,
             let expectedPose = capturePose(for: phase),
@@ -551,13 +556,12 @@ extension SelfieCaptureViewController {
     func statusText(
         for scanningState: FaceCaptureScanningState
     ) -> SelfieScanningView.ViewModel.StatusText? {
-        if apiConfig.enable3DFaceCapture,
+        if enable3DFaceCapture,
             poseBestFramePicker.isCollecting(for: scanningState.phase)
         {
             return .holdStill
         }
-
-        if apiConfig.enable3DFaceCapture {
+        if enable3DFaceCapture {
             switch scanningState.phase {
             case .front:
                 break
@@ -571,7 +575,7 @@ extension SelfieCaptureViewController {
             }
         }
 
-        if apiConfig.enable3DFaceCapture {
+        if enable3DFaceCapture {
             switch currentCaptureGuideHighlight {
             case .none:
                 break
@@ -587,12 +591,12 @@ extension SelfieCaptureViewController {
         case .front:
             return scanningState.frontSamples.isEmpty ? .placeFace : .holdStill
         case .left:
-            guard apiConfig.enable3DFaceCapture else {
+            guard enable3DFaceCapture else {
                 return .lookLeft
             }
             return shouldShowPoseInstruction(for: .left) ? .lookLeft : .lookLeftBottom
         case .right:
-            guard apiConfig.enable3DFaceCapture else {
+            guard enable3DFaceCapture else {
                 return .lookRight
             }
             return shouldShowPoseInstruction(for: .right) ? .lookRight : .lookRightBottom
@@ -618,7 +622,7 @@ extension SelfieCaptureViewController {
         let apiSequence = apiConfig.poseSequence?
             .compactMap { FaceCapturePose(rawValue: $0) }
             .filter { $0 != .front } ?? []
-        return apiSequence.isEmpty && apiConfig.enable3DFaceCapture
+        return apiSequence.isEmpty && enable3DFaceCapture
             ? [.right, .left]
             : apiSequence
     }
@@ -667,7 +671,7 @@ extension SelfieCaptureViewController {
     func captureGuideTarget(
         for phase: FaceCaptureScanningState.Phase
     ) -> SelfieScanningView.ViewModel.CaptureGuideTarget {
-        guard apiConfig.enable3DFaceCapture else {
+        guard enable3DFaceCapture else {
             return .none
         }
 
@@ -920,7 +924,7 @@ extension SelfieCaptureViewController {
         exifMetadata: CameraExifMetadata?
     ) {
         clearPoseCaptureFallbackState()
-        if !apiConfig.enable3DFaceCapture {
+        if !enable3DFaceCapture {
             currentCaptureGuideHighlight = .front
         }
         currentCaptureGuideProgress = 0
@@ -951,7 +955,7 @@ extension SelfieCaptureViewController {
             return
         }
 
-        guard apiConfig.enable3DFaceCapture else {
+        guard enable3DFaceCapture else {
             latestScanningState = nextState
             notifyCaptureAccepted()
             uploadAndSave(faceCaptureData: faceCaptureData)
@@ -1099,7 +1103,7 @@ extension SelfieCaptureViewController {
         _ block: @escaping () -> Void
     ) {
         stopCaptureAcknowledgementTimer()
-        let duration = duration ?? (apiConfig.enable3DFaceCapture
+        let duration = duration ?? (enable3DFaceCapture
             ? Constants.threeDCaptureAcknowledgementDuration
             : Constants.legacyCaptureAcknowledgementDuration)
         captureAcknowledgementTimer = Timer.scheduledTimer(

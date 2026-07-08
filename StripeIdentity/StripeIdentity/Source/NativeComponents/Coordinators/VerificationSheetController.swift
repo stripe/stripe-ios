@@ -235,8 +235,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             from: verificationPage.documentCapture,
             with: self
         )
-        if let selfiePageConfig = verificationPage.selfie {
-            mlModelLoader.startLoadingFaceModels(from: selfiePageConfig)
+        if verificationPage.selfie != nil {
+            mlModelLoader.startLoadingFaceModels(from: verificationPage)
         }
     }
 
@@ -605,7 +605,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
         let shouldSubmit3DFaceCaptureData: Bool
         if case .success(let verificationPage)? = verificationPageResponse {
-            shouldSubmit3DFaceCaptureData = verificationPage.selfie?.shouldSubmit3DFaceCaptureData == true
+            shouldSubmit3DFaceCaptureData = verificationPage.shouldSubmit3DFaceCaptureData
         } else {
             shouldSubmit3DFaceCaptureData = false
         }
