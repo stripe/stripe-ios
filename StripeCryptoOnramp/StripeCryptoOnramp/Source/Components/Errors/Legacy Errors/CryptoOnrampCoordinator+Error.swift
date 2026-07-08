@@ -32,6 +32,21 @@ public extension CryptoOnrampCoordinator {
         /// The provided sign-in token is invalid for a reason described in the non-localized associated value. Use the `authorize` API to sign in manually.
         case seamlessSignInTokenInvalid(reason: String?)
 
+        /// The wallet address is not registered with the current Link account.
+        case walletNotRegistered
+
+        /// The wallet network is not supported for ownership verification.
+        case unsupportedWalletNetwork
+
+        /// The wallet ownership challenge has expired. Request a new challenge via `getWalletOwnershipChallenge`.
+        case walletOwnershipChallengeExpired
+
+        /// The wallet ownership challenge is invalid or has already been used.
+        case invalidWalletOwnershipChallenge
+
+        /// The provided signature is invalid for the wallet ownership challenge.
+        case invalidWalletOwnershipSignature
+
         public var errorDescription: String? {
             switch self {
             case .invalidPhoneFormat:
@@ -48,6 +63,16 @@ public extension CryptoOnrampCoordinator {
                 return "No active Link consumer is available in a verified state."
             case .seamlessSignInTokenInvalid:
                 return "An error occurred while automatically signing in to your Link account. Please sign in manually."
+            case .walletNotRegistered:
+                return "The wallet address is not registered with the current Link account."
+            case .unsupportedWalletNetwork:
+                return "The wallet network is not supported for ownership verification."
+            case .walletOwnershipChallengeExpired:
+                return "The wallet ownership challenge has expired. Please request a new challenge."
+            case .invalidWalletOwnershipChallenge:
+                return "The wallet ownership challenge is invalid or has already been used."
+            case .invalidWalletOwnershipSignature:
+                return "The provided signature is invalid for the wallet ownership challenge."
             }
         }
     }

@@ -135,6 +135,24 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws if an authenticated Link user is not available, or an API error occurs.
     func registerWalletAddress(walletAddress: String, network: CryptoNetwork) async throws
 
+    /// Creates a short-lived challenge for verifying ownership of a registered wallet address.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter walletAddress: The crypto wallet address to verify ownership of.
+    /// - Parameter network: The crypto network for the wallet address.
+    /// - Returns: A `WalletOwnershipChallenge` whose `message` field should be signed by the merchant's wallet stack.
+    /// Throws if an authenticated Link user is not available, the wallet is not registered, or an API error occurs.
+    func getWalletOwnershipChallenge(walletAddress: String, network: CryptoNetwork) async throws -> WalletOwnershipChallenge
+
+    /// Submits a signature over a wallet ownership challenge to verify wallet ownership.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter challengeId: The identifier from a prior `getWalletOwnershipChallenge` call.
+    /// - Parameter signature: The signature over the challenge's `message` field.
+    /// - Returns: A `ConsumerWallet` with `verifiedOwnership` set to `true` on success.
+    /// Throws if an authenticated Link user is not available, the challenge is expired or invalid, the signature is invalid, or an API error occurs.
+    func submitWalletOwnershipSignature(challengeId: String, signature: String) async throws -> ConsumerWallet
+
     /// Presents UI to collect/select a payment method of the given type.
     ///
     /// - Parameters:
@@ -532,6 +550,45 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.walletRegistered(network: network.rawValue))
         } catch {
             try logAndThrow(error, during: .registerWalletAddress)
+        }
+    }
+
+    public func getWalletOwnershipChallenge(walletAddress: String, network: CryptoNetwork) async throws -> WalletOwnershipChallenge {
+        do {
+            let response = try await apiClient.createWalletOwnershipChallenge(
+                walletAddress: walletAddress,
+                network: network,
+                linkAccountInfo: linkAccountInfo
+            )
+            analyticsClient.log(.walletOwnershipChallengeCreated(network: network.rawValue))
+            return WalletOwnershipChallenge(
+                challengeId: response.challenge_id,
+                walletAddress: response.wallet_address,
+                network: response.network,
+                message: response.message,
+                expiresAt: response.expires_at
+            )
+        } catch {
+            try logAndThrow(error, during: .getWalletOwnershipChallenge)
+        }
+    }
+
+    public func submitWalletOwnershipSignature(challengeId: String, signature: String) async throws -> ConsumerWallet {
+        do {
+            let response = try await apiClient.submitWalletOwnershipVerification(
+                challengeId: challengeId,
+                signature: signature,
+                linkAccountInfo: linkAccountInfo
+            )
+            analyticsClient.log(.walletOwnershipVerified)
+            return ConsumerWallet(
+                id: response.id,
+                walletAddress: response.wallet_address ?? "",
+                network: response.network ?? "",
+                verifiedOwnership: response.verified_ownership
+            )
+        } catch {
+            try logAndThrow(error, during: .submitWalletOwnershipSignature)
         }
     }
 

@@ -8,6 +8,11 @@ MINOR
 
 ## 26.2.0 2026-07-06
 ### CryptoOnramp (Alpha)
+* [Added] Added `getWalletOwnershipChallenge(walletAddress:network:)` to `CryptoOnrampCoordinator` to create a short-lived server-issued challenge for EU Travel Rule wallet ownership verification.
+* [Added] Added `submitWalletOwnershipSignature(challengeId:signature:)` to `CryptoOnrampCoordinator` to verify wallet ownership by submitting a signature over the challenge message.
+* [Added] Added `WalletOwnershipChallenge` public type containing the challenge identifier, wallet address, network, message to sign, and expiry timestamp.
+* [Added] Added `ConsumerWallet` public type returned by `submitWalletOwnershipSignature`, including the `verifiedOwnership` flag.
+* [Added] Added `CryptoOnrampCoordinator.Error` cases: `walletNotRegistered`, `unsupportedWalletNetwork`, `walletOwnershipChallengeExpired`, `invalidWalletOwnershipChallenge`, `invalidWalletOwnershipSignature`.
 * [Added] Added `AppAttestationUnavailableError`, a rich `StripeCryptoOnrampError` surfaced when configuration fails because app attestation is missing or native Link is unavailable.
 * [Removed] Removed public diagnostic-only properties from rich Crypto Onramp errors: `sdkVersions` from `StripeCryptoOnrampError` and concrete error types; `operation`, `appIdentifier`, and `mode` from `StripeCryptoOnrampAPIError`, `AppAttestationAPIError`, and `UncategorizedAPIError`; and `operation`, `appIdentifier`, `mode`, and `sdkVersions` from `APIErrorContext`. These diagnostics are still included in `developerMessage`.
 * [Changed] Renamed the public API-backed error context property from `context` to `apiErrorContext`.
