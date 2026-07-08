@@ -6,7 +6,11 @@
 //
 
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 internal extension PaymentSheet.Appearance {
     var topFormInsets: NSDirectionalEdgeInsets {

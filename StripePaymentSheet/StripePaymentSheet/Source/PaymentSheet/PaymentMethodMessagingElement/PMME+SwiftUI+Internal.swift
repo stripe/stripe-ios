@@ -6,30 +6,59 @@
 //
 
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#else
+import Foundation
+#endif
+
+#if canImport(UIKit)
+private typealias PMMEPlatformViewRepresentable = UIViewRepresentable
+#elseif canImport(AppKit)
+private typealias PMMEPlatformViewRepresentable = NSViewRepresentable
+#endif
 
 // UIViewRepresentable wrapper for UIKit implementation of PMME
-struct PMMEViewRepresentable: UIViewRepresentable {
+struct PMMEViewRepresentable: PMMEPlatformViewRepresentable {
 
     let viewData: PaymentMethodMessagingElement.ViewData
     let integrationType: PMMEAnalyticsHelper.IntegrationType
     let didUpdateHeight: (CGFloat) -> Void
 
-    public func makeUIView(context: Context) -> UIView {
+    private func makeView(context: Context) -> UIView {
         let containerView = UIView()
         createView(andAddTo: containerView)
 
         return containerView
     }
 
-    // When SwiftUI updates the view with new viewdata, we replace the old PMMEUIView with a new one
-    public func updateUIView(_ uiView: UIView, context: Context) {
+    private func updateView(_ view: UIView, context: Context) {
         // Remove old PMMEUIView
-        uiView.subviews.first?.removeFromSuperview()
+        view.subviews.first?.removeFromSuperview()
 
         // Replace with new one
-        createView(andAddTo: uiView)
+        createView(andAddTo: view)
     }
+
+    #if canImport(UIKit)
+    public func makeUIView(context: Context) -> UIView {
+        makeView(context: context)
+    }
+
+    public func updateUIView(_ uiView: UIView, context: Context) {
+        updateView(uiView, context: context)
+    }
+    #elseif canImport(AppKit)
+    public func makeNSView(context: Context) -> UIView {
+        makeView(context: context)
+    }
+
+    public func updateNSView(_ nsView: UIView, context: Context) {
+        updateView(nsView, context: context)
+    }
+    #endif
 
     private func createView(andAddTo parentView: UIView) {
         let view = PMMEUIView(viewData: viewData, integrationType: integrationType, didUpdateHeight: didUpdateHeight)

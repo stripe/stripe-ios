@@ -6,7 +6,11 @@
 //
 
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class FCLiteContainerViewController: UIViewController {
     private let clientSecret: String

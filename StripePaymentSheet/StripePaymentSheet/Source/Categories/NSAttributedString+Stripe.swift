@@ -6,7 +6,11 @@
 //
 
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension NSMutableAttributedString {
     func replaceOccurrences(of textToReplace: String, with attachment: NSTextAttachment) {

@@ -7,13 +7,28 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 @_spi(STP) public extension UIView {
     /// - Note: This variant of `addAndPinSubview` respects the view's `directionalLayoutMargins` property.
     /// This is useful if your margins can change dynamically.
     func addAndPinSubview(_ view: UIView, directionalLayoutMargins: NSDirectionalEdgeInsets) {
         self.directionalLayoutMargins = directionalLayoutMargins
+        #if canImport(AppKit) && !canImport(UIKit)
+        view.translatesAutoresizingMaskIntoConstraints = true
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.frame = CGRect(
+            x: directionalLayoutMargins.leading,
+            y: directionalLayoutMargins.top,
+            width: max(0, bounds.width - directionalLayoutMargins.leading - directionalLayoutMargins.trailing),
+            height: max(0, bounds.height - directionalLayoutMargins.top - directionalLayoutMargins.bottom)
+        )
+        addSubview(view)
+        #else
         view.translatesAutoresizingMaskIntoConstraints = false
         addSubview(view)
 
@@ -23,9 +38,21 @@ import UIKit
             view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
             view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
         ])
+        #endif
     }
 
     func addAndPinSubview(_ view: UIView, insets: NSDirectionalEdgeInsets = .zero) {
+        #if canImport(AppKit) && !canImport(UIKit)
+        view.translatesAutoresizingMaskIntoConstraints = true
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.frame = CGRect(
+            x: insets.leading,
+            y: insets.top,
+            width: max(0, bounds.width - insets.leading - insets.trailing),
+            height: max(0, bounds.height - insets.top - insets.bottom)
+        )
+        addSubview(view)
+        #else
         view.translatesAutoresizingMaskIntoConstraints = false
         addSubview(view)
         NSLayoutConstraint.activate([
@@ -34,9 +61,13 @@ import UIKit
             view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: insets.leading),
             view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -insets.trailing),
         ])
+        #endif
     }
 
     func addAndPinSubviewToSafeArea(_ view: UIView, insets: NSDirectionalEdgeInsets = .zero) {
+        #if canImport(AppKit) && !canImport(UIKit)
+        addAndPinSubview(view, insets: insets)
+        #else
         view.translatesAutoresizingMaskIntoConstraints = false
         addSubview(view)
         NSLayoutConstraint.activate([
@@ -45,6 +76,7 @@ import UIKit
             view.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: insets.leading),
             view.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -insets.trailing),
         ])
+        #endif
     }
 
     /// Animates changes to one or more views alongside the keyboard.
@@ -84,7 +116,7 @@ import UIKit
 
     func firstResponder() -> UIView? {
         for subview in subviews {
-            if let firstResponder = subview.firstResponder() {
+            if let firstResponder = (subview as? UIView)?.firstResponder() {
                 return firstResponder
             }
         }

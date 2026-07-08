@@ -6,7 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
@@ -108,7 +112,7 @@ extension PayWithLinkViewController {
             super.viewDidLoad()
             self.paymentMethodEditElement.delegate = self
             view.backgroundColor = .linkSurfacePrimary
-            view.directionalLayoutMargins = LinkUI.contentMargins
+            (view as? UIView)?.directionalLayoutMargins = LinkUI.contentMargins
             errorView.isHidden = true
 
             let stackView = UIStackView(arrangedSubviews: [
@@ -143,7 +147,7 @@ extension PayWithLinkViewController {
 
             let updateParams = createUpdateDetails(for: params)
 
-            paymentMethodEditElement.view.endEditing(true)
+            paymentMethodEditElement.view.resignFirstResponder()
             paymentMethodEditElement.view.isUserInteractionEnabled = false
             updateButton.update(status: .processing)
 

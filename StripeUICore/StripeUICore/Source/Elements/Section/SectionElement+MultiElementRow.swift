@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 public extension SectionElement {
     /// A simple container element that displays its child elements in a horizontal stackview

@@ -9,7 +9,11 @@ import Combine
 @_spi(STP) import StripeCore
 import StripePayments
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// An element that provides a view with information about how a purchase could be paid for using Buy Now, Pay Later payment methods.
 @_spi(PaymentMethodMessagingElementPreview)

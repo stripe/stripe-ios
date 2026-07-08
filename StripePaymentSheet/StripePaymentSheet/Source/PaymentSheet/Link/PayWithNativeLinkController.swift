@@ -9,7 +9,11 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// Standalone Link controller
 @available(iOSApplicationExtension, unavailable)
@@ -144,7 +148,7 @@ final class PayWithNativeLinkController {
         self.selfRetainer = self
 
         let targetBottomSheet = presentingController as? BottomSheetViewController ?? presentingController.bottomSheetController
-        let targetPresentationController = targetBottomSheet?.presentingViewController
+        let targetPresentationController = targetBottomSheet?.presentingViewController as? UIViewController
 
         let presentBottomSheet: (UIViewController) -> Void = { presentingController in
             let payWithLinkVC = PayWithLinkViewController(

@@ -11,7 +11,11 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 // MARK: - PAN Configuration
 extension TextFieldElement {

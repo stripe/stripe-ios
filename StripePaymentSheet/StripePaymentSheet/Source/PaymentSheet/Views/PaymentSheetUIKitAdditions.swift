@@ -10,7 +10,11 @@ import Foundation
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 enum PaymentSheetUI {
     enum Error: Swift.Error {
@@ -92,20 +96,24 @@ extension UIViewController {
             // Add the new one
             toVC.beginAppearanceTransition(true, animated: true)
             self.addChild(toVC)
-            toVC.view.alpha = 0
-            containerView.addPinnedSubview(toVC.view)
+            let toView = (toVC.view as? UIView) ?? UIView()
+            let fromView = (fromVC.view as? UIView) ?? UIView()
+            toView.alpha = 0
+            containerView.addPinnedSubview(toView)
             containerView.layoutIfNeeded()  // Lay the view out now or it animates layout from a zero size
 
             // Remove the child view controller, but don't remove its view yet - keep it on screen so we can fade it out
+            #if canImport(UIKit)
             fromVC.willMove(toParent: nil)
+            #endif
             fromVC.removeFromParent()
 
             animateHeightChange(
                 {
                     containerView.updateHeight()
                     toVC.didMove(toParent: self)
-                    fromVC.view.alpha = 0
-                    toVC.view.alpha = 1
+                    fromView.alpha = 0
+                    toView.alpha = 1
                 },
                 postLayoutAnimations: {
                     if let contentOffsetPercentage {
@@ -115,22 +123,24 @@ extension UIViewController {
                 completion: { _ in
                     toVC.endAppearanceTransition()
                     // Finish removing the old one
-                    fromVC.view.removeFromSuperview()
+                    fromView.removeFromSuperview()
+                    #if canImport(UIKit)
                     fromVC.didMove(toParent: nil)
-                    UIAccessibility.post(notification: .screenChanged, argument: toVC.view)
+                    #endif
+                    UIAccessibility.post(notification: .screenChanged, argument: toView)
                 }
             )
         } else {
             add(childViewController: toVC, containerView: containerView)
             containerView.setNeedsLayout()
             containerView.layoutIfNeeded()
-            UIAccessibility.post(notification: .screenChanged, argument: toVC.view)
+            UIAccessibility.post(notification: .screenChanged, argument: toVC.view as? UIView)
         }
     }
 
     func add(childViewController: UIViewController, containerView: DynamicHeightContainerView) {
         addChild(childViewController)
-        containerView.addPinnedSubview(childViewController.view)
+        containerView.addPinnedSubview((childViewController.view as? UIView) ?? UIView())
         containerView.updateHeight()
         childViewController.didMove(toParent: self)
     }
@@ -138,7 +148,7 @@ extension UIViewController {
     func remove(childViewController: UIViewController) {
         childViewController.willMove(toParent: nil)
         childViewController.removeFromParent()
-        childViewController.view.removeFromSuperview()
+        (childViewController.view as? UIView)?.removeFromSuperview()
         childViewController.didMove(toParent: nil)
     }
 }
@@ -160,6 +170,6 @@ extension UIFont {
 
         let descriptor = UIFontDescriptor(fontAttributes: attributes)
 
-        return UIFont(descriptor: descriptor, size: pointSize)
+        return UIFont(descriptor: descriptor, size: pointSize) ?? self
     }
 }

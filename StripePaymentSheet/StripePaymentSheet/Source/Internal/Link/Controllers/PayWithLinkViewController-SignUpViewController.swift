@@ -6,7 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension PayWithLinkViewController {
 

@@ -10,7 +10,11 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 protocol AddPaymentMethodViewControllerDelegate: AnyObject {
     func getWalletHeaders() -> [String]
     func didUpdate(_ viewController: AddPaymentMethodViewController)
@@ -152,7 +156,7 @@ class AddPaymentMethodViewController: UIViewController {
         stackView.axis = .vertical
         stackView.spacing = 16
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        view.addAndPinSubview(stackView)
+        (view as? UIView)?.addAndPinSubview(stackView)
         if paymentMethodTypes == [.stripe(.card)] {
             paymentMethodTypesView.isHidden = true
         } else {

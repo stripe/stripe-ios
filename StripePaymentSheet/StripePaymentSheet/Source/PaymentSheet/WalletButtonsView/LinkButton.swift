@@ -9,6 +9,26 @@
 @_spi(STP) import StripeUICore
 import SwiftUI
 
+extension SwiftUI.Image {
+    init(stpImage image: UIImage) {
+        #if canImport(UIKit)
+        self.init(uiImage: image)
+        #else
+        self.init(nsImage: image)
+        #endif
+    }
+}
+
+extension Color {
+    init(stpColor color: UIColor) {
+        #if canImport(UIKit)
+        self.init(uiColor: color)
+        #else
+        self.init(nsColor: color)
+        #endif
+    }
+}
+
 @available(iOS 16.0, *)
 struct LinkButton: View {
     private enum Constants {
@@ -75,7 +95,7 @@ struct LinkButton: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: scaledContentSpacing) {
-                SwiftUI.Image(uiImage: brand.paymentSheetLogoImage)
+                SwiftUI.Image(stpImage: brand.paymentSheetLogoImage)
                     .resizable()
                     .scaledToFit()
                     .frame(height: scaledContentHeight)
@@ -83,13 +103,13 @@ struct LinkButton: View {
 
                 if let account = viewModel.account {
                     Rectangle()
-                        .fill(Color(uiColor: .linkExpressCheckoutButtonDivider))
+                        .fill(Color(stpColor: .linkExpressCheckoutButtonDivider))
                         .frame(width: scaledSeparatorWidth, height: scaledContentHeight)
                         .cornerRadius(scaledSeparatorWidth / 2)
 
                     if let paymentMethodPreview = viewModel.paymentMethodPreview {
                         HStack(spacing: scaledPaymentMethodPreviewSpacing) {
-                            SwiftUI.Image(uiImage: paymentMethodPreview.icon)
+                            SwiftUI.Image(stpImage: paymentMethodPreview.icon)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(height: scaledContentHeight)
@@ -106,17 +126,17 @@ struct LinkButton: View {
                 }
             }
             .padding(.horizontal, LinkUI.contentSpacing)
-            .foregroundColor(Color(uiColor: .linkExpressCheckoutButtonForeground))
+            .foregroundColor(Color(stpColor: .linkExpressCheckoutButtonForeground))
             .frame(height: scaledContentHeight)
             .frame(minWidth: Constants.minWidth, maxWidth: .infinity)
         }
         .frame(maxWidth: .infinity)
         .frame(height: height)
-        .background(Color(uiColor: .linkExpressCheckoutButtonBackground))
+        .background(Color(stpColor: .linkExpressCheckoutButtonBackground))
         .overlay {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .inset(by: 0.5)
-                .stroke(Color(uiColor: borderColor), lineWidth: 1)
+                .stroke(Color(stpColor: borderColor), lineWidth: 1)
         }
         .cornerRadius(cornerRadius)
     }

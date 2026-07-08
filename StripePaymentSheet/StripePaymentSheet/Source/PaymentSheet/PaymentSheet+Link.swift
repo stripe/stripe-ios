@@ -6,7 +6,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 // MARK: - Webview Link
 

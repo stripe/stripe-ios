@@ -8,7 +8,11 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 final class LinkInlineSignupElement: Element {
     let collectsUserInput: Bool = true

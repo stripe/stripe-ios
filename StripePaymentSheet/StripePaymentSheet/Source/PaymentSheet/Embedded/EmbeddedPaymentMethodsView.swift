@@ -8,7 +8,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @MainActor
 protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
@@ -37,7 +41,7 @@ class EmbeddedPaymentMethodsView: UIView {
         return super.intrinsicContentSize
     }
 
-    private let appearance: PaymentSheet.Appearance
+    private let paymentSheetAppearance: PaymentSheet.Appearance
     private let customer: PaymentSheet.CustomerConfiguration?
     private let currency: String?
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
@@ -89,13 +93,13 @@ class EmbeddedPaymentMethodsView: UIView {
     private(set) lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = appearance.embeddedPaymentElement.row.style == .floatingButton ? appearance.embeddedPaymentElement.row.floating.spacing : 0
+        stackView.spacing = paymentSheetAppearance.embeddedPaymentElement.row.style == .floatingButton ? paymentSheetAppearance.embeddedPaymentElement.row.floating.spacing : 0
         return stackView
     }()
     private lazy var mandateView = {
         // Special font size for mandates in embedded
-        var theme = appearance.asElementsTheme
-        theme.fonts.caption = appearance.scaledFont(for: appearance.font.base.regular, style: .caption2, maximumPointSize: 20)
+        var theme = paymentSheetAppearance.asElementsTheme
+        theme.fonts.caption = paymentSheetAppearance.scaledFont(for: paymentSheetAppearance.font.base.regular, style: .caption2, maximumPointSize: 20)
         let mandateView = SimpleMandateTextView(theme: theme)
         // Add some padding so that we can hide/remove it from the stackview without fiddling with padding in there.
         mandateView.directionalLayoutMargins.top = 12
@@ -129,7 +133,7 @@ class EmbeddedPaymentMethodsView: UIView {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
-        self.appearance = appearance
+        self.paymentSheetAppearance = appearance
         self.mandateProvider = mandateProvider
         self.shouldShowMandate = shouldShowMandate
         self.customer = customer
@@ -162,7 +166,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         if shouldShowApplePay {
-            let applePayRowButton = RowButton.makeForApplePay(appearance: appearance,
+            let applePayRowButton = RowButton.makeForApplePay(appearance: paymentSheetAppearance,
                                                               isEmbedded: true,
                                                               didTap: { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: customer?.id)
@@ -172,7 +176,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         if shouldShowLink {
-            let linkRowButton = RowButton.makeForLink(appearance: appearance, linkBrand: linkBrand, isEmbedded: true) { [weak self] rowButton in
+            let linkRowButton = RowButton.makeForLink(appearance: paymentSheetAppearance, linkBrand: linkBrand, isEmbedded: true) { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customer?.id)
                 self?.didTap(rowButton: rowButton)
             }
@@ -193,12 +197,12 @@ class EmbeddedPaymentMethodsView: UIView {
             stackView.addArrangedSubview(rowButton)
         }
 
-        if appearance.embeddedPaymentElement.row.style != .floatingButton {
-            stackView.addSeparators(color: appearance.embeddedPaymentElement.row.flat.separatorColor ?? appearance.colors.componentBorder,
-                                    thickness: appearance.embeddedPaymentElement.row.flat.separatorThickness,
-                                    inset: appearance.embeddedPaymentElement.row.flat.separatorInsets ?? appearance.embeddedPaymentElement.row.style.defaultInsets,
-                                    addTopSeparator: appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled,
-                                    addBottomSeparator: appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
+        if paymentSheetAppearance.embeddedPaymentElement.row.style != .floatingButton {
+            stackView.addSeparators(color: paymentSheetAppearance.embeddedPaymentElement.row.flat.separatorColor ?? paymentSheetAppearance.colors.componentBorder,
+                                    thickness: paymentSheetAppearance.embeddedPaymentElement.row.flat.separatorThickness,
+                                    inset: paymentSheetAppearance.embeddedPaymentElement.row.flat.separatorInsets ?? paymentSheetAppearance.embeddedPaymentElement.row.style.defaultInsets,
+                                    addTopSeparator: paymentSheetAppearance.embeddedPaymentElement.row.flat.topSeparatorEnabled,
+                                    addBottomSeparator: paymentSheetAppearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
         }
 
         // If we have a row button that matches the initial selection, make it selected
@@ -471,7 +475,7 @@ class EmbeddedPaymentMethodsView: UIView {
             style.alignment = .left
             formattedString.addAttributes([.paragraphStyle: style,
                                            .font: UIFont.preferredFont(forTextStyle: .footnote),
-                                           .foregroundColor: appearance.asElementsTheme.colors.secondaryText,
+                                           .foregroundColor: paymentSheetAppearance.asElementsTheme.colors.secondaryText,
             ],
                                           range: NSRange(location: 0, length: formattedString.length))
 
@@ -487,7 +491,7 @@ class EmbeddedPaymentMethodsView: UIView {
                                       savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?) -> RowButton {
         let accessoryButton: RowButton.RightAccessoryButton? = {
             if let savedPaymentMethodAccessoryType {
-                return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance) { [weak self] in
+                return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: paymentSheetAppearance) { [weak self] in
                     self?.didTapViewMoreSavedPaymentMethods()
                 }
             } else {
@@ -496,7 +500,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }()
         let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(
             paymentMethod: savedPaymentMethod,
-            appearance: appearance,
+            appearance: paymentSheetAppearance,
             accessoryView: accessoryButton,
             isEmbedded: true,
             linkBrand: linkBrand,
@@ -514,8 +518,8 @@ class EmbeddedPaymentMethodsView: UIView {
     func makePaymentMethodRowButton(paymentMethodType: PaymentSheet.PaymentMethodType, savedPaymentMethods: [STPPaymentMethod]) -> RowButton {
         // We always add a hidden accessory button ("Change >") so we can show/hide it easily
         let accessoryButton = RowButton.RightAccessoryButton(
-            accessoryType: appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton ? .change : .changeWithChevron,
-            appearance: appearance,
+            accessoryType: paymentSheetAppearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton ? .change : .changeWithChevron,
+            appearance: paymentSheetAppearance,
             didTap: { [weak self] in
                 guard let self, let selectedRowButton else { return }
                 didTap(rowButton: selectedRowButton)
@@ -529,8 +533,8 @@ class EmbeddedPaymentMethodsView: UIView {
             accessoryView: accessoryButton,
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
             promotionsHelper: paymentMethodMessagingPromotionsHelper,
-            appearance: appearance,
-            originalCornerRadius: appearance.cornerRadius,
+            appearance: paymentSheetAppearance,
+            originalCornerRadius: paymentSheetAppearance.cornerRadius,
             shouldAnimateOnPress: delegate?.willDisplayForm(for: .new(paymentMethodType: paymentMethodType)) == true,
             isEmbedded: true,
             didTap: { [weak self] rowButton in

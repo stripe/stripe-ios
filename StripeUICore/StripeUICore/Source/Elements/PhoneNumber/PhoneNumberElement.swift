@@ -7,7 +7,11 @@
 //
 
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /**
     A simple hstack of  [🇺🇸 + 1] `DropdownElement` and [ Phone number ] `TextFieldElement`

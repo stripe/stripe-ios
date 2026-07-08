@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /**
  A simple container element with an optional title and an error, and draws a border around its elements.

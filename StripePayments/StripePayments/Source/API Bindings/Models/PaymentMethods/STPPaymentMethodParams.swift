@@ -8,7 +8,11 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// An object representing parameters used to create a PaymentMethod object.
 /// @note To create a PaymentMethod from an Apple Pay PKPaymentToken, see `STPAPIClient createPaymentMethodWithPayment:completion:`

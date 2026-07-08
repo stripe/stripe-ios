@@ -4,7 +4,11 @@
 //
 
 @_spi(STP) import StripePaymentsUI
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension UIImageView {
     // Helper extension for downloading and setting image. Optionally process it before setting.

@@ -9,7 +9,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 protocol SheetNavigationBarDelegate: AnyObject {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar)
@@ -27,7 +31,7 @@ class SheetNavigationBar: UIView {
     fileprivate lazy var leftItemsStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [dummyView, closeButtonLeft, backButton, testModeView])
         stack.spacing = PaymentSheetUI.defaultPadding
-        stack.setCustomSpacing(PaymentSheetUI.navBarPadding(appearance: appearance), after: dummyView)
+        stack.setCustomSpacing(PaymentSheetUI.navBarPadding(appearance: navigationAppearance), after: dummyView)
         stack.alignment = .center
         return stack
     }()
@@ -50,9 +54,9 @@ class SheetNavigationBar: UIView {
 
     lazy var additionalButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(appearance.colors.primary, for: .normal)
-        button.setTitleColor(appearance.colors.primary.disabledColor, for: .disabled)
-        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.bold, style: .footnote, maximumPointSize: 20)
+        button.setTitleColor(navigationAppearance.colors.primary, for: .normal)
+        button.setTitleColor(navigationAppearance.colors.primary.disabledColor, for: .disabled)
+        button.titleLabel?.font = navigationAppearance.scaledFont(for: navigationAppearance.font.base.bold, style: .footnote, maximumPointSize: 20)
 
         return button
     }()
@@ -71,7 +75,7 @@ class SheetNavigationBar: UIView {
     }
 
     let testModeView = TestModeView()
-    let appearance: PaymentSheet.Appearance
+    let navigationAppearance: PaymentSheet.Appearance
     let shouldLogPaymentSheetAnalyticsOnDismissal: Bool
 
     override var isUserInteractionEnabled: Bool {
@@ -86,7 +90,7 @@ class SheetNavigationBar: UIView {
 
     init(isTestMode: Bool, appearance: PaymentSheet.Appearance, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
         testModeView.isHidden = !isTestMode
-        self.appearance = appearance
+        self.navigationAppearance = appearance
         self.shouldLogPaymentSheetAnalyticsOnDismissal = shouldLogPaymentSheetAnalyticsOnDismissal
         super.init(frame: .zero)
 
@@ -128,7 +132,7 @@ class SheetNavigationBar: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: Self.height(appearance: appearance))
+        return CGSize(width: UIView.noIntrinsicMetric, height: Self.height(appearance: navigationAppearance))
     }
 
     @objc
@@ -179,7 +183,7 @@ class SheetNavigationBar: UIView {
     }
 
     func setShadowHidden(_ isHidden: Bool) {
-        if appearance.navigationBarStyle.isPlain {
+        if navigationAppearance.navigationBarStyle.isPlain {
             layer.shadowPath = CGPath(rect: bounds, transform: nil)
             layer.shadowOpacity = isHidden ? 0 : 0.1
             layer.shadowColor = UIColor.black.cgColor
@@ -187,13 +191,13 @@ class SheetNavigationBar: UIView {
         }
     }
     func createBackButton() -> UIButton {
-        return appearance.navigationBarStyle.isGlass ? createGlassBackButton() : createPlainBackButton()
+        return navigationAppearance.navigationBarStyle.isGlass ? createGlassBackButton() : createPlainBackButton()
     }
     func createPlainBackButton() -> UIButton {
         let button = SheetNavigationButton(type: .custom)
         let image = Image.icon_chevron_left_standalone.makeImage(template: true)
         button.setImage(image, for: .normal)
-        button.tintColor = appearance.colors.icon
+        button.tintColor = navigationAppearance.colors.icon
         button.accessibilityLabel = String.Localized.back
         button.accessibilityIdentifier = "UIButton.Back"
         return button
@@ -209,7 +213,7 @@ class SheetNavigationBar: UIView {
         let image = UIImage(systemName: "chevron.left", withConfiguration: config)
 
         button.setImage(image, for: .normal)
-        button.tintColor = appearance.colors.icon
+        button.tintColor = navigationAppearance.colors.icon
 
         button.accessibilityLabel = String.Localized.back
         button.accessibilityIdentifier = "UIButton.Back"
@@ -219,12 +223,12 @@ class SheetNavigationBar: UIView {
     }
 
     func createCloseButton() -> UIButton {
-        let closeButton = if appearance.navigationBarStyle.isGlass {
+        let closeButton = if navigationAppearance.navigationBarStyle.isGlass {
             UIButton.createGlassCloseButton()
         } else {
             UIButton.createPlainCloseButton()
         }
-        closeButton.tintColor = appearance.colors.icon
+        closeButton.tintColor = navigationAppearance.colors.icon
         return closeButton
     }
 }

@@ -9,7 +9,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 private extension UIColor {
     static var testModeTextColor = UIColor(red: 0.65, green: 0.41, blue: 0.07, alpha: 1.00)

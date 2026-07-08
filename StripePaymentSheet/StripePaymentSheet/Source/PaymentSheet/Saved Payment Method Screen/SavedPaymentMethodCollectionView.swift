@@ -11,7 +11,11 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 // MARK: - Constants
 /// Entire cell size
@@ -81,8 +85,8 @@ extension SavedPaymentMethodCollectionView {
 
         lazy var label: UILabel = {
             let label = UILabel()
-            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
-            label.textColor = appearance.colors.text
+            label.font = cellAppearance.scaledFont(for: cellAppearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            label.textColor = cellAppearance.colors.text
             label.adjustsFontForContentSizeCategory = true
             return label
         }()
@@ -90,22 +94,22 @@ extension SavedPaymentMethodCollectionView {
         let plus: CircleIconView = CircleIconView(icon: .icon_plus,
                                                   fillColor: UIColor.dynamic(
             light: .systemGray5, dark: .tertiaryLabel))
-        lazy var selectedIcon: CircleIconView = CircleIconView(icon: .icon_checkmark, fillColor: appearance.colors.primary)
+        lazy var selectedIcon: CircleIconView = CircleIconView(icon: .icon_checkmark, fillColor: cellAppearance.colors.primary)
         lazy var selectableRectangle: ShadowedRoundedRectangle = {
-            return ShadowedRoundedRectangle(appearance: appearance, ios26DefaultCornerStyle: .uniform)
+            return ShadowedRoundedRectangle(appearance: cellAppearance, ios26DefaultCornerStyle: .uniform)
         }()
         lazy var accessoryButton: CircularButton = {
-            let button = CircularButton(style: .edit, iconStyle: appearance.iconStyle)
-            button.backgroundColor = appearance.colors.primary
-            button.iconColor = appearance.colors.primary.contrastingColor
+            let button = CircularButton(style: .edit, iconStyle: cellAppearance.iconStyle)
+            button.backgroundColor = cellAppearance.colors.primary
+            button.iconColor = cellAppearance.colors.primary.contrastingColor
             button.isAccessibilityElement = true
             button.accessibilityLabel = String.Localized.edit
             return button
         }()
         lazy var defaultBadge: UILabel = {
             let label = UILabel()
-            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20)
-            label.textColor = appearance.colors.textSecondary
+            label.font = cellAppearance.scaledFont(for: cellAppearance.font.base.medium, style: .caption1, maximumPointSize: 20)
+            label.textColor = cellAppearance.colors.textSecondary
             label.adjustsFontForContentSizeCategory = true
             label.text = String.Localized.default_text
             label.isHidden = true
@@ -136,10 +140,10 @@ extension SavedPaymentMethodCollectionView {
         }
 
         weak var delegate: PaymentOptionCellDelegate?
-        var appearance = PaymentSheet.Appearance.default {
+        var cellAppearance = PaymentSheet.Appearance.default {
             didSet {
                 update()
-                selectableRectangle.appearance = appearance
+                selectableRectangle.paymentSheetAppearance = cellAppearance
             }
         }
 
@@ -162,7 +166,7 @@ extension SavedPaymentMethodCollectionView {
 
         // MARK: - UICollectionViewCell
 
-        override init(frame: CGRect) {
+        required init(frame: CGRect) {
             super.init(frame: frame)
 
             [paymentMethodLogo, plus, selectedIcon].forEach {
@@ -305,7 +309,7 @@ extension SavedPaymentMethodCollectionView {
 
         func attributedTextForLabel(paymentMethod: STPPaymentMethod) -> NSAttributedString? {
             func makeBankAccountLabel(with text: String) -> NSAttributedString {
-                let iconImage = PaymentSheetImageLibrary.bankIcon(for: nil, iconStyle: appearance.iconStyle).withTintColor(appearance.colors.text)
+                let iconImage = PaymentSheetImageLibrary.bankIcon(for: nil, iconStyle: cellAppearance.iconStyle).withTintColor(cellAppearance.colors.text)
                 let iconImageAttachment = NSTextAttachment()
                 // Inspiration from:
                 // https://stackoverflow.com/questions/26105803/center-nstextattachment-image-next-to-single-line-uilabel/45161058#45161058
@@ -343,7 +347,7 @@ extension SavedPaymentMethodCollectionView {
         private func update() {
             // Setting the image ends up implicitly using UITraitCollection.current, which is undefined in this context, so wrap this in `traitCollection.performAsCurrent` to ensure it uses this view's trait collection
             traitCollection.performAsCurrent {
-                let overrideUserInterfaceStyle: UIUserInterfaceStyle = appearance.colors.componentBackground.isDark ? .dark : .light
+                let overrideUserInterfaceStyle: UIUserInterfaceStyle = cellAppearance.colors.componentBackground.isDark ? .dark : .light
                 if let viewModel = viewModel {
                     switch viewModel {
                     case .saved(let paymentMethod):
@@ -360,7 +364,7 @@ extension SavedPaymentMethodCollectionView {
                             .map { linkBrand.accessibilityText(from: $0) }
                         let paymentMethodCellImage = paymentMethod.makeSavedPaymentMethodCellImage(
                             overrideUserInterfaceStyle: overrideUserInterfaceStyle,
-                            iconStyle: appearance.iconStyle
+                            iconStyle: cellAppearance.iconStyle
                         )
                         if let cardArtURL = paymentMethod.cardArtCDNURL() {
                             if paymentMethodLogo.tag != cardArtURL.hashValue {
@@ -408,7 +412,7 @@ extension SavedPaymentMethodCollectionView {
                         paymentMethodLogo.tag = paymentMethodLogoImage.hashValue
                         paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                         paymentMethodLogo.tintColor = UIColor.linkIconBrand.resolvedContrastingColor(
-                            forBackgroundColor: appearance.colors.componentBackground
+                            forBackgroundColor: cellAppearance.colors.componentBackground
                         )
                     case .add:
                         label.text = STPLocalizedString(
@@ -427,7 +431,7 @@ extension SavedPaymentMethodCollectionView {
                 let applyDefaultStyle: () -> Void = { [self] in
                     selectableRectangle.isEnabled = true
                     selectableRectangle.isSelected = false
-                    label.textColor = appearance.colors.text
+                    label.textColor = cellAppearance.colors.text
                     paymentMethodLogo.alpha = 1
                     plus.alpha = 1
                     selectedIcon.isHidden = true
@@ -447,17 +451,17 @@ extension SavedPaymentMethodCollectionView {
                         selectableRectangle.isEnabled = false
                         paymentMethodLogo.alpha = 0.6
                         plus.alpha = 0.6
-                        label.textColor = appearance.colors.text.disabledColor
+                        label.textColor = cellAppearance.colors.text.disabledColor
                     }
 
                 } else if isSelected {
                     accessoryButton.isHidden = true
                     selectableRectangle.isEnabled = true
-                    label.textColor = appearance.colors.text
+                    label.textColor = cellAppearance.colors.text
                     paymentMethodLogo.alpha = 1
                     plus.alpha = 1
                     selectedIcon.isHidden = false
-                    selectedIcon.backgroundColor = appearance.colors.primary
+                    selectedIcon.fillColor = cellAppearance.colors.primary
 
                     // Draw a border with primary color
                     selectableRectangle.isSelected = true
@@ -466,7 +470,7 @@ extension SavedPaymentMethodCollectionView {
                     applyDefaultStyle()
                 }
                 accessoryButton.isAccessibilityElement = !accessoryButton.isHidden
-                label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+                label.font = cellAppearance.scaledFont(for: cellAppearance.font.base.medium, style: .footnote, maximumPointSize: 20)
 
                 selectableRectangle.accessibilityTraits = {
                     if isRemovingPaymentMethods {
@@ -481,9 +485,9 @@ extension SavedPaymentMethodCollectionView {
                 }()
             }
 
-            accessoryButton.backgroundColor = appearance.colors.primary
-            accessoryButton.iconColor = appearance.colors.primary.contrastingColor
-            accessoryButton.iconStyle = appearance.iconStyle
+            accessoryButton.backgroundColor = cellAppearance.colors.primary
+            accessoryButton.iconColor = cellAppearance.colors.primary.contrastingColor
+            accessoryButton.iconStyle = cellAppearance.iconStyle
         }
 
         private func activateDefaultBadgeConstraints() {
@@ -502,9 +506,12 @@ extension SavedPaymentMethodCollectionView {
     class CircleIconView: UIView {
         let imageView: UIImageView
 
-        override var backgroundColor: UIColor? {
+        var fillColor: UIColor? {
             didSet {
-                imageView.tintColor = backgroundColor?.contrastingColor
+                backgroundColor = fillColor
+                if let fillColor {
+                    imageView.tintColor = fillColor.contrastingColor
+                }
             }
         }
 
@@ -515,6 +522,7 @@ extension SavedPaymentMethodCollectionView {
         required init(icon: Image, fillColor: UIColor) {
             imageView = UIImageView(image: icon.makeImage(template: true))
             super.init(frame: .zero)
+            self.fillColor = fillColor
             backgroundColor = fillColor
 
             // Set colors according to the icon

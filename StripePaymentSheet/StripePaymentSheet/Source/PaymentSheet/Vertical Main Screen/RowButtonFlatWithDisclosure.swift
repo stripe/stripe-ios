@@ -7,15 +7,19 @@
 
 import Foundation
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A `RowButton` subclass that presents a flat layout featuring a chevron. No selected state is available for this style.
 final class RowButtonFlatWithDisclosure: RowButton {
     // MARK: - Subviews
     private lazy var disclosureImageView: UIImageView = {
-        let disclosureImage = appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage ?? Image.icon_chevron_right.makeImage(template: true)
+        let disclosureImage = paymentSheetAppearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage ?? Image.icon_chevron_right.makeImage(template: true)
         let chevronImageView = UIImageView(image: disclosureImage)
-        chevronImageView.tintColor = appearance.embeddedPaymentElement.row.flat.disclosure.color
+        chevronImageView.tintColor = paymentSheetAppearance.embeddedPaymentElement.row.flat.disclosure.color
         chevronImageView.contentMode = .scaleAspectFit
         chevronImageView.translatesAutoresizingMaskIntoConstraints = false
         return chevronImageView
@@ -65,10 +69,10 @@ final class RowButtonFlatWithDisclosure: RowButton {
             imageViewCenterYConstraint = imageView.centerYAnchor.constraint(equalTo: centerYAnchor)
         }
 
-        let insets = appearance.embeddedPaymentElement.row.additionalInsets
+        let insets = paymentSheetAppearance.embeddedPaymentElement.row.additionalInsets
         NSLayoutConstraint.activate([
             // Image view constraints
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: paymentSheetAppearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading),
             imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + insets),
             imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - insets),
             imageView.heightAnchor.constraint(equalToConstant: imageViewSize.height),
@@ -78,7 +82,7 @@ final class RowButtonFlatWithDisclosure: RowButton {
             imageViewBottomConstraint,
 
             // Label constraints
-            horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.trailing),
+            horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: paymentSheetAppearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.trailing),
             horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),

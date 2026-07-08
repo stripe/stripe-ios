@@ -7,7 +7,11 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 protocol LinkFullConsentViewControllerDelegate: AnyObject {
     @MainActor func fullConsentViewController(
@@ -113,7 +117,7 @@ final class LinkFullConsentViewController: UIViewController, BottomSheetContentV
     }
 
     private func setupUI() {
-        view.addAndPinSubview(mainContainerView)
+        (view as? UIView)?.addAndPinSubview(mainContainerView)
 
         if let scopesHeaderLabel {
             NSLayoutConstraint.activate([

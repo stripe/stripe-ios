@@ -7,7 +7,11 @@
 //
 
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP)
 public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputValidationObserver {
@@ -51,7 +55,7 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
         super.setupSubviews()
         let fontMetrics = UIFontMetrics(forTextStyle: .body)
         font = fontMetrics.scaledFont(for: UIFont.systemFont(ofSize: 14))
-        placeholderLabel.font = font
+        placeholderLabel.font = font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)
         defaultPlaceholderColor = .secondaryLabel
         floatingPlaceholderColor = .secondaryLabel
         rightView = accessoryImageStackView

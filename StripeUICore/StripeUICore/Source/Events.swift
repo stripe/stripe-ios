@@ -7,14 +7,18 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// Sends the event down the view hierarchy
 @_spi(STP) public func sendEventToSubviews(_ event: STPEvent, from view: UIView) {
     if let view = view as? EventHandler {
         view.handleEvent(event)
     }
-    for subview in view.subviews {
+    for subview in view.subviews.compactMap({ $0 as? UIView }) {
         sendEventToSubviews(event, from: subview)
     }
 }

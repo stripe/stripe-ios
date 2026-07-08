@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /**
  A simple container view that displays its subviews in a vertical stack.
@@ -58,6 +62,18 @@ import UIKit
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    #if canImport(AppKit) && !canImport(UIKit)
+    public override var intrinsicContentSize: CGSize {
+        stackView.intrinsicContentSize
+    }
+
+    public override func layout() {
+        super.layout()
+        stackView.frame = bounds
+        stackView.layoutSubtreeIfNeeded()
+    }
+    #endif
 
     func setViews(_ views: [UIView], hidden: Bool, animated: Bool) {
         stackView.toggleArrangedSubviews(views, shouldShow: !hidden, animated: animated)

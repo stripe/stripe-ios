@@ -9,7 +9,11 @@
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// An object that manages a view that displays payment methods and completes a checkout.
 @MainActor

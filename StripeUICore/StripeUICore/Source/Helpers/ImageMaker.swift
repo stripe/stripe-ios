@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 @_spi(STP) import StripeCore
 
@@ -41,14 +45,20 @@ import UIKit
         templateIfAvailable: Bool = false,
         overrideUserInterfaceStyle: UIUserInterfaceStyle? = nil
     ) -> UIImage {
-        let image: UIImage
+        var image: UIImage
         if let overrideUserInterfaceStyle = overrideUserInterfaceStyle {
             let appearanceTrait = UITraitCollection(userInterfaceStyle: overrideUserInterfaceStyle)
             image = imageNamed(imageName, templateIfAvailable: templateIfAvailable, compatibleWith: appearanceTrait) ?? UIImage()
         } else {
             image = imageNamed(imageName, templateIfAvailable: templateIfAvailable) ?? UIImage()
         }
+        #if canImport(AppKit) && !canImport(UIKit)
+        if image.size == .zero {
+            image = UIImage(size: CGSize(width: 1, height: 1))
+        }
+        #else
         assert(image.size != .zero, "Failed to find an image named \(imageName)")
+        #endif
         return image
     }
 }

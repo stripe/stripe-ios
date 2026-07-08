@@ -11,13 +11,17 @@ import SafariServices
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// For internal SDK use only
 @objc(STP_Internal_AfterpayPriceBreakdownView)
 class AfterpayPriceBreakdownView: UIView {
     private let afterPayClearPayLabel = UILabel()
-    private let appearance: PaymentSheet.Appearance
+    private let paymentSheetAppearance: PaymentSheet.Appearance
     private lazy var afterpayMarkImage: UIImage = {
         return PaymentSheetImageLibrary.afterpayLogo(currency: currency)
     }()
@@ -35,7 +39,7 @@ class AfterpayPriceBreakdownView: UIView {
     init(locale: Locale = Locale.autoupdatingCurrent, currency: String?, appearance: PaymentSheet.Appearance = .default) {
         self.locale = locale
         self.currency = currency
-        self.appearance = appearance
+        self.paymentSheetAppearance = appearance
         super.init(frame: .zero)
 
         afterPayClearPayLabel.attributedText = makeAfterPayClearPayString()
@@ -66,8 +70,8 @@ class AfterpayPriceBreakdownView: UIView {
             "Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay"
         )
         return NSMutableAttributedString.afterpayPromoString(
-            font: appearance.asElementsTheme.fonts.subheadline,
-            textColor: appearance.colors.text,
+            font: paymentSheetAppearance.asElementsTheme.fonts.subheadline,
+            textColor: paymentSheetAppearance.colors.text,
             template: template,
             logo: afterpayMarkImage
         )
@@ -99,9 +103,9 @@ class AfterpayPriceBreakdownView: UIView {
     }
 }
 
-private extension UIResponder {
+private extension UIView {
     var parentViewController: UIViewController? {
-        return next as? UIViewController ?? next?.parentViewController
+        return next as? UIViewController ?? (next as? UIView)?.parentViewController
     }
 }
 
@@ -149,7 +153,7 @@ private extension NSMutableAttributedString {
         }
 
         // Add info icon with 1.5x scale
-        let symbolConfig = UIImage.SymbolConfiguration(pointSize: font.pointSize)
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: font.pointSize, weight: .regular)
         if let infoIconImage = UIImage(systemName: "info.circle", withConfiguration: symbolConfig)?
             .withTintColor(textColor, renderingMode: .alwaysTemplate) {
             let infoIcon = NSAttributedString.attributedStringForImage(infoIconImage, font: font, additionalScale: 1.5)

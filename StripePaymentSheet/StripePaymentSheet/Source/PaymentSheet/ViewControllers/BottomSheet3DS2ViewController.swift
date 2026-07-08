@@ -8,7 +8,11 @@
 
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 protocol BottomSheet3DS2ViewControllerDelegate: AnyObject {
     func bottomSheet3DS2ViewControllerDidCancel(
@@ -56,7 +60,7 @@ class BottomSheet3DS2ViewController: UIViewController {
         view.addSubview(headerLabel)
         headerLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        let challengeView: UIView! = challengeViewController.view
+        let challengeView = (challengeViewController.view as? UIView) ?? UIView()
         view.addSubview(challengeView)
         challengeView.translatesAutoresizingMaskIntoConstraints = false
 

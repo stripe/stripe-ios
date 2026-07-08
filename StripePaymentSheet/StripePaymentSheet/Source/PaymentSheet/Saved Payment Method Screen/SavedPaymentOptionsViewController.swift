@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
@@ -138,8 +142,8 @@ class SavedPaymentOptionsViewController: UIViewController {
             collectionView.isRemovingPaymentMethods = newValue
             collectionView.needsVerticalPaddingForBadge = hasDefault
             collectionView.performBatchUpdates({
-                collectionView.reloadSections(IndexSet(integer: 0))
-                animateHeightChange { self.collectionView.updateLayout() }
+                self.collectionView.reloadSections(IndexSet(integer: 0))
+                self.animateHeightChange { self.collectionView.updateLayout() }
             })
             UIView.transition(with: collectionView,
                               duration: 0.3,
@@ -373,7 +377,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             }
             _ = linkAccountObserver
         }
-        view.addAndPinSubview(stackView)
+        (view as? UIView)?.addAndPinSubview(stackView)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -564,7 +568,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
                           linkBrand: currentLinkBrand)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
-        cell.appearance = appearance
+        cell.cellAppearance = appearance
 
         return cell
     }

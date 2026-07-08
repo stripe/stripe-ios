@@ -10,7 +10,11 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(ReactNativeSDK)
 public class PaymentSheetImageLibrary {

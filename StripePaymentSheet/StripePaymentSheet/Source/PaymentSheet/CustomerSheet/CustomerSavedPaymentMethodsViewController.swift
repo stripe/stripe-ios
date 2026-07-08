@@ -7,7 +7,11 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
     func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent,
@@ -251,13 +255,14 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     // MARK: Private Methods
     private func updateUI(animated: Bool = true) {
         let shouldEnableUserInteraction = !processingInFlight
-        if shouldEnableUserInteraction != view.isUserInteractionEnabled {
+        let rootView = view as? UIView
+        if shouldEnableUserInteraction != rootView?.isUserInteractionEnabled {
             sendEventToSubviews(shouldEnableUserInteraction
                                 ? .shouldEnableUserInteraction
                                 : .shouldDisableUserInteraction,
-                                from: view)
+                                from: rootView ?? UIView())
         }
-        view.isUserInteractionEnabled = shouldEnableUserInteraction
+        rootView?.isUserInteractionEnabled = shouldEnableUserInteraction
         isDismissable = !processingInFlight
         navigationBar.isUserInteractionEnabled = !processingInFlight
 

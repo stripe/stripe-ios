@@ -5,7 +5,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// The BottomSheetTransitioningDelegate conforms to the various transition delegates
 /// and vends the appropriate object for each transition controller requested.

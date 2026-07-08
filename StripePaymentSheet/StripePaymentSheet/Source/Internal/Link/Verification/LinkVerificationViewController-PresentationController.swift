@@ -7,7 +7,11 @@
 //
 
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension LinkVerificationViewController {
 
@@ -45,10 +49,10 @@ extension LinkVerificationViewController {
 
         private var contentView: UIView? {
             if let scrollView = presentedView as? UIScrollView {
-                return scrollView.subviews.first
+                return scrollView.subviews.first as? UIView
             }
 
-            return presentedView
+            return presentedView as? UIView
         }
 
         override var frameOfPresentedViewInContainerView: CGRect {

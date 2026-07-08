@@ -7,13 +7,17 @@
 //
 
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// The shadowed rounded rectangle that our cells use to display content
 class ShadowedRoundedRectangle: UIView {
     private let roundedRectangle: UIView
     private let ios26DefaultCornerStyle: CornerStyle
-    var appearance: PaymentSheet.Appearance {
+    var paymentSheetAppearance: PaymentSheet.Appearance {
         didSet {
             update()
         }
@@ -35,37 +39,37 @@ class ShadowedRoundedRectangle: UIView {
     private func update() {
         // Background color
         if isEnabled {
-            roundedRectangle.backgroundColor = appearance.colors.componentBackground
+            roundedRectangle.backgroundColor = paymentSheetAppearance.colors.componentBackground
         } else {
-            roundedRectangle.backgroundColor = appearance.colors.componentBackground.disabledColor
+            roundedRectangle.backgroundColor = paymentSheetAppearance.colors.componentBackground.disabledColor
         }
 
         // Corner radius
-        roundedRectangle.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: ios26DefaultCornerStyle)
-        applyCornerRadiusOrConfiguration(for: appearance)
+        roundedRectangle.applyCornerRadiusOrConfiguration(for: paymentSheetAppearance, ios26DefaultCornerStyle: ios26DefaultCornerStyle)
+        applyCornerRadiusOrConfiguration(for: paymentSheetAppearance)
 
         // Shadow
-        layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
+        layer.applyShadow(shadow: paymentSheetAppearance.asElementsTheme.shadow)
         layer.shadowPath = UIBezierPath(rect: bounds).cgPath
 
         // Border
         if isSelected {
-            let selectedBorderWidth = appearance.selectedBorderWidth ?? appearance.borderWidth
+            let selectedBorderWidth = paymentSheetAppearance.selectedBorderWidth ?? paymentSheetAppearance.borderWidth
             if selectedBorderWidth > 0 {
                 layer.borderWidth = selectedBorderWidth * 1.5
             } else {
                 // Without a border, the customer can't tell this is selected and it looks bad
                 layer.borderWidth = 1.5
             }
-            layer.borderColor = appearance.colors.selectedComponentBorder?.cgColor ?? appearance.colors.primary.cgColor
+            layer.borderColor = paymentSheetAppearance.colors.selectedComponentBorder?.cgColor ?? paymentSheetAppearance.colors.primary.cgColor
         } else {
-            layer.borderWidth = appearance.borderWidth
-            layer.borderColor = appearance.colors.componentBorder.cgColor
+            layer.borderWidth = paymentSheetAppearance.borderWidth
+            layer.borderColor = paymentSheetAppearance.colors.componentBorder.cgColor
         }
     }
 
     required init(appearance: PaymentSheet.Appearance, ios26DefaultCornerStyle: CornerStyle = .uniform) {
-        self.appearance = appearance
+        self.paymentSheetAppearance = appearance
         self.ios26DefaultCornerStyle = ios26DefaultCornerStyle
         roundedRectangle = UIView()
         roundedRectangle.layer.masksToBounds = true

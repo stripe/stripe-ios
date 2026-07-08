@@ -5,7 +5,11 @@
 //  Created by Mat Schmid on 10/14/25.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 final class TappableAttributedLabel: UILabel {
 

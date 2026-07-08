@@ -5,7 +5,11 @@
 //  Created by Nick Porter on 5/14/26.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension Checkout.CurrencySelectorView.Appearance: TwoOptionSelectorViewAppearance {
     var trackBackground: UIColor { background }

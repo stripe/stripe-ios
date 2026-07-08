@@ -7,7 +7,11 @@
 //
 
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// Standalone verification controller.
 final class LinkVerificationController {

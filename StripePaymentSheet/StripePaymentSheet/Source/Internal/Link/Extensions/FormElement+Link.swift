@@ -7,7 +7,11 @@
 //
 
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 // TODO(ramont): Graduate to StripeUICore.
 
@@ -41,7 +45,7 @@ extension FormElement {
         if animated {
             child.view.alpha = 0
             child.view.transform = CGAffineTransform(scaleX: 0.98, y: 0.98).translatedBy(x: 0, y: -10)
-            child.view.superview?.sendSubviewToBack(child.view)
+            (child.view.superview as? UIView)?.sendSubviewToBack(child.view)
             UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) {
                 child.view.alpha = 1
                 child.view.isHidden = false
@@ -70,7 +74,7 @@ extension FormElement {
         if animated {
             child.view.alpha = 1
             child.view.transform = .identity
-            child.view.superview?.sendSubviewToBack(child.view)
+            (child.view.superview as? UIView)?.sendSubviewToBack(child.view)
             UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) {
                 child.view.alpha = 0
                 child.view.isHidden = true

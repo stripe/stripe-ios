@@ -6,7 +6,11 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A UITextField that changes the text color, based on the validity of
 /// its contents.

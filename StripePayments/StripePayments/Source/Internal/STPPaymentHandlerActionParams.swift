@@ -9,7 +9,11 @@
 import AuthenticationServices
 import Foundation
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 #if canImport(Stripe3DS2)
     import Stripe3DS2

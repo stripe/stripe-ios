@@ -5,7 +5,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension UIViewController {
     /// Convenience method that presents the view controller in a custom 'bottom sheet' style
@@ -14,6 +18,7 @@ extension UIViewController {
         appearance: PaymentSheet.Appearance,
         completion: (() -> Void)? = nil
     ) {
+        let viewControllerToPresent = viewControllerToPresent as UIViewController
         var presentAsFormSheet: Bool {
             #if os(visionOS)
             return true
@@ -47,7 +52,7 @@ extension UIViewController {
                 return bottomSheetController
             }
 
-            current = current?.parent
+            current = current?.parent as? UIViewController
         }
 
         return nil

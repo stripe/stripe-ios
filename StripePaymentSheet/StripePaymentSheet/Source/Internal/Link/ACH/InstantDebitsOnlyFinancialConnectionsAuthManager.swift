@@ -6,7 +6,11 @@
 //
 
 import AuthenticationServices
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeCore
 

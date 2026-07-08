@@ -5,7 +5,11 @@
 //  Created by Till Hellmund on 11/19/24.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeUICore
 
@@ -14,7 +18,7 @@ class PromoBadgeView: UIView {
     private let labelBackground = UIView()
     private let label = UILabel()
 
-    private var appearance: PaymentSheet.Appearance
+    private var paymentSheetAppearance: PaymentSheet.Appearance
     private var cornerRadius: CGFloat?
     private var text: String?
     private var eligible: Bool
@@ -32,7 +36,7 @@ class PromoBadgeView: UIView {
         tinyMode: Bool,
         text: String? = nil
     ) {
-        self.appearance = appearance
+        self.paymentSheetAppearance = appearance
         self.cornerRadius = cornerRadius
         self.eligible = true
         self.text = text
@@ -56,7 +60,7 @@ class PromoBadgeView: UIView {
     }
 
     func setAppearance(_ appearance: PaymentSheet.Appearance) {
-        self.appearance = appearance
+        self.paymentSheetAppearance = appearance
         updateAppearance()
     }
 
@@ -82,15 +86,15 @@ class PromoBadgeView: UIView {
 
     private func updateAppearance() {
         let backgroundColor = if eligible {
-            appearance.primaryButton.successBackgroundColor
+            paymentSheetAppearance.primaryButton.successBackgroundColor
         } else {
-            appearance.colors.componentBorder
+            paymentSheetAppearance.colors.componentBorder
         }
 
         let foregroundColor = if eligible {
-            appearance.primaryButton.successTextColor ?? appearance.primaryButton.textColor ?? backgroundColor.contrastingColor
+            paymentSheetAppearance.primaryButton.successTextColor ?? paymentSheetAppearance.primaryButton.textColor ?? backgroundColor.contrastingColor
         } else {
-            appearance.colors.componentText
+            paymentSheetAppearance.colors.componentText
         }
 
         // In embedded mode with checkmarks, the `appearance` corner radius might not be what the
@@ -98,12 +102,12 @@ class PromoBadgeView: UIView {
         if let cornerRadius {
             labelBackground.layer.cornerRadius = cornerRadius
         } else {
-            labelBackground.applyCornerRadiusOrConfiguration(for: appearance)
+            labelBackground.applyCornerRadiusOrConfiguration(for: paymentSheetAppearance)
         }
 
         labelBackground.backgroundColor = backgroundColor
-        label.font = appearance.scaledFont(
-            for: appearance.font.base.medium,
+        label.font = paymentSheetAppearance.scaledFont(
+            for: paymentSheetAppearance.font.base.medium,
             style: .caption1,
             maximumPointSize: 20
         )
@@ -160,7 +164,7 @@ class PromoBadgeView: UIView {
 private extension Locale {
 
     var isEnglishLanguage: Bool {
-        let languageCode = if #available(iOS 16, *) {
+        let languageCode = if #available(iOS 16, macOS 13, *) {
             self.language.languageCode?.identifier
         } else {
             self.languageCode?.split(separator: "-").first.flatMap { String($0) }

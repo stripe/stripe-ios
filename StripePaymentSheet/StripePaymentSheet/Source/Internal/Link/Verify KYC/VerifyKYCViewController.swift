@@ -5,7 +5,11 @@
 //  Created by Michael Liberatore on 10/28/25.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// Container view controller that displays a list of KYC fields with the optional ability to initiate editing of the address.
 final class VerifyKYCViewController: BottomSheetViewController {

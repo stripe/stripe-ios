@@ -5,7 +5,11 @@
 //  Created by Nick Porter on 4/6/26.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP)
 @_spi(ReactNativeSDK)

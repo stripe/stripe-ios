@@ -8,7 +8,11 @@
 #if !os(visionOS)
 
 import AVFoundation
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @available(macCatalyst 14.0, *)
 class STPCameraView: UIView {
@@ -59,9 +63,11 @@ class STPCameraView: UIView {
         videoPreviewLayer.videoGravity = .resizeAspectFill
     }
 
+    #if canImport(UIKit)
     override class var layerClass: AnyClass {
-        return AVCaptureVideoPreviewLayer.self
+        AVCaptureVideoPreviewLayer.self
     }
+    #endif
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)

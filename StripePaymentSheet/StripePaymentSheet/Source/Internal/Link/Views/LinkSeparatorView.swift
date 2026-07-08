@@ -5,7 +5,11 @@
 //  Created by Mat Schmid on 4/23/25.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class LinkSeparatorView: UIView {
     private let separatorHeight: CGFloat = 0.5

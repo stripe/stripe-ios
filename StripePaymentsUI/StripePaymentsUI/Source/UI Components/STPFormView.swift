@@ -7,7 +7,11 @@
 //
 
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// Base protocol to support manually backspacing between form inputs and
 /// responding to different inputs receiving/losing focus.
@@ -518,7 +522,7 @@ extension STPFormView {
 
         var footerTextColor: UIColor {
             get {
-                return footerLabel.textColor
+                return footerLabel.textColor ?? .label
             }
             set {
                 footerLabel.textColor = newValue

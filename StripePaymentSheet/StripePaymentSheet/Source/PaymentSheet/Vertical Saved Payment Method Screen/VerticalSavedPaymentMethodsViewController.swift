@@ -10,7 +10,11 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @MainActor
 protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
@@ -232,7 +236,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         }
         _ = linkAccountObserver
 
-        view.addAndPinSubview(stackView, insets: configuration.appearance.formInsets)
+        (view as? UIView)?.addAndPinSubview(stackView, insets: configuration.appearance.formInsets)
 
         // Add a height constraint to the view to ensure a minimum height of 200
         let minHeightConstraint = view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200 - SheetNavigationBar.height(appearance: configuration.appearance))
@@ -356,7 +360,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         paymentMethodRows.first { $0 != button && $0.isSelected }?.state = .unselected
 
         // Disable interaction to prevent double selecting or entering edit mode since we will be dismissing soon
-        self.view.isUserInteractionEnabled = false
+        (self.view as? UIView)?.isUserInteractionEnabled = false
         self.navigationBar.isUserInteractionEnabled = false
 
         self.complete()

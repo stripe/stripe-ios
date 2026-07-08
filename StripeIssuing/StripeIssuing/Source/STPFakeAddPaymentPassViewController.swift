@@ -8,10 +8,22 @@
 
 import PassKit
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#else
+@_spi(STP) import StripeUICore
+#endif
+
+#if canImport(UIKit)
+public typealias STPIssuingUIViewController = UIViewController
+private typealias STPIssuingUIView = UIView
+#else
+public typealias STPIssuingUIViewController = StripeUICore.UIViewController
+private typealias STPIssuingUIView = StripeUICore.UIView
+#endif
 
 /// This class is a piece of fake UI that is intended to mimic `PKAddPaymentPassViewController`. That class is restricted to apps with a special entitlement from Apple, and as such can be difficult to build and test against. This class implements the same public API as `PKAddPaymentPassViewController`, and can be used to develop against the Stripe API in *testmode only*. (Obviously it will not actually place cards into the user's Apple Pay wallet either.) When it's time to go to production, you may simply replace all references to `STPFakeAddPaymentPassViewController` in your app with `PKAddPaymentPassViewController` and it will continue to function. For more information on developing against this API, please see https://stripe.com/docs/issuing/cards/digital-wallets .
-public class STPFakeAddPaymentPassViewController: UIViewController {
+public class STPFakeAddPaymentPassViewController: STPIssuingUIViewController {
     /// @see PKAddPaymentPassViewController
     @objc
     public class func canAddPaymentPass() -> Bool {
@@ -172,7 +184,7 @@ public class STPFakeAddPaymentPassViewController: UIViewController {
             rows.append(row)
         }
         var pairsTable: UIStackView?
-        if let rows = rows as? [UIView] {
+        if let rows = rows as? [STPIssuingUIView] {
             pairsTable = UIStackView(arrangedSubviews: rows)
         }
         pairsTable?.isLayoutMarginsRelativeArrangement = true

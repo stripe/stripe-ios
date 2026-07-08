@@ -6,7 +6,11 @@
 //
 
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 @preconcurrency import WebKit
 
 /// Represents the type of intent being confirmed
@@ -114,11 +118,13 @@ class IntentConfirmationChallengeViewController: UIViewController {
         webView.customUserAgent = PaymentsSDKVariant.paymentUserAgent
 
         // Make webview transparent
+        #if canImport(UIKit)
         webView.isOpaque = false
+        #endif
         webView.alpha = 0
 
         #if DEBUG
-        if #available(iOS 16.4, *) {
+        if #available(iOS 16.4, macOS 13.3, *) {
             webView.isInspectable = true
         }
         #endif
@@ -136,14 +142,23 @@ class IntentConfirmationChallengeViewController: UIViewController {
     private func setupCloseButton() {
         let useLiquidGlass = Self.shouldApplyLiquidGlass
 
+        #if canImport(UIKit)
         closeButton = UIButton(type: .system)
+        #elseif canImport(AppKit)
+        closeButton = UIButton()
+        #endif
         closeButton.translatesAutoresizingMaskIntoConstraints = false
 
+        #if canImport(UIKit)
         let symbolConfig = UIImage.SymbolConfiguration(
             pointSize: useLiquidGlass ? 20 : 16,
             weight: useLiquidGlass ? .regular : .medium
         )
         closeButton.setImage(UIImage(systemName: "xmark", withConfiguration: symbolConfig), for: .normal)
+        #elseif canImport(AppKit)
+        closeButton.image = UIImage(systemSymbolName: "xmark", accessibilityDescription: String.Localized.close)
+        closeButton.isBordered = false
+        #endif
 
         if useLiquidGlass {
             let glassButtonSize: CGFloat = 44
@@ -154,22 +169,36 @@ class IntentConfirmationChallengeViewController: UIViewController {
             // These checks are a convenience because .glass is only available on iOS (not visionOS)
             // when compiling with XCode 26
 #if compiler(>=6.2)
-            #if !os(visionOS)
+            #if !os(visionOS) && canImport(UIKit)
             if #available(iOS 26.0, visionOS 26.0, *) {
                 closeButton.configuration = .glass()
             }
             #endif
 #endif
         } else {
+            #if canImport(UIKit)
             closeButton.tintColor = .white
+            #elseif canImport(AppKit)
+            closeButton.contentTintColor = .white
+            #endif
         }
 
         // Add action
+        #if canImport(UIKit)
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        #elseif canImport(AppKit)
+        closeButton.target = self
+        closeButton.action = #selector(closeButtonTapped)
+        #endif
 
         // Accessibility
+        #if canImport(UIKit)
         closeButton.accessibilityLabel = String.Localized.close
         closeButton.accessibilityIdentifier = "UIButton.Close"
+        #elseif canImport(AppKit)
+        closeButton.setAccessibilityLabel(String.Localized.close)
+        closeButton.setAccessibilityIdentifier("UIButton.Close")
+        #endif
 
         // Initially hidden, will show when webview is ready
         closeButton.alpha = 0

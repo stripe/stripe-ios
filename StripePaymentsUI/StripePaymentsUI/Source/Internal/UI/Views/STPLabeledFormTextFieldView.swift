@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 let kLabeledFormFieldHeight: CGFloat = 44.0
 let kLabeledFormVeriticalMargin: CGFloat = 4.0
@@ -23,7 +27,7 @@ class STPLabeledFormTextFieldView: STPViewWithSeparator {
         super.init(frame: CGRect.zero)
         let formLabel = UILabel()
         formLabel.text = formLabelText
-        formLabel.font = textField.font
+        formLabel.font = textField.font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)
         formLabel.textColor = textField.defaultColor
         // We want the textField to fill additional space so set the label's contentHuggingPriority to high
         formLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -102,7 +106,9 @@ class STPLabeledFormTextFieldView: STPViewWithSeparator {
             return (formLabel?.font)!
         }
         set(formLabelFont) {
-            formLabel?.font = formLabelFont
+            if let formLabelFont {
+                formLabel?.font = formLabelFont
+            }
         }
     }
     private(set) var labelWidthDimension = NSLayoutDimension()

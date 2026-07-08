@@ -5,7 +5,11 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 // MARK: - PaymentMethodMessagingSublabelView
 
@@ -22,7 +26,7 @@ extension RowButton {
             return !attributedText.string.isEmpty
         }
 
-        private let appearance: PaymentSheet.Appearance
+        private let paymentSheetAppearance: PaymentSheet.Appearance
         private let paymentMethodType: PaymentSheet.PaymentMethodType
         private let promotionsHelper: PaymentMethodMessagingPromotionsHelper
 
@@ -30,7 +34,7 @@ extension RowButton {
         private var infoUrl: URL?
 
         private lazy var promotionTextView: PMMEPromotionTextView = {
-            let textView = PMMEPromotionTextView(foregroundColor: appearance.colors.primary)
+            let textView = PMMEPromotionTextView(foregroundColor: paymentSheetAppearance.colors.primary)
             textView.delegate = self
             textView.isHidden = true
             textView.alpha = 0
@@ -42,7 +46,7 @@ extension RowButton {
             paymentMethodType: PaymentSheet.PaymentMethodType,
             promotionsHelper: PaymentMethodMessagingPromotionsHelper
         ) {
-            self.appearance = appearance
+            self.paymentSheetAppearance = appearance
             self.paymentMethodType = paymentMethodType
             self.promotionsHelper = promotionsHelper
             super.init(frame: .zero)
@@ -127,8 +131,8 @@ extension RowButton {
 
         private func applyContent(_ content: PaymentMethodMessagingPromotionsHelper.PromotionContent) {
             promotionTextView.attributedText = NSMutableAttributedString.pmmePromoString(
-                font: appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20),
-                textColor: appearance.colors.text,
+                font: paymentSheetAppearance.scaledFont(for: paymentSheetAppearance.font.base.medium, style: .caption1, maximumPointSize: 20),
+                textColor: paymentSheetAppearance.colors.text,
                 template: content.promotion,
                 substitution: nil,
                 learnMoreText: content.learnMoreText,

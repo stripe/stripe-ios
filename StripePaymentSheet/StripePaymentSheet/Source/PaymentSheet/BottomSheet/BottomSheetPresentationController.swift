@@ -6,7 +6,11 @@
 //
 
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// The BottomSheetPresentationController is the middle layer between the presentingViewController
 /// and the presentedViewController.
@@ -63,7 +67,7 @@ class BottomSheetPresentationController: UIPresentationController {
      Override presented view to return non-optional
      */
     override var presentedView: UIView {
-        return presentedViewController.view
+        return presentedViewController.view as? UIView ?? UIView()
     }
 
     // MARK: - Lifecycle

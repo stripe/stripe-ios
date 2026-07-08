@@ -5,7 +5,11 @@
 //  Created by Nick Porter on 8/30/24.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension UIStackView {
     func addSeparators(color: UIColor, thickness: CGFloat = 1, inset: UIEdgeInsets, addTopSeparator: Bool = true, addBottomSeparator: Bool = true) {

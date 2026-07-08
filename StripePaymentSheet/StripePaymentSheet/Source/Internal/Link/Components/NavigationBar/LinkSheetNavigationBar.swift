@@ -6,7 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
@@ -29,8 +33,8 @@ class LinkSheetNavigationBar: SheetNavigationBar {
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .headline, maximumPointSize: 20)
-        label.textColor = appearance.colors.text
+        label.font = navigationAppearance.scaledFont(for: navigationAppearance.font.base.medium, style: .headline, maximumPointSize: 20)
+        label.textColor = navigationAppearance.colors.text
         label.textAlignment = .center
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -110,14 +114,14 @@ class LinkSheetNavigationBar: SheetNavigationBar {
             with: image,
             accessibilityLabel: String.Localized.back,
             accessibilityIdentifier: "UIButton.Back",
-            appearance: appearance
+            appearance: navigationAppearance
         )
     }
 
     override func createCloseButton() -> UIButton {
         return Self.createCloseButton(
             accessibilityIdentifier: "UIButton.Close",
-            appearance: appearance
+            appearance: navigationAppearance
         )
     }
 

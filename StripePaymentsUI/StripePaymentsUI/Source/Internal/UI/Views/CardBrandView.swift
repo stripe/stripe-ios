@@ -8,7 +8,11 @@
 
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A view that displays a card brand icon/logo, or an icon to help the user locate the CVC
 /// for a specific card brand.
@@ -79,7 +83,11 @@ import UIKit
         didSet {
             if oldValue != isShowingCBCIndicator {
                 // Gross, but we need to reach up to our top nested UIStackView to relayout with the new intrinsicContentSize:
+                #if canImport(UIKit)
                 self.superview?.superview?.setNeedsLayout()
+                #else
+                self.superview?.superview?.needsLayout = true
+                #endif
                 self.invalidateIntrinsicContentSize()
                 cbcIndicatorView.isHidden = !isShowingCBCIndicator
                 self.cbcIndicatorSizeConstraint?.constant = isShowingCBCIndicator ? 9.0 : 0

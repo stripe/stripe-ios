@@ -6,7 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
@@ -38,7 +42,7 @@ final class LinkVerificationView: UIView {
 
     let linkAccount: PaymentSheetLinkAccountInfoProtocol
 
-    private let appearance: LinkAppearance?
+    private let linkAppearance: LinkAppearance?
     private let brand: LinkBrand
     private let allowLogoutInDialog: Bool
     private let consentViewModel: LinkConsentViewModel?
@@ -97,7 +101,7 @@ final class LinkVerificationView: UIView {
             ),
             theme: LinkUI.appearance.asElementsTheme
         )
-        codeField.tintColor = appearance?.colors?.selectedBorder ?? LinkUI.appearance.colors.selectedComponentBorder
+        codeField.tintColor = linkAppearance?.colors?.selectedBorder ?? LinkUI.appearance.colors.selectedComponentBorder ?? .linkIconBrand
         codeField.addTarget(self, action: #selector(oneTimeCodeFieldChanged(_:)), for: .valueChanged)
         return codeField
     }()
@@ -120,7 +124,7 @@ final class LinkVerificationView: UIView {
     }()
 
     private lazy var resendCodeButton: Button = {
-        let button = Button(configuration: .linkPlain(foregroundColor: appearance?.colors?.primary ?? .linkTextBrand), title: String.Localized.resend_code)
+        let button = Button(configuration: .linkPlain(foregroundColor: linkAppearance?.colors?.primary ?? .linkTextBrand), title: String.Localized.resend_code)
         button.configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
         button.addTarget(self, action: #selector(resendCodeTapped(_:)), for: .touchUpInside)
         return button
@@ -158,7 +162,7 @@ final class LinkVerificationView: UIView {
         self.mode = mode
         self.linkAccount = linkAccount
         self.brand = brand
-        self.appearance = appearance
+        self.linkAppearance = appearance
         self.allowLogoutInDialog = allowLogoutInDialog
         self.consentViewModel = consentViewModel
         super.init(frame: .zero)

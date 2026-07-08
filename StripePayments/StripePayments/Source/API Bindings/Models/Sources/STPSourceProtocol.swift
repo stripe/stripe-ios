@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// Objects conforming to this protocol can be attached to a Stripe Customer object
 /// as a payment source.

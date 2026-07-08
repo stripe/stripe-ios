@@ -7,7 +7,11 @@
 
 import Foundation
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A `RowButton` subclass that presents a flat layout featuring a radio button for the selected state.
 final class RowButtonFlatWithRadioView: RowButton {
@@ -15,7 +19,7 @@ final class RowButtonFlatWithRadioView: RowButton {
 
     /// The radio control
     private lazy var radioButton: RadioButton = {
-        let radioButton = RadioButton(appearance: appearance)
+        let radioButton = RadioButton(appearance: paymentSheetAppearance)
         radioButton.isUserInteractionEnabled = false
         return radioButton
     }()
@@ -84,7 +88,7 @@ final class RowButtonFlatWithRadioView: RowButton {
         let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14)
         imageViewBottomConstraint.priority = .defaultLow
 
-        let insets = appearance.embeddedPaymentElement.row.additionalInsets
+        let insets = paymentSheetAppearance.embeddedPaymentElement.row.additionalInsets
         NSLayoutConstraint.activate([
             // Radio button constraints
             radioButton.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -93,7 +97,7 @@ final class RowButtonFlatWithRadioView: RowButton {
             radioButton.heightAnchor.constraint(equalToConstant: 18),
 
             // Image view constraints
-            imageView.leadingAnchor.constraint(equalTo: radioButton.trailingAnchor, constant: appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading),
+            imageView.leadingAnchor.constraint(equalTo: radioButton.trailingAnchor, constant: paymentSheetAppearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading),
             imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + insets),
             imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - insets),
             imageView.heightAnchor.constraint(equalToConstant: imageViewSize.height),
@@ -103,7 +107,7 @@ final class RowButtonFlatWithRadioView: RowButton {
             imageViewBottomConstraint,
 
             // Label constraints
-            horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.trailing),
+            horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: paymentSheetAppearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.trailing),
             horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             horizontalStackView.topAnchor.constraint(equalTo: topAnchor, constant: insets),

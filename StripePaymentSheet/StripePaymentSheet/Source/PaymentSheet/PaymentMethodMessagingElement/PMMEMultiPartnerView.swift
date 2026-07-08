@@ -8,7 +8,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class PMMEMultiPartnerView: UIView {
 
@@ -16,14 +20,14 @@ class PMMEMultiPartnerView: UIView {
     private let promotion: String
     private let learnMoreText: String
     private let infoUrl: URL
-    private let appearance: PaymentMethodMessagingElement.Appearance
+    private let messagingAppearance: PaymentMethodMessagingElement.Appearance
 
     private var logoViews = [UIImageView]()
     private let logoStack = UIStackView()
     private let mainStack = UIStackView()
 
     private lazy var promotionTextView: PMMEPromotionTextView = {
-        PMMEPromotionTextView(foregroundColor: appearance.linkTextColor)
+        PMMEPromotionTextView(foregroundColor: messagingAppearance.linkTextColor)
     }()
 
     // With the default font, padding between logos is 8
@@ -38,7 +42,7 @@ class PMMEMultiPartnerView: UIView {
     private func fontScaled(_ x: CGFloat) -> CGFloat {
         let defaultFontCapheight = PaymentMethodMessagingElement.Appearance().font.capHeight
         let xToFontHeightRatio = x / defaultFontCapheight
-        return xToFontHeightRatio * appearance.scaledFont.capHeight
+        return xToFontHeightRatio * messagingAppearance.scaledFont.capHeight
     }
 
     var customAccessibilityLabel: String {
@@ -57,7 +61,7 @@ class PMMEMultiPartnerView: UIView {
         self.promotion = promotion
         self.learnMoreText = learnMoreText
         self.infoUrl = infoUrl
-        self.appearance = appearance
+        self.messagingAppearance = appearance
         super.init(frame: .zero)
 
         promotionTextView.delegate = textViewDelegate
@@ -72,7 +76,7 @@ class PMMEMultiPartnerView: UIView {
         logoStack.spacing = logoHorizontalPadding
         for _ in logoSets {
             // Empty placeholder for initialization, we'll populate with the correct light/dark asset in didMoveToSuperView()
-            let imageView = ScalingImageView(appearance: appearance)
+            let imageView = ScalingImageView(appearance: messagingAppearance)
             imageView.contentMode = .left
             imageView.contentMode = .scaleAspectFill
             logoStack.addArrangedSubview(imageView)
@@ -121,8 +125,8 @@ class PMMEMultiPartnerView: UIView {
 
     private func getPromotionAttributedString() -> NSMutableAttributedString {
         .pmmePromoString(
-            font: appearance.scaledFont,
-            textColor: appearance.textColor,
+            font: messagingAppearance.scaledFont,
+            textColor: messagingAppearance.textColor,
             template: promotion,
             substitution: nil,
             learnMoreText: learnMoreText,
@@ -134,10 +138,10 @@ class PMMEMultiPartnerView: UIView {
 // UIImageView that scales according to the appearance's font size (including dynamic type)
 class ScalingImageView: UIImageView {
 
-    let appearance: PaymentMethodMessagingElement.Appearance
+    let messagingAppearance: PaymentMethodMessagingElement.Appearance
 
     init(appearance: PaymentMethodMessagingElement.Appearance) {
-        self.appearance = appearance
+        self.messagingAppearance = appearance
         super.init(frame: .zero)
     }
 
@@ -147,6 +151,6 @@ class ScalingImageView: UIImageView {
 
     override var intrinsicContentSize: CGSize {
         guard let image else { return CGSize(width: -1, height: -1) }
-        return image.sizeMatchingFont(appearance.scaledFont, additionalScale: 2.0)
+        return image.sizeMatchingFont(messagingAppearance.scaledFont, additionalScale: 2.0)
     }
 }

@@ -6,7 +6,11 @@
 //
 
 import AuthenticationServices
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// Creates a fallback ASPresentationAnchor when no window is available.
 /// On visionOS, UIWindow() without a scene is deprecated, so we find a scene first.

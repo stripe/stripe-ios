@@ -8,7 +8,13 @@
 
 import Foundation
 import SafariServices
+#if canImport(UIKit)
 import UIKit
+public typealias STPAuthenticationUIViewController = UIViewController
+#elseif canImport(AppKit)
+@_spi(STP) import StripeUICore
+public typealias STPAuthenticationUIViewController = StripeUICore.UIViewController
+#endif
 
 /// `STPAuthenticationContext` provides information required to present authentication challenges
 /// to a user.
@@ -17,7 +23,7 @@ import UIKit
     /// of the `authenticationPresentingViewController` when required for user
     /// authentication, like in the Challenge Flow for 3DS2 transactions.
     @MainActor @preconcurrency
-    func authenticationPresentingViewController() -> UIViewController
+    func authenticationPresentingViewController() -> STPAuthenticationUIViewController
 
     /// This method is called before presenting a UIViewController for authentication.
     /// @note `STPPaymentHandler` will not proceed until `completion` is called.
@@ -36,12 +42,12 @@ import UIKit
     /// it to return the user to your desired view controller.
     @MainActor @preconcurrency
     @objc(authenticationContextWillDismissViewController:)
-    optional func authenticationContextWillDismiss(_ viewController: UIViewController)
+    optional func authenticationContextWillDismiss(_ viewController: STPAuthenticationUIViewController)
     /// This method is called when an authentication UIViewController has been dismissed.
     /// Implement this method to have your UI respond to the authentication view controller to being dismissed. For example,
     /// if you requested authentication while displaying an STPBankSelectionViewController, you may want to hide
     /// it to return the user to your desired view controller.
     @_spi(STP)
     @objc(authenticationContextDidDismissViewController:)
-    optional func authenticationContextDidDismiss(_ viewController: UIViewController)
+    optional func authenticationContextDidDismiss(_ viewController: STPAuthenticationUIViewController)
 }

@@ -6,7 +6,11 @@
 //
 
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// Container view controller that displays the user attestation HTML in a Link-styled bottom sheet.
 final class UserAttestationViewController: BottomSheetViewController {

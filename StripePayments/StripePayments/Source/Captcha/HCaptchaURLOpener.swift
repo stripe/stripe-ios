@@ -6,7 +6,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /**
  * The protocol for a contractor which can handle/open URLs in an external viewer/browser

@@ -7,7 +7,11 @@
 
 import Foundation
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A `RowButton` subclass that presents floating button style.
 final class RowButtonFloating: RowButton {
@@ -15,15 +19,15 @@ final class RowButtonFloating: RowButton {
 
     /// The view that manages corner radius and shadows and selection border
     private lazy var selectableRectangle: ShadowedRoundedRectangle = {
-        return ShadowedRoundedRectangle(appearance: appearance, ios26DefaultCornerStyle: .capsule)
+        return ShadowedRoundedRectangle(appearance: paymentSheetAppearance, ios26DefaultCornerStyle: .capsule)
     }()
     /// The vertical top and bottom padding to be used. Floating uses different values for insets based on if it is used in embedded or vertical mode
     private var contentInsets: CGFloat {
         guard isEmbedded else {
-            return appearance.verticalModeRowPadding // Configurable insets for vertical mode
+            return paymentSheetAppearance.verticalModeRowPadding // Configurable insets for vertical mode
         }
 
-        return appearance.embeddedPaymentElement.row.additionalInsets
+        return paymentSheetAppearance.embeddedPaymentElement.row.additionalInsets
     }
 
     private var imageViewMargin: CGFloat {
@@ -32,7 +36,7 @@ final class RowButtonFloating: RowButton {
 
     private var imageViewLeadingConstant: CGFloat {
         if isEmbedded {
-            return appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading
+            return paymentSheetAppearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading
         }
         return selectableRectangle.didSetCornerConfiguration ? 16 : 12
     }
@@ -108,7 +112,7 @@ final class RowButtonFloating: RowButton {
         let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14)
         imageViewBottomConstraint.priority = .defaultLow
 
-        let imageViewTrailingConstant = isEmbedded ? appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.trailing : 12
+        let imageViewTrailingConstant = isEmbedded ? paymentSheetAppearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.trailing : 12
 
         NSLayoutConstraint.activate([
             // Image view constraints

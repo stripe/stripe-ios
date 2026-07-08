@@ -8,7 +8,11 @@
 
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 protocol LinkMandateViewDelegate: AnyObject {
     /// Called when the user taps on a link.

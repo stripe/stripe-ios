@@ -8,7 +8,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension RowButton {
     final class RightAccessoryButton: UIView, UIGestureRecognizerDelegate {
@@ -47,9 +51,9 @@ extension RowButton {
         private var label: UILabel {
             let label = UILabel()
             label.text = accessoryType.text
-            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            label.font = accessoryAppearance.scaledFont(for: accessoryAppearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             label.minimumContentSizeCategory = .large
-            label.textColor = appearance.colors.primary
+            label.textColor = accessoryAppearance.colors.primary
             label.adjustsFontSizeToFitWidth = true
             label.adjustsFontForContentSizeCategory = true
             label.minimumScaleFactor = 0.9
@@ -61,9 +65,9 @@ extension RowButton {
             guard let image = accessoryType.accessoryImage else { return nil }
             let imageView = UIImageView(image: image)
             if accessoryType == .update {
-                imageView.tintColor = appearance.colors.icon
+                imageView.tintColor = accessoryAppearance.colors.icon
             } else {
-                imageView.tintColor = appearance.colors.primary
+                imageView.tintColor = accessoryAppearance.colors.primary
             }
             imageView.contentMode = .scaleAspectFit
             imageView.isAccessibilityElement = false
@@ -87,12 +91,12 @@ extension RowButton {
         }
 
         let accessoryType: AccessoryType
-        let appearance: PaymentSheet.Appearance
+        let accessoryAppearance: PaymentSheet.Appearance
         let didTap: () -> Void
 
         init(accessoryType: AccessoryType, appearance: PaymentSheet.Appearance, didTap: @escaping () -> Void) {
             self.accessoryType = accessoryType
-            self.appearance = appearance
+            self.accessoryAppearance = appearance
             self.didTap = didTap
             super.init(frame: .zero)
             addAndPinSubview(stackView)
@@ -136,7 +140,7 @@ extension RowButton {
         // MARK: - UIGestureRecognizerDelegate
         func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
             // Without this, the long press prevents you from scrolling or our tap/pan gesture from triggering together.
-            return otherGestureRecognizer is UIPanGestureRecognizer || (gestureRecognizers?.contains(otherGestureRecognizer) ?? false)
+            return otherGestureRecognizer is UIPanGestureRecognizer
         }
     }
 }

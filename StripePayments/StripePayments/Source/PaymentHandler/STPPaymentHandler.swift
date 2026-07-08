@@ -1304,10 +1304,14 @@ public class STPPaymentHandler: NSObject {
                                                 challengeStatusReceiver: self,
                                                 timeout: timeout
                                             ) { threeDSChallengeViewController, completion in
-                                                paymentSheet.present(
-                                                    threeDSChallengeViewController,
-                                                    completion: completion
-                                                )
+                                                if let threeDSChallengeViewController = threeDSChallengeViewController as? STPAuthenticationUIViewController {
+                                                    paymentSheet.present(
+                                                        threeDSChallengeViewController,
+                                                        completion: completion
+                                                    )
+                                                } else {
+                                                    completion()
+                                                }
                                             }
                                         } else {
                                             transaction.doChallenge(
@@ -1837,10 +1841,10 @@ public class STPPaymentHandler: NSObject {
                                 to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))
                             ) {
                                 // This isn't great, but UIViewController is non-nil in the protocol. Maybe it's better to still call it, even if the VC isn't useful?
-                                context.authenticationContextWillDismiss?(UIViewController())
+                                context.authenticationContextWillDismiss?(STPAuthenticationUIViewController())
                             }
                             // This isn't great, but UIViewController is non-nil in the protocol. Maybe it's better to still call it, even if the VC isn't useful?
-                            self.callContextDidDismissIfNeeded(context, UIViewController())
+                            self.callContextDidDismissIfNeeded(context, STPAuthenticationUIViewController())
                             STPURLCallbackHandler.shared().unregisterListener(self)
                             self.logURLRedirectNextActionFinished(returnType: .ASWebAuthenticationSession)
                             self._retrieveAndCheckIntentForCurrentAction()
@@ -2030,7 +2034,12 @@ public class STPPaymentHandler: NSObject {
         var loggingSafeErrorMessage: String?
 
         // Is it in the window hierarchy?
-        if presentingViewController.viewIfLoaded?.window == nil {
+        #if canImport(UIKit)
+        let presentationWindow = presentingViewController.viewIfLoaded?.window
+        #elseif canImport(AppKit)
+        let presentationWindow = presentingViewController.isViewLoaded ? presentingViewController.view.window : nil
+        #endif
+        if presentationWindow == nil {
             canPresent = false
             loggingSafeErrorMessage =
                 "authenticationPresentingViewController is not in the window hierarchy. You should probably return the top-most view controller instead."
@@ -2375,7 +2384,7 @@ public class STPPaymentHandler: NSObject {
         return STPPaymentHandlerError(code: errorCode, loggingSafeUserInfo: userInfo) as NSError
     }
 
-    func callContextDidDismissIfNeeded(_ context: (any STPAuthenticationContext)?, _ viewController: UIViewController?) {
+    func callContextDidDismissIfNeeded(_ context: (any STPAuthenticationContext)?, _ viewController: STPAuthenticationUIViewController?) {
         guard let context, let viewController else { return }
 
         if context.responds(
@@ -2384,6 +2393,14 @@ public class STPPaymentHandler: NSObject {
         {
             context.authenticationContextDidDismiss?(viewController)
         }
+    }
+
+    func authenticationViewController(from safariViewController: SFSafariViewController) -> STPAuthenticationUIViewController {
+        #if canImport(UIKit)
+        return safariViewController
+        #else
+        return STPAuthenticationUIViewController()
+        #endif
     }
 }
 
@@ -2420,10 +2437,10 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
         if context?.responds(
             to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))
         ) ?? false {
-            context?.authenticationContextWillDismiss?(controller)
+            context?.authenticationContextWillDismiss?(authenticationViewController(from: controller))
         }
 
-        callContextDidDismissIfNeeded(context, controller)
+        callContextDidDismissIfNeeded(context, authenticationViewController(from: controller))
 
         safariViewController = nil
         STPURLCallbackHandler.shared().unregisterListener(self)
@@ -2451,7 +2468,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
         ) ?? false,
             let safariViewController = safariViewController
         {
-            context?.authenticationContextWillDismiss?(safariViewController)
+            context?.authenticationContextWillDismiss?(authenticationViewController(from: safariViewController))
         }
 
         NotificationCenter.default.removeObserver(
@@ -2461,7 +2478,10 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
         )
         STPURLCallbackHandler.shared().unregisterListener(self)
         safariViewController?.dismiss(animated: true) {
-            self.callContextDidDismissIfNeeded(context, self.safariViewController)
+            self.callContextDidDismissIfNeeded(
+                context,
+                self.safariViewController.map { self.authenticationViewController(from: $0) }
+            )
             self.safariViewController = nil
         }
         _retrieveAndCheckIntentForCurrentAction()
@@ -2674,7 +2694,11 @@ extension STPPaymentHandler {
         if let paymentSheet = currentAction.authenticationContext
             .authenticationPresentingViewController() as? PaymentSheetAuthenticationContext
         {
-            paymentSheet.dismiss(challengeViewController, completion: nil)
+            if let challengeViewController = challengeViewController as? STPAuthenticationUIViewController {
+                paymentSheet.dismiss(challengeViewController, completion: nil)
+            } else {
+                challengeViewController.dismiss(animated: true, completion: nil)
+            }
         } else {
             challengeViewController.dismiss(animated: true, completion: nil)
         }
@@ -2701,8 +2725,8 @@ extension STPPaymentHandler {
 
 /// Internal authentication context for PaymentSheet magic
 @_spi(STP) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
-    func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
-    func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?)
+    func present(_ authenticationViewController: STPAuthenticationUIViewController, completion: @escaping () -> Void)
+    func dismiss(_ authenticationViewController: STPAuthenticationUIViewController, completion: (() -> Void)?)
     func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
 }
 

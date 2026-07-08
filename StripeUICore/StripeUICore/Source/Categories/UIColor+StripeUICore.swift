@@ -6,7 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 @_spi(STP) public extension UIColor {
 
@@ -54,7 +58,7 @@ import UIKit
         var sb: CGFloat = 0
 
         // get the (extended) sRGB components
-        getRed(&sr, green: &sg, blue: &sb, alpha: nil)
+        rgbColor.getRed(&sr, green: &sg, blue: &sb, alpha: nil)
 
         // Convert from sRGB to linear RGB
         let r = sr < 0.04045 ? sr / 12.92 : pow((sr + 0.055) / 1.055, 2.4)
@@ -162,14 +166,14 @@ import UIKit
         var green: CGFloat = 0
         var blue: CGFloat = 0
         var alpha: CGFloat = 0
-        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        rgbColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
 
         return (red, green, blue, alpha)
     }
 
     var brightness: CGFloat {
         var brightness: CGFloat = 0
-        getHue(nil, saturation: nil, brightness: &brightness, alpha: nil)
+        rgbColor.getHue(nil, saturation: nil, brightness: &brightness, alpha: nil)
         return brightness
     }
 
@@ -177,6 +181,13 @@ import UIKit
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0
+        #if canImport(AppKit) && !canImport(UIKit)
+        guard let color = usingColorSpace(.deviceRGB) else {
+            return CGFloat(0.4)
+        }
+        color.getRed(&red, green: &green, blue: &blue, alpha: nil)
+        return red * CGFloat(0.299) + green * CGFloat(0.587) + blue * CGFloat(0.114)
+        #else
         if getRed(&red, green: &green, blue: &blue, alpha: nil) {
             // We're using the luma value from YIQ
             // https://en.wikipedia.org/wiki/YIQ#From_RGB_to_YIQ
@@ -189,6 +200,7 @@ import UIKit
             // formula), but not very bright.
             return CGFloat(0.4)
         }
+        #endif
     }
 
     var isBright: Bool { perceivedBrightness > 0.3 }
@@ -199,6 +211,13 @@ import UIKit
 // MARK: - Helpers
 
 private extension UIColor {
+    var rgbColor: UIColor {
+        #if canImport(AppKit) && !canImport(UIKit)
+        return usingColorSpace(.sRGB) ?? usingColorSpace(.deviceRGB) ?? self
+        #else
+        return self
+        #endif
+    }
 
     /// Transforms the brightness and returns the resulting color.
     ///
@@ -213,7 +232,7 @@ private extension UIColor {
             var brightness: CGFloat = 0
             var alpha: CGFloat = 0
 
-            self.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+            self.rgbColor.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
 
             return UIColor(
                 hue: hue,

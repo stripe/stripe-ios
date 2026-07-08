@@ -7,7 +7,11 @@
 //
 
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// STPMultiFormFieldDelegate provides methods for a delegate to respond to editing and text changes.
 @objc protocol STPMultiFormFieldDelegate: NSObjectProtocol {

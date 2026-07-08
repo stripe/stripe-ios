@@ -8,7 +8,11 @@
 import SafariServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// The content view of `UserAttestationViewController`, which displays user attestation HTML with a confirmation button.
 final class UserAttestationContentViewController: UIViewController, BottomSheetContentViewController {

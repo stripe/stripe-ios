@@ -9,7 +9,11 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class CVCReconfirmationViewController: UIViewController {
     let onCompletion: ((CVCReconfirmationViewController, IntentConfirmParams?) -> Void)
@@ -105,7 +109,7 @@ class CVCReconfirmationViewController: UIViewController {
         }
 
         // Get our margins in order
-        view.directionalLayoutMargins = configuration.appearance.formInsets
+        (view as? UIView)?.directionalLayoutMargins = configuration.appearance.formInsets
 
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.topAnchor),

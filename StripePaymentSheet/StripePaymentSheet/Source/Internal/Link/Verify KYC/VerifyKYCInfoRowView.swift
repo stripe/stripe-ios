@@ -5,7 +5,11 @@
 //  Created by Michael Liberatore on 10/30/25.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeUICore
 

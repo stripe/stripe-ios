@@ -9,7 +9,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
+#if canImport(UIKit)
 import UIKit
+#else
+@_spi(STP) import StripeUICore
+#endif
 
 protocol STPEphemeralKeyManagerProtocol {
     /// If the retriever's stored ephemeral key has not expired, it will be
@@ -61,7 +65,7 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleWillForegroundNotification),
-            name: UIApplication.willEnterForegroundNotification,
+            name: STPApplicationWillEnterForegroundNotification,
             object: nil
         )
     }
@@ -98,7 +102,7 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
     deinit {
         NotificationCenter.default.removeObserver(
             self,
-            name: UIApplication.willEnterForegroundNotification,
+            name: STPApplicationWillEnterForegroundNotification,
             object: nil
         )
     }
@@ -177,3 +181,9 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
 
 private let DefaultExpirationInterval: TimeInterval = 60
 private let MinEagerRefreshInterval: TimeInterval = 60 * 60
+
+#if canImport(UIKit)
+private let STPApplicationWillEnterForegroundNotification = UIApplication.willEnterForegroundNotification
+#else
+private let STPApplicationWillEnterForegroundNotification = StripeUICore.UIApplication.willEnterForegroundNotification
+#endif

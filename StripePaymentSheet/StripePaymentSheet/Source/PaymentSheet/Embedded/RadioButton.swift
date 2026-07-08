@@ -6,10 +6,14 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class RadioButton: UIView {
-    private let appearance: PaymentSheet.Appearance
+    private let paymentSheetAppearance: PaymentSheet.Appearance
 
     private struct Constants {
         static let diameter: CGFloat = 18
@@ -24,11 +28,11 @@ class RadioButton: UIView {
     }
 
     private var selectedColor: CGColor {
-        appearance.embeddedPaymentElement.row.flat.radio.selectedColor?.cgColor ?? appearance.colors.primary.cgColor
+        paymentSheetAppearance.embeddedPaymentElement.row.flat.radio.selectedColor?.cgColor ?? paymentSheetAppearance.colors.primary.cgColor
     }
 
     private var unselectedColor: CGColor {
-        appearance.embeddedPaymentElement.row.flat.radio.unselectedColor?.cgColor ?? appearance.colors.componentBorder.cgColor
+        paymentSheetAppearance.embeddedPaymentElement.row.flat.radio.unselectedColor?.cgColor ?? paymentSheetAppearance.colors.componentBorder.cgColor
     }
 
     private lazy var outerCircle: CALayer = {
@@ -55,7 +59,7 @@ class RadioButton: UIView {
     }
 
     init(appearance: PaymentSheet.Appearance = .default) {
-        self.appearance = appearance
+        self.paymentSheetAppearance = appearance
         super.init(frame: .zero)
         layer.addSublayer(outerCircle)
         layer.addSublayer(innerCircle)

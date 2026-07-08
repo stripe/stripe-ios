@@ -9,10 +9,16 @@
 @_spi(STP) import StripePayments
 import SwiftUI
 
+#if canImport(UIKit)
+private typealias PlatformViewRepresentable = UIViewRepresentable
+#elseif canImport(AppKit)
+private typealias PlatformViewRepresentable = NSViewRepresentable
+#endif
+
 extension STPPaymentCardTextField {
 
     /// A SwiftUI representation of an STPPaymentCardTextField.
-    public struct Representable: UIViewRepresentable {
+    public struct Representable: PlatformViewRepresentable {
         @Binding var paymentMethodParams: STPPaymentMethodParams?
 
         /// Initialize a SwiftUI representation of an STPPaymentCardTextField.
@@ -28,7 +34,7 @@ extension STPPaymentCardTextField {
             return Coordinator(parent: self)
         }
 
-        public func makeUIView(context: Context) -> STPPaymentCardTextField {
+        private func makeView(context: Context) -> STPPaymentCardTextField {
             let paymentCardField = STPPaymentCardTextField()
             if let paymentMethodParams = paymentMethodParams {
                 paymentCardField.paymentMethodParams = paymentMethodParams
@@ -39,11 +45,29 @@ extension STPPaymentCardTextField {
             return paymentCardField
         }
 
-        public func updateUIView(_ paymentCardField: STPPaymentCardTextField, context: Context) {
+        private func updateView(_ paymentCardField: STPPaymentCardTextField) {
             if let paymentMethodParams = paymentMethodParams {
                 paymentCardField.paymentMethodParams = paymentMethodParams
             }
         }
+
+        #if canImport(UIKit)
+        public func makeUIView(context: Context) -> STPPaymentCardTextField {
+            makeView(context: context)
+        }
+
+        public func updateUIView(_ paymentCardField: STPPaymentCardTextField, context: Context) {
+            updateView(paymentCardField)
+        }
+        #elseif canImport(AppKit)
+        public func makeNSView(context: Context) -> STPPaymentCardTextField {
+            makeView(context: context)
+        }
+
+        public func updateNSView(_ paymentCardField: STPPaymentCardTextField, context: Context) {
+            updateView(paymentCardField)
+        }
+        #endif
 
         public class Coordinator: NSObject, STPPaymentCardTextFieldDelegate {
             var parent: Representable

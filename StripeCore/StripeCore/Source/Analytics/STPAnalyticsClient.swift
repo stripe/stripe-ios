@@ -7,7 +7,9 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#endif
 
 @_spi(STP) public protocol STPAnalyticsProtocol {
     static var stp_analyticsIdentifier: String { get }
@@ -183,7 +185,11 @@ extension STPAnalyticsClient {
         var payload: [String: Any] = [:]
         payload["bindings_version"] = StripeAPIConfiguration.STPSDKVersion
         payload["analytics_ua"] = "analytics.stripeios-1.0"
+        #if canImport(UIKit)
         let version = UIDevice.current.systemVersion
+        #else
+        let version = ProcessInfo.processInfo.operatingSystemVersionString
+        #endif
         if !version.isEmpty {
             payload["os_version"] = version
         }

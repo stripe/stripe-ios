@@ -8,7 +8,11 @@
 
 import Foundation
 @_spi(STP) import StripePayments
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @objc enum STPCardFieldType: Int {
     case number

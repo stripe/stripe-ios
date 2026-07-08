@@ -8,7 +8,11 @@
 
 import PassKit
 import SafariServices
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
@@ -85,10 +89,18 @@ extension PayWithLinkViewController {
 
         private lazy var separator = SeparatorLabel(text: String.Localized.or)
 
-        private lazy var applePayButton: PKPaymentButton = {
+        private lazy var applePayButton: UIView = {
+            #if canImport(UIKit)
             let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: .compatibleAutomatic)
             button.addTarget(self, action: #selector(applePayButtonTapped(_:)), for: .touchUpInside)
             button.cornerRadius = LinkUI.cornerRadius
+            #else
+            let button = UIButton(type: .system)
+            button.setTitle("Apple Pay", for: .normal)
+            button.addTarget(self, action: #selector(applePayButtonTapped(_:)), for: .touchUpInside)
+            button.wantsLayer = true
+            button.layer.cornerRadius = LinkUI.cornerRadius
+            #endif
 
             NSLayoutConstraint.activate([
                 button.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.applePayButtonHeight)
@@ -244,7 +256,7 @@ extension PayWithLinkViewController {
 
         func updateUI(animated: Bool) {
             if !viewModel.shouldRecollectCardCVC && !viewModel.shouldRecollectCardExpiryDate {
-                cardDetailsRecollectionSection.view.endEditing(true)
+                cardDetailsRecollectionSection.view.resignFirstResponder()
             }
 
             if let mandate = viewModel.mandate {
@@ -394,7 +406,7 @@ extension PayWithLinkViewController {
         }
 
         @objc
-        func applePayButtonTapped(_ sender: PKPaymentButton) {
+        func applePayButtonTapped(_ sender: Any) {
             coordinator?.confirmWithApplePay()
         }
 
@@ -413,7 +425,7 @@ extension PayWithLinkViewController.WalletViewController {
         let style: UIAlertAction.Style
         let action: () -> Void
 
-        var contextMenuAttribute: UIMenuElement.Attributes {
+        var contextMenuAttribute: UIAction.Attributes {
             switch style {
             case .default, .cancel: return []
             case .destructive: return [.destructive]
@@ -853,9 +865,9 @@ private extension PayWithLinkViewController.WalletViewController {
             containerViewBottomConstraint.constant = -keyboardInViewHeight - LinkUI.contentSpacing
         }
 
-        view.setNeedsLayout()
+        (view as? UIView)?.setNeedsLayout()
         UIView.animateAlongsideKeyboard(notification) {
-            self.view.layoutIfNeeded()
+            (self.view as? UIView)?.layoutIfNeeded()
         }
     }
 }

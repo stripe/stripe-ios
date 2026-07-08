@@ -7,7 +7,11 @@
 //
 
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// The custom button used throughout the Stripe SDK.
 /// For internal SDK use only
@@ -383,8 +387,8 @@ private extension Button {
         let color = foregroundColor(for: state)
 
         titleLabel.textColor = color
-        iconView.tintColor = color
-        activityIndicator.tintColor = color
+        iconView.tintColor = color ?? tintColor
+        activityIndicator.tintColor = color ?? tintColor
 
         backgroundColor = backgroundColor(for: state)
         layer.borderColor = borderColor(for: state)?.cgColor
@@ -516,9 +520,14 @@ public extension Button.Configuration {
 
     /// A less prominent button.
     static func secondary() -> Self {
+        #if canImport(UIKit)
+        let backgroundColor = UIColor.secondarySystemFill
+        #else
+        let backgroundColor = UIColor.controlBackgroundColor
+        #endif
         return .init(
             foregroundColor: Self.tintColor,
-            backgroundColor: .secondarySystemFill,
+            backgroundColor: backgroundColor,
             disabledForegroundColor: .systemGray,
             colorTransforms: .init(
                 highlightedBackground: .darken(amount: 0.2)

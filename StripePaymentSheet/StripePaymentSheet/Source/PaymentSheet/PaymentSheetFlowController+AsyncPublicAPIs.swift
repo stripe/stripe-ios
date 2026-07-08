@@ -6,7 +6,11 @@
 //
 
 @_spi(STP) import StripePayments
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension PaymentSheet.FlowController {
     /// An asynchronous failable initializer for PaymentSheet.FlowController

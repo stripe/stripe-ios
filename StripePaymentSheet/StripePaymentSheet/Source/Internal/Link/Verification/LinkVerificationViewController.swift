@@ -6,7 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
@@ -102,7 +106,7 @@ final class LinkVerificationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.tintColor = .linkIconBrand
+        (view as? UIView)?.tintColor = .linkIconBrand
         view.backgroundColor = .systemBackground
 
         view.addSubview(verificationView)
@@ -121,8 +125,8 @@ final class LinkVerificationViewController: UIViewController {
         ])
 
         if mode.requiresModalPresentation {
-            view.layer.masksToBounds = true
-            view.layer.cornerRadius = LinkUI.largeCornerRadius
+            view.layer?.masksToBounds = true
+            view.layer?.cornerRadius = LinkUI.largeCornerRadius
         }
     }
 

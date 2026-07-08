@@ -7,7 +7,11 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 enum PaymentMethodMessagingElementError: Error, LocalizedError {
     case missingPublishableKey

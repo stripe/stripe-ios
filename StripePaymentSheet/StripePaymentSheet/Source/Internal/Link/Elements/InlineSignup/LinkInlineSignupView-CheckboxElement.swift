@@ -9,7 +9,11 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension LinkInlineSignupView {
 

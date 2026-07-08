@@ -7,14 +7,18 @@
 
 import Foundation
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A `RowButton` subclass that presents a flat layout featuring a checkmark for the selected state.
 final class RowButtonFlatWithCheckmark: RowButton {
     // MARK: - Subviews
     private lazy var checkmarkImageView: UIImageView = {
         let checkmarkImageView = UIImageView(image: Image.embedded_check.makeImage(template: true))
-        checkmarkImageView.tintColor = appearance.embeddedPaymentElement.row.flat.checkmark.color ?? appearance.colors.primary
+        checkmarkImageView.tintColor = paymentSheetAppearance.embeddedPaymentElement.row.flat.checkmark.color ?? paymentSheetAppearance.colors.primary
         checkmarkImageView.contentMode = .scaleAspectFit
         checkmarkImageView.isHidden = true
         checkmarkImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -69,10 +73,10 @@ final class RowButtonFlatWithCheckmark: RowButton {
             imageViewCenterYConstraint = imageView.centerYAnchor.constraint(equalTo: centerYAnchor)
         }
 
-        let insets = appearance.embeddedPaymentElement.row.additionalInsets
+        let insets = paymentSheetAppearance.embeddedPaymentElement.row.additionalInsets
         NSLayoutConstraint.activate([
             // Image view constraints
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: paymentSheetAppearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading),
             imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + insets),
             imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - insets),
             imageView.heightAnchor.constraint(equalToConstant: imageViewSize.height),
@@ -82,7 +86,7 @@ final class RowButtonFlatWithCheckmark: RowButton {
             imageViewBottomConstraint,
 
             // Label constraints
-            horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.trailing),
+            horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: paymentSheetAppearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.trailing),
             horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),

@@ -7,7 +7,11 @@
 
 import Foundation
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class PMMESinglePartnerView: UIView {
 
@@ -15,10 +19,10 @@ class PMMESinglePartnerView: UIView {
     private let promotion: String
     private let learnMoreText: String
     private let infoUrl: URL
-    private let appearance: PaymentMethodMessagingElement.Appearance
+    private let messagingAppearance: PaymentMethodMessagingElement.Appearance
 
     private lazy var promotionTextView: PMMEPromotionTextView = {
-        PMMEPromotionTextView(foregroundColor: appearance.linkTextColor)
+        PMMEPromotionTextView(foregroundColor: messagingAppearance.linkTextColor)
     }()
 
     // Needs to be set on the appropriate view to take effect
@@ -38,7 +42,7 @@ class PMMESinglePartnerView: UIView {
         self.promotion = promotion
         self.learnMoreText = learnMoreText
         self.infoUrl = infoUrl
-        self.appearance = appearance
+        self.messagingAppearance = appearance
         super.init(frame: .zero)
 
         promotionTextView.delegate = textViewDelegate
@@ -65,8 +69,8 @@ class PMMESinglePartnerView: UIView {
 
     func getPromotionAttributedString() -> NSMutableAttributedString {
         .pmmePromoString(
-            font: appearance.scaledFont,
-            textColor: appearance.textColor,
+            font: messagingAppearance.scaledFont,
+            textColor: messagingAppearance.textColor,
             template: promotion,
             substitution: ("{partner}", traitCollection.isDarkMode ? logoSet.dark : logoSet.light),
             learnMoreText: learnMoreText,

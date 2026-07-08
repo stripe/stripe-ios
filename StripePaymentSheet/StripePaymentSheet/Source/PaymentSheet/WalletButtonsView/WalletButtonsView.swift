@@ -187,10 +187,26 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
         }
 
         var body: some View {
+            #if canImport(UIKit)
             PayWithApplePayButton(.plain, action: action)
                 .frame(maxWidth: .infinity)
                 .frame(height: height)
                 .cornerRadius(cornerRadius)
+            #else
+            if #available(macOS 13.0, *) {
+                PayWithApplePayButton(.plain, action: action)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: height)
+                    .cornerRadius(cornerRadius)
+            } else {
+                Button(action: action) {
+                    SwiftUI.Image(systemName: "apple.logo")
+                        .frame(maxWidth: .infinity)
+                        .frame(height: height)
+                }
+                .cornerRadius(cornerRadius)
+            }
+            #endif
         }
     }
 }

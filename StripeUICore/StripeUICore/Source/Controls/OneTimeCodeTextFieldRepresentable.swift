@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+#if canImport(UIKit)
+private typealias PlatformViewRepresentable = UIViewRepresentable
+#elseif canImport(AppKit)
+private typealias PlatformViewRepresentable = NSViewRepresentable
+#endif
+
 // Controller to hold a reference to the underlying `OneTimeCodeTextField`
 @_spi(STP) public final class OneTimeCodeTextFieldController {
     private weak var textField: OneTimeCodeTextField?
@@ -22,7 +28,7 @@ import SwiftUI
     }
 }
 
-@_spi(STP) public struct OneTimeCodeTextFieldRepresentable: UIViewRepresentable {
+@_spi(STP) public struct OneTimeCodeTextFieldRepresentable: PlatformViewRepresentable {
     @Binding private var text: String
     private var configuration: OneTimeCodeTextField.Configuration
     private var controller: OneTimeCodeTextFieldController?
@@ -46,7 +52,7 @@ import SwiftUI
         self.onComplete = onComplete
     }
 
-    @_spi(STP) public func makeUIView(context: Context) -> OneTimeCodeTextField {
+    private func makeTextField(context: Context) -> OneTimeCodeTextField {
         let textField = OneTimeCodeTextField(configuration: configuration, theme: theme)
         textField.isEnabled = isEnabled
         textField.addTarget(
@@ -58,12 +64,30 @@ import SwiftUI
         return textField
     }
 
-    @_spi(STP) public func updateUIView(_ uiView: OneTimeCodeTextField, context: Context) {
-        if uiView.value != text {
-            uiView.value = text
+    private func updateTextField(_ textField: OneTimeCodeTextField) {
+        if textField.value != text {
+            textField.value = text
         }
-        uiView.isEnabled = isEnabled
+        textField.isEnabled = isEnabled
     }
+
+    #if canImport(UIKit)
+    @_spi(STP) public func makeUIView(context: Context) -> OneTimeCodeTextField {
+        makeTextField(context: context)
+    }
+
+    @_spi(STP) public func updateUIView(_ uiView: OneTimeCodeTextField, context: Context) {
+        updateTextField(uiView)
+    }
+    #elseif canImport(AppKit)
+    @_spi(STP) public func makeNSView(context: Context) -> OneTimeCodeTextField {
+        makeTextField(context: context)
+    }
+
+    @_spi(STP) public func updateNSView(_ nsView: OneTimeCodeTextField, context: Context) {
+        updateTextField(nsView)
+    }
+    #endif
 
     @_spi(STP) public func makeCoordinator() -> Coordinator {
         Coordinator(parent: self)

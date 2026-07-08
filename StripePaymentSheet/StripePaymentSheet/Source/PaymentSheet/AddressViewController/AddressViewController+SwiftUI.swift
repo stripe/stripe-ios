@@ -8,13 +8,21 @@
 
 @_spi(STP) import StripeCore
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+private typealias AddressPlatformViewControllerRepresentable = UIViewControllerRepresentable
+#elseif canImport(AppKit)
+import AppKit
+private typealias AddressPlatformViewControllerRepresentable = NSViewControllerRepresentable
+#else
+import Foundation
+#endif
 
 // MARK: - Internal Implementation
 
 /// Internal UIViewControllerRepresentable wrapper for AddressViewController.
 /// Use AddressElement instead of using this directly.
-struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
+struct AddressViewControllerRepresentable: AddressPlatformViewControllerRepresentable {
 
     // MARK: Properties
 
@@ -42,9 +50,7 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
         self.dismiss = dismiss
     }
 
-    // MARK: UIViewControllerRepresentable
-
-    func makeUIViewController(context: Context) -> UINavigationController {
+    private func makeViewController(context: Context) -> UINavigationController {
         let addressViewController = AddressViewController(
             configuration: configuration,
             delegate: context.coordinator
@@ -52,25 +58,38 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
         context.coordinator.addressViewController = addressViewController
 
         let navigationController = UINavigationController(rootViewController: addressViewController)
-
-        // Set preferred content size to help SwiftUI with initial sizing
-        // This prevents constraint conflicts during measurement phase and janky present animation
         navigationController.preferredContentSize = UIView.layoutFittingExpandedSize
         return navigationController
     }
 
-    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
+    private func updateViewController(_ viewController: UINavigationController, context: Context) {
         context.coordinator.address = $address
         context.coordinator.dismiss = dismiss
 
-        // Ensure delegate is set on the _parent_ presentation controller that actually owns the sheet.
-        // Walk up the hierarchy to find the topmost presenting controller (the sheet's root)
-        var topController: UIViewController? = uiViewController
-        while let parent = topController?.parent {
+        var topController: UIViewController? = viewController
+        while let parent = topController?.parent as? UIViewController {
             topController = parent
         }
         topController?.presentationController?.delegate = context.coordinator
     }
+
+    #if canImport(UIKit)
+    func makeUIViewController(context: Context) -> UINavigationController {
+        makeViewController(context: context)
+    }
+
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
+        updateViewController(uiViewController, context: context)
+    }
+    #elseif canImport(AppKit)
+    func makeNSViewController(context: Context) -> UINavigationController {
+        makeViewController(context: context)
+    }
+
+    func updateNSViewController(_ nsViewController: UINavigationController, context: Context) {
+        updateViewController(nsViewController, context: context)
+    }
+    #endif
 
     func makeCoordinator() -> Coordinator {
         Coordinator(address: $address, dismiss: dismiss)
@@ -153,8 +172,10 @@ public struct AddressElement: View {
             address: $address,
             dismiss: { dismiss() }
         )
+        #if canImport(UIKit)
         // Ensure keyboard doesn't push up content and create layout issues
         .ignoresSafeArea(.keyboard, edges: .bottom)
+        #endif
     }
 }
 

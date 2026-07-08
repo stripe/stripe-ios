@@ -5,7 +5,11 @@
 //  Created by Nick Porter on 3/26/25.
 //
 
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 @_spi(STP) public class SubtitleElement: Element {
     public let view: UIView

@@ -9,7 +9,11 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// STPPaymentCardTextField is a text field with similar properties to UITextField,
 /// but specialized for credit/debit card information. It manages
@@ -981,6 +985,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 #endif
 
     /// :nodoc:
+    #if canImport(UIKit)
     @objc open override var backgroundColor: UIColor? {
         get {
             let defaultColor = UIColor.systemBackground
@@ -992,6 +997,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             self.numberField.backgroundColor = newValue
         }
     }
+    #endif
 
     /// :nodoc:
     @objc open override var contentVerticalAlignment: UIControl.ContentVerticalAlignment {

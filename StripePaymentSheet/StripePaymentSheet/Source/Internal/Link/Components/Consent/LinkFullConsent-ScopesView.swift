@@ -6,7 +6,11 @@
 //
 
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 final class LinkFullConsentScopesView: UIView {
     private static let iconContainerSize: CGFloat = 36

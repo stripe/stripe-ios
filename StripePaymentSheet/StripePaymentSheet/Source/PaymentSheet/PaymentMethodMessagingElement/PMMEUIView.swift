@@ -8,12 +8,16 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class PMMEUIView: UIView {
 
     private let infoUrl: URL
-    private let appearance: PaymentMethodMessagingElement.Appearance
+    private let messagingAppearance: PaymentMethodMessagingElement.Appearance
     private let analyticsHelper: PMMEAnalyticsHelper
 
     // Callback to notify SwiftUI of height changes. Unneeded if used in a UIKit context.
@@ -25,7 +29,7 @@ class PMMEUIView: UIView {
 
     // With the default font, padding between the content and legal disclosure is 4
     private var verticalPadding: CGFloat {
-        appearance.fontScaled(4)
+        messagingAppearance.fontScaled(4)
     }
 
     init(
@@ -34,7 +38,7 @@ class PMMEUIView: UIView {
         didUpdateHeight: ((CGFloat) -> Void)? = nil
     ) {
         self.infoUrl = viewData.infoUrl
-        self.appearance = viewData.appearance
+        self.messagingAppearance = viewData.appearance
         self.analyticsHelper = viewData.analyticsHelper
         self.integrationType = integrationType
         self.didUpdateHeight = didUpdateHeight
@@ -44,7 +48,7 @@ class PMMEUIView: UIView {
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTap)))
 
         // set interface style
-        switch appearance.style {
+        switch messagingAppearance.style {
         case .alwaysDark:
             overrideUserInterfaceStyle = .dark
         case .alwaysLight, .flat:
@@ -73,7 +77,7 @@ class PMMEUIView: UIView {
                 promotion: viewData.promotion,
                 learnMoreText: viewData.learnMoreText,
                 infoUrl: viewData.infoUrl,
-                appearance: appearance,
+                appearance: messagingAppearance,
                 textViewDelegate: self
             )
             stackView.addArrangedSubview(view)
@@ -84,7 +88,7 @@ class PMMEUIView: UIView {
                 promotion: viewData.promotion,
                 learnMoreText: viewData.learnMoreText,
                 infoUrl: viewData.infoUrl,
-                appearance: appearance,
+                appearance: messagingAppearance,
                 textViewDelegate: self
             )
             stackView.addArrangedSubview(view)

@@ -6,7 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// A field for collecting one-time codes (OTCs).
 /// For internal SDK use only
@@ -111,7 +115,7 @@ import UIKit
         )
     }
 
-#if !os(visionOS)
+#if canImport(UIKit) && !os(visionOS)
     private let feedbackGenerator = UINotificationFeedbackGenerator()
 #endif
 
@@ -199,7 +203,7 @@ import UIKit
         let result = super.resignFirstResponder()
 
         if result {
-            #if !os(visionOS)
+            #if canImport(UIKit) && !os(visionOS)
             hideMenu()
             #endif
             update()
@@ -375,7 +379,7 @@ public extension OneTimeCodeTextField {
             digitView.borderLayer.add(borderColorAnimation, forKey: "borderColor")
         }
 
-#if !os(visionOS)
+#if canImport(UIKit) && !os(visionOS)
         feedbackGenerator.notificationOccurred(.error)
 #endif
 
@@ -414,7 +418,7 @@ extension OneTimeCodeTextField: UIKeyInput {
         inputDelegate?.textDidChange(self)
 
         sendActions(for: [.editingChanged, .valueChanged])
-        #if !os(visionOS)
+        #if canImport(UIKit) && !os(visionOS)
         hideMenu()
         #endif
         update()
@@ -430,7 +434,7 @@ extension OneTimeCodeTextField: UIKeyInput {
         inputDelegate?.textDidChange(self)
 
         sendActions(for: [.editingChanged, .valueChanged])
-        #if !os(visionOS)
+        #if canImport(UIKit) && !os(visionOS)
         hideMenu()
         #endif
         update()
@@ -837,7 +841,7 @@ private extension OneTimeCodeTextField {
             let backgroundColor = isEnabled ? theme.colors.componentBackground : theme.colors.disabledBackground
             borderLayer.backgroundColor = backgroundColor.resolvedColor(with: traitCollection).cgColor
             borderLayer.borderColor = theme.colors.border.resolvedColor(with: traitCollection).cgColor
-            caret.backgroundColor = label.textColor.resolvedColor(with: traitCollection).cgColor
+            caret.backgroundColor = (label.textColor ?? theme.colors.textFieldText).resolvedColor(with: traitCollection).cgColor
             focusRing.borderColor = tintColor.resolvedColor(with: traitCollection).cgColor
         }
 

@@ -7,7 +7,11 @@
 //
 
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// For internal SDK use only
 @objc(STP_Internal_SimpleMandateTextView)
@@ -18,7 +22,10 @@ class SimpleMandateTextView: UIView {
     let textView: UITextView = UITextView()
     var attributedText: NSAttributedString? {
         get {
-            textView.attributedText.string.isEmpty ? nil : textView.attributedText
+            guard let attributedText = textView.attributedText else {
+                return nil
+            }
+            return attributedText.string.isEmpty ? nil : attributedText
         }
         set {
             textView.attributedText = newValue

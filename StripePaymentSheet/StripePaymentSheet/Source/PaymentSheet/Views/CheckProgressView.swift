@@ -5,7 +5,11 @@
 //  Created by George Birch on 10/7/25.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class CheckProgressView: UIView {
 

@@ -9,10 +9,16 @@
 @_spi(STP) import StripeUICore
 import SwiftUI
 
-struct EmbeddedViewRepresentable: UIViewRepresentable {
+#if canImport(UIKit)
+private typealias EmbeddedPlatformViewRepresentable = UIViewRepresentable
+#elseif canImport(AppKit)
+private typealias EmbeddedPlatformViewRepresentable = NSViewRepresentable
+#endif
+
+struct EmbeddedViewRepresentable: EmbeddedPlatformViewRepresentable {
     @ObservedObject var viewModel: EmbeddedPaymentElementViewModel
 
-    public func makeUIView(context: Context) -> UIView {
+    private func makeView(context: Context) -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .clear
         containerView.layoutMargins = .zero
@@ -36,7 +42,7 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
         return containerView
     }
 
-    public func updateUIView(_ uiView: UIView, context: Context) {
+    private func updateView(_ view: UIView, context: Context) {
         guard let visibleVC = UIWindow.visibleViewController else { return }
 
         // If visibleVC in the process of dismissing, skip for now and retry shortly.
@@ -53,6 +59,24 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
             viewModel.embeddedPaymentElement?.presentingViewController = visibleVC
         }
     }
+
+    #if canImport(UIKit)
+    public func makeUIView(context: Context) -> UIView {
+        makeView(context: context)
+    }
+
+    public func updateUIView(_ uiView: UIView, context: Context) {
+        updateView(uiView, context: context)
+    }
+    #elseif canImport(AppKit)
+    public func makeNSView(context: Context) -> UIView {
+        makeView(context: context)
+    }
+
+    public func updateNSView(_ nsView: UIView, context: Context) {
+        updateView(nsView, context: context)
+    }
+    #endif
 }
 
 // MARK: UIWindow and UIViewController helpers

@@ -8,7 +8,11 @@
 import AuthenticationServices
 // `@preconcurrency` suppresses Sendable-related warnings from WebKit.
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 @preconcurrency import WebKit
 
 class FCLiteAuthFlowViewController: UIViewController {
@@ -63,9 +67,15 @@ class FCLiteAuthFlowViewController: UIViewController {
 
         #if DEBUG
         // Allow the web view to be inspected for debug builds on 16.4+
+        #if canImport(UIKit)
         if #available(iOS 16.4, *) {
             webView.isInspectable = true
         }
+        #elseif canImport(AppKit)
+        if #available(macOS 13.3, *) {
+            webView.isInspectable = true
+        }
+        #endif
         #endif
 
         let request = URLRequest(url: hostedAuthUrl)

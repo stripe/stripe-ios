@@ -12,7 +12,11 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 import Vision
 
 @available(macCatalyst 14.0, *)
@@ -51,7 +55,10 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     private var feedbackGenerator: UINotificationFeedbackGenerator?
 
-    @objc var deviceOrientation: UIDeviceOrientation {
+    #if canImport(UIKit)
+    @objc
+    #endif
+    var deviceOrientation: UIDeviceOrientation {
         get {
             return stp_deviceOrientation
         }
@@ -184,9 +191,20 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
         // The triple and dualWide cameras have a 0.5x lens for better macro focus.
         // If neither are available, use the default wide angle camera.
-        let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes:
-                                                                    [.builtInTripleCamera, .builtInDualWideCamera, .builtInWideAngleCamera],
-                                                                mediaType: .video, position: .back)
+        #if canImport(UIKit)
+        let deviceTypes: [AVCaptureDevice.DeviceType] = [
+            .builtInTripleCamera,
+            .builtInDualWideCamera,
+            .builtInWideAngleCamera,
+        ]
+        #else
+        let deviceTypes: [AVCaptureDevice.DeviceType] = [.builtInWideAngleCamera]
+        #endif
+        let discoverySession = AVCaptureDevice.DiscoverySession(
+            deviceTypes: deviceTypes,
+            mediaType: .video,
+            position: .back
+        )
         guard let captureDevice = discoverySession.devices.first else {
             finishWithError()
             return
@@ -234,13 +252,17 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         }
 
         // This improves recognition quality, but means the VideoDataOutput buffers won't match what we're seeing on screen.
+        #if canImport(UIKit)
         videoDataOutput?.connection(with: .video)?.preferredVideoStabilizationMode = .auto
+        #endif
 
         captureSession?.startRunning()
 
         do {
             try self.captureDevice?.lockForConfiguration()
+            #if canImport(UIKit)
             self.captureDevice?.autoFocusRangeRestriction = .near
+            #endif
         } catch {
         }
     }

@@ -6,7 +6,11 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 enum STPValidatedInputState {
     case unknown

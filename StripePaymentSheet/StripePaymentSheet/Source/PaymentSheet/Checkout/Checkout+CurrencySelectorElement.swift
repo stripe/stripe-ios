@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+#if canImport(UIKit)
+private typealias CurrencySelectorPlatformViewRepresentable = UIViewRepresentable
+#elseif canImport(AppKit)
+private typealias CurrencySelectorPlatformViewRepresentable = NSViewRepresentable
+#endif
+
 // MARK: - CurrencySelectorElement (SwiftUI)
 
 @_spi(STP)
@@ -58,20 +64,38 @@ extension Checkout {
     }
 }
 
-// MARK: - UIViewRepresentable
+// MARK: - ViewRepresentable
 
-private struct CurrencySelectorViewRepresentable: UIViewRepresentable {
+@MainActor
+private struct CurrencySelectorViewRepresentable: CurrencySelectorPlatformViewRepresentable {
     let checkout: Checkout
     let appearance: Checkout.CurrencySelectorView.Appearance
 
-    func makeUIView(context: Context) -> Checkout.CurrencySelectorView {
+    private func makeView(context: Context) -> Checkout.CurrencySelectorView {
         let view = Checkout.CurrencySelectorView(checkout: checkout, appearance: appearance)
-        // Forward SwiftUI's .disabled() modifier to the UIKit view.
         view.isEnabled = context.environment.isEnabled
         return view
     }
 
-    func updateUIView(_ uiView: Checkout.CurrencySelectorView, context: Context) {
-        uiView.isEnabled = context.environment.isEnabled
+    private func updateView(_ view: Checkout.CurrencySelectorView, context: Context) {
+        view.isEnabled = context.environment.isEnabled
     }
+
+    #if canImport(UIKit)
+    func makeUIView(context: Context) -> Checkout.CurrencySelectorView {
+        makeView(context: context)
+    }
+
+    func updateUIView(_ uiView: Checkout.CurrencySelectorView, context: Context) {
+        updateView(uiView, context: context)
+    }
+    #elseif canImport(AppKit)
+    func makeNSView(context: Context) -> Checkout.CurrencySelectorView {
+        makeView(context: context)
+    }
+
+    func updateNSView(_ nsView: Checkout.CurrencySelectorView, context: Context) {
+        updateView(nsView, context: context)
+    }
+    #endif
 }

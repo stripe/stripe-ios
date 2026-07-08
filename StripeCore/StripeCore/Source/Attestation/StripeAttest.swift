@@ -6,7 +6,9 @@
 import CryptoKit
 import DeviceCheck
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#endif
 
 @_spi(STP) public actor StripeAttest {
     /// Initialize a new StripeAttest object with the specified STPAPIClient.
@@ -415,16 +417,22 @@ import UIKit
     }
 
     func getDeviceID() async throws -> String {
+        #if canImport(UIKit)
         if let deviceID = await UIDevice.current.identifierForVendor?.uuidString {
             return deviceID
         }
+        #elseif os(macOS)
+        if let deviceID = Host.current().localizedName, !deviceID.isEmpty {
+            return deviceID
+        }
+        #endif
         throw AttestationError.noDeviceID
     }
 
     /// Get a challenge from the backend.
     func getChallenge() async throws -> StripeChallengeResponse {
         let keyID = try await self.getOrCreateKeyID()
-        return try await appAttestBackend.getChallenge(appId: getAppID(), deviceId: getDeviceID(), keyId: keyID)
+        return try await appAttestBackend.getChallenge(appId: getAppID(), deviceId: try await getDeviceID(), keyId: keyID)
     }
 
     /// Generate the assertion data from a key and challenge.

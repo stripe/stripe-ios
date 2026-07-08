@@ -9,7 +9,11 @@
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class CVCReconfirmationVerticalViewController: UIViewController {
     private lazy var headerLabel: UILabel = {
@@ -63,7 +67,7 @@ class CVCReconfirmationVerticalViewController: UIViewController {
         ])
         stackView.spacing = 16
         stackView.axis = .vertical
-        view.addAndPinSubview(stackView)
+        (view as? UIView)?.addAndPinSubview(stackView)
     }
 
     override func viewDidAppear(_ animated: Bool) {

@@ -7,7 +7,11 @@
 //
 
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 protocol PickerFieldViewDelegate: AnyObject {
     func didBeginEditing(_ pickerFieldView: PickerFieldView)
@@ -157,6 +161,24 @@ final class PickerFieldView: UIView {
         floatingPlaceholderTextFieldView?.updatePlaceholder(animated: false)
     }
 
+    #if canImport(AppKit) && !canImport(UIKit)
+    override func layout() {
+        super.layout()
+        hStackView.frame = CGRect(
+            x: directionalLayoutMargins.leading,
+            y: directionalLayoutMargins.top,
+            width: max(0, bounds.width - directionalLayoutMargins.leading - directionalLayoutMargins.trailing),
+            height: max(0, bounds.height - directionalLayoutMargins.top - directionalLayoutMargins.bottom)
+        )
+        hStackView.layoutSubtreeIfNeeded()
+        floatingPlaceholderTextFieldView?.updatePlaceholder(animated: false)
+    }
+
+    override var intrinsicContentSize: CGSize {
+        CGSize(width: UIView.noIntrinsicMetric, height: 44)
+    }
+    #endif
+
     override var isUserInteractionEnabled: Bool {
         didSet {
             textField.textColor = theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
@@ -188,6 +210,7 @@ final class PickerFieldView: UIView {
         #endif
     }
 
+    #if !canImport(AppKit) || canImport(UIKit)
     override var intrinsicContentSize: CGSize {
         // I'm implementing this to disambiguate layout of a horizontal stack view containing this view
         let hStackViewSize = hStackView.systemLayoutSizeFitting(.zero)
@@ -196,6 +219,7 @@ final class PickerFieldView: UIView {
             height: hStackViewSize.height + directionalLayoutMargins.top + directionalLayoutMargins.bottom
         )
     }
+    #endif
 
     override func becomeFirstResponder() -> Bool {
         // Prevents unwanted invocation of the picker's `becomeFirstResponder` method.

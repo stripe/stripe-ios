@@ -6,7 +6,11 @@
 //
 
 @_spi(STP) import StripePaymentsUI
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 struct LinkPaymentMethodPreview {
     let icon: UIImage

@@ -4,7 +4,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
@@ -271,7 +275,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.addAndPinSubview(stackView)
+        (view as? UIView)?.addAndPinSubview(stackView)
 
         // In the add payment flow, selectedViewModelIndex is set, and then
         // the view is loaded. Checking selectedViewModelIndex is needed to avoid
@@ -401,7 +405,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
                           allowsPaymentMethodUpdate: configuration.paymentMethodUpdate)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
-        cell.appearance = appearance
+        cell.cellAppearance = appearance
 
         return cell
     }

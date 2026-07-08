@@ -9,7 +9,11 @@
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewControllerProtocol, PaymentSheetViewControllerProtocol {
     enum Error: Swift.Error {
@@ -629,13 +633,14 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     var isUserInteractionEnabled: Bool = true {
         didSet {
-            if isUserInteractionEnabled != view.isUserInteractionEnabled {
+            let rootView = view as? UIView
+            if isUserInteractionEnabled != rootView?.isUserInteractionEnabled {
                 sendEventToSubviews(
                     isUserInteractionEnabled ? .shouldEnableUserInteraction : .shouldDisableUserInteraction,
-                    from: view
+                    from: rootView ?? UIView()
                 )
             }
-            view.isUserInteractionEnabled = isUserInteractionEnabled
+            rootView?.isUserInteractionEnabled = isUserInteractionEnabled
             navigationBar.isUserInteractionEnabled = isUserInteractionEnabled
         }
     }

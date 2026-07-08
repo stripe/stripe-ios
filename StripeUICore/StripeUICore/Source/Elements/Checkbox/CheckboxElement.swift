@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 @_spi(STP) public final class CheckboxElement {
     public weak var delegate: ElementDelegate?

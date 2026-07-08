@@ -8,7 +8,11 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 protocol PaymentMethodFormViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: PaymentMethodFormViewController)
@@ -155,13 +159,15 @@ class PaymentMethodFormViewController: UIViewController {
             _ = linkAccountObserver
             syncLinkInlineSignupBrand()
         }
-        view.addAndPinSubview(formStackView)
+        (view as? UIView)?.addAndPinSubview(formStackView)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         analyticsHelper.logFormShown(paymentMethodTypeIdentifier: paymentMethodType.identifier)
-        sendEventToSubviews(.viewDidAppear, from: view)
+        if let rootView = view as? UIView {
+            sendEventToSubviews(.viewDidAppear, from: rootView)
+        }
         // The form is cached and could have been shared across other instance of PaymentMethodFormViewController after this instance was initialized, so we set the delegate in viewDidAppear to ensure that the form's delegate is up to date.
         form.delegate = self
         delegate?.didUpdate(self) // notify delegate in case of any mandates being displayed

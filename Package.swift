@@ -56,7 +56,15 @@ let package = Package(
     targets: [
         .target(
             name: "Stripe",
-            dependencies: ["Stripe3DS2", "StripeCore", "StripeApplePay", "StripeUICore", "StripePayments", "StripePaymentsUI", "StripeIssuing"],
+            dependencies: [
+                .target(name: "Stripe3DS2", condition: .when(platforms: [.iOS])),
+                "StripeCore",
+                "StripeApplePay",
+                "StripeUICore",
+                "StripePayments",
+                "StripePaymentsUI",
+                "StripeIssuing",
+            ],
             path: "Stripe/StripeiOS",
             exclude: ["Info.plist"],
             resources: [
@@ -107,7 +115,7 @@ let package = Package(
         ),
         .target(
             name: "StripeIssuing",
-            dependencies: ["StripeCore", "StripePayments", "StripePaymentsUI"],
+            dependencies: ["StripeCore", "StripePayments", "StripePaymentsUI", "StripeUICore"],
             path: "StripeIssuing/StripeIssuing",
             resources: [
                 .process("Resources")
@@ -135,7 +143,11 @@ let package = Package(
         ),
         .target(
             name: "StripePayments",
-            dependencies: ["StripeCore", "Stripe3DS2"],
+            dependencies: [
+                "StripeCore",
+                "StripeUICore",
+                .target(name: "Stripe3DS2", condition: .when(platforms: [.iOS])),
+            ],
             path: "StripePayments/StripePayments",
             exclude: ["Info.plist"],
             resources: [
@@ -144,7 +156,12 @@ let package = Package(
         ),
         .target(
             name: "StripePaymentsUI",
-            dependencies: ["StripeCore", "Stripe3DS2", "StripePayments", "StripeUICore"],
+            dependencies: [
+                "StripeCore",
+                .target(name: "Stripe3DS2", condition: .when(platforms: [.iOS])),
+                "StripePayments",
+                "StripeUICore",
+            ],
             path: "StripePaymentsUI/StripePaymentsUI",
             exclude: ["Info.plist"],
             resources: [

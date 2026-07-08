@@ -8,7 +8,11 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
     private var inputMode = STPCardNumberInputTextField.InputMode.standard

@@ -6,7 +6,11 @@
 //
 
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkHintMessageView)
@@ -176,6 +180,7 @@ final class LinkHintMessageView: UIView {
     #endif
 }
 
+#if canImport(UIKit)
 @available(iOS 17.0, *)
 #Preview {
 
@@ -202,3 +207,4 @@ final class LinkHintMessageView: UIView {
     return stackView
 
 }
+#endif

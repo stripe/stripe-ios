@@ -6,7 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 extension AddressSectionElement {
     /// Looks like a "Address" text field but with the text field disabled

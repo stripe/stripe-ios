@@ -6,6 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
 
 @_spi(STP) extension UIActivityIndicatorView {
@@ -33,3 +34,4 @@ import UIKit
         stopAnimating()
     }
 }
+#endif

@@ -8,7 +8,11 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /**
  A textfield whose input view is a `UIPickerView` (on iOS) or a `UIMenu` (on Catalyst) with a list of the strings.

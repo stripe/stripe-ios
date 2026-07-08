@@ -9,7 +9,11 @@ import Combine
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 // MARK: - CurrencySelectorView
 
@@ -45,15 +49,15 @@ extension Checkout {
         // MARK: - Private Properties
 
         private let checkout: Checkout
-        private let appearance: Appearance
+        private let currencySelectorAppearance: Appearance
         private var selectorView: TwoOptionSelectorView?
         private var sessionCancellable: AnyCancellable?
         private var lastSelectedCurrency: String?
         private let containerStackView = UIStackView()
         private lazy var errorLabel: UILabel = {
             let label = ElementsUI.makeErrorLabel(
-                font: appearance.scaledFont(for: appearance.font, style: .caption1),
-                textColor: appearance.danger
+                font: currencySelectorAppearance.scaledFont(for: currencySelectorAppearance.font, style: .caption1),
+                textColor: currencySelectorAppearance.danger
             )
             label.setHiddenIfNecessary(true)
             return label
@@ -70,7 +74,7 @@ extension Checkout {
             appearance: Appearance = Appearance()
         ) {
             self.checkout = checkout
-            self.appearance = appearance
+            self.currencySelectorAppearance = appearance
             super.init(frame: .zero)
 
             setupContainerStackView()
@@ -154,8 +158,8 @@ extension Checkout {
         }
 
         private func resolveLabelContent(session: Checkout.Session) -> Appearance.LabelContent {
-            guard case .automatic = appearance.labelContent else {
-                return appearance.labelContent
+            guard case .automatic = currencySelectorAppearance.labelContent else {
+                return currencySelectorAppearance.labelContent
             }
             return session.mode == .subscription ? .currencyCode : .amount
         }
@@ -165,7 +169,7 @@ extension Checkout {
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta
         ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
             let resolvedLabelContent = resolveLabelContent(session: session)
-            let flagFont = appearance.scaledFont(for: appearance.font, style: .footnote)
+            let flagFont = currencySelectorAppearance.scaledFont(for: currencySelectorAppearance.font, style: .footnote)
             return CurrencySelectorUtilities.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,
                 localizedPricesMetas: session.localizedPricesMetas,
@@ -195,7 +199,7 @@ extension Checkout {
                 leftItem: left,
                 rightItem: right,
                 selectedItemId: currency.apiValue,
-                appearance: appearance
+                appearance: currencySelectorAppearance
             )
             newSelector.delegate = self
 

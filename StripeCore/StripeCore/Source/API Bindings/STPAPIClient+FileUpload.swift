@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 extension StripeFile.Purpose {
     /// See max purpose sizes https://stripe.com/docs/file-upload.

@@ -5,7 +5,11 @@
 //  Created by Mat Schmid on 2025-03-19.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class FCLiteModalPresentationWrapper: UIViewController {
 

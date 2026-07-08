@@ -12,7 +12,11 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension PaymentSheet {
     static var _preconfirmShim: ((UIViewController) -> Void)?

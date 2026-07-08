@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// Representation of a customer's payment instrument created with the Stripe API. - seealso: https://stripe.com/docs/api#sources
 public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {

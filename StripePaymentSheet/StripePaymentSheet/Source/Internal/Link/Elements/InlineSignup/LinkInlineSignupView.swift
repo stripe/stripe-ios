@@ -9,7 +9,11 @@
 import SafariServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 protocol LinkInlineSignupViewDelegate: AnyObject {
     func inlineSignupViewDidUpdate(_ view: LinkInlineSignupView)
@@ -335,7 +339,7 @@ extension LinkInlineSignupView: ElementDelegate {
             if checkboxElement.isChecked && viewModel.mode != .signupOptIn {
                 focusOnEmptyRequiredField()
             } else {
-                endEditing(true)
+                resignFirstResponder()
             }
         } else {
             switch emailElement.validationState {
@@ -386,7 +390,11 @@ extension LinkInlineSignupView: LinkLegalTermsViewDelegate {
 
         #if !os(visionOS)
         safariVC.dismissButtonStyle = .close
+        #if canImport(UIKit)
         safariVC.preferredControlTintColor = window?.tintColor ?? viewModel.configuration.appearance.colors.primary
+        #else
+        safariVC.preferredControlTintColor = viewModel.configuration.appearance.colors.primary
+        #endif
         #endif
         safariVC.modalPresentationStyle = .overFullScreen
 

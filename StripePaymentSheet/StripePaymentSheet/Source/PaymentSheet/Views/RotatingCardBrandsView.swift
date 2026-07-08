@@ -6,7 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
@@ -78,6 +82,8 @@ class RotatingCardBrandsView: UIView {
                 if let stackView = stackView {
                     addAndPinSubview(stackView)
                 }
+                invalidateIntrinsicContentSize()
+                setNeedsLayout()
             }
         }
     }
@@ -194,6 +200,30 @@ class RotatingCardBrandsView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    #if canImport(AppKit) && !canImport(UIKit)
+    override var intrinsicContentSize: CGSize {
+        let imageSizes = stackView?.arrangedSubviews.compactMap { view -> CGSize? in
+            guard !view.isHidden, let imageView = view as? UIImageView else {
+                return nil
+            }
+            return imageView.image?.size
+        } ?? []
+        guard !imageSizes.isEmpty else {
+            return .zero
+        }
+        return CGSize(
+            width: imageSizes.map(\.width).reduce(0, +) + Self.LogoSpacing * CGFloat(max(imageSizes.count - 1, 0)),
+            height: imageSizes.map(\.height).max() ?? 0
+        )
+    }
+
+    override func layout() {
+        super.layout()
+        let size = intrinsicContentSize
+        stackView?.frame = CGRect(x: 0, y: bounds.midY - size.height / 2, width: size.width, height: size.height)
+    }
+    #endif
 
     override func didMoveToWindow() {
         super.didMoveToWindow()

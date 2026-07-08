@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /**
  Subclass of UITextView that allows for links to be opened on tap when the text is un-selectable.
@@ -52,6 +56,6 @@ import UIKit
 
         let startIndex = offset(from: beginningOfDocument, to: range.start)
 
-        return attributedText.attribute(.link, at: startIndex, effectiveRange: nil) != nil
+        return attributedText?.attribute(.link, at: startIndex, effectiveRange: nil) != nil
     }
 }

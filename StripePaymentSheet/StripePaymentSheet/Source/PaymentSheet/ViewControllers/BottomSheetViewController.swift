@@ -11,7 +11,11 @@ import SafariServices
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 protocol BottomSheetContentViewController: UIViewController {
 
@@ -143,7 +147,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
         addChild(contentViewController)
         contentViewController.didMove(toParent: self)
-        contentContainerView.addArrangedSubview(contentViewController.view)
+        contentContainerView.addArrangedSubview((contentViewController.view as? UIView) ?? UIView())
         navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
         self.view.backgroundColor = appearance.colors.background
     }
@@ -168,7 +172,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     }()
 
     func addBlurEffect(animated: Bool, backgroundColor: UIColor, completion: @escaping () -> Void) {
-        if let containingSuperview = self.view {
+        if let containingSuperview = self.view as? UIView {
             [self.blurView].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 containingSuperview.addSubview($0)
@@ -221,7 +225,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         manualHeightConstraint.constant = oldContentViewController.view.frame.size.height + navigationBarContainerView.bounds.size.height
 
         // Take a snapshot of the old content and add it to our container - we'll fade it out
-        let oldView = oldContentViewController.view!
+        let oldView = (oldContentViewController.view as? UIView) ?? UIView()
         let oldViewImage = oldView.snapshotView(afterScreenUpdates: false) ?? UIView()
         contentContainerView.addSubview(oldViewImage)
 
@@ -234,7 +238,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         newContentViewController.beginAppearanceTransition(true, animated: true)
         // When your custom container calls the addChild(_:) method, it automatically calls the willMove(toParent:) method of the view controller to be added as a child before adding it.
         addChild(newContentViewController)
-        contentContainerView.addArrangedSubview(self.contentViewController.view)
+        contentContainerView.addArrangedSubview((self.contentViewController.view as? UIView) ?? UIView())
         if let presentationController = rootParent.presentationController as? BottomSheetPresentationController {
             presentationController.forceFullHeight = newContentViewController.requiresFullScreen
         }
@@ -372,13 +376,14 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         contentContainerView.directionalLayoutMargins = appearance.formInsets
         scrollView.addSubview(contentContainerView)
 
+        // Move the contentContainerView to start below the sheet
+        let topOffset = appearance.navigationBarStyle.isGlass ? navigationBarHeight : 0.0
+
+        #if canImport(UIKit)
         // Give the scroll view a desired height
         let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(equalTo: scrollView.contentLayoutGuide.heightAnchor)
         scrollViewHeightConstraint.priority = .fittingSizeLevel
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
-
-        // Move the contentContainerView to start below the sheet
-        let topOffset = appearance.navigationBarStyle.isGlass ? navigationBarHeight : 0.0
 
         NSLayoutConstraint.activate([
             contentContainerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
@@ -388,6 +393,15 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             contentContainerView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
             scrollViewHeightConstraint,
         ])
+        #else
+        NSLayoutConstraint.activate([
+            contentContainerView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentContainerView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentContainerView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: topOffset),
+            contentContainerView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentContainerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+        ])
+        #endif
         let hideKeyboardGesture = UITapGestureRecognizer(
             target: self, action: #selector(didTapAnywhere))
         hideKeyboardGesture.cancelsTouchesInView = false
@@ -448,7 +462,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             return
         }
         let adjustForKeyboard = {
-            self.view.superview?.setNeedsLayout()
+            (self.view.superview as? UIView)?.setNeedsLayout()
             UIView.animateAlongsideKeyboard(notification) {
                 guard
                     let keyboardScreenEndFrame =
@@ -478,7 +492,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                     bottomAnchor.constant = -keyboardInViewHeight
                 }
 
-                self.view.superview?.layoutIfNeeded()
+                (self.view.superview as? UIView)?.layoutIfNeeded()
                 animations()
             }
         }
@@ -541,7 +555,7 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
     }
 
     func authenticationContextWillDismiss(_ viewController: UIViewController) {
-        view.setNeedsLayout()
+        (view as? UIView)?.setNeedsLayout()
     }
 
     // TODO: Remove these three methods! BottomSheetVC shouldn't be aware of any of these specific VCs; it should expose generic present/dismiss methods

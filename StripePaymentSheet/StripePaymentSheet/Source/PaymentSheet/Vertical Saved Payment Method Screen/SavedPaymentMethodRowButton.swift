@@ -9,7 +9,11 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 protocol SavedPaymentMethodRowButtonDelegate: AnyObject {
     func didSelectButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
@@ -53,7 +57,7 @@ final class SavedPaymentMethodRowButton: UIView {
 
     // MARK: - Private properties
 
-    private let appearance: PaymentSheet.Appearance
+    private let paymentSheetAppearance: PaymentSheet.Appearance
     private var linkBrand: LinkBrand
 
     private var isEditing: Bool {
@@ -70,7 +74,7 @@ final class SavedPaymentMethodRowButton: UIView {
     // MARK: Private views
 
     private(set) lazy var chevronButton: RowButton.RightAccessoryButton = {
-        let chevronButton = RowButton.RightAccessoryButton(accessoryType: .update, appearance: appearance, didTap: handleUpdateButtonTapped)
+        let chevronButton = RowButton.RightAccessoryButton(accessoryType: .update, appearance: paymentSheetAppearance, didTap: handleUpdateButtonTapped)
         chevronButton.isHidden = !isEditing
         return chevronButton
     }()
@@ -78,7 +82,7 @@ final class SavedPaymentMethodRowButton: UIView {
     private(set) lazy var rowButton: RowButton = {
         let button: RowButton = .makeForSavedPaymentMethod(
             paymentMethod: paymentMethod,
-            appearance: appearance,
+            appearance: paymentSheetAppearance,
             badgeText: badgeText,
             accessoryView: chevronButton,
             linkBrand: linkBrand,
@@ -99,7 +103,7 @@ final class SavedPaymentMethodRowButton: UIView {
          previousSelectedState: State = .unselected,
          currentState: State = .unselected) {
         self.paymentMethod = paymentMethod
-        self.appearance = appearance
+        self.paymentSheetAppearance = appearance
         self.linkBrand = linkBrand
         self.showDefaultPMBadge = showDefaultPMBadge
         self.previousSelectedState = previousSelectedState

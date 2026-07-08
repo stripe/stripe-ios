@@ -11,18 +11,22 @@ import PassKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// Remove button
 /// For internal SDK use only
 @objc(STP_Internal_RemoveButton)
 class RemoveButton: UIButton {
-    private let appearance: PaymentSheet.Appearance
+    private let paymentSheetAppearance: PaymentSheet.Appearance
 
     override var intrinsicContentSize: CGSize {
         return CGSize(
             width: UIView.noIntrinsicMetric,
-            height: appearance.primaryButton.height
+            height: paymentSheetAppearance.primaryButton.height
         )
     }
 
@@ -30,7 +34,7 @@ class RemoveButton: UIButton {
         title: String = .Localized.remove,
         appearance: PaymentSheet.Appearance
     ) {
-        self.appearance = appearance
+        self.paymentSheetAppearance = appearance
         super.init(frame: .zero)
 
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
@@ -52,13 +56,13 @@ class RemoveButton: UIButton {
     }
 
     @objc private func buttonTouchDown(_: UIButton) {
-        configuration?.attributedTitle?.foregroundColor = appearance.colors.danger.disabledColor
-        configuration?.background.strokeColor = appearance.colors.danger.disabledColor
+        configuration?.attributedTitle?.foregroundColor = paymentSheetAppearance.colors.danger.disabledColor
+        configuration?.background.strokeColor = paymentSheetAppearance.colors.danger.disabledColor
     }
 
     @objc private func buttonTouchUp(_: UIButton) {
-        configuration?.attributedTitle?.foregroundColor = appearance.colors.danger
-        configuration?.background.strokeColor = appearance.colors.danger
+        configuration?.attributedTitle?.foregroundColor = paymentSheetAppearance.colors.danger
+        configuration?.background.strokeColor = paymentSheetAppearance.colors.danger
     }
 
     required init?(coder: NSCoder) {

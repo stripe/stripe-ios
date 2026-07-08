@@ -6,7 +6,11 @@
 //
 
 import Combine
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments

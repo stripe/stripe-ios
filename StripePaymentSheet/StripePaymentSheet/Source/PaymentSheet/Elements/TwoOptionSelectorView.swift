@@ -6,7 +6,11 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A single item in a `TwoOptionSelectorView`.
 struct TwoOptionSelectorItem: Equatable {
@@ -18,7 +22,7 @@ struct TwoOptionSelectorItem: Equatable {
 
 // MARK: - TwoOptionSelectorViewAppearance
 
-/// The visual properties that `TwoOptionSelectorView` reads from its appearance.
+/// The visual properties that `TwoOptionSelectorView` reads from its selectorAppearance.
 protocol TwoOptionSelectorViewAppearance {
     var trackBackground: UIColor { get }
     var pillBackground: UIColor { get }
@@ -58,7 +62,7 @@ final class TwoOptionSelectorView: UIView {
 
     weak var delegate: TwoOptionSelectorViewDelegate?
 
-    private let appearance: TwoOptionSelectorViewAppearance
+    private let selectorAppearance: TwoOptionSelectorViewAppearance
 
     private(set) var leftItem: TwoOptionSelectorItem
     private(set) var rightItem: TwoOptionSelectorItem
@@ -68,7 +72,7 @@ final class TwoOptionSelectorView: UIView {
     private let trackView = UIView()
     private let buttonsStackView = UIStackView()
     private let selectionIndicatorView = UIView()
-    private(set) lazy var expandableDetailView = ExpandableDetailView(appearance: appearance)
+    private(set) lazy var expandableDetailView = ExpandableDetailView(appearance: selectorAppearance)
     private var leftButton = UIButton(type: .custom)
     private var rightButton = UIButton(type: .custom)
 
@@ -87,7 +91,7 @@ final class TwoOptionSelectorView: UIView {
         caption: String? = nil,
         appearance: TwoOptionSelectorViewAppearance
     ) {
-        self.appearance = appearance
+        self.selectorAppearance = appearance
         self.leftItem = leftItem
         self.rightItem = rightItem
         self.selectedItemId = selectedItemId
@@ -104,9 +108,9 @@ final class TwoOptionSelectorView: UIView {
     // MARK: - Setup
 
     private func trackAndPillCornerRadii(for height: CGFloat) -> (track: CGFloat, pill: CGFloat) {
-        let bw = appearance.borderWidth
+        let bw = selectorAppearance.borderWidth
         let maxTrack = max((height - bw) / 2, 0)
-        let track = min(appearance.cornerRadius, maxTrack)
+        let track = min(selectorAppearance.cornerRadius, maxTrack)
         let pillHeight = height - 2 * Self.trackPadding
         let maxPill = pillHeight / 2
         let pill = min(max(track - Self.trackPadding, 0), maxPill)
@@ -119,18 +123,18 @@ final class TwoOptionSelectorView: UIView {
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(mainStackView)
 
-        let trackHeight = Self.defaultContentHeight + 2 * appearance.contentVerticalPadding
+        let trackHeight = Self.defaultContentHeight + 2 * selectorAppearance.contentVerticalPadding
         let (trackCornerRadius, pillCornerRadius) = trackAndPillCornerRadii(for: trackHeight)
 
         // Track background
-        trackView.backgroundColor = appearance.trackBackground
-        trackView.layer.borderWidth = appearance.borderWidth
+        trackView.backgroundColor = selectorAppearance.trackBackground
+        trackView.layer.borderWidth = selectorAppearance.borderWidth
         trackView.layer.cornerRadius = trackCornerRadius
         trackView.layer.cornerCurve = .circular
         trackView.clipsToBounds = false
 
         // Selection indicator pill
-        selectionIndicatorView.backgroundColor = appearance.pillBackground
+        selectionIndicatorView.backgroundColor = selectorAppearance.pillBackground
         selectionIndicatorView.layer.cornerRadius = pillCornerRadius
         selectionIndicatorView.layer.cornerCurve = .circular
 
@@ -157,7 +161,7 @@ final class TwoOptionSelectorView: UIView {
             buttonsStackView.bottomAnchor.constraint(equalTo: trackView.bottomAnchor, constant: -Self.trackPadding),
         ])
 
-        let heightConstraint = trackView.heightAnchor.constraint(equalToConstant: Self.defaultContentHeight + 2 * appearance.contentVerticalPadding)
+        let heightConstraint = trackView.heightAnchor.constraint(equalToConstant: Self.defaultContentHeight + 2 * selectorAppearance.contentVerticalPadding)
         heightConstraint.priority = UILayoutPriority(999)
         heightConstraint.isActive = true
 
@@ -192,7 +196,7 @@ final class TwoOptionSelectorView: UIView {
     }
 
     private func updateBorderColors() {
-        trackView.layer.borderColor = appearance.borderColor.cgColor
+        trackView.layer.borderColor = selectorAppearance.borderColor.cgColor
     }
 
     private func configureButton(_ button: UIButton, item: TwoOptionSelectorItem) {
@@ -208,10 +212,10 @@ final class TwoOptionSelectorView: UIView {
 
     private func updateButtonStyles(animated: Bool) {
         let isLeftSelected = leftItem.id == selectedItemId
-        let font = appearance.scaledFont(for: appearance.font.medium, style: .footnote)
+        let font = selectorAppearance.scaledFont(for: selectorAppearance.font.medium, style: .footnote)
 
-        applyTitleColor(to: leftButton, item: leftItem, color: isLeftSelected ? appearance.selectedTextColor : appearance.unselectedTextColor, font: font)
-        applyTitleColor(to: rightButton, item: rightItem, color: !isLeftSelected ? appearance.selectedTextColor : appearance.unselectedTextColor, font: font)
+        applyTitleColor(to: leftButton, item: leftItem, color: isLeftSelected ? selectorAppearance.selectedTextColor : selectorAppearance.unselectedTextColor, font: font)
+        applyTitleColor(to: rightButton, item: rightItem, color: !isLeftSelected ? selectorAppearance.selectedTextColor : selectorAppearance.unselectedTextColor, font: font)
 
         leftButton.accessibilityTraits = isLeftSelected ? [.button, .selected] : .button
         rightButton.accessibilityTraits = !isLeftSelected ? [.button, .selected] : .button

@@ -6,7 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// A custom replacement for `UIActivityIndicatorView`.
 /// For internal SDK use only
@@ -167,7 +171,11 @@ import UIKit
         if let window = newWindow {
             contentLayer.shouldRasterize = true
 #if !os(visionOS)
+            #if canImport(AppKit) && !canImport(UIKit)
+            contentLayer.rasterizationScale = window.screen?.scale ?? NSScreen.main?.scale ?? 1
+            #else
             contentLayer.rasterizationScale = window.screen.scale
+            #endif
 #endif
         }
 

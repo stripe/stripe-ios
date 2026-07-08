@@ -5,10 +5,14 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 final class BNPLFormHeaderView: UIView {
-    private let appearance: PaymentSheet.Appearance
+    private let paymentSheetAppearance: PaymentSheet.Appearance
     private let paymentMethod: PaymentSheet.PaymentMethodType
     private let promotionsHelper: PaymentMethodMessagingPromotionsHelper
     private let fallbackView: UIView
@@ -16,7 +20,7 @@ final class BNPLFormHeaderView: UIView {
     private var view: UIView
 
     private var theme: ElementsAppearance {
-        appearance.asElementsTheme
+        paymentSheetAppearance.asElementsTheme
     }
 
     /// Creates a BNPL header that can show payment method messaging promotion content when available.
@@ -32,7 +36,7 @@ final class BNPLFormHeaderView: UIView {
         promotionsHelper: PaymentMethodMessagingPromotionsHelper,
         fallback: SubtitleElement
     ) {
-        self.appearance = appearance
+        self.paymentSheetAppearance = appearance
         self.paymentMethod = paymentMethod
         self.promotionsHelper = promotionsHelper
         self.fallbackView = fallback.view

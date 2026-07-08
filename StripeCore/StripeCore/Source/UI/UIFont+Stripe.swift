@@ -7,6 +7,7 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
 
 @_spi(STP) extension UIFont {
@@ -86,3 +87,4 @@ import UIKit
         return metrics.scaledFont(for: font)
     }
 }
+#endif

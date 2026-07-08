@@ -9,7 +9,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A delegate for `AddressViewController`
 @MainActor @preconcurrency
@@ -309,9 +313,9 @@ extension AddressViewController {
         }
 
         // Animate the scrollView above the keyboard
-        view.setNeedsLayout()
+        (view as? UIView)?.setNeedsLayout()
         UIView.animateAlongsideKeyboard(notification) {
-            self.view.layoutIfNeeded()
+            (self.view as? UIView)?.layoutIfNeeded()
         }
     }
 }

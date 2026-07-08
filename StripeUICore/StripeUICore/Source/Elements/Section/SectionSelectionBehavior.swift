@@ -5,7 +5,11 @@
 //  Created by Mat Schmid on 5/27/25.
 //
 
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 @_spi(STP) public enum SelectionBehavior {
     case `default`

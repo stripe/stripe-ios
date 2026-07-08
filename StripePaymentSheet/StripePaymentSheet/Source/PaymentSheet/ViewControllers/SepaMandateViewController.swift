@@ -8,7 +8,11 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class SepaMandateViewController: UIViewController, BottomSheetContentViewController {
     let requiresFullScreen: Bool = false
@@ -61,7 +65,7 @@ class SepaMandateViewController: UIViewController, BottomSheetContentViewControl
         stackView.axis = .vertical
         stackView.spacing = PaymentSheetUI.defaultPadding
 
-        view.addAndPinSubviewToSafeArea(stackView, insets: configuration.appearance.formInsets)
+        (view as? UIView)?.addAndPinSubviewToSafeArea(stackView, insets: configuration.appearance.formInsets)
     }
 
     func didTapOrSwipeToDismiss() {

@@ -9,7 +9,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI

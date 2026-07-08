@@ -8,12 +8,16 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 final class FormHeaderView: UIView {
 
     private lazy var label: UILabel = {
-        let label = PaymentSheetUI.makeHeaderLabel(appearance: appearance)
+        let label = PaymentSheetUI.makeHeaderLabel(appearance: paymentSheetAppearance)
         if paymentMethodType == .stripe(.card) {
             label.text = shouldUseNewCardHeader ? String.Localized.add_new_card : String.Localized.add_card
         } else if paymentMethodType == .stripe(.USBankAccount) {
@@ -32,9 +36,9 @@ final class FormHeaderView: UIView {
             return nil
         default:
             return PaymentMethodTypeImageView(paymentMethodType: paymentMethodType,
-                                              contrastMatchingColor: appearance.colors.componentText,
+                                              contrastMatchingColor: paymentSheetAppearance.colors.componentText,
                                               currency: currency,
-                                              iconStyle: appearance.iconStyle)
+                                              iconStyle: paymentSheetAppearance.iconStyle)
         }
     }()
 
@@ -66,7 +70,7 @@ final class FormHeaderView: UIView {
 
     private let paymentMethodType: PaymentSheet.PaymentMethodType
     private let shouldUseNewCardHeader: Bool // true if the customer has a saved payment method that is type card
-    private let appearance: PaymentSheet.Appearance
+    private let paymentSheetAppearance: PaymentSheet.Appearance
     private let currency: String?
     private var incentive: PaymentMethodIncentive?
 
@@ -79,7 +83,7 @@ final class FormHeaderView: UIView {
     ) {
         self.paymentMethodType = paymentMethodType
         self.shouldUseNewCardHeader = shouldUseNewCardHeader
-        self.appearance = appearance
+        self.paymentSheetAppearance = appearance
         self.currency = currency
         self.incentive = incentive
         self.promoBadgeView = Self.makePromoBadge(for: incentive, with: appearance)
@@ -114,7 +118,7 @@ final class FormHeaderView: UIView {
         self.incentive = incentive
 
         if let incentive {
-            promoBadgeView = Self.makePromoBadge(for: incentive, with: appearance)
+            promoBadgeView = Self.makePromoBadge(for: incentive, with: paymentSheetAppearance)
             if let promoBadgeView {
                 stackView.addArrangedSubview(promoBadgeView)
                 stackView.addArrangedSubview(spacerView)

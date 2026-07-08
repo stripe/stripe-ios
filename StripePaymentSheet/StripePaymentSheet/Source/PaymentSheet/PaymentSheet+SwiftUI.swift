@@ -12,6 +12,12 @@
 @_spi(STP) import StripeCore
 import SwiftUI
 
+#if canImport(UIKit)
+typealias PaymentSheetViewRepresentable = UIViewRepresentable
+#elseif canImport(AppKit)
+typealias PaymentSheetViewRepresentable = NSViewRepresentable
+#endif
+
 extension View {
     /// Presents a sheet for a customer to complete their payment.
     /// - Parameter isPresented: A binding to whether the sheet is presented.
@@ -249,7 +255,7 @@ extension PaymentSheet.FlowController {
 }
 
 extension PaymentSheet {
-    struct PaymentSheetPresenter: UIViewRepresentable {
+    struct PaymentSheetPresenter: PaymentSheetViewRepresentable {
         @Binding var presented: Bool
         weak var paymentSheet: PaymentSheet?
         let onCompletion: @MainActor (PaymentSheetResult) -> Void
@@ -266,6 +272,17 @@ extension PaymentSheet {
             context.coordinator.parent = self
             context.coordinator.presented = presented
         }
+
+        #if canImport(AppKit) && !canImport(UIKit)
+        func makeNSView(context: Context) -> UIView {
+            return context.coordinator.view
+        }
+
+        func updateNSView(_ nsView: UIView, context: Context) {
+            context.coordinator.parent = self
+            context.coordinator.presented = presented
+        }
+        #endif
 
         class Coordinator {
 
@@ -312,7 +329,7 @@ extension PaymentSheet {
         }
     }
 
-    struct PaymentSheetFlowControllerPresenter: UIViewRepresentable {
+    struct PaymentSheetFlowControllerPresenter: PaymentSheetViewRepresentable {
         @Binding var presented: Bool
         weak var paymentSheetFlowController: PaymentSheet.FlowController?
         let action: FlowControllerAction
@@ -332,6 +349,17 @@ extension PaymentSheet {
             context.coordinator.parent = self
             context.coordinator.presented = presented
         }
+
+        #if canImport(AppKit) && !canImport(UIKit)
+        func makeNSView(context: Context) -> UIView {
+            return context.coordinator.view
+        }
+
+        func updateNSView(_ nsView: UIView, context: Context) {
+            context.coordinator.parent = self
+            context.coordinator.presented = presented
+        }
+        #endif
 
         class Coordinator {
             var parent: PaymentSheetFlowControllerPresenter
@@ -448,6 +476,7 @@ func findViewControllerPresenter(from uiViewController: UIViewController) -> UIV
 
     // This is a bit of a hack: We traverse the view hierarchy looking for the most reasonable VC to present from.
     // A VC hosted within a SwiftUI cell, for example, doesn't have a parent, so we need to find the UIWindow.
+    #if canImport(UIKit)
     var presentingViewController: UIViewController =
         uiViewController.view.window?.rootViewController ?? uiViewController
 
@@ -457,9 +486,13 @@ func findViewControllerPresenter(from uiViewController: UIViewController) -> UIV
     }
 
     return presentingViewController
+    #else
+    return uiViewController
+    #endif
 }
 
 func findViewController(for uiView: UIView) -> UIViewController? {
+    #if canImport(UIKit)
     if let nextResponder = uiView.next as? UIViewController {
         return nextResponder
     } else if let nextResponder = uiView.next as? UIView {
@@ -468,16 +501,19 @@ func findViewController(for uiView: UIView) -> UIViewController? {
         // Can't find a view, attempt to grab the top most view controller
         return topMostViewController()
     }
+    #else
+    return topMostViewController()
+    #endif
 }
 
 func topMostViewController() -> UIViewController? {
     guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
           let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return nil }
 
-    var topController: UIViewController? = window.rootViewController
+    var topController: UIViewController? = window.rootViewController as? UIViewController
 
     // Traverse presented view controllers to find the top most view controller
-    while let presentedViewController = topController?.presentedViewController {
+    while let presentedViewController = topController?.presentedViewController as? UIViewController {
         topController = presentedViewController
     }
 

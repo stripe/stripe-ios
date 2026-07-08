@@ -9,7 +9,11 @@
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A selectable button with various display styles used in vertical mode and embedded to display payment methods.
 /// - Note: This is an 'abstract base class', see its subclasses.
@@ -45,7 +49,7 @@ class RowButton: UIView, EventHandler {
     }
 
     var isFlatWithCheckmarkOrChevronStyle: Bool {
-        let rowStyle = appearance.embeddedPaymentElement.row.style
+        let rowStyle = paymentSheetAppearance.embeddedPaymentElement.row.style
         return (rowStyle == .flatWithCheckmark || rowStyle == .flatWithDisclosure) && isEmbedded
     }
 
@@ -65,7 +69,7 @@ class RowButton: UIView, EventHandler {
     var heightConstraint: NSLayoutConstraint?
     let type: RowButtonType
     let shouldAnimateOnPress: Bool
-    let appearance: PaymentSheet.Appearance
+    let paymentSheetAppearance: PaymentSheet.Appearance
     let didTap: DidTapClosure
     // When true, this `RowButton` is being used in the embedded payment element, otherwise it is in use in PaymentSheet
     let isEmbedded: Bool
@@ -85,7 +89,7 @@ class RowButton: UIView, EventHandler {
         isEmbedded: Bool = false,
         didTap: @escaping DidTapClosure
     ) {
-        self.appearance = appearance
+        self.paymentSheetAppearance = appearance
         self.type = type
         self.shouldAnimateOnPress = shouldAnimateOnPress
         self.didTap = didTap
@@ -192,7 +196,7 @@ class RowButton: UIView, EventHandler {
         self.isSelected = isSelected
 
         // Default badge font is heavier when the row is selected
-        defaultBadgeLabel?.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
+        defaultBadgeLabel?.font = isSelected ? paymentSheetAppearance.selectedDefaultBadgeFont : paymentSheetAppearance.defaultBadgeFont
         updateAccessibilityTraits()
 
         sublabel.updateSelectedState(isSelected, willDisplayForm: willDisplayForm)
@@ -256,7 +260,7 @@ class RowButton: UIView, EventHandler {
             heightConstraint?.isActive = false
             return
         }
-        heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance, isEmbedded: isEmbedded))
+        heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: paymentSheetAppearance, isEmbedded: isEmbedded))
         // Use a below-required priority so that if a taller subview (e.g. a just-shown
         // "Change >" accessory added via addChangeButton()) needs more height, Auto Layout
         // grows the row instead of reporting an unsatisfiable constraint conflict. In the
@@ -271,7 +275,7 @@ class RowButton: UIView, EventHandler {
 extension RowButton: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         // Without this, the long press prevents you from scrolling or our tap/pan gesture from triggering together.
-        return otherGestureRecognizer is UIPanGestureRecognizer || (gestureRecognizers?.contains(otherGestureRecognizer) ?? false)
+        return otherGestureRecognizer is UIPanGestureRecognizer
     }
 
     func gestureRecognizer(

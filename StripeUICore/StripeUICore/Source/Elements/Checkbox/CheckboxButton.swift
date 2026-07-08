@@ -7,7 +7,11 @@
 //
 
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 @_spi(STP) public protocol CheckboxButtonDelegate: AnyObject {
     /// Return `true` to open the URL in the device's default browser.

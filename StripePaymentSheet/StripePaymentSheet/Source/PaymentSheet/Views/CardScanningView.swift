@@ -13,7 +13,11 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// For internal SDK use only
 @available(macCatalyst 14.0, *)
@@ -152,7 +156,7 @@ class CardScanningView: UIView {
         // If this is called twice for any reason, we need to prevent two snapshot views from being added
         guard snapshotView == nil else { return }
 
-        if let snapshot = snapshotView(afterScreenUpdates: false) {
+        if let snapshot = (self as UIView).snapshotView(afterScreenUpdates: false) {
             self.addSubview(snapshot)
             self.snapshotView = snapshot
         }

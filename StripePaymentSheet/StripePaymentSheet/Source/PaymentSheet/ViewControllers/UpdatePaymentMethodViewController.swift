@@ -9,7 +9,11 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @MainActor
 protocol UpdatePaymentMethodViewControllerDelegate: AnyObject {
@@ -192,7 +196,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         // disable swipe to dismiss
         isModalInPresentation = true
         self.view.backgroundColor = configuration.appearance.colors.background
-        view.addAndPinSubview(formStackView, insets: configuration.appearance.formInsets)
+        (view as? UIView)?.addAndPinSubview(formStackView, insets: configuration.appearance.formInsets)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -238,8 +242,8 @@ final class UpdatePaymentMethodViewController: UIViewController {
             return
         }
         // Ensure endEditing(true) is called prior to setting isUserInteractionEnabled
-        view.endEditing(true)
-        view.isUserInteractionEnabled = false
+        (view as? UIView)?.resignFirstResponder()
+        (view as? UIView)?.isUserInteractionEnabled = false
         updateButton.update(status: .spinnerWithInteractionDisabled)
 
         let updatePaymentMethodResult = await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod)
@@ -277,7 +281,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
                                                                      params: ["payment_method_type": configuration.paymentMethod.type.identifier])
             }
         }
-        view.isUserInteractionEnabled = true
+        (view as? UIView)?.isUserInteractionEnabled = true
     }
 
     private func updateButtonState() {
@@ -363,7 +367,7 @@ extension UpdatePaymentMethodViewController {
 extension UpdatePaymentMethodViewController: BottomSheetContentViewController {
 
     func didTapOrSwipeToDismiss() {
-        guard view.isUserInteractionEnabled else {
+        guard (view as? UIView)?.isUserInteractionEnabled ?? true else {
             return
         }
 

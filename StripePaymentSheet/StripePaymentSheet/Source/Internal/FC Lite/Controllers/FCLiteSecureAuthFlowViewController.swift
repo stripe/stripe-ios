@@ -7,7 +7,11 @@
 
 import AuthenticationServices
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class FCLiteSecureAuthFlowViewController: UIViewController {
     private let manifest: LinkAccountSessionManifest

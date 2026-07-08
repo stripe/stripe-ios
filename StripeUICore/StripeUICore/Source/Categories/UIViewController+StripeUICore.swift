@@ -6,7 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 @_spi(STP) public extension UIViewController {
     /// Use this to animate changes that affect the height of the sheet
@@ -34,7 +38,7 @@ import UIKit
     }
 
     var rootParent: UIViewController {
-        if let parent = parent {
+        if let parent = parent as? UIViewController {
             return parent.rootParent
         }
         return self
@@ -49,7 +53,7 @@ import UIKit
         } else if let tab = self as? UITabBarController {
             // Use selectedViewController for tab controllers
             return tab.selectedViewController?.findTopMostPresentedViewController() ?? tab
-        } else if let presented = presentedViewController {
+        } else if let presented = presentedViewController as? UIViewController {
             // Recurse for any presented controllers
             return presented.findTopMostPresentedViewController()
         }

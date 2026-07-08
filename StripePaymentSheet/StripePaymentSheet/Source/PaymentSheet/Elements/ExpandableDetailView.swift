@@ -7,7 +7,11 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A view that displays a caption label with an optional expandable detail section.
 ///
@@ -15,7 +19,7 @@ import UIKit
 /// `update(caption:detail:)` and toggle expansion via `toggleExpansion()`.
 final class ExpandableDetailView: UIView {
 
-    private let appearance: TwoOptionSelectorViewAppearance
+    private let selectorAppearance: TwoOptionSelectorViewAppearance
     private let captionLabel = TappableAttributedLabel()
     private let expandedContentLabel: UILabel = {
         let label = UILabel()
@@ -33,7 +37,7 @@ final class ExpandableDetailView: UIView {
     private var detailHeightConstraint: NSLayoutConstraint?
 
     init(appearance: TwoOptionSelectorViewAppearance) {
-        self.appearance = appearance
+        self.selectorAppearance = appearance
         super.init(frame: .zero)
         setupViews()
     }
@@ -45,16 +49,16 @@ final class ExpandableDetailView: UIView {
     // MARK: - Setup
 
     private func setupViews() {
-        let baseFont = appearance.scaledFont(for: appearance.font, style: .caption1)
+        let baseFont = selectorAppearance.scaledFont(for: selectorAppearance.font, style: .caption1)
 
         captionLabel.font = baseFont
-        captionLabel.textColor = appearance.captionColor
+        captionLabel.textColor = selectorAppearance.captionColor
         captionLabel.numberOfLines = 0
         captionLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(captionLabel)
 
         expandedContentLabel.font = baseFont
-        expandedContentLabel.textColor = appearance.captionColor
+        expandedContentLabel.textColor = selectorAppearance.captionColor
         expandedContentLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(expandedContentLabel)
 
@@ -96,8 +100,8 @@ final class ExpandableDetailView: UIView {
         } else {
             captionLabel.setText(
                 caption,
-                baseFont: appearance.scaledFont(for: appearance.font, style: .caption1),
-                baseColor: appearance.captionColor,
+                baseFont: selectorAppearance.scaledFont(for: selectorAppearance.font, style: .caption1),
+                baseColor: selectorAppearance.captionColor,
                 highlights: []
             )
             expandedContentLabel.text = nil
@@ -150,12 +154,12 @@ final class ExpandableDetailView: UIView {
         guard let caption = currentCaption else { return }
         let toggleText = isExpanded ? String.Localized.hideDetails : String.Localized.showDetails
         let fullText = "\(caption) \(toggleText)"
-        let baseFont = appearance.scaledFont(for: appearance.font, style: .caption1)
+        let baseFont = selectorAppearance.scaledFont(for: selectorAppearance.font, style: .caption1)
 
         captionLabel.setText(
             fullText,
             baseFont: baseFont,
-            baseColor: appearance.captionColor,
+            baseColor: selectorAppearance.captionColor,
             highlights: [
                 TappableAttributedLabel.TappableHighlight(
                     text: toggleText,
@@ -197,13 +201,13 @@ final class ExpandableDetailView: UIView {
         while let current = view {
             current.invalidateIntrinsicContentSize()
             current.setNeedsLayout()
-            view = current.superview
+            view = current.superview as? UIView
         }
     }
 
     private static func layoutAnimationContainer(for view: UIView) -> UIView {
         var container = view
-        while let superview = container.superview, !(superview is UIWindow) {
+        while let superview = container.superview as? UIView, !(superview is UIWindow) {
             container = superview
         }
         return container

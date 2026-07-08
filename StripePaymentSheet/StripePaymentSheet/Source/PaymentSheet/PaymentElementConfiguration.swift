@@ -9,7 +9,11 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// Represents shared configuration properties between integration surfaces in mobile payment element.
 /// - Note: See the concrete implementations of `PaymentElementConfiguration` for detailed doc comments.

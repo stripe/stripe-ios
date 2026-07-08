@@ -8,7 +8,11 @@
 import Combine
 import Foundation
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension PaymentMethodMessagingElement {
 

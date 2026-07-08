@@ -6,7 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 import AuthenticationServices
 @_spi(STP) import StripeCore
@@ -44,7 +48,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         var presentingViewController: UIViewController = window.rootViewController!
 
         // Find the most-presented UIViewController
-        while let presented = presentingViewController.presentedViewController {
+        while let presented = presentingViewController.presentedViewController as? UIViewController {
             presentingViewController = presented
         }
 

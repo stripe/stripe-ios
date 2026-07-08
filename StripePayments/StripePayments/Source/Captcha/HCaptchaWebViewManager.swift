@@ -81,8 +81,12 @@ internal class HCaptchaWebViewManager: NSObject {
             frame: CGRect(origin: CGPoint.zero, size: webViewInitSize),
             configuration: self.buildConfiguration()
         )
+        #if canImport(UIKit)
         webview.accessibilityIdentifier = "webview"
         webview.accessibilityTraits = UIAccessibilityTraits.link
+        #elseif canImport(AppKit)
+        webview.setAccessibilityIdentifier("webview")
+        #endif
         webview.isHidden = true
         if debug {
             if #available(iOS 16.4, *) {
@@ -289,15 +293,24 @@ fileprivate extension HCaptchaWebViewManager {
      Adds the webview to a valid UIView and loads the initial HTML file
      */
     func setupWebview(html: String, url: URL) {
+        #if canImport(UIKit)
         let window = UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
             .flatMap { $0.windows }
             .first { $0.isKeyWindow }
+        #elseif canImport(AppKit)
+        let window = NSApplication.shared.keyWindow
+        #endif
         if let window {
             setupWebview(on: window, html: html, url: url)
         } else {
+            #if canImport(UIKit)
+            let notificationName = UIWindow.didBecomeVisibleNotification
+            #elseif canImport(AppKit)
+            let notificationName = NSWindow.didBecomeKeyNotification
+            #endif
             observer = NotificationCenter.default.addObserver(
-                forName: UIWindow.didBecomeVisibleNotification,
+                forName: notificationName,
                 object: nil,
                 queue: nil
             ) { [weak self] notification in
@@ -319,7 +332,11 @@ fileprivate extension HCaptchaWebViewManager {
     func setupWebview(on window: UIWindow, html: String, url: URL) {
         Log.debug("WebViewManager.setupWebview")
         if webView.superview == nil {
+            #if canImport(UIKit)
             window.addSubview(webView)
+            #elseif canImport(AppKit)
+            window.contentView?.addSubview(webView)
+            #endif
         }
         webView.loadHTMLString(html, baseURL: url)
         if webView.navigationDelegate == nil {

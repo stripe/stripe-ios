@@ -5,7 +5,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// Handles the animation of the presentedViewController as it is presented or dismissed.
 ///

@@ -6,7 +6,11 @@
 //
 
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) public final class FinancialConnectionsLite {
     /// The client secret of a Stripe `FinancialConnectionsSession` object.

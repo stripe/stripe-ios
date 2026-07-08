@@ -9,7 +9,13 @@
 import SafariServices
 import SwiftUI
 
-struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControllerRepresentable {
+#if canImport(UIKit)
+typealias STPViewControllerRepresentable = UIViewControllerRepresentable
+#elseif canImport(AppKit)
+typealias STPViewControllerRepresentable = NSViewControllerRepresentable
+#endif
+
+struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: STPViewControllerRepresentable {
     @Binding var presented: Bool
     let intentParams: ParamsType
     let onCompletion: CompletionBlockType
@@ -18,24 +24,39 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
         return Coordinator(parent: self)
     }
 
-    func makeUIViewController(context: Context) -> UIViewController {
+    func makeUIViewController(context: Context) -> STPAuthenticationUIViewController {
         return context.coordinator.uiViewController
     }
 
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+    func updateUIViewController(_ uiViewController: STPAuthenticationUIViewController, context: Context) {
         context.coordinator.parent = self
         context.coordinator.presented = presented
     }
 
+    #if canImport(AppKit) && !canImport(UIKit)
+    func makeNSViewController(context: Context) -> STPAuthenticationUIViewController {
+        return context.coordinator.uiViewController
+    }
+
+    func updateNSViewController(_ nsViewController: STPAuthenticationUIViewController, context: Context) {
+        context.coordinator.parent = self
+        context.coordinator.presented = presented
+    }
+    #endif
+
     class Coordinator: NSObject, STPAuthenticationContext {
-        func authenticationPresentingViewController() -> UIViewController {
+        func authenticationPresentingViewController() -> STPAuthenticationUIViewController {
             // This is a bit of a hack: We traverse the view hierarchy looking for the most reasonable VC to present from.
             // A VC hosted within a SwiftUI cell, for example, doesn't have a parent, so we need to find the UIWindow.
+            #if canImport(UIKit)
             var presentingViewController = uiViewController.view.window?.rootViewController
             presentingViewController =
                 presentingViewController?.presentedViewController ?? presentingViewController
                 ?? uiViewController
-            return presentingViewController ?? UIViewController()
+            return presentingViewController ?? STPAuthenticationUIViewController()
+            #elseif canImport(AppKit)
+            return uiViewController
+            #endif
         }
 
         var parent: ConfirmPaymentPresenter
@@ -45,7 +66,7 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
             self.parent = parent
         }
 
-        let uiViewController = UIViewController()
+        let uiViewController = STPAuthenticationUIViewController()
 
         var presented: Bool = false {
             didSet {

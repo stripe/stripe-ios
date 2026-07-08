@@ -88,7 +88,7 @@ final class PaymentSheetLoader {
             // Fetch ElementsSession
             // ⚠️ Note using `async let` instead of Tasks here triggered a crash when compiling with Xcode 26.4 / Swift 6.3
             let elementsSessionAndIntentTask = Task {
-                try await fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, loadTimings: loadTimings)
+                return try await fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, loadTimings: loadTimings)
             }
 
             // Fetch Customer email if using EK for Link and it wasn't provided in `configuration`. If using CS, Customer will be in v1/e/s response.

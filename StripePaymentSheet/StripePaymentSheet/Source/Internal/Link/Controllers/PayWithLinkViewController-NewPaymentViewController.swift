@@ -10,7 +10,11 @@ import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension PayWithLinkViewController {
 
@@ -41,10 +45,18 @@ extension PayWithLinkViewController {
 
         private lazy var separator = SeparatorLabel(text: String.Localized.or)
 
-        private lazy var applePayButton: PKPaymentButton = {
+        private lazy var applePayButton: UIView = {
+            #if canImport(UIKit)
             let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: .compatibleAutomatic)
             button.addTarget(self, action: #selector(applePayButtonTapped(_:)), for: .touchUpInside)
             button.cornerRadius = LinkUI.cornerRadius
+            #else
+            let button = UIButton(type: .system)
+            button.setTitle("Apple Pay", for: .normal)
+            button.addTarget(self, action: #selector(applePayButtonTapped(_:)), for: .touchUpInside)
+            button.wantsLayer = true
+            button.layer.cornerRadius = LinkUI.cornerRadius
+            #endif
 
             NSLayoutConstraint.activate([
                 button.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.applePayButtonHeight)
@@ -152,11 +164,13 @@ extension PayWithLinkViewController {
             addPaymentMethodVC.view.backgroundColor = .clear
             errorView.isHidden = true
 
-            let stackView = UIStackView(arrangedSubviews: [
-                addPaymentMethodVC.view,
-                errorView,
-                buttonContainer,
-            ])
+            let stackView = UIStackView(
+                arrangedSubviews: [
+                    (addPaymentMethodVC.view as? UIView) ?? UIView(),
+                    errorView,
+                    buttonContainer,
+                ]
+            )
 
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
@@ -319,7 +333,7 @@ extension PayWithLinkViewController {
         }
 
         @objc
-        func applePayButtonTapped(_ sender: PKPaymentButton) {
+        func applePayButtonTapped(_ sender: Any) {
             coordinator?.confirmWithApplePay()
         }
 

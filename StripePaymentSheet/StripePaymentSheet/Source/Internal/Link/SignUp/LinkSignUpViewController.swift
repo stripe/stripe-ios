@@ -6,7 +6,11 @@
 //
 
 import SafariServices
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeCore
 @_exported @_spi(STP) import StripePayments
@@ -193,7 +197,7 @@ final class LinkSignUpViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .systemBackground
-        view.tintColor = .linkTextPrimary
+        (view as? UIView)?.tintColor = .linkTextPrimary
 
         view.addSubview(stackView)
 

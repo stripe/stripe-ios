@@ -6,7 +6,11 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class STPViewWithSeparator: UIView {
     private var topSeparator = UIView()
@@ -77,6 +81,13 @@ class STPViewWithSeparator: UIView {
     func _currentPixelHeight() -> CGFloat {
         #if os(visionOS)
         return 1.0
+        #elseif canImport(AppKit) && !canImport(UIKit)
+        let scale = window?.screen?.backingScaleFactor ?? UIScreen.main.nativeScale
+        if scale > 0 {
+            return 1.0 / scale
+        } else {
+            return 0.5
+        }
         #else
         let screen = window?.screen ?? UIScreen.main
         if screen.nativeScale > 0 {

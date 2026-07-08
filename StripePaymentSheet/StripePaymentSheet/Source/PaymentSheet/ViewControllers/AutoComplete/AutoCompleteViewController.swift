@@ -10,7 +10,11 @@ import Foundation
 import MapKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 protocol AutoCompleteViewControllerDelegate: AnyObject {
 
@@ -215,7 +219,7 @@ class AutoCompleteViewController: UIViewController {
         ])
 
         // Set up proper content inset for table view after layout
-        view.layoutIfNeeded()
+        (view as? UIView)?.layoutIfNeeded()
         updateTableViewInsets()
     }
 
@@ -244,7 +248,7 @@ class AutoCompleteViewController: UIViewController {
             return
         }
 
-        view.layoutIfNeeded() // Ensures the view is laid out before animating
+        (view as? UIView)?.layoutIfNeeded() // Ensures the view is laid out before animating
         let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
         let keyboardInViewHeight = view.safeAreaLayoutGuide.layoutFrame.intersection(keyboardViewEndFrame).height
         if notification.name == UIResponder.keyboardWillHideNotification {
@@ -254,9 +258,9 @@ class AutoCompleteViewController: UIViewController {
         }
 
         // Animate the container above the keyboard
-        view.setNeedsLayout()
+        (view as? UIView)?.setNeedsLayout()
         UIView.animateAlongsideKeyboard(notification) {
-            self.view.layoutIfNeeded()
+            (self.view as? UIView)?.layoutIfNeeded()
         }
     }
 

@@ -9,7 +9,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView)
@@ -44,7 +48,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         }
     }
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
-    let appearance: PaymentSheet.Appearance
+    let paymentSheetAppearance: PaymentSheet.Appearance
     let currency: String?
     weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
 
@@ -71,7 +75,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
             }
         }()
         self.selected = paymentMethodTypes[selectedItemIndex]
-        self.appearance = appearance
+        self.paymentSheetAppearance = appearance
         self.currency = currency
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -85,7 +89,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         selectItem(at: IndexPath(item: selectedItemIndex, section: 0), animated: false, scrollPosition: [])
 
         showsHorizontalScrollIndicator = false
-        backgroundColor = appearance.colors.background
+        backgroundColor = paymentSheetAppearance.colors.background
 
         register(PaymentTypeCell.self, forCellWithReuseIdentifier: PaymentTypeCell.reuseIdentifier)
         clipsToBounds = false
@@ -116,7 +120,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     // instance to calculate min width
     private lazy var sizingInstance: PaymentTypeCell = {
         let sizingInstance = PaymentTypeCell(frame: .zero)
-        sizingInstance.appearance = appearance
+        sizingInstance.cellAppearance = paymentSheetAppearance
         return sizingInstance
     }()
     // maps payment method type to width to avoid recalculation
@@ -151,7 +155,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
                 withReuseIdentifier: PaymentMethodTypeCollectionView.PaymentTypeCell
                     .reuseIdentifier, for: indexPath)
                 as? PaymentMethodTypeCollectionView.PaymentTypeCell,
-            let appearance = (collectionView as? PaymentMethodTypeCollectionView)?.appearance
+            let appearance = (collectionView as? PaymentMethodTypeCollectionView)?.paymentSheetAppearance
         else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
                                               error: Error.unableToDequeueReusableCell)
@@ -163,7 +167,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
         cell.paymentMethodType = paymentMethodType
         cell.currency = currency
         cell.promoBadgeText = incentive?.takeIfAppliesTo(paymentMethodType)?.displayText
-        cell.appearance = appearance
+        cell.cellAppearance = appearance
         return cell
     }
 
@@ -213,7 +217,7 @@ extension PaymentMethodTypeCollectionView {
             }
         }
 
-        var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default {
+        var cellAppearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default {
             didSet {
                 update()
             }
@@ -222,7 +226,7 @@ extension PaymentMethodTypeCollectionView {
         private lazy var label: UILabel = {
             let label = UILabel()
             label.numberOfLines = 1
-            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            label.font = cellAppearance.scaledFont(for: cellAppearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             label.adjustsFontSizeToFitWidth = true
             label.minimumScaleFactor = 0.75
             label.textColor = .label
@@ -235,10 +239,10 @@ extension PaymentMethodTypeCollectionView {
             return paymentMethodLogo
         }()
         private lazy var promoBadge: PromoBadgeView = {
-            PromoBadgeView(appearance: appearance, tinyMode: true)
+            PromoBadgeView(appearance: cellAppearance, tinyMode: true)
         }()
         private(set) lazy var selectableRectangle: ShadowedRoundedRectangle = {
-            return ShadowedRoundedRectangle(appearance: appearance, ios26DefaultCornerStyle: .uniform)
+            return ShadowedRoundedRectangle(appearance: cellAppearance, ios26DefaultCornerStyle: .uniform)
         }()
         lazy var paymentMethodLogoWidthConstraint: NSLayoutConstraint = {
             paymentMethodLogo.widthAnchor.constraint(equalToConstant: 0)
@@ -246,7 +250,7 @@ extension PaymentMethodTypeCollectionView {
 
         // MARK: - UICollectionViewCell
 
-        override init(frame: CGRect) {
+        required init(frame: CGRect) {
             super.init(frame: frame)
 
             [paymentMethodLogo, label, promoBadge].forEach {
@@ -320,12 +324,12 @@ extension PaymentMethodTypeCollectionView {
         // MARK: - Private Methods
         var paymentMethodTypeOfCurrentImage: PaymentSheet.PaymentMethodType = .stripe(.unknown)
         private func update() {
-            selectableRectangle.appearance = appearance
+            selectableRectangle.paymentSheetAppearance = cellAppearance
             label.text = paymentMethodType.displayName
 
-            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            label.font = cellAppearance.scaledFont(for: cellAppearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             let currPaymentMethodType = self.paymentMethodType
-            let image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white, currency: currency, iconStyle: appearance.iconStyle) { [weak self] image in
+            let image = paymentMethodType.makeImage(forDarkBackground: cellAppearance.colors.componentBackground.contrastingColor == .white, currency: currency, iconStyle: cellAppearance.iconStyle) { [weak self] image in
                 DispatchQueue.main.async {
                     guard let self, currPaymentMethodType == self.paymentMethodType else {
                         return
@@ -344,13 +348,13 @@ extension PaymentMethodTypeCollectionView {
 
             promoBadge.isHidden = promoBadgeText == nil
             if let promoBadgeText {
-                promoBadge.setAppearance(appearance)
+                promoBadge.setAppearance(cellAppearance)
                 promoBadge.setText(promoBadgeText)
             }
 
             selectableRectangle.isSelected = isSelected
             // Set text color
-            label.textColor = appearance.colors.componentText
+            label.textColor = cellAppearance.colors.componentText
             accessibilityLabel = label.text
             accessibilityTraits = isSelected ? [.selected] : []
             accessibilityIdentifier = paymentMethodType.identifier
@@ -360,7 +364,7 @@ extension PaymentMethodTypeCollectionView {
             // tint icon for a few PMs to be a contrasting color to the component background
             if paymentMethodType.iconRequiresTinting  {
                 image = image.withRenderingMode(.alwaysTemplate)
-                paymentMethodLogo.tintColor = appearance.colors.componentBackground.contrastingColor
+                paymentMethodLogo.tintColor = cellAppearance.colors.componentBackground.contrastingColor
             }
 
             paymentMethodLogo.image = image

@@ -9,10 +9,16 @@
 @_spi(STP) import StripePayments
 import SwiftUI
 
+#if canImport(UIKit)
+private typealias PlatformViewRepresentable = UIViewRepresentable
+#elseif canImport(AppKit)
+private typealias PlatformViewRepresentable = NSViewRepresentable
+#endif
+
 extension STPCardFormView {
 
     /// A SwiftUI representation of STPCardFormView
-    public struct Representable: UIViewRepresentable {
+    public struct Representable: PlatformViewRepresentable {
         @Binding var paymentMethodParams: STPPaymentMethodParams
         @Binding var isComplete: Bool
 
@@ -36,15 +42,24 @@ extension STPCardFormView {
             return Coordinator(parent: self)
         }
 
-        public func makeUIView(context: Context) -> STPCardFormView {
+        private func makeView(context: Context) -> STPCardFormView {
             let cardFormView = STPCardFormView(style: cardFormViewStyle)
             cardFormView.delegate = context.coordinator
             cardFormView.cardParams = paymentMethodParams
             return cardFormView
         }
 
-        public func updateUIView(_ cardFormView: STPCardFormView, context: Context) {
+        private func updateView(_ cardFormView: STPCardFormView) {
             cardFormView.cardParams = paymentMethodParams
+        }
+
+        #if canImport(UIKit)
+        public func makeUIView(context: Context) -> STPCardFormView {
+            makeView(context: context)
+        }
+
+        public func updateUIView(_ cardFormView: STPCardFormView, context: Context) {
+            updateView(cardFormView)
         }
 
         @available(iOS 16.0, *)
@@ -56,6 +71,15 @@ extension STPCardFormView {
                                                    withHorizontalFittingPriority: .defaultHigh,
                                                    verticalFittingPriority: .fittingSizeLevel)
         }
+        #elseif canImport(AppKit)
+        public func makeNSView(context: Context) -> STPCardFormView {
+            makeView(context: context)
+        }
+
+        public func updateNSView(_ cardFormView: STPCardFormView, context: Context) {
+            updateView(cardFormView)
+        }
+        #endif
     }
 
     /// :nodoc:

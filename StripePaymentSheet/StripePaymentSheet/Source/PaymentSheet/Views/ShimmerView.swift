@@ -3,7 +3,11 @@
 //  StripePaymentSheet
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A view that displays a sliding shimmer animation overlay.
 /// Used as a loading indicator while card art images are downloaded.

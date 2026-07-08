@@ -9,7 +9,11 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// Options for configuring the display of an `STPCardFormView` instance.
 @objc
@@ -106,6 +110,7 @@ public class STPCardFormView: STPFormView {
     var _backgroundColor: UIColor?
 
     /// :nodoc:
+    #if canImport(UIKit)
     @objc
     public override var backgroundColor: UIColor? {
         get {
@@ -133,6 +138,7 @@ public class STPCardFormView: STPFormView {
             }
         }
     }
+    #endif
 
     var _disabledBackgroundColor: UIColor?
 
@@ -279,9 +285,16 @@ public class STPCardFormView: STPFormView {
         case .borderless:
             // if there's a backgroundColor set but no disabledBackgroundColor
             // assume no color change for disabled state
+            #if canImport(UIKit)
             super.backgroundColor =
                 isUserInteractionEnabled
                 ? backgroundColor : (disabledBackgroundColor ?? backgroundColor)
+            #else
+            layer.backgroundColor = (
+                isUserInteractionEnabled
+                    ? _backgroundColor : (disabledBackgroundColor ?? _backgroundColor)
+            )?.cgColor
+            #endif
         }
     }
 

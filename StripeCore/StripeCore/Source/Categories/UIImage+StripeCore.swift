@@ -6,7 +6,11 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 import AVFoundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 @_spi(STP) public typealias ImageDataAndSize = (imageData: Data, imageSize: CGSize)
 
@@ -34,7 +38,11 @@ extension UIImage {
             maxBytes: maxBytes,
             compressionQuality: compressionQuality
         ) { image, quality in
+            #if canImport(UIKit)
             image.jpegData(compressionQuality: quality)
+            #elseif canImport(AppKit)
+            image.stp_encodedData(type: AVFileType.jpg as CFString, compressionQuality: quality)
+            #endif
         }
     }
 
@@ -64,6 +72,7 @@ extension UIImage {
     }
 
     @_spi(STP) public func resized(to size: CGSize) -> UIImage? {
+        #if canImport(UIKit)
         let renderingMode = renderingMode
         UIGraphicsBeginImageContextWithOptions(size, false, self.scale)
         defer {
@@ -72,6 +81,13 @@ extension UIImage {
         draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
         let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
         return resizedImage?.withRenderingMode(renderingMode)
+        #elseif canImport(AppKit)
+        let image = NSImage(size: size)
+        image.lockFocus()
+        defer { image.unlockFocus() }
+        draw(in: CGRect(origin: .zero, size: size))
+        return image
+        #endif
     }
 
     @_spi(STP) public func resized(to scale: CGFloat) -> UIImage? {
@@ -79,6 +95,7 @@ extension UIImage {
             width: CGFloat(floor(size.width * scale)),
             height: CGFloat(floor(size.height * scale))
         )
+        #if canImport(UIKit)
         UIGraphicsBeginImageContextWithOptions(newImageSize, false, self.scale)
 
         defer {
@@ -87,6 +104,9 @@ extension UIImage {
 
         draw(in: CGRect(x: 0, y: 0, width: newImageSize.width, height: newImageSize.height))
         return UIGraphicsGetImageFromCurrentImageContext()
+        #elseif canImport(AppKit)
+        return resized(to: newImageSize)
+        #endif
     }
 
     // Returns a CGSize for the view that is scaled according to the size of the given font.
@@ -170,7 +190,13 @@ extension Array where Element: UIImage {
             [kCGImageDestinationLossyCompressionQuality: compressionQuality] as CFDictionary
 
         for image in self {
+            #if canImport(UIKit)
             let cgImage = image.cgImage!
+            #elseif canImport(AppKit)
+            guard let cgImage = image.stp_cgImage else {
+                continue
+            }
+            #endif
             CGImageDestinationAddImage(destination, cgImage, properties)
         }
 
@@ -181,3 +207,32 @@ extension Array where Element: UIImage {
         return nil
     }
 }
+
+#if canImport(AppKit)
+extension NSImage {
+    fileprivate var stp_cgImage: CGImage? {
+        var proposedRect = CGRect(origin: .zero, size: size)
+        return cgImage(forProposedRect: &proposedRect, context: nil, hints: nil)
+    }
+
+    fileprivate func stp_encodedData(
+        type: CFString,
+        compressionQuality: CGFloat
+    ) -> Data? {
+        guard let cgImage = stp_cgImage,
+            let mutableData = CFDataCreateMutable(nil, 0),
+            let destination = CGImageDestinationCreateWithData(mutableData, type, 1, nil)
+        else {
+            return nil
+        }
+        let properties = [
+            kCGImageDestinationLossyCompressionQuality: compressionQuality,
+        ] as CFDictionary
+        CGImageDestinationAddImage(destination, cgImage, properties)
+        guard CGImageDestinationFinalize(destination) else {
+            return nil
+        }
+        return mutableData as Data
+    }
+}
+#endif

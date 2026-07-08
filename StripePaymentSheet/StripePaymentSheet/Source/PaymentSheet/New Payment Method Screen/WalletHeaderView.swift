@@ -8,7 +8,11 @@
 
 import Foundation
 import PassKit
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
@@ -58,7 +62,7 @@ extension PaymentSheetViewController {
         }
 
         private let options: WalletOptions
-        private let appearance: PaymentSheet.Appearance
+        private let walletAppearance: PaymentSheet.Appearance
         private let applePayButtonType: PKPaymentButtonType
         private let isPaymentIntent: Bool
         private let linkBrandProvider: () -> LinkBrand
@@ -75,10 +79,10 @@ extension PaymentSheetViewController {
 
         private lazy var payWithLinkButton: PayWithLinkButton = {
             let button = PayWithLinkButton(brand: linkBrand)
-            if appearance.cornerRadius == nil, LiquidGlassDetector.isEnabledInMerchantApp {
+            if walletAppearance.cornerRadius == nil, LiquidGlassDetector.isEnabledInMerchantApp {
                 button.ios26_applyCapsuleCornerConfiguration()
             } else {
-                button.cornerRadius = appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius
+                button.cornerRadius = walletAppearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius
             }
             button.accessibilityIdentifier = "pay_with_link_button"
             button.addTarget(self, action: #selector(handleTapPayWithLink), for: .touchUpInside)
@@ -126,7 +130,7 @@ extension PaymentSheetViewController {
              isPaymentIntent: Bool = true,
              delegate: WalletHeaderViewDelegate?) {
             self.options = options
-            self.appearance = appearance
+            self.walletAppearance = appearance
             self.applePayButtonType = applePayButtonType
             self.linkBrand = linkBrand
             self.linkBrandProvider = linkBrandProvider ?? { linkBrand }
@@ -188,7 +192,7 @@ extension PaymentSheetViewController {
 
             // Find the Apple Pay button currently in the stackview
             guard let existingButtonIndex = stackView.arrangedSubviews.firstIndex(where: { view in
-                view is PKPaymentButton
+                view.accessibilityIdentifier == "apple_pay_button"
             }) else {
                 return
             }
@@ -207,16 +211,29 @@ extension PaymentSheetViewController {
         }
 
         private func createApplePayButton() -> UIView {
-            let isBlackApplePayButton = appearance.colors.background.contrastingColor == .black
+            let isBlackApplePayButton = walletAppearance.colors.background.contrastingColor == .black
+            #if canImport(UIKit)
             let button = PKPaymentButton(paymentButtonType: applePayButtonType, paymentButtonStyle: isBlackApplePayButton ? .black : .white)
+            #else
+            let button = UIButton(type: .system)
+            button.setTitle("Apple Pay", for: .normal)
+            button.backgroundColor = isBlackApplePayButton ? .black : .white
+            #endif
             // The corner configuration API that powers ios26_applyDefaultCornerConfiguration doesn't work on PKPaymentButton
             // Instead, we set the cornerRadius directly to half the button height to emulate the behavior
             // TODO(gbirch): align Apple Pay button liquid glass styling with other elements
-            if appearance.cornerRadius == nil, LiquidGlassDetector.isEnabledInMerchantApp {
-                button.cornerRadius = Constants.applePayButtonHeight / 2
+            let cornerRadius: CGFloat
+            if walletAppearance.cornerRadius == nil, LiquidGlassDetector.isEnabledInMerchantApp {
+                cornerRadius = Constants.applePayButtonHeight / 2
             } else {
-                button.cornerRadius = appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius
+                cornerRadius = walletAppearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius
             }
+            #if canImport(UIKit)
+            button.cornerRadius = cornerRadius
+            #else
+            button.wantsLayer = true
+            button.layer?.cornerRadius = cornerRadius
+            #endif
 
             button.accessibilityIdentifier = "apple_pay_button"
             button.addTarget(self, action: #selector(handleTapApplePay), for: .touchUpInside)
@@ -235,9 +252,9 @@ extension PaymentSheetViewController {
         }
 
         private func updateSeparatorLabel() {
-            separatorLabel.textColor = appearance.colors.textSecondary
-            separatorLabel.separatorColor = appearance.colors.background.contrastingColor.withAlphaComponent(0.2)
-            separatorLabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .footnote, maximumPointSize: 21)
+            separatorLabel.textColor = walletAppearance.colors.textSecondary
+            separatorLabel.separatorColor = walletAppearance.colors.background.contrastingColor.withAlphaComponent(0.2)
+            separatorLabel.font = walletAppearance.scaledFont(for: walletAppearance.font.base.regular, style: .footnote, maximumPointSize: 21)
             separatorLabel.text = separatorText
         }
 

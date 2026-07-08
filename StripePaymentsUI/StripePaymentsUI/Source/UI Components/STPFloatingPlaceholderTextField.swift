@@ -7,7 +7,11 @@
 //
 
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A `UITextField` subclass that moves the placeholder text to the top leading side of the field
 /// instead of hiding it upon text entry or editing.
@@ -44,7 +48,7 @@ import UIKit
 
     var placeholderColor: UIColor {
         get {
-            return placeholderLabel.textColor
+            return placeholderLabel.textColor ?? .label
         }
         set {
             placeholderLabel.textColor = newValue
@@ -71,7 +75,7 @@ import UIKit
         font = UIFont.preferredFont(forTextStyle: .body)
         adjustsFontForContentSizeCategory = true
 
-        placeholderLabel.font = font
+        placeholderLabel.font = font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)
         placeholderLabel.textAlignment = textAlignment
         placeholderColor = defaultPlaceholderColor
         addSubview(placeholderLabel)
@@ -277,7 +281,7 @@ extension STPFloatingPlaceholderTextField {
     /// :nodoc:
     @objc public override var font: UIFont? {
         didSet {
-            placeholderLabel.font = font
+            placeholderLabel.font = font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)
         }
     }
 

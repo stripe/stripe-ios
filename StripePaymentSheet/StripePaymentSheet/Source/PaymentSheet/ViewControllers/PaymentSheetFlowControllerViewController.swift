@@ -11,7 +11,11 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// For internal SDK use only
 class PaymentSheetFlowControllerViewController: UIViewController, FlowControllerViewControllerProtocol {
@@ -390,7 +394,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                     confirmButton.setHiddenIfNecessary(false)
                     UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
                         self.confirmButton.alpha = 1
-                        self.view.layoutIfNeeded()
+                        (self.view as? UIView)?.layoutIfNeeded()
                     }
                 }
                 confirmButton.update(status: savedPaymentOptionsViewController.isRemovingPaymentMethods ? .disabled : .enabled, callToAction: callToAction, animated: true)
@@ -400,7 +404,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                         // We're selecting a saved PM without a mandate, there's no 'Add' button
                         self.confirmButton.alpha = 0
                         self.confirmButton.setHiddenIfNecessary(true)
-                        self.view.layoutIfNeeded()
+                        (self.view as? UIView)?.layoutIfNeeded()
                     }
                 }
             }
@@ -412,7 +416,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 confirmButton.setHiddenIfNecessary(false)
                 UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
                     self.confirmButton.alpha = 1
-                    self.view.layoutIfNeeded()
+                    (self.view as? UIView)?.layoutIfNeeded()
                 }
             }
             var confirmButtonStatus: ConfirmButton.Status = {

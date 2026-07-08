@@ -9,7 +9,11 @@ import SafariServices
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension EmbeddedPaymentElement {
     @MainActor
@@ -686,7 +690,7 @@ extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthentic
         shouldPresentPollingVC = true
     }
 
-    func authenticationContextDidDismiss(_ viewController: UIViewController) {
+    func authenticationContextDidDismiss(_ viewController: STPAuthenticationUIViewController) {
         // The following code should only be executed if we have dismissed a SFSafariViewController
         guard viewController is SFSafariViewController else { return }
 
@@ -696,7 +700,7 @@ extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthentic
         }
     }
 
-    public func authenticationPresentingViewController() -> UIViewController {
+    public func authenticationPresentingViewController() -> STPAuthenticationUIViewController {
         return _presentingViewController
     }
 }

@@ -6,7 +6,11 @@
 //
 
 @_spi(STP) import StripePayments
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension STPElementsSession {
 

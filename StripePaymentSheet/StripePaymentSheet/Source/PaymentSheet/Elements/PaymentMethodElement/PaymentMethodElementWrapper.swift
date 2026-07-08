@@ -7,7 +7,11 @@
 //
 
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /**
  A class that wraps an Element and adds a `paramsUpdater` closure, provided at initialization, used to implement `PaymentMethodElement.updateParams`

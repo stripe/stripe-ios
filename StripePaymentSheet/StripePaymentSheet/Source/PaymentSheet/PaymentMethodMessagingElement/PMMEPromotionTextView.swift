@@ -5,7 +5,11 @@
 //  Created by George Birch on 4/30/26.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// Shared text view used by PMME surfaces that need tappable links without selectable text.
 /// Do NOT subclass from LinkOpeningTextView — subclassing `open` classes across SPM modules
@@ -55,6 +59,6 @@ class PMMEPromotionTextView: UITextView {
         }
 
         let startIndex = offset(from: beginningOfDocument, to: range.start)
-        return attributedText.attribute(.link, at: startIndex, effectiveRange: nil) != nil
+        return attributedText?.attribute(.link, at: startIndex, effectiveRange: nil) != nil
     }
 }

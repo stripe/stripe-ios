@@ -8,7 +8,11 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 final class CVCRecollectionElement: ContainerElement {
     var elements: [Element] {
@@ -111,7 +115,7 @@ extension CVCRecollectionElement: PaymentMethodElement {
 
 // MARK: - CardDetailView - e.g. [VISA] 4242
 final class CardDetailView: UIView {
-    private let appearance: PaymentSheet.Appearance
+    private let paymentSheetAppearance: PaymentSheet.Appearance
     private let paymentMethod: STPPaymentMethod
     lazy var paymentMethodImage: UIImageView = {
         let imageView = UIImageView(image: paymentMethod.makeIcon())
@@ -122,8 +126,8 @@ final class CardDetailView: UIView {
 
     lazy var paymentMethodLabelPrimary: UILabel = {
         let label = UILabel()
-        label.font = appearance.scaledFont(for: appearance.font.base, style: .body, maximumPointSize: 15)
-        label.textColor = appearance.colors.componentText
+        label.font = paymentSheetAppearance.scaledFont(for: paymentSheetAppearance.font.base, style: .body, maximumPointSize: 15)
+        label.textColor = paymentSheetAppearance.colors.componentText
         label.numberOfLines = 0
         label.text = paymentMethod.paymentSheetLabel
         return label
@@ -142,7 +146,7 @@ final class CardDetailView: UIView {
     }
 
     init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance) {
-        self.appearance = appearance
+        self.paymentSheetAppearance = appearance
         self.paymentMethod = paymentMethod
         super.init(frame: .zero)
         self.backgroundColor = appearance.asElementsTheme.colors.readonlyComponentBackground

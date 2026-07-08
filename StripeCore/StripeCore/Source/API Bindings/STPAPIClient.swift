@@ -7,7 +7,9 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#endif
 
 /// A client for making connections to the Stripe API.
 @objc public class STPAPIClient: NSObject {
@@ -181,7 +183,11 @@ import UIKit
             "lang": "objective-c",
             "bindings_version": STPSDKVersion,
         ]
+        #if canImport(UIKit)
         let version = UIDevice.current.systemVersion
+        #else
+        let version = ProcessInfo.processInfo.operatingSystemVersionString
+        #endif
         if version != "" {
             details["os_version"] = version
         }
@@ -195,14 +201,20 @@ import UIKit
             return identifier + String(UnicodeScalar(UInt8(value)))
         }
         details["type"] = deviceType
+        #if canImport(UIKit)
         let model = UIDevice.current.localizedModel
+        #else
+        let model = "Mac"
+        #endif
         if model != "" {
             details["model"] = model
         }
 
+        #if canImport(UIKit)
         if let vendorIdentifier = UIDevice.current.identifierForVendor?.uuidString {
             details["vendor_identifier"] = vendorIdentifier
         }
+        #endif
         if let appInfo = appInfo {
             details["name"] = appInfo.name
             details["partner_id"] = appInfo.partnerId

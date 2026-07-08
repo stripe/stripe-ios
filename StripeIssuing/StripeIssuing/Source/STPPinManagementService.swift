@@ -10,7 +10,11 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+#if canImport(UIKit)
 import UIKit
+#else
+@_spi(STP) import StripeUICore
+#endif
 
 /// STPAPIClient extensions to manage PIN on Stripe Issuing cards
 @available(iOS, deprecated: 100000.0, message: "Please use Issuing Elements instead: https://stripe.com/docs/issuing/elements")

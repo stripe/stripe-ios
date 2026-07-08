@@ -11,7 +11,11 @@ import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// For internal SDK use only
 @objc(STP_Internal_PaymentSheetViewController)
@@ -310,13 +314,14 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private func updateUI(animated: Bool = true) {
         // Disable interaction if necessary
         let shouldEnableUserInteraction = !isBusy
-        if shouldEnableUserInteraction != view.isUserInteractionEnabled {
+        let rootView = view as? UIView
+        if shouldEnableUserInteraction != rootView?.isUserInteractionEnabled {
             sendEventToSubviews(
                 shouldEnableUserInteraction ? .shouldEnableUserInteraction : .shouldDisableUserInteraction,
-                from: view
+                from: rootView ?? UIView()
             )
         }
-        view.isUserInteractionEnabled = shouldEnableUserInteraction
+        rootView?.isUserInteractionEnabled = shouldEnableUserInteraction
         isDismissable = !isPaymentInFlight
         navigationBar.isUserInteractionEnabled = shouldEnableUserInteraction
 

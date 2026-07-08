@@ -9,7 +9,11 @@
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 final class USBankAccountPaymentMethodElement: ContainerElement {
     var elements: [Element] {

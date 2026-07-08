@@ -11,7 +11,11 @@ import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// The result of an attempt to confirm a PaymentIntent or SetupIntent
 @frozen public enum PaymentSheetResult {
@@ -154,48 +158,66 @@ public class PaymentSheet {
             ) { result in
                 switch result {
                 case .success(let (loadResult, confirmationChallenge)):
-                    self.confirmationChallenge = confirmationChallenge
-                    let presentPaymentSheet: () -> Void = {
-                        let paymentSheetVC = self.makePaymentSheetVC(
-                            loadResult: loadResult,
-                            previousPaymentOption: nil
-                        )
-                        self.bottomSheetViewController.setViewControllers([paymentSheetVC])
-                    }
-                    if let linkAccount = LinkAccountContext.shared.account,
-                       loadResult.elementsSession.shouldShowLink2FABeforePaymentSheet(
-                           for: linkAccount,
-                           savedPaymentMethods: loadResult.savedPaymentMethods
-                       ) {
-                        let verificationController = LinkVerificationController(
-                            mode: .inlineLogin,
-                            linkAccount: linkAccount,
-                            brand: self.configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession, linkAccount: linkAccount),
-                            configuration: self.configuration
-                        )
-
-                        verificationController.present(from: self.bottomSheetViewController) { result in
-                            switch result {
-                            case .completed:
-                                self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: self.configuration.isApplePayEnabled, shouldFinishOnClose: false, onClose: {
-                                    presentPaymentSheet()
-                                })
-                            case .canceled, .switchAccount:
-                                presentPaymentSheet()
-                            case .failed:
-                                // Error is logged within LinkVerificationViewController
-                                presentPaymentSheet()
-                            }
+                    DispatchQueue.main.async {
+                        self.confirmationChallenge = confirmationChallenge
+                        let presentPaymentSheet: () -> Void = {
+                            let paymentSheetVC = self.makePaymentSheetVC(
+                                loadResult: loadResult,
+                                previousPaymentOption: nil
+                            )
+                            #if canImport(UIKit)
+                            self.bottomSheetViewController.setViewControllers([paymentSheetVC])
+                            #else
+                            self.bottomSheetViewController = self.makeBottomSheetViewController(
+                                contentViewController: paymentSheetVC
+                            )
+                            presentingViewController.presentAsBottomSheet(
+                                self.bottomSheetViewController,
+                                appearance: self.configuration.appearance
+                            )
+                            #endif
                         }
-                    } else {
+                        #if !canImport(UIKit)
                         presentPaymentSheet()
+                        #else
+                        if let linkAccount = LinkAccountContext.shared.account,
+                           loadResult.elementsSession.shouldShowLink2FABeforePaymentSheet(
+                               for: linkAccount,
+                               savedPaymentMethods: loadResult.savedPaymentMethods
+                           ) {
+                            let verificationController = LinkVerificationController(
+                                mode: .inlineLogin,
+                                linkAccount: linkAccount,
+                                brand: self.configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession, linkAccount: linkAccount),
+                                configuration: self.configuration
+                            )
+
+                            verificationController.present(from: self.bottomSheetViewController) { result in
+                                switch result {
+                                case .completed:
+                                    self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: self.configuration.isApplePayEnabled, shouldFinishOnClose: false, onClose: {
+                                        presentPaymentSheet()
+                                    })
+                                case .canceled, .switchAccount:
+                                    presentPaymentSheet()
+                                case .failed:
+                                    // Error is logged within LinkVerificationViewController
+                                    presentPaymentSheet()
+                                }
+                            }
+                        } else {
+                            presentPaymentSheet()
+                        }
+                        #endif
                     }
                 case .failure(let error):
                     completion(.failed(error: error))
                 }
             }
+            #if canImport(UIKit)
             self.bottomSheetViewController.setViewControllers([self.loadingViewController])
             presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
+            #endif
         }
     }
 
@@ -243,10 +265,14 @@ public class PaymentSheet {
 
     /// The parent view controller to present
     lazy var bottomSheetViewController: BottomSheetViewController = {
+        return makeBottomSheetViewController(contentViewController: loadingViewController)
+    }()
+
+    func makeBottomSheetViewController(contentViewController: BottomSheetContentViewController) -> BottomSheetViewController {
         let isTestMode = configuration.apiClient.isTestmode
 
         let vc = BottomSheetViewController(
-            contentViewController: loadingViewController,
+            contentViewController: contentViewController,
             appearance: configuration.appearance,
             isTestMode: isTestMode,
             didCancelNative3DS2: { [weak self] in
@@ -256,7 +282,7 @@ public class PaymentSheet {
 
         configuration.style.configure(vc)
         return vc
-    }()
+    }
 
     let analyticsHelper: PaymentSheetAnalyticsHelper
 
@@ -343,8 +369,8 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                     } else {
                         // We dismissed the Payment Sheet to show the Apple Pay sheet
                         // Bring it back if it didn't succeed
-                        presentingViewController?.presentAsBottomSheet(self.bottomSheetViewController,
-                                                                       appearance: self.configuration.appearance)
+                        (presentingViewController as? UIViewController)?.presentAsBottomSheet(self.bottomSheetViewController,
+                                                                                              appearance: self.configuration.appearance)
                     }
                     completion(result, deferredIntentConfirmationType)
                 }

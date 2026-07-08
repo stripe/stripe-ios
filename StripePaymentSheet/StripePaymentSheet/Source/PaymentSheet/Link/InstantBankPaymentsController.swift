@@ -10,7 +10,11 @@ import AuthenticationServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// `InstantBankPaymentsController` encapsulates the Link payment flow, allowing you to let your customers pay with their Link account.
 /// This feature is currently invite-only. To accept payments, [use the Mobile Payment Element.](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet)

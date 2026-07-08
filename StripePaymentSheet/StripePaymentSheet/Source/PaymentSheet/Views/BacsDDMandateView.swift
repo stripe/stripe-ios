@@ -7,7 +7,11 @@
 
 @_spi(STP) import StripeUICore
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 private let headerColor = Color(.dynamic(
     light: UIColor(red: 0.188, green: 0.192, blue: 0.239, alpha: 1.0),
@@ -71,10 +75,17 @@ support@stripe.com
                         Text("Your payments are protected by the [Direct Debit Guarantee](https://stripe.com/legal/bacs-direct-debit-guarantee).")
                             .multilineTextAlignment(.leading)
                             .padding([.trailing])
-                        SwiftUI.Image(uiImage: Image.bacsdd_logo.makeImage(template: false))
-                            .resizable()
-                            .scaledToFit()
-                            .frame(maxWidth: 94)
+                        Group {
+                            #if canImport(UIKit)
+                            SwiftUI.Image(uiImage: Image.bacsdd_logo.makeImage(template: false))
+                                .resizable()
+                            #else
+                            SwiftUI.Image(nsImage: Image.bacsdd_logo.makeImage(template: false))
+                                .resizable()
+                            #endif
+                        }
+                        .scaledToFit()
+                        .frame(maxWidth: 94)
                     }
                     .padding([.bottom])
                     Text(addressInfo)

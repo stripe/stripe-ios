@@ -6,7 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /**
  A helper view that contains a floating placeholder and a user-provided text field
@@ -93,9 +97,45 @@ class FloatingPlaceholderTextFieldView: UIView {
         return textField.becomeFirstResponder()
     }
 
+    override func layout() {
+        super.layout()
+        #if canImport(AppKit) && !canImport(UIKit)
+        let minimizedPlaceholderHeight = placeholderLabel.font.lineHeight * Constants.Placeholder.scale
+        placeholderLabel.frame = CGRect(
+            x: 0,
+            y: 0,
+            width: max(bounds.width, placeholderLabel.intrinsicContentSize.width),
+            height: placeholderLabel.intrinsicContentSize.height
+        )
+        textField.frame = CGRect(
+            x: 0,
+            y: minimizedPlaceholderHeight + Constants.Placeholder.bottomPadding,
+            width: bounds.width,
+            height: textField.intrinsicContentSize.height
+        )
+        placeholderLabel.layoutSubtreeIfNeeded()
+        textField.layoutSubtreeIfNeeded()
+        #endif
+    }
+
+    override var intrinsicContentSize: CGSize {
+        let minimizedPlaceholderHeight = placeholderLabel.font.lineHeight * Constants.Placeholder.scale
+        return CGSize(
+            width: UIView.noIntrinsicMetric,
+            height: minimizedPlaceholderHeight + Constants.Placeholder.bottomPadding + textField.intrinsicContentSize.height
+        )
+    }
+
     // MARK: - Private methods
 
     fileprivate func installConstraints() {
+        #if canImport(AppKit) && !canImport(UIKit)
+        textField.translatesAutoresizingMaskIntoConstraints = true
+        addSubview(textField)
+        placeholderLabel.translatesAutoresizingMaskIntoConstraints = true
+        addSubview(placeholderLabel)
+        return
+        #else
         textField.translatesAutoresizingMaskIntoConstraints = false
         addSubview(textField)
 
@@ -120,6 +160,7 @@ class FloatingPlaceholderTextFieldView: UIView {
             placeholderLabel.centerXAnchor.constraint(equalTo: textField.leadingAnchor),
             placeholderCenterYConstraint,
         ])
+        #endif
     }
 
     // MARK: - Animate placeholder

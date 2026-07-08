@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 protocol TextFieldViewDelegate: AnyObject {
     func textFieldViewDidUpdate(view: TextFieldView)
@@ -147,6 +151,69 @@ class TextFieldView: UIView {
 
     // MARK: - Overrides
 
+    override func layout() {
+        super.layout()
+        #if canImport(AppKit) && !canImport(UIKit)
+        let insets = viewModel.theme.textFieldInsets
+        hStack.frame = CGRect(
+            x: bounds.minX + insets.leading,
+            y: bounds.minY + insets.top,
+            width: max(0, bounds.width - insets.leading - insets.trailing),
+            height: max(0, bounds.height - insets.top - insets.bottom)
+        )
+        let accessoryWidth = accessoryView?.intrinsicContentSize.width ?? 0
+        let errorWidth = errorIconView.alpha > 0 ? errorIconView.intrinsicContentSize.width : 0
+        let clearWidth = clearButton.isHidden ? 0 : clearButton.intrinsicContentSize.width
+        let visibleTrailingWidths = [errorWidth, clearWidth, accessoryWidth].filter { $0 > 0 }
+        let spacing = hStack.spacing * CGFloat(visibleTrailingWidths.count)
+        let textWidth = max(0, hStack.bounds.width - visibleTrailingWidths.reduce(0, +) - spacing)
+        let height = hStack.bounds.height
+        var x: CGFloat = 0
+
+        func centerFrame(width: CGFloat) -> CGRect {
+            CGRect(x: x, y: (height - min(height, 44)) / 2, width: width, height: min(height, 44))
+        }
+
+        textFieldView.frame = CGRect(x: x, y: 0, width: textWidth, height: height)
+        textFieldView.layoutSubtreeIfNeeded()
+        x += textWidth
+
+        if errorWidth > 0 {
+            x += hStack.spacing
+            errorIconView.frame = centerFrame(width: errorWidth)
+            errorIconView.layoutSubtreeIfNeeded()
+            x += errorWidth
+        } else {
+            errorIconView.frame = .zero
+        }
+
+        if clearWidth > 0 {
+            x += hStack.spacing
+            clearButton.frame = centerFrame(width: clearWidth)
+            clearButton.layoutSubtreeIfNeeded()
+            x += clearWidth
+        } else {
+            clearButton.frame = .zero
+        }
+
+        if accessoryWidth > 0 {
+            x += hStack.spacing
+            accessoryContainerView.frame = centerFrame(width: accessoryWidth)
+            accessoryContainerView.layoutSubtreeIfNeeded()
+        } else {
+            accessoryContainerView.frame = .zero
+        }
+        #endif
+    }
+
+    override var intrinsicContentSize: CGSize {
+        #if canImport(AppKit) && !canImport(UIKit)
+        return CGSize(width: UIView.noIntrinsicMetric, height: 44)
+        #else
+        return super.intrinsicContentSize
+        #endif
+    }
+
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {
             return nil
@@ -180,6 +247,9 @@ class TextFieldView: UIView {
                                                                        for: .horizontal)
         hStack.alignment = .center
         hStack.spacing = 6
+        #if canImport(AppKit) && !canImport(UIKit)
+        hStack.usesArrangedSubviewLayout = false
+        #endif
         addAndPinSubview(hStack, insets: viewModel.theme.textFieldInsets)
     }
 

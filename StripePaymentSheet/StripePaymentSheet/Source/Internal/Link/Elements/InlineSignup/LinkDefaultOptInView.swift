@@ -7,7 +7,11 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 protocol LinkDefaultOptInViewDelegate: AnyObject {
     func linkDefaultOptInViewDidSelectChange(_ view: LinkDefaultOptInView)

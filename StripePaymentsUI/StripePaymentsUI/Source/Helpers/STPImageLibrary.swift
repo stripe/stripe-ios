@@ -9,7 +9,11 @@
 import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// This class lets you access card icons used by the Stripe SDK. All icons are 32 x 20 points.
 public class STPImageLibrary: NSObject {

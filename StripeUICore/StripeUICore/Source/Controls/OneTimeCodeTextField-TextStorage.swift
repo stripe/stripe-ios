@@ -6,7 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 extension OneTimeCodeTextField {
     final class TextStorage {
@@ -195,7 +199,7 @@ extension OneTimeCodeTextField {
                 return false
             }
 
-            return self.start == other.start && self.end == other.end
+            return self._start == other._start && self._end == other._end
         }
 
         func contains(_ index: Int) -> Bool {

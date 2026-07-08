@@ -6,7 +6,19 @@
 //
 
 @_spi(STP) import StripeCore
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#else
+import Foundation
+#endif
+
+#if canImport(UIKit)
+public typealias FCLitePresentingViewController = UIViewController
+#elseif canImport(AppKit)
+public typealias FCLitePresentingViewController = NSViewController
+#endif
 
 /// NOTE: If you change the name of this class, make sure to also change it in the `FinancialConnectionsSDKAvailability` file.
 @_spi(STP) public class FCLiteImplementation: FinancialConnectionsSDKInterface {
@@ -21,7 +33,7 @@ import UIKit
         elementsSessionContext: ElementsSessionContext?,
         linkBrand: LinkBrand?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
-        from presentingViewController: UIViewController,
+        from presentingViewController: FCLitePresentingViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
     ) {
         let returnUrl = returnURL.flatMap(URL.init(string:))
@@ -32,6 +44,11 @@ import UIKit
         )
         fcLite.elementsSessionContext = elementsSessionContext
         fcLite.existingConsumer = existingConsumer
+        #if canImport(UIKit)
         fcLite.present(from: presentingViewController, completion: completion)
+        #else
+        let presentingViewController = presentingViewController as? UIViewController ?? UIViewController(nibName: nil, bundle: nil)
+        fcLite.present(from: presentingViewController, completion: completion)
+        #endif
     }
 }

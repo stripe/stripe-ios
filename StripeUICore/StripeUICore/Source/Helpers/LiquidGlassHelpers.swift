@@ -6,7 +6,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 @_spi(STP) public class LiquidGlassDetector {
     /// Whether or not the merchant's app (not MPE) has Liquid Glass enabled
@@ -38,35 +42,43 @@ import UIKit
 // MARK: - UIView Liquid Glass helpers
 extension UIView {
     @_spi(STP) public func ios26_applyCapsuleCornerConfiguration() {
+#if canImport(UIKit)
 #if compiler(>=6.2)
         if #available(iOS 26.0, visionOS 26.0, *) {
             cornerConfiguration = .capsule()
         }
 #endif
+#endif
     }
 
     @_spi(STP) public func ios26_applyDefaultCornerConfiguration() {
+#if canImport(UIKit)
 #if compiler(>=6.2)
         if #available(iOS 26.0, visionOS 26.0, *) {
             cornerConfiguration = .uniformCorners(radius: 26)
         }
 #endif
+#endif
     }
 
     /// Convenience method that returns whether or not `cornerConfiguration` was set.
     @_spi(STP) public var didSetCornerConfiguration: Bool {
+#if canImport(UIKit)
 #if compiler(>=6.2)
         if #available(iOS 26.0, visionOS 26.0, *) {
             return UIView.plainUIView.cornerConfiguration != cornerConfiguration
         }
 #endif
+#endif
         return false
     }
 
     // Compiler flag here is just to satisfy dead code checker, on Xcode 25 it's unused
+#if canImport(UIKit)
 #if compiler(>=6.2)
     /// Just exists to avoid creating one every time in `didSetCornerConfiguration`
     static var plainUIView = UIView()
+#endif
 #endif
 }
 
@@ -76,12 +88,14 @@ extension UIButton {
         assert(LiquidGlassDetector.isEnabledInMerchantApp)
         // These checks are a convenience because .glass is only available on iOS (not visionOS)
         // when compiling with XCode 26
+#if canImport(UIKit)
 #if compiler(>=6.2)
         #if !os(visionOS)
         if #available(iOS 26.0, visionOS 26.0, *) {
             configuration = .glass()
         }
         #endif
+#endif
 #endif
     }
 }

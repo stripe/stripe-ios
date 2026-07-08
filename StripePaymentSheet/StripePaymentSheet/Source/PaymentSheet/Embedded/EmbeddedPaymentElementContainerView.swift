@@ -4,7 +4,11 @@
 //
 //  Created by Yuki Tokuhiro on 10/16/24.
 //
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// The view that's vended to the merchant, containing the embedded view.  We use this to be able to swap out the embedded view with an animation when `update` is called.
 class EmbeddedPaymentElementContainerView: UIView {

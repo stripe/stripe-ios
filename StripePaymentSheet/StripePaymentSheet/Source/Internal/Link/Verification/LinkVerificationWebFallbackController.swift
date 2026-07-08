@@ -6,7 +6,11 @@
 //
 
 import AuthenticationServices
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 final class LinkVerificationWebFallbackController: NSObject {
     private static let callbackURLSchme = "link-popup"

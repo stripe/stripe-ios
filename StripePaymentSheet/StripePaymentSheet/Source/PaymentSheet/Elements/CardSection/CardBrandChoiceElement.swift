@@ -10,7 +10,11 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// An Element wrapper that provides inline tappable brand icons for card brand choice (CBC).
 final class CardBrandChoiceElement: Element {

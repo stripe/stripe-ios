@@ -6,7 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
@@ -100,7 +104,11 @@ extension LinkToast {
     ///   - view: View to show the toast from.
     ///   - duration: How long to show the toast for.
     func show(from view: UIView, duration: TimeInterval = Constants.defaultDuration) {
+        #if canImport(UIKit)
         let presentingView = view.window ?? view
+        #else
+        let presentingView = view
+        #endif
 
         translatesAutoresizingMaskIntoConstraints = false
         presentingView.addSubview(self)

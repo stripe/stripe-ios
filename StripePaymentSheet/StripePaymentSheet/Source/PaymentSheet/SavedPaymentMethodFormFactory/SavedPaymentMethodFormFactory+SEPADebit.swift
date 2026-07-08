@@ -7,7 +7,11 @@
 
 import Foundation
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension SavedPaymentMethodFormFactory {
     func makeSEPADebit(configuration: UpdatePaymentMethodViewController.Configuration) -> PaymentMethodElement {

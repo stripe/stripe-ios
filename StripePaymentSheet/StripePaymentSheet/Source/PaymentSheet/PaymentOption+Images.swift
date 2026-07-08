@@ -10,7 +10,11 @@
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension PaymentOption {
     /// Returns an icon representing the payment option, suitable for display on a checkout screen

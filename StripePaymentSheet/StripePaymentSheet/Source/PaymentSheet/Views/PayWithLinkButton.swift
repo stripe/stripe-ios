@@ -6,7 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
@@ -266,7 +270,12 @@ private extension PayWithLinkButton {
         let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_link(brand: brand))
 
         let linkImage = primaryLinkLogoImage
+        #if canImport(UIKit)
         let linkAttachment = NSTextAttachment(image: linkImage)
+        #else
+        let linkAttachment = NSTextAttachment()
+        linkAttachment.image = linkImage
+        #endif
         let linkLogoRatio = Self.logoAspectRatio(for: linkImage)
         let linkTextSpacing = Self.inlineLogoVerticalSpacing
         let linkLogoHeight = (font.capHeight + (font.pointSize * Self.inlineLogoFontSizeBoost)) * (1.0 + linkTextSpacing)
@@ -512,7 +521,13 @@ private extension PayWithLinkButton {
 #if DEBUG
 import SwiftUI
 
-struct UIViewPreview<View: UIView>: UIViewRepresentable {
+#if canImport(UIKit)
+typealias LinkButtonViewRepresentable = UIViewRepresentable
+#elseif canImport(AppKit)
+typealias LinkButtonViewRepresentable = NSViewRepresentable
+#endif
+
+struct UIViewPreview<View: UIView>: LinkButtonViewRepresentable {
     let view: View
 
     init(_ builder: @escaping () -> View) {
@@ -528,6 +543,17 @@ struct UIViewPreview<View: UIView>: UIViewRepresentable {
         view.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         view.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
+
+    #if canImport(AppKit) && !canImport(UIKit)
+    func makeNSView(context: Context) -> UIView {
+        return view
+    }
+
+    func updateNSView(_ view: UIView, context: Context) {
+        view.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        view.setContentHuggingPriority(.defaultHigh, for: .vertical)
+    }
+    #endif
 }
 
 private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails?) -> PayWithLinkButton.LinkAccountStub {

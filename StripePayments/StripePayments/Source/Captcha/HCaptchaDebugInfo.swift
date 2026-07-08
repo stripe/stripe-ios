@@ -8,7 +8,11 @@
 import CryptoKit
 import Foundation
 import ObjectiveC.runtime
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 extension String {
     func jsSanitize() -> String {
@@ -87,7 +91,12 @@ class HCaptchaDebugInfo {
         let depsHash = getFinalHash(&depsCtx)
         let sysHash = getFinalHash(&sysCtx)
         let appHash = getFinalHash(&appCtx)
-        let iver = UIDevice.current.systemVersion.jsSanitize()
+        #if canImport(UIKit)
+        let systemVersion = UIDevice.current.systemVersion
+        #else
+        let systemVersion = ProcessInfo.processInfo.operatingSystemVersionString
+        #endif
+        let iver = systemVersion.jsSanitize()
 
         return [
             "sys_\(String(describing: sysHash))",

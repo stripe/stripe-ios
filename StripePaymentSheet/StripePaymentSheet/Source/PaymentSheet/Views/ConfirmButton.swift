@@ -12,7 +12,11 @@ import PassKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// Buy or Continue button
 class ConfirmButton: UIControl {
@@ -69,17 +73,17 @@ class ConfirmButton: UIControl {
 
     /// Background color for the `.disabled` state.
     var disabledBackgroundColor: UIColor {
-        return appearance.primaryButton.disabledBackgroundColor ?? appearance.primaryButton.backgroundColor ?? appearance.colors.primary
+        return paymentSheetAppearance.primaryButton.disabledBackgroundColor ?? paymentSheetAppearance.primaryButton.backgroundColor ?? paymentSheetAppearance.colors.primary
     }
 
     /// Background color for the `.succeeded` state.
     var succeededBackgroundColor: UIColor {
-        return appearance.primaryButton.successBackgroundColor
+        return paymentSheetAppearance.primaryButton.successBackgroundColor
     }
 
     private(set) var status: Status
     private(set) var callToAction: CallToActionType
-    private let appearance: PaymentSheet.Appearance
+    private let paymentSheetAppearance: PaymentSheet.Appearance
     private let showProcessingLabel: Bool
     private let didTap: () -> Void
     private let didTapWhenDisabled: () -> Void
@@ -87,7 +91,7 @@ class ConfirmButton: UIControl {
     override var intrinsicContentSize: CGSize {
         return CGSize(
             width: UIView.noIntrinsicMetric,
-            height: appearance.primaryButton.height
+            height: paymentSheetAppearance.primaryButton.height
         )
     }
 
@@ -119,8 +123,8 @@ class ConfirmButton: UIControl {
     lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = appearance.primaryButton.font ?? appearance.scaledFont(
-            for: appearance.font.base.medium,
+        label.font = paymentSheetAppearance.primaryButton.font ?? paymentSheetAppearance.scaledFont(
+            for: paymentSheetAppearance.font.base.medium,
             style: .callout,
             maximumPointSize: 25
         )
@@ -152,8 +156,8 @@ class ConfirmButton: UIControl {
         return icon
     }()
     var scaleFactor: CGFloat {
-        guard let primaryButtonFont = appearance.primaryButton.font else {
-            return appearance.font.sizeScaleFactor
+        guard let primaryButtonFont = paymentSheetAppearance.primaryButton.font else {
+            return paymentSheetAppearance.font.sizeScaleFactor
         }
         // scale by primary button text, not the overall
         return primaryButtonFont.pointSize/UIFont.labelFontSize
@@ -177,7 +181,7 @@ class ConfirmButton: UIControl {
         self.status = status
         self.callToAction = callToAction
         self.showProcessingLabel = showProcessingLabel
-        self.appearance = appearance
+        self.paymentSheetAppearance = appearance
         self.didTap = didTap
         self.didTapWhenDisabled = didTapWhenDisabled
         super.init(frame: .zero)
@@ -185,13 +189,13 @@ class ConfirmButton: UIControl {
 
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
         // primaryButton.backgroundColor takes priority over appearance.colors.primary
-        tintColor = appearance.primaryButton.backgroundColor ?? appearance.colors.primary
-        layer.applyShadow(shadow: appearance.primaryButton.shadow?.asElementThemeShadow ?? appearance.shadow.asElementThemeShadow)
+        tintColor = paymentSheetAppearance.primaryButton.backgroundColor ?? paymentSheetAppearance.colors.primary
+        layer.applyShadow(shadow: paymentSheetAppearance.primaryButton.shadow?.asElementThemeShadow ?? paymentSheetAppearance.shadow.asElementThemeShadow)
         layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: layer.cornerRadius).cgPath
 
         preservesSuperviewLayoutMargins = true
         layer.masksToBounds = true
-        layer.borderWidth = appearance.primaryButton.borderWidth
+        layer.borderWidth = paymentSheetAppearance.primaryButton.borderWidth
 
         applyCornerRadius()
 
@@ -235,8 +239,8 @@ class ConfirmButton: UIControl {
             spinner.widthAnchor.constraint(equalToConstant: spinnerSize.width.scaled(by: scaleFactor)),
             spinner.heightAnchor.constraint(equalToConstant: spinnerSize.height.scaled(by: scaleFactor)),
         ])
-        layer.borderColor = appearance.primaryButton.borderColor.cgColor
-        overriddenForegroundColor = appearance.primaryButton.textColor
+        layer.borderColor = paymentSheetAppearance.primaryButton.borderColor.cgColor
+        overriddenForegroundColor = paymentSheetAppearance.primaryButton.textColor
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(didBecomeActive),
@@ -253,7 +257,7 @@ class ConfirmButton: UIControl {
 #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        layer.borderColor = appearance.primaryButton.borderColor.cgColor
+        layer.borderColor = paymentSheetAppearance.primaryButton.borderColor.cgColor
         update()
     }
 #endif
@@ -381,12 +385,11 @@ class ConfirmButton: UIControl {
 
                 // If differentiate without color is enabled, we should underline the button instead.
                 if UIAccessibility.shouldDifferentiateWithoutColor && status == .enabled,
-                   let font = self.titleLabel.font,
                    let foregroundColor = self.titleLabel.textColor,
                    let text = text
                 {
                     let attributes: [NSAttributedString.Key: Any] = [
-                        .font: font,
+                        .font: self.titleLabel.font,
                         .foregroundColor: foregroundColor,
                         .underlineStyle: NSUnderlineStyle.single.rawValue,
                     ]
@@ -406,7 +409,7 @@ class ConfirmButton: UIControl {
             self.titleLabel.alpha = {
                 switch status {
                 case .disabled:
-                    return self.appearance.primaryButton.disabledTextColor == nil ? 0.6 : 1.0
+                    return self.paymentSheetAppearance.primaryButton.disabledTextColor == nil ? 0.6 : 1.0
                 case .spinnerWithInteractionDisabled:
                     return 0.6
                 case .succeeded:
@@ -453,11 +456,11 @@ class ConfirmButton: UIControl {
     }
 
     private func applyCornerRadius() {
-        if let cornerRadius = appearance.primaryButton.cornerRadius {
+        if let cornerRadius = paymentSheetAppearance.primaryButton.cornerRadius {
             // Use primary button corner radius
             layer.cornerRadius = cornerRadius
         } else {
-            applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .capsule)
+            applyCornerRadiusOrConfiguration(for: paymentSheetAppearance, ios26DefaultCornerStyle: .capsule)
         }
     }
 
@@ -492,12 +495,12 @@ class ConfirmButton: UIControl {
         let background = backgroundColor(for: status)
 
         // Use disabledTextColor if in disabled state and provided, otherwise fallback to foreground color
-        if status == .disabled, let disabledTextColor = appearance.primaryButton.disabledTextColor {
+        if status == .disabled, let disabledTextColor = paymentSheetAppearance.primaryButton.disabledTextColor {
             return disabledTextColor
         }
 
         // Use successTextColor if in succeeded state and provided, otherwise fallback to foreground color
-        if status == .succeeded, let successTextColor = appearance.primaryButton.successTextColor {
+        if status == .succeeded, let successTextColor = paymentSheetAppearance.primaryButton.successTextColor {
             return successTextColor
         }
 

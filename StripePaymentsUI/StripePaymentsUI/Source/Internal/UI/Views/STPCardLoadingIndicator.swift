@@ -6,7 +6,11 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 private let kCardLoadingIndicatorDiameter: CGFloat = 14.0
 private let kCardLoadingInnerCircleDiameter: CGFloat = 10.0

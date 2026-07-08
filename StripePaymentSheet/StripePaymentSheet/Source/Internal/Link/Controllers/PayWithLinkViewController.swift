@@ -6,7 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
@@ -280,7 +284,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.accessibilityIdentifier = "Stripe.Link.PayWithLinkViewController"
+        (view as? UIView)?.accessibilityIdentifier = "Stripe.Link.PayWithLinkViewController"
 
         context.configuration.style.configure(self)
 
@@ -323,9 +327,10 @@ final class PayWithLinkViewController: BottomSheetViewController {
         super.pushContentViewController(contentViewController)
 
         // Re-enable user interaction when presenting a new controller.
-        let wasUserInteractionEnabled = view.isUserInteractionEnabled
+        let rootView = view as? UIView
+        let wasUserInteractionEnabled = rootView?.isUserInteractionEnabled ?? true
         if !wasUserInteractionEnabled {
-            view.isUserInteractionEnabled = true
+            rootView?.isUserInteractionEnabled = true
         }
 
         if let viewController = contentViewController as? BaseViewController {
@@ -724,7 +729,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     }
 
     func allowSheetDismissal(_ enable: Bool) {
-        view.isUserInteractionEnabled = enable
+        (view as? UIView)?.isUserInteractionEnabled = enable
         context.isDismissible = enable
     }
 
@@ -757,7 +762,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     }
 
     func finish(withResult result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
-        view.isUserInteractionEnabled = false
+        (view as? UIView)?.isUserInteractionEnabled = false
         payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, result: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
     }
 
@@ -787,7 +792,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         }
         isBailingToWebFlow = true
         // Make sure we're presenting over a VC
-        guard let presentingViewController else {
+        guard let presentingViewController = presentingViewController as? UIViewController else {
             // No VC to present over, so don't bail
             return
         }

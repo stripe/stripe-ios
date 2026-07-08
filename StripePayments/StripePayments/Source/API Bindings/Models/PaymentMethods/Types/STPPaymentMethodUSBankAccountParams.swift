@@ -6,7 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// An object representing parameters used to create a US Bank Account Payment Method
 public class STPPaymentMethodUSBankAccountParams: NSObject {

@@ -8,7 +8,11 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A simple button that increases the tap target for small buttons used in the navigation bar of PaymentSheet
 /// For internal SDK use only

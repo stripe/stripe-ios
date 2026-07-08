@@ -7,7 +7,11 @@
 
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 protocol BankAccountInfoViewDelegate {
     func didTapXIcon()
@@ -20,11 +24,11 @@ class BankAccountInfoView: UIView {
         static let spacing: CGFloat = 12
     }
 
-    private let appearance: PaymentSheet.Appearance
+    private let paymentSheetAppearance: PaymentSheet.Appearance
     private let incentive: PaymentMethodIncentive?
 
     private var theme: ElementsAppearance {
-        appearance.asElementsTheme
+        paymentSheetAppearance.asElementsTheme
     }
     private lazy var accountInfoStackView: UIStackView = {
         let stackView = UIStackView()
@@ -76,7 +80,7 @@ class BankAccountInfoView: UIView {
         guard let incentive else {
             return nil
         }
-        return PromoBadgeView(appearance: appearance, tinyMode: false, text: incentive.displayText)
+        return PromoBadgeView(appearance: paymentSheetAppearance, tinyMode: false, text: incentive.displayText)
     }()
 
     lazy var xIcon: UIImageView = {
@@ -106,7 +110,7 @@ class BankAccountInfoView: UIView {
         appearance: PaymentSheet.Appearance = .default,
         incentive: PaymentMethodIncentive? = nil
     ) {
-        self.appearance = appearance
+        self.paymentSheetAppearance = appearance
         self.incentive = incentive
         super.init(frame: frame)
         addViewComponents()
@@ -161,7 +165,7 @@ class BankAccountInfoView: UIView {
 
     func setBankName(text: String) {
         self.bankNameLabel.text = text
-        bankIconImageView.image = PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: text), iconStyle: appearance.iconStyle)
+        bankIconImageView.image = PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: text), iconStyle: paymentSheetAppearance.iconStyle)
     }
 
     func setLastFourOfBank(text: String) {

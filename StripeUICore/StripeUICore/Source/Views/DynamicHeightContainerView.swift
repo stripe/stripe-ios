@@ -6,7 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// For internal SDK use only
 @objc(STP_Internal_DynamicHeightContainerView)
@@ -32,7 +36,12 @@ import UIKit
 
     /// Adds a subview and pins it to the top or bottom. It leaves the other end unpinned, thus not affecting the view's height.
     public func addPinnedSubview(_ view: UIView) {
-        // Add new view
+        #if canImport(AppKit) && !canImport(UIKit)
+        view.translatesAutoresizingMaskIntoConstraints = true
+        super.addSubview(view)
+        needsLayout = true
+        invalidateIntrinsicContentSize()
+        #else
         view.translatesAutoresizingMaskIntoConstraints = false
         super.addSubview(view)
         let pinnedDirectionAnchor: NSLayoutConstraint = {
@@ -49,6 +58,7 @@ import UIKit
             view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
             view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
         ])
+        #endif
     }
 
     /// Changes the view's height to be equal to the last added subview's height.
@@ -70,4 +80,38 @@ import UIKit
         }()
         pinnedDirectionConstraint?.isActive = true
     }
+
+    #if canImport(AppKit) && !canImport(UIKit)
+    public override var intrinsicContentSize: CGSize {
+        guard let view = subviews.last else {
+            return .zero
+        }
+        let size = view.intrinsicContentSize
+        if size.height > 0 {
+            return size
+        }
+        let childSizes = view.subviews.map(\.intrinsicContentSize).filter { $0.height > 0 }
+        guard !childSizes.isEmpty else {
+            return size
+        }
+        return CGSize(
+            width: childSizes.map(\.width).max() ?? size.width,
+            height: childSizes.map(\.height).max() ?? size.height
+        )
+    }
+
+    public override func layout() {
+        super.layout()
+        guard let view = subviews.last else {
+            return
+        }
+        let margins = layoutMargins
+        view.frame = CGRect(
+            x: margins.left,
+            y: margins.top,
+            width: max(0, bounds.width - margins.left - margins.right),
+            height: max(0, bounds.height - margins.top - margins.bottom)
+        )
+    }
+    #endif
 }

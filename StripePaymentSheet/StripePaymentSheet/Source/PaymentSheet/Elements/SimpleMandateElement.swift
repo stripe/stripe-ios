@@ -6,7 +6,11 @@
 //
 
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class SimpleMandateElement: PaymentMethodElement {
     let collectsUserInput: Bool = false

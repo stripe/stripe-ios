@@ -9,7 +9,11 @@ import Foundation
 import SafariServices
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 @objc(STP_Internal_AUBECSLegalTermsView)
 final class AUBECSLegalTermsView: UIView {
@@ -73,8 +77,8 @@ final class AUBECSLegalTermsView: UIView {
 
 }
 
-private extension UIResponder {
+private extension UIView {
     var parentViewController: UIViewController? {
-        return next as? UIViewController ?? next?.parentViewController
+        return next as? UIViewController ?? (next as? UIView)?.parentViewController
     }
 }

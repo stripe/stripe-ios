@@ -6,6 +6,17 @@
 
 @_spi(STP) import StripeCore
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
+
+#if canImport(UIKit)
+private typealias CustomerSheetPlatformViewRepresentable = UIViewRepresentable
+#elseif canImport(AppKit)
+private typealias CustomerSheetPlatformViewRepresentable = NSViewRepresentable
+#endif
 
 extension View {
     /// Presents the customer sheet to select saved payment methods
@@ -45,7 +56,7 @@ extension CustomerSheet {
         }
     }
 
-    struct CustomerSheetPresenter: UIViewRepresentable {
+    struct CustomerSheetPresenter: CustomerSheetPlatformViewRepresentable {
         @Binding var presented: Bool
         weak var customerSheet: CustomerSheet?
         let onCompletion: @MainActor (CustomerSheet.CustomerSheetResult) -> Void
@@ -54,14 +65,32 @@ extension CustomerSheet {
             return Coordinator(parent: self)
         }
 
-        func makeUIView(context: Context) -> UIView {
+        private func makeView(context: Context) -> UIView {
             return context.coordinator.view
         }
 
-        func updateUIView(_ uiView: UIView, context: Context) {
+        private func updateView(_ view: UIView, context: Context) {
             context.coordinator.parent = self
             context.coordinator.presented = presented
         }
+
+        #if canImport(UIKit)
+        func makeUIView(context: Context) -> UIView {
+            makeView(context: context)
+        }
+
+        func updateUIView(_ uiView: UIView, context: Context) {
+            updateView(uiView, context: context)
+        }
+        #elseif canImport(AppKit)
+        func makeNSView(context: Context) -> UIView {
+            makeView(context: context)
+        }
+
+        func updateNSView(_ nsView: UIView, context: Context) {
+            updateView(nsView, context: context)
+        }
+        #endif
 
         class Coordinator {
 

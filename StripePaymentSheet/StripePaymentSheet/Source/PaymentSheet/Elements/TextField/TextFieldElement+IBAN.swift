@@ -9,7 +9,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension TextFieldElement {
     static func makeIBAN(defaultValue: String? = nil, theme: ElementsAppearance = .default) -> TextFieldElement {

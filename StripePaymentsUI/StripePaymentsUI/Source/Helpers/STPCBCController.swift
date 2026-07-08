@@ -8,7 +8,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A controller to handle CBC state
 /// Update the `cardNumber` as the card number changes. Brands will be fetched and returned via the `updateHandler()` automatically.

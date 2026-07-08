@@ -5,7 +5,11 @@
 //  Created by Michael Liberatore on 7/14/25.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 // Customizable appearance-related configuration for Stripe-provided Link UI.
 @_spi(CryptoOnrampAlpha)

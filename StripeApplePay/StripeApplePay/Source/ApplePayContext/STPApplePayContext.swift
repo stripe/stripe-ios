@@ -9,6 +9,11 @@
 import Foundation
 import ObjectiveC
 import PassKit
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 @_spi(STP) import StripeCore
 
 /// :nodoc:
@@ -215,10 +220,16 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     @objc(presentApplePayWithCompletion:)
     public func presentApplePay(completion: STPVoidBlock? = nil) {
         // This isn't great: We should encourage the use of presentApplePay(from window:) instead.
+        #if canImport(UIKit)
         let window = UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
             .flatMap { $0.windows }
             .first { $0.isKeyWindow }
+        #elseif canImport(AppKit)
+        let window = NSApplication.shared.keyWindow
+        #else
+        let window: UIWindow? = nil
+        #endif
         self.presentApplePay(from: window, completion: completion)
     }
 
@@ -275,7 +286,11 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         on viewController: UIViewController,
         completion: STPVoidBlock? = nil
     ) {
+        #if canImport(UIKit)
         let window = viewController.viewIfLoaded?.window
+        #elseif canImport(AppKit)
+        let window = viewController.isViewLoaded ? viewController.view.window : nil
+        #endif
         presentApplePay(from: window, completion: completion)
     }
 

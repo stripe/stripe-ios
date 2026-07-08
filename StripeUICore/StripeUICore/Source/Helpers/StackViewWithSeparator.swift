@@ -6,7 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// For internal SDK use only
 @objc(STP_Internal_StackViewWithSeparator)
@@ -131,6 +135,21 @@ import UIKit
         view.layer.shadowRadius = 4
         return view
     }()
+
+    override public func layout() {
+        super.layout()
+        #if canImport(AppKit) && !canImport(UIKit)
+        if axis == .vertical {
+            let leftInset = layoutMargins.left
+            let rightInset = layoutMargins.right
+            for view in arrangedSubviews where !view.isHidden {
+                view.frame.origin.x = leftInset
+                view.frame.size.width = max(0, bounds.width - leftInset - rightInset)
+            }
+        }
+        layoutSubviews()
+        #endif
+    }
 
     func configureDefaultShadow() {
         backgroundView.layer.shadowOffset = CGSize(width: 0, height: 2)

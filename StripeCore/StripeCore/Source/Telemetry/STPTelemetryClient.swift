@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
 
@@ -113,11 +117,26 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         return model ?? "Unknown"
     }()
 
-    private var osVersion = UIDevice.current.systemVersion
+    private var osVersion: String = {
+        #if canImport(UIKit)
+        return UIDevice.current.systemVersion
+        #else
+        return ProcessInfo.processInfo.operatingSystemVersionString
+        #endif
+    }()
 
     private var screenSize: String {
         #if os(visionOS)
         return "visionOS"
+        #elseif canImport(AppKit)
+        guard let screen = NSScreen.main else {
+            return "macOS"
+        }
+        let screenRect = screen.frame
+        let width = screenRect.size.width
+        let height = screenRect.size.height
+        let scale = screen.backingScaleFactor
+        return String(format: "%.0fw_%.0fh_%.0fr", width, height, scale)
         #else
         let screen = UIScreen.main
         let screenRect = screen.bounds

@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /**
  A rounded, lightly shadowed container view with a thin border.
@@ -77,6 +81,17 @@ class SectionContainerView: UIView {
         )
     }
 
+    #if canImport(AppKit) && !canImport(UIKit)
+    override var intrinsicContentSize: CGSize {
+        bottomPinningContainerView.intrinsicContentSize
+    }
+
+    override func layout() {
+        super.layout()
+        bottomPinningContainerView.frame = bounds
+    }
+    #endif
+
 #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -90,6 +105,9 @@ class SectionContainerView: UIView {
             return true
         }
         for subview in topView.subviews {
+            guard let subview = subview as? UIView else {
+                continue
+            }
             return potentialFirstResponderIsInHierarchy(topView: subview)
         }
         return false
@@ -172,7 +190,7 @@ class SectionContainerView: UIView {
                 _ = newFirstResponderTextField.textField.becomeFirstResponder()
             }
         }
-        guard let viewController = window?.rootViewController?.presentedViewController else {
+        guard let viewController = window?.rootViewController?.presentedViewController as? UIViewController else {
             transition()
             transitionCompletion(false)
             return
@@ -202,7 +220,10 @@ extension SectionContainerView: EventHandler {
 extension SectionContainerView {
     class MultiElementRowView: UIView {
         private class DividerView: UIView {
+            private let width: CGFloat
+
             init(width: CGFloat, color: UIColor) {
+                self.width = width
                 super.init(frame: .zero)
                 translatesAutoresizingMaskIntoConstraints = false
                 widthAnchor.constraint(equalToConstant: width).isActive = true
@@ -212,6 +233,12 @@ extension SectionContainerView {
             required init?(coder: NSCoder) {
                 fatalError("init(coder:) has not been implemented")
             }
+
+            #if canImport(AppKit) && !canImport(UIKit)
+            override var intrinsicContentSize: CGSize {
+                CGSize(width: width, height: UIView.noIntrinsicMetric)
+            }
+            #endif
         }
 
         private let stackView: UIStackView = {
@@ -247,6 +274,17 @@ extension SectionContainerView {
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
+
+        #if canImport(AppKit) && !canImport(UIKit)
+        override var intrinsicContentSize: CGSize {
+            stackView.intrinsicContentSize
+        }
+
+        override func layout() {
+            super.layout()
+            stackView.frame = bounds
+        }
+        #endif
 
         func updateDividerVisibility() {
             let items = stackView.arrangedSubviews

@@ -4,7 +4,11 @@
 //
 
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 // MARK: - PlainSublabelView
 
@@ -90,8 +94,8 @@ extension RowButton {
                 UIView.animate(withDuration: showDuration) {
                     self.textLabel.text = nil
                     self.isHidden = true
-                    self.superview?.setNeedsLayout()
-                    self.superview?.layoutIfNeeded()
+                    (self.superview as? UIView)?.setNeedsLayout()
+                    (self.superview as? UIView)?.layoutIfNeeded()
                 }
             }
         }

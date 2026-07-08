@@ -6,7 +6,11 @@
 //
 
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A convenience UIImageView that displays the payment method types image, handles the download, and automatically updates its image for dark mode.
 class PaymentMethodTypeImageView: UIImageView {
@@ -59,7 +63,11 @@ class PaymentMethodTypeImageView: UIImageView {
             tintColor = contrastMatchingColor.roundToBlackOrWhite
         } else {
             self.image = image
+            #if canImport(UIKit)
             tintColor = nil
+            #else
+            tintColor = .clear
+            #endif
         }
     }
 }

@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 extension String {
     func highlightSearchString(highlightRanges: [NSValue], textStyle: UIFont.TextStyle, appearance: PaymentSheet.Appearance, isSubtitle: Bool) -> NSAttributedString {

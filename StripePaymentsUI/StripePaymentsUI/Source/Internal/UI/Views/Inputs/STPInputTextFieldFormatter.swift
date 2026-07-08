@@ -6,7 +6,11 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 class STPInputTextFieldFormatter: NSObject {
     func isAllowedInput(_ input: String, to string: String, at range: NSRange) -> Bool {

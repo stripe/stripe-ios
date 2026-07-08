@@ -7,7 +7,11 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: CustomerAddPaymentMethodViewController)
@@ -163,7 +167,9 @@ class CustomerAddPaymentMethodViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        sendEventToSubviews(.viewDidAppear, from: view)
+        if let rootView = view as? UIView {
+            sendEventToSubviews(.viewDidAppear, from: rootView)
+        }
     }
 
     override func viewDidLoad() {
@@ -240,7 +246,9 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             paymentMethodFormElement = element
         }
         updateUI()
-        sendEventToSubviews(.viewDidAppear, from: view)
+        if let rootView = view as? UIView {
+            sendEventToSubviews(.viewDidAppear, from: rootView)
+        }
     }
     private func makeElement(for type: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
         let configuration = PaymentSheetFormFactoryConfig.customerSheet(configuration)

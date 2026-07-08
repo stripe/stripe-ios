@@ -6,7 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// A separator with label.
 /// For internal SDK use only
@@ -37,7 +41,7 @@ final class SeparatorLabel: UIView {
 
     var textColor: UIColor {
         get {
-            return label.textColor
+            return label.textColor ?? .label
         }
         set {
             label.textColor = newValue

@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 typealias SectionViewModel = SectionElement.ViewModel
 
@@ -77,6 +81,20 @@ final class SectionView: UIView {
             updateBorderPath()
         }
     }
+
+    #if canImport(AppKit) && !canImport(UIKit)
+    override var intrinsicContentSize: CGSize {
+        (subviews.first as? UIStackView)?.intrinsicContentSize ?? .zero
+    }
+
+    override func layout() {
+        super.layout()
+        (subviews.first as? UIStackView)?.frame = bounds
+        if isHighlighted {
+            updateBorderPath()
+        }
+    }
+    #endif
 
     // MARK: - Private methods
 

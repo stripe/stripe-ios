@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#else
+import Foundation
+#endif
 
 /// STPFormTextFieldContainer is a protocol that views can conform to to provide customization properties for the field form views that they contain.
 @objc public protocol STPFormTextFieldContainer: NSObjectProtocol {

@@ -61,26 +61,26 @@ struct LinkInlineVerificationView: View {
     var body: some View {
         VStack(spacing: LinkUI.contentSpacing) {
             HStack(spacing: Constants.contentSpacing) {
-                SwiftUI.Image(uiImage: brand.paymentSheetLogoImage)
+                SwiftUI.Image(stpImage: brand.paymentSheetLogoImage)
                     .resizable()
                     .scaledToFit()
                     .frame(height: Constants.logoHeight)
 
                 if let paymentMethodPreview = viewModel.paymentMethodPreview {
                     Rectangle()
-                        .fill(Color(uiColor: .separator))
+                        .fill(Color(stpColor: .separator))
                         .frame(width: Constants.separatorWidth, height: Constants.logoHeight)
                         .cornerRadius(Constants.separatorWidth / 2)
 
                     HStack(spacing: Constants.paymentMehtodIconAndNumberSpacing) {
-                        SwiftUI.Image(uiImage: paymentMethodPreview.icon)
+                        SwiftUI.Image(stpImage: paymentMethodPreview.icon)
                             .resizable()
                             .scaledToFit()
                             .frame(height: Constants.logoHeight)
 
                         Text(paymentMethodPreview.last4)
                             .font(Font(font))
-                            .foregroundColor(Color(uiColor: .label))
+                            .foregroundColor(Color(stpColor: .label))
                     }
                 }
             }
@@ -112,7 +112,7 @@ struct LinkInlineVerificationView: View {
                             }
                         }
                     )
-                    .tint(Color(uiColor: .linkBorderSelected))
+                    .tint(Color(stpColor: .linkBorderSelected))
                 }
             }
             .frame(height: 72)
@@ -120,7 +120,7 @@ struct LinkInlineVerificationView: View {
             if let startVerificationErrorMessage {
                 Text(startVerificationErrorMessage)
                     .font(Font(LinkUI.font(forTextStyle: .detail)))
-                    .foregroundColor(Color(uiColor: viewModel.appearance.colors.danger))
+                    .foregroundColor(Color(stpColor: viewModel.appearance.colors.danger))
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -129,7 +129,7 @@ struct LinkInlineVerificationView: View {
                 // TODO: Localize
                 Text("Resend code")
                     .font(Font(viewModel.appearance.asElementsTheme.fonts.subheadline.bold))
-                    .foregroundColor(Color(uiColor: .linkTextPrimary))
+                    .foregroundColor(Color(stpColor: .linkTextPrimary))
             }
             .disabled(viewModel.loading)
             .opacity(viewModel.loading ? 0.5 : 1.0)
