@@ -80,8 +80,6 @@ import UIKit
     /// A set of beta headers to add to Stripe API requests e.g. `["alipay_beta=v1"]`.
     public var betas: Set<String> = []
 
-    @_spi(STP) public static let vippsPreviewBetaHeader = "vipps_preview=v1"
-
     /// Returns `true` if `publishableKey` is actually a user key, `false` otherwise.
     @_spi(STP) public var publishableKeyIsUserKey: Bool {
         return publishableKey?.hasPrefix("uk_") ?? false

@@ -93,15 +93,34 @@ class STPAPIClientTest: XCTestCase {
         XCTAssertEqual(accountHeader, "acct_123")
     }
 
-    func testMakeCopyAddingBetas() {
+    func testConfiguredRequestIncludesMerchantProvidedBetas() {
+        let sut = STPAPIClient(publishableKey: "pk_foo")
+        sut.betas = ["merchant_beta=v1"]
+
+        let stripeVersion = sut.configuredRequest(
+            for: URL(string: "https://www.stripe.com")!,
+            additionalHeaders: [:]
+        ).allHTTPHeaderFields?["Stripe-Version"]
+
+        XCTAssertEqual(
+            Set(stripeVersion?.split(separator: ";").map { $0.trimmingCharacters(in: .whitespaces) } ?? []),
+            [STPAPIClient.apiVersion, "merchant_beta=v1"]
+        )
+    }
+
+    func testMakeCopyPreservesMerchantProvidedBetas() throws {
         let sut = STPAPIClient(publishableKey: "pk_foo")
         sut.betas = ["existing_beta=v1"]
 
-        let copiedClient = sut.makeCopy(addingBetas: [STPAPIClient.vippsPreviewBetaHeader])
+        let copiedClient = sut.makeCopy()
 
         XCTAssertFalse(copiedClient === sut)
         XCTAssertEqual(sut.betas, ["existing_beta=v1"])
-        XCTAssertEqual(copiedClient.betas, ["existing_beta=v1", STPAPIClient.vippsPreviewBetaHeader])
+        XCTAssertEqual(copiedClient.betas, ["existing_beta=v1"])
+
+        let apiClientSource = try stpAPIClientSource()
+        XCTAssertTrue(apiClientSource.contains("\n    public var betas: Set<String> = []"))
+        XCTAssertFalse(apiClientSource.contains("@_spi(STP) public var betas"))
     }
 
     private struct MockUAUsageClass: STPAnalyticsProtocol {
@@ -175,5 +194,19 @@ class STPAPIClientTest: XCTestCase {
         XCTAssertEqual(userAgentHeaderDict?["partner_id"] as! String, "pp_partner_1234")
         XCTAssertEqual(userAgentHeaderDict?["version"] as! String, "1.2.34")
         XCTAssertEqual(userAgentHeaderDict?["url"] as! String, "https://myawesomelibrary.info")
+    }
+
+    private func stpAPIClientSource() throws -> String {
+        let stripeIOSRoot = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+        let apiClientSourceURL = stripeIOSRoot
+            .appendingPathComponent("StripeCore")
+            .appendingPathComponent("StripeCore")
+            .appendingPathComponent("Source")
+            .appendingPathComponent("API Bindings")
+            .appendingPathComponent("STPAPIClient.swift")
+        return try String(contentsOf: apiClientSourceURL, encoding: .utf8)
     }
 }
