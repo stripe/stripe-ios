@@ -264,9 +264,14 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
 
         // If finished collecting, submit and transition
         if updateData.requirements.missing.isEmpty {
-            apiClient.submitIdentityVerificationPage().observe(on: .main) { [weak self] submittedData in
-                guard let self = self else { return }
-                self.isVerificationPageSubmitted = (try? submittedData.get())?.submittedAndClosed() == true
+            Task {
+                let submittedData: Result<StripeAPI.VerificationPageData, Error>
+                do {
+                    submittedData = .success(try await apiClient.submitIdentityVerificationPage())
+                    self.isVerificationPageSubmitted = (try? submittedData.get())?.submittedAndClosed() == true
+                } catch {
+                    submittedData = .failure(error)
+                }
 
                 // Checking the response of submit
                 guard case .success(let resultData) = submittedData
@@ -492,19 +497,27 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
 
     func generatePhoneOtp() async -> StripeAPI.VerificationPageData {
         await withCheckedContinuation { continuation in
-            apiClient.generatePhoneOtp().observe(on: .main) { [weak self] result in
-                self?.handleVerificationPageDataResult(updateDataResult: result, successPageData: { successPageData in continuation.resume(returning: successPageData) })
+            Task {
+                let result: Result<StripeAPI.VerificationPageData, any Error>
+                do {
+                    result = .success(try await apiClient.generatePhoneOtp())
+                } catch {
+                    result = .failure(error)
+                }
+                
+                handleVerificationPageDataResult(updateDataResult: result, successPageData: { successPageData in continuation.resume(returning: successPageData) })
             }
         }
     }
 
     func sendCannotVerifyPhoneOtpAndTransition() async {
-        await withCheckedContinuation { continuation in
-            apiClient.cannotPhoneVerifyOtp().observe(on: .main) { [weak self] updatedDataResult in
-                self?.transitionWithUpdatedDataResult(result: updatedDataResult)
-                continuation.resume()
-            }
+        let updatedDataResult: Result<StripeAPI.VerificationPageData, Error>
+        do {
+            updatedDataResult = .success(try await apiClient.cannotPhoneVerifyOtp())
+        } catch {
+            updatedDataResult = .failure(error)
         }
+        transitionWithUpdatedDataResult(result: updatedDataResult)
     }
 
     private func transitionWithUpdatedDataResult(result: Result<StripeAPI.VerificationPageData, Error>) {

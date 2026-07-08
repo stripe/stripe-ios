@@ -111,19 +111,19 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
 
     func testSubmitIdentityVerificationSession() async throws {
         try await verifyPostWithSuffix(expectedSuffix: "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/submit") {
-            apiClient.submitIdentityVerificationPage()
+            try await apiClient.submitIdentityVerificationPage()
         }
     }
 
     func testGeneratePhoneOtp() async throws {
         try await verifyPostWithSuffix(expectedSuffix: "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/phone_otp/generate") {
-            apiClient.generatePhoneOtp()
+            try await apiClient.generatePhoneOtp()
         }
     }
 
     func testCannotPhoneVerifyOtp() async throws {
         try await verifyPostWithSuffix(expectedSuffix: "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/phone_otp/cannot_verify") {
-            apiClient.cannotPhoneVerifyOtp()
+            try await apiClient.cannotPhoneVerifyOtp()
         }
     }
 
@@ -187,9 +187,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
         XCTAssertEqual(response, mockResponse)
     }
 
-    private func verifyPostWithSuffix(expectedSuffix: String, apiCall: () -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData>) async throws {
-        let exp = expectation(description: "Request completed")
-
+    private func verifyPostWithSuffix(expectedSuffix: String, apiCall: () async throws -> StripeCore.StripeAPI.VerificationPageData) async throws {
         let mockVerificationPageData = VerificationPageDataMock.response200
         let mockResponseData = try mockVerificationPageData.data()
         let mockResponse = try mockVerificationPageData.make()
@@ -209,18 +207,12 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
 
-        apiCall().observe { result in
-            switch result {
-            case .success(let response):
-                XCTAssertEqual(response, mockResponse)
-            case .failure(let error):
-                XCTFail("Request returned error \(error)")
-            }
-            exp.fulfill()
+        do {
+            let response = try await apiCall()
+            XCTAssertEqual(response, mockResponse)
+        } catch {
+            XCTFail("Request returned error \(error)")
         }
-
-        await fulfillment(of: [exp], timeout: 1)
-
     }
 }
 

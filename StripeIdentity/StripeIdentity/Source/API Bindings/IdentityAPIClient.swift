@@ -19,7 +19,7 @@ protocol IdentityAPIClient: AnyObject {
         updating verificationData: StripeAPI.VerificationPageDataUpdate
     ) async throws -> StripeAPI.VerificationPageData
 
-    func submitIdentityVerificationPage() -> Promise<StripeAPI.VerificationPageData>
+    func submitIdentityVerificationPage() async throws -> StripeAPI.VerificationPageData
 
     func uploadImage(
         _ image: UIImage,
@@ -36,9 +36,9 @@ protocol IdentityAPIClient: AnyObject {
         simulateDelay: Bool
     ) -> Promise<StripeAPI.VerificationPageData>
 
-    func generatePhoneOtp() -> Promise<StripeAPI.VerificationPageData>
+    func generatePhoneOtp() async throws -> StripeAPI.VerificationPageData
 
-    func cannotPhoneVerifyOtp() -> Promise<StripeAPI.VerificationPageData>
+    func cannotPhoneVerifyOtp() async throws -> StripeAPI.VerificationPageData
 }
 
 final class IdentityAPIClientImpl: IdentityAPIClient {
@@ -100,8 +100,8 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         )
     }
 
-    func submitIdentityVerificationPage() -> Promise<StripeAPI.VerificationPageData> {
-        return apiClient.post(
+    func submitIdentityVerificationPage() async throws -> StripeAPI.VerificationPageData {
+        try await apiClient.post(
             resource: APIEndpointVerificationPageSubmit(id: verificationSessionId),
             parameters: [:]
         )
@@ -136,15 +136,15 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         )
     }
 
-    func generatePhoneOtp() -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
-        return apiClient.post(
+    func generatePhoneOtp() async throws -> StripeCore.StripeAPI.VerificationPageData {
+        try await apiClient.post(
             resource: APIEndpointVerificationPagePhoneOtpGenerate(id: verificationSessionId),
             parameters: [:]
         )
     }
 
-    func cannotPhoneVerifyOtp() -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
-        return apiClient.post(
+    func cannotPhoneVerifyOtp() async throws -> StripeCore.StripeAPI.VerificationPageData {
+        try await apiClient.post(
             resource: APIEndpointVerificationPagePhoneOtpCannotVerify(id: verificationSessionId),
             parameters: [:]
         )
