@@ -1,5 +1,5 @@
 //
-//  CryptoOnrampUnsupportedNetworkAPIError.swift
+//  WalletNotFoundAPIError.swift
 //  StripeCryptoOnramp
 //
 //  Created by Michael Liberatore on 6/30/26.
@@ -8,9 +8,9 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-/// Details from an unsupported-network API error, enriched with SDK-local diagnostic context.
+/// Details from a wallet-not-found API error, enriched with SDK-local diagnostic context.
 @_spi(CryptoOnrampAlpha)
-public struct CryptoOnrampUnsupportedNetworkAPIError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
+public struct WalletNotFoundAPIError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
     public let apiErrorContext: APIErrorContext
@@ -18,7 +18,7 @@ public struct CryptoOnrampUnsupportedNetworkAPIError: StripeCryptoOnrampAPIError
     /// Local SDK context used to expose diagnostics.
     let diagnosticContext: DiagnosticContext
 
-    /// Creates an unsupported-network API error from shared API error and local diagnostic context.
+    /// Creates a wallet-not-found API error from shared API error and local diagnostic context.
     ///
     /// - Parameters:
     ///   - apiErrorContext: Shared API error context used to expose diagnostics.
@@ -31,14 +31,14 @@ public struct CryptoOnrampUnsupportedNetworkAPIError: StripeCryptoOnrampAPIError
     // MARK: - StripeCryptoOnrampAPIError
 
     public var code: String {
-        return apiErrorContext.code(fallback: "crypto_onramp_unsupported_network")
+        return apiErrorContext.code(fallback: "crypto_onramp_wallet_not_found")
     }
 
-    // MARK: - CryptoOnrampUnsupportedNetworkAPIError
+    // MARK: - WalletNotFoundAPIError
 
     /// A localized message that can be shown to the app user.
     public var userMessage: String {
-        return String.Localized.cryptoOnrampErrorUnsupportedNetwork
+        return String.Localized.cryptoOnrampErrorWalletNotFound
     }
 
     /// A developer-facing description with diagnostic details and suggested next steps.
@@ -46,9 +46,9 @@ public struct CryptoOnrampUnsupportedNetworkAPIError: StripeCryptoOnrampAPIError
         return StripeCryptoOnrampErrorRenderer.renderAPIErrorDeveloperMessage(
             apiErrorContext: apiErrorContext,
             diagnosticContext: diagnosticContext,
-            summary: apiMessage ?? "Crypto Onramp doesn't support this wallet network for the requested operation.",
+            summary: apiMessage ?? "Crypto Onramp couldn't find the wallet for the authenticated consumer.",
             code: code,
-            nextStep: "Use a network supported by Crypto Onramp for this operation, then retry the request."
+            nextStep: "Use a wallet registered to the authenticated consumer, or register the wallet before retrying the request."
         )
     }
 }
