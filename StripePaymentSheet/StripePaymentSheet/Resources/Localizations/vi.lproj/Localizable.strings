@@ -62,8 +62,6 @@
 
 "By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Bằng việc tiếp tục, bạn đồng ý lưu thông tin của mình cho các giao dịch mua trong tương lai với %1$@ và <link>%2$@</link> theo <terms>điều khoản</terms> và <privacy>quyền riêng tư</privacy> của %2$@.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Bằng cách tiếp tục, bạn đồng ý lưu thông tin của mình cho các giao dịch mua trong tương lai với %@ và <link>Link</link> theo <terms>điều khoản</terms> và <privacy>quyền riêng tư</privacy> của Link.";
-
 "By continuing, you agree to save your information for future purchases with %@." = "Bằng cách tiếp tục, bạn đồng ý lưu thông tin của mình cho các giao dịch mua trong tương lai với %@.";
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Bằng việc tiếp tục, bạn cho phép %@ tự động ghi nợ Số dư Satispay của bạn theo chu kỳ định kỳ dựa trên gói mua hoặc gói đăng ký của bạn.";
@@ -74,11 +72,7 @@
 
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tham gia %@, bạn đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách quyền riêng tư</privacy>.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tham gia Link, quý vị đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
-
 "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc cung cấp số điện thoại và email, bạn đồng ý tạo tài khoản %1$@ tuân thủ theo <terms>Điều khoản</terms> và <privacy>Chính sách quyền riêng tư</privacy> của %1$@.";
-
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc cung cấp số điện thoại và email, bạn đồng ý tạo tài khoản Link theo <terms>Điều khoản sử dụng</terms> và <privacy>Chính sách Quyền riêng tư</privacy> của Link.";
 
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Bằng việc cung cấp chi tiết tài khoản ngân hàng của mình và xác nhận khoản thanh toán này, bạn đồng ý với Yêu cầu Ghi nợ Trực tiếp này và <terms>thỏa thuận dịch vụ yêu cầu ghi nợ trực tiếp</terms> này, đồng thời cho phép Stripe Payments Australia Pty Ltd ACN 160 180 343 với Số ID người dùng ghi nợ trực tiếp 507156 (“Stripe”) ghi nợ tài khoản của bạn qua Hệ thống thanh toán bù trừ điện tử hàng loạt (BECS) thay mặt cho %@ (\"Người bán\") đối với bất kỳ số tiền nào được Người bán ghi nợ trực tiếp cho bạn. Bạn xác nhận rằng bạn là chủ tài khoản hoặc người ký tên cho tài khoản được liệt kê ở trên.";
 
@@ -86,13 +80,9 @@
 
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc cung cấp email, bạn đồng ý tạo tài khoản %1$@ và lưu thông tin thanh toán của bạn vào %1$@, theo <terms>Điều khoản</terms> và <privacy>Chính sách quyền riêng tư</privacy> của %1$@.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc cung cấp email, bạn đồng ý tạo tài khoản Link và lưu thông tin thanh toán vào Link, theo <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy> của Link.";
-
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Bằng việc cung cấp thông tin thanh toán của quý vị và xác nhận khoản thanh toán này, quý vị đã ủy quyền cho (A) %@ và Stripe, nhà cung cấp dịch vụ thanh toán của chúng tôi, gửi hướng dẫn đến ngân hàng của quý vị để ghi nợ tài khoản của quý vị và (B) ngân hàng ghi nợ tài khoản của quý vị theo những hướng dẫn đó. Trong các quyền của mình, quý vị được hoàn tiền từ ngân hàng của mình theo các điều khoản và điều kiện trong thỏa thuận của quý vị với ngân hàng của quý vị. Khoản tiền hoàn phải được yêu cầu trong vòng 8 tuần kể từ ngày tài khoản của quý vị bị ghi nợ. Các quyền của quý vị được giải thích trong bản tuyên bố mà quý vị có thể nhận được từ ngân hàng của mình. Quý vị đồng ý nhận thông báo cho các khoản ghi nợ trong tương lai tối đa 2 ngày trước khi chúng xảy ra.";
 
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc cung cấp số điện thoại của mình, bạn đồng ý tạo tài khoản %1$@ và lưu thông tin thanh toán của bạn vào %1$@, theo <terms>Điều khoản</terms> và <privacy>Chính sách quyền riêng tư</privacy> của %1$@.";
-
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc cung cấp số điện thoại, bạn đồng ý tạo tài khoản Link và lưu thông tin thanh toán vào Link, theo <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy> của Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc lưu tài khoản ngân hàng của bạn cho %@ bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
 
@@ -136,8 +126,6 @@
 
 "Create an account with %@ for faster checkout across the web" = "Tạo tài khoản bằng %@ để thanh toán nhanh hơn trên web";
 
-"Create an account with Link for faster checkout across the web" = "Tạo tài khoản bằng Link để thanh toán nhanh hơn trên web";
-
 "Debit or credit card" = "Thẻ ghi nợ hoặc thẻ tín dụng";
 
 "Declarations" = "Tuyên bố";
@@ -175,8 +163,6 @@
 "Log in or sign up" = "Đăng nhập hoặc đăng ký";
 
 "Log out of %@" = "Đăng xuất khỏi %@";
-
-"Log out of Link" = "Đăng xuất khỏi Link";
 
 "Manage SEPA debit" = "Quản lý Ghi nợ SEPA";
 
@@ -280,8 +266,6 @@
 
 "Save my info for faster checkout with %@" = "Lưu thông tin của tôi để thanh toán nhanh hơn với %@";
 
-"Save my info for faster checkout with Link" = "Lưu thông tin của tôi để thanh toán nhanh chóng hơn với Link";
-
 "Save payment details to %@ for future purchases" = "Lưu thông tin thanh toán vào %@ để mua hàng trong tương lai";
 
 "Save this account for future %@ payments" = "Lưu tài khoản này cho các thanh toán %@ trong tương lai";
@@ -289,8 +273,6 @@
 "Save your bank account in just a few steps." = "Lưu tài khoản ngân hàng chỉ trong vài bước.";
 
 "Save your info for secure 1-click checkout with %@" = "Lưu thông tin của bạn để thanh toán an toàn bằng 1 cú nhấp chuột với %@";
-
-"Save your info for secure 1-click checkout with Link" = "Lưu thông tin của bạn để thanh toán an toàn bằng 1 cú nhấp chuột với Link";
 
 "Saved" = "Đã lưu";
 

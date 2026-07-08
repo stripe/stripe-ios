@@ -62,8 +62,6 @@
 
 "By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Ha folytatja, azzal hozzájárul az adatainak mentéséhez a jövőbeni vásárlásokhoz itt: %1$@ és <link>%2$@</link> a %2$@ <terms>feltételeknek</terms> és az <privacy>adatvédelmi szabályzatnak</privacy> megfelelően.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "A folytatással Ön beleegyezik abba, hogy adatait elmenti a jövőbeni vásárlásokhoz itt: %@ és <link>a Linknél</link> a Link <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> szerint.";
-
 "By continuing, you agree to save your information for future purchases with %@." = "A folytatással Ön beleegyezik abba, hogy adatait elmenti a jövőbeni vásárlásokhoz itt: %@.";
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "A folytatással felhatalmazza a(z) %@-t, hogy a vásárlási vagy előfizetési csomagjának megfelelően rendszeresen automatikusan megterhelje Satispay egyenlegét.";
@@ -74,11 +72,7 @@
 
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Azzal, hogy csatlakozik %@ elfogadja a <terms>feltételeket</terms> és az <privacy>adatvédelmi szabályzatot</privacy>.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "A Linkhez történő csatlakozással Őn elfogadja a <terms>feltételeket</terms> és az <privacy>adatvédelmi szabályzatot</privacy>.";
-
 "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "A telefonszám és az e-mail megadásával Ön hozzájárul egy %1$@ számla létrehozásához, amelyre a %1$@ <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> vonatkoznak.";
-
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Telefonszáma és e-mail-címe megadásával hozzájárul a Link <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> által szabályozott Link-számla létrehozásához.";
 
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "A bankszámlaadatainak megadásával és a fizetés megerősítésével elfogadja ezt a közvetlen beszedési kérelmet és a <terms>közvetlen beszedési kérelemre vonatkozó szolgáltatási szerződést</terms>, valamint felhatalmazza a Stripe Payments Australia Pty Ltd ACN 160 180 343 céget (közvetlen beszedési kérelmi azonosító: 507156) („Stripe”), hogy a(z) %@ („a Kereskedő”) nevében megterhelje az Ön számláját a Bulk Electronic Clearing System (BECS) rendszeren keresztül a Kereskedő által Ön felé jelzett bármilyen összeggel. Ön kijelenti, hogy a fent megadott számla tekintetében Ön vagy számlatulajdonos vagy meghatalmazott aláíró.";
 
@@ -86,13 +80,9 @@
 
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Az e-mail-címének megadásával Ön hozzájárul egy %1$@ számla létrehozásához és a fizetési adatok mentéséhez %1$@ helyre a %1$@ <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> szerint.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Az e-mail-címe megadásával hozzájárul egy Link fiók létrehozásához és a fizetési adatai mentéséhez a Linkbe, a Link <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> szerint.";
-
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Fizetési adatainak megadásával és a fizetés megerősítésével Ön felhatalmazza (A) a(z) %@ céget és a Stripe-ot, fizetési szolgáltatónkat, hogy utasításokat küldjön a bankjának, hogy megterhelje a számláját, és (B) bankját, hogy az utasításoknak megfelelően megterhelje a számláját. A jogai részeként Ön jogosult a bankjától a velük kötött megállapodás feltételei szerinti visszatérítésre. A visszatérítést a számla megterhelésének napjától számított 8 héten belül kell igényelni. Jogait egy, a bankjától beszerezhető nyilatkozat tartalmazza. Beleegyezik abba, hogy a jövőbeni terhelésekről értesítést kap, legfeljebb 2 nappal azok bekövetkezése előtt.";
 
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Telefonszáma megadásával Ön hozzájárul egy %1$@ számla létrehozásához és a fizetési adatok mentéséhez %1$@ helyre a %1$@ <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> szerint.";
-
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "A telefonszáma megadásával hozzájárul egy Link fiók létrehozásához és a fizetési adatai mentéséhez a Linkbe, a Link <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> szerint.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy elmenti a bankszámlát a(z) %@ számára, beleegyezik a kifizetések engedélyezésébe ezen <terms>feltételek</terms> szerint.";
 
@@ -136,8 +126,6 @@
 
 "Create an account with %@ for faster checkout across the web" = "Hozzon létre egy számlát a következővel: %@ a gyorsabb fizetéshez az interneten";
 
-"Create an account with Link for faster checkout across the web" = "Hozzon létre egy fiókot a Link segítségével a gyorsabb fizetéshez az interneten";
-
 "Debit or credit card" = "Betéti vagy hitelkártya";
 
 "Declarations" = "Nyilatkozatok";
@@ -175,8 +163,6 @@
 "Log in or sign up" = "Bejelentkezés vagy regisztrálás";
 
 "Log out of %@" = "Kijelentkezés a következőről: %@";
-
-"Log out of Link" = "Kijelentkezés a Link";
 
 "Manage SEPA debit" = "SEPA beszedés kezelése";
 
@@ -280,8 +266,6 @@
 
 "Save my info for faster checkout with %@" = "Adataim mentése a gyorsabb fizetéshez a következővel: %@";
 
-"Save my info for faster checkout with Link" = "Adataim mentése a gyorsabb fizetéshez a Linkkel";
-
 "Save payment details to %@ for future purchases" = "Fizetési adatok mentése %@ vállalkozó részére későbbi vásárlásokhoz";
 
 "Save this account for future %@ payments" = "Számla mentése a(z) %@ részére történő fizetésekhez";
@@ -289,8 +273,6 @@
 "Save your bank account in just a few steps." = "Mentse el egyszerűen bankszámláját.";
 
 "Save your info for secure 1-click checkout with %@" = "Mentse adatait a biztonságos egykattintásos fizetéshez a következővel: %@";
-
-"Save your info for secure 1-click checkout with Link" = "Mentse el az adatait a biztonságos egykattintásos fizetéshez a Linkkel";
 
 "Saved" = "Mentett";
 

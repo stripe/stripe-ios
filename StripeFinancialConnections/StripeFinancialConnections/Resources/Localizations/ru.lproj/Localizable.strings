@@ -28,8 +28,6 @@
 
 "Continue with %@" = "Продолжить с %@";
 
-"Continue with Link" = "Продолжить с Link";
-
 "Email address" = "Адрес электронной почты";
 
 "Enter bank details" = "Введите банковские реквизиты";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "Попробуйте поискать другой банк или %@";
 
 "Use information you previously saved with your %@ account." = "Использовать данные, ранее сохраненные в вашей учетной записи %@.";
-
-"Use information you previously saved with your Link account." = "Используйте данные, ранее сохраненные в вашей учетной записи Link.";
 
 "Use test account" = "Использовать тестовый счет";
 

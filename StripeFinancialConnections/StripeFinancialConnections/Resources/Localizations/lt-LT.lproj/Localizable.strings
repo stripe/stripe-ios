@@ -28,8 +28,6 @@
 
 "Continue with %@" = "Tęsti su %@";
 
-"Continue with Link" = "Tęsti naudojant „Link“";
-
 "Email address" = "El. pašto adresas";
 
 "Enter bank details" = "Įvesti banko duomenis";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "Pabandykite ieškoti kito banko arba %@";
 
 "Use information you previously saved with your %@ account." = "Naudokite informaciją, kurią anksčiau įrašėte naudodamiesi %@ paskyra.";
-
-"Use information you previously saved with your Link account." = "Naudokite anksčiau savo „Link“ paskyroje įrašytą informaciją.";
 
 "Use test account" = "Naudoti bandomąją sąskaitą";
 

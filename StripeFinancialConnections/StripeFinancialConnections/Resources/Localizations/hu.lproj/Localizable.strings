@@ -28,8 +28,6 @@
 
 "Continue with %@" = "Folytatás ezzel: %@";
 
-"Continue with Link" = "Folytatás a Linkkel";
-
 "Email address" = "E-mail-cím";
 
 "Enter bank details" = "Banki adatok megadása";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "Próbáljon meg másik bankot keresni, vagy %@.";
 
 "Use information you previously saved with your %@ account." = "Használja az előzőleg a(z) %@ számlájához mentett adatokat.";
-
-"Use information you previously saved with your Link account." = "Használja az előzőleg a Link számlájára mentett adatokat.";
 
 "Use test account" = "Próbaszámla használata";
 
