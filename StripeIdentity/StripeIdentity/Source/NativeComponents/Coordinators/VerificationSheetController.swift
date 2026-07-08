@@ -470,29 +470,27 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
     func verifyAndTransition(
         simulateDelay: Bool
     ) async {
-        await withCheckedContinuation { continuation in
-            apiClient.verifyTestVerificationSession(
-                simulateDelay: simulateDelay
-            ).observe(on: .main) { [weak self] result in
-                self?.overrideTestModeReturnValue(result: .flowCompleted)
-                self?.transitionWithVerificaionPageDataResult(result)
-                continuation.resume()
-            }
+        let result: Result<StripeAPI.VerificationPageData, Error>
+        do {
+            result = .success(try await apiClient.verifyTestVerificationSession(simulateDelay: simulateDelay))
+        } catch {
+            result = .failure(error)
         }
+        overrideTestModeReturnValue(result: .flowCompleted)
+        transitionWithVerificaionPageDataResult(result)
     }
 
     func unverifyAndTransition(
         simulateDelay: Bool
     ) async {
-        await withCheckedContinuation { continuation in
-            apiClient.unverifyTestVerificationSession(
-                simulateDelay: simulateDelay
-            ).observe(on: .main) { [weak self] result in
-                self?.overrideTestModeReturnValue(result: .flowCompleted)
-                self?.transitionWithVerificaionPageDataResult(result)
-                continuation.resume()
-            }
+        let result: Result<StripeAPI.VerificationPageData, Error>
+        do {
+            result = .success(try await apiClient.unverifyTestVerificationSession(simulateDelay: simulateDelay))
+        } catch {
+            result = .failure(error)
         }
+        overrideTestModeReturnValue(result: .flowCompleted)
+        transitionWithVerificaionPageDataResult(result)
     }
 
     func generatePhoneOtp() async -> StripeAPI.VerificationPageData {
