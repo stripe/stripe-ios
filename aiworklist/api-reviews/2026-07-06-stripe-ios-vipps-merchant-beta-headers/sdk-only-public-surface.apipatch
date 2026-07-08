@@ -1,5 +1,0 @@
-// No Stripe HTTP API patch applies here.
-// This API review covers a stripe-ios SDK-only public surface change:
-// - `STPAPIClient.betas` becomes public
-// - PaymentSheet / Checkout stop auto-injecting `vipps_preview=v1`
-// - No Stripe REST endpoint, parameter, or response schema changes
