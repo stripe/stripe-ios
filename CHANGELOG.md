@@ -4,6 +4,12 @@ MINOR
 ## X.Y.Z - changes pending release
 
 ### StripeConnect
+* [Changed][6611](https://github.com/stripe/stripe-ios/pull/6611) `PaymentsViewController`, `PaymentsViewControllerDelegate`, `PayoutsViewController`, `PayoutsViewControllerDelegate`, and `EmbeddedComponentManager.PaymentsListDefaultFiltersOptions` are now part of the public API and no longer require `@_spi(PreviewConnect)` to access.
+
+### PaymentsUI
+* [Fixed][6664](https://github.com/stripe/stripe-ios/pull/6664) Fixed an issue where the iOS 26 floating number pad popover could misposition itself over the form on iPad when using `STPPaymentCardTextField`.
+
+### StripeConnect
 * [Changed] `PaymentsViewController`, `PaymentsViewControllerDelegate`, `PayoutsViewController`, `PayoutsViewControllerDelegate`, and `EmbeddedComponentManager.PaymentsListDefaultFiltersOptions` are now part of the public API and no longer require `@_spi(PreviewConnect)` to access.
 
 ## 26.2.0 2026-07-06

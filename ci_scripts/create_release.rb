@@ -2,6 +2,7 @@
 
 require_relative 'release_common'
 require_relative 'validate_version_number'
+require_relative 'changelog_entries_steps'
 
 # Get argument of new version number
 @version = @specified_version
@@ -83,6 +84,11 @@ def validate_changelog_bump
   raise "CHANGELOG.md line 2 must be #{expected_marker} before creating release #{@version}. Found #{actual_marker}."
 end
 
+def generate_changelog
+  puts "Generating changelog entries for commits since last release..."
+  generate_changelog_entries(dry_run: @is_dry_run)
+end
+
 def run_download_localized_strings
   return if @is_dry_run
   `sh ci_scripts/download_localized_strings_from_lokalise.sh`
@@ -144,6 +150,7 @@ end
 steps = [
   method(:validate_version_number),
   method(:validate_changelog_bump),
+  method(:generate_changelog),
   method(:create_branch),
   method(:update_version),
   method(:update_placeholders),
