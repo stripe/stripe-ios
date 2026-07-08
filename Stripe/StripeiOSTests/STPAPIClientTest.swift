@@ -119,7 +119,7 @@ class STPAPIClientTest: XCTestCase {
         XCTAssertEqual(copiedClient.betas, ["existing_beta=v1"])
 
         let apiClientSource = try stpAPIClientSource()
-        XCTAssertTrue(apiClientSource.contains("\n    public var betas: Set<String> = []"))
+        XCTAssertTrue(apiClientSource.contains("\n    @objc public var betas: Set<String> = []"))
         XCTAssertFalse(apiClientSource.contains("@_spi(STP) public var betas"))
     }
 
