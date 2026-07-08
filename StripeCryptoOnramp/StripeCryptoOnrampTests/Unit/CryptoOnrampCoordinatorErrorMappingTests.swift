@@ -143,7 +143,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         let apiError = try assertMapsWalletOwnershipError(
             code: "crypto_onramp_invalid_wallet_ownership_signature",
             message: "The submitted signature does not prove ownership of the registered wallet.",
-            expectedType: InvalidWalletOwnershipSignatureAPIError.self,
+            expectedType: InvalidWalletOwnershipSignatureError.self,
             expectedUserMessage: "We couldn't verify ownership of this wallet. Please try again."
         )
 
@@ -156,7 +156,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         let apiError = try assertMapsWalletOwnershipError(
             code: "crypto_onramp_wallet_ownership_challenge_expired",
             message: "The wallet ownership challenge has expired.",
-            expectedType: WalletOwnershipChallengeExpiredAPIError.self,
+            expectedType: WalletOwnershipChallengeExpiredError.self,
             expectedUserMessage: "This wallet verification request expired. Please try again."
         )
 
@@ -169,7 +169,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         let apiError = try assertMapsWalletOwnershipError(
             code: "crypto_onramp_invalid_wallet_ownership_challenge",
             message: "The wallet ownership challenge is invalid.",
-            expectedType: InvalidWalletOwnershipChallengeAPIError.self,
+            expectedType: InvalidWalletOwnershipChallengeError.self,
             expectedUserMessage: "This wallet verification request is no longer valid. Please try again."
         )
 
@@ -182,7 +182,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         let apiError = try assertMapsWalletOwnershipError(
             code: "crypto_onramp_wallet_not_found",
             message: "The wallet was not found for the authenticated consumer.",
-            expectedType: WalletNotFoundAPIError.self,
+            expectedType: WalletNotFoundError.self,
             expectedUserMessage: "This wallet couldn't be found. Please choose or add a wallet and try again."
         )
 
@@ -195,7 +195,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         let apiError = try assertMapsWalletOwnershipError(
             code: "crypto_onramp_unsupported_network",
             message: "The wallet network is not supported for this operation.",
-            expectedType: UnsupportedNetworkAPIError.self,
+            expectedType: UnsupportedNetworkError.self,
             expectedUserMessage: "This wallet network isn't supported. Please choose a different network."
         )
 
@@ -235,35 +235,35 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             "uncategorized_api_error"
         )
         XCTAssertEqual(
-            InvalidWalletOwnershipSignatureAPIError(
+            InvalidWalletOwnershipSignatureError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
             "crypto_onramp_invalid_wallet_ownership_signature"
         )
         XCTAssertEqual(
-            WalletOwnershipChallengeExpiredAPIError(
+            WalletOwnershipChallengeExpiredError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
             "crypto_onramp_wallet_ownership_challenge_expired"
         )
         XCTAssertEqual(
-            InvalidWalletOwnershipChallengeAPIError(
+            InvalidWalletOwnershipChallengeError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
             "crypto_onramp_invalid_wallet_ownership_challenge"
         )
         XCTAssertEqual(
-            WalletNotFoundAPIError(
+            WalletNotFoundError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
             "crypto_onramp_wallet_not_found"
         )
         XCTAssertEqual(
-            UnsupportedNetworkAPIError(
+            UnsupportedNetworkError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,

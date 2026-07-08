@@ -1,5 +1,5 @@
 //
-//  InvalidWalletOwnershipChallengeAPIError.swift
+//  InvalidWalletOwnershipChallengeError.swift
 //  StripeCryptoOnramp
 //
 //  Created by Michael Liberatore on 6/24/26.
@@ -10,7 +10,7 @@ import Foundation
 
 /// Details from an invalid wallet ownership challenge API error, enriched with SDK-local diagnostic context.
 @_spi(CryptoOnrampAlpha)
-public struct InvalidWalletOwnershipChallengeAPIError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
+public struct InvalidWalletOwnershipChallengeError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
     public let apiErrorContext: APIErrorContext
@@ -34,7 +34,7 @@ public struct InvalidWalletOwnershipChallengeAPIError: StripeCryptoOnrampAPIErro
         return apiErrorContext.code(fallback: "crypto_onramp_invalid_wallet_ownership_challenge")
     }
 
-    // MARK: - InvalidWalletOwnershipChallengeAPIError
+    // MARK: - InvalidWalletOwnershipChallengeError
 
     /// A localized message that can be shown to the app user.
     public var userMessage: String {

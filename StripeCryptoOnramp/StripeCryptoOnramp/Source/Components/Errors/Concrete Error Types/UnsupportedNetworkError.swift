@@ -1,16 +1,16 @@
 //
-//  InvalidWalletOwnershipSignatureAPIError.swift
+//  UnsupportedNetworkError.swift
 //  StripeCryptoOnramp
 //
-//  Created by Michael Liberatore on 6/24/26.
+//  Created by Michael Liberatore on 6/30/26.
 //
 
 import Foundation
 @_spi(STP) import StripeCore
 
-/// Details from an invalid wallet ownership signature API error, enriched with SDK-local diagnostic context.
+/// Details from an unsupported-network API error, enriched with SDK-local diagnostic context.
 @_spi(CryptoOnrampAlpha)
-public struct InvalidWalletOwnershipSignatureAPIError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
+public struct UnsupportedNetworkError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
     public let apiErrorContext: APIErrorContext
@@ -18,7 +18,7 @@ public struct InvalidWalletOwnershipSignatureAPIError: StripeCryptoOnrampAPIErro
     /// Local SDK context used to expose diagnostics.
     let diagnosticContext: DiagnosticContext
 
-    /// Creates an invalid wallet ownership signature API error from shared API error and local diagnostic context.
+    /// Creates an unsupported-network API error from shared API error and local diagnostic context.
     ///
     /// - Parameters:
     ///   - apiErrorContext: Shared API error context used to expose diagnostics.
@@ -31,14 +31,14 @@ public struct InvalidWalletOwnershipSignatureAPIError: StripeCryptoOnrampAPIErro
     // MARK: - StripeCryptoOnrampAPIError
 
     public var code: String {
-        return apiErrorContext.code(fallback: "crypto_onramp_invalid_wallet_ownership_signature")
+        return apiErrorContext.code(fallback: "crypto_onramp_unsupported_network")
     }
 
-    // MARK: - InvalidWalletOwnershipSignatureAPIError
+    // MARK: - UnsupportedNetworkError
 
     /// A localized message that can be shown to the app user.
     public var userMessage: String {
-        return String.Localized.cryptoOnrampErrorInvalidWalletOwnershipSignature
+        return String.Localized.cryptoOnrampErrorUnsupportedNetwork
     }
 
     /// A developer-facing description with diagnostic details and suggested next steps.
@@ -46,9 +46,9 @@ public struct InvalidWalletOwnershipSignatureAPIError: StripeCryptoOnrampAPIErro
         return StripeCryptoOnrampErrorRenderer.renderAPIErrorDeveloperMessage(
             apiErrorContext: apiErrorContext,
             diagnosticContext: diagnosticContext,
-            summary: apiMessage ?? "Wallet ownership verification failed: the submitted signature does not prove control of the wallet.",
+            summary: apiMessage ?? "Crypto Onramp doesn't support this wallet network for the requested operation.",
             code: code,
-            nextStep: "Sign the exact challenge message with the registered wallet address, then submit the resulting signature for the same challenge ID."
+            nextStep: "Use a network supported by Crypto Onramp for this operation, then retry the request."
         )
     }
 }

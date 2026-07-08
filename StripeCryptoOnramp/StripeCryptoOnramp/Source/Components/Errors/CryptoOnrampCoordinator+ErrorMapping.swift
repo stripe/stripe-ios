@@ -129,7 +129,7 @@ extension CryptoOnrampCoordinator {
         apiClient: STPAPIClient,
         additionalSDKVersions: [SDKVersion]
     ) -> Swift.Error {
-        return InvalidWalletOwnershipSignatureAPIError(
+        return InvalidWalletOwnershipSignatureError(
             apiErrorContext: makeAPIErrorContext(
                 from: error,
                 apiError: apiError,
@@ -150,7 +150,7 @@ extension CryptoOnrampCoordinator {
         apiClient: STPAPIClient,
         additionalSDKVersions: [SDKVersion]
     ) -> Swift.Error {
-        return WalletOwnershipChallengeExpiredAPIError(
+        return WalletOwnershipChallengeExpiredError(
             apiErrorContext: makeAPIErrorContext(
                 from: error,
                 apiError: apiError,
@@ -171,7 +171,7 @@ extension CryptoOnrampCoordinator {
         apiClient: STPAPIClient,
         additionalSDKVersions: [SDKVersion]
     ) -> Swift.Error {
-        return InvalidWalletOwnershipChallengeAPIError(
+        return InvalidWalletOwnershipChallengeError(
             apiErrorContext: makeAPIErrorContext(
                 from: error,
                 apiError: apiError,
@@ -192,7 +192,7 @@ extension CryptoOnrampCoordinator {
         apiClient: STPAPIClient,
         additionalSDKVersions: [SDKVersion]
     ) -> Swift.Error {
-        return WalletNotFoundAPIError(
+        return WalletNotFoundError(
             apiErrorContext: makeAPIErrorContext(
                 from: error,
                 apiError: apiError,
@@ -213,7 +213,7 @@ extension CryptoOnrampCoordinator {
         apiClient: STPAPIClient,
         additionalSDKVersions: [SDKVersion]
     ) -> Swift.Error {
-        return UnsupportedNetworkAPIError(
+        return UnsupportedNetworkError(
             apiErrorContext: makeAPIErrorContext(
                 from: error,
                 apiError: apiError,

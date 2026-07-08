@@ -1,16 +1,16 @@
 //
-//  WalletNotFoundAPIError.swift
+//  WalletOwnershipChallengeExpiredError.swift
 //  StripeCryptoOnramp
 //
-//  Created by Michael Liberatore on 6/30/26.
+//  Created by Michael Liberatore on 6/24/26.
 //
 
 import Foundation
 @_spi(STP) import StripeCore
 
-/// Details from a wallet-not-found API error, enriched with SDK-local diagnostic context.
+/// Details from an expired wallet ownership challenge API error, enriched with SDK-local diagnostic context.
 @_spi(CryptoOnrampAlpha)
-public struct WalletNotFoundAPIError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
+public struct WalletOwnershipChallengeExpiredError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
     public let apiErrorContext: APIErrorContext
@@ -18,7 +18,7 @@ public struct WalletNotFoundAPIError: StripeCryptoOnrampAPIError, APIErrorContex
     /// Local SDK context used to expose diagnostics.
     let diagnosticContext: DiagnosticContext
 
-    /// Creates a wallet-not-found API error from shared API error and local diagnostic context.
+    /// Creates an expired wallet ownership challenge API error from shared API error and local diagnostic context.
     ///
     /// - Parameters:
     ///   - apiErrorContext: Shared API error context used to expose diagnostics.
@@ -31,14 +31,14 @@ public struct WalletNotFoundAPIError: StripeCryptoOnrampAPIError, APIErrorContex
     // MARK: - StripeCryptoOnrampAPIError
 
     public var code: String {
-        return apiErrorContext.code(fallback: "crypto_onramp_wallet_not_found")
+        return apiErrorContext.code(fallback: "crypto_onramp_wallet_ownership_challenge_expired")
     }
 
-    // MARK: - WalletNotFoundAPIError
+    // MARK: - WalletOwnershipChallengeExpiredError
 
     /// A localized message that can be shown to the app user.
     public var userMessage: String {
-        return String.Localized.cryptoOnrampErrorWalletNotFound
+        return String.Localized.cryptoOnrampErrorWalletOwnershipChallengeExpired
     }
 
     /// A developer-facing description with diagnostic details and suggested next steps.
@@ -46,9 +46,9 @@ public struct WalletNotFoundAPIError: StripeCryptoOnrampAPIError, APIErrorContex
         return StripeCryptoOnrampErrorRenderer.renderAPIErrorDeveloperMessage(
             apiErrorContext: apiErrorContext,
             diagnosticContext: diagnosticContext,
-            summary: apiMessage ?? "Crypto Onramp couldn't find the wallet for the authenticated consumer.",
+            summary: apiMessage ?? "Wallet ownership verification failed: the challenge has expired.",
             code: code,
-            nextStep: "Use a wallet registered to the authenticated consumer, or register the wallet before retrying the request."
+            nextStep: "Request a new wallet ownership challenge and submit a fresh signature before it expires."
         )
     }
 }
