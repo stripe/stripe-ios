@@ -40,7 +40,12 @@ class CheckoutSessionUITests: PaymentSheetUITestCase {
         app.buttons["+ Add"].waitForExistenceAndTap()
         app.buttons["Card"].waitForExistenceAndTap()
         try fillCardData(app)
-        app.buttons["Continue"].tap()
+
+        let continueButton = app.buttons["Continue"]
+        continueButton.tap()
+        // Wait for sheet to dismiss (billing sync + session reload happens before dismiss)
+        let didDismiss = continueButton.waitForNonExistence(timeout: 10)
+        XCTAssertTrue(didDismiss, "Sheet did not dismiss after Continue")
 
         // Confirm
         app.buttons["Confirm"].waitForExistenceAndTap()
