@@ -6,9 +6,11 @@ MINOR
 ### StripeConnect
 * [Changed] `PaymentsViewController`, `PaymentsViewControllerDelegate`, `PayoutsViewController`, `PayoutsViewControllerDelegate`, and `EmbeddedComponentManager.PaymentsListDefaultFiltersOptions` are now part of the public API and no longer require `@_spi(PreviewConnect)` to access.
 
-## 26.2.0 2026-07-06
 ### CryptoOnramp (Alpha)
 * [Fixed] Automatically set PKPaymentRequest.merchantCategoryCode so unsupported payment methods are hidden from Apple Pay
+
+## 26.2.0 2026-07-06
+### CryptoOnramp (Alpha)
 * [Added] Added `AppAttestationUnavailableError`, a rich `StripeCryptoOnrampError` surfaced when configuration fails because app attestation is missing or native Link is unavailable.
 * [Removed] Removed public diagnostic-only properties from rich Crypto Onramp errors: `sdkVersions` from `StripeCryptoOnrampError` and concrete error types; `operation`, `appIdentifier`, and `mode` from `StripeCryptoOnrampAPIError`, `AppAttestationAPIError`, and `UncategorizedAPIError`; and `operation`, `appIdentifier`, `mode`, and `sdkVersions` from `APIErrorContext`. These diagnostics are still included in `developerMessage`.
 * [Changed] Renamed the public API-backed error context property from `context` to `apiErrorContext`.
