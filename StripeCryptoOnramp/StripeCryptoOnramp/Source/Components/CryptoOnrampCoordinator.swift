@@ -574,6 +574,9 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         case .applePay(let paymentRequest):
             // This presents Apple Pay and promotes the pending payment source on success.
             pendingApplePayPaymentSource = nil
+            if #available(iOS 18.0, *) {
+                paymentRequest.merchantCategoryCode = PKPaymentRequest.MerchantCategoryCode(rawValue: 6051)
+            }
             do {
                 let status = try await presentApplePay(using: paymentRequest, from: viewController)
                 switch status {
