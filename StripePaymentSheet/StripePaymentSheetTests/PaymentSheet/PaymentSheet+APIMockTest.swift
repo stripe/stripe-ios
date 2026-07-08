@@ -408,6 +408,127 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         await fulfillment(of: [createPaymentMethodExp, confirmExp, exp], timeout: 10)
     }
 
+    func testCheckoutSessionConfirmDoesNotInjectVippsPreviewBeta() async {
+        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
+        let confirmParams = MockParams.intentConfirmParams
+        confirmParams.saveForFutureUseCheckboxState = .selected
+
+        let checkoutAPIBaseURL = URL(string: "https://checkout.example/v1")!
+        let configurationAPIBaseURL = URL(string: "https://configuration.example/v1")!
+        let checkoutAPIClient = stubbedAPIClient()
+        checkoutAPIClient.publishableKey = "pk_checkout"
+        checkoutAPIClient.apiURL = checkoutAPIBaseURL
+
+        let createPaymentMethodExpectation = expectation(description: "create payment method uses checkout api client")
+        stub { request in
+            request.url?.absoluteString == "https://checkout.example/v1/payment_methods"
+        } response: { [self] request in
+            assertStripeVersion(request.value(forHTTPHeaderField: "Stripe-Version"), hasBetas: [])
+            let params = bodyParams(from: request, line: #line)
+            assertParam(params, named: "allow_redisplay", is: "always", line: #line)
+            createPaymentMethodExpectation.fulfill()
+            return HTTPStubsResponse(jsonObject: MockJson.cardPaymentMethod, statusCode: 200, headers: nil)
+        }
+
+        let confirmExpectation = expectation(description: "confirm uses checkout api client")
+        stub { request in
+            request.url?.absoluteString == "https://checkout.example/v1/payment_pages/\(checkoutSession.id)/confirm"
+        } response: { [self] request in
+            assertStripeVersion(request.value(forHTTPHeaderField: "Stripe-Version"), hasBetas: [])
+            let params = bodyParams(from: request, line: #line)
+            assertParam(params, named: "save_payment_method", is: "true", line: #line)
+            confirmExpectation.fulfill()
+            return HTTPStubsResponse(jsonObject: MockJson.checkoutSessionConfirmed, statusCode: 200, headers: nil)
+        }
+
+        let checkout = Checkout(session: checkoutSession, apiClient: checkoutAPIClient)
+
+        let configuration = MockParams.configuration(pk: MockParams.publicKey)
+        configuration.apiClient.apiURL = configurationAPIBaseURL
+
+        let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
+        let completionExpectation = expectation(description: "confirm completed")
+
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .checkout(checkout),
+            elementsSession: elementsSession,
+            paymentOption: .new(confirmParams: confirmParams),
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
+            completion: { result, _ in
+                XCTAssertEqual(result, .completed)
+                completionExpectation.fulfill()
+            }
+        )
+
+        await fulfillment(of: [createPaymentMethodExpectation, confirmExpectation, completionExpectation], timeout: 10)
+    }
+
+    func testCheckoutSessionConfirmUsesMerchantProvidedBetas() async {
+        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
+        let confirmParams = MockParams.intentConfirmParams
+        confirmParams.saveForFutureUseCheckboxState = .selected
+
+        let checkoutAPIBaseURL = URL(string: "https://checkout.example/v1")!
+        let configurationAPIBaseURL = URL(string: "https://configuration.example/v1")!
+        let expectedBetas: Set<String> = ["merchant_beta=v1", "vipps_preview=v1"]
+
+        let checkoutAPIClient = stubbedAPIClient()
+        checkoutAPIClient.publishableKey = "pk_checkout"
+        checkoutAPIClient.apiURL = checkoutAPIBaseURL
+        checkoutAPIClient.betas = expectedBetas
+
+        let createPaymentMethodExpectation = expectation(description: "create payment method preserves merchant betas")
+        stub { request in
+            request.url?.absoluteString == "https://checkout.example/v1/payment_methods"
+        } response: { [self] request in
+            assertStripeVersion(request.value(forHTTPHeaderField: "Stripe-Version"), hasBetas: expectedBetas)
+            let params = bodyParams(from: request, line: #line)
+            assertParam(params, named: "allow_redisplay", is: "always", line: #line)
+            createPaymentMethodExpectation.fulfill()
+            return HTTPStubsResponse(jsonObject: MockJson.cardPaymentMethod, statusCode: 200, headers: nil)
+        }
+
+        let confirmExpectation = expectation(description: "confirm preserves merchant betas")
+        stub { request in
+            request.url?.absoluteString == "https://checkout.example/v1/payment_pages/\(checkoutSession.id)/confirm"
+        } response: { [self] request in
+            assertStripeVersion(request.value(forHTTPHeaderField: "Stripe-Version"), hasBetas: expectedBetas)
+            let params = bodyParams(from: request, line: #line)
+            assertParam(params, named: "save_payment_method", is: "true", line: #line)
+            confirmExpectation.fulfill()
+            return HTTPStubsResponse(jsonObject: MockJson.checkoutSessionConfirmed, statusCode: 200, headers: nil)
+        }
+
+        let checkout = Checkout(session: checkoutSession, apiClient: checkoutAPIClient)
+
+        let configuration = MockParams.configuration(pk: MockParams.publicKey)
+        configuration.apiClient.apiURL = configurationAPIBaseURL
+        configuration.apiClient.betas = ["configuration_beta=v1"]
+
+        let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
+        let completionExpectation = expectation(description: "confirm completed")
+
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .checkout(checkout),
+            elementsSession: elementsSession,
+            paymentOption: .new(confirmParams: confirmParams),
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
+            completion: { result, _ in
+                XCTAssertEqual(result, .completed)
+                completionExpectation.fulfill()
+            }
+        )
+
+        await fulfillment(of: [createPaymentMethodExpectation, confirmExpectation, completionExpectation], timeout: 10)
+    }
     func testCheckoutSessionConfirmWithNewPaymentMethodDeselectedOmitsSaveAndUsesUnspecifiedAllowRedisplay() async throws {
         let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
@@ -881,5 +1002,16 @@ private extension PaymentSheetAPIMockTest {
 
     func bodyParams(from request: URLRequest, line: UInt) -> [String: String] {
         return RequestBodyTestHelpers.formEncodedBodyParams(from: request, omittingEmptyValues: true, line: line)
+    }
+
+    func assertStripeVersion(_ value: String?, hasBetas expectedBetas: Set<String>, line: UInt = #line) {
+        guard let value else {
+            XCTFail("No Stripe-Version header found", line: line)
+            return
+        }
+
+        let components = value.components(separatedBy: "; ")
+        XCTAssertEqual(components.first, STPAPIClient.apiVersion, line: line)
+        XCTAssertEqual(Set(components.dropFirst()), expectedBetas, line: line)
     }
 }

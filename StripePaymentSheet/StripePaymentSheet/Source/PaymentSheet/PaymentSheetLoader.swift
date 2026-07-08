@@ -263,7 +263,7 @@ final class PaymentSheetLoader {
         defer {
             loadTimings.logEnd("fetchElementsSession")
         }
-        let apiClient = configuration.apiClientIncludingVippsPreviewBeta
+        let apiClient = configuration.apiClient
         let intent: Intent
         let elementsSession: STPElementsSession
         let clientDefaultPaymentMethod: String? = {

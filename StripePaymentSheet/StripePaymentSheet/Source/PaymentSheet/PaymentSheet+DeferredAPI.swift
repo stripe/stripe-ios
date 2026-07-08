@@ -72,7 +72,7 @@ extension PaymentSheet {
         confirmHandler: @escaping IntentConfiguration.ConfirmHandler
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
-            let apiClient = configuration.apiClientIncludingVippsPreviewBeta
+            let apiClient = configuration.apiClient
             var confirmType = confirmType
             // 1. Create PM if necessary
             let paymentMethod: STPPaymentMethod

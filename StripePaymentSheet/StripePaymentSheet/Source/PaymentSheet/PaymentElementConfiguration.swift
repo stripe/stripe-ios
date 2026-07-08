@@ -50,10 +50,6 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
 }
 
 extension PaymentElementConfiguration {
-    var apiClientIncludingVippsPreviewBeta: STPAPIClient {
-        apiClient.makeCopy(addingBetas: [STPAPIClient.vippsPreviewBetaHeader])
-    }
-
     func resolvedLinkBrand(elementsSession: STPElementsSession, linkAccount: PaymentSheetLinkAccount?) -> LinkBrand {
         if let brand = link.brand {
             return brand

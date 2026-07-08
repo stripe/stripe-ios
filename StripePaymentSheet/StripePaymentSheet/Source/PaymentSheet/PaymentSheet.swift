@@ -291,7 +291,7 @@ public class PaymentSheet {
     )
 
     /// The STPPaymentHandler instance
-    lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClientIncludingVippsPreviewBeta) }()
+    lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
 
     /// The parent view controller to present
     lazy var bottomSheetViewController: BottomSheetViewController = {
