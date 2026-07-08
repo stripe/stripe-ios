@@ -632,7 +632,14 @@ SYSTEM_PROMPT = <<~PROMPT
        [Removed]    → "Removed ..."
        [Deprecated] → "Deprecated `<PublicType>`; use `<Replacement>` instead."
 
-  7. The PR title is a STARTING POINT, not the answer. PR titles are written for
+  7. When APIs graduate from `@_spi(Preview*)` or `@_spi(PrivateBeta*)` to plain
+     `public`, describe them as "now generally available" or "now part of the
+     public API." Do NOT mention `@_spi`, the annotation name, or the internal
+     mechanism — integrators don't know or care about SPI groups. Example:
+       Bad:  "`PaymentsViewController` no longer requires `@_spi(PreviewConnect)` to access."
+       Good: "`PaymentsViewController` and `PayoutsViewController` are now generally available."
+
+  8. The PR title is a STARTING POINT, not the answer. PR titles are written for
      reviewers and often carry a ticket prefix, an internal type name, or the
      mechanism rather than the effect. Rewrite for a consumer:
        PR title: "[MOBILESDK-1234] Guard against nil in CVCRecollectionVC"
@@ -984,6 +991,19 @@ def sanitize_untrusted(text, limit)
   cleaned[0, limit] || ''
 end
 
+def existing_unreleased_entries
+  content = File.read(File.join(REPO_ROOT, 'CHANGELOG.md'))
+  placeholder_idx = content.index('## X.Y.Z')
+  return '' unless placeholder_idx
+
+  version_match = content.match(/^## \d+\.\d+\.\d+ \d{4}-\d{2}-\d{2}$/m)
+  return '' unless version_match
+
+  content[placeholder_idx...version_match.begin(0)].strip
+rescue StandardError
+  ''
+end
+
 def build_llm_prompt(status, pr_context)
   pr_section = if pr_context
     <<~PR
@@ -996,6 +1016,8 @@ def build_llm_prompt(status, pr_context)
   else
     ''
   end
+
+  existing = existing_unreleased_entries
 
   # The diff, PR body, and commit message are ATTACKER-CONTROLLED (anyone who
   # can open a PR controls their contents). Fence them in an explicit data-only
@@ -1030,7 +1052,11 @@ def build_llm_prompt(status, pr_context)
 
     END_UNTRUSTED_INPUT
 
+    ## Existing unreleased changelog entries (already written):
+    #{existing}
+
     Based on the PR context, commit message, and diff above, generate the changelog entry.
+    If this change is already covered by one of the existing entries above (same behavior described, even if worded differently), output NO_CHANGELOG_NEEDED.
   PROMPT
 end
 

@@ -24,7 +24,15 @@ unless defined?(rputs)
   end
 end
 
-CHANGELOG_PR_PATTERN = /\[[\w]+\]\[(\d+)\]/.freeze
+# Matches PR numbers in various formats found in CHANGELOG entries:
+#   [Tag][6611](url)  — our generated format
+#   (#6611)           — common in manual entries and commit messages
+#   #6611             — bare reference
+CHANGELOG_PR_PATTERNS = [
+  /\[[\w]+\]\[(\d+)\]/,
+  /\(#(\d+)\)/,
+  /(?:^|\s)#(\d+)(?:\s|$)/,
+].freeze
 
 def generate_changelog_entries(dry_run: false)
   last_release_version = most_recent_released_version
@@ -144,7 +152,11 @@ def changelog_pr_numbers_in_unreleased
   return Set.new unless version_match
 
   unreleased_section = content[placeholder_idx...version_match.begin(0)]
-  unreleased_section.scan(CHANGELOG_PR_PATTERN).flatten.map(&:to_i).to_set
+  pr_numbers = Set.new
+  CHANGELOG_PR_PATTERNS.each do |pattern|
+    unreleased_section.scan(pattern).flatten.each { |n| pr_numbers.add(n.to_i) }
+  end
+  pr_numbers
 end
 
 def validate_bump_consistency!(current_bump, responses)
