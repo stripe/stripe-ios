@@ -96,10 +96,10 @@ import Foundation
     case wero
     /// A Pay by Bank payment method
     case payByBank
-    /// An unknown type.
-    case unknown
     /// A Vipps payment method
     case vipps
+    /// An unknown type.
+    case unknown
 
     /// Localized display name for this payment method type
     @_spi(STP) public var displayName: String {
