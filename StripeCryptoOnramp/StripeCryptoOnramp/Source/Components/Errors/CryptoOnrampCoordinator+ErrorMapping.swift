@@ -192,7 +192,7 @@ extension CryptoOnrampCoordinator {
         apiClient: STPAPIClient,
         additionalSDKVersions: [SDKVersion]
     ) -> Swift.Error {
-        return CryptoOnrampWalletNotFoundAPIError(
+        return WalletNotFoundAPIError(
             apiErrorContext: makeAPIErrorContext(
                 from: error,
                 apiError: apiError,
@@ -213,7 +213,7 @@ extension CryptoOnrampCoordinator {
         apiClient: STPAPIClient,
         additionalSDKVersions: [SDKVersion]
     ) -> Swift.Error {
-        return CryptoOnrampUnsupportedNetworkAPIError(
+        return UnsupportedNetworkAPIError(
             apiErrorContext: makeAPIErrorContext(
                 from: error,
                 apiError: apiError,

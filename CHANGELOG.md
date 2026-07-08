@@ -6,7 +6,7 @@ MINOR
 ### CryptoOnramp (Alpha)
 * [Added] Added wallet ownership verification APIs to `CryptoOnrampCoordinator`: `getWalletOwnershipChallenge(walletAddress:network:)` and `submitWalletOwnershipSignature(challengeId:signature:)`.
 * [Added] Added `WalletOwnershipChallenge` and `CryptoConsumerWallet`, including `CryptoConsumerWallet.verifiedOwnership`, for wallet ownership verification responses.
-* [Added] Added rich Crypto Onramp API error mapping types: `WalletOwnershipChallengeExpiredAPIError`, `InvalidWalletOwnershipChallengeAPIError`, `InvalidWalletOwnershipSignatureAPIError`, `CryptoOnrampWalletNotFoundAPIError`, and `CryptoOnrampUnsupportedNetworkAPIError`.
+* [Added] Added rich Crypto Onramp API error mapping types: `WalletOwnershipChallengeExpiredAPIError`, `InvalidWalletOwnershipChallengeAPIError`, `InvalidWalletOwnershipSignatureAPIError`, `WalletNotFoundAPIError`, and `UnsupportedNetworkAPIError`.
 
 ### StripeConnect
 * [Changed] `PaymentsViewController`, `PaymentsViewControllerDelegate`, `PayoutsViewController`, `PayoutsViewControllerDelegate`, and `EmbeddedComponentManager.PaymentsListDefaultFiltersOptions` are now part of the public API and no longer require `@_spi(PreviewConnect)` to access.
