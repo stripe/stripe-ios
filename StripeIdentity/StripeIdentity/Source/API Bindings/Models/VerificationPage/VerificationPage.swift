@@ -67,6 +67,7 @@ extension StripeAPI.VerificationPage {
         return experiments.contains { experiment in
             experiment.experimentName == ThreeDFaceCaptureExperiment.experimentName
         }
+    }
 
     var enable3DFaceCapture: Bool {
         return selfie?.enable3DFaceCapture == true || has3DFaceCaptureExperiment
