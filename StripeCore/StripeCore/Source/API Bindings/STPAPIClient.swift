@@ -263,12 +263,6 @@ import UIKit
         return client
     }
 
-    @_spi(STP) public func makeCopy(addingBetas additionalBetas: Set<String>) -> STPAPIClient {
-        let client = makeCopy()
-        client.betas.formUnion(additionalBetas)
-        return client
-    }
-
 }
 
 private let APIVersion = "2020-08-27"

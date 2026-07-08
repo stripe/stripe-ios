@@ -23,7 +23,7 @@ extension PaymentSheet {
         isFromLink: Bool = false
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
-            let apiClient = configuration.apiClientIncludingVippsPreviewBeta
+            let apiClient = configuration.apiClient
             // 1. Create the confirmation token params
             let confirmationTokenParams = createConfirmationTokenParams(confirmType: confirmType,
                                                                         configuration: configuration,
