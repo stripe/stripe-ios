@@ -29,7 +29,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             during: .hasLinkAccount,
             apiClient: apiClient
         )
-        let apiError = try XCTUnwrap(mappedError as? AppAttestationAPIError)
+        let apiError = try XCTUnwrap(mappedError as? AppAttestationError)
 
         XCTAssertEqual(apiError.reason, "app_not_registered")
         XCTAssertEqual(apiError.code, "link_failed_to_attest_request")
@@ -113,7 +113,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         """)
     }
 
-    func testMappedErrorUsesSafeUserMessageForUncategorizedAPIError() throws {
+    func testMappedErrorUsesSafeUserMessageForUncategorizedError() throws {
         let stripeError = StripeError.apiError(StripeAPIError(
             type: .invalidRequestError,
             code: "unexpected_backend_error",
@@ -127,7 +127,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             during: .hasLinkAccount,
             apiClient: apiClient
         )
-        let apiError = try XCTUnwrap(mappedError as? UncategorizedAPIError)
+        let apiError = try XCTUnwrap(mappedError as? UncategorizedError)
 
         XCTAssertEqual(apiError.code, "unexpected_backend_error")
         XCTAssertEqual(apiError.apiMessage, "Raw backend message that should not be shown to app users.")
@@ -221,14 +221,14 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         )
 
         XCTAssertEqual(
-            AppAttestationAPIError(
+            AppAttestationError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
             "link_failed_to_attest_request"
         )
         XCTAssertEqual(
-            UncategorizedAPIError(
+            UncategorizedError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
@@ -307,7 +307,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             apiClient: apiClient,
             additionalSDKVersions: additionalSDKVersions
         )
-        let apiError = try XCTUnwrap(mappedError as? AppAttestationAPIError)
+        let apiError = try XCTUnwrap(mappedError as? AppAttestationError)
 
         XCTAssertTrue(apiError.developerMessage.contains("SDK: stripe-ios@\(STPAPIClient.STPSDKVersion), stripe-react-native@1.2.3"))
     }
@@ -343,7 +343,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         XCTAssertEqual(apiError.errorDescription, apiError.userMessage, file: file, line: line)
         XCTAssertEqual(apiError.debugDescription, apiError.developerMessage, file: file, line: line)
         XCTAssertTrue(apiError.underlyingError is StripeError, file: file, line: line)
-        XCTAssertFalse(apiError is UncategorizedAPIError, file: file, line: line)
+        XCTAssertFalse(apiError is UncategorizedError, file: file, line: line)
 
         let richError = apiError as StripeCryptoOnrampError
         XCTAssertEqual(richError.code, code, file: file, line: line)

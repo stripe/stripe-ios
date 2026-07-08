@@ -83,7 +83,7 @@ extension CryptoOnrampCoordinator {
                     additionalSDKVersions: additionalSDKVersions
                 )
             default:
-                return UncategorizedAPIError(
+                return UncategorizedError(
                     apiErrorContext: makeAPIErrorContext(
                         from: error,
                         apiError: apiError,
@@ -108,7 +108,7 @@ extension CryptoOnrampCoordinator {
         apiClient: STPAPIClient,
         additionalSDKVersions: [SDKVersion]
     ) -> Swift.Error {
-        return AppAttestationAPIError(
+        return AppAttestationError(
             apiErrorContext: makeAPIErrorContext(
                 from: error,
                 apiError: apiError,

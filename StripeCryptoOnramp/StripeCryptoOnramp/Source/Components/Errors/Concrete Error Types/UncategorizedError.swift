@@ -1,5 +1,5 @@
 //
-//  UncategorizedAPIError.swift
+//  UncategorizedError.swift
 //  StripeCryptoOnramp
 //
 //  Created by Michael Liberatore on 5/28/26.
@@ -10,7 +10,7 @@ import Foundation
 
 /// Details from an uncategorized backend API error, enriched with SDK-local diagnostic context.
 @_spi(CryptoOnrampAlpha)
-public struct UncategorizedAPIError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
+public struct UncategorizedError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
     public let apiErrorContext: APIErrorContext
@@ -34,7 +34,7 @@ public struct UncategorizedAPIError: StripeCryptoOnrampAPIError, APIErrorContext
         return apiErrorContext.code(fallback: "uncategorized_api_error")
     }
 
-    // MARK: - UncategorizedAPIError
+    // MARK: - UncategorizedError
 
     /// A localized message that can be shown to the app user.
     public var userMessage: String {
