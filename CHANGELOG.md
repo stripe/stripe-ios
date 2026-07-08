@@ -3,7 +3,7 @@ MINOR
 
 ## X.Y.Z - changes pending release
 ### PaymentSheet
-* [Added] Added public `STPAPIClient.betas` support for merchant-supplied beta headers. To use Vipps in PaymentSheet beta, add `vipps_preview=v1`, for example `Set(["vipps_preview=v1"])`.
+* [Added] Added public `STPAPIClient.betas` support for merchant-supplied beta headers. To use Vipps in PaymentSheet beta, set `vipps_preview=v1` on the `STPAPIClient` instance that you pass into PaymentSheet or Checkout, for example `Set(["vipps_preview=v1"])`.
 
 ### CryptoOnramp (Alpha)
 * [Added] Added `CryptoOnrampCoordinator.deleteWalletAddress(walletId:)` to delete a registered wallet address.
