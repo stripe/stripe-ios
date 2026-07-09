@@ -230,11 +230,20 @@ workflows:
     - prep_all
     steps:
     - xcode-test@6:
-        inputs:
+        is_skippable: true
+        inputs: &financial_connections_stability_tests_inputs
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: FinancialConnections Example
+    - script@1:
+        is_always_run: true
+        title: Retry gate for test-runner hang
+        inputs:
+        - content: ./ci_scripts/xcode_test_runner_hang_gate.sh
+    - xcode-test@6:
+        run_if: '{{enveq "STRIPE_RETRY_XCODE_TEST" "yes"}}'
+        inputs: *financial_connections_stability_tests_inputs
     - slack@3:
         is_always_run: true
         run_if: .IsBuildFailed
@@ -268,11 +277,20 @@ workflows:
     - prep_all
     steps:
     - xcode-test@6:
-        inputs:
+        is_skippable: true
+        inputs: &financial_connections_stability_tests_for_edge_inputs
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: FinancialConnections Example
+    - script@1:
+        is_always_run: true
+        title: Retry gate for test-runner hang
+        inputs:
+        - content: ./ci_scripts/xcode_test_runner_hang_gate.sh
+    - xcode-test@6:
+        run_if: '{{enveq "STRIPE_RETRY_XCODE_TEST" "yes"}}'
+        inputs: *financial_connections_stability_tests_for_edge_inputs
     - deploy-to-bitrise-io@2: {}
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
@@ -511,12 +529,21 @@ workflows:
   integration-all:
     steps:
     - xcode-test@6:
-        inputs:
+        is_skippable: true
+        inputs: &integration_all_inputs
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: IntegrationTester
         - log_formatter: xcbeautify
+    - script@1:
+        is_always_run: true
+        title: Retry gate for test-runner hang
+        inputs:
+        - content: ./ci_scripts/xcode_test_runner_hang_gate.sh
+    - xcode-test@6:
+        run_if: '{{enveq "STRIPE_RETRY_XCODE_TEST" "yes"}}'
+        inputs: *integration_all_inputs
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
