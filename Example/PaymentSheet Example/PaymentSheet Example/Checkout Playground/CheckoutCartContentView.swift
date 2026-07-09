@@ -17,9 +17,7 @@ struct CheckoutCartContentView: View {
 
     @State private var promoCodeInput = ""
     @State private var showShippingAddressSheet = false
-    @State private var showBillingAddressSheet = false
     @State private var shippingAddressDetails: AddressElement.AddressDetails?
-    @State private var billingAddressDetails: AddressElement.AddressDetails?
 
     var body: some View {
         ScrollView {
@@ -35,7 +33,6 @@ struct CheckoutCartContentView: View {
                 currencySelectorSection
                 lineItemsSection
                 shippingAddressSection
-                billingAddressSection
                 promotionCodeSection
                 orderSummarySection
 
@@ -153,34 +150,6 @@ struct CheckoutCartContentView: View {
                 configuration: makeAddressConfiguration(
                     title: "Shipping Address",
                     override: checkout.session.shippingAddress
-                )
-            )
-        }
-    }
-
-    @ViewBuilder
-    private var billingAddressSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Billing Address")
-                .font(.title2).bold()
-                .padding(.horizontal)
-
-            if let override = checkout.session.billingAddress {
-                addressCard(
-                    name: override.name,
-                    address: override.address,
-                    onEdit: { showBillingAddressSheet = true }
-                )
-            } else {
-                emptyAddressCard(label: "Add billing address", onAdd: { showBillingAddressSheet = true })
-            }
-        }
-        .sheet(isPresented: $showBillingAddressSheet) {
-            AddressElement(
-                address: billingAddressBinding,
-                configuration: makeAddressConfiguration(
-                    title: "Billing Address",
-                    override: checkout.session.billingAddress
                 )
             )
         }
@@ -490,40 +459,12 @@ struct CheckoutCartContentView: View {
         )
     }
 
-    private var billingAddressBinding: Binding<AddressElement.AddressDetails?> {
-        Binding(
-            get: { billingAddressDetails },
-            set: { newValue in
-                billingAddressDetails = newValue
-                guard let details = newValue else { return }
-                updateBillingAddress(details)
-            }
-        )
-    }
-
     private func updateShippingAddress(_ details: AddressElement.AddressDetails) {
         Task {
             isLoading = true
             errorMessage = nil
             do {
                 try await checkout.updateShippingAddress(
-                    name: details.name,
-                    phone: nil,
-                    address: checkoutAddress(from: details.address)
-                )
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-            isLoading = false
-        }
-    }
-
-    private func updateBillingAddress(_ details: AddressElement.AddressDetails) {
-        Task {
-            isLoading = true
-            errorMessage = nil
-            do {
-                try await checkout.updateBillingAddress(
                     name: details.name,
                     phone: nil,
                     address: checkoutAddress(from: details.address)
