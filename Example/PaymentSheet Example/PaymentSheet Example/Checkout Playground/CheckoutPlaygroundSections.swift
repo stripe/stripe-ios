@@ -166,6 +166,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var checkoutSessionPaymentMethodSave: Bool
     @Binding var checkoutSessionPaymentMethodRemove: Bool
     @Binding var adaptivePricingCountry: CheckoutPlayground.AdaptivePricingCountry
+    @Binding var automaticPaymentMethods: Bool
 
     private var supportsSetupRestrictedFeatures: Bool {
         return mode != .setup
@@ -188,6 +189,11 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     title: "Collect Billing Address",
                     isOn: $billingAddressCollection,
                     tooltip: "Sets `billing_address_collection: 'required'`. If off, defaults to 'auto' (only collected if the payment method needs it)."
+                )
+                CheckoutPlayground.ToggleRow(
+                    title: "Automatic Payment Methods",
+                    isOn: $automaticPaymentMethods,
+                    tooltip: "Sends `automatic_payment_methods: true` instead of an explicit `payment_method_types` array. Stripe selects the best payment methods for the session."
                 )
                 if supportsSetupRestrictedFeatures {
                     CheckoutPlayground.ToggleRow(

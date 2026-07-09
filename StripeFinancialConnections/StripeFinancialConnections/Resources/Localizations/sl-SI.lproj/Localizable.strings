@@ -28,8 +28,6 @@
 
 "Continue with %@" = "Nadaljujte s ponudnikom %@";
 
-"Continue with Link" = "Nadaljuj s storitvijo Link";
-
 "Email address" = "E-poštni naslov";
 
 "Enter bank details" = "Vnesite podatke o banki";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "Poskusite poiskati drugo banko ali pa %@.";
 
 "Use information you previously saved with your %@ account." = "Uporabite podatke, ki ste jih prej shranili s svojim računom pri ponudniku %@.";
-
-"Use information you previously saved with your Link account." = "Uporabite podatke, ki ste jih predhodno shranili v računu Link.";
 
 "Use test account" = "Uporabi preskusni račun";
 

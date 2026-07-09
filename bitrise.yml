@@ -231,11 +231,20 @@ workflows:
     - prep_all
     steps:
     - xcode-test@6:
-        inputs:
+        is_skippable: true
+        inputs: &financial_connections_stability_tests_inputs
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: FinancialConnections Example
+    - script@1:
+        is_always_run: true
+        title: Retry gate for test-runner hang
+        inputs:
+        - content: ./ci_scripts/xcode_test_runner_hang_gate.sh
+    - xcode-test@6:
+        run_if: '{{enveq "STRIPE_RETRY_XCODE_TEST" "yes"}}'
+        inputs: *financial_connections_stability_tests_inputs
     - slack@3:
         is_always_run: true
         run_if: .IsBuildFailed
@@ -269,11 +278,20 @@ workflows:
     - prep_all
     steps:
     - xcode-test@6:
-        inputs:
+        is_skippable: true
+        inputs: &financial_connections_stability_tests_for_edge_inputs
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: FinancialConnections Example
+    - script@1:
+        is_always_run: true
+        title: Retry gate for test-runner hang
+        inputs:
+        - content: ./ci_scripts/xcode_test_runner_hang_gate.sh
+    - xcode-test@6:
+        run_if: '{{enveq "STRIPE_RETRY_XCODE_TEST" "yes"}}'
+        inputs: *financial_connections_stability_tests_for_edge_inputs
     - deploy-to-bitrise-io@2: {}
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
@@ -526,12 +544,21 @@ workflows:
   integration-all:
     steps:
     - xcode-test@6:
-        inputs:
+        is_skippable: true
+        inputs: &integration_all_inputs
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: IntegrationTester
         - log_formatter: xcbeautify
+    - script@1:
+        is_always_run: true
+        title: Retry gate for test-runner hang
+        inputs:
+        - content: ./ci_scripts/xcode_test_runner_hang_gate.sh
+    - xcode-test@6:
+        run_if: '{{enveq "STRIPE_RETRY_XCODE_TEST" "yes"}}'
+        inputs: *integration_all_inputs
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
@@ -758,8 +785,12 @@ workflows:
         inputs:
         - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
+    # First attempt is is_skippable so the runner-hang flake does not
+    # immediately fail the build; the gate script decides retry-vs-fail.
+    # The retry step reuses these inputs via a YAML anchor.
     - xcode-test@6:
-        inputs:
+        is_skippable: true
+        inputs: &ui_tests_paymentsheet_inputs
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
@@ -767,7 +798,16 @@ workflows:
         - test_plan: $TEST_PLAN_SHARD
         - log_formatter: xcbeautify
         - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
-    - deploy-to-bitrise-io@2: {}
+    - script@1:
+        is_always_run: true
+        title: Retry gate for test-runner hang
+        inputs:
+        - content: ./ci_scripts/xcode_test_runner_hang_gate.sh
+    - xcode-test@6:
+        run_if: '{{enveq "STRIPE_RETRY_XCODE_TEST" "yes"}}'
+        inputs: *ui_tests_paymentsheet_inputs
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
     before_run:
     - install-runtime-16
     - prep_all
@@ -782,7 +822,8 @@ workflows:
         - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
     - xcode-test@6:
-        inputs:
+        is_skippable: true
+        inputs: &ui_tests_connect_inputs
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
@@ -790,7 +831,16 @@ workflows:
         - test_plan: StripeConnectExample
         - log_formatter: xcbeautify
         - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
-    - deploy-to-bitrise-io@2: {}
+    - script@1:
+        is_always_run: true
+        title: Retry gate for test-runner hang
+        inputs:
+        - content: ./ci_scripts/xcode_test_runner_hang_gate.sh
+    - xcode-test@6:
+        run_if: '{{enveq "STRIPE_RETRY_XCODE_TEST" "yes"}}'
+        inputs: *ui_tests_connect_inputs
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
     before_run:
     - install-runtime-16
     - prep_all
@@ -805,7 +855,8 @@ workflows:
         - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
     - xcode-test@6:
-        inputs:
+        is_skippable: true
+        inputs: &ui_tests_crypto_inputs
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
@@ -813,7 +864,16 @@ workflows:
         - test_plan: CryptoOnrampExampleUITests
         - log_formatter: xcbeautify
         - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
-    - deploy-to-bitrise-io@2: {}
+    - script@1:
+        is_always_run: true
+        title: Retry gate for test-runner hang
+        inputs:
+        - content: ./ci_scripts/xcode_test_runner_hang_gate.sh
+    - xcode-test@6:
+        run_if: '{{enveq "STRIPE_RETRY_XCODE_TEST" "yes"}}'
+        inputs: *ui_tests_crypto_inputs
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
     before_run:
     - install-runtime-16
     - prep_all
