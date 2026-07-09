@@ -28,8 +28,6 @@
 
 "Continue with %@" = "Συνέχεια με %@";
 
-"Continue with Link" = "Συνέχεια με το Link";
-
 "Email address" = "Διεύθυνση email";
 
 "Enter bank details" = "Εισαγάγετε στοιχεία τράπεζας";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "Δοκιμάστε να αναζητήσετε άλλη τράπεζα ή %@";
 
 "Use information you previously saved with your %@ account." = "Χρησιμοποιήστε τα στοιχεία που είχατε αποθηκεύσει προηγουμένως με τον λογαριασμό σας %@.";
-
-"Use information you previously saved with your Link account." = "Χρησιμοποιήστε τα στοιχεία που είχατε αποθηκεύσει προηγουμένως με τον λογαριασμό σας στο Link.";
 
 "Use test account" = "Χρήση δοκιμαστικού λογαριασμού";
 

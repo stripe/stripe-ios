@@ -28,8 +28,6 @@
 
 "Continue with %@" = "Tiếp tục với %@";
 
-"Continue with Link" = "Tiếp tục với Link";
-
 "Email address" = "Địa chỉ email";
 
 "Enter bank details" = "Nhập thông tin ngân hàng";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "Hãy thử tìm ngân hàng khác hoặc %@";
 
 "Use information you previously saved with your %@ account." = "Sử dụng thông tin bạn đã lưu vào tài khoản %@ trước đây.";
-
-"Use information you previously saved with your Link account." = "Sử dụng thông tin bạn đã lưu vào tài khoản Link trước đây.";
 
 "Use test account" = "Sử dụng tài khoản thử nghiệm";
 

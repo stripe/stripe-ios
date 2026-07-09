@@ -6,7 +6,7 @@
 //
 
 import SafariServices
-@_spi(PreviewConnect) @testable import StripeConnect
+@testable import StripeConnect
 @_spi(STP) import StripeCore
 import WebKit
 import XCTest

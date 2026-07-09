@@ -7,7 +7,6 @@
 
 import UIKit
 
-@_spi(PreviewConnect)
 public class PaymentsViewController: UIViewController {
 
     struct Props: Encodable {
@@ -48,7 +47,6 @@ public class PaymentsViewController: UIViewController {
 }
 
 /// Delegate of an `PaymentsViewController`
-@_spi(PreviewConnect)
 public protocol PaymentsViewControllerDelegate: AnyObject {
 
     /**
