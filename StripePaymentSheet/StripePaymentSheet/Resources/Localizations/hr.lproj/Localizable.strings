@@ -62,8 +62,6 @@
 
 "By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Nastavkom se slažete da ćete spremiti svoje podatke za buduće kupnje s %1$@ i <link>%2$@</link> prema %2$@ <terms>uvjetima</terms> i <privacy>privatnosti</privacy>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Nastavkom pristajete spremiti svoje podatke za buduće kupnje uz %@ i <link>Link</link> prema <terms>uvjetima</terms> i <privacy>privatnosti</privacy> značajke Link.";
-
 "By continuing, you agree to save your information for future purchases with %@." = "Nastavkom pristajete spremiti svoje podatke za buduće kupnje uz %@.";
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Nastavkom ovlašćujete da %@ automatski tereti vaš saldo Satispay na ponavljajućoj osnovi u skladu s vašim planom kupnje ili pretplate.";
@@ -74,11 +72,7 @@
 
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pridruživanjem %@, pristajete na <terms>uvjete</terms> i <privacy>pravila o privatnosti</privacy>.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prisupanjem u Link, prihvaćate <terms>Uvjete</terms> i <privacy>Pravila privatnosti</privacy>.";
-
 "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Davanjem telefonskog broja i e-pošte, pristajete otvoriti račun %1$@ podložan %1$@ <terms>uvjetima</terms> i <privacy>pravilima o privatnosti</privacy>.";
-
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Davanjem telefonskog broja i e-pošte pristajete na stvaranje Link računa u skladu s Link <terms>Uvjetima</terms> i <privacy>Pravilima o privatnosti</privacy>.";
 
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Davanjem pojedinosti o svojem bankovnom računu i potvrdom ovog plaćanja, pristajete na ovaj Zahtjev za izravno terećenje i <terms>ugovor o usluzi zahtjeva za izravna terećenja</terms> i autorizirate Stripe Payments Australia Pty Ltd ACN 160 180 343, ID korisnika izravnog terećenja 507156 („Stripe”) da tereti vaš račun putem Sustava elektroničkog kliringa (BECS) u ime %@ („Trgovac”) za sve iznose koje vam Trgovac zasebno priopći. Potvrđujete da ste vlasnik računa ili ovlašteni potpisnik na gore navedenom računu.";
 
@@ -86,13 +80,9 @@
 
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Davanjem svoje adrese e-pošte, pristajete otvoriti račun %1$@ i spremiti podatke o plaćanju na %1$@, prema %1$@ <terms>uvjetima</terms> i <privacy>pravilima o privatnosti</privacy>.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Navođenjem svoje adrese e-pošte pristajete na izradu Link računa i spremanje podataka o plaćanju na Link, u skladu s <terms>Uvjetima</terms> i <privacy>Pravilima o privatnosti</privacy> Linka.";
-
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Unošenjem vaših podataka o plaćanju, ovlašćujete (A) %@ i Stripe, našeg davatelja usluga platnog prometa, da vašoj banci pošalje upute za terećenje vašeg računa, i (B) vašu banku za terećenje vašeg računa u skladu s tim uputama. U sklopu vaših prava, imate pravo na povrat novca od svoje banke prema uvjetima i odredbama ugovora s bankom. Povrat novca mora se zatražiti u roku od 8 tjedana počevši od datuma terećenja vašeg računa. Vaša prava objašnjena su u izjavi koju možete dobiti od svoje banke. Slažete se s primanjem obavijesti o budućim terećenjima do 2 dana prije njihova izvršenja.";
 
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Davanjem telefonskog broja pristajete otvoriti račun %1$@ i spremiti podatke o plaćanju na %1$@, prema %1$@ <terms>uvjetima</terms> i <privacy>pravilima o privatnosti</privacy>.";
-
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Navođenjem svog telefonskog broja pristajete na izradu Link računa i spremanje podataka o plaćanju na Link, u skladu s <terms>Uvjetima</terms> i <privacy>Pravilima o privatnosti</privacy> Linka.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Spremanjem bankovnog računa za %@ pristajete na autorizaciju plaćanja u skladu s <terms>ovim uvjetima</terms>.";
 
@@ -136,8 +126,6 @@
 
 "Create an account with %@ for faster checkout across the web" = "Izradite račun upotrebljavajući %@ za brže izvršavanje plaćanja na mreži";
 
-"Create an account with Link for faster checkout across the web" = "Stvaranje računa s pomoću Linka za brže izvršenje plaćanja na mreži";
-
 "Debit or credit card" = "Debitna ili kreditna kartica";
 
 "Declarations" = "Deklaracije";
@@ -175,8 +163,6 @@
 "Log in or sign up" = "Prijavite se ili registrirajte";
 
 "Log out of %@" = "Odjava iz %@";
-
-"Log out of Link" = "Odjavite se s Linka";
 
 "Manage SEPA debit" = "Upravljajte SEPA terećenjem";
 
@@ -280,8 +266,6 @@
 
 "Save my info for faster checkout with %@" = "Spremi moje podatke za brže izvršenje plaćanja upotrebljavajući %@";
 
-"Save my info for faster checkout with Link" = "Spremi moje podatke za bržu naplatu putem poveznice";
-
 "Save payment details to %@ for future purchases" = "Spremi podatke za plaćanja poduzeću %@ za buduće kupnje";
 
 "Save this account for future %@ payments" = "Spremi ovaj račun za buduća %@ plaćanja";
@@ -289,8 +273,6 @@
 "Save your bank account in just a few steps." = "Spremite svoj bankovni račun u samo par koraka.";
 
 "Save your info for secure 1-click checkout with %@" = "Spremite svoje podatke za sigurno izvršenje plaćanja jednim klikom upotrebljavajući %@";
-
-"Save your info for secure 1-click checkout with Link" = "Spremite svoje podatke za sigurno plaćanje jednim klikom putem Linka";
 
 "Saved" = "Spremljeno";
 

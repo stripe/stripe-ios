@@ -130,9 +130,10 @@ enum CheckoutTestHelpers {
         "elements_session": minimalElementsSessionJSON,
     ]
 
-    static func makeOpenSession(customerEmail: String? = nil) -> STPCheckoutSessionAPIResponse {
+    static func makeOpenSession(customerEmail: String? = nil, billingAddressCollection: String? = nil) -> STPCheckoutSessionAPIResponse {
         var json = openSessionJSON
         json["customer_email"] = customerEmail
+        json["billing_address_collection"] = billingAddressCollection
         return STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
     }
 

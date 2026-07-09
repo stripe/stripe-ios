@@ -28,8 +28,6 @@
 
 "Continue with %@" = "%@ ile devam et";
 
-"Continue with Link" = "Link ile Devam Et";
-
 "Email address" = "E-posta adresi";
 
 "Enter bank details" = "Banka ayrıntılarını girin";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "Başka bir banka veya %@ aramayı deneyin.";
 
 "Use information you previously saved with your %@ account." = "%@ hesabınıza daha önce kaydettiğiniz bilgileri kullanın.";
-
-"Use information you previously saved with your Link account." = "Daha önce Link hesabınıza kaydettiğiniz bilgileri kullanın.";
 
 "Use test account" = "Test hesabı kullan";
 

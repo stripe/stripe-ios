@@ -28,8 +28,6 @@
 
 "Continue with %@" = "继续使用 %@";
 
-"Continue with Link" = "继续使用 Link";
-
 "Email address" = "邮件地址";
 
 "Enter bank details" = "输入银行信息";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "尝试搜索另一银行或%@";
 
 "Use information you previously saved with your %@ account." = "使用您之前在 %@ 账户中保存的信息。";
-
-"Use information you previously saved with your Link account." = "使用您之前在 Link 账户中保存的信息。";
 
 "Use test account" = "使用测试账户";
 
