@@ -342,9 +342,10 @@ extension STPApplePayContext {
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
-            if case .checkout(let checkout) = intent, let email = checkout.nonisolatedSession.email {
-                applePayContext.fallbackBillingDetails = StripeAPI.BillingDetails(email: email)
-            }
+            applePayContext.fallbackBillingDetails = makeFallbackBillingDetails(
+                intent: intent,
+                configuration: configuration
+            )
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes
@@ -444,6 +445,51 @@ private func makeShippingDetails(from configuration: PaymentElementConfiguration
         name: name,
         phone: shippingDetails.phone
     )
+}
+
+private func makeFallbackBillingDetails(
+    intent: Intent,
+    configuration: PaymentElementConfiguration
+) -> StripeAPI.BillingDetails? {
+    var fallbackBillingDetails = StripeAPI.BillingDetails()
+    var hasFallbackBillingDetails = false
+
+    if case .checkout(let checkout) = intent, let email = checkout.nonisolatedSession.email {
+        fallbackBillingDetails.email = email
+        hasFallbackBillingDetails = true
+    }
+
+    guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
+        return hasFallbackBillingDetails ? fallbackBillingDetails : nil
+    }
+
+    let defaultBillingDetails = configuration.defaultBillingDetails
+    if fallbackBillingDetails.email == nil, let email = defaultBillingDetails.email {
+        fallbackBillingDetails.email = email
+        hasFallbackBillingDetails = true
+    }
+    if let name = defaultBillingDetails.name {
+        fallbackBillingDetails.name = name
+        hasFallbackBillingDetails = true
+    }
+    if let phone = defaultBillingDetails.phone {
+        fallbackBillingDetails.phone = phone
+        hasFallbackBillingDetails = true
+    }
+    if defaultBillingDetails.address != .init() {
+        let address = defaultBillingDetails.address
+        fallbackBillingDetails.address = StripeAPI.BillingDetails.Address(
+            city: address.city,
+            country: address.country,
+            line1: address.line1,
+            line2: address.line2,
+            postalCode: address.postalCode,
+            state: address.state
+        )
+        hasFallbackBillingDetails = true
+    }
+
+    return hasFallbackBillingDetails ? fallbackBillingDetails : nil
 }
 
 private func makeRequiredBillingDetails(from configuration: PaymentElementConfiguration) -> Set<PKContactField> {
