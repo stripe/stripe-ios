@@ -23,7 +23,7 @@ extension CheckoutPlayground {
         @Published var shippingAddressCollection = true
         @Published var billingAddressCollection = false
         @Published var automaticTax = true
-        @Published var adaptivePricing = false
+@Published var adaptivePricing = false
         @Published var checkoutSessionPaymentMethodSave = true
         @Published var checkoutSessionPaymentMethodRemove = true
         @Published var adaptivePricingCountry: AdaptivePricingCountry = .none
@@ -99,7 +99,7 @@ extension CheckoutPlayground {
                 "shipping_address_collection": shippingAddressCollection,
                 "billing_address_collection": billingAddressCollection,
                 "automatic_tax": automaticTaxForRequest,
-                "payment_method_types": Array(paymentMethodTypes),
+"payment_method_types": Array(paymentMethodTypes),
                 "adaptive_pricing": adaptivePricing,
                 "checkout_session_payment_method_save": checkoutSessionPaymentMethodSave ? "enabled" : "disabled",
                 "checkout_session_payment_method_remove": checkoutSessionPaymentMethodRemove ? "enabled" : "disabled",

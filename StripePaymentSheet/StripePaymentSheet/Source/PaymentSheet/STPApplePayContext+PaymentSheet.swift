@@ -179,6 +179,21 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     ) async throws -> String {
         let checkoutSession: Checkout.Session = checkout.nonisolatedSession
 
+        // 0. Update tax region from billing address if the session uses billing address for tax.
+        //    Billing contact is only available at authorization time (no mid-sheet callback),
+        //    so we apply it here before confirming.
+        if checkoutSession.shouldSendTaxRegion(for: "billing"),
+           let postalAddress = paymentInformation.billingContact?.postalAddress,
+           !postalAddress.isoCountryCode.isEmpty {
+            let address = Checkout.Address(
+                country: postalAddress.isoCountryCode,
+                city: postalAddress.city.isEmpty ? nil : postalAddress.city,
+                state: postalAddress.state.isEmpty ? nil : postalAddress.state,
+                postalCode: postalAddress.postalCode.isEmpty ? nil : postalAddress.postalCode
+            )
+            try? await checkout.performUpdate(.setTaxRegion(address))
+        }
+
         // 1. Build client attribution metadata
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
             intent: intent,
@@ -234,7 +249,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
         let shippingDetailsParams = STPPaymentIntentShippingDetailsParams(address: addressParams, name: name)
         shippingDetailsParams.phone = shippingAddress.phone
-
         return shippingDetailsParams
     }
 
@@ -283,28 +297,113 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     func applePayContext(
         _ context: STPApplePayContext,
         didSelect shippingMethod: PKShippingMethod,
-        handler: @escaping (PKPaymentRequestShippingMethodUpdate) -> Void) {
+        handler: @escaping (PKPaymentRequestShippingMethodUpdate) -> Void
+    ) {
+        guard case .checkout(let checkout) = intent else {
             if let shippingMethodUpdateHandler {
-                shippingMethodUpdateHandler(shippingMethod) { result in
-                    handler(result)
-                }
+                shippingMethodUpdateHandler(shippingMethod) { handler($0) }
             } else {
                 handler(PKPaymentRequestShippingMethodUpdate())
             }
+            return
         }
+
+        Task { @MainActor in
+            if let optionId = shippingMethod.identifier {
+                try? await checkout.performUpdate(.setShippingRate(optionId))
+            }
+            handler(makeShippingMethodUpdate(from: checkout.nonisolatedSession))
+        }
+    }
 
     func applePayContext(
         _ context: STPApplePayContext,
         didSelectShippingContact shippingContact: PKContact,
-        handler: @escaping (PKPaymentRequestShippingContactUpdate) -> Void) {
+        handler: @escaping (PKPaymentRequestShippingContactUpdate) -> Void
+    ) {
+        guard case .checkout(let checkout) = intent else {
             if let shippingContactUpdateHandler {
-                shippingContactUpdateHandler(shippingContact) { result in
-                    handler(result)
-                }
+                shippingContactUpdateHandler(shippingContact) { handler($0) }
             } else {
                 handler(PKPaymentRequestShippingContactUpdate())
             }
+            return
         }
+
+        Task { @MainActor in
+            let session = checkout.nonisolatedSession
+            // Update tax region with the (redacted) shipping address Apple Pay provides.
+            // Apple Pay only shares country, state, and postal code at this stage — enough for tax.
+            if session?.shouldSendTaxRegion(for: "shipping") == true,
+               let postalAddress = shippingContact.postalAddress,
+               !postalAddress.isoCountryCode.isEmpty {
+                let address = Checkout.Address(
+                    country: postalAddress.isoCountryCode,
+                    city: postalAddress.city.isEmpty ? nil : postalAddress.city,
+                    state: postalAddress.state.isEmpty ? nil : postalAddress.state,
+                    postalCode: postalAddress.postalCode.isEmpty ? nil : postalAddress.postalCode
+                )
+                try? await checkout.performUpdate(.setTaxRegion(address))
+            }
+            handler(makeShippingContactUpdate(from: checkout.nonisolatedSession))
+        }
+    }
+
+    private func makeShippingContactUpdate(from session: Checkout.Session) -> PKPaymentRequestShippingContactUpdate {
+        let shippingMethods = session.shippingOptions.map {
+            STPApplePayContext.makePKShippingMethod(from: $0, currency: session.currency)
+        }
+        return PKPaymentRequestShippingContactUpdate(
+            errors: [],
+            paymentSummaryItems: makeSummaryItems(from: session),
+            shippingMethods: shippingMethods
+        )
+    }
+
+    private func makeShippingMethodUpdate(from session: Checkout.Session) -> PKPaymentRequestShippingMethodUpdate {
+        return PKPaymentRequestShippingMethodUpdate(paymentSummaryItems: makeSummaryItems(from: session))
+    }
+
+    private func makeSummaryItems(from session: Checkout.Session) -> [PKPaymentSummaryItem] {
+        guard !session.lineItems.isEmpty, let total = session.total else { return [] }
+        let label = intent.sellerDetails?.businessName ?? ""
+        return STPApplePayContext.makeApplePayPaymentSummaryItems(
+            lineItems: session.lineItems,
+            total: total,
+            taxStatus: session.tax.status,
+            totalLabel: label,
+            currency: session.currency
+        )
+    }
+
+    @available(iOS 15.0, *)
+    func applePayContext(
+        _ context: STPApplePayContext,
+        didChangeCouponCode couponCode: String
+    ) async -> PKPaymentRequestCouponCodeUpdate {
+        guard case .checkout(let checkout) = intent else {
+            return PKPaymentRequestCouponCodeUpdate(errors: nil, paymentSummaryItems: [], shippingMethods: [])
+        }
+
+        do {
+            try await checkout.performUpdate(.setPromotionCode(couponCode))
+        } catch {
+            let couponError = PKPaymentRequest.paymentCouponCodeInvalidError(localizedDescription: error.localizedDescription)
+            let session: Checkout.Session = checkout.nonisolatedSession
+            return PKPaymentRequestCouponCodeUpdate(
+                errors: [couponError],
+                paymentSummaryItems: makeSummaryItems(from: session),
+                shippingMethods: session.shippingOptions.map { STPApplePayContext.makePKShippingMethod(from: $0, currency: session.currency) }
+            )
+        }
+
+        let session: Checkout.Session = checkout.nonisolatedSession
+        return PKPaymentRequestCouponCodeUpdate(
+            errors: nil,
+            paymentSummaryItems: makeSummaryItems(from: session),
+            shippingMethods: session.shippingOptions.map { STPApplePayContext.makePKShippingMethod(from: $0, currency: session.currency) }
+        )
+    }
 }
 
 extension STPApplePayContext {
@@ -365,8 +464,12 @@ extension STPApplePayContext {
             country: applePay.merchantCountryCode,
             currency: intent.currency ?? "USD"
         )
-        paymentRequest.requiredBillingContactFields = makeRequiredBillingDetails(from: configuration)
-        paymentRequest.requiredShippingContactFields = makeRequiredShippingDetails(from: configuration)
+        let checkoutSession: Checkout.Session? = {
+            guard case .checkout(let checkout) = intent else { return nil }
+            return checkout.nonisolatedSession
+        }()
+        paymentRequest.requiredBillingContactFields = makeRequiredBillingDetails(from: configuration, checkoutSession: checkoutSession)
+        paymentRequest.requiredShippingContactFields = makeRequiredShippingDetails(from: configuration, checkoutSession: checkoutSession)
 
         let label = intent.sellerDetails?.businessName ?? configuration.merchantDisplayName
 
@@ -379,6 +482,7 @@ extension STPApplePayContext {
             paymentRequest.paymentSummaryItems = STPApplePayContext.makeApplePayPaymentSummaryItems(
                 lineItems: checkout.nonisolatedSession.lineItems,
                 total: total,
+                taxStatus: checkout.nonisolatedSession.tax.status,
                 totalLabel: label,
                 currency: intent.currency
             )
@@ -423,6 +527,27 @@ extension STPApplePayContext {
             paymentRequest.billingContact = Self.makeBillingContact(from: billingAddress)
         }
 
+        // CS: shipping methods, allowed countries, pre-populated shipping contact, and promo code support
+        if let checkoutSession {
+            if !checkoutSession.shippingOptions.isEmpty {
+                paymentRequest.shippingMethods = checkoutSession.shippingOptions.map {
+                    Self.makePKShippingMethod(from: $0, currency: checkoutSession.currency)
+                }
+            }
+            if let allowedCountries = checkoutSession.allowedShippingCountries {
+                paymentRequest.supportedCountries = Set(allowedCountries)
+            }
+            if let shippingAddress = checkoutSession.shippingAddress {
+                paymentRequest.shippingContact = Self.makeBillingContact(from: shippingAddress)
+            }
+            if #available(iOS 15.0, *),
+               (configuration as? PaymentSheet.Configuration)?.allowsPromotionCodes == true {
+                paymentRequest.supportsCouponCode = true
+                // Pre-populate if a promo code is already applied to the session
+                paymentRequest.couponCode = checkoutSession.discountAmounts.first?.promotionCode
+            }
+        }
+
         return paymentRequest
     }
 }
@@ -446,11 +571,23 @@ private func makeShippingDetails(from configuration: PaymentElementConfiguration
     )
 }
 
-private func makeRequiredBillingDetails(from configuration: PaymentElementConfiguration) -> Set<PKContactField> {
+private func makeRequiredBillingDetails(from configuration: PaymentElementConfiguration, checkoutSession: Checkout.Session?) -> Set<PKContactField> {
     var requiredPKContactFields = Set<PKContactField>()
     let billingConfig = configuration.billingDetailsCollectionConfiguration
-    // By default, we always want to request the billing address (as it includes the postal code)
-    if billingConfig.address == .automatic || billingConfig.address == .full {
+
+    let shouldRequireBillingAddress: Bool
+    if let session = checkoutSession {
+        // For CS, require billing address if: address mode is full, phone is collected,
+        // or billing address is needed for automatic tax calculation.
+        let neededForTax = billingConfig.address != .never && session.shouldSendTaxRegion(for: "billing")
+        shouldRequireBillingAddress = billingConfig.address == .full
+            || billingConfig.phone == .always
+            || neededForTax
+    } else {
+        shouldRequireBillingAddress = billingConfig.address == .automatic || billingConfig.address == .full
+    }
+
+    if shouldRequireBillingAddress {
         requiredPKContactFields.insert(.postalAddress)
     }
     // Only request name field - phone and email go into shipping contact fields
@@ -460,11 +597,33 @@ private func makeRequiredBillingDetails(from configuration: PaymentElementConfig
     return requiredPKContactFields
 }
 
-private func makeRequiredShippingDetails(from configuration: PaymentElementConfiguration) -> Set<PKContactField> {
+private func makeRequiredShippingDetails(from configuration: PaymentElementConfiguration, checkoutSession: Checkout.Session?) -> Set<PKContactField> {
     var requiredPKContactFields = Set<PKContactField>()
     let billingConfig = configuration.billingDetailsCollectionConfiguration
-    // Phone and email are collected through shipping contact fields
-    if billingConfig.email == .always {
+
+    // Collect shipping postal address when the CS has shipping options or needs a shipping
+    // address to compute automatic tax.
+    if let session = checkoutSession,
+       session.requiresShippingAddress || session.shouldSendTaxRegion(for: "shipping") {
+        requiredPKContactFields.insert(.postalAddress)
+        requiredPKContactFields.insert(.name)
+    }
+
+    // Phone and email are collected through shipping contact fields.
+    // For CS + .automatic email mode: only require email if the session doesn't already have the customer's email.
+    let shouldRequireEmail: Bool
+    switch billingConfig.email {
+    case .always:
+        shouldRequireEmail = true
+    case .automatic:
+        // For CS, only require email if the session doesn't already have the customer's email.
+        // For non-CS intents, .automatic means don't collect.
+        shouldRequireEmail = checkoutSession != nil && checkoutSession?.email == nil
+    case .never:
+        shouldRequireEmail = false
+    }
+
+    if shouldRequireEmail {
         requiredPKContactFields.insert(.emailAddress)
     }
     if billingConfig.phone == .always {

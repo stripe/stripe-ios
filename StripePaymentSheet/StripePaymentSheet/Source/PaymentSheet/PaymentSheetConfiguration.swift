@@ -257,6 +257,9 @@ extension PaymentSheet {
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false
 
+        /// When `true`, enables the coupon code field in the Apple Pay sheet for Checkout Sessions that have `allow_promotion_codes: true`.
+        @_spi(STP) public var allowsPromotionCodes = false
+
         /// When using WalletButtonsView, configures payment method visibility across available surfaces.
         @_spi(STP) public var walletButtonsVisibility: WalletButtonsVisibility = WalletButtonsVisibility()
     }

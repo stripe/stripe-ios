@@ -48,7 +48,7 @@ struct CheckoutPlaygroundView: View {
                             billingAddressCollection: $viewModel.billingAddressCollection,
                             allowPromotionCodes: $viewModel.allowPromotionCodes,
                             automaticTax: $viewModel.automaticTax,
-                            adaptivePricing: $viewModel.adaptivePricing,
+adaptivePricing: $viewModel.adaptivePricing,
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
                             adaptivePricingCountry: $viewModel.adaptivePricingCountry
@@ -85,6 +85,8 @@ struct CheckoutPlaygroundView: View {
                     CheckoutCartView(
                         clientSecret: clientSecret,
                         adaptivePricing: viewModel.adaptivePricing,
+                        billingAddressCollection: viewModel.billingAddressCollection,
+                        allowPromotionCodes: viewModel.allowPromotionCodes,
                         integrationType: viewModel.integrationType,
                         currencySelectorAppearance: viewModel.currencySelectorAppearance
                     )

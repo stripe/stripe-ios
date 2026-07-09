@@ -18,6 +18,8 @@ struct CheckoutCartView: View {
 
     let clientSecret: String
     let adaptivePricing: Bool
+    let billingAddressCollection: Bool
+    let allowPromotionCodes: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
 
@@ -45,6 +47,13 @@ struct CheckoutCartView: View {
                             case .embedded:
                                 CheckoutCartEmbeddedPaymentView(
                                     checkout: checkout,
+                                    onDismiss: { dismiss() }
+                                )
+                            case .expressCheckout:
+                                CheckoutCartExpressCheckoutView(
+                                    checkout: checkout,
+                                    billingAddressCollection: billingAddressCollection,
+                                    allowPromotionCodes: allowPromotionCodes,
                                     onDismiss: { dismiss() }
                                 )
                             }

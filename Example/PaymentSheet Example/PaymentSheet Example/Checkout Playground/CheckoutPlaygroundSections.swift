@@ -162,7 +162,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var billingAddressCollection: Bool
     @Binding var allowPromotionCodes: Bool
     @Binding var automaticTax: Bool
-    @Binding var adaptivePricing: Bool
+@Binding var adaptivePricing: Bool
     @Binding var checkoutSessionPaymentMethodSave: Bool
     @Binding var checkoutSessionPaymentMethodRemove: Bool
     @Binding var adaptivePricingCountry: CheckoutPlayground.AdaptivePricingCountry

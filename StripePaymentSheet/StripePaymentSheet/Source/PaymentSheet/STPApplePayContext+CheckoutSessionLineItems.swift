@@ -21,6 +21,7 @@ extension STPApplePayContext {
     static func makeApplePayPaymentSummaryItems(
         lineItems: [Checkout.LineItem],
         total: Checkout.Total,
+        taxStatus: Checkout.TaxStatus?,
         totalLabel: String,
         currency: String?
     ) -> [PKPaymentSummaryItem] {
@@ -88,6 +89,15 @@ extension STPApplePayContext {
         }
 
         // Apple Pay convention: the last item is the grand total.
+        // Use .pending when tax hasn't been calculated yet (address still required),
+        // signaling to the user that the total may change.
+        let totalType: PKPaymentSummaryItemType
+        switch taxStatus {
+        case .requiresShippingAddress, .requiresBillingAddress:
+            totalType = .pending
+        default:
+            totalType = .final
+        }
         summaryItems.append(
             PKPaymentSummaryItem(
                 label: totalLabel,
@@ -95,11 +105,25 @@ extension STPApplePayContext {
                     withAmount: total.total.minorUnitsAmount,
                     currency: currency
                 ),
-                type: .final
+                type: totalType
             )
         )
 
         return summaryItems
+    }
+
+    /// Converts a `Checkout.ShippingOption` into a `PKShippingMethod` for use in Apple Pay.
+    static func makePKShippingMethod(from option: Checkout.ShippingOption, currency: String?) -> PKShippingMethod {
+        let amount = NSDecimalNumber.stp_decimalNumber(
+            withAmount: option.amount.minorUnitsAmount,
+            currency: currency
+        )
+        let method = PKShippingMethod(label: option.displayName ?? option.id, amount: amount)
+        method.identifier = option.id
+        if let estimate = option.deliveryEstimate {
+            method.detail = estimate.localizedDescription
+        }
+        return method
     }
 
     /// Converts a `Checkout.ContactAddress` into a `PKContact` for pre-populating the Apple Pay sheet.
@@ -139,5 +163,31 @@ extension STPApplePayContext {
 
         contact.postalAddress = postalAddress
         return contact
+    }
+}
+
+private extension Checkout.DeliveryEstimate {
+    var localizedDescription: String? {
+        if let min = minimum, let max = maximum, min.unit == max.unit {
+            return "\(min.value)–\(max.value) \(max.unit.localizedString)"
+        } else if let min = minimum {
+            return "\(min.value)+ \(min.unit.localizedString)"
+        } else if let max = maximum {
+            return "Up to \(max.value) \(max.unit.localizedString)"
+        }
+        return nil
+    }
+}
+
+private extension Checkout.DeliveryEstimate.Bound.Unit {
+    var localizedString: String {
+        switch self {
+        case .hour: return "hours"
+        case .day: return "days"
+        case .businessDay: return "business days"
+        case .week: return "weeks"
+        case .month: return "months"
+        case .unknown: return ""
+        }
     }
 }
