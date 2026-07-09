@@ -28,8 +28,6 @@
 
 "Continue with %@" = "Fortsett med %@";
 
-"Continue with Link" = "Fortsett med Link";
-
 "Email address" = "E-postadresse";
 
 "Enter bank details" = "Skriv inn bankopplysninger";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "Prøv å søke en annen bank eller %@";
 
 "Use information you previously saved with your %@ account." = "Bruk informasjon du tidligere har lagret på %@-kontoen din.";
-
-"Use information you previously saved with your Link account." = "Bruk informasjon du tidligere har lagret i Link-kontoen din.";
 
 "Use test account" = "Bruk testkonto";
 

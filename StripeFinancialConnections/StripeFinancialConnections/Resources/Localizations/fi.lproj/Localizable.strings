@@ -28,8 +28,6 @@
 
 "Continue with %@" = "Jatka kohteella %@";
 
-"Continue with Link" = "Jatka Link-palvelulla";
-
 "Email address" = "Sähköpostiosoite";
 
 "Enter bank details" = "Anna pankkitiedot";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "Yritä hakea toista pankkia tai %@";
 
 "Use information you previously saved with your %@ account." = "Käytä aiemmin tallennettuja tietoja %@-tililläsi.";
-
-"Use information you previously saved with your Link account." = "Käytä Link-tilille aiemmin tallennettuja tietoja.";
 
 "Use test account" = "Käytä testitiliä";
 

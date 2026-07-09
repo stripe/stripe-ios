@@ -28,8 +28,6 @@
 
 "Continue with %@" = "Pokračovat s %@";
 
-"Continue with Link" = "Pokračovat s Link";
-
 "Email address" = "E-mailová adresa";
 
 "Enter bank details" = "Zadejte podrobnosti o bance";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "Zkuste vyhledat jinou banku nebo %@";
 
 "Use information you previously saved with your %@ account." = "Použijte informace, které jste dříve uložili pomocí účtu %@.";
-
-"Use information you previously saved with your Link account." = "Použijte informace, které jste dříve uložili do svého účtu Link.";
 
 "Use test account" = "Použít zkušební účet";
 
