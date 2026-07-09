@@ -9,6 +9,9 @@ MINOR
 * [Added] Added rich Crypto Onramp API error mapping types: `WalletOwnershipChallengeExpiredError`, `InvalidWalletOwnershipChallengeError`, `InvalidWalletOwnershipSignatureError`, `WalletNotFoundError`, and `UnsupportedNetworkError`.
 * [Changed] Renamed `AppAttestationAPIError` to `AppAttestationError` and `UncategorizedAPIError` to `UncategorizedError`.
 
+### PaymentSheet
+* [Added] Added standalone Link wallet APIs in private preview via `LinkController`.
+
 ### StripeConnect
 * [Changed] `PaymentsViewController`, `PaymentsViewControllerDelegate`, `PayoutsViewController`, `PayoutsViewControllerDelegate`, and `EmbeddedComponentManager.PaymentsListDefaultFiltersOptions` are now part of the public API and no longer require `@_spi(PreviewConnect)` to access.
 
