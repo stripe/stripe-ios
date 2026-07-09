@@ -198,7 +198,17 @@ import UIKit
     private func resolvedSupportedPaymentMethodTypes(
         override supportedPaymentMethodTypes: [LinkPaymentMethodType]?
     ) -> [LinkPaymentMethodType]? {
-        supportedPaymentMethodTypes ?? configuration?.supportedPaymentMethodTypes
+        Self.nonEmptySupportedPaymentMethodTypes(supportedPaymentMethodTypes)
+            ?? Self.nonEmptySupportedPaymentMethodTypes(configuration?.supportedPaymentMethodTypes)
+    }
+
+    private static func nonEmptySupportedPaymentMethodTypes(
+        _ supportedPaymentMethodTypes: [LinkPaymentMethodType]?
+    ) -> [LinkPaymentMethodType]? {
+        guard let supportedPaymentMethodTypes, !supportedPaymentMethodTypes.isEmpty else {
+            return nil
+        }
+        return supportedPaymentMethodTypes
     }
 
     private func updatePaymentMethodPreview() {
@@ -422,7 +432,7 @@ import UIKit
     ///
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
-    /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. If `nil`, all available types are supported.
+    /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. If `nil` or empty, all available types are supported.
     /// - Parameter collectName: Whether or not we should collect the user's name and attach it to the billing details.
     /// - Parameter completion: A closure that is called when the user has selected a payment method or canceled the sheet. If the user selects a payment method, the `paymentMethodPreview` will be updated accordingly.
     @_spi(STP) public func collectPaymentMethod(
@@ -1223,7 +1233,7 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     ///
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
-    /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. If `nil`, all available types are supported.
+    /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. If `nil` or empty, all available types are supported.
     /// - Parameter collectName: Whether or not we should collect the user's name and attach it to the billing details.
     /// - Returns: A `PaymentMethodDisplayData` if the user selected a payment method, or `nil` otherwise.
     func collectPaymentMethod(

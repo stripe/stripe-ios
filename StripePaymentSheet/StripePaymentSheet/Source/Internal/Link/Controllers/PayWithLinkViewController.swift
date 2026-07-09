@@ -117,7 +117,8 @@ final class PayWithLinkViewController: BottomSheetViewController {
         func getSupportedPaymentDetailsTypes(linkAccount: PaymentSheetLinkAccount) -> Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> {
             var allSupportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: elementsSession)
 
-            if let supportedPaymentDetailsTypes = supportedPaymentMethodTypes?.detailsTypes {
+            if let supportedPaymentDetailsTypes = supportedPaymentMethodTypes?.detailsTypes,
+               !supportedPaymentDetailsTypes.isEmpty {
                 allSupportedPaymentDetailsTypes = allSupportedPaymentDetailsTypes.intersection(supportedPaymentDetailsTypes)
             }
 
@@ -140,7 +141,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         ///   - launchedFromFlowController: Whether the flow was opened from `FlowController`.
         ///   - initiallySelectedPaymentDetailsID: The ID of an initially selected payment method. This is set when opened instead of FlowController.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
-        ///   - supportedPaymentMethodTypes: The payment method types to support in the Link sheet. If `nil`, all available types are supported.
+        ///   - supportedPaymentMethodTypes: The payment method types to support in the Link sheet. If `nil` or empty, all available types are supported.
         ///   - analyticsHelper: An instance of `AnalyticsHelper` to use for logging.
         ///   - linkAppearance: Optional appearance overrides for Link UI.
         ///   - linkConfiguration: Configuration for Link behavior and content.
