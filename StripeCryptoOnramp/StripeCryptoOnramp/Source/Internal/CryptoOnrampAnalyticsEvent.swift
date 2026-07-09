@@ -21,6 +21,8 @@ enum CryptoOnrampOperation: String {
     case verifyKycInfo = "verify_kyc_info"
     case verifyIdentity = "verify_identity"
     case registerWalletAddress = "register_wallet_address"
+    case getWalletOwnershipChallenge = "get_wallet_ownership_challenge"
+    case submitWalletOwnershipSignature = "submit_wallet_ownership_signature"
     case collectPaymentMethod = "collect_payment_method"
     case createCryptoPaymentToken = "create_crypto_payment_token"
     case performCheckout = "perform_checkout"
@@ -45,6 +47,8 @@ enum CryptoOnrampAnalyticsEvent {
     case kycInfoVerificationStarted
     case kycInfoVerificationCompleted
     case walletRegistered(network: String)
+    case walletOwnershipChallengeRetrieved(network: String)
+    case walletOwnershipVerified(network: String)
     case collectPaymentMethodStarted(paymentMethodType: String)
     case collectPaymentMethodCompleted(paymentMethodType: String)
     case cryptoPaymentTokenCreated(paymentMethodType: String)
@@ -89,6 +93,10 @@ enum CryptoOnrampAnalyticsEvent {
             return "onramp.kyc_info_verification_completed"
         case .walletRegistered:
             return "onramp.wallet_registered"
+        case .walletOwnershipChallengeRetrieved:
+            return "onramp.wallet_ownership_challenge_retrieved"
+        case .walletOwnershipVerified:
+            return "onramp.wallet_ownership_verified"
         case .collectPaymentMethodStarted:
             return "onramp.collect_payment_method_started"
         case .collectPaymentMethodCompleted:
@@ -130,6 +138,10 @@ enum CryptoOnrampAnalyticsEvent {
         case let .linkAuthorizationCompleted(consented):
             return ["consented": consented]
         case let .walletRegistered(network):
+            return ["network": network]
+        case let .walletOwnershipChallengeRetrieved(network):
+            return ["network": network]
+        case let .walletOwnershipVerified(network):
             return ["network": network]
         case let .collectPaymentMethodStarted(paymentMethodType):
             return ["payment_method_type": paymentMethodType]

@@ -28,8 +28,6 @@
 
 "Continue with %@" = "Doorgaan met %@";
 
-"Continue with Link" = "Doorgaan met Link";
-
 "Email address" = "E-mailadres";
 
 "Enter bank details" = "Bankgegevens invoeren";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "Zoek naar een andere bank of %@";
 
 "Use information you previously saved with your %@ account." = "Gebruik gegevens die je eerder hebt opgeslagen met je %@-account.";
-
-"Use information you previously saved with your Link account." = "Gebruik informatie die je eerder hebt opgeslagen met je Link-account.";
 
 "Use test account" = "Testaccount gebruiken";
 
