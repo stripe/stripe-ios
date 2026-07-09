@@ -92,6 +92,44 @@ class LinkInlineVerificationViewSnapshotTests: STPSnapshotTestCase {
             )
         )
     }
+
+    @available(iOS 16.0, *)
+    func testLinkInlineVerificationView_WithGenericPaymentMethodPreview() {
+        let displayJson: [String: Any] = [
+            "label": "Affirm",
+            "sublabel": "Affirm •••• 1234",
+        ]
+        let data = try! JSONSerialization.data(withJSONObject: displayJson)
+        let display = try! JSONDecoder().decode(ConsumerPaymentDetails.DisplayMetadata.self, from: data)
+
+        let displayablePaymentDetails = ConsumerSession.DisplayablePaymentDetails(
+            defaultCardBrand: nil,
+            defaultPaymentType: .unparsable,
+            last4: nil,
+            display: display
+        )
+
+        let account = PaymentSheetLinkAccount._testValue(
+            email: "jane.diaz@email.com",
+            isRegistered: true,
+            displayablePaymentDetails: displayablePaymentDetails
+        )
+
+        let verificationView = LinkInlineVerificationView(
+            account: account,
+            appearance: .default,
+            onComplete: { }
+        )
+
+        let vc = UIHostingController(rootView: verificationView)
+
+        // Need to host the SwiftUI view in a window for iOSSnapshotTestCase to work:
+        let window = UIWindow(frame: frame)
+        window.rootViewController = vc
+        window.makeKeyAndVisible()
+
+        STPSnapshotVerifyView(vc.view, identifier: nil, file: #filePath, line: #line)
+    }
 }
 
 private final class SnapshotLinkInlineVerificationViewModel: LinkInlineVerificationViewModel {
