@@ -1,16 +1,16 @@
 //
-//  UncategorizedAPIError.swift
+//  InvalidWalletOwnershipChallengeError.swift
 //  StripeCryptoOnramp
 //
-//  Created by Michael Liberatore on 5/28/26.
+//  Created by Michael Liberatore on 6/24/26.
 //
 
 import Foundation
 @_spi(STP) import StripeCore
 
-/// Details from an uncategorized backend API error, enriched with SDK-local diagnostic context.
+/// Details from an invalid wallet ownership challenge API error, enriched with SDK-local diagnostic context.
 @_spi(CryptoOnrampAlpha)
-public struct UncategorizedAPIError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
+public struct InvalidWalletOwnershipChallengeError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
     public let apiErrorContext: APIErrorContext
@@ -18,7 +18,7 @@ public struct UncategorizedAPIError: StripeCryptoOnrampAPIError, APIErrorContext
     /// Local SDK context used to expose diagnostics.
     let diagnosticContext: DiagnosticContext
 
-    /// Creates an uncategorized API error from shared API error and local diagnostic context.
+    /// Creates an invalid wallet ownership challenge API error from shared API error and local diagnostic context.
     ///
     /// - Parameters:
     ///   - apiErrorContext: Shared API error context used to expose diagnostics.
@@ -31,14 +31,14 @@ public struct UncategorizedAPIError: StripeCryptoOnrampAPIError, APIErrorContext
     // MARK: - StripeCryptoOnrampAPIError
 
     public var code: String {
-        return apiErrorContext.code(fallback: "uncategorized_api_error")
+        return apiErrorContext.code(fallback: "crypto_onramp_invalid_wallet_ownership_challenge")
     }
 
-    // MARK: - UncategorizedAPIError
+    // MARK: - InvalidWalletOwnershipChallengeError
 
     /// A localized message that can be shown to the app user.
     public var userMessage: String {
-        return NSError.stp_unexpectedErrorMessage()
+        return String.Localized.cryptoOnrampErrorInvalidWalletOwnershipChallenge
     }
 
     /// A developer-facing description with diagnostic details and suggested next steps.
@@ -46,9 +46,9 @@ public struct UncategorizedAPIError: StripeCryptoOnrampAPIError, APIErrorContext
         return StripeCryptoOnrampErrorRenderer.renderAPIErrorDeveloperMessage(
             apiErrorContext: apiErrorContext,
             diagnosticContext: diagnosticContext,
-            summary: apiMessage ?? apiErrorContext.underlyingError.localizedDescription,
+            summary: apiMessage ?? "Wallet ownership verification failed: the challenge is invalid, already consumed, missing, or not associated with the authenticated consumer.",
             code: code,
-            nextStep: "Inspect the preserved Stripe API error for details and retry after correcting the request."
+            nextStep: "Request a new challenge for the registered wallet and authenticated consumer, then submit that challenge ID with its signature."
         )
     }
 }
