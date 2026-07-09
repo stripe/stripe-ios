@@ -12,6 +12,9 @@ MINOR
 ### StripeConnect
 * [Changed] `PaymentsViewController`, `PaymentsViewControllerDelegate`, `PayoutsViewController`, `PayoutsViewControllerDelegate`, and `EmbeddedComponentManager.PaymentsListDefaultFiltersOptions` are now part of the public API and no longer require `@_spi(PreviewConnect)` to access.
 
+### CryptoOnramp (Alpha)
+* [Fixed] Automatically set PKPaymentRequest.merchantCategoryCode so unsupported payment methods are hidden from Apple Pay
+
 ## 26.2.0 2026-07-06
 ### CryptoOnramp (Alpha)
 * [Added] Added `AppAttestationUnavailableError`, a rich `StripeCryptoOnrampError` surfaced when configuration fails because app attestation is missing or native Link is unavailable.
