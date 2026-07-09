@@ -43,7 +43,6 @@ import UIKit
 }
 
 /// A drop-in class that presents a sheet for a customer to complete their payment
-@MainActor
 public class PaymentSheet {
     enum InitializationMode {
         case paymentIntentClientSecret(String)
@@ -220,7 +219,7 @@ public class PaymentSheet {
     /// You must call this method when the user logs out from your app.
     /// This will ensure that any persisted authentication state in PaymentSheet,
     /// such as authentication cookies, is also cleared during logout.
-    public nonisolated static func resetCustomer() {
+    public static func resetCustomer() {
         UserDefaults.standard.clearLinkDefaults()
     }
 
@@ -296,6 +295,7 @@ public class PaymentSheet {
 
 extension PaymentSheet: PaymentSheetViewControllerDelegate {
 
+    @MainActor
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
         with paymentOption: PaymentOption,
@@ -367,6 +367,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         }
     }
 
+    @MainActor
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
         let useNativeLink = deviceCanUseNativeLink(elementsSession: paymentSheetViewController.elementsSession, configuration: configuration)
         if useNativeLink {
@@ -406,6 +407,7 @@ internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSh
 }
 
 protocol PaymentSheetViewControllerDelegate: AnyObject {
+    @MainActor
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
         with paymentOption: PaymentOption,
@@ -416,5 +418,6 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
         result: PaymentSheetResult
     )
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
+    @MainActor
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
 }

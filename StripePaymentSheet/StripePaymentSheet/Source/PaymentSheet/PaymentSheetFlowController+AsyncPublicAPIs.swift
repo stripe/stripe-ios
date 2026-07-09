@@ -22,8 +22,10 @@ extension PaymentSheet.FlowController {
         configuration: PaymentSheet.Configuration
     ) async throws -> PaymentSheet.FlowController {
         return try await withCheckedThrowingContinuation { continuation in
-            create(mode: .paymentIntentClientSecret(paymentIntentClientSecret), configuration: configuration) { result in
-                continuation.resume(with: result)
+            Task { @MainActor in
+                create(mode: .paymentIntentClientSecret(paymentIntentClientSecret), configuration: configuration) { result in
+                    continuation.resume(with: result)
+                }
             }
         }
     }
@@ -40,8 +42,10 @@ extension PaymentSheet.FlowController {
         configuration: PaymentSheet.Configuration
     ) async throws -> PaymentSheet.FlowController {
         return try await withCheckedThrowingContinuation { continuation in
-            create(setupIntentClientSecret: setupIntentClientSecret, configuration: configuration) { result in
-                continuation.resume(with: result)
+            Task { @MainActor in
+                create(setupIntentClientSecret: setupIntentClientSecret, configuration: configuration) { result in
+                    continuation.resume(with: result)
+                }
             }
         }
     }
@@ -58,8 +62,10 @@ extension PaymentSheet.FlowController {
         configuration: PaymentSheet.Configuration
     ) async throws -> PaymentSheet.FlowController {
         return try await withCheckedThrowingContinuation { continuation in
-            create(intentConfiguration: intentConfiguration, configuration: configuration) { result in
-                continuation.resume(with: result)
+            Task { @MainActor in
+                create(intentConfiguration: intentConfiguration, configuration: configuration) { result in
+                    continuation.resume(with: result)
+                }
             }
         }
     }
@@ -72,14 +78,15 @@ extension PaymentSheet.FlowController {
     /// - Throws: An error if loading failed.
     @_spi(STP)
     @_spi(ReactNativeSDK)
-    @MainActor
     public static func create(
         checkout: Checkout,
         configuration: PaymentSheet.Configuration
     ) async throws -> PaymentSheet.FlowController {
         return try await withCheckedThrowingContinuation { continuation in
-            create(checkout: checkout, configuration: configuration) { result in
-                continuation.resume(with: result)
+            Task { @MainActor in
+                create(checkout: checkout, configuration: configuration) { result in
+                    continuation.resume(with: result)
+                }
             }
         }
     }

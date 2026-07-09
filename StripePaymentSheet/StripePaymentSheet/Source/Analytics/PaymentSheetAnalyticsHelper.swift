@@ -9,7 +9,6 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-@MainActor
 final class PaymentSheetAnalyticsHelper {
     let analyticsClient: STPAnalyticsClient
     let integrationShape: IntegrationShape
@@ -101,7 +100,6 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event)
     }
 
-    @MainActor
     func logLoadStarted(isUpdate: Bool) {
         log(
             event: .paymentSheetLoadStarted,
@@ -112,7 +110,6 @@ final class PaymentSheetAnalyticsHelper {
         )
     }
 
-    @MainActor
     func logLoadFailed(
         error: Error,
         loadTimings: PaymentSheetLoader.LoadTimings,
@@ -486,6 +483,25 @@ final class PaymentSheetAnalyticsHelper {
             guard let elementsSession else { return nil }
             return PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         }()
+        let intentAnalytics: (
+            currency: String?,
+            setupFutureUsageString: String?,
+            isPaymentMethodOptionsSetupFutureUsageSet: Bool?
+        )? = {
+            // Band-aid: keep analytics callable from non-main contexts without making
+            // PaymentSheet initialization @MainActor. Checkout-backed Intent fields are
+            // only safe to read on MainActor, so omit these optional params off-main.
+            guard let intent, Thread.isMainThread else {
+                return nil
+            }
+            return MainActor.assumeIsolated {
+                (
+                    currency: intent.currency,
+                    setupFutureUsageString: intent.setupFutureUsageString,
+                    isPaymentMethodOptionsSetupFutureUsageSet: intent.isPaymentMethodOptionsSetupFutureUsageSet
+                )
+            }
+        }()
 
         var additionalParams = [:] as [String: Any]
         additionalParams["duration"] = duration
@@ -495,7 +511,7 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["link_use_attestation"] = elementsSession?.linkSettings?.useAttestationEndpoints
         additionalParams["link_mobile_suppress_2fa_modal"] = elementsSession?.linkSettings?.suppress2FAModal
         additionalParams["mpe_config"] = configuration.analyticPayload
-        additionalParams["currency"] = intent?.currency
+        additionalParams["currency"] = intentAnalytics?.currency
         additionalParams["is_decoupled"] = intent?.intentConfig != nil
         additionalParams["is_spt"] = intent?.intentConfig?.preparePaymentMethodHandler != nil
         additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue
@@ -503,8 +519,8 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["selected_lpm"] = selectedLPM
         additionalParams["link_context"] = linkContext
         additionalParams["link_ui"] = linkUI
-        additionalParams["setup_future_usage"] = intent?.setupFutureUsageString
-        additionalParams["payment_method_options_setup_future_usage"] = intent?.isPaymentMethodOptionsSetupFutureUsageSet
+        additionalParams["setup_future_usage"] = intentAnalytics?.setupFutureUsageString
+        additionalParams["payment_method_options_setup_future_usage"] = intentAnalytics?.isPaymentMethodOptionsSetupFutureUsageSet
         additionalParams["elements_session_config_id"] = elementsSession?.configID
         additionalParams["is_confirmation_tokens"] = intent?.intentConfig?.confirmationTokenConfirmHandler != nil
         additionalParams["payment_method_orientation"] = paymentMethodOrientation?.rawValue

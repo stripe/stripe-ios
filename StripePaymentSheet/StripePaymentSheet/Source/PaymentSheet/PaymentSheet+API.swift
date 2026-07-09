@@ -33,6 +33,7 @@ extension PaymentSheet {
     }
 
     /// Confirms a PaymentIntent with the given PaymentOption and returns a PaymentResult
+    @MainActor
     static func confirm(
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
@@ -113,6 +114,7 @@ extension PaymentSheet {
         }
     }
 
+    @MainActor
     static func confirm(
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
@@ -145,6 +147,7 @@ extension PaymentSheet {
         }
     }
 
+    @MainActor
     static fileprivate func confirmAfterHandlingLocalActions(
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,

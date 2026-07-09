@@ -677,7 +677,6 @@ final class PaymentSheetLoader {
 
 extension PaymentSheetLoader {
     /// Used to measure granular load timings
-    @MainActor
     class LoadTimings {
         static var shouldPrintLogs: Bool = false
         let loadingStartDate: Date
