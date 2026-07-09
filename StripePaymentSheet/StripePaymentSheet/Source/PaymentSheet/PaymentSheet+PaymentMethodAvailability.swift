@@ -18,7 +18,7 @@ extension PaymentSheet {
     /// Modifying this property in a production app can lead to unexpected behavior.
     ///
     /// :nodoc:
-    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] = [
+    @_spi(STP) public nonisolated(unsafe) static var supportedPaymentMethods: [STPPaymentMethodType] = [
         .card, .payPal,
         .klarna, .afterpayClearpay, .affirm,
         .iDEAL, .bancontact, .SEPADebit, .EPS, .przelewy24,
@@ -67,7 +67,7 @@ extension PaymentSheet {
     /// Determines if Link is disabled due to a holdback experiment, either `link_global_holdback` or `link_ab_test`
     /// - Parameter elementsSession: The elements session containing experiment data
     /// - Returns: true if Link is disabled due to holdback experiment, false otherwise
-    static func isLinkInHoldbackExperiment(elementsSession: STPElementsSession) -> Bool {
+    nonisolated static func isLinkInHoldbackExperiment(elementsSession: STPElementsSession) -> Bool {
         guard let experimentsData = elementsSession.experimentsData else {
             return false
         }
@@ -77,12 +77,12 @@ extension PaymentSheet {
     }
 
     /// Canonical source of truth for whether Link is enabled
-    static func isLinkEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+    nonisolated static func isLinkEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
         return linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).isEmpty
     }
 
     /// Canonical source of truth for reasons why Link is disabled
-    static func linkDisabledReasons(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> [LinkDisabledReason] {
+    nonisolated static func linkDisabledReasons(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> [LinkDisabledReason] {
         var reasons = [LinkDisabledReason]()
 
         if !elementsSession.supportsLink {
@@ -166,6 +166,7 @@ private extension STPElementsSession {
 // MARK: - PaymentMethodRequirementProvider
 
 /// Defines an instance type who provides a set of `PaymentMethodTypeRequirement` it satisfies
+@MainActor
 protocol PaymentMethodRequirementProvider {
 
     /// The set of payment requirements provided by this instance

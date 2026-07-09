@@ -14,6 +14,7 @@ import UIKit
 /// Standalone Link controller
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
+@MainActor
 final class PayWithNativeLinkController {
 
     enum Mode {

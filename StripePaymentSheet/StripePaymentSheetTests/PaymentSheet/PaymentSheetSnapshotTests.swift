@@ -16,6 +16,7 @@ import XCTest
 @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
+@MainActor
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     private let backendCheckoutUrl = URL(
@@ -24,11 +25,11 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     var paymentSheet: PaymentSheet!
 
-    private var configuration = PaymentSheet.Configuration()
+    nonisolated(unsafe) private var configuration = PaymentSheet.Configuration()
 
     // Change this to true to hit the real glitch backend. This may be required
     // to capture data for new use cases
-    var runAgainstLiveService: Bool = false
+    nonisolated(unsafe) var runAgainstLiveService: Bool = false
     override func setUp() {
         super.setUp()
 //        recordMode = true
@@ -1195,7 +1196,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
     }
 
-    private func stubAllImageRequests() {
+    nonisolated private func stubAllImageRequests() {
         // Just fail all image requests so that these snapshot tests only use hardcoded image assets
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/v3/fingerprinted/img/payment-methods") ?? false

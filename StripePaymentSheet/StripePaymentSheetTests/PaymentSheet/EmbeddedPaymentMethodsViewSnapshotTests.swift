@@ -12,6 +12,7 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
 
+@MainActor
 class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     // MARK: Flat radio snapshot tests
@@ -1462,6 +1463,7 @@ class MockMandateProvider: MandateTextProvider {
 }
 
 extension EmbeddedPaymentMethodsView {
+    @MainActor
     convenience init(
         initialSelection: RowButtonType? = nil,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.stripe(.card), .stripe(.cashApp)],
@@ -1470,7 +1472,7 @@ extension EmbeddedPaymentMethodsView {
         shouldShowApplePay: Bool = true,
         shouldShowLink: Bool = true,
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? = nil,
-        mandateProvider: MandateTextProvider = MockMandateProvider(),
+        mandateProvider: MandateTextProvider? = nil,
         shouldShowMandate: Bool = true,
         savedPaymentMethods: [STPPaymentMethod] = [],
         customer: PaymentSheet.CustomerConfiguration? = nil,
@@ -1486,7 +1488,7 @@ extension EmbeddedPaymentMethodsView {
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
-            mandateProvider: mandateProvider,
+            mandateProvider: mandateProvider ?? MockMandateProvider(),
             shouldShowMandate: shouldShowMandate,
             savedPaymentMethods: savedPaymentMethods,
             customer: customer,

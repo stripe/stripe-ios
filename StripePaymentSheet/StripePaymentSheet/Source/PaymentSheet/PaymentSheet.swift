@@ -43,6 +43,7 @@ import UIKit
 }
 
 /// A drop-in class that presents a sheet for a customer to complete their payment
+@MainActor
 public class PaymentSheet {
     enum InitializationMode {
         case paymentIntentClientSecret(String)
@@ -219,7 +220,7 @@ public class PaymentSheet {
     /// You must call this method when the user logs out from your app.
     /// This will ensure that any persisted authentication state in PaymentSheet,
     /// such as authentication cookies, is also cleared during logout.
-    public static func resetCustomer() {
+    public nonisolated static func resetCustomer() {
         UserDefaults.standard.clearLinkDefaults()
     }
 

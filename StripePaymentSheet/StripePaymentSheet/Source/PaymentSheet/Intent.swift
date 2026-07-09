@@ -23,6 +23,7 @@ enum Intent {
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
     case checkout(Checkout)
 
+    @MainActor
     var stripeId: String? {
         switch self {
         case .paymentIntent(let intent): intent.stripeId
@@ -32,6 +33,7 @@ enum Intent {
         }
     }
 
+    @MainActor
     var isPaymentIntent: Bool {
         switch self {
         case .paymentIntent:
@@ -84,6 +86,7 @@ enum Intent {
         }
     }
 
+    @MainActor
     var currency: String? {
         switch self {
         case .paymentIntent(let pi):
@@ -102,6 +105,7 @@ enum Intent {
         }
     }
 
+    @MainActor
     var amount: Int? {
         switch self {
         case .paymentIntent(let pi):
@@ -120,6 +124,7 @@ enum Intent {
         }
     }
 
+    @MainActor
     var setupFutureUsageString: String? {
         switch self {
         case .paymentIntent(let paymentIntent):
@@ -144,6 +149,7 @@ enum Intent {
         }
     }
 
+    @MainActor
     var isPaymentMethodOptionsSetupFutureUsageSet: Bool? {
         switch self {
         case .paymentIntent(let paymentIntent):
@@ -164,6 +170,7 @@ enum Intent {
     }
 
     /// Whether the intent has setup for future usage set for a payment method type.
+    @MainActor
     func isSetupFutureUsageSet(for paymentMethodType: STPPaymentMethodType) -> Bool {
         switch self {
         case .paymentIntent(let paymentIntent):
@@ -197,6 +204,7 @@ enum Intent {
         }
     }
 
+    @MainActor
     func allowsPaymentMethodRemoval(elementsSession: STPElementsSession) -> Bool {
         switch self {
         case .checkout(let checkout):

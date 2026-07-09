@@ -267,6 +267,7 @@ extension PaymentSheet {
             context.coordinator.presented = presented
         }
 
+        @MainActor
         class Coordinator {
 
             var parent: PaymentSheetPresenter
@@ -333,6 +334,7 @@ extension PaymentSheet {
             context.coordinator.presented = presented
         }
 
+        @MainActor
         class Coordinator {
             var parent: PaymentSheetFlowControllerPresenter
             let view = UIView()

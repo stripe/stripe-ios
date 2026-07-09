@@ -15,6 +15,7 @@ import Foundation
 @_spi(ReactNativeSDK)
 extension Checkout {
     /// A read-only representation of a Stripe Checkout Session.
+    @MainActor
     public final class Session {
         // MARK: - Public Properties
 

@@ -13,6 +13,7 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
+@MainActor
 class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     func makeConfiguration(

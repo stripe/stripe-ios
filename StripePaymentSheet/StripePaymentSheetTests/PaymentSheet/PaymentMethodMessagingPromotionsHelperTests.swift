@@ -11,6 +11,7 @@ import OHHTTPStubsSwift
 @_spi(STP) @testable import StripePaymentSheet
 import XCTest
 
+@MainActor
 final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
 
     override func setUp() {
@@ -18,7 +19,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
         stubPMMEEndpoint()
     }
 
-    private func stubPMMEEndpoint() {
+    nonisolated private func stubPMMEEndpoint() {
         stub { urlRequest in
             urlRequest.url?.host == "ppm.stripe.com"
         } response: { _ in

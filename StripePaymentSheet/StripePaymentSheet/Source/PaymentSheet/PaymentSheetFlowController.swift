@@ -136,6 +136,7 @@ extension PaymentSheet {
     }
 
     /// A class that presents the individual steps of a payment flow
+    @MainActor
     public class FlowController: ObservableObject {
         // MARK: - Public properties
         /// Contains details about a payment method that can be displayed to the customer

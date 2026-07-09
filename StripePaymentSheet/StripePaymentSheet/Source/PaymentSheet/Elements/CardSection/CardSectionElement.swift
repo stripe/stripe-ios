@@ -16,6 +16,7 @@ import UIKit
 /// A Element that contains a SectionElement for card details, whose view depends on the availability of card scanning:
 /// If card scanning is available, it uses a custom view that adds card scanning. Otherwise, it uses the default SectionElement view.
 /// It coordinates between the PAN and CVC fields.
+@MainActor
 final class CardSectionElement: ContainerElement {
 
     var elements: [Element] {

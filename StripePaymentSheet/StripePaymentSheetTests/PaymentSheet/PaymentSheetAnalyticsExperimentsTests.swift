@@ -12,6 +12,7 @@ import Foundation
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
+@MainActor
 final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
     private struct MockExperiment: LoggableExperiment {
         var name: String

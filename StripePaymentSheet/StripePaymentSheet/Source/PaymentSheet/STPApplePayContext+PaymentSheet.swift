@@ -167,10 +167,10 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         return clientSecret
     }
 
-    // TODO(gbirch): Remove session parameter once MPE is MainActor-isolated; we can then
-    // access checkout.session directly. This is a temporary stopgap to provide a threadsafe
-    // version of the checkout session data.
+    // TODO(gbirch): Remove this band-aid once the remaining Apple Pay confirmation path is
+    // fully MainActor-isolated; then access checkout.session directly instead of the unsafe bridge.
     /// Handles Apple Pay confirmation for CheckoutSession by calling the confirm API with the payment method.
+    @MainActor
     private func handleCheckoutSessionApplePay(
         checkout: Checkout,
         paymentMethod: StripeAPI.PaymentMethod,
@@ -309,6 +309,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
 extension STPApplePayContext {
 
+    @MainActor
     static func create(
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -354,6 +355,7 @@ extension STPApplePayContext {
         }
     }
 
+    @MainActor
     static func createPaymentRequest(
         intent: Intent,
         configuration: PaymentElementConfiguration,

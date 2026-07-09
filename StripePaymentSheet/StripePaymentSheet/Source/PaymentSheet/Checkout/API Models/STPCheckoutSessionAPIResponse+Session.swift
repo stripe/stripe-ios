@@ -16,6 +16,7 @@ extension STPCheckoutSessionAPIResponse {
     }
 
     /// Builds a public, read-only ``Checkout.Session`` snapshot from this API response object.
+    @MainActor
     func makePublicSession() -> Checkout.Session {
         return Checkout.Session(
             id: id,

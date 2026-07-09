@@ -17,6 +17,7 @@ import UIKit
  This class creates a FormElement for a given payment method type and binds the FormElement's field values to an
  `IntentConfirmParams`.
  */
+@MainActor
 class PaymentSheetFormFactory {
     enum Error: Swift.Error {
         case missingFormSpec
@@ -543,7 +544,7 @@ extension PaymentSheetFormFactory {
         return PaymentSheetFormFactory.makeBillingAddressPaymentMethodWrapper(section: section, countryAPIPath: countryAPIPath)
     }
 
-    static func makeBillingAddressPaymentMethodWrapper(section: AddressSectionElement, countryAPIPath: String?) -> PaymentMethodElementWrapper<AddressSectionElement> {
+    nonisolated static func makeBillingAddressPaymentMethodWrapper(section: AddressSectionElement, countryAPIPath: String?) -> PaymentMethodElementWrapper<AddressSectionElement> {
         return PaymentMethodElementWrapper(section) { section, params in
             guard case .valid = section.validationState else {
                 return nil
@@ -580,7 +581,7 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    static func makeBankMandateText(
+    nonisolated static func makeBankMandateText(
         isSettingUp: Bool,
         merchantName: String,
         sellerName: String?,

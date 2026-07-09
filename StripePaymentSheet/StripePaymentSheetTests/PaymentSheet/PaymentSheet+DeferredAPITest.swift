@@ -13,8 +13,9 @@
 @testable@_spi(STP) import StripeUICore
 import XCTest
 
+@MainActor
 final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
-    var apiClient: STPAPIClient!
+    nonisolated(unsafe) var apiClient: STPAPIClient!
     lazy var paymentHandler = STPPaymentHandler(apiClient: apiClient)
     override func setUp() {
         super.setUp()

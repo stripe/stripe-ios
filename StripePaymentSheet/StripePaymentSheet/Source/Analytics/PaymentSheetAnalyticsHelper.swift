@@ -9,6 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
+@MainActor
 final class PaymentSheetAnalyticsHelper {
     let analyticsClient: STPAnalyticsClient
     let integrationShape: IntegrationShape
