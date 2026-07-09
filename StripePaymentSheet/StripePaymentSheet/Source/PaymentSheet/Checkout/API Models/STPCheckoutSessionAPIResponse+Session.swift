@@ -44,6 +44,7 @@ extension STPCheckoutSessionAPIResponse {
             allowedShippingCountries: allowedShippingCountries,
             localizedPricesMetas: localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,
+            requiresBillingAddress: requiresBillingAddress,
             adaptivePricingActive: adaptivePricingActive,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,

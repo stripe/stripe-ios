@@ -123,11 +123,6 @@ class PaymentSheet_AddressTests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Country: \(country)"].exists)
     }
 
-    private func scrollDown() {
-        let verySlowVelocity: XCUIGestureVelocity = XCUIGestureVelocity(300)
-        app.swipeUp(velocity: verySlowVelocity)
-    }
-
     /// Helper function to navigate to address collection for shipping
     private func navigateToShippingAddress() {
         let shippingButton = app.buttons["Address"]
@@ -145,10 +140,7 @@ class PaymentSheet_AddressTests: PaymentSheetUITestCase {
             return
         }
         let addressButton = app.staticTexts["AddressElement (SwiftUI)"]
-        if !addressButton.exists {
-            scrollDown()
-        }
-        XCTAssertTrue(addressButton.waitForExistenceAndTap())
+        addressButton.scrollToAndTap(in: app)
         XCTAssertTrue(app.buttons["Collect Address"].waitForExistenceAndTap())
     }
 

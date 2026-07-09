@@ -125,11 +125,21 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         // /v1/crypto/internal/wallet
         static let collectWalletAddressAPIPath = "/v1/crypto/internal/wallet"
-        static let validWalletAddress = "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
-        static let validNetwork = CryptoNetwork.bitcoin
+        static let validWalletAddress = "11111111111111111111111111111111"
+        static let validNetwork = CryptoNetwork.solana
         static let registerWalletMockResponseObject = RegisterWalletResponse(
             id: "ccw_12345"
         )
+
+        // /v1/crypto/internal/wallet_ownership_challenge
+        static let getWalletOwnershipChallengeAPIPath = "/v1/crypto/internal/wallet_ownership_challenge"
+        static let validChallengeId = "woc_test_123"
+        static let validChallengeMessage = "test message"
+        static let validChallengeExpiresAt = "2026-06-17T13:00:00Z"
+
+        // /v1/crypto/internal/wallet_ownership_verification
+        static let submitWalletOwnershipSignatureAPIPath = "/v1/crypto/internal/wallet_ownership_verification"
+        static let validWalletOwnershipSignature = "0x1234567890abcdef"
 
         // /v1/crypto/internal/onramp_session
         static let getOnrampSessionAPIPath = "/v1/crypto/internal/onramp_session"
@@ -894,6 +904,181 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             _ = try await apiClient.collectWalletAddress(
                 walletAddress: Constant.validWalletAddress,
                 network: Constant.validNetwork,
+                linkAccountInfo: unverifiedLinkAccountInfo
+            )
+        )
+    }
+
+    func testGetWalletOwnershipChallengeSuccess() async throws {
+        let mockResponseData = try WalletOwnershipChallengeResponseMock.walletOwnershipChallengeResponse_200.data()
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.getWalletOwnershipChallengeAPIPath)
+            XCTAssertEqual(request.httpMethod, "POST")
+
+            guard let httpBody = request.ohhttpStubs_httpBody else {
+                XCTFail("Expected an httpBody data but found none.")
+                return false
+            }
+
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
+
+            XCTAssertEqual(parameters.count, 3)
+            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+            XCTAssertEqual(parameters["wallet_address"], Constant.validWalletAddress)
+            XCTAssertEqual(parameters["network"], Constant.validNetwork.rawValue)
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            let response = try await apiClient.getWalletOwnershipChallenge(
+                walletAddress: Constant.validWalletAddress,
+                network: Constant.validNetwork,
+                linkAccountInfo: Constant.validLinkAccountInfo
+            )
+            XCTAssertEqual(response.challengeId, Constant.validChallengeId)
+            XCTAssertEqual(response.walletAddress, Constant.validWalletAddress)
+            XCTAssertEqual(response.network, Constant.validNetwork)
+            XCTAssertEqual(response.message, Constant.validChallengeMessage)
+            XCTAssertEqual(response.expiresAt, Constant.validChallengeExpiresAt)
+        } catch {
+            XCTFail("Expected a success response but got an error: \(error).")
+        }
+    }
+
+    func testGetWalletOwnershipChallengeFailure() async {
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.getWalletOwnershipChallengeAPIPath)
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(error: NSError(domain: Constant.errorDomain, code: 400))
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            _ = try await apiClient.getWalletOwnershipChallenge(
+                walletAddress: Constant.validWalletAddress,
+                network: Constant.validNetwork,
+                linkAccountInfo: Constant.validLinkAccountInfo
+            )
+            XCTFail("Expected failure but got success.")
+        } catch {
+            XCTAssertEqual((error as NSError).domain, Constant.errorDomain)
+        }
+    }
+
+    func testGetWalletOwnershipChallengeThrowsWithInvalidArguments() async {
+        let apiClient = stubbedAPIClient()
+
+        var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
+        noSecretLinkAccountInfo.consumerSessionClientSecret = nil
+        await XCTAssertThrowsErrorAsync(
+            _ = try await apiClient.getWalletOwnershipChallenge(
+                walletAddress: Constant.validWalletAddress,
+                network: Constant.validNetwork,
+                linkAccountInfo: noSecretLinkAccountInfo
+            )
+        )
+
+        var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
+        unverifiedLinkAccountInfo.sessionState = .requiresVerification
+        await XCTAssertThrowsErrorAsync(
+            _ = try await apiClient.getWalletOwnershipChallenge(
+                walletAddress: Constant.validWalletAddress,
+                network: Constant.validNetwork,
+                linkAccountInfo: unverifiedLinkAccountInfo
+            )
+        )
+    }
+
+    func testSubmitWalletOwnershipSignatureSuccess() async throws {
+        let mockResponseData = try SubmitWalletOwnershipSignatureResponseMock.submitWalletOwnershipSignatureResponse_200.data()
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.submitWalletOwnershipSignatureAPIPath)
+            XCTAssertEqual(request.httpMethod, "POST")
+
+            guard let httpBody = request.ohhttpStubs_httpBody else {
+                XCTFail("Expected an httpBody data but found none.")
+                return false
+            }
+
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
+
+            XCTAssertEqual(parameters.count, 3)
+            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+            XCTAssertEqual(parameters["challenge_id"], Constant.validChallengeId)
+            XCTAssertEqual(parameters["signature"], Constant.validWalletOwnershipSignature)
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            let response = try await apiClient.submitWalletOwnershipSignature(
+                challengeId: Constant.validChallengeId,
+                signature: Constant.validWalletOwnershipSignature,
+                linkAccountInfo: Constant.validLinkAccountInfo
+            )
+            XCTAssertEqual(response.id, Constant.registerWalletMockResponseObject.id)
+            XCTAssertEqual(response.walletAddress, Constant.validWalletAddress)
+            XCTAssertEqual(response.network, Constant.validNetwork)
+            XCTAssertTrue(response.verifiedOwnership)
+        } catch {
+            XCTFail("Expected a success response but got an error: \(error).")
+        }
+    }
+
+    func testSubmitWalletOwnershipSignatureFailure() async {
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.submitWalletOwnershipSignatureAPIPath)
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(error: NSError(domain: Constant.errorDomain, code: 400))
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            _ = try await apiClient.submitWalletOwnershipSignature(
+                challengeId: Constant.validChallengeId,
+                signature: Constant.validWalletOwnershipSignature,
+                linkAccountInfo: Constant.validLinkAccountInfo
+            )
+            XCTFail("Expected failure but got success.")
+        } catch {
+            XCTAssertEqual((error as NSError).domain, Constant.errorDomain)
+        }
+    }
+
+    func testSubmitWalletOwnershipSignatureThrowsWithInvalidArguments() async {
+        let apiClient = stubbedAPIClient()
+
+        var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
+        noSecretLinkAccountInfo.consumerSessionClientSecret = nil
+        await XCTAssertThrowsErrorAsync(
+            _ = try await apiClient.submitWalletOwnershipSignature(
+                challengeId: Constant.validChallengeId,
+                signature: Constant.validWalletOwnershipSignature,
+                linkAccountInfo: noSecretLinkAccountInfo
+            )
+        )
+
+        var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
+        unverifiedLinkAccountInfo.sessionState = .requiresVerification
+        await XCTAssertThrowsErrorAsync(
+            _ = try await apiClient.submitWalletOwnershipSignature(
+                challengeId: Constant.validChallengeId,
+                signature: Constant.validWalletOwnershipSignature,
                 linkAccountInfo: unverifiedLinkAccountInfo
             )
         )
