@@ -83,7 +83,7 @@ extension CryptoOnrampCoordinator {
                     additionalSDKVersions: additionalSDKVersions
                 )
             default:
-                return UncategorizedAPIError(
+                return UncategorizedError(
                     apiErrorContext: makeAPIErrorContext(
                         from: error,
                         apiError: apiError,
@@ -108,7 +108,112 @@ extension CryptoOnrampCoordinator {
         apiClient: STPAPIClient,
         additionalSDKVersions: [SDKVersion]
     ) -> Swift.Error {
-        return AppAttestationAPIError(
+        return AppAttestationError(
+            apiErrorContext: makeAPIErrorContext(
+                from: error,
+                apiError: apiError,
+                docURL: apiError.docUrl
+            ),
+            diagnosticContext: diagnosticContext(
+                during: operation,
+                apiClient: apiClient,
+                additionalSDKVersions: additionalSDKVersions
+            )
+        )
+    }
+
+    private static func invalidWalletOwnershipSignatureError(
+        from error: Swift.Error,
+        apiError: StripeAPIError,
+        during operation: CryptoOnrampOperation,
+        apiClient: STPAPIClient,
+        additionalSDKVersions: [SDKVersion]
+    ) -> Swift.Error {
+        return InvalidWalletOwnershipSignatureError(
+            apiErrorContext: makeAPIErrorContext(
+                from: error,
+                apiError: apiError,
+                docURL: apiError.docUrl
+            ),
+            diagnosticContext: diagnosticContext(
+                during: operation,
+                apiClient: apiClient,
+                additionalSDKVersions: additionalSDKVersions
+            )
+        )
+    }
+
+    private static func walletOwnershipChallengeExpiredError(
+        from error: Swift.Error,
+        apiError: StripeAPIError,
+        during operation: CryptoOnrampOperation,
+        apiClient: STPAPIClient,
+        additionalSDKVersions: [SDKVersion]
+    ) -> Swift.Error {
+        return WalletOwnershipChallengeExpiredError(
+            apiErrorContext: makeAPIErrorContext(
+                from: error,
+                apiError: apiError,
+                docURL: apiError.docUrl
+            ),
+            diagnosticContext: diagnosticContext(
+                during: operation,
+                apiClient: apiClient,
+                additionalSDKVersions: additionalSDKVersions
+            )
+        )
+    }
+
+    private static func invalidWalletOwnershipChallengeError(
+        from error: Swift.Error,
+        apiError: StripeAPIError,
+        during operation: CryptoOnrampOperation,
+        apiClient: STPAPIClient,
+        additionalSDKVersions: [SDKVersion]
+    ) -> Swift.Error {
+        return InvalidWalletOwnershipChallengeError(
+            apiErrorContext: makeAPIErrorContext(
+                from: error,
+                apiError: apiError,
+                docURL: apiError.docUrl
+            ),
+            diagnosticContext: diagnosticContext(
+                during: operation,
+                apiClient: apiClient,
+                additionalSDKVersions: additionalSDKVersions
+            )
+        )
+    }
+
+    private static func cryptoOnrampWalletNotFoundError(
+        from error: Swift.Error,
+        apiError: StripeAPIError,
+        during operation: CryptoOnrampOperation,
+        apiClient: STPAPIClient,
+        additionalSDKVersions: [SDKVersion]
+    ) -> Swift.Error {
+        return WalletNotFoundError(
+            apiErrorContext: makeAPIErrorContext(
+                from: error,
+                apiError: apiError,
+                docURL: apiError.docUrl
+            ),
+            diagnosticContext: diagnosticContext(
+                during: operation,
+                apiClient: apiClient,
+                additionalSDKVersions: additionalSDKVersions
+            )
+        )
+    }
+
+    private static func cryptoOnrampUnsupportedNetworkError(
+        from error: Swift.Error,
+        apiError: StripeAPIError,
+        during operation: CryptoOnrampOperation,
+        apiClient: STPAPIClient,
+        additionalSDKVersions: [SDKVersion]
+    ) -> Swift.Error {
+        return UnsupportedNetworkError(
             apiErrorContext: makeAPIErrorContext(
                 from: error,
                 apiError: apiError,

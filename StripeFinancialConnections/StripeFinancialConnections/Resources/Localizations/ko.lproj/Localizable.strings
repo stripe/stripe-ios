@@ -28,8 +28,6 @@
 
 "Continue with %@" = "%@으로 계속";
 
-"Continue with Link" = "Link에서 계속";
-
 "Email address" = "이메일 주소";
 
 "Enter bank details" = "은행 세부사항 입력";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "다른 은행 또는 %@에서 검색하십시오.";
 
 "Use information you previously saved with your %@ account." = "이전에 %@ 계정에 저장한 정보를 사용합니다.";
-
-"Use information you previously saved with your Link account." = "이전에 Link 계정에 저장한 정보를 사용하십시오.";
 
 "Use test account" = "테스트 계정 사용";
 

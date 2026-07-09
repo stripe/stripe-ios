@@ -28,8 +28,6 @@
 
 "Continue with %@" = "Magpatuloy sa %@";
 
-"Continue with Link" = "Magpatuloy sa Link";
-
 "Email address" = "Email address";
 
 "Enter bank details" = "Ilagay ang mga detalye ng bangko";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "Subukang maghanap ng ibang bangko o %@";
 
 "Use information you previously saved with your %@ account." = "Gamitin ang impormasyong dati mong nai-save gamit ang iyong %@ account.";
-
-"Use information you previously saved with your Link account." = "Gamitin ang impormasyon na dati mong na-save sa iyong Link account.";
 
 "Use test account" = "Gumamit ng test account";
 

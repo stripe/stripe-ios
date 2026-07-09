@@ -29,7 +29,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             during: .hasLinkAccount,
             apiClient: apiClient
         )
-        let apiError = try XCTUnwrap(mappedError as? AppAttestationAPIError)
+        let apiError = try XCTUnwrap(mappedError as? AppAttestationError)
 
         XCTAssertEqual(apiError.reason, "app_not_registered")
         XCTAssertEqual(apiError.code, "link_failed_to_attest_request")
@@ -113,7 +113,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         """)
     }
 
-    func testMappedErrorUsesSafeUserMessageForUncategorizedAPIError() throws {
+    func testMappedErrorUsesSafeUserMessageForUncategorizedError() throws {
         let stripeError = StripeError.apiError(StripeAPIError(
             type: .invalidRequestError,
             code: "unexpected_backend_error",
@@ -127,7 +127,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             during: .hasLinkAccount,
             apiClient: apiClient
         )
-        let apiError = try XCTUnwrap(mappedError as? UncategorizedAPIError)
+        let apiError = try XCTUnwrap(mappedError as? UncategorizedError)
 
         XCTAssertEqual(apiError.code, "unexpected_backend_error")
         XCTAssertEqual(apiError.apiMessage, "Raw backend message that should not be shown to app users.")
@@ -143,7 +143,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         let apiError = try assertMapsWalletOwnershipError(
             code: "crypto_onramp_invalid_wallet_ownership_signature",
             message: "The submitted signature does not prove ownership of the registered wallet.",
-            expectedType: InvalidWalletOwnershipSignatureAPIError.self,
+            expectedType: InvalidWalletOwnershipSignatureError.self,
             expectedUserMessage: "We couldn't verify ownership of this wallet. Please try again."
         )
 
@@ -156,7 +156,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         let apiError = try assertMapsWalletOwnershipError(
             code: "crypto_onramp_wallet_ownership_challenge_expired",
             message: "The wallet ownership challenge has expired.",
-            expectedType: WalletOwnershipChallengeExpiredAPIError.self,
+            expectedType: WalletOwnershipChallengeExpiredError.self,
             expectedUserMessage: "This wallet verification request expired. Please try again."
         )
 
@@ -169,7 +169,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         let apiError = try assertMapsWalletOwnershipError(
             code: "crypto_onramp_invalid_wallet_ownership_challenge",
             message: "The wallet ownership challenge is invalid.",
-            expectedType: InvalidWalletOwnershipChallengeAPIError.self,
+            expectedType: InvalidWalletOwnershipChallengeError.self,
             expectedUserMessage: "This wallet verification request is no longer valid. Please try again."
         )
 
@@ -182,7 +182,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         let apiError = try assertMapsWalletOwnershipError(
             code: "crypto_onramp_wallet_not_found",
             message: "The wallet was not found for the authenticated consumer.",
-            expectedType: WalletNotFoundAPIError.self,
+            expectedType: WalletNotFoundError.self,
             expectedUserMessage: "This wallet couldn't be found. Please choose or add a wallet and try again."
         )
 
@@ -195,7 +195,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         let apiError = try assertMapsWalletOwnershipError(
             code: "crypto_onramp_unsupported_network",
             message: "The wallet network is not supported for this operation.",
-            expectedType: UnsupportedNetworkAPIError.self,
+            expectedType: UnsupportedNetworkError.self,
             expectedUserMessage: "This wallet network isn't supported. Please choose a different network."
         )
 
@@ -221,49 +221,49 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         )
 
         XCTAssertEqual(
-            AppAttestationAPIError(
+            AppAttestationError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
             "link_failed_to_attest_request"
         )
         XCTAssertEqual(
-            UncategorizedAPIError(
+            UncategorizedError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
             "uncategorized_api_error"
         )
         XCTAssertEqual(
-            InvalidWalletOwnershipSignatureAPIError(
+            InvalidWalletOwnershipSignatureError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
             "crypto_onramp_invalid_wallet_ownership_signature"
         )
         XCTAssertEqual(
-            WalletOwnershipChallengeExpiredAPIError(
+            WalletOwnershipChallengeExpiredError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
             "crypto_onramp_wallet_ownership_challenge_expired"
         )
         XCTAssertEqual(
-            InvalidWalletOwnershipChallengeAPIError(
+            InvalidWalletOwnershipChallengeError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
             "crypto_onramp_invalid_wallet_ownership_challenge"
         )
         XCTAssertEqual(
-            WalletNotFoundAPIError(
+            WalletNotFoundError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
             "crypto_onramp_wallet_not_found"
         )
         XCTAssertEqual(
-            UnsupportedNetworkAPIError(
+            UnsupportedNetworkError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
@@ -307,7 +307,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             apiClient: apiClient,
             additionalSDKVersions: additionalSDKVersions
         )
-        let apiError = try XCTUnwrap(mappedError as? AppAttestationAPIError)
+        let apiError = try XCTUnwrap(mappedError as? AppAttestationError)
 
         XCTAssertTrue(apiError.developerMessage.contains("SDK: stripe-ios@\(STPAPIClient.STPSDKVersion), stripe-react-native@1.2.3"))
     }
@@ -343,7 +343,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         XCTAssertEqual(apiError.errorDescription, apiError.userMessage, file: file, line: line)
         XCTAssertEqual(apiError.debugDescription, apiError.developerMessage, file: file, line: line)
         XCTAssertTrue(apiError.underlyingError is StripeError, file: file, line: line)
-        XCTAssertFalse(apiError is UncategorizedAPIError, file: file, line: line)
+        XCTAssertFalse(apiError is UncategorizedError, file: file, line: line)
 
         let richError = apiError as StripeCryptoOnrampError
         XCTAssertEqual(richError.code, code, file: file, line: line)
