@@ -775,10 +775,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
     }
 
-    private func syncCheckoutBillingIfNeeded(completion: @escaping () -> Void) {
+    /// Syncs billing address to the checkout session.
+    /// - Note: `onSuccess` is only called on success; on failure the sheet stays open showing the error.
+    private func syncCheckoutBillingIfNeeded(onSuccess: @escaping () -> Void) {
         guard case .checkout(let checkout) = intent,
               let paymentOption = selectedPaymentOption else {
-            completion()
+            onSuccess()
             return
         }
 
@@ -793,7 +795,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
                 self?.isPaymentInFlight = false
                 self?.isUserInteractionEnabled = true
-                completion()
+                onSuccess()
             } catch {
                 guard let self else { return }
                 self.isPaymentInFlight = false
