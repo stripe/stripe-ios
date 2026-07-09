@@ -86,7 +86,7 @@ struct ExampleLinkControllerPreviewView: View {
                         }
                     }
                     .buttonStyle(PreviewPrimaryButtonStyle())
-                    .disabled(isLoading || email.isEmpty || linkController == nil || supportedPaymentMethodTypes.isEmpty)
+                    .disabled(isLoading || linkController == nil)
 
                     Button("Reset LinkController") {
                         Task { @MainActor in
@@ -166,11 +166,6 @@ struct ExampleLinkControllerPreviewView: View {
     private func presentLinkFlow() async {
         guard let linkController else {
             errorMessage = "LinkController not initialized"
-            return
-        }
-
-        guard !email.isEmpty else {
-            errorMessage = "Please enter an email address"
             return
         }
 
