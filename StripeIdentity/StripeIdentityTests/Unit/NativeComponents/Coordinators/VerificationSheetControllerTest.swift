@@ -334,8 +334,8 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         wait(for: [saveRequestExp], timeout: 1)
         let face = mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.face
-        XCTAssertEqual(face?.leftFullFrame, "left_low")
-        XCTAssertEqual(face?.rightFullFrame, "right_low")
+        XCTAssertEqual(face?.leftHighResImage, "left_low")
+        XCTAssertEqual(face?.rightHighResImage, "right_low")
         XCTAssertNotNil(face?.leftFrameData)
         XCTAssertNotNil(face?.rightFrameData)
 
@@ -360,8 +360,8 @@ final class VerificationSheetControllerTest: XCTestCase {
             shouldSubmit3DFaceCaptureData: true
         )
 
-        XCTAssertEqual(face.leftFullFrame, "left_low")
-        XCTAssertEqual(face.rightFullFrame, "right_low")
+        XCTAssertEqual(face.leftHighResImage, "left_low")
+        XCTAssertEqual(face.rightHighResImage, "right_low")
         XCTAssertNotNil(face.leftFrameData)
         XCTAssertNotNil(face.rightFrameData)
     }

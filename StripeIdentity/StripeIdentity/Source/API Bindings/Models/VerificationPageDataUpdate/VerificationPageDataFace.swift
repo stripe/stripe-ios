@@ -24,10 +24,10 @@ extension StripeAPI {
         let lastHighResImage: String
         /// File ID of uploaded image for last selfie frame. This will be un-cropped.
         let lastLowResImage: String
-        /// File ID of uploaded full-frame image for left side selfie frame.
-        let leftFullFrame: String?
-        /// File ID of uploaded full-frame image for right side selfie frame.
-        let rightFullFrame: String?
+        /// File ID of uploaded image for left side selfie frame.
+        let leftHighResImage: String?
+        /// File ID of uploaded image for right side selfie frame.
+        let rightHighResImage: String?
         /// FaceDetector score for the best selfie frame.
         let bestFaceScore: TwoDecimalFloat
         /// Variance of the FaceDetector scores over all selfie frames.
@@ -62,8 +62,8 @@ extension StripeAPI {
             firstLowResImage: String,
             lastHighResImage: String,
             lastLowResImage: String,
-            leftFullFrame: String? = nil,
-            rightFullFrame: String? = nil,
+            leftHighResImage: String? = nil,
+            rightHighResImage: String? = nil,
             bestFaceScore: TwoDecimalFloat,
             faceScoreVariance: TwoDecimalFloat,
             numFrames: Int,
@@ -86,8 +86,8 @@ extension StripeAPI {
             self.firstLowResImage = firstLowResImage
             self.lastHighResImage = lastHighResImage
             self.lastLowResImage = lastLowResImage
-            self.leftFullFrame = leftFullFrame
-            self.rightFullFrame = rightFullFrame
+            self.leftHighResImage = leftHighResImage
+            self.rightHighResImage = rightHighResImage
             self.bestFaceScore = bestFaceScore
             self.faceScoreVariance = faceScoreVariance
             self.numFrames = numFrames

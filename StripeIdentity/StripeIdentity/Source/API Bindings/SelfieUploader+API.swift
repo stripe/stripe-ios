@@ -35,10 +35,10 @@ extension StripeAPI.VerificationPageDataFace {
         shouldSubmit3DFaceCaptureData: Bool = false
     ) {
         let captureOrders = capturedImages.captureOrders
-        let leftFullFrame = shouldSubmit3DFaceCaptureData
+        let leftHighResImage = shouldSubmit3DFaceCaptureData
             ? uploadedFiles.leftFullFrameFile?.id
             : nil
-        let rightFullFrame = shouldSubmit3DFaceCaptureData
+        let rightHighResImage = shouldSubmit3DFaceCaptureData
             ? uploadedFiles.rightFullFrameFile?.id
             : nil
         self.init(
@@ -48,8 +48,8 @@ extension StripeAPI.VerificationPageDataFace {
             firstLowResImage: uploadedFiles.firstLowResFile.id,
             lastHighResImage: uploadedFiles.lastHighResFile.id,
             lastLowResImage: uploadedFiles.lastLowResFile.id,
-            leftFullFrame: leftFullFrame,
-            rightFullFrame: rightFullFrame,
+            leftHighResImage: leftHighResImage,
+            rightHighResImage: rightHighResImage,
             bestFaceScore: .init(capturedImages.bestMiddle.scannerOutput.faceScore),
             faceScoreVariance: .init(capturedImages.faceScoreVariance),
             numFrames: capturedImages.numSamples,
@@ -97,7 +97,7 @@ extension StripeAPI.VerificationPageDataFace {
                 : nil,
             leftFrameData: capturedImages.shouldIncludeCaptureFrameMetadata
                 ? capturedImages.leftSide.flatMap { leftSide in
-                    guard leftFullFrame != nil else {
+                    guard leftHighResImage != nil else {
                         return nil
                     }
                     return .init(
@@ -109,7 +109,7 @@ extension StripeAPI.VerificationPageDataFace {
                 : nil,
             rightFrameData: capturedImages.shouldIncludeCaptureFrameMetadata
                 ? capturedImages.rightSide.flatMap { rightSide in
-                    guard rightFullFrame != nil else {
+                    guard rightHighResImage != nil else {
                         return nil
                     }
                     return .init(
