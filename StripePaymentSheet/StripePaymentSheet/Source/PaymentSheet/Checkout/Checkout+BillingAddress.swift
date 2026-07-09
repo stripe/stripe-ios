@@ -30,7 +30,8 @@ extension Checkout {
         try await updateBillingAddress(
             name: billingDetails.name,
             phone: billingDetails.phone,
-            address: address
+            address: address,
+            canUpdateWhileSheetPresented: true
         )
     }
 }
