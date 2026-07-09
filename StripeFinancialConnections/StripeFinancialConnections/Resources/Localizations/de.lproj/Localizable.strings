@@ -28,8 +28,6 @@
 
 "Continue with %@" = "Mit %@ fortfahren";
 
-"Continue with Link" = "Mit Link fortfahren";
-
 "Email address" = "E-Mail-Adresse";
 
 "Enter bank details" = "Bankdaten eingeben";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "Suchen Sie nach einer anderen Bank oder %@";
 
 "Use information you previously saved with your %@ account." = "Verwenden Sie Informationen, die Sie zu einem früheren Zeitpunkt in Ihrem %@-Konto gespeichert haben.";
-
-"Use information you previously saved with your Link account." = "Informationen verwenden, die Sie zu einem früheren Zeitpunkt in Ihrem Link-Konto gespeichert haben.";
 
 "Use test account" = "Testkonto verwenden";
 

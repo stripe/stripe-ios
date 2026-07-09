@@ -25,7 +25,7 @@ extension CryptoOnrampCoordinator {
            case .missingAppAttestation = integrationError {
             return appAttestationUnavailableError(
                 from: error,
-                diagnosticContext: diagnosticContext(
+                diagnosticContext: makeDiagnosticContext(
                     during: operation,
                     apiClient: apiClient,
                     additionalSDKVersions: additionalSDKVersions
@@ -33,53 +33,28 @@ extension CryptoOnrampCoordinator {
             )
         } else if let stripeError = error as? StripeError,
            case let .apiError(apiError) = stripeError {
-            switch apiError.code {
+            let apiErrorContext = makeAPIErrorContext(from: error, apiError: apiError, docURL: apiError.docUrl)
+            let diagnosticContext = makeDiagnosticContext(during: operation, apiClient: apiClient, additionalSDKVersions: additionalSDKVersions)
+
+            return switch apiError.code {
             case "link_failed_to_attest_request":
-                return appAttestationError(
-                    from: error,
-                    apiError: apiError,
-                    during: operation,
-                    apiClient: apiClient,
-                    additionalSDKVersions: additionalSDKVersions
-                )
+                AppAttestationError(apiErrorContext: apiErrorContext, diagnosticContext: diagnosticContext)
+            case "crypto_onramp_invalid_wallet_ownership_signature":
+                InvalidWalletOwnershipSignatureError(apiErrorContext: apiErrorContext, diagnosticContext: diagnosticContext)
+            case "crypto_onramp_wallet_ownership_challenge_expired":
+                WalletOwnershipChallengeExpiredError(apiErrorContext: apiErrorContext, diagnosticContext: diagnosticContext)
+            case "crypto_onramp_invalid_wallet_ownership_challenge":
+                InvalidWalletOwnershipChallengeError(apiErrorContext: apiErrorContext, diagnosticContext: diagnosticContext)
+            case "crypto_onramp_wallet_not_found":
+                WalletNotFoundError(apiErrorContext: apiErrorContext, diagnosticContext: diagnosticContext)
+            case "crypto_onramp_unsupported_network":
+                UnsupportedNetworkError(apiErrorContext: apiErrorContext, diagnosticContext: diagnosticContext)
             default:
-                return UncategorizedAPIError(
-                    apiErrorContext: makeAPIErrorContext(
-                        from: error,
-                        apiError: apiError,
-                        docURL: apiError.docUrl
-                    ),
-                    diagnosticContext: diagnosticContext(
-                        during: operation,
-                        apiClient: apiClient,
-                        additionalSDKVersions: additionalSDKVersions
-                    )
-                )
+                UncategorizedError(apiErrorContext: apiErrorContext, diagnosticContext: diagnosticContext)
             }
         } else {
             return error
         }
-    }
-
-    private static func appAttestationError(
-        from error: Swift.Error,
-        apiError: StripeAPIError,
-        during operation: CryptoOnrampOperation,
-        apiClient: STPAPIClient,
-        additionalSDKVersions: [SDKVersion]
-    ) -> Swift.Error {
-        return AppAttestationAPIError(
-            apiErrorContext: makeAPIErrorContext(
-                from: error,
-                apiError: apiError,
-                docURL: apiError.docUrl
-            ),
-            diagnosticContext: diagnosticContext(
-                during: operation,
-                apiClient: apiClient,
-                additionalSDKVersions: additionalSDKVersions
-            )
-        )
     }
 
     private static func appAttestationUnavailableError(
@@ -108,7 +83,7 @@ extension CryptoOnrampCoordinator {
         )
     }
 
-    private static func diagnosticContext(
+    private static func makeDiagnosticContext(
         during operation: CryptoOnrampOperation,
         apiClient: STPAPIClient,
         additionalSDKVersions: [SDKVersion]

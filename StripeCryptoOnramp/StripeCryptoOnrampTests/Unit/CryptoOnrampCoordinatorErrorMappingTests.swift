@@ -29,7 +29,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             during: .hasLinkAccount,
             apiClient: apiClient
         )
-        let apiError = try XCTUnwrap(mappedError as? AppAttestationAPIError)
+        let apiError = try XCTUnwrap(mappedError as? AppAttestationError)
 
         XCTAssertEqual(apiError.reason, "app_not_registered")
         XCTAssertEqual(apiError.code, "link_failed_to_attest_request")
@@ -113,7 +113,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         """)
     }
 
-    func testMappedErrorUsesSafeUserMessageForUncategorizedAPIError() throws {
+    func testMappedErrorUsesSafeUserMessageForUncategorizedError() throws {
         let stripeError = StripeError.apiError(StripeAPIError(
             type: .invalidRequestError,
             code: "unexpected_backend_error",
@@ -127,7 +127,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             during: .hasLinkAccount,
             apiClient: apiClient
         )
-        let apiError = try XCTUnwrap(mappedError as? UncategorizedAPIError)
+        let apiError = try XCTUnwrap(mappedError as? UncategorizedError)
 
         XCTAssertEqual(apiError.code, "unexpected_backend_error")
         XCTAssertEqual(apiError.apiMessage, "Raw backend message that should not be shown to app users.")
@@ -137,6 +137,71 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         let richError = apiError as StripeCryptoOnrampError
         XCTAssertEqual(richError.userMessage, NSError.stp_unexpectedErrorMessage())
         XCTAssertTrue(richError.developerMessage.contains("Raw backend message that should not be shown to app users."))
+    }
+
+    func testMappedErrorMapsInvalidWalletOwnershipSignatureError() throws {
+        let apiError = try assertMapsWalletOwnershipError(
+            code: "crypto_onramp_invalid_wallet_ownership_signature",
+            message: "The submitted signature does not prove ownership of the registered wallet.",
+            expectedType: InvalidWalletOwnershipSignatureError.self,
+            expectedUserMessage: "We couldn't verify ownership of this wallet. Please try again."
+        )
+
+        XCTAssertTrue(apiError.developerMessage.contains("The submitted signature does not prove ownership of the registered wallet."))
+        XCTAssertTrue(apiError.developerMessage.contains("Code: crypto_onramp_invalid_wallet_ownership_signature"))
+        XCTAssertTrue(apiError.developerMessage.contains("Next step: Sign the exact challenge message with the registered wallet address"))
+    }
+
+    func testMappedErrorMapsWalletOwnershipChallengeExpiredError() throws {
+        let apiError = try assertMapsWalletOwnershipError(
+            code: "crypto_onramp_wallet_ownership_challenge_expired",
+            message: "The wallet ownership challenge has expired.",
+            expectedType: WalletOwnershipChallengeExpiredError.self,
+            expectedUserMessage: "This wallet verification request expired. Please try again."
+        )
+
+        XCTAssertTrue(apiError.developerMessage.contains("The wallet ownership challenge has expired."))
+        XCTAssertTrue(apiError.developerMessage.contains("Code: crypto_onramp_wallet_ownership_challenge_expired"))
+        XCTAssertTrue(apiError.developerMessage.contains("Next step: Request a new wallet ownership challenge"))
+    }
+
+    func testMappedErrorMapsInvalidWalletOwnershipChallengeError() throws {
+        let apiError = try assertMapsWalletOwnershipError(
+            code: "crypto_onramp_invalid_wallet_ownership_challenge",
+            message: "The wallet ownership challenge is invalid.",
+            expectedType: InvalidWalletOwnershipChallengeError.self,
+            expectedUserMessage: "This wallet verification request is no longer valid. Please try again."
+        )
+
+        XCTAssertTrue(apiError.developerMessage.contains("The wallet ownership challenge is invalid."))
+        XCTAssertTrue(apiError.developerMessage.contains("Code: crypto_onramp_invalid_wallet_ownership_challenge"))
+        XCTAssertTrue(apiError.developerMessage.contains("Next step: Request a new challenge for the registered wallet"))
+    }
+
+    func testMappedErrorMapsWalletNotFoundError() throws {
+        let apiError = try assertMapsWalletOwnershipError(
+            code: "crypto_onramp_wallet_not_found",
+            message: "The wallet was not found for the authenticated consumer.",
+            expectedType: WalletNotFoundError.self,
+            expectedUserMessage: "This wallet couldn't be found. Please choose or add a wallet and try again."
+        )
+
+        XCTAssertTrue(apiError.developerMessage.contains("The wallet was not found for the authenticated consumer."))
+        XCTAssertTrue(apiError.developerMessage.contains("Code: crypto_onramp_wallet_not_found"))
+        XCTAssertTrue(apiError.developerMessage.contains("Next step: Use a wallet registered to the authenticated consumer"))
+    }
+
+    func testMappedErrorMapsUnsupportedNetworkError() throws {
+        let apiError = try assertMapsWalletOwnershipError(
+            code: "crypto_onramp_unsupported_network",
+            message: "The wallet network is not supported for this operation.",
+            expectedType: UnsupportedNetworkError.self,
+            expectedUserMessage: "This wallet network isn't supported. Please choose a different network."
+        )
+
+        XCTAssertTrue(apiError.developerMessage.contains("The wallet network is not supported for this operation."))
+        XCTAssertTrue(apiError.developerMessage.contains("Code: crypto_onramp_unsupported_network"))
+        XCTAssertTrue(apiError.developerMessage.contains("Next step: Use a network supported by Crypto Onramp"))
     }
 
     func testAPIErrorCodeFallsBackWhenBackendCodeIsUnavailable() {
@@ -156,18 +221,53 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         )
 
         XCTAssertEqual(
-            AppAttestationAPIError(
+            AppAttestationError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
             "link_failed_to_attest_request"
         )
         XCTAssertEqual(
-            UncategorizedAPIError(
+            UncategorizedError(
                 apiErrorContext: apiErrorContext,
                 diagnosticContext: diagnosticContext
             ).code,
             "uncategorized_api_error"
+        )
+        XCTAssertEqual(
+            InvalidWalletOwnershipSignatureError(
+                apiErrorContext: apiErrorContext,
+                diagnosticContext: diagnosticContext
+            ).code,
+            "crypto_onramp_invalid_wallet_ownership_signature"
+        )
+        XCTAssertEqual(
+            WalletOwnershipChallengeExpiredError(
+                apiErrorContext: apiErrorContext,
+                diagnosticContext: diagnosticContext
+            ).code,
+            "crypto_onramp_wallet_ownership_challenge_expired"
+        )
+        XCTAssertEqual(
+            InvalidWalletOwnershipChallengeError(
+                apiErrorContext: apiErrorContext,
+                diagnosticContext: diagnosticContext
+            ).code,
+            "crypto_onramp_invalid_wallet_ownership_challenge"
+        )
+        XCTAssertEqual(
+            WalletNotFoundError(
+                apiErrorContext: apiErrorContext,
+                diagnosticContext: diagnosticContext
+            ).code,
+            "crypto_onramp_wallet_not_found"
+        )
+        XCTAssertEqual(
+            UnsupportedNetworkError(
+                apiErrorContext: apiErrorContext,
+                diagnosticContext: diagnosticContext
+            ).code,
+            "crypto_onramp_unsupported_network"
         )
     }
 
@@ -207,8 +307,49 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             apiClient: apiClient,
             additionalSDKVersions: additionalSDKVersions
         )
-        let apiError = try XCTUnwrap(mappedError as? AppAttestationAPIError)
+        let apiError = try XCTUnwrap(mappedError as? AppAttestationError)
 
         XCTAssertTrue(apiError.developerMessage.contains("SDK: stripe-ios@\(STPAPIClient.STPSDKVersion), stripe-react-native@1.2.3"))
+    }
+
+    @discardableResult
+    private func assertMapsWalletOwnershipError<T: StripeCryptoOnrampAPIError>(
+        code: String,
+        message: String,
+        expectedType: T.Type,
+        expectedUserMessage: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) throws -> T {
+        let stripeError = StripeError.apiError(StripeAPIError(
+            type: .invalidRequestError,
+            code: code,
+            message: message,
+            param: nil
+        ))
+        let apiClient = STPAPIClient(publishableKey: "pk_test_123")
+
+        let mappedError = CryptoOnrampCoordinator.mappedError(
+            stripeError,
+            during: .submitWalletOwnershipSignature,
+            apiClient: apiClient
+        )
+        let apiError = try XCTUnwrap(mappedError as? T, file: file, line: line)
+
+        XCTAssertEqual(apiError.code, code, file: file, line: line)
+        XCTAssertEqual(apiError.apiMessage, message, file: file, line: line)
+        XCTAssertEqual(apiError.type, "invalid_request_error", file: file, line: line)
+        XCTAssertEqual(apiError.userMessage, expectedUserMessage, file: file, line: line)
+        XCTAssertEqual(apiError.errorDescription, apiError.userMessage, file: file, line: line)
+        XCTAssertEqual(apiError.debugDescription, apiError.developerMessage, file: file, line: line)
+        XCTAssertTrue(apiError.underlyingError is StripeError, file: file, line: line)
+        XCTAssertFalse(apiError is UncategorizedError, file: file, line: line)
+
+        let richError = apiError as StripeCryptoOnrampError
+        XCTAssertEqual(richError.code, code, file: file, line: line)
+        XCTAssertEqual(richError.userMessage, apiError.userMessage, file: file, line: line)
+        XCTAssertEqual(richError.developerMessage, apiError.developerMessage, file: file, line: line)
+
+        return apiError
     }
 }

@@ -62,8 +62,6 @@
 
 "By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Kontynuując, wyrażasz zgodę na zachowanie danych do przyszłych zakupów w %1$@ i <link>%2$@</link> zgodnie z <terms>warunkami</terms> i <privacy>polityką prywatności</privacy> %2$@.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Kontynuując, wyrażasz zgodę na zapisywanie swoich danych na potrzeby przyszłych zakupów w firmie %@ i <link>Link</link> zgodnie z <terms>warunkami</terms> i <privacy>polityką prywatnością</privacy> Link.";
-
 "By continuing, you agree to save your information for future purchases with %@." = "Kontynuując, wyrażasz zgodę na zapisywanie swoich danych na potrzeby przyszłych zakupów w firmie %@.";
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Kontynuując, upoważniasz %@ do automatycznego obciążania Twojego salda Satispay w regularnych odstępach czasu, zgodnie z Twoim planem zakupu lub subskrypcji.";
@@ -74,11 +72,7 @@
 
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dołączając do %@, akceptujesz <terms>Warunki</terms> i <privacy>Politykę prywatności</privacy>.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dołączając do Link, wyrażasz zgodę na <terms>Warunki</terms> i <privacy>Politykę prywatności</privacy>.";
-
 "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając numer telefonu i adres e-mail, wyrażasz zgodę na utworzenie konta %1$@ zgodnie z <terms>Warunkami</terms> i <privacy>Polityką prywatności</privacy> %1$@.";
-
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając numer telefonu i adres e-mail, użytkownik wyraża zgodę na utworzenie konta Link podlegającego <terms>Warunkom</terms> i <privacy>Polityce prywatności</privacy>.";
 
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Podając dane swojego konta bankowego i potwierdzając tę płatność, wyrażasz zgodę na niniejsze żądanie polecenia zapłaty oraz <terms>umowę o świadczenie usług polecenia zapłaty</terms>, a także upoważniasz Stripe Payments Australia Pty Ltd ACN 160 180 343, numer identyfikacyjny użytkownika polecenia zapłaty 507156 („Stripe”) do obciążenia Twojego konta za pośrednictwem systemu Bulk Electronic Clearing System (BECS) w imieniu %@ („Sprzedawca”) na wszelkie kwoty, o których Sprzedawca poinformuje Cię oddzielnie. Zaświadczasz, że jest posiadaczem wyżej wymienionego konta lub jego upoważnionym sygnatariuszem.";
 
@@ -86,13 +80,9 @@
 
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając adres e-mail, wyrażasz zgodę na utworzenie konta %1$@ i zapisanie informacji o płatności w %1$@ zgodnie z <terms>Warunkami</terms> i <privacy>Polityką prywatności</privacy> %1$@.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając swój adres e-mail, zgadzasz się na utworzenie konta Link i zapisanie danych do płatności w Link, zgodnie z <terms>Warunkami</terms> i <privacy>Polityką prywatności</privacy> Link.";
-
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Podając dane płatności i potwierdzając tę płatność, upoważniasz (A) %@ i Stripe, naszego dostawcę usług płatności, do wysłania instrukcji do Twojego banku w celu obciążenia Twojego konta oraz (B) Twój bank do obciążenia Twojego konta zgodnie z tymi instrukcjami. W ramach swoich praw jesteś uprawniony(-a) do otrzymania zwrotu od Twojego banku zgodnie z zasadami i warunkami umowy z bankiem. Zwrot należy odebrać w ciągu 8 tygodni, licząc od daty obciążenia konta. Twoje prawa są wyjaśnione w oświadczeniu, które możesz otrzymać z banku. Wyrażasz zgodę na otrzymywanie powiadomień w przypadku przyszłych obciążeń do 2 dni przed ich wystąpieniem.";
 
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając numer telefonu, wyrażasz zgodę na utworzenie konta %1$@ i zapisanie informacji o płatności w %1$@ zgodnie z <terms>Warunkami</terms> i <privacy>Polityką prywatności</privacy> %1$@.";
-
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając swój numer telefonu, zgadzasz się na utworzenie konta Link i zapisanie danych do płatności w Link, zgodnie z <terms>Warunkami</terms> i <privacy>Polityką prywatności</privacy> Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Zapisując swoje konto bankowe dla %@, zgadzasz się na autoryzowanie płatności zgodnie z <terms>tymi warunkami</terms>.";
 
@@ -136,8 +126,6 @@
 
 "Create an account with %@ for faster checkout across the web" = "Utwórz konto z %@, aby przyspieszyć finalizację transakcji online";
 
-"Create an account with Link for faster checkout across the web" = "Utwórz konto w usłudze Link, aby przyspieszyć finalizację transakcji online";
-
 "Debit or credit card" = "Karta debetowa lub kredytowa";
 
 "Declarations" = "Deklaracje";
@@ -175,8 +163,6 @@
 "Log in or sign up" = "Zaloguj się lub zarejestruj";
 
 "Log out of %@" = "Wyloguj się z %@";
-
-"Log out of Link" = "Wyloguj się z Link";
 
 "Manage SEPA debit" = "Zarządzaj poleceniem zapłaty SEPA";
 
@@ -280,8 +266,6 @@
 
 "Save my info for faster checkout with %@" = "Zapisz moje dane do szybszej finalizacji za pomocą %@";
 
-"Save my info for faster checkout with Link" = "Zapisz moje informacje w celu szybszej finalizacji z Link";
-
 "Save payment details to %@ for future purchases" = "Zapisz informacje o płatności dla %@ do wykorzystania przy przyszłych zakupach";
 
 "Save this account for future %@ payments" = "Zapisz to konto do przyszłych płatności %@";
@@ -289,8 +273,6 @@
 "Save your bank account in just a few steps." = "Zapisz konto bankowe w kilku krokach.";
 
 "Save your info for secure 1-click checkout with %@" = "Zapisz informacje do bezpiecznej finalizacji jednym kliknięciem dzięki %@";
-
-"Save your info for secure 1-click checkout with Link" = "Zapisz informacje do bezpiecznej finalizacji jednym kliknięciem z Link";
 
 "Saved" = "Zapisano";
 

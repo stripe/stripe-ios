@@ -135,6 +135,24 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws if an authenticated Link user is not available, or an API error occurs.
     func registerWalletAddress(walletAddress: String, network: CryptoNetwork) async throws
 
+    /// Creates a short-lived server-issued challenge for a registered wallet.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter walletAddress: The crypto wallet address to verify.
+    /// - Parameter network: The crypto network for the wallet address.
+    /// - Returns: A server-issued wallet ownership challenge.
+    /// Throws if an authenticated Link user is not available, the wallet is not registered, the network is unsupported, or an API error occurs.
+    func getWalletOwnershipChallenge(walletAddress: String, network: CryptoNetwork) async throws -> WalletOwnershipChallenge
+
+    /// Verifies a signature over a previously issued wallet ownership challenge.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter challengeId: Opaque identifier returned by `getWalletOwnershipChallenge(walletAddress:network:)`.
+    /// - Parameter signature: Signature produced by the merchant's wallet stack over the exact challenge message.
+    /// - Returns: The updated consumer wallet.
+    /// Throws if an authenticated Link user is not available, the challenge is invalid or expired, the signature is invalid, or an API error occurs.
+    func submitWalletOwnershipSignature(challengeId: String, signature: String) async throws -> CryptoConsumerWallet
+
     /// Presents UI to collect/select a payment method of the given type.
     ///
     /// - Parameters:
@@ -535,6 +553,34 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
     }
 
+    public func getWalletOwnershipChallenge(walletAddress: String, network: CryptoNetwork) async throws -> WalletOwnershipChallenge {
+        do {
+            let challenge = try await apiClient.getWalletOwnershipChallenge(
+                walletAddress: walletAddress,
+                network: network,
+                linkAccountInfo: linkAccountInfo
+            )
+            analyticsClient.log(.walletOwnershipChallengeRetrieved(network: network.rawValue))
+            return challenge
+        } catch {
+            try logAndThrow(error, during: .getWalletOwnershipChallenge)
+        }
+    }
+
+    public func submitWalletOwnershipSignature(challengeId: String, signature: String) async throws -> CryptoConsumerWallet {
+        do {
+            let wallet = try await apiClient.submitWalletOwnershipSignature(
+                challengeId: challengeId,
+                signature: signature,
+                linkAccountInfo: linkAccountInfo
+            )
+            analyticsClient.log(.walletOwnershipVerified(network: wallet.network.rawValue))
+            return wallet
+        } catch {
+            try logAndThrow(error, during: .submitWalletOwnershipSignature)
+        }
+    }
+
     @MainActor
     public func collectPaymentMethod(
         type: PaymentMethodType,
@@ -574,6 +620,9 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         case .applePay(let paymentRequest):
             // This presents Apple Pay and promotes the pending payment source on success.
             pendingApplePayPaymentSource = nil
+            if #available(iOS 18.0, *) {
+                paymentRequest.merchantCategoryCode = PKPaymentRequest.MerchantCategoryCode(rawValue: 6051)
+            }
             do {
                 let status = try await presentApplePay(using: paymentRequest, from: viewController)
                 switch status {
