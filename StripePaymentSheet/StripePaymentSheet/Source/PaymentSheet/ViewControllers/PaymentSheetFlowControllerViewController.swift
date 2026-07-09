@@ -472,13 +472,50 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
         switch mode {
         case .selectingSaved:
-            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            syncCheckoutBillingThenClose()
         case .addingNew:
             if addPaymentMethodViewController.overridePrimaryButtonState != nil {
                 addPaymentMethodViewController.didTapCallToActionButton(from: self)
             } else {
                 addPaymentMethodViewController.logBillingAddressCompletionIfNeeded()
+                syncCheckoutBillingThenClose()
+            }
+        }
+    }
+
+    /// Syncs billing address to the checkout session, then closes the sheet.
+    /// If the sync fails, stays on the sheet and shows the error instead.
+    private func syncCheckoutBillingThenClose() {
+        guard case .checkout(let checkout) = intent,
+              let paymentOption = selectedPaymentOption else {
+            flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            return
+        }
+
+        view.endEditing(true)
+        error = nil
+        isDismissable = false
+        confirmButton.update(status: .processing, animated: true)
+        sendEventToSubviews(.shouldDisableUserInteraction, from: view)
+        view.isUserInteractionEnabled = false
+        navigationBar.isUserInteractionEnabled = false
+
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
                 self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            } catch {
+                sendEventToSubviews(.shouldEnableUserInteraction, from: self.view)
+                self.isDismissable = true
+                self.view.isUserInteractionEnabled = true
+                self.navigationBar.isUserInteractionEnabled = true
+                self.error = error
+                self.errorLabel.text = error.nonGenericDescription
+                UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                    self.errorLabel.setHiddenIfNecessary(false)
+                }
+                self.updateButton()
             }
         }
     }

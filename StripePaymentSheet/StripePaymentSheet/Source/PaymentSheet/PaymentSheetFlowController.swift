@@ -133,6 +133,23 @@ extension PaymentSheet {
             }
             return false
         }
+
+        var billingDetails: STPPaymentMethodBillingDetails? {
+            switch self {
+            case .new(let confirmParams):
+                return confirmParams.paymentMethodParams.billingDetails
+            case .saved(_, let confirmParams):
+                return confirmParams?.paymentMethodParams.billingDetails
+            case .external(_, let billingDetails):
+                return billingDetails
+            case .applePay:
+                // TODO(porter) Get Apple Pay working with automatic tax
+                return nil
+            case .link:
+                // Link does not support automatic tax with billing address as source
+                return nil
+            }
+        }
     }
 
     /// A class that presents the individual steps of a payment flow
@@ -773,17 +790,8 @@ extension PaymentSheet {
                 return
             }
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
-            assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
             let updateID = beginUpdate()
             Task { @MainActor in
-                guard !self.isPresented else {
-                    let message = "PaymentSheet.FlowController.update must be called when PaymentSheet is not presented."
-                    assertionFailure(message)
-                    let error = PaymentSheetError.integrationError(nonPIIDebugDescription: message)
-                    self.failUpdate(updateID)
-                    completion(error)
-                    return
-                }
                 checkout.session.applyAddressOverrides(to: &configuration)
                 performUpdate(mode: .checkout(checkout), updateID: updateID, completion: completion)
             }
@@ -793,13 +801,6 @@ extension PaymentSheet {
         private func beginUpdate(updateID: UUID = UUID()) -> UUID {
             latestUpdateContext = UpdateContext(id: updateID)
             return updateID
-        }
-
-        private func failUpdate(_ updateID: UUID) {
-            guard latestUpdateContext?.id == updateID else {
-                return
-            }
-            latestUpdateContext?.status = .failed
         }
 
         private func performUpdate(
