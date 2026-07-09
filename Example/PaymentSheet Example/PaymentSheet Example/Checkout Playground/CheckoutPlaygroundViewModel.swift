@@ -27,6 +27,7 @@ extension CheckoutPlayground {
         @Published var checkoutSessionPaymentMethodSave = true
         @Published var checkoutSessionPaymentMethodRemove = true
         @Published var adaptivePricingCountry: AdaptivePricingCountry = .none
+        @Published var automaticPaymentMethods = false
         @Published var paymentMethodTypes: Set<String> = ["card"]
         @Published var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
         @Published var checkoutEndpointOption: EndpointOption = .hosted
@@ -38,7 +39,7 @@ extension CheckoutPlayground {
         @Published var navigateToCheckout = false
 
         var isButtonDisabled: Bool {
-            isCreating || paymentMethodTypes.isEmpty || (mode != .setup && lineItems.isEmpty)
+            isCreating || (!automaticPaymentMethods && paymentMethodTypes.isEmpty) || (mode != .setup && lineItems.isEmpty)
         }
 
         func createSession() async {
@@ -99,11 +100,15 @@ extension CheckoutPlayground {
                 "shipping_address_collection": shippingAddressCollection,
                 "billing_address_collection": billingAddressCollection,
                 "automatic_tax": automaticTaxForRequest,
-                "payment_method_types": Array(paymentMethodTypes),
                 "adaptive_pricing": adaptivePricing,
                 "checkout_session_payment_method_save": checkoutSessionPaymentMethodSave ? "enabled" : "disabled",
                 "checkout_session_payment_method_remove": checkoutSessionPaymentMethodRemove ? "enabled" : "disabled",
             ]
+            if automaticPaymentMethods {
+                body["automatic_payment_methods"] = true
+            } else {
+                body["payment_method_types"] = Array(paymentMethodTypes)
+            }
             if adaptivePricing, adaptivePricingCountry != .none {
                 let countryCode = adaptivePricingCountry.rawValue.uppercased()
                 body["customer_email"] = "test+location_\(countryCode)@example.com"

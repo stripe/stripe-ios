@@ -51,17 +51,20 @@ struct CheckoutPlaygroundView: View {
                             adaptivePricing: $viewModel.adaptivePricing,
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
-                            adaptivePricingCountry: $viewModel.adaptivePricingCountry
+                            adaptivePricingCountry: $viewModel.adaptivePricingCountry,
+                            automaticPaymentMethods: $viewModel.automaticPaymentMethods
                         )
 
                         if viewModel.adaptivePricing {
                             currencySelectorAppearanceSection
                         }
 
-                        CheckoutPlaygroundPaymentMethodSection(
-                            selectedMethods: $viewModel.paymentMethodTypes,
-                            availableMethods: CheckoutPlayground.ViewModel.availablePaymentMethods
-                        )
+                        if !viewModel.automaticPaymentMethods {
+                            CheckoutPlaygroundPaymentMethodSection(
+                                selectedMethods: $viewModel.paymentMethodTypes,
+                                availableMethods: CheckoutPlayground.ViewModel.availablePaymentMethods
+                            )
+                        }
 
                         Spacer().frame(height: 100)
                     }
