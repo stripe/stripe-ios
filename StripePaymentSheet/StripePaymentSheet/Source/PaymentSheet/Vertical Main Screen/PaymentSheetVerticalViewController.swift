@@ -738,9 +738,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         // If FlowController, sync billing then close the sheet
         if isFlowController {
-            syncCheckoutBillingIfNeeded {
-                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
-            }
+            syncCheckoutBillingThenClose()
             return
         }
 
@@ -775,12 +773,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
     }
 
-    /// Syncs billing address to the checkout session.
-    /// - Note: `onSuccess` is only called on success; on failure the sheet stays open showing the error.
-    private func syncCheckoutBillingIfNeeded(onSuccess: @escaping () -> Void) {
+    /// Syncs billing address to the checkout session, then closes the sheet.
+    /// If the sync fails, stays on the sheet and shows the error instead.
+    private func syncCheckoutBillingThenClose() {
         guard case .checkout(let checkout) = intent,
               let paymentOption = selectedPaymentOption else {
-            onSuccess()
+            flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return
         }
 
@@ -791,13 +789,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         isUserInteractionEnabled = false
 
         Task { @MainActor [weak self] in
+            guard let self else { return }
             do {
                 try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
-                self?.isPaymentInFlight = false
-                self?.isUserInteractionEnabled = true
-                onSuccess()
+                self.isPaymentInFlight = false
+                self.isUserInteractionEnabled = true
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             } catch {
-                guard let self else { return }
                 self.isPaymentInFlight = false
                 self.isUserInteractionEnabled = true
                 self.error = error

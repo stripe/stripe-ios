@@ -472,27 +472,23 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
         switch mode {
         case .selectingSaved:
-            syncCheckoutBillingIfNeeded {
-                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
-            }
+            syncCheckoutBillingThenClose()
         case .addingNew:
             if addPaymentMethodViewController.overridePrimaryButtonState != nil {
                 addPaymentMethodViewController.didTapCallToActionButton(from: self)
             } else {
                 addPaymentMethodViewController.logBillingAddressCompletionIfNeeded()
-                syncCheckoutBillingIfNeeded {
-                    self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
-                }
+                syncCheckoutBillingThenClose()
             }
         }
     }
 
-    /// Syncs billing address to the checkout session.
-    /// - Note: `onSuccess` is only called on success; on failure the sheet stays open showing the error.
-    private func syncCheckoutBillingIfNeeded(onSuccess: @escaping () -> Void) {
+    /// Syncs billing address to the checkout session, then closes the sheet.
+    /// If the sync fails, stays on the sheet and shows the error instead.
+    private func syncCheckoutBillingThenClose() {
         guard case .checkout(let checkout) = intent,
               let paymentOption = selectedPaymentOption else {
-            onSuccess()
+            flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return
         }
 
@@ -505,12 +501,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         navigationBar.isUserInteractionEnabled = false
 
         Task { @MainActor [weak self] in
+            guard let self else { return }
             do {
                 try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
-                // Don't re-enable UI as we will be dismissing
-                onSuccess()
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             } catch {
-                guard let self else { return }
                 sendEventToSubviews(.shouldEnableUserInteraction, from: self.view)
                 self.isDismissable = true
                 self.view.isUserInteractionEnabled = true

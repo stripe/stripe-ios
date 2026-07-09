@@ -379,21 +379,19 @@ class EmbeddedFormViewController: UIViewController {
 
         // If we defer confirmation, sync billing then close the sheet
         if shouldDeferConfirmation {
-            syncCheckoutBillingIfNeeded {
-                self.delegate?.embeddedFormViewControllerDidContinue(self)
-            }
+            syncCheckoutBillingThenContinue()
             return
         }
 
         pay(with: selectedPaymentOption)
     }
 
-    /// Syncs billing address to the checkout session.
-    /// - Note: `onSuccess` is only called on success; on failure the sheet stays open showing the error.
-    private func syncCheckoutBillingIfNeeded(onSuccess: @escaping () -> Void) {
+    /// Syncs billing address to the checkout session, then tells the delegate to continue.
+    /// If the sync fails, stays on the sheet and shows the error instead.
+    private func syncCheckoutBillingThenContinue() {
         guard case .checkout(let checkout) = intent,
               let paymentOption = selectedPaymentOption else {
-            onSuccess()
+            delegate?.embeddedFormViewControllerDidContinue(self)
             return
         }
 
@@ -405,13 +403,13 @@ class EmbeddedFormViewController: UIViewController {
         isUserInteractionEnabled = false
 
         Task { @MainActor [weak self] in
+            guard let self else { return }
             do {
                 try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
-                self?.isPaymentInFlight = false
-                self?.isUserInteractionEnabled = true
-                onSuccess()
+                self.isPaymentInFlight = false
+                self.isUserInteractionEnabled = true
+                self.delegate?.embeddedFormViewControllerDidContinue(self)
             } catch {
-                guard let self else { return }
                 self.isPaymentInFlight = false
                 self.isUserInteractionEnabled = true
                 self.error = error
