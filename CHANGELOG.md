@@ -8,12 +8,10 @@ MINOR
 * [Added] Added `WalletOwnershipChallenge` and `CryptoConsumerWallet`, including `CryptoConsumerWallet.verifiedOwnership`, for wallet ownership verification responses.
 * [Added] Added rich Crypto Onramp API error mapping types: `WalletOwnershipChallengeExpiredError`, `InvalidWalletOwnershipChallengeError`, `InvalidWalletOwnershipSignatureError`, `WalletNotFoundError`, and `UnsupportedNetworkError`.
 * [Changed] Renamed `AppAttestationAPIError` to `AppAttestationError` and `UncategorizedAPIError` to `UncategorizedError`.
+* [Fixed] Automatically set `PKPaymentRequest.merchantCategoryCode` so unsupported payment methods are hidden from Apple Pay.
 
 ### StripeConnect
 * [Changed] `PaymentsViewController`, `PaymentsViewControllerDelegate`, `PayoutsViewController`, `PayoutsViewControllerDelegate`, and `EmbeddedComponentManager.PaymentsListDefaultFiltersOptions` are now part of the public API and no longer require `@_spi(PreviewConnect)` to access.
-
-### CryptoOnramp (Alpha)
-* [Fixed] Automatically set PKPaymentRequest.merchantCategoryCode so unsupported payment methods are hidden from Apple Pay
 
 ## 26.2.0 2026-07-06
 ### CryptoOnramp (Alpha)

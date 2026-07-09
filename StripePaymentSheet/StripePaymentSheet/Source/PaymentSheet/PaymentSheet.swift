@@ -65,6 +65,13 @@ public class PaymentSheet {
             }
             return false
         }
+
+        var isCheckout: Bool {
+            if case .checkout = self {
+                return true
+            }
+            return false
+        }
     }
 
     /// This contains all configurable properties of PaymentSheet
