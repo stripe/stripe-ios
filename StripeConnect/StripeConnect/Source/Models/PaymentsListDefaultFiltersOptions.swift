@@ -20,7 +20,6 @@ private extension String {
     }
 }
 
-@_spi(PreviewConnect)
 @_documentation(visibility: public)
 extension EmbeddedComponentManager {
     @_documentation(visibility: public)

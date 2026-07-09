@@ -1,5 +1,5 @@
 //
-//  AppAttestationAPIError.swift
+//  AppAttestationError.swift
 //  StripeCryptoOnramp
 //
 //  Created by Michael Liberatore on 5/28/26.
@@ -10,7 +10,7 @@ import Foundation
 
 /// Details from an app attestation API error, enriched with SDK-local diagnostic context.
 @_spi(CryptoOnrampAlpha)
-public struct AppAttestationAPIError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
+public struct AppAttestationError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
     public let apiErrorContext: APIErrorContext
@@ -34,7 +34,7 @@ public struct AppAttestationAPIError: StripeCryptoOnrampAPIError, APIErrorContex
         return apiErrorContext.code(fallback: "link_failed_to_attest_request")
     }
 
-    // MARK: - AppAttestationAPIError
+    // MARK: - AppAttestationError
 
     /// A localized message that can be shown to the app user.
     public var userMessage: String {

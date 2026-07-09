@@ -28,8 +28,6 @@
 
 "Continue with %@" = "Turpināt ar %@";
 
-"Continue with Link" = "Turpināt ar Link";
-
 "Email address" = "E-pasta adrese";
 
 "Enter bank details" = "Ievadiet bankas informāciju";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "Mēģiniet sameklēt citu banku vai %@";
 
 "Use information you previously saved with your %@ account." = "Izmantojiet informāciju, ko iepriekš saglabājāt savā %@ kontā.";
-
-"Use information you previously saved with your Link account." = "Izmantojiet iepriekš Link kontā saglabāto informāciju.";
 
 "Use test account" = "Izmantojiet testa kontu";
 
