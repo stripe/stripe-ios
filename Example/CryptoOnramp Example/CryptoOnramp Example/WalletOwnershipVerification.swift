@@ -126,7 +126,10 @@ enum WalletOwnershipVerification {
             walletAddress: context.walletAddress,
             network: context.network
         )
-        let signature = try await placeholderSignature(for: challenge)
+
+        // Note: This constant signature is accepted in test mode. For live mode, an actual signature
+        // of `challenge.message` must be produced using the wallet.
+        let signature = "abcd"
         return try await coordinator.submitWalletOwnershipSignature(
             challengeId: challenge.challengeId,
             signature: signature
@@ -143,13 +146,6 @@ enum WalletOwnershipVerification {
         } else {
             return error.localizedDescription
         }
-    }
-
-    /// Produces a placeholder signature for the challenge while test-mode signing behavior is pending.
-    /// - Parameter challenge: The wallet ownership challenge to sign.
-    private static func placeholderSignature(for _: WalletOwnershipChallenge) async throws -> String {
-        // TODO: Replace this with demo wallet signing once test-mode signing behavior is available.
-        return ""
     }
 }
 
