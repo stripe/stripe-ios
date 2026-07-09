@@ -239,6 +239,60 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
+    /// Creates a short-lived server-issued challenge for a registered wallet.
+    /// - Parameters:
+    ///   - walletAddress: The registered wallet address to verify.
+    ///   - network: The crypto network for the wallet address.
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: A server-issued wallet ownership challenge.
+    func getWalletOwnershipChallenge(
+        walletAddress: String,
+        network: CryptoNetwork,
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> WalletOwnershipChallenge {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/wallet_ownership_challenge"
+        let requestObject = WalletOwnershipChallengeRequest(
+            walletAddress: walletAddress,
+            network: network,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+
+        return try await post(resource: endpoint, object: requestObject)
+    }
+
+    /// Verifies a signature over a previously issued wallet ownership challenge.
+    /// - Parameters:
+    ///   - challengeId: Opaque identifier returned by `getWalletOwnershipChallenge`.
+    ///   - signature: Signature produced by the merchant's wallet stack over the exact challenge message.
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: The updated consumer wallet.
+    func submitWalletOwnershipSignature(
+        challengeId: String,
+        signature: String,
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> CryptoConsumerWallet {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/wallet_ownership_verification"
+        let requestObject = WalletOwnershipSignatureRequest(
+            challengeId: challengeId,
+            signature: signature,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+
+        return try await post(resource: endpoint, object: requestObject)
+    }
+
     /// Retrieves an onramp session.
     /// - Parameters:
     ///   - sessionId: The onramp session identifier.

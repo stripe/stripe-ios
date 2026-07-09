@@ -28,8 +28,6 @@
 
 "Continue with %@" = "Jätka %@";
 
-"Continue with Link" = "Jätka Linkiga";
-
 "Email address" = "E-posti aadress";
 
 "Enter bank details" = "Sisestage pangaandmed";
@@ -113,8 +111,6 @@
 "Try searching another bank or %@" = "Proovige otsida mõnda muud panka või %@";
 
 "Use information you previously saved with your %@ account." = "Kasuta infot, mille salvestasid varem oma %@ kontoga.";
-
-"Use information you previously saved with your Link account." = "Kasutage teavet, mille olete varem oma Linki kontole salvestanud.";
 
 "Use test account" = "Kasuta testkontot";
 
