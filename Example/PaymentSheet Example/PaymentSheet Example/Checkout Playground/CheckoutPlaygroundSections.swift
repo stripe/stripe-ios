@@ -193,7 +193,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
                 CheckoutPlayground.ToggleRow(
                     title: "Automatic Payment Methods",
                     isOn: $automaticPaymentMethods,
-                    tooltip: "Sets `automatic_payment_methods: true` instead of an explicit `payment_method_types` array. Stripe selects the best payment methods for the session."
+                    tooltip: "Sends `automatic_payment_methods: true` instead of an explicit `payment_method_types` array. Stripe selects the best payment methods for the session."
                 )
                 if supportsSetupRestrictedFeatures {
                     CheckoutPlayground.ToggleRow(
