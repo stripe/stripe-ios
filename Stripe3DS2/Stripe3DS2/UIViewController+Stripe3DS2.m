@@ -31,7 +31,6 @@
         cancelButton.configuration = UIButtonConfiguration.glassButtonConfiguration;
     }
 #endif
-    cancelButton.frame = CGRectMake(0, 0, cancelButton.intrinsicContentSize.width, cancelButton.intrinsicContentSize.height);
     UIBarButtonItem *cancelBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancelButton];
     self.navigationItem.rightBarButtonItem = cancelBarButtonItem;
     // Title
