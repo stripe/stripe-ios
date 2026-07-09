@@ -296,7 +296,7 @@ import UIKit
         }
     }
 
-    /// Creates a `LinkController` with the specified preview `configuration`.
+    /// Creates a `LinkController` with the specified `configuration`.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
     /// - Parameter configuration: Configuration for Link behavior and content. If not specified, default behavior is used.
@@ -1312,7 +1312,7 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
 
 @_spi(LinkControllerPreview) public extension LinkController {
 
-    /// Creates a `LinkController` with the specified preview `configuration`.
+    /// Creates a `LinkController` with the specified `configuration`.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
     /// - Parameter configuration: Configuration for Link behavior and content. If not specified, default behavior is used.
