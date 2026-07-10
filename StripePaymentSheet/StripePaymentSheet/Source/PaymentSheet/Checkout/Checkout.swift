@@ -52,6 +52,9 @@ public final class Checkout: ObservableObject {
     /// A delegate notified when session data changes.
     public weak var delegate: CheckoutDelegate?
 
+    /// The PaymentElement for this Checkout instance.
+    public internal(set) var paymentElement: PaymentElement!
+
     // MARK: - Internal Properties
 
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
@@ -117,15 +120,20 @@ public final class Checkout: ObservableObject {
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
             )
             let loadedSession = apiResponse.makePublicSession()
-            await flagImageManager.prefetchFlagImages(for: loadedSession)
             self.session = loadedSession
-            self.nonisolatedSession = session
+            self.nonisolatedSession = session // temporary hack
+
+            // Load elements
+            self.paymentElement = try await PaymentElement(checkout: self)
+            await flagImageManager.prefetchFlagImages(for: loadedSession)
+
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
     }
 
 #if DEBUG
+    // TODO: Refactor this away, we should extract loading into its own object and inject a dummy in tests.
     /// Internal initializer for unit tests that injects a pre-loaded API response.
     init(
         clientSecret: String,
@@ -365,5 +373,11 @@ public final class Checkout: ObservableObject {
         session = finalSession
 
         try await integrationDelegate?.checkoutDidUpdate(self)
+    }
+
+    // MARK: - Element methods
+
+    func getPaymentElement() {
+        // TODO Pass whatever parms needed to initialize FlowController, Embedded (elements session, not sure what else)
     }
 }

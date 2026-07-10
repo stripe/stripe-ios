@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 7/10/26.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 import SwiftUI
 import UIKit
@@ -13,29 +14,71 @@ import UIKit
 @MainActor
 @_spi(STP)
 public final class PaymentElement {
+    // MARK: - Public Properties
+
     /// A SwiftUI View that displays payment methods.
     public internal(set) var view: PaymentElementView
 
     /// A UIView that displays payment methods.
     public internal(set) var uiView: PaymentElementUIView
 
-    init() {
-        self.view = PaymentElementView()
-        self.uiView = PaymentElementUIView()
-    }
+    // MARK: - Public methods
 
     /// Presents a sheet that displays payment methods.
     /// - Parameter from: The view controller that presents the sheet. If you're using SwiftUI, you may pass nil and it will use the topmost UIViewController from the key window.
     /// Returns when the sheet is dismissed.
     public func present(from viewController: UIViewController? = nil) async {
-        // Placeholder.
+        await withCheckedContinuation { continuation in
+            present(from: viewController) {
+                continuation.resume()
+            }
+        }
     }
 
     /// Presents a sheet that displays payment methods.
     /// - Parameter from: The view controller that presents the sheet. If you're using SwiftUI, you may pass nil and it will use the topmost UIViewController from the key window.
     /// - Parameter completion: Called when the sheet is dismissed.
     public func present(from viewController: UIViewController? = nil, completion: (() -> Void)? = nil) {
-        completion?()
+        guard let presentingViewController = viewController ?? UIWindow.visibleViewController else {
+            let errorMessage = "PaymentElement.present(from:) could not find a presenting view controller."
+            assertionFailure(errorMessage)
+            let analytic = GenericAnalytic(
+                event: .unexpectedCheckoutError,
+                params: [
+                    "error_code": "missing_presenting_view_controller", // TODO: find better error code
+                    "error_message": errorMessage,
+                ]
+            )
+            STPAnalyticsClient.sharedClient.log(analytic: analytic)
+            completion?()
+            return
+        }
+
+        paymentSheetFlowController.presentPaymentOptions(from: presentingViewController) { _ in
+            completion?()
+        }
+    }
+
+    // MARK: - Internal Properties
+
+    let paymentSheetFlowController: PaymentSheet.FlowController
+    let embeddedPaymentElement: EmbeddedPaymentElement
+
+    // MARK: - Internal methods
+
+    init(checkout: Checkout) async throws {
+        let paymentSheetConfiguration = checkout.configuration.paymentElement.makePaymentSheetConfiguration(apiClient: checkout.apiClient)
+        self.paymentSheetFlowController = try await PaymentSheet.FlowController.create(
+            checkout: checkout,
+            configuration: paymentSheetConfiguration
+        )
+        let embeddedConfiguration = checkout.configuration.paymentElement.makeEmbeddedConfiguration(apiClient: checkout.apiClient)
+        self.embeddedPaymentElement = try await EmbeddedPaymentElement.create(
+            checkout: checkout,
+            configuration: embeddedConfiguration
+        )
+        self.view = PaymentElementView()
+        self.uiView = PaymentElementUIView()
     }
 }
 
@@ -107,6 +150,47 @@ extension PaymentElement {
     public typealias SavePaymentMethodOptInBehavior = PaymentSheet.SavePaymentMethodOptInBehavior
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias PaymentMethodLayout = PaymentSheet.PaymentMethodLayout
+}
+
+private extension PaymentElement.Configuration {
+    func makeEmbeddedConfiguration(apiClient: STPAPIClient) -> EmbeddedPaymentElement.Configuration {
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.apiClient = apiClient
+        configuration.savePaymentMethodOptInBehavior = savePaymentMethodOptInBehavior
+        configuration.appearance = appearance
+        configuration.preferredNetworks = preferredNetworks
+        configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
+        configuration.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
+        configuration.paymentMethodOrder = paymentMethodOrder
+        configuration.opensCardScannerAutomatically = opensCardScannerAutomatically
+        configuration.useAutocompleteEndpoints = useAutocompleteEndpoints
+        configuration.termsDisplay = termsDisplay
+        configuration.rowSelectionBehavior = {
+            switch rowSelectionBehavior {
+            case .default:
+                return .default
+            case .immediateAction(let didSelectPaymentOption):
+                return .immediateAction(didSelectPaymentOption: didSelectPaymentOption)
+            }
+        }()
+        return configuration
+    }
+
+    func makePaymentSheetConfiguration(apiClient: STPAPIClient) -> PaymentSheet.Configuration {
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = apiClient
+        configuration.savePaymentMethodOptInBehavior = savePaymentMethodOptInBehavior
+        configuration.appearance = appearance
+        configuration.preferredNetworks = preferredNetworks
+        configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
+        configuration.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
+        configuration.paymentMethodOrder = paymentMethodOrder
+        configuration.paymentMethodLayout = paymentMethodLayout
+        configuration.opensCardScannerAutomatically = opensCardScannerAutomatically
+        configuration.useAutocompleteEndpoints = useAutocompleteEndpoints
+        configuration.termsDisplay = termsDisplay
+        return configuration
+    }
 }
 
 // MARK: - UIKit
