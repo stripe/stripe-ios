@@ -42,12 +42,9 @@ public final class PaymentElement {
         guard let presentingViewController = viewController ?? UIWindow.visibleViewController else {
             let errorMessage = "PaymentElement.present(from:) could not find a presenting view controller."
             assertionFailure(errorMessage)
-            let analytic = GenericAnalytic(
-                event: .unexpectedCheckoutError,
-                params: [
-                    "error_code": "missing_presenting_view_controller", // TODO: find better error code
-                    "error_message": errorMessage,
-                ]
+            let analytic = UnexpectedCheckoutElementsErrorAnalytic(
+                errorCode: .paymentElementPresentingViewControllerUnavailable,
+                errorMessage: errorMessage
             )
             STPAnalyticsClient.sharedClient.log(analytic: analytic)
             completion?()
