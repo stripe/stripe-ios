@@ -125,7 +125,7 @@ public final class Checkout: ObservableObject {
 
             // Load elements
             self.paymentElement = try await PaymentElement(checkout: self)
-            await flagImageManager.prefetchFlagImages(for: loadedSession)
+            await flagImageManager.prefetchFlagImages(for: loadedSession) // TODO: This should probably just load currency selector and not be a global singleton
 
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
