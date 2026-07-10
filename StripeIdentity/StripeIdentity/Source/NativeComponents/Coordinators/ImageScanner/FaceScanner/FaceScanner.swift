@@ -8,7 +8,6 @@
 
 import CoreVideo
 @_spi(STP) import StripeCameraCore
-@_spi(STP) import StripeCore
 import Vision
 
 typealias AnyFaceScanner = AnyImageScanner<FaceScannerOutput>
@@ -63,23 +62,16 @@ extension FaceScanner: ImageScanner {
         pixelBuffer: CVPixelBuffer,
         sampleBuffer: CMSampleBuffer,
         cameraProperties: CameraSession.DeviceProperties?
-    ) -> StripeCore.Future<FaceScannerOutput> {
-        do {
-            let faceDetectorOutput = try faceDetector.scanImage(pixelBuffer: pixelBuffer)
-            return Promise(
-                value: .init(
-                    faceDetectorOutput: faceDetectorOutput,
-                    cameraProperties: cameraProperties,
-                    configuration: configuration,
-                    motionBlurResult: motionBlurResult(
-                        faceDetectorOutput: faceDetectorOutput
-                    )
-                )
+    ) throws -> FaceScannerOutput {
+        let faceDetectorOutput = try faceDetector.scanImage(pixelBuffer: pixelBuffer)
+        return FaceScannerOutput(
+            faceDetectorOutput: faceDetectorOutput,
+            cameraProperties: cameraProperties,
+            configuration: configuration,
+            motionBlurResult: motionBlurResult(
+                faceDetectorOutput: faceDetectorOutput
             )
-        } catch {
-            return Promise(error: error)
-        }
-
+        )
     }
 
     func reset() {
