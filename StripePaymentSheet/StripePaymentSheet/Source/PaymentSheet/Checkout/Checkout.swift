@@ -52,10 +52,10 @@ public final class Checkout: ObservableObject {
     /// A delegate notified when session data changes.
     public weak var delegate: CheckoutDelegate?
 
-    /// The PaymentElement for this Checkout instance.
-    public internal(set) var paymentElement: PaymentElement!
-
     // MARK: - Internal Properties
+
+    /// The PaymentElement for this Checkout instance.
+    private var paymentElement: PaymentElement!
 
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
@@ -377,7 +377,8 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Element methods
 
-    func getPaymentElement() {
-        // TODO Pass whatever parms needed to initialize FlowController, Embedded (elements session, not sure what else)
+    /// Returns the PaymentElement for this Checkout instance.
+    public func getPaymentElement() -> PaymentElement {
+        return paymentElement
     }
 }
