@@ -140,4 +140,9 @@ extension STPApplePayContext {
         contact.postalAddress = postalAddress
         return contact
     }
+
+    /// Converts default Checkout billing details into a `PKContact` for pre-populating the Apple Pay sheet.
+    static func makeBillingContact(from billingDetails: Checkout.Configuration.Defaults.BillingDetails) -> PKContact {
+        makeBillingContact(from: Checkout.ContactAddress(name: billingDetails.name, address: billingDetails.address))
+    }
 }

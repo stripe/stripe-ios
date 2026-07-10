@@ -417,10 +417,13 @@ extension STPApplePayContext {
             paymentRequest.merchantCapabilities = merchantCapabilities
         }
 
-        // Pre-populate billingContact from the CheckoutSession's billing address if available
-        if case .checkout(let checkout) = intent,
-           let billingAddress = checkout.nonisolatedSession.billingAddress {
-            paymentRequest.billingContact = Self.makeBillingContact(from: billingAddress)
+        // Pre-populate billingContact from Checkout, preferring the current session over configuration defaults.
+        if case .checkout(let checkout) = intent {
+            if let billingAddress = checkout.nonisolatedSession.billingAddress {
+                paymentRequest.billingContact = Self.makeBillingContact(from: billingAddress)
+            } else if let billingDetails = checkout.configuration.defaults.billingDetails {
+                paymentRequest.billingContact = Self.makeBillingContact(from: billingDetails)
+            }
         }
 
         return paymentRequest

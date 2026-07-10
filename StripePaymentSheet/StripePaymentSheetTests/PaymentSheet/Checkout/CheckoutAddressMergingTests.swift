@@ -109,6 +109,70 @@ final class CheckoutAddressMergingTests: XCTestCase {
         XCTAssertEqual(config.defaultBillingDetails.email, "config@example.com")
     }
 
+    // MARK: - Checkout.Configuration.Defaults
+
+    func testApplyAddressOverrides_checkoutDefaultsBillingDetailsFillEmptyFields() async {
+        let apiResponse = CheckoutTestHelpers.makeOpenSession()
+        var checkoutConfig = Checkout.Configuration(clientSecret: "cs_test")
+        checkoutConfig.defaults.billingDetails = .init(
+            name: "Default Name",
+            address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
+        )
+        let checkout = await Checkout(clientSecret: "cs_test", configuration: checkoutConfig, apiResponse: apiResponse)
+
+        var config = PaymentSheet.Configuration()
+        checkout.applyAddressOverrides(to: &config)
+
+        XCTAssertEqual(config.defaultBillingDetails.name, "Default Name")
+        XCTAssertEqual(config.defaultBillingDetails.address.country, "US")
+        XCTAssertEqual(config.defaultBillingDetails.address.line1, "123 Main St")
+        XCTAssertEqual(config.defaultBillingDetails.address.city, "SF")
+        XCTAssertEqual(config.defaultBillingDetails.address.state, "CA")
+        XCTAssertEqual(config.defaultBillingDetails.address.postalCode, "94105")
+    }
+
+    func testApplyAddressOverrides_paymentSheetConfigurationTakesPrecedenceOverCheckoutDefaults() async {
+        let apiResponse = CheckoutTestHelpers.makeOpenSession()
+        var checkoutConfig = Checkout.Configuration(clientSecret: "cs_test")
+        checkoutConfig.defaults.billingDetails = .init(
+            name: "Default Name",
+            address: .init(country: "US", line1: "123 Main St")
+        )
+        let checkout = await Checkout(clientSecret: "cs_test", configuration: checkoutConfig, apiResponse: apiResponse)
+
+        var config = PaymentSheet.Configuration()
+        config.defaultBillingDetails.name = "Config Name"
+        config.defaultBillingDetails.address.country = "CA"
+        checkout.applyAddressOverrides(to: &config)
+
+        XCTAssertEqual(config.defaultBillingDetails.name, "Config Name")
+        XCTAssertEqual(config.defaultBillingDetails.address.country, "CA")
+        XCTAssertEqual(config.defaultBillingDetails.address.line1, "123 Main St")
+    }
+
+    func testApplyAddressOverrides_sessionBillingFillsFieldsRemainingAfterCheckoutDefaults() async {
+        let apiResponse = CheckoutTestHelpers.makeOpenSession()
+        apiResponse.billingAddress = Checkout.ContactAddress(
+            name: "Session Name",
+            address: .init(country: "GB", line1: "Session Line1", city: "London")
+        )
+        var checkoutConfig = Checkout.Configuration(clientSecret: "cs_test")
+        checkoutConfig.defaults.billingDetails = .init(
+            name: "Default Name",
+            address: .init(country: "US", postalCode: "94105")
+        )
+        let checkout = await Checkout(clientSecret: "cs_test", configuration: checkoutConfig, apiResponse: apiResponse)
+
+        var config = PaymentSheet.Configuration()
+        checkout.applyAddressOverrides(to: &config)
+
+        XCTAssertEqual(config.defaultBillingDetails.name, "Default Name")
+        XCTAssertEqual(config.defaultBillingDetails.address.country, "US")
+        XCTAssertEqual(config.defaultBillingDetails.address.line1, "Session Line1")
+        XCTAssertEqual(config.defaultBillingDetails.address.city, "London")
+        XCTAssertEqual(config.defaultBillingDetails.address.postalCode, "94105")
+    }
+
     func testApplyAddressOverrides_noEmailStaysNil() {
         let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
 

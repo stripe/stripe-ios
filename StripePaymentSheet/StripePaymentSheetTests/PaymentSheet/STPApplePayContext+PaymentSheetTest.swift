@@ -23,6 +23,23 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         return config
     }()
 
+    private func makeCheckout(
+        configuration: Checkout.Configuration,
+        billingAddress: Checkout.ContactAddress? = nil
+    ) async -> Checkout {
+        let checkoutSession = CheckoutTestHelpers.makeSession([
+            "status": "open",
+            "currency": "usd",
+            "total_summary": [
+                "due": 2345,
+                "subtotal": 2345,
+                "total": 2345,
+            ],
+        ])
+        checkoutSession.billingAddress = billingAddress
+        return await Checkout(clientSecret: "cs_test", configuration: configuration, apiResponse: checkoutSession)
+    }
+
     func testCreatePaymentRequest_PaymentIntent() {
         let intent = Intent._testValue()
         let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD"), confirmHandler: dummyDeferredConfirmHandler))
@@ -712,6 +729,67 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         let billingContact = sut.billingContact
         XCTAssertNotNil(billingContact)
         XCTAssertEqual(billingContact?.postalAddress?.street, "123 Main St")
+    }
+
+    func testCreatePaymentRequest_CheckoutSession_PopulatesBillingContactFromCheckoutDefaults() async {
+        var checkoutConfig = Checkout.Configuration(clientSecret: "cs_test")
+        checkoutConfig.defaults.billingDetails = .init(
+            name: "Default Name",
+            address: .init(
+                country: "US",
+                line1: "510 Townsend St",
+                line2: "Floor 2",
+                city: "San Francisco",
+                state: "CA",
+                postalCode: "94103"
+            )
+        )
+        let checkout = await makeCheckout(configuration: checkoutConfig)
+
+        let sut = STPApplePayContext.createPaymentRequest(
+            intent: .checkout(checkout),
+            configuration: configuration,
+            applePay: applePayConfiguration
+        )
+
+        let billingContact = sut.billingContact
+        XCTAssertNotNil(billingContact)
+
+        let name = billingContact?.name
+        XCTAssertNotNil(name)
+        let formattedName = PersonNameComponentsFormatter.localizedString(from: name!, style: .default)
+        XCTAssertEqual(formattedName, "Default Name")
+
+        let postalAddress = billingContact?.postalAddress
+        XCTAssertEqual(postalAddress?.isoCountryCode, "US")
+        XCTAssertEqual(postalAddress?.street, "510 Townsend St\nFloor 2")
+        XCTAssertEqual(postalAddress?.city, "San Francisco")
+        XCTAssertEqual(postalAddress?.state, "CA")
+        XCTAssertEqual(postalAddress?.postalCode, "94103")
+    }
+
+    func testCreatePaymentRequest_CheckoutSession_BillingAddressTakesPrecedenceOverCheckoutDefaults() async {
+        let billingAddress = Checkout.ContactAddress(
+            name: "Session Name",
+            address: .init(country: "GB", line1: "Session Line1")
+        )
+        var checkoutConfig = Checkout.Configuration(clientSecret: "cs_test")
+        checkoutConfig.defaults.billingDetails = .init(
+            name: "Default Name",
+            address: .init(country: "US", line1: "Default Line1")
+        )
+        let checkout = await makeCheckout(configuration: checkoutConfig, billingAddress: billingAddress)
+
+        let sut = STPApplePayContext.createPaymentRequest(
+            intent: .checkout(checkout),
+            configuration: configuration,
+            applePay: applePayConfiguration
+        )
+
+        let billingContact = sut.billingContact
+        XCTAssertNotNil(billingContact)
+        XCTAssertEqual(billingContact?.postalAddress?.isoCountryCode, "GB")
+        XCTAssertEqual(billingContact?.postalAddress?.street, "Session Line1")
     }
 
     func testCreatePaymentRequest_CheckoutSession_NoBillingContact_WhenNoBillingAddress() {
