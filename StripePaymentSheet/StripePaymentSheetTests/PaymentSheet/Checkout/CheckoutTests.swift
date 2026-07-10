@@ -11,16 +11,37 @@
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
+import OHHTTPStubs
+import OHHTTPStubsSwift
 import XCTest
 
 @MainActor
 final class CheckoutTests: STPNetworkStubbingTestCase {
-    func testCheckoutInitPreservesMerchantProvidedBetas() {
+    func testCheckoutInitUsesMerchantProvidedAPIClientInstance() async {
+        let apiClient = STPAPIClient(publishableKey: "pk_test_checkout")
+        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("CheckoutSession")!)!
+        stubFlagImages()
+
+        let checkout = await Checkout(
+            clientSecret: "cs_test_checkout_secret_123",
+            apiResponse: checkoutSession,
+            apiClient: apiClient
+        )
+
+        XCTAssertTrue(checkout.apiClient === apiClient)
+    }
+
+    func testCheckoutInitPreservesMerchantProvidedBetas() async {
         let apiClient = STPAPIClient(publishableKey: "pk_test_checkout")
         apiClient.betas = ["merchant_beta=v1"]
-        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("CheckoutSession")!)!
+        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("CheckoutSession")!)!
+        stubFlagImages()
 
-        let checkout = Checkout(session: checkoutSession, apiClient: apiClient)
+        let checkout = await Checkout(
+            clientSecret: "cs_test_checkout_secret_123",
+            apiResponse: checkoutSession,
+            apiClient: apiClient
+        )
 
         XCTAssertEqual(checkout.apiClient.betas, apiClient.betas)
     }
@@ -287,5 +308,14 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
     private func promotionCode(in session: Checkout.Session?) -> String? {
         session?.discountAmounts.first(where: { $0.promotionCode != nil })?.promotionCode
+    }
+
+    private func stubFlagImages() {
+        let imageData = Data(base64Encoded: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aK6cAAAAASUVORK5CYII=")!
+        stub { request in
+            request.url?.host == "img.stripecdn.com"
+        } response: { _ in
+            HTTPStubsResponse(data: imageData, statusCode: 200, headers: ["Content-Type": "image/png"])
+        }
     }
 }
