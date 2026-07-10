@@ -67,12 +67,16 @@ public final class PaymentElement {
     // MARK: - Internal methods
 
     init(checkout: Checkout) async throws {
-        let paymentSheetConfiguration = checkout.configuration.paymentElement.makePaymentSheetConfiguration(apiClient: checkout.apiClient)
+        let paymentSheetConfiguration = checkout.configuration.paymentElement.makePaymentSheetConfiguration(
+            apiClient: checkout.apiClient
+        )
         self.paymentSheetFlowController = try await PaymentSheet.FlowController.create(
             checkout: checkout,
             configuration: paymentSheetConfiguration
         )
-        let embeddedConfiguration = checkout.configuration.paymentElement.makeEmbeddedConfiguration(apiClient: checkout.apiClient)
+        let embeddedConfiguration = checkout.configuration.paymentElement.makeEmbeddedConfiguration(
+            apiClient: checkout.apiClient
+        )
         self.embeddedPaymentElement = try await EmbeddedPaymentElement.create(
             checkout: checkout,
             configuration: embeddedConfiguration
@@ -85,47 +89,111 @@ public final class PaymentElement {
 extension PaymentElement {
     /// Configuration for PaymentElement
     public struct Configuration {
+        private var paymentSheetConfiguration = PaymentSheet.Configuration()
+        private var embeddedConfiguration: EmbeddedPaymentElement.Configuration = {
+            var configuration = EmbeddedPaymentElement.Configuration()
+            configuration.embeddedViewDisplaysMandateText = false
+            return configuration
+        }()
+
         /// PaymentSheet offers users an option to save some payment methods for later use.
         /// Default value is `.automatic`.
-        public var savePaymentMethodOptInBehavior: SavePaymentMethodOptInBehavior = .automatic
+        public var savePaymentMethodOptInBehavior: SavePaymentMethodOptInBehavior = .automatic {
+            didSet {
+                paymentSheetConfiguration.savePaymentMethodOptInBehavior = savePaymentMethodOptInBehavior
+                embeddedConfiguration.savePaymentMethodOptInBehavior = savePaymentMethodOptInBehavior
+            }
+        }
 
         /// Describes the appearance of PaymentElement.
-        public var appearance: Appearance = .default
+        public var appearance: Appearance = .default {
+            didSet {
+                paymentSheetConfiguration.appearance = appearance
+                embeddedConfiguration.appearance = appearance
+            }
+        }
 
         /// The list of preferred networks that should be used to process payments made with a co-branded card.
         /// This value will only be used if your user hasn't selected a network themselves.
-        public var preferredNetworks: [STPCardBrand]?
+        public var preferredNetworks: [STPCardBrand]? {
+            didSet {
+                paymentSheetConfiguration.preferredNetworks = preferredNetworks
+                embeddedConfiguration.preferredNetworks = preferredNetworks
+            }
+        }
 
         /// Describes how billing details should be collected.
-        public var billingDetailsCollectionConfiguration: BillingDetailsCollectionConfiguration = .init()
+        public var billingDetailsCollectionConfiguration: BillingDetailsCollectionConfiguration = .init() {
+            didSet {
+                paymentSheetConfiguration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
+                embeddedConfiguration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
+            }
+        }
 
         /// Optional configuration to display a custom message when a saved payment method is removed.
-        public var removeSavedPaymentMethodMessage: String?
+        public var removeSavedPaymentMethodMessage: String? {
+            didSet {
+                paymentSheetConfiguration.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
+                embeddedConfiguration.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
+            }
+        }
 
         /// By default, PaymentElement will use a dynamic ordering that optimizes payment method display for the customer.
-        public var paymentMethodOrder: [String]?
+        public var paymentMethodOrder: [String]? {
+            didSet {
+                paymentSheetConfiguration.paymentMethodOrder = paymentMethodOrder
+                embeddedConfiguration.paymentMethodOrder = paymentMethodOrder
+            }
+        }
 
         /// By default, the card form will provide a button to open the card scanner.
         /// If true, the card form will instead initialize with the card scanner already open.
-        public var opensCardScannerAutomatically: Bool = false
+        public var opensCardScannerAutomatically: Bool = false {
+            didSet {
+                paymentSheetConfiguration.opensCardScannerAutomatically = opensCardScannerAutomatically
+                embeddedConfiguration.opensCardScannerAutomatically = opensCardScannerAutomatically
+            }
+        }
 
         /// When true, uses the Stripe autocomplete endpoints for billing address autocomplete instead of Apple MapKit.
-        @_spi(STP) public var useAutocompleteEndpoints: Bool = false
+        @_spi(STP) public var useAutocompleteEndpoints: Bool = false {
+            didSet {
+                paymentSheetConfiguration.useAutocompleteEndpoints = useAutocompleteEndpoints
+                embeddedConfiguration.useAutocompleteEndpoints = useAutocompleteEndpoints
+            }
+        }
 
         /// A map for specifying when legal agreements are displayed for each payment method type.
-        public var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] = [:]
+        public var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] = [:] {
+            didSet {
+                paymentSheetConfiguration.termsDisplay = termsDisplay
+                embeddedConfiguration.termsDisplay = termsDisplay
+            }
+        }
 
         /// The layout of payment methods in the sheet. Defaults to `.automatic`.
         /// - Note: Only used if you call `PaymentElement.present(from:)`.
-        public var paymentMethodLayout: PaymentMethodLayout = .automatic
+        public var paymentMethodLayout: PaymentMethodLayout = .automatic {
+            didSet {
+                paymentSheetConfiguration.paymentMethodLayout = paymentMethodLayout
+            }
+        }
 
         /// Controls whether the PaymentElement displays mandate text at the bottom for payment methods that require it. If set to `false`, your integration must display `PaymentOptionDisplayData.mandateText` to the customer near your “Buy” button to comply with regulations.
         /// - Note: This doesn't affect mandates displayed in the sheet and is ignored if you call `PaymentElement.present(from:)`.
-        public var displaysMandateText: Bool = false
+        public var displaysMandateText: Bool = false {
+            didSet {
+                embeddedConfiguration.embeddedViewDisplaysMandateText = displaysMandateText
+            }
+        }
 
         /// Determines the behavior when a row is selected.
         /// - Note: Ignored if you call `PaymentElement.present(from:)`.
-        public var rowSelectionBehavior: RowSelectionBehavior = .default
+        public var rowSelectionBehavior: RowSelectionBehavior = .default {
+            didSet {
+                embeddedConfiguration.rowSelectionBehavior = embeddedRowSelectionBehavior
+            }
+        }
 
         /// Initializes a Configuration with default values.
         public init() {}
@@ -138,6 +206,18 @@ extension PaymentElement {
             /// When a payment option is selected, `didSelectPaymentOption` is triggered.
             /// You can implement this method to immediately perform an action e.g. go back to the checkout screen.
             case immediateAction(didSelectPaymentOption: () -> Void)
+        }
+
+        func makeEmbeddedConfiguration(apiClient: STPAPIClient) -> EmbeddedPaymentElement.Configuration {
+            var configuration = embeddedConfiguration
+            configuration.apiClient = apiClient
+            return configuration
+        }
+
+        func makePaymentSheetConfiguration(apiClient: STPAPIClient) -> PaymentSheet.Configuration {
+            var configuration = paymentSheetConfiguration
+            configuration.apiClient = apiClient
+            return configuration
         }
     }
 }
@@ -153,43 +233,13 @@ extension PaymentElement {
 }
 
 private extension PaymentElement.Configuration {
-    func makeEmbeddedConfiguration(apiClient: STPAPIClient) -> EmbeddedPaymentElement.Configuration {
-        var configuration = EmbeddedPaymentElement.Configuration()
-        configuration.apiClient = apiClient
-        configuration.savePaymentMethodOptInBehavior = savePaymentMethodOptInBehavior
-        configuration.appearance = appearance
-        configuration.preferredNetworks = preferredNetworks
-        configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
-        configuration.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
-        configuration.paymentMethodOrder = paymentMethodOrder
-        configuration.opensCardScannerAutomatically = opensCardScannerAutomatically
-        configuration.useAutocompleteEndpoints = useAutocompleteEndpoints
-        configuration.termsDisplay = termsDisplay
-        configuration.rowSelectionBehavior = {
-            switch rowSelectionBehavior {
-            case .default:
-                return .default
-            case .immediateAction(let didSelectPaymentOption):
-                return .immediateAction(didSelectPaymentOption: didSelectPaymentOption)
-            }
-        }()
-        return configuration
-    }
-
-    func makePaymentSheetConfiguration(apiClient: STPAPIClient) -> PaymentSheet.Configuration {
-        var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = apiClient
-        configuration.savePaymentMethodOptInBehavior = savePaymentMethodOptInBehavior
-        configuration.appearance = appearance
-        configuration.preferredNetworks = preferredNetworks
-        configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
-        configuration.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
-        configuration.paymentMethodOrder = paymentMethodOrder
-        configuration.paymentMethodLayout = paymentMethodLayout
-        configuration.opensCardScannerAutomatically = opensCardScannerAutomatically
-        configuration.useAutocompleteEndpoints = useAutocompleteEndpoints
-        configuration.termsDisplay = termsDisplay
-        return configuration
+    var embeddedRowSelectionBehavior: EmbeddedPaymentElement.Configuration.RowSelectionBehavior {
+        switch rowSelectionBehavior {
+        case .default:
+            return .default
+        case .immediateAction(let didSelectPaymentOption):
+            return .immediateAction(didSelectPaymentOption: didSelectPaymentOption)
+        }
     }
 }
 
