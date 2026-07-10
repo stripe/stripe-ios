@@ -101,6 +101,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         case JP = "jp"
         case BR = "br"
         case FR = "fr"
+        case NO = "no"
         case TH = "th"
         case DE = "de"
         case IT = "it"
@@ -126,6 +127,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             case .BR:
                 return STPTestingBRPublishableKey
             case .FR:
+                return STPTestingFRPublishableKey
+            case .NO:
                 return STPTestingFRPublishableKey
             case .TH:
                 return STPTestingTHPublishableKey
@@ -456,7 +459,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             intentKinds: [.paymentIntent],
             currency: "NOK",
             paymentMethodType: .vipps,
-            merchantCountry: .FR,
+            merchantCountry: .NO,
             expectedHierarchy: ExpectedFormHierarchy.Vipps.paymentIntent
         ) { _ in }
     }

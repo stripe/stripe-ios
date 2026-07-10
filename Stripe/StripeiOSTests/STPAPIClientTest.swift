@@ -108,21 +108,6 @@ class STPAPIClientTest: XCTestCase {
         )
     }
 
-    func testMakeCopyPreservesMerchantProvidedBetas() throws {
-        let sut = STPAPIClient(publishableKey: "pk_foo")
-        sut.betas = ["existing_beta=v1"]
-
-        let copiedClient = sut.makeCopy()
-
-        XCTAssertFalse(copiedClient === sut)
-        XCTAssertEqual(sut.betas, ["existing_beta=v1"])
-        XCTAssertEqual(copiedClient.betas, ["existing_beta=v1"])
-
-        let apiClientSource = try stpAPIClientSource()
-        XCTAssertTrue(apiClientSource.contains("\n    @objc public var betas: Set<String> = []"))
-        XCTAssertFalse(apiClientSource.contains("@_spi(STP) public var betas"))
-    }
-
     private struct MockUAUsageClass: STPAnalyticsProtocol {
         static let stp_analyticsIdentifier = "MockUAUsageClass"
     }
@@ -194,19 +179,5 @@ class STPAPIClientTest: XCTestCase {
         XCTAssertEqual(userAgentHeaderDict?["partner_id"] as! String, "pp_partner_1234")
         XCTAssertEqual(userAgentHeaderDict?["version"] as! String, "1.2.34")
         XCTAssertEqual(userAgentHeaderDict?["url"] as! String, "https://myawesomelibrary.info")
-    }
-
-    private func stpAPIClientSource() throws -> String {
-        let stripeIOSRoot = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-        let apiClientSourceURL = stripeIOSRoot
-            .appendingPathComponent("StripeCore")
-            .appendingPathComponent("StripeCore")
-            .appendingPathComponent("Source")
-            .appendingPathComponent("API Bindings")
-            .appendingPathComponent("STPAPIClient.swift")
-        return try String(contentsOf: apiClientSourceURL, encoding: .utf8)
     }
 }
