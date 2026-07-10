@@ -20,7 +20,7 @@ public struct LinkConfiguration {
     /// The payment method types to support in the Link sheet. If `nil` or empty, all available types are shown.
     @_spi(LinkControllerPreview) public let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
 
-    /// The merchant name displayed in Link UI (e.g. consent text, wallet header).
+    /// The merchant name displayed in Link UI (e.g. consent text).
     /// If `nil`, defaults to the host app's `CFBundleDisplayName` / `CFBundleName`.
     @_spi(LinkControllerPreview) public let merchantDisplayName: String?
 
