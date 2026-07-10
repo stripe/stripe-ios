@@ -75,14 +75,6 @@ extension PaymentElement {
             }
         }
 
-        /// When true, uses the Stripe autocomplete endpoints for billing address autocomplete instead of Apple MapKit.
-        @_spi(STP) public var useAutocompleteEndpoints: Bool = false {
-            didSet {
-                paymentSheetConfiguration.useAutocompleteEndpoints = useAutocompleteEndpoints
-                embeddedConfiguration.useAutocompleteEndpoints = useAutocompleteEndpoints
-            }
-        }
-
         /// A map for specifying when legal agreements are displayed for each payment method type.
         public var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] = [:] {
             didSet {
