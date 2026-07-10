@@ -12,6 +12,7 @@ final class LinkControllerPreviewAPITests: XCTestCase {
         _ = LinkPaymentMethodType.card
         _ = LinkConfiguration(supportedPaymentMethodTypes: [.card])
         _ = LinkConfiguration(supportedPaymentMethodTypes: [.card], allowLogout: false).allowLogout
+        _ = LinkConfiguration(supportedPaymentMethodTypes: [.card], merchantDisplayName: "Example Merchant")
 
         let result: LinkController.PaymentMethodResult = .canceled
         _ = result
