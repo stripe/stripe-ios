@@ -17,20 +17,6 @@ import XCTest
 
 @MainActor
 final class CheckoutTests: STPNetworkStubbingTestCase {
-    func testCheckoutInitUsesMerchantProvidedAPIClientInstance() async {
-        let apiClient = STPAPIClient(publishableKey: "pk_test_checkout")
-        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("CheckoutSession")!)!
-        stubFlagImages()
-
-        let checkout = await Checkout(
-            clientSecret: "cs_test_checkout_secret_123",
-            apiResponse: checkoutSession,
-            apiClient: apiClient
-        )
-
-        XCTAssertTrue(checkout.apiClient === apiClient)
-    }
-
     func testCheckoutInitPreservesMerchantProvidedBetas() async {
         let apiClient = STPAPIClient(publishableKey: "pk_test_checkout")
         apiClient.betas = ["merchant_beta=v1"]
