@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
@@ -15,15 +16,18 @@ extension Checkout {
     /// Supply a configuration when creating a ``Checkout`` to customize behavior:
     ///
     /// ```swift
-    /// var config = Checkout.Configuration()
+    /// var config = Checkout.Configuration(clientSecret: "cs_xxx_secret_yyy")
     /// config.adaptivePricing.allowed = true
     ///
-    /// let checkout = try await Checkout(
-    ///     clientSecret: "cs_xxx_secret_yyy",
-    ///     configuration: config
-    /// )
+    /// let checkout = try await Checkout(configuration: config)
     /// ```
     public struct Configuration {
+        /// The client secret for your Checkout Session.
+        public var clientSecret: String
+
+        /// The API client used to make requests to Stripe.
+        public var apiClient: STPAPIClient = .shared
+
         /// Controls whether adaptive pricing is requested for this session.
         ///
         /// When allowed, Stripe may present prices in the customer's local
@@ -32,8 +36,11 @@ extension Checkout {
         /// Default: ``AdaptivePricing.init()`` (`allowed: false`).
         public var adaptivePricing: AdaptivePricing = AdaptivePricing()
 
-        /// Creates a configuration with default values.
-        public init() {}
+        /// Creates a configuration.
+        /// - Parameter clientSecret: The client secret for your Checkout Session.
+        public init(clientSecret: String) {
+            self.clientSecret = clientSecret
+        }
     }
 }
 
