@@ -3,8 +3,8 @@
 //  StripePaymentSheet
 //
 
-@_spi(STP) import StripeCore
 import PassKit
+@_spi(STP) import StripeCore
 import SwiftUI
 
 typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
