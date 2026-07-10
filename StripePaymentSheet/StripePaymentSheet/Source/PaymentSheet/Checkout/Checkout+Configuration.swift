@@ -32,6 +32,13 @@ extension Checkout {
         /// Default: ``AdaptivePricing.init()`` (`allowed: false`).
         public var adaptivePricing: AdaptivePricing = AdaptivePricing()
 
+        /// Configuration for the Express Checkout Element.
+        ///
+        /// Set this to display wallet buttons (Apple Pay, Link) backed by this
+        /// Checkout Session. Use ``Checkout/getExpressCheckoutElement()`` to
+        /// obtain the element after initialization.
+        public var expressCheckout: ExpressCheckoutElement.Configuration = ExpressCheckoutElement.Configuration()
+
         /// Creates a configuration with default values.
         public init() {}
     }

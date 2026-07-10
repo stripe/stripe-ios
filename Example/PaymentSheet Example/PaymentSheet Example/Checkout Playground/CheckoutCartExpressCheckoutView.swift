@@ -9,8 +9,6 @@ import SwiftUI
 /// Playground view for Express Checkout Element with Checkout Sessions.
 struct CheckoutCartExpressCheckoutView: View {
     @ObservedObject var checkout: Checkout
-    let billingAddressCollection: Bool
-    let allowPromotionCodes: Bool
     let onDismiss: () -> Void
 
     @State private var expressCheckoutElement: ExpressCheckoutElement?
@@ -130,17 +128,7 @@ struct CheckoutCartExpressCheckoutView: View {
         isLoading = true
         loadError = nil
         do {
-            var config = ExpressCheckoutElement.Configuration()
-            config.returnURL = "payments-example://stripe-redirect"
-            config.applePay = PaymentSheet.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.umbrella.test",
-                merchantCountryCode: "US"
-            )
-            if billingAddressCollection {
-                config.billingDetailsCollectionConfiguration.address = .full
-            }
-            config.allowsPromotionCodes = allowPromotionCodes
-            let element = try await ExpressCheckoutElement(checkout: checkout, configuration: config)
+            let element = try await checkout.getExpressCheckoutElement()
             element.delegate = PaymentResultDelegate(onResult: { result in
                 paymentResult = result
             })

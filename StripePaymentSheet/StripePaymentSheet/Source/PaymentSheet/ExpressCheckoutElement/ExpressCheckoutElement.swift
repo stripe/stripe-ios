@@ -11,6 +11,8 @@ import UIKit
 /// An element that displays wallet buttons (e.g. Apple Pay, Link) for a Checkout Session.
 /// Use this to let customers quickly pay with an express payment method without going through a full payment flow.
 ///
+/// Obtain an instance via ``Checkout/getExpressCheckoutElement()``.
+///
 /// - Note: This is a Checkout Sessions-only API.
 @_spi(STP)
 @MainActor
@@ -21,6 +23,9 @@ public final class ExpressCheckoutElement: STPAnalyticsProtocol {
 
     /// Configuration for ``ExpressCheckoutElement``.
     public struct Configuration {
+
+        // MARK: - Public properties
+
         /// Describes the appearance of the Express Checkout Element.
         public var appearance: PaymentSheet.Appearance = .default
 
@@ -44,6 +49,33 @@ public final class ExpressCheckoutElement: STPAnalyticsProtocol {
 
         /// Creates a configuration with default values.
         public init() {}
+
+        // MARK: - Internal properties (satisfy PaymentElementConfiguration conformance)
+
+        var apiClient: STPAPIClient = STPAPIClient.shared
+        var allowsDelayedPaymentMethods: Bool = false
+        var allowsPaymentMethodsRequiringShippingAddress: Bool = false
+        var primaryButtonColor: UIColor?
+        var primaryButtonLabel: String?
+        var style: PaymentSheet.UserInterfaceStyle = .automatic
+        var customer: PaymentSheet.CustomerConfiguration?
+        var merchantDisplayName: String = ""
+        var defaultBillingDetails: PaymentSheet.BillingDetails = .init()
+        var savePaymentMethodOptInBehavior: PaymentSheet.SavePaymentMethodOptInBehavior = .automatic
+        var shippingDetails: () -> AddressViewController.AddressDetails? = { nil }
+        var preferredNetworks: [STPCardBrand]?
+        var userOverrideCountry: String?
+        var removeSavedPaymentMethodMessage: String?
+        var externalPaymentMethodConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?
+        var customPaymentMethodConfiguration: PaymentSheet.CustomPaymentMethodConfiguration?
+        var paymentMethodOrder: [String]?
+        var allowsRemovalOfLastSavedPaymentMethod: Bool = true
+        var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
+        @_spi(CardFundingFilteringPrivatePreview) var allowedCardFundingTypes: PaymentSheet.CardFundingType = .all
+        var disableWalletPaymentMethodFiltering: Bool = false
+        var linkPaymentMethodsOnly: Bool = false
+        var opensCardScannerAutomatically: Bool = false
+        var useAutocompleteEndpoints: Bool = false
     }
 
     // MARK: - Public properties
@@ -60,7 +92,7 @@ public final class ExpressCheckoutElement: STPAnalyticsProtocol {
     // MARK: - Internal properties
 
     let checkout: Checkout
-    let configuration: PaymentSheet.Configuration
+    let configuration: Configuration
     let elementsSession: STPElementsSession
     let availableWallets: [ExpressType]
     let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -70,45 +102,19 @@ public final class ExpressCheckoutElement: STPAnalyticsProtocol {
 
     // MARK: - Initialization
 
-    /// Creates an ``ExpressCheckoutElement`` backed by the given Checkout Session.
-    ///
-    /// ```swift
-    /// var config = ExpressCheckoutElement.Configuration()
-    /// config.applePay = .init(
-    ///     merchantId: "merchant.com.example",
-    ///     merchantCountryCode: "US"
-    /// )
-    /// let element = try await ExpressCheckoutElement(checkout: checkout, configuration: config)
-    /// ```
-    ///
-    /// - Parameters:
-    ///   - checkout: The ``Checkout`` instance backing this element.
-    ///   - configuration: Configuration for the element.
-    /// - Throws: An error if the element could not be loaded.
-    public init(checkout: Checkout, configuration: Configuration) async throws {
-        try await checkout.awaitPendingOperations()
-
-        var psConfiguration = configuration.asPaymentSheetConfiguration(apiClient: checkout.apiClient)
-        checkout.nonisolatedSession.applyAddressOverrides(to: &psConfiguration)
-
-        AnalyticsHelper.shared.generateSessionID()
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: ExpressCheckoutElement.self)
-        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .flowController, configuration: psConfiguration)
-
-        let (loadResult, _) = try await PaymentSheetLoader.load(
-            mode: .checkout(checkout),
-            configuration: psConfiguration,
-            analyticsHelper: analyticsHelper,
-            integrationShape: .flowController
-        )
-
+    init(
+        checkout: Checkout,
+        configuration: Configuration,
+        loadResult: PaymentSheetLoader.LoadResult,
+        analyticsHelper: PaymentSheetAnalyticsHelper
+    ) {
         self.checkout = checkout
-        self.configuration = psConfiguration
+        self.configuration = configuration
         self.elementsSession = loadResult.elementsSession
         self.analyticsHelper = analyticsHelper
         self.availableWallets = ExpressCheckoutElement.determineAvailableWallets(
             elementsSession: loadResult.elementsSession,
-            configuration: psConfiguration,
+            configuration: configuration,
             checkoutSession: checkout.nonisolatedSession
         )
     }
@@ -117,7 +123,7 @@ public final class ExpressCheckoutElement: STPAnalyticsProtocol {
 
     private static func determineAvailableWallets(
         elementsSession: STPElementsSession,
-        configuration: PaymentSheet.Configuration,
+        configuration: Configuration,
         checkoutSession: Checkout.Session?
     ) -> [ExpressType] {
         // Link cannot collect shipping addresses or apply promo codes, so hide it when the
@@ -150,5 +156,19 @@ public final class ExpressCheckoutElement: STPAnalyticsProtocol {
         }
 
         return wallets
+    }
+}
+
+// MARK: - PaymentElementConfiguration
+
+extension ExpressCheckoutElement.Configuration: PaymentElementConfiguration {
+    var analyticPayload: [String: Any] { [:] }
+    var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { [:] }
+
+    func resolveLayout(
+        elementsSession: STPElementsSession,
+        paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+    ) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout {
+        return .vertical
     }
 }

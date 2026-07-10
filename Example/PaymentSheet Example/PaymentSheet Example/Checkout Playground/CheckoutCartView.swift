@@ -52,8 +52,6 @@ struct CheckoutCartView: View {
                             case .expressCheckout:
                                 CheckoutCartExpressCheckoutView(
                                     checkout: checkout,
-                                    billingAddressCollection: billingAddressCollection,
-                                    allowPromotionCodes: allowPromotionCodes,
                                     onDismiss: { dismiss() }
                                 )
                             }
@@ -99,6 +97,15 @@ struct CheckoutCartView: View {
         do {
             var config = Checkout.Configuration()
             config.adaptivePricing.allowed = adaptivePricing
+            config.expressCheckout.returnURL = "payments-example://stripe-redirect"
+            config.expressCheckout.applePay = PaymentSheet.ApplePayConfiguration(
+                merchantId: "merchant.com.stripe.umbrella.test",
+                merchantCountryCode: "US"
+            )
+            if billingAddressCollection {
+                config.expressCheckout.billingDetailsCollectionConfiguration.address = .full
+            }
+            config.expressCheckout.allowsPromotionCodes = allowPromotionCodes
             checkout = try await Checkout(clientSecret: clientSecret, configuration: config)
         } catch {
             errorMessage = error.localizedDescription

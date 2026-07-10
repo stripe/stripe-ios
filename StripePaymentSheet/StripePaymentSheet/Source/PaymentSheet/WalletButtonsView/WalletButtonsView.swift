@@ -3,6 +3,7 @@
 //  StripePaymentSheet
 //
 
+@_spi(STP) import StripeCore
 import PassKit
 import SwiftUI
 
@@ -14,57 +15,138 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
     /// The parameter is the wallet type as a string: "apple_pay" or "link"
     @_spi(STP) public typealias WalletButtonClickHandler = (String) -> Bool
 
-    let flowController: PaymentSheet.FlowController
-    let confirmHandler: (PaymentSheetResult) -> Void
-    let clickHandler: WalletButtonClickHandler?
+    let appearance: PaymentSheet.Appearance
+    let linkBrandProvider: (PaymentSheetLinkAccount?) -> LinkBrand
+    let tapHandler: (ExpressType) -> Void
+    let onAppear: (([String]) -> Void)?
+    let onDisappear: (() -> Void)?
     @State var orderedWallets: [ExpressType]
     @StateObject private var linkButtonViewModel = LinkButtonViewModel()
 
-    @_spi(STP) public init(flowController: PaymentSheet.FlowController,
-                           confirmHandler: @escaping (PaymentSheetResult) -> Void,
-                           clickHandler: WalletButtonClickHandler? = nil) {
-        self.confirmHandler = confirmHandler
-        self.flowController = flowController
-        self.clickHandler = clickHandler
+    // MARK: - FlowController initializer
 
+    @_spi(STP) public init(
+        flowController: PaymentSheet.FlowController,
+        confirmHandler: @escaping (PaymentSheetResult) -> Void,
+        clickHandler: WalletButtonClickHandler? = nil
+    ) {
         let wallets = WalletButtonsView.determineAvailableWallets(for: flowController)
         self._orderedWallets = State(initialValue: wallets)
+        self.appearance = flowController.configuration.appearance
+        self.linkBrandProvider = { account in
+            flowController.configuration.resolvedLinkBrand(
+                elementsSession: flowController.elementsSession,
+                linkAccount: account
+            )
+        }
+        self.onAppear = { wallets in
+            flowController.walletButtonsViewState = .visible(allowedWallets: wallets)
+        }
+        self.onDisappear = {
+            flowController.walletButtonsViewState = .hidden
+        }
+        self.tapHandler = { expressType in
+            flowController.analyticsHelper.logWalletButtonTapped(walletType: expressType)
+
+            if let clickHandler = clickHandler {
+                guard clickHandler(expressType.rawValue) else { return }
+            }
+
+            switch expressType {
+            case .applePay:
+                PaymentSheet.confirm(
+                    configuration: flowController.configuration,
+                    authenticationContext: WindowAuthenticationContext(),
+                    intent: flowController.intent,
+                    elementsSession: flowController.elementsSession,
+                    paymentOption: .applePay,
+                    paymentHandler: flowController.paymentHandler,
+                    analyticsHelper: flowController.analyticsHelper
+                ) { result, _ in
+                    if case .completed = result {
+                        CustomerPaymentOption.setDefaultPaymentMethod(
+                            .applePay,
+                            forCustomer: flowController.configuration.customer?.id
+                        )
+                    }
+                    confirmHandler(result)
+                }
+            case .link:
+                let linkController = PayWithNativeLinkController(
+                    mode: .paymentMethodSelection,
+                    intent: flowController.intent,
+                    elementsSession: flowController.elementsSession,
+                    configuration: flowController.configuration,
+                    analyticsHelper: flowController.analyticsHelper
+                )
+                linkController.presentForPaymentMethodSelection(
+                    from: WindowAuthenticationContext().authenticationPresentingViewController(),
+                    initiallySelectedPaymentDetailsID: nil,
+                    shouldShowSecondaryCta: false,
+                    completion: { confirmOptions, _ in
+                        guard let confirmOptions else { return }
+                        flowController.viewController.linkConfirmOption = confirmOptions
+                        flowController.updatePaymentOption()
+                    }
+                )
+            }
+        }
+    }
+
+    // MARK: - Generic initializer (used by ExpressCheckoutElement)
+
+    init(
+        appearance: PaymentSheet.Appearance,
+        orderedWallets: [ExpressType],
+        linkBrandProvider: @escaping (PaymentSheetLinkAccount?) -> LinkBrand,
+        tapHandler: @escaping (ExpressType) -> Void
+    ) {
+        self.appearance = appearance
+        self._orderedWallets = State(initialValue: orderedWallets)
+        self.linkBrandProvider = linkBrandProvider
+        self.tapHandler = tapHandler
+        self.onAppear = nil
+        self.onDisappear = nil
     }
 
     // TODO: Deprecate?
-    init(flowController: PaymentSheet.FlowController,
-         confirmHandler: @escaping (PaymentSheetResult) -> Void,
-         orderedWallets: [ExpressType],
-         clickHandler: WalletButtonClickHandler? = nil) {
-        self.flowController = flowController
-        self.confirmHandler = confirmHandler
-        self.clickHandler = clickHandler
+    init(
+        flowController: PaymentSheet.FlowController,
+        confirmHandler: @escaping (PaymentSheetResult) -> Void,
+        orderedWallets: [ExpressType],
+        clickHandler: WalletButtonClickHandler? = nil
+    ) {
+        self.init(flowController: flowController, confirmHandler: confirmHandler, clickHandler: clickHandler)
         self._orderedWallets = State(initialValue: orderedWallets)
     }
+
+    // MARK: - Body
 
     @_spi(STP) public var body: some View {
         if !orderedWallets.isEmpty {
             VStack(spacing: 8) {
                 ForEach(orderedWallets, id: \.self) { wallet in
-                    let completion: () -> Void = {
-                        checkoutTapped(wallet)
-                    }
+                    let completion: () -> Void = { tapHandler(wallet) }
 
                     switch wallet {
                     case .applePay:
                         ApplePayButton(
-                            height: flowController.configuration.appearance.primaryButton.height,
+                            height: appearance.primaryButton.height,
                             // TODO (iOS 26): Respect cornerRadius = nil
-                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius,
+                            cornerRadius: appearance.primaryButton.cornerRadius
+                                ?? appearance.cornerRadius
+                                ?? PaymentSheet.Appearance.defaultCornerRadius,
                             action: completion
                         )
                     case .link:
                         LinkButton(
-                            height: flowController.configuration.appearance.primaryButton.height,
+                            height: appearance.primaryButton.height,
                             // TODO (iOS 26): Respect cornerRadius = nil
-                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius,
-                            brand: flowController.configuration.resolvedLinkBrand(elementsSession: flowController.elementsSession, linkAccount: linkButtonViewModel.account),
-                            borderColor: flowController.configuration.appearance.colors.componentBorder,
+                            cornerRadius: appearance.primaryButton.cornerRadius
+                                ?? appearance.cornerRadius
+                                ?? PaymentSheet.Appearance.defaultCornerRadius,
+                            brand: linkBrandProvider(linkButtonViewModel.account),
+                            borderColor: appearance.colors.componentBorder,
                             action: completion
                         )
                     }
@@ -73,19 +155,19 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
             .frame(maxWidth: .infinity)
             .animation(.easeInOut, value: orderedWallets)
             .onAppear {
-                let allowedWallets = Set(orderedWallets)
-                flowController.walletButtonsViewState = .visible(allowedWallets: allowedWallets.map(\.rawValue))
+                onAppear?(orderedWallets.map(\.rawValue))
             }
             .onDisappear {
-                flowController.walletButtonsViewState = .hidden
+                onDisappear?()
             }
         }
     }
 
+    // MARK: - Wallet determination (FlowController-specific)
+
     private static func determineAvailableWallets(
         for flowController: PaymentSheet.FlowController
     ) -> [ExpressType] {
-        // Determine available wallets and their order from elementsSession
         var wallets: [ExpressType] = []
 
         func appendIfAllowed(_ wallet: ExpressType) {
@@ -110,66 +192,21 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
             }
         }
 
-        if flowController.elementsSession.linkPassthroughModeEnabled && PaymentSheet.isLinkEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
-            // Link in passthrough mode won't be in `orderedPaymentMethodTypesAndWallets`, so we append it.
+        if flowController.elementsSession.linkPassthroughModeEnabled &&
+            PaymentSheet.isLinkEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
             appendIfAllowed(.link)
         }
 
         return wallets
     }
 
+    // MARK: - Internal tap entry point (used by tests)
+
     func checkoutTapped(_ expressType: ExpressType) {
-        // Log wallet button tap analytics
-        flowController.analyticsHelper.logWalletButtonTapped(walletType: expressType)
-
-        // Invoke click handler if set, and only proceed if it returns true
-        if let clickHandler = clickHandler {
-            let shouldProceed = clickHandler(expressType.rawValue)
-            guard shouldProceed else {
-                return
-            }
-        }
-
-        switch expressType {
-        case .applePay:
-            // Launch directly into Apple Pay and confirm the payment
-            PaymentSheet.confirm(
-                configuration: flowController.configuration,
-                authenticationContext: WindowAuthenticationContext(),
-                intent: flowController.intent,
-                elementsSession: flowController.elementsSession,
-                paymentOption: .applePay,
-                paymentHandler: flowController.paymentHandler,
-                analyticsHelper: flowController.analyticsHelper
-            ) { result, _ in
-                if case .completed = result {
-                    // Remember Apple Pay as default payment method for returning users
-                    CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: flowController.configuration.customer?.id)
-                }
-                confirmHandler(result)
-            }
-        case .link:
-            let linkController = PayWithNativeLinkController(
-                mode: .paymentMethodSelection,
-                intent: flowController.intent,
-                elementsSession: flowController.elementsSession,
-                configuration: flowController.configuration,
-                analyticsHelper: flowController.analyticsHelper
-            )
-            linkController.presentForPaymentMethodSelection(
-                from: WindowAuthenticationContext().authenticationPresentingViewController(),
-                initiallySelectedPaymentDetailsID: nil,
-                shouldShowSecondaryCta: false,
-                completion: { confirmOptions, _ in
-                    guard let confirmOptions else {
-                        return
-                    }
-                    flowController.viewController.linkConfirmOption = confirmOptions
-                    flowController.updatePaymentOption()
-                }
-            )
-        }
+        tapHandler(expressType)
     }
+
+    // MARK: - Apple Pay button subview
 
     private struct ApplePayButton: View {
         private enum Constants {

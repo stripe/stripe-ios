@@ -3,7 +3,6 @@
 //  StripePaymentSheet
 //
 
-import PassKit
 import SwiftUI
 
 /// A SwiftUI view that displays Express Checkout Element wallet buttons.
@@ -14,55 +13,20 @@ public struct ExpressCheckoutElementView: View {
 
     let element: ExpressCheckoutElement
 
-    @StateObject private var linkButtonViewModel = LinkButtonViewModel()
-
-    public var body: some View {
-        if !element.availableWallets.isEmpty {
-            VStack(spacing: 8) {
-                ForEach(element.availableWallets, id: \.self) { wallet in
-                    let completion: () -> Void = { element.walletTapped(wallet) }
-
-                    switch wallet {
-                    case .applePay:
-                        ApplePayButtonView(
-                            height: element.configuration.appearance.primaryButton.height,
-                            cornerRadius: element.configuration.appearance.primaryButton.cornerRadius
-                                ?? element.configuration.appearance.cornerRadius
-                                ?? PaymentSheet.Appearance.defaultCornerRadius,
-                            action: completion
-                        )
-                    case .link:
-                        LinkButton(
-                            height: element.configuration.appearance.primaryButton.height,
-                            cornerRadius: element.configuration.appearance.primaryButton.cornerRadius
-                                ?? element.configuration.appearance.cornerRadius
-                                ?? PaymentSheet.Appearance.defaultCornerRadius,
-                            brand: element.configuration.resolvedLinkBrand(
-                                elementsSession: element.elementsSession,
-                                linkAccount: linkButtonViewModel.account
-                            ),
-                            borderColor: element.configuration.appearance.colors.componentBorder,
-                            action: completion
-                        )
-                    }
-                }
+    @_spi(STP) public var body: some View {
+        WalletButtonsView(
+            appearance: element.configuration.appearance,
+            orderedWallets: element.availableWallets,
+            linkBrandProvider: { account in
+                element.configuration.resolvedLinkBrand(
+                    elementsSession: element.elementsSession,
+                    linkAccount: account
+                )
+            },
+            tapHandler: { wallet in
+                element.walletTapped(wallet)
             }
-            .frame(maxWidth: .infinity)
-            .animation(.easeInOut, value: element.availableWallets)
-        }
-    }
-
-    private struct ApplePayButtonView: View {
-        let height: CGFloat
-        let cornerRadius: CGFloat
-        let action: () -> Void
-
-        var body: some View {
-            PayWithApplePayButton(.plain, action: action)
-                .frame(maxWidth: .infinity)
-                .frame(height: height)
-                .cornerRadius(cornerRadius)
-        }
+        )
     }
 }
 
@@ -94,12 +58,6 @@ extension ExpressCheckoutElement {
                 analyticsHelper: analyticsHelper
             ) { [weak self] result, _ in
                 guard let self else { return }
-                if case .completed = result {
-                    CustomerPaymentOption.setDefaultPaymentMethod(
-                        .applePay,
-                        forCustomer: configuration.customer?.id
-                    )
-                }
                 delegate?.expressCheckoutElement(self, didCompleteWith: result)
             }
 
@@ -122,4 +80,5 @@ extension ExpressCheckoutElement {
             )
         }
     }
+
 }
