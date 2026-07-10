@@ -162,7 +162,7 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
     // Requires document photo without type - should return DocumentTypeSelectViewController
     func testMissingDocFrontNoType() async throws {
         // Mock that document ML models successfully loaded
-        mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
+        mockMLModelLoader.documentModelsResult = .success(.init(DocumentScannerMock()))
 
         let exp = expectation(description: "testMissingDocFrontNoType")
         try nextViewController(
@@ -323,7 +323,7 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
         mockSheetController.collectedData = .init()
 
         // Mock that document ML models successfully loaded
-        mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
+        mockMLModelLoader.documentModelsResult = .success(.init(DocumentScannerMock()))
 
         let frontExp = expectation(description: "front")
         try nextViewController(
@@ -348,7 +348,7 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
 
     func testNextViewControllerSelfie() async throws {
         // Mock that face ML models successfully loaded
-        mockMLModelLoader.faceModelsPromise.resolve(with: .init(FaceScannerMock()))
+        mockMLModelLoader.faceModelsResult = .success(.init(FaceScannerMock()))
 
         let exp = expectation(description: "testNextViewControllerSelfie")
         try nextViewController(

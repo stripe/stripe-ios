@@ -7,28 +7,27 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 @testable import StripeIdentity
 
 final class IdentityMLModelLoaderMock: IdentityMLModelLoaderProtocol {
 
-    let documentModelsPromise = Promise<AnyDocumentScanner>(
-        error: IdentityMLModelLoaderError.mlModelNeverLoaded
+    var documentModelsResult: Result<AnyDocumentScanner, Error> = .failure(
+        IdentityMLModelLoaderError.mlModelNeverLoaded
     )
-    let faceModelsPromise = Promise<AnyFaceScanner>(
-        error: IdentityMLModelLoaderError.mlModelNeverLoaded
+    var faceModelsResult: Result<AnyFaceScanner, Error> = .failure(
+        IdentityMLModelLoaderError.mlModelNeverLoaded
     )
 
     private(set) var didStartLoadingDocumentModels = false
     private(set) var didStartLoadingFaceModels = false
 
-    var documentModelsFuture: Future<AnyDocumentScanner> {
-        return documentModelsPromise
+    func documentModels() async -> Result<AnyDocumentScanner, Error> {
+        documentModelsResult
     }
 
-    var faceModelsFuture: Future<AnyFaceScanner> {
-        return faceModelsPromise
+    func faceModels() async -> Result<AnyFaceScanner, Error> {
+        faceModelsResult
     }
 
     func startLoadingDocumentModels(
