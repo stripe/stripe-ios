@@ -438,7 +438,6 @@ extension PaymentSheet {
                 ) { result in
                     if case .success(let flowController) = result {
                         flowController.checkout = checkout
-                        checkout.integrationDelegate = flowController
                     }
                     completion(result)
                 }
@@ -980,15 +979,11 @@ extension PaymentSheet {
     }
 }
 
-// MARK: - CheckoutIntegrationDelegate
+// MARK: - Checkout
 
-extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
-    var isSheetPresented: Bool {
-        isPresented
-    }
-
-    func checkoutDidUpdate(_ checkout: Checkout) async throws {
-        try await update(checkout: checkout)
+extension PaymentSheet.FlowController {
+    var isPresentingPaymentUI: Bool {
+        return isPresented
     }
 }
 

@@ -116,7 +116,7 @@ extension Checkout {
     // MARK: - Validation
 
     func requireSheetNotPresented() throws {
-        guard integrationDelegate?.isSheetPresented != true else {
+        guard paymentElement.isPresentingPaymentUI != true else {
             throw CheckoutError.sheetCurrentlyPresented
         }
     }
