@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "Чаще всего принимаются дебетовые карты.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Не удалось подтвердить данное приложение из-за ошибки при аттестации. Повторите попытку несколько позже или свяжитесь с разработчиком, если проблема не исчезнет.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Не удалось проверить это приложение. Обратитесь за помощью к разработчику приложения.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Не удалось найти этот кошелек. Выберите или добавьте кошелек и попробуйте еще раз.";
+
+"This wallet network isn't supported. Please choose a different network." = "Сеть этого кошелька не поддерживается. Выберите другую сеть.";
+
+"This wallet verification request expired. Please try again." = "Срок действия запроса на подтверждение кошелька истек. Попробуйте еще раз.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Не удалось подтвердить право собственности на этот кошелек. Попробуйте еще раз.";

@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "Οι χρεωστικές κάρτες είναι πιο πιθανό να γίνουν αποδεκτές.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Δεν ήταν δυνατή η επαλήθευση αυτής της εφαρμογής λόγω σφάλματος βεβαίωσης. Δοκιμάστε ξανά αργότερα ή επικοινωνήστε με τον προγραμματιστή αν το πρόβλημα παραμένει.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Δεν ήταν δυνατή η επαλήθευση αυτής της εφαρμογής. Επικοινωνήστε με τον προγραμματιστή της εφαρμογής για βοήθεια.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Αυτό το πορτοφόλι δεν βρέθηκε. Επιλέξτε ή προσθέστε ένα πορτοφόλι και δοκιμάστε ξανά.";
+
+"This wallet network isn't supported. Please choose a different network." = "Αυτό το δίκτυο πορτοφολιού δεν υποστηρίζεται. Επιλέξτε διαφορετικό δίκτυο.";
+
+"This wallet verification request expired. Please try again." = "Αυτό το αίτημα επαλήθευσης πορτοφολιού έληξε. Δοκιμάστε ξανά.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Δεν μπορέσαμε να επαληθεύσουμε την ιδιοκτησία αυτού του πορτοφολιού. Δοκιμάστε ξανά.";

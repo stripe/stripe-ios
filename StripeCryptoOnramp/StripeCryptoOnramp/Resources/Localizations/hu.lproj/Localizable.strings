@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "A legnagyobb valószínűséggel a betéti kártyák lesznek elfogadva.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Ez az alkalmazás igazolási hiba miatt nem ellenőrizhető. Próbálja újra később, vagy ha a probléma továbbra is fennáll, lépjen kapcsolatba a fejlesztővel.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Ez az alkalmazás nem ellenőrizhető. Segítségért lépjen kapcsolatba az alkalmazás fejlesztőjével.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Ez a pénztárca nem található. Kérjük, válasszon vagy adjon hozzá egy pénztárcát, és próbálja újra.";
+
+"This wallet network isn't supported. Please choose a different network." = "Ez a pénztárcahálózat nem támogatott. Kérjük, válasszon egy másik hálózatot.";
+
+"This wallet verification request expired. Please try again." = "A pénztárca ellenőrzési kérelme lejárt. Kérjük, próbálja újra.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Nem tudtuk ellenőrizni ennek a pénztárcának a tulajdonjogát. Kérjük, próbálja újra.";

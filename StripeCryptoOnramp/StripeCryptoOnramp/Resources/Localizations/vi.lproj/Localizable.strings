@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "Thẻ ghi nợ có khả năng cao được chấp nhận.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Ứng dụng này không thể được xác minh do lỗi chứng thực. Vui lòng thử lại sau hoặc liên hệ với nhà phát triển nếu sự cố vẫn tiếp diễn.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Ứng dụng này không thể được xác minh. Hãy liên hệ với nhà phát triển ứng dụng để được trợ giúp.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Không thể tìm thấy ví này. Vui lòng chọn hoặc thêm ví và thử lại.";
+
+"This wallet network isn't supported. Please choose a different network." = "Mạng ví này không được hỗ trợ. Vui lòng chọn một mạng khác.";
+
+"This wallet verification request expired. Please try again." = "Yêu cầu xác minh ví này đã hết hạn. Vui lòng thử lại.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Chúng tôi không thể xác minh quyền sở hữu ví này. Vui lòng thử lại.";

@@ -556,6 +556,13 @@ workflows:
   install-runtime-15:
     steps:
     - script@1:
+        title: Upgrade xcodes
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -euo pipefail
+            brew upgrade xcodesorg/made/xcodes || brew install xcodesorg/made/xcodes
+    - script@1:
         title: Install iOS 15.5 simulator runtime
         inputs:
         - content: |-
@@ -565,7 +572,7 @@ workflows:
               echo "iOS 15.5 runtime already installed"
             else
               echo "Installing iOS 15.5 runtime..."
-              xcodebuild -downloadPlatform iOS -buildVersion 15.5
+              sudo xcodes runtimes install "iOS 15.5"
             fi
   legacy-tests-15:
     steps:
@@ -674,6 +681,13 @@ workflows:
   install-runtime-16:
     steps:
     - script@1:
+        title: Upgrade xcodes
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -euo pipefail
+            brew upgrade xcodesorg/made/xcodes || brew install xcodesorg/made/xcodes
+    - script@1:
         title: Install iOS 16.4 simulator runtime
         inputs:
         - content: |-
@@ -683,7 +697,7 @@ workflows:
               echo "iOS 16.4 runtime already installed"
             else
               echo "Installing iOS 16.4 runtime..."
-              xcodebuild -downloadPlatform iOS -buildVersion 16.4
+              sudo xcodes runtimes install "iOS 16.4"
             fi
   prep_all:
     steps:

@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "Visticamāk, tiks pieņemtas debetkartes.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Šo lietotni nevarēja verificēt atestācijas kļūdas dēļ. Lūdzu, mēģiniet vēlreiz vēlāk vai sazinieties ar izstrādātāju, ja problēma joprojām pastāv.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Šo lietotni nevarēja verificēt. Lai saņemtu palīdzību, sazinieties ar lietotnes izstrādātāju.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Šis maks netika atrasts. Lūdzu, izvēlieties vai pievienojiet maku un mēģiniet vēlreiz.";
+
+"This wallet network isn't supported. Please choose a different network." = "Šis maka tīkls netiek atbalstīts. Lūdzu, izvēlieties citu tīklu.";
+
+"This wallet verification request expired. Please try again." = "Šī maka verifikācijas pieprasījuma derīguma termiņš ir beidzies. Lūdzu, mēģiniet vēlreiz.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Mums neizdevās pārbaudīt šī maka īpašumtiesības. Lūdzu, mēģiniet vēlreiz.";

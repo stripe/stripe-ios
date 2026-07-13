@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "Debetkort vil højst sandsynligt blive accepteret.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Denne app kunne ikke verificeres på grund af en attestationsfejl. Prøv igen senere, eller kontakt udvikleren, hvis problemet fortsætter.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Denne app kunne ikke verificeres. Kontakt appudvikleren for at få hjælp.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Denne wallet kunne ikke findes. Vælg eller tilføj en wallet, og prøv igen.";
+
+"This wallet network isn't supported. Please choose a different network." = "Dette wallet-netværk understøttes ikke. Vælg et andet netværk.";
+
+"This wallet verification request expired. Please try again." = "Denne anmodning om verifikation af wallet er udløbet. Prøv igen.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Vi kunne ikke verificere ejerskabet af denne wallet. Prøv igen.";
