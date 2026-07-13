@@ -165,6 +165,7 @@ import UIKit
 
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = apiClient
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
         configuration.customPaymentMethodConfiguration = customPaymentMethodConfiguration
         switch settings.externalPaymentMethods {
@@ -285,6 +286,7 @@ import UIKit
         }()
 
         var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.apiClient = apiClient
         configuration.formSheetAction = formSheetAction
         configuration.embeddedViewDisplaysMandateText = settings.embeddedViewDisplaysMandateText == .on
         configuration.rowSelectionBehavior = settings.rowSelectionBehavior == .default ? .default : .immediateAction { [weak self] in
@@ -602,6 +604,14 @@ import UIKit
         set {
             settings.checkoutEndpoint = newValue
         }
+    }
+
+    var apiClient: STPAPIClient {
+        let apiClient = STPAPIClient.shared.makeCopy()
+        if settings.usesVippsPreview {
+            apiClient.betas.insert("vipps_preview=v1")
+        }
+        return apiClient
     }
 
     func makeAlertController() -> UIAlertController {
@@ -942,6 +952,7 @@ extension PlaygroundController {
                     do {
                         var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionClientSecret)
                         checkoutConfiguration.adaptivePricing.allowed = settingsToLoad.csAdaptivePricing == .on
+                        checkoutConfiguration.apiClient = self.apiClient
                         self.checkout = try await Checkout(configuration: checkoutConfiguration)
                     } catch {
                         self.checkout = nil
@@ -1069,22 +1080,6 @@ extension PlaygroundController {
         }
     }
 
-    private var shouldUseVippsPreview: Bool {
-        if settings.currency == .nok, settings.apmsEnabled == .on {
-            return true
-        }
-
-        guard let supportedPaymentMethods = settings.supportedPaymentMethods else {
-            return false
-        }
-
-        return supportedPaymentMethods
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .split(separator: ",")
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() }
-            .contains("vipps")
-    }
-
     private func backendRequestOptions() -> [String: Any] {
         var body: [String: Any] = [:]
 
@@ -1094,7 +1089,7 @@ extension PlaygroundController {
         if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
             body["custom_publishable_key"] = customPublishableKey
         }
-        if shouldUseVippsPreview {
+        if settings.usesVippsPreview {
             body["vipps_preview"] = true
         }
 
