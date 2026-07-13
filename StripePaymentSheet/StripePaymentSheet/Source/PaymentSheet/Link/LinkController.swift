@@ -314,13 +314,13 @@ import UIKit
     ///   behaviour applies — the raw `STPPaymentMethod` is returned and the merchant
     ///   is responsible for attaching it.
     /// - Parameter appearance: Link UI appearance overrides.
-    /// - Parameter linkConfiguration: Configuration for Link behaviour.
+    /// - Parameter configuration: Configuration for Link behaviour.
     /// - Parameter completion: Called with the ready `LinkController` or an error.
     @_spi(LinkControllerPreview) public static func create(
         apiClient: STPAPIClient = .shared,
         setupIntentClientSecret: String? = nil,
         appearance: LinkAppearance? = nil,
-        linkConfiguration: LinkConfiguration? = nil,
+        configuration: LinkConfiguration? = nil,
         completion: @escaping (Result<LinkController, Error>) -> Void
     ) {
         Task {
@@ -330,7 +330,7 @@ import UIKit
                 if let appearance = appearance {
                     paymentElementConfiguration.style = appearance.style
                 }
-                if let merchantDisplayName = linkConfiguration?.merchantDisplayName {
+                if let merchantDisplayName = configuration?.merchantDisplayName {
                     paymentElementConfiguration.merchantDisplayName = merchantDisplayName
                 }
 
@@ -365,7 +365,7 @@ import UIKit
                         linkAccount: LinkAccountContext.shared.account
                     ),
                     appearance: appearance,
-                    configuration: linkConfiguration,
+                    configuration: configuration,
                     analyticsHelper: analyticsHelper,
                     requestSurface: .default
                 )
@@ -1429,20 +1429,20 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     ///   selection, attaching it automatically. When `nil` (default), the raw
     ///   `STPPaymentMethod` is returned and the merchant attaches it.
     /// - Parameter appearance: Link UI appearance overrides.
-    /// - Parameter linkConfiguration: Configuration for Link behaviour.
+    /// - Parameter configuration: Configuration for Link behaviour.
     /// - Returns: A `LinkController` if successful, or throws an error if creation failed.
     static func create(
         apiClient: STPAPIClient = .shared,
         setupIntentClientSecret: String? = nil,
         appearance: LinkAppearance? = nil,
-        linkConfiguration: LinkConfiguration? = nil
+        configuration: LinkConfiguration? = nil
     ) async throws -> LinkController {
         return try await withCheckedThrowingContinuation { continuation in
             create(
                 apiClient: apiClient,
                 setupIntentClientSecret: setupIntentClientSecret,
                 appearance: appearance,
-                linkConfiguration: linkConfiguration
+                configuration: configuration
             ) { result in
                 switch result {
                 case .success(let controller):
