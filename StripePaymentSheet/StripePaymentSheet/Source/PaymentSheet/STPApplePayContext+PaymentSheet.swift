@@ -455,8 +455,8 @@ private func makeRequiredBillingDetails(
 ) -> Set<PKContactField> {
     var requiredPKContactFields = Set<PKContactField>()
     let billingConfig = configuration.billingDetailsCollectionConfiguration
-    // By default, we always want to request the billing address (as it includes the postal code)
-    // ...and also when the session needs it to compute tax.
+    // By default, we always want to request the billing address (as it includes the postal code), plus
+    // when the session needs it for tax
     if billingConfig.address == .automatic || billingConfig.address == .full || collectsTaxRegionFromBillingAddress {
         requiredPKContactFields.insert(.postalAddress)
     }

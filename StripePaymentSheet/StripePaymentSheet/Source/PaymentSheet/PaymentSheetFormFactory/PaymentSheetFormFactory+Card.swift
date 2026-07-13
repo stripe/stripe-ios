@@ -98,7 +98,10 @@ extension PaymentSheetFormFactory {
             case .full:
                 return makeBillingAddressSection(collectionMode: .autoCompletable, countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .never:
-                return nil
+                // still need a region for tax, so collect the card minimum (country + postal)
+                return collectsTaxRegionFromBillingAddress
+                    ? makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
+                    : nil
             }
         }()
 

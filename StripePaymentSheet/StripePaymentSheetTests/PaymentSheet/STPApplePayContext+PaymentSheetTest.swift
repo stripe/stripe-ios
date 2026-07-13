@@ -293,8 +293,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     func testCreatePaymentRequest_requiredContactFields_automaticTaxForcesPostalAddress() {
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
         config.applePay = applePayConfiguration
-        // Merchant turned off billing address collection, but the session needs it for tax, so
-        // Apple Pay still has to collect the postal address.
+        // address collection off, but tax needs it, so Apple Pay still collects postal address
         config.billingDetailsCollectionConfiguration.address = .never
 
         let sut = STPApplePayContext.createPaymentRequest(
@@ -320,8 +319,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertFalse(sut.requiredBillingContactFields.contains(.postalAddress))
     }
 
-    // Builds a .checkout intent, optionally with automatic tax on the billing address.
-    // Needs a total_summary since createPaymentRequest reads intent.amount.
+    // total_summary is needed because createPaymentRequest reads intent.amount
     private func makeCheckoutIntent(automaticTaxBilling: Bool) -> Intent {
         let response = automaticTaxBilling
             ? CheckoutTestHelpers.makeOpenSession(automaticTaxEnabled: true, automaticTaxAddressSource: "session.billing")

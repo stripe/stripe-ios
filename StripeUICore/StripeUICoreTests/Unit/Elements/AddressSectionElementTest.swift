@@ -21,6 +21,15 @@ class AddressSectionElementTest: XCTestCase {
         return specProvider
     }()
 
+    // mirrors PaymentSheet's tax requirement policy
+    private static func taxRequirement(for countryCode: String) -> AddressSectionElement.TaxAddressRequirement {
+        switch countryCode.uppercased() {
+        case "US": return .autocomplete
+        case "CA": return .stateOrProvince
+        default: return .none
+        }
+    }
+
     func testAddressFieldsMapsSpecs() throws {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
@@ -130,10 +139,10 @@ class AddressSectionElementTest: XCTestCase {
             locale: locale_enUS,
             addressSpecProvider: specProvider,
             collectionMode: .countryAndPostal(),
-            collectsAddressForTax: true
+            taxAddressRequirement: Self.taxRequirement(for:)
         )
 
-        // US goes through the autocomplete line, not the individual fields.
+        // US: autocomplete line, not individual fields
         sut.selectedCountryCode = "US"
         XCTAssertNotNil(sut.autoCompleteLine)
         XCTAssertNil(sut.line1)
@@ -141,14 +150,14 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertNil(sut.state)
         XCTAssertNil(sut.postalCode)
 
-        // CA adds the province on top of .countryAndPostal's postal.
+        // CA: province on top of postal
         sut.selectedCountryCode = "CA"
         XCTAssertNil(sut.line1)
         XCTAssertNil(sut.city)
         XCTAssertNotNil(sut.state)
         XCTAssertNotNil(sut.postalCode)
 
-        // FR needs nothing extra
+        // FR: nothing extra
         sut.selectedCountryCode = "FR"
         XCTAssertNil(sut.line1)
         XCTAssertNil(sut.city)
@@ -156,22 +165,49 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertNil(sut.postalCode)
     }
 
-    func testTaxRegionLeavesAutocompleteModeAlone() {
+    // .noCountry already collects the full address; a US tax requirement must not force the autocomplete
+    // line (that used to collapse the form and then inject a duplicate country dropdown).
+    func testTaxDoesNotCollapseNoCountryMode() {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
             "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
         ]
-        // .autoCompletable already grabs the whole address, so tax shouldn't add anything.
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: specProvider,
-            collectionMode: .autoCompletable,
-            collectsAddressForTax: true
+            collectionMode: .noCountry,
+            taxAddressRequirement: Self.taxRequirement(for:)
+        )
+        sut.selectedCountryCode = "US"
+        XCTAssertNil(sut.autoCompleteLine)
+        // full address still collected
+        XCTAssertNotNil(sut.line1)
+        XCTAssertNotNil(sut.city)
+        XCTAssertNotNil(sut.state)
+        XCTAssertNotNil(sut.postalCode)
+    }
+
+    func testTaxAutocompleteLineClearedWhenSwitchingAwayFromUS() {
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
+            "FR": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .postal_code),
+        ]
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US", "FR"],
+            locale: locale_enUS,
+            addressSpecProvider: specProvider,
+            collectionMode: .countryAndPostal(),
+            taxAddressRequirement: Self.taxRequirement(for:)
         )
         sut.selectedCountryCode = "US"
         XCTAssertNotNil(sut.autoCompleteLine)
+
+        sut.selectedCountryCode = "FR"
+        XCTAssertNil(sut.autoCompleteLine)
         XCTAssertNil(sut.line1)
         XCTAssertNil(sut.city)
         XCTAssertNil(sut.state)

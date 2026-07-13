@@ -117,9 +117,11 @@ extension PaymentSheetFormFactory {
         case .selector(let selectorSpec):
             return makeDropdown(for: selectorSpec)
         case .billing_address(let countrySpec):
-            return configuration.billingDetailsCollectionConfiguration.address != .never
-                ? makeBillingAddressSection(countries: countrySpec.allowedCountryCodes)
-                : nil
+            return makeBillingAddressSection(
+                merchantRequestsAddress: configuration.billingDetailsCollectionConfiguration.address != .never,
+                fullMode: .autoCompletable,
+                countries: countrySpec.allowedCountryCodes
+            )
         case .country(let spec):
             return makeCountry(countryCodes: spec.allowedCountryCodes, apiPath: spec.apiPath?["v1"])
         case .affirm_header:
@@ -162,13 +164,18 @@ extension PaymentSheetFormFactory {
         case .phone:
             return configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
         case .billingAddress:
-            return configuration.billingDetailsCollectionConfiguration.address == .full
-                ? makeBillingAddressSection(countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
-                : nil
+            return makeBillingAddressSection(
+                merchantRequestsAddress: configuration.billingDetailsCollectionConfiguration.address == .full,
+                fullMode: .autoCompletable,
+                countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
+            )
         case .billingAddressWithoutCountry:
-            return configuration.billingDetailsCollectionConfiguration.address == .full
-                ? makeBillingAddressSection(collectionMode: .noCountry, countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
-                : nil
+            return makeBillingAddressSection(
+                merchantRequestsAddress: configuration.billingDetailsCollectionConfiguration.address == .full,
+                fullMode: .noCountry,
+                taxMode: .noCountry,
+                countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
+            )
         case .unknown: return nil
         }
     }

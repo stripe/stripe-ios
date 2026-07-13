@@ -443,10 +443,8 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         XCTAssertEqual(cardForm.validationState, .valid)
     }
 
-    // MARK: - Automatic tax (billing source)
-
     @MainActor
-    func testCardFormWithAutomaticTaxBilling_collectsAddressForTax() {
+    func testCardFormWithAutomaticTaxBilling_AddsTaxRegionFields() {
         let session = CheckoutTestHelpers.makeOpenSession(
             automaticTaxEnabled: true,
             automaticTaxAddressSource: "session.billing"
@@ -466,39 +464,146 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             XCTFail("Could not find billing address section")
             return
         }
-        XCTAssertTrue(billingAddressSection.collectsAddressForTax)
-
-        // US collects the full address via the autocomplete line.
+        // US: full address via autocomplete line
         billingAddressSection.selectedCountryCode = "US"
         XCTAssertNotNil(billingAddressSection.autoCompleteLine)
         XCTAssertNil(billingAddressSection.line1)
 
-        // CA adds the province on top of the card form's postal.
+        // CA: province on top of postal
         billingAddressSection.selectedCountryCode = "CA"
         XCTAssertNil(billingAddressSection.line1)
         XCTAssertNotNil(billingAddressSection.state)
         XCTAssertNotNil(billingAddressSection.postalCode)
     }
 
-    // Tax shouldn't shrink a form that already collects the whole address.
+    func testTaxAddressRequirementMapping() {
+        XCTAssertEqual(PaymentSheetFormFactory.taxAddressRequirement(for: "US"), .autocomplete)
+        XCTAssertEqual(PaymentSheetFormFactory.taxAddressRequirement(for: "us"), .autocomplete)
+        XCTAssertEqual(PaymentSheetFormFactory.taxAddressRequirement(for: "CA"), .stateOrProvince)
+        XCTAssertEqual(PaymentSheetFormFactory.taxAddressRequirement(for: "FR"), AddressSectionElement.TaxAddressRequirement.none)
+        XCTAssertEqual(PaymentSheetFormFactory.taxAddressRequirement(for: "GB"), AddressSectionElement.TaxAddressRequirement.none)
+    }
+
+    // prefilled address promotes .countryAndPostal to the full form
     @MainActor
-    func testMakeBillingAddressSectionAutoTaxKeepsAutocomplete() {
+    func testAutomaticTaxBillingPromotesToFullAddressWhenPrefilled() {
         let session = CheckoutTestHelpers.makeOpenSession(
             automaticTaxEnabled: true,
             automaticTaxAddressSource: "session.billing"
         )
+        var configuration = PaymentSheet.Configuration()
+        configuration.defaultBillingDetails.address = .init(city: "San Francisco", country: "US", line1: "510 Townsend St", postalCode: "94103", state: "CA")
         let factory = PaymentSheetFormFactory(
             intent: .checkout(Checkout(apiResponse: session)),
             elementsSession: session.elementsSession,
-            configuration: .paymentElement(PaymentSheet.Configuration()),
+            configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
 
-        let section = factory.makeBillingAddressSection(collectionMode: .autoCompletable).element
-        XCTAssertTrue(section.collectsAddressForTax)
-        section.selectedCountryCode = "US"
-        XCTAssertNotNil(section.autoCompleteLine)
-        XCTAssertNil(section.line1)
+        let section = factory.makeBillingAddressSection(collectionMode: .countryAndPostal()).element
+        XCTAssertEqual(section.collectionMode, .allWithAutocomplete)
+        XCTAssertEqual(section.selectedCountryCode, "US")
+        XCTAssertEqual(section.line1?.text, "510 Townsend St")
+        XCTAssertEqual(section.city?.text, "San Francisco")
+        XCTAssertEqual(section.postalCode?.text, "94103")
+    }
+
+    private func firstAddressSection(in element: Element) -> AddressSectionElement? {
+        return element.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+    }
+
+    @MainActor
+    private func taxFactory(_ configuration: PaymentSheet.Configuration, paymentMethod: PaymentSheet.PaymentMethodType = .stripe(.card)) -> PaymentSheetFormFactory {
+        let session = CheckoutTestHelpers.makeOpenSession(automaticTaxEnabled: true, automaticTaxAddressSource: "session.billing")
+        return PaymentSheetFormFactory(
+            intent: .checkout(Checkout(apiResponse: session)),
+            elementsSession: session.elementsSession,
+            configuration: .paymentElement(configuration),
+            paymentMethod: paymentMethod,
+            addressSpecProvider: dummyAddressSpecProvider
+        )
+    }
+
+    @MainActor
+    func testBillingAddressSectionIfNecessary_TaxForcesMinimalCollection() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+        let result = taxFactory(configuration).makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let section = (result as? PaymentMethodElementWrapper<AddressSectionElement>)?.element
+        XCTAssertNotNil(section)
+        XCTAssertEqual(section?.collectionMode, .countryAndPostal())
+    }
+
+    // tax overrides an explicit .never, same as Apple Pay
+    @MainActor
+    func testBillingAddressSectionIfNecessary_TaxOverridesNever() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .never
+        let result = taxFactory(configuration).makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let section = (result as? PaymentMethodElementWrapper<AddressSectionElement>)?.element
+        XCTAssertNotNil(section)
+        XCTAssertEqual(section?.collectionMode, .countryAndPostal())
+    }
+
+    // Without tax, no address section unless the merchant asked or the PM requires it.
+    @MainActor
+    func testBillingAddressSectionIfNecessary_NoTaxUnchanged() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+        let factory = PaymentSheetFormFactory(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card),
+            addressSpecProvider: dummyAddressSpecProvider
+        )
+        XCTAssertNil(factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false))
+
+        var neverConfiguration = PaymentSheet.Configuration()
+        neverConfiguration.billingDetailsCollectionConfiguration.address = .never
+        let neverFactory = PaymentSheetFormFactory(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(neverConfiguration),
+            paymentMethod: .stripe(.card),
+            addressSpecProvider: dummyAddressSpecProvider
+        )
+        XCTAssertNil(neverFactory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false))
+    }
+
+    @MainActor
+    func testNonCardLPMCollectsTaxAddress() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+        let form = taxFactory(configuration, paymentMethod: .stripe(.afterpayClearpay)).makeAfterpayClearpay()
+        XCTAssertNotNil(firstAddressSection(in: form), "Afterpay should collect a billing address when automatic tax is on")
+    }
+
+    @MainActor
+    func testCardNeverPlusTaxCollectsMinimal() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .never
+        let section = firstAddressSection(in: taxFactory(configuration, paymentMethod: .stripe(.card)).makeCard())
+        XCTAssertNotNil(section)
+        XCTAssertEqual(section?.collectionMode, .countryAndPostal())
+    }
+
+    // Klarna uses .noCountry with its own country dropdown. Tax must not force the autocomplete line, or
+    // completing autocomplete flips to .allWithAutocomplete and we get a duplicate country dropdown.
+    @MainActor
+    func testKlarnaAutomaticPlusTaxCollectsAddress() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+        guard let addressSection = firstAddressSection(in: taxFactory(configuration, paymentMethod: .stripe(.klarna)).makeKlarna()) else {
+            XCTFail("Klarna should collect a billing address when automatic tax is on")
+            return
+        }
+        addressSection.selectedCountryCode = "US"
+        XCTAssertNil(addressSection.autoCompleteLine)
+        XCTAssertNotNil(addressSection.line1)
+        XCTAssertNotNil(addressSection.city)
+        XCTAssertNotNil(addressSection.state)
+        XCTAssertNotNil(addressSection.postalCode)
     }
 }

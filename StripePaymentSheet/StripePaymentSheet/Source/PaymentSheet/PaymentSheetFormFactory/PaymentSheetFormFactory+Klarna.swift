@@ -25,13 +25,13 @@ extension PaymentSheetFormFactory {
         // Klarna requires country selection
         let countryElement = makeKlarnaCountry()
 
-        // Address without country - only show if config requires full address
-        let addressElement = configuration.billingDetailsCollectionConfiguration.address == .full
-            ? makeBillingAddressSection(
-                collectionMode: .noCountry,
-                countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
-            )
-            : nil
+        // Address without country (Klarna has its own country dropdown)
+        let addressElement = makeBillingAddressSection(
+            merchantRequestsAddress: configuration.billingDetailsCollectionConfiguration.address == .full,
+            fullMode: .noCountry,
+            taxMode: .noCountry,
+            countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
+        )
 
         connectBillingDetailsFields(
             countryElement: countryElement as? PaymentMethodElementWrapper<DropdownFieldElement>,

@@ -80,6 +80,15 @@ import UIKit
         /// Special case used by some Payment Methods that collect country separately.
         case noCountry
     }
+
+    /// Extra fields tax needs on top of `collectionMode`. Only applies to `.countryAndPostal`.
+    public enum TaxAddressRequirement: Equatable {
+        case none
+        /// Full street address, via the autocomplete line in minimal modes.
+        case autocomplete
+        case stateOrProvince
+    }
+
     /// Fields that this section can collect in addition to the address
     public struct AdditionalFields {
         public init(
@@ -155,8 +164,8 @@ import UIKit
     }
 
     public let countryCodes: [String]
-    /// Collect enough address to compute tax, on top of `collectionMode`.
-    public let collectsAddressForTax: Bool
+    // Per-country tax requirement, only used in .countryAndPostal (other modes already collect everything)
+    let taxAddressRequirement: (_ countryCode: String) -> TaxAddressRequirement
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsAppearance
     private(set) var defaults: AddressDetails
@@ -181,7 +190,7 @@ import UIKit
         addressSpecProvider: AddressSpecProvider = .shared,
         defaults: AddressDetails = .empty,
         collectionMode: CollectionMode = .all(),
-        collectsAddressForTax: Bool = false,
+        taxAddressRequirement: @escaping (_ countryCode: String) -> TaxAddressRequirement = { _ in .none },
         additionalFields: AdditionalFields = .init(),
         theme: ElementsAppearance = .default,
         presentAutoComplete: @escaping () -> Void = { }
@@ -189,7 +198,7 @@ import UIKit
         let dropdownCountries = countries?.map { $0.uppercased() } ?? addressSpecProvider.countries
         let countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
         self.collectionMode = collectionMode
-        self.collectsAddressForTax = collectsAddressForTax
+        self.taxAddressRequirement = taxAddressRequirement
         self.countryCodes = countryCodes
         self.country = DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country_or_region,
@@ -298,21 +307,6 @@ import UIKit
         }
     }
 
-    private enum TaxRegion {
-        // Full address, via the autocomplete line (US).
-        case autocomplete
-        // Extra fields beyond what collectionMode collects (e.g. CA province). Empty = country alone is enough.
-        case extraFields(Set<AddressSpec.FieldType>)
-    }
-
-    private static func taxRegion(for countryCode: String) -> TaxRegion {
-        switch countryCode {
-        case "US": return .autocomplete
-        case "CA": return .extraFields([.state])
-        default: return .extraFields([])
-        }
-    }
-
     private func makeLine1Element(defaultValue: String?, countryCode: String) -> TextFieldElement {
         let showsAutocomplete: Bool
         switch collectionMode {
@@ -347,15 +341,17 @@ import UIKit
             state: state?.rawData
         )
 
-        // Only bother topping up for tax in the minimal modes. The autocomplete modes already collect the whole
-        // address, and skipping them avoids wiping fields the user just filled once an autocomplete selection
-        // flips us to .allWithAutocomplete.
+        // Only augment in .countryAndPostal; other modes already collect everything.
         var taxUsesAutocomplete = false
         var extraTaxFields: Set<AddressSpec.FieldType> = []
-        if collectsAddressForTax, collectionMode != .allWithAutocomplete, collectionMode != .autoCompletable {
-            switch Self.taxRegion(for: countryCode) {
-            case .autocomplete: taxUsesAutocomplete = true
-            case .extraFields(let fields): extraTaxFields = fields
+        if case .countryAndPostal = collectionMode {
+            switch taxAddressRequirement(countryCode) {
+            case .none:
+                break
+            case .autocomplete:
+                taxUsesAutocomplete = true
+            case .stateOrProvince:
+                extraTaxFields = [.state]
             }
         }
 
