@@ -19,16 +19,26 @@ final class LinkControllerPreviewAPITests: XCTestCase {
 
         if false {
             LinkController.create(
-                configuration: .init(supportedPaymentMethodTypes: [.card])
+                linkConfiguration: .init(supportedPaymentMethodTypes: [.card])
+            ) { result in
+                _ = result
+            }
+
+            LinkController.create(
+                setupIntentClientSecret: "seti_secret_123"
             ) { result in
                 _ = result
             }
 
             Task { @MainActor in
                 let controller = try await LinkController.create(
-                    configuration: .init(supportedPaymentMethodTypes: [.card])
+                    linkConfiguration: .init(supportedPaymentMethodTypes: [.card])
                 )
                 _ = controller.paymentMethodPreview
+
+                _ = try await LinkController.create(
+                    setupIntentClientSecret: "seti_secret_123"
+                )
 
                 controller.present(
                     email: "jenny.rosen@example.com",
