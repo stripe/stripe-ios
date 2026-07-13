@@ -130,10 +130,20 @@ enum CheckoutTestHelpers {
         "elements_session": minimalElementsSessionJSON,
     ]
 
-    static func makeOpenSession(customerEmail: String? = nil, billingAddressCollection: String? = nil) -> STPCheckoutSessionAPIResponse {
+    static func makeOpenSession(
+        customerEmail: String? = nil,
+        billingAddressCollection: String? = nil,
+        automaticTaxEnabled: Bool = false,
+        automaticTaxAddressSource: String? = nil
+    ) -> STPCheckoutSessionAPIResponse {
         var json = openSessionJSON
         json["customer_email"] = customerEmail
         json["billing_address_collection"] = billingAddressCollection
+        if automaticTaxEnabled || automaticTaxAddressSource != nil {
+            var taxContext: [String: Any] = ["automatic_tax_enabled": automaticTaxEnabled]
+            taxContext["automatic_tax_address_source"] = automaticTaxAddressSource
+            json["tax_context"] = taxContext
+        }
         return STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
     }
 

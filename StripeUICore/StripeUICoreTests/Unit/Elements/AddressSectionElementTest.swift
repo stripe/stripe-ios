@@ -117,6 +117,46 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(ZZTextFields.map { $0.configuration.isOptional }, expectedZZFields.map { $0.isOptional })
     }
 
+    func testTaxRegionCollectionModeCollectsPerCountryFields() {
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
+            "CA": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
+            "FR": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .postal_code),
+        ]
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US", "CA", "FR"],
+            locale: locale_enUS,
+            addressSpecProvider: specProvider,
+            collectionMode: .taxRegion
+        )
+
+        // US: full address
+        sut.selectedCountryCode = "US"
+        XCTAssertNotNil(sut.line1)
+        XCTAssertNotNil(sut.line2)
+        XCTAssertNotNil(sut.city)
+        XCTAssertNotNil(sut.state)
+        XCTAssertNotNil(sut.postalCode)
+
+        // CA: just the province
+        sut.selectedCountryCode = "CA"
+        XCTAssertNil(sut.line1)
+        XCTAssertNil(sut.line2)
+        XCTAssertNil(sut.city)
+        XCTAssertNotNil(sut.state)
+        XCTAssertNil(sut.postalCode)
+
+        // everywhere else: country only
+        sut.selectedCountryCode = "FR"
+        XCTAssertNil(sut.line1)
+        XCTAssertNil(sut.line2)
+        XCTAssertNil(sut.city)
+        XCTAssertNil(sut.state)
+        XCTAssertNil(sut.postalCode)
+    }
+
     func testCountries() {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [

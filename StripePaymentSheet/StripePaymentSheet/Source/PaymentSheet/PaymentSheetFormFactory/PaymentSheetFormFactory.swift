@@ -52,6 +52,7 @@ class PaymentSheetFormFactory {
     let cardFundingFilter: CardFundingFilter
     let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
+    let collectsTaxRegionFromBillingAddress: Bool
 
     var shouldDisplaySaveCheckbox: Bool {
         // Don't show the save checkbox in Link
@@ -160,7 +161,8 @@ class PaymentSheetFormFactory {
                   linkBrand: linkBrand,
                   sellerName: intent.sellerDetails?.businessName,
                   previousLinkInlineSignupAction: previousLinkInlineSignupAction,
-                  cardFundingFilter: configuration.cardFundingFilter(for: elementsSession)
+                  cardFundingFilter: configuration.cardFundingFilter(for: elementsSession),
+                  collectsTaxRegionFromBillingAddress: intent.collectsTaxRegionFromBillingAddress
         )
     }
 
@@ -192,7 +194,8 @@ class PaymentSheetFormFactory {
         linkBrand: LinkBrand = .link,
         sellerName: String? = nil,
         previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil,
-        cardFundingFilter: CardFundingFilter = .default
+        cardFundingFilter: CardFundingFilter = .default,
+        collectsTaxRegionFromBillingAddress: Bool = false
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
@@ -227,6 +230,7 @@ class PaymentSheetFormFactory {
         self.sellerName = sellerName
         self.previousLinkInlineSignupAction = previousLinkInlineSignupAction
         self.cardFundingFilter = cardFundingFilter
+        self.collectsTaxRegionFromBillingAddress = collectsTaxRegionFromBillingAddress
     }
 
     func make() -> PaymentMethodElement {
@@ -488,6 +492,11 @@ extension PaymentSheetFormFactory {
         includeEmail: Bool = false,
         includePhone: Bool = false
     ) -> PaymentMethodElementWrapper<AddressSectionElement> {
+        // For automatic tax based on billing, narrow to just the tax-region fields.
+        // .noCountry keeps its mode though; it needs the country selector to figure out the region.
+        let collectionMode: AddressSectionElement.CollectionMode =
+            (collectsTaxRegionFromBillingAddress && collectionMode != .noCountry) ? .taxRegion : collectionMode
+
         let displayBillingSameAsShippingCheckbox: Bool
         var defaultAddress: AddressSectionElement.AddressDetails
         if let shippingDetails = configuration.shippingDetails() {

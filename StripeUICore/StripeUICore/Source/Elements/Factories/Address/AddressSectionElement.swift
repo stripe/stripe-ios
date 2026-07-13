@@ -79,6 +79,8 @@ import UIKit
         case autoCompletable
         /// Special case used by some Payment Methods that collect country separately.
         case noCountry
+        /// Collects only what's needed to determine the tax region: full address in the US, state in CA, country-only elsewhere.
+        case taxRegion
     }
     /// Fields that this section can collect in addition to the address
     public struct AdditionalFields {
@@ -294,6 +296,25 @@ import UIKit
         }
     }
 
+    private func makeLine1Element(defaultValue: String?, countryCode: String) -> TextFieldElement {
+        let showsAutocomplete: Bool
+        switch collectionMode {
+        case .all(let autocompletableCountries):
+            showsAutocomplete = autocompletableCountries.caseInsensitiveContains(countryCode)
+        case .allWithAutocomplete:
+            showsAutocomplete = true
+        default:
+            showsAutocomplete = false
+        }
+        guard showsAutocomplete else {
+            return TextFieldElement.Address.makeLine1(defaultValue: defaultValue, theme: theme)
+        }
+        return TextFieldElement.Address.LineConfiguration(
+            lineType: .line1Autocompletable(didTapAutocomplete: { [weak self] in self?.didTapAutocompleteButton() }),
+            defaultValue: defaultValue
+        ).makeElement(theme: theme)
+    }
+
     /// - Parameter address: Populates the new fields with the provided defaults, or the current fields' text if `nil`.
     private func updateAddressFields(
         for countryCode: String,
@@ -325,6 +346,12 @@ import UIKit
                 return false
             case .allWithAutocomplete:
                 return true
+            case .taxRegion:
+                switch countryCode {
+                case "US": return [.line, .city, .state, .postal].contains($0)
+                case "CA": return $0 == .state
+                default: return false
+                }
             }
         }
 
@@ -334,21 +361,7 @@ import UIKit
             autoCompleteLine = nil
         }
         // Re-create the address fields
-        if fieldOrdering.contains(.line) {
-            if case .all(let autocompletableCountries) = collectionMode, autocompletableCountries.caseInsensitiveContains(countryCode) {
-                line1 = TextFieldElement.Address.LineConfiguration(
-                    lineType: .line1Autocompletable(didTapAutocomplete: { [weak self] in self?.didTapAutocompleteButton() }),
-                    defaultValue: address.line1
-                ).makeElement(theme: theme)
-            } else if case .allWithAutocomplete = collectionMode {
-                line1 = TextFieldElement.Address.LineConfiguration(
-                    lineType: .line1Autocompletable(didTapAutocomplete: { [weak self] in self?.didTapAutocompleteButton() }),
-                    defaultValue: address.line1
-                ).makeElement(theme: theme)
-            } else {
-                line1 = TextFieldElement.Address.makeLine1(defaultValue: address.line1, theme: theme)
-            }
-        }
+        line1 = fieldOrdering.contains(.line) ? makeLine1Element(defaultValue: address.line1, countryCode: countryCode) : nil
         line2 = fieldOrdering.contains(.line) ?
             TextFieldElement.Address.makeLine2(defaultValue: address.line2, theme: theme) : nil
         city = fieldOrdering.contains(.city) ?

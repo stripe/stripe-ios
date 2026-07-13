@@ -442,4 +442,60 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         // Now should be valid
         XCTAssertEqual(cardForm.validationState, .valid)
     }
+
+    // MARK: - Automatic tax (billing source)
+
+    @MainActor
+    func testCardFormWithAutomaticTaxBilling_usesTaxRegionCollectionMode() {
+        let session = CheckoutTestHelpers.makeOpenSession(
+            automaticTaxEnabled: true,
+            automaticTaxAddressSource: "session.billing"
+        )
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .checkout(Checkout(apiResponse: session)),
+            elementsSession: session.elementsSession,
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card),
+            addressSpecProvider: dummyAddressSpecProvider
+        )
+
+        let cardForm = factory.makeCard()
+        guard let containerElement = cardForm as? ContainerElement,
+              let billingAddressSection = containerElement.elements.compactMap({ $0 as? PaymentMethodElementWrapper<AddressSectionElement> }).first?.element else {
+            XCTFail("Could not find billing address section")
+            return
+        }
+        XCTAssertEqual(billingAddressSection.collectionMode, .taxRegion)
+
+        billingAddressSection.selectedCountryCode = "US"
+        XCTAssertNotNil(billingAddressSection.line1)
+        XCTAssertNotNil(billingAddressSection.state)
+        XCTAssertNotNil(billingAddressSection.postalCode)
+
+        // CA only needs the province
+        billingAddressSection.selectedCountryCode = "CA"
+        XCTAssertNil(billingAddressSection.line1)
+        XCTAssertNil(billingAddressSection.postalCode)
+        XCTAssertNotNil(billingAddressSection.state)
+    }
+
+    @MainActor
+    func testMakeBillingAddressSection_taxRegionOverrideRespectsNoCountry() {
+        let session = CheckoutTestHelpers.makeOpenSession(
+            automaticTaxEnabled: true,
+            automaticTaxAddressSource: "session.billing"
+        )
+        let factory = PaymentSheetFormFactory(
+            intent: .checkout(Checkout(apiResponse: session)),
+            elementsSession: session.elementsSession,
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.card),
+            addressSpecProvider: dummyAddressSpecProvider
+        )
+
+        XCTAssertEqual(factory.makeBillingAddressSection(collectionMode: .autoCompletable).element.collectionMode, .taxRegion)
+        // .noCountry is left alone since it collects the country separately
+        XCTAssertEqual(factory.makeBillingAddressSection(collectionMode: .noCountry).element.collectionMode, .noCountry)
+    }
 }

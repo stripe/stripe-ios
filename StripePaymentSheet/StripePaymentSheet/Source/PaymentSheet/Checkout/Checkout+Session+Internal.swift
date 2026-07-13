@@ -18,6 +18,10 @@ extension Checkout.Session {
         allowedShippingCountries != nil
     }
 
+    var automaticTaxUsesBillingAddress: Bool {
+        automaticTaxEnabled && automaticTaxAddressSource == "billing"
+    }
+
     var isPaymentMethodOptionsSetupFutureUsageSet: Bool {
         return !setupFutureUsageForPaymentMethodType.isEmpty
     }

@@ -72,6 +72,15 @@ enum Intent {
         }
     }
 
+    var collectsTaxRegionFromBillingAddress: Bool {
+        switch self {
+        case .checkout(let checkout):
+            return checkout.nonisolatedSession.automaticTaxUsesBillingAddress
+        case .paymentIntent, .setupIntent, .deferredIntent:
+            return false
+        }
+    }
+
     var cvcRecollectionEnabled: Bool {
         switch self {
         case .deferredIntent(let intentConfig):
