@@ -72,8 +72,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     var cannotVerifyPhoneOtpHandler: (() async -> Void)?
     var cannotVerifyPhoneOtpCalled: Bool = false
 
-    var saveOtpAndMaybeTransitionCompletion: (() -> Void)?
-    var saveOtpAndMaybeTransitionInvalidOtp: (() -> Void)?
+    var saveOtpAndMaybeTransitionHandler: (() async -> OtpSubmissionResult)?
 
     init(
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
@@ -165,10 +164,11 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         self.uploadedSelfieResult = result
     }
 
-    func saveOtpAndMaybeTransition(from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName, otp otpValue: String, completion: @escaping () -> Void, invalidOtp: @escaping () -> Void) {
-        saveOtpAndMaybeTransitionCompletion = completion
-        saveOtpAndMaybeTransitionInvalidOtp = invalidOtp
-
+    func saveOtpAndMaybeTransition(
+        from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName,
+        otp otpValue: String
+    ) async -> OtpSubmissionResult {
+        await saveOtpAndMaybeTransitionHandler?() ?? .transitioned
     }
 
     func verifyAndTransition(simulateDelay: Bool) async {
