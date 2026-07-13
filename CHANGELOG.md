@@ -10,6 +10,9 @@ MINOR
 * [Changed] Renamed `AppAttestationAPIError` to `AppAttestationError` and `UncategorizedAPIError` to `UncategorizedError`.
 * [Fixed] Automatically set `PKPaymentRequest.merchantCategoryCode` so unsupported payment methods are hidden from Apple Pay.
 
+### PaymentSheet
+* [Added] Added standalone Link wallet APIs in private preview via `LinkController`.
+
 ### StripeConnect
 * [Changed] `PaymentsViewController`, `PaymentsViewControllerDelegate`, `PayoutsViewController`, `PayoutsViewControllerDelegate`, and `EmbeddedComponentManager.PaymentsListDefaultFiltersOptions` are now part of the public API and no longer require `@_spi(PreviewConnect)` to access.
 

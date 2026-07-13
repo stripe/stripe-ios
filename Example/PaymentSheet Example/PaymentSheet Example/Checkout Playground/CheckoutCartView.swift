@@ -88,9 +88,9 @@ struct CheckoutCartView: View {
         isLoading = true
         errorMessage = nil
         do {
-            var config = Checkout.Configuration()
+            var config = Checkout.Configuration(clientSecret: clientSecret)
             config.adaptivePricing.allowed = adaptivePricing
-            checkout = try await Checkout(clientSecret: clientSecret, configuration: config)
+            checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription
         }
