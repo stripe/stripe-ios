@@ -117,14 +117,13 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(ZZTextFields.map { $0.configuration.isOptional }, expectedZZFields.map { $0.isOptional })
     }
 
-    func testTaxRegionFieldsUnionWithBaseCollectionMode() {
+    func testTaxRegionFieldsAddedOnTopOfCollectionMode() {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
             "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
             "CA": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
             "FR": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .postal_code),
         ]
-        // Base mode is country + postal (US/CA); tax region fields get added on top.
         let sut = AddressSectionElement(
             title: "",
             countries: ["US", "CA", "FR"],
@@ -134,7 +133,7 @@ class AddressSectionElementTest: XCTestCase {
             collectsAddressForTax: true
         )
 
-        // US needs the full address, which it collects via the autocomplete line rather than every field.
+        // US collects the full address via the autocomplete line, not the individual fields.
         sut.selectedCountryCode = "US"
         XCTAssertNotNil(sut.autoCompleteLine)
         XCTAssertNil(sut.line1)
@@ -142,14 +141,14 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertNil(sut.state)
         XCTAssertNil(sut.postalCode)
 
-        // CA adds the province; postal from the base mode sticks around
+        // CA adds the province on top of the postal that .countryAndPostal already collects.
         sut.selectedCountryCode = "CA"
         XCTAssertNil(sut.line1)
         XCTAssertNil(sut.city)
         XCTAssertNotNil(sut.state)
         XCTAssertNotNil(sut.postalCode)
 
-        // FR adds nothing extra, and base mode doesn't collect postal here
+        // FR needs nothing extra, and .countryAndPostal doesn't collect postal here.
         sut.selectedCountryCode = "FR"
         XCTAssertNil(sut.line1)
         XCTAssertNil(sut.city)
@@ -157,13 +156,12 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertNil(sut.postalCode)
     }
 
-    func testTaxRegionFloorLeavesAutocompleteFormsUnchanged() {
+    func testTaxRegionLeavesAutocompleteModeAlone() {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
             "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
         ]
-        // .autoCompletable already grabs the whole address via the autocomplete line, so we shouldn't tack on the
-        // individual fields too.
+        // .autoCompletable already grabs the whole address, so tax shouldn't add anything.
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],

@@ -155,8 +155,7 @@ import UIKit
     }
 
     public let countryCodes: [String]
-    /// When true, always collect enough of the address to compute tax (see `taxRegionCollection(for:)`), on top of
-    /// whatever `collectionMode` would collect.
+    /// When true, collect enough of the address to compute tax (on top of whatever `collectionMode` collects).
     public let collectsAddressForTax: Bool
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsAppearance
@@ -299,21 +298,18 @@ import UIKit
         }
     }
 
-    /// What to collect for automatic tax in a given country.
-    private enum TaxRegionCollection {
-        /// Collect the full address via the autocomplete line (e.g. the US).
+    private enum TaxRegion {
+        // US wants the full address, which we grab through the autocomplete line.
         case autocomplete
-        /// Collect these fields in addition to what `collectionMode` collects (e.g. Canada's province).
-        /// An empty set means the country selector alone is enough.
-        case fields(Set<AddressSpec.FieldType>)
+        // Fields to add on top of what collectionMode collects, e.g. CA's province. Empty = country picker is enough.
+        case extraFields(Set<AddressSpec.FieldType>)
     }
 
-    // What we need to compute tax in each country: the full address in the US, the province in Canada, country alone otherwise.
-    private static func taxRegionCollection(for countryCode: String) -> TaxRegionCollection {
+    private static func taxRegion(for countryCode: String) -> TaxRegion {
         switch countryCode {
         case "US": return .autocomplete
-        case "CA": return .fields([.state])
-        default: return .fields([])
+        case "CA": return .extraFields([.state])
+        default: return .extraFields([])
         }
     }
 
@@ -351,22 +347,22 @@ import UIKit
             state: state?.rawData
         )
 
-        // What automatic tax needs in this country. Only applies on top of the "minimal" collection modes; the
-        // autocomplete modes already collect the full address, so we leave them alone (this also keeps the filled-in
-        // fields visible after an autocomplete selection switches us to .allWithAutocomplete).
-        let taxCollection: TaxRegionCollection? = (collectsAddressForTax && collectionMode != .allWithAutocomplete && collectionMode != .autoCompletable)
-            ? Self.taxRegionCollection(for: countryCode)
-            : nil
-        // The US collects its full address via the autocomplete line rather than every field.
-        let taxUsesAutocomplete = { if case .autocomplete = taxCollection { return true } else { return false } }()
-        // Extra fields tax needs on top of `collectionMode` (e.g. Canada's province).
-        let taxFields: Set<AddressSpec.FieldType> = { if case .fields(let fields) = taxCollection { return fields } else { return [] } }()
+        // Only top up for tax in the minimal collection modes; the autocomplete modes already ask for the whole
+        // address. Skipping them also avoids clobbering fields the user just filled in when an autocomplete
+        // selection flips us over to .allWithAutocomplete.
+        var taxUsesAutocomplete = false
+        var extraTaxFields: Set<AddressSpec.FieldType> = []
+        if collectsAddressForTax, collectionMode != .allWithAutocomplete, collectionMode != .autoCompletable {
+            switch Self.taxRegion(for: countryCode) {
+            case .autocomplete: taxUsesAutocomplete = true
+            case .extraFields(let fields): extraTaxFields = fields
+            }
+        }
 
         // Get the address spec for the country and filter out unused fields
         let spec = addressSpecProvider.addressSpec(for: countryCode)
         var fieldOrdering = spec.fieldOrdering.filter { field in
-            // Always pull in the fields tax needs, in addition to whatever collectionMode collects.
-            if taxFields.contains(field) {
+            if extraTaxFields.contains(field) {
                 return true
             }
             switch collectionMode {

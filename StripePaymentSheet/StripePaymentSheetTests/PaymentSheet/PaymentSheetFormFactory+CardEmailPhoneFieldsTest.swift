@@ -468,18 +468,19 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         }
         XCTAssertTrue(billingAddressSection.collectsAddressForTax)
 
-        // US needs the full address, which it collects via the autocomplete line rather than every field.
+        // US collects the full address via the autocomplete line.
         billingAddressSection.selectedCountryCode = "US"
         XCTAssertNotNil(billingAddressSection.autoCompleteLine)
         XCTAssertNil(billingAddressSection.line1)
 
-        // CA adds the province; the card form's postal is still there
+        // CA adds the province on top of the card form's postal.
         billingAddressSection.selectedCountryCode = "CA"
         XCTAssertNil(billingAddressSection.line1)
         XCTAssertNotNil(billingAddressSection.state)
         XCTAssertNotNil(billingAddressSection.postalCode)
     }
 
+    // Tax should never *shrink* a form that already collects everything.
     @MainActor
     func testMakeBillingAddressSection_autoTaxDoesNotNarrowFullAddressForm() {
         let session = CheckoutTestHelpers.makeOpenSession(
@@ -494,7 +495,6 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             addressSpecProvider: dummyAddressSpecProvider
         )
 
-        // Autocomplete already collects more than tax needs, so leave it alone.
         let section = factory.makeBillingAddressSection(collectionMode: .autoCompletable).element
         XCTAssertTrue(section.collectsAddressForTax)
         section.selectedCountryCode = "US"
