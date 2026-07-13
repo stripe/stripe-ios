@@ -1305,7 +1305,7 @@ extension PlaygroundController {
         }
         body.merge(backendRequestOptions()) { _, new in new }
 
-        makeRequest(with: PaymentSheetTestPlaygroundSettings.confirmEndpoint, body: body, completionHandler: { data, response, error in
+        makeRequest(with: settings.confirmEndpoint, body: body, completionHandler: { data, response, error in
             guard
                 error == nil,
                 let data = data,
