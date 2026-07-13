@@ -36,6 +36,9 @@ extension Checkout {
         /// Default: ``AdaptivePricing.init()`` (`allowed: false`).
         public var adaptivePricing: AdaptivePricing = AdaptivePricing()
 
+        /// Configuration for PaymentElement.
+        public var paymentElement: PaymentElement.Configuration = .init()
+
         /// Creates a configuration.
         /// - Parameter clientSecret: The client secret for your Checkout Session.
         public init(clientSecret: String) {
