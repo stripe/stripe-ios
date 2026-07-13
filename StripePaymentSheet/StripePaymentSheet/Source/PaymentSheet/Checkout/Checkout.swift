@@ -131,7 +131,10 @@ public final class Checkout: ObservableObject {
     }
 
 #if DEBUG
-    // TODO: Refactor this away, we should extract loading into its own object and inject a dummy in tests.
+    // TODO: Remove these test-only inits. They leave paymentElement nil, which breaks
+    // any code path that touches it. Instead, construct a real PaymentElement using the
+    // internal test inits for FlowController and EmbeddedPaymentElement (both accept a
+    // loadResult directly without network calls).
     /// Internal initializer for unit tests that injects a pre-loaded API response.
     init(
         clientSecret: String,
