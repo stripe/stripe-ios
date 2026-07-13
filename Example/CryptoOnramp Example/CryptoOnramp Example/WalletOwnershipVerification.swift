@@ -120,9 +120,7 @@ enum WalletOwnershipVerification {
     /// Returns a user-facing verification error message.
     /// - Parameter error: The error returned while verifying wallet ownership.
     private static func errorMessage(for error: Error) -> String {
-        if error is CancellationError {
-            return "Wallet signing was canceled."
-        } else if let error = error as? StripeCryptoOnrampError {
+       if let error = error as? StripeCryptoOnrampError {
             return error.userMessage
         } else {
             return error.localizedDescription
