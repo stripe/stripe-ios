@@ -485,7 +485,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
     // MARK: - Discard selection on cancel (MOBILESDK-4643)
 
-    // Vertical FlowController committed to Apple Pay, with one saved card also in the list.
+    // Vertical FlowController that defaults to Apple Pay, with one saved card also in the list.
     private func makeApplePayFlowController() -> (PaymentSheet.FlowController, STPPaymentMethod) {
         // Pin the default so we don't inherit leftover UserDefaults state.
         CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: nil)
@@ -545,14 +545,14 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         wait(for: [exp], timeout: 2.0)
     }
 
-    func testContinueCommitsPendingSelection() {
+    func testContinueAppliesPendingSelection() {
         let (flowController, savedCard) = makeApplePayFlowController()
         let mockViewController = UIViewController()
 
         let exp = expectation(description: "continue completion")
         flowController.presentPaymentOptions(from: mockViewController) { didCancel in
             XCTAssertFalse(didCancel)
-            // Continue commits the saved card.
+            // Continue applies the saved card.
             XCTAssertEqual(flowController.paymentOption?.paymentMethodType, "card")
             XCTAssertEqual(flowController.viewController.selectedPaymentOption?.savedPaymentMethod?.stripeId, savedCard.stripeId)
             exp.fulfill()
@@ -564,7 +564,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         wait(for: [exp], timeout: 2.0)
     }
 
-    // Cancelling without touching anything should leave the committed selection alone.
+    // Cancelling without touching anything leaves the selection alone.
     func testCancelWithoutInteractionKeepsSelection() {
         let (flowController, _) = makeApplePayFlowController()
         let mockViewController = UIViewController()

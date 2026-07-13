@@ -270,8 +270,8 @@ extension PaymentSheet {
         private var presentPaymentOptionsCompletionWithResult: ((Bool) -> Void)?
         private var didDismissLinkVerificationDialog: Bool = false
 
-        // The selection committed when we presented the sheet. Cancelling restores this so changes are discarded.
-        private var committedPaymentOption: PaymentOption?
+        // What was selected when we presented the sheet. If the customer cancels, we revert to this.
+        private var previousPaymentOption: PaymentOption?
 
         // If a WalletButtonsView is currently visible
         var walletButtonsViewState: WalletButtonsViewState = .hidden {
@@ -523,9 +523,8 @@ extension PaymentSheet {
                 return
             }
 
-            // Remember the current selection so we can put it back if the customer cancels. The sheet hasn't
-            // been touched yet, so this is the committed selection.
-            committedPaymentOption = internalPaymentOption
+            // Snapshot the current selection so we can put it back if the customer cancels.
+            previousPaymentOption = internalPaymentOption
 
             // Overwrite completion closure to retain self until called
             let wrappedCompletion: (Bool) -> Void = { didCancel in
@@ -885,10 +884,9 @@ extension PaymentSheet {
             updatePaymentOption()
         }
 
-        // Rebuild the VC seeded with the selection we had at present time, throwing away whatever the customer
-        // changed. Same recreation dance as updateForWalletButtonsView - keep the current saved PMs so any
-        // removals/edits done on the manage screen aren't undone.
-        private func restoreCommittedSelection() {
+        // Recreate the view controller with the previous payment option preselected, dropping the customer's changes.
+        // Like updateForWalletButtonsView, use the updated saved PMs so PMs removed on the manage screen don't reappear.
+        private func restorePreviousPaymentOption() {
             let updatedLoadResult = PaymentSheetLoader.LoadResult(
                 intent: viewController.loadResult.intent,
                 elementsSession: viewController.loadResult.elementsSession,
@@ -902,7 +900,7 @@ extension PaymentSheet {
                 loadResult: updatedLoadResult,
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: self.walletButtonsViewState,
-                previousPaymentOption: committedPaymentOption
+                previousPaymentOption: self.previousPaymentOption
             )
             self.viewController.flowControllerDelegate = self
         }
@@ -1051,9 +1049,8 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
         }
         flowControllerViewController.dismiss(animated: true) {
             if didCancel {
-                // Cancelling should discard any selection changes, so put back what was committed before we
-                // recompute the merchant-facing payment option.
-                self.restoreCommittedSelection()
+                // On cancel, revert to the previous selection before we recompute paymentOption.
+                self.restorePreviousPaymentOption()
             }
             self.presentPaymentOptionsCompletionWithResult?(didCancel)
             self.updatePaymentOption()

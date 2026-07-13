@@ -881,7 +881,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertNil(sut.paymentOption, "Payment option should be nil after filling out the card form, but hitting cancel.")
     }
 
-    func testCancelingFormRevertsToCommittedSelection() async throws {
+    func testCancelingFormRevertsToPreviousSelection() async throws {
         let sut = try await EmbeddedPaymentElement.create(
             intentConfiguration: paymentIntentConfig,
             configuration: configuration
@@ -889,7 +889,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.delegate = self
         sut.presentingViewController = UIViewController()
 
-        // Cash App Pay has no form, so tapping it commits immediately.
+        // Cash App Pay has no form, so tapping it selects it immediately.
         sut.embeddedPaymentMethodsView.didTap(
             rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay")
         )
@@ -907,7 +907,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.selectedFormViewController?.didTapOrSwipeToDismiss() // Tap cancel to close
 
         // We should be back on Cash App Pay, not the cancelled card.
-        XCTAssertEqual(sut.paymentOption?.paymentMethodType, "cashapp", "Cancelling the form should revert to the committed selection.")
+        XCTAssertEqual(sut.paymentOption?.paymentMethodType, "cashapp", "Cancelling the form should revert to the previous selection.")
     }
 
     // MARK: - Checkout Session update tests
