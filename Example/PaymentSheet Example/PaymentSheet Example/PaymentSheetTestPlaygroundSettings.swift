@@ -141,6 +141,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case usd
         case eur
+        case nok
         case aud
         case gbp
         case inr

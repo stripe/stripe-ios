@@ -1069,6 +1069,38 @@ extension PlaygroundController {
         }
     }
 
+    private var shouldUseVippsPreview: Bool {
+        if settings.currency == .nok, settings.apmsEnabled == .on {
+            return true
+        }
+
+        guard let supportedPaymentMethods = settings.supportedPaymentMethods else {
+            return false
+        }
+
+        return supportedPaymentMethods
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .split(separator: ",")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() }
+            .contains("vipps")
+    }
+
+    private func backendRequestOptions() -> [String: Any] {
+        var body: [String: Any] = [:]
+
+        if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
+            body["custom_secret_key"] = customSecretKey
+        }
+        if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
+            body["custom_publishable_key"] = customPublishableKey
+        }
+        if shouldUseVippsPreview {
+            body["vipps_preview"] = true
+        }
+
+        return body
+    }
+
     /// Builds the common request body parameters used for both loading backend and creating intents
     private func buildRequestBody(shouldCreateCustomerKey: Bool = true) -> [String: Any] {
         var body = [
@@ -1113,14 +1145,10 @@ extension PlaygroundController {
             }
         }
 
-        // Send custom keys to backend if provided
-        if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
-            body["custom_secret_key"] = customSecretKey
-        }
         if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
-            body["custom_publishable_key"] = customPublishableKey
             STPAPIClient.shared.publishableKey = customPublishableKey
         }
+        body.merge(backendRequestOptions()) { _, new in new }
 
         if settings.apmsEnabled == .off, let supportedPaymentMethods = settings.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
             body["supported_payment_methods"] = supportedPaymentMethods
@@ -1275,6 +1303,7 @@ extension PlaygroundController {
             body["payment_method_id"] = paymentMethodId
             body["should_save_payment_method"] = shouldSavePaymentMethod
         }
+        body.merge(backendRequestOptions()) { _, new in new }
 
         makeRequest(with: PaymentSheetTestPlaygroundSettings.confirmEndpoint, body: body, completionHandler: { data, response, error in
             guard
