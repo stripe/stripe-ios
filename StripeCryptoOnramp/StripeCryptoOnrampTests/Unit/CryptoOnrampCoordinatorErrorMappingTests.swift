@@ -170,7 +170,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             code: "crypto_onramp_invalid_wallet_ownership_challenge",
             message: "The challenge does not exist, belongs to a different authenticated consumer, was already consumed, or is otherwise invalid.",
             expectedType: InvalidWalletOwnershipChallengeError.self,
-            expectedUserMessage: "This wallet verification request can't be used. Please try again."
+            expectedUserMessage: "This wallet verification request is invalid. Please try again."
         )
 
         XCTAssertTrue(apiError.developerMessage.contains("The challenge does not exist, belongs to a different authenticated consumer, was already consumed, or is otherwise invalid."))
