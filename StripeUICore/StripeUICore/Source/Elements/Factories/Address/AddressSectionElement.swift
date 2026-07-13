@@ -155,9 +155,8 @@ import UIKit
     }
 
     public let countryCodes: [String]
-    /// When `true`, the fields needed to determine the tax region (full address in the US, the province in Canada,
-    /// and the country selector elsewhere) are always collected in addition to whatever `collectionMode` collects.
-    /// Used when automatic tax is calculated from the billing address.
+    /// When true, always collect enough of the address to figure out the tax region (see `taxRegionFields`), on top of
+    /// whatever `collectionMode` would collect. Set when automatic tax is computed from the billing address.
     public let collectsTaxRegionFields: Bool
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsAppearance
@@ -300,8 +299,7 @@ import UIKit
         }
     }
 
-    /// The address fields required to determine the tax region for `countryCode`: the full address in the US, the
-    /// province in Canada, and nothing (country selector only) everywhere else.
+    // What we need to pin down the tax region: full address in the US, just the province in Canada, country alone otherwise.
     private static func taxRegionFields(for countryCode: String) -> Set<AddressSpec.FieldType> {
         switch countryCode {
         case "US": return [.line, .city, .state, .postal]
@@ -347,9 +345,8 @@ import UIKit
         // Get the address spec for the country and filter out unused fields
         let spec = addressSpecProvider.addressSpec(for: countryCode)
         let fieldOrdering = spec.fieldOrdering.filter { field in
-            // For automatic tax, always collect at least the fields needed to determine the tax region, on top of
-            // whatever `collectionMode` collects. `.autoCompletable` is exempt: it already collects the full address
-            // via the autocomplete line, so we leave that form as-is rather than adding redundant fields.
+            // Force in the tax-region fields regardless of collectionMode. Skip .autoCompletable though — its
+            // autocomplete line already grabs the whole address, so adding these back would just duplicate it.
             if collectsTaxRegionFields, collectionMode != .autoCompletable, Self.taxRegionFields(for: countryCode).contains(field) {
                 return true
             }

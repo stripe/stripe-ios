@@ -19,7 +19,7 @@ extension Checkout.Session {
     }
 
     var automaticTaxUsesBillingAddress: Bool {
-        automaticTaxEnabled && automaticTaxAddressSource == "billing"
+        shouldSendTaxRegion(for: "billing")
     }
 
     var isPaymentMethodOptionsSetupFutureUsageSet: Bool {

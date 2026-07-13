@@ -124,7 +124,7 @@ class AddressSectionElementTest: XCTestCase {
             "CA": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
             "FR": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .postal_code),
         ]
-        // Base mode collects country + postal (for US/CA); the tax-region floor is unioned on top of it.
+        // Base mode is country + postal (US/CA); tax region fields get added on top.
         let sut = AddressSectionElement(
             title: "",
             countries: ["US", "CA", "FR"],
@@ -134,7 +134,7 @@ class AddressSectionElementTest: XCTestCase {
             collectsTaxRegionFields: true
         )
 
-        // US: the tax floor is the full address, so everything is collected.
+        // US wants the full address
         sut.selectedCountryCode = "US"
         XCTAssertNotNil(sut.line1)
         XCTAssertNotNil(sut.line2)
@@ -142,14 +142,14 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertNotNil(sut.state)
         XCTAssertNotNil(sut.postalCode)
 
-        // CA: the province is added by the floor, and the postal already collected by the base mode is kept.
+        // CA adds the province; postal from the base mode sticks around
         sut.selectedCountryCode = "CA"
         XCTAssertNil(sut.line1)
         XCTAssertNil(sut.city)
         XCTAssertNotNil(sut.state)
         XCTAssertNotNil(sut.postalCode)
 
-        // FR: the floor adds nothing (country only) and the base mode collects no postal for FR.
+        // FR adds nothing extra, and base mode doesn't collect postal here
         sut.selectedCountryCode = "FR"
         XCTAssertNil(sut.line1)
         XCTAssertNil(sut.city)
@@ -162,8 +162,8 @@ class AddressSectionElementTest: XCTestCase {
         specProvider.addressSpecs = [
             "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
         ]
-        // `.autoCompletable` already collects the full address via the autocomplete line — the floor must not add
-        // redundant individual fields on top.
+        // .autoCompletable already grabs the whole address via the autocomplete line, so we shouldn't tack on the
+        // individual fields too.
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],

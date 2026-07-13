@@ -468,13 +468,13 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         }
         XCTAssertTrue(billingAddressSection.collectsTaxRegionFields)
 
-        // US: the floor is the full address, so everything is collected.
+        // US wants the full address
         billingAddressSection.selectedCountryCode = "US"
         XCTAssertNotNil(billingAddressSection.line1)
         XCTAssertNotNil(billingAddressSection.state)
         XCTAssertNotNil(billingAddressSection.postalCode)
 
-        // CA: the province is added, and the postal that the base card form already collects is kept.
+        // CA adds the province; the card form's postal is still there
         billingAddressSection.selectedCountryCode = "CA"
         XCTAssertNil(billingAddressSection.line1)
         XCTAssertNotNil(billingAddressSection.state)
@@ -495,7 +495,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             addressSpecProvider: dummyAddressSpecProvider
         )
 
-        // A `.full` billing form (autocomplete) already collects more than the tax region requires, so it's left as-is.
+        // Autocomplete already collects more than tax needs, so leave it alone.
         let section = factory.makeBillingAddressSection(collectionMode: .autoCompletable).element
         XCTAssertTrue(section.collectsTaxRegionFields)
         section.selectedCountryCode = "US"
