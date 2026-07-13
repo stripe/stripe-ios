@@ -45,8 +45,13 @@ enum LinkControllerDemoBackendClient {
             let last4: String
         }
 
+        struct Link: Decodable {
+            let email: String
+        }
+
         let card: Card?
         let usBankAccount: UsBankAccount?
+        let link: Link?
         let metadata: [String: String]?
 
         var mandateId: String? { metadata?["mandate_id"] }
@@ -54,6 +59,7 @@ enum LinkControllerDemoBackendClient {
         var displayLabel: String {
             if let card { return "\(card.brand.capitalized) •••• \(card.last4)" }
             if let bank = usBankAccount { return "\(bank.bankName.capitalized) •••• \(bank.last4)" }
+            if let link { return "Link • \(link.email)" }
             return type
         }
     }
@@ -113,6 +119,17 @@ enum LinkControllerDemoBackendClient {
 
     static func fetchPaymentIntentStatus(piId: String) async throws -> PaymentIntentResponse {
         try await get("payment-intents/\(piId)")
+    }
+
+    // MARK: - Setup Intents
+
+    struct SetupIntentResponse: Decodable {
+        let clientSecret: String
+    }
+
+    static func createSetupIntent(customerId: String) async throws -> String {
+        let response: SetupIntentResponse = try await post("setup-intents", body: ["customerId": customerId])
+        return response.clientSecret
     }
 
     // MARK: - HTTP helpers
