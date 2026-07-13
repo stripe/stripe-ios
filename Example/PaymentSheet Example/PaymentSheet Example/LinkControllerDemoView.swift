@@ -6,8 +6,8 @@
 import SwiftUI
 import UIKit
 
-import StripePayments
 @_spi(LinkControllerPreview) import StripePaymentSheet
+import StripePayments
 
 @available(iOS 16.0, *)
 struct LinkControllerDemoView: View {
@@ -253,7 +253,6 @@ struct LinkControllerDemoView: View {
                             paymentMethod.stripeId,
                             toCustomer: customerId
                         )
-                        print("**** Payment method created (ID: \(paymentMethod.stripeId), type: \(paymentMethod.type))")
                     } catch {
                         errorMessage = "Payment method created (ID: \(paymentMethod.stripeId)) but failed to save: \(error.localizedDescription)"
                     }

@@ -78,11 +78,11 @@ struct ExampleLinkControllerPreviewView: View {
 
                             switch configuration.intentMode {
                             case .sdkManaged:
-                                Text("LinkController manages the session and returns a payment method object; the merchant is responsible for attaching the payment method.")
+                                Text("LinkController manages the session; the app attaches the payment method manually after `present` returns.")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             case .serverSetupIntent:
-                                Text("The merchant creates a setup intent passes it to the LinkController; the setup intent is automatically confirmed and the payment method is attached to the associated customer.")
+                                Text("A SetupIntent is created server-side before presenting. The SDK confirms and attaches automatically.")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
