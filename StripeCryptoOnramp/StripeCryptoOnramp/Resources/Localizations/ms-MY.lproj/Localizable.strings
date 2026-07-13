@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "Kad debit paling berkemungkinan akan diterima.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Apl ini tidak dapat disahkan kerana ralat pengesahan. Sila cuba lagi kemudian atau hubungi pembangun jika isu berterusan.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Aplikasi ini tidak dapat disahkan. Hubungi pembangun aplikasi untuk mendapatkan bantuan.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Dompet ini tidak dapat ditemukan. Sila pilih atau tambahkan dompet dan cuba lagi.";
+
+"This wallet network isn't supported. Please choose a different network." = "Rangkaian dompet ini tidak disokong. Sila pilih rangkaian yang berbeza.";
+
+"This wallet verification request expired. Please try again." = "Permintaan pengesahan dompet ini telah tamat tempoh. Sila cuba lagi.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Kami tidak dapat mengesahkan pemilikan dompet ini. Sila cuba lagi.";

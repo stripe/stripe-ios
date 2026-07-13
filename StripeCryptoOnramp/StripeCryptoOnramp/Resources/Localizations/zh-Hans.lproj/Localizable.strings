@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "借记卡最有可能被接受。";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "因认证校验异常，应用无法完成验证。请稍后重试，若问题持续存在，可联系应用开发者。";
+
+"This app couldn't be verified. Contact the app developer for help." = "此应用无法通过验证。请联系应用开发者寻求帮助。";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "无法找到该钱包。请选择或添加一个钱包，然后重试。";
+
+"This wallet network isn't supported. Please choose a different network." = "不支持此钱包网络。请选择其他网络。";
+
+"This wallet verification request expired. Please try again." = "此钱包验证请求已过期，请重试。";
+
+"We couldn't verify ownership of this wallet. Please try again." = "我们无法验证此钱包的所有权，请重试。";

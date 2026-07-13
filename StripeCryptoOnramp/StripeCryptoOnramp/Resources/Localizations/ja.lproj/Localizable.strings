@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "受け付けられる可能性が最も高いのはデビットカードです。";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "認証証明エラーのため、このアプリを認証できませんでした。後でもう一度お試しいただくか、問題が解決しない場合は開発者にお問い合わせください。";
+
+"This app couldn't be verified. Contact the app developer for help." = "このアプリを確認できませんでした。サポートが必要な場合は、アプリの開発者にお問い合わせください。";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "ウォレットが見つかりませんでした。ウォレットを選択するか追加して、もう一度お試しください。";
+
+"This wallet network isn't supported. Please choose a different network." = "ウォレットのネットワークはサポートされていません。別のネットワークを選択してください。";
+
+"This wallet verification request expired. Please try again." = "ウォレットの確認リクエストの有効期限が切れました。もう一度お試しください。";
+
+"We couldn't verify ownership of this wallet. Please try again." = "ウォレットの所有権を確認できませんでした。もう一度お試しください。";

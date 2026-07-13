@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "Kartu debit kemungkinan besar akan diterima.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Aplikasi ini tidak dapat diverifikasi karena kesalahan atestasi. Silakan coba lagi nanti atau hubungi pengembang jika masalah terus berlanjut.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Aplikasi ini tidak dapat diverifikasi. Hubungi pengembang aplikasi untuk mendapatkan bantuan.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Dompet digital ini tidak dapat ditemukan. Pilih atau tambahkan dompet digital dan coba lagi.";
+
+"This wallet network isn't supported. Please choose a different network." = "Jaringan dompet digital ini tidak didukung. Pilih jaringan yang berbeda.";
+
+"This wallet verification request expired. Please try again." = "Permintaan verifikasi dompet digital ini telah kedaluwarsa. Coba lagi.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Kami tidak dapat memverifikasi kepemilikan dompet digital ini. Coba lagi.";

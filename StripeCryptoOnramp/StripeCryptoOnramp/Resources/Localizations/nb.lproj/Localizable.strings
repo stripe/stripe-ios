@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "Debetkort vil mest sannsynlig bli akseptert.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Denne appen kan ikke bekreftes på grunn av en attesteringsfeil. Prøv på nytt senere eller kontakt utvikleren hvis problemet vedvarer.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Denne appen kan ikke bekreftes. Ta kontakt med apputvikleren for å få hjelp.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Fant ikke denne lommeboken.Velg en annen eller legg til en lommebok og prøv på nytt.";
+
+"This wallet network isn't supported. Please choose a different network." = "Dette lommeboknettverket støttes ikke. Velg et annet nettverk.";
+
+"This wallet verification request expired. Please try again." = "Denne forespørselen om lommebokbekreftelse har utløpt. Prøv igjen.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Vi kan ikke bekrefte eierskapet til denne lommeboken. Prøv igjen.";
