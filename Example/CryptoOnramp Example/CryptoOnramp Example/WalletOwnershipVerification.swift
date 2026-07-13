@@ -88,7 +88,7 @@ enum WalletOwnershipVerification {
                     isLoading.wrappedValue = false
                     alert.wrappedValue = Alert(
                         title: "Wallet verification failed",
-                        message: errorMessage(for: error)
+                        message: error.localizedDescription
                     )
                 }
             }
@@ -115,15 +115,5 @@ enum WalletOwnershipVerification {
             challengeId: challenge.challengeId,
             signature: signature
         )
-    }
-
-    /// Returns a user-facing verification error message.
-    /// - Parameter error: The error returned while verifying wallet ownership.
-    private static func errorMessage(for error: Error) -> String {
-       if let error = error as? StripeCryptoOnrampError {
-            return error.userMessage
-        } else {
-            return error.localizedDescription
-        }
     }
 }
