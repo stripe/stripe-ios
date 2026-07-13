@@ -31,7 +31,7 @@ extension StripeAPI {
         let blurThreshold: Decimal?
         let poseSequence: [String]?
 
-        private static let local3DFaceCaptureOverride: Bool? = true
+        static let local3DFaceCaptureOverride: Bool? = nil
 
         var enable3DFaceCapture: Bool {
             return Self.local3DFaceCaptureOverride ?? apiIncludes3DFaceCapturePose

@@ -70,10 +70,16 @@ extension StripeAPI.VerificationPage {
     }
 
     var enable3DFaceCapture: Bool {
+        if let localOverride = StripeAPI.VerificationPageStaticContentSelfiePage.local3DFaceCaptureOverride {
+            return localOverride
+        }
         return selfie?.enable3DFaceCapture == true || has3DFaceCaptureExperiment
     }
 
     var shouldSubmit3DFaceCaptureData: Bool {
+        if let localOverride = StripeAPI.VerificationPageStaticContentSelfiePage.local3DFaceCaptureOverride {
+            return localOverride
+        }
         return selfie?.shouldSubmit3DFaceCaptureData == true || has3DFaceCaptureExperiment
     }
     func copyWithNewMissings(newMissings: Set<StripeAPI.VerificationPageFieldType>) -> StripeAPI.VerificationPage {
