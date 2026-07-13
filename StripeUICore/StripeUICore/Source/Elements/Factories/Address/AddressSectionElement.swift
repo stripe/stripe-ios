@@ -155,7 +155,7 @@ import UIKit
     }
 
     public let countryCodes: [String]
-    /// When true, collect enough of the address to compute tax (on top of whatever `collectionMode` collects).
+    /// Collect enough address to compute tax, on top of `collectionMode`.
     public let collectsAddressForTax: Bool
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsAppearance
@@ -299,9 +299,9 @@ import UIKit
     }
 
     private enum TaxRegion {
-        // US wants the full address, which we grab through the autocomplete line.
+        // Full address, via the autocomplete line (US).
         case autocomplete
-        // Fields to add on top of what collectionMode collects, e.g. CA's province. Empty = country picker is enough.
+        // Extra fields beyond what collectionMode collects (e.g. CA province). Empty = country alone is enough.
         case extraFields(Set<AddressSpec.FieldType>)
     }
 
@@ -347,9 +347,9 @@ import UIKit
             state: state?.rawData
         )
 
-        // Only top up for tax in the minimal collection modes; the autocomplete modes already ask for the whole
-        // address. Skipping them also avoids clobbering fields the user just filled in when an autocomplete
-        // selection flips us over to .allWithAutocomplete.
+        // Only bother topping up for tax in the minimal modes. The autocomplete modes already collect the whole
+        // address, and skipping them avoids wiping fields the user just filled once an autocomplete selection
+        // flips us to .allWithAutocomplete.
         var taxUsesAutocomplete = false
         var extraTaxFields: Set<AddressSpec.FieldType> = []
         if collectsAddressForTax, collectionMode != .allWithAutocomplete, collectionMode != .autoCompletable {

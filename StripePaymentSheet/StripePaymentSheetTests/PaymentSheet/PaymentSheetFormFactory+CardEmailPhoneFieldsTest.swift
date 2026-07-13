@@ -480,9 +480,9 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         XCTAssertNotNil(billingAddressSection.postalCode)
     }
 
-    // Tax should never *shrink* a form that already collects everything.
+    // Tax shouldn't shrink a form that already collects the whole address.
     @MainActor
-    func testMakeBillingAddressSection_autoTaxDoesNotNarrowFullAddressForm() {
+    func testMakeBillingAddressSectionAutoTaxKeepsAutocomplete() {
         let session = CheckoutTestHelpers.makeOpenSession(
             automaticTaxEnabled: true,
             automaticTaxAddressSource: "session.billing"

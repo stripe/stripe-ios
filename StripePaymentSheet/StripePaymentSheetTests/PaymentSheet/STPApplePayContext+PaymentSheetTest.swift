@@ -290,6 +290,48 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertTrue(sut.requiredShippingContactFields.contains(.phoneNumber))
     }
 
+    func testCreatePaymentRequest_requiredContactFields_automaticTaxForcesPostalAddress() {
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.applePay = applePayConfiguration
+        // Merchant turned off billing address collection, but the session needs it for tax, so
+        // Apple Pay still has to collect the postal address.
+        config.billingDetailsCollectionConfiguration.address = .never
+
+        let sut = STPApplePayContext.createPaymentRequest(
+            intent: makeCheckoutIntent(automaticTaxBilling: true),
+            configuration: config,
+            applePay: applePayConfiguration
+        )
+
+        XCTAssertTrue(sut.requiredBillingContactFields.contains(.postalAddress))
+    }
+
+    func testCreatePaymentRequest_requiredContactFields_noTaxRespectsAddressNever() {
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.applePay = applePayConfiguration
+        config.billingDetailsCollectionConfiguration.address = .never
+
+        let sut = STPApplePayContext.createPaymentRequest(
+            intent: makeCheckoutIntent(automaticTaxBilling: false),
+            configuration: config,
+            applePay: applePayConfiguration
+        )
+
+        XCTAssertFalse(sut.requiredBillingContactFields.contains(.postalAddress))
+    }
+
+    // Builds a .checkout intent, optionally with automatic tax on the billing address.
+    // Needs a total_summary since createPaymentRequest reads intent.amount.
+    private func makeCheckoutIntent(automaticTaxBilling: Bool) -> Intent {
+        let response = automaticTaxBilling
+            ? CheckoutTestHelpers.makeOpenSession(automaticTaxEnabled: true, automaticTaxAddressSource: "session.billing")
+            : CheckoutTestHelpers.makeOpenSession()
+        var json = response.allResponseFields as? [String: Any] ?? [:]
+        json["total_summary"] = ["subtotal": 5050, "total": 5050, "due": 5050]
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
+        return .checkout(Checkout(apiResponse: session))
+    }
+
     func testCreatePaymentRequest_label_normalIntent() {
         var configuration = configuration
         configuration.merchantDisplayName = "Merchant Name"

@@ -133,7 +133,7 @@ class AddressSectionElementTest: XCTestCase {
             collectsAddressForTax: true
         )
 
-        // US collects the full address via the autocomplete line, not the individual fields.
+        // US goes through the autocomplete line, not the individual fields.
         sut.selectedCountryCode = "US"
         XCTAssertNotNil(sut.autoCompleteLine)
         XCTAssertNil(sut.line1)
@@ -141,14 +141,14 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertNil(sut.state)
         XCTAssertNil(sut.postalCode)
 
-        // CA adds the province on top of the postal that .countryAndPostal already collects.
+        // CA adds the province on top of .countryAndPostal's postal.
         sut.selectedCountryCode = "CA"
         XCTAssertNil(sut.line1)
         XCTAssertNil(sut.city)
         XCTAssertNotNil(sut.state)
         XCTAssertNotNil(sut.postalCode)
 
-        // FR needs nothing extra, and .countryAndPostal doesn't collect postal here.
+        // FR needs nothing extra
         sut.selectedCountryCode = "FR"
         XCTAssertNil(sut.line1)
         XCTAssertNil(sut.city)

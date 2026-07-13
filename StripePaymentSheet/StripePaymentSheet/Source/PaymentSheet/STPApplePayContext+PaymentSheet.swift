@@ -365,7 +365,10 @@ extension STPApplePayContext {
             country: applePay.merchantCountryCode,
             currency: intent.currency ?? "USD"
         )
-        paymentRequest.requiredBillingContactFields = makeRequiredBillingDetails(from: configuration)
+        paymentRequest.requiredBillingContactFields = makeRequiredBillingDetails(
+            from: configuration,
+            collectsTaxRegionFromBillingAddress: intent.collectsTaxRegionFromBillingAddress
+        )
         paymentRequest.requiredShippingContactFields = makeRequiredShippingDetails(from: configuration)
 
         let label = intent.sellerDetails?.businessName ?? configuration.merchantDisplayName
@@ -446,11 +449,15 @@ private func makeShippingDetails(from configuration: PaymentElementConfiguration
     )
 }
 
-private func makeRequiredBillingDetails(from configuration: PaymentElementConfiguration) -> Set<PKContactField> {
+private func makeRequiredBillingDetails(
+    from configuration: PaymentElementConfiguration,
+    collectsTaxRegionFromBillingAddress: Bool = false
+) -> Set<PKContactField> {
     var requiredPKContactFields = Set<PKContactField>()
     let billingConfig = configuration.billingDetailsCollectionConfiguration
     // By default, we always want to request the billing address (as it includes the postal code)
-    if billingConfig.address == .automatic || billingConfig.address == .full {
+    // ...and also when the session needs it to compute tax.
+    if billingConfig.address == .automatic || billingConfig.address == .full || collectsTaxRegionFromBillingAddress {
         requiredPKContactFields.insert(.postalAddress)
     }
     // Only request name field - phone and email go into shipping contact fields
