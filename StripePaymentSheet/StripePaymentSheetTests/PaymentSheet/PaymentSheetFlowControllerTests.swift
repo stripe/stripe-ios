@@ -482,4 +482,101 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         }
         await fulfillment(of: [exp], timeout: 2.0)
     }
+
+    // MARK: - Discard selection on cancel (MOBILESDK-4643)
+
+    // Vertical FlowController committed to Apple Pay, with one saved card also in the list.
+    private func makeApplePayFlowController() -> (PaymentSheet.FlowController, STPPaymentMethod) {
+        // Pin the default so we don't inherit leftover UserDefaults state.
+        CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: nil)
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.applePay = .init(merchantId: "merchant.com.stripe.test", merchantCountryCode: "US")
+        let savedCard = STPPaymentMethod._testCard()
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: [savedCard],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .vertical
+        )
+        let flowController = PaymentSheet.FlowController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+        return (flowController, savedCard)
+    }
+
+    // Tap the saved card row in the presented sheet.
+    private func selectSavedCard(in flowController: PaymentSheet.FlowController, _ savedCard: STPPaymentMethod) {
+        guard let verticalVC = flowController.viewController as? PaymentSheetVerticalViewController,
+              let listVC = verticalVC.paymentMethodListViewController,
+              let savedRow = listVC.rowButtons.first(where: { $0.type == .saved(paymentMethod: savedCard) }) else {
+            XCTFail("Expected a saved payment method row in the vertical list")
+            return
+        }
+        listVC.didTap(rowButton: savedRow, selection: .saved(paymentMethod: savedCard))
+    }
+
+    func testCancelDiscardsPendingSelection() {
+        let (flowController, savedCard) = makeApplePayFlowController()
+        let mockViewController = UIViewController()
+
+        XCTAssertEqual(flowController.paymentOption?.paymentMethodType, "apple_pay")
+
+        let exp = expectation(description: "cancel completion")
+        flowController.presentPaymentOptions(from: mockViewController) { didCancel in
+            XCTAssertTrue(didCancel)
+            // Back to Apple Pay - the saved card the customer tapped is thrown away.
+            XCTAssertEqual(flowController.paymentOption?.paymentMethodType, "apple_pay")
+            XCTAssertNil(flowController.viewController.selectedPaymentOption?.savedPaymentMethod)
+            exp.fulfill()
+        }
+
+        // Switch to the saved card, but don't tap Continue.
+        selectSavedCard(in: flowController, savedCard)
+        XCTAssertEqual(flowController.viewController.selectedPaymentOption?.savedPaymentMethod?.stripeId, savedCard.stripeId)
+
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: true)
+        wait(for: [exp], timeout: 2.0)
+    }
+
+    func testContinueCommitsPendingSelection() {
+        let (flowController, savedCard) = makeApplePayFlowController()
+        let mockViewController = UIViewController()
+
+        let exp = expectation(description: "continue completion")
+        flowController.presentPaymentOptions(from: mockViewController) { didCancel in
+            XCTAssertFalse(didCancel)
+            // Continue commits the saved card.
+            XCTAssertEqual(flowController.paymentOption?.paymentMethodType, "card")
+            XCTAssertEqual(flowController.viewController.selectedPaymentOption?.savedPaymentMethod?.stripeId, savedCard.stripeId)
+            exp.fulfill()
+        }
+
+        selectSavedCard(in: flowController, savedCard)
+
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: false)
+        wait(for: [exp], timeout: 2.0)
+    }
+
+    // Cancelling without touching anything should leave the committed selection alone.
+    func testCancelWithoutInteractionKeepsSelection() {
+        let (flowController, _) = makeApplePayFlowController()
+        let mockViewController = UIViewController()
+
+        let exp = expectation(description: "cancel completion")
+        flowController.presentPaymentOptions(from: mockViewController) { didCancel in
+            XCTAssertTrue(didCancel)
+            XCTAssertEqual(flowController.paymentOption?.paymentMethodType, "apple_pay")
+            exp.fulfill()
+        }
+
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: true)
+        wait(for: [exp], timeout: 2.0)
+    }
 }
