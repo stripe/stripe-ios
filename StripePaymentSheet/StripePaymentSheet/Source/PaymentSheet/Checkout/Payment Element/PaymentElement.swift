@@ -65,6 +65,7 @@ public final class PaymentElement {
 
     init(checkout: Checkout) async throws {
         // Note: PaymentElement is just nice user-facing packaging around the existing Embedded and FC classes
+        // Create FlowController
         let paymentSheetConfiguration = checkout.configuration.paymentElement.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient
         )
@@ -72,6 +73,7 @@ public final class PaymentElement {
             checkout: checkout,
             configuration: paymentSheetConfiguration
         )
+        // Create Embedded
         let embeddedConfiguration = checkout.configuration.paymentElement.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient
         )
@@ -80,7 +82,8 @@ public final class PaymentElement {
             configuration: embeddedConfiguration
         )
         self.view = PaymentElementView()
-        self.uiView = PaymentElementUIView()
+        self.uiView = PaymentElementUIView(contentView: embeddedPaymentElement.view)
+        self.embeddedPaymentElement.delegate = self
     }
 }
 
@@ -104,36 +107,20 @@ extension PaymentElement {
     }
 }
 
-// MARK: - UIKit
+// MARK: - EmbeddedPaymentElementDelegate
 
-/// A view that displays payment methods.
-@_spi(STP)
-public final class PaymentElementUIView: UIView {
-    /// A delegate for the view.
-    public weak var delegate: PaymentElementViewDelegate?
-
-    override init(frame: CGRect = .zero) {
-        super.init(frame: frame)
+// Note: The EPE delegate methods just get forwarded to the PaymentElementUIView delegate
+extension PaymentElement: EmbeddedPaymentElementDelegate {
+    public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
+        uiView.embeddedPaymentElementDidUpdateHeight()
     }
 
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
+    public func embeddedPaymentElementWillPresent(embeddedPaymentElement: EmbeddedPaymentElement) {
+        uiView.embeddedPaymentElementWillPresent()
     }
-}
 
-@MainActor
-@_spi(STP)
-public protocol PaymentElementViewDelegate: AnyObject {
-    /// Called inside an animation block when the PaymentElement view is updating its height.
-    func paymentElementViewDidUpdateHeight(paymentElementView: PaymentElementUIView)
-
-    /// Called immediately before the PaymentElement view presents.
-    func paymentElementViewWillPresent(paymentElementView: PaymentElementUIView)
-}
-
-public extension PaymentElementViewDelegate {
-    func paymentElementViewWillPresent(paymentElementView: PaymentElementUIView) {
-        // Default implementation does nothing.
+    public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
+        // PaymentElementViewDelegate does not expose payment option updates.
     }
 }
 

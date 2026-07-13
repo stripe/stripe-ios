@@ -190,7 +190,7 @@ public final class EmbeddedPaymentElement {
             return result
         }
 
-        // If we currently have a sheet presented fail the update (unless it's a checkout session update, which may occur during billing sync)
+        // If we currently have a sheet presented, fail the update (unless it's a checkout session update, which may occur during billing sync)
         if !mode.isCheckout,
            presentingViewController?.presentedViewController is BottomSheetViewController {
             let result: EmbeddedPaymentElement.UpdateResult = .failed(error: PaymentSheetError.embeddedPaymentElementUpdateWithFormPresented)
@@ -309,7 +309,8 @@ public final class EmbeddedPaymentElement {
     /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
     public func confirm() async -> EmbeddedPaymentElementResult {
         analyticsHelper.log(event: .mcConfirmEmbedded)
-        guard let presentingViewController else {
+        // TODO: stpAssert + log error if resolvedPresentingViewController == nil when this is called from Checkout SDK.
+        guard let presentingViewController = resolvedPresentingViewController else {
             let errorMessage = "Presenting view controller is nil. Please set EmbeddedPaymentElement.presentingViewController."
             assertionFailure(errorMessage)
             return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
@@ -472,6 +473,30 @@ public final class EmbeddedPaymentElement {
 extension EmbeddedPaymentElement {
     var isPresentingPaymentUI: Bool {
         return presentingViewController?.presentedViewController is BottomSheetViewController
+    }
+
+    /// Returns the explicitly configured presenting view controller or tries to find one if nil.
+    var resolvedPresentingViewController: UIViewController? {
+        guard presentingViewController == nil else {
+            return presentingViewController
+        }
+
+        guard let visibleViewController = UIWindow.visibleViewController else {
+            return nil
+        }
+
+        guard !visibleViewController.isBeingDismissed else {
+            assert(false, "Cannot use a dismissing view controller to present EmbeddedPaymentElement.")
+            return nil
+        }
+
+        guard !(visibleViewController is BottomSheetViewController) else {
+            assert(false, "Cannot use a BottomSheetViewController to present EmbeddedPaymentElement.")
+            return nil
+        }
+
+        presentingViewController = visibleViewController
+        return visibleViewController
     }
 }
 
