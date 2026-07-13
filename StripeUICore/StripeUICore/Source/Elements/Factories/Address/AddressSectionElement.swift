@@ -79,8 +79,6 @@ import UIKit
         case autoCompletable
         /// Special case used by some Payment Methods that collect country separately.
         case noCountry
-        /// Collects only what's needed to determine the tax region: full address in the US, state in CA, country-only elsewhere.
-        case taxRegion
     }
     /// Fields that this section can collect in addition to the address
     public struct AdditionalFields {
@@ -157,6 +155,10 @@ import UIKit
     }
 
     public let countryCodes: [String]
+    /// When `true`, the fields needed to determine the tax region (full address in the US, the province in Canada,
+    /// and the country selector elsewhere) are always collected in addition to whatever `collectionMode` collects.
+    /// Used when automatic tax is calculated from the billing address.
+    public let collectsTaxRegionFields: Bool
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsAppearance
     private(set) var defaults: AddressDetails
@@ -181,6 +183,7 @@ import UIKit
         addressSpecProvider: AddressSpecProvider = .shared,
         defaults: AddressDetails = .empty,
         collectionMode: CollectionMode = .all(),
+        collectsTaxRegionFields: Bool = false,
         additionalFields: AdditionalFields = .init(),
         theme: ElementsAppearance = .default,
         presentAutoComplete: @escaping () -> Void = { }
@@ -188,6 +191,7 @@ import UIKit
         let dropdownCountries = countries?.map { $0.uppercased() } ?? addressSpecProvider.countries
         let countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
         self.collectionMode = collectionMode
+        self.collectsTaxRegionFields = collectsTaxRegionFields
         self.countryCodes = countryCodes
         self.country = DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country_or_region,
@@ -296,6 +300,16 @@ import UIKit
         }
     }
 
+    /// The address fields required to determine the tax region for `countryCode`: the full address in the US, the
+    /// province in Canada, and nothing (country selector only) everywhere else.
+    private static func taxRegionFields(for countryCode: String) -> Set<AddressSpec.FieldType> {
+        switch countryCode {
+        case "US": return [.line, .city, .state, .postal]
+        case "CA": return [.state]
+        default: return []
+        }
+    }
+
     private func makeLine1Element(defaultValue: String?, countryCode: String) -> TextFieldElement {
         let showsAutocomplete: Bool
         switch collectionMode {
@@ -332,26 +346,20 @@ import UIKit
 
         // Get the address spec for the country and filter out unused fields
         let spec = addressSpecProvider.addressSpec(for: countryCode)
-        let fieldOrdering = spec.fieldOrdering.filter {
+        let fieldOrdering = spec.fieldOrdering.filter { field in
+            // For automatic tax, always collect at least the fields needed to determine the tax region, on top of
+            // whatever `collectionMode` collects. `.autoCompletable` is exempt: it already collects the full address
+            // via the autocomplete line, so we leave that form as-is rather than adding redundant fields.
+            if collectsTaxRegionFields, collectionMode != .autoCompletable, Self.taxRegionFields(for: countryCode).contains(field) {
+                return true
+            }
             switch collectionMode {
-            case .all, .noCountry:
+            case .all, .noCountry, .allWithAutocomplete:
                 return true
             case .countryAndPostal(let countriesRequiringPostalCollection):
-                if case .postal = $0 {
-                    return countriesRequiringPostalCollection.contains(countryCode)
-                } else {
-                   return false
-                }
+                return field == .postal && countriesRequiringPostalCollection.contains(countryCode)
             case .autoCompletable:
                 return false
-            case .allWithAutocomplete:
-                return true
-            case .taxRegion:
-                switch countryCode {
-                case "US": return [.line, .city, .state, .postal].contains($0)
-                case "CA": return $0 == .state
-                default: return false
-                }
             }
         }
 

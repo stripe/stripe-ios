@@ -492,11 +492,6 @@ extension PaymentSheetFormFactory {
         includeEmail: Bool = false,
         includePhone: Bool = false
     ) -> PaymentMethodElementWrapper<AddressSectionElement> {
-        // For automatic tax based on billing, narrow to just the tax-region fields.
-        // .noCountry keeps its mode though; it needs the country selector to figure out the region.
-        let collectionMode: AddressSectionElement.CollectionMode =
-            (collectsTaxRegionFromBillingAddress && collectionMode != .noCountry) ? .taxRegion : collectionMode
-
         let displayBillingSameAsShippingCheckbox: Bool
         var defaultAddress: AddressSectionElement.AddressDetails
         if let shippingDetails = configuration.shippingDetails() {
@@ -541,6 +536,9 @@ extension PaymentSheetFormFactory {
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
             collectionMode: finalCollectionMode,
+            // When automatic tax is calculated from the billing address, always collect at least the fields needed
+            // to determine the tax region, on top of whatever `collectionMode` already collects.
+            collectsTaxRegionFields: collectsTaxRegionFromBillingAddress,
             additionalFields: .init(
                 phone: includePhone ? .enabled(isOptional: false) : .disabled,
                 email: includeEmail ? .enabled(isOptional: false) : .disabled,

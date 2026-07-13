@@ -446,7 +446,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
     // MARK: - Automatic tax (billing source)
 
     @MainActor
-    func testCardFormWithAutomaticTaxBilling_usesTaxRegionCollectionMode() {
+    func testCardFormWithAutomaticTaxBilling_collectsTaxRegionFields() {
         let session = CheckoutTestHelpers.makeOpenSession(
             automaticTaxEnabled: true,
             automaticTaxAddressSource: "session.billing"
@@ -466,22 +466,23 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             XCTFail("Could not find billing address section")
             return
         }
-        XCTAssertEqual(billingAddressSection.collectionMode, .taxRegion)
+        XCTAssertTrue(billingAddressSection.collectsTaxRegionFields)
 
+        // US: the floor is the full address, so everything is collected.
         billingAddressSection.selectedCountryCode = "US"
         XCTAssertNotNil(billingAddressSection.line1)
         XCTAssertNotNil(billingAddressSection.state)
         XCTAssertNotNil(billingAddressSection.postalCode)
 
-        // CA only needs the province
+        // CA: the province is added, and the postal that the base card form already collects is kept.
         billingAddressSection.selectedCountryCode = "CA"
         XCTAssertNil(billingAddressSection.line1)
-        XCTAssertNil(billingAddressSection.postalCode)
         XCTAssertNotNil(billingAddressSection.state)
+        XCTAssertNotNil(billingAddressSection.postalCode)
     }
 
     @MainActor
-    func testMakeBillingAddressSection_taxRegionOverrideRespectsNoCountry() {
+    func testMakeBillingAddressSection_autoTaxDoesNotNarrowFullAddressForm() {
         let session = CheckoutTestHelpers.makeOpenSession(
             automaticTaxEnabled: true,
             automaticTaxAddressSource: "session.billing"
@@ -494,8 +495,11 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             addressSpecProvider: dummyAddressSpecProvider
         )
 
-        XCTAssertEqual(factory.makeBillingAddressSection(collectionMode: .autoCompletable).element.collectionMode, .taxRegion)
-        // .noCountry is left alone since it collects the country separately
-        XCTAssertEqual(factory.makeBillingAddressSection(collectionMode: .noCountry).element.collectionMode, .noCountry)
+        // A `.full` billing form (autocomplete) already collects more than the tax region requires, so it's left as-is.
+        let section = factory.makeBillingAddressSection(collectionMode: .autoCompletable).element
+        XCTAssertTrue(section.collectsTaxRegionFields)
+        section.selectedCountryCode = "US"
+        XCTAssertNotNil(section.autoCompleteLine)
+        XCTAssertNil(section.line1)
     }
 }
