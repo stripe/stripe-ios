@@ -36,8 +36,6 @@ struct PaymentSummaryView: View {
 
     @State private var authenticationContext = WindowAuthenticationContext()
     @State private var alert: Alert?
-    @State private var pendingWalletOwnershipVerificationContext: WalletOwnershipVerificationContext?
-    @State private var isPresentingWalletOwnershipVerificationAlert = false
 
     private var isPresentingAlert: Binding<Bool> {
         Binding(get: {
@@ -159,15 +157,6 @@ struct PaymentSummaryView: View {
                 Text(alert.message)
             }
         )
-        .walletOwnershipVerificationRequiredAlert(
-            isPresented: $isPresentingWalletOwnershipVerificationAlert,
-            onVerify: {
-                verifyPendingWalletOwnership()
-            },
-            onCancel: {
-                pendingWalletOwnershipVerificationContext = nil
-            }
-        )
     }
 
     // MARK: - PaymentSummaryView
@@ -195,7 +184,7 @@ struct PaymentSummaryView: View {
                     authenticationContext: authenticationContext
                 ) { onrampSessionId in
                     let result = try await APIClient.shared.checkout(onrampSessionId: onrampSessionId)
-                    return result.clientSecret
+                    return  result.clientSecret
                 }
 
                 await MainActor.run {
@@ -211,39 +200,12 @@ struct PaymentSummaryView: View {
                         break
                     }
                 }
-            } catch let error as WalletOwnershipVerificationRequiredError {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    if let context = WalletOwnershipVerificationContext(transactionDetails: error.response.transactionDetails) {
-                        pendingWalletOwnershipVerificationContext = context
-                        isPresentingWalletOwnershipVerificationAlert = true
-                    } else {
-                        alert = WalletOwnershipVerification.unavailableAlert
-                    }
-                }
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     alert = Alert(title: "Checkout failed", message: error.localizedDescription)
                 }
             }
-        }
-    }
-
-    private func verifyPendingWalletOwnership() {
-        guard let context = pendingWalletOwnershipVerificationContext else {
-            alert = WalletOwnershipVerification.unavailableAlert
-            return
-        }
-
-        WalletOwnershipVerification.startVerification(
-            context: context,
-            coordinator: coordinator,
-            isLoading: isLoading,
-            alert: $alert
-        ) {
-            pendingWalletOwnershipVerificationContext = nil
-            checkout()
         }
     }
 }
