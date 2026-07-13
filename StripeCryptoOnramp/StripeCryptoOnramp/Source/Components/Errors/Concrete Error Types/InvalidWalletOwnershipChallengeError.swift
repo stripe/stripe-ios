@@ -46,7 +46,7 @@ public struct InvalidWalletOwnershipChallengeError: StripeCryptoOnrampAPIError, 
         return StripeCryptoOnrampErrorRenderer.renderAPIErrorDeveloperMessage(
             apiErrorContext: apiErrorContext,
             diagnosticContext: diagnosticContext,
-            summary: apiMessage ?? "Wallet ownership verification failed: the challenge is invalid, already consumed, missing, or not associated with the authenticated consumer.",
+            summary: apiMessage ?? "Wallet ownership verification failed: the challenge does not exist, belongs to a different authenticated consumer, was already consumed, or is otherwise invalid.",
             code: code,
             nextStep: "Request a new challenge for the registered wallet and authenticated consumer, then submit that challenge ID with its signature."
         )

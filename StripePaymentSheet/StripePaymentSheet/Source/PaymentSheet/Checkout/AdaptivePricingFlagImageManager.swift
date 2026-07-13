@@ -12,7 +12,7 @@ import UIKit
 
 /// Downloads and caches country flag images for the adaptive pricing currency selector.
 ///
-/// Flag images are prefetched during ``Checkout.init(clientSecret:configuration:apiClient:)``
+/// Flag images are prefetched during ``Checkout.init(configuration:)``
 /// so they are available immediately when ``Checkout.CurrencySelectorView`` appears.
 /// If either download fails, both currencies fall back to emoji flags.
 @MainActor

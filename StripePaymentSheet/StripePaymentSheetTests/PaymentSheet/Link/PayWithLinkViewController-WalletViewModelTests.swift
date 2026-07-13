@@ -190,6 +190,26 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
         XCTAssertEqual(sut.supportedPaymentMethodTypes, [ParsedEnum(.bankAccount)])
     }
 
+    func test_supportedPaymentMethodTypes_whenFilterIsEmpty_usesAllCasesAtIntersection() throws {
+        let sut = try makeSUT(
+            supportedPaymentDetailsTypes: [ParsedEnum(.bankAccount)],
+            supportedPaymentMethodTypes: [],
+            linkFundingSources: ["BANK_ACCOUNT"]
+        )
+
+        XCTAssertEqual(sut.supportedPaymentMethodTypes, [ParsedEnum(.bankAccount)])
+    }
+
+    func test_supportedPaymentMethodTypes_whenFilterIsCard_returnsCardOnly() throws {
+        let sut = try makeSUT(
+            supportedPaymentDetailsTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
+            supportedPaymentMethodTypes: [.card],
+            linkFundingSources: ["CARD", "BANK_ACCOUNT"]
+        )
+
+        XCTAssertEqual(sut.supportedPaymentMethodTypes, [ParsedEnum(.card)])
+    }
+
     func test_cardBrandFiltering_passThroughEnabled() throws {
         let sut = try makeSUT(supportedPaymentDetailsTypes: [ParsedEnum(.card)],
                               linkFundingSources: ["CARD"],

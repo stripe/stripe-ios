@@ -17,7 +17,7 @@
 "This wallet verification request expired. Please try again." = "This wallet verification request expired. Please try again.";
 
 /* Error message shown when the wallet ownership challenge is invalid */
-"This wallet verification request is no longer valid. Please try again." = "This wallet verification request is no longer valid. Please try again.";
+"This wallet verification request is invalid. Please try again." = "This wallet verification request is invalid. Please try again.";
 
 /* Error message shown when the submitted wallet ownership signature is invalid */
 "We couldn't verify ownership of this wallet. Please try again." = "We couldn't verify ownership of this wallet. Please try again.";

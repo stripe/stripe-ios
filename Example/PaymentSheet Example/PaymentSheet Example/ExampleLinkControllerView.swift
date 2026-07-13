@@ -8,7 +8,7 @@
 import SwiftUI
 import UIKit
 
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @_spi(LinkControllerPreview) import StripePaymentSheet
 
 @available(iOS 16.0, *)
 struct ExampleLinkControllerView: View {
@@ -24,6 +24,10 @@ struct ExampleLinkControllerView: View {
     @State private var userExists: Bool?
     @State private var selectedPaymentMethodTypes: Set<LinkPaymentMethodType> = Set(LinkPaymentMethodType.allCases)
     @FocusState private var isEmailFieldFocused: Bool
+
+    private var supportedPaymentMethodTypes: [LinkPaymentMethodType] {
+        LinkPaymentMethodType.allCases.filter(selectedPaymentMethodTypes.contains)
+    }
 
     var body: some View {
         NavigationView {
@@ -112,6 +116,7 @@ struct ExampleLinkControllerView: View {
                                         }
                                     }
                                     .buttonStyle(PlainButtonStyle())
+                                    .disabled(isLoading)
                                 }
                             }
                         }
@@ -315,13 +320,19 @@ struct ExampleLinkControllerView: View {
     private func initializeLinkController() {
         STPAPIClient.shared.publishableKey = "pk_test_51K9W3OHMaDsveWq0oLP0ZjldetyfHIqyJcz27k2BpMGHxu9v9Cei2tofzoHncPyk3A49jMkFEgTOBQyAMTUffRLa00xzzARtZO"
 
+        linkController = nil
+        authenticationResult = nil
+        userExists = nil
         isLoading = true
         errorMessage = nil
         statusMessage = "Initializing LinkController..."
 
         Task {
             do {
-                let controller = try await LinkController.create(mode: .setup)
+                let controller = try await LinkController.create(
+                    mode: .setup,
+                    linkConfiguration: .init(supportedPaymentMethodTypes: supportedPaymentMethodTypes, merchantDisplayName: "Example, Inc.")
+                )
                 await MainActor.run {
                     self.linkController = controller
                     self.isLoading = false
@@ -494,7 +505,7 @@ struct ExampleLinkControllerView: View {
         let paymentMethodPreview = await linkController.collectPaymentMethod(
             from: rootViewController,
             with: email,
-            supportedPaymentMethodTypes: Array(selectedPaymentMethodTypes)
+            supportedPaymentMethodTypes: supportedPaymentMethodTypes
         )
 
         await MainActor.run {
@@ -535,7 +546,6 @@ struct ExampleLinkControllerView: View {
             let result = try await linkController.present(
                 email: email,
                 phoneNumber: phone.isEmpty ? nil : phone,
-                supportedPaymentMethodTypes: Array(selectedPaymentMethodTypes),
                 from: rootViewController
             )
             await MainActor.run {
@@ -607,6 +617,8 @@ struct ExampleLinkControllerView: View {
         } else {
             selectedPaymentMethodTypes.insert(paymentMethodType)
         }
+
+        initializeLinkController()
     }
 
     private func findViewController() -> UIViewController? {
