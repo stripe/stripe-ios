@@ -30,13 +30,12 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
     var documentUploader: DocumentUploaderProtocol? { get }
     var visitedIndividualWelcomePage: Bool { get }
 
-    func transitionToNextScreen(
+    @MainActor func transitionToNextScreen(
         skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>?,
-        sheetController: VerificationSheetControllerProtocol,
-        completion: @escaping () -> Void
-    )
+        sheetController: VerificationSheetControllerProtocol
+    ) async
 
     func transitionToIndividualScreen(
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
@@ -59,11 +58,10 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
         sheetController: VerificationSheetControllerProtocol
     )
 
-    func transitionToErrorScreen(
+    @MainActor func transitionToErrorScreen(
         sheetController: VerificationSheetControllerProtocol,
-        error: Error,
-        completion: @escaping () -> Void
-    )
+        error: Error
+    ) async
 
     func replaceCurrentScreen(
         with viewController: UIViewController
@@ -111,26 +109,26 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     /// Transitions to the next view controller in the flow with a 'push' animation.
     /// - Note: This may replace the navigation stack or push an additional view
     ///   controller onto the stack, depending on whether on where the user is in the flow.
-    ///   TODO: migrate to async
-    func transitionToNextScreen(
+    @MainActor func transitionToNextScreen(
         skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>?,
-        sheetController: VerificationSheetControllerProtocol,
-        completion: @escaping () -> Void
-    ) {
-        nextViewController(
+        sheetController: VerificationSheetControllerProtocol
+    ) async {
+        guard let viewController = await nextViewController(
             skipTestMode: skipTestMode,
             staticContentResult: staticContentResult,
             updateDataResult: updateDataResult,
             sheetController: sheetController
-        ) { [weak self] viewController in
-            self?.transition(
-                to: viewController,
-                shouldAnimate: true,
-                completion: completion
-            )
+        ) else {
+            await dismissNavigationController()
+            return
         }
+
+        await transition(
+            to: viewController,
+            shouldAnimate: true
+        )
     }
 
     func makeDocumentUploader(
@@ -174,22 +172,20 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         let staticContent: StripeAPI.VerificationPage
         do {
             staticContent = try staticContentResult.get()
-            self.transition(
+            self.transitionWithoutWaiting(
                 to: makeIndividualViewController(
                     staticContent: staticContent,
                     sheetController: sheetController
                 ),
-                shouldAnimate: true,
-                completion: {}
+                shouldAnimate: true
             )
         } catch {
-            self.transition(
+            self.transitionWithoutWaiting(
                 to: ErrorViewController(
                     sheetController: sheetController,
                     error: .error(error)
                 ),
-                shouldAnimate: true,
-                completion: {}
+                shouldAnimate: true
             )
         }
     }
@@ -203,24 +199,22 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         let staticContent: StripeAPI.VerificationPage
         do {
             staticContent = try staticContentResult.get()
-            self.transition(
+            self.transitionWithoutWaiting(
                 to: CountryNotListedViewController(
                     missingType: missingType,
                     countryNotListedContent:
                         staticContent.countryNotListed,
                     sheetController: sheetController
                 ),
-                shouldAnimate: true,
-                completion: {}
+                shouldAnimate: true
             )
         } catch {
-            self.transition(
+            self.transitionWithoutWaiting(
                 to: ErrorViewController(
                     sheetController: sheetController,
                     error: .error(error)
                 ),
-                shouldAnimate: true,
-                completion: {}
+                shouldAnimate: true
             )
         }
     }
@@ -235,23 +229,21 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             let faceScannerResult = await sheetController.mlModelLoader.faceModels()
             do {
                 let staticContent = try staticContentResult.get()
-                self.transition(
+                self.transitionWithoutWaiting(
                     to: self.makeSelfieCaptureViewController(
                         faceScannerResult: faceScannerResult,
                         staticContent: staticContent,
                         sheetController: sheetController
                     ),
-                    shouldAnimate: true,
-                    completion: {}
+                    shouldAnimate: true
                 )
             } catch {
-                self.transition(
+                self.transitionWithoutWaiting(
                     to: ErrorViewController(
                         sheetController: sheetController,
                         error: .error(error)
                     ),
-                    shouldAnimate: true,
-                    completion: {}
+                    shouldAnimate: true
                 )
             }
         }
@@ -267,40 +259,36 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             let documentScannerResult = await sheetController.mlModelLoader.documentModels()
             do {
                 let staticContent = try staticContentResult.get()
-                self.transition(
+                self.transitionWithoutWaiting(
                     to: self.makeDocumentCaptureViewController(
                         documentScannerResult: documentScannerResult,
                         staticContent: staticContent,
                         sheetController: sheetController
                     ),
-                    shouldAnimate: true,
-                    completion: {}
+                    shouldAnimate: true
                 )
             } catch {
-                self.transition(
+                self.transitionWithoutWaiting(
                     to: ErrorViewController(
                         sheetController: sheetController,
                         error: .error(error)
                     ),
-                    shouldAnimate: true,
-                    completion: {}
+                    shouldAnimate: true
                 )
             }
         }
     }
 
-    func transitionToErrorScreen(
+    @MainActor func transitionToErrorScreen(
         sheetController: VerificationSheetControllerProtocol,
-        error: Error,
-        completion: @escaping () -> Void
-    ) {
-        self.transition(
+        error: Error
+    ) async {
+        await transition(
             to: ErrorViewController(
                 sheetController: sheetController,
                 error: .error(error)
             ),
-            shouldAnimate: true,
-            completion: completion
+            shouldAnimate: true
         )
     }
 
@@ -361,11 +349,62 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     // MARK: - Helpers
 
     /// - Note: This method should not be called directly from outside of this class except for tests
-    func transition(
+    @MainActor func transition(
         to nextViewController: UIViewController,
-        shouldAnimate: Bool,
-        completion: @escaping () -> Void
+        shouldAnimate: Bool
+    ) async {
+        let transitionCoordinator = beginTransition(
+            to: nextViewController,
+            shouldAnimate: shouldAnimate
+        )
+
+        await withCheckedContinuation { continuation in
+            guard let transitionCoordinator else {
+                DispatchQueue.main.async {
+                    continuation.resume()
+                }
+                return
+            }
+
+            let didRegisterCompletion = transitionCoordinator.animate(
+                alongsideTransition: nil,
+                completion: { _ in continuation.resume() }
+            )
+            if !didRegisterCompletion {
+                DispatchQueue.main.async {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+
+    @MainActor private func dismissNavigationController() async {
+        guard navigationController.presentingViewController != nil else {
+            return
+        }
+
+        await withCheckedContinuation { continuation in
+            navigationController.dismiss(animated: true) {
+                continuation.resume()
+            }
+        }
+    }
+
+    private func transitionWithoutWaiting(
+        to nextViewController: UIViewController,
+        shouldAnimate: Bool
     ) {
+        beginTransition(
+            to: nextViewController,
+            shouldAnimate: shouldAnimate
+        )
+    }
+
+    @discardableResult
+    private func beginTransition(
+        to nextViewController: UIViewController,
+        shouldAnimate: Bool
+    ) -> UIViewControllerTransitionCoordinator? {
         // If the only view in the stack is a loading screen, they should not be
         // able to hit the back button to get back into a loading state.
         let isTransitioningFromLoading =
@@ -393,29 +432,17 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             navigationController.pushViewController(nextViewController, animated: shouldAnimate)
         }
 
-        // Call completion block after navigation controller animation, if possible
-        guard shouldAnimate,
-            let coordinator = navigationController.transitionCoordinator
-        else {
-            DispatchQueue.main.async {
-                completion()
-            }
-            return
-        }
-
-        coordinator.animate(alongsideTransition: nil, completion: { _ in completion() })
+        return shouldAnimate ? navigationController.transitionCoordinator : nil
     }
 
     /// Instantiates and returns the next view controller to display in the flow.
     /// - Note: This method should not be called directly from outside of this class except for tests
-    /// TODO: migrate to an async function
-    func nextViewController(
+    @MainActor func nextViewController(
         skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>?,
-        sheetController: VerificationSheetControllerProtocol,
-        completion: @escaping (UIViewController) -> Void
-    ) {
+        sheetController: VerificationSheetControllerProtocol
+    ) async -> UIViewController? {
         // Check for API Errors
         let staticContent: StripeAPI.VerificationPage
         let updateDataResponse: StripeAPI.VerificationPageData?
@@ -423,39 +450,31 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             staticContent = try staticContentResult.get()
             updateDataResponse = try updateDataResult?.get()
         } catch {
-            return completion(
-                ErrorViewController(
-                    sheetController: sheetController,
-                    error: .error(error)
-                )
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(error)
             )
         }
 
         // Check for validation errors
         if let inputError = updateDataResponse?.requirements.errors.first {
-            return completion(
-                ErrorViewController(
-                    sheetController: sheetController,
-                    error: .inputError(inputError)
-                )
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .inputError(inputError)
             )
         }
 
         // If client is unsupported, fallback to web
         if staticContent.unsupportedClient {
             isUsingWebView = true
-            return completion(
-                makeWebViewController(
-                    staticContent: staticContent,
-                    sheetController: sheetController
-                )
+            return makeWebViewController(
+                staticContent: staticContent,
+                sheetController: sheetController
             )
         }
 
         if !skipTestMode && !staticContent.livemode {
-            return completion(
-                makeDebugViewModeController(sheetController: sheetController)
-            )
+            return makeDebugViewModeController(sheetController: sheetController)
         }
 
         // If updateDataResponse is not nil, then this transition is triggered by a
@@ -468,91 +487,68 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         // Show success screen if submitted and closed
         if updateDataResponse?.submittedAndClosed() == true {
             if staticContent.skipSuccessPage {
-                navigationController.dismiss(animated: true)
-                return
+                return nil
             }
-            return completion(
-                SuccessViewController(
-                    successContent: staticContent.success,
-                    sheetController: sheetController
-                )
+            return SuccessViewController(
+                successContent: staticContent.success,
+                sheetController: sheetController
             )
         }
 
         switch missingRequirements.nextDestination(collectedData: sheetController.collectedData) {
         case .consentDestination:
-            return completion(
-                makeBiometricConsentViewController(
-                    staticContent: staticContent,
-                    sheetController: sheetController
-                )
+            return makeBiometricConsentViewController(
+                staticContent: staticContent,
+                sheetController: sheetController
             )
         case .documentWarmupDestination:
-            return completion(
-                makeDocumentWarmupViewController(
-                    sheetController: sheetController,
-                    staticContent: staticContent
-                )
+            return makeDocumentWarmupViewController(
+                sheetController: sheetController,
+                staticContent: staticContent
             )
         case .documentCaptureDestination:
-            Task { @MainActor [weak self] in
-                guard let self else { return }
-                let documentScannerResult = await sheetController.mlModelLoader.documentModels()
-                completion(
-                    self.makeDocumentCaptureViewController(
-                        documentScannerResult: documentScannerResult,
-                        staticContent: staticContent,
-                        sheetController: sheetController
-                    )
-                )
-            }
+            let documentScannerResult = await sheetController.mlModelLoader.documentModels()
+            return makeDocumentCaptureViewController(
+                documentScannerResult: documentScannerResult,
+                staticContent: staticContent,
+                sheetController: sheetController
+            )
         case .selfieCaptureDestination:
-            completion(makeSelfieWarmupViewController(sheetController: sheetController))
+            return makeSelfieWarmupViewController(sheetController: sheetController)
         case .individualWelcomeDestination:
             visitedIndividualWelcomePage = true
             // if missing .name or .dob, then verification type is not document.
             // Transition to IndividualWelcomeViewController.
-            return completion(
-                makeIndividualWelcomeViewController(
-                    staticContent: staticContent,
-                    sheetController: sheetController
-                )
+            return makeIndividualWelcomeViewController(
+                staticContent: staticContent,
+                sheetController: sheetController
             )
         case .individualDestination:
             // if missing .address or .idNumber but not missing .name or .dob, then verification type is document.
             // IndividualViewController is the screen after document collection.
-            return completion(
-                makeIndividualViewController(
-                    staticContent: staticContent,
-                    sheetController: sheetController
-                )
+            return makeIndividualViewController(
+                staticContent: staticContent,
+                sheetController: sheetController
             )
         case .phoneOtpDestination:
-            return completion(
-                makePhoneOtpViewController(
-                    staticContent: staticContent,
-                    sheetController: sheetController
-                )
+            return makePhoneOtpViewController(
+                staticContent: staticContent,
+                sheetController: sheetController
             )
         case .confirmationDestination:
             if staticContent.skipSuccessPage {
-                navigationController.dismiss(animated: true)
-                return
+                return nil
             }
-            return completion(
-                SuccessViewController(
-                    successContent: staticContent.success,
-                    sheetController: sheetController
-                )
+            return SuccessViewController(
+                successContent: staticContent.success,
+                sheetController: sheetController
             )
         case .errorDestination:
-            return completion(
-                ErrorViewController(
-                    sheetController: sheetController,
-                    error: .error(
-                        VerificationSheetFlowControllerError.noScreenForRequirements(
-                            missingRequirements
-                        )
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(
+                    VerificationSheetFlowControllerError.noScreenForRequirements(
+                        missingRequirements
                     )
                 )
             )

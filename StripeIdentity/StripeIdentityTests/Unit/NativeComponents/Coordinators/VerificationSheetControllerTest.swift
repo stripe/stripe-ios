@@ -938,6 +938,25 @@ final class VerificationSheetControllerTest: XCTestCase {
         _ = await generateTask.value
     }
 
+    func testGeneratePhoneOtpFailureTransitionsAndReturnsNil() async throws {
+        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+
+        let requestExp = expectation(description: "generate OTP request made")
+        mockAPIClient.verificationPageGeneratePhoneOtp.callBackOnRequest {
+            requestExp.fulfill()
+        }
+
+        let generateTask = Task { await controller.generatePhoneOtp() }
+        await fulfillment(of: [requestExp], timeout: 1)
+
+        let error = NSError(domain: "test", code: 1)
+        mockAPIClient.verificationPageGeneratePhoneOtp.respondToRequests(with: .failure(error))
+
+        await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        let result = await generateTask.value
+        XCTAssertNil(result)
+    }
+
     func testCannotVerifyPhoneOtp() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
@@ -950,7 +969,15 @@ final class VerificationSheetControllerTest: XCTestCase {
         await fulfillment(of: [requestExp], timeout: 1)
 
         XCTAssertEqual(mockAPIClient.verificationPageCannotVerifyPhoneOtp.requestHistory.count, 1)
+
+        let submitRequestExp = expectation(description: "submit request made")
+        mockAPIClient.verificationSessionSubmit.callBackOnRequest {
+            submitRequestExp.fulfill()
+        }
         mockAPIClient.verificationPageCannotVerifyPhoneOtp.respondToRequests(with: .success(try VerificationPageDataMock.response200.make()))
+        await fulfillment(of: [submitRequestExp], timeout: 1)
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(try VerificationPageDataMock.response200.make()))
+
         await cannotVerifyTask.value
     }
 

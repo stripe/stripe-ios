@@ -40,30 +40,30 @@ protocol VerificationSheetControllerProtocol: AnyObject {
 
     func loadAndUpdateUI(skipTestMode: Bool)
 
-    func saveAndTransition(
+    @MainActor func saveAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         collectedData: StripeAPI.VerificationPageCollectedData
     ) async
 
-    func saveDocumentFrontAndDecideBack(
+    @MainActor func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol
     ) async -> Bool
 
-    func saveDocumentBackAndTransition(
+    @MainActor func saveDocumentBackAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol
     ) async
 
-    func forceDocumentFrontAndDecideBack(
+    @MainActor func forceDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
     ) async -> Bool
 
-    func forceDocumentBackAndTransition(
+    @MainActor func forceDocumentBackAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName
     ) async
 
-    func saveSelfieFileDataAndTransition(
+    @MainActor func saveSelfieFileDataAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         selfieUploader: SelfieUploaderProtocol,
         capturedImages: FaceCaptureData,
@@ -71,24 +71,24 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     ) async
 
     /// Submit OTP with VerificationPageData API and transition if OTP is valid or the request fails.
-    func saveOtpAndMaybeTransition(
+    @MainActor func saveOtpAndMaybeTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         otp otpValue: String
     ) async -> OtpSubmissionResult
 
-    func verifyAndTransition(
+    @MainActor func verifyAndTransition(
         simulateDelay: Bool
     ) async
 
-    func unverifyAndTransition(
+    @MainActor func unverifyAndTransition(
         simulateDelay: Bool
     ) async
 
-    /// Request a new phoneOtp, transition to error view controller if request failed, callback on successCallback otherwise.
-    func generatePhoneOtp() async -> StripeAPI.VerificationPageData
+    /// Request a new phone OTP and transition to the error screen if the request fails.
+    @MainActor func generatePhoneOtp() async -> StripeAPI.VerificationPageData?
 
     /// Send the cannotVerifyPhoneOtp request and transition accordingly.
-    func sendCannotVerifyPhoneOtpAndTransition() async
+    @MainActor func sendCannotVerifyPhoneOtpAndTransition() async
 
     /// Transition to CountryNotListedViewController without any API request
     func transitionToCountryNotListed(
@@ -182,12 +182,11 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
     func loadAndUpdateUI(skipTestMode: Bool) {
         Task { @MainActor in
             let result = await self.load()
-            self.flowController.transitionToNextScreen(
+            await self.flowController.transitionToNextScreen(
                 skipTestMode: skipTestMode,
                 staticContentResult: result,
                 updateDataResult: nil,
-                sheetController: self,
-                completion: {}
+                sheetController: self
             )
         }
     }
@@ -221,8 +220,7 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
 
     // MARK: - Save
 
-    /// Saves the `collectedData` to the server and caches the saved fields if successful
-    /// - Note: `completion` block is always executed on the main thread.
+    /// Saves the `collectedData` to the server and caches the saved fields if successful.
     func saveAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         collectedData: StripeAPI.VerificationPageCollectedData
@@ -251,67 +249,57 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
     /// 1. Check If all fields have been collected, submits the verification page
     /// 2. Transition to the next screen
     private func checkSubmitAndTransition(
-        updateDataResult: Result<StripeAPI.VerificationPageData, Error>,
-        completion: @escaping () -> Void
-    ) {
+        updateDataResult: Result<StripeAPI.VerificationPageData, Error>
+    ) async {
         guard case .success(let updateData) = updateDataResult
         else {
             // Transition to generic error screen
-            transitionWithVerificaionPageDataResult(
-                updateDataResult,
-                completion: completion
-            )
+            await transitionWithVerificaionPageDataResult(updateDataResult)
             return
         }
 
         // If finished collecting, submit and transition
         if updateData.requirements.missing.isEmpty {
-            Task {
-                let submittedData: Result<StripeAPI.VerificationPageData, Error>
-                do {
-                    submittedData = .success(try await apiClient.submitIdentityVerificationPage())
-                    self.isVerificationPageSubmitted = (try? submittedData.get())?.submittedAndClosed() == true
-                } catch {
-                    submittedData = .failure(error)
-                }
+            let submittedData: Result<StripeAPI.VerificationPageData, Error>
+            do {
+                submittedData = .success(try await apiClient.submitIdentityVerificationPage())
+                self.isVerificationPageSubmitted = (try? submittedData.get())?.submittedAndClosed() == true
+            } catch {
+                submittedData = .failure(error)
+            }
 
-                // Checking the response of submit
-                guard case .success(let resultData) = submittedData
-                else {
-                    self.isVerificationPageSubmitted = false
-                    self.transitionWithVerificaionPageDataResult(submittedData, completion: completion)
+            // Checking the response of submit
+            guard case .success(let resultData) = submittedData
+            else {
+                self.isVerificationPageSubmitted = false
+                await transitionWithVerificaionPageDataResult(submittedData)
+                return
+            }
+
+            self.isVerificationPageSubmitted = resultData.submitted == true && resultData.closed == true
+
+            if resultData.needsFallback() {
+                // Checking the buffered VerificationPageResponse, update its missings with the new missings
+                guard let verificationPageResponse = self.verificationPageOrLogError(
+                    missingError: .missingVerificationPageResponseForFallbackUpdate,
+                    assertionMessage: "Fail to get VerificationPageResponse is nil"
+                ) else {
                     return
                 }
+                self.verificationPageResponse = .success(verificationPageResponse.copyWithNewMissings(newMissings: resultData.requirements.missing))
+                // clear collected data
+                self.collectedData = StripeAPI.VerificationPageCollectedData()
 
-                self.isVerificationPageSubmitted = resultData.submitted == true && resultData.closed == true
-
-                if resultData.needsFallback() {
-                    // Checking the buffered VerificationPageResponse, update its missings with the new missings
-                    guard let verificationPageResponse = self.verificationPageOrLogError(
-                        missingError: .missingVerificationPageResponseForFallbackUpdate,
-                        assertionMessage: "Fail to get VerificationPageResponse is nil"
-                    ) else {
-                        completion()
-                        return
-                    }
-                    self.verificationPageResponse = .success(verificationPageResponse.copyWithNewMissings(newMissings: resultData.requirements.missing))
-                    // clear collected data
-                    self.collectedData = StripeAPI.VerificationPageCollectedData()
-
-                }
-                self.transitionWithVerificaionPageDataResult(
-                    submittedData,
-                    completion: completion
-                )
             }
+            await transitionWithVerificaionPageDataResult(submittedData)
         } else {
-            transitionWithVerificaionPageDataResult(updateDataResult, completion: completion)
+            await transitionWithVerificaionPageDataResult(updateDataResult)
         }
     }
 
     /// Save update VerificationPage with document front, checks if back is needed
-    /// If back is needed, invokes onNeedBack
-    /// Otherwise submit the Verification session, transition and invokes onNotNeedBack
+    /// If back is needed, returns `true`.
+    /// Otherwise, submits the verification session, transitions, and returns `false`.
     /// returns `isBackRequired: Bool`
     func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
@@ -324,8 +312,7 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
         )
     }
 
-    /// Waits until document back are done uploading then saves back of document to the server
-    /// - Note: `completion` block is always executed on the main thread.
+    /// Waits until the document back is done uploading, then saves it to the server.
     func saveDocumentBackAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol
@@ -343,11 +330,11 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
     ) async -> Bool {
         guard let documentUploader = self.flowController.documentUploader
         else {
-            return await withCheckedContinuation { continuation in
-                self.flowController.transitionToErrorScreen(sheetController: self, error: VerificationSheetFlowControllerError.noDocumentUploader) {
-                    continuation.resume(returning: false)
-                }
-            }
+            await flowController.transitionToErrorScreen(
+                sheetController: self,
+                error: VerificationSheetFlowControllerError.noDocumentUploader
+            )
+            return false
         }
 
         return await saveDocumentFront(
@@ -363,11 +350,11 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
 
         guard let documentUploader = self.flowController.documentUploader
         else {
-            return await withCheckedContinuation { continuation in
-                self.flowController.transitionToErrorScreen(sheetController: self, error: VerificationSheetFlowControllerError.noDocumentUploader) {
-                    continuation.resume()
-                }
-            }
+            await flowController.transitionToErrorScreen(
+                sheetController: self,
+                error: VerificationSheetFlowControllerError.noDocumentUploader
+            )
+            return
         }
 
         await saveDocumentBack(from: fromScreen, forceConfirm: true, documentUploader: documentUploader)
@@ -405,30 +392,25 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
             result = .failure(error)
         }
 
-        return await withCheckedContinuation { continuation in
-            handleVerificationPageDataResult(
-                collectedData: optionalCollectedData,
-                updateDataResult: result,
-                completion: {
-                    continuation.resume(returning: false)
-                }
-            ) { successData in
-                guard successData.requirements.errors.isEmpty else {
-                    self.transitionWithVerificaionPageDataResult(result) {
-                        continuation.resume(returning: false)
-                    }
-                    return
-                }
-                if successData.requirements.missing.contains(.idDocumentBack) {
-                    continuation.resume(returning: true)
-                } else {
-                    self.analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
-                    self.checkSubmitAndTransition(updateDataResult: result) {
-                        continuation.resume(returning: false)
-                    }
-                }
-            }
+        guard let successData = await handleVerificationPageDataResult(
+            collectedData: optionalCollectedData,
+            updateDataResult: result
+        ) else {
+            return false
         }
+
+        guard successData.requirements.errors.isEmpty else {
+            await transitionWithVerificaionPageDataResult(result)
+            return false
+        }
+
+        if successData.requirements.missing.contains(.idDocumentBack) {
+            return true
+        }
+
+        analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
+        await checkSubmitAndTransition(updateDataResult: result)
+        return false
     }
 
     private func saveDocumentBack(
@@ -480,7 +462,7 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
             result = .failure(error)
         }
         overrideTestModeReturnValue(result: .flowCompleted)
-        transitionWithVerificaionPageDataResult(result)
+        await transitionWithVerificaionPageDataResult(result)
     }
 
     func unverifyAndTransition(
@@ -493,22 +475,18 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
             result = .failure(error)
         }
         overrideTestModeReturnValue(result: .flowCompleted)
-        transitionWithVerificaionPageDataResult(result)
+        await transitionWithVerificaionPageDataResult(result)
     }
 
-    func generatePhoneOtp() async -> StripeAPI.VerificationPageData {
-        await withCheckedContinuation { continuation in
-            Task {
-                let result: Result<StripeAPI.VerificationPageData, any Error>
-                do {
-                    result = .success(try await apiClient.generatePhoneOtp())
-                } catch {
-                    result = .failure(error)
-                }
-                
-                handleVerificationPageDataResult(updateDataResult: result, successPageData: { successPageData in continuation.resume(returning: successPageData) })
-            }
+    func generatePhoneOtp() async -> StripeAPI.VerificationPageData? {
+        let result: Result<StripeAPI.VerificationPageData, Error>
+        do {
+            result = .success(try await apiClient.generatePhoneOtp())
+        } catch {
+            result = .failure(error)
         }
+
+        return await handleVerificationPageDataResult(updateDataResult: result)
     }
 
     func sendCannotVerifyPhoneOtpAndTransition() async {
@@ -518,16 +496,10 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
         } catch {
             updatedDataResult = .failure(error)
         }
-        transitionWithUpdatedDataResult(result: updatedDataResult)
-    }
-
-    private func transitionWithUpdatedDataResult(result: Result<StripeAPI.VerificationPageData, Error>) {
-        Task {
-            await saveCheckSubmitAndTransition(
-                collectedData: nil,
-                updateDataResult: result
-            )
-        }
+        await saveCheckSubmitAndTransition(
+            collectedData: nil,
+            updateDataResult: updatedDataResult
+        )
     }
 
     // MARK: - Transition without save
@@ -590,25 +562,22 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
 
     /// * Assert verificationPageResponse to be correct, then transition with the PageDataResult.
     private func transitionWithVerificaionPageDataResult(
-        _ result: Result<StripeAPI.VerificationPageData, Error>?,
-        completion: @escaping () -> Void = {}
-    ) {
+        _ result: Result<StripeAPI.VerificationPageData, Error>?
+    ) async {
         // Only mutate properties on the main thread
         assert(Thread.isMainThread)
         guard let verificationPageResponse = verificationPageResponseOrLogMissing(
             .missingVerificationPageResponseForPageDataTransition,
             assertionMessage: "verificationPageResponse is nil"
         ) else {
-            completion()
             return
         }
 
-        flowController.transitionToNextScreen(
+        await flowController.transitionToNextScreen(
             skipTestMode: true,
             staticContentResult: verificationPageResponse,
             updateDataResult: result,
-            sheetController: self,
-            completion: completion
+            sheetController: self
         )
     }
 
@@ -677,26 +646,19 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
             updateDataResult = .failure(error)
         }
 
-        return await withCheckedContinuation { continuation in
-            handleVerificationPageDataResult(
-                collectedData: phoneOtpData,
-                updateDataResult: updateDataResult,
-                completion: {
-                    continuation.resume(returning: .transitioned)
-                }
-            ) { successPageData in
-                if successPageData.requirements.missing.contains(.phoneOtp) {
-                    continuation.resume(returning: .invalidOtp)
-                } else {
-                    self.checkSubmitAndTransition(
-                        updateDataResult: updateDataResult,
-                        completion: {
-                            continuation.resume(returning: .transitioned)
-                        }
-                    )
-                }
-            }
+        guard let successPageData = await handleVerificationPageDataResult(
+            collectedData: phoneOtpData,
+            updateDataResult: updateDataResult
+        ) else {
+            return .transitioned
         }
+
+        if successPageData.requirements.missing.contains(.phoneOtp) {
+            return .invalidOtp
+        }
+
+        await checkSubmitAndTransition(updateDataResult: updateDataResult)
+        return .transitioned
     }
 
     // MARK: - Update internal states
@@ -709,17 +671,15 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
         self.testModeReturnValue = result
     }
 
-    /// Check the result of VerificationPageData and update status. Callback successPageData if successful.
+    /// Check the result of VerificationPageData and update status.
     private func handleVerificationPageDataResult(
         collectedData: StripeAPI.VerificationPageCollectedData? = nil,
-        updateDataResult: Result<StripeAPI.VerificationPageData, Error>,
-        completion: @escaping () -> Void = {},
-        successPageData: @escaping (StripeAPI.VerificationPageData) -> Void
-    ) {
+        updateDataResult: Result<StripeAPI.VerificationPageData, Error>
+    ) async -> StripeAPI.VerificationPageData? {
         guard case .success(let resultData) = updateDataResult
         else {
-            self.transitionWithVerificaionPageDataResult(updateDataResult, completion: completion)
-            return
+            await transitionWithVerificaionPageDataResult(updateDataResult)
+            return nil
         }
 
         // update collectedData if there are no errors.
@@ -729,7 +689,7 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
             }
         }
 
-        successPageData(resultData)
+        return resultData
     }
 
     /// 1. If the save was successful, caches the collectedData
@@ -739,23 +699,14 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
         collectedData: StripeAPI.VerificationPageCollectedData?,
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>
     ) async {
-        await withCheckedContinuation { continuation in
-            handleVerificationPageDataResult(
-                collectedData: collectedData,
-                updateDataResult: updateDataResult,
-                completion: {
-                    continuation.resume()
-                },
-                successPageData: { _ in
-                    self.checkSubmitAndTransition(
-                        updateDataResult: updateDataResult,
-                        completion: {
-                            continuation.resume()
-                        }
-                    )
-                }
-            )
+        guard await handleVerificationPageDataResult(
+            collectedData: collectedData,
+            updateDataResult: updateDataResult
+        ) != nil else {
+            return
         }
+
+        await checkSubmitAndTransition(updateDataResult: updateDataResult)
     }
 
     /// Calculate the clearData parameter from the collectedData to be generated by the following

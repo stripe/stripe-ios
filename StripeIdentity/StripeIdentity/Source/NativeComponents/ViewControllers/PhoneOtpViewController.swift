@@ -164,7 +164,9 @@ extension PhoneOtpViewController {
     func generateOtp() {
         phoneOtpView.configure(with: .RequestingOTP)
         Task {
-            _ = await sheetController?.generatePhoneOtp()
+            guard await sheetController?.generatePhoneOtp() != nil else {
+                return
+            }
             phoneOtpView.configure(with: .InputtingOTP)
         }
     }
