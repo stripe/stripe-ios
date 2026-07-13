@@ -446,7 +446,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
     // MARK: - Automatic tax (billing source)
 
     @MainActor
-    func testCardFormWithAutomaticTaxBilling_collectsTaxRegionFields() {
+    func testCardFormWithAutomaticTaxBilling_collectsAddressForTax() {
         let session = CheckoutTestHelpers.makeOpenSession(
             automaticTaxEnabled: true,
             automaticTaxAddressSource: "session.billing"
@@ -466,13 +466,12 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             XCTFail("Could not find billing address section")
             return
         }
-        XCTAssertTrue(billingAddressSection.collectsTaxRegionFields)
+        XCTAssertTrue(billingAddressSection.collectsAddressForTax)
 
-        // US wants the full address
+        // US needs the full address, which it collects via the autocomplete line rather than every field.
         billingAddressSection.selectedCountryCode = "US"
-        XCTAssertNotNil(billingAddressSection.line1)
-        XCTAssertNotNil(billingAddressSection.state)
-        XCTAssertNotNil(billingAddressSection.postalCode)
+        XCTAssertNotNil(billingAddressSection.autoCompleteLine)
+        XCTAssertNil(billingAddressSection.line1)
 
         // CA adds the province; the card form's postal is still there
         billingAddressSection.selectedCountryCode = "CA"
@@ -497,7 +496,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
 
         // Autocomplete already collects more than tax needs, so leave it alone.
         let section = factory.makeBillingAddressSection(collectionMode: .autoCompletable).element
-        XCTAssertTrue(section.collectsTaxRegionFields)
+        XCTAssertTrue(section.collectsAddressForTax)
         section.selectedCountryCode = "US"
         XCTAssertNotNil(section.autoCompleteLine)
         XCTAssertNil(section.line1)

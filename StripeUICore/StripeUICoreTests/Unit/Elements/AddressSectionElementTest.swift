@@ -131,16 +131,16 @@ class AddressSectionElementTest: XCTestCase {
             locale: locale_enUS,
             addressSpecProvider: specProvider,
             collectionMode: .countryAndPostal(),
-            collectsTaxRegionFields: true
+            collectsAddressForTax: true
         )
 
-        // US wants the full address
+        // US needs the full address, which it collects via the autocomplete line rather than every field.
         sut.selectedCountryCode = "US"
-        XCTAssertNotNil(sut.line1)
-        XCTAssertNotNil(sut.line2)
-        XCTAssertNotNil(sut.city)
-        XCTAssertNotNil(sut.state)
-        XCTAssertNotNil(sut.postalCode)
+        XCTAssertNotNil(sut.autoCompleteLine)
+        XCTAssertNil(sut.line1)
+        XCTAssertNil(sut.city)
+        XCTAssertNil(sut.state)
+        XCTAssertNil(sut.postalCode)
 
         // CA adds the province; postal from the base mode sticks around
         sut.selectedCountryCode = "CA"
@@ -170,7 +170,7 @@ class AddressSectionElementTest: XCTestCase {
             locale: locale_enUS,
             addressSpecProvider: specProvider,
             collectionMode: .autoCompletable,
-            collectsTaxRegionFields: true
+            collectsAddressForTax: true
         )
         sut.selectedCountryCode = "US"
         XCTAssertNotNil(sut.autoCompleteLine)

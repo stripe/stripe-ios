@@ -536,8 +536,7 @@ extension PaymentSheetFormFactory {
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
             collectionMode: finalCollectionMode,
-            // Automatic tax needs enough of the billing address to work out the tax region, so pull those fields in too.
-            collectsTaxRegionFields: collectsTaxRegionFromBillingAddress,
+            collectsAddressForTax: collectsTaxRegionFromBillingAddress,
             additionalFields: .init(
                 phone: includePhone ? .enabled(isOptional: false) : .disabled,
                 email: includeEmail ? .enabled(isOptional: false) : .disabled,

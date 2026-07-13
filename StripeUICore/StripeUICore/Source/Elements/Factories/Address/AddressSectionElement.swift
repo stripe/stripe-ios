@@ -155,9 +155,9 @@ import UIKit
     }
 
     public let countryCodes: [String]
-    /// When true, always collect enough of the address to figure out the tax region (see `taxRegionFields`), on top of
-    /// whatever `collectionMode` would collect. Set when automatic tax is computed from the billing address.
-    public let collectsTaxRegionFields: Bool
+    /// When true, always collect enough of the address to compute tax (see `taxRegionCollection(for:)`), on top of
+    /// whatever `collectionMode` would collect.
+    public let collectsAddressForTax: Bool
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsAppearance
     private(set) var defaults: AddressDetails
@@ -182,7 +182,7 @@ import UIKit
         addressSpecProvider: AddressSpecProvider = .shared,
         defaults: AddressDetails = .empty,
         collectionMode: CollectionMode = .all(),
-        collectsTaxRegionFields: Bool = false,
+        collectsAddressForTax: Bool = false,
         additionalFields: AdditionalFields = .init(),
         theme: ElementsAppearance = .default,
         presentAutoComplete: @escaping () -> Void = { }
@@ -190,7 +190,7 @@ import UIKit
         let dropdownCountries = countries?.map { $0.uppercased() } ?? addressSpecProvider.countries
         let countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
         self.collectionMode = collectionMode
-        self.collectsTaxRegionFields = collectsTaxRegionFields
+        self.collectsAddressForTax = collectsAddressForTax
         self.countryCodes = countryCodes
         self.country = DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country_or_region,
@@ -299,12 +299,21 @@ import UIKit
         }
     }
 
-    // What we need to pin down the tax region: full address in the US, just the province in Canada, country alone otherwise.
-    private static func taxRegionFields(for countryCode: String) -> Set<AddressSpec.FieldType> {
+    /// What to collect for automatic tax in a given country.
+    private enum TaxRegionCollection {
+        /// Collect the full address via the autocomplete line (e.g. the US).
+        case autocomplete
+        /// Collect these fields in addition to what `collectionMode` collects (e.g. Canada's province).
+        /// An empty set means the country selector alone is enough.
+        case fields(Set<AddressSpec.FieldType>)
+    }
+
+    // What we need to compute tax in each country: the full address in the US, the province in Canada, country alone otherwise.
+    private static func taxRegionCollection(for countryCode: String) -> TaxRegionCollection {
         switch countryCode {
-        case "US": return [.line, .city, .state, .postal]
-        case "CA": return [.state]
-        default: return []
+        case "US": return .autocomplete
+        case "CA": return .fields([.state])
+        default: return .fields([])
         }
     }
 
@@ -342,12 +351,22 @@ import UIKit
             state: state?.rawData
         )
 
+        // What automatic tax needs in this country. Only applies on top of the "minimal" collection modes; the
+        // autocomplete modes already collect the full address, so we leave them alone (this also keeps the filled-in
+        // fields visible after an autocomplete selection switches us to .allWithAutocomplete).
+        let taxCollection: TaxRegionCollection? = (collectsAddressForTax && collectionMode != .allWithAutocomplete && collectionMode != .autoCompletable)
+            ? Self.taxRegionCollection(for: countryCode)
+            : nil
+        // The US collects its full address via the autocomplete line rather than every field.
+        let taxUsesAutocomplete = { if case .autocomplete = taxCollection { return true } else { return false } }()
+        // Extra fields tax needs on top of `collectionMode` (e.g. Canada's province).
+        let taxFields: Set<AddressSpec.FieldType> = { if case .fields(let fields) = taxCollection { return fields } else { return [] } }()
+
         // Get the address spec for the country and filter out unused fields
         let spec = addressSpecProvider.addressSpec(for: countryCode)
-        let fieldOrdering = spec.fieldOrdering.filter { field in
-            // Force in the tax-region fields regardless of collectionMode. Skip .autoCompletable though — its
-            // autocomplete line already grabs the whole address, so adding these back would just duplicate it.
-            if collectsTaxRegionFields, collectionMode != .autoCompletable, Self.taxRegionFields(for: countryCode).contains(field) {
+        var fieldOrdering = spec.fieldOrdering.filter { field in
+            // Always pull in the fields tax needs, in addition to whatever collectionMode collects.
+            if taxFields.contains(field) {
                 return true
             }
             switch collectionMode {
@@ -360,7 +379,11 @@ import UIKit
             }
         }
 
-        if collectionMode == .autoCompletable {
+        if taxUsesAutocomplete {
+            fieldOrdering = []
+        }
+
+        if collectionMode == .autoCompletable || taxUsesAutocomplete {
             autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme, didTap: { [weak self] in self?.didTapAutocompleteButton() })
         } else {
             autoCompleteLine = nil
