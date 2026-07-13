@@ -42,7 +42,7 @@ extension String.Localized {
 
     static var cryptoOnrampErrorInvalidWalletOwnershipChallenge: String {
         return STPLocalizedString(
-            "This wallet verification request is no longer valid. Please try again.",
+            "This wallet verification request can't be used. Please try again.",
             "Error message shown when the wallet ownership challenge is invalid"
         )
     }

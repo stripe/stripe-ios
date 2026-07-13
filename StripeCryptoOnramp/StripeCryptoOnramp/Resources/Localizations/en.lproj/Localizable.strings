@@ -13,11 +13,11 @@
 /* Error message shown when the wallet network is not supported for crypto onramp */
 "This wallet network isn't supported. Please choose a different network." = "This wallet network isn't supported. Please choose a different network.";
 
+/* Error message shown when the wallet ownership challenge is invalid */
+"This wallet verification request can't be used. Please try again." = "This wallet verification request can't be used. Please try again.";
+
 /* Error message shown when the wallet ownership challenge has expired */
 "This wallet verification request expired. Please try again." = "This wallet verification request expired. Please try again.";
-
-/* Error message shown when the wallet ownership challenge is invalid */
-"This wallet verification request is no longer valid. Please try again." = "This wallet verification request is no longer valid. Please try again.";
 
 /* Error message shown when the submitted wallet ownership signature is invalid */
 "We couldn't verify ownership of this wallet. Please try again." = "We couldn't verify ownership of this wallet. Please try again.";
