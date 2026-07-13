@@ -54,6 +54,9 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Internal Properties
 
+    /// The PaymentElement for this Checkout instance.
+    private var paymentElement: PaymentElement!
+
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
     /// A snapshot of the current ``session`` accessible from non-MainActor contexts.
@@ -117,15 +120,20 @@ public final class Checkout: ObservableObject {
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
             )
             let loadedSession = apiResponse.makePublicSession()
-            await flagImageManager.prefetchFlagImages(for: loadedSession)
             self.session = loadedSession
-            self.nonisolatedSession = session
+            self.nonisolatedSession = session // temporary hack
+
+            // Load elements
+            self.paymentElement = try await PaymentElement(checkout: self)
+            await flagImageManager.prefetchFlagImages(for: loadedSession) // TODO: This should probably just load currency selector and not be a global singleton
+
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
     }
 
 #if DEBUG
+    // TODO: Refactor this away, we should extract loading into its own object and inject a dummy in tests.
     /// Internal initializer for unit tests that injects a pre-loaded API response.
     init(
         clientSecret: String,
@@ -365,5 +373,12 @@ public final class Checkout: ObservableObject {
         session = finalSession
 
         try await integrationDelegate?.checkoutDidUpdate(self)
+    }
+
+    // MARK: - Element methods
+
+    /// Returns the PaymentElement for this Checkout instance.
+    public func getPaymentElement() -> PaymentElement {
+        return paymentElement
     }
 }
