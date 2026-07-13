@@ -102,6 +102,47 @@ extension STPApplePayContext {
         return summaryItems
     }
 
+    // Apple Pay summary items for the checkout session's current state. Used both to build the initial
+    // request and to refresh the sheet after a tax recalc, so the two stay structurally identical.
+    // Prefers itemized line items, falls back to a single total row (or a .pending row if amount unknown).
+    static func checkoutPaymentSummaryItems(
+        checkout: Checkout,
+        label: String,
+        currency: String?
+    ) -> [PKPaymentSummaryItem] {
+        let session: Checkout.Session = checkout.nonisolatedSession
+        if !session.lineItems.isEmpty, let total = session.total {
+            return makeApplePayPaymentSummaryItems(
+                lineItems: session.lineItems,
+                total: total,
+                totalLabel: label,
+                currency: currency
+            )
+        } else if let amount = session.expectedAmount() {
+            let decimalAmount = NSDecimalNumber.stp_decimalNumber(withAmount: amount, currency: currency)
+            return [PKPaymentSummaryItem(label: label, amount: decimalAmount, type: .final)]
+        } else {
+            return [PKPaymentSummaryItem(label: label, amount: .zero, type: .pending)]
+        }
+    }
+
+    // Checkout.Address from the partial billing address Apple Pay exposes while the sheet is open. nil if
+    // there's no country to key tax on. line1/line2 are omitted: Apple withholds the street until
+    // authorization, so we only get country/city/state/postal here (enough for a tax region).
+    static func makeCheckoutAddress(from postalAddress: CNPostalAddress) -> Checkout.Address? {
+        guard let country = postalAddress.isoCountryCode.nonEmpty else {
+            return nil
+        }
+        return Checkout.Address(
+            country: country,
+            line1: nil,
+            line2: nil,
+            city: postalAddress.city.nonEmpty,
+            state: postalAddress.state.nonEmpty,
+            postalCode: postalAddress.postalCode.nonEmpty
+        )
+    }
+
     /// Converts a `Checkout.ContactAddress` into a `PKContact` for pre-populating the Apple Pay sheet.
     static func makeBillingContact(from contactAddress: Checkout.ContactAddress) -> PKContact {
         let contact = PKContact()

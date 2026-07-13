@@ -5,6 +5,8 @@
 //  Created by Yuki Tokuhiro on 8/2/23.
 //
 
+import Contacts
+import PassKit
 @testable @_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
@@ -330,6 +332,56 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         json["total_summary"] = ["subtotal": 5050, "total": 5050, "due": 5050]
         let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
         return .checkout(Checkout(apiResponse: session))
+    }
+
+    // MARK: - didSelectPaymentMethod (automatic-tax billing sync)
+
+    // We only respond to didSelectPaymentMethod for checkout sessions that source tax from the billing
+    // address; every other flow must stay untouched.
+    private static let didSelectPaymentMethodSelector = #selector(
+        PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(_:didSelectPaymentMethod:handler:)
+    )
+
+    func testDidSelectPaymentMethod_respondedTo_forCheckoutAutoTaxBilling() {
+        let context = makeApplePayContext(for: makeCheckoutIntent(automaticTaxBilling: true))
+        XCTAssertTrue(context.responds(to: Self.didSelectPaymentMethodSelector))
+    }
+
+    func testDidSelectPaymentMethod_notRespondedTo_forCheckoutWithoutAutoTax() {
+        let context = makeApplePayContext(for: makeCheckoutIntent(automaticTaxBilling: false))
+        XCTAssertFalse(context.responds(to: Self.didSelectPaymentMethodSelector))
+    }
+
+    func testDidSelectPaymentMethod_notRespondedTo_forPaymentIntent() {
+        // plain Apple Pay must be unaffected
+        let context = makeApplePayContext(for: Intent._testValue())
+        XCTAssertFalse(context.responds(to: Self.didSelectPaymentMethodSelector))
+    }
+
+    // MARK: - makeCheckoutAddress
+
+    func testMakeCheckoutAddress_extractsRegionAndOmitsStreet() {
+        let postalAddress = CNMutablePostalAddress()
+        postalAddress.isoCountryCode = "US"
+        postalAddress.city = "San Francisco"
+        postalAddress.state = "CA"
+        postalAddress.postalCode = "94105"
+        postalAddress.street = "510 Townsend St" // Apple withholds the street pre-authorization; must be ignored.
+
+        let address = STPApplePayContext.makeCheckoutAddress(from: postalAddress)
+
+        XCTAssertEqual(address?.country, "US")
+        XCTAssertEqual(address?.city, "San Francisco")
+        XCTAssertEqual(address?.state, "CA")
+        XCTAssertEqual(address?.postalCode, "94105")
+        XCTAssertNil(address?.line1)
+        XCTAssertNil(address?.line2)
+    }
+
+    func testMakeCheckoutAddress_withoutCountry_returnsNil() {
+        let postalAddress = CNMutablePostalAddress()
+        postalAddress.city = "San Francisco"
+        XCTAssertNil(STPApplePayContext.makeCheckoutAddress(from: postalAddress))
     }
 
     func testCreatePaymentRequest_label_normalIntent() {

@@ -56,6 +56,26 @@ import PassKit
         didSelectShippingContact contact: PKContact
     ) async -> PKPaymentRequestShippingContactUpdate
 
+    /// Called when the Apple Pay sheet opens and when the user selects a different payment method (card).
+    /// Inspect the payment method's billing address and invoke the completion block with an updated
+    /// `PKPaymentRequestPaymentMethodUpdate` (e.g. to recalculate tax from the billing address).
+    /// - Note: Apple exposes only a partial billing address here — in the US, postal code/city/state, not the
+    /// street; the full address arrives in the `paymentInformation` passed to
+    /// `applePayContext:didCreatePaymentMethod:paymentInformation:`.
+    @MainActor @preconcurrency
+    @objc optional func applePayContext(
+        _ context: STPApplePayContext,
+        didSelectPaymentMethod paymentMethod: PKPaymentMethod,
+        handler: @escaping (_ update: PKPaymentRequestPaymentMethodUpdate) -> Void
+    )
+
+    /// Async variant of the completion-block `didSelectPaymentMethod` above; returns the updated
+    /// `PKPaymentRequestPaymentMethodUpdate` instead of taking a handler. Implement one or the other.
+    @objc optional func applePayContext(
+        _ context: STPApplePayContext,
+        didSelectPaymentMethod paymentMethod: PKPaymentMethod
+    ) async -> PKPaymentRequestPaymentMethodUpdate
+
     /// Called when the user has entered or updated a coupon code. You should validate the
     /// coupon and must invoke the completion block with a PKPaymentRequestCouponCodeUpdate object.
     @MainActor @preconcurrency
@@ -390,12 +410,18 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         let stp_didSelectShippingContact = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didSelectShippingContact:handler:))
         let stp_didSelectShippingContact_async = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didSelectShippingContact:))
 
+        // didSelectPaymentMethod
+        let pk_didSelectPaymentMethod = #selector(PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(_:didSelectPaymentMethod:handler:))
+        let stp_didSelectPaymentMethod = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didSelectPaymentMethod:handler:))
+        let stp_didSelectPaymentMethod_async = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didSelectPaymentMethod:))
+
         // Note: We can't implement _both_ the PK completion-block-based didSelectShippingMethod and the async version (try it - you'll see a compiler error).
         // We only implement the completion-block based method. If our delegate implements the async version, we call it.
         // Our method should be called if our delegate  implements *either* our completion-block-based didSelectShippingMethod *o*  the async version.
         var delegateToAppleDelegateMapping = [
             pk_didSelectShippingMethod: [stp_didSelectShippingMethod, stp_didSelectShippingMethod_async],
             pk_didSelectShippingContact: [stp_didSelectShippingContact, stp_didSelectShippingContact_async],
+            pk_didSelectPaymentMethod: [stp_didSelectPaymentMethod, stp_didSelectPaymentMethod_async],
         ]
 
         // Apple Pay can accept coupon codes directly, so we need to broker the
@@ -536,6 +562,31 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         } else if respondsToAsyncDelegateMethod {
             Task {
                 let update = await delegate.applePayContext!(self, didSelectShippingContact: contact)
+                completion(update)
+            }
+        }
+    }
+
+    @objc
+    public func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didSelectPaymentMethod paymentMethod: PKPaymentMethod,
+        handler completion: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
+    ) {
+        // Note: this method isn't called unless our delegate implements it (see this class's `responds(to:)` override)
+        guard let delegate else {
+            return
+        }
+        let completionBlockDelegateMethod = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didSelectPaymentMethod:handler:))
+        let asyncDelegateMethod = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didSelectPaymentMethod:))
+        let respondsToCompletionBlockDelegateMethod = delegate.responds(to: completionBlockDelegateMethod)
+        let respondsToAsyncDelegateMethod = delegate.responds(to: asyncDelegateMethod)
+        assert(!(respondsToAsyncDelegateMethod && respondsToCompletionBlockDelegateMethod), "Only implement either the async or completion-block based didSelectPaymentMethod delegate method, not both.")
+        if respondsToCompletionBlockDelegateMethod {
+            delegate.applePayContext?(self, didSelectPaymentMethod: paymentMethod, handler: completion)
+        } else if respondsToAsyncDelegateMethod {
+            Task {
+                let update = await delegate.applePayContext!(self, didSelectPaymentMethod: paymentMethod)
                 completion(update)
             }
         }

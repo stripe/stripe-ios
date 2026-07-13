@@ -347,9 +347,9 @@ import UIKit
             state: state?.rawData
         )
 
-        // Only bother topping up for tax in the minimal modes. The autocomplete modes already collect the whole
-        // address, and skipping them avoids wiping fields the user just filled once an autocomplete selection
-        // flips us to .allWithAutocomplete.
+        // Only top up for tax in the minimal modes; the autocomplete modes already collect the whole address.
+        // Skipping them also avoids wiping fields the user just filled when an autocomplete selection flips us
+        // to .allWithAutocomplete.
         var taxUsesAutocomplete = false
         var extraTaxFields: Set<AddressSpec.FieldType> = []
         if collectsAddressForTax, collectionMode != .allWithAutocomplete, collectionMode != .autoCompletable {
