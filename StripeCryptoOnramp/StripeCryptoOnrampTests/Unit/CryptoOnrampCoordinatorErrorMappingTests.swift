@@ -168,12 +168,12 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
     func testMappedErrorMapsInvalidWalletOwnershipChallengeError() throws {
         let apiError = try assertMapsWalletOwnershipError(
             code: "crypto_onramp_invalid_wallet_ownership_challenge",
-            message: "The wallet ownership challenge is invalid.",
+            message: "The challenge does not exist, belongs to a different authenticated consumer, was already consumed, or is otherwise invalid.",
             expectedType: InvalidWalletOwnershipChallengeError.self,
-            expectedUserMessage: "This wallet verification request is no longer valid. Please try again."
+            expectedUserMessage: "This wallet verification request is invalid. Please try again."
         )
 
-        XCTAssertTrue(apiError.developerMessage.contains("The wallet ownership challenge is invalid."))
+        XCTAssertTrue(apiError.developerMessage.contains("The challenge does not exist, belongs to a different authenticated consumer, was already consumed, or is otherwise invalid."))
         XCTAssertTrue(apiError.developerMessage.contains("Code: crypto_onramp_invalid_wallet_ownership_challenge"))
         XCTAssertTrue(apiError.developerMessage.contains("Next step: Request a new challenge for the registered wallet"))
     }
