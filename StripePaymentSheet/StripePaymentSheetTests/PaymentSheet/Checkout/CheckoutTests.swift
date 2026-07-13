@@ -18,10 +18,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
     func testLoadCheckoutSession() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
-        let checkout = try await Checkout(
-            clientSecret: checkoutSessionResponse.clientSecret,
-            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        )
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
 
         let session = checkout.session
         XCTAssertEqual(session.id, checkoutSessionResponse.id)
@@ -37,10 +36,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
-        let checkout = try await Checkout(
-            clientSecret: checkoutSessionResponse.clientSecret,
-            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        )
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
 
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
@@ -61,10 +59,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
-        let checkout = try await Checkout(
-            clientSecret: checkoutSessionResponse.clientSecret,
-            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        )
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
 
         XCTAssertTrue(checkout.session.discountAmounts.isEmpty)
         XCTAssertNil(promotionCode(in: checkout.session))
@@ -82,10 +79,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
-        let checkout = try await Checkout(
-            clientSecret: checkoutSessionResponse.clientSecret,
-            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        )
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
 
         // Apply first
         try await checkout.applyPromotionCode("SAVE25")
@@ -105,10 +101,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
-        let checkout = try await Checkout(
-            clientSecret: checkoutSessionResponse.clientSecret,
-            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        )
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
 
         do {
             try await checkout.applyPromotionCode("BOGUS_CODE_123")
@@ -125,10 +120,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowAdjustableLineItemQuantity: true
         )
-        let checkout = try await Checkout(
-            clientSecret: checkoutSessionResponse.clientSecret,
-            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        )
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
 
         XCTAssertEqual(5050, checkout.session.total?.total.minorUnitsAmount)
 
@@ -145,10 +139,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             includeShippingOptions: true
         )
-        let checkout = try await Checkout(
-            clientSecret: checkoutSessionResponse.clientSecret,
-            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        )
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
 
         XCTAssertEqual(2500, checkout.session.total?.total.minorUnitsAmount)
 
@@ -168,10 +161,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
             collectBillingAddress: true,
             automaticTax: true
         )
-        let checkout = try await Checkout(
-            clientSecret: checkoutSessionResponse.clientSecret,
-            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        )
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
 
         XCTAssertNil(checkout.session.billingAddress)
 
@@ -216,10 +208,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
             collectShippingAddress: true,
             automaticTax: true
         )
-        let checkout = try await Checkout(
-            clientSecret: checkoutSessionResponse.clientSecret,
-            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        )
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
 
         XCTAssertNil(checkout.session.shippingAddress)
 
@@ -261,13 +252,10 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
             adaptivePricingEnabled: true,
             customerEmailLocation: "DE"
         )
-        var configuration = Checkout.Configuration()
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
         configuration.adaptivePricing.allowed = true
-        let checkout = try await Checkout(
-            clientSecret: checkoutSessionResponse.clientSecret,
-            configuration: configuration,
-            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        )
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
 
         let initialSession = checkout.session
 

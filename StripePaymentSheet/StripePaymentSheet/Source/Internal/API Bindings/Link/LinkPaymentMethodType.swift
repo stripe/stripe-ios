@@ -9,7 +9,8 @@ import Foundation
 
 @_spi(STP) import StripeCore
 
-@_spi(STP) public enum LinkPaymentMethodType: String, CaseIterable {
+/// The payment method types supported by the Link flow.
+@_spi(STP) @_spi(LinkControllerPreview) public enum LinkPaymentMethodType: String, CaseIterable {
     case card = "CARD"
     case bankAccount = "BANK_ACCOUNT"
 }

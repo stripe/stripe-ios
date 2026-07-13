@@ -14,7 +14,7 @@ import Foundation
 /// Manages a Checkout Session lifecycle.
 ///
 /// ```swift
-/// let checkout = try await Checkout(clientSecret: "cs_xxx_secret_yyy")
+/// let checkout = try await Checkout(configuration: .init(clientSecret: "cs_xxx_secret_yyy"))
 /// print(checkout.session)
 /// ```
 ///
@@ -99,26 +99,20 @@ public final class Checkout: ObservableObject {
 
     /// Loads a Checkout Session from Stripe and returns a ready-to-use instance.
     ///
-    /// - Parameters:
-    ///   - clientSecret: The client secret for your Checkout Session (e.g. `cs_xxx_secret_yyy`).
-    ///   - configuration: Configuration options for the checkout. Defaults to ``Configuration.init()``.
-    ///   - apiClient: The API client to use. Defaults to ``STPAPIClient.shared``.
+    /// - Parameter configuration: Configuration options for the checkout.
     /// - Throws: ``CheckoutError`` if the client secret is invalid or the session cannot be loaded.
-    public init(
-        clientSecret: String,
-        configuration: Configuration = Configuration(),
-        apiClient: STPAPIClient = .shared
-    ) async throws {
+    public init(configuration: Configuration) async throws {
+        let clientSecret = configuration.clientSecret
         guard !clientSecret.isEmpty else {
             throw CheckoutError.invalidClientSecret
         }
         self.clientSecret = clientSecret
         self.configuration = configuration
-        self.apiClient = apiClient
+        self.apiClient = configuration.apiClient
 
         let sessionId = Self.extractSessionId(from: clientSecret)
         do {
-            let apiResponse = try await apiClient.initCheckoutSession(
+            let apiResponse = try await configuration.apiClient.initCheckoutSession(
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
             )
@@ -135,12 +129,14 @@ public final class Checkout: ObservableObject {
     /// Internal initializer for unit tests that injects a pre-loaded API response.
     init(
         clientSecret: String,
-        configuration: Configuration = Configuration(),
+        configuration: Configuration? = nil,
         apiResponse: STPCheckoutSessionAPIResponse,
         apiClient: STPAPIClient = .shared
     ) async {
         self.clientSecret = clientSecret
-        self.configuration = configuration
+        var resolvedConfiguration = configuration ?? Configuration(clientSecret: clientSecret)
+        resolvedConfiguration.apiClient = apiClient
+        self.configuration = resolvedConfiguration
         self.apiClient = apiClient
         let loadedSession = apiResponse.makePublicSession()
         await flagImageManager.prefetchFlagImages(for: loadedSession)
@@ -151,7 +147,7 @@ public final class Checkout: ObservableObject {
     /// Synchronous test-only initializer that wraps a pre-loaded API response without async work.
     init(apiResponse: STPCheckoutSessionAPIResponse) {
         self.clientSecret = ""
-        self.configuration = Configuration()
+        self.configuration = Configuration(clientSecret: "")
         self.apiClient = .shared
         self.session = apiResponse.makePublicSession()
         self.nonisolatedSession = session
@@ -243,21 +239,22 @@ public final class Checkout: ObservableObject {
     ///     to a country-only region, pass a ``Checkout.Address`` with just the country.
     /// - Throws: ``CheckoutError`` if the session is not open, or if
     ///   the server request fails.
-    public func updateBillingAddress(
+    func updateBillingAddress(
         name: String? = nil,
         phone: String? = nil,
-        address: Address
+        address: Address,
+        canUpdateWhileSheetPresented: Bool = false
     ) async throws {
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
         guard session.billingAddress != contactAddress else { return }
         if session.shouldSendTaxRegion(for: "billing") {
             try await performUpdate(.setTaxRegion(address), applying: { session in
                 session.makeCopyOverriding(billingAddress: contactAddress)
-            })
+            }, canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
         } else {
             try await performUpdate(applying: { session in
                 session.makeCopyOverriding(billingAddress: contactAddress)
-            })
+            }, canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
         }
     }
 

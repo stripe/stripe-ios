@@ -886,7 +886,9 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCheckoutSession() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret)
+        checkoutConfiguration.apiClient = apiClient
+        let checkout = try await Checkout(configuration: checkoutConfiguration)
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient
@@ -904,7 +906,9 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCheckoutSessionCancelsInFlight() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret)
+        checkoutConfiguration.apiClient = apiClient
+        let checkout = try await Checkout(configuration: checkoutConfiguration)
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient
@@ -926,7 +930,9 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCheckoutSessionNoOpsForCompleteSession() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret)
+        checkoutConfiguration.apiClient = apiClient
+        let checkout = try await Checkout(configuration: checkoutConfiguration)
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient
@@ -955,7 +961,9 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCheckoutSessionNoOpsForExpiredSession() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret)
+        checkoutConfiguration.apiClient = apiClient
+        let checkout = try await Checkout(configuration: checkoutConfiguration)
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient

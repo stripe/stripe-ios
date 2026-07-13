@@ -12,46 +12,27 @@ import Foundation
 // We use snake case to make long names easier to read.
 extension String.Localized {
     @_spi(STP) public static func continue_with_link(brand: LinkBrand) -> String {
-        switch brand {
-        case .link, .unparsable:
-            return STPLocalizedString(
-                "Continue with Link",
+        String(
+            format: STPLocalizedString(
+                "Continue with %@",
                 """
                 A button title. This button, when pressed, will automatically log-in the user with their e-mail to Link (one-click checkout provider).
                    The title of a screen where users are informed that they can sign-in-to Link.
+                   The placeholder is a Stripe brand name and should not be translated.
                 """
-            )
-        case .onelink:
-            return String(
-                format: STPLocalizedString(
-                    "Continue with %@",
-                    """
-                    A button title. This button, when pressed, will automatically log-in the user with their e-mail to Link (one-click checkout provider).
-                       The title of a screen where users are informed that they can sign-in-to Link.
-                       The placeholder is a Stripe brand name and should not be translated.
-                    """
-                ),
-                brand.displayName
-            )
-        }
+            ),
+            brand.displayName
+        )
     }
 
     @_spi(STP) public static func use_information_you_previously_saved_with_your_brand_account(brand: LinkBrand) -> String {
-        switch brand {
-        case .link, .unparsable:
-            return STPLocalizedString(
-                "Use information you previously saved with your Link account.",
-                "The subtitle/description of a screen where users are informed that they can sign-in-to Link."
-            )
-        case .onelink:
-            return String(
-                format: STPLocalizedString(
-                    "Use information you previously saved with your %@ account.",
-                    "The subtitle/description of a screen where users are informed that they can sign in to the Link brand. The placeholder is a Stripe brand name and should not be translated."
-                ),
-                brand.displayName
-            )
-        }
+        String(
+            format: STPLocalizedString(
+                "Use information you previously saved with your %@ account.",
+                "The subtitle/description of a screen where users are informed that they can sign in to the Link brand. The placeholder is a Stripe brand name and should not be translated."
+            ),
+            brand.displayName
+        )
     }
 
     @_spi(STP) public static func your_account_was_connected_but_could_not_be_saved_to_brand(brand: LinkBrand) -> String {

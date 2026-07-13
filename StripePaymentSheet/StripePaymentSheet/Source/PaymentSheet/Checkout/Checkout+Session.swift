@@ -87,6 +87,7 @@ extension Checkout {
         let localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
         let exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
         let adaptivePricingActive: Bool
+        let requiresBillingAddress: Bool
         let automaticTaxEnabled: Bool
         let automaticTaxAddressSource: String?
         let elementsSession: STPElementsSession
@@ -120,6 +121,7 @@ extension Checkout {
             allowedShippingCountries: [String]?,
             localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?,
+            requiresBillingAddress: Bool,
             adaptivePricingActive: Bool,
             automaticTaxEnabled: Bool,
             automaticTaxAddressSource: String?,
@@ -151,6 +153,7 @@ extension Checkout {
             self.allowedShippingCountries = allowedShippingCountries
             self.localizedPricesMetas = localizedPricesMetas
             self.exchangeRateMeta = exchangeRateMeta
+            self.requiresBillingAddress = requiresBillingAddress
             self.adaptivePricingActive = adaptivePricingActive
             self.automaticTaxEnabled = automaticTaxEnabled
             self.automaticTaxAddressSource = automaticTaxAddressSource

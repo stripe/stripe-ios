@@ -105,6 +105,21 @@ struct CheckoutCartPaymentButton: View {
         isLoadingFlowController = true
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "payments-example://stripe-redirect"
+        configuration.applePay = .init(
+            merchantId: "merchant.com.stripe.umbrella.test",
+            merchantCountryCode: "US"
+        )
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.defaultBillingDetails.name = "Jane Doe"
+        configuration.defaultBillingDetails.phone = "+15555555555"
+        configuration.defaultBillingDetails.address = .init(
+            city: "San Francisco",
+            country: "US",
+            line1: "510 Townsend St",
+            postalCode: "94103",
+            state: "CA"
+        )
         PaymentSheet.FlowController.create(
             checkout: checkout,
             configuration: configuration
