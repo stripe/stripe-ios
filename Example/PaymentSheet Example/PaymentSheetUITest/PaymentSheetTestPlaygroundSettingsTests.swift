@@ -24,4 +24,25 @@ final class PaymentSheetTestPlaygroundSettingsTests: XCTestCase {
             "http://127.0.0.1:8081/confirm_intent"
         )
     }
+
+    func testUsesVippsPreviewForNokAutomaticPaymentMethods() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.currency = .nok
+        settings.apmsEnabled = .on
+
+        XCTAssertTrue(settings.usesVippsPreview)
+    }
+
+    func testUsesVippsPreviewForExplicitVippsSupportedPaymentMethods() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.supportedPaymentMethods = "card, vipps"
+
+        XCTAssertTrue(settings.usesVippsPreview)
+    }
+
+    func testDoesNotUseVippsPreviewForNonVippsSettings() {
+        let settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+
+        XCTAssertFalse(settings.usesVippsPreview)
+    }
 }
