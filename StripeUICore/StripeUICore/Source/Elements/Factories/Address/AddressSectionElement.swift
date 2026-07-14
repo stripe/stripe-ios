@@ -139,6 +139,11 @@ import UIKit
             }
         }
     }
+    /// The collection mode this section was initialized with, before any per-country override is applied.
+    private let baseCollectionMode: CollectionMode
+    /// Countries whose selection replaces `baseCollectionMode` with a different collection mode.
+    /// See the `countryCollectionModeOverrides` init parameter.
+    private let countryCollectionModeOverrides: [String: CollectionMode]
     public var selectedCountryCode: String {
         get {
             return countryCodes[country.selectedIndex]
@@ -146,6 +151,7 @@ import UIKit
         set {
             guard let index = countryCodes.firstIndex(of: newValue) else { return }
             country.selectedIndex = index
+            applyCollectionModeOverride(for: newValue)
             updateAddressFields(
                 for: countryCodes[index]
             )
@@ -173,6 +179,7 @@ import UIKit
        - locale: Locale used to generate the display names for each country
        - addressSpecProvider: Determines the list of address fields to display for a selected country
        - defaults: Default address to prepopulate address fields with
+       - countryCollectionModeOverrides: Countries whose selection uses a different collection mode than `collectionMode`. When the selected country changes, the section switches to the country's override, or back to `collectionMode` if it has none. Externally-set `collectionMode` values (e.g. expanding after autocomplete) are preserved until the country changes again.
      */
     public init(
         title: String? = nil,
@@ -181,6 +188,7 @@ import UIKit
         addressSpecProvider: AddressSpecProvider = .shared,
         defaults: AddressDetails = .empty,
         collectionMode: CollectionMode = .all(),
+        countryCollectionModeOverrides: [String: CollectionMode] = [:],
         additionalFields: AdditionalFields = .init(),
         theme: ElementsAppearance = .default,
         presentAutoComplete: @escaping () -> Void = { }
@@ -188,6 +196,8 @@ import UIKit
         let dropdownCountries = countries?.map { $0.uppercased() } ?? addressSpecProvider.countries
         let countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
         self.collectionMode = collectionMode
+        self.baseCollectionMode = collectionMode
+        self.countryCollectionModeOverrides = countryCollectionModeOverrides
         self.countryCodes = countryCodes
         self.country = DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country_or_region,
@@ -202,6 +212,9 @@ import UIKit
         self.didTapAutocompleteButton = presentAutoComplete
 
         let initialCountry = countryCodes[country.selectedIndex]
+        if let collectionModeOverride = countryCollectionModeOverrides[initialCountry] {
+            self.collectionMode = collectionModeOverride
+        }
 
         // Initialize additional fields
         self.name = {
@@ -250,6 +263,7 @@ import UIKit
         )
         country.didUpdate = { [weak self] index in
             guard let self = self else { return }
+            self.applyCollectionModeOverride(for: self.countryCodes[index])
             self.updateAddressFields(
                 for: self.countryCodes[index]
             )
@@ -294,6 +308,14 @@ import UIKit
             // ...or select the checkbox if the address matches
             sameAsCheckbox.isSelected = displayedAddressEqualTo(address: defaultAddress)
         }
+    }
+
+    /// Switches to the collection mode override for `countryCode`, or back to the base mode if it has none.
+    /// No-op unless the section was initialized with `countryCollectionModeOverrides`, so externally-set
+    /// collection modes (e.g. expanding after autocomplete) are otherwise left untouched.
+    private func applyCollectionModeOverride(for countryCode: String) {
+        guard !countryCollectionModeOverrides.isEmpty else { return }
+        collectionMode = countryCollectionModeOverrides[countryCode] ?? baseCollectionMode
     }
 
     /// - Parameter address: Populates the new fields with the provided defaults, or the current fields' text if `nil`.

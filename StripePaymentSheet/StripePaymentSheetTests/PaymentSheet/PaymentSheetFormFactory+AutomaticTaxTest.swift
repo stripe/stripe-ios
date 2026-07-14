@@ -101,6 +101,13 @@ final class PaymentSheetFormFactoryAutomaticTaxTest: XCTestCase {
         XCTAssertEqual(section.collectionMode, .countryAndPostal())
     }
 
+    func testTaxSourcedFromShippingAddressUnaffected() throws {
+        let intent = makeCheckoutIntent(addressSource: "session.shipping")
+        let form = makeForm(paymentMethod: .card, intent: intent, config: makeConfiguration(country: "US"), specProvider: makeSpecProvider())
+        let section = try XCTUnwrap(addressSection(in: form))
+        XCTAssertEqual(section.collectionMode, .countryAndPostal())
+    }
+
     func testReEvaluatesOnCountryChange() throws {
         let form = makeForm(paymentMethod: .card, intent: makeCheckoutIntent(), config: makeConfiguration(country: "FR"), specProvider: makeSpecProvider())
         let section = try XCTUnwrap(addressSection(in: form))

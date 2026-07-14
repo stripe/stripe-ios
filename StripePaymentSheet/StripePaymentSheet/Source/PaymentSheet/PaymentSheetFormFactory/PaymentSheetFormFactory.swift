@@ -234,47 +234,6 @@ class PaymentSheetFormFactory {
     }
 
     func make() -> PaymentMethodElement {
-        let form = makeUnprocessed()
-        applyAutomaticTaxFieldCollection(to: form)
-        return form
-    }
-
-    private func applyAutomaticTaxFieldCollection(to form: PaymentMethodElement) {
-        guard collectsTaxFromBillingAddress else {
-            return
-        }
-        let formElement = (form as? PaymentMethodElementWrapper<FormElement>)?.element ?? form
-        guard let section = formElement.getAllUnwrappedSubElements()
-            .compactMap({ $0 as? AddressSectionElement }).first else {
-            return
-        }
-
-        // Recompute from the base mode every time so we narrow as well as widen (e.g. US -> CA should drop
-        // the full address back down to just the state).
-        let baseCollectionMode = section.collectionMode
-
-        let applyTaxRequirementForSelectedCountry: (AddressSectionElement) -> Void = { section in
-            let requirement = CountryTaxRequirement(country: section.selectedCountryCode)
-            let target = baseCollectionMode.widened(toSatisfy: requirement)
-            guard section.collectionMode != target else { return }
-            // Prevent recursive didUpdate
-            let delegate = section.delegate
-            section.delegate = nil
-            section.collectionMode = target
-            section.delegate = delegate
-        }
-
-        applyTaxRequirementForSelectedCountry(section)
-
-        let previousDidUpdate = section.didUpdate
-        section.didUpdate = { [weak section] addressDetails in
-            previousDidUpdate?(addressDetails)
-            guard let section else { return }
-            applyTaxRequirementForSelectedCountry(section)
-        }
-    }
-
-    private func makeUnprocessed() -> PaymentMethodElement {
         switch paymentMethod {
         case .instantDebits, .linkCardBrand:
             return makeInstantDebits()
@@ -570,6 +529,13 @@ extension PaymentSheetFormFactory {
             }
         }()
 
+        // If tax is computed from the billing address, some countries need more fields than the base
+        // collection mode gathers (e.g. full address for the US). Overrides are applied per-country as
+        // the user changes the country dropdown.
+        let countryCollectionModeOverrides = collectsTaxFromBillingAddress
+            ? CountryTaxRequirement.collectionModeOverrides(for: finalCollectionMode)
+            : [:]
+
         let section = AddressSectionElement(
             // TODO: Switch between "billing address" and "billing details" strings once the localizations have landed
             title: (includePhone || includeEmail) ? String.Localized.billing_address_lowercase : String.Localized.billing_address_lowercase,
@@ -577,6 +543,7 @@ extension PaymentSheetFormFactory {
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
             collectionMode: finalCollectionMode,
+            countryCollectionModeOverrides: countryCollectionModeOverrides,
             additionalFields: .init(
                 phone: includePhone ? .enabled(isOptional: false) : .disabled,
                 email: includeEmail ? .enabled(isOptional: false) : .disabled,

@@ -164,7 +164,7 @@ enum Intent {
     }
 
     /// Whether the billing address must collect enough fields to compute tax per country. True only for
-    /// Checkout Sessions with automatic tax sourced from the billing address; see `CountryTaxRequirement`.
+    /// Checkout Sessions with automatic tax sourced from the billing address.
     var collectsTaxFromBillingAddress: Bool {
         switch self {
         case .checkout(let checkout):
