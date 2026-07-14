@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "Este cel mai probabil ca cardurile de debit să fie acceptate.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Această aplicație nu a putut fi verificată din cauza unei erori de atestare. Vă rugăm să încercați din nou mai târziu sau să contactați dezvoltatorul dacă problema persistă.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Această aplicație nu a putut fi verificată. Contactați dezvoltatorul aplicației pentru ajutor.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Acest portofel nu a putut fi găsit. Vă rugăm să alegeți sau să adăugați un portofel și să încercați din nou.";
+
+"This wallet network isn't supported. Please choose a different network." = "Această rețea a portofelului nu este acceptată. Vă rugăm să alegeți o rețea diferită.";
+
+"This wallet verification request expired. Please try again." = "Această solicitare de verificare a portofelului a expirat. Vă rugăm să încercați din nou.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Nu am putut verifica dreptul de proprietate asupra acestui portofel. Vă rugăm să încercați din nou.";

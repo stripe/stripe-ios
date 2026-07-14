@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "Malamang na tanggapin ang mga debit card.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Hindi ma-verify ang app na ito dahil sa isang error sa pagpapatunay. Mangyaring subukang muli mamaya o makipag-ugnayan sa developer kung magpapatuloy ang isyu.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Hindi ma-verify ang app na ito. Makipag-ugnayan sa developer ng app para sa tulong.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Hindi mahanap ang wallet na ito. Mangyaring pumili o magdagdag ng wallet at subukang muli.";
+
+"This wallet network isn't supported. Please choose a different network." = "Hindi sinusuportahan ang network ng wallet na ito. Mangyaring pumili ng ibang network.";
+
+"This wallet verification request expired. Please try again." = "Nag-expire na ang kahilingan sa pag-verify ng wallet na ito. Mangyaring subukang muli.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Hindi namin ma-verify ang pagmamay-ari ng wallet na ito. Mangyaring subukang muli.";
