@@ -792,15 +792,16 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             guard let self else { return }
             do {
                 try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
-                self.isPaymentInFlight = false
-                self.isUserInteractionEnabled = true
-                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             } catch {
-                self.isPaymentInFlight = false
-                self.isUserInteractionEnabled = true
                 self.error = error
-                self.updateError()
-                self.updatePrimaryButton()
+            }
+            self.isPaymentInFlight = false
+            self.isUserInteractionEnabled = true
+            self.updateError()
+            self.updatePrimaryButton()
+
+            if self.error == nil {
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
     }
