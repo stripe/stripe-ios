@@ -7,7 +7,6 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-import SwiftUI
 import UIKit
 
 /// PaymentElement collects the customer's payment method, either in an embeddable view or presented in a sheet.
@@ -81,8 +80,10 @@ public final class PaymentElement {
             checkout: checkout,
             configuration: embeddedConfiguration
         )
-        self.view = PaymentElementView()
-        self.uiView = PaymentElementUIView(contentView: embeddedPaymentElement.view)
+        self.embeddedPaymentElement.notifiesDelegateOnInitialHeight = true
+        let uiView = PaymentElementUIView(contentView: embeddedPaymentElement.view)
+        self.view = PaymentElementView(viewModel: PaymentElementViewModel(uiView: uiView))
+        self.uiView = uiView
         self.embeddedPaymentElement.delegate = self
     }
 }
@@ -121,17 +122,5 @@ extension PaymentElement: EmbeddedPaymentElementDelegate {
 
     public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
         // PaymentElementViewDelegate does not expose payment option updates.
-    }
-}
-
-// MARK: - SwiftUI
-
-/// A view that displays payment methods.
-@_spi(STP)
-public struct PaymentElementView: View {
-    public init() {}
-
-    public var body: some View {
-        EmptyView()
     }
 }

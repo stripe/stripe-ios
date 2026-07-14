@@ -436,6 +436,14 @@ public final class EmbeddedPaymentElement {
 
     internal var confirmationChallenge: ConfirmationChallenge?
     internal var linkAccountObserver: LinkAccountContextObserver?
+    var notifiesDelegateOnInitialHeight: Bool {
+        get {
+            return embeddedPaymentMethodsView.notifiesDelegateOnInitialHeight
+        }
+        set {
+            embeddedPaymentMethodsView.notifiesDelegateOnInitialHeight = newValue
+        }
+    }
 
     internal init(
         configuration: Configuration,
