@@ -343,39 +343,6 @@ public final class Checkout: ObservableObject {
         }
     }
 
-    // MARK: - State updates
-
-    /// True if the session is still actionable (open or no status yet).
-    var sessionIsOpen: Bool {
-        session.status?.type == .open || session.status?.type == nil
-    }
-
-    /// Replaces the current session from an API response, preserves client-side overrides, and notifies delegates.
-    ///
-    /// Client-side address overrides are copied from the current session to the new one
-    /// automatically. To update an address, pass a `localMutation` closure.
-    func commitSession(
-        _ apiResponse: STPCheckoutSessionAPIResponse? = nil,
-        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
-    ) async throws {
-        // === Update the session ===
-        // Generate a new session from the API response, or fall back to the current session.
-        let newSession = apiResponse?.makePublicSession() ?? session
-
-        // Preserve client-side address overrides on the new session.
-        let sessionWithLocalAddress = newSession.makeCopyOverriding(
-            billingAddress: session.billingAddress,
-            shippingAddress: session.shippingAddress
-        )
-
-        // Apply any additional local mutations to the session.
-        let finalSession = localMutation?(sessionWithLocalAddress) ?? sessionWithLocalAddress
-        session = finalSession
-
-        // === Update elements ===
-        try await paymentElement?.update(checkout: self)
-    }
-
     // MARK: - Element methods
 
     /// Returns the PaymentElement for this Checkout instance.
