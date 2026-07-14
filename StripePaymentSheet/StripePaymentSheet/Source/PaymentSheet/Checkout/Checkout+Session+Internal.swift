@@ -79,42 +79,4 @@ extension Checkout.Session {
         return setupFutureUsage
     }
 
-    func makeCopyOverriding(
-        billingAddress: Checkout.ContactAddress? = nil,
-        shippingAddress: Checkout.ContactAddress? = nil
-    ) -> Self {
-        return Self(
-            id: id,
-            billingAddress: billingAddress ?? self.billingAddress,
-            businessName: businessName,
-            currency: currency,
-            currencyOptions: currencyOptions,
-            discountAmounts: discountAmounts,
-            email: email,
-            lineItems: lineItems,
-            livemode: livemode,
-            minorUnitsAmountDivisor: minorUnitsAmountDivisor,
-            savedPaymentMethods: savedPaymentMethods,
-            shipping: shipping,
-            shippingAddress: shippingAddress ?? self.shippingAddress,
-            shippingOptions: shippingOptions,
-            status: status,
-            tax: tax,
-            total: total,
-            mode: mode,
-            paymentMethodOptions: paymentMethodOptions,
-            customer: customer,
-            savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
-            setupFutureUsage: setupFutureUsage,
-            setupFutureUsageForPaymentMethodType: setupFutureUsageForPaymentMethodType,
-            allowedShippingCountries: allowedShippingCountries,
-            localizedPricesMetas: localizedPricesMetas,
-            exchangeRateMeta: exchangeRateMeta,
-            requiresBillingAddress: requiresBillingAddress,
-            adaptivePricingActive: adaptivePricingActive,
-            automaticTaxEnabled: automaticTaxEnabled,
-            automaticTaxAddressSource: automaticTaxAddressSource,
-            elementsSession: elementsSession
-        )
-    }
 }

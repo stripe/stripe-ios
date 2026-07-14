@@ -258,11 +258,11 @@ public final class Checkout: ObservableObject {
         guard session.billingAddress != contactAddress else { return }
         if session.shouldSendTaxRegion(for: "billing") {
             try await performUpdate(.setTaxRegion(address), applying: { session in
-                session.makeCopyOverriding(billingAddress: contactAddress)
+                session.makeCopyOverriding(billingAddress: .set(contactAddress))
             }, canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
         } else {
             try await performUpdate(applying: { session in
-                session.makeCopyOverriding(billingAddress: contactAddress)
+                session.makeCopyOverriding(billingAddress: .set(contactAddress))
             }, canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
         }
     }
@@ -294,11 +294,11 @@ public final class Checkout: ObservableObject {
         guard session.shippingAddress != contactAddress else { return }
         if session.shouldSendTaxRegion(for: "shipping") {
             try await performUpdate(.setTaxRegion(address), applying: { session in
-                session.makeCopyOverriding(shippingAddress: contactAddress)
+                session.makeCopyOverriding(shippingAddress: .set(contactAddress))
             })
         } else {
             try await performUpdate(applying: { session in
-                session.makeCopyOverriding(shippingAddress: contactAddress)
+                session.makeCopyOverriding(shippingAddress: .set(contactAddress))
             })
         }
     }
