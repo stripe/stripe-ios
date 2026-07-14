@@ -524,6 +524,9 @@ extension PaymentSheet {
             paymentOptionBeforePresenting = internalPaymentOption
             // Overwrite completion closure to retain self until called
             let wrappedCompletion: (Bool) -> Void = { didCancel in
+                if !didCancel {
+                    self.updatePaymentOption()
+                }
                 completion?(didCancel)
                 self.presentPaymentOptionsCompletionWithResult = nil
             }
