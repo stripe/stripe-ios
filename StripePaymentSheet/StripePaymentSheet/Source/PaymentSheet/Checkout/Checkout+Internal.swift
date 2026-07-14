@@ -23,6 +23,9 @@ extension Checkout {
     // MARK: - Payment Option
 
     func setPaymentOption(_ paymentOption: Session.PaymentOptionDisplayData?) {
+        guard session.paymentOption != paymentOption else {
+            return
+        }
         session = session.makeCopyOverriding(paymentOption: .newValue(paymentOption))
     }
 

@@ -100,7 +100,7 @@ extension Checkout {
 
 extension Checkout.Session {
     /// Display data for the currently selected payment option.
-    public struct PaymentOptionDisplayData {
+    public struct PaymentOptionDisplayData: Equatable {
         /// An image representing a payment method, such as the Apple Pay logo or a card brand.
         public let image: UIImage
         /// A customer-facing label representing the payment option.
