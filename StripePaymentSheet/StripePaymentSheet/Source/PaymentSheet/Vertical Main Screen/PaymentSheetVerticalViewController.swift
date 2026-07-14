@@ -916,12 +916,9 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         UISelectionFeedbackGenerator().selectionChanged()
 #endif
         switch selection {
-        case .applePay:
-            CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customer?.id)
-        case .link:
-            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
-        case .saved(let paymentMethod):
-            CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: configuration.customer?.id)
+        case .applePay, .link, .saved:
+            // Selection is persisted at the confirmation point (Continue/Pay), not on tap.
+            break
         case let .new(paymentMethodType: paymentMethodType):
             let pmFormVC = makeFormVC(paymentMethodType: paymentMethodType)
             if pmFormVC.form.collectsUserInput || paymentMethodType.isBankPayment {

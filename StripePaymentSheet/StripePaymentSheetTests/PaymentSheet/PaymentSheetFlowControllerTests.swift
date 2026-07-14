@@ -439,6 +439,112 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         wait(for: [legacyExpectation], timeout: 2.0)
     }
 
+    // MARK: - Cancel discards selection
+
+    private let testCustomerID = "cus_discard_selection_test"
+
+    private func makeFlowController() -> PaymentSheet.FlowController {
+        let savedPM = STPPaymentMethod._testCard()
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: "")
+
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: Intent._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: STPElementsSession._testCardValue(),
+            savedPaymentMethods: [savedPM],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .vertical
+        )
+
+        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(savedPM.stripeId), forCustomer: testCustomerID)
+        return PaymentSheet.FlowController(configuration: configuration, loadResult: loadResult, analyticsHelper: ._testValue())
+    }
+
+    private func present(_ fc: PaymentSheet.FlowController) -> XCTestExpectation {
+        let exp = expectation(description: "sheet dismissed")
+        fc.presentPaymentOptions(from: UIViewController()) { _ in exp.fulfill() }
+        return exp
+    }
+
+    private func selectLink(_ fc: PaymentSheet.FlowController) {
+        fc.viewController.linkConfirmOption = .wallet(brand: .link)
+    }
+
+    private func close(_ fc: PaymentSheet.FlowController, didCancel: Bool, expectation exp: XCTestExpectation) {
+        fc.flowControllerViewControllerShouldClose(fc.viewController, didCancel: didCancel)
+        wait(for: [exp], timeout: 2.0)
+    }
+
+    private func persistedDefault() -> CustomerPaymentOption? {
+        CustomerPaymentOption.selectedPaymentMethod(
+            for: testCustomerID,
+            elementsSession: STPElementsSession._testCardValue(),
+            surface: .paymentSheet
+        )
+    }
+
+    override func tearDown() {
+        super.tearDown()
+        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: testCustomerID)
+    }
+
+    // Open, select Link, cancel. Reverts to card. UserDefaults unchanged.
+    func testCancelAfterChangingSelection_revertsPaymentOption() {
+        let fc = makeFlowController()
+        XCTAssertEqual(fc.paymentOption?.paymentMethodType, "card")
+
+        let exp = present(fc)
+        selectLink(fc)
+        close(fc, didCancel: true, expectation: exp)
+
+        XCTAssertEqual(fc.paymentOption?.paymentMethodType, "card")
+        XCTAssertEqual(persistedDefault(), .stripeId(STPPaymentMethod._testCard().stripeId))
+    }
+
+    // Open, select Link, continue. paymentOption updates to Link. UserDefaults persists Link.
+    func testContinueAfterChangingSelection_persistsNewSelection() {
+        let fc = makeFlowController()
+        XCTAssertEqual(fc.paymentOption?.paymentMethodType, "card")
+
+        let exp = present(fc)
+        selectLink(fc)
+        close(fc, didCancel: false, expectation: exp)
+
+        XCTAssertEqual(fc.paymentOption?.paymentMethodType, "link")
+        XCTAssertEqual(persistedDefault(), .link)
+    }
+
+    // Open, change nothing, cancel. No effect.
+    func testCancelWithoutChanging_preservesExistingSelection() {
+        let fc = makeFlowController()
+
+        let exp = present(fc)
+        close(fc, didCancel: true, expectation: exp)
+
+        XCTAssertEqual(fc.paymentOption?.paymentMethodType, "card")
+        XCTAssertEqual(persistedDefault(), .stripeId(STPPaymentMethod._testCard().stripeId))
+    }
+
+    // Confirm Link, then reopen, change selection, cancel. Reverts to Link (last confirmed).
+    func testCancelAfterPriorContinue_revertsToLastConfirmed() {
+        let fc = makeFlowController()
+
+        // First: confirm Link
+        let exp1 = present(fc)
+        selectLink(fc)
+        close(fc, didCancel: false, expectation: exp1)
+        XCTAssertEqual(fc.paymentOption?.paymentMethodType, "link")
+
+        // Second: open, deselect Link, cancel
+        let exp2 = present(fc)
+        fc.viewController.linkConfirmOption = nil
+        close(fc, didCancel: true, expectation: exp2)
+
+        XCTAssertEqual(fc.paymentOption?.paymentMethodType, "link")
+        XCTAssertEqual(persistedDefault(), .link)
+    }
+
     // MARK: - Checkout terminal session
 
     @MainActor

@@ -596,15 +596,9 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
                                               error: Error.collectionViewDidSelectItemAtAdd)
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure()
-        case .applePay:
-            CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
-        case .link:
-            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
-        case .saved(let paymentMethod):
-            CustomerPaymentOption.setDefaultPaymentMethod(
-                .stripeId(paymentMethod.stripeId),
-                forCustomer: configuration.customerID
-            )
+        case .applePay, .link, .saved:
+            // Selection is persisted at the confirmation point (Continue/Pay), not on tap.
+            break
         }
         updateMandateView()
         cvcFormElement.clearTextFields()

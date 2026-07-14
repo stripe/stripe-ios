@@ -268,6 +268,7 @@ extension PaymentSheet {
         var viewController: FlowControllerViewControllerProtocol
 
         private var presentPaymentOptionsCompletionWithResult: ((Bool) -> Void)?
+        private var paymentOptionBeforePresenting: PaymentOption?
         private var didDismissLinkVerificationDialog: Bool = false
 
         // If a WalletButtonsView is currently visible
@@ -520,9 +521,9 @@ extension PaymentSheet {
                 return
             }
 
+            paymentOptionBeforePresenting = internalPaymentOption
             // Overwrite completion closure to retain self until called
             let wrappedCompletion: (Bool) -> Void = { didCancel in
-                self.updatePaymentOption()
                 completion?(didCancel)
                 self.presentPaymentOptionsCompletionWithResult = nil
             }
@@ -1019,8 +1020,36 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
     ) {
         if !didCancel {
             self.didPresentAndContinue = true
+            if let customerPaymentOption = internalPaymentOption?.customerPaymentOption {
+                CustomerPaymentOption.setDefaultPaymentMethod(customerPaymentOption, forCustomer: configuration.customer?.id)
+            }
         }
         flowControllerViewController.dismiss(animated: true) {
+            if didCancel {
+                // The VC accumulates too much state during a session (link options, form input, SPM
+                // edits) to safely reset in place. Just rebuild it.
+                var savedPaymentMethods = self.viewController.savedPaymentMethods
+                if case .saved(let paymentMethod, _) = self.paymentOptionBeforePresenting {
+                    savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
+                    savedPaymentMethods.insert(paymentMethod, at: 0)
+                }
+                let updatedLoadResult = PaymentSheetLoader.LoadResult(
+                    intent: self.viewController.loadResult.intent,
+                    elementsSession: self.viewController.loadResult.elementsSession,
+                    savedPaymentMethods: savedPaymentMethods,
+                    paymentMethodTypes: self.viewController.loadResult.paymentMethodTypes,
+                    paymentMethodMessagingPromotionsHelper: self.viewController.loadResult.paymentMethodMessagingPromotionsHelper,
+                    paymentMethodOrientation: self.viewController.loadResult.paymentMethodOrientation
+                )
+                self.viewController = Self.makeViewController(
+                    configuration: self.configuration,
+                    loadResult: updatedLoadResult,
+                    analyticsHelper: self.analyticsHelper,
+                    walletButtonsViewState: self.walletButtonsViewState,
+                    previousPaymentOption: self.paymentOptionBeforePresenting
+                )
+                self.viewController.flowControllerDelegate = self
+            }
             self.presentPaymentOptionsCompletionWithResult?(didCancel)
             self.updatePaymentOption()
             self.isPresented = false
@@ -1085,6 +1114,19 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
 }
 
 extension PaymentOption {
+    var customerPaymentOption: CustomerPaymentOption? {
+        switch self {
+        case .applePay:
+            return .applePay
+        case .link:
+            return .link
+        case .saved(let paymentMethod, _):
+            return .stripeId(paymentMethod.stripeId)
+        case .new, .external:
+            return nil
+        }
+    }
+
     var canLaunchLink: Bool {
         let hasLinkAccount = LinkAccountContext.shared.account?.isRegistered ?? false
         switch self {
