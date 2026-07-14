@@ -106,15 +106,38 @@ final class PaymentSheetFormFactoryAutomaticTaxTest: XCTestCase {
         let section = try XCTUnwrap(addressSection(in: form))
         XCTAssertEqual(section.collectionMode, .countryAndPostal())
 
-        // Switch to US -> widens
         let usIndex = try XCTUnwrap(section.countryCodes.firstIndex(of: "US"))
+        let caIndex = try XCTUnwrap(section.countryCodes.firstIndex(of: "CA"))
+        let frIndex = try XCTUnwrap(section.countryCodes.firstIndex(of: "FR"))
+
+        // FR -> US widens to the full address.
         section.country.select(index: usIndex)
         XCTAssertEqual(section.collectionMode, .autoCompletable)
 
-        // Switch to CA -> never narrows below what US produced
-        let caIndex = try XCTUnwrap(section.countryCodes.firstIndex(of: "CA"))
+        // US -> CA narrows to just the province.
         section.country.select(index: caIndex)
+        XCTAssertEqual(section.collectionMode, .countryPostalAndState)
+
+        // CA -> US widens back to the full address.
+        section.country.select(index: usIndex)
         XCTAssertEqual(section.collectionMode, .autoCompletable)
+
+        // US -> FR narrows all the way back to the base form.
+        section.country.select(index: frIndex)
+        XCTAssertEqual(section.collectionMode, .countryAndPostal())
+    }
+
+    func testNeverNarrowsBelowBase() throws {
+        // A merchant collecting the full address keeps it, even for countries that need less for tax.
+        let config = makeConfiguration(country: "US", address: .full)
+        let form = makeForm(paymentMethod: .card, intent: makeCheckoutIntent(), config: config, specProvider: makeSpecProvider())
+        let section = try XCTUnwrap(addressSection(in: form))
+        XCTAssertEqual(section.collectionMode, .allWithAutocomplete)
+
+        for country in ["CA", "FR"] {
+            section.country.select(index: try XCTUnwrap(section.countryCodes.firstIndex(of: country)))
+            XCTAssertEqual(section.collectionMode, .allWithAutocomplete)
+        }
     }
 
     func testTaxForcesBillingAddressForLPM() throws {

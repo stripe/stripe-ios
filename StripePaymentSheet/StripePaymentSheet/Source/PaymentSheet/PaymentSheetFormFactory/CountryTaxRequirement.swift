@@ -11,8 +11,9 @@ import Foundation
 
 /// The billing-address fields a country needs collected in order to compute tax.
 ///
-/// Only relevant to Checkout Sessions whose tax is sourced from the billing address. Callers *widen* the
-/// fields they collect to satisfy the requirement, and never narrow below what is already shown — see
+/// Only relevant to Checkout Sessions whose tax is sourced from the billing address. Callers widen the
+/// base form to satisfy the requirement for the selected country. Recomputing from the base as the country
+/// changes lets fields narrow again, but never below the base. See
 /// `AddressSectionElement.CollectionMode.widened(toSatisfy:)`.
 enum CountryTaxRequirement: Equatable {
     /// Nothing beyond the base form is required (most countries).

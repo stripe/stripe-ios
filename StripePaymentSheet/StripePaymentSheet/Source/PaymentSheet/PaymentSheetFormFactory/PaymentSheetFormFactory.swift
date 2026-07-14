@@ -249,9 +249,13 @@ class PaymentSheetFormFactory {
             return
         }
 
-        let widenForSelectedCountry: (AddressSectionElement) -> Void = { section in
+        // Recompute from the base mode every time so we narrow as well as widen (e.g. US -> CA should drop
+        // the full address back down to just the state).
+        let baseCollectionMode = section.collectionMode
+
+        let applyTaxRequirementForSelectedCountry: (AddressSectionElement) -> Void = { section in
             let requirement = CountryTaxRequirement(country: section.selectedCountryCode)
-            let target = section.collectionMode.widened(toSatisfy: requirement)
+            let target = baseCollectionMode.widened(toSatisfy: requirement)
             guard section.collectionMode != target else { return }
             // Prevent recursive didUpdate
             let delegate = section.delegate
@@ -260,13 +264,13 @@ class PaymentSheetFormFactory {
             section.delegate = delegate
         }
 
-        widenForSelectedCountry(section)
+        applyTaxRequirementForSelectedCountry(section)
 
         let previousDidUpdate = section.didUpdate
         section.didUpdate = { [weak section] addressDetails in
             previousDidUpdate?(addressDetails)
             guard let section else { return }
-            widenForSelectedCountry(section)
+            applyTaxRequirementForSelectedCountry(section)
         }
     }
 
