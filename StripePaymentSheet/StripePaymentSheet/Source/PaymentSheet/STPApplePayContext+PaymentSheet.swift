@@ -327,6 +327,15 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
             }
         }
+
+    // Only advertise `didSelectPaymentMethod` if we have a handler for it, otherwise it'd get called
+    // when there's nothing to do.
+    override func responds(to aSelector: Selector!) -> Bool {
+        if aSelector == #selector(applePayContext(_:didSelectPaymentMethod:handler:)) {
+            return paymentMethodUpdateHandler != nil
+        }
+        return super.responds(to: aSelector)
+    }
 }
 
 extension STPApplePayContext {
