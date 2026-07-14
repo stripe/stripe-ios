@@ -842,6 +842,36 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.paymentSummaryItems[0].label, "Custom")
         XCTAssertEqual(sut.paymentSummaryItems[0].amount, NSDecimalNumber(string: "9.99"))
     }
+
+    // MARK: - Automatic tax billing address
+
+    private func makeCheckoutIntent(automaticTaxEnabled: Bool = true) -> Intent {
+        let session = CheckoutTestHelpers.makeSession([
+            "status": "open",
+            "currency": "usd",
+            "total_summary": ["subtotal": 1000, "total": 1000, "due": 1000],
+            "tax_context": [
+                "automatic_tax_enabled": automaticTaxEnabled,
+                "automatic_tax_address_source": "session.billing",
+            ],
+        ])
+        return .checkout(Checkout(apiResponse: session))
+    }
+
+    func testCreatePaymentRequest_automaticTaxBilling_forcesPostalAddress() {
+        // A config that wouldn't otherwise collect the billing address, to isolate the tax forcing.
+        var config = configuration
+        config.billingDetailsCollectionConfiguration.address = .never
+
+        XCTAssertTrue(
+            STPApplePayContext.createPaymentRequest(intent: makeCheckoutIntent(), configuration: config, applePay: applePayConfiguration)
+                .requiredBillingContactFields.contains(.postalAddress)
+        )
+        XCTAssertFalse(
+            STPApplePayContext.createPaymentRequest(intent: makeCheckoutIntent(automaticTaxEnabled: false), configuration: config, applePay: applePayConfiguration)
+                .requiredBillingContactFields.contains(.postalAddress)
+        )
+    }
 }
 
 #if compiler(>=5.9)

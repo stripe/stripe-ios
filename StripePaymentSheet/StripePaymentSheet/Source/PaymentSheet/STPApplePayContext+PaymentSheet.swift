@@ -367,6 +367,11 @@ extension STPApplePayContext {
             currency: intent.currency ?? "USD"
         )
         paymentRequest.requiredBillingContactFields = makeRequiredBillingDetails(from: configuration)
+        // Automatic tax sourced from the billing address needs the postal address to compute tax. Apple Pay
+        // only lets us require the full address, so unlike the form we can't scope this per-country.
+        if intent.collectsTaxFromBillingAddress {
+            paymentRequest.requiredBillingContactFields.insert(.postalAddress)
+        }
         paymentRequest.requiredShippingContactFields = makeRequiredShippingDetails(from: configuration)
 
         let label = intent.sellerDetails?.businessName ?? configuration.merchantDisplayName

@@ -163,6 +163,17 @@ enum Intent {
         }
     }
 
+    /// Whether the billing address must collect enough fields to compute tax per country. True only for
+    /// Checkout Sessions with automatic tax sourced from the billing address; see `CountryTaxRequirement`.
+    var collectsTaxFromBillingAddress: Bool {
+        switch self {
+        case .checkout(let checkout):
+            return checkout.nonisolatedSession.shouldSendTaxRegion(for: "billing")
+        case .paymentIntent, .setupIntent, .deferredIntent:
+            return false
+        }
+    }
+
     /// Whether the intent has setup for future usage set for a payment method type.
     func isSetupFutureUsageSet(for paymentMethodType: STPPaymentMethodType) -> Bool {
         switch self {

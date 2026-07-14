@@ -117,6 +117,36 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(ZZTextFields.map { $0.configuration.isOptional }, expectedZZFields.map { $0.isOptional })
     }
 
+    func testCountryPostalAndStateMode() {
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
+            "FR": AddressSpec(format: "ACZ", require: "ACZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
+        ]
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US", "FR"],
+            locale: locale_enUS,
+            addressSpecProvider: specProvider,
+            collectionMode: .countryPostalAndState
+        )
+
+        // A country with a state in its spec: state + postal only, no street/city.
+        sut.selectedCountryCode = "US"
+        XCTAssertNotNil(sut.state)
+        XCTAssertNotNil(sut.postalCode)
+        XCTAssertNil(sut.line1)
+        XCTAssertNil(sut.line2)
+        XCTAssertNil(sut.city)
+
+        // A country with no state in its spec: postal only.
+        sut.selectedCountryCode = "FR"
+        XCTAssertNil(sut.state)
+        XCTAssertNotNil(sut.postalCode)
+        XCTAssertNil(sut.line1)
+        XCTAssertNil(sut.city)
+    }
+
     func testCountries() {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [

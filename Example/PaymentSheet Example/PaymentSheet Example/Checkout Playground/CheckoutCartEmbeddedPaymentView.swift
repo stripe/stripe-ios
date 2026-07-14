@@ -179,17 +179,6 @@ struct CheckoutCartEmbeddedPaymentView: View {
                 merchantId: "merchant.com.stripe.umbrella.test",
                 merchantCountryCode: "US"
             )
-            configuration.billingDetailsCollectionConfiguration.name = .always
-            configuration.billingDetailsCollectionConfiguration.address = .full
-            configuration.defaultBillingDetails.name = "Jane Doe"
-            configuration.defaultBillingDetails.phone = "+15555555555"
-            configuration.defaultBillingDetails.address = .init(
-                city: "San Francisco",
-                country: "US",
-                line1: "510 Townsend St",
-                postalCode: "94103",
-                state: "CA"
-            )
             try await viewModel.load(checkout: checkout, configuration: configuration)
         } catch {
             loadError = error

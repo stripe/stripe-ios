@@ -37,6 +37,7 @@ class PaymentSheetFormFactory {
     let isSettingUp: Bool
     let countryCode: String?
     let currency: String?
+    let collectsTaxFromBillingAddress: Bool
     let cardBrandChoiceEligible: Bool
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
     let allowsSetAsDefaultPM: Bool
@@ -146,6 +147,7 @@ class PaymentSheetFormFactory {
                   isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType),
                   countryCode: elementsSession.countryCode,
                   currency: intent.currency,
+                  collectsTaxFromBillingAddress: intent.collectsTaxFromBillingAddress,
                   savePaymentMethodConsentBehavior: Self.makeSavePaymentMethodConsentBehavior(intent: intent, elementsSession: elementsSession),
                   allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                   allowsLinkDefaultOptIn: elementsSession.allowsLinkDefaultOptIn,
@@ -178,6 +180,7 @@ class PaymentSheetFormFactory {
         isSettingUp: Bool,
         countryCode: String?,
         currency: String? = nil,
+        collectsTaxFromBillingAddress: Bool = false,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
         allowsSetAsDefaultPM: Bool = false,
         allowsLinkDefaultOptIn: Bool = false,
@@ -211,6 +214,7 @@ class PaymentSheetFormFactory {
         self.isSettingUp = isSettingUp
         self.countryCode = countryCode
         self.currency = currency
+        self.collectsTaxFromBillingAddress = collectsTaxFromBillingAddress
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
         self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
@@ -230,6 +234,43 @@ class PaymentSheetFormFactory {
     }
 
     func make() -> PaymentMethodElement {
+        let form = makeUnprocessed()
+        applyAutomaticTaxFieldCollection(to: form)
+        return form
+    }
+
+    private func applyAutomaticTaxFieldCollection(to form: PaymentMethodElement) {
+        guard collectsTaxFromBillingAddress else {
+            return
+        }
+        let formElement = (form as? PaymentMethodElementWrapper<FormElement>)?.element ?? form
+        guard let section = formElement.getAllUnwrappedSubElements()
+            .compactMap({ $0 as? AddressSectionElement }).first else {
+            return
+        }
+
+        let widenForSelectedCountry: (AddressSectionElement) -> Void = { section in
+            let requirement = CountryTaxRequirement(country: section.selectedCountryCode)
+            let target = section.collectionMode.widened(toSatisfy: requirement)
+            guard section.collectionMode != target else { return }
+            // Prevent recursive didUpdate
+            let delegate = section.delegate
+            section.delegate = nil
+            section.collectionMode = target
+            section.delegate = delegate
+        }
+
+        widenForSelectedCountry(section)
+
+        let previousDidUpdate = section.didUpdate
+        section.didUpdate = { [weak section] addressDetails in
+            previousDidUpdate?(addressDetails)
+            guard let section else { return }
+            widenForSelectedCountry(section)
+        }
+    }
+
+    private func makeUnprocessed() -> PaymentMethodElement {
         switch paymentMethod {
         case .instantDebits, .linkCardBrand:
             return makeInstantDebits()
@@ -993,12 +1034,15 @@ extension PaymentSheetFormFactory {
     }
 
     func makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: Bool) -> Element? {
-        if configuration.billingDetailsCollectionConfiguration.address == .full
-            || (configuration.billingDetailsCollectionConfiguration.address == .automatic && requiredByPaymentMethod) {
-            let countries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty
-                ? nil
-                : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
-           return makeBillingAddressSection(countries: countries)
+        let address = configuration.billingDetailsCollectionConfiguration.address
+        let countries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty
+            ? nil
+            : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
+        if address == .full || (address == .automatic && requiredByPaymentMethod) {
+            return makeBillingAddressSection(countries: countries)
+        } else if collectsTaxFromBillingAddress {
+            // Start with country+postal, widen later based on country
+            return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: countries)
         } else {
             return nil
         }
