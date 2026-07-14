@@ -20,7 +20,7 @@ public struct PaymentElementView: View {
     public var body: some View {
         PaymentElementViewRepresentable(viewModel: viewModel)
             .frame(maxWidth: .infinity)
-            .frame(height: viewModel.height)
+            .frame(height: viewModel.height > 0 ? viewModel.height : nil)
     }
 }
 
@@ -76,11 +76,12 @@ private struct PaymentElementViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> PaymentElementUIView {
         viewModel.uiView.delegate = context.coordinator
+        viewModel.updateHeight(animated: false)
         return viewModel.uiView
     }
 
     func updateUIView(_ uiView: PaymentElementUIView, context: Context) {
-        // No-op. UIKit reports height changes through PaymentElementViewDelegate.
+        viewModel.updateHeight(width: uiView.bounds.width)
     }
 
     func makeCoordinator() -> Coordinator {
