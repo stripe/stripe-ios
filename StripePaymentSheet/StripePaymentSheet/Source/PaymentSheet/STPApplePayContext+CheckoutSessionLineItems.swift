@@ -14,11 +14,8 @@ import PassKit
 @_spi(STP) import StripePayments
 
 extension STPApplePayContext {
-    /// Builds Apple Pay summary items from a checkout session's current state. Used both for the initial
-    /// payment request and to refresh the sheet after billing changes, so the two stay identical.
-    ///
-    /// Prefers itemized line items (one row per item, optional subtotal/shipping/tax/discount breakdown),
-    /// falls back to a single total row, or a .pending row if amount is unknown.
+    /// Builds Apple Pay summary items from a checkout session's current state.
+    /// Falls back to a single total row (or .pending) when line items aren't available.
     static func makePaymentSummaryItems(
         for checkout: Checkout,
         label: String,
@@ -27,7 +24,6 @@ extension STPApplePayContext {
         let session: Checkout.Session = checkout.nonisolatedSession
 
         guard !session.lineItems.isEmpty, let total = session.total else {
-            // No line items available, fall back to a single summary row
             if let amount = session.expectedAmount() {
                 let decimalAmount = NSDecimalNumber.stp_decimalNumber(withAmount: amount, currency: currency)
                 return [PKPaymentSummaryItem(label: label, amount: decimalAmount, type: .final)]
@@ -114,9 +110,8 @@ extension STPApplePayContext {
         return summaryItems
     }
 
-    // Checkout.Address from the partial billing address Apple Pay exposes while the sheet is open. nil if
-    // there's no country to key tax on. line1/line2 are omitted: Apple withholds the street until
-    // authorization, so we only get country/city/state/postal here (enough for a tax region).
+    // Partial billing address from the Apple Pay sheet (no street until authorization).
+    // Returns nil if there's no country to key tax on.
     static func makeCheckoutAddress(from postalAddress: CNPostalAddress) -> Checkout.Address? {
         guard let country = postalAddress.isoCountryCode.nonEmpty else {
             return nil

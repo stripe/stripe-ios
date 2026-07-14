@@ -56,12 +56,10 @@ import PassKit
         didSelectShippingContact contact: PKContact
     ) async -> PKPaymentRequestShippingContactUpdate
 
-    /// Called when the Apple Pay sheet opens and when the user selects a different payment method (card).
-    /// Inspect the payment method's billing address and invoke the completion block with an updated
-    /// `PKPaymentRequestPaymentMethodUpdate` (e.g. to recalculate tax from the billing address).
-    /// - Note: Apple exposes only a partial billing address here — in the US, postal code/city/state, not the
-    /// street; the full address arrives in the `paymentInformation` passed to
-    /// `applePayContext:didCreatePaymentMethod:paymentInformation:`.
+    /// Called when the Apple Pay sheet opens and when the user changes their selected card.
+    /// Use the partial billing address on `paymentMethod` to recalculate tax, then call the handler.
+    /// - Note: Apple only exposes postal code/city/state/country here; the full street address
+    /// arrives in `paymentInformation` at authorization time.
     @_spi(STP) @MainActor @preconcurrency
     @objc optional func applePayContext(
         _ context: STPApplePayContext,
@@ -69,8 +67,7 @@ import PassKit
         handler: @escaping (_ update: PKPaymentRequestPaymentMethodUpdate) -> Void
     )
 
-    /// Async variant of the completion-block `didSelectPaymentMethod` above; returns the updated
-    /// `PKPaymentRequestPaymentMethodUpdate` instead of taking a handler. Implement one or the other.
+    /// Async variant of `didSelectPaymentMethod`. Implement one or the other, not both.
     @_spi(STP)
     @objc optional func applePayContext(
         _ context: STPApplePayContext,
@@ -574,7 +571,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         didSelectPaymentMethod paymentMethod: PKPaymentMethod,
         handler completion: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
     ) {
-        // Note: this method isn't called unless our delegate implements it (see this class's `responds(to:)` override)
         guard let delegate else {
             return
         }
@@ -582,7 +578,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         let asyncDelegateMethod = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didSelectPaymentMethod:))
         let respondsToCompletionBlockDelegateMethod = delegate.responds(to: completionBlockDelegateMethod)
         let respondsToAsyncDelegateMethod = delegate.responds(to: asyncDelegateMethod)
-        assert(!(respondsToAsyncDelegateMethod && respondsToCompletionBlockDelegateMethod), "Only implement either the async or completion-block based didSelectPaymentMethod delegate method, not both.")
+        assert(!(respondsToAsyncDelegateMethod && respondsToCompletionBlockDelegateMethod), "Implement either async or completion-block didSelectPaymentMethod, not both.")
         if respondsToCompletionBlockDelegateMethod {
             delegate.applePayContext?(self, didSelectPaymentMethod: paymentMethod, handler: completion)
         } else if respondsToAsyncDelegateMethod {
