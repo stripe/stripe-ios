@@ -31,9 +31,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     let intent: Intent
     let elementsSession: STPElementsSession
 
-    // Snapshotted before presenting the sheet so we can restore on cancel.
-    let billingAddressSnapshot: Checkout.ContactAddress?
-
     init(
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -47,7 +44,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         paymentMethodUpdateHandler: (
             (PKPaymentMethod, @escaping ((PKPaymentRequestPaymentMethodUpdate) -> Void)) -> Void
         )? = nil,
-        billingAddressSnapshot: Checkout.ContactAddress? = nil,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) {
         self.completion = completion
@@ -55,7 +51,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         self.shippingMethodUpdateHandler = shippingMethodUpdateHandler
         self.shippingContactUpdateHandler = shippingContactUpdateHandler
         self.paymentMethodUpdateHandler = paymentMethodUpdateHandler
-        self.billingAddressSnapshot = billingAddressSnapshot
         self.intent = intent
         self.elementsSession = elementsSession
         super.init()
@@ -285,34 +280,9 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         case .error:
             completion(.failed(error: error!), confirmType)
         case .userCancellation:
-//            restoreBillingAddressAfterCancel()
             completion(.canceled, confirmType)
         }
         selfRetainer = nil
-    }
-
-    // Undo billing-address changes from switching cards when the user cancels.
-    private func restoreBillingAddressAfterCancel() {
-        guard case .checkout(let checkout) = intent else {
-            return
-        }
-        let snapshot = billingAddressSnapshot
-        Task { @MainActor in
-            guard let snapshot else {
-                // Can't fully clear a tax region server-side (MOBILESDK-4638)
-                return
-            }
-            do {
-                try await checkout.updateBillingAddress(
-                    name: snapshot.name,
-                    phone: snapshot.phone,
-                    address: snapshot.address,
-                    canUpdateWhileSheetPresented: true
-                )
-            } catch {
-                // Already cancelled, best-effort
-            }
-        }
     }
 
     func applePayContext(
@@ -390,9 +360,7 @@ extension STPApplePayContext {
 
         // Keep tax in sync with the billing address as the user switches cards.
         var paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping ((PKPaymentRequestPaymentMethodUpdate) -> Void)) -> Void)?
-        var billingAddressSnapshot: Checkout.ContactAddress?
         if case .checkout(let checkout) = intent {
-            billingAddressSnapshot = checkout.nonisolatedSession.billingAddress
             let label = intent.sellerDetails?.businessName ?? configuration.merchantDisplayName
             let currency = intent.currency
             paymentMethodUpdateHandler = { pkPaymentMethod, completion in
@@ -417,7 +385,6 @@ extension STPApplePayContext {
             shippingMethodUpdateHandler: configuration.applePay?.customHandlers?.shippingMethodUpdateHandler,
             shippingContactUpdateHandler: configuration.applePay?.customHandlers?.shippingContactUpdateHandler,
             paymentMethodUpdateHandler: paymentMethodUpdateHandler,
-            billingAddressSnapshot: billingAddressSnapshot,
             completion: completion
         )
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: delegate) {
