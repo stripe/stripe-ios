@@ -55,7 +55,7 @@ public final class Checkout: ObservableObject {
     // MARK: - Internal Properties
 
     /// The PaymentElement for this Checkout instance.
-    var paymentElement: PaymentElement!
+    public internal(set) var paymentElement: PaymentElement!
 
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
