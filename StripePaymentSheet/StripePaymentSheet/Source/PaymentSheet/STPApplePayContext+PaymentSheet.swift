@@ -57,15 +57,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         self.selfRetainer = self
     }
 
-    // didSelectPaymentMethod fires on every payment (including sheet open), so only
-    // advertise the selector when we actually have a handler.
-    override func responds(to aSelector: Selector!) -> Bool {
-        if aSelector == #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didSelectPaymentMethod:handler:)) {
-            return paymentMethodUpdateHandler != nil
-        }
-        return super.responds(to: aSelector)
-    }
-
     func applePayContext(
         _ context: STPApplePayContext,
         didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
