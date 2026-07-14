@@ -11,63 +11,92 @@ import UIKit
 /// A SwiftUI view that displays payment methods.
 @_spi(STP)
 public struct PaymentElementView: View {
-    @State private var height: CGFloat = 0
+    @ObservedObject private var viewModel: PaymentElementViewModel
 
-    private let uiView: PaymentElementUIView
+    init(viewModel: PaymentElementViewModel) {
+        self.viewModel = viewModel
+    }
+
+    public var body: some View {
+        PaymentElementViewRepresentable(viewModel: viewModel)
+            .frame(maxWidth: .infinity)
+            .frame(height: viewModel.height)
+    }
+}
+
+@MainActor
+final class PaymentElementViewModel: ObservableObject {
+    let uiView: PaymentElementUIView
+
+    @Published private(set) var height: CGFloat = 0
+
+    private var width: CGFloat = 0
 
     init(uiView: PaymentElementUIView) {
         self.uiView = uiView
     }
 
-    public var body: some View {
-        PaymentElementViewRepresentable(uiView: uiView, height: $height)
-            .frame(height: height)
+    func updateHeight(width: CGFloat? = nil, animated: Bool = true) {
+        if let width, width > 0 {
+            self.width = width
+        }
+
+        Task { @MainActor [weak self] in
+            self?.updateHeightNow(animated: animated)
+        }
+    }
+
+    private func updateHeightNow(animated: Bool) {
+        let fittingWidth = width > 0 ? width : uiView.bounds.width
+        guard fittingWidth > 0 else { return }
+
+        let newHeight = uiView.systemLayoutSizeFitting(
+            CGSize(
+                width: fittingWidth,
+                height: UIView.layoutFittingCompressedSize.height
+            ),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        ).height
+
+        guard abs(height - newHeight) > 1 else { return }
+
+        if animated {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                height = newHeight
+            }
+        } else {
+            height = newHeight
+        }
     }
 }
 
 private struct PaymentElementViewRepresentable: UIViewRepresentable {
-    let uiView: PaymentElementUIView
-
-    @Binding var height: CGFloat
+    let viewModel: PaymentElementViewModel
 
     func makeUIView(context: Context) -> PaymentElementUIView {
-        uiView.delegate = context.coordinator
-        context.coordinator.updateHeight(for: uiView)
-        return uiView
+        viewModel.uiView.delegate = context.coordinator
+        return viewModel.uiView
     }
 
     func updateUIView(_ uiView: PaymentElementUIView, context: Context) {
-        context.coordinator.height = $height
-        context.coordinator.updateHeight(for: uiView)
+        // No-op. UIKit reports height changes through PaymentElementViewDelegate.
     }
 
     func makeCoordinator() -> Coordinator {
-        return Coordinator(height: $height)
+        return Coordinator(viewModel: viewModel)
     }
 
     @MainActor
     final class Coordinator: PaymentElementViewDelegate {
-        var height: Binding<CGFloat>
+        let viewModel: PaymentElementViewModel
 
-        init(height: Binding<CGFloat>) {
-            self.height = height
+        init(viewModel: PaymentElementViewModel) {
+            self.viewModel = viewModel
         }
 
         func paymentElementViewDidUpdateHeight(paymentElementView: PaymentElementUIView) {
-            updateHeight(for: paymentElementView)
-        }
-
-        func updateHeight(for paymentElementView: PaymentElementUIView) {
-            let newHeight = paymentElementView.systemLayoutSizeFitting(
-                CGSize(
-                    width: paymentElementView.bounds.width,
-                    height: UIView.layoutFittingCompressedSize.height
-                )
-            ).height
-
-            withAnimation(.easeInOut(duration: 0.2)) {
-                height.wrappedValue = newHeight
-            }
+            viewModel.updateHeight()
         }
     }
 }
