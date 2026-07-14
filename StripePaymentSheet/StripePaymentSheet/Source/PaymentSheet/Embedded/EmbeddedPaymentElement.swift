@@ -135,7 +135,6 @@ public final class EmbeddedPaymentElement {
         )
         embeddedPaymentElement.clearPaymentOptionIfNeeded()
         embeddedPaymentElement.checkout = checkout
-        checkout.integrationDelegate = embeddedPaymentElement
         return embeddedPaymentElement
     }
 
@@ -468,21 +467,11 @@ public final class EmbeddedPaymentElement {
     }
 }
 
-// MARK: - CheckoutIntegrationDelegate
+// MARK: - Checkout
 
-extension EmbeddedPaymentElement: CheckoutIntegrationDelegate {
-    var isSheetPresented: Bool {
-        presentingViewController?.presentedViewController is BottomSheetViewController
-    }
-
-    func checkoutDidUpdate(_ checkout: Checkout) async throws {
-        let result = await update(checkout: checkout)
-        switch result {
-        case .succeeded, .canceled:
-            break
-        case .failed(let error):
-            throw error
-        }
+extension EmbeddedPaymentElement {
+    var isPresentingPaymentUI: Bool {
+        return presentingViewController?.presentedViewController is BottomSheetViewController
     }
 }
 

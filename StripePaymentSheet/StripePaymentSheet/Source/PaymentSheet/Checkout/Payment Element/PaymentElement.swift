@@ -84,6 +84,26 @@ public final class PaymentElement {
     }
 }
 
+// MARK: - Checkout Updates
+
+extension PaymentElement {
+    var isPresentingPaymentUI: Bool {
+        return paymentSheetFlowController.isPresentingPaymentUI || embeddedPaymentElement.isPresentingPaymentUI
+    }
+
+    func update(checkout: Checkout) async throws {
+        // TODO: This should not be async or throws; we should not make any network requests or re-fetch things, just update the v1/e/s response.
+        // Update FlowController
+        try await paymentSheetFlowController.update(checkout: checkout)
+
+        // Update Embedded
+        let result = await embeddedPaymentElement.update(checkout: checkout)
+        if case .failed(let error) = result {
+            throw error
+        }
+    }
+}
+
 // MARK: - UIKit
 
 /// A view that displays payment methods.
