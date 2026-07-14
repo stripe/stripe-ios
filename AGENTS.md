@@ -155,6 +155,7 @@ The Stripe iOS SDK is organized as a multi-module framework with clear dependenc
 - Snapshot tests for UI components using FBSnapshotTestCase
 - Integration tests with real backend APIs (marked as functional tests)
 - Example apps for manual testing in `Example/` directory
+- When adding/rewriting tests, use `// Given <setup>` / `// When <action>` / `// Then <assertion>` comments where helpful.
 
 ### Dependencies Installation
 Run `bundle install && bundle exec fastlane stripeios_tests` initially to install test dependencies.
