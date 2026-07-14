@@ -350,11 +350,12 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         sleep(2)
         XCTAssertEqual(paymentMethodButton.label, "Link, link")
 
-        // Open again and choose to continue with card
+        // Open again and continue without changing anything - Link is the last confirmed
+        // selection, so it persists (the previously entered card was discarded on cancel).
         paymentMethodButton.tap()
         app.buttons["Continue"].tap()
         sleep(2)
-        XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
+        XCTAssertEqual(paymentMethodButton.label, "Link, link")
     }
 
     func testPaymentSheetSwiftUI() throws {
