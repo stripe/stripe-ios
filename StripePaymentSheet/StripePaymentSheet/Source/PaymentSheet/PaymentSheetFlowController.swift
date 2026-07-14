@@ -1032,9 +1032,15 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
                 // The VC accumulates too much state during a session (link options, form input, SPM
                 // edits) to safely reset in place. Just rebuild it.
                 var savedPaymentMethods = self.viewController.savedPaymentMethods
-                if case .saved(let paymentMethod, _) = self.paymentOptionBeforePresenting {
-                    savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
-                    savedPaymentMethods.insert(paymentMethod, at: 0)
+                var previousOption = self.paymentOptionBeforePresenting
+                if case .saved(let paymentMethod, _) = previousOption {
+                    if savedPaymentMethods.contains(where: { $0.stripeId == paymentMethod.stripeId }) {
+                        savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
+                        savedPaymentMethods.insert(paymentMethod, at: 0)
+                    } else {
+                        // The saved PM was removed during this session, don't revert
+                        previousOption = nil
+                    }
                 }
                 let updatedLoadResult = PaymentSheetLoader.LoadResult(
                     intent: self.viewController.loadResult.intent,
@@ -1049,12 +1055,11 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
                     loadResult: updatedLoadResult,
                     analyticsHelper: self.analyticsHelper,
                     walletButtonsViewState: self.walletButtonsViewState,
-                    previousPaymentOption: self.paymentOptionBeforePresenting
+                    previousPaymentOption: previousOption
                 )
                 self.viewController.flowControllerDelegate = self
             }
             self.presentPaymentOptionsCompletionWithResult?(didCancel)
-            self.updatePaymentOption()
             self.isPresented = false
         }
     }

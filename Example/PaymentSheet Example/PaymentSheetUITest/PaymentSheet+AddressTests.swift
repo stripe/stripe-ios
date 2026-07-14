@@ -505,6 +505,16 @@ RO
         XCTAssertFalse(app.switches["Billing address is same as shipping"].isSelected)
 
         // ...and changing the shipping address...
+        // First tap Continue to persist the billing address change, then close
+        app.buttons["Continue"].tap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
+
+        // The billing address change should be persisted since we tapped Continue
+        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Uruguay")
+        XCTAssertEqual(app.textFields["Postal code"].value as? String, updatedBillingAddressPostalCode)
+        XCTAssertFalse(app.switches["Billing address is same as shipping"].isSelected)
+
+        // Now change shipping address
         app.buttons["Close"].tap()
         app.buttons["Address"].tap()
         app.textFields["Country or region"].waitForExistenceAndTap()

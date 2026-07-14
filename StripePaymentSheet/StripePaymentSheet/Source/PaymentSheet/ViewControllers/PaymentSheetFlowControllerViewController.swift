@@ -712,8 +712,8 @@ extension PaymentSheetFlowControllerViewController: WalletHeaderViewDelegate {
         if canPresentLinkOnWalletButton {
             presentLink()
         } else {
-            didDismiss(didCancel: false)
             isHackyLinkButtonSelected = true
+            didDismiss(didCancel: false)
         }
 
         updateUI()
