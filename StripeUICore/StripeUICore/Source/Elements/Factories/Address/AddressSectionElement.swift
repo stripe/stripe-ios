@@ -133,7 +133,11 @@ import UIKit
     public var collectionMode: CollectionMode {
         didSet {
             if oldValue != collectionMode {
-                updateAddressFields(for: countryCodes[country.selectedIndex], address: nil)
+                // If the "billing same as shipping" checkbox is selected, populate any newly displayed
+                // fields from the default (shipping) address so the displayed address still matches it.
+                // Otherwise, preserve the current field text.
+                let defaultAddress: AddressDetails.Address? = (!sameAsCheckbox.view.isHidden && sameAsCheckbox.isSelected) ? defaults.address : nil
+                updateAddressFields(for: countryCodes[country.selectedIndex], address: defaultAddress)
             }
         }
     }

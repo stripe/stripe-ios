@@ -1036,11 +1036,13 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
             }
         }
         flowControllerViewController.dismiss(animated: true) {
-            if didCancel {
+            // Only rebuild if there's a payment option to revert to; otherwise keep the current VC,
+            // which already holds whatever (possibly incomplete) input existed before presenting.
+            if didCancel, let paymentOptionBeforePresenting = self.paymentOptionBeforePresenting {
                 // The VC accumulates too much state during a session (link options, form input, SPM
                 // edits) to safely reset in place. Just rebuild it.
                 var savedPaymentMethods = self.viewController.savedPaymentMethods
-                if case .saved(let paymentMethod, _) = self.paymentOptionBeforePresenting {
+                if case .saved(let paymentMethod, _) = paymentOptionBeforePresenting {
                     savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
                     savedPaymentMethods.insert(paymentMethod, at: 0)
                 }
@@ -1057,7 +1059,7 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
                     loadResult: updatedLoadResult,
                     analyticsHelper: self.analyticsHelper,
                     walletButtonsViewState: self.walletButtonsViewState,
-                    previousPaymentOption: self.paymentOptionBeforePresenting
+                    previousPaymentOption: paymentOptionBeforePresenting
                 )
                 self.viewController.flowControllerDelegate = self
             }
