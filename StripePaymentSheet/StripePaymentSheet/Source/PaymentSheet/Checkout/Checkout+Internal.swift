@@ -20,6 +20,12 @@ extension Checkout {
         try await performUpdate(.setCurrency(currency))
     }
 
+    // MARK: - Payment Option
+
+    func setPaymentOption(_ paymentOption: Session.PaymentOptionDisplayData?) {
+        session = session.makeCopyOverriding(paymentOption: .newValue(paymentOption))
+    }
+
     // MARK: - Session Updates
 
     /// Runs `body` as a tracked session update, serialized behind any in-flight ops.
@@ -133,7 +139,8 @@ extension Checkout {
         // Preserve client-side address overrides on the new session.
         let sessionWithLocalAddress = newSession.makeCopyOverriding(
             billingAddress: .newValue(session.billingAddress),
-            shippingAddress: .newValue(session.shippingAddress)
+            shippingAddress: .newValue(session.shippingAddress),
+            paymentOption: .newValue(session.paymentOption)
         )
 
         // Apply any additional local mutations to the session.

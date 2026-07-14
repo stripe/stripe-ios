@@ -78,7 +78,6 @@ extension Checkout.Session {
 
         return setupFutureUsage
     }
-
 }
 
 enum SessionFieldUpdate<Value> {
@@ -102,7 +101,8 @@ extension Checkout.Session {
     /// - Resolution: SessionFieldUpdate keeps that distinction visible at call sites instead of relying on double optionals.
     func makeCopyOverriding(
         billingAddress: SessionFieldUpdate<Checkout.ContactAddress> = .keepOldValue,
-        shippingAddress: SessionFieldUpdate<Checkout.ContactAddress> = .keepOldValue
+        shippingAddress: SessionFieldUpdate<Checkout.ContactAddress> = .keepOldValue,
+        paymentOption: SessionFieldUpdate<Checkout.Session.PaymentOptionDisplayData> = .keepOldValue
     ) -> Self {
         return Self(
             id: id,
@@ -115,6 +115,7 @@ extension Checkout.Session {
             lineItems: lineItems,
             livemode: livemode,
             minorUnitsAmountDivisor: minorUnitsAmountDivisor,
+            paymentOption: paymentOption.resolved(currentValue: self.paymentOption),
             savedPaymentMethods: savedPaymentMethods,
             shipping: shipping,
             shippingAddress: shippingAddress.resolved(currentValue: self.shippingAddress),
@@ -131,8 +132,8 @@ extension Checkout.Session {
             allowedShippingCountries: allowedShippingCountries,
             localizedPricesMetas: localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,
-            requiresBillingAddress: requiresBillingAddress,
             adaptivePricingActive: adaptivePricingActive,
+            requiresBillingAddress: requiresBillingAddress,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
             elementsSession: elementsSession

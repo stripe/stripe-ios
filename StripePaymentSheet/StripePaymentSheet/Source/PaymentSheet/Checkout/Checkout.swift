@@ -349,4 +349,9 @@ public final class Checkout: ObservableObject {
     public func getPaymentElement() -> PaymentElement {
         return paymentElement
     }
+
+    /// Clears the currently selected payment option.
+    public func clearPaymentOption() {
+        paymentElement?.clearPaymentOption()
+    }
 }

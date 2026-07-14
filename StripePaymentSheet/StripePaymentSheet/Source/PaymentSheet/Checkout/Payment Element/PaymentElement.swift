@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 7/10/26.
 //
 
+import Combine
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 import UIKit
@@ -59,6 +60,8 @@ public final class PaymentElement {
 
     let paymentSheetFlowController: PaymentSheet.FlowController
     let embeddedPaymentElement: EmbeddedPaymentElement
+    weak var checkout: Checkout?
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Internal methods
 
@@ -85,6 +88,18 @@ public final class PaymentElement {
         self.view = PaymentElementView(viewModel: PaymentElementViewModel(uiView: uiView))
         self.uiView = uiView
         self.embeddedPaymentElement.delegate = self
+        self.checkout = checkout
+        self.paymentSheetFlowController.$paymentOption
+            // Without dropFirst, @Published immediately emits FlowController's current value before we setPaymentOption from EmbeddedPaymentElement below.
+            .dropFirst()
+            .sink { [weak self] paymentOption in
+                self?.checkout?.setPaymentOption(paymentOption.map(Checkout.Session.PaymentOptionDisplayData.init))
+            }
+            .store(in: &cancellables)
+        // We don't know whether to use FC or Embedded's payment option at this point, so we'll use Embedded since it has more info (includes mandate text).
+        checkout.setPaymentOption(
+            embeddedPaymentElement.paymentOption.map(Checkout.Session.PaymentOptionDisplayData.init)
+        )
     }
 }
 
@@ -106,6 +121,12 @@ extension PaymentElement {
             throw error
         }
     }
+
+    func clearPaymentOption() {
+        paymentSheetFlowController.clearPaymentOption()
+        embeddedPaymentElement.clearPaymentOption()
+        checkout?.setPaymentOption(nil)
+    }
 }
 
 // MARK: - EmbeddedPaymentElementDelegate
@@ -121,6 +142,30 @@ extension PaymentElement: EmbeddedPaymentElementDelegate {
     }
 
     public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
-        // PaymentElementViewDelegate does not expose payment option updates.
+        checkout?.setPaymentOption(embeddedPaymentElement.paymentOption.map(Checkout.Session.PaymentOptionDisplayData.init))
+    }
+}
+
+// MARK: - Checkout.Session.PaymentOptionDisplayData
+
+extension Checkout.Session.PaymentOptionDisplayData {
+    init(_ paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData) {
+        self.init(
+            image: paymentOption.image,
+            label: paymentOption.label,
+            billingDetails: paymentOption.billingDetails,
+            paymentMethodType: paymentOption.paymentMethodType,
+            mandateText: nil
+        )
+    }
+
+    init(_ paymentOption: EmbeddedPaymentElement.PaymentOptionDisplayData) {
+        self.init(
+            image: paymentOption.image,
+            label: paymentOption.label,
+            billingDetails: paymentOption.billingDetails,
+            paymentMethodType: paymentOption.paymentMethodType,
+            mandateText: paymentOption.mandateText
+        )
     }
 }
