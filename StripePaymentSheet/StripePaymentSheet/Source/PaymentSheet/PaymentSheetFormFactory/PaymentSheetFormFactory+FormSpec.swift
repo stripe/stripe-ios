@@ -166,6 +166,7 @@ extension PaymentSheetFormFactory {
             if address == .full {
                 return makeBillingAddressSection(countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
             } else if collectsTaxFromBillingAddress {
+                // Start with country+postal, widen later based on country
                 return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
             } else {
                 return nil
