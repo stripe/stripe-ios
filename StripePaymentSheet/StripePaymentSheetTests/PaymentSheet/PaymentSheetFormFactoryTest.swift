@@ -2943,7 +2943,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethod: .stripe(.card)
         )
 
-        let billingSection = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let billingSection = factory.makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: false)
         XCTAssertNotNil(billingSection)
 
         // Verify the address section was created with no country filtering (nil countries parameter)
@@ -2968,7 +2968,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethod: .stripe(.card)
         )
 
-        let billingSection = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let billingSection = factory.makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: false)
         XCTAssertNotNil(billingSection)
 
         // Verify the address section was created with country filtering
@@ -2992,7 +2992,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethod: .stripe(.card)
         )
 
-        let billingSection = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let billingSection = factory.makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: false)
         XCTAssertNil(billingSection)  // Should be nil when address collection is .never
     }
 
@@ -3009,11 +3009,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
 
         // When address is .automatic and payment method requires it
-        let billingSectionRequired = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: true)
+        let billingSectionRequired = factory.makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: true)
         XCTAssertNotNil(billingSectionRequired)
 
         // When address is .automatic and payment method doesn't require it
-        let billingSectionNotRequired = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let billingSectionNotRequired = factory.makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: false)
         XCTAssertNil(billingSectionNotRequired)
     }
 

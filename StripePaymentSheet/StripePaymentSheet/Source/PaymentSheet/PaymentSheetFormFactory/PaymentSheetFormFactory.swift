@@ -631,7 +631,7 @@ extension PaymentSheetFormFactory {
             phoneRequiredByPaymentMethod: false
         )
         let iban: Element = makeIban()
-        let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: true)
+        let addressSection: Element? = makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: true)
         let checkboxElement: Element? = makeSepaBasedPMCheckbox()
         let mandate: Element? = makeSepaMandate()
         let elements: [Element?] = [contactSection, iban, addressSection, checkboxElement, mandate]
@@ -647,7 +647,7 @@ extension PaymentSheetFormFactory {
             emailRequiredByPaymentMethod: isSettingUp,
             phoneRequiredByPaymentMethod: false
         )
-        let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let addressSection: Element? = makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: false)
         let checkboxElement: Element? = makeSepaBasedPMCheckbox()
         let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
         let elements: [Element?] = [contactSection, addressSection, checkboxElement, mandate]
@@ -663,7 +663,7 @@ extension PaymentSheetFormFactory {
             emailRequiredByPaymentMethod: true,
             phoneRequiredByPaymentMethod: false
         )
-        let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: true)
+        let addressSection: Element? = makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: true)
         let sortCodeField = makeSortCode()
         let accountNumberField = makeBacsAccountNumber()
         let mandate = makeBacsMandate()
@@ -736,7 +736,7 @@ extension PaymentSheetFormFactory {
 
     func makeKonbini() -> PaymentMethodElement {
         let contactInfoSection = makeContactInformationSection(nameRequiredByPaymentMethod: true, emailRequiredByPaymentMethod: true, phoneRequiredByPaymentMethod: false)
-        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let billingDetails = makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: false)
         let konbiniPhoneNumber = PaymentMethodElementWrapper(TextFieldElement.makeKonbini(theme: theme)) { textField, params in
             let confirmationNumber = textField.text
             if !confirmationNumber.isEmpty {
@@ -763,7 +763,7 @@ extension PaymentSheetFormFactory {
 
         let billingDetails: Element? = {
             guard !disableBillingDetailCollection else { return nil }
-            return makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+            return makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: false)
         }()
 
         let elements = [subtitleElement, contactInfoSection, billingDetails].compactMap { $0 }
@@ -776,7 +776,7 @@ extension PaymentSheetFormFactory {
             emailRequiredByPaymentMethod: false,
             phoneRequiredByPaymentMethod: false
         )
-        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let billingDetails = makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: false)
         return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
     }
 
@@ -787,7 +787,7 @@ extension PaymentSheetFormFactory {
             emailRequiredByPaymentMethod: false,
             phoneRequiredByPaymentMethod: false
         )
-        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let billingDetails = makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: false)
         return FormElement(autoSectioningElements: [country, contactInfoSection, billingDetails].compactMap { $0 }, theme: theme)
     }
 
@@ -1004,12 +1004,12 @@ extension PaymentSheetFormFactory {
             theme: theme)
     }
 
-    func makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: Bool) -> Element? {
+    func makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: Bool) -> Element? {
         let address = configuration.billingDetailsCollectionConfiguration.address
         let countries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty
             ? nil
             : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
-        if address == .full || (address == .automatic && requiredByPaymentMethod) {
+        if address == .full || (address == .automatic && fullAddressRequiredByPaymentMethod) {
             return makeBillingAddressSection(countries: countries)
         } else if collectsTaxFromBillingAddress {
             // Start with country+postal, widen later based on country

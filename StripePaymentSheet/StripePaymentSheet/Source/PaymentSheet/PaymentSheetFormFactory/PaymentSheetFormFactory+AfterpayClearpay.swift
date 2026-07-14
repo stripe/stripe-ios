@@ -16,7 +16,7 @@ extension PaymentSheetFormFactory {
             emailRequiredByPaymentMethod: true,
             phoneRequiredByPaymentMethod: false
         )
-        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let billingDetails = makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: false)
         return FormElement(autoSectioningElements: [header, contactInfoSection, billingDetails].compactMap { $0 }, theme: theme)
     }
 

@@ -19,7 +19,7 @@ extension PaymentSheetFormFactory {
             emailRequiredByPaymentMethod: true,
             phoneRequiredByPaymentMethod: false
         )
-        let billingAddressElement = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let billingAddressElement = makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: false)
 
         let allElements: [Element?] = [
             contactInformationElement,

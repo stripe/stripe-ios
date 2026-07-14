@@ -13,7 +13,7 @@ extension PaymentSheetFormFactory {
             emailRequiredByPaymentMethod: isSettingUp,
             phoneRequiredByPaymentMethod: false
         )
-        let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let addressSection: Element? = makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: false)
         let checkboxElement: Element? = makeSepaBasedPMCheckbox()
         // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
         let mandate: Element? = isSettingUp ? makeSepaMandate() : nil
