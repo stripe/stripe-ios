@@ -566,7 +566,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
 
     @objc
-    public func paymentAuthorizationController(
+    @_spi(STP) public func paymentAuthorizationController(
         _ controller: PKPaymentAuthorizationController,
         didSelectPaymentMethod paymentMethod: PKPaymentMethod,
         handler completion: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
