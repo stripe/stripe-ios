@@ -94,64 +94,6 @@ extension Checkout {
     }
 }
 
-enum SessionFieldUpdate<Value> {
-    case preserve
-    case set(Value?)
-
-    func resolved(currentValue: Value?) -> Value? {
-        switch self {
-        case .preserve:
-            return currentValue
-        case .set(let newValue):
-            return newValue
-        }
-    }
-}
-
-extension Checkout.Session {
-    /// Apologetic explanation for this method:
-    /// - Situation: Session is immutable, so all mutations must create a new one.
-    /// - Complication: Optional fields need three states here: preserve the current value, replace with a non-nil value, or explicitly clear to nil.
-    /// - Resolution: SessionFieldUpdate keeps that distinction visible at call sites instead of relying on double optionals.
-    func makeCopyOverriding(
-        billingAddress: SessionFieldUpdate<Checkout.ContactAddress> = .preserve,
-        shippingAddress: SessionFieldUpdate<Checkout.ContactAddress> = .preserve
-    ) -> Self {
-        return Self(
-            id: id,
-            billingAddress: billingAddress.resolved(currentValue: self.billingAddress),
-            businessName: businessName,
-            currency: currency,
-            currencyOptions: currencyOptions,
-            discountAmounts: discountAmounts,
-            email: email,
-            lineItems: lineItems,
-            livemode: livemode,
-            minorUnitsAmountDivisor: minorUnitsAmountDivisor,
-            savedPaymentMethods: savedPaymentMethods,
-            shipping: shipping,
-            shippingAddress: shippingAddress.resolved(currentValue: self.shippingAddress),
-            shippingOptions: shippingOptions,
-            status: status,
-            tax: tax,
-            total: total,
-            mode: mode,
-            paymentMethodOptions: paymentMethodOptions,
-            customer: customer,
-            savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
-            setupFutureUsage: setupFutureUsage,
-            setupFutureUsageForPaymentMethodType: setupFutureUsageForPaymentMethodType,
-            allowedShippingCountries: allowedShippingCountries,
-            localizedPricesMetas: localizedPricesMetas,
-            exchangeRateMeta: exchangeRateMeta,
-            requiresBillingAddress: requiresBillingAddress,
-            adaptivePricingActive: adaptivePricingActive,
-            automaticTaxEnabled: automaticTaxEnabled,
-            automaticTaxAddressSource: automaticTaxAddressSource,
-            elementsSession: elementsSession
-        )
-    }
-}
 
 
 // MARK: - Mode

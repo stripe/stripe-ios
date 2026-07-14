@@ -80,3 +80,62 @@ extension Checkout.Session {
     }
 
 }
+
+enum SessionFieldUpdate<Value> {
+    case keepOldValue
+    case newValue(Value?)
+
+    func resolved(currentValue: Value?) -> Value? {
+        switch self {
+        case .keepOldValue:
+            return currentValue
+        case .newValue(let newValue):
+            return newValue
+        }
+    }
+}
+
+extension Checkout.Session {
+    /// Apologetic explanation for this method:
+    /// - Situation: Session is immutable, so all mutations must create a new one.
+    /// - Complication: Optional fields need three states here: keep the old value, replace with a non-nil value, or explicitly clear to nil.
+    /// - Resolution: SessionFieldUpdate keeps that distinction visible at call sites instead of relying on double optionals.
+    func makeCopyOverriding(
+        billingAddress: SessionFieldUpdate<Checkout.ContactAddress> = .keepOldValue,
+        shippingAddress: SessionFieldUpdate<Checkout.ContactAddress> = .keepOldValue
+    ) -> Self {
+        return Self(
+            id: id,
+            billingAddress: billingAddress.resolved(currentValue: self.billingAddress),
+            businessName: businessName,
+            currency: currency,
+            currencyOptions: currencyOptions,
+            discountAmounts: discountAmounts,
+            email: email,
+            lineItems: lineItems,
+            livemode: livemode,
+            minorUnitsAmountDivisor: minorUnitsAmountDivisor,
+            savedPaymentMethods: savedPaymentMethods,
+            shipping: shipping,
+            shippingAddress: shippingAddress.resolved(currentValue: self.shippingAddress),
+            shippingOptions: shippingOptions,
+            status: status,
+            tax: tax,
+            total: total,
+            mode: mode,
+            paymentMethodOptions: paymentMethodOptions,
+            customer: customer,
+            savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
+            setupFutureUsage: setupFutureUsage,
+            setupFutureUsageForPaymentMethodType: setupFutureUsageForPaymentMethodType,
+            allowedShippingCountries: allowedShippingCountries,
+            localizedPricesMetas: localizedPricesMetas,
+            exchangeRateMeta: exchangeRateMeta,
+            requiresBillingAddress: requiresBillingAddress,
+            adaptivePricingActive: adaptivePricingActive,
+            automaticTaxEnabled: automaticTaxEnabled,
+            automaticTaxAddressSource: automaticTaxAddressSource,
+            elementsSession: elementsSession
+        )
+    }
+}

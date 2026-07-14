@@ -132,8 +132,8 @@ extension Checkout {
 
         // Preserve client-side address overrides on the new session.
         let sessionWithLocalAddress = newSession.makeCopyOverriding(
-            billingAddress: .set(session.billingAddress),
-            shippingAddress: .set(session.shippingAddress)
+            billingAddress: .newValue(session.billingAddress),
+            shippingAddress: .newValue(session.shippingAddress)
         )
 
         // Apply any additional local mutations to the session.
