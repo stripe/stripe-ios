@@ -1021,6 +1021,14 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
         _ flowControllerViewController: FlowControllerViewControllerProtocol,
         didCancel: Bool
     ) {
+        // If the user's previous PM was deleted during the session, treat cancel as continue
+        // since the deletion is permanent and we need to accept whatever is now selected.
+        var didCancel = didCancel
+        if didCancel, case .saved(let paymentMethod, _) = paymentOptionBeforePresenting,
+           !viewController.savedPaymentMethods.contains(where: { $0.stripeId == paymentMethod.stripeId }) {
+            didCancel = false
+        }
+
         if !didCancel {
             self.didPresentAndContinue = true
             if let customerPaymentOption = internalPaymentOption?.customerPaymentOption {
@@ -1032,15 +1040,9 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
                 // The VC accumulates too much state during a session (link options, form input, SPM
                 // edits) to safely reset in place. Just rebuild it.
                 var savedPaymentMethods = self.viewController.savedPaymentMethods
-                var previousOption = self.paymentOptionBeforePresenting
-                if case .saved(let paymentMethod, _) = previousOption {
-                    if savedPaymentMethods.contains(where: { $0.stripeId == paymentMethod.stripeId }) {
-                        savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
-                        savedPaymentMethods.insert(paymentMethod, at: 0)
-                    } else {
-                        // The saved PM was removed during this session, don't revert
-                        previousOption = nil
-                    }
+                if case .saved(let paymentMethod, _) = self.paymentOptionBeforePresenting {
+                    savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
+                    savedPaymentMethods.insert(paymentMethod, at: 0)
                 }
                 let updatedLoadResult = PaymentSheetLoader.LoadResult(
                     intent: self.viewController.loadResult.intent,
@@ -1055,7 +1057,7 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
                     loadResult: updatedLoadResult,
                     analyticsHelper: self.analyticsHelper,
                     walletButtonsViewState: self.walletButtonsViewState,
-                    previousPaymentOption: previousOption
+                    previousPaymentOption: self.paymentOptionBeforePresenting
                 )
                 self.viewController.flowControllerDelegate = self
             }
