@@ -123,7 +123,10 @@ extension PaymentElement {
     }
 
     func clearPaymentOption() {
-        paymentSheetFlowController.clearPaymentOption()
+        guard !paymentSheetFlowController.didPresentAndContinue else {
+            assertionFailure("Clearing the payment option after presenting PaymentElement is not implemented. File a feature request if you need this.")
+            return
+        }
         embeddedPaymentElement.clearPaymentOption()
         checkout?.setPaymentOption(nil)
     }

@@ -280,17 +280,12 @@ extension PaymentSheet {
 
         /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
         private var internalPaymentOption: PaymentOption? {
-            guard !hasClearedPaymentOption else {
-                return nil
-            }
             guard viewController.error == nil else {
                 return nil
             }
 
             return viewController.selectedPaymentOption
         }
-
-        private var hasClearedPaymentOption = false
 
         private var canPresentLinkInPlaceOfFlowController: Bool {
             guard elementsSession.enableFlowControllerRUX(for: configuration) else {
@@ -990,12 +985,6 @@ extension PaymentSheet.FlowController {
     var isPresentingPaymentUI: Bool {
         return isPresented
     }
-
-    func clearPaymentOption() {
-        hasClearedPaymentOption = true
-        viewController.clearSelection()
-        updatePaymentOption()
-    }
 }
 
 // MARK: - LoadingViewControllerDelegate
@@ -1025,7 +1014,6 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
     ) {
         if !didCancel {
             self.didPresentAndContinue = true
-            self.hasClearedPaymentOption = false
         }
         flowControllerViewController.dismiss(animated: true) {
             self.presentPaymentOptionsCompletionWithResult?(didCancel)

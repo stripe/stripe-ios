@@ -37,11 +37,12 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testSessionPaymentOptionUpdatesAndClears() async throws {
-        // Given
+        // Given a Checkout with a PaymentElement and valid card payment option
         let checkout = await Checkout(
             clientSecret: "cs_test_123_secret_abc",
             apiResponse: CheckoutTestHelpers.makeOpenSession()
         )
+        // TODO: Setting PaymentElement is a workaround hack - delete when we can remove the test-only init above and properly init Checkout.
         let paymentElement = try await PaymentElement(checkout: checkout)
         checkout.paymentElement = paymentElement
         let confirmParams = IntentConfirmParams(type: .stripe(.card))
@@ -52,20 +53,20 @@ final class CheckoutUnitTests: XCTestCase {
         confirmParams.paymentMethodParams.card?.cvc = "123"
         confirmParams.setDefaultBillingDetailsIfNecessary(for: paymentElement.embeddedPaymentElement.configuration)
 
-        // When
+        // When the embedded PaymentElement reports the selected payment option
         paymentElement.embeddedPaymentElement._test_paymentOption = .new(confirmParams: confirmParams)
         paymentElement.embeddedPaymentElementDidUpdatePaymentOption(
             embeddedPaymentElement: paymentElement.embeddedPaymentElement
         )
 
-        // Then
+        // Then the Checkout session mirrors the selected payment option
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "card")
         XCTAssertEqual(checkout.session.paymentOption?.label, "•••• 4242")
 
-        // When
+        // When the Checkout payment option is cleared
         checkout.clearPaymentOption()
 
-        // Then
+        // Then the Checkout session payment option is cleared
         XCTAssertNil(checkout.session.paymentOption)
     }
 
