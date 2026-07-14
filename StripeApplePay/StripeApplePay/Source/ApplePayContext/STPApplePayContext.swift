@@ -571,6 +571,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         didSelectPaymentMethod paymentMethod: PKPaymentMethod,
         handler completion: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
     ) {
+        // Note: this method isn't called unless our delegate implements it (see this class's `responds(to:)` override)
         guard let delegate else {
             return
         }
