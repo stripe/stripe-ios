@@ -198,6 +198,47 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(noOverrides.collectionMode, .allWithAutocomplete)
     }
 
+    func testCountryCollectionModeOverridesWithBillingSameAsShipping() throws {
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
+            "CA": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
+            "FR": AddressSpec(format: "ACZ", require: "ACZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
+        ]
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US", "CA", "FR"],
+            locale: locale_enUS,
+            addressSpecProvider: specProvider,
+            defaults: .init(address: .init(country: "US")),
+            collectionMode: .countryAndPostal(),
+            countryCollectionModeOverrides: [
+                "US": .autoCompletable,
+                "CA": .countryPostalAndState,
+            ],
+            additionalFields: .init(billingSameAsShippingCheckbox: .enabled(isOptional: false))
+        )
+
+        // US's override applies at init.
+        XCTAssertEqual(sut.collectionMode, .autoCompletable)
+
+        // FR has no override, so it uses the base mode.
+        sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "FR")))
+        XCTAssertEqual(sut.collectionMode, .countryAndPostal())
+
+        // Re-checking "same as shipping" snaps back to US, so its override should return.
+        sut.sameAsCheckbox.didToggle(false)
+        sut.sameAsCheckbox.didToggle(true)
+        XCTAssertEqual(sut.selectedCountryCode, "US")
+        XCTAssertEqual(sut.collectionMode, .autoCompletable)
+
+        // Same when the default shipping address updates to CA.
+        sut.sameAsCheckbox.isSelected = true
+        sut.updateBillingSameAsShippingDefaultAddress(.init(country: "CA"))
+        XCTAssertEqual(sut.selectedCountryCode, "CA")
+        XCTAssertEqual(sut.collectionMode, .countryPostalAndState)
+    }
+
     func testCountries() {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [

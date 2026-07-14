@@ -150,11 +150,7 @@ import UIKit
         }
         set {
             guard let index = countryCodes.firstIndex(of: newValue) else { return }
-            country.selectedIndex = index
-            applyCollectionModeOverride(for: newValue)
-            updateAddressFields(
-                for: countryCodes[index]
-            )
+            selectCountry(index: index)
         }
     }
     public var addressDetails: AddressDetails {
@@ -263,20 +259,14 @@ import UIKit
         )
         country.didUpdate = { [weak self] index in
             guard let self = self else { return }
-            self.applyCollectionModeOverride(for: self.countryCodes[index])
-            self.updateAddressFields(
-                for: self.countryCodes[index]
-            )
+            self.selectCountry(index: index)
         }
         sameAsCheckbox.didToggle = { [weak self] isToggled in
             guard let self = self else { return }
             if isToggled {
-                // Set the country to the default country
-                self.country.selectedIndex = self.country.items.firstIndex {
-                    $0.rawData == self.defaults.address.country ?? ""
-                } ?? self.country.selectedIndex
-                // Populate our fields with the provided defaults
-                self.updateAddressFields(for: self.defaults.address.country ?? self.country.selectedItem.rawData, address: self.defaults.address)
+                // Snap back to the default country and refill its values
+                let index = self.countryCodes.firstIndex(of: self.defaults.address.country ?? "") ?? self.country.selectedIndex
+                self.selectCountry(index: index, address: self.defaults.address)
             } else {
                 // Clear the fields
                 self.updateAddressFields(for: self.country.selectedItem.rawData, address: .init())
@@ -300,10 +290,8 @@ import UIKit
         // Finally...
         if sameAsCheckbox.isSelected {
             // ...update the fields with the default values if billing checkbox is shown and checked
-            self.country.selectedIndex = self.country.items.firstIndex {
-                $0.rawData == defaults.address.country ?? ""
-            } ?? self.country.selectedIndex
-            updateAddressFields(for: defaults.address.country ?? self.country.selectedItem.rawData, address: defaults.address)
+            let index = countryCodes.firstIndex(of: defaults.address.country ?? "") ?? country.selectedIndex
+            selectCountry(index: index, address: defaults.address)
         } else {
             // ...or select the checkbox if the address matches
             sameAsCheckbox.isSelected = displayedAddressEqualTo(address: defaultAddress)
@@ -316,6 +304,16 @@ import UIKit
     private func applyCollectionModeOverride(for countryCode: String) {
         guard !countryCollectionModeOverrides.isEmpty else { return }
         collectionMode = countryCollectionModeOverrides[countryCode] ?? baseCollectionMode
+    }
+
+    /// Selects `index` and rebuilds the fields, keeping the collection mode override in sync. Route
+    /// every country change through here, since setting `country.selectedIndex` directly skips `didUpdate`.
+    private func selectCountry(index: Int, address: AddressDetails.Address? = nil) {
+        if country.selectedIndex != index {
+            country.selectedIndex = index
+        }
+        applyCollectionModeOverride(for: countryCodes[index])
+        updateAddressFields(for: countryCodes[index], address: address)
     }
 
     /// - Parameter address: Populates the new fields with the provided defaults, or the current fields' text if `nil`.
