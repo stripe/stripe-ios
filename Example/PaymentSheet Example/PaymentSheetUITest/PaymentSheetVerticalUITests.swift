@@ -54,24 +54,19 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.textFields["Card number"].typeText("1")
         XCTAssertFalse(continueButton.isEnabled)
         app.tapCoordinate(at: .init(x: 200, y: 100))
-        // Tap out of FlowController and expect empty payment method
+        // Tap out of FlowController - cancelling discards the incomplete card and reverts to the previous selection
         app.tapCoordinate(at: .init(x: 200, y: 100))
-        XCTAssertEqual(paymentMethodButton.label, "None")
+        XCTAssertEqual(paymentMethodButton.label, "Cash App Pay, cashapp")
 
-        // Go back in
+        // Go back in - Cash App Pay (the previous selection) is restored and selected
         paymentMethodButton.tap()
-        XCTAssertFalse(continueButton.isEnabled)
-        // Back out of card form
-        app.buttons["Back"].tap()
-        // Cash App Pay (the previous selection) should be selected
         XCTAssertTrue(app.buttons["Cash App Pay"].isSelected)
         XCTAssertTrue(continueButton.isEnabled)
 
-        // Go back to card
+        // Go to card - the incomplete details we typed earlier were discarded, so the form starts fresh
         app.buttons["Card"].waitForExistenceAndTap()
-        // Make sure the card form retained previously entered details
-        XCTAssertEqual(app.textFields["Card number"].value as? String, "1, Your card number is invalid.")
-        app.textFields["Card number"].clearText()
+        XCTAssertFalse(continueButton.isEnabled)
+        XCTAssertNotEqual(app.textFields["Card number"].value as? String, "1, Your card number is invalid.")
         // Finish the card payment
         try! fillCardData(app, cardNumber: "4242424242424242", tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
         continueButton.tap()
