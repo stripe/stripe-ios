@@ -14,20 +14,32 @@ import PassKit
 @_spi(STP) import StripePayments
 
 extension STPApplePayContext {
-    /// Builds Apple Pay summary items from a CheckoutSession's line items and totals.
+    /// Builds Apple Pay summary items from a checkout session's current state. Used both for the initial
+    /// payment request and to refresh the sheet after billing changes, so the two stay identical.
     ///
-    /// One row per line item, optional Subtotal/Shipping/Tax/Discount rows, then the grand total.
-    /// Callers must guard against empty `lineItems` and fall back to default summary items.
-    static func makeApplePayPaymentSummaryItems(
-        lineItems: [Checkout.LineItem],
-        total: Checkout.Total,
-        totalLabel: String,
+    /// Prefers itemized line items (one row per item, optional subtotal/shipping/tax/discount breakdown),
+    /// falls back to a single total row, or a .pending row if amount is unknown.
+    static func makePaymentSummaryItems(
+        for checkout: Checkout,
+        label: String,
         currency: String?
     ) -> [PKPaymentSummaryItem] {
+        let session: Checkout.Session = checkout.nonisolatedSession
+
+        guard !session.lineItems.isEmpty, let total = session.total else {
+            // No line items available, fall back to a single summary row
+            if let amount = session.expectedAmount() {
+                let decimalAmount = NSDecimalNumber.stp_decimalNumber(withAmount: amount, currency: currency)
+                return [PKPaymentSummaryItem(label: label, amount: decimalAmount, type: .final)]
+            } else {
+                return [PKPaymentSummaryItem(label: label, amount: .zero, type: .pending)]
+            }
+        }
+
         var summaryItems: [PKPaymentSummaryItem] = []
 
-        for lineItem in lineItems {
-            let label = lineItem.quantity > 1
+        for lineItem in session.lineItems {
+            let itemLabel = lineItem.quantity > 1
                 ? String.Localized.lineItemLabel(name: lineItem.name, quantity: lineItem.quantity)
                 : lineItem.name
             let unitMinorUnits = lineItem.unitAmount?.minorUnitsAmount ?? 0
@@ -35,7 +47,7 @@ extension STPApplePayContext {
                 withAmount: unitMinorUnits * lineItem.quantity,
                 currency: currency
             )
-            summaryItems.append(PKPaymentSummaryItem(label: label, amount: amount, type: .final))
+            summaryItems.append(PKPaymentSummaryItem(label: itemLabel, amount: amount, type: .final))
         }
 
         let shipping = total.shippingRate.minorUnitsAmount
@@ -90,7 +102,7 @@ extension STPApplePayContext {
         // Apple Pay convention: the last item is the grand total.
         summaryItems.append(
             PKPaymentSummaryItem(
-                label: totalLabel,
+                label: label,
                 amount: NSDecimalNumber.stp_decimalNumber(
                     withAmount: total.total.minorUnitsAmount,
                     currency: currency
@@ -100,6 +112,23 @@ extension STPApplePayContext {
         )
 
         return summaryItems
+    }
+
+    // Checkout.Address from the partial billing address Apple Pay exposes while the sheet is open. nil if
+    // there's no country to key tax on. line1/line2 are omitted: Apple withholds the street until
+    // authorization, so we only get country/city/state/postal here (enough for a tax region).
+    static func makeCheckoutAddress(from postalAddress: CNPostalAddress) -> Checkout.Address? {
+        guard let country = postalAddress.isoCountryCode.nonEmpty else {
+            return nil
+        }
+        return Checkout.Address(
+            country: country,
+            line1: nil,
+            line2: nil,
+            city: postalAddress.city.nonEmpty,
+            state: postalAddress.state.nonEmpty,
+            postalCode: postalAddress.postalCode.nonEmpty
+        )
     }
 
     /// Converts a `Checkout.ContactAddress` into a `PKContact` for pre-populating the Apple Pay sheet.

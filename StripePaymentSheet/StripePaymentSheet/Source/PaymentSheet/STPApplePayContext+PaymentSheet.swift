@@ -24,9 +24,17 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     ((PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void)?
     let shippingContactUpdateHandler:
     ((PKContact, @escaping ((PKPaymentRequestShippingContactUpdate) -> Void)) -> Void)?
+    // Recalculates tax from the selected card's billing address. Non-nil only for checkout sessions
+    // that source tax from the billing address.
+    let paymentMethodUpdateHandler:
+    ((PKPaymentMethod, @escaping ((PKPaymentRequestPaymentMethodUpdate) -> Void)) -> Void)?
 
     let intent: Intent
     let elementsSession: STPElementsSession
+
+    // Billing address captured before presenting the sheet, so we can restore it on cancel (opening the
+    // sheet / switching cards mutates it). nil if none was set.
+    let billingAddressSnapshot: Checkout.ContactAddress?
 
     init(
         intent: Intent,
@@ -38,16 +46,31 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         shippingContactUpdateHandler: (
             (PKContact, @escaping ((PKPaymentRequestShippingContactUpdate) -> Void)) -> Void
         )?,
+        paymentMethodUpdateHandler: (
+            (PKPaymentMethod, @escaping ((PKPaymentRequestPaymentMethodUpdate) -> Void)) -> Void
+        )? = nil,
+        billingAddressSnapshot: Checkout.ContactAddress? = nil,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) {
         self.completion = completion
         self.authorizationResultHandler = authorizationResultHandler
         self.shippingMethodUpdateHandler = shippingMethodUpdateHandler
         self.shippingContactUpdateHandler = shippingContactUpdateHandler
+        self.paymentMethodUpdateHandler = paymentMethodUpdateHandler
+        self.billingAddressSnapshot = billingAddressSnapshot
         self.intent = intent
         self.elementsSession = elementsSession
         super.init()
         self.selfRetainer = self
+    }
+
+    // didSelectPaymentMethod fires on *every* Apple Pay payment (including sheet open), unlike the shipping
+    // callbacks. Only advertise the selector when we have a handler, so unrelated flows are unaffected.
+    override func responds(to aSelector: Selector!) -> Bool {
+        if aSelector == #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didSelectPaymentMethod:handler:)) {
+            return paymentMethodUpdateHandler != nil
+        }
+        return super.responds(to: aSelector)
     }
 
     func applePayContext(
@@ -177,6 +200,14 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         paymentInformation: PKPayment,
         context: STPApplePayContext
     ) async throws -> String {
+        // Sync the full billing address (incl. line1, now available post-authorization) so the server computes
+        // the final tax. This also drains any in-flight sheet-open tax update, so expectedAmount below reflects
+        // the latest tax rather than a stale, pre-tax value.
+        if let stpPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: paymentMethod.allResponseFields) {
+            try await checkout.syncBillingAddress(from: stpPaymentMethod.billingDetails)
+        }
+
+        // Re-read after the sync so the values below reflect the latest tax.
         let checkoutSession: Checkout.Session = checkout.nonisolatedSession
 
         // 1. Build client attribution metadata
@@ -265,9 +296,38 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         case .error:
             completion(.failed(error: error!), confirmType)
         case .userCancellation:
+            restoreBillingAddressAfterCancel()
             completion(.canceled, confirmType)
         }
         selfRetainer = nil
+    }
+
+    // On cancel, undo the billing-address mutation from opening the sheet / switching cards (which
+    // recalculated tax from a card the user abandoned).
+    private func restoreBillingAddressAfterCancel() {
+        guard case .checkout(let checkout) = intent else {
+            return
+        }
+        let snapshot = billingAddressSnapshot
+        Task { @MainActor in
+            guard let snapshot else {
+                // No billing address before Apple Pay, and the server can't fully clear a tax region (finest
+                // reset is country-only), so we can't perfectly undo. Leave the last-computed value — a
+                // documented limitation (MOBILESDK-4638).
+                return
+            }
+            do {
+                // No-ops if the address never changed.
+                try await checkout.updateBillingAddress(
+                    name: snapshot.name,
+                    phone: snapshot.phone,
+                    address: snapshot.address,
+                    canUpdateWhileSheetPresented: true
+                )
+            } catch {
+                // payment's already cancelled, nothing to do if restore fails
+            }
+        }
     }
 
     func applePayContext(
@@ -305,6 +365,19 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 handler(PKPaymentRequestShippingContactUpdate())
             }
         }
+
+    func applePayContext(
+        _ context: STPApplePayContext,
+        didSelectPaymentMethod paymentMethod: PKPaymentMethod,
+        handler: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void) {
+            if let paymentMethodUpdateHandler {
+                paymentMethodUpdateHandler(paymentMethod) { result in
+                    handler(result)
+                }
+            } else {
+                handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
+            }
+        }
 }
 
 extension STPApplePayContext {
@@ -329,12 +402,42 @@ extension STPApplePayContext {
         if let paymentRequestHandler = configuration.applePay?.customHandlers?.paymentRequestHandler {
             paymentRequest = paymentRequestHandler(paymentRequest)
         }
+
+        // For checkout sessions that source tax from the billing address, keep the session's billing address
+        // (and displayed tax) in sync with the sheet as the user opens it / switches cards. Snapshot the
+        // current address first so we can restore it on cancel.
+        var paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping ((PKPaymentRequestPaymentMethodUpdate) -> Void)) -> Void)?
+        var billingAddressSnapshot: Checkout.ContactAddress?
+        if case .checkout(let checkout) = intent {
+            billingAddressSnapshot = checkout.nonisolatedSession.billingAddress
+            let label = intent.sellerDetails?.businessName ?? configuration.merchantDisplayName
+            let currency = intent.currency
+            paymentMethodUpdateHandler = { pkPaymentMethod, completion in
+                Task { @MainActor in
+                    if let postalAddress = pkPaymentMethod.billingAddress?.postalAddresses.first?.value,
+                       let address = STPApplePayContext.makeCheckoutAddress(from: postalAddress) {
+                        // on failure, fall through with the current (unchanged) items
+                        try? await checkout.updateBillingAddress(address: address, canUpdateWhileSheetPresented: true)
+                    }
+                    // recompute from the (maybe updated) session: new tax on success, current total otherwise,
+                    // never an empty item list
+                    let items = STPApplePayContext.makePaymentSummaryItems(for: checkout,
+                        label: label,
+                        currency: currency
+                    )
+                    completion(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: items))
+                }
+            }
+        }
+
         let delegate = ApplePayContextClosureDelegate(
             intent: intent,
             elementsSession: elementsSession,
             authorizationResultHandler: configuration.applePay?.customHandlers?.authorizationResultHandler,
             shippingMethodUpdateHandler: configuration.applePay?.customHandlers?.shippingMethodUpdateHandler,
             shippingContactUpdateHandler: configuration.applePay?.customHandlers?.shippingContactUpdateHandler,
+            paymentMethodUpdateHandler: paymentMethodUpdateHandler,
+            billingAddressSnapshot: billingAddressSnapshot,
             completion: completion
         )
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: delegate) {
@@ -342,10 +445,7 @@ extension STPApplePayContext {
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
-            applePayContext.fallbackBillingDetails = makeFallbackBillingDetails(
-                intent: intent,
-                configuration: configuration
-            )
+            applePayContext.fallbackBillingDetails = makeFallbackBillingDetails(intent: intent, configuration: configuration)
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes
@@ -374,13 +474,10 @@ extension STPApplePayContext {
         if let paymentSummaryItems = applePay.paymentSummaryItems {
             // Use the merchant supplied paymentSummaryItems
             paymentRequest.paymentSummaryItems = paymentSummaryItems
-        } else if case .checkout(let checkout) = intent,
-                  !checkout.nonisolatedSession.lineItems.isEmpty,
-                  let total = checkout.nonisolatedSession.total {
-            paymentRequest.paymentSummaryItems = STPApplePayContext.makeApplePayPaymentSummaryItems(
-                lineItems: checkout.nonisolatedSession.lineItems,
-                total: total,
-                totalLabel: label,
+        } else if case .checkout(let checkout) = intent {
+            // same helper used to refresh the sheet post-tax-recalc, so initial and updated lists match
+            paymentRequest.paymentSummaryItems = STPApplePayContext.makePaymentSummaryItems(for: checkout,
+                label: label,
                 currency: intent.currency
             )
         } else {
