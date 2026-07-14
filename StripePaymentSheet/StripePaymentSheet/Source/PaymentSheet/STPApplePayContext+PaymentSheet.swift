@@ -461,9 +461,11 @@ extension STPApplePayContext {
             paymentRequest.merchantCapabilities = merchantCapabilities
         }
 
-        // Pre-populate billingContact from the CheckoutSession's billing address if available
+        // Pre-populate billingContact from the CheckoutSession's billing address, but only
+        // if it has a street. Otherwise Apple Pay will show "Update Billing Address".
         if case .checkout(let checkout) = intent,
-           let billingAddress = checkout.nonisolatedSession.billingAddress {
+           let billingAddress = checkout.nonisolatedSession.billingAddress,
+           billingAddress.address.line1 != nil {
             paymentRequest.billingContact = Self.makeBillingContact(from: billingAddress)
         }
 
