@@ -322,6 +322,8 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                     handler(result)
                 }
             } else {
+                // Note: this method isn't called unless our delegate implements it (see this class's `responds(to:)` override)
+                stpAssertionFailure("This method should not be called unless paymentMethodUpdateHandler is set")
                 handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
             }
         }
