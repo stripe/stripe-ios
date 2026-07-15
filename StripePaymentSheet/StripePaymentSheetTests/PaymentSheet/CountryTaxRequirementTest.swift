@@ -27,12 +27,6 @@ final class CountryTaxRequirementTest: XCTestCase {
         // A base that already collects the full address needs no overrides.
         XCTAssertEqual(CountryTaxRequirement.collectionModeOverrides(for: .allWithAutocomplete), [:])
         XCTAssertEqual(CountryTaxRequirement.collectionModeOverrides(for: .noCountry), [:])
-        // A base collecting postal (for every country) but not the full address only needs the
-        // full-address overrides for US/PR; the postal-only countries are satisfied.
-        XCTAssertEqual(
-            CountryTaxRequirement.collectionModeOverrides(for: .countryPostalAndState),
-            ["US": .autoCompletable, "PR": .autoCompletable]
-        )
         // A base that collects no country's postal needs a postal override for every postal-only country.
         XCTAssertEqual(
             CountryTaxRequirement.collectionModeOverrides(for: .countryAndPostal(countriesRequiringPostalCollection: [])),

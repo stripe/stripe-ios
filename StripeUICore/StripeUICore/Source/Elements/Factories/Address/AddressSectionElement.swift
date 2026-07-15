@@ -75,8 +75,6 @@ import UIKit
         /// Collects country and postal code if the country is one of `countriesRequiringPostalCollection`
         /// - Note: Really only useful for cards, where we only collect postal for a handful of countries
         case countryAndPostal(countriesRequiringPostalCollection: [String] = ["US", "GB", "CA"])
-        /// Collects country, postal code, and state/province (each shown only if the country's spec defines it).
-        case countryPostalAndState
         /// Replaces the address line 1 field with `self.autoCompleteLine`
         case autoCompletable
         /// Special case used by some Payment Methods that collect country separately.
@@ -342,13 +340,6 @@ import UIKit
                     return countriesRequiringPostalCollection.contains(countryCode)
                 } else {
                    return false
-                }
-            case .countryPostalAndState:
-                switch $0 {
-                case .state, .postal:
-                    return true
-                case .line, .city:
-                    return false
                 }
             case .autoCompletable:
                 return false

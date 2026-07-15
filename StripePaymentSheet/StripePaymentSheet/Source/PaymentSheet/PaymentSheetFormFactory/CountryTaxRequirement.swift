@@ -58,7 +58,7 @@ extension AddressSectionElement.CollectionMode {
         switch self {
         case .all, .autoCompletable, .allWithAutocomplete, .noCountry:
             return true
-        case .countryAndPostal, .countryPostalAndState:
+        case .countryAndPostal:
             return false
         @unknown default:
             return false
@@ -68,7 +68,7 @@ extension AddressSectionElement.CollectionMode {
     /// Whether this mode collects the postal code for `country`.
     fileprivate func collectsPostal(for country: String) -> Bool {
         switch self {
-        case .all, .autoCompletable, .allWithAutocomplete, .noCountry, .countryPostalAndState:
+        case .all, .autoCompletable, .allWithAutocomplete, .noCountry:
             return true
         case .countryAndPostal(let countriesRequiringPostalCollection):
             return countriesRequiringPostalCollection.contains(country)

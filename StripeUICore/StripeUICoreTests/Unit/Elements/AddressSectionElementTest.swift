@@ -117,36 +117,6 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(ZZTextFields.map { $0.configuration.isOptional }, expectedZZFields.map { $0.isOptional })
     }
 
-    func testCountryPostalAndStateMode() {
-        let specProvider = AddressSpecProvider()
-        specProvider.addressSpecs = [
-            "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
-            "FR": AddressSpec(format: "ACZ", require: "ACZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
-        ]
-        let sut = AddressSectionElement(
-            title: "",
-            countries: ["US", "FR"],
-            locale: locale_enUS,
-            addressSpecProvider: specProvider,
-            collectionMode: .countryPostalAndState
-        )
-
-        // A country with a state in its spec: state + postal only, no street/city.
-        sut.selectedCountryCode = "US"
-        XCTAssertNotNil(sut.state)
-        XCTAssertNotNil(sut.postalCode)
-        XCTAssertNil(sut.line1)
-        XCTAssertNil(sut.line2)
-        XCTAssertNil(sut.city)
-
-        // A country with no state in its spec: postal only.
-        sut.selectedCountryCode = "FR"
-        XCTAssertNil(sut.state)
-        XCTAssertNotNil(sut.postalCode)
-        XCTAssertNil(sut.line1)
-        XCTAssertNil(sut.city)
-    }
-
     func testCountryCollectionModeOverrides() throws {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
@@ -163,7 +133,7 @@ class AddressSectionElementTest: XCTestCase {
             collectionMode: .countryAndPostal(),
             countryCollectionModeOverrides: [
                 "US": .autoCompletable,
-                "CA": .countryPostalAndState,
+                "CA": .allWithAutocomplete,
             ]
         )
 
@@ -172,7 +142,7 @@ class AddressSectionElementTest: XCTestCase {
 
         // Selecting a country with a different override switches to it.
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "CA")))
-        XCTAssertEqual(sut.collectionMode, .countryPostalAndState)
+        XCTAssertEqual(sut.collectionMode, .allWithAutocomplete)
 
         // Selecting a country with no override falls back to the base mode.
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "FR")))
@@ -181,9 +151,9 @@ class AddressSectionElementTest: XCTestCase {
         // And selecting an overridden country again re-applies its override, even if the
         // collection mode was changed externally in the meantime (e.g. after autocomplete).
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "US")))
-        sut.collectionMode = .allWithAutocomplete
+        sut.collectionMode = .all()
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "CA")))
-        XCTAssertEqual(sut.collectionMode, .countryPostalAndState)
+        XCTAssertEqual(sut.collectionMode, .allWithAutocomplete)
 
         // Without overrides, country changes never touch an externally-set collection mode.
         let noOverrides = AddressSectionElement(
@@ -214,7 +184,7 @@ class AddressSectionElementTest: XCTestCase {
             collectionMode: .countryAndPostal(),
             countryCollectionModeOverrides: [
                 "US": .autoCompletable,
-                "CA": .countryPostalAndState,
+                "CA": .allWithAutocomplete,
             ],
             additionalFields: .init(billingSameAsShippingCheckbox: .enabled(isOptional: false))
         )
@@ -236,7 +206,7 @@ class AddressSectionElementTest: XCTestCase {
         sut.sameAsCheckbox.isSelected = true
         sut.updateBillingSameAsShippingDefaultAddress(.init(country: "CA"))
         XCTAssertEqual(sut.selectedCountryCode, "CA")
-        XCTAssertEqual(sut.collectionMode, .countryPostalAndState)
+        XCTAssertEqual(sut.collectionMode, .allWithAutocomplete)
     }
 
     func testCountries() {
