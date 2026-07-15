@@ -87,12 +87,6 @@ struct PaymentView: View {
         case usd
         case eur
 
-        // MARK: - Identifiable
-
-        var id: String {
-            rawValue
-        }
-
         var displayName: String {
             rawValue.uppercased()
         }
@@ -104,6 +98,12 @@ struct PaymentView: View {
             case .eur:
                 "€"
             }
+        }
+
+        // MARK: - Identifiable
+
+        var id: String {
+            rawValue
         }
     }
 
