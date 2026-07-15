@@ -216,7 +216,7 @@ class CheckoutSessionUITests: PaymentSheetUITestCase {
         try saveCardsAndReloadFreshCheckoutSession(settings: &settings)
         assertBillingAddressEmpty()
 
-        // Opening + closing commits the already-selected SPM (no Continue)
+        // Opening + closing syncs the already-selected SPM (no Continue)
         app.buttons["Payment method"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["•••• 4242"].waitForExistence(timeout: 5))
         app.buttons["Close"].waitForExistenceAndTap()
@@ -380,8 +380,8 @@ class CheckoutSessionUITests: PaymentSheetUITestCase {
         waitForCheckoutBillingAddress(country: "US", postalCode: "94102", line1: "510 Townsend St.")
     }
 
-    func testCheckoutSession_FlowController_Vertical_UpdateCardBilling_SyncsOnlyOnCommit() throws {
-        // Updating billing on the card form updates the PM only; session sync waits for commit.
+    func testCheckoutSession_FlowController_Vertical_UpdateCardBilling_SyncsOnlyOnClose() throws {
+        // Updating billing on the card form updates the PM only; session sync waits for close.
         var settings = checkoutSessionSettings(
             uiStyle: .flowController,
             layout: .vertical,

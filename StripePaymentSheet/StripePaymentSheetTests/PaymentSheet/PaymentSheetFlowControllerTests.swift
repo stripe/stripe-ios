@@ -550,7 +550,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
     @MainActor
     func testCheckoutRequiringBillingSync_updatedPMBillingDiffersFromSession() async throws {
-        // PM billing changed (e.g. via update form); next commit should need a sync.
+        // PM billing changed (e.g. via update form); the next close should need a sync.
         let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
         let original = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
         try await checkout.syncBillingAddress(from: PaymentSheet.PaymentOption.saved(paymentMethod: original, confirmParams: nil).billingDetails)
@@ -706,8 +706,8 @@ class PaymentSheetFlowControllerTests: XCTestCase {
     }
 
     @MainActor
-    func testSyncBillingIfNeeded_updatedPMBilling_syncsOnCommit() async throws {
-        // Updating SPM billing does not sync by itself; the next commit should.
+    func testSyncBillingIfNeeded_updatedPMBilling_syncsOnClose() async throws {
+        // Updating SPM billing does not sync by itself; the next close should.
         let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
         let original = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
         try await checkout.syncBillingAddress(from: PaymentSheet.PaymentOption.saved(paymentMethod: original, confirmParams: nil).billingDetails)

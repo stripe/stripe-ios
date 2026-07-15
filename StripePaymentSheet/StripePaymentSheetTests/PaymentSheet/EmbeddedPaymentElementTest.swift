@@ -987,9 +987,9 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertEqual(result, .succeeded)
     }
 
-    // MARK: - Checkout billing sync (fire-and-forget commit)
+    // MARK: - Checkout billing sync (fire-and-forget)
 
-    func testCheckout_commitPaymentOptionAndSyncBilling_informsDelegateAndSyncsBilling() async throws {
+    func testCheckout_syncCheckoutBillingAndInformDelegate_informsDelegateAndSyncsBilling() async throws {
         // Given an EPE backed by an open checkout session with no billing address
         let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
         let sut = try await EmbeddedPaymentElement.create(checkout: checkout, configuration: configuration)
@@ -1001,8 +1001,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut._test_paymentOption = .saved(paymentMethod: savedCard, confirmParams: nil)
         delegateDidUpdatePaymentOptionCalled = false
 
-        // When the payment option is committed...
-        sut.commitPaymentOptionAndSyncBilling()
+        // When checkout billing is synced and the delegate informed...
+        sut.syncCheckoutBillingAndInformDelegate()
 
         // ...the delegate is informed right away (the sync is fire-and-forget)
         XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
@@ -1014,7 +1014,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertEqual(checkout.session.billingAddress?.address.line1, "123 Main St")
     }
 
-    func testCheckout_commitPaymentOptionAndSyncBilling_nothingToSync_informsDelegateImmediately() async throws {
+    func testCheckout_syncCheckoutBillingAndInformDelegate_nothingToSync_informsDelegateImmediately() async throws {
         // Given an EPE backed by a checkout session already in sync with the selection
         let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
         let savedCard = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
@@ -1026,14 +1026,14 @@ class EmbeddedPaymentElementTest: XCTestCase {
         delegateDidUpdatePaymentOptionCalled = false
 
         // When there's nothing to sync...
-        sut.commitPaymentOptionAndSyncBilling()
+        sut.syncCheckoutBillingAndInformDelegate()
 
         // ...the delegate is informed synchronously and no sync is kicked off
         XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
     }
 
-    func testCheckout_commitPaymentOptionAndSyncBilling_syncFails_leavesSessionBillingUnchanged() async throws {
+    func testCheckout_syncCheckoutBillingAndInformDelegate_syncFails_leavesSessionBillingUnchanged() async throws {
         // Given a tax-enabled checkout session whose billing update endpoint returns a 500
         let apiClient = APIStubbedTestCase.stubbedAPIClient()
         let stubDescriptor = stub(condition: { request in
@@ -1070,8 +1070,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut._test_paymentOption = .saved(paymentMethod: savedCard, confirmParams: nil)
         delegateDidUpdatePaymentOptionCalled = false
 
-        // When the payment option is committed...
-        sut.commitPaymentOptionAndSyncBilling()
+        // When checkout billing is synced and the delegate informed...
+        sut.syncCheckoutBillingAndInformDelegate()
 
         // ...the delegate is still informed (the sync is fire-and-forget)
         XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)

@@ -527,7 +527,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
 
     func didDismiss(didCancel: Bool) {
-        // Selection is committed on dismiss too, so sync billing before closing.
+        // The selection updates on dismiss too, so sync billing before closing.
         closeSheet(didCancel: didCancel) { [weak self] in
             guard let self else { return }
             // If the customer was adding a new payment method and it's incomplete/invalid, return to the saved PM screen

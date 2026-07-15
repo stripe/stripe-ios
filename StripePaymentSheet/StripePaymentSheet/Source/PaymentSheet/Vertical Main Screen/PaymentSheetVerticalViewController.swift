@@ -1037,7 +1037,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
 
     func didCancel() {
         if isFlowController {
-            // Even on cancel, the current selection is committed - sync billing to the checkout session first if needed
+            // Even on cancel, the current selection still updates - sync billing to the checkout session first if needed
             closeSheet(didCancel: true)
         } else {
             paymentSheetDelegate?.paymentSheetViewControllerDidCancel(self)

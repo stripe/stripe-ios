@@ -378,7 +378,7 @@ class EmbeddedFormViewController: UIViewController {
         analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
 
         // Blocking sync: keep the sheet open and show an error on failure. (Paths without a sheet use
-        // EmbeddedPaymentElement.commitPaymentOptionAndSyncBilling instead.)
+        // EmbeddedPaymentElement.syncCheckoutBillingAndInformDelegate instead.)
         if shouldDeferConfirmation {
             intent.syncCheckoutBillingIfNeeded(
                 for: selectedPaymentOption,
