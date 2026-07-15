@@ -83,6 +83,30 @@ struct PaymentView: View {
         let id = UUID()
     }
 
+    private enum SourceCurrency: String, CaseIterable, Identifiable {
+        case usd
+        case eur
+
+        // MARK: - Identifiable
+
+        var id: String {
+            rawValue
+        }
+
+        var displayName: String {
+            rawValue.uppercased()
+        }
+
+        var symbol: String {
+            switch self {
+            case .usd:
+                "$"
+            case .eur:
+                "€"
+            }
+        }
+    }
+
     /// The coordinator to use for collecting new payment methods and creating crypto payment tokens.
     let coordinator: CryptoOnrampCoordinator
 
@@ -105,6 +129,7 @@ struct PaymentView: View {
     @State private var paymentTokens: [PaymentTokensResponse.PaymentToken] = []
     @State private var alert: Alert?
     @State private var selectedPaymentMethod: SelectedPaymentMethod?
+    @State private var sourceCurrency: SourceCurrency = .eur
     @State private var destinationCurrency: String = "usdc"
     @State private var editCurrencyAlert: EditCurrencyAlert?
     @State private var editingCurrencyText: String = ""
@@ -131,8 +156,7 @@ struct PaymentView: View {
             }
         })
     }
-    // This example UI is intended for USD ($) only, but we respect the
-    // current locale’s decimal separator.
+    // This example UI respects the current locale’s decimal separator.
     //
     // Additionally, we don’t use a currency number formatter while
     // editing in order to allow fully typing a dollar and cents amount
@@ -211,26 +235,39 @@ struct PaymentView: View {
             Spacer()
 
             VStack(spacing: 8) {
-                Text("$" + (amountText.isEmpty ? "0" : amountText))
+                Text(sourceCurrency.symbol + (amountText.isEmpty ? "0" : amountText))
                     .font(.system(size: 56, weight: .bold))
                     .monospacedDigit()
                     .frame(maxWidth: .infinity, alignment: .center)
 
-                Button {
-                    editingCurrencyText = destinationCurrency
-                    editCurrencyAlert = EditCurrencyAlert()
-                } label: {
-                    HStack(spacing: 4) {
-                        Text("to \(destinationCurrency)")
+                HStack(spacing: 0) {
+                    Picker(selection: $sourceCurrency) {
+                        ForEach(SourceCurrency.allCases) { currency in
+                            Text(currency.displayName).tag(currency)
+                        }
+                    } label: {
+                        Text(sourceCurrency.displayName)
                             .font(.callout)
                             .foregroundColor(.secondary)
-
-                        Image(systemName: "pencil")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundColor(.secondary)
                     }
+                    .pickerStyle(.menu)
+
+                    Button {
+                        editingCurrencyText = destinationCurrency
+                        editCurrencyAlert = EditCurrencyAlert()
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text("to \(destinationCurrency)")
+                                .font(.callout)
+                                .foregroundColor(.secondary)
+
+                            Image(systemName: "pencil")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
 
             Spacer()
@@ -539,15 +576,15 @@ struct PaymentView: View {
     }
 
     @ViewBuilder
-    private func makePresetAmountButton(_ dollarAmount: Int) -> some View {
+    private func makePresetAmountButton(_ amount: Int) -> some View {
         Button {
-            amountText = "\(dollarAmount)"
+            amountText = "\(amount)"
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color(.secondarySystemBackground))
 
-                Text("$\(dollarAmount)")
+                Text("\(sourceCurrency.symbol)\(amount)")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.primary)
             }
@@ -728,9 +765,17 @@ struct PaymentView: View {
             return
         }
 
-        let request = StripeAPI.paymentRequest(withMerchantIdentifier: "merchant.com.stripe.umbrella.test", country: "US", currency: "USD")
+        let request = StripeAPI.paymentRequest(
+            withMerchantIdentifier: "merchant.com.stripe.umbrella.test",
+            country: "US",
+            currency: sourceCurrency.displayName
+        )
         request.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: "$\(amountText) usd + fees", amount: .zero, type: .pending)
+            PKPaymentSummaryItem(
+                label: "\(sourceCurrency.symbol)\(amountText) \(sourceCurrency.rawValue) + fees",
+                amount: .zero,
+                type: .pending
+            ),
         ]
 
         isLoading.wrappedValue = true
@@ -773,7 +818,7 @@ struct PaymentView: View {
         let request = CreateOnrampSessionRequest(
             paymentToken: cryptoPaymentTokenId,
             sourceAmount: Decimal(string: amountText) ?? 0,
-            sourceCurrency: "usd", // <--- hardcoded for demo
+            sourceCurrency: sourceCurrency.rawValue,
             destinationCurrency: destinationCurrency,
             destinationNetwork: wallet.network,
             destinationCurrencies: [destinationCurrency],
