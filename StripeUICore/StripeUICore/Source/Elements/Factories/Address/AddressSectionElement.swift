@@ -295,14 +295,13 @@ import UIKit
         }
     }
 
-    /// Re-applies ``CollectionMode/perCountry(_:)`` for `countryCode`, if that was the init mode.
+    /// Re-applies ``CollectionMode.perCountry(_:)`` for `countryCode`, if that was the init mode.
     private func applyPerCountryModeIfNeeded(for countryCode: String) {
         guard case .perCountry(let modes) = baseCollectionMode else { return }
         collectionMode = modes[countryCode] ?? .countryAndPostal(countriesRequiringPostalCollection: [])
     }
 
-    /// Selects `index` and rebuilds the fields. Always change country through here — setting
-    /// `country.selectedIndex` directly skips `didUpdate`.
+    /// Selects `index` and rebuilds the fields. Always change country through here
     private func selectCountry(index: Int, address: AddressDetails.Address? = nil) {
         if country.selectedIndex != index {
             country.selectedIndex = index
