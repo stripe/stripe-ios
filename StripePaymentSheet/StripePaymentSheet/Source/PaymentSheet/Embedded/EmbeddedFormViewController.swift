@@ -406,15 +406,16 @@ class EmbeddedFormViewController: UIViewController {
             guard let self else { return }
             do {
                 try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
-                self.isPaymentInFlight = false
-                self.isUserInteractionEnabled = true
-                self.delegate?.embeddedFormViewControllerDidContinue(self)
             } catch {
-                self.isPaymentInFlight = false
-                self.isUserInteractionEnabled = true
                 self.error = error
-                self.updateError()
-                self.updatePrimaryButton()
+            }
+            self.isPaymentInFlight = false
+            self.isUserInteractionEnabled = true
+            self.updateError()
+            self.updatePrimaryButton()
+
+            if self.error == nil {
+                self.delegate?.embeddedFormViewControllerDidContinue(self)
             }
         }
     }
