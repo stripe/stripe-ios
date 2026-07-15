@@ -392,7 +392,7 @@ final class CheckoutUnitTests: XCTestCase {
             name: "Jane Doe",
             address: .init(country: "US")
         )
-        checkout.session = checkout.session.makeCopyOverriding(billingAddress: .newValue(billingUpdate))
+        checkout.dangerouslySetSessionDirectly(checkout.session.makeCopyOverriding(billingAddress: .newValue(billingUpdate)))
 
         // Simulate a confirm response
         var updatedJSON = CheckoutTestHelpers.openSessionJSON
