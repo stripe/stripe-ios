@@ -109,6 +109,8 @@ struct PaymentView: View {
     @State private var editCurrencyAlert: EditCurrencyAlert?
     @State private var editingCurrencyText: String = ""
     @State private var achSettlementSpeed: CreateOnrampSessionRequest.SettlementSpeed = .instant
+    @State private var pendingWalletOwnershipVerificationCryptoPaymentTokenId: String?
+    @State private var isPresentingWalletOwnershipVerificationAlert = false
 
     private var isPresentingAlert: Binding<Bool> {
         Binding(get: {
@@ -404,6 +406,15 @@ struct PaymentView: View {
             },
             message: {
                 Text("Enter the destination currency code (e.g. usdc, btc, eth)")
+            }
+        )
+        .walletOwnershipVerificationRequiredAlert(
+            isPresented: $isPresentingWalletOwnershipVerificationAlert,
+            onVerify: {
+                verifyWalletOwnershipForPendingCreateOnrampSession()
+            },
+            onCancel: {
+                pendingWalletOwnershipVerificationCryptoPaymentTokenId = nil
             }
         )
     }
@@ -779,6 +790,12 @@ struct PaymentView: View {
                     isLoading.wrappedValue = false
                     onContinue(response, selectPaymentMethodButtonTitle, settlementSpeed)
                 }
+            } catch is WalletOwnershipVerificationRequiredError {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    pendingWalletOwnershipVerificationCryptoPaymentTokenId = cryptoPaymentTokenId
+                    isPresentingWalletOwnershipVerificationAlert = true
+                }
             } catch {
                 let fallbackErrorTitle = "Failed to create onramp session"
                 var fallbackAlert = Alert(title: fallbackErrorTitle, message: error.localizedDescription)
@@ -820,6 +837,32 @@ struct PaymentView: View {
                 }
             }
         }
+    }
+
+    private func verifyWalletOwnershipForPendingCreateOnrampSession() {
+        guard let context = WalletOwnershipVerificationContext(wallet: wallet) else {
+            pendingWalletOwnershipVerificationCryptoPaymentTokenId = nil
+            alert = WalletOwnershipVerification.unavailableAlert
+            return
+        }
+
+        WalletOwnershipVerification.startVerification(
+            context: context,
+            coordinator: coordinator,
+            isLoading: isLoading,
+            alert: $alert
+        ) {
+            retryPendingCreateOnrampSession()
+        }
+    }
+
+    private func retryPendingCreateOnrampSession() {
+        guard let cryptoPaymentTokenId = pendingWalletOwnershipVerificationCryptoPaymentTokenId else {
+            return
+        }
+
+        pendingWalletOwnershipVerificationCryptoPaymentTokenId = nil
+        createOnrampSession(withCryptoPaymentTokenId: cryptoPaymentTokenId)
     }
 
     private func shouldFetchCustomerInfoForRecovery(forErrorCode code: String) -> Bool {

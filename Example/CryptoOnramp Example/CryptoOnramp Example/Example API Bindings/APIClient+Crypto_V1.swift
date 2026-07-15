@@ -25,18 +25,30 @@ extension APIClient {
 
     func createOnrampSession(requestObject: CreateOnrampSessionRequest) async throws -> CreateOnrampSessionResponse {
         guard let token = authTokenWithLAI else { throw APIError.missingAuthTokenWithLAI }
-        return try await request("v1/create_onramp_session", method: .POST, body: requestObject, bearerToken: token)
+        let response: CreateOnrampSessionResponse = try await request("v1/create_onramp_session", method: .POST, body: requestObject, bearerToken: token)
+        try throwIfWalletOwnershipVerificationRequired(response)
+        return response
     }
 
     @discardableResult
     func refreshQuote(onrampSessionId: String) async throws -> QuoteResponse {
         guard let token = authTokenWithLAI else { throw APIError.missingAuthTokenWithLAI }
-        return try await request("v1/quote", method: .POST, body: QuoteRequest(cryptoOnrampSessionId: onrampSessionId), bearerToken: token)
+        let response: QuoteResponse = try await request("v1/quote", method: .POST, body: QuoteRequest(cryptoOnrampSessionId: onrampSessionId), bearerToken: token)
+        try throwIfWalletOwnershipVerificationRequired(response)
+        return response
     }
 
     func checkout(onrampSessionId: String) async throws -> CheckoutResponse {
         guard let token = authTokenWithLAI else { throw APIError.missingAuthTokenWithLAI }
-        return try await request("v1/checkout", method: .POST, body: CheckoutRequest(cryptoOnrampSessionId: onrampSessionId), bearerToken: token)
+        let response: CheckoutResponse = try await request("v1/checkout", method: .POST, body: CheckoutRequest(cryptoOnrampSessionId: onrampSessionId), bearerToken: token)
+        try throwIfWalletOwnershipVerificationRequired(response)
+        return response
+    }
+
+    private func throwIfWalletOwnershipVerificationRequired(_ response: CreateOnrampSessionResponse) throws {
+        if response.requiresWalletOwnershipVerification {
+            throw WalletOwnershipVerificationRequiredError(response: response)
+        }
     }
 }
 
