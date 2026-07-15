@@ -514,7 +514,7 @@ extension PaymentSheetFormFactory {
         }
 
         // Determine the collection mode based on whether we have default values
-        let baseCollectionMode: AddressSectionElement.CollectionMode = {
+        let finalCollectionMode: AddressSectionElement.CollectionMode = {
             // If we have default address values (either from billing defaults or shipping details) and the requested mode would show all fields, use allWithAutocomplete
             let hasDefaultAddressValues = defaultBillingDetails().address != .init() || (configuration.shippingDetails() != nil && displayBillingSameAsShippingCheckbox)
             if hasDefaultAddressValues {
@@ -540,7 +540,7 @@ extension PaymentSheetFormFactory {
             countries: countries,
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
-            collectionMode: baseCollectionMode,
+            collectionMode: finalCollectionMode,
             minimumFieldsByCountry: minimumFieldsByCountry,
             additionalFields: .init(
                 phone: includePhone ? .enabled(isOptional: false) : .disabled,
@@ -1015,10 +1015,7 @@ extension PaymentSheetFormFactory {
         case .automatic, .never:
             // Country + tax fields for the selected country, even if the merchant opted out
             guard collectsTaxFromBillingAddress else { return nil }
-            return makeBillingAddressSection(
-                collectionMode: .countryAndPostal(countriesRequiringPostalCollection: []),
-                countries: countries
-            )
+            return makeBillingAddressSection(countries: countries)
         }
     }
 

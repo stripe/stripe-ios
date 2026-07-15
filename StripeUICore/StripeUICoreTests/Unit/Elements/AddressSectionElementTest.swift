@@ -148,8 +148,7 @@ class AddressSectionElementTest: XCTestCase {
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "FR")))
         XCTAssertEqual(sut.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: []))
 
-        // And selecting a country with a minimum again re-applies the widened base, even if the
-        // collection mode was changed externally in the meantime (e.g. after autocomplete).
+        // Re-selecting a country with a minimum re-applies the widened base, even after an external change.
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "US")))
         sut.collectionMode = .all()
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "CA")))
