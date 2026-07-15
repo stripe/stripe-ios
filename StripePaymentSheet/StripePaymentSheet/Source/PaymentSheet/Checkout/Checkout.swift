@@ -136,7 +136,7 @@ public final class Checkout: ObservableObject {
     // TODO: Remove these test-only inits. They leave paymentElement nil, which breaks
     // any code path that touches it. Instead, construct a real PaymentElement using the
     // internal test inits for FlowController and EmbeddedPaymentElement (both accept a
-    // loadResult directly without network calls).
+    // loadResult directly without network calls) and make paymentElement private(set).
     /// Internal initializer for unit tests that injects a pre-loaded API response.
     init(
         clientSecret: String,
