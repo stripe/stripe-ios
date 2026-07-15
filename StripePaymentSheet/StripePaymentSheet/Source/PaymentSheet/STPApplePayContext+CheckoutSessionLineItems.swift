@@ -14,8 +14,10 @@ import PassKit
 @_spi(STP) import StripePayments
 
 extension STPApplePayContext {
-    /// Builds Apple Pay summary items: one row per line item, optional Subtotal/Shipping/Tax/Discount
-    /// rows, then the grand total. Callers should guard against empty `lineItems` and fall back to defaults.
+    /// Builds Apple Pay summary items from a CheckoutSession's line items and totals.
+    ///
+    /// One row per line item, optional Subtotal/Shipping/Tax/Discount rows, then the grand total.
+    /// Callers must guard against empty `lineItems` and fall back to default summary items.
     static func makeApplePayPaymentSummaryItems(
         lineItems: [Checkout.LineItem],
         total: Checkout.Total,
