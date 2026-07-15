@@ -51,6 +51,19 @@ extension StripeContact {
 }
 
 extension StripeAPI.BillingDetails {
+    init(
+        from payment: PKPayment,
+        fallbackBillingDetails: StripeAPI.BillingDetails?
+    ) {
+        self = StripeAPI.BillingDetails(from: payment) ?? StripeAPI.BillingDetails()
+        if let fallbackBillingDetails {
+            email = email ?? fallbackBillingDetails.email
+            name = name ?? fallbackBillingDetails.name
+            phone = phone ?? fallbackBillingDetails.phone
+            address = address ?? fallbackBillingDetails.address
+        }
+    }
+
     init?(
         from payment: PKPayment
     ) {

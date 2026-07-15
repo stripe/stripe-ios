@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "Dažniausiai priimamos debeto kortelės.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Šios programėlės nebuvo galima patvirtinti dėl patvirtinimo klaidos. Prašome pabandyti vėliau arba susisiekti su kūrėju, jei problema neišsprendžiama.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Šios programos patvirtinti nepavyko. Kreipkitės pagalbos į programos kūrėją.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Piniginės rasti nepavyko. Pasirinkite arba pridėkite piniginę ir bandykite dar kartą.";
+
+"This wallet network isn't supported. Please choose a different network." = "Piniginės tinklas nepalaikomas. Pasirinkite kitą tinklą.";
+
+"This wallet verification request expired. Please try again." = "Piniginės patvirtinimo užklausos galiojimas baigėsi. Bandykite dar kartą.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Piniginės nuosavybės patvirtinti nepavyko. Bandykite dar kartą.";

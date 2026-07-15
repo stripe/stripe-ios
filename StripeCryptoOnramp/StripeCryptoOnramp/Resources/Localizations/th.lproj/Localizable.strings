@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "บัตรเดบิตเป็นบัตรที่มีแนวโน้มที่จะได้รับการยอมรับมากที่สุด";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "ยืนยันแอปนี้ไม่ได้เนื่องจากเกิดข้อผิดพลาดในการรับรอง โปรดลองอีกครั้งในภายหลังหรือติดต่อนักพัฒนาหากยังพบปัญหาอยู่";
+
+"This app couldn't be verified. Contact the app developer for help." = "แอปนี้ไม่สามารถตรวจสอบยืนยันได้ โปรดติดต่อนักพัฒนาแอปเพื่อขอความช่วยเหลือ";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "ไม่พบกระเป๋าเงินนี้ โปรดเลือกหรือเพิ่มกระเป๋าเงินแล้วลองอีกครั้ง";
+
+"This wallet network isn't supported. Please choose a different network." = "ไม่รองรับเครือข่ายกระเป๋าเงินนี้ โปรดเลือกเครือข่ายอื่น";
+
+"This wallet verification request expired. Please try again." = "คำขอยืนยันกระเป๋าเงินนี้หมดอายุแล้ว โปรดลองอีกครั้ง";
+
+"We couldn't verify ownership of this wallet. Please try again." = "เราไม่สามารถยืนยันการเป็นเจ้าของกระเป๋าเงินนี้ได้ โปรดลองอีกครั้ง";

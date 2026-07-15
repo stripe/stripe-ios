@@ -169,27 +169,6 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.shippingAddress?.address.country, "CA")
     }
 
-    // MARK: - Sheet Presented Guard Tests
-
-    func testRequireOpenSessionThrowsWhenSheetPresented() async {
-        let checkout = await makeCheckoutWithOpenSession()
-        let integrationDelegate = MockCheckoutIntegrationDelegate()
-        integrationDelegate.isSheetPresented = true
-        checkout.integrationDelegate = integrationDelegate
-
-        do {
-            try await checkout.applyPromotionCode("SAVE25")
-            XCTFail("Expected CheckoutError.sheetCurrentlyPresented")
-        } catch let error as CheckoutError {
-            guard case .sheetCurrentlyPresented = error else {
-                XCTFail("Expected .sheetCurrentlyPresented, got \(error)")
-                return
-            }
-        } catch {
-            XCTFail("Unexpected error type: \(error)")
-        }
-    }
-
     // MARK: - Address Collection Decoding Tests
 
     func testRequiresBillingAddress_whenRequired() {
@@ -426,22 +405,6 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(recorder.sessions.count, 2)
     }
 
-    func testCommitSessionWithTerminalStatusStillNotifiesIntegrationDelegate() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
-        let integrationDelegate = MockCheckoutIntegrationDelegate()
-        checkout.integrationDelegate = integrationDelegate
-
-        var completedJSON = CheckoutTestHelpers.openSessionJSON
-        completedJSON["status"] = "complete"
-        completedJSON["payment_status"] = "paid"
-        let completedSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: completedJSON)!
-
-        try await checkout.commitSession(completedSession)
-
-        XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 1)
-        XCTAssertEqual(checkout.session.status?.type, .complete)
-    }
-
     // MARK: - State Convenience Tests
 
     func testSessionAvailableAfterInit() async {
@@ -454,46 +417,9 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertFalse(checkout.isLoading)
     }
 
-    // MARK: - checkoutDidUpdate Tests
-
-    func testCheckoutDidUpdateCalledWhenSessionChanges() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
-        let integrationDelegate = MockCheckoutIntegrationDelegate()
-        checkout.integrationDelegate = integrationDelegate
-        let recorder = CheckoutEmissionRecorder(checkout)
-
-        var updatedJSON = CheckoutTestHelpers.openSessionJSON
-        updatedJSON["status"] = "complete"
-        updatedJSON["payment_status"] = "paid"
-        let updatedSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: updatedJSON)!
-
-        try await checkout.commitSession(updatedSession)
-
-        XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 1)
-        XCTAssertTrue(integrationDelegate.lastCheckout === checkout)
-        XCTAssertEqual(recorder.sessions.count, 1)
-    }
-
-    func testCheckoutDidUpdateCalledEvenWhenSessionUnchanged() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
-        let integrationDelegate = MockCheckoutIntegrationDelegate()
-        checkout.integrationDelegate = integrationDelegate
-        let recorder = CheckoutEmissionRecorder(checkout)
-
-        let sameSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: CheckoutTestHelpers.openSessionJSON)!
-        try await checkout.commitSession(sameSession)
-
-        XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 1)
-        XCTAssertEqual(recorder.sessions.count, 1)
-    }
-
-    func testCommitSessionNotifiesRegularDelegateThenIntegrationDelegate() async throws {
+    func testCommitSessionNotifiesRegularDelegate() async throws {
         let checkout = await makeCheckoutWithOpenSession()
         var callOrder: [String] = []
-
-        let integrationDelegate = MockCheckoutIntegrationDelegate()
-        integrationDelegate.onUpdate = { callOrder.append("integration") }
-        checkout.integrationDelegate = integrationDelegate
 
         let delegate = MockCheckoutDelegate()
         delegate.onUpdateSession = { callOrder.append("regular") }
@@ -507,32 +433,10 @@ final class CheckoutUnitTests: XCTestCase {
 
         try await checkout.commitSession(updatedSession)
 
-        XCTAssertEqual(callOrder, ["regular", "integration"])
-        XCTAssertEqual(integrationDelegate.checkoutDidUpdateCallCount, 1)
+        XCTAssertEqual(callOrder, ["regular"])
         XCTAssertEqual(delegate.updateSessionCallCount, 1)
         XCTAssertEqual(recorder.sessions.count, 1)
     }
-
-    func testCheckoutDidUpdateErrorBubblesUp() async {
-        let checkout = await makeCheckoutWithOpenSession()
-        let integrationDelegate = MockCheckoutIntegrationDelegate()
-        let testError = NSError(domain: "test", code: 42)
-        integrationDelegate.shouldThrow = testError
-        checkout.integrationDelegate = integrationDelegate
-
-        var updatedJSON = CheckoutTestHelpers.openSessionJSON
-        updatedJSON["status"] = "complete"
-        updatedJSON["payment_status"] = "paid"
-        let updatedSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: updatedJSON)!
-
-        do {
-            try await checkout.commitSession(updatedSession)
-            XCTFail("Expected error to propagate")
-        } catch {
-            XCTAssertEqual((error as NSError).code, 42)
-        }
-    }
-
     // MARK: - updatePaymentMethod Parameter Encoding Tests
 
     func testUpdatePaymentMethodParameters_expiryOnly() {

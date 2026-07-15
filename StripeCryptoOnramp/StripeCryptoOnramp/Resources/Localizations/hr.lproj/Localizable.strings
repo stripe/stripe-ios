@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "Debitne će kartice najvjerojatnije biti prihvaćene.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Ova se aplikacija nije mogla potvrditi zbog pogreške u potvrdi. Pokušajte ponovno poslije ili se obratite razvijatelju ako problem i dalje traje.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Ova aplikacija nije se mogla potvrditi. Obratite se razvijatelju aplikacije za pomoć.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Ovaj novčanik nije bilo moguće pronaći. Odaberite ili dodajte novčanik i pokušajte ponovno.";
+
+"This wallet network isn't supported. Please choose a different network." = "Ova mreža za novčanik nije podržana. Odaberite drugu mrežu.";
+
+"This wallet verification request expired. Please try again." = "Ovaj je zahtjev za provjeru novčanika istekao. Pokušajte ponovno.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Nismo mogli potvrditi vlasništvo nad ovim novčanikom. Pokušajte ponovno.";

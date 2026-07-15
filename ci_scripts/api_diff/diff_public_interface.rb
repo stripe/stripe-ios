@@ -7,6 +7,7 @@ SPI_SEVERITY = 'spi'.freeze
 NO_SEVERITY = 'none'.freeze
 DIFF_OUTPUT_PATH = 'diff_result.txt'.freeze
 SEVERITY_OUTPUT_PATH = 'api_change_severity.txt'.freeze
+IGNORED_SPI_NAMES = %w[STP ReactNativeSDK].freeze
 
 def normalize_line(line)
   spi_attrs = line.scan(/@_spi\([^)]+\)/).sort
@@ -46,9 +47,9 @@ def sorted_diff_lines(old_path, new_path)
   end
 end
 
-def non_stp_spi_line?(line)
+def non_ignored_spi_line?(line)
   spi_names = line.scan(/@_spi\(([^)]+)\)/).flatten.map(&:strip)
-  spi_names.any? { |spi_name| spi_name != 'STP' }
+  spi_names.any? { |spi_name| !IGNORED_SPI_NAMES.include?(spi_name) }
 end
 
 def has_non_additive_changes?(lines)
@@ -86,7 +87,7 @@ GetFrameworks.framework_names('./modules.yaml').each do |framework_name|
   master_private_interface_path = "#{framework_name}-master.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.private.swiftinterface"
   branch_private_interface_path = "#{framework_name}-new.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.private.swiftinterface"
   spi_diff_lines = sorted_diff_lines(master_private_interface_path, branch_private_interface_path).select do |line|
-    line.include?('@_spi(') && non_stp_spi_line?(line)
+    line.include?('@_spi(') && non_ignored_spi_line?(line)
   end
 
   if has_non_additive_changes?(public_diff_lines)

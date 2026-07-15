@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "Kõige tõenäolisemalt aktsepteeritakse deebetkaarte.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Seda rakendust ei saanud kinnitada atesteerimisvea tõttu. Palun proovige hiljem uuesti või võtke ühendust arendajaga, kui probleem püsib.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Seda rakendust ei saanud kontrollida. Abi saamiseks võtke ühendust rakenduse arendajaga.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Seda rahakotti ei leitud. Palun valige või lisage rahakott ja proovige uuesti.";
+
+"This wallet network isn't supported. Please choose a different network." = "Seda rahakoti võrku ei toetata. Palun valige teine võrk.";
+
+"This wallet verification request expired. Please try again." = "See rahakoti kinnitamise taotlus aegus. Palun proovige uuesti.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Me ei suutnud selle rahakoti omandiõigust kinnitada. Palun proovige uuesti.";
