@@ -1044,7 +1044,7 @@ private extension PaymentTokensResponse.PaymentToken {
                 walletAddress: "",
                 verifiedOwnership: false
             ),
-            isEUCustomer: true,
+            isEUCustomer: false,
             onContinue: { _, _, _ in }
         )
     }
