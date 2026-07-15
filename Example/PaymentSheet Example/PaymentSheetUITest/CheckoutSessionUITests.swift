@@ -15,6 +15,7 @@ class CheckoutSessionUITests: PaymentSheetUITestCase {
         settings.integrationType = .checkoutSession
         settings.mode = .payment
         settings.formSheetAction = .continue
+        settings.linkDisplay = .never
         loadPlayground(app, settings)
 
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
@@ -33,6 +34,7 @@ class CheckoutSessionUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.integrationType = .checkoutSession
         settings.mode = .payment
+        settings.linkDisplay = .never
         loadPlayground(app, settings)
 
         // Open payment options
@@ -43,12 +45,11 @@ class CheckoutSessionUITests: PaymentSheetUITestCase {
 
         let continueButton = app.buttons["Continue"]
         continueButton.tap()
-        // Wait for sheet to dismiss (billing sync + session reload happens before dismiss)
-        let didDismiss = continueButton.waitForNonExistence(timeout: 10)
-        XCTAssertTrue(didDismiss, "Sheet did not dismiss after Continue")
 
-        // Confirm
-        app.buttons["Confirm"].waitForExistenceAndTap()
+        // Wait for sheet dismissal. The merchant Confirm button exists behind the sheet,
+        // but should not be hittable until billing sync and the session reload complete.
+        let confirmButton = app.buttons["Confirm"]
+        confirmButton.forceTapWhenHittableInTestCase(self)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15))
     }
 }

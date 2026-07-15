@@ -494,30 +494,36 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
         view.endEditing(true)
         error = nil
-        isDismissable = false
         confirmButton.update(status: .processing, animated: true)
-        sendEventToSubviews(.shouldDisableUserInteraction, from: view)
-        view.isUserInteractionEnabled = false
-        navigationBar.isUserInteractionEnabled = false
+        setUserInteraction(enabled: false)
 
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
                 try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
-                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             } catch {
-                sendEventToSubviews(.shouldEnableUserInteraction, from: self.view)
-                self.isDismissable = true
-                self.view.isUserInteractionEnabled = true
-                self.navigationBar.isUserInteractionEnabled = true
                 self.error = error
+            }
+            self.setUserInteraction(enabled: true)
+            self.updateButton()
+
+            if let error = self.error {
                 self.errorLabel.text = error.nonGenericDescription
                 UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
                     self.errorLabel.setHiddenIfNecessary(false)
                 }
-                self.updateButton()
+            } else {
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
+    }
+
+    /// Enables or disables all interaction with the sheet, including drag/tap-to-dismiss.
+    private func setUserInteraction(enabled: Bool) {
+        isDismissable = enabled
+        sendEventToSubviews(enabled ? .shouldEnableUserInteraction : .shouldDisableUserInteraction, from: view)
+        view.isUserInteractionEnabled = enabled
+        navigationBar.isUserInteractionEnabled = enabled
     }
 
     func didDismiss(didCancel: Bool) {

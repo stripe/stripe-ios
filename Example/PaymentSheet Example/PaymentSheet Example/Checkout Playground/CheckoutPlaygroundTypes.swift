@@ -123,8 +123,8 @@ enum CheckoutPlayground {
 
         var displayName: String {
             switch self {
-            case .flowController: return "FlowController"
-            case .embedded: return "Embedded"
+            case .flowController: return "sheet"
+            case .embedded: return "view"
             }
         }
     }
