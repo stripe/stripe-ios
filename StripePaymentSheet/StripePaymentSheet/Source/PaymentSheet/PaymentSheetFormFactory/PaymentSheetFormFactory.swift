@@ -514,7 +514,7 @@ extension PaymentSheetFormFactory {
         }
 
         // Determine the collection mode based on whether we have default values
-        let finalCollectionMode: AddressSectionElement.CollectionMode = {
+        let baseCollectionMode: AddressSectionElement.CollectionMode = {
             // If we have default address values (either from billing defaults or shipping details) and the requested mode would show all fields, use allWithAutocomplete
             let hasDefaultAddressValues = defaultBillingDetails().address != .init() || (configuration.shippingDetails() != nil && displayBillingSameAsShippingCheckbox)
             if hasDefaultAddressValues {
@@ -529,11 +529,9 @@ extension PaymentSheetFormFactory {
             }
         }()
 
-        // If tax is computed from the billing address, some countries need more fields than the base
-        // collection mode gathers (e.g. full address for the US). Overrides are applied per-country as
-        // the user changes the country dropdown.
-        let countryCollectionModeOverrides = collectsTaxFromBillingAddress
-            ? CountryTaxRequirement.collectionModeOverrides(for: finalCollectionMode)
+        // The minimum fields tax requires per country; the section widens the base mode as needed.
+        let minimumFieldsByCountry = collectsTaxFromBillingAddress
+            ? CountryTaxRequirement.minimumFieldsByCountry
             : [:]
 
         let section = AddressSectionElement(
@@ -542,8 +540,8 @@ extension PaymentSheetFormFactory {
             countries: countries,
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
-            collectionMode: finalCollectionMode,
-            countryCollectionModeOverrides: countryCollectionModeOverrides,
+            collectionMode: baseCollectionMode,
+            minimumFieldsByCountry: minimumFieldsByCountry,
             additionalFields: .init(
                 phone: includePhone ? .enabled(isOptional: false) : .disabled,
                 email: includeEmail ? .enabled(isOptional: false) : .disabled,
@@ -1015,9 +1013,12 @@ extension PaymentSheetFormFactory {
         case .automatic where fullAddressRequiredByPaymentMethod:
             return makeBillingAddressSection(countries: countries)
         case .automatic, .never:
-            // Collect the minimum tax fields even if the merchant opted out
+            // Country + tax fields for the selected country, even if the merchant opted out
             guard collectsTaxFromBillingAddress else { return nil }
-            return makeBillingAddressSection(collectionMode: .countryAndPostal(countriesRequiringPostalCollection: []), countries: countries)
+            return makeBillingAddressSection(
+                collectionMode: .countryAndPostal(countriesRequiringPostalCollection: []),
+                countries: countries
+            )
         }
     }
 

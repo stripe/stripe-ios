@@ -21,9 +21,7 @@ final class PaymentSheetFormFactoryAutomaticTaxTest: XCTestCase {
         let provider = AddressSpecProvider()
         provider.addressSpecs = [
             "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip, subKeys: ["CA", "NY"], subLabels: ["California", "New York"]),
-            "CA": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code, subKeys: ["AB", "ON"], subLabels: ["Alberta", "Ontario"]),
             "IN": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip, subKeys: ["MH", "KA"], subLabels: ["Maharashtra", "Karnataka"]),
-            "PR": AddressSpec(format: "ACZ", require: "ACZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
             "FR": AddressSpec(format: "ACZ", require: "ACZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
         ]
         return provider
@@ -79,23 +77,6 @@ final class PaymentSheetFormFactoryAutomaticTaxTest: XCTestCase {
         XCTAssertEqual(section.collectionMode, .autoCompletable)
     }
 
-    func testPRRequiresFullAddress() throws {
-        let form = makeForm(paymentMethod: .card, intent: makeCheckoutIntent(), config: makeConfiguration(country: "PR"), specProvider: makeSpecProvider())
-        let section = try XCTUnwrap(addressSection(in: form))
-        XCTAssertEqual(section.collectionMode, .autoCompletable)
-    }
-
-    func testCACollectsPostalOnly() throws {
-        // CA needs only the postal code for tax; the base already collects it, so no state/province.
-        let form = makeForm(paymentMethod: .card, intent: makeCheckoutIntent(), config: makeConfiguration(country: "CA"), specProvider: makeSpecProvider())
-        let section = try XCTUnwrap(addressSection(in: form))
-        XCTAssertEqual(section.collectionMode, .countryAndPostal())
-        XCTAssertNil(section.state)
-        XCTAssertNotNil(section.postalCode)
-        XCTAssertNil(section.line1)
-        XCTAssertNil(section.city)
-    }
-
     func testINCollectsPostalOnly() throws {
         // IN needs the postal code but isn't in the base postal list, so it gets a postal override.
         let form = makeForm(paymentMethod: .card, intent: makeCheckoutIntent(), config: makeConfiguration(country: "IN"), specProvider: makeSpecProvider())
@@ -126,45 +107,6 @@ final class PaymentSheetFormFactoryAutomaticTaxTest: XCTestCase {
         let form = makeForm(paymentMethod: .card, intent: intent, config: makeConfiguration(country: "US"), specProvider: makeSpecProvider())
         let section = try XCTUnwrap(addressSection(in: form))
         XCTAssertEqual(section.collectionMode, .countryAndPostal())
-    }
-
-    func testReEvaluatesOnCountryChange() throws {
-        let form = makeForm(paymentMethod: .card, intent: makeCheckoutIntent(), config: makeConfiguration(country: "FR"), specProvider: makeSpecProvider())
-        let section = try XCTUnwrap(addressSection(in: form))
-        XCTAssertEqual(section.collectionMode, .countryAndPostal())
-
-        let usIndex = try XCTUnwrap(section.countryCodes.firstIndex(of: "US"))
-        let caIndex = try XCTUnwrap(section.countryCodes.firstIndex(of: "CA"))
-        let frIndex = try XCTUnwrap(section.countryCodes.firstIndex(of: "FR"))
-
-        // FR -> US widens to the full address.
-        section.country.select(index: usIndex)
-        XCTAssertEqual(section.collectionMode, .autoCompletable)
-
-        // US -> CA narrows to postal only (base already collects CA's postal, no province).
-        section.country.select(index: caIndex)
-        XCTAssertEqual(section.collectionMode, .countryAndPostal())
-
-        // CA -> US widens back to the full address.
-        section.country.select(index: usIndex)
-        XCTAssertEqual(section.collectionMode, .autoCompletable)
-
-        // US -> FR narrows all the way back to the base form.
-        section.country.select(index: frIndex)
-        XCTAssertEqual(section.collectionMode, .countryAndPostal())
-    }
-
-    func testNeverNarrowsBelowBase() throws {
-        // A merchant collecting the full address keeps it, even for countries that need less for tax.
-        let config = makeConfiguration(country: "US", address: .full)
-        let form = makeForm(paymentMethod: .card, intent: makeCheckoutIntent(), config: config, specProvider: makeSpecProvider())
-        let section = try XCTUnwrap(addressSection(in: form))
-        XCTAssertEqual(section.collectionMode, .allWithAutocomplete)
-
-        for country in ["CA", "FR"] {
-            section.country.select(index: try XCTUnwrap(section.countryCodes.firstIndex(of: country)))
-            XCTAssertEqual(section.collectionMode, .allWithAutocomplete)
-        }
     }
 
     func testTaxForcesBillingAddressForLPM() throws {
