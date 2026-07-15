@@ -23,10 +23,7 @@ extension Checkout {
     // MARK: - Payment Option
 
     func setPaymentOption(_ paymentOption: Session.PaymentOptionDisplayData?) {
-        guard session.paymentOption != paymentOption else {
-            return
-        }
-        session = session.makeCopyOverriding(paymentOption: .newValue(paymentOption))
+        dangerouslySetSessionDirectly(session.makeCopyOverriding(paymentOption: .newValue(paymentOption)))
     }
 
     // MARK: - Session Updates
@@ -41,7 +38,7 @@ extension Checkout {
     /// is `true`; once the queue drains it returns to `false.`
     /// - Throws: Any error thrown by `body`.
     /// - Returns: The value returned by `body`.
-    internal func enqueueSessionUpdate<T>(
+    func enqueueSessionUpdate<T>(
         _ body: @MainActor @escaping () async throws -> T
     ) async throws -> T {
         let predecessor = pendingOperations.last
@@ -71,7 +68,7 @@ extension Checkout {
     ///
     /// Use this when the enqueued work cannot fail. The operation is still
     /// serialized behind any in-flight ops in the same FIFO order.
-    internal func enqueueSessionUpdate<T>(
+    func enqueueSessionUpdate<T>(
         _ body: @MainActor @escaping () async -> T
     ) async -> T {
         // Cast body to `throws` so that we call the underlying throwing version
@@ -125,33 +122,6 @@ extension Checkout {
     /// True if the session is still actionable (open or no status yet).
     var sessionIsOpen: Bool {
         session.status?.type == .open || session.status?.type == nil
-    }
-
-    /// Replaces the current session from an API response, preserves client-side overrides, and notifies delegates.
-    ///
-    /// Client-side address overrides are copied from the current session to the new one
-    /// automatically. To update an address, pass a `localMutation` closure.
-    func commitSession(
-        _ apiResponse: STPCheckoutSessionAPIResponse? = nil,
-        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
-    ) async throws {
-        // === Update the session ===
-        // Generate a new session from the API response, or fall back to the current session.
-        let newSession = apiResponse?.makePublicSession() ?? session
-
-        // Preserve client-side address overrides on the new session.
-        let sessionWithLocalAddress = newSession.makeCopyOverriding(
-            billingAddress: .newValue(session.billingAddress),
-            shippingAddress: .newValue(session.shippingAddress),
-            paymentOption: .newValue(session.paymentOption)
-        )
-
-        // Apply any additional local mutations to the session.
-        let finalSession = localMutation?(sessionWithLocalAddress) ?? sessionWithLocalAddress
-        session = finalSession
-
-        // === Update elements ===
-        try await paymentElement?.update(checkout: self)
     }
 
     // MARK: - Validation

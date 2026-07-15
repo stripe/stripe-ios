@@ -39,9 +39,11 @@ public final class Checkout: ObservableObject {
     }
 
     /// The Checkout Session, updated from Stripe after every mutation.
-    @Published public internal(set) var session: Session {
+    @Published public private(set) var session: Session {
         didSet {
             nonisolatedSession = session
+            // Just some notes: Setting session causes publisher+delegate to fire even when it didn't change.
+            // AFAICT that's okay, deduping sees like a minor optimization to slightly reduce the amount of UI updates.
             delegate?.checkoutDidUpdateSession(self, session: session)
         }
     }
@@ -353,5 +355,42 @@ public final class Checkout: ObservableObject {
     /// Clears the currently selected payment option.
     public func clearPaymentOption() {
         paymentElement?.clearPaymentOption()
+    }
+}
+
+// MARK: - Internal session setters
+// These exist here because `session` is private(set) to enforce that session can only be mutated through these sanctioned paths.
+// Setting the session should generally only be done via `commitSession` to avoid putting us into an inconsistent state e.g. without using commitSession, MPE is not aware of the updated session.
+extension Checkout {
+    /// Replaces the current session from an API response, applies client-side mutations, and updates PaymentElement.
+    ///
+    /// Client-side address overrides are copied from the current session to the new one
+    /// automatically. To update an address, pass a `localMutation` closure.
+    func commitSession(
+        _ apiResponse: STPCheckoutSessionAPIResponse? = nil,
+        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
+    ) async throws {
+        // === Update the session ===
+        // Generate a new session from the API response, or fall back to the current session.
+        let newSession = apiResponse?.makePublicSession() ?? session
+
+        // Preserve client-side address overrides on the new session.
+        let sessionWithLocalAddress = newSession.makeCopyOverriding(
+            billingAddress: .newValue(session.billingAddress),
+            shippingAddress: .newValue(session.shippingAddress),
+            paymentOption: .newValue(session.paymentOption)
+        )
+
+        // Apply any additional local mutations to the session.
+        let finalSession = localMutation?(sessionWithLocalAddress) ?? sessionWithLocalAddress
+        session = finalSession
+
+        // === Update Payment Element and all other asynchronously updated elements ==
+        try await paymentElement?.update(checkout: self)
+    }
+
+    /// - Warning: See `commitSession` for what this method *doesn't* do. That includes updating PaymentElement.
+    func dangerouslySetSessionDirectly(_ session: Session) {
+        self.session = session
     }
 }
