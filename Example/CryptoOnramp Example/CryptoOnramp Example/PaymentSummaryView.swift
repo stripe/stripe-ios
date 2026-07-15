@@ -255,16 +255,6 @@ private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
 }
 
 private extension CreateOnrampSessionResponse {
-    static let currencyFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        // Use local formatting for the number, but assume USD for the currency.
-        formatter.locale = Locale.current
-        formatter.currencySymbol = "$"
-        formatter.currencyCode = "USD"
-        return formatter
-    }()
-
     static let currencyFormatterWithoutSymbol: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
@@ -275,7 +265,7 @@ private extension CreateOnrampSessionResponse {
 
     var totalText: String {
         let amount = Double(sourceTotalAmount) ?? 0
-        return Self.currencyFormatter.string(from: NSNumber(value: amount)) ?? "$0"
+        return formattedSourceAmount(amount)
     }
 
     var amountToReceiveText: String {
@@ -288,7 +278,7 @@ private extension CreateOnrampSessionResponse {
         let networkFee = Double(transactionDetails.fees.networkFeeAmount) ?? 0
         let transactionFee = Double(transactionDetails.fees.transactionFeeAmount) ?? 0
         let total = networkFee + transactionFee
-        return Self.currencyFormatter.string(from: NSNumber(value: total)) ?? "$0"
+        return formattedSourceAmount(total)
     }
 
     var depositToText: String {
@@ -297,6 +287,15 @@ private extension CreateOnrampSessionResponse {
         let prefix = String(address.prefix(2))
         let suffix = String(address.suffix(4))
         return "\(network) • \(prefix)••••\(suffix)"
+    }
+
+    private func formattedSourceAmount(_ amount: Double) -> String {
+        let sourceCurrencyCode = transactionDetails.sourceCurrency.uppercased()
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = Locale.current
+        formatter.currencyCode = sourceCurrencyCode
+        return formatter.string(from: NSNumber(value: amount)) ?? "\(sourceCurrencyCode) \(amount)"
     }
 }
 
@@ -333,7 +332,7 @@ private extension CreateOnrampSessionResponse {
                     lastError: nil,
                     lockWalletAddress: false,
                     quoteExpiration: Date(),
-                    sourceCurrency: "usd",
+                    sourceCurrency: "eur",
                     sourceAmount: "10.00",
                     destinationCurrencies: [],
                     destinationNetworks: [],
