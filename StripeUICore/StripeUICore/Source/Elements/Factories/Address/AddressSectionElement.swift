@@ -80,6 +80,7 @@ import UIKit
         /// Special case used by some Payment Methods that collect country separately.
         case noCountry
         /// Per-country collection modes. Missing countries collect country only.
+        /// - Note: 2 letter country code as the key
         indirect case perCountry([String: CollectionMode])
     }
     /// Fields that this section can collect in addition to the address
