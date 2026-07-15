@@ -43,22 +43,6 @@ class MockCheckoutDelegate: CheckoutDelegate {
     }
 }
 
-@MainActor
-class MockCheckoutIntegrationDelegate: CheckoutIntegrationDelegate {
-    var isSheetPresented: Bool = false
-    var checkoutDidUpdateCallCount = 0
-    var lastCheckout: Checkout?
-    var shouldThrow: Error?
-    var onUpdate: (() -> Void)?
-
-    func checkoutDidUpdate(_ checkout: Checkout) async throws {
-        checkoutDidUpdateCallCount += 1
-        lastCheckout = checkout
-        onUpdate?()
-        if let error = shouldThrow { throw error }
-    }
-}
-
 // MARK: - Emission Recorder
 
 @MainActor
