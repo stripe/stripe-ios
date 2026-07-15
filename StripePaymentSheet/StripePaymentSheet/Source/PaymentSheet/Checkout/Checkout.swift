@@ -165,40 +165,6 @@ public final class Checkout: ObservableObject {
     }
 #endif
 
-    // MARK: - Pending Operations
-
-    /// Waits for all in-flight session updates (mutations, etc.) to complete.
-    ///
-    /// - Returns immediately if no operations are pending.
-    /// - Waits for the operations pending when this method is called; operations
-    ///   enqueued afterward are not included in this wait.
-    /// - If any pending operation throws, the first such error is rethrown.
-    /// - If the wait exceeds `timeout`, throws ``CheckoutError.timedOut``.
-    ///
-    /// - Parameters:
-    ///   - timeout: Maximum time to wait, in seconds.
-    func awaitPendingOperations(
-        timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout
-    ) async throws {
-        let snapshot = pendingOperations
-        guard !snapshot.isEmpty else { return }
-
-        let result = await withTimeout(timeout) {
-            var firstError: Error?
-            for operation in snapshot {
-                do {
-                    try await operation.value
-                } catch {
-                    firstError = firstError ?? error
-                }
-            }
-            if let firstError { throw firstError }
-        }
-        if case .failure(let error) = result {
-            throw error is TimeoutError ? CheckoutError.timedOut : error
-        }
-    }
-
     // MARK: - Promotion Codes
 
     /// Applies a promotion code to the session.
@@ -232,6 +198,13 @@ public final class Checkout: ObservableObject {
     /// - Throws: ``CheckoutError`` if the update fails.
     public func selectShippingOption(_ optionId: String) async throws {
         try await performUpdate(.setShippingRate(optionId))
+    }
+
+    // MARK: - Payment Option
+
+    /// Clears the currently selected payment option.
+    public func clearPaymentOption() {
+        paymentElement?.clearPaymentOption()
     }
 
     // MARK: - Addresses
@@ -350,11 +323,6 @@ public final class Checkout: ObservableObject {
     /// Returns the PaymentElement for this Checkout instance.
     public func getPaymentElement() -> PaymentElement {
         return paymentElement
-    }
-
-    /// Clears the currently selected payment option.
-    public func clearPaymentOption() {
-        paymentElement?.clearPaymentOption()
     }
 }
 

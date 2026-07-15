@@ -28,6 +28,38 @@ extension Checkout {
 
     // MARK: - Session Updates
 
+    /// Waits for all in-flight session updates (mutations, etc.) to complete.
+    ///
+    /// - Returns immediately if no operations are pending.
+    /// - Waits for the operations pending when this method is called; operations
+    ///   enqueued afterward are not included in this wait.
+    /// - If any pending operation throws, the first such error is rethrown.
+    /// - If the wait exceeds `timeout`, throws ``CheckoutError.timedOut``.
+    ///
+    /// - Parameters:
+    ///   - timeout: Maximum time to wait, in seconds.
+    func awaitPendingOperations(
+        timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout
+    ) async throws {
+        let snapshot = pendingOperations
+        guard !snapshot.isEmpty else { return }
+
+        let result = await withTimeout(timeout) {
+            var firstError: Error?
+            for operation in snapshot {
+                do {
+                    try await operation.value
+                } catch {
+                    firstError = firstError ?? error
+                }
+            }
+            if let firstError { throw firstError }
+        }
+        if case .failure(let error) = result {
+            throw error is TimeoutError ? CheckoutError.timedOut : error
+        }
+    }
+
     /// Runs `body` as a tracked session update, serialized behind any in-flight ops.
     ///
     /// `body` can be of any return type, including `Void`, and  `enqueueSessionUpdate`
