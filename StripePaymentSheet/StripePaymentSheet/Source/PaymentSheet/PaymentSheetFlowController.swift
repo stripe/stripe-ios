@@ -138,8 +138,8 @@ extension PaymentSheet {
             switch self {
             case .new(let confirmParams):
                 return confirmParams.paymentMethodParams.billingDetails
-            case .saved(_, let confirmParams):
-                return confirmParams?.paymentMethodParams.billingDetails
+            case .saved(let paymentMethod, let confirmParams):
+                return confirmParams?.paymentMethodParams.billingDetails ?? paymentMethod.billingDetails
             case .external(_, let billingDetails):
                 return billingDetails
             case .applePay:
