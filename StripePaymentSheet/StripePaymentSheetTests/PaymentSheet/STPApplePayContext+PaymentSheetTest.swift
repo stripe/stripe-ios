@@ -490,7 +490,12 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     // MARK: - CheckoutSession Line Items Tests
 
-    private func makeApplePayContext(for intent: Intent, file: StaticString = #filePath, line: UInt = #line) -> STPApplePayContext {
+    private func makeApplePayContext(
+        for intent: Intent,
+        configuration: PaymentSheet.Configuration? = nil,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> STPApplePayContext {
         let elementsSession = STPElementsSession._testValue()
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
             intent: intent,
@@ -499,7 +504,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         guard let context = STPApplePayContext.create(
             intent: intent,
             elementsSession: elementsSession,
-            configuration: configuration,
+            configuration: configuration ?? self.configuration,
             clientAttributionMetadata: clientAttributionMetadata,
             completion: { _, _ in }
         ) else {
@@ -741,6 +746,60 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         let intent = Intent._testCheckoutSession(mode: .payment, amount: 2345, currency: "USD", email: "guest@example.com")
         let applePayContext = makeApplePayContext(for: intent)
         XCTAssertEqual(applePayContext.fallbackBillingDetails?.email, "guest@example.com")
+    }
+
+    func testCreate_DeferredIntentAttachesDefaultBillingDetailsToApplePayFallback() {
+        var configuration = configuration
+        configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
+            address: PaymentSheet.Address(
+                city: "San Francisco",
+                country: "US",
+                line1: "510 Townsend St",
+                line2: "Apt 2",
+                postalCode: "94103",
+                state: "CA"
+            ),
+            email: "default@example.com",
+            name: "Default Customer",
+            phone: "+14155551234"
+        )
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
+        let intent = Intent.deferredIntent(
+            intentConfig: .init(
+                mode: .payment(amount: 2345, currency: "USD"),
+                confirmHandler: dummyDeferredConfirmHandler
+            )
+        )
+
+        let applePayContext = makeApplePayContext(for: intent, configuration: configuration)
+
+        XCTAssertEqual(applePayContext.fallbackBillingDetails?.email, "default@example.com")
+        XCTAssertEqual(applePayContext.fallbackBillingDetails?.name, "Default Customer")
+        XCTAssertEqual(applePayContext.fallbackBillingDetails?.phone, "+14155551234")
+        XCTAssertEqual(applePayContext.fallbackBillingDetails?.address?.line1, "510 Townsend St")
+        XCTAssertEqual(applePayContext.fallbackBillingDetails?.address?.line2, "Apt 2")
+        XCTAssertEqual(applePayContext.fallbackBillingDetails?.address?.city, "San Francisco")
+        XCTAssertEqual(applePayContext.fallbackBillingDetails?.address?.state, "CA")
+        XCTAssertEqual(applePayContext.fallbackBillingDetails?.address?.postalCode, "94103")
+        XCTAssertEqual(applePayContext.fallbackBillingDetails?.address?.country, "US")
+    }
+
+    func testCreate_DefaultBillingDetailsAreNotApplePayFallbackWhenAttachDefaultsDisabled() {
+        var configuration = configuration
+        configuration.defaultBillingDetails.email = "default@example.com"
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = false
+        let intent = Intent.deferredIntent(
+            intentConfig: .init(
+                mode: .payment(amount: 2345, currency: "USD"),
+                confirmHandler: dummyDeferredConfirmHandler
+            )
+        )
+
+        let applePayContext = makeApplePayContext(for: intent, configuration: configuration)
+
+        XCTAssertNil(applePayContext.fallbackBillingDetails)
     }
 
     func testCreate_CheckoutSessionWithNoEmail_fallbackBillingDetailsNil() {

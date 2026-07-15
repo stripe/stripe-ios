@@ -38,6 +38,22 @@ extension StripeAPI {
 
             public var _additionalParametersStorage: NonEncodableParameters?
             public var _allResponseFieldsStorage: NonEncodableParameters?
+
+            @_spi(STP) public init(
+                city: String? = nil,
+                country: String? = nil,
+                line1: String? = nil,
+                line2: String? = nil,
+                postalCode: String? = nil,
+                state: String? = nil
+            ) {
+                self.city = city
+                self.country = country
+                self.line1 = line1
+                self.line2 = line2
+                self.postalCode = postalCode
+                self.state = state
+            }
         }
 
         /// Email address.

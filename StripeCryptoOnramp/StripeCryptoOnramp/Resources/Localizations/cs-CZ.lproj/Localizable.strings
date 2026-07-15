@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "Debetní karty budou s největší pravděpodobností akceptovány.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Tuto aplikaci nebylo možné ověřit z důvodu chyby atestace. Pokud problém potrvá, zkuste to prosím později nebo kontaktujte vývojáře.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Tuto aplikaci nebylo možné ověřit. Požádejte o pomoc vývojáře aplikace.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Tuto peněženku s Bitcoiny se nepodařilo najít. Vyberte nebo přidejte peněženku s Bitcoiny a zkuste to znovu.";
+
+"This wallet network isn't supported. Please choose a different network." = "Tato síť peněženky s Bitcoiny není podporována. Vyberte jinou síť.";
+
+"This wallet verification request expired. Please try again." = "Tato žádost o ověření peněženky s Bitcoiny vypršela. Zkuste to znovu.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Nepodařilo se nám ověřit vlastnictví této peněženky s Bitcoiny. Zkuste to znovu.";

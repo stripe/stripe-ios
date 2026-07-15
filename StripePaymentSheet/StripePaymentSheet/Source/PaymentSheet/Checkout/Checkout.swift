@@ -55,7 +55,7 @@ public final class Checkout: ObservableObject {
     // MARK: - Internal Properties
 
     /// The PaymentElement for this Checkout instance.
-    private var paymentElement: PaymentElement!
+    var paymentElement: PaymentElement!
 
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
@@ -66,8 +66,6 @@ public final class Checkout: ObservableObject {
     /// UI is presented, a window during which no mutations occur. Writes are always on MainActor
     /// because they go through `Checkout`'s MainActor-isolated mutation methods.
     nonisolated(unsafe) private(set) var nonisolatedSession: Session!
-
-    weak var integrationDelegate: CheckoutIntegrationDelegate?
 
     let flagImageManager = AdaptivePricingFlagImageManager()
     let clientSecret: String
@@ -133,7 +131,10 @@ public final class Checkout: ObservableObject {
     }
 
 #if DEBUG
-    // TODO: Refactor this away, we should extract loading into its own object and inject a dummy in tests.
+    // TODO: Remove these test-only inits. They leave paymentElement nil, which breaks
+    // any code path that touches it. Instead, construct a real PaymentElement using the
+    // internal test inits for FlowController and EmbeddedPaymentElement (both accept a
+    // loadResult directly without network calls).
     /// Internal initializer for unit tests that injects a pre-loaded API response.
     init(
         clientSecret: String,
@@ -357,6 +358,7 @@ public final class Checkout: ObservableObject {
         _ apiResponse: STPCheckoutSessionAPIResponse? = nil,
         applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
     ) async throws {
+        // === Update the session ===
         // Generate a new session from the API response, or fall back to the current session.
         let newSession = apiResponse?.makePublicSession() ?? session
 
@@ -368,11 +370,10 @@ public final class Checkout: ObservableObject {
 
         // Apply any additional local mutations to the session.
         let finalSession = localMutation?(sessionWithLocalAddress) ?? sessionWithLocalAddress
-
-        // Update the session and notify delegates.
         session = finalSession
 
-        try await integrationDelegate?.checkoutDidUpdate(self)
+        // === Update elements ===
+        try await paymentElement?.update(checkout: self)
     }
 
     // MARK: - Element methods

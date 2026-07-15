@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "És molt probable que s'acceptin les targetes de dèbit.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Aquesta aplicació no s'ha pogut verificar a causa d'un error d'atestació. Torneu-ho a provar més tard o poseu-vos en contacte amb el desenvolupador si el problema persisteix.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Aquesta aplicació no s'ha pogut verificar. Contacteu amb la persona que la va desenvolupar per a demanar ajuda.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "No s'ha pogut trobar aquesta cartera. Trieu o afegiu una cartera i torneu-ho a provar.";
+
+"This wallet network isn't supported. Please choose a different network." = "Aquesta xarxa de carteres no és compatible. Trieu una xarxa diferent.";
+
+"This wallet verification request expired. Please try again." = "Aquesta sol·licitud de verificació de la cartera ha caducat. Torneu-ho a provar.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "No hem pogut verificar la propietat d'aquesta cartera. Torneu-ho a provar.";

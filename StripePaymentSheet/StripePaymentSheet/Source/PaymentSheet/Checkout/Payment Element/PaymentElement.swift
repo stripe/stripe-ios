@@ -7,7 +7,6 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-import SwiftUI
 import UIKit
 
 /// PaymentElement collects the customer's payment method, either in an embeddable view or presented in a sheet.
@@ -65,6 +64,7 @@ public final class PaymentElement {
 
     init(checkout: Checkout) async throws {
         // Note: PaymentElement is just nice user-facing packaging around the existing Embedded and FC classes
+        // Create FlowController
         let paymentSheetConfiguration = checkout.configuration.paymentElement.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient
         )
@@ -72,6 +72,7 @@ public final class PaymentElement {
             checkout: checkout,
             configuration: paymentSheetConfiguration
         )
+        // Create Embedded
         let embeddedConfiguration = checkout.configuration.paymentElement.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient
         )
@@ -79,52 +80,47 @@ public final class PaymentElement {
             checkout: checkout,
             configuration: embeddedConfiguration
         )
-        self.view = PaymentElementView()
-        self.uiView = PaymentElementUIView()
+        self.embeddedPaymentElement.notifiesDelegateOnInitialHeight = true
+        let uiView = PaymentElementUIView(contentView: embeddedPaymentElement.view)
+        self.view = PaymentElementView(viewModel: PaymentElementViewModel(uiView: uiView))
+        self.uiView = uiView
+        self.embeddedPaymentElement.delegate = self
     }
 }
 
-// MARK: - UIKit
+// MARK: - Checkout Updates
 
-/// A view that displays payment methods.
-@_spi(STP)
-public final class PaymentElementUIView: UIView {
-    /// A delegate for the view.
-    public weak var delegate: PaymentElementViewDelegate?
-
-    override init(frame: CGRect = .zero) {
-        super.init(frame: frame)
+extension PaymentElement {
+    var isPresentingPaymentUI: Bool {
+        return paymentSheetFlowController.isPresentingPaymentUI || embeddedPaymentElement.isPresentingPaymentUI
     }
 
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-    }
-}
+    func update(checkout: Checkout) async throws {
+        // TODO: This should not be async or throws; we should not make any network requests or re-fetch things, just update the v1/e/s response.
+        // Update FlowController
+        try await paymentSheetFlowController.update(checkout: checkout)
 
-@MainActor
-@_spi(STP)
-public protocol PaymentElementViewDelegate: AnyObject {
-    /// Called inside an animation block when the PaymentElement view is updating its height.
-    func paymentElementViewDidUpdateHeight(paymentElementView: PaymentElementUIView)
-
-    /// Called immediately before the PaymentElement view presents.
-    func paymentElementViewWillPresent(paymentElementView: PaymentElementUIView)
-}
-
-public extension PaymentElementViewDelegate {
-    func paymentElementViewWillPresent(paymentElementView: PaymentElementUIView) {
-        // Default implementation does nothing.
+        // Update Embedded
+        let result = await embeddedPaymentElement.update(checkout: checkout)
+        if case .failed(let error) = result {
+            throw error
+        }
     }
 }
 
-// MARK: - SwiftUI
+// MARK: - EmbeddedPaymentElementDelegate
 
-/// A view that displays payment methods.
-@_spi(STP)
-public struct PaymentElementView: View {
-    public init() {}
+// Note: The EPE delegate methods just get forwarded to the PaymentElementUIView delegate
+extension PaymentElement: EmbeddedPaymentElementDelegate {
+    public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
+        uiView.embeddedPaymentElementDidUpdateHeight()
+    }
 
-    public var body: some View {
-        EmptyView()
+    public func embeddedPaymentElementWillPresent(embeddedPaymentElement: EmbeddedPaymentElement) {
+        uiView.embeddedPaymentElementWillPresent()
+    }
+
+    public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
+        // PaymentElementViewDelegate does not expose payment option updates.
     }
 }

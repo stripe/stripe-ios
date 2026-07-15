@@ -239,6 +239,7 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     private var previousHeight: CGFloat?
+    var notifiesDelegateOnInitialHeight = false
     private var didLogRenderLPMs: Bool = false
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -252,9 +253,12 @@ class EmbeddedPaymentMethodsView: UIView {
         // Calculate our natural height
         let desiredHeight = systemLayoutSizeFitting(CGSize(width: frame.width, height: UIView.layoutFittingExpandedSize.height)).height
 
-        // If we never recorded a height, this is our first layout; don't notify the delegate.
+        // If we never recorded a height, this is our first layout.
         guard let previousHeight else {
-            previousHeight = frame.height
+            previousHeight = desiredHeight
+            if notifiesDelegateOnInitialHeight {
+                delegate?.embeddedPaymentMethodsViewDidUpdateHeight()
+            }
             return
         }
 

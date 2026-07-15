@@ -1,3 +1,13 @@
 "Debit cards are most likely to be accepted." = "Les cartes de débit sont les plus susceptibles d'être acceptées.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Impossible de vérifier cette application en raison d’une erreur d’attestation. Veuillez réessayer ultérieurement ou contacter le développeur si le problème persiste.";
+
+"This app couldn't be verified. Contact the app developer for help." = "Impossible de vérifier cette application. Contactez le développeur de l’application pour obtenir de l’aide.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "Ce portefeuille numérique est introuvable. Choisissez ou ajoutez un portefeuille numérique et réessayez.";
+
+"This wallet network isn't supported. Please choose a different network." = "Le réseau de ce portefeuille numérique n’est pas pris en charge. Choisissez un autre réseau.";
+
+"This wallet verification request expired. Please try again." = "Cette requête de vérification de portefeuille numérique a expiré. Réessayez.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "Nous n’avons pas pu vérifier que ce portefeuille vous appartient. Réessayez.";

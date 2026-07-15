@@ -52,12 +52,10 @@ extension StripeAPI.PaymentMethod {
             }
             var cardParams = StripeAPI.PaymentMethodParams.Card()
             cardParams.token = token.id
-            var billingDetails = StripeAPI.BillingDetails(from: payment) ?? StripeAPI.BillingDetails()
-            if let additional = fallbackBillingDetails {
-                billingDetails.email = billingDetails.email ?? additional.email
-                billingDetails.name = billingDetails.name ?? additional.name
-                billingDetails.phone = billingDetails.phone ?? additional.phone
-            }
+            let billingDetails = StripeAPI.BillingDetails(
+                from: payment,
+                fallbackBillingDetails: fallbackBillingDetails
+            )
             var paymentMethodParams = StripeAPI.PaymentMethodParams(type: .card, card: cardParams)
             paymentMethodParams.billingDetails = billingDetails
             paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
