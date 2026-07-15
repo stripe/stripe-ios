@@ -26,6 +26,22 @@ public final class PaymentElementUIView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override public var intrinsicContentSize: CGSize {
+        return fittingSize(width: bounds.width)
+    }
+
+    override public func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
+        return fittingSize(width: targetSize.width)
+    }
+
+    override public func systemLayoutSizeFitting(
+        _ targetSize: CGSize,
+        withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority,
+        verticalFittingPriority: UILayoutPriority
+    ) -> CGSize {
+        return fittingSize(width: targetSize.width, horizontalFittingPriority: horizontalFittingPriority, verticalFittingPriority: verticalFittingPriority)
+    }
+
     // MARK: - PaymentElementViewDelegate
 
     func embeddedPaymentElementDidUpdateHeight() {
@@ -41,7 +57,29 @@ public final class PaymentElementUIView: UIView {
     private func installContentView() {
         backgroundColor = .clear
         layoutMargins = .zero
-        addAndPinSubview(contentView)
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(contentView)
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+    }
+
+    private func fittingSize(
+        width: CGFloat,
+        horizontalFittingPriority: UILayoutPriority = .required,
+        verticalFittingPriority: UILayoutPriority = .fittingSizeLevel
+    ) -> CGSize {
+        let fittingWidth = width > 0 ? width : bounds.width
+        guard fittingWidth > 0 else {
+            return UIView.layoutFittingCompressedSize
+        }
+        return contentView.systemLayoutSizeFitting(
+            CGSize(width: fittingWidth, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: horizontalFittingPriority,
+            verticalFittingPriority: verticalFittingPriority
+        )
     }
 }
 

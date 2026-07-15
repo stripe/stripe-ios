@@ -93,11 +93,10 @@ struct PaymentSheetExampleAppRootView: View {
         case walletButtonsView_swiftUI
         case addressCollection_swiftUI
 
-        case checkout_playground
-
         case paymentSheet_playground
         case customerSheet_playground
         case pmme_playground
+        case checkout_playground
 
         static var destinationsBySection: [Section: [NavigationDestination]] {
             var result: [Section: [NavigationDestination]] = [:]
@@ -123,12 +122,12 @@ struct PaymentSheetExampleAppRootView: View {
                      .embeddedPaymentElement,
                      .embeddedPaymentElement_swiftUI,
                      .walletButtonsView_swiftUI,
-                     .addressCollection_swiftUI,
-                     .checkout_playground:
+                     .addressCollection_swiftUI:
                     result[.examples]?.append(destination)
                 case .paymentSheet_playground,
                      .customerSheet_playground,
-                     .pmme_playground:
+                     .pmme_playground,
+                     .checkout_playground:
                     result[.testPlaygrounds]?.append(destination)
                 }
             }
@@ -172,7 +171,7 @@ struct PaymentSheetExampleAppRootView: View {
             case .addressCollection_swiftUI:
                 return "AddressElement (SwiftUI)"
             case .checkout_playground:
-                return "Checkout SDK"
+                return "Checkout Elements"
             case .customerSheet_playground:
                 return "Customer Sheet (test playground)"
             case .paymentSheet_playground:
