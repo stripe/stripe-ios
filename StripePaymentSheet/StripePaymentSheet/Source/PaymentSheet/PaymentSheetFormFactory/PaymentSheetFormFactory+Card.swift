@@ -98,7 +98,9 @@ extension PaymentSheetFormFactory {
             case .full:
                 return makeBillingAddressSection(collectionMode: .autoCompletable, countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .never:
-                return nil
+                // Collect the minimum tax fields even if the merchant opted out
+                guard collectsTaxFromBillingAddress else { return nil }
+                return makeBillingAddressSection(collectionMode: .countryAndPostal(countriesRequiringPostalCollection: []), countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             }
         }()
 

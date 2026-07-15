@@ -173,4 +173,12 @@ final class PaymentSheetFormFactoryAutomaticTaxTest: XCTestCase {
         XCTAssertEqual(section.collectionMode, .autoCompletable)
     }
 
+    func testTaxForcesBillingAddressForCardWhenAddressNever() throws {
+        // Card with address == .never still collects the minimum tax fields (matches LPM/Apple Pay).
+        let config = makeConfiguration(country: "US", address: .never)
+        let form = makeForm(paymentMethod: .card, intent: makeCheckoutIntent(), config: config, specProvider: makeSpecProvider())
+        let section = try XCTUnwrap(addressSection(in: form), "Automatic tax should force a billing address section even when address is .never")
+        XCTAssertEqual(section.collectionMode, .autoCompletable)
+    }
+
 }
