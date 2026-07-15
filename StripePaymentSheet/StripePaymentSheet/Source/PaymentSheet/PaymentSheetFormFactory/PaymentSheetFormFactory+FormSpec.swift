@@ -162,14 +162,13 @@ extension PaymentSheetFormFactory {
         case .phone:
             return configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
         case .billingAddress:
-            let address = configuration.billingDetailsCollectionConfiguration.address
-            if address == .full {
+            switch configuration.billingDetailsCollectionConfiguration.address {
+            case .full:
                 return makeBillingAddressSection(countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
-            } else if collectsTaxFromBillingAddress {
-                // Start with country+postal, widen later based on country
-                return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
-            } else {
-                return nil
+            case .automatic, .never:
+                // Collect the minimum tax fields even if the merchant opted out
+                guard collectsTaxFromBillingAddress else { return nil }
+                return makeBillingAddressSection(collectionMode: .countryAndPostal(countriesRequiringPostalCollection: []), countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
             }
         case .billingAddressWithoutCountry:
             return configuration.billingDetailsCollectionConfiguration.address == .full
