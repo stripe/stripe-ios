@@ -332,7 +332,7 @@ private extension CreateOnrampSessionResponse {
                     lastError: nil,
                     lockWalletAddress: false,
                     quoteExpiration: Date(),
-                    sourceCurrency: "eur",
+                    sourceCurrency: "usd",
                     sourceAmount: "10.00",
                     destinationCurrencies: [],
                     destinationNetworks: [],
