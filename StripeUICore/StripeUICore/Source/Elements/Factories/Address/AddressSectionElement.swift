@@ -79,6 +79,8 @@ import UIKit
         case autoCompletable
         /// Special case used by some Payment Methods that collect country separately.
         case noCountry
+        /// Per-country collection modes. Missing countries collect country only.
+        indirect case perCountry([String: CollectionMode])
     }
     /// Fields that this section can collect in addition to the address
     public struct AdditionalFields {
@@ -137,10 +139,8 @@ import UIKit
             }
         }
     }
-    /// The collection mode passed at init, before any per-country widening.
+    /// Collection mode passed at init. Restored on country change when using ``CollectionMode/perCountry(_:)``.
     private let baseCollectionMode: CollectionMode
-    /// Per-country minimum fields to collect. See the `minimumFieldsByCountry` init parameter.
-    private let minimumFieldsByCountry: [String: CollectionMode]
     public var selectedCountryCode: String {
         get {
             return countryCodes[country.selectedIndex]
@@ -172,8 +172,7 @@ import UIKit
        - locale: Locale used to generate the display names for each country
        - addressSpecProvider: Determines the list of address fields to display for a selected country
        - defaults: Default address to prepopulate address fields with
-       - collectionMode: The base collection mode.
-       - minimumFieldsByCountry: The fewest fields to collect per country. When `collectionMode` collects less, it's widened to the country's mode (never narrowed), re-evaluated on country changes. Empty leaves externally-set modes (e.g. expanding after autocomplete) untouched.
+       - collectionMode: Which address fields to collect
      */
     public init(
         title: String? = nil,
@@ -182,7 +181,6 @@ import UIKit
         addressSpecProvider: AddressSpecProvider = .shared,
         defaults: AddressDetails = .empty,
         collectionMode: CollectionMode = .all(),
-        minimumFieldsByCountry: [String: CollectionMode] = [:],
         additionalFields: AdditionalFields = .init(),
         theme: ElementsAppearance = .default,
         presentAutoComplete: @escaping () -> Void = { }
@@ -190,7 +188,6 @@ import UIKit
         let dropdownCountries = countries?.map { $0.uppercased() } ?? addressSpecProvider.countries
         let countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
         self.baseCollectionMode = collectionMode
-        self.minimumFieldsByCountry = minimumFieldsByCountry
         self.countryCodes = countryCodes
         self.country = DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country_or_region,
@@ -205,7 +202,11 @@ import UIKit
         self.didTapAutocompleteButton = presentAutoComplete
 
         let initialCountry = countryCodes[country.selectedIndex]
-        self.collectionMode = collectionMode.widened(toSatisfy: minimumFieldsByCountry[initialCountry], for: initialCountry)
+        if case .perCountry(let modes) = collectionMode {
+            self.collectionMode = modes[initialCountry] ?? .countryAndPostal(countriesRequiringPostalCollection: [])
+        } else {
+            self.collectionMode = collectionMode
+        }
 
         // Initialize additional fields
         self.name = {
@@ -293,20 +294,19 @@ import UIKit
         }
     }
 
-    /// Widens the base collection mode to meet `countryCode`'s minimum. Does nothing when there are no
-    /// minimums, leaving externally-set modes (e.g. expanding after autocomplete) untouched.
-    private func applyMinimumFieldRequirement(for countryCode: String) {
-        guard !minimumFieldsByCountry.isEmpty else { return }
-        collectionMode = baseCollectionMode.widened(toSatisfy: minimumFieldsByCountry[countryCode], for: countryCode)
+    /// Re-applies ``CollectionMode/perCountry(_:)`` for `countryCode`, if that was the init mode.
+    private func applyPerCountryModeIfNeeded(for countryCode: String) {
+        guard case .perCountry(let modes) = baseCollectionMode else { return }
+        collectionMode = modes[countryCode] ?? .countryAndPostal(countriesRequiringPostalCollection: [])
     }
 
-    /// Selects `index`, rebuilds the fields, and re-applies the per-country widening. Always change the
-    /// country through here — setting `country.selectedIndex` directly skips `didUpdate`.
+    /// Selects `index` and rebuilds the fields. Always change country through here — setting
+    /// `country.selectedIndex` directly skips `didUpdate`.
     private func selectCountry(index: Int, address: AddressDetails.Address? = nil) {
         if country.selectedIndex != index {
             country.selectedIndex = index
         }
-        applyMinimumFieldRequirement(for: countryCodes[index])
+        applyPerCountryModeIfNeeded(for: countryCodes[index])
         updateAddressFields(for: countryCodes[index], address: address)
     }
 
@@ -341,6 +341,9 @@ import UIKit
                 return false
             case .allWithAutocomplete:
                 return true
+            case .perCountry:
+                // Unresolved .perCountry — treat as country-only.
+                return false
             }
         }
 
@@ -425,48 +428,6 @@ import UIKit
         return allDisplayedFieldsEqual
     }
 
-}
-
-// MARK: - CollectionMode widening
-extension AddressSectionElement.CollectionMode {
-    /// Returns `minimum` if it collects more than `self` does for `country`, otherwise keeps `self`.
-    /// Only ever widens.
-    func widened(toSatisfy minimum: Self?, for country: String) -> Self {
-        guard let minimum, !collectsAtLeast(minimum, for: country) else { return self }
-        return minimum
-    }
-
-    /// Whether `self` collects everything `other` would for `country`.
-    private func collectsAtLeast(_ other: Self, for country: String) -> Bool {
-        if other.collectsFullAddress {
-            return collectsFullAddress
-        }
-        if other.collectsPostal(for: country) {
-            return collectsFullAddress || collectsPostal(for: country)
-        }
-        // `other` collects only the country dropdown, which every mode has.
-        return true
-    }
-
-    /// Whether this mode collects every field in the country's address spec.
-    private var collectsFullAddress: Bool {
-        switch self {
-        case .all, .allWithAutocomplete, .autoCompletable, .noCountry:
-            return true
-        case .countryAndPostal:
-            return false
-        }
-    }
-
-    /// Whether this mode collects a postal code for the given country.
-    private func collectsPostal(for country: String) -> Bool {
-        switch self {
-        case .all, .allWithAutocomplete, .autoCompletable, .noCountry:
-            return true
-        case .countryAndPostal(let countries):
-            return countries.contains(country)
-        }
-    }
 }
 
 // MARK: - Element

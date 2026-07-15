@@ -166,9 +166,12 @@ extension PaymentSheetFormFactory {
             case .full:
                 return makeBillingAddressSection(countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
             case .automatic, .never:
-                // Collect the minimum tax fields even if the merchant opted out
+                // Still collect tax fields if the merchant opted out
                 guard collectsTaxFromBillingAddress else { return nil }
-                return makeBillingAddressSection(countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
+                return makeBillingAddressSection(
+                    collectionMode: .perCountry(CountryTaxRequirement.collectionModeByCountry),
+                    countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
+                )
             }
         case .billingAddressWithoutCountry:
             return configuration.billingDetailsCollectionConfiguration.address == .full

@@ -117,76 +117,62 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(ZZTextFields.map { $0.configuration.isOptional }, expectedZZFields.map { $0.isOptional })
     }
 
-    func testMinimumFieldsByCountry() throws {
+    func testPerCountryCollectionMode() throws {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
             "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
             "CA": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
             "FR": AddressSpec(format: "ACZ", require: "ACZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
         ]
+        let perCountry: AddressSectionElement.CollectionMode = .perCountry([
+            "US": .autoCompletable,
+            "CA": .countryAndPostal(countriesRequiringPostalCollection: ["CA"]),
+        ])
         let sut = AddressSectionElement(
             title: "",
             countries: ["US", "CA", "FR"],
             locale: locale_enUS,
             addressSpecProvider: specProvider,
             defaults: .init(address: .init(country: "US")),
-            collectionMode: .countryAndPostal(countriesRequiringPostalCollection: []),
-            minimumFieldsByCountry: [
-                "US": .autoCompletable,
-                "CA": .countryAndPostal(countriesRequiringPostalCollection: ["CA"]),
-            ]
+            collectionMode: perCountry
         )
 
-        // The base is widened to the initial country's minimum at init.
+        // Initial country applied at init.
         XCTAssertEqual(sut.collectionMode, .autoCompletable)
+        XCTAssertNotNil(sut.autoCompleteLine)
 
-        // Selecting a country with a postal minimum widens the base to postal collection.
+        // US -> CA narrows to postal.
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "CA")))
         XCTAssertEqual(sut.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: ["CA"]))
+        XCTAssertNotNil(sut.postalCode)
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertNil(sut.line1)
 
-        // Selecting a country with no minimum falls back to the base mode.
+        // CA -> FR falls back to country only.
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "FR")))
         XCTAssertEqual(sut.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: []))
+        XCTAssertNil(sut.postalCode)
 
-        // Re-selecting a country with a minimum re-applies the widened base, even after an external change.
+        // Re-applies after an external collectionMode change.
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "US")))
         sut.collectionMode = .all()
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "CA")))
         XCTAssertEqual(sut.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: ["CA"]))
 
-        // A base that already collects everything never shrinks, for any country.
-        let fullBase = AddressSectionElement(
-            title: "",
-            countries: ["US", "CA", "FR"],
-            locale: locale_enUS,
-            addressSpecProvider: specProvider,
-            defaults: .init(address: .init(country: "US")),
-            collectionMode: .allWithAutocomplete,
-            minimumFieldsByCountry: [
-                "US": .autoCompletable,
-                "CA": .countryAndPostal(countriesRequiringPostalCollection: ["CA"]),
-            ]
-        )
-        XCTAssertEqual(fullBase.collectionMode, .allWithAutocomplete)
-        for country in ["CA", "FR", "US"] {
-            fullBase.country.select(index: try XCTUnwrap(fullBase.countryCodes.firstIndex(of: country)))
-            XCTAssertEqual(fullBase.collectionMode, .allWithAutocomplete)
-        }
-
-        // Without minimums, country changes never touch an externally-set collection mode.
-        let noMinimums = AddressSectionElement(
+        // Non-perCountry bases leave externally-set modes alone.
+        let noPerCountry = AddressSectionElement(
             title: "",
             countries: ["US", "FR"],
             locale: locale_enUS,
             addressSpecProvider: specProvider,
             collectionMode: .autoCompletable
         )
-        noMinimums.collectionMode = .allWithAutocomplete
-        noMinimums.country.select(index: try XCTUnwrap(noMinimums.countryCodes.firstIndex(of: "FR")))
-        XCTAssertEqual(noMinimums.collectionMode, .allWithAutocomplete)
+        noPerCountry.collectionMode = .allWithAutocomplete
+        noPerCountry.country.select(index: try XCTUnwrap(noPerCountry.countryCodes.firstIndex(of: "FR")))
+        XCTAssertEqual(noPerCountry.collectionMode, .allWithAutocomplete)
     }
 
-    func testMinimumFieldsByCountryWithBillingSameAsShipping() throws {
+    func testPerCountryCollectionModeWithBillingSameAsShipping() throws {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
             "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
@@ -199,22 +185,19 @@ class AddressSectionElementTest: XCTestCase {
             locale: locale_enUS,
             addressSpecProvider: specProvider,
             defaults: .init(address: .init(country: "US")),
-            collectionMode: .countryAndPostal(countriesRequiringPostalCollection: []),
-            minimumFieldsByCountry: [
+            collectionMode: .perCountry([
                 "US": .autoCompletable,
                 "CA": .countryAndPostal(countriesRequiringPostalCollection: ["CA"]),
-            ],
+            ]),
             additionalFields: .init(billingSameAsShippingCheckbox: .enabled(isOptional: false))
         )
 
-        // US's widened mode applies at init.
         XCTAssertEqual(sut.collectionMode, .autoCompletable)
 
-        // FR has no minimum, so it uses the base mode.
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "FR")))
         XCTAssertEqual(sut.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: []))
 
-        // Re-checking "same as shipping" snaps back to US, so its widened mode should return.
+        // Re-checking "same as shipping" snaps back to US.
         sut.sameAsCheckbox.didToggle(false)
         sut.sameAsCheckbox.didToggle(true)
         XCTAssertEqual(sut.selectedCountryCode, "US")
@@ -225,49 +208,6 @@ class AddressSectionElementTest: XCTestCase {
         sut.updateBillingSameAsShippingDefaultAddress(.init(country: "CA"))
         XCTAssertEqual(sut.selectedCountryCode, "CA")
         XCTAssertEqual(sut.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: ["CA"]))
-    }
-
-    func testCollectionModeWidenedToSatisfyMinimum() {
-        typealias CollectionMode = AddressSectionElement.CollectionMode
-
-        // No minimum: any base passes through untouched.
-        for base: CollectionMode in [.all(), .allWithAutocomplete, .autoCompletable, .noCountry, .countryAndPostal()] {
-            XCTAssertEqual(base.widened(toSatisfy: nil, for: "FR"), base)
-        }
-
-        // Full-address minimum: bases that already collect the full address are kept, postal-only bases widen.
-        for base: CollectionMode in [.all(), .allWithAutocomplete, .autoCompletable, .noCountry] {
-            XCTAssertEqual(base.widened(toSatisfy: .autoCompletable, for: "US"), base)
-        }
-        XCTAssertEqual(
-            CollectionMode.countryAndPostal().widened(toSatisfy: .autoCompletable, for: "US"),
-            .autoCompletable
-        )
-
-        // Postal minimum: satisfied if the base collects the full address or the country's postal code.
-        let postalMinimum = { (country: String) -> CollectionMode in
-            .countryAndPostal(countriesRequiringPostalCollection: [country])
-        }
-        for base: CollectionMode in [.all(), .allWithAutocomplete, .autoCompletable, .noCountry] {
-            XCTAssertEqual(base.widened(toSatisfy: postalMinimum("IN"), for: "IN"), base)
-        }
-        // CA is in the default postal list; IN isn't and widens.
-        XCTAssertEqual(
-            CollectionMode.countryAndPostal().widened(toSatisfy: postalMinimum("CA"), for: "CA"),
-            .countryAndPostal()
-        )
-        XCTAssertEqual(
-            CollectionMode.countryAndPostal().widened(toSatisfy: postalMinimum("IN"), for: "IN"),
-            .countryAndPostal(countriesRequiringPostalCollection: ["IN"])
-        )
-
-        // A country-dropdown-only minimum never changes the base.
-        for base: CollectionMode in [.all(), .allWithAutocomplete, .autoCompletable, .noCountry, .countryAndPostal()] {
-            XCTAssertEqual(
-                base.widened(toSatisfy: .countryAndPostal(countriesRequiringPostalCollection: []), for: "FR"),
-                base
-            )
-        }
     }
 
     func testCountries() {

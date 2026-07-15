@@ -529,11 +529,6 @@ extension PaymentSheetFormFactory {
             }
         }()
 
-        // The minimum fields tax requires per country; the section widens the base mode as needed.
-        let minimumFieldsByCountry = collectsTaxFromBillingAddress
-            ? CountryTaxRequirement.minimumFieldsByCountry
-            : [:]
-
         let section = AddressSectionElement(
             // TODO: Switch between "billing address" and "billing details" strings once the localizations have landed
             title: (includePhone || includeEmail) ? String.Localized.billing_address_lowercase : String.Localized.billing_address_lowercase,
@@ -541,7 +536,6 @@ extension PaymentSheetFormFactory {
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
             collectionMode: finalCollectionMode,
-            minimumFieldsByCountry: minimumFieldsByCountry,
             additionalFields: .init(
                 phone: includePhone ? .enabled(isOptional: false) : .disabled,
                 email: includeEmail ? .enabled(isOptional: false) : .disabled,
@@ -1013,9 +1007,11 @@ extension PaymentSheetFormFactory {
         case .automatic where fullAddressRequiredByPaymentMethod:
             return makeBillingAddressSection(countries: countries)
         case .automatic, .never:
-            // Country + tax fields for the selected country, even if the merchant opted out
             guard collectsTaxFromBillingAddress else { return nil }
-            return makeBillingAddressSection(countries: countries)
+            return makeBillingAddressSection(
+                collectionMode: .perCountry(CountryTaxRequirement.collectionModeByCountry),
+                countries: countries
+            )
         }
     }
 

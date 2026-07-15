@@ -94,13 +94,21 @@ extension PaymentSheetFormFactory {
                 : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
             switch configuration.billingDetailsCollectionConfiguration.address {
             case .automatic:
-                return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
+                let collectionMode: AddressSectionElement.CollectionMode = collectsTaxFromBillingAddress
+                    ? .perCountry(CountryTaxRequirement.collectionModeByCountry)
+                    : .countryAndPostal()
+                return makeBillingAddressSection(collectionMode: collectionMode, countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .full:
                 return makeBillingAddressSection(collectionMode: .autoCompletable, countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .never:
-                // Collect the minimum tax fields even if the merchant opted out
+                // Still collect tax fields if the merchant opted out
                 guard collectsTaxFromBillingAddress else { return nil }
-                return makeBillingAddressSection(collectionMode: .countryAndPostal(countriesRequiringPostalCollection: []), countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
+                return makeBillingAddressSection(
+                    collectionMode: .perCountry(CountryTaxRequirement.collectionModeByCountry),
+                    countries: countries,
+                    includeEmail: shouldIncludeEmail,
+                    includePhone: shouldIncludePhone
+                )
             }
         }()
 

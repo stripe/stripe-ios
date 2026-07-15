@@ -84,8 +84,6 @@ struct CheckoutCartView: View {
         do {
             var config = Checkout.Configuration(clientSecret: clientSecret)
             config.adaptivePricing.allowed = adaptivePricing
-            config.paymentElement.billingDetailsCollectionConfiguration.name = .always
-            config.paymentElement.billingDetailsCollectionConfiguration.address = .full
             checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription
