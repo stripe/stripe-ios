@@ -382,22 +382,7 @@ class EmbeddedFormViewController: UIViewController {
         if shouldDeferConfirmation {
             intent.syncCheckoutBillingIfNeeded(
                 for: selectedPaymentOption,
-                setLoading: { [weak self] inProgress in
-                    guard let self else { return }
-                    if inProgress {
-                        self.view.endEditing(true)
-                        self.error = nil
-                        self.isPaymentInFlight = true
-                        self.updateError()
-                        self.updatePrimaryButton()
-                        self.isUserInteractionEnabled = false
-                    } else {
-                        self.isPaymentInFlight = false
-                        self.isUserInteractionEnabled = true
-                        self.updateError()
-                        self.updatePrimaryButton()
-                    }
-                },
+                setLoading: { [weak self] in self?.setLoading($0) },
                 onFailure: { [weak self] error in
                     self?.error = error
                     self?.updateError()
@@ -411,6 +396,18 @@ class EmbeddedFormViewController: UIViewController {
         }
 
         pay(with: selectedPaymentOption)
+    }
+
+    /// Shows or hides the in-flight/loading state for a blocking operation (e.g. a checkout billing sync).
+    private func setLoading(_ inProgress: Bool) {
+        if inProgress {
+            view.endEditing(true)
+            error = nil
+        }
+        isPaymentInFlight = inProgress
+        isUserInteractionEnabled = !inProgress
+        updateError()
+        updatePrimaryButton()
     }
 
     @objc func didTapPrimaryButtonWhenDisabled() {
