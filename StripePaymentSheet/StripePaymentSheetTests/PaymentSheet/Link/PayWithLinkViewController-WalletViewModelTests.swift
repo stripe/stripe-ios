@@ -383,12 +383,12 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
     }
 
     func testShouldShowSecondaryButtonEnabled() throws {
-        let sut = try makeSUT(shouldShowSecondaryCta: true)
+        let sut = try makeSUT(canPayAnotherWay: true)
         XCTAssertNotNil(sut.cancelButtonConfiguration)
     }
 
     func testShouldShowSecondaryButtonDisabled() throws {
-        let sut = try makeSUT(shouldShowSecondaryCta: false)
+        let sut = try makeSUT(canPayAnotherWay: false)
         XCTAssertNil(sut.cancelButtonConfiguration)
     }
 }
@@ -405,7 +405,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
         linkPassthroughModeEnabled: Bool? = nil,
         isSettingUp: Bool = false,
         linkPMOSFU: Bool? = nil,
-        shouldShowSecondaryCta: Bool = true
+        canPayAnotherWay: Bool = true
     ) throws -> PayWithLinkViewController.WalletViewModel {
         // Enable card funding filtering when allowedCardFundingTypes is not .all
         let cardFundingFilteringEnabled = allowedCardFundingTypes != .all
@@ -444,7 +444,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 linkBrand: .link,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
-                shouldShowSecondaryCta: shouldShowSecondaryCta,
+                canPayAnotherWay: canPayAnotherWay,
                 initiallySelectedPaymentDetailsID: nil,
                 callToAction: nil,
                 supportedPaymentMethodTypes: supportedPaymentMethodTypes,

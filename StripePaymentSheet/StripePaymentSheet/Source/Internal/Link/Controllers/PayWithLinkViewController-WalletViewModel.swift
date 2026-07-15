@@ -144,7 +144,7 @@ extension PayWithLinkViewController {
         }
 
         var cancelButtonConfiguration: Button.Configuration? {
-            context.shouldShowSecondaryCta ? .linkPlain(foregroundColor: linkAppearance?.colors?.primary ?? .linkTextBrand) : nil
+            context.canPayAnotherWay ? .linkPlain(foregroundColor: linkAppearance?.colors?.primary ?? .linkTextBrand) : nil
         }
 
         /// Whether or not we must re-collect the card CVC.

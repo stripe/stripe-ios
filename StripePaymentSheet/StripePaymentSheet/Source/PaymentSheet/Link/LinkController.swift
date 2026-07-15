@@ -525,7 +525,7 @@ import UIKit
             ),
             linkAppearance: appearance,
             linkConfiguration: configuration,
-            shouldShowSecondaryCta: false
+            canPayAnotherWay: false
         ) { [weak self] confirmOption, shouldClearSelection in
             guard let confirmOption else {
                 if shouldClearSelection {
@@ -580,7 +580,7 @@ import UIKit
                 supportedPaymentMethodTypes: self.resolvedSupportedPaymentMethodTypes(override: nil),
                 linkAppearance: self.appearance,
                 linkConfiguration: self.configuration,
-                shouldShowSecondaryCta: false
+                canPayAnotherWay: false
             ) { [weak self] confirmOption, _ in
                 guard let self else { return }
                 guard let confirmOption else {
