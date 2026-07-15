@@ -169,6 +169,113 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.shippingAddress?.address.country, "CA")
     }
 
+    // MARK: - Billing Address Sync Tests
+
+    func testBillingAddressDiffers_notEnoughInfoToSync_returnsFalse() async {
+        let checkout = await makeCheckoutWithOpenSession()
+
+        XCTAssertFalse(checkout.billingAddressDiffers(from: nil))
+        XCTAssertFalse(checkout.billingAddressDiffers(from: makeBillingDetails(country: nil)))
+        // Postal alone isn't enough without a country
+        XCTAssertFalse(checkout.billingAddressDiffers(from: makeBillingDetails(
+            country: nil,
+            line1: nil,
+            city: nil,
+            state: nil,
+            postalCode: "12345"
+        )))
+    }
+
+    func testBillingAddressDiffers_zipOnlyWithCountry_returnsTrue() async {
+        let checkout = await makeCheckoutWithOpenSession()
+
+        // Country + postal is enough to sync
+        XCTAssertTrue(checkout.billingAddressDiffers(from: makeBillingDetails(
+            country: "US",
+            line1: nil,
+            city: nil,
+            state: nil,
+            postalCode: "12345"
+        )))
+    }
+
+    func testBillingAddressDiffers_differentAddress_returnsTrue() async {
+        let checkout = await makeCheckoutWithOpenSession()
+
+        XCTAssertTrue(checkout.billingAddressDiffers(from: makeBillingDetails(country: "US")))
+    }
+
+    func testBillingAddressDiffers_sameAddress_returnsFalse() async throws {
+        let checkout = await makeCheckoutWithOpenSession()
+        try await checkout.updateBillingAddress(
+            name: "Jane Doe",
+            address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
+        )
+
+        XCTAssertFalse(checkout.billingAddressDiffers(from: makeBillingDetails(name: "Jane Doe", country: "US")))
+    }
+
+    func testSyncBillingAddress_sameAddress_noOps() async throws {
+        let checkout = await makeCheckoutWithOpenSession()
+        try await checkout.updateBillingAddress(
+            name: "Jane Doe",
+            address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
+        )
+        let delegate = MockCheckoutDelegate()
+        checkout.delegate = delegate
+
+        try await checkout.syncBillingAddress(from: makeBillingDetails(name: "Jane Doe", country: "US"))
+
+        XCTAssertEqual(delegate.updateSessionCallCount, 0)
+    }
+
+    func testSyncBillingAddress_differentAddress_updatesSession() async throws {
+        let checkout = await makeCheckoutWithOpenSession()
+
+        try await checkout.syncBillingAddress(from: makeBillingDetails(name: "Jane Doe", country: "US"))
+
+        XCTAssertEqual(checkout.session.billingAddress?.name, "Jane Doe")
+        XCTAssertEqual(checkout.session.billingAddress?.address.country, "US")
+        XCTAssertEqual(checkout.session.billingAddress?.address.line1, "123 Main St")
+    }
+
+    func testSyncBillingAddress_zipOnlyWithCountry_updatesSession() async throws {
+        let checkout = await makeCheckoutWithOpenSession()
+
+        try await checkout.syncBillingAddress(from: makeBillingDetails(
+            name: nil,
+            country: "US",
+            line1: nil,
+            city: nil,
+            state: nil,
+            postalCode: "12345"
+        ))
+
+        XCTAssertEqual(checkout.session.billingAddress?.address.country, "US")
+        XCTAssertEqual(checkout.session.billingAddress?.address.postalCode, "12345")
+        XCTAssertNil(checkout.session.billingAddress?.address.line1)
+    }
+
+    private func makeBillingDetails(
+        name: String? = "Jane Doe",
+        country: String?,
+        line1: String? = "123 Main St",
+        city: String? = "SF",
+        state: String? = "CA",
+        postalCode: String? = "94105"
+    ) -> STPPaymentMethodBillingDetails {
+        let billingDetails = STPPaymentMethodBillingDetails()
+        billingDetails.name = name
+        let address = STPPaymentMethodAddress()
+        address.country = country
+        address.line1 = line1
+        address.city = city
+        address.state = state
+        address.postalCode = postalCode
+        billingDetails.address = address
+        return billingDetails
+    }
+
     // MARK: - Address Collection Decoding Tests
 
     func testRequiresBillingAddress_whenRequired() {

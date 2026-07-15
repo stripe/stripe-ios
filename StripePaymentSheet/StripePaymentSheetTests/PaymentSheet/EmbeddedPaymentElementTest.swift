@@ -5,6 +5,8 @@
 //  Created by Yuki Tokuhiro on 10/14/24.
 //
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable@_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
 @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
@@ -983,6 +985,117 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
         let result = await sut.update(checkout: checkout)
         XCTAssertEqual(result, .succeeded)
+    }
+
+    // MARK: - Checkout billing sync (fire-and-forget commit)
+
+    func testCheckout_commitPaymentOptionAndSyncBilling_informsDelegateAndSyncsBilling() async throws {
+        // Given an EPE backed by an open checkout session with no billing address
+        let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
+        let sut = try await EmbeddedPaymentElement.create(checkout: checkout, configuration: configuration)
+        sut.delegate = self
+        XCTAssertNil(checkout.session.billingAddress)
+
+        // ...and a saved card (no form) as the current selection
+        let savedCard = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
+        sut._test_paymentOption = .saved(paymentMethod: savedCard, confirmParams: nil)
+        delegateDidUpdatePaymentOptionCalled = false
+
+        // When the payment option is committed...
+        sut.commitPaymentOptionAndSyncBilling()
+
+        // ...the delegate is informed right away (the sync is fire-and-forget)
+        XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
+
+        // Then the session billing address eventually matches the saved card
+        try await waitUntil { checkout.session.billingAddress != nil }
+        XCTAssertEqual(checkout.session.billingAddress?.address.country, "US")
+        XCTAssertEqual(checkout.session.billingAddress?.address.postalCode, "94105")
+        XCTAssertEqual(checkout.session.billingAddress?.address.line1, "123 Main St")
+    }
+
+    func testCheckout_commitPaymentOptionAndSyncBilling_nothingToSync_informsDelegateImmediately() async throws {
+        // Given an EPE backed by a checkout session already in sync with the selection
+        let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
+        let savedCard = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
+        try await checkout.syncBillingAddress(from: PaymentSheet.PaymentOption.saved(paymentMethod: savedCard, confirmParams: nil).billingDetails)
+
+        let sut = try await EmbeddedPaymentElement.create(checkout: checkout, configuration: configuration)
+        sut.delegate = self
+        sut._test_paymentOption = .saved(paymentMethod: savedCard, confirmParams: nil)
+        delegateDidUpdatePaymentOptionCalled = false
+
+        // When there's nothing to sync...
+        sut.commitPaymentOptionAndSyncBilling()
+
+        // ...the delegate is informed synchronously and no sync is kicked off
+        XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
+        XCTAssertTrue(checkout.pendingOperations.isEmpty)
+    }
+
+    func testCheckout_commitPaymentOptionAndSyncBilling_syncFails_leavesSessionBillingUnchanged() async throws {
+        // Given a tax-enabled checkout session whose billing update endpoint returns a 500
+        let apiClient = APIStubbedTestCase.stubbedAPIClient()
+        let stubDescriptor = stub(condition: { request in
+            request.url?.absoluteString.contains("/v1/payment_pages") == true
+                || request.url?.absoluteString.contains("/v1/checkout/sessions") == true
+        }) { _ in
+            let body = ["error": ["message": "Billing update failed", "type": "api_error"]]
+            return HTTPStubsResponse(jsonObject: body, statusCode: 500, headers: nil)
+        }
+        defer {
+            HTTPStubs.removeStub(stubDescriptor)
+        }
+
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["tax_context"] = [
+            "automatic_tax_enabled": true,
+            "automatic_tax_address_source": "session.billing",
+        ]
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
+        let checkout = await Checkout(
+            clientSecret: "cs_test_123_secret_abc",
+            apiResponse: session,
+            apiClient: apiClient
+        )
+        XCTAssertTrue(
+            checkout.session.shouldSendTaxRegion(for: "billing"),
+            "Test requires a tax-enabled session so sync hits the network"
+        )
+
+        let sut = try await EmbeddedPaymentElement.create(checkout: checkout, configuration: configuration)
+        sut.delegate = self
+
+        let savedCard = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
+        sut._test_paymentOption = .saved(paymentMethod: savedCard, confirmParams: nil)
+        delegateDidUpdatePaymentOptionCalled = false
+
+        // When the payment option is committed...
+        sut.commitPaymentOptionAndSyncBilling()
+
+        // ...the delegate is still informed (the sync is fire-and-forget)
+        XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
+
+        // Then once the failed sync settles, session billing is unchanged
+        try await Task.sleep(nanoseconds: 100_000_000) // Let the fire-and-forget sync start
+        try await waitUntil { !checkout.isLoading && checkout.pendingOperations.isEmpty }
+        XCTAssertNil(checkout.session.billingAddress)
+    }
+
+    private func waitUntil(
+        timeout: TimeInterval = 2,
+        file: StaticString = #filePath,
+        line: UInt = #line,
+        _ condition: () -> Bool
+    ) async throws {
+        let deadline = Date().addingTimeInterval(timeout)
+        while !condition() {
+            if Date() >= deadline {
+                XCTFail("Condition not met within \(timeout) seconds", file: file, line: line)
+                throw TestError.testFailure
+            }
+            try await Task.sleep(nanoseconds: 10_000_000)
+        }
     }
 
     // MARK: Immediate action tests

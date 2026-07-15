@@ -584,7 +584,7 @@ import UIKit
     }
 
     var clientSecret: String?
-    var checkout: Checkout?
+    @Published var checkout: Checkout?
     var checkoutSession: Checkout.Session? { checkout?.session }
     var customerId: String?
     var ephemeralKey: String?

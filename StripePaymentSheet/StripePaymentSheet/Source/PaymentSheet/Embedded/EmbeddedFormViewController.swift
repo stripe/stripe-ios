@@ -377,46 +377,40 @@ class EmbeddedFormViewController: UIViewController {
         // Send analytic when primary button is tapped
         analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
 
-        // If we defer confirmation, sync billing then close the sheet
+        // Blocking sync: keep the sheet open and show an error on failure. (Paths without a sheet use
+        // EmbeddedPaymentElement.commitPaymentOptionAndSyncBilling instead.)
         if shouldDeferConfirmation {
-            syncCheckoutBillingThenContinue()
+            intent.syncCheckoutBillingIfNeeded(
+                for: selectedPaymentOption,
+                setLoading: { [weak self] inProgress in
+                    guard let self else { return }
+                    if inProgress {
+                        self.view.endEditing(true)
+                        self.error = nil
+                        self.isPaymentInFlight = true
+                        self.updateError()
+                        self.updatePrimaryButton()
+                        self.isUserInteractionEnabled = false
+                    } else {
+                        self.isPaymentInFlight = false
+                        self.isUserInteractionEnabled = true
+                        self.updateError()
+                        self.updatePrimaryButton()
+                    }
+                },
+                onFailure: { [weak self] error in
+                    self?.error = error
+                    self?.updateError()
+                },
+                completion: { [weak self] in
+                    guard let self else { return }
+                    self.delegate?.embeddedFormViewControllerDidContinue(self)
+                }
+            )
             return
         }
 
         pay(with: selectedPaymentOption)
-    }
-
-    /// Syncs billing address to the checkout session, then tells the delegate to continue.
-    /// If the sync fails, stays on the sheet and shows the error instead.
-    private func syncCheckoutBillingThenContinue() {
-        guard case .checkout(let checkout) = intent,
-              let paymentOption = selectedPaymentOption else {
-            delegate?.embeddedFormViewControllerDidContinue(self)
-            return
-        }
-
-        view.endEditing(true)
-        error = nil
-        isPaymentInFlight = true
-        updateError()
-        updatePrimaryButton()
-        isUserInteractionEnabled = false
-
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            do {
-                try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
-                self.isPaymentInFlight = false
-                self.isUserInteractionEnabled = true
-                self.delegate?.embeddedFormViewControllerDidContinue(self)
-            } catch {
-                self.isPaymentInFlight = false
-                self.isUserInteractionEnabled = true
-                self.error = error
-                self.updateError()
-                self.updatePrimaryButton()
-            }
-        }
     }
 
     @objc func didTapPrimaryButtonWhenDisabled() {

@@ -5,7 +5,7 @@
 //  Created by David Estes on 5/31/23.
 //
 
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 // MARK: - PaymentSheetTestPlayground
@@ -115,6 +115,9 @@ struct PaymentSheetTestPlayground: View {
                             headerButtons: {
                                 if ProcessInfo.processInfo.environment["UITesting"] != nil {
                                     AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
+                                    if let checkout = playgroundController.checkout {
+                                        CheckoutBillingAddressForTesting(checkout: checkout)
+                                    }
                                 }
                                 Button {
                                     playgroundController.didTapResetConfig()
@@ -697,6 +700,38 @@ struct AnalyticsLogForTesting: View {
             .opacity(0)
             .accessibility(identifier: "_testAnalyticsLog")
             .accessibility(label: Text(analyticsLogString))
+            .accessibility(hidden: false)
+    }
+}
+
+/// Exposes the checkout session billing address to XCUITests via accessibility.
+struct CheckoutBillingAddressForTesting: View {
+    @ObservedObject var checkout: Checkout
+
+    private var billingAddressJSON: String {
+        guard let billing = checkout.session.billingAddress else {
+            return "{}"
+        }
+        var payload: [String: Any] = [
+            "country": billing.address.country,
+        ]
+        if let name = billing.name { payload["name"] = name }
+        if let phone = billing.phone { payload["phone"] = phone }
+        if let line1 = billing.address.line1 { payload["line1"] = line1 }
+        if let line2 = billing.address.line2 { payload["line2"] = line2 }
+        if let city = billing.address.city { payload["city"] = city }
+        if let state = billing.address.state { payload["state"] = state }
+        if let postalCode = billing.address.postalCode { payload["postalCode"] = postalCode }
+        let data = try! JSONSerialization.data(withJSONObject: payload)
+        return String(data: data, encoding: .utf8)!
+    }
+
+    var body: some View {
+        Text(billingAddressJSON)
+            .frame(width: 0, height: 0)
+            .opacity(0)
+            .accessibility(identifier: "_testCheckoutBillingAddress")
+            .accessibility(label: Text(billingAddressJSON))
             .accessibility(hidden: false)
     }
 }

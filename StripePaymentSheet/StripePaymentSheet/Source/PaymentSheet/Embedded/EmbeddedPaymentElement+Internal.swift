@@ -93,6 +93,25 @@ extension EmbeddedPaymentElement {
         }
     }
 
+    /// Commits the current payment option for paths with no sheet error surface: fire-and-forget
+    /// checkout billing sync (when needed), then notifies the merchant if the option changed.
+    ///
+    /// Use for manage dismiss, single-PM update, row tap with no form, and first-load default.
+    /// The session mutation already drives Embedded loading / `CheckoutDelegate` via
+    /// `update(checkout:)`, and `confirm` refuses to run while the sync is pending. On failure,
+    /// billing stays stale until a later sync.
+    ///
+    /// Form Continue instead uses blocking `Intent.syncCheckoutBillingIfNeeded` so it can keep the
+    /// sheet open and surface the error, then calls `informDelegateIfPaymentOptionUpdated()` on its own.
+    func commitPaymentOptionAndSyncBilling() {
+        if let (checkout, billingDetails) = intent.checkoutRequiringBillingSync(for: _paymentOption) {
+            Task { @MainActor in
+                try? await checkout.syncBillingAddress(from: billingDetails)
+            }
+        }
+        informDelegateIfPaymentOptionUpdated()
+    }
+
     // Helper method to create Form VC for a payment method row, if applicable.
     static func makeFormViewControllerIfNecessary(
         selection: RowButtonType?,
@@ -293,6 +312,9 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
+        // Single-PM update dismisses directly (no manage list / Continue CTA). Same-PM billing edits
+        // don't change RowButtonType, so DidUpdateSelection won't sync — commit + fire-and-forget here.
+        commitPaymentOptionAndSyncBilling()
         presentingViewController?.dismiss(animated: true)
         return .success
     }
@@ -363,6 +385,12 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
+
+        // Manage has no Continue CTA and no inline sync-error surface, so sync is fire-and-forget.
+        // This is required for billing edits to the already-selected PM (same RowButtonType → no
+        // DidUpdateSelection). Selection changes are covered here too; a later selection-commit hook
+        // may also sync, in which case this becomes a no-op once billing matches.
+        commitPaymentOptionAndSyncBilling()
         presentingViewController?.dismiss(animated: true)
     }
 }
@@ -456,6 +484,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         if let newSelectedType = embeddedPaymentMethodsView.selectedRowButton?.type {
             updateChangeButtonAndSublabelState(for: newSelectedType)
         }
+        // Billing already synced (blocking) in the form before this was called.
         embeddedFormViewController.dismiss(animated: true)
         informDelegateIfPaymentOptionUpdated()
         if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {

@@ -5,7 +5,10 @@
 //  Created by Nick Porter on 6/13/25.
 //
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 @_spi(STP) @testable import StripeCore
+import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
 @testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
@@ -482,4 +485,309 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         }
         await fulfillment(of: [exp], timeout: 2.0)
     }
+
+    // MARK: - PaymentOption billing details
+
+    func testPaymentOptionBillingDetails_savedFallsBackToPaymentMethodBillingDetails() {
+        // No confirm params -> use the PM's billing details
+        let paymentMethod = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
+        let paymentOption = PaymentSheet.PaymentOption.saved(paymentMethod: paymentMethod, confirmParams: nil)
+
+        XCTAssertEqual(paymentOption.billingDetails?.address?.country, "US")
+        XCTAssertEqual(paymentOption.billingDetails?.address?.line1, "123 Main St")
+    }
+
+    func testPaymentOptionBillingDetails_savedPrefersConfirmParams() {
+        // Confirm params win when present
+        let paymentMethod = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        let billingDetails = STPPaymentMethodBillingDetails()
+        let address = STPPaymentMethodAddress()
+        address.country = "CA"
+        billingDetails.address = address
+        confirmParams.paymentMethodParams.billingDetails = billingDetails
+        let paymentOption = PaymentSheet.PaymentOption.saved(paymentMethod: paymentMethod, confirmParams: confirmParams)
+
+        XCTAssertEqual(paymentOption.billingDetails?.address?.country, "CA")
+    }
+
+    // MARK: - Intent.checkoutRequiringBillingSync
+
+    @MainActor
+    func testCheckoutRequiringBillingSync() async throws {
+        let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
+        let savedCard = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
+        let savedOption = PaymentSheet.PaymentOption.saved(paymentMethod: savedCard, confirmParams: nil)
+
+        // Non-checkout intent
+        XCTAssertNil(Intent._testPaymentIntent(paymentMethodTypes: [.card]).checkoutRequiringBillingSync(for: savedOption))
+        // No selection (e.g. deleted all SPMs)
+        XCTAssertNil(Intent.checkout(checkout).checkoutRequiringBillingSync(for: nil))
+        // Apple Pay has no billingDetails
+        XCTAssertNil(PaymentSheet.PaymentOption.applePay.billingDetails)
+        XCTAssertNil(Intent.checkout(checkout).checkoutRequiringBillingSync(for: .applePay))
+        // Different billing than the session
+        let requiringSync = Intent.checkout(checkout).checkoutRequiringBillingSync(for: savedOption)
+        XCTAssertNotNil(requiringSync)
+        XCTAssertEqual(requiringSync?.billingDetails.address?.country, "US")
+        XCTAssertEqual(requiringSync?.billingDetails.address?.line1, "123 Main St")
+
+        // Already matches
+        try await checkout.syncBillingAddress(from: savedOption.billingDetails)
+        XCTAssertNil(Intent.checkout(checkout).checkoutRequiringBillingSync(for: savedOption))
+    }
+
+    @MainActor
+    func testCheckoutRequiringBillingSync_zipOnlySavedCard_stillHasCountry() async {
+        let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
+        let zipOnlyCard = STPPaymentMethod._testCard(postalCode: "12345", countryCode: "US")
+        let savedOption = PaymentSheet.PaymentOption.saved(paymentMethod: zipOnlyCard, confirmParams: nil)
+
+        XCTAssertEqual(savedOption.billingDetails?.address?.country, "US")
+        XCTAssertEqual(savedOption.billingDetails?.address?.postalCode, "12345")
+        XCTAssertNotNil(Intent.checkout(checkout).checkoutRequiringBillingSync(for: savedOption))
+    }
+
+    @MainActor
+    func testCheckoutRequiringBillingSync_updatedPMBillingDiffersFromSession() async throws {
+        // PM billing changed (e.g. via update form); next commit should need a sync.
+        let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
+        let original = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
+        try await checkout.syncBillingAddress(from: PaymentSheet.PaymentOption.saved(paymentMethod: original, confirmParams: nil).billingDetails)
+        XCTAssertEqual(checkout.session.billingAddress?.address.postalCode, "94105")
+
+        let updated = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "99999", countryCode: "US")
+        let updatedOption = PaymentSheet.PaymentOption.saved(paymentMethod: updated, confirmParams: nil)
+
+        let requiringSync = Intent.checkout(checkout).checkoutRequiringBillingSync(for: updatedOption)
+        XCTAssertNotNil(requiringSync)
+        XCTAssertEqual(requiringSync?.billingDetails.address?.postalCode, "99999")
+    }
+
+    @MainActor
+    func testCheckoutRequiringBillingSync_newPaymentOption() async {
+        // Continue with a newly entered card (not an SPM) should still sync billing.
+        let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        let billingDetails = STPPaymentMethodBillingDetails()
+        let address = STPPaymentMethodAddress()
+        address.country = "US"
+        address.postalCode = "12345"
+        billingDetails.address = address
+        confirmParams.paymentMethodParams.billingDetails = billingDetails
+        let newOption = PaymentSheet.PaymentOption.new(confirmParams: confirmParams)
+
+        let requiringSync = Intent.checkout(checkout).checkoutRequiringBillingSync(for: newOption)
+        XCTAssertNotNil(requiringSync)
+        XCTAssertEqual(requiringSync?.billingDetails.address?.country, "US")
+        XCTAssertEqual(requiringSync?.billingDetails.address?.postalCode, "12345")
+    }
+
+    @MainActor
+    func testCheckoutRequiringBillingSync_newPaymentOptionMissingCountry_skips() async {
+        let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        let billingDetails = STPPaymentMethodBillingDetails()
+        let address = STPPaymentMethodAddress()
+        address.postalCode = "12345"
+        billingDetails.address = address
+        confirmParams.paymentMethodParams.billingDetails = billingDetails
+        let newOption = PaymentSheet.PaymentOption.new(confirmParams: confirmParams)
+
+        XCTAssertNil(Intent.checkout(checkout).checkoutRequiringBillingSync(for: newOption))
+    }
+
+    // MARK: - Intent.syncCheckoutBillingIfNeeded
+
+    @MainActor
+    func testSyncBillingIfNeeded_nothingToSync_closesImmediately() async {
+        let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
+        let savedCard = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
+        let savedOption = PaymentSheet.PaymentOption.saved(paymentMethod: savedCard, confirmParams: nil)
+
+        try? await checkout.syncBillingAddress(from: savedOption.billingDetails)
+
+        var loadingStates: [Bool] = []
+        var failed = false
+        var closed = false
+        Intent.checkout(checkout).syncCheckoutBillingIfNeeded(
+            for: savedOption,
+            setLoading: { loadingStates.append($0) },
+            onFailure: { _ in failed = true },
+            completion: { closed = true }
+        )
+
+        XCTAssertTrue(closed)
+        XCTAssertTrue(loadingStates.isEmpty)
+        XCTAssertFalse(failed)
+    }
+
+    @MainActor
+    func testSyncBillingIfNeeded_nilSelection_preservesSessionBilling() async throws {
+        // Nil selection (deleted all SPMs) should close without clearing existing session billing.
+        let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
+        let savedCard = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
+        try await checkout.syncBillingAddress(from: PaymentSheet.PaymentOption.saved(paymentMethod: savedCard, confirmParams: nil).billingDetails)
+        XCTAssertEqual(checkout.session.billingAddress?.address.country, "US")
+
+        var loadingStates: [Bool] = []
+        var failed = false
+        var closed = false
+        Intent.checkout(checkout).syncCheckoutBillingIfNeeded(
+            for: nil,
+            setLoading: { loadingStates.append($0) },
+            onFailure: { _ in failed = true },
+            completion: { closed = true }
+        )
+
+        XCTAssertTrue(closed)
+        XCTAssertTrue(loadingStates.isEmpty)
+        XCTAssertFalse(failed)
+        XCTAssertEqual(checkout.session.billingAddress?.address.country, "US")
+        XCTAssertEqual(checkout.session.billingAddress?.address.line1, "123 Main St")
+    }
+
+    @MainActor
+    func testSyncBillingIfNeeded_differentAddress_syncsThenCloses() async {
+        let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
+        let savedCard = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
+        let savedOption = PaymentSheet.PaymentOption.saved(paymentMethod: savedCard, confirmParams: nil)
+
+        var loadingStates: [Bool] = []
+        var failed = false
+        let closed = expectation(description: "closed")
+        Intent.checkout(checkout).syncCheckoutBillingIfNeeded(
+            for: savedOption,
+            setLoading: { loadingStates.append($0) },
+            onFailure: { _ in failed = true },
+            completion: { closed.fulfill() }
+        )
+
+        // Loading starts synchronously before the async work
+        XCTAssertEqual(loadingStates, [true])
+        await fulfillment(of: [closed], timeout: 2.0)
+
+        XCTAssertEqual(loadingStates, [true, false])
+        XCTAssertFalse(failed)
+        XCTAssertEqual(checkout.session.billingAddress?.address.country, "US")
+        XCTAssertEqual(checkout.session.billingAddress?.address.line1, "123 Main St")
+    }
+
+    @MainActor
+    func testSyncBillingIfNeeded_newPaymentOption_syncsThenCloses() async {
+        // Mirrors Continue with a newly entered card.
+        let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        let billingDetails = STPPaymentMethodBillingDetails()
+        let address = STPPaymentMethodAddress()
+        address.country = "US"
+        address.postalCode = "12345"
+        billingDetails.address = address
+        confirmParams.paymentMethodParams.billingDetails = billingDetails
+        let newOption = PaymentSheet.PaymentOption.new(confirmParams: confirmParams)
+
+        var loadingStates: [Bool] = []
+        var failed = false
+        let closed = expectation(description: "closed")
+        Intent.checkout(checkout).syncCheckoutBillingIfNeeded(
+            for: newOption,
+            setLoading: { loadingStates.append($0) },
+            onFailure: { _ in failed = true },
+            completion: { closed.fulfill() }
+        )
+
+        XCTAssertEqual(loadingStates, [true])
+        await fulfillment(of: [closed], timeout: 2.0)
+
+        XCTAssertEqual(loadingStates, [true, false])
+        XCTAssertFalse(failed)
+        XCTAssertEqual(checkout.session.billingAddress?.address.country, "US")
+        XCTAssertEqual(checkout.session.billingAddress?.address.postalCode, "12345")
+    }
+
+    @MainActor
+    func testSyncBillingIfNeeded_updatedPMBilling_syncsOnCommit() async throws {
+        // Updating SPM billing does not sync by itself; the next commit should.
+        let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
+        let original = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
+        try await checkout.syncBillingAddress(from: PaymentSheet.PaymentOption.saved(paymentMethod: original, confirmParams: nil).billingDetails)
+        XCTAssertEqual(checkout.session.billingAddress?.address.postalCode, "94105")
+
+        let updated = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "99999", countryCode: "US")
+        let updatedOption = PaymentSheet.PaymentOption.saved(paymentMethod: updated, confirmParams: nil)
+
+        var loadingStates: [Bool] = []
+        var failed = false
+        let closed = expectation(description: "closed")
+        Intent.checkout(checkout).syncCheckoutBillingIfNeeded(
+            for: updatedOption,
+            setLoading: { loadingStates.append($0) },
+            onFailure: { _ in failed = true },
+            completion: { closed.fulfill() }
+        )
+
+        await fulfillment(of: [closed], timeout: 2.0)
+
+        XCTAssertEqual(loadingStates, [true, false])
+        XCTAssertFalse(failed)
+        XCTAssertEqual(checkout.session.billingAddress?.address.postalCode, "99999")
+        XCTAssertEqual(checkout.session.billingAddress?.address.line1, "123 Main St")
+    }
+
+    @MainActor
+    func testSyncBillingIfNeeded_syncFails_callsOnFailureAndDoesNotClose() async {
+        // When the server update fails, stay open: onFailure fires, completion does not.
+        let apiClient = APIStubbedTestCase.stubbedAPIClient()
+        let stubDescriptor = stub(condition: { request in
+            request.url?.absoluteString.contains("/v1/payment_pages") == true
+                || request.url?.absoluteString.contains("/v1/checkout/sessions") == true
+        }) { _ in
+            let body = ["error": ["message": "Billing update failed", "type": "api_error"]]
+            return HTTPStubsResponse(jsonObject: body, statusCode: 500, headers: nil)
+        }
+        defer {
+            HTTPStubs.removeStub(stubDescriptor)
+        }
+
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["tax_context"] = [
+            "automatic_tax_enabled": true,
+            "automatic_tax_address_source": "session.billing",
+        ]
+        let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
+        let checkout = await Checkout(
+            clientSecret: "cs_test_123_secret_abc",
+            apiResponse: session,
+            apiClient: apiClient
+        )
+        XCTAssertTrue(
+            checkout.session.shouldSendTaxRegion(for: "billing"),
+            "Test requires a tax-enabled session so sync hits the network"
+        )
+
+        let savedCard = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
+        let savedOption = PaymentSheet.PaymentOption.saved(paymentMethod: savedCard, confirmParams: nil)
+
+        var loadingStates: [Bool] = []
+        var receivedError: Error?
+        var closed = false
+        let failed = expectation(description: "onFailure")
+        Intent.checkout(checkout).syncCheckoutBillingIfNeeded(
+            for: savedOption,
+            setLoading: { loadingStates.append($0) },
+            onFailure: {
+                receivedError = $0
+                failed.fulfill()
+            },
+            completion: { closed = true }
+        )
+
+        await fulfillment(of: [failed], timeout: 2.0)
+
+        XCTAssertFalse(closed)
+        XCTAssertEqual(loadingStates, [true, false])
+        XCTAssertNotNil(receivedError)
+        XCTAssertNil(checkout.session.billingAddress)
+    }
+
 }
