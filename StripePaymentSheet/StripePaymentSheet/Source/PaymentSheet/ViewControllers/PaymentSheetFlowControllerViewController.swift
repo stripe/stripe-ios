@@ -487,8 +487,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private func closeSheet(didCancel: Bool, afterClose: (() -> Void)? = nil) {
         intent.syncCheckoutBillingIfNeeded(
             for: selectedPaymentOption,
-            setLoading: { [weak self] in self?.setBillingSyncLoading($0) },
-            onFailure: { [weak self] in self?.showBillingSyncError($0) },
+            setLoading: { [weak self] in self?.setLoading($0) },
+            onFailure: { [weak self] in self?.showError($0) },
             completion: { [weak self] in
                 guard let self else { return }
                 self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: didCancel)
@@ -505,20 +505,20 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         navigationBar.isUserInteractionEnabled = enabled
     }
 
-    private func setBillingSyncLoading(_ inProgress: Bool) {
+    /// Shows or hides the in-flight/loading state for a blocking operation (e.g. a checkout billing sync).
+    private func setLoading(_ inProgress: Bool) {
         if inProgress {
             view.endEditing(true)
             error = nil
             // Spinner only shows when the confirm button is visible (hidden for plain saved PMs).
             confirmButton.update(status: .processing, animated: true)
-            setUserInteraction(enabled: false)
         } else {
-            setUserInteraction(enabled: true)
             updateButton()
         }
+        setUserInteraction(enabled: !inProgress)
     }
 
-    private func showBillingSyncError(_ error: Error) {
+    private func showError(_ error: Error) {
         self.error = error
         errorLabel.text = error.nonGenericDescription
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
