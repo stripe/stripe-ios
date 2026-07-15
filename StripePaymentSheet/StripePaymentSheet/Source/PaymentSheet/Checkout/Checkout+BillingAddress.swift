@@ -10,6 +10,11 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension Checkout {
+    /// Whether the given billing details require a billing sync (i.e. they have an address with a country).
+    static func requiresBillingSync(for billingDetails: STPPaymentMethodBillingDetails?) -> Bool {
+        return billingDetails?.address?.country?.nonEmpty != nil
+    }
+
     /// Syncs the billing address from the payment method's billing details onto the checkout session.
     func syncBillingAddress(from billingDetails: STPPaymentMethodBillingDetails?) async throws {
         // We need at least a country to build an Address for tax region calculation. Billing details

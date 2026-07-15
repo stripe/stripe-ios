@@ -116,6 +116,14 @@ extension SavedPaymentMethodCollectionView {
              paymentMethodLogo.heightAnchor.constraint(equalToConstant: paymentMethodLogoSize.height)
         }()
 
+        private lazy var spinner: ActivityIndicator = {
+            let spinner = ActivityIndicator(size: .medium)
+            spinner.translatesAutoresizingMaskIntoConstraints = false
+            return spinner
+        }()
+
+        private(set) var isLoading: Bool = false
+
         fileprivate var viewModel: SavedPaymentOptionsViewController.Selection?
 
         var isRemovingPaymentMethods: Bool = false {
@@ -266,6 +274,7 @@ extension SavedPaymentMethodCollectionView {
 
         // MARK: - Internal Methods
         func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsPaymentMethodUpdate: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false, linkBrand: LinkBrand = .link) {
+            setLoading(false)
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             selectableRectangle.isHidden = false
@@ -278,6 +287,27 @@ extension SavedPaymentMethodCollectionView {
             self.showDefaultPMBadge = showDefaultPMBadge
             self.linkBrand = linkBrand
             update()
+        }
+
+        /// Shows or hides a small centered spinner and dims the logo while work is in flight.
+        func setLoading(_ loading: Bool) {
+            guard loading != isLoading else { return }
+            isLoading = loading
+
+            if loading {
+                spinner.tintColor = appearance.colors.primary
+                selectableRectangle.addSubview(spinner)
+                NSLayoutConstraint.activate([
+                    spinner.centerXAnchor.constraint(equalTo: selectableRectangle.centerXAnchor),
+                    spinner.centerYAnchor.constraint(equalTo: selectableRectangle.centerYAnchor),
+                ])
+                spinner.startAnimating()
+                paymentMethodLogo.alpha = 0.4
+            } else {
+                spinner.stopAnimating()
+                spinner.removeFromSuperview()
+                paymentMethodLogo.alpha = 1.0
+            }
         }
 
         func handleEvent(_ event: STPEvent) {

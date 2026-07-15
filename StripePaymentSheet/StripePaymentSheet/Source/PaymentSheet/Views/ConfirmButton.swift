@@ -300,8 +300,9 @@ class ConfirmButton: UIControl {
         self.status = status
         self.callToAction = callToAction
 
-        // Enable/disable
+        // Enable/disable, and reset any event-driven dim (see handleEvent)
         isUserInteractionEnabled = (status == .enabled || status == .disabled)
+        alpha = 1
 
         // Update the label with a crossfade UIView.transition; UIView.animate doesn't provide an animation for text changes
         let text: String? = {
@@ -516,5 +517,27 @@ class ConfirmButton: UIControl {
         titleLabel.textColor = foregroundColor
         lockIcon.tintColor = foregroundColor
         spinner.color = foregroundColor
+    }
+}
+
+// MARK: - EventHandler
+extension ConfirmButton: EventHandler {
+    func handleEvent(_ event: STPEvent) {
+        switch event {
+        case .shouldDisableUserInteraction:
+            // Only dim an idle CTA; other statuses (processing, succeeded, etc.) manage their own appearance
+            guard status == .enabled else { return }
+            isUserInteractionEnabled = false
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                self.alpha = 0.5
+            }
+        case .shouldEnableUserInteraction:
+            isUserInteractionEnabled = (status == .enabled || status == .disabled)
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                self.alpha = 1
+            }
+        default:
+            break
+        }
     }
 }

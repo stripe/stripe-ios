@@ -242,6 +242,8 @@ class SavedPaymentOptionsViewController: UIViewController {
     var elementsSession: STPElementsSession
 
     // MARK: - Private Properties
+    /// Whether a billing address sync to the checkout session is in flight; selection is disabled while true.
+    private var isSyncingBillingAddress = false
     private var selectedViewModelIndex: Int?
     private var viewModels: [Selection] = []
     private let cbcEligible: Bool
@@ -297,10 +299,27 @@ class SavedPaymentOptionsViewController: UIViewController {
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [collectionView, cvcRecollectionContainerView, sepaMandateView])
+        let stackView = UIStackView(arrangedSubviews: [collectionView, cvcRecollectionContainerView, sepaMandateView, errorLabelContainerView])
         stackView.axis = .vertical
         stackView.toggleArrangedSubview(cvcRecollectionContainerView, shouldShow: false, animated: false)
+        stackView.toggleArrangedSubview(errorLabelContainerView, shouldShow: false, animated: false)
         return stackView
+    }()
+
+    private lazy var errorLabel: UILabel = {
+        return ElementsUI.makeErrorLabel(theme: appearance.asElementsTheme)
+    }()
+
+    private lazy var errorLabelContainerView: UIView = {
+        let view = UIView()
+        let margins = NSDirectionalEdgeInsets.insets(
+            top: 8,
+            leading: appearance.formInsets.leading,
+            bottom: 0,
+            trailing: appearance.formInsets.trailing
+        )
+        view.addAndPinSubview(errorLabel, directionalLayoutMargins: margins)
+        return view
     }()
 
     private lazy var sepaMandateView: UIView = {
@@ -572,6 +591,9 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath)
         -> Bool
     {
+        guard !isSyncingBillingAddress else {
+            return false
+        }
         guard !self.collectionView.isRemovingPaymentMethods else {
             if let cell = collectionView.cellForItem(at: indexPath) as? SavedPaymentMethodCollectionView.PaymentOptionCell, cell.isEditable {
                 paymentOptionCellDidSelectEdit(cell)
@@ -587,6 +609,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let previousSelectedViewModelIndex = selectedViewModelIndex
         selectedViewModelIndex = indexPath.item
         let viewModel = viewModels[indexPath.item]
 
@@ -609,7 +632,61 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         updateMandateView()
         cvcFormElement.clearTextFields()
         updateFormElement()
-        delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
+
+        guard case .saved(let paymentMethod) = viewModel,
+              case .checkout(let checkout) = intent,
+              Checkout.requiresBillingSync(for: paymentMethod.billingDetails) else {
+            delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
+            return
+        }
+
+        // Sync the payment method's billing address to the checkout session before notifying the
+        // delegate of the new selection. On failure, revert the selection and show the error.
+        isSyncingBillingAddress = true
+        showError(nil)
+        let cell = collectionView.cellForItem(at: indexPath) as? SavedPaymentMethodCollectionView.PaymentOptionCell
+        setSheetUserInteraction(enabled: false)
+        cell?.setLoading(true)
+
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            defer {
+                cell?.setLoading(false)
+                self.setSheetUserInteraction(enabled: true)
+                self.isSyncingBillingAddress = false
+            }
+            do {
+                try await checkout.syncBillingAddress(from: paymentMethod.billingDetails)
+                self.delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
+            } catch {
+                // Revert to the previous selection
+                self.selectedViewModelIndex = previousSelectedViewModelIndex
+                self.collectionView.deselectItem(at: indexPath, animated: true)
+                if let selectedIndexPath = self.selectedIndexPath {
+                    self.collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
+                }
+                self.updateMandateView()
+                self.updateFormElement()
+                self.showError(error)
+            }
+        }
+    }
+
+    /// Dims and disables the entire sheet (including any host CTA) while work is in flight,
+    /// using the same event broadcast the host view controllers use during payment processing.
+    private func setSheetUserInteraction(enabled: Bool) {
+        let sheetRootView: UIView = bottomSheetController?.view ?? view
+        sendEventToSubviews(enabled ? .shouldEnableUserInteraction : .shouldDisableUserInteraction, from: sheetRootView)
+        sheetRootView.isUserInteractionEnabled = enabled
+    }
+
+    private func showError(_ error: Swift.Error?) {
+        errorLabel.text = error?.nonGenericDescription
+        let shouldShow = error != nil
+        guard errorLabelContainerView.isHidden == shouldShow else { return }
+        animateHeightChange {
+            self.stackView.toggleArrangedSubview(self.errorLabelContainerView, shouldShow: shouldShow, animated: false)
+        }
     }
 }
 

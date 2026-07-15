@@ -153,6 +153,12 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return label
     }()
 
+    private lazy var errorLabel: UILabel = {
+        let label = ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
+        label.isHidden = true
+        return label
+    }()
+
     private lazy var stackView: UIStackView = {
         let spacerView = UIView(frame: .zero)
         spacerView.translatesAutoresizingMaskIntoConstraints = false
@@ -161,7 +167,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         heightConstraint.priority = UILayoutPriority(rawValue: 1)
         heightConstraint.isActive = true
 
-        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows + [spacerView])
+        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows + [errorLabel, spacerView])
         stackView.axis = .vertical
         stackView.spacing = 12
         stackView.setCustomSpacing(16, after: headerLabel)
@@ -353,13 +359,58 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         }
 
         // Deselect previous button
-        paymentMethodRows.first { $0 != button && $0.isSelected }?.state = .unselected
+        let previousSelectedButton = paymentMethodRows.first { $0 != button && $0.isSelected }
+        previousSelectedButton?.state = .unselected
 
         // Disable interaction to prevent double selecting or entering edit mode since we will be dismissing soon
         self.view.isUserInteractionEnabled = false
         self.navigationBar.isUserInteractionEnabled = false
 
-        self.complete()
+        guard case .checkout(let checkout) = intent, Checkout.requiresBillingSync(for: paymentMethod.billingDetails) else {
+            self.complete()
+            return
+        }
+
+        // Sync the payment method's billing address to the checkout session before dismissing.
+        // On failure, stay on this screen, restore the previous selection, and show the error.
+        showError(nil)
+        button.setLoading(true)
+        setOtherRows(enabled: false, than: button)
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            defer {
+                button.setLoading(false)
+                self.setOtherRows(enabled: true, than: button)
+            }
+            do {
+                try await checkout.syncBillingAddress(from: paymentMethod.billingDetails)
+                self.complete()
+            } catch {
+                button.state = .unselected
+                previousSelectedButton?.state = .selected
+                self.view.isUserInteractionEnabled = true
+                self.navigationBar.isUserInteractionEnabled = true
+                self.showError(error)
+            }
+        }
+    }
+
+    /// Dims (or restores) every row other than the given one while work is in flight.
+    private func setOtherRows(enabled: Bool, than button: SavedPaymentMethodRowButton) {
+        paymentMethodRows.filter { $0 != button }.forEach {
+            sendEventToSubviews(enabled ? .shouldEnableUserInteraction : .shouldDisableUserInteraction, from: $0)
+        }
+    }
+
+    private func showError(_ error: Error?) {
+        errorLabel.text = error?.nonGenericDescription
+        // The last row normally has no spacing after it; give the error label some breathing room when visible
+        if let lastPaymentMethodRow = paymentMethodRows.last {
+            stackView.setCustomSpacing(error == nil ? 0 : 12, after: lastPaymentMethodRow)
+        }
+        animateHeightChange {
+            self.errorLabel.setHiddenIfNecessary(error == nil)
+        }
     }
 
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {

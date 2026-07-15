@@ -255,7 +255,8 @@ public final class Checkout: ObservableObject {
         canUpdateWhileSheetPresented: Bool = false
     ) async throws {
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
-        guard session.billingAddress != contactAddress else { return }
+        // TEMP: skip equality short-circuit so we always sync (even when address is unchanged)
+        // guard session.billingAddress != contactAddress else { return }
         if session.shouldSendTaxRegion(for: "billing") {
             try await performUpdate(.setTaxRegion(address), applying: { session in
                 session.makeCopyOverriding(billingAddress: contactAddress)
