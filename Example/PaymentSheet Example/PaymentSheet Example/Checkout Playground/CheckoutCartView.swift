@@ -38,15 +38,9 @@ struct CheckoutCartView: View {
                         if checkout.session.total != nil {
                             switch integrationType {
                             case .flowController:
-                                CheckoutCartPaymentButton(
-                                    checkout: checkout,
-                                    onDismiss: { dismiss() }
-                                )
+                                CheckoutCartPaymentButton(checkout: checkout)
                             case .embedded:
-                                CheckoutCartEmbeddedPaymentView(
-                                    checkout: checkout,
-                                    onDismiss: { dismiss() }
-                                )
+                                CheckoutCartEmbeddedPaymentView(checkout: checkout)
                             }
                         }
                     }
@@ -90,6 +84,8 @@ struct CheckoutCartView: View {
         do {
             var config = Checkout.Configuration(clientSecret: clientSecret)
             config.adaptivePricing.allowed = adaptivePricing
+            config.paymentElement.billingDetailsCollectionConfiguration.name = .always
+            config.paymentElement.billingDetailsCollectionConfiguration.address = .full
             checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription
