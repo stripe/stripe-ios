@@ -120,6 +120,28 @@ struct PaymentView: View {
         _ settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed
     ) -> Void
 
+    /// Creates a new instance of `PaymentView`.
+    /// - Parameters:
+    ///   - coordinator: The coordinator to use for collecting new payment methods and creating crypto payment tokens.
+    ///   - wallet: The wallet being funded.
+    ///   - isEUCustomer: Whether the user's KYC region is EU.
+    ///   - onContinue: Called with the created onramp session when the user continues.
+    init(
+        coordinator: CryptoOnrampCoordinator,
+        wallet: CustomerWalletsResponse.Wallet,
+        isEUCustomer: Bool,
+        onContinue: @escaping (
+            CreateOnrampSessionResponse,
+            _ selectedPaymentMethodDescription: String,
+            _ settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed
+        ) -> Void
+    ) {
+        self.coordinator = coordinator
+        self.wallet = wallet
+        self.onContinue = onContinue
+        self._sourceCurrency = State(initialValue: isEUCustomer ? .eur : .usd)
+    }
+
     @Environment(\.isLoading) private var isLoading
     @Environment(\.locale) private var locale
 
@@ -129,7 +151,7 @@ struct PaymentView: View {
     @State private var paymentTokens: [PaymentTokensResponse.PaymentToken] = []
     @State private var alert: Alert?
     @State private var selectedPaymentMethod: SelectedPaymentMethod?
-    @State private var sourceCurrency: SourceCurrency = .eur
+    @State private var sourceCurrency: SourceCurrency
     @State private var destinationCurrency: String = "usdc"
     @State private var editCurrencyAlert: EditCurrencyAlert?
     @State private var editingCurrencyText: String = ""
@@ -1022,6 +1044,7 @@ private extension PaymentTokensResponse.PaymentToken {
                 walletAddress: "",
                 verifiedOwnership: false
             ),
+            isEUCustomer: true,
             onContinue: { _, _, _ in }
         )
     }
