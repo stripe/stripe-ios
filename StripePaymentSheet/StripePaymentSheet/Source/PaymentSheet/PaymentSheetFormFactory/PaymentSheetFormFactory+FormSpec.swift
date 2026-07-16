@@ -114,8 +114,7 @@ extension PaymentSheetFormFactory {
         case .selector(let selectorSpec):
             return makeDropdown(for: selectorSpec)
         case .billing_address(let countrySpec):
-            return billingAddressCollection(fullAddressRequiredByPaymentMethod: true)
-                .map { makeBillingAddressSection(collectionMode: $0.collectionMode, countryFieldsOverrides: $0.countryFieldsOverrides, countries: countrySpec.allowedCountryCodes) }
+            return makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: true, allowedCountries: countrySpec.allowedCountryCodes)
         case .country(let spec):
             return makeCountryOrAddressSection(
                 countries: spec.allowedCountryCodes,
@@ -176,8 +175,6 @@ extension PaymentSheetFormFactory {
                     countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
                 )
             case .never:
-                // PaymentSheetLoader rejects CheckoutSessions with `.address = .never`, so a Checkout Session
-                // (which may need the billing address to compute tax) can never reach this case.
                 stpAssert(!isCheckoutSession, "CheckoutSession does not support billingDetailsCollectionConfiguration.address = .never")
                 return nil
             }

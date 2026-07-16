@@ -15,8 +15,7 @@ extension PaymentSheetFormFactory {
 
     func makeBLIK() -> FormElement {
         let contactInformationElement = makeContactInformationSection(nameRequiredByPaymentMethod: false, emailRequiredByPaymentMethod: false, phoneRequiredByPaymentMethod: false)
-        let billingAddressElement = billingAddressCollection(fullAddressRequiredByPaymentMethod: false)
-            .map { makeBillingAddressSection(collectionMode: $0.collectionMode, countryFieldsOverrides: $0.countryFieldsOverrides, countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray) }
+        let billingAddressElement = makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: false)
         let phoneElement = contactInformationElement?.elements.compactMap {
             $0 as? PaymentMethodElementWrapper<PhoneNumberElement>
         }.first

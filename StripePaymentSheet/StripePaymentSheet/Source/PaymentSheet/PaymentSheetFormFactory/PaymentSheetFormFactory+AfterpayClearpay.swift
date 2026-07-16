@@ -17,7 +17,7 @@ extension PaymentSheetFormFactory {
             phoneRequiredByPaymentMethod: false
         )
         let billingDetails = makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: false)
-        return FormElement(autoSectioningElements: [header, contactInfoSection, billingDetails].compactMap { $0 }, theme: theme)
+        return FormElement(autoSectioningElements: ([header, contactInfoSection, billingDetails] as [Element?]).compactMap { $0 }, theme: theme)
     }
 
     func makeAfterpayClearpayHeader() -> SubtitleElement {

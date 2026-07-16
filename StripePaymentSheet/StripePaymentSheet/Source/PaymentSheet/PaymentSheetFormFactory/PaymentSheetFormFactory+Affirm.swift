@@ -15,6 +15,6 @@ extension PaymentSheetFormFactory {
             phoneRequiredByPaymentMethod: false
         )
         let billingDetails = makeBillingAddressSectionIfNecessary(fullAddressRequiredByPaymentMethod: false)
-        return FormElement(elements: [header, contactInfoSection, billingDetails].compactMap { $0 }, theme: theme)
+        return FormElement(elements: ([header, contactInfoSection, billingDetails] as [Element?]).compactMap { $0 }, theme: theme)
     }
 }

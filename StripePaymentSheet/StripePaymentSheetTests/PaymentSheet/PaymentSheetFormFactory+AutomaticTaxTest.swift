@@ -17,23 +17,10 @@ import XCTest
 @MainActor
 final class PaymentSheetFormFactoryAutomaticTaxTest: XCTestCase {
 
-    override func setUp() {
-        super.setUp()
-        // Load form specs so spec-driven LPMs (FPX, EPS, etc.) build a real form.
-        let expectation = expectation(description: "Load form specs")
-        FormSpecProvider.shared.load { _ in expectation.fulfill() }
-        waitForExpectations(timeout: 5)
-    }
-
-    private func makeSpecProvider() -> AddressSpecProvider {
-        let provider = AddressSpecProvider()
-        provider.addressSpecs = [
-            "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip, subKeys: ["CA", "NY"], subLabels: ["California", "New York"]),
-            "CA": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code, subKeys: ["ON", "BC"], subLabels: ["Ontario", "British Columbia"]),
-            "IN": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip, subKeys: ["MH", "KA"], subLabels: ["Maharashtra", "Karnataka"]),
-            "FR": AddressSpec(format: "ACZ", require: "ACZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
-        ]
-        return provider
+    override func setUp() async throws {
+        try await super.setUp()
+        // Load the real form and address specs so every LPM builds its production form.
+        await PaymentSheetLoader.loadMiscellaneousSingletons()
     }
 
     private func makeCheckoutIntent(automaticTaxEnabled: Bool = true, addressSource: String = "session.billing") -> Intent {
@@ -63,15 +50,13 @@ final class PaymentSheetFormFactoryAutomaticTaxTest: XCTestCase {
     private func makeForm(
         paymentMethod: STPPaymentMethodType,
         intent: Intent,
-        config: PaymentSheet.Configuration,
-        specProvider: AddressSpecProvider
+        config: PaymentSheet.Configuration
     ) -> PaymentMethodElement {
         let factory = PaymentSheetFormFactory(
             intent: intent,
             elementsSession: ._testCardValue(),
             configuration: .paymentElement(config),
-            paymentMethod: .stripe(paymentMethod),
-            addressSpecProvider: specProvider
+            paymentMethod: .stripe(paymentMethod)
         )
         return factory.make()
     }
@@ -96,12 +81,16 @@ final class PaymentSheetFormFactoryAutomaticTaxTest: XCTestCase {
     }
 
     func testAllSupportedLPMsCollectMinimumTaxFieldsWithAutomaticTax() throws {
-        // For every LPM PaymentSheet supports: when automatic tax is sourced from the billing address
-        // and the merchant hasn't set `.automatic` collection to `.full`, any billing address section
-        // the form shows must collect the minimum tax fields for its selected country.
+        // For every LPM PaymentSheet supports: when automatic tax is sourced from the billing address and
+        // the merchant hasn't set `.automatic` collection to `.full`, the form must show a billing address
+        // section that collects at least the minimum tax fields for its selected country. Every supported
+        // LPM is expected to surface this section, so a missing section is a failure, not a skip.
         for pm in PaymentSheet.supportedPaymentMethods {
-            let form = makeForm(paymentMethod: pm, intent: makeCheckoutIntent(), config: makeConfiguration(country: "US"), specProvider: makeSpecProvider())
-            guard let section = addressSection(in: form) else { continue } // LPM doesn't collect a billing address in-form.
+            let form = makeForm(paymentMethod: pm, intent: makeCheckoutIntent(), config: makeConfiguration(country: "US"))
+            let section = try XCTUnwrap(
+                addressSection(in: form),
+                "\(pm.identifier) must collect a billing address section when tax is sourced from the billing address"
+            )
             assertCollectsTaxFields(section, pm)
         }
     }

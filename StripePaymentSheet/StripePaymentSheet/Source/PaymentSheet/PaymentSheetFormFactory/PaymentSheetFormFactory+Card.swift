@@ -104,8 +104,6 @@ extension PaymentSheetFormFactory {
             case .full:
                 return makeBillingAddressSection(collectionMode: .autocomplete(), countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .never:
-                // PaymentSheetLoader rejects CheckoutSessions with `.address = .never`, so a Checkout Session
-                // (which may need the billing address to compute tax) can never reach this case.
                 stpAssert(!isCheckoutSession, "CheckoutSession does not support billingDetailsCollectionConfiguration.address = .never")
                 return nil
             }
