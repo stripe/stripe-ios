@@ -16,15 +16,29 @@ struct STPCheckoutSessionSavedPaymentMethodsOfferSave {
     /// Whether the save checkbox should be shown to the user.
     let enabled: Bool
 
+    /// The initial state of the checkbox.
+    let status: Status
+
+    /// Represents the initial checked state of the save checkbox.
+    enum Status {
+        /// Checkbox should be pre-checked (user has previously agreed to save).
+        case accepted
+        /// Checkbox should be unchecked by default.
+        case notAccepted
+    }
+
     static func decodedObject(from dict: [AnyHashable: Any]?) -> STPCheckoutSessionSavedPaymentMethodsOfferSave? {
         guard let dict = dict else {
             return nil
         }
 
         let enabled = dict["enabled"] as? Bool ?? false
+        let statusString = dict["status"] as? String
+        let status: Status = (statusString == "accepted") ? .accepted : .notAccepted
 
         return STPCheckoutSessionSavedPaymentMethodsOfferSave(
-            enabled: enabled
+            enabled: enabled,
+            status: status
         )
     }
 }

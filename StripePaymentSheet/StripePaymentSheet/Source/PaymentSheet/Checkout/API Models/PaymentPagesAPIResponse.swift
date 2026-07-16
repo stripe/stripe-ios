@@ -21,6 +21,9 @@ class PaymentPagesAPIResponse: NSObject {
     /// The Stripe ID of the CheckoutSession.
     let id: String
 
+    /// The client secret of the CheckoutSession. Used for embedded or custom UI modes.
+    let clientSecret: String?
+
     /// The business name configured in the Business Public Details settings of your account.
     let businessName: String?
 
@@ -153,6 +156,7 @@ class PaymentPagesAPIResponse: NSObject {
             String(format: "%@: %p", NSStringFromClass(PaymentPagesAPIResponse.self), self),
             "id = \(id)",
             "total = \(String(describing: total))",
+            "clientSecret = <redacted>",
             "currency = \(String(describing: currency))",
             "mode = \(String(describing: allResponseFields["mode"]))",
             "status = \(String(describing: status))",
@@ -175,6 +179,7 @@ class PaymentPagesAPIResponse: NSObject {
 
     private init(
         id: String,
+        clientSecret: String?,
         businessName: String?,
         currency: String?,
         currencyOptions: [Checkout.CurrencyOption],
@@ -211,6 +216,7 @@ class PaymentPagesAPIResponse: NSObject {
         allResponseFields: [AnyHashable: Any]
     ) {
         self.id = id
+        self.clientSecret = clientSecret
         self.businessName = businessName
         self.currency = currency
         self.currencyOptions = currencyOptions
@@ -266,6 +272,7 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
         }
 
         // Optional / nullable fields
+        let clientSecret = dict["client_secret"] as? String
         let currency = dict["currency"] as? String
         let urlString = dict["url"] as? String
 
@@ -429,6 +436,7 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
 
         return PaymentPagesAPIResponse(
             id: id,
+            clientSecret: clientSecret,
             businessName: businessName,
             currency: currency,
             currencyOptions: currencyOptions,
