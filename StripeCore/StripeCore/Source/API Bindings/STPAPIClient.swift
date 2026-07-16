@@ -77,11 +77,7 @@ import UIKit
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
     )
 
-    /// A set of beta codes to enable on Stripe API requests, e.g. `["alipay_beta=v1"]`.
-    ///
-    /// Each value is appended to the `Stripe-Version` header, allowing merchants to opt in to
-    /// beta features that require a preview flag on the server. Only use this when a beta is
-    /// gated behind a server-side version header; most SDK betas are opted into via other APIs.
+    /// A set of beta headers to add to Stripe API requests e.g. `["alipay_beta=v1"]`.
     public var betas: Set<String> = []
 
     /// Returns `true` if `publishableKey` is actually a user key, `false` otherwise.
