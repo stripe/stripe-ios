@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 PATCH
 
 ## X.Y.Z - changes pending release
+### StripeCore
+* [Added] `STPAPIClient.betas` is now public, allowing merchants to opt in to beta features that require a preview flag on the `Stripe-Version` header.
 
 ## 26.3.0 2026-07-13
 ### CryptoOnramp (Alpha)
