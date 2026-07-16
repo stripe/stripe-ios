@@ -477,7 +477,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         let updatedParams = formElement.updateParams(params: params)
 
-        XCTAssertNil(updatedParams?.paymentMethodParams.billingDetails?.address?.country)
+        // The country is written to both billing details and the API path
+        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.country, "US")
         XCTAssertEqual(
             updatedParams?.paymentMethodParams.additionalAPIParameters[
                 "billing_details[address][country]"
@@ -810,8 +811,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.FPX)
         )
-        let country = factory.makeCountry(countryCodes: ["AT", "BE"], apiPath: nil)
-        (country as! PaymentMethodElementWrapper<DropdownFieldElement>).element.select(index: 1) // select a different index than the default of 0
+        let country = factory.makeCountryOrAddressSection(countries: ["AT", "BE"])
+        country.element.country.select(index: 1) // select a different index than the default of 0
 
         let params = IntentConfirmParams(type: .stripe(.FPX))
         let updatedParams = country.updateParams(params: params)
@@ -827,7 +828,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.FPX),
             previousCustomerInput: updatedParams
-        ).makeCountry(countryCodes: ["AT", "BE"], apiPath: nil)
+        ).makeCountryOrAddressSection(countries: ["AT", "BE"])
         // ...should result in a valid, filled out element
         XCTAssert(country_with_previous_input.validationState == .valid)
         let updatedParams_with_previous_input = country_with_previous_input.updateParams(params: .init(type: .stripe(.FPX)))
@@ -2768,7 +2769,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     }
 
     func testAppliesPreviousCustomerInput_klarna_country() {
-        func makeKlarnaCountry(apiPath: String?, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElementWrapper<DropdownFieldElement> {
+        func makeKlarnaCountry(apiPath: String?, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElementWrapper<AddressSectionElement> {
             let factory = PaymentSheetFormFactory(
                 intent: ._testPaymentIntent(paymentMethodTypes: [.klarna], currency: "eur"),
                 elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
@@ -2776,19 +2777,19 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 paymentMethod: .stripe(.klarna),
                 previousCustomerInput: previousCustomerInput
             )
-            return factory.makeKlarnaCountry(apiPath: apiPath) as! PaymentMethodElementWrapper<DropdownFieldElement>
+            return factory.makeBillingAddressSection(collectionMode: .countryOnly, countryAPIPath: apiPath)
         }
         let apiPathValues: [String?] = [nil, "billing_details[address][country]"] // Test the same thing with and without an api path
         apiPathValues.forEach { apiPath in
             // Given a klarna country...
             let klarnaCountry = makeKlarnaCountry(apiPath: apiPath, previousCustomerInput: nil)
             // ...with a selection *different* from the default of 0
-            klarnaCountry.element.select(index: 1)
+            klarnaCountry.element.country.select(index: 1)
             // ...using its params as previous customer input to create a new klarna country...
             let previousCustomerInput = klarnaCountry.updateParams(params: IntentConfirmParams(type: .stripe(.klarna)))
             let klarnaCountry_with_previous_customer_input = makeKlarnaCountry(apiPath: apiPath, previousCustomerInput: previousCustomerInput)
             // ...should result in a valid element filled out with the previous customer input
-            XCTAssertEqual(klarnaCountry_with_previous_customer_input.element.selectedIndex, 1)
+            XCTAssertEqual(klarnaCountry_with_previous_customer_input.element.country.selectedIndex, 1)
             XCTAssertEqual(klarnaCountry_with_previous_customer_input.validationState, .valid)
         }
     }

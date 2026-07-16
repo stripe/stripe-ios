@@ -527,7 +527,8 @@ extension PaymentSheetFormFactory {
 
         let section = AddressSectionElement(
             // TODO: Switch between "billing address" and "billing details" strings once the localizations have landed
-            title: (includePhone || includeEmail) ? String.Localized.billing_address_lowercase : String.Localized.billing_address_lowercase,
+            // A lone country dropdown doesn't need a "Billing address" header
+            title: finalCollectionMode == .countryOnly ? nil : String.Localized.billing_address_lowercase,
             countries: countries,
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
@@ -701,7 +702,6 @@ extension PaymentSheetFormFactory {
         ? makeBillingAddressSection(collectionMode: .autoCompletable, countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
             : nil
         connectBillingDetailsFields(
-            countryElement: nil,
             addressElement: addressElement,
             phoneElement: phoneElement)
 
@@ -769,14 +769,36 @@ extension PaymentSheetFormFactory {
     }
 
     func makeWero() -> PaymentMethodElement {
-        let country = makeCountry(countryCodes: ["DE", "BE", "FR"])
+        // Wero requires a country; collect the full address only if the config requires it
+        let addressElement = makeCountryOrAddressSection(countries: ["DE", "BE", "FR"])
         let contactInfoSection = makeContactInformationSection(
             nameRequiredByPaymentMethod: false,
             emailRequiredByPaymentMethod: false,
             phoneRequiredByPaymentMethod: false
         )
-        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
-        return FormElement(autoSectioningElements: [country, contactInfoSection, billingDetails].compactMap { $0 }, theme: theme)
+        let phoneElement = contactInfoSection?.elements.compactMap {
+            $0 as? PaymentMethodElementWrapper<PhoneNumberElement>
+        }.first
+        connectBillingDetailsFields(
+            addressElement: addressElement,
+            phoneElement: phoneElement
+        )
+        let allElements: [Element?] = [addressElement, contactInfoSection]
+        return FormElement(autoSectioningElements: allElements.compactMap { $0 }, theme: theme)
+    }
+
+    /// Country dropdown, or a full address section when billing address collection is `.full`.
+    /// - Parameter countryAPIPath: Optional form-spec API path that also receives the selected country
+    ///   (in addition to `billing_details[address][country]`).
+    func makeCountryOrAddressSection(
+        countries: [String]?,
+        countryAPIPath: String? = nil
+    ) -> PaymentMethodElementWrapper<AddressSectionElement> {
+        makeBillingAddressSection(
+            collectionMode: configuration.billingDetailsCollectionConfiguration.address == .full ? .all() : .countryOnly,
+            countries: countries,
+            countryAPIPath: countryAPIPath
+        )
     }
 
     // Only show checkbox for PI+SFU & Setup Intent
@@ -796,30 +818,6 @@ extension PaymentSheetFormFactory {
         return shouldDisplaySaveCheckbox && isSettingUp ? saveCheckbox : nil
     }
 
-    func makeCountry(countryCodes: [String]?, apiPath: String? = nil) -> PaymentMethodElement {
-        let locale = Locale.current
-        let resolvedCountryCodes = countryCodes ?? addressSpecProvider.countries
-        let country = PaymentMethodElementWrapper(
-            DropdownFieldElement.Address.makeCountry(
-                label: String.Localized.country,
-                countryCodes: resolvedCountryCodes,
-                theme: theme,
-                defaultCountry: defaultBillingDetails(countryAPIPath: apiPath).address.country,
-                locale: locale
-            )
-        ) { dropdown, params in
-            if let apiPath = apiPath {
-                params.paymentMethodParams.additionalAPIParameters[apiPath] =
-                    resolvedCountryCodes[dropdown.selectedIndex]
-            } else {
-                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.country =
-                    resolvedCountryCodes[dropdown.selectedIndex]
-            }
-            return params
-        }
-        return country
-    }
-
     func makeIban(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
         let defaultValue = getPreviousCustomerInput(for: apiPath) ?? previousCustomerInput?.paymentMethodParams.sepaDebit?.iban
         return PaymentMethodElementWrapper(TextFieldElement.makeIBAN(defaultValue: defaultValue, theme: theme)) { iban, params in
@@ -832,32 +830,6 @@ extension PaymentSheetFormFactory {
             }
             return params
         }
-    }
-
-    /// Creates a country dropdown for Klarna form specs with API path support
-    func makeKlarnaCountry(apiPath: String?) -> PaymentMethodElement? {
-        let countryCodes = Locale.current.sortedByTheirLocalizedNames(addressSpecProvider.countries)
-        let defaultValue = getPreviousCustomerInput(for: apiPath) ?? defaultBillingDetails(countryAPIPath: apiPath).address.country
-        let country = PaymentMethodElementWrapper(
-            DropdownFieldElement.Address.makeCountry(
-                label: String.Localized.country,
-                countryCodes: countryCodes,
-                theme: theme,
-                defaultCountry: defaultValue,
-                locale: Locale.current
-            )
-        ) { dropdown, params in
-            let countryCode = countryCodes[dropdown.selectedIndex]
-            if let apiPath = apiPath {
-                params.paymentMethodParams.additionalAPIParameters[apiPath] = countryCode
-            } else {
-                let address = STPPaymentMethodAddress()
-                address.country = countryCode
-                params.paymentMethodParams.nonnil_billingDetails.address = address
-            }
-            return params
-        }
-        return country
     }
 
     func makeKlarnaHeader() -> SubtitleElement {
@@ -1034,7 +1006,6 @@ extension PaymentSheetFormFactory {
     }
 
     func connectBillingDetailsFields(
-        countryElement: PaymentMethodElementWrapper<DropdownFieldElement>?,
         addressElement: PaymentMethodElementWrapper<AddressSectionElement>?,
         phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?
     ) {
@@ -1054,24 +1025,6 @@ extension PaymentSheetFormFactory {
             }
 
             phoneElement.setSelectedCountryCode(countryCode, shouldUpdateDefaultNumber: true)
-        }
-
-        if let countryElement = countryElement {
-            countryElement.element.didUpdate = { [updatePhone] _ in
-                let countryCode = countryElement.element.selectedItem.rawData
-                if let phoneElement = phoneElement {
-                    updatePhone(phoneElement.element, countryCode)
-                }
-                if let addressElement = addressElement {
-                    addressElement.element.selectedCountryCode = countryCode
-                }
-            }
-
-            if let addressElement = addressElement,
-               addressElement.element.selectedCountryCode != countryElement.element.selectedItem.rawData
-            {
-                addressElement.element.selectedCountryCode = countryElement.element.selectedItem.rawData
-            }
         }
 
         if let addressElement = addressElement {
