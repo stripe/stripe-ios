@@ -1002,8 +1002,6 @@ extension PaymentSheetFormFactory {
         case .automatic:
             return collectsTaxFromBillingAddress ? (.countryOnly, CountryTaxRequirement.fieldsToCollectByCountry) : nil
         case .never:
-            // PaymentSheetLoader rejects CheckoutSessions with `.address = .never`, so a Checkout Session
-            // (which may need the billing address to compute tax) can never reach this case.
             stpAssert(!isCheckoutSession, "CheckoutSession does not support billingDetailsCollectionConfiguration.address = .never")
             return nil
         }
