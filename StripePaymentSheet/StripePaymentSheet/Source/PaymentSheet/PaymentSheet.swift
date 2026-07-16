@@ -162,6 +162,9 @@ public class PaymentSheet {
                 switch result {
                 case .success(let (loadResult, confirmationChallenge)):
                     self.confirmationChallenge = confirmationChallenge
+                    // Snapshot the persisted default so we can revert it if the user changes their
+                    // selection (which persists at tap time) and then cancels the sheet
+                    self.persistedSelectionSnapshot = .capture(paymentOption: nil, customerID: self.configuration.customer?.id, savedPaymentMethods: loadResult.savedPaymentMethods)
                     let presentPaymentSheet: () -> Void = {
                         let paymentSheetVC = self.makePaymentSheetVC(
                             loadResult: loadResult,
@@ -237,6 +240,10 @@ public class PaymentSheet {
 
     /// A user-supplied completion block. Nil until `present` is called.
     var completion: ((PaymentSheetResult) -> Void)?
+
+    /// The persisted default payment method when the sheet was presented, restored if the user cancels.
+    /// (The full sheet has no developer-facing selection, so only the persisted half needs reverting.)
+    var persistedSelectionSnapshot: SelectionSnapshot?
 
     /// Loading View Controller
     lazy var loadingViewController = LoadingViewController(
@@ -362,12 +369,21 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     }
 
     func paymentSheetViewControllerDidFinish(_ paymentSheetViewController: PaymentSheetViewControllerProtocol, result: PaymentSheetResult) {
+        // The payment completed; don't revert the persisted default on dismissal
+        persistedSelectionSnapshot = nil
         paymentSheetViewController.dismiss(animated: true) {
             self.completion?(result)
         }
     }
 
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
+        // Revert the persisted default to its at-presentation value so an abandoned selection doesn't
+        // become the default for the next presentation
+        persistedSelectionSnapshot?.restoreLocalPersistence(
+            customerID: configuration.customer?.id,
+            savedPaymentMethods: paymentSheetViewController.savedPaymentMethods
+        )
+        persistedSelectionSnapshot = nil
         paymentSheetViewController.dismiss(animated: true) {
             self.completion?(.canceled)
         }
@@ -406,6 +422,8 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSheetContentViewController {
     var intent: Intent { get }
     var elementsSession: STPElementsSession { get }
+    /// The up to date list of saved payment methods.
+    var savedPaymentMethods: [STPPaymentMethod] { get }
 
     func pay(with paymentOption: PaymentOption)
     func clearTextFields()

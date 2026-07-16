@@ -71,7 +71,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 
     private let addPaymentMethodViewController: AddPaymentMethodViewController
 
-    private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
+    let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
     internal lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(
             isTestMode: configuration.apiClient.isTestmode,

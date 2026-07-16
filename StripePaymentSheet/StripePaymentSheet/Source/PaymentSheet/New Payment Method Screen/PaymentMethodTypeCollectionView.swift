@@ -43,6 +43,16 @@ class PaymentMethodTypeCollectionView: UICollectionView {
             }
         }
     }
+
+    /// Programmatically selects the given payment method type, if it's in the carousel.
+    func select(_ paymentMethodType: PaymentSheet.PaymentMethodType) {
+        guard let index = paymentMethodTypes.firstIndex(of: paymentMethodType), selected != paymentMethodType else {
+            return
+        }
+        selected = paymentMethodType
+        reloadData()
+        selectItem(at: IndexPath(item: index, section: 0), animated: false, scrollPosition: .centeredHorizontally)
+    }
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let appearance: PaymentSheet.Appearance
     let currency: String?

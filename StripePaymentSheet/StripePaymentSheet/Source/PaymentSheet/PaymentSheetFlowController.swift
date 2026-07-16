@@ -45,8 +45,17 @@ extension PaymentSheet {
         /// This is often used to restore a customer's previous form input when re-presenting `AddPaymentMethodViewController`.
         var newConfirmParams: IntentConfirmParams? {
             switch self {
-            case .applePay, .saved, .link:
+            case .applePay:
                 return nil
+            case .link(let confirmOption):
+                // Inline Link signup is form-backed (a completed payment method form with the
+                // signup fields): restoring it means restoring that form. Wallet-style Link
+                // options return nil.
+                return confirmOption.signupConfirmParams
+            case .saved(_, let confirmParams):
+                // Form-backed saved selections (Instant Debits / Link Card Brand) are restored by
+                // restoring their form
+                return confirmParams?.isFormBackedSavedPaymentMethod == true ? confirmParams : nil
             case .new(confirmParams: let params):
                 return params
             case let .external(paymentMethod, billingDetails):
@@ -54,6 +63,17 @@ extension PaymentSheet {
                 params.paymentMethodParams.billingDetails = billingDetails
                 return params
             }
+        }
+
+        /// The confirm params to restore into a payment method form when redisplaying this option,
+        /// e.g. re-presenting after `update()` or reverting the selection on cancel. Like
+        /// `newConfirmParams`, but also returns the params of customer-saved selections (restoring
+        /// e.g. recollected CVC input).
+        var formRestorationConfirmParams: IntentConfirmParams? {
+            if case .saved(_, let confirmParams) = self {
+                return confirmParams
+            }
+            return newConfirmParams
         }
 
         var savedPaymentMethod: STPPaymentMethod? {
@@ -252,6 +272,8 @@ extension PaymentSheet {
 
         private var presentPaymentOptionsCompletionWithResult: ((Bool) -> Void)?
         private var didDismissLinkVerificationDialog: Bool = false
+        /// The selection state when the payment options sheet was presented, restored if the user cancels the sheet.
+        private var selectionSnapshotAtPresentation: SelectionSnapshot?
 
         // If a WalletButtonsView is currently visible
         var walletButtonsViewState: WalletButtonsViewState = .hidden {
@@ -522,6 +544,9 @@ extension PaymentSheet {
                 return
             }
 
+            // Snapshot the current selection so we can revert to it if the user cancels the sheet
+            selectionSnapshotAtPresentation = .capture(paymentOption: internalPaymentOption, customerID: configuration.customer?.id, savedPaymentMethods: viewController.savedPaymentMethods)
+
             let showPaymentOptions: () -> Void = { [weak self] in
                 guard let self = self else { return }
 
@@ -596,10 +621,25 @@ extension PaymentSheet {
                         }
                     } else {
                         self.viewController.flowControllerDelegate = self
+                        // Snapshot the selection now that the payment options are replacing the loading
+                        // spinner, so cancelling the sheet reverts to what the customer sees here
+                        self.selectionSnapshotAtPresentation = .capture(paymentOption: self.internalPaymentOption, customerID: self.configuration.customer?.id, savedPaymentMethods: self.viewController.savedPaymentMethods)
                         bottomSheetVC.setViewControllers([self.viewController])
                     }
                 }
             }
+        }
+
+        /// The user deliberately dropped out of the native Link flow while Link was selected:
+        /// deselect Link everywhere it's recorded — the sheet, the locally persisted default (so it
+        /// doesn't reappear on the next initialization), and the presentation snapshot (so a
+        /// subsequent cancel doesn't resurrect it).
+        private func clearLinkSelectionAfterLinkFlowDropOut() {
+            viewController.clearSelection()
+            if CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customer?.id) == .link {
+                CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: configuration.customer?.id)
+            }
+            selectionSnapshotAtPresentation = selectionSnapshotAtPresentation?.clearingLinkSelection
         }
 
         private func presentNativeLinkInPlaceOfFlowController(
@@ -618,9 +658,9 @@ extension PaymentSheet {
                 if shouldReturnToPaymentSheet {
                     self.viewController.linkConfirmOption = nil
                     if case .link(let option) = self.internalPaymentOption, case .wallet = option {
-                        // The Link row was selected before we launched the Link flow, but the user decided to drop out
-                        // of the Link flow. We clear the selection to avoid having Link stay selected.
-                        self.viewController.clearSelection()
+                        // The Link row was selected before we launched the Link flow, but the user
+                        // decided to drop out of the Link flow: deselect Link
+                        self.clearLinkSelectionAfterLinkFlowDropOut()
                     }
                     self.updatePaymentOption()
                     returnToPaymentSheet()
@@ -998,7 +1038,26 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
         if !didCancel {
             self.didPresentAndContinue = true
         }
+        // On cancel, revert the selection (and the locally persisted default) to their values at
+        // presentation time. If the snapshotted saved PM was deleted while the sheet was up, keep
+        // the sheet's own post-deletion selection instead. The UI revert is deferred to the dismiss
+        // completion so the selection doesn't visibly flip while the sheet animates away; it still
+        // runs before `updatePaymentOption` reads the reverted state.
+        var revertSelectionAfterDismissal: (() -> Void)?
+        if didCancel, let snapshot = selectionSnapshotAtPresentation {
+            snapshot.restoreLocalPersistence(
+                customerID: configuration.customer?.id,
+                savedPaymentMethods: flowControllerViewController.savedPaymentMethods
+            )
+            if case .revert(let paymentOptionToRestore) = snapshot.paymentOptionRestoration(savedPaymentMethods: flowControllerViewController.savedPaymentMethods) {
+                revertSelectionAfterDismissal = {
+                    flowControllerViewController.revertSelection(to: paymentOptionToRestore)
+                }
+            }
+        }
+        selectionSnapshotAtPresentation = nil
         flowControllerViewController.dismiss(animated: true) {
+            revertSelectionAfterDismissal?()
             self.presentPaymentOptionsCompletionWithResult?(didCancel)
             self.updatePaymentOption()
             self.isPresented = false
@@ -1060,6 +1119,9 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
     func clearSelection()
+    /// Reverts the current selection to the given payment option, e.g. when the user cancels the sheet
+    /// after changing their selection. Passing nil clears the selection.
+    func revertSelection(to paymentOption: PaymentOption?)
 }
 
 extension PaymentOption {

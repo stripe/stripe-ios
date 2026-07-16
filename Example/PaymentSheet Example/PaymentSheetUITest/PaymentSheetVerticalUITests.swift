@@ -54,16 +54,14 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.textFields["Card number"].typeText("1")
         XCTAssertFalse(continueButton.isEnabled)
         app.tapCoordinate(at: .init(x: 200, y: 100))
-        // Tap out of FlowController and expect empty payment method
+        // Tap out of FlowController - the selection should revert to Cash App Pay, the selection
+        // when the sheet was presented
         app.tapCoordinate(at: .init(x: 200, y: 100))
-        XCTAssertEqual(paymentMethodButton.label, "None")
+        XCTAssertEqual(paymentMethodButton.label, "Cash App Pay, cashapp")
 
-        // Go back in
+        // Go back in - Cash App Pay (the reverted selection) should be selected
         paymentMethodButton.tap()
-        XCTAssertFalse(continueButton.isEnabled)
-        // Back out of card form
-        app.buttons["Back"].tap()
-        // Cash App Pay (the previous selection) should be selected
+        XCTAssertTrue(app.buttons["Cash App Pay"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["Cash App Pay"].isSelected)
         XCTAssertTrue(continueButton.isEnabled)
 

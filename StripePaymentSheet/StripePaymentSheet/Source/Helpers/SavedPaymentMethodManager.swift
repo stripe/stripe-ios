@@ -76,6 +76,10 @@ final class SavedPaymentMethodManager {
     }
 
     func detach(paymentMethod: STPPaymentMethod) {
+        // Never leave the locally persisted default pointing at a deleted payment method
+        if CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customer?.id) == .stripeId(paymentMethod.stripeId) {
+            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: configuration.customer?.id)
+        }
         switch intent {
         case .checkout(let checkout):
             Task {

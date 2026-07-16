@@ -88,7 +88,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         case selectingSaved
         case addingNew
     }
-    private var mode: Mode
+    private(set) var mode: Mode
     private let isApplePayEnabled: Bool
     private let isLinkEnabled: Bool
     private let couldShowLinkInHeader: Bool
@@ -100,8 +100,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }()
 
     // MARK: - Views
-    private let addPaymentMethodViewController: AddPaymentMethodViewController
-    private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
+    let addPaymentMethodViewController: AddPaymentMethodViewController
+    let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
     private lazy var headerLabel: UILabel = {
         return PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
     }()
@@ -457,6 +457,41 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     func clearSelection() {
         savedPaymentOptionsViewController.unselectPaymentMethod()
         updateButton()
+    }
+
+    func revertSelection(to paymentOption: PaymentOption?) {
+        isHackyLinkButtonSelected = false
+        if let confirmParams = paymentOption?.newConfirmParams {
+            // A form-backed selection (.new, .external, an Instant Debits / Link Card Brand `.saved`,
+            // or an inline Link signup): restore the form (including its payment method type) to the
+            // snapshotted input, discarding any edits made while the sheet was presented
+            linkConfirmOption = nil
+            if addPaymentMethodViewController.resetForm(to: confirmParams) {
+                mode = .addingNew
+            }
+        } else if let paymentOption {
+            // Apple Pay, the Link wallet, or a customer-saved payment method: restore its tile.
+            // Restore directly from the snapshot rather than re-deriving from defaults, which could
+            // e.g. select the server-side default instead of the snapshotted selection
+            linkConfirmOption = {
+                if case .link(let option) = paymentOption {
+                    return option
+                }
+                return nil
+            }()
+            mode = .selectingSaved
+            savedPaymentOptionsViewController.select(paymentOption: paymentOption)
+        } else {
+            linkConfirmOption = nil
+            // Discard any in-progress form input; a completed form would otherwise still be
+            // returned as the selection
+            addPaymentMethodViewController.clearForm()
+            mode = savedPaymentOptionsViewController.hasOptionsExcludingAdd ? .selectingSaved : .addingNew
+            clearSelection()
+        }
+        if isViewLoaded {
+            updateUI()
+        }
     }
 
     @objc

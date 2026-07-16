@@ -427,13 +427,34 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         let lastSelection = embeddedPaymentMethodsView.previousSelectedRowButton?.type
         let currentlySelectedType = embeddedPaymentMethodsView.selectedRowButton?.type
 
-        // If the user re-selects a valid payment option w/ form, then modifies it, then hits close, we clear selection
-        // Ideally we would revert back to the valid payment option that existed when the form was presented rather than totally clear selection
-        // To restore to the previous payment option we need to restore the previous form VC that contained the previous payment option
-        // TODO (https://jira.corp.stripe.com/browse/MOBILESDK-3361): Consider restoring the form VC and form cache to revert to the last valid payment option
-        if lastSelection == currentlySelectedType,
-           lastUpdatedPaymentOption != paymentOption {
-            embeddedPaymentMethodsView.resetSelection()
+        // If the user re-selects a valid payment option w/ form, then modifies it, then hits close, restore
+        // the form (and thus the payment option) to its last confirmed state; if there is no confirmed
+        // state to restore, clear the selection.
+        if lastSelection == currentlySelectedType {
+            if case .new(let selectedPaymentMethodType) = currentlySelectedType,
+               // The confirm params conversion covers external/custom payment methods too, restoring
+               // their collected billing details
+               let confirmParams = lastConfirmedFormPaymentOption?.newConfirmParams,
+               confirmParams.paymentMethodType == selectedPaymentMethodType {
+                // Rebuild the form VC from the last confirmed input, discarding any edits. This is
+                // unconditional: comparing display data can't detect confirmation-only edits like
+                // CVC or expiry, which must not survive cancellation either.
+                formCache[confirmParams.paymentMethodType] = nil
+                selectedFormViewController = Self.makeFormViewControllerIfNecessary(
+                    selection: currentlySelectedType,
+                    previousPaymentOption: .new(confirmParams: confirmParams),
+                    configuration: configuration,
+                    intent: intent,
+                    elementsSession: elementsSession,
+                    savedPaymentMethods: savedPaymentMethods,
+                    analyticsHelper: analyticsHelper,
+                    paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+                    formCache: formCache,
+                    delegate: self
+                )
+            } else if lastUpdatedPaymentOption != paymentOption {
+                embeddedPaymentMethodsView.resetSelection()
+            }
         } else {
             // Go back to the previous selection if there was one
             embeddedPaymentMethodsView.resetSelectionToLastSelection()
@@ -452,6 +473,10 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     }
 
     func embeddedFormViewControllerDidContinue(_ embeddedFormViewController: EmbeddedFormViewController) {
+        // Remember the confirmed payment option so we can restore it if the user later edits this
+        // form and cancels. (Reading `selectedPaymentOption` creates a fresh IntentConfirmParams,
+        // so this is unaffected by later edits.)
+        lastConfirmedFormPaymentOption = embeddedFormViewController.selectedPaymentOption
         // Show change button if the selected row needs it
         if let newSelectedType = embeddedPaymentMethodsView.selectedRowButton?.type {
             updateChangeButtonAndSublabelState(for: newSelectedType)

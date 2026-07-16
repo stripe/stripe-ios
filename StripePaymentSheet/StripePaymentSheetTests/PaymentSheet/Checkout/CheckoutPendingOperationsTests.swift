@@ -241,6 +241,62 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         _ = try? await operationTask.value
     }
 
+    func testFCPresentPaymentOptionsWithPendingOperationsRevertsSelectionOnCancel() async throws {
+        await AddressSpecProvider.shared.loadAddressSpecs()
+
+        let checkout = await makeCheckoutWithOpenSession()
+        let gate = CheckoutPendingOperationsTestGate()
+
+        let operationTask = Task { @MainActor in
+            try await checkout.enqueueSessionUpdate {
+                await gate.wait()
+            }
+        }
+        defer { gate.open() }
+
+        try await waitUntil {
+            checkout.pendingOperations.count == 1 && gate.isWaiting
+        }
+
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: .checkout(checkout),
+            elementsSession: checkout.session.elementsSession,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .vertical
+        )
+        let fc = PaymentSheet.FlowController(
+            configuration: PaymentSheet.Configuration(),
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+        fc.checkout = checkout
+
+        // Present while a mutation is pending — the loading spinner shows until it completes
+        let originalViewController = fc.viewController
+        let presentCompleted = expectation(description: "presentPaymentOptions completion called")
+        fc.presentPaymentOptions(from: UIViewController()) { didCancel in
+            XCTAssertTrue(didCancel)
+            presentCompleted.fulfill()
+        }
+
+        // Complete the mutation; the payment options view controller replaces the loading spinner
+        gate.open()
+        _ = try? await operationTask.value
+        try await waitUntil {
+            fc.viewController !== originalViewController
+        }
+
+        // Simulate the user changing their selection to Link, then cancelling the sheet
+        fc.viewController.linkConfirmOption = .wallet(brand: .link)
+        fc.flowControllerViewControllerShouldClose(fc.viewController, didCancel: true)
+
+        await fulfillment(of: [presentCompleted], timeout: 2.0)
+        // The selection abandoned by cancelling should have been reverted
+        XCTAssertNil(fc.paymentOption, "Cancelling should revert a selection made while the sheet was presented")
+    }
+
     // MARK: - Loading & Emission Tests
 
     func testLoadingStatePersistsAcrossConsecutiveQueuedOperations() async throws {

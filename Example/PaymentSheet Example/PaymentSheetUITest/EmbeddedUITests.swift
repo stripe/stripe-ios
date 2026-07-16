@@ -684,15 +684,16 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         cardNumberField.tap()
         app.typeText(XCUIKeyboardKey.delete.rawValue)
         app.buttons["Close"].waitForExistenceAndTap()
-        // ...should de-select the row and clear the payment option
-        XCTAssertFalse(app.staticTexts["Payment method"].waitForExistence(timeout: 1))
-        XCTAssertFalse(app.buttons["New card"].isSelected)
-        XCTAssertFalse(app.buttons["Checkout"].isEnabled)
+        // ...should restore the last confirmed card, discarding the edit
+        XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4444")
+        XCTAssertTrue(app.buttons["New card"].isSelected)
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
-        // Tapping back into card form should preserve previous form details
+        // Tapping back into card form should show the restored card
         app.buttons["New card"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Add new card"].waitForExistence(timeout: 2))
-        XCTAssertEqual(cardNumberField.value as? String, "555555555555444, Your card number is incomplete.")
+        XCTAssertEqual(cardNumberField.value as? String, "5555555555554444")
     }
 
     func testApplePay() {

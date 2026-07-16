@@ -230,25 +230,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             let paymentMethodListViewController = makePaymentMethodListViewController(selection: updatedListSelection)
             self.paymentMethodListViewController = paymentMethodListViewController
 
-            let confirmParams: IntentConfirmParams? = {
-                guard let paymentOption = previousPaymentOption else {
-                    return nil
-                }
-                switch paymentOption {
-                case .saved(_, let confirmParams):
-                    if let confirmParams {
-                        return confirmParams
-                    } else {
-                        return nil
-                    }
-                case .new(let confirmParams):
-                    return confirmParams
-                case .link(let confirmOption):
-                    return confirmOption.signupConfirmParams
-                case .applePay, .external:
-                    return nil
-                }
-            }()
+            let confirmParams = previousPaymentOption?.formRestorationConfirmParams
 
             if let confirmParams,
                 paymentMethodTypes.contains(confirmParams.paymentMethodType),
@@ -711,6 +693,42 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         updatePrimaryButton()
     }
 
+    func revertSelection(to paymentOption: PaymentOption?) {
+        view.endEditing(true)
+        isLinkWalletButtonSelected = false
+        isRecollectingCVC = false
+        cvcRecollectionViewController = nil
+        if case .link(let confirmOption) = paymentOption {
+            linkConfirmOption = confirmOption
+        } else {
+            linkConfirmOption = nil
+        }
+        // Reuse the `previousPaymentOption` restore machinery (also used by FlowController's `update()`)
+        // to rebuild the UI with the reverted selection. `regenerateUI` preserves the form cache, so
+        // in-progress form input survives the revert.
+        if let restoredFormType = paymentOption?.newConfirmParams?.paymentMethodType {
+            // ...except when reverting to a completed form: discard any edits made to that same form
+            // so it's rebuilt from the snapshotted input rather than the (edited) cached form.
+            formCache[restoredFormType] = nil
+        } else if paymentOption == nil, shouldDisplayFormOnly, let onlyType = loadResult.paymentMethodTypes.first {
+            // The form is the only content; discard its input so an abandoned completed entry
+            // isn't still returned as the selection
+            formCache[onlyType] = nil
+        }
+        previousPaymentOption = paymentOption
+        regenerateUI()
+        previousPaymentOption = nil
+        if paymentOption == nil {
+            // Without a previous payment option, calculateInitialSelection falls back to the list's
+            // current selection; explicitly clear it
+            clearSelection()
+        }
+        // Unless the revert redisplayed a form (which sets its own back style), show the close button
+        if let paymentMethodListViewController, children.contains(paymentMethodListViewController) {
+            navigationBar.setStyle(.close(showAdditionalButton: false))
+        }
+    }
+
     @objc func didTapPrimaryButton() {
         // If the form has overridden the primary buy button, hand control over to the form
         guard paymentMethodFormViewController?.overridePrimaryButtonState == nil else {
@@ -944,17 +962,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     }
 
     private func makeFormVC(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodFormViewController {
-        let previousCustomerInput: IntentConfirmParams? = {
-            if case let .new(confirmParams: confirmParams) = previousPaymentOption {
-                return confirmParams
-            } else if case let .saved(_, confirmParams) = previousPaymentOption {
-                return confirmParams
-            } else if case let .link(confirmOption) = previousPaymentOption {
-                return confirmOption.signupConfirmParams
-            } else {
-                return nil
-            }
-        }()
+        let previousCustomerInput = previousPaymentOption?.formRestorationConfirmParams
         let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = {
             if case let .link(confirmOption) = previousPaymentOption {
                 return confirmOption.signupAction
