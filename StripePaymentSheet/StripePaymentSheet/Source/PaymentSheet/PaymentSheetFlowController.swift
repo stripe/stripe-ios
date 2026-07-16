@@ -421,6 +421,7 @@ extension PaymentSheet {
                 ) { result in
                     if case .success(let flowController) = result {
                         flowController.checkout = checkout
+                        flowController.viewController.checkout = checkout
                     }
                     completion(result)
                 }
@@ -820,6 +821,7 @@ extension PaymentSheet {
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
                         walletButtonsViewState: walletButtonsViewState,
+                        checkout: self.checkout,
                         previousPaymentOption: self.internalPaymentOption
                     )
                     self.viewController.flowControllerDelegate = self
@@ -905,6 +907,7 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
+            checkout: Checkout? = nil,
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
@@ -914,6 +917,7 @@ extension PaymentSheet {
                     configuration: configuration,
                     loadResult: loadResult,
                     analyticsHelper: analyticsHelper,
+                    checkout: checkout,
                     previousPaymentOption: previousPaymentOption
                 )
             case .vertical:
@@ -923,6 +927,7 @@ extension PaymentSheet {
                     isFlowController: true,
                     analyticsHelper: analyticsHelper,
                     walletButtonsViewState: walletButtonsViewState,
+                    checkout: checkout,
                     previousPaymentOption: previousPaymentOption
                 )
             }
@@ -1059,6 +1064,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
+    var checkout: Checkout? { get set }
     func clearSelection()
 }
 

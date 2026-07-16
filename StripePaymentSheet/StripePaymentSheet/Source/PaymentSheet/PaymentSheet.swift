@@ -275,6 +275,12 @@ public class PaymentSheet {
         loadResult: PaymentSheetLoader.LoadResult,
         previousPaymentOption: PaymentOption?
     ) -> PaymentSheetViewControllerProtocol {
+        let checkout: Checkout? = {
+            guard case .checkout(let checkout) = mode else {
+                return nil
+            }
+            return checkout
+        }()
         switch loadResult.paymentMethodOrientation {
         case .horizontal:
             let vc = PaymentSheetViewController(
@@ -291,6 +297,7 @@ public class PaymentSheet {
                 loadResult: loadResult,
                 isFlowController: false,
                 analyticsHelper: analyticsHelper,
+                checkout: checkout,
                 previousPaymentOption: previousPaymentOption
             )
             vc.paymentSheetDelegate = self
