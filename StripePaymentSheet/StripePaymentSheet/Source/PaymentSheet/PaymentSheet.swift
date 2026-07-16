@@ -302,6 +302,7 @@ public class PaymentSheet {
 
 extension PaymentSheet: PaymentSheetViewControllerDelegate {
 
+    @MainActor
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
         with paymentOption: PaymentOption,
@@ -373,6 +374,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         }
     }
 
+    @MainActor
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
         let useNativeLink = deviceCanUseNativeLink(elementsSession: paymentSheetViewController.elementsSession, configuration: configuration)
         if useNativeLink {
@@ -412,6 +414,7 @@ internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSh
 }
 
 protocol PaymentSheetViewControllerDelegate: AnyObject {
+    @MainActor
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
         with paymentOption: PaymentOption,
@@ -422,5 +425,6 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
         result: PaymentSheetResult
     )
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
+    @MainActor
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
 }

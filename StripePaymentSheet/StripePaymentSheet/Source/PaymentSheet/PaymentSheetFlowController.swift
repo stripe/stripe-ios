@@ -271,6 +271,7 @@ extension PaymentSheet {
         private var didDismissLinkVerificationDialog: Bool = false
 
         // If a WalletButtonsView is currently visible
+        @MainActor
         var walletButtonsViewState: WalletButtonsViewState = .hidden {
             didSet {
                 // Update payment method options
@@ -329,6 +330,7 @@ extension PaymentSheet {
 
         // MARK: - Initializer (Internal)
 
+        @MainActor
         required init(
             configuration: Configuration,
             loadResult: PaymentSheetLoader.LoadResult,
@@ -371,10 +373,12 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            create(mode: .paymentIntentClientSecret(paymentIntentClientSecret),
-                   configuration: configuration,
-                   completion: completion
-            )
+            Task { @MainActor in
+                create(mode: .paymentIntentClientSecret(paymentIntentClientSecret),
+                       configuration: configuration,
+                       completion: completion
+                )
+            }
         }
 
         /// An asynchronous failable initializer for PaymentSheet.FlowController
@@ -388,10 +392,12 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            create(mode: .setupIntentClientSecret(setupIntentClientSecret),
-                   configuration: configuration,
-                   completion: completion
-            )
+            Task { @MainActor in
+                create(mode: .setupIntentClientSecret(setupIntentClientSecret),
+                       configuration: configuration,
+                       completion: completion
+                )
+            }
         }
 
         /// An asynchronous failable initializer for PaymentSheet.FlowController
@@ -405,10 +411,12 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            create(mode: .deferredIntent(intentConfiguration),
-                   configuration: configuration,
-                   completion: completion
-            )
+            Task { @MainActor in
+                create(mode: .deferredIntent(intentConfiguration),
+                       configuration: configuration,
+                       completion: completion
+                )
+            }
         }
 
         /// An asynchronous failable initializer for PaymentSheet.FlowController
@@ -418,7 +426,6 @@ extension PaymentSheet {
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
         @_spi(STP)
         @_spi(ReactNativeSDK)
-        @MainActor
         public static func create(
             checkout: Checkout,
             configuration: PaymentSheet.Configuration,
@@ -450,6 +457,7 @@ extension PaymentSheet {
         /// - Parameter mode: The mode used to initialize PaymentSheet
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
+        @MainActor
         static func create(
             mode: InitializationMode,
             configuration: PaymentSheet.Configuration,
@@ -521,9 +529,11 @@ extension PaymentSheet {
 
             // Overwrite completion closure to retain self until called
             let wrappedCompletion: (Bool) -> Void = { didCancel in
-                self.updatePaymentOption()
-                completion?(didCancel)
-                self.presentPaymentOptionsCompletionWithResult = nil
+                Task { @MainActor in
+                    self.updatePaymentOption()
+                    completion?(didCancel)
+                    self.presentPaymentOptionsCompletionWithResult = nil
+                }
             }
             presentPaymentOptionsCompletionWithResult = wrappedCompletion
 
@@ -629,7 +639,9 @@ extension PaymentSheet {
 
                 if let confirmOption {
                     self.viewController.linkConfirmOption = confirmOption
-                    self.updatePaymentOption()
+                    Task { @MainActor in
+                        self.updatePaymentOption()
+                    }
                 }
 
                 if shouldReturnToPaymentSheet {
@@ -639,7 +651,9 @@ extension PaymentSheet {
                         // of the Link flow. We clear the selection to avoid having Link stay selected.
                         self.viewController.clearSelection()
                     }
-                    self.updatePaymentOption()
+                    Task { @MainActor in
+                        self.updatePaymentOption()
+                    }
                     returnToPaymentSheet()
                     return
                 }
@@ -714,28 +728,30 @@ extension PaymentSheet {
 
             func confirm() {
                 let confirmBlock = { [self] in
-                    PaymentSheet.confirm(
-                        configuration: self.configuration,
-                        authenticationContext: authenticationContext,
-                        intent: self.intent,
-                        elementsSession: self.elementsSession,
-                        paymentOption: paymentOption,
-                        paymentHandler: self.paymentHandler,
-                        integrationShape: .flowController,
-                        confirmationChallenge: self.confirmationChallenge,
-                        analyticsHelper: self.analyticsHelper
-                    ) { result, deferredIntentConfirmationType in
-                        self.analyticsHelper.logPayment(
+                    Task { @MainActor in
+                        PaymentSheet.confirm(
+                            configuration: self.configuration,
+                            authenticationContext: authenticationContext,
+                            intent: self.intent,
+                            elementsSession: self.elementsSession,
                             paymentOption: paymentOption,
-                            result: result,
-                            deferredIntentConfirmationType: deferredIntentConfirmationType
-                        )
-                        if case .completed = result, case .link = paymentOption {
-                            // Remember Link as default payment method for users who just created an account.
-                            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: self.configuration.customer?.id)
-                        }
+                            paymentHandler: self.paymentHandler,
+                            integrationShape: .flowController,
+                            confirmationChallenge: self.confirmationChallenge,
+                            analyticsHelper: self.analyticsHelper
+                        ) { result, deferredIntentConfirmationType in
+                            self.analyticsHelper.logPayment(
+                                paymentOption: paymentOption,
+                                result: result,
+                                deferredIntentConfirmationType: deferredIntentConfirmationType
+                            )
+                            if case .completed = result, case .link = paymentOption {
+                                // Remember Link as default payment method for users who just created an account.
+                                CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: self.configuration.customer?.id)
+                            }
 
-                        completion(result)
+                            completion(result)
+                        }
                     }
                 }
 
@@ -836,15 +852,17 @@ extension PaymentSheet {
                         configuration: self.configuration,
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
-                        walletButtonsViewState: walletButtonsViewState,
+                        walletButtonsViewState: MainActor.assumeIsolated { self.walletButtonsViewState },
                         previousPaymentOption: self.internalPaymentOption
                     )
                     self.viewController.flowControllerDelegate = self
                     self.confirmationChallenge = confirmationChallenge
 
                     // Update the payment option and synchronously pre-load image into cache
-                    self.updatePaymentOption()
-                    self.preloadPaymentOptionImage()
+                    Task { @MainActor in
+                        self.updatePaymentOption()
+                        self.preloadPaymentOptionImage()
+                    }
 
                     self.latestUpdateContext?.status = .completed
                     completion(nil)
@@ -855,6 +873,7 @@ extension PaymentSheet {
             }
         }
 
+        @MainActor
         func updateForWalletButtonsView() {
             // Recreate the view controller
             // Use the original load result, but w/ updated saved PMs to avoid e.g. deleting PMs, then having this method be called and showing the deleted PMs again.
@@ -878,6 +897,7 @@ extension PaymentSheet {
         }
 
         /// Updates the published paymentOption property based on the current state
+        @MainActor
         func updatePaymentOption() {
             if let selectedPaymentOption = internalPaymentOption {
                 paymentOption = PaymentOptionDisplayData(

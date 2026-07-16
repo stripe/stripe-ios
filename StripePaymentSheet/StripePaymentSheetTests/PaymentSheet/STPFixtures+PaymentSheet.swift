@@ -215,6 +215,7 @@ extension STPElementsSession {
         return elementsSession
     }
 
+    @MainActor
     static func _testValue(
         intent: Intent,
         isLinkPassthroughModeEnabled: Bool? = nil,
@@ -440,6 +441,7 @@ extension PaymentSheet.Appearance {
 }
 
 extension PaymentSheetLoader.LoadResult {
+    @MainActor
     static func _testValue(paymentMethodTypes: [String], savedPaymentMethods: [STPPaymentMethod]) -> Self {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(
@@ -512,6 +514,7 @@ extension PaymentMethodMessagingPromotionsHelper {
 }
 
 extension PaymentSheetAnalyticsHelper {
+    @MainActor
     static func _testValue(
         integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape = .complete,
         configuration: PaymentSheet.Configuration = .init(),

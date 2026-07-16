@@ -18,6 +18,7 @@ protocol PayWithLinkWalletViewModelDelegate: AnyObject {
 
 extension PayWithLinkViewController {
 
+    @MainActor
     final class WalletViewModel {
         let context: Context
         let linkAccount: PaymentSheetLinkAccount

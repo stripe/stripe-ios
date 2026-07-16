@@ -140,6 +140,7 @@ extension PaymentSheet {
         /// - Parameters:
         ///   - intent: An `intent` to extract `PaymentMethodType`s from.
         ///   - configuration: A `PaymentSheet` configuration.
+        @MainActor
         static func filteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
             func logIfNecessary(_ message: String) {
@@ -284,6 +285,7 @@ extension PaymentSheet {
         ///   - intent: a intent object
         ///   - supportedPaymentMethods: the payment methods that PaymentSheet can display UI for
         /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
+        @MainActor
         static func supportsAdding(
             paymentMethod: STPPaymentMethodType,
             configuration: PaymentElementConfiguration,
@@ -362,6 +364,7 @@ extension PaymentSheet {
         /// - US Bank Account is *not* an available payment method.
         /// - Link Funding Sources contains Bank Account.
         /// - We collect an email, or a default non-empty email has been provided.
+        @MainActor
         static func supportsInstantBankPayments(
             configuration: PaymentElementConfiguration,
             intent: Intent,
@@ -406,6 +409,7 @@ extension PaymentSheet {
         /// - Link Funding Sources contains Bank Account.
         /// - US Bank Account is *not* an available payment method.
         /// - We collect an email, or a default non-empty email has been provided.
+        @MainActor
         static func supportsLinkCardIntegration(
             configuration: PaymentElementConfiguration,
             intent: Intent,
@@ -470,6 +474,7 @@ extension PaymentSheet {
         ///   - configuration: a configuration to satisfy requirements
         ///   - intent: an intent object
         /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
+        @MainActor
         static func configurationSatisfiesRequirements(
             requirements: [PaymentMethodTypeRequirement],
             configuration: PaymentElementConfiguration,
@@ -498,6 +503,7 @@ extension PaymentSheet {
         ///   - intent: an intent object
         ///   - supportedPaymentMethods: a list of supported payment method types
         /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method is supported
+        @MainActor
         static func configurationSupports(
             paymentMethod: STPPaymentMethodType,
             requirements: [PaymentMethodTypeRequirement],
@@ -542,6 +548,7 @@ extension STPPaymentMethod {
     /// Returns whether or not saved PaymentMethods of this type should be displayed as an option to customers
     /// This should only return true if saved PMs of this type can be successfully used to `/confirm` the given `intent`
     /// - Warning: This doesn't quite work as advertised. We've hardcoded `PaymentSheet+API.swift` to only fetch saved cards and us bank accounts.
+    @MainActor
     func supportsSavedPaymentMethod(configuration: PaymentElementConfiguration, intent: Intent, elementsSession: STPElementsSession) -> Bool {
         let requirements: [PaymentMethodTypeRequirement] = {
             switch type {

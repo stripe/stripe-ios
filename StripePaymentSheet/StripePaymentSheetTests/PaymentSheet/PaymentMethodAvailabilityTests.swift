@@ -11,6 +11,7 @@
 @testable @_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
+@MainActor
 final class PaymentMethodAvailabilityTests: XCTestCase {
     func testResolvedLinkBrand_usesElementsSessionBrand() {
         let elementsSession = STPElementsSession._testValue(

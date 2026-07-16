@@ -9,6 +9,7 @@
 @_spi(STP) import StripePayments
 
 extension STPClientAttributionMetadata {
+    @MainActor
     static func makeClientAttributionMetadataIfNecessary(analyticsHelper: PaymentSheetAnalyticsHelper, intent: Intent, elementsSession: STPElementsSession) -> STPClientAttributionMetadata? {
         if analyticsHelper.integrationShape.isMPE {
             return makeClientAttributionMetadata(intent: intent, elementsSession: elementsSession)
@@ -16,6 +17,7 @@ extension STPClientAttributionMetadata {
         return nil
     }
 
+    @MainActor
     static func makeClientAttributionMetadata(intent: Intent, elementsSession: STPElementsSession) -> STPClientAttributionMetadata {
         let elementsSessionConfigId = elementsSession.configID
         switch intent {

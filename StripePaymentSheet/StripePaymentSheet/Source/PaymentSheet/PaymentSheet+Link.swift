@@ -35,6 +35,7 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
 }
 
 extension PaymentSheet {
+    @MainActor
     func presentPayWithLinkController(
         from presentingController: UIViewController,
         intent: Intent,
@@ -60,6 +61,7 @@ extension PaymentSheet {
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
 
+    @MainActor
     func presentPayWithNativeLinkController(
         from presentingController: UIViewController,
         intent: Intent,

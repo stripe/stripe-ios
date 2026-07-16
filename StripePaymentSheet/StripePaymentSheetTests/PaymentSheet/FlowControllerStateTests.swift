@@ -14,6 +14,7 @@ import OHHTTPStubsSwift
 import StripeCoreTestUtils
 import XCTest
 
+@MainActor
 class FlowControllerStateTests: XCTestCase {
 
     func testAddPaymentMethodViewControllerDelegate() {

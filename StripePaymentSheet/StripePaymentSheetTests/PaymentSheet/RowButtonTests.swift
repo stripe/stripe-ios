@@ -8,6 +8,7 @@ import XCTest
 
 @_spi(STP) @testable import StripePaymentSheet
 
+@MainActor
 final class RowButtonTests: XCTestCase {
     func testRowButtonForPaymentMethodType_usesPaymentMethodMessagingSublabelWhenInTreatment() {
         let promotionsHelper = PaymentMethodMessagingPromotionsHelper._testValueInTreatment()

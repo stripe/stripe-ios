@@ -222,6 +222,7 @@ struct WalletButtonsView_Previews: PreviewProvider {
 }
 
 fileprivate extension PaymentSheet.FlowController {
+    @MainActor
     static func _mockFlowController() -> PaymentSheet.FlowController {
         let psConfig = PaymentSheet.Configuration()
         let elementsSession = STPElementsSession(allResponseFields: [:], sessionID: "", configID: "", orderedPaymentMethodTypes: [], orderedPaymentMethodTypesAndWallets: ["card", "link", "apple_pay"], unactivatedPaymentMethodTypes: [], countryCode: nil, merchantCountryCode: nil, merchantLogoUrl: nil, linkSettings: nil, experimentsData: nil, flags: [:], paymentMethodSpecs: nil, cardBrandChoice: nil, isApplePayEnabled: true, externalPaymentMethods: [], customPaymentMethods: [], passiveCaptchaData: nil, customer: nil)

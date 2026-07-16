@@ -7,6 +7,7 @@
 @testable import StripePaymentSheet
 import XCTest
 
+@MainActor
 class SavedPaymentOptionsViewControllerTests: XCTestCase {
 
     lazy var paymentSheetConfiguration: PaymentSheet.Configuration = {

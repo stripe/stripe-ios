@@ -12,6 +12,7 @@
 @_spi(STP) import StripeUICore
 import XCTest
 
+@MainActor
 final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() async throws {

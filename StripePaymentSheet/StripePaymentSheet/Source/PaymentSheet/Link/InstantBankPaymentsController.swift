@@ -574,7 +574,7 @@ import UIKit
     ///
     /// You must call this method when the user logs out from your app.
     /// This will ensure that any persisted authentication state, such as authentication cookies, is also cleared during logout.
-    @_spi(LinkOnly) public static func resetCustomer() {
+    @_spi(LinkOnly) @MainActor public static func resetCustomer() {
         PaymentSheet.resetCustomer()
     }
 

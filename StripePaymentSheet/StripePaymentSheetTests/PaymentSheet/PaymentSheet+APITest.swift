@@ -15,9 +15,10 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 
+@MainActor
 class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
-    var apiClient: STPAPIClient!
+    nonisolated(unsafe) var apiClient: STPAPIClient!
 
     override func setUp() {
         super.setUp()

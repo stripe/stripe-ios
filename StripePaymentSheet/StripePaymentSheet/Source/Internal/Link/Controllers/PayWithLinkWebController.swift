@@ -32,6 +32,7 @@ protocol PayWithLinkWebControllerDelegate: AnyObject {
 /// For internal SDK use only
 
 @objc(STP_Internal_PayWithLinkWebController)
+@MainActor
 final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationContextProviding, STPAuthenticationContext {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return bestWindowForPresentation
@@ -58,6 +59,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     }
     var presentationVC: UIViewController?
 
+    @MainActor
     final class Context {
         let intent: Intent
         let elementsSession: STPElementsSession
