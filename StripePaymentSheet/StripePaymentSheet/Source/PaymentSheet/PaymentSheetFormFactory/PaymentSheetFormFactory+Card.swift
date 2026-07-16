@@ -126,7 +126,6 @@ extension PaymentSheetFormFactory {
         }.first
 
         connectBillingDetailsFields(
-            countryElement: nil,
             addressElement: billingAddressSection,
             phoneElement: phoneElement)
 
