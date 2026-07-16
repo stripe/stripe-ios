@@ -455,9 +455,6 @@ is not supported by the merchant */
 /* Title of the sign-out action. The placeholder is a Stripe brand name and should not be translated. */
 "Sign out of %@" = "Sign out of %@";
 
-/* Title of the sign-out action. */
-"Sign out of Link" = "Sign out of Link";
-
 /* Subtitle shown on a button allowing a user to select to pay with Link. */
 "Simple, secure one-click payments" = "Simple, secure one-click payments";
 
