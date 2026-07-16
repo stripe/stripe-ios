@@ -68,7 +68,13 @@ extension PaymentSheet {
         shouldFinishOnClose: Bool,
         onClose: (() -> Void)? = nil
     ) {
-        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
+        let checkout: Checkout? = {
+            guard case .checkout(let checkout) = mode else {
+                return nil
+            }
+            return checkout
+        }()
+        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, checkout: checkout, confirmationChallenge: confirmationChallenge)
 
         payWithNativeLink.presentAsBottomSheet(from: presentingController, shouldOfferApplePay: shouldOfferApplePay, shouldFinishOnClose: shouldFinishOnClose, completion: { result, _, didFinish in
             if case let .failed(error) = result {

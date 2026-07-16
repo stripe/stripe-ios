@@ -298,7 +298,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            checkout: checkout
         ) { [weak self] confirmOption, _ in
             guard let self else { return }
             self.linkConfirmOption = confirmOption

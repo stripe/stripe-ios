@@ -25,6 +25,7 @@ extension UIViewController {
         intent: Intent,
         elementsSession: STPElementsSession,
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        checkout: Checkout? = nil,
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
@@ -40,7 +41,8 @@ extension UIViewController {
             analyticsHelper: analyticsHelper,
             supportedPaymentMethodTypes: supportedPaymentMethodTypes,
             linkAppearance: linkAppearance,
-            linkConfiguration: linkConfiguration
+            linkConfiguration: linkConfiguration,
+            checkout: checkout
         )
 
         payWithLinkController.presentForPaymentMethodSelection(

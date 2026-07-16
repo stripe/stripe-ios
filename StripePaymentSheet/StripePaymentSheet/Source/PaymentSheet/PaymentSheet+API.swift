@@ -42,6 +42,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         integrationShape: IntegrationShape = .complete,
         paymentMethodID: String? = nil,
+        checkout: Checkout? = nil,
         confirmationChallenge: ConfirmationChallenge? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
@@ -61,7 +62,7 @@ extension PaymentSheet {
                                                 confirmAction: {
                 // If confirmed, dismiss the MandateView and complete the transaction:
                 authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
-                confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, confirmationChallenge: confirmationChallenge, analyticsHelper: analyticsHelper, completion: completion)
+                confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, checkout: checkout, confirmationChallenge: confirmationChallenge, analyticsHelper: analyticsHelper, completion: completion)
             }, cancelAction: {
                 // Dismiss the MandateView and return to PaymentSheet
                 authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
@@ -90,7 +91,7 @@ extension PaymentSheet {
                 configuration: configuration,
                 onCompletion: { vc, intentConfirmParams in
                     vc.dismiss(animated: true)
-                    confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: intentConfirmParams, paymentHandler: paymentHandler, confirmationChallenge: confirmationChallenge, analyticsHelper: analyticsHelper, completion: completion)
+                    confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: intentConfirmParams, paymentHandler: paymentHandler, checkout: checkout, confirmationChallenge: confirmationChallenge, analyticsHelper: analyticsHelper, completion: completion)
                 },
                 onCancel: { vc in
                     vc.dismiss(animated: true)
@@ -109,7 +110,7 @@ extension PaymentSheet {
             presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
         } else {
             // MARK: - No local actions
-            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, confirmationChallenge: confirmationChallenge, analyticsHelper: analyticsHelper, completion: completion)
+            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, checkout: checkout, confirmationChallenge: confirmationChallenge, analyticsHelper: analyticsHelper, completion: completion)
         }
     }
 
@@ -123,7 +124,8 @@ extension PaymentSheet {
         integrationShape: IntegrationShape = .complete,
         confirmationChallenge: ConfirmationChallenge? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        paymentMethodID: String? = nil
+        paymentMethodID: String? = nil,
+        checkout: Checkout? = nil
     ) async -> (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) {
         await withCheckedContinuation { continuation in
             Task { @MainActor in
@@ -136,6 +138,7 @@ extension PaymentSheet {
                     paymentHandler: paymentHandler,
                     integrationShape: integrationShape,
                     paymentMethodID: paymentMethodID,
+                    checkout: checkout,
                     confirmationChallenge: confirmationChallenge,
                     analyticsHelper: analyticsHelper
                 ) { result, deferredType in
@@ -155,6 +158,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool = false,
         paymentMethodID: String? = nil,
+        checkout: Checkout? = nil,
         confirmationChallenge: ConfirmationChallenge?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
@@ -165,6 +169,11 @@ extension PaymentSheet {
         }
 
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(intent: intent, elementsSession: elementsSession)
+        let missingCheckoutControllerResult: () -> PaymentSheetResult = {
+            let message = "Missing Checkout controller for CheckoutSession confirmation."
+            stpAssertionFailure(message)
+            return .failed(error: PaymentSheetError.unknown(debugDescription: message))
+        }
 
         let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
             intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
@@ -285,8 +294,14 @@ extension PaymentSheet {
                         completion(result.result, result.deferredIntentConfirmationType)
                     }
                     // MARK: ↪ Checkout
-                case .checkout(let checkout):
+                case .checkout:
                     Task { @MainActor in
+                        guard let checkout else {
+                            let result = missingCheckoutControllerResult()
+                            await confirmationChallenge?.complete()
+                            completion(result, nil)
+                            return
+                        }
                         let result = await handleCheckoutSessionConfirmation(
                             checkout: checkout,
                             confirmType: .new(
@@ -360,8 +375,12 @@ extension PaymentSheet {
                     completion(result.result, result.deferredIntentConfirmationType)
                 }
                 // MARK: ↪ Checkout
-            case .checkout(let checkout):
+            case .checkout:
                 Task { @MainActor in
+                    guard let checkout else {
+                        completion(missingCheckoutControllerResult(), nil)
+                        return
+                    }
                     let paymentOptions = intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions != nil
                     // Flow controller and embedded collects CVC using interstitial:
                     ? intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions
@@ -452,7 +471,13 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
-                    case .checkout(let checkout):
+                    case .checkout:
+                        guard let checkout else {
+                            let result = missingCheckoutControllerResult()
+                            await confirmationChallenge?.complete()
+                            completion(result, nil)
+                            return
+                        }
                         let result = await handleCheckoutSessionConfirmation(
                             checkout: checkout,
                             confirmType: .new(
@@ -544,7 +569,13 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
-                    case .checkout(let checkout):
+                    case .checkout:
+                        guard let checkout else {
+                            let result = missingCheckoutControllerResult()
+                            await confirmationChallenge?.complete()
+                            completion(result, nil)
+                            return
+                        }
                         let result = await handleCheckoutSessionConfirmation(
                             checkout: checkout,
                             confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
@@ -645,12 +676,12 @@ extension PaymentSheet {
                 let useNativeLink = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
                 if useNativeLink {
                     // logPayment is false because callers of PaymentSheet.confirm() are responsible for logging the payment result.
-                    let linkController = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, logPayment: false, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
+                    let linkController = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, logPayment: false, analyticsHelper: analyticsHelper, checkout: checkout, confirmationChallenge: confirmationChallenge)
                     linkController.presentAsBottomSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
                         completion(result, confirmationType)
                     })
                 } else {
-                    let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
+                    let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, checkout: checkout, confirmationChallenge: confirmationChallenge)
                     linkController.present(from: authenticationContext.authenticationPresentingViewController(),
                                            completion: completion)
                 }

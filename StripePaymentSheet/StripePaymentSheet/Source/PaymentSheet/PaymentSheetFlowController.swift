@@ -638,6 +638,7 @@ extension PaymentSheet {
                 intent: intent,
                 elementsSession: elementsSession,
                 analyticsHelper: analyticsHelper,
+                checkout: checkout,
                 callback: completionCallback
             )
         }
@@ -706,6 +707,7 @@ extension PaymentSheet {
                         paymentOption: paymentOption,
                         paymentHandler: self.paymentHandler,
                         integrationShape: .flowController,
+                        checkout: self.checkout,
                         confirmationChallenge: self.confirmationChallenge,
                         analyticsHelper: self.analyticsHelper
                     ) { result, deferredIntentConfirmationType in

@@ -324,6 +324,12 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 paymentOption: paymentOption,
                 paymentHandler: self.paymentHandler,
                 integrationShape: .complete,
+                checkout: {
+                    guard case .checkout(let checkout) = self.mode else {
+                        return nil
+                    }
+                    return checkout
+                }(),
                 confirmationChallenge: self.confirmationChallenge,
                 analyticsHelper: self.analyticsHelper
             ) { result, deferredIntentConfirmationType in

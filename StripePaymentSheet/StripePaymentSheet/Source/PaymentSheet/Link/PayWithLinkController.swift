@@ -27,13 +27,15 @@ final class PayWithLinkController {
     let configuration: PaymentElementConfiguration
     let analyticsHelper: PaymentSheetAnalyticsHelper
     private let confirmationChallenge: ConfirmationChallenge?
+    private weak var checkout: Checkout?
 
-    init(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper, confirmationChallenge: ConfirmationChallenge?) {
+    init(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper, checkout: Checkout? = nil, confirmationChallenge: ConfirmationChallenge?) {
         self.intent = intent
         self.elementsSession = elementsSession
         self.configuration = configuration
         self.paymentHandler = .init(apiClient: configuration.apiClient)
         self.analyticsHelper = analyticsHelper
+        self.checkout = checkout
         self.confirmationChallenge = confirmationChallenge
     }
 
@@ -74,6 +76,7 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
             integrationShape: .complete,
+            checkout: checkout,
             confirmationChallenge: confirmationChallenge,
             analyticsHelper: analyticsHelper
         ) { result, deferredIntentConfirmationType in

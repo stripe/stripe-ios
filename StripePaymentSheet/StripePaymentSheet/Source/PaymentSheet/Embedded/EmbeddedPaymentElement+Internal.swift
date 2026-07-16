@@ -554,7 +554,8 @@ extension EmbeddedPaymentElement {
                 paymentHandler: self.paymentHandler,
                 integrationShape: .embedded,
                 confirmationChallenge: self.confirmationChallenge,
-                analyticsHelper: self.analyticsHelper
+                analyticsHelper: self.analyticsHelper,
+                checkout: self.checkout
             )
         }
 
