@@ -356,7 +356,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         )
 
         let billingAddressSection = factory.makeBillingAddressSection(
-            collectionMode: .autoCompletable,
+            collectionMode: .autocomplete(),
             countries: nil,
             includeEmail: true,
             includePhone: true
@@ -386,7 +386,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         )
 
         let billingAddressSection = factory.makeBillingAddressSection(
-            collectionMode: .autoCompletable,
+            collectionMode: .autocomplete(),
             countries: nil,
             includeEmail: false,
             includePhone: false
