@@ -999,6 +999,7 @@ extension PaymentSheetFormFactory {
             return makeBillingAddressSection(collectionMode: .autocomplete(), countries: countries)
         case .automatic:
             guard collectsTaxFromBillingAddress else { return nil }
+            // When collecting billing used for tax, start in countryOnly mode, countryFieldsOverrides determines the correct final mode.
             return makeBillingAddressSection(collectionMode: .countryOnly, countryFieldsOverrides: CountryTaxRequirement.fieldsToCollectByCountry, countries: countries)
         case .never:
             stpAssert(!isCheckoutSession, "CheckoutSession does not support billingDetailsCollectionConfiguration.address = .never")
