@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "Paskutiniai 4 SSN skaitmenys";
 
-"Log in or sign up" = "Prisijungti arba prisiregistruoti";
-
-"Log out of %@" = "Atsijungti nuo %@?";
-
 "Manage SEPA debit" = "Tvarkyti SEPA debetą";
 
 "Manage US bank account" = "Tvarkyti JAV banko sąskaitą";
@@ -295,6 +291,12 @@
 "Show details" = "Rodyti išsamią informaciją";
 
 "Show menu" = "Rodyti meniu";
+
+"Sign in or sign up" = "Prisijungti arba prisiregistruoti";
+
+"Sign out of %@" = "Atsijungti nuo %@";
+
+"Sign out of Link" = "Atsijungti nuo „Link”";
 
 "Simple, secure one-click payments" = "Paprasti ir saugūs mokėjimai vienu spustelėjimu";
 

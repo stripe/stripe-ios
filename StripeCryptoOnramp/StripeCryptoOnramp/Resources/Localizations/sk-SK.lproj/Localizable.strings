@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Platnosť tejto požiadavky na overenie peňaženky vypršala. Skúste to znova.";
 
+"This wallet verification request is invalid. Please try again." = "Táto požiadavka na overenie peňaženky je neplatná. Skúste to znova.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Vlastníctvo tejto peňaženky sa nám nepodarilo overiť. Skúste to znova.";

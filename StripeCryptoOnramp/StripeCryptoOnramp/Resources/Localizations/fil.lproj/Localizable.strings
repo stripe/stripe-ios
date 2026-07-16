@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Nag-expire na ang kahilingan sa pag-verify ng wallet na ito. Mangyaring subukang muli.";
 
+"This wallet verification request is invalid. Please try again." = "Hindi valid ang kahilingan sa pag-verify ng wallet na ito. Mangyaring subukang muli.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Hindi namin ma-verify ang pagmamay-ari ng wallet na ito. Mangyaring subukang muli.";

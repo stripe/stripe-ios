@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "Last 4 digits of SSN";
 
-"Log in or sign up" = "Log in or sign up";
-
-"Log out of %@" = "Log out of %@";
-
 "Manage SEPA debit" = "Manage SEPA debit";
 
 "Manage US bank account" = "Manage US bank account";
@@ -295,6 +291,12 @@
 "Show details" = "Show details";
 
 "Show menu" = "Show menu";
+
+"Sign in or sign up" = "Sign in or sign up";
+
+"Sign out of %@" = "Sign out of %@";
+
+"Sign out of Link" = "Sign out of Link";
 
 "Simple, secure one-click payments" = "Simple, secure one-click payments";
 

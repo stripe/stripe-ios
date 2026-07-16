@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "Sista 4 siffrorna i SSN";
 
-"Log in or sign up" = "Logga in eller registrera dig";
-
-"Log out of %@" = "Logga ut från %@";
-
 "Manage SEPA debit" = "Hantera SEPA-debitering";
 
 "Manage US bank account" = "Hantera amerikanskt bankkonto";
@@ -295,6 +291,12 @@
 "Show details" = "Visa information";
 
 "Show menu" = "Visa meny";
+
+"Sign in or sign up" = "Logga in eller registrera dig";
+
+"Sign out of %@" = "Logga ut från %@";
+
+"Sign out of Link" = "Logga ut från Link";
 
 "Simple, secure one-click payments" = "Enkla och säkra betalningar med ett klick";
 

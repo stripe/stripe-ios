@@ -112,10 +112,6 @@
 
 "IBAN" = "IBAN";
 
-"Log in or sign up" = "登入或註冊";
-
-"Log out of %@" = "登出 %@";
-
 "Manage SEPA debit" = "管理 SEPA 借記";
 
 "Manage US bank account" = "管理美國銀行帳戶";
@@ -233,6 +229,12 @@
 "Show details" = "顯示詳細資料";
 
 "Show menu" = "顯示選單";
+
+"Sign in or sign up" = "登入或註冊";
+
+"Sign out of %@" = "登出 %@";
+
+"Sign out of Link" = "登出 Link";
 
 "Simple, secure one-click payments" = "簡單、安全地一鍵支付";
 

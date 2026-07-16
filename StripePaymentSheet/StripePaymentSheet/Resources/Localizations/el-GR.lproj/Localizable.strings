@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "4 τελευταία ψηφία SSN";
 
-"Log in or sign up" = "Σύνδεση ή εγγραφή";
-
-"Log out of %@" = "Αποσύνδεση από %@";
-
 "Manage SEPA debit" = "Διαχείριση χρέωσης SEPA";
 
 "Manage US bank account" = "Διαχείριση τραπεζικού λογαριασμού στις Ηνωμένες Πολιτείες";
@@ -295,6 +291,12 @@
 "Show details" = "Εμφάνιση λεπτομερειών";
 
 "Show menu" = "Εμφάνιση μενού";
+
+"Sign in or sign up" = "Σύνδεση ή εγγραφή";
+
+"Sign out of %@" = "Αποσύνδεση από %@";
+
+"Sign out of Link" = "Αποσύνδεση από το Link";
 
 "Simple, secure one-click payments" = "Απλές και ασφαλείς πληρωμές με ένα κλικ";
 

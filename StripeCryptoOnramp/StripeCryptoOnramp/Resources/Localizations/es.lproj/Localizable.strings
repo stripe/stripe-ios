@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Esta petición de verificación del monedero ha caducado. Inténtalo de nuevo.";
 
+"This wallet verification request is invalid. Please try again." = "Esta petición de verificación del monedero no es válida. Vuelve a intentarlo.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "No hemos podido verificar la titularidad de este monedero. Inténtalo de nuevo.";

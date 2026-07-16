@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "Huling 4 na digit ng SSN";
 
-"Log in or sign up" = "Mag-log in o mag-sign up";
-
-"Log out of %@" = "Mag-log out sa %@";
-
 "Manage SEPA debit" = "Pangasiwaan ang SEPA debit";
 
 "Manage US bank account" = "Pangasiwaan ang account sa bangko sa US";
@@ -295,6 +291,12 @@
 "Show details" = "Ipakita ang mga detalye";
 
 "Show menu" = "Ipakita ang menu";
+
+"Sign in or sign up" = "Mag-sign in o mag-sign up";
+
+"Sign out of %@" = "Mag-sign out sa %@";
+
+"Sign out of Link" = "Mag-sign out sa Link";
 
 "Simple, secure one-click payments" = "Simple, ligtas na isang-click na mga pagbabayad";
 

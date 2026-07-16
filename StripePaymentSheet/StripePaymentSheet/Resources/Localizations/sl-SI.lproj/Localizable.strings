@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "Zadnje 4 števke SSN";
 
-"Log in or sign up" = "Vpis ali prijava";
-
-"Log out of %@" = "Odjavite se od ponudnika %@";
-
 "Manage SEPA debit" = "Upravljanje obremenitve SEPA";
 
 "Manage US bank account" = "Upravljanje bančnega računa v ZDA";
@@ -295,6 +291,12 @@
 "Show details" = "Prikaži podrobnosti";
 
 "Show menu" = "Pokaži meni";
+
+"Sign in or sign up" = "Vpišite se ali se prijavite";
+
+"Sign out of %@" = "Odjavite se iz %@";
+
+"Sign out of Link" = "Odjavite se iz Link";
 
 "Simple, secure one-click payments" = "Enostavna in varna plačila z enim klikom";
 

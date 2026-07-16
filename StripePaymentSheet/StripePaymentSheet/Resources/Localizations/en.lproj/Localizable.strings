@@ -246,25 +246,6 @@ with the transaction. */
 /* Label for displaying the last 4 digits of the user's social security number */
 "Last 4 digits of SSN" = "Last 4 digits of SSN";
 
-/* Title for a button that indicates a user can log in or sign up. */
-"Log in or sign up" = "Log in or sign up";
-
-/* Title of the logout action. The placeholder is a Stripe brand name and should not be translated. */
-"Log out of %@" = "Log out of %@";
-
-/* Title of the logout action. */
-"Log out of Link" = "Log out of Link";
-
-/* Title of the sign-out action. The placeholder is a Stripe brand name and should not be translated. */
-"Sign out of %@" = "Sign out of %@";
-
-/* Title of the sign-out action. */
-"Sign out of Link" = "Sign out of Link";
-
-/* Title for a button that indicates a user can sign in or sign up. */
-"Sign in or sign up" = "Sign in or sign up";
-
-
 /* Title shown above a view containing the customer's bank account that they can delete */
 "Manage bank account" = "Manage bank account";
 
@@ -467,6 +448,15 @@ is not supported by the merchant */
 
 /* Accessibility label for an action or a button that shows a menu. */
 "Show menu" = "Show menu";
+
+/* Title for a button that indicates a user can sign in or sign up. */
+"Sign in or sign up" = "Sign in or sign up";
+
+/* Title of the sign-out action. The placeholder is a Stripe brand name and should not be translated. */
+"Sign out of %@" = "Sign out of %@";
+
+/* Title of the sign-out action. */
+"Sign out of Link" = "Sign out of Link";
 
 /* Subtitle shown on a button allowing a user to select to pay with Link. */
 "Simple, secure one-click payments" = "Simple, secure one-click payments";

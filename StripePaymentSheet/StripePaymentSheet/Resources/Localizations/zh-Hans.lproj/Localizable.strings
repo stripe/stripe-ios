@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "社会保障号码 (SSN) 最后 4 位";
 
-"Log in or sign up" = "登录或注册";
-
-"Log out of %@" = "退出 %@";
-
 "Manage SEPA debit" = "管理 SEPA 借记";
 
 "Manage US bank account" = "管理美国银行账户";
@@ -295,6 +291,12 @@
 "Show details" = "显示详情";
 
 "Show menu" = "显示菜单";
+
+"Sign in or sign up" = "登录或注册";
+
+"Sign out of %@" = "退出 %@";
+
+"Sign out of Link" = "退出 Link";
 
 "Simple, secure one-click payments" = "简单、安全的一键支付";
 

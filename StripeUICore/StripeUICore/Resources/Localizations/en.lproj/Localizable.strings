@@ -44,7 +44,7 @@ Section header for address fields */
 /* Caption for City field on address form */
 "City" = "City";
 
-/* Accessibility label describing a field for entering a login code */
+/* Accessibility label describing a field for entering a sign-in code */
 "Code field" = "Code field";
 
 /* Label for Company field on form */

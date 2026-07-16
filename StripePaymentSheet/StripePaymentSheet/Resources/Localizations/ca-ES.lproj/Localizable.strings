@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "Últims 4 dígits del número de la seguretat social (SSN)";
 
-"Log in or sign up" = "Inicia sessió o registra't";
-
-"Log out of %@" = "Tanca la sessió de %@";
-
 "Manage SEPA debit" = "Administra la domiciliació SEPA";
 
 "Manage US bank account" = "Administra el compte bancari dels EUA";
@@ -295,6 +291,12 @@
 "Show details" = "Mostra els detalls";
 
 "Show menu" = "Mostra el menú";
+
+"Sign in or sign up" = "Inicieu la sessió o registreu-vos";
+
+"Sign out of %@" = "Tanqueu la sessió de %@";
+
+"Sign out of Link" = "Tanqueu la sessió de Link";
 
 "Simple, secure one-click payments" = "Pagaments senzills i segurs amb un toc";
 

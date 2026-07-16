@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "SSN의 마지막 4자리";
 
-"Log in or sign up" = "로그인 또는 등록";
-
-"Log out of %@" = "%@에서 로그아웃";
-
 "Manage SEPA debit" = "SEPA 자동 이체 관리";
 
 "Manage US bank account" = "미국 은행 계좌 관리";
@@ -295,6 +291,12 @@
 "Show details" = "세부사항 표시";
 
 "Show menu" = "메뉴 표시";
+
+"Sign in or sign up" = "로그인 또는 등록";
+
+"Sign out of %@" = "%@에서 로그아웃";
+
+"Sign out of Link" = "Link에서 로그아웃";
 
 "Simple, secure one-click payments" = "간단하고 안전한 원클릭 결제";
 

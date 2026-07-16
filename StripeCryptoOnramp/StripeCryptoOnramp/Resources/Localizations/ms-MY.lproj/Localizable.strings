@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Permintaan pengesahan dompet ini telah tamat tempoh. Sila cuba lagi.";
 
+"This wallet verification request is invalid. Please try again." = "Permintaan pengesahan dompet ini tidak sah. Sila cuba lagi.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Kami tidak dapat mengesahkan pemilikan dompet ini. Sila cuba lagi.";
