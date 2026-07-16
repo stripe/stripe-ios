@@ -500,7 +500,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
-                try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
+                try await checkout.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
             } catch {
                 self.error = error
             }
