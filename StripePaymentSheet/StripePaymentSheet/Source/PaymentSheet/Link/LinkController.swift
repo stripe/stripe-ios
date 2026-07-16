@@ -929,6 +929,10 @@ import UIKit
         let confirmParams = STPSetupIntentConfirmParams(clientSecret: clientSecret)
         confirmParams.paymentMethodID = paymentMethod.stripeId
 
+        // Required for off-session link PMs: captures consent given during the Link flow.
+        let mandateData = STPMandateDataParams.makeWithInferredValues()
+        confirmParams.mandateData = mandateData
+
         let authContext = ViewControllerAuthenticationContext(viewController: viewController)
         STPPaymentHandler.shared().confirmSetupIntent(
             params: confirmParams,
