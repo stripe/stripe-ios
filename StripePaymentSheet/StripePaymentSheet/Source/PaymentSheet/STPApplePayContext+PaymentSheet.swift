@@ -386,7 +386,7 @@ extension STPApplePayContext {
                         try? await checkout.updateBillingAddress(address: address, canUpdateWhileSheetPresented: true)
                     }
                     completion(PKPaymentRequestPaymentMethodUpdate(
-                        paymentSummaryItems: STPApplePayContext.makePaymentSummaryItems(for: checkout, label: label, currency: currency)
+                        paymentSummaryItems: STPApplePayContext.makePaymentSummaryItems(for: checkout.nonisolatedSession, label: label, currency: currency)
                     ))
                 }
             }
@@ -436,8 +436,8 @@ extension STPApplePayContext {
         if let paymentSummaryItems = applePay.paymentSummaryItems {
             // Use the merchant supplied paymentSummaryItems
             paymentRequest.paymentSummaryItems = paymentSummaryItems
-        } else if case .checkout(let checkout) = intent {
-            paymentRequest.paymentSummaryItems = STPApplePayContext.makePaymentSummaryItems(for: checkout,
+        } else if case .checkout(let session) = intent {
+            paymentRequest.paymentSummaryItems = STPApplePayContext.makePaymentSummaryItems(for: session,
                 label: label,
                 currency: intent.currency
             )
@@ -478,8 +478,8 @@ extension STPApplePayContext {
 
         // Pre-populate billingContact from the CheckoutSession's billing address, but only
         // if it has a street. Otherwise Apple Pay will show "Update Billing Address".
-        if case .checkout(let checkout) = intent,
-           let billingAddress = checkout.nonisolatedSession.billingAddress,
+        if case .checkout(let session) = intent,
+           let billingAddress = session.billingAddress,
            billingAddress.address.line1 != nil {
             paymentRequest.billingContact = Self.makeBillingContact(from: billingAddress)
         }
@@ -514,7 +514,7 @@ private func makeFallbackBillingDetails(
     var fallbackBillingDetails = StripeAPI.BillingDetails()
     var hasFallbackBillingDetails = false
 
-    if case .checkout(let checkout) = intent, let email = checkout.nonisolatedSession.email {
+    if case .checkout(let session) = intent, let email = session.email {
         fallbackBillingDetails.email = email
         hasFallbackBillingDetails = true
     }

@@ -712,12 +712,12 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_CheckoutSession_NoBillingContact_WhenNoBillingAddress() {
         let intent = Intent._testCheckoutSession(mode: .payment, amount: 2345, currency: "USD")
-        guard case .checkout(let checkout) = intent else {
+        guard case .checkout(let session) = intent else {
             XCTFail("Expected checkout intent")
             return
         }
         // billingAddress is nil by default
-        XCTAssertNil(checkout.session.billingAddress)
+        XCTAssertNil(session.billingAddress)
 
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
 

@@ -16,19 +16,19 @@ import UIKit
 
 // MARK: - Intent
 
-/// An internal type representing either a PaymentIntent, SetupIntent, a "deferred Intent", or a Checkout
+/// An internal type representing either a PaymentIntent, SetupIntent, a "deferred Intent", or a Checkout Session
 enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
-    case checkout(Checkout)
+    case checkout(Checkout.Session)
 
     var stripeId: String? {
         switch self {
         case .paymentIntent(let intent): intent.stripeId
         case .setupIntent(let intent): intent.stripeID
         case .deferredIntent: nil
-        case .checkout(let checkout): checkout.nonisolatedSession.id
+        case .checkout(let session): session.id
         }
     }
 
@@ -45,8 +45,8 @@ enum Intent {
             case .setup:
                 return false
             }
-        case .checkout(let checkout):
-            return checkout.nonisolatedSession.mode == .payment || checkout.nonisolatedSession.mode == .subscription
+        case .checkout(let session):
+            return session.mode == .payment || session.mode == .subscription
         }
     }
 
@@ -97,8 +97,8 @@ enum Intent {
             case .setup(let currency, _):
                 return currency
             }
-        case .checkout(let checkout):
-            return checkout.nonisolatedSession.currency
+        case .checkout(let session):
+            return session.currency
         }
     }
 
@@ -115,8 +115,8 @@ enum Intent {
             case .setup:
                 return nil
             }
-        case .checkout(let checkout):
-            return checkout.nonisolatedSession.expectedAmount()
+        case .checkout(let session):
+            return session.expectedAmount()
         }
     }
 
@@ -129,10 +129,10 @@ enum Intent {
                 return setupFutureUsage?.rawValue
             }
             return nil
-        case .checkout(let checkout):
-            switch checkout.nonisolatedSession.mode {
+        case .checkout(let session):
+            switch session.mode {
             case .payment:
-                return checkout.nonisolatedSession.setupFutureUsage
+                return session.setupFutureUsage
             case .setup:
                 return nil
             case .subscription, .unknown:
@@ -156,8 +156,8 @@ enum Intent {
                 return !setupFutureUsageValues.isEmpty
             }
             return nil
-        case .checkout(let checkout):
-            return checkout.nonisolatedSession.isPaymentMethodOptionsSetupFutureUsageSet
+        case .checkout(let session):
+            return session.isPaymentMethodOptionsSetupFutureUsageSet
         case .setupIntent:
             return nil
         }
@@ -181,10 +181,10 @@ enum Intent {
             case .setup:
                 return true
             }
-        case .checkout(let checkout):
-            switch checkout.nonisolatedSession.mode {
+        case .checkout(let session):
+            switch session.mode {
             case .payment:
-                guard let setupFutureUsage = checkout.nonisolatedSession.setupFutureUsage(for: paymentMethodType) else {
+                guard let setupFutureUsage = session.setupFutureUsage(for: paymentMethodType) else {
                     return false
                 }
                 return setupFutureUsage != "none"
@@ -199,8 +199,8 @@ enum Intent {
 
     func allowsPaymentMethodRemoval(elementsSession: STPElementsSession) -> Bool {
         switch self {
-        case .checkout(let checkout):
-            return checkout.nonisolatedSession.customer?.canDetachPaymentMethod ?? false
+        case .checkout(let session):
+            return session.customer?.canDetachPaymentMethod ?? false
         case .paymentIntent, .setupIntent, .deferredIntent:
             return elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         }

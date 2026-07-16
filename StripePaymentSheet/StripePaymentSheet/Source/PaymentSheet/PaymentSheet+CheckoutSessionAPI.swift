@@ -24,7 +24,7 @@ extension PaymentSheet {
         let checkoutSession: Checkout.Session = checkout.nonisolatedSession
         do {
             let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-                intent: .checkout(checkout),
+                intent: .checkout(checkoutSession),
                 elementsSession: elementsSession
             )
 
