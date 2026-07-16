@@ -85,7 +85,7 @@ extension SavedPaymentMethodFormFactory {
             case .automatic:
                 return makeBillingAddressSection(configuration, collectionMode: .countryAndPostal(), countries: countries)
             case .full:
-                return makeBillingAddressSection(configuration, collectionMode: .all(), countries: countries)
+                return makeBillingAddressSection(configuration, collectionMode: .all, countries: countries)
             case .never:
                 return nil
             }
@@ -106,7 +106,7 @@ extension SavedPaymentMethodFormFactory {
 
     func makeBillingAddressSection(
         _ configuration: UpdatePaymentMethodViewController.Configuration,
-        collectionMode: AddressSectionElement.CollectionMode = .all(),
+        collectionMode: AddressSectionElement.CollectionMode = .all,
         countries: [String]? = nil) -> PaymentMethodElementWrapper<AddressSectionElement> {
             let section = AddressSectionElement(
                 title: String.Localized.billing_address_lowercase,
