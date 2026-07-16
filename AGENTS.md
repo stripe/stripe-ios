@@ -158,7 +158,7 @@ The Stripe iOS SDK is organized as a multi-module framework with clear dependenc
 - Snapshot tests for UI components using FBSnapshotTestCase; always record to a temp dir, CI auto-commits meaningful changes via `ci_scripts/record_snapshots.rb`
 - Integration tests with real backend APIs (marked as functional tests)
 - Example apps for manual testing in `Example/` directory
-- When adding/rewriting tests, use `// Given <setup>` / `// When <action>` / `// Then <assertion>` comments where helpful.
+- When adding/rewriting tests, use `// Given <setup>` / `// When <action>` / `// Then <assertion>` comments where helpful. You may use `// ...and <other setup/action/assertion>` when a section of code is doing multiple things to avoid having a single comment explain too much code.
 
 ### Dependencies Installation
 Run `bundle install && bundle exec fastlane stripeios_tests` initially to install test dependencies.

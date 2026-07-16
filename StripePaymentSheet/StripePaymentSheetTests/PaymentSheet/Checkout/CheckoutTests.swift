@@ -46,12 +46,14 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         try await checkout.applyPromotionCode("SAVE25")
 
-        XCTAssertEqual(delegate.updateSessionCallCount, 1)
+        // Applying the promotion code emits once for the server-backed Checkout session update
+        // and once when PaymentElement re-syncs its local payment option.
+        XCTAssertEqual(delegate.updateSessionCallCount, 2)
         XCTAssertEqual(delegate.beginLoadingCallCount, 1)
         XCTAssertEqual(delegate.finishLoadingCallCount, 1)
         XCTAssertNotNil(delegate.lastSession)
         XCTAssertEqual(promotionCode(in: delegate.lastSession), "SAVE25")
-        XCTAssertEqual(recorder.sessions.count, 1)
+        XCTAssertEqual(recorder.sessions.count, 2)
         XCTAssertEqual(recorder.loading, [true, false])
     }
 
