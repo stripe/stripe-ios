@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "Posledné 4 číslice SSN";
 
-"Log in or sign up" = "Prihlásiť sa alebo zaregistrovať";
-
-"Log out of %@" = "Odhlásiť sa z %@";
-
 "Manage SEPA debit" = "Spravovať SEPA inkaso";
 
 "Manage US bank account" = "Spravovať americký bankový účet";
@@ -295,6 +291,10 @@
 "Show details" = "Zobraziť podrobnosti";
 
 "Show menu" = "Zobraziť ponuku";
+
+"Sign in or sign up" = "Prihlásiť sa alebo zaregistrovať";
+
+"Sign out of %@" = "Odhlásiť sa zo služby %@";
 
 "Simple, secure one-click payments" = "Jednoduché, bezpečné platby jedným kliknutím";
 

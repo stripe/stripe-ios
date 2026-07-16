@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Ta zahteva za preverjanje denarnice je potekla. Poskusite znova.";
 
+"This wallet verification request is invalid. Please try again." = "Ta zahteva za preverjanje denarnice je neveljavna. Poskusite znova.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Lastništva te denarnice ni bilo mogoče preveriti. Poskusite znova.";

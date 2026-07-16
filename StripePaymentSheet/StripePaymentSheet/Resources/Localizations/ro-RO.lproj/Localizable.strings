@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "Ultimele 4 cifre de la SSN";
 
-"Log in or sign up" = "Conectați-vă sau înregistrați-vă";
-
-"Log out of %@" = "Deconectați-vă de la %@";
-
 "Manage SEPA debit" = "Gestionare debit SEPA";
 
 "Manage US bank account" = "Gestionare cont bancar din SUA";
@@ -295,6 +291,10 @@
 "Show details" = "Afișare detalii";
 
 "Show menu" = "Afișare meniu";
+
+"Sign in or sign up" = "Conectați-vă sau înregistrați-vă";
+
+"Sign out of %@" = "Deconectați-vă de la %@";
 
 "Simple, secure one-click payments" = "Plăți simple și securizate cu un singur clic";
 
