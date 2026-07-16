@@ -200,6 +200,7 @@ extension PaymentSheet {
                     elementsSession: elementsSession,
                     configuration: configuration,
                     clientAttributionMetadata: clientAttributionMetadata,
+                    checkout: checkout,
                     completion: completion
                 )
             else {
