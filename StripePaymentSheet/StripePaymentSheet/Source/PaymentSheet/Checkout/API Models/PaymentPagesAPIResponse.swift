@@ -1,5 +1,5 @@
 //
-//  STPCheckoutSessionAPIResponse.swift
+//  PaymentPagesAPIResponse.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 1/14/26.
@@ -10,10 +10,11 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-/// A CheckoutSession represents a session for a customer to complete a payment.
+/// Internal response model for the mobile Payment Pages API endpoints.
 ///
-/// - seealso: https://stripe.com/docs/api/checkout/sessions/object
-class STPCheckoutSessionAPIResponse: NSObject {
+/// These endpoints return Checkout Session state plus mobile-specific fields such as
+/// `elements_session`.
+class PaymentPagesAPIResponse: NSObject {
 
     // MARK: - Identifiers
 
@@ -88,11 +89,6 @@ class STPCheckoutSessionAPIResponse: NSObject {
     /// Customer data including saved payment methods.
     let customer: STPCheckoutSessionCustomer?
 
-    /// The ID of the customer for this Session.
-    var customerId: String? {
-        return customer?.id
-    }
-
     /// The URL to the Checkout Session (for hosted UI mode).
     let url: URL?
 
@@ -101,14 +97,6 @@ class STPCheckoutSessionAPIResponse: NSObject {
 
     /// The URL the customer will be directed to if they decide to cancel payment.
     let cancelUrl: String?
-
-    /// The internal tax amounts (with `taxableAmount` and `taxRate`) used for SDK-side display.
-    let taxAmounts: [STPCheckoutSessionTaxAmount]
-
-    /// The total tax amount for this session, in the smallest currency unit.
-    var totalTaxAmount: Int {
-        taxAmounts.reduce(0) { $0 + $1.amount }
-    }
 
     /// Server-side flag controlling the "Save for future use" checkbox.
     let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
@@ -125,11 +113,6 @@ class STPCheckoutSessionAPIResponse: NSObject {
     /// The allowed countries for shipping address collection, or `nil` if shipping
     /// address collection is not configured.
     let allowedShippingCountries: [String]?
-
-    /// Whether the session requires a shipping address.
-    var requiresShippingAddress: Bool {
-        allowedShippingCountries != nil
-    }
 
     /// The localized price options for adaptive pricing (internal decoder used by the
     /// adaptive-pricing UI; the public surface is ``currencyOptions``).
@@ -152,12 +135,6 @@ class STPCheckoutSessionAPIResponse: NSObject {
 
     /// The raw API response used to create this object.
     let allResponseFields: [AnyHashable: Any]
-
-    /// Client-side billing address override.
-    var billingAddress: Checkout.ContactAddress?
-
-    /// Client-side shipping address override.
-    var shippingAddress: Checkout.ContactAddress?
 
     /// Extracts the client secret from the expanded PaymentIntent or SetupIntent based on mode.
     func intentClientSecret() throws -> String {
@@ -182,7 +159,7 @@ class STPCheckoutSessionAPIResponse: NSObject {
     /// :nodoc:
     override var description: String {
         let props: [String] = [
-            String(format: "%@: %p", NSStringFromClass(STPCheckoutSessionAPIResponse.self), self),
+            String(format: "%@: %p", NSStringFromClass(PaymentPagesAPIResponse.self), self),
             "id = \(id)",
             "total = \(String(describing: total))",
             "clientSecret = <redacted>",
@@ -195,7 +172,7 @@ class STPCheckoutSessionAPIResponse: NSObject {
             "setupIntent = \(String(describing: setupIntent))",
             "paymentMethodTypes = \(String(describing: allResponseFields["payment_method_types"]))",
             "livemode = \(livemode)",
-            "customerId = \(String(describing: customerId))",
+            "customerId = \(String(describing: customer?.id))",
             "email = \(String(describing: email))",
             "url = \(String(describing: url))",
             "returnUrl = \(String(describing: returnUrl))",
@@ -233,7 +210,6 @@ class STPCheckoutSessionAPIResponse: NSObject {
         url: URL?,
         returnUrl: String?,
         cancelUrl: String?,
-        taxAmounts: [STPCheckoutSessionTaxAmount],
         savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
         setupFutureUsage: String?,
         setupFutureUsageForPaymentMethodType: [String: String],
@@ -273,7 +249,6 @@ class STPCheckoutSessionAPIResponse: NSObject {
         self.url = url
         self.returnUrl = returnUrl
         self.cancelUrl = cancelUrl
-        self.taxAmounts = taxAmounts
         self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
         self.setupFutureUsage = setupFutureUsage
         self.setupFutureUsageForPaymentMethodType = setupFutureUsageForPaymentMethodType
@@ -292,7 +267,7 @@ class STPCheckoutSessionAPIResponse: NSObject {
 
 // MARK: - STPAPIResponseDecodable
 
-extension STPCheckoutSessionAPIResponse: STPAPIResponseDecodable {
+extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
 
     @objc
     class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
@@ -330,14 +305,7 @@ extension STPCheckoutSessionAPIResponse: STPAPIResponseDecodable {
         }()
 
         // Collections
-        let internalTaxAmounts = STPCheckoutSessionTaxAmount.taxAmounts(from: dict)
-        let publicTaxAmounts = internalTaxAmounts.map {
-            Checkout.TaxAmount(
-                amount: makeAmount($0.amount, currency: currency),
-                inclusive: $0.inclusive,
-                displayName: $0.taxRate?.displayName ?? String.Localized.tax
-            )
-        }
+        let publicTaxAmounts = Self.parseSessionTaxAmounts(from: dict, currency: currency)
 
         let discountAmounts = Self.parseDiscountAmounts(from: dict, currency: currency)
         let lineItems = Self.parseLineItems(from: dict, defaultCurrency: currency)
@@ -350,8 +318,8 @@ extension STPCheckoutSessionAPIResponse: STPAPIResponseDecodable {
                   let totalValue = summary["total"] as? Int else {
                 return nil
             }
-            let taxInclusiveValue = internalTaxAmounts.filter { $0.inclusive }.reduce(0) { $0 + $1.amount }
-            let taxExclusiveValue = internalTaxAmounts.filter { !$0.inclusive }.reduce(0) { $0 + $1.amount }
+            let taxInclusiveValue = publicTaxAmounts.filter { $0.inclusive }.reduce(0) { $0 + $1.amount.minorUnitsAmount }
+            let taxExclusiveValue = publicTaxAmounts.filter { !$0.inclusive }.reduce(0) { $0 + $1.amount.minorUnitsAmount }
             let shippingValue = Self.parseSelectedShippingAmount(from: dict)
             let discountValue = discountAmounts.reduce(0) { $0 + $1.amount.minorUnitsAmount }
             let appliedBalanceValue = (summary["applied_balance"] as? Int) ?? 0
@@ -476,7 +444,7 @@ extension STPCheckoutSessionAPIResponse: STPAPIResponseDecodable {
 
         let email = (dict["customer_email"] as? String) ?? customer?.email
 
-        return STPCheckoutSessionAPIResponse(
+        return PaymentPagesAPIResponse(
             id: id,
             clientSecret: clientSecret,
             businessName: businessName,
@@ -505,7 +473,6 @@ extension STPCheckoutSessionAPIResponse: STPAPIResponseDecodable {
             url: urlString.flatMap { URL(string: $0) },
             returnUrl: dict["return_url"] as? String ?? dict["success_url"] as? String,
             cancelUrl: dict["cancel_url"] as? String,
-            taxAmounts: internalTaxAmounts,
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
             setupFutureUsage: setupFutureUsage,
             setupFutureUsageForPaymentMethodType: setupFutureUsageForPaymentMethodType,
@@ -524,7 +491,7 @@ extension STPCheckoutSessionAPIResponse: STPAPIResponseDecodable {
 
 // MARK: - Parsing helpers
 
-extension STPCheckoutSessionAPIResponse {
+extension PaymentPagesAPIResponse {
 
     // MARK: Amounts
 
@@ -740,6 +707,19 @@ extension STPCheckoutSessionAPIResponse {
     }
 
     // MARK: Tax Amounts
+
+    private static func parseSessionTaxAmounts(
+        from dict: [AnyHashable: Any],
+        currency: String?
+    ) -> [Checkout.TaxAmount] {
+        guard let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any] else {
+            return []
+        }
+        return parseLineTaxAmounts(
+            from: lineItemGroup["tax_amounts"] as? [[AnyHashable: Any]] ?? [],
+            currency: currency
+        )
+    }
 
     private static func parseLineTaxAmounts(
         from array: [[AnyHashable: Any]],

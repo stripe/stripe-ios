@@ -101,7 +101,7 @@ extension PaymentSheet {
 
     @MainActor
     private static func handleCheckoutSessionConfirmResponse(
-        response: STPCheckoutSessionAPIResponse,
+        response: PaymentPagesAPIResponse,
         checkoutSession: Checkout.Session,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,

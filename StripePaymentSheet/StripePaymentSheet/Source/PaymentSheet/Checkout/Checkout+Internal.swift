@@ -130,7 +130,7 @@ extension Checkout {
                 try self.requireSheetNotPresented()
             }
             do {
-                let updatedSessionAPIResponse: STPCheckoutSessionAPIResponse?
+                let updatedSessionAPIResponse: PaymentPagesAPIResponse?
                 if let update {
                     let sessionId = Checkout.extractSessionId(from: self.clientSecret)
                     updatedSessionAPIResponse = try await self.apiClient.updateCheckoutSession(

@@ -285,7 +285,7 @@ extension SavedPaymentMethodManagerTests {
                            responseObject: STPPaymentMethod.paymentMethodsJson)
     }
 
-    func makeCheckoutSession(id: String) -> STPCheckoutSessionAPIResponse {
+    func makeCheckoutSession(id: String) -> PaymentPagesAPIResponse {
         CheckoutTestHelpers.makeSession().withSessionId(id)
     }
 
