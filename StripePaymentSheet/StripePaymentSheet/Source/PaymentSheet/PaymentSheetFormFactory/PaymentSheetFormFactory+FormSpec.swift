@@ -33,7 +33,6 @@ extension PaymentSheetFormFactory {
         ]
 
         // These fields will need to be connected.
-        var countryElement: Element?
         var billingAddressElement: Element?
         var phoneElement: Element?
 
@@ -44,9 +43,6 @@ extension PaymentSheetFormFactory {
                 billingDetailsFields.remove(fieldToRemove)
             }
 
-            if fieldSpec.isCountrySpec {
-                countryElement = element
-            }
             if fieldSpec.isPhoneSpec {
                 phoneElement = element
             }
@@ -73,7 +69,6 @@ extension PaymentSheetFormFactory {
         }
 
         connectBillingDetailsFields(
-            countryElement: countryElement as? PaymentMethodElementWrapper<DropdownFieldElement>,
             addressElement: billingAddressElement as? PaymentMethodElementWrapper<AddressSectionElement>,
             phoneElement: phoneElement as? PaymentMethodElementWrapper<PhoneNumberElement>)
 
@@ -86,7 +81,9 @@ extension PaymentSheetFormFactory {
             return .name
         case .email:
             return .email
-        case .billing_address:
+        // Country fields produce an AddressSectionElement that also collects the full address when configured,
+        // so suppress the auto-added billing address placeholder.
+        case .billing_address, .country, .klarna_country:
             return .billingAddress
         case .placeholder(let placeholder):
             switch placeholder.field {
@@ -121,13 +118,19 @@ extension PaymentSheetFormFactory {
                 ? makeBillingAddressSection(countries: countrySpec.allowedCountryCodes)
                 : nil
         case .country(let spec):
-            return makeCountry(countryCodes: spec.allowedCountryCodes, apiPath: spec.apiPath?["v1"])
+            return makeCountryOrAddressSection(
+                countries: spec.allowedCountryCodes,
+                countryAPIPath: spec.apiPath?["v1"]
+            )
         case .affirm_header:
             return makeAffirmHeader()
         case .klarna_header:
             return makeKlarnaHeader()
         case .klarna_country(let spec):
-            return makeKlarnaCountry(apiPath: spec.apiPath?["v1"])!
+            return makeCountryOrAddressSection(
+                countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray,
+                countryAPIPath: spec.apiPath?["v1"]
+            )
         case .au_becs_bsb_number(let spec):
             return makeBSB(apiPath: spec.apiPath?["v1"])
         case .au_becs_account_number(let spec):
@@ -174,9 +177,9 @@ extension PaymentSheetFormFactory {
                 )
             }
         case .billingAddressWithoutCountry:
-            return configuration.billingDetailsCollectionConfiguration.address == .full
-                ? makeBillingAddressSection(collectionMode: .noCountry, countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
-                : nil
+            // The address (including country) is collected by the accompanying country /
+            // klarna_country AddressSectionElement, so this placeholder produces nothing.
+            return nil
         case .unknown: return nil
         }
     }
@@ -213,13 +216,6 @@ extension PaymentSheetFormFactory {
 }
 
 extension FormSpec.FieldSpec {
-    var isCountrySpec: Bool {
-        switch self {
-        case .country, .klarna_country: return true
-        default: return false
-        }
-    }
-
     var isPhoneSpec: Bool {
         if case .placeholder(let placeholderSpec) = self {
             return placeholderSpec.field == .phone
@@ -229,7 +225,8 @@ extension FormSpec.FieldSpec {
 
     var isAddressSpec: Bool {
         switch self {
-        case .billing_address: return true
+        // `.country` and `.klarna_country` produce an AddressSectionElement (country-only or full address)
+        case .billing_address, .country, .klarna_country: return true
         case .placeholder(let placeholderSpec):
             switch placeholderSpec.field {
             case .billingAddress, .billingAddressWithoutCountry: return true

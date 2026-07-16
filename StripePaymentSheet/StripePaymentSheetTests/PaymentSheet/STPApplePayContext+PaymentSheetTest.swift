@@ -673,6 +673,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     }
 
     func testCreatePaymentRequest_CheckoutSession_PopulatesBillingContactWithCountryOnly() {
+        // A billing address without a street shouldn't be pre-populated on the Apple Pay sheet,
+        // otherwise Apple Pay shows "Update Billing Address" in red.
         let intent = Intent._testCheckoutSession(
             mode: .payment,
             amount: 2345,
@@ -684,18 +686,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
 
-        let billingContact = sut.billingContact
-        XCTAssertNotNil(billingContact)
-        XCTAssertNil(billingContact?.name)
-        XCTAssertNil(billingContact?.phoneNumber)
-
-        let postalAddress = billingContact?.postalAddress
-        XCTAssertNotNil(postalAddress)
-        XCTAssertEqual(postalAddress?.isoCountryCode, "GB")
-        XCTAssertEqual(postalAddress?.street, "")
-        XCTAssertEqual(postalAddress?.city, "")
-        XCTAssertEqual(postalAddress?.state, "")
-        XCTAssertEqual(postalAddress?.postalCode, "")
+        XCTAssertNil(sut.billingContact)
     }
 
     func testCreatePaymentRequest_CheckoutSession_PopulatesBillingContactWithLine1Only() {

@@ -77,8 +77,8 @@ import UIKit
         case countryAndPostal(countriesRequiringPostalCollection: [String] = ["US", "GB", "CA"])
         /// Replaces the address line 1 field with `self.autoCompleteLine`
         case autoCompletable
-        /// Special case used by some Payment Methods that collect country separately.
-        case noCountry
+        /// Only collects the country. Used by Payment Methods that require a country but not the rest of the address.
+        case countryOnly
         /// Per-country collection modes. Missing countries collect country only.
         /// - Note: 2 letter country code as the key
         indirect case perCountry([String: CollectionMode])
@@ -329,8 +329,10 @@ import UIKit
         let spec = addressSpecProvider.addressSpec(for: countryCode)
         let fieldOrdering = spec.fieldOrdering.filter {
             switch collectionMode {
-            case .all, .noCountry:
+            case .all:
                 return true
+            case .countryOnly:
+                return false
             case .countryAndPostal(let countriesRequiringPostalCollection):
                 if case .postal = $0 {
                     return countriesRequiringPostalCollection.contains(countryCode)
@@ -394,10 +396,7 @@ import UIKit
             }
         }
 
-        var initialElements: [Element?] = [name]
-        if collectionMode != .noCountry {
-            initialElements.append(country)
-        }
+        var initialElements: [Element?] = [name, country]
         initialElements.append(autoCompleteLine)
         let emailElement: [Element?] = [email]
         let phoneElement: [Element?] = [phone]
