@@ -24,21 +24,11 @@ final class LinkControllerPreviewAPITests: XCTestCase {
                 _ = result
             }
 
-            LinkController.create(
-                setupIntentClientSecret: "seti_secret_123"
-            ) { result in
-                _ = result
-            }
-
             Task { @MainActor in
                 let controller = try await LinkController.create(
                     configuration: .init(supportedPaymentMethodTypes: [.card])
                 )
                 _ = controller.paymentMethodPreview
-
-                _ = try await LinkController.create(
-                    setupIntentClientSecret: "seti_secret_123"
-                )
 
                 controller.present(
                     email: "jenny.rosen@example.com",
@@ -51,6 +41,18 @@ final class LinkControllerPreviewAPITests: XCTestCase {
                 _ = try await controller.present(
                     email: "jenny.rosen@example.com",
                     phoneNumber: "+14155551234",
+                    from: UIViewController()
+                )
+
+                controller.confirmSetupIntent(
+                    clientSecret: "seti_secret_123",
+                    from: UIViewController()
+                ) { result in
+                    _ = result
+                }
+
+                _ = try await controller.confirmSetupIntent(
+                    clientSecret: "seti_secret_123",
                     from: UIViewController()
                 )
             }
