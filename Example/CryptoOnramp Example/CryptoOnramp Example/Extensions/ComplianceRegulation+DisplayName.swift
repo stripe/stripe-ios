@@ -17,6 +17,8 @@ extension ComplianceRegulation {
             return "CRS/CARF"
         case .euMiCA:
             return "MiCA"
+        @unknown default:
+            return rawValue
         }
     }
 }
