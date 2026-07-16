@@ -117,27 +117,24 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(ZZTextFields.map { $0.configuration.isOptional }, expectedZZFields.map { $0.isOptional })
     }
 
-    func testPerCountryCollectionMode() throws {
+    func testCountryFieldsOverrides() throws {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
             "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
             "CA": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
             "FR": AddressSpec(format: "ACZ", require: "ACZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
         ]
-        let perCountry: AddressSectionElement.CollectionMode = .perCountry([
-            "US": .autocomplete(),
-            "CA": .countryAndPostal(countriesRequiringPostalCollection: ["CA"]),
-        ])
         let sut = AddressSectionElement(
             title: "",
             countries: ["US", "CA", "FR"],
             locale: locale_enUS,
             addressSpecProvider: specProvider,
             defaults: .init(address: .init(country: "US")),
-            collectionMode: perCountry
+            collectionMode: .countryOnly,
+            countryFieldsOverrides: ["US": .all, "CA": .countryAndPostal]
         )
 
-        // Initial country applied at init.
+        // Initial country's override applied at init; `.all` collects the full address via autocomplete.
         XCTAssertEqual(sut.collectionMode, .autocomplete())
         XCTAssertNotNil(sut.autoCompleteLine)
 
@@ -148,9 +145,9 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertNil(sut.autoCompleteLine)
         XCTAssertNil(sut.line1)
 
-        // CA -> FR falls back to country only.
+        // CA -> FR falls back to the base collection mode.
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "FR")))
-        XCTAssertEqual(sut.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: []))
+        XCTAssertEqual(sut.collectionMode, .countryOnly)
         XCTAssertNil(sut.postalCode)
 
         // Re-applies after an external collectionMode change.
@@ -159,20 +156,20 @@ class AddressSectionElementTest: XCTestCase {
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "CA")))
         XCTAssertEqual(sut.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: ["CA"]))
 
-        // Non-perCountry bases leave externally-set modes alone.
-        let noPerCountry = AddressSectionElement(
+        // Without overrides, externally-set modes survive country changes.
+        let noOverrides = AddressSectionElement(
             title: "",
             countries: ["US", "FR"],
             locale: locale_enUS,
             addressSpecProvider: specProvider,
             collectionMode: .autocomplete()
         )
-        noPerCountry.collectionMode = .autocomplete(presentation: .expanded)
-        noPerCountry.country.select(index: try XCTUnwrap(noPerCountry.countryCodes.firstIndex(of: "FR")))
-        XCTAssertEqual(noPerCountry.collectionMode, .autocomplete(presentation: .expanded))
+        noOverrides.collectionMode = .autocomplete(presentation: .expanded)
+        noOverrides.country.select(index: try XCTUnwrap(noOverrides.countryCodes.firstIndex(of: "FR")))
+        XCTAssertEqual(noOverrides.collectionMode, .autocomplete(presentation: .expanded))
     }
 
-    func testPerCountryCollectionModeWithBillingSameAsShipping() throws {
+    func testCountryFieldsOverridesWithBillingSameAsShipping() throws {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
             "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
@@ -185,17 +182,15 @@ class AddressSectionElementTest: XCTestCase {
             locale: locale_enUS,
             addressSpecProvider: specProvider,
             defaults: .init(address: .init(country: "US")),
-            collectionMode: .perCountry([
-                "US": .autocomplete(),
-                "CA": .countryAndPostal(countriesRequiringPostalCollection: ["CA"]),
-            ]),
+            collectionMode: .countryOnly,
+            countryFieldsOverrides: ["US": .all, "CA": .countryAndPostal],
             additionalFields: .init(billingSameAsShippingCheckbox: .enabled(isOptional: false))
         )
 
         XCTAssertEqual(sut.collectionMode, .autocomplete())
 
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "FR")))
-        XCTAssertEqual(sut.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: []))
+        XCTAssertEqual(sut.collectionMode, .countryOnly)
 
         // Re-checking "same as shipping" snaps back to US.
         sut.sameAsCheckbox.didToggle(false)

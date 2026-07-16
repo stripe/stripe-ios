@@ -114,8 +114,8 @@ extension PaymentSheetFormFactory {
         case .selector(let selectorSpec):
             return makeDropdown(for: selectorSpec)
         case .billing_address(let countrySpec):
-            return billingAddressCollectionMode(fullAddressRequiredByPaymentMethod: true)
-                .map { makeBillingAddressSection(collectionMode: $0, countries: countrySpec.allowedCountryCodes) }
+            return billingAddressCollection(fullAddressRequiredByPaymentMethod: true)
+                .map { makeBillingAddressSection(collectionMode: $0.collectionMode, countryFieldsOverrides: $0.countryFieldsOverrides, countries: countrySpec.allowedCountryCodes) }
         case .country(let spec):
             return makeCountryOrAddressSection(
                 countries: spec.allowedCountryCodes,
@@ -167,13 +167,19 @@ extension PaymentSheetFormFactory {
             switch configuration.billingDetailsCollectionConfiguration.address {
             case .full:
                 return makeBillingAddressSection(countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
-            case .automatic, .never:
-                // Still collect tax fields if the merchant opted out
+            case .automatic:
+                // Only collect an address if the Checkout Session needs it to compute tax.
                 guard collectsTaxFromBillingAddress else { return nil }
                 return makeBillingAddressSection(
-                    collectionMode: .perCountry(CountryTaxRequirement.collectionModeByCountry),
+                    collectionMode: .countryOnly,
+                    countryFieldsOverrides: CountryTaxRequirement.fieldsToCollectByCountry,
                     countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
                 )
+            case .never:
+                // PaymentSheetLoader rejects CheckoutSessions with `.address = .never`, so a Checkout Session
+                // (which may need the billing address to compute tax) can never reach this case.
+                stpAssert(!isCheckoutSession, "CheckoutSession does not support billingDetailsCollectionConfiguration.address = .never")
+                return nil
             }
         case .billingAddressWithoutCountry:
             // The address (including country) is collected by the accompanying country /

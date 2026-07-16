@@ -33,8 +33,8 @@ extension PaymentSheetFormFactory {
             elements: [taxIdElementWrapper],
             theme: theme
         )
-        let addressSection = billingAddressCollectionMode(fullAddressRequiredByPaymentMethod: true)
-            .map { makeBillingAddressSection(collectionMode: $0, countries: ["BR"]) }
+        let addressSection = billingAddressCollection(fullAddressRequiredByPaymentMethod: true)
+            .map { makeBillingAddressSection(collectionMode: $0.collectionMode, countryFieldsOverrides: $0.countryFieldsOverrides, countries: ["BR"]) }
         let allElements: [Element?] = [contactInfoSection, taxIdSection, addressSection]
         let elements = allElements.compactMap { $0 }
         return FormElement(autoSectioningElements: elements, theme: theme)

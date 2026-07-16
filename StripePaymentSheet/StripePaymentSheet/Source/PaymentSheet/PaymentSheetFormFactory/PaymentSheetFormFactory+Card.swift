@@ -94,21 +94,20 @@ extension PaymentSheetFormFactory {
                 : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
             switch configuration.billingDetailsCollectionConfiguration.address {
             case .automatic:
-                let collectionMode: AddressSectionElement.CollectionMode = collectsTaxFromBillingAddress
-                    ? .perCountry(CountryTaxRequirement.collectionModeByCountry)
-                    : .countryAndPostal()
-                return makeBillingAddressSection(collectionMode: collectionMode, countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
-            case .full:
-                return makeBillingAddressSection(collectionMode: .autocomplete(), countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
-            case .never:
-                // Still collect tax fields if the merchant opted out
-                guard collectsTaxFromBillingAddress else { return nil }
                 return makeBillingAddressSection(
-                    collectionMode: .perCountry(CountryTaxRequirement.collectionModeByCountry),
+                    collectionMode: .countryAndPostal(),
+                    countryFieldsOverrides: collectsTaxFromBillingAddress ? CountryTaxRequirement.fieldsToCollectByCountry : [:],
                     countries: countries,
                     includeEmail: shouldIncludeEmail,
                     includePhone: shouldIncludePhone
                 )
+            case .full:
+                return makeBillingAddressSection(collectionMode: .autocomplete(), countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
+            case .never:
+                // PaymentSheetLoader rejects CheckoutSessions with `.address = .never`, so a Checkout Session
+                // (which may need the billing address to compute tax) can never reach this case.
+                stpAssert(!isCheckoutSession, "CheckoutSession does not support billingDetailsCollectionConfiguration.address = .never")
+                return nil
             }
         }()
 

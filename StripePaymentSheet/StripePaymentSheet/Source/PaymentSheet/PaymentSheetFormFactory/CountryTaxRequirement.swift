@@ -11,12 +11,12 @@ import Foundation
 
 /// Billing address fields needed to compute tax from the billing address.
 enum CountryTaxRequirement {
-    /// Collection mode per country; unlisted countries need country only.
-    static let collectionModeByCountry: [String: AddressSectionElement.CollectionMode] = [
-        "US": .autocomplete(),
-        "PR": .autocomplete(),
-        "CA": .countryAndPostal(countriesRequiringPostalCollection: ["CA"]),
-        "GB": .countryAndPostal(countriesRequiringPostalCollection: ["GB"]),
-        "IN": .countryAndPostal(countriesRequiringPostalCollection: ["IN"]),
+    /// Fields to collect per country; unlisted countries only need the country.
+    static let fieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect] = [
+        "US": .all,
+        "PR": .all,
+        "CA": .countryAndPostal,
+        "GB": .countryAndPostal,
+        "IN": .countryAndPostal,
     ]
 }

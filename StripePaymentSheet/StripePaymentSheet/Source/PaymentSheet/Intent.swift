@@ -63,6 +63,13 @@ enum Intent {
         }
     }
 
+    var isCheckout: Bool {
+        if case .checkout = self {
+            return true
+        }
+        return false
+    }
+
     var intentConfig: PaymentSheet.IntentConfiguration? {
         switch self {
         case .deferredIntent(let intentConfig):

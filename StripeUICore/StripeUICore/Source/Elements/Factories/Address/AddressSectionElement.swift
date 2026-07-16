@@ -81,9 +81,6 @@ import UIKit
         case countryAndPostal(countriesRequiringPostalCollection: [String] = ["US", "GB", "CA"])
         /// Only collects the country. Used by Payment Methods that require a country but not the rest of the address.
         case countryOnly
-        /// Per-country collection modes. Missing countries collect country only.
-        /// - Note: 2 letter country code as the key
-        indirect case perCountry([String: CollectionMode])
 
         public enum AutocompletePresentation: Equatable {
             /// Shows country and the autocomplete line entry point.
@@ -91,6 +88,17 @@ import UIKit
             /// Shows the full address form. Line 1 opens autocomplete when the selected country is supported.
             case expanded
         }
+    }
+
+    /// The minimum address fields to collect for a specific country.
+    /// Used via `countryFieldsOverrides` to override the base `collectionMode` on a per-country basis.
+    public enum FieldsToCollect: Equatable {
+        /// Collect only the country.
+        case country
+        /// Collect the country and postal code.
+        case countryAndPostal
+        /// Collect the full address.
+        case all
     }
     /// Fields that this section can collect in addition to the address
     public struct AdditionalFields {
@@ -149,8 +157,10 @@ import UIKit
             }
         }
     }
-    /// Collection mode passed at init. Restored on country change when using ``CollectionMode/perCountry(_:)``.
+    /// Collection mode passed at init. Re-applied (with `countryFieldsOverrides`) on country change.
     private let baseCollectionMode: CollectionMode
+    /// Per-country overrides of the fields to collect. Countries not in the map use `baseCollectionMode`.
+    private let countryFieldsOverrides: [String: FieldsToCollect]
     public var selectedCountryCode: String {
         get {
             return countryCodes[country.selectedIndex]
@@ -183,6 +193,7 @@ import UIKit
        - addressSpecProvider: Determines the list of address fields to display for a selected country
        - defaults: Default address to prepopulate address fields with
        - collectionMode: Which address fields to collect
+       - countryFieldsOverrides: Per-country overrides of the fields to collect. Countries not in the map use `collectionMode`.
      */
     public init(
         title: String? = nil,
@@ -191,6 +202,7 @@ import UIKit
         addressSpecProvider: AddressSpecProvider = .shared,
         defaults: AddressDetails = .empty,
         collectionMode: CollectionMode = .all,
+        countryFieldsOverrides: [String: FieldsToCollect] = [:],
         additionalFields: AdditionalFields = .init(),
         theme: ElementsAppearance = .default,
         presentAutoComplete: @escaping () -> Void = { }
@@ -212,11 +224,8 @@ import UIKit
         self.didTapAutocompleteButton = presentAutoComplete
 
         let initialCountry = countryCodes[country.selectedIndex]
-        if case .perCountry(let modes) = collectionMode {
-            self.collectionMode = modes[initialCountry] ?? .countryAndPostal(countriesRequiringPostalCollection: [])
-        } else {
-            self.collectionMode = collectionMode
-        }
+        self.countryFieldsOverrides = countryFieldsOverrides
+        self.collectionMode = Self.resolveCollectionMode(base: collectionMode, overrides: countryFieldsOverrides, for: initialCountry)
 
         // Initialize additional fields
         self.name = {
@@ -304,10 +313,29 @@ import UIKit
         }
     }
 
-    /// Re-applies ``CollectionMode.perCountry(_:)`` for `countryCode`, if that was the init mode.
-    private func applyPerCountryModeIfNeeded(for countryCode: String) {
-        guard case .perCountry(let modes) = baseCollectionMode else { return }
-        collectionMode = modes[countryCode] ?? .countryAndPostal(countriesRequiringPostalCollection: [])
+    /// Resolves the effective collection mode for `countryCode`, applying any per-country override.
+    /// - Note: `.all` resolves to `.autocomplete()`; the UI treatment of a full address
+    ///   (autocomplete vs. manual entry, compact presentation) is this element's decision, not the caller's.
+    private static func resolveCollectionMode(
+        base: CollectionMode,
+        overrides: [String: FieldsToCollect],
+        for countryCode: String
+    ) -> CollectionMode {
+        guard let fieldsToCollect = overrides[countryCode] else { return base }
+        switch fieldsToCollect {
+        case .country:
+            return .countryOnly
+        case .countryAndPostal:
+            return .countryAndPostal(countriesRequiringPostalCollection: [countryCode])
+        case .all:
+            return .autocomplete()
+        }
+    }
+
+    /// Re-resolves the collection mode for `countryCode` when per-country overrides were provided at init.
+    private func applyCountryFieldsOverrideIfNeeded(for countryCode: String) {
+        guard !countryFieldsOverrides.isEmpty else { return } // Leave externally-set modes alone
+        collectionMode = Self.resolveCollectionMode(base: baseCollectionMode, overrides: countryFieldsOverrides, for: countryCode)
     }
 
     /// Selects `index` and rebuilds the fields. Always change country through here
@@ -315,7 +343,7 @@ import UIKit
         if country.selectedIndex != index {
             country.selectedIndex = index
         }
-        applyPerCountryModeIfNeeded(for: countryCodes[index])
+        applyCountryFieldsOverrideIfNeeded(for: countryCodes[index])
         updateAddressFields(for: countryCodes[index], address: address)
     }
 
@@ -352,9 +380,6 @@ import UIKit
                 return false
             case .autocomplete(_, .expanded):
                 return true
-            case .perCountry:
-                // Unresolved .perCountry — treat as country-only.
-                return false
             }
         }
 
@@ -438,7 +463,7 @@ private extension AddressSectionElement.CollectionMode {
         switch self {
         case .autocomplete(_, .compact):
             return true
-        case .all, .autocomplete(_, .expanded), .countryAndPostal, .countryOnly, .perCountry:
+        case .all, .autocomplete(_, .expanded), .countryAndPostal, .countryOnly:
             return false
         }
     }
@@ -447,7 +472,7 @@ private extension AddressSectionElement.CollectionMode {
         switch self {
         case .autocomplete(let autocompleteCountries, .expanded):
             return autocompleteCountries?.caseInsensitiveContains(countryCode) ?? true
-        case .all, .autocomplete(_, .compact), .countryAndPostal, .countryOnly, .perCountry:
+        case .all, .autocomplete(_, .compact), .countryAndPostal, .countryOnly:
             return false
         }
     }
