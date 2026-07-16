@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "SSN'nin son 4 hanesi";
 
-"Log in or sign up" = "Oturum açın veya kaydolun";
-
-"Log out of %@" = "%@ oturumu kapatılsın mı?";
-
 "Manage SEPA debit" = "SEPA bankamatik hesabını yönet";
 
 "Manage US bank account" = "ABD banka hesabını yönet";
@@ -295,6 +291,10 @@
 "Show details" = "Ayrıntıları göster";
 
 "Show menu" = "Menüyü göster";
+
+"Sign in or sign up" = "Oturum açın veya kaydolun";
+
+"Sign out of %@" = "%@ oturumunu kapatın";
 
 "Simple, secure one-click payments" = "Tek tıkla basit ve güvenli ödemeler";
 

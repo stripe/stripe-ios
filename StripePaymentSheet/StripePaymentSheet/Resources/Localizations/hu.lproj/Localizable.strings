@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "Az SSN utolsó 4 számjegye";
 
-"Log in or sign up" = "Bejelentkezés vagy regisztrálás";
-
-"Log out of %@" = "Kijelentkezés a következőről: %@";
-
 "Manage SEPA debit" = "SEPA beszedés kezelése";
 
 "Manage US bank account" = "USA bankszámla kezelése";
@@ -295,6 +291,10 @@
 "Show details" = "Részletek megjelenítése";
 
 "Show menu" = "Menü megjelenítése";
+
+"Sign in or sign up" = "Bejelentkezés vagy regisztráció";
+
+"Sign out of %@" = "Kijelentkezés innen: %@";
 
 "Simple, secure one-click payments" = "Egyszerű, biztonságos, egykattintásos fizetés";
 

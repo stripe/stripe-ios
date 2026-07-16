@@ -117,8 +117,8 @@ final class LinkSignUpViewModel: NSObject {
         shouldShowPhoneNumberField
             ? String.Localized.continue
             : STPLocalizedString(
-                "Log in or sign up",
-                "Title for a button that indicates a user can log in or sign up."
+                "Sign in or sign up",
+                "Title for a button that indicates a user can sign in or sign up."
             )
     }
 

@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "4 chữ số cuối của SSN";
 
-"Log in or sign up" = "Đăng nhập hoặc đăng ký";
-
-"Log out of %@" = "Đăng xuất khỏi %@";
-
 "Manage SEPA debit" = "Quản lý Ghi nợ SEPA";
 
 "Manage US bank account" = "Quản lý tài khoản ngân hàng Hoa Kỳ";
@@ -295,6 +291,10 @@
 "Show details" = "Hiển thị chi tiết";
 
 "Show menu" = "Hiển thị trình đơn";
+
+"Sign in or sign up" = "Đăng nhập hoặc đăng ký";
+
+"Sign out of %@" = "Đăng xuất khỏi %@";
 
 "Simple, secure one-click payments" = "Thanh toán đơn giản, an toàn chỉ bằng một cú nhấp chuột";
 

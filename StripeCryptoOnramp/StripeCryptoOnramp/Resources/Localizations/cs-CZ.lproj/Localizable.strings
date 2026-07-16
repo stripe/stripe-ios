@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Tato žádost o ověření peněženky s Bitcoiny vypršela. Zkuste to znovu.";
 
+"This wallet verification request is invalid. Please try again." = "Tato žádost o ověření peněženky s Bitcoiny je neplatná. Zkuste to prosím znovu.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Nepodařilo se nám ověřit vlastnictví této peněženky s Bitcoiny. Zkuste to znovu.";
