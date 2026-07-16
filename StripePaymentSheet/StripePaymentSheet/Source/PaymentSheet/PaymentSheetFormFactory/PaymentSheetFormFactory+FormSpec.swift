@@ -114,9 +114,8 @@ extension PaymentSheetFormFactory {
         case .selector(let selectorSpec):
             return makeDropdown(for: selectorSpec)
         case .billing_address(let countrySpec):
-            return configuration.billingDetailsCollectionConfiguration.address != .never
-                ? makeBillingAddressSection(countries: countrySpec.allowedCountryCodes)
-                : nil
+            return billingAddressCollectionMode(fullAddressRequiredByPaymentMethod: true)
+                .map { makeBillingAddressSection(collectionMode: $0, countries: countrySpec.allowedCountryCodes) }
         case .country(let spec):
             return makeCountryOrAddressSection(
                 countries: spec.allowedCountryCodes,

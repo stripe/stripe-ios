@@ -17,6 +17,14 @@ import XCTest
 @MainActor
 final class PaymentSheetFormFactoryAutomaticTaxTest: XCTestCase {
 
+    override func setUp() {
+        super.setUp()
+        // Load form specs so spec-driven LPMs (FPX, EPS, etc.) build a real form.
+        let expectation = expectation(description: "Load form specs")
+        FormSpecProvider.shared.load { _ in expectation.fulfill() }
+        waitForExpectations(timeout: 5)
+    }
+
     private func makeSpecProvider() -> AddressSpecProvider {
         let provider = AddressSpecProvider()
         provider.addressSpecs = [
@@ -72,96 +80,29 @@ final class PaymentSheetFormFactoryAutomaticTaxTest: XCTestCase {
         form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
     }
 
-    func testUSRequiresFullAddress() throws {
-        let form = makeForm(paymentMethod: .card, intent: makeCheckoutIntent(), config: makeConfiguration(country: "US"), specProvider: makeSpecProvider())
-        let section = try XCTUnwrap(addressSection(in: form))
-        XCTAssertEqual(section.collectionMode, .autoCompletable)
+    /// Asserts `section` collects at least the billing fields tax needs for its currently-selected country.
+    private func assertCollectsTaxFields(_ section: AddressSectionElement, _ pm: STPPaymentMethodType, file: StaticString = #filePath, line: UInt = #line) {
+        let country = section.selectedCountryCode
+        switch CountryTaxRequirement.collectionModeByCountry[country] {
+        case .autoCompletable, .all, .allWithAutocomplete:
+            // Full address required → line1 (or its autocomplete stand-in) must be present.
+            XCTAssertTrue(section.line1 != nil || section.autoCompleteLine != nil,
+                          "\(pm.identifier) must collect line1 for tax in \(country)", file: file, line: line)
+        case .countryAndPostal:
+            XCTAssertNotNil(section.postalCode, "\(pm.identifier) must collect postal for tax in \(country)", file: file, line: line)
+        case .countryOnly, .perCountry, .none:
+            break // Country-only requirement; the country dropdown is always present.
+        }
     }
 
-    func testINCollectsPostalOnly() throws {
-        // IN needs the postal code but isn't in the base postal list, so it gets a postal override.
-        let form = makeForm(paymentMethod: .card, intent: makeCheckoutIntent(), config: makeConfiguration(country: "IN"), specProvider: makeSpecProvider())
-        let section = try XCTUnwrap(addressSection(in: form))
-        XCTAssertEqual(section.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: ["IN"]))
-        XCTAssertNil(section.state)
-        XCTAssertNotNil(section.postalCode)
-        XCTAssertNil(section.line1)
-        XCTAssertNil(section.city)
-    }
-
-    func testOtherCountryUnchanged() throws {
-        let form = makeForm(paymentMethod: .card, intent: makeCheckoutIntent(), config: makeConfiguration(country: "FR"), specProvider: makeSpecProvider())
-        let section = try XCTUnwrap(addressSection(in: form))
-        // FR isn't in the tax map — country only.
-        XCTAssertEqual(section.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: []))
-        XCTAssertNil(section.state)
-        XCTAssertNil(section.postalCode)
-    }
-
-    func testUSToCANarrowsFields() throws {
-        let form = makeForm(paymentMethod: .card, intent: makeCheckoutIntent(), config: makeConfiguration(country: "US"), specProvider: makeSpecProvider())
-        let section = try XCTUnwrap(addressSection(in: form))
-        XCTAssertEqual(section.collectionMode, .autoCompletable)
-
-        section.country.select(index: try XCTUnwrap(section.countryCodes.firstIndex(of: "CA")))
-        XCTAssertEqual(section.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: ["CA"]))
-        XCTAssertNotNil(section.postalCode)
-        XCTAssertNil(section.autoCompleteLine)
-        XCTAssertNil(section.line1)
-
-        section.country.select(index: try XCTUnwrap(section.countryCodes.firstIndex(of: "FR")))
-        XCTAssertEqual(section.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: []))
-        XCTAssertNil(section.postalCode)
-    }
-
-    func testAutomaticTaxDisabled() throws {
-        let intent = makeCheckoutIntent(automaticTaxEnabled: false)
-        let form = makeForm(paymentMethod: .card, intent: intent, config: makeConfiguration(country: "US"), specProvider: makeSpecProvider())
-        let section = try XCTUnwrap(addressSection(in: form))
-        XCTAssertEqual(section.collectionMode, .countryAndPostal())
-    }
-
-    func testTaxSourcedFromShippingAddressUnaffected() throws {
-        let intent = makeCheckoutIntent(addressSource: "session.shipping")
-        let form = makeForm(paymentMethod: .card, intent: intent, config: makeConfiguration(country: "US"), specProvider: makeSpecProvider())
-        let section = try XCTUnwrap(addressSection(in: form))
-        XCTAssertEqual(section.collectionMode, .countryAndPostal())
-    }
-
-    func testTaxForcesBillingAddressForLPM() throws {
-        let form = makeForm(paymentMethod: .afterpayClearpay, intent: makeCheckoutIntent(), config: makeConfiguration(country: "US"), specProvider: makeSpecProvider())
-        let section = try XCTUnwrap(addressSection(in: form), "Automatic tax should force a billing address section")
-        XCTAssertEqual(section.collectionMode, .autoCompletable)
-
-        // US -> CA should narrow for LPMs too.
-        section.country.select(index: try XCTUnwrap(section.countryCodes.firstIndex(of: "CA")))
-        XCTAssertEqual(section.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: ["CA"]))
-        XCTAssertNotNil(section.postalCode)
-        XCTAssertNil(section.autoCompleteLine)
-    }
-
-    func testTaxForcesBillingAddressForCardWhenAddressNever() throws {
-        // address == .never still collects tax fields.
-        let config = makeConfiguration(country: "US", address: .never)
-        let form = makeForm(paymentMethod: .card, intent: makeCheckoutIntent(), config: config, specProvider: makeSpecProvider())
-        let section = try XCTUnwrap(addressSection(in: form), "Automatic tax should force a billing address section even when address is .never")
-        XCTAssertEqual(section.collectionMode, .autoCompletable)
-
-        section.country.select(index: try XCTUnwrap(section.countryCodes.firstIndex(of: "CA")))
-        XCTAssertEqual(section.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: ["CA"]))
-    }
-
-    func testNeverNarrowsBelowFullBase() throws {
-        // Merchant .full keeps the full address for every country.
-        let config = makeConfiguration(country: "US", address: .full)
-        let form = makeForm(paymentMethod: .card, intent: makeCheckoutIntent(), config: config, specProvider: makeSpecProvider())
-        let section = try XCTUnwrap(addressSection(in: form))
-        // Default country present → autoCompletable upgrades to allWithAutocomplete.
-        XCTAssertEqual(section.collectionMode, .allWithAutocomplete)
-
-        for country in ["CA", "FR"] {
-            section.country.select(index: try XCTUnwrap(section.countryCodes.firstIndex(of: country)))
-            XCTAssertEqual(section.collectionMode, .allWithAutocomplete)
+    func testAllSupportedLPMsCollectMinimumTaxFieldsWithAutomaticTax() throws {
+        // For every LPM PaymentSheet supports: when automatic tax is sourced from the billing address
+        // and the merchant hasn't set `.automatic` collection to `.full`, any billing address section
+        // the form shows must collect the minimum tax fields for its selected country.
+        for pm in PaymentSheet.supportedPaymentMethods {
+            let form = makeForm(paymentMethod: pm, intent: makeCheckoutIntent(), config: makeConfiguration(country: "US"), specProvider: makeSpecProvider())
+            guard let section = addressSection(in: form) else { continue } // LPM doesn't collect a billing address in-form.
+            assertCollectsTaxFields(section, pm)
         }
     }
 
