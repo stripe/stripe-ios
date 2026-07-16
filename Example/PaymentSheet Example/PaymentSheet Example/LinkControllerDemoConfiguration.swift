@@ -6,7 +6,7 @@
 @_spi(LinkControllerPreview) import StripePaymentSheet
 
 struct LinkControllerDemoConfiguration {
-    var email: String = ""
+    var email: String = "foo@bar.com"
     var phone: String = ""
     var supportedPaymentMethodTypes: Set<LinkPaymentMethodType> = Set(LinkPaymentMethodType.allCases)
     var intentMode: IntentMode = .sdkManaged
