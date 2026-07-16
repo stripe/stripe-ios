@@ -48,13 +48,11 @@ final class SavedPaymentMethodManager {
             guard billing != nil || expiry != nil else {
                 throw PaymentSheetError.unknown(debugDescription: "Tried to update a payment method without billing details or expiry details.")
             }
-            let session = try await configuration.apiClient.updatePaymentMethod(
+            guard let updatedPaymentMethod = try await checkout.updatePaymentMethod(
                 paymentMethod.stripeId,
-                inCheckoutSession: checkout.session.id,
                 billingDetails: billing,
                 expiryDetails: expiry
-            )
-            guard let updatedPaymentMethod = session.customer?.paymentMethods.first(where: { $0.stripeId == paymentMethod.stripeId }) else {
+            ) else {
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
                                                   error: Error.missingUpdatedPaymentMethod,
                                                   additionalNonPIIParams: ["payment_method_id": paymentMethod.stripeId])

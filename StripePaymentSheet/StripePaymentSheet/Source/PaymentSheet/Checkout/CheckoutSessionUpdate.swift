@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 @_spi(STP)
 extension Checkout {
@@ -16,6 +17,7 @@ extension Checkout {
         case setShippingRate(String)
         case setTaxRegion(Address)
         case setCurrency(String)
+        case updatePaymentMethod(id: String, billing: PaymentMethodBillingDetails?, expiry: PaymentMethodExpiryDetails?)
 
         var parameters: [String: Any] {
             switch self {
@@ -39,6 +41,12 @@ extension Checkout {
                 ] as [String: Any?]).compactMapValues { $0 }
             case .setCurrency(let currency):
                 return ["updated_currency": currency]
+            case .updatePaymentMethod(let id, let billing, let expiry):
+                return STPAPIClient.updatePaymentMethodParameters(
+                    paymentMethodId: id,
+                    billingDetails: billing,
+                    expiryDetails: expiry
+                )
             }
         }
     }

@@ -98,17 +98,17 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
     }
 
     func testUpdatePaymentMethod_checkoutSession() async throws {
-        let checkoutSessionId = "cs_test_checkout_session"
+        let checkoutSessionId = "cs_test_123"
         let (expectation, capturedBody) = stubCheckoutSessionUpdatePaymentMethod(
             checkoutSessionId: checkoutSessionId,
             paymentMethodId: paymentMethod.stripeId
         )
 
-        let checkoutSession = makeCheckoutSession(id: checkoutSessionId)
+        let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkout(Checkout(apiResponse: checkoutSession))
+            intent: .checkout(checkout)
         )
 
         let card = STPPaymentMethodCardParams()
@@ -130,20 +130,63 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         XCTAssertTrue(body.contains("payment_method_to_update%5Bbilling_details%5D%5Bemail%5D=jane%40example.com"))
         XCTAssertTrue(body.contains("payment_method_to_update%5Bexpiry_details%5D%5Bexp_month%5D=12"))
         XCTAssertTrue(body.contains("payment_method_to_update%5Bexpiry_details%5D%5Bexp_year%5D=2030"))
+
+        // The refreshed session from the update response is committed onto the Checkout
+        XCTAssertEqual(checkout.session.customer?.paymentMethods.first?.stripeId, "pm_123card")
+    }
+
+    func testUpdatePaymentMethod_checkoutSession_syncsBillingAddress() async throws {
+        let checkoutSessionId = "cs_test_123"
+        var pmJSON = STPPaymentMethod.paymentMethodJson
+        pmJSON["billing_details"] = [
+            "name": "Jane Doe",
+            "address": [
+                "line1": "123 Main St",
+                "city": "San Francisco",
+                "state": "CA",
+                "postal_code": "94105",
+                "country": "US",
+            ],
+        ]
+        let (expectation, _) = stubCheckoutSessionUpdatePaymentMethod(
+            checkoutSessionId: checkoutSessionId,
+            paymentMethodId: paymentMethod.stripeId,
+            paymentMethodJSON: pmJSON
+        )
+
+        let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
+        let sut = SavedPaymentMethodManager(
+            configuration: configuration,
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            intent: .checkout(checkout)
+        )
+
+        let billing = STPPaymentMethodBillingDetails()
+        billing.name = "Jane Doe"
+        let updateParams = STPPaymentMethodUpdateParams()
+        updateParams.billingDetails = billing
+        _ = try await sut.update(paymentMethod: paymentMethod, with: updateParams)
+        await fulfillment(of: [expectation], timeout: 5.0)
+
+        // The updated payment method's billing address is synced onto the checkout session
+        XCTAssertEqual(checkout.session.billingAddress?.address.country, "US")
+        XCTAssertEqual(checkout.session.billingAddress?.address.line1, "123 Main St")
+        XCTAssertEqual(checkout.session.billingAddress?.address.city, "San Francisco")
+        XCTAssertEqual(checkout.session.billingAddress?.name, "Jane Doe")
     }
 
     func testUpdatePaymentMethod_checkoutSession_expiryOnly() async throws {
-        let checkoutSessionId = "cs_test_checkout_session"
+        let checkoutSessionId = "cs_test_123"
         let (expectation, capturedBody) = stubCheckoutSessionUpdatePaymentMethod(
             checkoutSessionId: checkoutSessionId,
             paymentMethodId: paymentMethod.stripeId
         )
 
-        let checkoutSession = makeCheckoutSession(id: checkoutSessionId)
+        let checkout = await CheckoutTestHelpers.makeCheckoutWithOpenSession()
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkout(Checkout(apiResponse: checkoutSession))
+            intent: .checkout(checkout)
         )
 
         let card = STPPaymentMethodCardParams()
@@ -291,7 +334,8 @@ extension SavedPaymentMethodManagerTests {
 
     func stubCheckoutSessionUpdatePaymentMethod(
         checkoutSessionId: String,
-        paymentMethodId: String
+        paymentMethodId: String,
+        paymentMethodJSON: [String: Any] = STPPaymentMethod.paymentMethodJson
     ) -> (XCTestExpectation, CapturedBody) {
         let exp = expectation(description: "POST payment_pages/\(checkoutSessionId) updates payment method")
         let captured = CapturedBody()
@@ -300,7 +344,7 @@ extension SavedPaymentMethodManagerTests {
             "session_id": checkoutSessionId,
             "customer": [
                 "id": "cus_test123",
-                "payment_methods": [STPPaymentMethod.paymentMethodJson],
+                "payment_methods": [paymentMethodJSON],
             ],
         ])
 
