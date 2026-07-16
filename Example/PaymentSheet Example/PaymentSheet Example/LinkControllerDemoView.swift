@@ -253,6 +253,7 @@ struct LinkControllerDemoView: View {
                             paymentMethod.stripeId,
                             toCustomer: customerId
                         )
+                        print("**** Payment method created (ID: \(paymentMethod.stripeId), type: \(paymentMethod.type))")
                     } catch {
                         errorMessage = "Payment method created (ID: \(paymentMethod.stripeId)) but failed to save: \(error.localizedDescription)"
                     }

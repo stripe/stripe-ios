@@ -921,16 +921,6 @@ import UIKit
         let confirmParams = STPSetupIntentConfirmParams(clientSecret: clientSecret)
         confirmParams.paymentMethodID = paymentMethod.stripeId
 
-        // Required for off-session link PMs: captures consent given during the Link flow.
-        // inferFromClient lets Stripe derive IP/user-agent from the request itself.
-        let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
-        onlineParams.inferFromClient = true
-        let acceptance = STPMandateCustomerAcceptanceParams()
-        acceptance.type = .online
-        acceptance.onlineParams = onlineParams
-        let mandateData = STPMandateDataParams(customerAcceptance: acceptance)
-        confirmParams.mandateData = mandateData
-
         let authContext = ViewControllerAuthenticationContext(viewController: viewController)
         STPPaymentHandler.shared().confirmSetupIntent(
             params: confirmParams,
@@ -1070,7 +1060,6 @@ import UIKit
                     currency: nil,
                     setupFutureUsage: .offSession
                 ),
-                paymentMethodTypes: ["link"],
                 confirmHandler: { _, _ in
                     stpAssertionFailure("The confirmHandler is not expected to be called in the LinkController.")
                     return PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT
