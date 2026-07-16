@@ -6,8 +6,8 @@
 import SwiftUI
 import UIKit
 
-@_spi(LinkControllerPreview) import StripePaymentSheet
 import StripePayments
+@_spi(LinkControllerPreview) import StripePaymentSheet
 
 @available(iOS 16.0, *)
 struct LinkControllerDemoView: View {
