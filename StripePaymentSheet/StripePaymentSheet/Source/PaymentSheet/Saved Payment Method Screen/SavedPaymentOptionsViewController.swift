@@ -635,13 +635,29 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
 
         guard case .saved(let paymentMethod) = viewModel,
               case .checkout(let checkout) = intent,
-              Checkout.requiresBillingSync(for: paymentMethod.billingDetails) else {
+              intent.requiresBillingSync(for: paymentMethod.billingDetails) else {
             delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
             return
         }
 
-        // Sync the payment method's billing address to the checkout session before notifying the
-        // delegate of the new selection. On failure, revert the selection and show the error.
+        syncBillingAddressThenNotifyDelegate(
+            checkout: checkout,
+            paymentMethod: paymentMethod,
+            viewModel: viewModel,
+            indexPath: indexPath,
+            previousSelectedViewModelIndex: previousSelectedViewModelIndex
+        )
+    }
+
+    /// Syncs the payment method's billing address to the checkout session before notifying the
+    /// delegate of the new selection. On failure, reverts the selection and shows the error.
+    private func syncBillingAddressThenNotifyDelegate(
+        checkout: Checkout,
+        paymentMethod: STPPaymentMethod,
+        viewModel: Selection,
+        indexPath: IndexPath,
+        previousSelectedViewModelIndex: Int?
+    ) {
         isSyncingBillingAddress = true
         showError(nil)
         let cell = collectionView.cellForItem(at: indexPath) as? SavedPaymentMethodCollectionView.PaymentOptionCell

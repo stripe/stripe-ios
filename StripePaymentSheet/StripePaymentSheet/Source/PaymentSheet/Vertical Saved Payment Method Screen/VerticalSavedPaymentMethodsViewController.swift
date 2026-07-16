@@ -366,13 +366,27 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         self.view.isUserInteractionEnabled = false
         self.navigationBar.isUserInteractionEnabled = false
 
-        guard case .checkout(let checkout) = intent, Checkout.requiresBillingSync(for: paymentMethod.billingDetails) else {
+        guard case .checkout(let checkout) = intent, intent.requiresBillingSync(for: paymentMethod.billingDetails) else {
             self.complete()
             return
         }
 
-        // Sync the payment method's billing address to the checkout session before dismissing.
-        // On failure, stay on this screen, restore the previous selection, and show the error.
+        syncBillingAddressThenComplete(
+            checkout: checkout,
+            paymentMethod: paymentMethod,
+            button: button,
+            previousSelectedButton: previousSelectedButton
+        )
+    }
+
+    /// Syncs the payment method's billing address to the checkout session before dismissing.
+    /// On failure, stays on this screen, restores the previous selection, and shows the error.
+    private func syncBillingAddressThenComplete(
+        checkout: Checkout,
+        paymentMethod: STPPaymentMethod,
+        button: SavedPaymentMethodRowButton,
+        previousSelectedButton: SavedPaymentMethodRowButton?
+    ) {
         showError(nil)
         button.setLoading(true)
         setOtherRows(enabled: false, than: button)

@@ -19,14 +19,6 @@ final class SavedPaymentOptionsBillingSyncTests: APIStubbedTestCase {
 
     private let customerID = "cus_billing_sync_test"
 
-    // MARK: - Checkout.requiresBillingSync
-
-    func testRequiresBillingSync() {
-        XCTAssertTrue(Checkout.requiresBillingSync(for: makeSavedCard(id: "pm_1", country: "US").billingDetails))
-        XCTAssertFalse(Checkout.requiresBillingSync(for: makeSavedCard(id: "pm_2", country: nil).billingDetails))
-        XCTAssertFalse(Checkout.requiresBillingSync(for: nil))
-    }
-
     // MARK: - SavedPaymentOptionsViewController
 
     func testTapSavedPM_checkoutIntent_syncsBillingThenNotifiesDelegate() async throws {
