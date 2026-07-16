@@ -133,23 +133,6 @@ extension PaymentSheet {
             }
             return false
         }
-
-        var billingDetails: STPPaymentMethodBillingDetails? {
-            switch self {
-            case .new(let confirmParams):
-                return confirmParams.paymentMethodParams.billingDetails
-            case .saved(let paymentMethod, let confirmParams):
-                return confirmParams?.paymentMethodParams.billingDetails ?? paymentMethod.billingDetails
-            case .external(_, let billingDetails):
-                return billingDetails
-            case .applePay:
-                // TODO(porter) Get Apple Pay working with automatic tax
-                return nil
-            case .link:
-                // Link does not support automatic tax with billing address as source
-                return nil
-            }
-        }
     }
 
     /// A class that presents the individual steps of a payment flow

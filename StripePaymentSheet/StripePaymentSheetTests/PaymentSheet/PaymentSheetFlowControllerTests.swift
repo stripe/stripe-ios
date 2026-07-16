@@ -483,20 +483,20 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         await fulfillment(of: [exp], timeout: 2.0)
     }
 
-    // MARK: - PaymentOption.billingDetails
+    // MARK: - PaymentOption.checkoutBillingDetails
 
-    func testSavedPaymentOptionBillingDetails_fallsBackToSavedPaymentMethod() {
+    func testSavedPaymentOptionCheckoutBillingDetails_fallsBackToSavedPaymentMethod() {
         // Given a saved PM that carries its own billing address and no confirmParams (the usual saved case)...
         let savedCard = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
         let option = PaymentSheet.PaymentOption.saved(paymentMethod: savedCard, confirmParams: nil)
 
-        // ...billingDetails falls back to the saved PM's billing details (rather than returning nil).
-        XCTAssertEqual(option.billingDetails?.address?.country, "US")
-        XCTAssertEqual(option.billingDetails?.address?.line1, "123 Main St")
-        XCTAssertEqual(option.billingDetails?.address?.postalCode, "94105")
+        // ...checkoutBillingDetails falls back to the saved PM's billing details (rather than returning nil).
+        XCTAssertEqual(option.checkoutBillingDetails?.address?.country, "US")
+        XCTAssertEqual(option.checkoutBillingDetails?.address?.line1, "123 Main St")
+        XCTAssertEqual(option.checkoutBillingDetails?.address?.postalCode, "94105")
     }
 
-    func testSavedPaymentOptionBillingDetails_prefersConfirmParams() {
+    func testSavedPaymentOptionCheckoutBillingDetails_prefersConfirmParams() {
         // Given a saved PM plus confirmParams (e.g. CVC recollection) that carry their own billing...
         let savedCard = STPPaymentMethod._testCard(line1: "123 Main St", postalCode: "94105", countryCode: "US")
         let confirmParams = IntentConfirmParams(type: .stripe(.card))
@@ -505,6 +505,6 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         let option = PaymentSheet.PaymentOption.saved(paymentMethod: savedCard, confirmParams: confirmParams)
 
         // ...confirmParams billing wins over the saved PM's billing.
-        XCTAssertEqual(option.billingDetails?.address?.country, "CA")
+        XCTAssertEqual(option.checkoutBillingDetails?.address?.country, "CA")
     }
 }
