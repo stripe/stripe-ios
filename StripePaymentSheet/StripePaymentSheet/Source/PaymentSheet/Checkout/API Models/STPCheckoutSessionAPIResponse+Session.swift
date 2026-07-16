@@ -28,6 +28,7 @@ extension STPCheckoutSessionAPIResponse {
             lineItems: lineItems,
             livemode: livemode,
             minorUnitsAmountDivisor: minorUnitsAmountDivisor,
+            paymentOption: nil,
             savedPaymentMethods: savedPaymentMethods,
             shipping: shipping,
             shippingAddress: shippingAddress,
@@ -44,8 +45,8 @@ extension STPCheckoutSessionAPIResponse {
             allowedShippingCountries: allowedShippingCountries,
             localizedPricesMetas: localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,
-            requiresBillingAddress: requiresBillingAddress,
             adaptivePricingActive: adaptivePricingActive,
+            requiresBillingAddress: requiresBillingAddress,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
             elementsSession: elementsSession

@@ -13,8 +13,8 @@ import Foundation
 enum CountryTaxRequirement {
     /// Collection mode per country; unlisted countries need country only.
     static let collectionModeByCountry: [String: AddressSectionElement.CollectionMode] = [
-        "US": .autoCompletable,
-        "PR": .autoCompletable,
+        "US": .autocomplete(),
+        "PR": .autocomplete(),
         "CA": .countryAndPostal(countriesRequiringPostalCollection: ["CA"]),
         "GB": .countryAndPostal(countriesRequiringPostalCollection: ["GB"]),
         "IN": .countryAndPostal(countriesRequiringPostalCollection: ["IN"]),

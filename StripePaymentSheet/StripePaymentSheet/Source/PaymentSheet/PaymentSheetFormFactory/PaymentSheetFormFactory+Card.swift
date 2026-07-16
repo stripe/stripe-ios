@@ -99,7 +99,7 @@ extension PaymentSheetFormFactory {
                     : .countryAndPostal()
                 return makeBillingAddressSection(collectionMode: collectionMode, countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .full:
-                return makeBillingAddressSection(collectionMode: .autoCompletable, countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
+                return makeBillingAddressSection(collectionMode: .autocomplete(), countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .never:
                 // Still collect tax fields if the merchant opted out
                 guard collectsTaxFromBillingAddress else { return nil }

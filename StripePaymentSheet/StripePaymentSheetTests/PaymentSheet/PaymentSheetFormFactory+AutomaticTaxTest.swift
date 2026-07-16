@@ -84,7 +84,7 @@ final class PaymentSheetFormFactoryAutomaticTaxTest: XCTestCase {
     private func assertCollectsTaxFields(_ section: AddressSectionElement, _ pm: STPPaymentMethodType, file: StaticString = #filePath, line: UInt = #line) {
         let country = section.selectedCountryCode
         switch CountryTaxRequirement.collectionModeByCountry[country] {
-        case .autoCompletable, .all, .allWithAutocomplete:
+        case .all, .autocomplete:
             // Full address required → line1 (or its autocomplete stand-in) must be present.
             XCTAssertTrue(section.line1 != nil || section.autoCompleteLine != nil,
                           "\(pm.identifier) must collect line1 for tax in \(country)", file: file, line: line)

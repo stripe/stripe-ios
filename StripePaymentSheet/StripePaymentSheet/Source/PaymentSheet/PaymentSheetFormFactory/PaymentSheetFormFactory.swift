@@ -486,7 +486,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeBillingAddressSection(
-        collectionMode: AddressSectionElement.CollectionMode = .autoCompletable,
+        collectionMode: AddressSectionElement.CollectionMode = .autocomplete(),
         countries: [String]? = nil,
         countryAPIPath: String? = nil,
         includeEmail: Bool = false,
@@ -515,12 +515,13 @@ extension PaymentSheetFormFactory {
 
         // Determine the collection mode based on whether we have default values
         let finalCollectionMode: AddressSectionElement.CollectionMode = {
-            // If we have default address values (either from billing defaults or shipping details) and the requested mode would show all fields, use allWithAutocomplete
+            // If we have default address values, show the expanded form so those values are visible.
             let hasDefaultAddressValues = defaultBillingDetails().address != .init() || (configuration.shippingDetails() != nil && displayBillingSameAsShippingCheckbox)
             if hasDefaultAddressValues {
                 switch collectionMode {
-                case .autoCompletable:
-                    return .allWithAutocomplete
+                case .autocomplete(let autocompleteCountries, .compact):
+                    // Preserve any autocomplete country restrictions while expanding so default values are visible.
+                    return .autocomplete(autocompleteCountries: autocompleteCountries, presentation: .expanded)
                 default:
                     return collectionMode
                 }
@@ -799,7 +800,7 @@ extension PaymentSheetFormFactory {
     ) -> PaymentMethodElementWrapper<AddressSectionElement> {
         let collectionMode: AddressSectionElement.CollectionMode
         if configuration.billingDetailsCollectionConfiguration.address == .full {
-            collectionMode = .all()
+            collectionMode = .all
         } else {
             // Country-requiring LPMs always show at least the country. When the Checkout Session
             // sources tax from the billing address, collect the extra per-country tax fields too.
@@ -985,9 +986,9 @@ extension PaymentSheetFormFactory {
     func billingAddressCollectionMode(fullAddressRequiredByPaymentMethod: Bool) -> AddressSectionElement.CollectionMode? {
         switch configuration.billingDetailsCollectionConfiguration.address {
         case .full:
-            return .autoCompletable
+            return .autocomplete()
         case .automatic where fullAddressRequiredByPaymentMethod:
-            return .autoCompletable
+            return .autocomplete()
         case .automatic, .never:
             return collectsTaxFromBillingAddress ? .perCountry(CountryTaxRequirement.collectionModeByCountry) : nil
         }

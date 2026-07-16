@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 7/10/26.
 //
 
+import Combine
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 import UIKit
@@ -59,6 +60,10 @@ public final class PaymentElement {
 
     let paymentSheetFlowController: PaymentSheet.FlowController
     let embeddedPaymentElement: EmbeddedPaymentElement
+    weak var checkout: Checkout?
+    private var cancellables = Set<AnyCancellable>()
+    var paymentOptionSourceOfTruthIsFlowController = false
+    private var isSuppressingPaymentOptionUpdates = false
 
     // MARK: - Internal methods
 
@@ -85,6 +90,24 @@ public final class PaymentElement {
         self.view = PaymentElementView(viewModel: PaymentElementViewModel(uiView: uiView))
         self.uiView = uiView
         self.embeddedPaymentElement.delegate = self
+        self.checkout = checkout
+        self.paymentSheetFlowController.$paymentOption
+            // Without dropFirst, @Published immediately emits FlowController's current value before we setPaymentOption from EmbeddedPaymentElement below.
+            .dropFirst()
+            .sink { [weak self] paymentOption in
+                guard let self, !isSuppressingPaymentOptionUpdates else {
+                    return
+                }
+                paymentOptionSourceOfTruthIsFlowController = true
+                self.checkout?.setPaymentOption(paymentOption.map(Checkout.Session.PaymentOptionDisplayData.init))
+            }
+            .store(in: &cancellables)
+        // We don't know whether to use FC or Embedded's payment option at this point, so we'll use Embedded since it has more info (includes mandate text).
+        stpAssert(paymentSheetFlowController.paymentOption?.label == embeddedPaymentElement.paymentOption?.label, "Payment Element assumes that the FlowController's payment option is the same as the Embedded's on first load!")
+        checkout.setPaymentOption(
+            embeddedPaymentElement.paymentOption.map(Checkout.Session.PaymentOptionDisplayData.init)
+        )
+        paymentOptionSourceOfTruthIsFlowController = false // We used embedded's payment option
     }
 }
 
@@ -96,6 +119,13 @@ extension PaymentElement {
     }
 
     func update(checkout: Checkout) async throws {
+        // FlowController.update and EmbeddedPaymentElement.update can both publish their current/default payment option while applying the new Checkout session. Suppress those intermediate callbacks - we'll explicitly set the payment option ourselves in this method.
+        stpAssert(!isSuppressingPaymentOptionUpdates, "PaymentElement.update(checkout:) does not support overlapping updates.")
+        isSuppressingPaymentOptionUpdates = true
+        defer {
+            isSuppressingPaymentOptionUpdates = false
+        }
+
         // TODO: This should not be async or throws; we should not make any network requests or re-fetch things, just update the v1/e/s response.
         // Update FlowController
         try await paymentSheetFlowController.update(checkout: checkout)
@@ -105,6 +135,28 @@ extension PaymentElement {
         if case .failed(let error) = result {
             throw error
         }
+
+        // Update payment option
+        // Problem: Since (unfortunately) we have two sources of truth for payment option (FC and Embedded), we need to know which one to pick. We can't just let them both update payment option - then the last one to update will win, even when it wasn't actually used by the customer.
+        // Hacky solution: We determine which one to pick based on which one last reported a payment option update.
+        // If neither was used, their payment options should be equal (the default), and we pick one arbitrarily.
+        let paymentOption = {
+            if paymentOptionSourceOfTruthIsFlowController {
+                paymentSheetFlowController.paymentOption.map(Checkout.Session.PaymentOptionDisplayData.init)
+            } else {
+                embeddedPaymentElement.paymentOption.map(Checkout.Session.PaymentOptionDisplayData.init)
+            }
+        }()
+        checkout.setPaymentOption(paymentOption)
+    }
+
+    func clearPaymentOption() {
+        guard !paymentSheetFlowController.didPresentAndContinue else {
+            assertionFailure("Clearing the payment option after presenting PaymentElement is not implemented. File a feature request if you need this.")
+            return
+        }
+        embeddedPaymentElement.clearPaymentOption()
+        checkout?.setPaymentOption(nil)
     }
 }
 
@@ -121,6 +173,34 @@ extension PaymentElement: EmbeddedPaymentElementDelegate {
     }
 
     public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
-        // PaymentElementViewDelegate does not expose payment option updates.
+        guard !isSuppressingPaymentOptionUpdates else {
+            return
+        }
+        paymentOptionSourceOfTruthIsFlowController = false
+        checkout?.setPaymentOption(embeddedPaymentElement.paymentOption.map(Checkout.Session.PaymentOptionDisplayData.init))
+    }
+}
+
+// MARK: - Checkout.Session.PaymentOptionDisplayData
+
+extension Checkout.Session.PaymentOptionDisplayData {
+    init(_ paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData) {
+        self.init(
+            image: paymentOption.image,
+            label: paymentOption.label,
+            billingDetails: paymentOption.billingDetails,
+            paymentMethodType: paymentOption.paymentMethodType,
+            mandateText: nil
+        )
+    }
+
+    init(_ paymentOption: EmbeddedPaymentElement.PaymentOptionDisplayData) {
+        self.init(
+            image: paymentOption.image,
+            label: paymentOption.label,
+            billingDetails: paymentOption.billingDetails,
+            paymentMethodType: paymentOption.paymentMethodType,
+            mandateText: paymentOption.mandateText
+        )
     }
 }

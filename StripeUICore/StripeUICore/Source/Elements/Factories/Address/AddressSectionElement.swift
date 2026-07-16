@@ -67,21 +67,30 @@ import UIKit
 
     /// Describes which address fields to collect
     public enum CollectionMode: Equatable {
-        /// The default collection mode.
-        /// - Parameter autocompletableCountries: If non-empty, the line1 field displays an autocomplete accessory button if the current country is in this list. Set the `didTapAutocompleteButton` property to be notified when the button is tapped.
-        case all(autocompletableCountries: [String] = [])
-        /// Collects all address fields and always shows the autocomplete button for all countries.
-        case allWithAutocomplete
+        /// Shows all address fields without autocomplete.
+        case all
+        /// Shows address autocomplete.
+        /// - Parameters:
+        ///   - autocompleteCountries: Countries that support autocomplete. If nil, all countries are supported.
+        ///     Unsupported countries use manual entry in expanded mode.
+        ///     Compact mode callers should expand when an unsupported country is selected.
+        ///   - presentation: Whether to show only the autocomplete entry point or the full address form.
+        case autocomplete(autocompleteCountries: [String]? = nil, presentation: AutocompletePresentation = .compact)
         /// Collects country and postal code if the country is one of `countriesRequiringPostalCollection`
         /// - Note: Really only useful for cards, where we only collect postal for a handful of countries
         case countryAndPostal(countriesRequiringPostalCollection: [String] = ["US", "GB", "CA"])
-        /// Replaces the address line 1 field with `self.autoCompleteLine`
-        case autoCompletable
         /// Only collects the country. Used by Payment Methods that require a country but not the rest of the address.
         case countryOnly
         /// Per-country collection modes. Missing countries collect country only.
         /// - Note: 2 letter country code as the key
         indirect case perCountry([String: CollectionMode])
+
+        public enum AutocompletePresentation: Equatable {
+            /// Shows country and the autocomplete line entry point.
+            case compact
+            /// Shows the full address form. Line 1 opens autocomplete when the selected country is supported.
+            case expanded
+        }
     }
     /// Fields that this section can collect in addition to the address
     public struct AdditionalFields {
@@ -181,7 +190,7 @@ import UIKit
         locale: Locale = .current,
         addressSpecProvider: AddressSpecProvider = .shared,
         defaults: AddressDetails = .empty,
-        collectionMode: CollectionMode = .all(),
+        collectionMode: CollectionMode = .all,
         additionalFields: AdditionalFields = .init(),
         theme: ElementsAppearance = .default,
         presentAutoComplete: @escaping () -> Void = { }
@@ -339,9 +348,9 @@ import UIKit
                 } else {
                    return false
                 }
-            case .autoCompletable:
+            case .autocomplete(_, .compact):
                 return false
-            case .allWithAutocomplete:
+            case .autocomplete(_, .expanded):
                 return true
             case .perCountry:
                 // Unresolved .perCountry — treat as country-only.
@@ -349,19 +358,14 @@ import UIKit
             }
         }
 
-        if collectionMode == .autoCompletable {
+        if collectionMode.isCompactAutocomplete {
             autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme, didTap: { [weak self] in self?.didTapAutocompleteButton() })
         } else {
             autoCompleteLine = nil
         }
         // Re-create the address fields
         if fieldOrdering.contains(.line) {
-            if case .all(let autocompletableCountries) = collectionMode, autocompletableCountries.caseInsensitiveContains(countryCode) {
-                line1 = TextFieldElement.Address.LineConfiguration(
-                    lineType: .line1Autocompletable(didTapAutocomplete: { [weak self] in self?.didTapAutocompleteButton() }),
-                    defaultValue: address.line1
-                ).makeElement(theme: theme)
-            } else if case .allWithAutocomplete = collectionMode {
+            if collectionMode.showsAutocompleteAccessory(for: countryCode) {
                 line1 = TextFieldElement.Address.LineConfiguration(
                     lineType: .line1Autocompletable(didTapAutocomplete: { [weak self] in self?.didTapAutocompleteButton() }),
                     defaultValue: address.line1
@@ -427,6 +431,26 @@ import UIKit
         return allDisplayedFieldsEqual
     }
 
+}
+
+private extension AddressSectionElement.CollectionMode {
+    var isCompactAutocomplete: Bool {
+        switch self {
+        case .autocomplete(_, .compact):
+            return true
+        case .all, .autocomplete(_, .expanded), .countryAndPostal, .countryOnly, .perCountry:
+            return false
+        }
+    }
+
+    func showsAutocompleteAccessory(for countryCode: String) -> Bool {
+        switch self {
+        case .autocomplete(let autocompleteCountries, .expanded):
+            return autocompleteCountries?.caseInsensitiveContains(countryCode) ?? true
+        case .all, .autocomplete(_, .compact), .countryAndPostal, .countryOnly, .perCountry:
+            return false
+        }
+    }
 }
 
 // MARK: - Element

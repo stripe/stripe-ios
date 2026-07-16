@@ -36,6 +36,40 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.status?.type, .open)
     }
 
+    func testSessionPaymentOptionUpdatesAndClears() async throws {
+        // Given a Checkout with a PaymentElement and valid card payment option
+        let checkout = await Checkout(
+            clientSecret: "cs_test_123_secret_abc",
+            apiResponse: CheckoutTestHelpers.makeOpenSession()
+        )
+        // TODO: Setting PaymentElement is a workaround hack - delete when we can remove the test-only init above and properly init Checkout.
+        let paymentElement = try await PaymentElement(checkout: checkout)
+        checkout.paymentElement = paymentElement
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
+        confirmParams.paymentMethodParams.card?.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card?.expMonth = NSNumber(value: 12)
+        confirmParams.paymentMethodParams.card?.expYear = NSNumber(value: 2040)
+        confirmParams.paymentMethodParams.card?.cvc = "123"
+        confirmParams.setDefaultBillingDetailsIfNecessary(for: paymentElement.embeddedPaymentElement.configuration)
+
+        // When the embedded PaymentElement reports the selected payment option
+        paymentElement.embeddedPaymentElement._test_paymentOption = .new(confirmParams: confirmParams)
+        paymentElement.embeddedPaymentElementDidUpdatePaymentOption(
+            embeddedPaymentElement: paymentElement.embeddedPaymentElement
+        )
+
+        // Then the Checkout session mirrors the selected payment option
+        XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "card")
+        XCTAssertEqual(checkout.session.paymentOption?.label, "•••• 4242")
+
+        // When the Checkout payment option is cleared
+        checkout.clearPaymentOption()
+
+        // Then the Checkout session payment option is cleared
+        XCTAssertNil(checkout.session.paymentOption)
+    }
+
     // MARK: - runServerUpdate Tests
 
     func testRunServerUpdateWrapsClosureError() async {
@@ -358,7 +392,7 @@ final class CheckoutUnitTests: XCTestCase {
             name: "Jane Doe",
             address: .init(country: "US")
         )
-        checkout.session = checkout.session.makeCopyOverriding(billingAddress: billingUpdate)
+        checkout.dangerouslySetSessionDirectly(checkout.session.makeCopyOverriding(billingAddress: .newValue(billingUpdate)))
 
         // Simulate a confirm response
         var updatedJSON = CheckoutTestHelpers.openSessionJSON
