@@ -780,10 +780,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        // Fetch the full PaymentPagesAPIResponse object (with allResponseFields containing elements_session)
-        let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
-
-        let checkout = Checkout(apiResponse: checkoutSession)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        checkoutConfiguration.apiClient = customApiClient
+        let checkout = try await Checkout(configuration: checkoutConfiguration)
         PaymentSheetLoader.load(
             mode: .checkout(checkout),
             configuration: configuration,
@@ -817,8 +816,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        let checkoutSessionAPIResponse = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
-        let checkout = Checkout(apiResponse: checkoutSessionAPIResponse)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        checkoutConfiguration.apiClient = customApiClient
+        let checkout = try await Checkout(configuration: checkoutConfiguration)
 
         PaymentSheetLoader.load(
             mode: .checkout(checkout),

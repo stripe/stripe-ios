@@ -30,21 +30,16 @@ final class CheckoutUnitTests: XCTestCase {
         )
     }
 
-    func testInitSetsLoadedState() async {
-        let checkout = await makeCheckoutWithOpenSession()
+    func testInitSetsLoadedState() async throws {
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         XCTAssertFalse(checkout.isLoading)
         XCTAssertEqual(checkout.session.status?.type, .open)
     }
 
     func testSessionPaymentOptionUpdatesAndClears() async throws {
         // Given a Checkout with a PaymentElement and valid card payment option
-        let checkout = await Checkout(
-            clientSecret: "cs_test_123_secret_abc",
-            apiResponse: CheckoutTestHelpers.makeOpenSession()
-        )
-        // TODO: Setting PaymentElement is a workaround hack - delete when we can remove the test-only init above and properly init Checkout.
-        let paymentElement = try await PaymentElement(checkout: checkout)
-        checkout.paymentElement = paymentElement
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let paymentElement = checkout.getPaymentElement()
         let confirmParams = IntentConfirmParams(type: .stripe(.card))
         confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
         confirmParams.paymentMethodParams.card?.number = "4242424242424242"
@@ -72,8 +67,8 @@ final class CheckoutUnitTests: XCTestCase {
 
     // MARK: - runServerUpdate Tests
 
-    func testRunServerUpdateWrapsClosureError() async {
-        let checkout = await makeCheckoutWithOpenSession()
+    func testRunServerUpdateWrapsClosureError() async throws {
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let expectedMessage = "Server returned 500"
 
         do {
@@ -92,8 +87,8 @@ final class CheckoutUnitTests: XCTestCase {
         }
     }
 
-    func testRunServerUpdateWrapsTimeoutError() async {
-        let checkout = await makeCheckoutWithOpenSession()
+    func testRunServerUpdateWrapsTimeoutError() async throws {
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
 
         do {
             try await checkout.runServerUpdate {
@@ -110,8 +105,8 @@ final class CheckoutUnitTests: XCTestCase {
         }
     }
 
-    func testRunServerUpdateWrapsGenericError() async {
-        let checkout = await makeCheckoutWithOpenSession()
+    func testRunServerUpdateWrapsGenericError() async throws {
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
 
         do {
             try await checkout.runServerUpdate {
@@ -132,7 +127,7 @@ final class CheckoutUnitTests: XCTestCase {
 // MARK: - Address Override Tests
 
     func testUpdateBillingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
@@ -145,15 +140,15 @@ final class CheckoutUnitTests: XCTestCase {
         let stored = checkout.session.billingAddress
         XCTAssertEqual(stored?.name, "Jane Doe")
         XCTAssertEqual(stored?.address.country, "US")
-        XCTAssertEqual(delegate.updateSessionCallCount, 1)
+        XCTAssertEqual(delegate.updateSessionCallCount, 2)
         XCTAssertEqual(delegate.beginLoadingCallCount, 1)
         XCTAssertEqual(delegate.finishLoadingCallCount, 1)
-        XCTAssertEqual(recorder.sessions.count, 1)
+        XCTAssertEqual(recorder.sessions.count, 2)
         XCTAssertEqual(recorder.loading, [true, false])
     }
 
     func testUpdateShippingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
@@ -166,16 +161,16 @@ final class CheckoutUnitTests: XCTestCase {
         let stored = checkout.session.shippingAddress
         XCTAssertEqual(stored?.name, "John Smith")
         XCTAssertEqual(stored?.address.country, "US")
-        XCTAssertEqual(delegate.updateSessionCallCount, 1)
+        XCTAssertEqual(delegate.updateSessionCallCount, 2)
         XCTAssertEqual(delegate.beginLoadingCallCount, 1)
         XCTAssertEqual(delegate.finishLoadingCallCount, 1)
-        XCTAssertEqual(recorder.sessions.count, 1)
+        XCTAssertEqual(recorder.sessions.count, 2)
         XCTAssertEqual(recorder.loading, [true, false])
     }
 
     func testUpdateShippingAddress_disallowedCountry_throws() async throws {
         let session = CheckoutTestHelpers.makeOpenSession(allowedCountries: ["US", "CA"])
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: session)
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session))
 
         do {
             try await checkout.updateShippingAddress(
@@ -194,7 +189,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testUpdateShippingAddress_allowedCountry_succeeds() async throws {
         let session = CheckoutTestHelpers.makeOpenSession(allowedCountries: ["US", "CA", "GB"])
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: session)
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session))
 
         try await checkout.updateShippingAddress(
             address: .init(country: "CA", line1: "80 Spadina Ave", city: "Toronto", state: "ON", postalCode: "M5V 2J4")
@@ -374,7 +369,7 @@ final class CheckoutUnitTests: XCTestCase {
     // MARK: - commitSession Tests
 
     func testUpdateSessionNotifiesDelegate() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
@@ -388,12 +383,12 @@ final class CheckoutUnitTests: XCTestCase {
 
         XCTAssertEqual(checkout.session.status?.type, .complete)
         XCTAssertEqual(checkout.session.status?.paymentStatus, .paid)
-        XCTAssertEqual(delegate.updateSessionCallCount, 1)
-        XCTAssertEqual(recorder.sessions.count, 1)
+        XCTAssertEqual(delegate.updateSessionCallCount, 2)
+        XCTAssertEqual(recorder.sessions.count, 2)
     }
 
     func testUpdateSessionCarriesOverAddressOverrides() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
 
         // Set address overrides on the initial session
         let billingUpdate = Checkout.ContactAddress(
@@ -417,12 +412,17 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testUpdateSessionCanBeCalledMultipleTimes() async throws {
         // Initialize with billing address already set so it doesn't emit a change
-        let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: apiResponse)
-        checkout.dangerouslySetSessionDirectly(checkout.session.makeCopyOverriding(billingAddress: .newValue(Checkout.ContactAddress(
-            name: "Jane Doe",
-            address: .init(country: "US")
-        ))))
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        checkout.dangerouslySetSessionDirectly(
+            checkout.session.makeCopyOverriding(
+                billingAddress: .newValue(
+                    Checkout.ContactAddress(
+                        name: "Jane Doe",
+                        address: .init(country: "US")
+                    )
+                )
+            )
+        )
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
@@ -443,24 +443,24 @@ final class CheckoutUnitTests: XCTestCase {
         try await checkout.commitSession(secondSession)
         XCTAssertEqual(checkout.session.status?.type, .open)
         XCTAssertEqual(checkout.session.billingAddress?.name, "Jane Doe")
-        XCTAssertEqual(delegate.updateSessionCallCount, 2)
-        XCTAssertEqual(recorder.sessions.count, 2)
+        XCTAssertEqual(delegate.updateSessionCallCount, 4)
+        XCTAssertEqual(recorder.sessions.count, 4)
     }
 
     // MARK: - State Convenience Tests
 
-    func testSessionAvailableAfterInit() async {
-        let checkout = await makeCheckoutWithOpenSession()
+    func testSessionAvailableAfterInit() async throws {
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         XCTAssertEqual(checkout.session.status?.type, .open)
     }
 
-    func testIsLoadingFalseAfterInit() async {
-        let checkout = await makeCheckoutWithOpenSession()
+    func testIsLoadingFalseAfterInit() async throws {
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         XCTAssertFalse(checkout.isLoading)
     }
 
     func testCommitSessionNotifiesRegularDelegate() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         var callOrder: [String] = []
 
         let delegate = MockCheckoutDelegate()
@@ -475,9 +475,9 @@ final class CheckoutUnitTests: XCTestCase {
 
         try await checkout.commitSession(updatedSession)
 
-        XCTAssertEqual(callOrder, ["regular"])
-        XCTAssertEqual(delegate.updateSessionCallCount, 1)
-        XCTAssertEqual(recorder.sessions.count, 1)
+        XCTAssertEqual(callOrder, ["regular", "regular"])
+        XCTAssertEqual(delegate.updateSessionCallCount, 2)
+        XCTAssertEqual(recorder.sessions.count, 2)
     }
     // MARK: - updatePaymentMethod Parameter Encoding Tests
 
@@ -570,12 +570,6 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertNil(params["payment_method_to_update[billing_details][address][line1]"])
         XCTAssertNil(params["payment_method_to_update[billing_details][address][city]"])
         XCTAssertEqual(params.count, 3)
-    }
-
-    // MARK: - Helpers
-
-    private func makeCheckoutWithOpenSession() async -> Checkout {
-        await CheckoutTestHelpers.makeCheckoutWithOpenSession()
     }
 
 }

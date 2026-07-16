@@ -1151,11 +1151,9 @@ extension PaymentSheetLPMConfirmFlowTests {
                 customerID: customer
             )
             let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            let checkoutSession = try await csApiClient.initCheckoutSession(
-                checkoutSessionId: checkoutSessionResponse.id,
-                adaptivePricingAllowed: true
-            )
-            let checkout = Checkout(apiResponse: checkoutSession)
+            var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+            checkoutConfiguration.apiClient = csApiClient
+            let checkout = try await Checkout(configuration: checkoutConfiguration)
 
             intents = [
                 TestIntent("PaymentIntent", .paymentIntent(paymentIntent)),
@@ -1297,11 +1295,9 @@ extension PaymentSheetLPMConfirmFlowTests {
                     setupFutureUsage: "off_session"
                 )
                 let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-                let checkoutSession = try await csApiClient.initCheckoutSession(
-                    checkoutSessionId: checkoutSessionResponse.id,
-                    adaptivePricingAllowed: true
-                )
-                let checkout = Checkout(apiResponse: checkoutSession)
+                var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+                checkoutConfiguration.apiClient = csApiClient
+                let checkout = try await Checkout(configuration: checkoutConfiguration)
                 intents.append(TestIntent("CheckoutSession w/ setup_future_usage", .checkout(checkout.session), checkout: checkout))
             }
 
@@ -1410,11 +1406,9 @@ extension PaymentSheetLPMConfirmFlowTests {
                     ]
                 )
                 let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-                let checkoutSession = try await csApiClient.initCheckoutSession(
-                    checkoutSessionId: checkoutSessionResponse.id,
-                    adaptivePricingAllowed: true
-                )
-                let checkout = Checkout(apiResponse: checkoutSession)
+                var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+                checkoutConfiguration.apiClient = csApiClient
+                let checkout = try await Checkout(configuration: checkoutConfiguration)
                 intents.append(TestIntent("CheckoutSession w/ PMO setup_future_usage", .checkout(checkout.session), checkout: checkout))
             }
 
@@ -1447,8 +1441,9 @@ extension PaymentSheetLPMConfirmFlowTests {
                 customerID: customer
             )
             let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            let checkoutSession = try await csApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionResponse.id, adaptivePricingAllowed: true)
-            let checkout = Checkout(apiResponse: checkoutSession)
+            var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+            checkoutConfiguration.apiClient = csApiClient
+            let checkout = try await Checkout(configuration: checkoutConfiguration)
 
             return [
                 TestIntent("SetupIntent", .setupIntent(setupIntent)),

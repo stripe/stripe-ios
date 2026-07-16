@@ -18,13 +18,13 @@ import XCTest
 // @iOS26
 final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
 
-    func testDefaultAppearance() async {
-        let view = await makeCurrencySelectorElement(selectedCurrency: "gbp")
+    func testDefaultAppearance() async throws {
+        let view = try await makeCurrencySelectorElement(selectedCurrency: "gbp")
         verify(view)
     }
 
-    func testDarkMode() async {
-        let view = await makeCurrencySelectorElement(selectedCurrency: "gbp")
+    func testDarkMode() async throws {
+        let view = try await makeCurrencySelectorElement(selectedCurrency: "gbp")
         verify(view, darkMode: true)
     }
 
@@ -35,9 +35,9 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
         selectedCurrency: String = "usd",
         appearance: Checkout.CurrencySelectorView.Appearance = .init(),
         disabled: Bool = false
-    ) async -> some View {
+    ) async throws -> some View {
         let session = CheckoutTestHelpers.makeAdaptivePricingSession(currency: selectedCurrency)
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: session)
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session))
 
         return Checkout.CurrencySelectorElement(checkout: checkout, appearance: appearance)
             .disabled(disabled)
