@@ -21,9 +21,6 @@ class PaymentPagesAPIResponse: NSObject {
     /// The Stripe ID of the CheckoutSession.
     let id: String
 
-    /// The client secret of the CheckoutSession. Used for embedded or custom UI modes.
-    let clientSecret: String?
-
     /// The business name configured in the Business Public Details settings of your account.
     let businessName: String?
 
@@ -80,9 +77,6 @@ class PaymentPagesAPIResponse: NSObject {
     /// The expanded SetupIntent for this session, if in `setup` mode.
     let setupIntent: STPSetupIntent?
 
-    /// The list of payment method types that this CheckoutSession is allowed to use.
-    let paymentMethodTypes: [STPPaymentMethodType]
-
     /// Payment-method-specific configuration for this CheckoutSession.
     let paymentMethodOptions: STPPaymentMethodOptions?
 
@@ -94,9 +88,6 @@ class PaymentPagesAPIResponse: NSObject {
 
     /// The URL to redirect to after authentication or payment completion.
     let returnUrl: String?
-
-    /// The URL the customer will be directed to if they decide to cancel payment.
-    let cancelUrl: String?
 
     /// Server-side flag controlling the "Save for future use" checkbox.
     let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
@@ -162,7 +153,6 @@ class PaymentPagesAPIResponse: NSObject {
             String(format: "%@: %p", NSStringFromClass(PaymentPagesAPIResponse.self), self),
             "id = \(id)",
             "total = \(String(describing: total))",
-            "clientSecret = <redacted>",
             "currency = \(String(describing: currency))",
             "mode = \(String(describing: allResponseFields["mode"]))",
             "status = \(String(describing: status))",
@@ -185,7 +175,6 @@ class PaymentPagesAPIResponse: NSObject {
 
     private init(
         id: String,
-        clientSecret: String?,
         businessName: String?,
         currency: String?,
         currencyOptions: [Checkout.CurrencyOption],
@@ -204,12 +193,10 @@ class PaymentPagesAPIResponse: NSObject {
         setupIntentId: String?,
         paymentIntent: STPPaymentIntent?,
         setupIntent: STPSetupIntent?,
-        paymentMethodTypes: [STPPaymentMethodType],
         paymentMethodOptions: STPPaymentMethodOptions?,
         customer: STPCheckoutSessionCustomer?,
         url: URL?,
         returnUrl: String?,
-        cancelUrl: String?,
         savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
         setupFutureUsage: String?,
         setupFutureUsageForPaymentMethodType: [String: String],
@@ -224,7 +211,6 @@ class PaymentPagesAPIResponse: NSObject {
         allResponseFields: [AnyHashable: Any]
     ) {
         self.id = id
-        self.clientSecret = clientSecret
         self.businessName = businessName
         self.currency = currency
         self.currencyOptions = currencyOptions
@@ -243,12 +229,10 @@ class PaymentPagesAPIResponse: NSObject {
         self.setupIntentId = setupIntentId
         self.paymentIntent = paymentIntent
         self.setupIntent = setupIntent
-        self.paymentMethodTypes = paymentMethodTypes
         self.paymentMethodOptions = paymentMethodOptions
         self.customer = customer
         self.url = url
         self.returnUrl = returnUrl
-        self.cancelUrl = cancelUrl
         self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
         self.setupFutureUsage = setupFutureUsage
         self.setupFutureUsageForPaymentMethodType = setupFutureUsageForPaymentMethodType
@@ -276,13 +260,12 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
               let livemode = dict["livemode"] as? Bool,
               let rawMode = dict["mode"] as? String,
               let rawPaymentStatus = dict["payment_status"] as? String,
-              let paymentMethodTypeStrings = dict["payment_method_types"] as? [String]
+              (dict["payment_method_types"] as? [String]) != nil
         else {
             return nil
         }
 
         // Optional / nullable fields
-        let clientSecret = dict["client_secret"] as? String
         let currency = dict["currency"] as? String
         let urlString = dict["url"] as? String
 
@@ -446,7 +429,6 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
 
         return PaymentPagesAPIResponse(
             id: id,
-            clientSecret: clientSecret,
             businessName: businessName,
             currency: currency,
             currencyOptions: currencyOptions,
@@ -465,14 +447,12 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
             setupIntentId: setupIntentId,
             paymentIntent: paymentIntent,
             setupIntent: setupIntent,
-            paymentMethodTypes: paymentMethodTypeStrings.map { STPPaymentMethod.type(from: $0) },
             paymentMethodOptions: STPPaymentMethodOptions.decodedObject(
                 fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any]
             ),
             customer: customer,
             url: urlString.flatMap { URL(string: $0) },
             returnUrl: dict["return_url"] as? String ?? dict["success_url"] as? String,
-            cancelUrl: dict["cancel_url"] as? String,
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
             setupFutureUsage: setupFutureUsage,
             setupFutureUsageForPaymentMethodType: setupFutureUsageForPaymentMethodType,

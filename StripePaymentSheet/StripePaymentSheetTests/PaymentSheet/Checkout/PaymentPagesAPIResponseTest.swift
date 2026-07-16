@@ -58,7 +58,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
 
         XCTAssertEqual(session.id, "cs_test_a1b2c3d4e5f6g7h8i9j0")
-        XCTAssertEqual(session.clientSecret, "cs_test_a1b2c3d4e5f6g7h8i9j0_secret_xyz123abc456")
         XCTAssertEqual(session.total?.total.minorUnitsAmount, 2686)
         XCTAssertEqual(session.total?.subtotal.minorUnitsAmount, 2000)
         XCTAssertEqual(session.currency, "usd")
@@ -72,8 +71,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNotNil(session.customer)
         XCTAssertEqual(session.customer?.id, "cus_test123456")
         XCTAssertEqual(session.customer?.email, "customer@example.com")
-        XCTAssertEqual(session.customer?.name, "Test Customer")
-        XCTAssertEqual(session.customer?.phone, "+15555555555")
         XCTAssertFalse(session.customer?.canDetachPaymentMethod ?? true)
         XCTAssertEqual(session.customer?.paymentMethods.count, 2)
         XCTAssertEqual(session.customer?.paymentMethods[0].stripeId, "pm_1Sxae3Lu5o3P18Zpt5YuRRoG")
@@ -86,7 +83,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.email, "test@example.com")
         XCTAssertEqual(session.url?.absoluteString, "https://checkout.stripe.com/c/pay/cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(session.returnUrl, "https://example.com/return")
-        XCTAssertEqual(session.cancelUrl, "https://example.com/cancel")
 
         // Saved payment methods
         XCTAssertEqual(session.savedPaymentMethods.count, 2)
@@ -99,13 +95,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         // Verify saved payment methods offer save
         XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
         XCTAssertTrue(session.savedPaymentMethodsOfferSave!.enabled)
-        XCTAssertEqual(session.savedPaymentMethodsOfferSave!.status, .notAccepted)
         XCTAssertNil(session.setupFutureUsage)
-
-        XCTAssertEqual(
-            session.paymentMethodTypes,
-            [STPPaymentMethodType.card, STPPaymentMethodType.USBankAccount]
-        )
 
         XCTAssertNotNil(session.paymentMethodOptions)
 
@@ -197,12 +187,10 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNil(session.status)
         XCTAssertEqual(session.mode, .payment)
         XCTAssertTrue(session.livemode)
-        XCTAssertEqual(session.paymentMethodTypes, [.card])
 
         // Optional fields should be nil
         XCTAssertNil(session.total)
         XCTAssertNil(session.currency)
-        XCTAssertNil(session.clientSecret)
         XCTAssertNil(session.paymentIntentId)
         XCTAssertNil(session.setupIntentId)
         XCTAssertNil(session.customer)

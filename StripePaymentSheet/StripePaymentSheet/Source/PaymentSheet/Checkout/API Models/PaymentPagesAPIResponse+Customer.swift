@@ -23,12 +23,6 @@ struct STPCheckoutSessionCustomer {
     /// Customer email address.
     let email: String?
 
-    /// Customer name.
-    let name: String?
-
-    /// Customer phone number.
-    let phone: String?
-
     static func decodedObject(from dict: [AnyHashable: Any]?) -> STPCheckoutSessionCustomer? {
         guard let dict = dict,
               let id = dict["id"] as? String else {
@@ -43,9 +37,7 @@ struct STPCheckoutSessionCustomer {
             id: id,
             paymentMethods: paymentMethods,
             canDetachPaymentMethod: dict["can_detach_payment_method"] as? Bool ?? false,
-            email: dict["email"] as? String,
-            name: dict["name"] as? String,
-            phone: dict["phone"] as? String
+            email: dict["email"] as? String
         )
     }
 }
