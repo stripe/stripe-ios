@@ -25,6 +25,18 @@ import XCTest
 final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     let window: UIWindow = UIWindow(frame: .init(x: 0, y: 0, width: 428, height: 926))
 
+    struct TestIntent {
+        let description: String
+        let intent: Intent
+        let checkout: Checkout?
+
+        init(_ description: String, _ intent: Intent, checkout: Checkout? = nil) {
+            self.description = description
+            self.intent = intent
+            self.checkout = checkout
+        }
+    }
+
     enum MerchantCountry: String {
         case US = "us"
         case SG = "sg"
@@ -448,7 +460,9 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 return config
             }()
 
-            for (description, intent) in try await makeTestIntents(intentKind: intentKind, currency: "eur", paymentMethod: .SEPADebit, merchantCountry: .US, customer: customer, apiClient: apiClient) {
+            for testIntent in try await makeTestIntents(intentKind: intentKind, currency: "eur", paymentMethod: .SEPADebit, merchantCountry: .US, customer: customer, apiClient: apiClient) {
+                let description = testIntent.description
+                let intent = testIntent.intent
 
                 // Create elements session with customer configuration for proper ephemeral keys
                 let elementsSession: STPElementsSession
@@ -477,6 +491,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     elementsSession: elementsSession,
                     paymentOption: .saved(paymentMethod: savedSepaPM, confirmParams: nil),
                     paymentHandler: paymentHandler,
+                    checkout: testIntent.checkout,
                     analyticsHelper: ._testValue()
                 ) { result, _  in
                     e.fulfill()
@@ -705,7 +720,9 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 merchantCountry: merchantCountry,
                 apiClient: apiClient
             )
-            for (description, intent) in intents {
+            for testIntent in intents {
+                let description = testIntent.description
+                let intent = testIntent.intent
                 let e = expectation(description: "Confirm Apple Pay (\(description))")
                 let elementsSession = STPElementsSession._testValue(intent: intent)
                 let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
@@ -718,6 +735,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     elementsSession: elementsSession,
                     configuration: configuration,
                     clientAttributionMetadata: clientAttributionMetadata,
+                    checkout: testIntent.checkout,
                     completion: { result, _ in
                     switch result {
                     case .failed(error: let error):
@@ -975,7 +993,9 @@ extension PaymentSheetLPMConfirmFlowTests {
         // Check that the form respects billingDetailsCollection
         verifyFormRespectsBillingDetailsCollectionConfiguration(paymentMethodType: paymentMethodType, defaultCountry: defaultCountry)
 
-        for (description, intent) in intents {
+        for testIntent in intents {
+            let description = testIntent.description
+            let intent = testIntent.intent
 
             func makeFormVC(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
                 return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent, allowsSetAsDefaultPM: allowsSetAsDefaultPM), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
@@ -1054,6 +1074,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 elementsSession: ._testValue(intent: intent),
                 paymentOption: .new(confirmParams: intentConfirmParams),
                 paymentHandler: paymentHandler,
+                checkout: testIntent.checkout,
                 analyticsHelper: ._testValue()
             ) { result, _  in
                 switch result {
@@ -1078,7 +1099,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         merchantCountry: MerchantCountry,
         customer: String? = nil,
         apiClient: STPAPIClient
-    ) async throws -> [(String, Intent)] {
+    ) async throws -> [TestIntent] {
         let paramsForServerSideConfirmation: [String: Any] = [ // We require merchants to set some extra parameters themselves for server-side confirmation
             "return_url": "foo://bar",
             "mandate_data": [
@@ -1095,7 +1116,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             return .deferredIntent(intentConfig: intentConfig)
         }
 
-        var intents: [(String, Intent)] = []
+        var intents: [TestIntent] = []
         let paymentMethodTypes = [paymentMethod.identifier].compactMap { $0 }
         let setupFutureUsageSupport = setupFutureUsageSupport(for: paymentMethod)
         switch intentKind {
@@ -1134,11 +1155,12 @@ extension PaymentSheetLPMConfirmFlowTests {
                 checkoutSessionId: checkoutSessionResponse.id,
                 adaptivePricingAllowed: true
             )
+            let checkout = Checkout(apiResponse: checkoutSession)
 
             intents = [
-                ("PaymentIntent", .paymentIntent(paymentIntent)),
-                ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
-                ("CheckoutSession", .checkout(checkoutSession.makePublicSession())),
+                TestIntent("PaymentIntent", .paymentIntent(paymentIntent)),
+                TestIntent("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
+                TestIntent("CheckoutSession", .checkout(checkout.session), checkout: checkout),
             ]
             guard paymentMethod != .blik else {
                 // Blik doesn't support server-side confirmation
@@ -1158,7 +1180,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             }
 
             intents += [
-                ("Deferred PaymentIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
+                TestIntent("Deferred PaymentIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]
 
             // Confirmation token variations
@@ -1185,8 +1207,8 @@ extension PaymentSheetLPMConfirmFlowTests {
             })
 
             intents += [
-                ("Deferred PaymentIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
-                ("Deferred PaymentIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+                TestIntent("Deferred PaymentIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                TestIntent("Deferred PaymentIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
             ]
 
             return intents
@@ -1255,12 +1277,12 @@ extension PaymentSheetLPMConfirmFlowTests {
                 )
             })
 
-            var intents: [(String, Intent)] = [
-                ("PaymentIntent", .paymentIntent(paymentIntent)),
-                ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with payment method flow", makeDeferredIntent(deferredCSC)),
-                ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with payment method flow", makeDeferredIntent(deferredSSC)),
-                ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
-                ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+            var intents: [TestIntent] = [
+                TestIntent("PaymentIntent", .paymentIntent(paymentIntent)),
+                TestIntent("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with payment method flow", makeDeferredIntent(deferredCSC)),
+                TestIntent("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with payment method flow", makeDeferredIntent(deferredSSC)),
+                TestIntent("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                TestIntent("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
             ]
 
             // Payment+SFU and PMO SFU are not always available on payment methods that support them for intents.
@@ -1279,7 +1301,8 @@ extension PaymentSheetLPMConfirmFlowTests {
                     checkoutSessionId: checkoutSessionResponse.id,
                     adaptivePricingAllowed: true
                 )
-                intents.append(("CheckoutSession w/ setup_future_usage", .checkout(checkoutSession.makePublicSession())))
+                let checkout = Checkout(apiResponse: checkoutSession)
+                intents.append(TestIntent("CheckoutSession w/ setup_future_usage", .checkout(checkout.session), checkout: checkout))
             }
 
             return intents
@@ -1368,12 +1391,12 @@ extension PaymentSheetLPMConfirmFlowTests {
                 }
             )
 
-            var intents: [(String, Intent)] = [
-                ("PaymentIntent", .paymentIntent(paymentIntent)),
-                ("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
-                ("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
-                ("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
-                ("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+            var intents: [TestIntent] = [
+                TestIntent("PaymentIntent", .paymentIntent(paymentIntent)),
+                TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
+                TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
+                TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
             ]
             if setupFutureUsageSupport.checkoutSessionPaymentMethodOptionsSetupFutureUsage {
                 let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
@@ -1391,7 +1414,8 @@ extension PaymentSheetLPMConfirmFlowTests {
                     checkoutSessionId: checkoutSessionResponse.id,
                     adaptivePricingAllowed: true
                 )
-                intents.append(("CheckoutSession w/ PMO setup_future_usage", .checkout(checkoutSession.makePublicSession())))
+                let checkout = Checkout(apiResponse: checkoutSession)
+                intents.append(TestIntent("CheckoutSession w/ PMO setup_future_usage", .checkout(checkout.session), checkout: checkout))
             }
 
             return intents
@@ -1424,14 +1448,15 @@ extension PaymentSheetLPMConfirmFlowTests {
             )
             let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
             let checkoutSession = try await csApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionResponse.id, adaptivePricingAllowed: true)
+            let checkout = Checkout(apiResponse: checkoutSession)
 
             return [
-                ("SetupIntent", .setupIntent(setupIntent)),
-                ("Deferred SetupIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
-                ("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
-                ("Deferred SetupIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
-                ("Deferred SetupIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
-                ("CheckoutSession", .checkout(checkoutSession.makePublicSession())),
+                TestIntent("SetupIntent", .setupIntent(setupIntent)),
+                TestIntent("Deferred SetupIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
+                TestIntent("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
+                TestIntent("Deferred SetupIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                TestIntent("Deferred SetupIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+                TestIntent("CheckoutSession", .checkout(checkout.session), checkout: checkout),
             ]
         }
     }
@@ -1478,7 +1503,9 @@ extension PaymentSheetLPMConfirmFlowTests {
                 apiClient: apiClient
             )
 
-            for (description, intent) in intents {
+            for testIntent in intents {
+                let description = testIntent.description
+                let intent = testIntent.intent
                 let linkPaymentMethod = try await makeLinkPaymentMethod(apiClient)
 
                 let e = expectation(description: "Confirm Link (\(description))")
@@ -1506,6 +1533,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                         )
                     ),
                     paymentHandler: paymentHandler,
+                    checkout: testIntent.checkout,
                     analyticsHelper: ._testValue()
                 ) { result, _ in
                     switch result {

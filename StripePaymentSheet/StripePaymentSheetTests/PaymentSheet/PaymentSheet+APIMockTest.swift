@@ -300,6 +300,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
     func testCheckoutSessionConfirmWithNewPaymentMethodViaLink() {
         let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+        let checkout = Checkout(apiResponse: checkoutSession)
 
         // In non-passthrough mode, Link payment details are converted to params and
         // a new payment method is created before calling checkout session confirm
@@ -357,10 +358,11 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkout(checkoutSession.makePublicSession()),
+            intent: .checkout(checkout.session),
             elementsSession: elementsSession,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
+            checkout: checkout,
             analyticsHelper: ._testValue(),
             completion: { result, _ in
                 XCTAssertEqual(result, .completed)
@@ -373,6 +375,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
     func testCheckoutSessionConfirmWithNewPaymentMethodSelectedSendsSaveAndAllowRedisplay() {
         let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+        let checkout = Checkout(apiResponse: checkoutSession)
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .selected
@@ -390,10 +393,11 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkout(checkoutSession.makePublicSession()),
+            intent: .checkout(checkout.session),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
+            checkout: checkout,
             analyticsHelper: ._testValue(),
             completion: { result, _ in
                 XCTAssertEqual(result, .completed)
@@ -406,6 +410,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
     func testCheckoutSessionConfirmWithNewPaymentMethodDeselectedOmitsSaveAndUsesUnspecifiedAllowRedisplay() {
         let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+        let checkout = Checkout(apiResponse: checkoutSession)
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .deselected
@@ -423,10 +428,11 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkout(checkoutSession.makePublicSession()),
+            intent: .checkout(checkout.session),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
+            checkout: checkout,
             analyticsHelper: ._testValue(),
             completion: { result, _ in
                 XCTAssertEqual(result, .completed)
@@ -439,6 +445,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
     func testCheckoutSessionConfirmWithHiddenCheckboxOmitsSavePaymentMethod() {
         let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+        let checkout = Checkout(apiResponse: checkoutSession)
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         let confirmParams = MockParams.intentConfirmParams
 
@@ -455,10 +462,11 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkout(checkoutSession.makePublicSession()),
+            intent: .checkout(checkout.session),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
+            checkout: checkout,
             analyticsHelper: ._testValue(),
             completion: { result, _ in
                 XCTAssertEqual(result, .completed)
@@ -473,6 +481,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         var checkoutSessionJSON = MockJson.checkoutSession
         checkoutSessionJSON["setup_future_usage"] = "off_session"
         let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
+        let checkout = Checkout(apiResponse: checkoutSession)
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .deselected
@@ -490,10 +499,11 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkout(checkoutSession.makePublicSession()),
+            intent: .checkout(checkout.session),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
+            checkout: checkout,
             analyticsHelper: ._testValue(),
             completion: { result, _ in
                 XCTAssertEqual(result, .completed)
@@ -512,6 +522,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
             "status": "not_accepted",
         ]
         let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
+        let checkout = Checkout(apiResponse: checkoutSession)
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .hidden
@@ -529,10 +540,11 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkout(checkoutSession.makePublicSession()),
+            intent: .checkout(checkout.session),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
+            checkout: checkout,
             analyticsHelper: ._testValue(),
             completion: { result, _ in
                 XCTAssertEqual(result, .completed)
@@ -547,6 +559,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         var checkoutSessionJSON = MockJson.checkoutSession
         checkoutSessionJSON["payment_method_types"] = ["paypal"]
         let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
+        let checkout = Checkout(apiResponse: checkoutSession)
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["paypal"])
         let confirmParams = IntentConfirmParams(type: .stripe(.payPal))
         confirmParams.saveForFutureUseCheckboxState = .selected
@@ -564,10 +577,11 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkout(checkoutSession.makePublicSession()),
+            intent: .checkout(checkout.session),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
+            checkout: checkout,
             analyticsHelper: ._testValue(),
             completion: { result, _ in
                 XCTAssertEqual(result, .completed)
