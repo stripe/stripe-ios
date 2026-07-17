@@ -780,7 +780,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        // Fetch the full STPCheckoutSessionAPIResponse object (with allResponseFields containing elements_session)
+        // Fetch the full PaymentPagesAPIResponse object (with allResponseFields containing elements_session)
         let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
 
         let checkout = Checkout(apiResponse: checkoutSession)

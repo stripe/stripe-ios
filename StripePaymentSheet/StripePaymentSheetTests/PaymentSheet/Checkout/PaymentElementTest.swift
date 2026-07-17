@@ -57,7 +57,7 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(checkout.session.paymentOption?.label, "PayNow")
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
 
-        let completedSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: {
+        let completedSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: {
             var json = Self.openSessionJSON(paymentMethodTypes: ["card", "paynow"])
             json["status"] = "complete"
             json["payment_status"] = "paid"
@@ -70,8 +70,8 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
     }
 
-    private static func makeOpenSession(paymentMethodTypes: [String]) -> STPCheckoutSessionAPIResponse {
-        return STPCheckoutSessionAPIResponse.decodedObject(
+    private static func makeOpenSession(paymentMethodTypes: [String]) -> PaymentPagesAPIResponse {
+        return PaymentPagesAPIResponse.decodedObject(
             fromAPIResponse: openSessionJSON(paymentMethodTypes: paymentMethodTypes)
         )!
     }

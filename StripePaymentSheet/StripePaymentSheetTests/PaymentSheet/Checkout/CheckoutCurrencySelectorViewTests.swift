@@ -202,7 +202,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         includeExchangeRateFields: Bool = true,
         integrationAmount: Int = 1200,
         localAmount: Int = 1000
-    ) -> STPCheckoutSessionAPIResponse {
+    ) -> PaymentPagesAPIResponse {
         CheckoutTestHelpers.makeAdaptivePricingSession(
             adaptivePricingActive: adaptivePricingActive,
             includeLocalizedPrices: includeLocalizedPrices,

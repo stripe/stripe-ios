@@ -141,7 +141,7 @@ public final class Checkout: ObservableObject {
     init(
         clientSecret: String,
         configuration: Configuration? = nil,
-        apiResponse: STPCheckoutSessionAPIResponse,
+        apiResponse: PaymentPagesAPIResponse,
         apiClient: STPAPIClient = .shared
     ) async {
         self.clientSecret = clientSecret
@@ -156,7 +156,7 @@ public final class Checkout: ObservableObject {
     }
 
     /// Synchronous test-only initializer that wraps a pre-loaded API response without async work.
-    init(apiResponse: STPCheckoutSessionAPIResponse) {
+    init(apiResponse: PaymentPagesAPIResponse) {
         self.clientSecret = ""
         self.configuration = Configuration(clientSecret: "")
         self.apiClient = .shared
@@ -305,7 +305,7 @@ public final class Checkout: ObservableObject {
                 throw CheckoutError.apiError(message: error.localizedDescription)
             }
             let sessionId = Self.extractSessionId(from: self.clientSecret)
-            let refreshedCheckoutSession: STPCheckoutSessionAPIResponse
+            let refreshedCheckoutSession: PaymentPagesAPIResponse
             do {
                 refreshedCheckoutSession = try await self.apiClient.initCheckoutSession(
                     checkoutSessionId: sessionId,
@@ -335,7 +335,7 @@ extension Checkout {
     /// Client-side address overrides are copied from the current session to the new one
     /// automatically. To update an address, pass a `localMutation` closure.
     func commitSession(
-        _ apiResponse: STPCheckoutSessionAPIResponse? = nil,
+        _ apiResponse: PaymentPagesAPIResponse? = nil,
         applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
     ) async throws {
         // === Update the session ===

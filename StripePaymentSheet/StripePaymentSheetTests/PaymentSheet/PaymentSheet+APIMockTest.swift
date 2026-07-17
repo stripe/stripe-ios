@@ -299,7 +299,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testCheckoutSessionConfirmWithNewPaymentMethodViaLink() {
-        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
 
         // In non-passthrough mode, Link payment details are converted to params and
         // a new payment method is created before calling checkout session confirm
@@ -372,7 +372,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testCheckoutSessionConfirmWithNewPaymentMethodSelectedSendsSaveAndAllowRedisplay() {
-        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .selected
@@ -405,7 +405,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testCheckoutSessionConfirmWithNewPaymentMethodDeselectedOmitsSaveAndUsesUnspecifiedAllowRedisplay() {
-        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .deselected
@@ -438,7 +438,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testCheckoutSessionConfirmWithHiddenCheckboxOmitsSavePaymentMethod() {
-        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         let confirmParams = MockParams.intentConfirmParams
 
@@ -472,7 +472,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     func testCheckoutSessionConfirmWithPaymentModeSetupFutureUsageDeselectedUsesLimitedAllowRedisplay() {
         var checkoutSessionJSON = MockJson.checkoutSession
         checkoutSessionJSON["setup_future_usage"] = "off_session"
-        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
+        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .deselected
@@ -511,7 +511,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
             "enabled": false,
             "status": "not_accepted",
         ]
-        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
+        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .hidden
@@ -546,7 +546,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     func testCheckoutSessionConfirmWithNonCardPaymentMethodIncludesSavePaymentMethod() {
         var checkoutSessionJSON = MockJson.checkoutSession
         checkoutSessionJSON["payment_method_types"] = ["paypal"]
-        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
+        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["paypal"])
         let confirmParams = IntentConfirmParams(type: .stripe(.payPal))
         confirmParams.saveForFutureUseCheckboxState = .selected
