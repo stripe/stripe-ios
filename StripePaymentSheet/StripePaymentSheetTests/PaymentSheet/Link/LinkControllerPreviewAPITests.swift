@@ -11,6 +11,7 @@ final class LinkControllerPreviewAPITests: XCTestCase {
     func testPreviewSPISurfaceCompiles() {
         _ = LinkPaymentMethodType.card
         _ = LinkConfiguration(supportedPaymentMethodTypes: [.card])
+        _ = LinkConfiguration(paymentMethodTypes: ["link"]).paymentMethodTypes
         _ = LinkConfiguration(supportedPaymentMethodTypes: [.card], allowLogout: false).allowLogout
         _ = LinkConfiguration(supportedPaymentMethodTypes: [.card], merchantDisplayName: "Example Merchant")
 
@@ -19,14 +20,14 @@ final class LinkControllerPreviewAPITests: XCTestCase {
 
         if false {
             LinkController.create(
-                configuration: .init(supportedPaymentMethodTypes: [.card])
+                configuration: .init(supportedPaymentMethodTypes: [.card], paymentMethodTypes: ["link"])
             ) { result in
                 _ = result
             }
 
             Task { @MainActor in
                 let controller = try await LinkController.create(
-                    configuration: .init(supportedPaymentMethodTypes: [.card])
+                    configuration: .init(supportedPaymentMethodTypes: [.card], paymentMethodTypes: ["link"])
                 )
                 _ = controller.paymentMethodPreview
 
