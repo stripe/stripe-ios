@@ -63,6 +63,10 @@ public final class AccountOnboardingController {
     // so we set retainedSelf on present, and unset it when the VC is dismissed.
     var retainedSelf: AccountOnboardingController?
 
+    // Ensures the exit callback is delivered exactly once, whether the exit
+    // originates from the component (JS onExit) or the UIKit dismissal lifecycle.
+    private var didNotifyExit = false
+
     /// Delegate that receives callbacks for this component
     public weak var delegate: AccountOnboardingControllerDelegate?
 
@@ -97,6 +101,7 @@ public final class AccountOnboardingController {
 
         webVC.addMessageHandler(OnExitMessageHandler(didReceiveMessage: { [weak self] in
             guard let self else { return }
+            self.notifyDidExit()
             self.dismiss()
         }))
     }
@@ -124,8 +129,7 @@ public final class AccountOnboardingController {
         retainedSelf = self
         webVC.onDismiss = { [weak self] in
             guard let self else { return }
-            self.delegate?.accountOnboardingDidExit(self)
-            self.retainedSelf = nil
+            self.notifyDidExit()
         }
     }
 
@@ -133,6 +137,16 @@ public final class AccountOnboardingController {
     /// No-Ops if not presented.
     func dismiss(animated: Bool = true) {
         webVC.dismiss(animated: animated)
+    }
+
+    /// Notifies the delegate that onboarding has exited — exactly once — and releases
+    /// the retained reference. Safe to call from both the component exit (JS onExit)
+    /// path and the UIKit dismissal lifecycle.
+    private func notifyDidExit() {
+        guard !didNotifyExit else { return }
+        didNotifyExit = true
+        delegate?.accountOnboardingDidExit(self)
+        retainedSelf = nil
     }
 
     @objc

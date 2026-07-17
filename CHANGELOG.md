@@ -3,6 +3,9 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### StripeConnect
+* [Fixed] Fixed `AccountOnboardingControllerDelegate.accountOnboardingDidExit(_:)` not being called on the first automatic dismissal after onboarding completion.
+
 ## 26.3.0 2026-07-13
 ### CryptoOnramp (Alpha)
 * [Added] Added wallet ownership verification APIs to `CryptoOnrampCoordinator`: `getWalletOwnershipChallenge(walletAddress:network:)` and `submitWalletOwnershipSignature(challengeId:signature:)`.
