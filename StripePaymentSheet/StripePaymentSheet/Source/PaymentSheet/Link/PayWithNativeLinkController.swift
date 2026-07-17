@@ -109,7 +109,7 @@ final class PayWithNativeLinkController {
     func presentForPaymentMethodSelection(
         from presentingController: UIViewController,
         initiallySelectedPaymentDetailsID: String?,
-        canPayAnotherWay: Bool = true,
+        canContinueWithoutLink: Bool = true,
         completion: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         presentAsBottomSheetInternal(
@@ -120,7 +120,7 @@ final class PayWithNativeLinkController {
             initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
             callToAction: .continue,
             shouldFinishOnClose: false,
-            canPayAnotherWay: canPayAnotherWay
+            canContinueWithoutLink: canContinueWithoutLink
         ) { completionResult in
             guard case .paymentMethodSelection(let confirmOption, let shouldReturnToPaymentSheet) = completionResult else {
                 return
@@ -138,7 +138,7 @@ final class PayWithNativeLinkController {
         initiallySelectedPaymentDetailsID: String? = nil,
         callToAction: ConfirmButton.CallToActionType? = nil,
         shouldFinishOnClose: Bool,
-        canPayAnotherWay: Bool = true,
+        canContinueWithoutLink: Bool = true,
         completion: @escaping (CompletionResult) -> Void
     ) {
         self.selfRetainer = self
@@ -154,7 +154,7 @@ final class PayWithNativeLinkController {
                 configuration: self.configuration,
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,
-                canPayAnotherWay: canPayAnotherWay,
+                canContinueWithoutLink: canContinueWithoutLink,
                 launchedFromFlowController: launchedFromFlowController,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 callToAction: callToAction,
