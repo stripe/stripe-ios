@@ -101,7 +101,6 @@ class AccountOnboardingControllerTests: XCTestCase {
         XCTAssertNil(weakRef, "The onboarding controller should not be retained after dismissal")
     }
 
-
     @MainActor
     func testExitNotifiesDelegateExactlyOnceAcrossExitAndDismiss() async throws {
         // Given a presented onboarding controller with a delegate
