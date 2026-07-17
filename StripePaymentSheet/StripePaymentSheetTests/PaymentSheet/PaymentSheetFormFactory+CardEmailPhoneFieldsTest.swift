@@ -68,6 +68,41 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         XCTAssertNil(contactInfoSection, "Should not have separate contact information section when billing address includes email/phone")
     }
 
+    func testCardAutomaticBillingUsesCountryMinimums() {
+        let addressSpecProvider = AddressSpecProvider()
+        addressSpecProvider.addressSpecs = Dictionary(
+            uniqueKeysWithValues: ["US", "GB", "CA", "FR"].map {
+                ($0, AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .postal_code))
+            }
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+        configuration.defaultBillingDetails.address.country = "US"
+        let factory = PaymentSheetFormFactory(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card),
+            addressSpecProvider: addressSpecProvider
+        )
+        let cardForm = factory.makeCard()
+        guard let addressSection = cardForm.getAllUnwrappedSubElements().compactMap({ $0 as? AddressSectionElement }).first else {
+            return XCTFail("Expected an AddressSectionElement")
+        }
+
+        XCTAssertEqual(addressSection.defaultFieldsToCollect, .country)
+        XCTAssertEqual(addressSection.addressSection.title, String.Localized.billing_address_lowercase)
+        for country in ["US", "GB", "CA"] {
+            addressSection.selectedCountryCode = country
+            XCTAssertNotNil(addressSection.postalCode, "Expected postal collection for \(country)")
+            XCTAssertNil(addressSection.line1)
+        }
+
+        addressSection.selectedCountryCode = "FR"
+        XCTAssertNil(addressSection.postalCode)
+        XCTAssertNil(addressSection.line1)
+    }
+
     func testCardFormWithEmailPhoneAlwaysAndFullBilling_EmailPhoneInBillingAddress() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.email = .always
@@ -356,7 +391,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         )
 
         let billingAddressSection = factory.makeBillingAddressSection(
-            collectionMode: .autocomplete(),
+            autocompleteStyle: .compact(),
             countries: nil,
             includeEmail: true,
             includePhone: true
@@ -376,6 +411,27 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         XCTAssertEqual(params?.paymentMethodParams.billingDetails?.phone, "+17777777777")
     }
 
+    func testMakeBillingAddressSectionExpandsCompactAutocompleteAndPreservesSupportedCountries() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.defaultBillingDetails.address = .init(country: "US", line1: "510 Townsend St.")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card),
+            addressSpecProvider: dummyAddressSpecProvider
+        )
+
+        let billingAddressSection = factory.makeBillingAddressSection(
+            autocompleteStyle: .compact(supportedCountries: ["CA"])
+        )
+
+        XCTAssertEqual(
+            billingAddressSection.element.autocompleteStyle,
+            .expanded(supportedCountries: ["CA"])
+        )
+    }
+
     func testMakeBillingAddressSectionWithoutEmailAndPhone() {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
@@ -386,7 +442,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         )
 
         let billingAddressSection = factory.makeBillingAddressSection(
-            collectionMode: .autocomplete(),
+            autocompleteStyle: .compact(),
             countries: nil,
             includeEmail: false,
             includePhone: false

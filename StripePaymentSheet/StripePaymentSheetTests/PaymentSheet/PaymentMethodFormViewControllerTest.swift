@@ -54,6 +54,42 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         XCTAssertEqual(sut.form.getTextFieldElement("Address line 1").text, "Updated line1")
     }
 
+    func testUpdatingShippingDetailsExpandsAutomaticAddressCollection() {
+        // Given automatic address collection with no initial shipping details...
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        var shippingDetails: AddressViewController.AddressDetails?
+        configuration.shippingDetails = { shippingDetails }
+        configuration.billingDetailsCollectionConfiguration = .init(address: .automatic)
+        let sut = PaymentMethodFormViewController(
+            type: .stripe(.card),
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            previousCustomerInput: nil,
+            formCache: .init(),
+            configuration: configuration,
+            paymentMethodOrientation: .vertical,
+            headerView: nil,
+            analyticsHelper: ._testValue(),
+            delegate: self
+        )
+        guard let addressSection = sut.form.getAllUnwrappedSubElements().compactMap({ $0 as? AddressSectionElement }).first else {
+            return XCTFail("Expected an AddressSectionElement")
+        }
+        XCTAssertEqual(addressSection.defaultFieldsToCollect, .country)
+        XCTAssertEqual(addressSection.autocompleteStyle, .compact())
+        XCTAssertNotNil(addressSection.postalCode)
+
+        // When shipping details are added and the form is displayed again...
+        shippingDetails = AddressViewController.AddressDetails(address: .init(country: "US", line1: "Updated line1"))
+        sut.beginAppearanceTransition(true, animated: false)
+        sut.endAppearanceTransition()
+
+        // Then the section expands so the updated shipping address can be populated.
+        XCTAssertEqual(addressSection.defaultFieldsToCollect, .all)
+        XCTAssertEqual(addressSection.autocompleteStyle, .expanded())
+        XCTAssertEqual(addressSection.line1?.text, "Updated line1")
+    }
+
     func testHandlesViewDidAppear() {
         // Given a PaymentMethodFormViewController...
         let sut = PaymentMethodFormViewController(

@@ -2508,7 +2508,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertFalse(instantDebitsSection.enableCTA)
 
         // Set a valid address
-        instantDebitsSection.addressElement?.collectionMode = .all // simulate going to manual entry
+        instantDebitsSection.addressElement?.autocompleteStyle = .none // simulate going to manual entry
         instantDebitsSection.addressElement?.city?.setText(defaultAddress.city!)
         instantDebitsSection.addressElement?.country.select(index: 0) // "US"
         instantDebitsSection.addressElement?.line1?.setText(defaultAddress.line1!)
@@ -2769,15 +2769,21 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     }
 
     func testAppliesPreviousCustomerInput_klarna_country() {
+        let addressSpecProvider = AddressSpecProvider()
+        addressSpecProvider.addressSpecs = [
+            "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
+            "CA": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
+        ]
         func makeKlarnaCountry(apiPath: String?, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElementWrapper<AddressSectionElement> {
             let factory = PaymentSheetFormFactory(
                 intent: ._testPaymentIntent(paymentMethodTypes: [.klarna], currency: "eur"),
                 elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
                 configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
                 paymentMethod: .stripe(.klarna),
-                previousCustomerInput: previousCustomerInput
+                previousCustomerInput: previousCustomerInput,
+                addressSpecProvider: addressSpecProvider
             )
-            return factory.makeBillingAddressSection(collectionMode: .countryOnly, countryAPIPath: apiPath)
+            return factory.makeBillingAddressSection(defaultFieldsToCollect: .country, autocompleteStyle: .none, countryAPIPath: apiPath)
         }
         let apiPathValues: [String?] = [nil, "billing_details[address][country]"] // Test the same thing with and without an api path
         apiPathValues.forEach { apiPath in

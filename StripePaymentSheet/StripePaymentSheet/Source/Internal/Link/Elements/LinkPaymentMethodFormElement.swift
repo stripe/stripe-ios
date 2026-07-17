@@ -49,6 +49,7 @@ final class LinkPaymentMethodFormElement: Element {
     let paymentMethod: ConsumerPaymentDetails
     let isBillingDetailsUpdateFlow: Bool
     private let linkAppearance: LinkAppearance?
+    private let minimumBillingAddressFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect]
 
     let configuration: PaymentElementConfiguration
 
@@ -74,7 +75,7 @@ final class LinkPaymentMethodFormElement: Element {
 
         // TODO(link): Replace `STPPaymentMethodBillingDetails` with a custom struct for Link.
         // This matches the object that was returned by CardDetailsEditView, but won't work
-        // with `collectionMode: .all`, because extra fields won't match what expected by Link.
+        // with `defaultFieldsToCollect: .all`, because extra fields won't match what expected by Link.
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = billingAddressSection?.name?.text
             ?? nameOnCardElement?.text
@@ -261,23 +262,28 @@ final class LinkPaymentMethodFormElement: Element {
             phone: collectPhone ? .enabled(isOptional: false) : .disabled,
             email: collectEmail ? .enabled(isOptional: false) : .disabled
         )
-
         return AddressSectionElement(
             title: String.Localized.billing_address_lowercase,
             countries: isBillingDetailsUpdateFlow ? configuration.billingDetailsCollectionConfiguration.allowedCountriesArray : nil,
             defaults: defaultBillingAddress,
-            collectionMode: configuration.billingDetailsCollectionConfiguration.address == .full
-                ? .all
-                : .countryAndPostal(),
+            defaultFieldsToCollect: configuration.billingDetailsCollectionConfiguration.address == .full ? .all : .country,
+            minimumFieldsToCollectByCountry: minimumBillingAddressFieldsToCollectByCountry,
             additionalFields: additionalFields,
             theme: theme
         )
     }()
 
-    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, isBillingDetailsUpdateFlow: Bool, linkAppearance: LinkAppearance? = nil) {
+    init(
+        paymentMethod: ConsumerPaymentDetails,
+        configuration: PaymentElementConfiguration,
+        isBillingDetailsUpdateFlow: Bool,
+        minimumBillingAddressFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect],
+        linkAppearance: LinkAppearance? = nil
+    ) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
         self.isBillingDetailsUpdateFlow = isBillingDetailsUpdateFlow
+        self.minimumBillingAddressFieldsToCollectByCountry = minimumBillingAddressFieldsToCollectByCountry
         self.linkAppearance = linkAppearance
 
         if let expiryDate = paymentMethod.cardDetails?.expiryDate {

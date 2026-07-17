@@ -68,6 +68,9 @@ extension PayWithLinkViewController {
             paymentMethod: paymentMethod,
             configuration: makeConfiguration(),
             isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow,
+            minimumBillingAddressFieldsToCollectByCountry: paymentMethod.type == .card
+                ? PaymentSheetFormFactory.cardMinimumFieldsToCollectByCountry
+                : [:],
             linkAppearance: linkAppearance
         )
 

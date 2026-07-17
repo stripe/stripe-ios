@@ -166,7 +166,8 @@ extension LinkPaymentMethodFormElementSnapshotTests {
         return LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
             configuration: configuration,
-            isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow
+            isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow,
+            minimumBillingAddressFieldsToCollectByCountry: PaymentSheetFormFactory.cardMinimumFieldsToCollectByCountry
         )
     }
 
@@ -198,7 +199,8 @@ extension LinkPaymentMethodFormElementSnapshotTests {
         return LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
             configuration: config,
-            isBillingDetailsUpdateFlow: true
+            isBillingDetailsUpdateFlow: true,
+            minimumBillingAddressFieldsToCollectByCountry: [:]
         )
     }
 }
