@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Piniginės patvirtinimo užklausos galiojimas baigėsi. Bandykite dar kartą.";
 
+"This wallet verification request is invalid. Please try again." = "Piniginės patvirtinimo užklausa netinkama. Bandykite dar kartą.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Piniginės nuosavybės patvirtinti nepavyko. Bandykite dar kartą.";

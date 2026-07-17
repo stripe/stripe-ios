@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "คำขอยืนยันกระเป๋าเงินนี้หมดอายุแล้ว โปรดลองอีกครั้ง";
 
+"This wallet verification request is invalid. Please try again." = "คำขอยืนยันกระเป๋าเงินนี้ไม่ถูกต้อง โปรดลองอีกครั้ง";
+
 "We couldn't verify ownership of this wallet. Please try again." = "เราไม่สามารถยืนยันการเป็นเจ้าของกระเป๋าเงินนี้ได้ โปรดลองอีกครั้ง";

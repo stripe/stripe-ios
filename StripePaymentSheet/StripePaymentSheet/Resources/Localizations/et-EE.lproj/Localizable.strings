@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "SSN-i 4 viimast numbrit";
 
-"Log in or sign up" = "Logi sisse või registreeru";
-
-"Log out of %@" = "Logi %@st välja";
-
 "Manage SEPA debit" = "SEPA deebeti haldamine";
 
 "Manage US bank account" = "Ameerika Ühendriikide pangakonto haldamine";
@@ -295,6 +291,10 @@
 "Show details" = "Kuva üksikasjad";
 
 "Show menu" = "Kuva menüü";
+
+"Sign in or sign up" = "Logi sisse või registreeru";
+
+"Sign out of %@" = "Logi teenusest %@ välja";
 
 "Simple, secure one-click payments" = "Lihtsad turvalised maksed ühe hiireklõpsuga";
 

@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Tämä lompakon vahvistuspyyntö vanhentui. Yritä uudelleen.";
 
+"This wallet verification request is invalid. Please try again." = "Tämä lompakon vahvistuspyyntö on virheellinen. Yritä uudelleen.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Emme voineet vahvistaa tämän lompakon omistajuutta. Yritä uudelleen.";

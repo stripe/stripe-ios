@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Den här begäran om plånboksverifiering har löpt ut. Försök igen.";
 
+"This wallet verification request is invalid. Please try again." = "Den här begäran om plånboksverifiering är ogiltig. Försök igen.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Vi kunde inte verifiera vem som äger den här plånboken. Försök igen.";

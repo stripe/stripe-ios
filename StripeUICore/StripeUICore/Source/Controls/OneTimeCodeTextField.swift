@@ -159,7 +159,7 @@ import UIKit
         isAccessibilityElement = true
         accessibilityLabel = STPLocalizedString(
             "Code field",
-            "Accessibility label describing a field for entering a login code"
+            "Accessibility label describing a field for entering a sign-in code"
         )
 
         setupUI()

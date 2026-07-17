@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Това искане за удостоверяване на портфейл изтече. Моля, опитайте отново.";
 
+"This wallet verification request is invalid. Please try again." = "Това искане за удостоверяване на портфейл е валидно. Моля, опитайте отново.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Не можахме да удостоверим собствеността на този портфейл. Моля, опитайте отново.";
