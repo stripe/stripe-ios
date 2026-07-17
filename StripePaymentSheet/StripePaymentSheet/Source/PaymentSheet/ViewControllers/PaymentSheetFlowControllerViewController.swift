@@ -172,8 +172,10 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         configuration: PaymentSheet.Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        previousPaymentOption: PaymentOption? = nil
+        previousPaymentOption: PaymentOption? = nil,
+        restoredPaymentOption: PaymentOption? = nil
     ) {
+        let previousPaymentOption = restoredPaymentOption ?? previousPaymentOption
         self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
@@ -233,6 +235,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper
         )
         super.init(nibName: nil, bundle: nil)
+        // A server default seeds the initial carousel selection, but a cancel restoration must use
+        // the selection captured when the sheet opened instead of re-deriving it from defaults.
+        if let restoredPaymentOption {
+            self.savedPaymentOptionsViewController.select(paymentOption: restoredPaymentOption)
+        }
         self.savedPaymentOptionsViewController.delegate = self
         self.addPaymentMethodViewController.delegate = self
     }

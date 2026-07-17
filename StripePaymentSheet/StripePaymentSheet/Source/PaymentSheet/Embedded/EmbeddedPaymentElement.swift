@@ -392,6 +392,8 @@ public final class EmbeddedPaymentElement {
 
     /// The value of `paymentOption` when we last called `embeddedPaymentElementDidUpdatePaymentOption`
     internal var lastUpdatedPaymentOption: PaymentOptionDisplayData?
+    /// The internal payment option at the last selection.
+    internal var lastSelectedPaymentOption: PaymentOption?
     internal var _paymentOption: PaymentOption? {
     #if DEBUG
         if let testPaymentOption = _test_paymentOption {

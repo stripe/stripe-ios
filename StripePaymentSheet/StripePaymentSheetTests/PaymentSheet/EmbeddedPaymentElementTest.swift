@@ -881,6 +881,101 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertNil(sut.paymentOption, "Payment option should be nil after filling out the card form, but hitting cancel.")
     }
 
+    func testCancelingEditedFormRestoresSelectedPaymentOption() async throws {
+        // Given an EmbeddedPaymentElement with a selected card
+        let sut = try await EmbeddedPaymentElement.create(
+            intentConfiguration: paymentIntentConfig,
+            configuration: configuration
+        )
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.embeddedPaymentMethodsView.didTap(
+            rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
+        )
+        var cardForm = sut.formCache[.stripe(.card)]!
+        cardForm.getTextFieldElement("Card number").setText("4242424242424242")
+        cardForm.getTextFieldElement("MM / YY").setText("1240")
+        cardForm.getTextFieldElement("CVC").setText("123")
+        cardForm.getTextFieldElement("ZIP").setText("12345")
+        sut.selectedFormViewController?.didTapPrimaryButton()
+        XCTAssertEqual(sut.paymentOption?.label, "•••• 4242")
+
+        // When the same card row is reopened, edited, and canceled
+        sut.embeddedPaymentMethodsView.didTap(
+            rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
+        )
+        cardForm.getTextFieldElement("Card number").setText("5555555555554444")
+        sut.selectedFormViewController?.didTapOrSwipeToDismiss()
+
+        // Then the selected card and its form input are restored
+        XCTAssertEqual(sut.paymentOption?.label, "•••• 4242")
+        cardForm = sut.formCache[.stripe(.card)]!
+        XCTAssertEqual(cardForm.getTextFieldElement("Card number").text, "4242424242424242")
+    }
+
+    func testCancelingEditedExternalPaymentMethodFormRestoresBillingDetails() async throws {
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        await FormSpecProvider.shared.load()
+
+        let externalPaymentMethod = ExternalPaymentMethod(
+            type: "external_paypal",
+            label: "PayPal",
+            lightImageUrl: URL(string: "https://example.com/paypal.png")!,
+            darkImageUrl: nil
+        )
+        let externalConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration(
+            externalPaymentMethods: ["external_paypal"],
+            externalPaymentMethodConfirmHandler: { _, _ in .completed }
+        )
+        let externalPaymentOption = try XCTUnwrap(
+            ExternalPaymentOption.from(externalPaymentMethod, configuration: externalConfiguration)
+        )
+        var config = configuration
+        config.formSheetAction = .continue
+        config.externalPaymentMethodConfiguration = externalConfiguration
+        config.billingDetailsCollectionConfiguration.name = .always
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(
+                paymentMethodTypes: ["card"],
+                externalPaymentMethodTypes: ["external_paypal"]
+            ),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card), .external(externalPaymentOption)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .vertical
+        )
+        let sut = EmbeddedPaymentElement(
+            configuration: config,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Given PayPal with collected billing details is selected
+        sut.embeddedPaymentMethodsView.didTap(
+            rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "PayPal")
+        )
+        var form = try XCTUnwrap(sut.formCache[.external(externalPaymentOption)])
+        form.getTextFieldElement("Full name")?.setText("Jane Doe")
+        try XCTUnwrap(sut.selectedFormViewController).didTapPrimaryButton()
+        XCTAssertEqual(sut.paymentOption?.billingDetails?.name, "Jane Doe")
+
+        // When the form is edited and canceled
+        sut.embeddedPaymentMethodsView.didTap(
+            rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "PayPal")
+        )
+        form.getTextFieldElement("Full name")?.setText("John Smith")
+        sut.embeddedFormViewControllerDidCancel(try XCTUnwrap(sut.selectedFormViewController))
+
+        // Then the selected billing details are restored
+        XCTAssertEqual(sut.paymentOption?.billingDetails?.name, "Jane Doe")
+        form = try XCTUnwrap(sut.formCache[.external(externalPaymentOption)])
+        XCTAssertEqual(form.getTextFieldElement("Full name")?.text, "Jane Doe")
+    }
+
     // MARK: - Checkout Session update tests
 
     func testUpdateCheckoutSession() async throws {

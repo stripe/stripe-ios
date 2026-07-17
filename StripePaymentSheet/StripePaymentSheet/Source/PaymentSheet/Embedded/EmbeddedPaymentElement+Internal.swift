@@ -91,6 +91,7 @@ extension EmbeddedPaymentElement {
             delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             lastUpdatedPaymentOption = paymentOption
         }
+        lastSelectedPaymentOption = _paymentOption
     }
 
     // Helper method to create Form VC for a payment method row, if applicable.
@@ -423,24 +424,46 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         }
     }
 
+    /// Restores the last selected form, including linked banks that are represented as `.saved`.
+    private func restoreLastSelectedForm(for selection: RowButtonType?) -> Bool {
+        guard case let .new(paymentMethodType) = selection,
+              let confirmParams = lastSelectedPaymentOption?.newConfirmParams,
+              confirmParams.paymentMethodType == paymentMethodType else {
+            return false
+        }
+        formCache[paymentMethodType] = nil
+        selectedFormViewController = Self.makeFormViewControllerIfNecessary(
+            selection: selection,
+            previousPaymentOption: .new(confirmParams: confirmParams),
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: savedPaymentMethods,
+            analyticsHelper: analyticsHelper,
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            formCache: formCache,
+            delegate: self
+        )
+        return selectedFormViewController != nil
+    }
+
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
         let lastSelection = embeddedPaymentMethodsView.previousSelectedRowButton?.type
         let currentlySelectedType = embeddedPaymentMethodsView.selectedRowButton?.type
 
-        // If the user re-selects a valid payment option w/ form, then modifies it, then hits close, we clear selection
-        // Ideally we would revert back to the valid payment option that existed when the form was presented rather than totally clear selection
-        // To restore to the previous payment option we need to restore the previous form VC that contained the previous payment option
-        // TODO (https://jira.corp.stripe.com/browse/MOBILESDK-3361): Consider restoring the form VC and form cache to revert to the last valid payment option
-        if lastSelection == currentlySelectedType,
-           lastUpdatedPaymentOption != paymentOption {
-            embeddedPaymentMethodsView.resetSelection()
+        if lastSelection == currentlySelectedType {
+            if !restoreLastSelectedForm(for: currentlySelectedType),
+               lastUpdatedPaymentOption != paymentOption {
+                embeddedPaymentMethodsView.resetSelection()
+            }
         } else {
             // Go back to the previous selection if there was one
             embeddedPaymentMethodsView.resetSelectionToLastSelection()
+            restoreLastSelectedForm(for: lastSelection)
         }
 
         // Show change button if the newly selected row needs it
-        if let currentlySelectedType = embeddedPaymentMethodsView.selectedRowButton?.type{
+        if let currentlySelectedType = embeddedPaymentMethodsView.selectedRowButton?.type {
             updateChangeButtonAndSublabelState(for: currentlySelectedType)
         }
 

@@ -243,9 +243,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     }
                 case .new(let confirmParams):
                     return confirmParams
+                case .external:
+                    // External payment methods can have a form based on the billing details collection configuration.
+                    return paymentOption.newConfirmParams
                 case .link(let confirmOption):
                     return confirmOption.signupConfirmParams
-                case .applePay, .external:
+                case .applePay:
                     return nil
                 }
             }()
@@ -945,7 +948,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
 
     private func makeFormVC(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodFormViewController {
         let previousCustomerInput: IntentConfirmParams? = {
-            if case let .new(confirmParams: confirmParams) = previousPaymentOption {
+            if let confirmParams = previousPaymentOption?.newConfirmParams {
                 return confirmParams
             } else if case let .saved(_, confirmParams) = previousPaymentOption {
                 return confirmParams

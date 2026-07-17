@@ -91,3 +91,34 @@ public enum CustomerPaymentOption: Equatable {
         return nil
     }
 }
+
+extension CustomerPaymentOption {
+    /// Captures local selection persistence independently from the selection displayed by a
+    /// payment surface. These can differ when a saved payment method is filtered out of the UI.
+    struct PersistenceSnapshot {
+        private let customerID: String?
+        private let paymentOption: CustomerPaymentOption?
+        private let savedPaymentMethodIDs: Set<String>
+
+        init(customerID: String?, savedPaymentMethods: [STPPaymentMethod]) {
+            self.customerID = customerID
+            self.paymentOption = CustomerPaymentOption.localDefaultPaymentMethod(for: customerID)
+            self.savedPaymentMethodIDs = Set(savedPaymentMethods.map(\.stripeId))
+        }
+
+        func restore(currentSavedPaymentMethods: [STPPaymentMethod]) {
+            if case .stripeId(let paymentMethodID) = paymentOption,
+               savedPaymentMethodIDs.contains(paymentMethodID),
+               !currentSavedPaymentMethods.contains(where: { $0.stripeId == paymentMethodID }) {
+                // It was available when the surface opened but is gone now, so the customer
+                // deleted it. Preserve any fallback selected during deletion.
+                if CustomerPaymentOption.localDefaultPaymentMethod(for: customerID) == paymentOption {
+                    CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
+                }
+                return
+            }
+
+            CustomerPaymentOption.setDefaultPaymentMethod(paymentOption, forCustomer: customerID)
+        }
+    }
+}

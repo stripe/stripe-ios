@@ -486,6 +486,34 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.reloadItems(at: [selectedIndexPath])
     }
 
+    /// Selects an existing carousel option without treating the restoration as a new user selection.
+    func select(paymentOption: PaymentOption) {
+        let customerPaymentOption: CustomerPaymentOption? = {
+            switch paymentOption {
+            case .applePay:
+                return .applePay
+            case .link:
+                return .link
+            case .saved(let paymentMethod, _):
+                return .stripeId(paymentMethod.stripeId)
+            case .new, .external:
+                return nil
+            }
+        }()
+        guard let customerPaymentOption,
+              let index = viewModels.firstIndex(where: { $0 == customerPaymentOption }) else {
+            return
+        }
+
+        selectedViewModelIndex = index
+        collectionView.reloadData()
+        collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
+        updateMandateView()
+        if isViewLoaded {
+            updateFormElement()
+        }
+    }
+
     private func isDefaultPaymentMethod(savedPaymentMethodId: String?) -> Bool {
         guard configuration.allowsSetAsDefaultPM, let savedPaymentMethodId, let defaultPaymentMethod else { return false }
         return savedPaymentMethodId == defaultPaymentMethod.stripeId
