@@ -134,16 +134,16 @@ class AddressSectionElementTest: XCTestCase {
             countryFieldsOverrides: ["US": .all, "CA": .countryAndPostal]
         )
 
-        // Initial country's override applied at init; `.all` collects the full address via autocomplete.
-        XCTAssertEqual(sut.collectionMode, .autocomplete())
-        XCTAssertNotNil(sut.autoCompleteLine)
+        // Initial country's override applied at init; `.all` collects the full address form (no autocomplete).
+        XCTAssertEqual(sut.collectionMode, .all)
+        XCTAssertNil(sut.autoCompleteLine)
 
         // US -> CA narrows to postal.
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "CA")))
         XCTAssertEqual(sut.collectionMode, .countryAndPostal(countriesRequiringPostalCollection: ["CA"]))
         XCTAssertNotNil(sut.postalCode)
         XCTAssertNil(sut.autoCompleteLine)
-        XCTAssertNil(sut.line1)
+        XCTAssertNotNil(sut.line1)
 
         // CA -> FR falls back to the base collection mode.
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "FR")))
@@ -187,7 +187,7 @@ class AddressSectionElementTest: XCTestCase {
             additionalFields: .init(billingSameAsShippingCheckbox: .enabled(isOptional: false))
         )
 
-        XCTAssertEqual(sut.collectionMode, .autocomplete())
+        XCTAssertEqual(sut.collectionMode, .all)
 
         sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "FR")))
         XCTAssertEqual(sut.collectionMode, .countryOnly)
@@ -196,7 +196,7 @@ class AddressSectionElementTest: XCTestCase {
         sut.sameAsCheckbox.didToggle(false)
         sut.sameAsCheckbox.didToggle(true)
         XCTAssertEqual(sut.selectedCountryCode, "US")
-        XCTAssertEqual(sut.collectionMode, .autocomplete())
+        XCTAssertEqual(sut.collectionMode, .all)
 
         // Same when the default shipping address updates to CA.
         sut.sameAsCheckbox.isSelected = true
