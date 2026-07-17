@@ -193,40 +193,6 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertLine1DoesNotHaveAutocompleteAccessory(sut)
     }
 
-    func testFieldsToCollectCountryOnlyShowsCountry() {
-        let sut = AddressSectionElement(
-            title: "",
-            countries: ["US"],
-            locale: locale_enUS,
-            addressSpecProvider: dummyAddressSpecProvider,
-            defaultFieldsToCollect: .country
-        )
-
-        XCTAssertNil(sut.autoCompleteLine)
-        XCTAssertNil(sut.line1)
-        XCTAssertNil(sut.line2)
-        XCTAssertNil(sut.city)
-        XCTAssertNil(sut.state)
-        XCTAssertNil(sut.postalCode)
-    }
-
-    func testFieldsToCollectCountryAndPostalShowsPostal() {
-        let sut = AddressSectionElement(
-            title: "",
-            countries: ["US"],
-            locale: locale_enUS,
-            addressSpecProvider: dummyAddressSpecProvider,
-            defaultFieldsToCollect: .countryAndPostal
-        )
-
-        XCTAssertNil(sut.autoCompleteLine)
-        XCTAssertNil(sut.line1)
-        XCTAssertNil(sut.line2)
-        XCTAssertNil(sut.city)
-        XCTAssertNil(sut.state)
-        XCTAssertNotNil(sut.postalCode)
-    }
-
     func testAutocompleteStyleIsIgnoredUnlessCollectingAllFields() {
         let fieldsToCollect: [AddressSectionElement.FieldsToCollect] = [.country, .countryAndPostal]
         let autocompleteStyles: [AddressSectionElement.AutocompleteStyle] = [.none, .compact(), .expanded()]
