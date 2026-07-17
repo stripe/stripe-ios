@@ -225,7 +225,7 @@ import UIKit
 
         let initialCountry = countryCodes[country.selectedIndex]
         self.countryFieldsOverrides = countryFieldsOverrides
-        self.collectionMode = Self.resolveCollectionMode(base: collectionMode, overrides: countryFieldsOverrides, for: initialCountry)
+        self.collectionMode = collectionMode
 
         // Initialize additional fields
         self.name = {
@@ -267,7 +267,7 @@ import UIKit
         addressSection = SectionElement(title: title, elements: [], theme: theme)
         elements = ([addressSection, sameAsCheckbox] as [Element?]).compactMap { $0 }
         elements.forEach { $0.delegate = self }
-
+        applyCountryFieldsOverrideIfNeeded(for: initialCountry)
         self.updateAddressFields(
             for: initialCountry,
             address: defaults.address
@@ -316,7 +316,7 @@ import UIKit
     /// Resolves the effective collection mode for `countryCode`, applying any per-country override.
     /// - Note: `.all` resolves to `.autocomplete()`; the UI treatment of a full address
     ///   (autocomplete vs. manual entry, compact presentation) is this element's decision, not the caller's.
-    private static func resolveCollectionMode(
+    private func resolveCollectionMode(
         base: CollectionMode,
         overrides: [String: FieldsToCollect],
         for countryCode: String
@@ -328,14 +328,14 @@ import UIKit
         case .countryAndPostal:
             return .countryAndPostal(countriesRequiringPostalCollection: [countryCode])
         case .all:
-            return .autocomplete()
+            return defaults.address == .init() ? .autocomplete() : .all
         }
     }
 
     /// Re-resolves the collection mode for `countryCode` when per-country overrides were provided at init.
     private func applyCountryFieldsOverrideIfNeeded(for countryCode: String) {
         guard !countryFieldsOverrides.isEmpty else { return } // Leave externally-set modes alone
-        collectionMode = Self.resolveCollectionMode(base: baseCollectionMode, overrides: countryFieldsOverrides, for: countryCode)
+        collectionMode = resolveCollectionMode(base: baseCollectionMode, overrides: countryFieldsOverrides, for: countryCode)
     }
 
     /// Selects `index` and rebuilds the fields. Always change country through here
