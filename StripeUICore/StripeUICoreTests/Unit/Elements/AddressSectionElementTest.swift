@@ -131,13 +131,13 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(AddressSectionElement(title: "", countries: ["UK", "US"], addressSpecProvider: specProvider).countryCodes, ["UK", "US"])
     }
 
-    func testAutocompleteCompactPresentationShowsDummyAddressLine() {
+    func testAutocompleteCompactPresentationShowsDummyAddressLineAndCanExpand() {
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            collectionMode: .autocomplete(autocompleteCountries: ["US"])
+            fieldsToCollect: .all(autocomplete: .compact(autocompleteCountries: ["US"]))
         )
 
         XCTAssertNotNil(sut.autoCompleteLine)
@@ -146,6 +146,16 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertNil(sut.city)
         XCTAssertNil(sut.state)
         XCTAssertNil(sut.postalCode)
+
+        sut.fieldsToCollect = .all(autocomplete: .expanded(autocompleteCountries: ["US"]))
+
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertNotNil(sut.line1)
+        XCTAssertNotNil(sut.line2)
+        XCTAssertNotNil(sut.city)
+        XCTAssertNotNil(sut.state)
+        XCTAssertNotNil(sut.postalCode)
+        XCTAssertLine1HasAutocompleteAccessory(sut)
     }
 
     func testAutocompleteExpandedPresentationShowsAutocompleteLine1() {
@@ -154,7 +164,7 @@ class AddressSectionElementTest: XCTestCase {
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            collectionMode: .autocomplete(presentation: .expanded)
+            fieldsToCollect: .all(autocomplete: .expanded())
         )
 
         XCTAssertNil(sut.autoCompleteLine)
@@ -168,23 +178,23 @@ class AddressSectionElementTest: XCTestCase {
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            collectionMode: .autocomplete(autocompleteCountries: ["CA"], presentation: .expanded)
+            fieldsToCollect: .all(autocomplete: .expanded(autocompleteCountries: ["CA"]))
         )
 
         XCTAssertLine1DoesNotHaveAutocompleteAccessory(sut)
 
-        sut.collectionMode = .autocomplete(autocompleteCountries: ["US"], presentation: .expanded)
+        sut.fieldsToCollect = .all(autocomplete: .expanded(autocompleteCountries: ["US"]))
 
         XCTAssertLine1HasAutocompleteAccessory(sut)
     }
 
-    func testAllCollectionModeDoesNotShowAutocomplete() {
+    func testAllFieldsToCollectDoesNotShowAutocomplete() {
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            collectionMode: .all
+            fieldsToCollect: .all()
         )
 
         XCTAssertNil(sut.autoCompleteLine)

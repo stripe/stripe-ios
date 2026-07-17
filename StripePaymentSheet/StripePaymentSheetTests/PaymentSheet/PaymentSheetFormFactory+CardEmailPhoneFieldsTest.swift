@@ -356,10 +356,16 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         )
 
         let billingAddressSection = factory.makeBillingAddressSection(
-            collectionMode: .autocomplete(),
+            fieldsToCollect: .all(autocomplete: .compact(autocompleteCountries: ["US"])),
             countries: nil,
             includeEmail: true,
             includePhone: true
+        )
+
+        // Verify defaults expand the address fields while preserving the autocomplete countries
+        XCTAssertEqual(
+            billingAddressSection.element.fieldsToCollect,
+            .all(autocomplete: .expanded(autocompleteCountries: ["US"]))
         )
 
         // Verify email and phone fields are present
@@ -386,7 +392,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         )
 
         let billingAddressSection = factory.makeBillingAddressSection(
-            collectionMode: .autocomplete(),
+            fieldsToCollect: .all(autocomplete: .compact()),
             countries: nil,
             includeEmail: false,
             includePhone: false
