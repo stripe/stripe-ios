@@ -59,7 +59,7 @@ final class PayWithNativeLinkController {
     private let linkAppearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
     private let confirmationChallenge: ConfirmationChallenge?
-    private weak var checkout: Checkout?
+    private weak var checkout: CheckoutSessionBillingAddressUpdater?
 
     init(
         mode: Mode,
@@ -71,7 +71,7 @@ final class PayWithNativeLinkController {
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
-        checkout: Checkout? = nil,
+        checkout: CheckoutSessionBillingAddressUpdater? = nil,
         confirmationChallenge: ConfirmationChallenge? = nil
     ) {
         self.mode = mode

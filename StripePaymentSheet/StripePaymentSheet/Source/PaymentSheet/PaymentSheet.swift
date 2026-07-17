@@ -59,6 +59,15 @@ public class PaymentSheet {
             }
         }
 
+        var checkout: Checkout? {
+            switch self {
+            case .checkout(let checkout):
+                return checkout
+            case .paymentIntentClientSecret, .setupIntentClientSecret, .deferredIntent:
+                return nil
+            }
+        }
+
         var isDeferred: Bool {
             if case .deferredIntent = self {
                 return true
@@ -275,12 +284,6 @@ public class PaymentSheet {
         loadResult: PaymentSheetLoader.LoadResult,
         previousPaymentOption: PaymentOption?
     ) -> PaymentSheetViewControllerProtocol {
-        let checkout: Checkout? = {
-            guard case .checkout(let checkout) = mode else {
-                return nil
-            }
-            return checkout
-        }()
         switch loadResult.paymentMethodOrientation {
         case .horizontal:
             let vc = PaymentSheetViewController(
@@ -297,7 +300,7 @@ public class PaymentSheet {
                 loadResult: loadResult,
                 isFlowController: false,
                 analyticsHelper: analyticsHelper,
-                checkout: checkout,
+                checkout: mode.checkout,
                 previousPaymentOption: previousPaymentOption
             )
             vc.paymentSheetDelegate = self
@@ -324,12 +327,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 paymentOption: paymentOption,
                 paymentHandler: self.paymentHandler,
                 integrationShape: .complete,
-                checkout: {
-                    guard case .checkout(let checkout) = self.mode else {
-                        return nil
-                    }
-                    return checkout
-                }(),
+                checkout: self.mode.checkout,
                 confirmationChallenge: self.confirmationChallenge,
                 analyticsHelper: self.analyticsHelper
             ) { result, deferredIntentConfirmationType in

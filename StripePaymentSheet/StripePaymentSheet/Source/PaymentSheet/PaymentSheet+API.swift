@@ -42,7 +42,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         integrationShape: IntegrationShape = .complete,
         paymentMethodID: String? = nil,
-        checkout: Checkout? = nil,
+        checkout: CheckoutSessionBillingAddressUpdater? = nil,
         confirmationChallenge: ConfirmationChallenge? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
@@ -125,7 +125,7 @@ extension PaymentSheet {
         confirmationChallenge: ConfirmationChallenge? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         paymentMethodID: String? = nil,
-        checkout: Checkout? = nil
+        checkout: CheckoutSessionBillingAddressUpdater? = nil
     ) async -> (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) {
         await withCheckedContinuation { continuation in
             Task { @MainActor in
@@ -158,7 +158,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool = false,
         paymentMethodID: String? = nil,
-        checkout: Checkout? = nil,
+        checkout: CheckoutSessionBillingAddressUpdater? = nil,
         confirmationChallenge: ConfirmationChallenge?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
@@ -295,7 +295,7 @@ extension PaymentSheet {
                         completion(result.result, result.deferredIntentConfirmationType)
                     }
                     // MARK: ↪ Checkout
-                case .checkout:
+                case .checkout(let checkoutSession):
                     Task { @MainActor in
                         guard let checkout else {
                             let result = missingCheckoutControllerResult()
@@ -305,6 +305,7 @@ extension PaymentSheet {
                         }
                         let result = await handleCheckoutSessionConfirmation(
                             checkout: checkout,
+                            checkoutSession: checkoutSession,
                             confirmType: .new(
                                 params: confirmParams.paymentMethodParams,
                                 paymentOptions: confirmParams.confirmPaymentMethodOptions,
@@ -376,7 +377,7 @@ extension PaymentSheet {
                     completion(result.result, result.deferredIntentConfirmationType)
                 }
                 // MARK: ↪ Checkout
-            case .checkout:
+            case .checkout(let checkoutSession):
                 Task { @MainActor in
                     guard let checkout else {
                         completion(missingCheckoutControllerResult(), nil)
@@ -389,6 +390,7 @@ extension PaymentSheet {
                     : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
                     let result = await handleCheckoutSessionConfirmation(
                         checkout: checkout,
+                        checkoutSession: checkoutSession,
                         confirmType: .saved(paymentMethod,
                                             paymentOptions: paymentOptions,
                                             clientAttributionMetadata: clientAttributionMetadata,
@@ -472,7 +474,7 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
-                    case .checkout:
+                    case .checkout(let checkoutSession):
                         guard let checkout else {
                             let result = missingCheckoutControllerResult()
                             await confirmationChallenge?.complete()
@@ -481,6 +483,7 @@ extension PaymentSheet {
                         }
                         let result = await handleCheckoutSessionConfirmation(
                             checkout: checkout,
+                            checkoutSession: checkoutSession,
                             confirmType: .new(
                                 params: paymentMethodParams,
                                 paymentOptions: STPConfirmPaymentMethodOptions(),
@@ -570,7 +573,7 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
-                    case .checkout:
+                    case .checkout(let checkoutSession):
                         guard let checkout else {
                             let result = missingCheckoutControllerResult()
                             await confirmationChallenge?.complete()
@@ -579,6 +582,7 @@ extension PaymentSheet {
                         }
                         let result = await handleCheckoutSessionConfirmation(
                             checkout: checkout,
+                            checkoutSession: checkoutSession,
                             confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
                             configuration: configuration,
                             authenticationContext: authenticationContext,

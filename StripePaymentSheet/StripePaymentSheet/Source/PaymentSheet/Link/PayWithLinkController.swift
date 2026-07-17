@@ -27,9 +27,9 @@ final class PayWithLinkController {
     let configuration: PaymentElementConfiguration
     let analyticsHelper: PaymentSheetAnalyticsHelper
     private let confirmationChallenge: ConfirmationChallenge?
-    private weak var checkout: Checkout?
+    private weak var checkout: CheckoutSessionBillingAddressUpdater?
 
-    init(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper, checkout: Checkout? = nil, confirmationChallenge: ConfirmationChallenge?) {
+    init(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper, checkout: CheckoutSessionBillingAddressUpdater? = nil, confirmationChallenge: ConfirmationChallenge?) {
         self.intent = intent
         self.elementsSession = elementsSession
         self.configuration = configuration

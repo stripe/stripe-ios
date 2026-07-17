@@ -30,12 +30,12 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
     let intent: Intent
     let elementsSession: STPElementsSession
-    private weak var checkout: Checkout?
+    private weak var checkout: CheckoutSessionBillingAddressUpdater?
 
     init(
         intent: Intent,
         elementsSession: STPElementsSession,
-        checkout: Checkout?,
+        checkout: CheckoutSessionBillingAddressUpdater?,
         authorizationResultHandler: PaymentSheet.ApplePayConfiguration.Handlers.AuthorizationResultHandler?,
         shippingMethodUpdateHandler: (
             (PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void
@@ -70,7 +70,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             return paymentIntent.clientSecret
         case .setupIntent(let setupIntent):
             return setupIntent.clientSecret
-        case .checkout:
+        case .checkout(let checkoutSession):
             guard let checkout else {
                 let message = "Missing Checkout controller for CheckoutSession Apple Pay confirmation."
                 stpAssertionFailure(message)
@@ -78,6 +78,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             }
             return try await handleCheckoutSessionApplePay(
                 checkout: checkout,
+                checkoutSession: checkoutSession,
                 paymentMethod: paymentMethod,
                 paymentInformation: paymentInformation,
                 context: context
@@ -182,18 +183,14 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         return clientSecret
     }
 
-    // TODO(gbirch): Remove session parameter once MPE is MainActor-isolated; we can then
-    // access checkout.session directly. This is a temporary stopgap to provide a threadsafe
-    // version of the checkout session data.
     /// Handles Apple Pay confirmation for CheckoutSession by calling the confirm API with the payment method.
     private func handleCheckoutSessionApplePay(
-        checkout: Checkout,
+        checkout: CheckoutSessionBillingAddressUpdater,
+        checkoutSession: Checkout.Session,
         paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment,
         context: STPApplePayContext
     ) async throws -> String {
-        let checkoutSession: Checkout.Session = checkout.nonisolatedSession
-
         // 1. Build client attribution metadata
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
             intent: intent,
@@ -353,7 +350,7 @@ extension STPApplePayContext {
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         clientAttributionMetadata: STPClientAttributionMetadata,
-        checkout: Checkout? = nil,
+        checkout: CheckoutSessionBillingAddressUpdater? = nil,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) -> STPApplePayContext? {
         guard let applePay = configuration.applePay else {
@@ -372,7 +369,7 @@ extension STPApplePayContext {
 
         // Keep tax in sync with the billing address as the user switches cards.
         let paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping ((PKPaymentRequestPaymentMethodUpdate) -> Void)) -> Void)? = {
-            guard case .checkout = intent else { return nil }
+            guard case .checkout(let checkoutSession) = intent else { return nil }
             guard let checkout else {
                 stpAssertionFailure("Missing Checkout controller for CheckoutSession Apple Pay payment method update.")
                 return nil
@@ -381,12 +378,13 @@ extension STPApplePayContext {
             let currency = intent.currency
             return { pkPaymentMethod, completion in
                 Task { @MainActor in
+                    var session = checkoutSession
                     if let postalAddress = pkPaymentMethod.billingAddress?.postalAddresses.first?.value,
                        let address = STPApplePayContext.makeCheckoutAddress(from: postalAddress) {
-                        try? await checkout.updateBillingAddress(address: address, canUpdateWhileSheetPresented: true)
+                        session = (try? await checkout.updateBillingAddressForPaymentSheet(address: address, canUpdateWhileSheetPresented: true)) ?? session
                     }
                     completion(PKPaymentRequestPaymentMethodUpdate(
-                        paymentSummaryItems: STPApplePayContext.makePaymentSummaryItems(for: checkout.nonisolatedSession, label: label, currency: currency)
+                        paymentSummaryItems: STPApplePayContext.makePaymentSummaryItems(for: session, label: label, currency: currency)
                     ))
                 }
             }
