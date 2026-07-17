@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 PATCH
 
 ## X.Y.Z - changes pending release
+### CryptoOnramp (Alpha)
+* [Added] Added support for registering wallet addresses on the Tempo network.
 
 ## 26.3.0 2026-07-13
 ### CryptoOnramp (Alpha)

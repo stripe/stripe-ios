@@ -358,7 +358,11 @@ private extension STPAPIClient {
     /// Helper method to wrap the closure-based post method for Swift concurrency.
     func post<T: Decodable>(resource: String, object: Encodable) async throws -> T {
         return try await withCheckedThrowingContinuation { continuation in
-            post(resource: resource, object: object) { (result: Result<T, Error>) in
+            post(
+                resource: resource,
+                object: object,
+                additionalHeaders: CryptoOnrampAPI.additionalHeaders
+            ) { (result: Result<T, Error>) in
                 continuation.resume(with: result)
             }
         }
@@ -367,9 +371,20 @@ private extension STPAPIClient {
     /// Helper method to wrap the closure-based get method for Swift concurrency.
     func get<T: Decodable>(resource: String, parameters: [String: Any] = [:]) async throws -> T {
         return try await withCheckedThrowingContinuation { continuation in
-            get(resource: resource, parameters: parameters) { (result: Result<T, Error>) in
+            get(
+                resource: resource,
+                parameters: parameters,
+                additionalHeaders: CryptoOnrampAPI.additionalHeaders
+            ) { (result: Result<T, Error>) in
                 continuation.resume(with: result)
             }
         }
     }
+}
+
+private enum CryptoOnrampAPI {
+    // Use a preview API version for networks and parameters behind preview API features.
+    // Bump this when new onramp features require a newer API version.
+    static let stripeAPIVersion = "2026-03-25.preview"
+    static let additionalHeaders = ["Stripe-Version": stripeAPIVersion]
 }

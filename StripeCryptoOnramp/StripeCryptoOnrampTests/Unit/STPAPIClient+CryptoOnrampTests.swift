@@ -21,6 +21,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         static let requestSecret = "cscs_12345"
         static let errorDomain = "STPAPIClientCryptoOnrampTests.Error"
         static let validCustomerId = "crc_12345"
+        static let cryptoOnrampAPIVersion = "2026-03-25.preview"
 
         // /v1/crypto/internal/customers
         static let createCryptoCustomerAPIPath = "/v1/crypto/internal/customers"
@@ -831,6 +832,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.collectWalletAddressAPIPath)
             XCTAssertEqual(request.httpMethod, "POST")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Version"), Constant.cryptoOnrampAPIVersion)
 
             guard let httpBody = request.ohhttpStubs_httpBody else {
                 XCTFail("Expected an httpBody data but found none.")
