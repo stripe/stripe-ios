@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
@@ -67,13 +67,13 @@ jobs:
             echo "No new dead code detected."
           fi
 
-      - uses: davidme-stripe/find-comment@v3
+      - uses: davidme-stripe/find-comment@v4
         id: find_comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: '[find-dead-code]'
 
-      - uses: davidme-stripe/create-or-update-comment@v3
+      - uses: davidme-stripe/create-or-update-comment@v5
         id: create_update_comment
         if: env.diff != '' && !contains(github.event.pull_request.labels.*.name, 'skip dead code check')
         with:
@@ -97,7 +97,7 @@ jobs:
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: davidme-stripe/create-or-update-comment@v3
+      - uses: davidme-stripe/create-or-update-comment@v5
         id: create_update_comment_ignored
         if: env.diff != '' && contains(github.event.pull_request.labels.*.name, 'skip dead code check')
         with:
@@ -119,7 +119,7 @@ jobs:
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: davidme-stripe/create-or-update-comment@v3
+      - uses: davidme-stripe/create-or-update-comment@v5
         id: resolve_comment
         if: env.diff == '' && steps.find_comment.outputs.comment-id != ''
         with:
