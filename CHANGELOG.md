@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 PATCH
 
 ## X.Y.Z - changes pending release
+### PaymentSheet
+* [Fixed] Fixed an issue where the Alipay redirect web view could appear to freeze after completing authentication, when the redirect flow used an intermediate `https` URL before returning to the merchant's app.
 
 ## 26.3.0 2026-07-13
 ### CryptoOnramp (Alpha)
