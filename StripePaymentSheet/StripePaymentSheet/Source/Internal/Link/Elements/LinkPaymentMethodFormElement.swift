@@ -49,7 +49,6 @@ final class LinkPaymentMethodFormElement: Element {
     let paymentMethod: ConsumerPaymentDetails
     let isBillingDetailsUpdateFlow: Bool
     private let linkAppearance: LinkAppearance?
-    private let minimumBillingAddressFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect]
 
     let configuration: PaymentElementConfiguration
 
@@ -266,8 +265,7 @@ final class LinkPaymentMethodFormElement: Element {
             title: String.Localized.billing_address_lowercase,
             countries: isBillingDetailsUpdateFlow ? configuration.billingDetailsCollectionConfiguration.allowedCountriesArray : nil,
             defaults: defaultBillingAddress,
-            defaultFieldsToCollect: configuration.billingDetailsCollectionConfiguration.address == .full ? .all : .country,
-            minimumFieldsToCollectByCountry: minimumBillingAddressFieldsToCollectByCountry,
+            defaultFieldsToCollect: configuration.billingDetailsCollectionConfiguration.address == .full ? .all : .countryAndPostal,
             additionalFields: additionalFields,
             theme: theme
         )
@@ -277,13 +275,11 @@ final class LinkPaymentMethodFormElement: Element {
         paymentMethod: ConsumerPaymentDetails,
         configuration: PaymentElementConfiguration,
         isBillingDetailsUpdateFlow: Bool,
-        minimumBillingAddressFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect],
         linkAppearance: LinkAppearance? = nil
     ) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
         self.isBillingDetailsUpdateFlow = isBillingDetailsUpdateFlow
-        self.minimumBillingAddressFieldsToCollectByCountry = minimumBillingAddressFieldsToCollectByCountry
         self.linkAppearance = linkAppearance
 
         if let expiryDate = paymentMethod.cardDetails?.expiryDate {
