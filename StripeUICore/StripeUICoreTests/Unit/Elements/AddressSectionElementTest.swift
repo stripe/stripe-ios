@@ -190,6 +190,13 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertNil(sut.autoCompleteLine)
         XCTAssertNotNil(sut.line1)
         XCTAssertLine1DoesNotHaveAutocompleteAccessory(sut)
+
+        sut.collectionMode = .countryOnly
+        XCTAssertNil(sut.line1)
+        XCTAssertNil(sut.line2)
+        XCTAssertNil(sut.city)
+        XCTAssertNil(sut.state)
+        XCTAssertNil(sut.postalCode)
     }
 
     func test_additionalFields() {

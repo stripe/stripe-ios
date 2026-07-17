@@ -550,6 +550,10 @@ extension PaymentSheetFormFactory {
             guard case .valid = section.validationState else {
                 return nil
             }
+            if let previousCountry = params.paymentMethodParams.billingDetails?.address?.country,
+               previousCountry.caseInsensitiveCompare(section.selectedCountryCode) != .orderedSame {
+                params.paymentMethodParams.nonnil_billingDetails.address = STPPaymentMethodAddress()
+            }
             if let line1 = section.line1 {
                 params.paymentMethodParams.nonnil_billingDetails.nonnil_address.line1 = line1.text
             }

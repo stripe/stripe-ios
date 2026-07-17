@@ -1776,6 +1776,37 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(billingDetails.country, defaultAddress.country)
     }
 
+    func testBillingAddressSectionClearsHiddenFieldsAfterCountryChange() throws {
+        let section = AddressSectionElement(
+            countries: ["US", "FR"],
+            locale: Locale(identifier: "en_US"),
+            addressSpecProvider: addressSpecProvider(countries: ["US", "FR"]),
+            defaults: .init(address: .init(city: "San Francisco", country: "US", line1: "1 Main Street", line2: "Apt 1", postalCode: "94107", state: "CA")),
+            collectionMode: .all
+        )
+        let sut = PaymentSheetFormFactory.makeBillingAddressPaymentMethodWrapper(section: section, countryAPIPath: nil)
+        let params = try XCTUnwrap(sut.updateParams(params: IntentConfirmParams(type: .stripe(.card))))
+
+        section.collectionMode = .countryAndPostal(countriesRequiringPostalCollection: ["FR"])
+        section.selectedCountryCode = "FR"
+        section.postalCode?.setText("75001")
+        _ = try XCTUnwrap(sut.updateParams(params: params))
+        XCTAssertNil(params.paymentMethodParams.billingDetails?.address?.line1)
+        XCTAssertNil(params.paymentMethodParams.billingDetails?.address?.line2)
+        XCTAssertNil(params.paymentMethodParams.billingDetails?.address?.city)
+        XCTAssertNil(params.paymentMethodParams.billingDetails?.address?.state)
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.address?.postalCode, "75001")
+
+        section.collectionMode = .countryOnly
+        section.selectedCountryCode = "US"
+        _ = try XCTUnwrap(sut.updateParams(params: params))
+        XCTAssertNil(params.paymentMethodParams.billingDetails?.address?.line1)
+        XCTAssertNil(params.paymentMethodParams.billingDetails?.address?.line2)
+        XCTAssertNil(params.paymentMethodParams.billingDetails?.address?.city)
+        XCTAssertNil(params.paymentMethodParams.billingDetails?.address?.state)
+        XCTAssertNil(params.paymentMethodParams.billingDetails?.address?.postalCode)
+    }
+
     func testPreferDefaultBillingDetailsOverShippingDetails() {
         var configuration = PaymentSheet.Configuration()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
