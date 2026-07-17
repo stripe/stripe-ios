@@ -261,6 +261,7 @@ final class LinkPaymentMethodFormElement: Element {
             phone: collectPhone ? .enabled(isOptional: false) : .disabled,
             email: collectEmail ? .enabled(isOptional: false) : .disabled
         )
+
         return AddressSectionElement(
             title: String.Localized.billing_address_lowercase,
             countries: isBillingDetailsUpdateFlow ? configuration.billingDetailsCollectionConfiguration.allowedCountriesArray : nil,
@@ -271,12 +272,7 @@ final class LinkPaymentMethodFormElement: Element {
         )
     }()
 
-    init(
-        paymentMethod: ConsumerPaymentDetails,
-        configuration: PaymentElementConfiguration,
-        isBillingDetailsUpdateFlow: Bool,
-        linkAppearance: LinkAppearance? = nil
-    ) {
+    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, isBillingDetailsUpdateFlow: Bool, linkAppearance: LinkAppearance? = nil) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
         self.isBillingDetailsUpdateFlow = isBillingDetailsUpdateFlow
