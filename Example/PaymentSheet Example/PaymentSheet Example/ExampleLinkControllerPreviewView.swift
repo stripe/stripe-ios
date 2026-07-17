@@ -67,6 +67,15 @@ struct ExampleLinkControllerPreviewView: View {
                         }
                     }
 
+                    DemoSection(title: "Intent Payment Method Types") {
+                        Picker("Intent Payment Method Types", selection: $configuration.paymentMethodTypesMode) {
+                            ForEach(LinkControllerDemoConfiguration.PaymentMethodTypesMode.allCases, id: \.self) { mode in
+                                Text(mode.rawValue).tag(mode)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                    }
+
                     DemoSection(title: "Intent Mode") {
                         VStack(alignment: .leading, spacing: 16) {
                             Picker("Intent Mode", selection: $configuration.intentMode) {
