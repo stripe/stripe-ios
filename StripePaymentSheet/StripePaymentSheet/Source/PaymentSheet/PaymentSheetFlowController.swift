@@ -1154,8 +1154,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
 extension FlowControllerViewControllerProtocol {
     var stateForSnapshot: FlowControllerStateSnapshot.Selection {
         return .init(
-            paymentOption: selectedPaymentOption,
-            formConfirmParams: selectedPaymentOption?.formConfirmParams
+            paymentOption: selectedPaymentOption
         )
     }
 }
@@ -1169,7 +1168,6 @@ internal struct FlowControllerStateSnapshot {
 
     struct Selection {
         var paymentOption: PaymentOption?
-        let formConfirmParams: IntentConfirmParams?
     }
 
     struct Restoration {
