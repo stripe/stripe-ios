@@ -241,6 +241,64 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         _ = try? await operationTask.value
     }
 
+    func testFCPresentPaymentOptionsWithPendingOperationsRevertsSelectionOnCancel() async throws {
+        await AddressSpecProvider.shared.loadAddressSpecs()
+
+        // Given a Checkout update is still pending
+        let checkout = await makeCheckoutWithOpenSession()
+        let gate = CheckoutPendingOperationsTestGate()
+
+        let operationTask = Task { @MainActor in
+            try await checkout.enqueueSessionUpdate {
+                await gate.wait()
+            }
+        }
+        defer { gate.open() }
+
+        try await waitUntil {
+            checkout.pendingOperations.count == 1 && gate.isWaiting
+        }
+
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: .checkout(checkout),
+            elementsSession: checkout.session.elementsSession,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .vertical
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.paymentMethodLayout = .vertical
+        let fc = PaymentSheet.FlowController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+        fc.checkout = checkout
+
+        // When payment options finish loading, Link is selected and the sheet is canceled
+        let originalViewController = fc.viewController
+        let presentCompleted = expectation(description: "presentPaymentOptions completion called")
+        fc.presentPaymentOptions(from: UIViewController()) { didCancel in
+            XCTAssertTrue(didCancel)
+            presentCompleted.fulfill()
+        }
+
+        gate.open()
+        _ = try? await operationTask.value
+        try await waitUntil {
+            fc.viewController !== originalViewController
+        }
+
+        fc.viewController.linkConfirmOption = .wallet(brand: .link)
+        fc.viewController.didTapOrSwipeToDismiss()
+
+        await fulfillment(of: [presentCompleted], timeout: 2.0)
+
+        // Then the selection made during presentation is discarded
+        XCTAssertNil(fc.paymentOption)
+    }
+
     // MARK: - Loading & Emission Tests
 
     func testLoadingStatePersistsAcrossConsecutiveQueuedOperations() async throws {
