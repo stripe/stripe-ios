@@ -93,32 +93,50 @@ public enum CustomerPaymentOption: Equatable {
 }
 
 extension CustomerPaymentOption {
-    /// Captures local selection persistence independently from the selection displayed by a
-    /// payment surface. These can differ when a saved payment method is filtered out of the UI.
-    struct PersistenceSnapshot {
+    /// Captures the locally persisted selected payment option and the saved payment methods
+    /// available immediately before a payment surface is presented.
+    ///
+    /// On cancellation, use this snapshot to revert the persisted selection. A method that was
+    /// available before presentation but is missing at cancellation was deleted and is not restored.
+    /// A method missing at both points may be hidden or temporarily unavailable, so its selection is
+    /// restored.
+    struct PersistedSelectionSnapshot {
         private let customerID: String?
-        private let paymentOption: CustomerPaymentOption?
-        private let savedPaymentMethodIDs: Set<String>
+        private let selectedPaymentOptionBeforePresentation: CustomerPaymentOption?
+        private let availableSavedPaymentMethodIDsBeforePresentation: Set<String>
 
-        init(customerID: String?, savedPaymentMethods: [STPPaymentMethod]) {
+        init(customerID: String?, availableSavedPaymentMethods: [STPPaymentMethod]) {
             self.customerID = customerID
-            self.paymentOption = CustomerPaymentOption.localDefaultPaymentMethod(for: customerID)
-            self.savedPaymentMethodIDs = Set(savedPaymentMethods.map(\.stripeId))
+            self.selectedPaymentOptionBeforePresentation = CustomerPaymentOption.localDefaultPaymentMethod(for: customerID)
+            self.availableSavedPaymentMethodIDsBeforePresentation = Set(availableSavedPaymentMethods.map(\.stripeId))
         }
 
-        func restore(currentSavedPaymentMethods: [STPPaymentMethod]) {
-            if case .stripeId(let paymentMethodID) = paymentOption,
-               savedPaymentMethodIDs.contains(paymentMethodID),
-               !currentSavedPaymentMethods.contains(where: { $0.stripeId == paymentMethodID }) {
-                // It was available when the surface opened but is gone now, so the customer
-                // deleted it. Preserve any fallback selected during deletion.
-                if CustomerPaymentOption.localDefaultPaymentMethod(for: customerID) == paymentOption {
-                    CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
-                }
-                return
+        /// Reverts to the captured selection unless its saved payment method was deleted.
+        func revertPersistedSelection(using currentlyAvailableSavedPaymentMethods: [STPPaymentMethod]) {
+            if selectedPaymentMethodWasDeleted(from: currentlyAvailableSavedPaymentMethods) {
+                clearDeletedSelectionIfNeeded()
+            } else {
+                CustomerPaymentOption.setDefaultPaymentMethod(selectedPaymentOptionBeforePresentation, forCustomer: customerID)
             }
+        }
 
-            CustomerPaymentOption.setDefaultPaymentMethod(paymentOption, forCustomer: customerID)
+        private func selectedPaymentMethodWasDeleted(
+            from currentlyAvailableSavedPaymentMethods: [STPPaymentMethod]
+        ) -> Bool {
+            if case .stripeId(let selectedPaymentMethodID) = selectedPaymentOptionBeforePresentation,
+               availableSavedPaymentMethodIDsBeforePresentation.contains(selectedPaymentMethodID),
+               !currentlyAvailableSavedPaymentMethods.contains(where: { $0.stripeId == selectedPaymentMethodID }) {
+                return true
+            }
+            return false
+        }
+
+        private func clearDeletedSelectionIfNeeded() {
+            // Deletion may persist a fallback selection. Keep it, or clear the deleted selection
+            // if no fallback was persisted.
+            if CustomerPaymentOption.localDefaultPaymentMethod(for: customerID) == selectedPaymentOptionBeforePresentation {
+                CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
+            }
         }
     }
 }

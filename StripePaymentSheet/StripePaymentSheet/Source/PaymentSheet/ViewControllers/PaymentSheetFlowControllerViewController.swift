@@ -173,9 +173,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         previousPaymentOption: PaymentOption? = nil,
-        restoredPaymentOption: PaymentOption? = nil
+        selectionToRestore: PaymentOption? = nil
     ) {
-        let previousPaymentOption = restoredPaymentOption ?? previousPaymentOption
+        let initialPaymentOption = selectionToRestore ?? previousPaymentOption
         self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
@@ -185,15 +185,10 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.configuration = configuration
         self.analyticsHelper = analyticsHelper
 
-        // Restore the customer's previous payment method. For saved PMs, this happens naturally already, so we just need to handle new payment methods.
-        // Caveats:
-        // - Only payment method details (including checkbox state) and billing details are restored
-        // - Only restored if the previous input resulted in a completed form i.e. partial or invalid input is still discarded
-        let previousConfirmParams = previousPaymentOption?.newConfirmParams
-
-        // Default to saved payment selection mode, as long as we aren't restoring a customer's previous new payment method input
-        // and they have saved PMs or Apple Pay or Link is enabled
-        self.mode = (previousConfirmParams == nil) && (loadResult.savedPaymentMethods.count > 0 || isApplePayEnabled || isLinkEnabled)
+        // A PaymentOption only contains completed form input, so partial or invalid input is discarded.
+        let initialFormConfirmParams = initialPaymentOption?.formConfirmParams
+        let hasSavedOrWalletOption = !loadResult.savedPaymentMethods.isEmpty || isApplePayEnabled || isLinkEnabled
+        self.mode = initialFormConfirmParams == nil && hasSavedOrWalletOption
                 ? .selectingSaved
                 : .addingNew
 
@@ -228,17 +223,25 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             elementsSession: elementsSession,
             configuration: configuration,
             paymentMethodOrientation: loadResult.paymentMethodOrientation,
-            previousCustomerInput: previousConfirmParams, // Restore the customer's previous new payment method input
+            previousCustomerInput: initialFormConfirmParams,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             formCache: formCache,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper
         )
         super.init(nibName: nil, bundle: nil)
-        // A server default seeds the initial carousel selection, but a cancel restoration must use
-        // the selection captured when the sheet opened instead of re-deriving it from defaults.
-        if let restoredPaymentOption {
-            self.savedPaymentOptionsViewController.select(paymentOption: restoredPaymentOption)
+        // A cancellation-time selection takes precedence over defaults derived by the carousel.
+        if let selectionToRestore {
+            self.savedPaymentOptionsViewController.setSelection(to: selectionToRestore)
+            if case let .link(linkConfirmOption) = selectionToRestore {
+                switch linkConfirmOption {
+                case .wallet:
+                    // A wallet selection is valid only when it is still available in the carousel.
+                    break
+                case .signUp, .withPaymentMethod, .withPaymentDetails:
+                    self.linkConfirmOption = linkConfirmOption
+                }
+            }
         }
         self.savedPaymentOptionsViewController.delegate = self
         self.addPaymentMethodViewController.delegate = self

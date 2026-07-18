@@ -502,6 +502,37 @@ class PaymentSheetFlowControllerTests: XCTestCase {
     }
 
     @MainActor
+    func testCancelingPaymentOptionsRestoresNoSelection() {
+        // Given a FlowController with no selected or persisted payment option
+        let paymentMethod = makeCardPaymentMethod(id: "pm_card", last4: "4242", brand: "visa")
+        let flowController = makeFlowController(savedPaymentMethods: [paymentMethod])
+        flowController.viewController.clearSelection()
+        flowController.updatePaymentOption()
+        XCTAssertNil(flowController.paymentOption)
+
+        let completionExpectation = expectation(description: "Payment options dismissed")
+        flowController.presentPaymentOptions(from: UIViewController()) { didCancel in
+            XCTAssertTrue(didCancel)
+            completionExpectation.fulfill()
+        }
+
+        // When a saved payment method is selected and the sheet is canceled
+        let presentedViewController = flowController.viewController as! PaymentSheetVerticalViewController
+        selectSavedPaymentMethod(
+            paymentMethod,
+            from: [paymentMethod],
+            in: presentedViewController
+        )
+        flowController.flowControllerViewControllerShouldClose(presentedViewController, didCancel: true)
+        wait(for: [completionExpectation], timeout: 2)
+
+        // Then FlowController returns to having no selection
+        XCTAssertNil(flowController.viewController.selectedPaymentOption)
+        XCTAssertNil(flowController.paymentOption)
+        XCTAssertNil(CustomerPaymentOption.localDefaultPaymentMethod(for: nil))
+    }
+
+    @MainActor
     func testContinuingPaymentOptionsKeepsNewSavedPaymentMethod() {
         // Given a FlowController with a selected saved payment method
         let firstPaymentMethod = makeCardPaymentMethod(id: "pm_first", last4: "4242", brand: "visa")
@@ -558,7 +589,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
     }
 
     @MainActor
-    func testHorizontalRestoredApplePaySelectionOverridesServerDefault() {
+    func testHorizontalSelectionToRestoreOverridesServerDefault() {
         // Given a horizontal FlowController where the server default is a saved bank account
         let customerID = "cus_horizontal_server_default"
         let bank = STPPaymentMethod._testUSBankAccount()
@@ -587,18 +618,172 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         )
         XCTAssertEqual(savedPaymentMethodID(initialViewController.selectedPaymentOption), bank.stripeId)
 
-        // When the controller is reconstructed with Apple Pay as the previous selection
+        // An ordinary previous option preserves form input without overriding the server default
+        let updateViewController = PaymentSheetFlowControllerViewController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue(),
+            previousPaymentOption: .applePay
+        )
+        XCTAssertEqual(savedPaymentMethodID(updateViewController.selectedPaymentOption), bank.stripeId)
+
+        // When the controller is reconstructed with Apple Pay as the selection to restore
         let restoredViewController = PaymentSheetFlowControllerViewController(
             configuration: configuration,
             loadResult: loadResult,
             analyticsHelper: ._testValue(),
-            restoredPaymentOption: .applePay
+            selectionToRestore: .applePay
         )
 
-        // Then the explicit previous selection takes precedence over the server default
+        // Then the selection to restore takes precedence over the server default
         guard case .applePay = restoredViewController.selectedPaymentOption else {
             return XCTFail("Expected Apple Pay to be restored")
         }
+    }
+
+    @MainActor
+    func testHorizontalPreviousPaymentOptionPreservesCompletedFormInput() throws {
+        // Given completed card input and a saved method that would otherwise seed the carousel
+        let confirmParams = IntentConfirmParams(
+            params: ._testValidCardValue(),
+            type: .stripe(.card)
+        )
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: false),
+            savedPaymentMethods: [._testUSBankAccount()],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .horizontal
+        )
+
+        // When the horizontal controller is rebuilt after an ordinary update
+        let viewController = PaymentSheetFlowControllerViewController(
+            configuration: PaymentSheet.Configuration(),
+            loadResult: loadResult,
+            analyticsHelper: ._testValue(),
+            previousPaymentOption: .new(confirmParams: confirmParams)
+        )
+        viewController.loadViewIfNeeded()
+
+        // Then it shows the card form with the previous input
+        let cardForm = try XCTUnwrap(viewController.formCache[.stripe(.card)])
+        XCTAssertEqual(viewController.selectedPaymentMethodType, .stripe(.card))
+        XCTAssertEqual(
+            cardForm.getTextFieldElement("Card number")?.text,
+            confirmParams.paymentMethodParams.card?.number
+        )
+    }
+
+    @MainActor
+    func testHorizontalSelectionToRestorePreservesLinkConfirmOption() {
+        // Given Link confirmation details that aren't represented by the carousel selection
+        let linkConfirmOption = PaymentSheet.LinkConfirmOption.withPaymentMethod(
+            brand: .link,
+            paymentMethod: ._testCard()
+        )
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: false),
+            savedPaymentMethods: [._testUSBankAccount()],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .horizontal
+        )
+
+        // When the horizontal controller is rebuilt with that selection
+        let viewController = PaymentSheetFlowControllerViewController(
+            configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
+            loadResult: loadResult,
+            analyticsHelper: ._testValue(),
+            selectionToRestore: .link(option: linkConfirmOption)
+        )
+
+        // Then it preserves the complete Link confirmation option
+        guard case .link(option: .withPaymentMethod) = viewController.selectedPaymentOption else {
+            return XCTFail("Expected the Link confirmation option to be restored")
+        }
+    }
+
+    @MainActor
+    func testHorizontalUnavailableLinkWalletSelectionUsesAvailableSavedMethod() {
+        // Given Link is no longer available but a saved method is
+        let savedPaymentMethod = STPPaymentMethod._testUSBankAccount()
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            savedPaymentMethods: [savedPaymentMethod],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .horizontal
+        )
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        configuration.link.display = .never
+
+        // When the controller is rebuilt with a Link wallet selection
+        let viewController = PaymentSheetFlowControllerViewController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue(),
+            selectionToRestore: .link(option: .wallet(brand: .link))
+        )
+
+        // Then it falls back to the available saved method
+        XCTAssertEqual(
+            savedPaymentMethodID(viewController.selectedPaymentOption),
+            savedPaymentMethod.stripeId
+        )
+    }
+
+    @MainActor
+    func testHorizontalSelectionToRestorePreservesFormBackedSavedMethod() throws {
+        // Given a linked bank represented as a saved option but restored through its form
+        let paymentMethod = STPPaymentMethod._testUSBankAccount()
+        var linkBankPaymentMethod = LinkBankPaymentMethod(id: paymentMethod.stripeId)
+        linkBankPaymentMethod._allResponseFieldsStorage = NonEncodableParameters(
+            storage: paymentMethod.allResponseFields as? [String: Any] ?? [:]
+        )
+        let linkedBank = InstantDebitsLinkedBank(
+            paymentMethod: linkBankPaymentMethod,
+            bankName: "StripeBank",
+            last4: "6789",
+            linkMode: .linkPaymentMethod,
+            incentiveEligible: false,
+            linkAccountSessionId: "fcsess_123"
+        )
+        let confirmParams = IntentConfirmParams(type: .instantDebits)
+        confirmParams.instantDebitsLinkedBank = linkedBank
+        let paymentOption = PaymentOption.saved(
+            paymentMethod: paymentMethod,
+            confirmParams: confirmParams
+        )
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card), .instantDebits],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .horizontal
+        )
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        configuration.defaultBillingDetails.email = "test@example.com"
+
+        // When the horizontal controller is rebuilt with that selection
+        let viewController = PaymentSheetFlowControllerViewController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue(),
+            selectionToRestore: paymentOption
+        )
+
+        // Then the form reconstructs the linked-bank saved option
+        guard case let .saved(_, restoredConfirmParams) = viewController.selectedPaymentOption else {
+            return XCTFail("Expected the linked bank to be restored")
+        }
+        XCTAssertEqual(
+            try XCTUnwrap(restoredConfirmParams?.instantDebitsLinkedBank).last4,
+            linkedBank.last4
+        )
     }
 
     @MainActor
@@ -706,7 +891,10 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
         // Then the deleted method is not restored
         XCTAssertEqual(flowController.viewController.savedPaymentMethods.map(\.stripeId), [remainingPaymentMethod.stripeId])
-        XCTAssertNotEqual(savedPaymentMethodID(flowController.viewController.selectedPaymentOption), deletedPaymentMethod.stripeId)
+        XCTAssertEqual(
+            savedPaymentMethodID(flowController.viewController.selectedPaymentOption),
+            remainingPaymentMethod.stripeId
+        )
         XCTAssertEqual(CustomerPaymentOption.localDefaultPaymentMethod(for: nil), .stripeId(remainingPaymentMethod.stripeId))
     }
 
@@ -731,6 +919,10 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         XCTAssertEqual(
             CustomerPaymentOption.localDefaultPaymentMethod(for: nil),
             .stripeId(hiddenPaymentMethod.stripeId)
+        )
+        XCTAssertEqual(
+            savedPaymentMethodID(flowController.viewController.selectedPaymentOption),
+            visiblePaymentMethod.stripeId
         )
     }
 
@@ -775,6 +967,32 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
         // Wait for legacy callback
         wait(for: [legacyExpectation], timeout: 2.0)
+    }
+
+    func testCanPresentPaymentOptionsAgainFromCompletion() {
+        let flowController = makeFlowController(savedPaymentMethods: [])
+        let secondCompletion = expectation(description: "Second presentation completed")
+
+        flowController.presentPaymentOptions(from: UIViewController()) { firstDidCancel in
+            XCTAssertTrue(firstDidCancel)
+
+            flowController.presentPaymentOptions(from: UIViewController()) { secondDidCancel in
+                XCTAssertFalse(secondDidCancel)
+                secondCompletion.fulfill()
+            }
+            DispatchQueue.main.async {
+                flowController.flowControllerViewControllerShouldClose(
+                    flowController.viewController,
+                    didCancel: false
+                )
+            }
+        }
+        flowController.flowControllerViewControllerShouldClose(
+            flowController.viewController,
+            didCancel: true
+        )
+
+        wait(for: [secondCompletion], timeout: 2.0)
     }
 
     // MARK: - Checkout terminal session

@@ -37,8 +37,8 @@ final class IntentConfirmParams {
     var financialConnectionsLinkedBank: FinancialConnectionsLinkedBank?
     var instantDebitsLinkedBank: InstantDebitsLinkedBank?
 
-    /// Instant Debits and Link Card Brand create their payment method during bank auth and return
-    /// it as `.saved`, but the selection remains backed by the form rather than `savedPaymentMethods`.
+    /// Whether these params contain a linked bank represented as `.saved` but reconstructed through its
+    /// Instant Debits or Link Card Brand form.
     var isFormBackedSavedPaymentMethod: Bool {
         return instantDebitsLinkedBank != nil
     }

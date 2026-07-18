@@ -486,8 +486,8 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.reloadItems(at: [selectedIndexPath])
     }
 
-    /// Selects an existing carousel option without treating the restoration as a new user selection.
-    func select(paymentOption: PaymentOption) {
+    /// Updates the carousel selection without persisting it or notifying the delegate.
+    func setSelection(to paymentOption: PaymentOption) {
         let customerPaymentOption: CustomerPaymentOption? = {
             switch paymentOption {
             case .applePay:
@@ -506,7 +506,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
 
         selectedViewModelIndex = index
-        collectionView.reloadData()
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
         updateMandateView()
         if isViewLoaded {

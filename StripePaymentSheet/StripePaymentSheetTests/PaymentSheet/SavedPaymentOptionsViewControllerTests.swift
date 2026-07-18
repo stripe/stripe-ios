@@ -4,7 +4,7 @@
 //
 
 @_spi(STP) import StripePayments
-@testable import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
 class SavedPaymentOptionsViewControllerTests: XCTestCase {
@@ -212,7 +212,89 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
         XCTAssertEqual(cell.selectableRectangle.accessibilityLabel, "One-link")
     }
 
+    func testSetSelectionSelectsAvailableOptionsWithoutPersisting() throws {
+        // Given a persisted card and a carousel with wallet and saved options
+        let customerID = "cus_set_selection"
+        let firstPaymentMethod = STPPaymentMethod._testCard()
+        let secondPaymentMethod = STPPaymentMethod._testUSBankAccount()
+        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(firstPaymentMethod.stripeId), forCustomer: customerID)
+        defer {
+            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
+        }
+        let controller = makeViewController(
+            savedPaymentMethods: [firstPaymentMethod, secondPaymentMethod],
+            customerID: customerID
+        )
+
+        // When each available option is selected programmatically
+        controller.setSelection(to: .applePay)
+        guard case .applePay = controller.selectedPaymentOption else {
+            return XCTFail("Expected Apple Pay to be selected")
+        }
+
+        controller.setSelection(to: .link(option: .wallet(brand: .link)))
+        guard case .link = controller.selectedPaymentOption else {
+            return XCTFail("Expected Link to be selected")
+        }
+
+        controller.setSelection(to: .saved(paymentMethod: secondPaymentMethod, confirmParams: nil))
+        let selectedPaymentMethod = try XCTUnwrap(controller.selectedPaymentOption?.savedPaymentMethod)
+
+        // Then the carousel reflects the selection without changing persistence
+        XCTAssertEqual(selectedPaymentMethod.stripeId, secondPaymentMethod.stripeId)
+        XCTAssertEqual(
+            CustomerPaymentOption.localDefaultPaymentMethod(for: customerID),
+            .stripeId(firstPaymentMethod.stripeId)
+        )
+    }
+
+    func testSetSelectionIgnoresOptionsOutsideTheCarousel() throws {
+        // Given a selected saved method
+        let card = STPPaymentMethod._testCard()
+        let unavailablePaymentMethod = STPPaymentMethod._testUSBankAccount()
+        let controller = makeViewController(savedPaymentMethods: [card])
+        controller.setSelection(to: .saved(paymentMethod: card, confirmParams: nil))
+
+        // When asked to select an unavailable saved method or a form-backed option
+        controller.setSelection(to: .saved(paymentMethod: unavailablePaymentMethod, confirmParams: nil))
+        controller.setSelection(to: .new(confirmParams: IntentConfirmParams(type: .stripe(.card))))
+
+        // Then the existing carousel selection is unchanged
+        let selectedPaymentMethod = try XCTUnwrap(controller.selectedPaymentOption?.savedPaymentMethod)
+        XCTAssertEqual(selectedPaymentMethod.stripeId, card.stripeId)
+    }
+
     // MARK: Helpers
+
+    private func makeViewController(
+        savedPaymentMethods: [STPPaymentMethod],
+        customerID: String = "cus_saved_payment_options"
+    ) -> SavedPaymentOptionsViewController {
+        let configuration = SavedPaymentOptionsViewController.Configuration(
+            customerID: customerID,
+            showApplePay: true,
+            showLink: true,
+            linkBrand: .link,
+            removeSavedPaymentMethodMessage: nil,
+            merchantDisplayName: "Test Merchant",
+            isCVCRecollectionEnabled: false,
+            isTestMode: true,
+            allowsRemovalOfLastSavedPaymentMethod: true,
+            allowsRemovalOfPaymentMethods: true,
+            allowsSetAsDefaultPM: false,
+            allowsUpdatePaymentMethod: false
+        )
+        return SavedPaymentOptionsViewController(
+            savedPaymentMethods: savedPaymentMethods,
+            configuration: configuration,
+            paymentSheetConfiguration: paymentSheetConfiguration,
+            intent: Intent._testValue(),
+            appearance: .default,
+            elementsSession: .emptyElementsSession,
+            analyticsHelper: ._testValue()
+        )
+    }
+
     func _testCanEditPaymentMethods(removePM: Bool,
                                     removeLastPM: Bool,
                                     defaultPM: Bool,

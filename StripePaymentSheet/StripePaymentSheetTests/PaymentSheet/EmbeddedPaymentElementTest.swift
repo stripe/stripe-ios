@@ -900,17 +900,23 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.selectedFormViewController?.didTapPrimaryButton()
         XCTAssertEqual(sut.paymentOption?.label, "•••• 4242")
 
-        // When the same card row is reopened, edited, and canceled
+        // When the element is updated and the same card row is reopened
+        let updateResult = await sut.update(intentConfiguration: paymentIntentConfig)
+        XCTAssertEqual(updateResult, .succeeded)
         sut.embeddedPaymentMethodsView.didTap(
             rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
         )
-        cardForm.getTextFieldElement("Card number").setText("5555555555554444")
+        cardForm = sut.formCache[.stripe(.card)]!
+
+        // ...and its CVC is edited before the form is canceled
+        cardForm.getTextFieldElement("CVC").setText("999")
         sut.selectedFormViewController?.didTapOrSwipeToDismiss()
 
-        // Then the selected card and its form input are restored
+        // Then the selected card and its CVC are restored even though its display data did not change
         XCTAssertEqual(sut.paymentOption?.label, "•••• 4242")
         cardForm = sut.formCache[.stripe(.card)]!
         XCTAssertEqual(cardForm.getTextFieldElement("Card number").text, "4242424242424242")
+        XCTAssertEqual(cardForm.getTextFieldElement("CVC").text, "123")
     }
 
     func testCancelingEditedExternalPaymentMethodFormRestoresBillingDetails() async throws {

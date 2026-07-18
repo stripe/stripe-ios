@@ -5,11 +5,31 @@
 
 import Foundation
 
+@testable @_spi(STP) import StripeCore
 @testable import StripePaymentSheet
 import StripePaymentsTestUtils
 import XCTest
 
 class IntentConfirmParamsTest: XCTestCase {
+    func testFormBackedSavedPaymentMethod() {
+        let linkedBank = InstantDebitsLinkedBank(
+            paymentMethod: .init(id: "pm_123"),
+            bankName: "Stripe Bank",
+            last4: "6789",
+            linkMode: nil,
+            incentiveEligible: false,
+            linkAccountSessionId: "fcsess_123"
+        )
+
+        for paymentMethodType in [PaymentSheet.PaymentMethodType.instantDebits, .linkCardBrand] {
+            let confirmParams = IntentConfirmParams(type: paymentMethodType)
+            XCTAssertFalse(confirmParams.isFormBackedSavedPaymentMethod)
+
+            confirmParams.instantDebitsLinkedBank = linkedBank
+            XCTAssertTrue(confirmParams.isFormBackedSavedPaymentMethod)
+        }
+    }
+
     // MARK: Legacy
     func testSetAllowRedisplay_legacySI() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))

@@ -280,7 +280,7 @@ public final class EmbeddedPaymentElement {
                 delegate: self
             )
             self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
-            informDelegateIfPaymentOptionUpdated()
+            updatePaymentOptionState()
             return .succeeded
         }
         self.latestUpdateTask = currentUpdateTask
@@ -347,7 +347,7 @@ public final class EmbeddedPaymentElement {
 #endif
 
         // Notify the delegate that the payment option has changed
-        informDelegateIfPaymentOptionUpdated()
+        updatePaymentOptionState()
     }
 
     #if DEBUG
@@ -392,8 +392,8 @@ public final class EmbeddedPaymentElement {
 
     /// The value of `paymentOption` when we last called `embeddedPaymentElementDidUpdatePaymentOption`
     internal var lastUpdatedPaymentOption: PaymentOptionDisplayData?
-    /// The internal payment option at the last selection.
-    internal var lastSelectedPaymentOption: PaymentOption?
+    /// Confirm parameters used to revert the last selected form after canceled edits.
+    internal var lastSelectedFormConfirmParams: IntentConfirmParams?
     internal var _paymentOption: PaymentOption? {
     #if DEBUG
         if let testPaymentOption = _test_paymentOption {
@@ -470,7 +470,7 @@ public final class EmbeddedPaymentElement {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.embeddedPaymentMethodsView.updateLinkRow(for: LinkAccountContext.shared.account, animated: true)
-                self.informDelegateIfPaymentOptionUpdated()
+                self.updatePaymentOptionState()
             }
         }
         _ = self.linkAccountObserver
