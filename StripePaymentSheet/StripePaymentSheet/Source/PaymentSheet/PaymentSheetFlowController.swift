@@ -843,7 +843,8 @@ extension PaymentSheet {
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
                         walletButtonsViewState: walletButtonsViewState,
-                        previousPaymentOption: selection.paymentOption
+                        previousPaymentOption: selection.paymentOption,
+                        previousFormConfirmParams: selection.formConfirmParams
                     )
                     self.viewController.flowControllerDelegate = self
                     self.confirmationChallenge = confirmationChallenge
@@ -869,7 +870,8 @@ extension PaymentSheet {
                 loadResult: makeLoadResultWithCurrentSavedPaymentMethods(),
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: self.walletButtonsViewState,
-                previousPaymentOption: selection.paymentOption
+                previousPaymentOption: selection.paymentOption,
+                previousFormConfirmParams: selection.formConfirmParams
             )
             self.viewController.flowControllerDelegate = self
             updatePaymentOption()
@@ -900,12 +902,6 @@ extension PaymentSheet {
             guard case let .presented(selectionSnapshot) = selectionState else {
                 return
             }
-
-            // Horizontal selection restoration is added by the next change in this stack.
-            guard viewController.loadResult.paymentMethodOrientation == .vertical else {
-                return
-            }
-
             let restoration = selectionSnapshot.restoration(using: viewController)
             selectionState = .restored(restoration)
             if restoration.requiresViewControllerRebuild {
@@ -923,7 +919,8 @@ extension PaymentSheet {
                 ),
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: walletButtonsViewState,
-                previousPaymentOption: selection.paymentOption
+                previousFormConfirmParams: selection.formConfirmParams,
+                selectionToRestore: selection.paymentOption
             )
             self.viewController.flowControllerDelegate = self
             if selection.paymentOption == nil {
@@ -983,7 +980,9 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
-            previousPaymentOption: PaymentOption? = nil
+            previousPaymentOption: PaymentOption? = nil,
+            previousFormConfirmParams: IntentConfirmParams? = nil,
+            selectionToRestore: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
             switch loadResult.paymentMethodOrientation {
@@ -992,7 +991,9 @@ extension PaymentSheet {
                     configuration: configuration,
                     loadResult: loadResult,
                     analyticsHelper: analyticsHelper,
-                    previousPaymentOption: previousPaymentOption
+                    previousPaymentOption: previousPaymentOption,
+                    previousFormConfirmParams: previousFormConfirmParams,
+                    selectionToRestore: selectionToRestore
                 )
             case .vertical:
                 controller = PaymentSheetVerticalViewController(
@@ -1001,7 +1002,7 @@ extension PaymentSheet {
                     isFlowController: true,
                     analyticsHelper: analyticsHelper,
                     walletButtonsViewState: walletButtonsViewState,
-                    previousPaymentOption: previousPaymentOption
+                    previousPaymentOption: selectionToRestore ?? previousPaymentOption
                 )
             }
             return controller
@@ -1146,7 +1147,8 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
 extension FlowControllerViewControllerProtocol {
     var stateForSnapshot: FlowControllerStateSnapshot.Selection {
         return .init(
-            paymentOption: selectedPaymentOption
+            paymentOption: selectedPaymentOption,
+            formConfirmParams: selectedPaymentOption?.formConfirmParams
         )
     }
 }
@@ -1160,6 +1162,7 @@ internal struct FlowControllerStateSnapshot {
 
     struct Selection {
         var paymentOption: PaymentOption?
+        let formConfirmParams: IntentConfirmParams?
     }
 
     struct Restoration {

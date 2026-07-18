@@ -30,8 +30,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         case .addingNew:
             if let linkConfirmOption {
                 return .link(option: linkConfirmOption)
-            } else if isHackyLinkButtonSelected {
-                return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)))
+            } else if let walletHeaderSelection {
+                return .link(option: walletHeaderSelection)
             } else if let paymentOption = addPaymentMethodViewController.paymentOption {
                 return paymentOption
             } else if let paymentOption = savedPaymentOptionsViewController.selectedPaymentOption {
@@ -92,8 +92,22 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private let isApplePayEnabled: Bool
     private let isLinkEnabled: Bool
     private let couldShowLinkInHeader: Bool
-    private var isHackyLinkButtonSelected: Bool = false
     var linkConfirmOption: PaymentSheet.LinkConfirmOption?
+    /// A wallet selected from the header while the payment-method form remains visible.
+    private var walletHeaderSelection: PaymentSheet.LinkConfirmOption?
+
+    var stateForSnapshot: FlowControllerStateSnapshot.Selection {
+        let formConfirmParams: IntentConfirmParams? = {
+            guard let paymentOption = addPaymentMethodViewController.paymentOption else {
+                return nil
+            }
+            if case let .link(confirmOption) = paymentOption {
+                return confirmOption.signupConfirmParams
+            }
+            return paymentOption.formConfirmParams
+        }()
+        return .init(paymentOption: selectedPaymentOption, formConfirmParams: formConfirmParams)
+    }
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
@@ -172,8 +186,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         configuration: PaymentSheet.Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        previousPaymentOption: PaymentOption? = nil
+        previousPaymentOption: PaymentOption? = nil,
+        previousFormConfirmParams: IntentConfirmParams? = nil,
+        selectionToRestore: PaymentOption? = nil
     ) {
+        let initialPaymentOption = selectionToRestore ?? previousPaymentOption
         self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
@@ -183,15 +200,10 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.configuration = configuration
         self.analyticsHelper = analyticsHelper
 
-        // Restore the customer's previous payment method. For saved PMs, this happens naturally already, so we just need to handle new payment methods.
-        // Caveats:
-        // - Only payment method details (including checkbox state) and billing details are restored
-        // - Only restored if the previous input resulted in a completed form i.e. partial or invalid input is still discarded
-        let previousConfirmParams = previousPaymentOption?.formConfirmParams
-
-        // Default to saved payment selection mode, as long as we aren't restoring a customer's previous new payment method input
-        // and they have saved PMs or Apple Pay or Link is enabled
-        self.mode = (previousConfirmParams == nil) && (loadResult.savedPaymentMethods.count > 0 || isApplePayEnabled || isLinkEnabled)
+        // A PaymentOption only contains completed form input, so partial or invalid input is discarded.
+        let initialFormConfirmParams = previousFormConfirmParams ?? initialPaymentOption?.formConfirmParams
+        let hasSavedOrWalletOption = !loadResult.savedPaymentMethods.isEmpty || isApplePayEnabled || isLinkEnabled
+        self.mode = initialFormConfirmParams == nil && hasSavedOrWalletOption
                 ? .selectingSaved
                 : .addingNew
 
@@ -226,13 +238,35 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             elementsSession: elementsSession,
             configuration: configuration,
             paymentMethodOrientation: loadResult.paymentMethodOrientation,
-            previousCustomerInput: previousConfirmParams, // Restore the customer's previous new payment method input
+            previousCustomerInput: initialFormConfirmParams,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             formCache: formCache,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper
         )
         super.init(nibName: nil, bundle: nil)
+        // A cancellation-time selection takes precedence over defaults derived by the carousel.
+        if let selectionToRestore {
+            self.savedPaymentOptionsViewController.setSelection(to: selectionToRestore)
+            // setSelection(to:) above fully restores .applePay/.saved by selecting their row.
+            // Link needs more: the row only tells us Link is selected, not which LinkConfirmOption
+            // backed it, so selectedPaymentOption would otherwise collapse it to a generic .wallet.
+            if case let .link(linkConfirmOption) = selectionToRestore {
+                switch linkConfirmOption {
+                case .wallet where isLinkEnabled:
+                    if linkOnlyMode {
+                        // Link-only mode displays Link in the wallet header instead of the carousel.
+                        mode = .addingNew
+                        walletHeaderSelection = linkConfirmOption
+                    }
+                case .wallet:
+                    // Link is no longer available. Keep the fallback selected by the carousel.
+                    break
+                case .signUp, .withPaymentMethod, .withPaymentDetails:
+                    self.linkConfirmOption = linkConfirmOption
+                }
+            }
+        }
         self.savedPaymentOptionsViewController.delegate = self
         self.addPaymentMethodViewController.delegate = self
     }
@@ -461,8 +495,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     @objc
     private func didTapContinueButton() {
-        // The user is continuing with an LPM, so we un-select Link
-        isHackyLinkButtonSelected = false
+        // Continue applies to the visible payment-method form, not its wallet header.
+        walletHeaderSelection = nil
 
         if let selectedPaymentOption {
             analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
@@ -718,8 +752,13 @@ extension PaymentSheetFlowControllerViewController: WalletHeaderViewDelegate {
         if canPresentLinkOnWalletButton {
             presentLink()
         } else {
+            walletHeaderSelection = .wallet(
+                brand: configuration.resolvedLinkBrand(
+                    elementsSession: elementsSession,
+                    linkAccount: LinkAccountContext.shared.account
+                )
+            )
             didDismiss(didCancel: false)
-            isHackyLinkButtonSelected = true
         }
 
         updateUI()
