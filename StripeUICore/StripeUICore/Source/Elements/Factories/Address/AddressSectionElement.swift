@@ -207,10 +207,6 @@ import UIKit
         self.didTapAutocompleteButton = presentAutoComplete
 
         let initialCountry = countryCodes[country.selectedIndex]
-        self.isAutocompleteExpanded = fieldsToCollect.shouldExpandAutocomplete(
-            for: initialCountry,
-            address: defaults.address
-        )
 
         // Initialize additional fields
         self.name = {
@@ -308,7 +304,8 @@ import UIKit
     /// - Parameter address: Populates the new fields with the provided defaults, or the current fields' text if `nil`.
     private func updateAddressFields(
         for countryCode: String,
-        address: AddressDetails.Address? = nil
+        address: AddressDetails.Address? = nil,
+        forceExpand: Bool = false
     ) {
         // Create the new address fields' default text
         let address = address ?? AddressDetails.Address(
@@ -321,7 +318,7 @@ import UIKit
         )
 
         if !isAutocompleteExpanded,
-           fieldsToCollect.shouldExpandAutocomplete(for: countryCode, address: address) {
+           forceExpand || fieldsToCollect.shouldExpandAutocomplete(for: countryCode, address: address) {
             isAutocompleteExpanded = true
         }
 
@@ -428,7 +425,8 @@ import UIKit
         return addressSection.elements.contains { $0 === element }
     }
 
-    private func isAddressField(_ element: Element) -> Bool {
+    private func isHiddenAddressField(_ element: Element) -> Bool {
+        guard fieldsToCollect.isCompactAutocomplete(isExpanded: isAutocompleteExpanded) else { return false }
         let addressFields: [Element?] = [line1, line2, city, state, postalCode]
         return addressFields
             .compactMap { $0 }
@@ -508,10 +506,9 @@ extension AddressSectionElement: Element {
 // MARK: - ElementDelegate
 extension AddressSectionElement: ElementDelegate {
     public func didUpdate(element: Element) {
-        if fieldsToCollect.isCompactAutocomplete(isExpanded: isAutocompleteExpanded),
-           isAddressField(element) {
-            isAutocompleteExpanded = true
-            updateAddressFields(for: selectedCountryCode)
+        // If a hidden element has been 
+        if isHiddenAddressField(element) {
+            updateAddressFields(for: selectedCountryCode, forceExpand: true)
             return
         }
 
