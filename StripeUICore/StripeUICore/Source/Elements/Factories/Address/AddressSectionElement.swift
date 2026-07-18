@@ -449,7 +449,7 @@ private extension AddressSectionElement.FieldsToCollect {
 
     func shouldExpandAutocomplete(for countryCode: String, address: AddressSectionElement.AddressDetails.Address) -> Bool {
         guard let autocomplete else { return false }
-        return address.hasAnyValue || !autocomplete.supports(countryCode)
+        return address.hasNonCountryValue || !autocomplete.supports(countryCode)
     }
 
     func showsAutocompleteAccessory(for countryCode: String, isExpanded: Bool) -> Bool {
@@ -465,8 +465,10 @@ private extension AddressSectionElement.FieldsToCollect.Autocomplete {
 }
 
 private extension AddressSectionElement.AddressDetails.Address {
-    var hasAnyValue: Bool {
-        return [city, country, line1, line2, postalCode, state].contains { $0?.nonEmpty != nil }
+    /// `true` iff any field other than `country` is set. A default `country` alone (a common
+    /// merchant customization) shouldn't be treated as an existing address to expand and show.
+    var hasNonCountryValue: Bool {
+        return [city, line1, line2, postalCode, state].contains { $0?.nonEmpty != nil }
     }
 }
 

@@ -177,6 +177,22 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertLine1HasAutocompleteAccessory(sut)
     }
 
+    func testAutocompleteStaysCompactWhenOnlyDefaultCountryIsPresent() {
+        // A default country alone (no street address) shouldn't be treated as an
+        // existing address to expand and show.
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaults: .init(address: .init(country: "US")),
+            fieldsToCollect: .all(autocomplete: .init())
+        )
+
+        XCTAssertNotNil(sut.autoCompleteLine)
+        XCTAssertFalse(sut.addressSection.elements.contains { $0 === sut.line1 })
+    }
+
     func testAutocompleteExpandsForUnsupportedCountryAndDoesNotCollapse() {
         let sut = AddressSectionElement(
             title: "",
