@@ -338,14 +338,20 @@ extension STPPaymentMethodCard {
 
 extension UIImage {
     func rounded(radius: CGFloat) -> UIImage {
+        guard size.width > 0, size.height > 0 else {
+            return self
+        }
         let rect = CGRect(origin: .zero, size: size)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         UIBezierPath(roundedRect: rect, cornerRadius: radius).addClip()
         draw(in: rect)
-        return UIGraphicsGetImageFromCurrentImageContext()!
+        return UIGraphicsGetImageFromCurrentImageContext() ?? self
     }
 
     func roundedWithBorder(radius: CGFloat, borderWidth: CGFloat = 1, borderColor: UIColor = UIColor.black.withAlphaComponent(0.2)) -> UIImage {
+        guard size.width > 0, size.height > 0 else {
+            return self
+        }
         let rect = CGRect(origin: .zero, size: size)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         let path = UIBezierPath(roundedRect: rect, cornerRadius: radius)
@@ -356,6 +362,6 @@ extension UIImage {
         borderColor.setStroke()
         borderPath.lineWidth = borderWidth
         borderPath.stroke()
-        return UIGraphicsGetImageFromCurrentImageContext()!
+        return UIGraphicsGetImageFromCurrentImageContext() ?? self
     }
 }
