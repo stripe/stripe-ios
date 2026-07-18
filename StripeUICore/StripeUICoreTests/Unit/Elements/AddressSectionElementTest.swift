@@ -131,61 +131,108 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(AddressSectionElement(title: "", countries: ["UK", "US"], addressSpecProvider: specProvider).countryCodes, ["UK", "US"])
     }
 
-    func testAutocompleteCompactPresentationShowsDummyAddressLineAndCanExpand() {
+    func testAutocompleteStartsCompactAndExpandsWhenLine1IsSet() {
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            fieldsToCollect: .all(autocomplete: .compact(autocompleteCountries: ["US"]))
+            fieldsToCollect: .all(autocomplete: .init(autocompleteCountries: ["US"]))
         )
 
         XCTAssertNotNil(sut.autoCompleteLine)
-        XCTAssertNil(sut.line1)
-        XCTAssertNil(sut.line2)
-        XCTAssertNil(sut.city)
-        XCTAssertNil(sut.state)
-        XCTAssertNil(sut.postalCode)
-
-        sut.fieldsToCollect = .all(autocomplete: .expanded(autocompleteCountries: ["US"]))
-
-        XCTAssertNil(sut.autoCompleteLine)
         XCTAssertNotNil(sut.line1)
         XCTAssertNotNil(sut.line2)
         XCTAssertNotNil(sut.city)
         XCTAssertNotNil(sut.state)
         XCTAssertNotNil(sut.postalCode)
+        guard let compactLine1 = sut.line1 else {
+            return XCTFail("Expected a backing line1 field")
+        }
+        XCTAssertFalse(sut.addressSection.elements.contains { $0 === compactLine1 })
+
+        sut.line1?.setText("510 Townsend St.")
+
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertEqual(sut.line1?.text, "510 Townsend St.")
+        guard let expandedLine1 = sut.line1 else {
+            return XCTFail("Expected a visible line1 field")
+        }
+        XCTAssertTrue(sut.addressSection.elements.contains { $0 === expandedLine1 })
         XCTAssertLine1HasAutocompleteAccessory(sut)
     }
 
-    func testAutocompleteExpandedPresentationShowsAutocompleteLine1() {
+    func testAutocompleteStartsExpandedWhenAddressDefaultsArePresent() {
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            fieldsToCollect: .all(autocomplete: .expanded())
+            defaults: .init(address: .init(city: "San Francisco")),
+            fieldsToCollect: .all(autocomplete: .init())
         )
 
         XCTAssertNil(sut.autoCompleteLine)
-        XCTAssertNotNil(sut.line1)
+        XCTAssertEqual(sut.city?.text, "San Francisco")
         XCTAssertLine1HasAutocompleteAccessory(sut)
     }
 
-    func testAutocompleteExpandedPresentationRespectsSupportedCountries() {
+    func testAutocompleteExpandsForUnsupportedCountryAndDoesNotCollapse() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US", "CA"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            fieldsToCollect: .all(autocomplete: .init(autocompleteCountries: ["US"]))
+        )
+
+        XCTAssertEqual(sut.selectedCountryCode, "US")
+        XCTAssertNotNil(sut.autoCompleteLine)
+
+        sut.selectedCountryCode = "CA"
+
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertLine1DoesNotHaveAutocompleteAccessory(sut)
+
+        sut.selectedCountryCode = "US"
+
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertLine1HasAutocompleteAccessory(sut)
+    }
+
+    func testAutocompleteExpandsWhenEmptyManualEntryIsSet() {
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            fieldsToCollect: .all(autocomplete: .expanded(autocompleteCountries: ["CA"]))
+            fieldsToCollect: .all(autocomplete: .init())
         )
 
-        XCTAssertLine1DoesNotHaveAutocompleteAccessory(sut)
+        sut.line1?.setText("")
 
-        sut.fieldsToCollect = .all(autocomplete: .expanded(autocompleteCountries: ["US"]))
-
+        XCTAssertNil(sut.autoCompleteLine)
         XCTAssertLine1HasAutocompleteAccessory(sut)
+    }
+
+    func testAutocompleteDoesNotExpandForNonAddressDefaultsOrFieldUpdates() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaults: .init(name: "Jenny Rosen"),
+            fieldsToCollect: .all(autocomplete: .init()),
+            additionalFields: .init(name: .enabled())
+        )
+
+        XCTAssertNotNil(sut.autoCompleteLine)
+        sut.name?.setText("Jane Doe")
+        XCTAssertNotNil(sut.autoCompleteLine)
+        guard let line1 = sut.line1 else {
+            return XCTFail("Expected a backing line1 field")
+        }
+        XCTAssertFalse(sut.addressSection.elements.contains { $0 === line1 })
     }
 
     func testAllFieldsToCollectDoesNotShowAutocomplete() {

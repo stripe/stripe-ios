@@ -416,29 +416,16 @@ extension AddressViewController {
 
 // MARK: - Private methods
 extension AddressViewController {
-    /// Expands the address section element and begin editing if the current country selection does not support auto complete
-    private func expandAddressSectionIfNeeded() {
-        // If we're using compact autocomplete and the country is unsupported, show the expanded address fields.
-        if let addressSection = addressSection,
-           case .all(.some(.compact(let autocompleteCountries))) = addressSection.fieldsToCollect,
-           !(autocompleteCountries?.caseInsensitiveContains(addressSection.selectedCountryCode) ?? true) {
-            addressSection.fieldsToCollect = addressSection.fieldsToCollect.expandedAutocomplete
-        }
-    }
-
     private func makeDefaultAddressSection() -> AddressSectionElement? {
         guard hasLoadedSpecs else { return nil }
 
         let defaultValues = compatibleDefaultValues ?? .init()
-        let showFullForm = compatibleDefaultValues?.address.line1?.isEmpty == false
 
         return AddressSectionElement(
             countries: configuration.allowedCountries.isEmpty ? nil : configuration.allowedCountries,
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: defaultValues),
-            fieldsToCollect: showFullForm
-                ? .all(autocomplete: .expanded(autocompleteCountries: configuration.autocompleteCountries))
-                : .all(autocomplete: .compact(autocompleteCountries: configuration.autocompleteCountries)),
+            fieldsToCollect: .all(autocomplete: .init(autocompleteCountries: configuration.autocompleteCountries)),
             additionalFields: .init(from: configuration.additionalFields),
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { [weak self] in
@@ -521,7 +508,6 @@ extension AddressViewController {
          self.latestError = nil // clear error on new input
          let enabled = addressSection.validationState.isValid
          button.update(status: enabled ? .enabled : .disabled, animated: true)
-         expandAddressSectionIfNeeded()
 
          // Automatically update the "shipping equals billing" checkbox based on current form state
          updateShippingEqualsBillingCheckboxState()
@@ -538,15 +524,12 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
     func didSelectManualEntry(_ line1: String) {
         guard let addressSection = addressSection else { assertionFailure(); return }
         navigationController?.popViewController(animated: true)
-        addressSection.fieldsToCollect = addressSection.fieldsToCollect.expandedAutocomplete
         addressSection.line1?.setText(line1)
     }
 
     func didSelectAddress(_ address: PaymentSheet.Address?) {
         guard let addressSection = addressSection else { assertionFailure(); return }
         navigationController?.popViewController(animated: true)
-        // Expand the address fields after an address is selected
-        addressSection.fieldsToCollect = addressSection.fieldsToCollect.expandedAutocomplete
         guard let address = address else {
             return
         }

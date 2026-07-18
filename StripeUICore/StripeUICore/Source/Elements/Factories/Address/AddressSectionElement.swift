@@ -68,7 +68,7 @@ import UIKit
     /// Describes which address fields to collect.
     public enum FieldsToCollect: Equatable {
         /// Shows all address fields, optionally with autocomplete.
-        /// - Parameter autocomplete: The autocomplete presentation to use. If nil, autocomplete is disabled.
+        /// - Parameter autocomplete: The autocomplete configuration to use. If nil, autocomplete is disabled.
         case all(autocomplete: Autocomplete? = nil)
         /// Collects country and postal code if the country is one of `countriesRequiringPostalCollection`
         /// - Note: Really only useful for cards, where we only collect postal for a handful of countries
@@ -76,15 +76,14 @@ import UIKit
         /// Only collects the country. Used by Payment Methods that require a country but not the rest of the address.
         case countryOnly
 
-        public enum Autocomplete: Equatable {
-            /// Shows country and the autocomplete line entry point.
-            /// - Parameter autocompleteCountries: Countries that support autocomplete. If nil, all countries are supported.
-            ///   Callers should expand when an unsupported country is selected.
-            case compact(autocompleteCountries: [String]? = nil)
-            /// Shows the full address form. Line 1 opens autocomplete when the selected country is supported.
-            /// - Parameter autocompleteCountries: Countries that support autocomplete. If nil, all countries are supported.
-            ///   Unsupported countries use manual entry.
-            case expanded(autocompleteCountries: [String]? = nil)
+        /// Configuration for address autocomplete.
+        public struct Autocomplete: Equatable {
+            /// Countries that support autocomplete. If nil, all countries are supported.
+            public let autocompleteCountries: [String]?
+
+            public init(autocompleteCountries: [String]? = nil) {
+                self.autocompleteCountries = autocompleteCountries
+            }
         }
     }
     /// Fields that this section can collect in addition to the address
@@ -165,6 +164,7 @@ import UIKit
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsAppearance
     private(set) var defaults: AddressDetails
+    private var isAutocompleteExpanded = false
     @_spi(STP) public var didTapAutocompleteButton: () -> Void
     public var didUpdate: DidUpdateAddress?
 
@@ -207,6 +207,10 @@ import UIKit
         self.didTapAutocompleteButton = presentAutoComplete
 
         let initialCountry = countryCodes[country.selectedIndex]
+        self.isAutocompleteExpanded = fieldsToCollect.shouldExpandAutocomplete(
+            for: initialCountry,
+            address: defaults.address
+        )
 
         // Initialize additional fields
         self.name = {
@@ -316,17 +320,18 @@ import UIKit
             state: state?.rawData
         )
 
-        // Get the address spec for the country and filter out unused fields
+        if !isAutocompleteExpanded,
+           fieldsToCollect.shouldExpandAutocomplete(for: countryCode, address: address) {
+            isAutocompleteExpanded = true
+        }
+
+        // Get the address spec for the country and filter out unused fields.
+        // All address fields are created for compact autocomplete so they can receive values and expand the section.
         let spec = addressSpecProvider.addressSpec(for: countryCode)
         let fieldOrdering = spec.fieldOrdering.filter {
             switch fieldsToCollect {
-            case .all(let autocomplete):
-                switch autocomplete {
-                case .none, .some(.expanded):
-                    return true
-                case .some(.compact):
-                    return false
-                }
+            case .all:
+                return true
             case .countryOnly:
                 return false
             case .countryAndPostal(let countriesRequiringPostalCollection):
@@ -338,14 +343,15 @@ import UIKit
             }
         }
 
-        if fieldsToCollect.isCompactAutocomplete {
+        let isCompactAutocomplete = fieldsToCollect.isCompactAutocomplete(isExpanded: isAutocompleteExpanded)
+        if isCompactAutocomplete {
             autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme, didTap: { [weak self] in self?.didTapAutocompleteButton() })
         } else {
             autoCompleteLine = nil
         }
         // Re-create the address fields
         if fieldOrdering.contains(.line) {
-            if fieldsToCollect.showsAutocompleteAccessory(for: countryCode) {
+            if fieldsToCollect.showsAutocompleteAccessory(for: countryCode, isExpanded: isAutocompleteExpanded) {
                 line1 = TextFieldElement.Address.LineConfiguration(
                     lineType: .line1Autocompletable(didTapAutocomplete: { [weak self] in self?.didTapAutocompleteButton() }),
                     defaultValue: address.line1
@@ -384,52 +390,83 @@ import UIKit
         initialElements.append(autoCompleteLine)
         let emailElement: [Element?] = [email]
         let phoneElement: [Element?] = [phone]
-        addressSection.elements = (emailElement + phoneElement + initialElements + addressFields).compactMap { $0 }
+        let visibleAddressFields = isCompactAutocomplete ? [] : addressFields
+        addressSection.elements = (emailElement + phoneElement + initialElements + visibleAddressFields).compactMap { $0 }
+
+        // Compact autocomplete keeps its address fields out of the section hierarchy, so wire them directly
+        // to this element to observe values supplied by autocomplete or manual entry.
+        if isCompactAutocomplete {
+            addressFields.compactMap { $0 }.forEach { $0.delegate = self }
+        }
     }
 
     /// Returns `true` iff all **displayed** address fields match the given `address`, treating `nil` and "" as equal.
     func displayedAddressEqualTo(address: AddressDetails.Address) -> Bool {
         var allDisplayedFieldsEqual = true
-        if let city = city, city.text.nonEmpty != address.city?.nonEmpty {
+        if let city = city, isDisplayed(city), city.text.nonEmpty != address.city?.nonEmpty {
            allDisplayedFieldsEqual = false
         }
         if country.selectedItem.rawData != address.country?.nonEmpty {
            allDisplayedFieldsEqual = false
         }
-        if let line1 = line1, line1.text.nonEmpty != address.line1?.nonEmpty {
+        if let line1 = line1, isDisplayed(line1), line1.text.nonEmpty != address.line1?.nonEmpty {
            allDisplayedFieldsEqual = false
         }
-        if let line2 = line2, line2.text.nonEmpty != address.line2?.nonEmpty {
+        if let line2 = line2, isDisplayed(line2), line2.text.nonEmpty != address.line2?.nonEmpty {
            allDisplayedFieldsEqual = false
         }
-        if let postalCode = postalCode, postalCode.text.nonEmpty != address.postalCode?.nonEmpty {
+        if let postalCode = postalCode, isDisplayed(postalCode), postalCode.text.nonEmpty != address.postalCode?.nonEmpty {
            allDisplayedFieldsEqual = false
         }
-        if let state = state, state.rawData.nonEmpty != address.state?.nonEmpty {
+        if let state = state, isDisplayed(state), state.rawData.nonEmpty != address.state?.nonEmpty {
            allDisplayedFieldsEqual = false
         }
         return allDisplayedFieldsEqual
     }
 
+    private func isDisplayed(_ element: Element) -> Bool {
+        return addressSection.elements.contains { $0 === element }
+    }
+
+    private func isAddressField(_ element: Element) -> Bool {
+        let addressFields: [Element?] = [line1, line2, city, state, postalCode]
+        return addressFields
+            .compactMap { $0 }
+            .contains { $0 === element }
+    }
+
 }
 
 private extension AddressSectionElement.FieldsToCollect {
-    var isCompactAutocomplete: Bool {
-        guard case .all(let autocomplete) = self,
-              let autocomplete else { return false }
-        guard case .compact = autocomplete else { return false }
-        return true
+    var autocomplete: Autocomplete? {
+        guard case .all(let autocomplete) = self else { return nil }
+        return autocomplete
     }
 
-    func showsAutocompleteAccessory(for countryCode: String) -> Bool {
-        guard case .all(let autocomplete) = self,
-              let autocomplete else { return false }
-        switch autocomplete {
-        case .expanded(let autocompleteCountries):
-            return autocompleteCountries?.caseInsensitiveContains(countryCode) ?? true
-        case .compact:
-            return false
-        }
+    func isCompactAutocomplete(isExpanded: Bool) -> Bool {
+        return autocomplete != nil && !isExpanded
+    }
+
+    func shouldExpandAutocomplete(for countryCode: String, address: AddressSectionElement.AddressDetails.Address) -> Bool {
+        guard let autocomplete else { return false }
+        return address.hasAnyValue || !autocomplete.supports(countryCode)
+    }
+
+    func showsAutocompleteAccessory(for countryCode: String, isExpanded: Bool) -> Bool {
+        guard let autocomplete, isExpanded else { return false }
+        return autocomplete.supports(countryCode)
+    }
+}
+
+private extension AddressSectionElement.FieldsToCollect.Autocomplete {
+    func supports(_ countryCode: String) -> Bool {
+        return autocompleteCountries?.caseInsensitiveContains(countryCode) ?? true
+    }
+}
+
+private extension AddressSectionElement.AddressDetails.Address {
+    var hasAnyValue: Bool {
+        return [city, country, line1, line2, postalCode, state].contains { $0?.nonEmpty != nil }
     }
 }
 
@@ -469,6 +506,13 @@ extension AddressSectionElement: Element {
 // MARK: - ElementDelegate
 extension AddressSectionElement: ElementDelegate {
     public func didUpdate(element: Element) {
+        if fieldsToCollect.isCompactAutocomplete(isExpanded: isAutocompleteExpanded),
+           isAddressField(element) {
+            isAutocompleteExpanded = true
+            updateAddressFields(for: selectedCountryCode)
+            return
+        }
+
         if !sameAsCheckbox.view.isHidden, sameAsCheckbox.isSelected, !displayedAddressEqualTo(address: defaults.address) {
             // Deselect checkbox if the address != the shipping address (our `defaults`)
             sameAsCheckbox.isSelected = false

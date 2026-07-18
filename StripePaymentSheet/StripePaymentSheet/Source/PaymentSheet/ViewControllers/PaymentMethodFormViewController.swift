@@ -179,7 +179,6 @@ class PaymentMethodFormViewController: UIViewController {
             let delegate = addressSection.delegate
             addressSection.delegate = nil  // Stop didUpdate delegate calls to avoid laying out while we're being presented
             if let newShippingAddress = configuration.shippingDetails()?.address {
-                addressSection.fieldsToCollect = addressSection.fieldsToCollect.expandedAutocomplete
                 addressSection.updateBillingSameAsShippingDefaultAddress(.init(newShippingAddress))
             } else {
                 addressSection.updateBillingSameAsShippingDefaultAddress(.init())
@@ -716,8 +715,6 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
 
         // Dismiss the autocomplete view controller
         presentedViewController?.dismiss(animated: true) {
-            // Expand the address fields and set the line1 text
-            addressSectionElement.fieldsToCollect = addressSectionElement.fieldsToCollect.expandedAutocomplete
             addressSectionElement.line1?.setText(line1)
             addressSectionElement.line1?.beginEditing()
         }
@@ -728,9 +725,6 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
 
         // Dismiss the autocomplete view controller
         presentedViewController?.dismiss(animated: true) {
-            // Expand the address fields after address selection
-            addressSectionElement.fieldsToCollect = addressSectionElement.fieldsToCollect.expandedAutocomplete
-
             guard let address = address else {
                 return
             }
