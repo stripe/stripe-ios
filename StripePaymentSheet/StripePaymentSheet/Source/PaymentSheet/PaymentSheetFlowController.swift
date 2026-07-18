@@ -41,12 +41,13 @@ extension PaymentSheet {
             }
         }
 
-        /// Returns confirm params for `.new` and `.external` options, nil otherwise.
-        /// This is often used to restore a customer's previous form input when re-presenting `AddPaymentMethodViewController`.
-        var newConfirmParams: IntentConfirmParams? {
+        /// Confirm params for selections reconstructed through a payment method form.
+        var formConfirmParams: IntentConfirmParams? {
             switch self {
-            case .applePay, .saved, .link:
+            case .applePay, .link:
                 return nil
+            case .saved(_, let confirmParams):
+                return confirmParams?.isFormBackedSavedPaymentMethod == true ? confirmParams : nil
             case .new(confirmParams: let params):
                 return params
             case let .external(paymentMethod, billingDetails):
@@ -251,6 +252,7 @@ extension PaymentSheet {
         var viewController: FlowControllerViewControllerProtocol
 
         private var presentPaymentOptionsCompletionWithResult: ((Bool) -> Void)?
+        private var selectionState: FlowControllerStateSnapshot.Source = .viewController
         private var didDismissLinkVerificationDialog: Bool = false
 
         // If a WalletButtonsView is currently visible
@@ -263,6 +265,9 @@ extension PaymentSheet {
 
         /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
         private var internalPaymentOption: PaymentOption? {
+            if case let .restored(restoration) = selectionState {
+                return restoration.selection.paymentOption
+            }
             guard viewController.error == nil else {
                 return nil
             }
@@ -497,17 +502,35 @@ extension PaymentSheet {
                 break
             }
 
+            guard presentPaymentOptionsCompletionWithResult == nil else {
+                assertionFailure("PaymentSheet.FlowController is already presenting payment options")
+                completion?(true)
+                return
+            }
+
             guard presentingViewController.presentedViewController == nil else {
                 assertionFailure("presentingViewController is already presenting a view controller")
                 completion?(true)
                 return
             }
 
+            selectionState = .presented(
+                FlowControllerStateSnapshot(
+                    viewController: viewController,
+                    customerID: configuration.customer?.id
+                )
+            )
+
             // Overwrite completion closure to retain self until called
             let wrappedCompletion: (Bool) -> Void = { didCancel in
+                // The payment-options sheet has finished. Clear its presentation state before
+                // invoking merchant code, which may present it again immediately.
+                if case .presented = self.selectionState {
+                    self.selectionState = .viewController
+                }
+                self.presentPaymentOptionsCompletionWithResult = nil
                 self.updatePaymentOption()
                 completion?(didCancel)
-                self.presentPaymentOptionsCompletionWithResult = nil
             }
             presentPaymentOptionsCompletionWithResult = wrappedCompletion
 
@@ -628,8 +651,8 @@ extension PaymentSheet {
                     return
                 }
 
-                self.presentPaymentOptionsCompletionWithResult?(false)
                 self.isPresented = false
+                self.presentPaymentOptionsCompletionWithResult?(false)
             }
 
             presentingViewController.presentNativeLink(
@@ -817,14 +840,14 @@ extension PaymentSheet {
                 switch result {
                 case .success(let (loadResult, confirmationChallenge)):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
-
+                    let selection = self.selectionForRebuilding()
                     self.viewController = Self.makeViewController(
                         configuration: self.configuration,
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
                         walletButtonsViewState: walletButtonsViewState,
                         checkout: self.checkout,
-                        previousPaymentOption: self.internalPaymentOption
+                        previousPaymentOption: selection.paymentOption
                     )
                     self.viewController.flowControllerDelegate = self
                     self.confirmationChallenge = confirmationChallenge
@@ -843,25 +866,80 @@ extension PaymentSheet {
         }
 
         func updateForWalletButtonsView() {
-            // Recreate the view controller
-            // Use the original load result, but w/ updated saved PMs to avoid e.g. deleting PMs, then having this method be called and showing the deleted PMs again.
-            let updatedLoadResult = PaymentSheetLoader.LoadResult(
+            // Rebuild with the current saved methods so deleted methods don't reappear.
+            let selection = selectionForRebuilding()
+            self.viewController = Self.makeViewController(
+                configuration: self.configuration,
+                loadResult: makeLoadResultWithCurrentSavedPaymentMethods(),
+                analyticsHelper: analyticsHelper,
+                walletButtonsViewState: self.walletButtonsViewState,
+                previousPaymentOption: selection.paymentOption
+            )
+            self.viewController.flowControllerDelegate = self
+            updatePaymentOption()
+        }
+
+        private func makeLoadResultWithCurrentSavedPaymentMethods(
+            prioritizing paymentOption: PaymentOption? = nil
+        ) -> PaymentSheetLoader.LoadResult {
+            var savedPaymentMethods = viewController.savedPaymentMethods
+            // The vertical main screen displays one saved method. Move the captured method into
+            // that slot without changing horizontal carousel order.
+            if viewController.loadResult.paymentMethodOrientation == .vertical,
+               case let .saved(paymentMethod, _) = paymentOption,
+               let index = savedPaymentMethods.firstIndex(where: { $0.stripeId == paymentMethod.stripeId }) {
+                savedPaymentMethods.insert(savedPaymentMethods.remove(at: index), at: 0)
+            }
+            return PaymentSheetLoader.LoadResult(
                 intent: viewController.loadResult.intent,
                 elementsSession: viewController.loadResult.elementsSession,
-                savedPaymentMethods: viewController.savedPaymentMethods, // Note: not using load result!
+                savedPaymentMethods: savedPaymentMethods,
                 paymentMethodTypes: viewController.loadResult.paymentMethodTypes,
                 paymentMethodMessagingPromotionsHelper: viewController.loadResult.paymentMethodMessagingPromotionsHelper,
                 paymentMethodOrientation: viewController.loadResult.paymentMethodOrientation
             )
+        }
+
+        private func revertSelectionAfterCancellation() {
+            guard case let .presented(selectionSnapshot) = selectionState else {
+                return
+            }
+
+            // Horizontal selection restoration is added by the next change in this stack.
+            guard viewController.loadResult.paymentMethodOrientation == .vertical else {
+                return
+            }
+
+            let restoration = selectionSnapshot.restoration(using: viewController)
+            selectionState = .restored(restoration)
+            if restoration.requiresViewControllerRebuild {
+                rebuildViewController(restoring: restoration.selection)
+            }
+        }
+
+        private func rebuildViewController(
+            restoring selection: FlowControllerStateSnapshot.Selection
+        ) {
             self.viewController = Self.makeViewController(
-                configuration: self.configuration,
-                loadResult: updatedLoadResult,
+                configuration: configuration,
+                loadResult: makeLoadResultWithCurrentSavedPaymentMethods(
+                    prioritizing: selection.paymentOption
+                ),
                 analyticsHelper: analyticsHelper,
-                walletButtonsViewState: self.walletButtonsViewState,
-                previousPaymentOption: self.internalPaymentOption
+                walletButtonsViewState: walletButtonsViewState,
+                previousPaymentOption: selection.paymentOption
             )
             self.viewController.flowControllerDelegate = self
-            updatePaymentOption()
+            if selection.paymentOption == nil {
+                self.viewController.clearSelection()
+            }
+        }
+
+        private func selectionForRebuilding() -> FlowControllerStateSnapshot.Selection {
+            if case let .restored(restoration) = selectionState {
+                return restoration.selection
+            }
+            return viewController.stateForSnapshot
         }
 
         /// Updates the published paymentOption property based on the current state
@@ -984,8 +1062,8 @@ extension PaymentSheet.FlowController: LoadingViewControllerDelegate {
         pendingPresentTask?.cancel()
         pendingPresentTask = nil
         loadingViewController.dismiss(animated: true) {
+            self.isPresented = false
             self.presentPaymentOptionsCompletionWithResult?(true)
-            self.updatePaymentOption()
         }
     }
 }
@@ -1006,9 +1084,11 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
             self.didPresentAndContinue = true
         }
         flowControllerViewController.dismiss(animated: true) {
-            self.presentPaymentOptionsCompletionWithResult?(didCancel)
-            self.updatePaymentOption()
+            if didCancel {
+                self.revertSelectionAfterCancellation()
+            }
             self.isPresented = false
+            self.presentPaymentOptionsCompletionWithResult?(didCancel)
         }
     }
 }
@@ -1062,12 +1142,83 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var savedPaymentMethods: [STPPaymentMethod] { get }
     var linkConfirmOption: PaymentSheet.LinkConfirmOption? { get set }
     var selectedPaymentOption: PaymentOption? { get }
+    var stateForSnapshot: FlowControllerStateSnapshot.Selection { get }
     /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil Apple Pay and .stripe(.link) for Link.
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
     var checkout: Checkout? { get set }
     func clearSelection()
+}
+
+extension FlowControllerViewControllerProtocol {
+    var stateForSnapshot: FlowControllerStateSnapshot.Selection {
+        return .init(
+            paymentOption: selectedPaymentOption,
+            formConfirmParams: selectedPaymentOption?.formConfirmParams
+        )
+    }
+}
+
+internal struct FlowControllerStateSnapshot {
+    enum Source {
+        case viewController
+        case presented(FlowControllerStateSnapshot)
+        case restored(Restoration)
+    }
+
+    struct Selection {
+        var paymentOption: PaymentOption?
+        let formConfirmParams: IntentConfirmParams?
+    }
+
+    struct Restoration {
+        let selection: Selection
+        let requiresViewControllerRebuild: Bool
+    }
+
+    private let selection: Selection
+    private let persistedSelection: CustomerPaymentOption.PersistedSelectionSnapshot
+
+    init(viewController: FlowControllerViewControllerProtocol, customerID: String?) {
+        self.selection = viewController.stateForSnapshot
+        self.persistedSelection = .init(
+            customerID: customerID,
+            availableSavedPaymentMethods: viewController.savedPaymentMethods
+        )
+    }
+
+    func restoration(
+        using viewController: FlowControllerViewControllerProtocol
+    ) -> Restoration {
+        persistedSelection.revertPersistedSelection(using: viewController.savedPaymentMethods)
+
+        var restoredSelection = selection
+        if case let .saved(paymentMethod, confirmParams) = restoredSelection.paymentOption,
+           confirmParams?.isFormBackedSavedPaymentMethod != true,
+           !viewController.savedPaymentMethods.contains(where: { $0.stripeId == paymentMethod.stripeId }) {
+            // Deletion is not canceled. Keep the fallback selected by the saved-method manager.
+            restoredSelection.paymentOption = viewController.selectedPaymentOption
+        }
+
+        let requiresViewControllerRebuild: Bool
+        switch (restoredSelection.paymentOption, viewController.selectedPaymentOption) {
+        case (nil, nil):
+            // There is no canceled selection state to discard. Reusing the form also lets it
+            // resolve dynamic configuration, such as shipping details, when it next appears.
+            requiresViewControllerRebuild = false
+        case (.link(.wallet)?, .link(.wallet)?):
+            // The accepted wallet remains selected. Reusing the controller preserves the
+            // accepted payment-method form cached behind the wallet header.
+            requiresViewControllerRebuild = false
+        default:
+            requiresViewControllerRebuild = true
+        }
+        return .init(
+            selection: restoredSelection,
+            requiresViewControllerRebuild: requiresViewControllerRebuild
+        )
+    }
 }
 
 extension PaymentOption {

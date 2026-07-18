@@ -264,6 +264,35 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         verify(sut)
     }
 
+    func testInitialLinkSelectionEnablesPrimaryButton() {
+        // Given a form-only controller rebuilt with Link selected
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: false),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .vertical
+        )
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.applePay = nil
+
+        // When the controller initializes its UI
+        let sut = PaymentSheetVerticalViewController(
+            configuration: configuration,
+            loadResult: loadResult,
+            isFlowController: true,
+            analyticsHelper: ._testValue(),
+            previousPaymentOption: .link(option: .wallet(brand: .link))
+        )
+
+        // Then its selected option and button state both reflect Link
+        guard case .link = sut.selectedPaymentOption else {
+            return XCTFail("Expected Link to be selected")
+        }
+        XCTAssertEqual(sut.primaryButton.status, .enabled)
+    }
+
     func testDisplaysMandateBelowList_cashapp() {
         // When loaded with cash app + sfu = off_session...
         let loadResult = PaymentSheetLoader.LoadResult(
