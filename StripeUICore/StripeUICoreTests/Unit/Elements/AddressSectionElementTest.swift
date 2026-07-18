@@ -131,7 +131,7 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(AddressSectionElement(title: "", countries: ["UK", "US"], addressSpecProvider: specProvider).countryCodes, ["UK", "US"])
     }
 
-    func testAutocompleteStartsCompactAndExpandsWhenLine1IsSet() {
+    func testAutocompleteStartsCompactAndExpandsForManualEntry() {
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
@@ -141,18 +141,17 @@ class AddressSectionElementTest: XCTestCase {
         )
 
         XCTAssertNotNil(sut.autoCompleteLine)
-        XCTAssertNotNil(sut.line1)
-        XCTAssertNotNil(sut.line2)
-        XCTAssertNotNil(sut.city)
-        XCTAssertNotNil(sut.state)
-        XCTAssertNotNil(sut.postalCode)
-        guard let compactLine1 = sut.line1 else {
-            return XCTFail("Expected a backing line1 field")
-        }
-        XCTAssertFalse(sut.addressSection.elements.contains { $0 === compactLine1 })
+        XCTAssertNil(sut.line1)
+        XCTAssertNil(sut.line2)
+        XCTAssertNil(sut.city)
+        XCTAssertNil(sut.state)
+        XCTAssertNil(sut.postalCode)
+        var updateCount = 0
+        sut.didUpdate = { _ in updateCount += 1 }
 
-        sut.line1?.setText("510 Townsend St.")
+        sut.beginManualEntry(with: "510 Townsend St.")
 
+        XCTAssertEqual(updateCount, 1)
         XCTAssertNil(sut.autoCompleteLine)
         XCTAssertEqual(sut.line1?.text, "510 Townsend St.")
         guard let expandedLine1 = sut.line1 else {
@@ -190,7 +189,7 @@ class AddressSectionElementTest: XCTestCase {
         )
 
         XCTAssertNotNil(sut.autoCompleteLine)
-        XCTAssertFalse(sut.addressSection.elements.contains { $0 === sut.line1 })
+        XCTAssertNil(sut.line1)
     }
 
     func testAutocompleteExpandsForUnsupportedCountryAndDoesNotCollapse() {
@@ -216,7 +215,7 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertLine1HasAutocompleteAccessory(sut)
     }
 
-    func testAutocompleteExpandsWhenEmptyManualEntryIsSet() {
+    func testAutocompleteExpandsForEmptyManualEntry() {
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
@@ -225,10 +224,49 @@ class AddressSectionElementTest: XCTestCase {
             fieldsToCollect: .all(autocomplete: .init())
         )
 
-        sut.line1?.setText("")
+        sut.beginManualEntry(with: "")
 
         XCTAssertNil(sut.autoCompleteLine)
         XCTAssertLine1HasAutocompleteAccessory(sut)
+    }
+
+    func testSettingAddressExpandsAutocompleteAndPopulatesFields() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            fieldsToCollect: .all(autocomplete: .init())
+        )
+        let address = AddressSectionElement.AddressDetails.Address(
+            city: "San Francisco",
+            country: "US",
+            line1: "510 Townsend St.",
+            line2: "Floor 3",
+            postalCode: "94103",
+            state: "CA"
+        )
+
+        sut.setAddress(address)
+
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertEqual(sut.addressDetails.address, address)
+        XCTAssertLine1HasAutocompleteAccessory(sut)
+    }
+
+    func testSettingEmptyAddressDoesNotExpandAutocomplete() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            fieldsToCollect: .all(autocomplete: .init())
+        )
+
+        sut.setAddress(.init())
+
+        XCTAssertNotNil(sut.autoCompleteLine)
+        XCTAssertNil(sut.line1)
     }
 
     func testAutocompleteDoesNotExpandForNonAddressDefaultsOrFieldUpdates() {
@@ -245,10 +283,7 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertNotNil(sut.autoCompleteLine)
         sut.name?.setText("Jane Doe")
         XCTAssertNotNil(sut.autoCompleteLine)
-        guard let line1 = sut.line1 else {
-            return XCTFail("Expected a backing line1 field")
-        }
-        XCTAssertFalse(sut.addressSection.elements.contains { $0 === line1 })
+        XCTAssertNil(sut.line1)
     }
 
     func testAllFieldsToCollectDoesNotShowAutocomplete() {

@@ -715,7 +715,7 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
 
         // Dismiss the autocomplete view controller
         presentedViewController?.dismiss(animated: true) {
-            addressSectionElement.line1?.setText(line1)
+            addressSectionElement.beginManualEntry(with: line1)
             addressSectionElement.line1?.beginEditing()
         }
     }
@@ -729,18 +729,7 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
                 return
             }
 
-            // Set the country if it's supported
-            let autocompleteCountryIndex = addressSectionElement.countryCodes.firstIndex(where: { $0 == address.country })
-            if let autocompleteCountryIndex = autocompleteCountryIndex {
-                addressSectionElement.country.select(index: autocompleteCountryIndex, shouldAutoAdvance: false)
-            }
-
-            // Populate the address fields
-            addressSectionElement.line1?.setText(address.line1 ?? "")
-            addressSectionElement.line2?.setText(address.line2 ?? "")
-            addressSectionElement.city?.setText(address.city ?? "")
-            addressSectionElement.postalCode?.setText(address.postalCode ?? "")
-            addressSectionElement.state?.setRawData(address.state ?? "", shouldAutoAdvance: false)
+            addressSectionElement.setAddress(address.addressSectionAddress)
 
             // Read back from the element so field processing (e.g. postal code truncation) is reflected
             let normalized = addressSectionElement.addressDetails.address

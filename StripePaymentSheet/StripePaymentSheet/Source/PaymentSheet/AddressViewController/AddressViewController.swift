@@ -364,17 +364,7 @@ extension AddressViewController {
     private func populateAddressSection(with addressDetails: AddressSectionElement.AddressDetails) {
         guard let addressSection = addressSection else { return }
 
-        // Set country first as it affects available fields
-        if let countryIndex = addressSection.countryCodes.firstIndex(where: { $0 == addressDetails.address.country }) {
-            addressSection.country.select(index: countryIndex)
-        }
-
-        // Populate address fields
-        addressSection.line1?.setText(addressDetails.address.line1 ?? "")
-        addressSection.line2?.setText(addressDetails.address.line2 ?? "")
-        addressSection.city?.setText(addressDetails.address.city ?? "")
-        addressSection.postalCode?.setText(addressDetails.address.postalCode ?? "")
-        addressSection.state?.setRawData(addressDetails.address.state ?? "", shouldAutoAdvance: false)
+        addressSection.setAddress(addressDetails.address)
 
         // Populate name and phone if available
         addressSection.name?.setText(addressDetails.name ?? "")
@@ -397,12 +387,8 @@ extension AddressViewController {
     private func clearAddressSection() {
         guard let addressSection = addressSection else { return }
 
-        // Clear all text fields
-        addressSection.line1?.setText("")
-        addressSection.line2?.setText("")
-        addressSection.city?.setText("")
-        addressSection.postalCode?.setText("")
-        addressSection.state?.setRawData("", shouldAutoAdvance: false)
+        // Clear all fields
+        addressSection.setAddress(.init())
         addressSection.name?.setText("")
         addressSection.phone?.clearPhoneNumber()
 
@@ -524,7 +510,7 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
     func didSelectManualEntry(_ line1: String) {
         guard let addressSection = addressSection else { assertionFailure(); return }
         navigationController?.popViewController(animated: true)
-        addressSection.line1?.setText(line1)
+        addressSection.beginManualEntry(with: line1)
     }
 
     func didSelectAddress(_ address: PaymentSheet.Address?) {
@@ -543,13 +529,7 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
             return
         }
 
-        if let autocompleteCountryIndex = autocompleteCountryIndex {
-            addressSection.country.select(index: autocompleteCountryIndex, shouldAutoAdvance: false)
-        }
-        addressSection.line1?.setText(address.line1 ?? "")
-        addressSection.city?.setText(address.city ?? "")
-        addressSection.postalCode?.setText(address.postalCode ?? "")
-        addressSection.state?.setRawData(address.state ?? "", shouldAutoAdvance: false)
+        addressSection.setAddress(address.addressSectionAddress)
 
         // Read back from the element so field processing (e.g. postal code truncation) is reflected
         let normalized = addressSection.addressDetails.address
@@ -636,6 +616,17 @@ extension AddressViewController {
 }
 
 extension PaymentSheet.Address {
+    var addressSectionAddress: AddressSectionElement.AddressDetails.Address {
+        return .init(
+            city: city,
+            country: country,
+            line1: line1,
+            line2: line2,
+            postalCode: postalCode,
+            state: state
+        )
+    }
+
     var isEmpty: Bool {
         return self == .init()
     }
