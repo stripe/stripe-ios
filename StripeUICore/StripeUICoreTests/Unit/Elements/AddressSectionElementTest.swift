@@ -183,18 +183,18 @@ class AddressSectionElementTest: XCTestCase {
             countries: ["US", "CA"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            fieldsToCollect: .all(autocomplete: .init(autocompleteCountries: ["US"]))
+            fieldsToCollect: .all(autocomplete: .init(autocompleteCountries: ["CA"]))
         )
 
-        XCTAssertEqual(sut.selectedCountryCode, "US")
+        XCTAssertEqual(sut.selectedCountryCode, "CA")
         XCTAssertNotNil(sut.autoCompleteLine)
 
-        sut.selectedCountryCode = "CA"
+        sut.selectedCountryCode = "US"
 
         XCTAssertNil(sut.autoCompleteLine)
         XCTAssertLine1DoesNotHaveAutocompleteAccessory(sut)
 
-        sut.selectedCountryCode = "US"
+        sut.selectedCountryCode = "CA"
 
         XCTAssertNil(sut.autoCompleteLine)
         XCTAssertLine1HasAutocompleteAccessory(sut)
