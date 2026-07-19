@@ -117,6 +117,207 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(ZZTextFields.map { $0.configuration.isOptional }, expectedZZFields.map { $0.isOptional })
     }
 
+    func testMinimumFieldsToCollectResolveInitialAndCountryChanges() throws {
+        // Given country-specific minimums that can widen the default fields
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
+            "CA": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
+            "FR": AddressSpec(format: "ACZ", require: "ACZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
+        ]
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US", "CA", "FR"],
+            locale: locale_enUS,
+            addressSpecProvider: specProvider,
+            defaults: .init(address: .init(country: "US")),
+            defaultFieldsToCollect: .country,
+            minimumFieldsToCollectByCountry: [
+                "US": .all(),
+                "CA": .countryAndPostal,
+            ]
+        )
+
+        // Then the initial US minimum collects the full address
+        XCTAssertDisplayed(sut.line1, in: sut)
+        XCTAssertDisplayed(sut.postalCode, in: sut)
+
+        // When the country is changed programmatically to CA
+        sut.selectedCountryCode = "CA"
+
+        // Then the CA minimum narrows collection from the US requirement to postal code
+        XCTAssertNotDisplayed(sut.line1, in: sut)
+        XCTAssertDisplayed(sut.postalCode, in: sut)
+
+        // When the picker changes to an unlisted country
+        sut.country.select(index: try XCTUnwrap(sut.countryCodes.firstIndex(of: "FR")))
+
+        // Then the element falls back to its country-only default
+        XCTAssertNotDisplayed(sut.line1, in: sut)
+        XCTAssertNotDisplayed(sut.postalCode, in: sut)
+    }
+
+    func testCountryMinimumDoesNotReduceDefaultFieldsToCollect() {
+        // Given a country-only minimum on a full-address default
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US", "CA"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaults: .init(address: .init(country: "US")),
+            defaultFieldsToCollect: .all(),
+            minimumFieldsToCollectByCountry: ["US": .country]
+        )
+
+        // Then the country minimum does not narrow the full-address default
+        XCTAssertDisplayed(sut.line1, in: sut)
+        XCTAssertDisplayed(sut.postalCode, in: sut)
+
+        // When changing to an unlisted country
+        sut.selectedCountryCode = "CA"
+
+        // Then the full-address default remains unchanged
+        XCTAssertDisplayed(sut.line1, in: sut)
+        XCTAssertDisplayed(sut.postalCode, in: sut)
+    }
+
+    func testAddingMinimumFieldsToCollectByCountryNeverReducesExistingMinimums() {
+        // Given different existing minimums for US and CA
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US", "CA"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaults: .init(address: .init(country: "US")),
+            defaultFieldsToCollect: .country,
+            minimumFieldsToCollectByCountry: [
+                "US": .all(autocomplete: .init()),
+                "CA": .country,
+            ]
+        )
+
+        // When adding a smaller US minimum and a larger CA minimum
+        sut.addMinimumFieldsToCollectByCountry([
+            "US": .countryAndPostal,
+            "CA": .countryAndPostal,
+        ])
+
+        // Then the US minimum and its autocomplete configuration are preserved
+        XCTAssertNotNil(sut.autoCompleteLine)
+
+        // ...and CA widens to collect its new postal-code minimum
+        sut.selectedCountryCode = "CA"
+        XCTAssertNotDisplayed(sut.line1, in: sut)
+        XCTAssertDisplayed(sut.postalCode, in: sut)
+    }
+
+    func testUpdatingDefaultFieldsToCollectRebuildsCurrentCountry() {
+        // Given an element collecting only country
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaultFieldsToCollect: .country
+        )
+        XCTAssertNotDisplayed(sut.line1, in: sut)
+        XCTAssertNotDisplayed(sut.postalCode, in: sut)
+
+        // When the default changes to full address collection
+        sut.defaultFieldsToCollect = .all()
+
+        // Then the current country is rebuilt with all fields
+        XCTAssertDisplayed(sut.line1, in: sut)
+        XCTAssertDisplayed(sut.postalCode, in: sut)
+
+        // When the default changes to country and postal code
+        sut.defaultFieldsToCollect = .countryAndPostal
+
+        // Then the current country narrows to postal code
+        XCTAssertNotDisplayed(sut.line1, in: sut)
+        XCTAssertDisplayed(sut.postalCode, in: sut)
+    }
+
+    func testUpdatingDefaultFieldsToCollectPreservesCountryMinimum() {
+        // Given full-address collection with a postal minimum for the selected country
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaultFieldsToCollect: .all(),
+            minimumFieldsToCollectByCountry: ["US": .countryAndPostal]
+        )
+        XCTAssertDisplayed(sut.line1, in: sut)
+        XCTAssertDisplayed(sut.postalCode, in: sut)
+
+        // When the default changes to country-only collection
+        sut.defaultFieldsToCollect = .country
+
+        // Then the selected country's postal minimum is preserved
+        XCTAssertNotDisplayed(sut.line1, in: sut)
+        XCTAssertDisplayed(sut.postalCode, in: sut)
+    }
+
+    func testCountryMinimumAllSupportsAutocomplete() {
+        // Given autocomplete configured on a country minimum
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US", "CA"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaults: .init(address: .init(country: "CA")),
+            defaultFieldsToCollect: .country,
+            minimumFieldsToCollectByCountry: [
+                "US": .all(autocomplete: .init(autocompleteCountries: ["US"])),
+            ]
+        )
+        XCTAssertNil(sut.autoCompleteLine)
+
+        // When changing to the overridden country
+        sut.selectedCountryCode = "US"
+
+        // Then the full address minimum starts in compact autocomplete
+        XCTAssertNotNil(sut.autoCompleteLine)
+        XCTAssertNotDisplayed(sut.line1, in: sut)
+    }
+
+    func testCountryMinimumsApplyToBillingSameAsShippingCountryChanges() {
+        // Given a shipping address and country-specific field minimums
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US", "CA"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaults: .init(address: .init(country: "US")),
+            defaultFieldsToCollect: .country,
+            minimumFieldsToCollectByCountry: [
+                "US": .all(),
+                "CA": .countryAndPostal,
+            ],
+            additionalFields: .init(billingSameAsShippingCheckbox: .enabled(isOptional: false))
+        )
+
+        // When re-selecting billing same as shipping from another country
+        sut.selectedCountryCode = "CA"
+        sut.sameAsCheckbox.didToggle(false)
+        sut.sameAsCheckbox.didToggle(true)
+
+        // Then the shipping country's full-address minimum is restored
+        XCTAssertEqual(sut.selectedCountryCode, "US")
+        XCTAssertDisplayed(sut.line1, in: sut)
+
+        // When the selected shipping address changes to CA
+        sut.sameAsCheckbox.isSelected = true
+        sut.updateBillingSameAsShippingDefaultAddress(.init(country: "CA", postalCode: "A1A 1A1"))
+
+        // Then the CA postal minimum and defaults are applied
+        XCTAssertEqual(sut.selectedCountryCode, "CA")
+        XCTAssertNotDisplayed(sut.line1, in: sut)
+        XCTAssertDisplayed(sut.postalCode, in: sut)
+        XCTAssertEqual(sut.postalCode?.text, "A1A 1A1")
+    }
+
     func testCountries() {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
@@ -131,13 +332,13 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(AddressSectionElement(title: "", countries: ["UK", "US"], addressSpecProvider: specProvider).countryCodes, ["UK", "US"])
     }
 
-    func testAutocompleteCompactPresentationShowsDummyAddressLine() {
+    func testAutocompleteStartsCompactAndExpandsForManualEntry() {
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            collectionMode: .autocomplete(autocompleteCountries: ["US"])
+            defaultFieldsToCollect: .all(autocomplete: .init(autocompleteCountries: ["US"]))
         )
 
         XCTAssertNotNil(sut.autoCompleteLine)
@@ -146,45 +347,153 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertNil(sut.city)
         XCTAssertNil(sut.state)
         XCTAssertNil(sut.postalCode)
+        var updateCount = 0
+        sut.didUpdate = { _ in updateCount += 1 }
+
+        sut.beginManualEntry(with: "510 Townsend St.")
+
+        XCTAssertEqual(updateCount, 1)
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertEqual(sut.line1?.text, "510 Townsend St.")
+        guard let expandedLine1 = sut.line1 else {
+            return XCTFail("Expected a visible line1 field")
+        }
+        XCTAssertTrue(sut.addressSection.elements.contains { $0 === expandedLine1 })
+        XCTAssertLine1HasAutocompleteAccessory(sut)
     }
 
-    func testAutocompleteExpandedPresentationShowsAutocompleteLine1() {
+    func testAutocompleteStartsExpandedWhenAddressDefaultsArePresent() {
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            collectionMode: .autocomplete(presentation: .expanded)
+            defaults: .init(address: .init(city: "San Francisco")),
+            defaultFieldsToCollect: .all(autocomplete: .init())
         )
 
         XCTAssertNil(sut.autoCompleteLine)
-        XCTAssertNotNil(sut.line1)
+        XCTAssertEqual(sut.city?.text, "San Francisco")
         XCTAssertLine1HasAutocompleteAccessory(sut)
     }
 
-    func testAutocompleteExpandedPresentationRespectsSupportedCountries() {
+    func testAutocompleteStaysCompactWhenOnlyDefaultCountryIsPresent() {
+        // A default country alone (no street address) shouldn't be treated as an
+        // existing address to expand and show.
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            collectionMode: .autocomplete(autocompleteCountries: ["CA"], presentation: .expanded)
+            defaults: .init(address: .init(country: "US")),
+            defaultFieldsToCollect: .all(autocomplete: .init())
         )
 
+        XCTAssertNotNil(sut.autoCompleteLine)
+        XCTAssertNil(sut.line1)
+    }
+
+    func testAutocompleteExpandsForUnsupportedCountryAndDoesNotCollapse() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US", "CA"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaultFieldsToCollect: .all(autocomplete: .init(autocompleteCountries: ["CA"]))
+        )
+
+        XCTAssertEqual(sut.selectedCountryCode, "CA")
+        XCTAssertNotNil(sut.autoCompleteLine)
+
+        sut.selectedCountryCode = "US"
+
+        XCTAssertNil(sut.autoCompleteLine)
         XCTAssertLine1DoesNotHaveAutocompleteAccessory(sut)
 
-        sut.collectionMode = .autocomplete(autocompleteCountries: ["US"], presentation: .expanded)
+        sut.selectedCountryCode = "CA"
 
+        XCTAssertNil(sut.autoCompleteLine)
         XCTAssertLine1HasAutocompleteAccessory(sut)
     }
 
-    func testAllCollectionModeDoesNotShowAutocomplete() {
+    func testAutocompleteExpandsForEmptyManualEntry() {
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            collectionMode: .all
+            defaultFieldsToCollect: .all(autocomplete: .init())
+        )
+
+        sut.beginManualEntry(with: "")
+
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertLine1HasAutocompleteAccessory(sut)
+    }
+
+    func testSettingAddressExpandsAutocompleteAndPopulatesFields() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaultFieldsToCollect: .all(autocomplete: .init())
+        )
+        let address = AddressSectionElement.AddressDetails.Address(
+            city: "San Francisco",
+            country: "US",
+            line1: "510 Townsend St.",
+            line2: "Floor 3",
+            postalCode: "94103",
+            state: "CA"
+        )
+
+        sut.setAddress(address)
+
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertEqual(sut.addressDetails.address, address)
+        XCTAssertLine1HasAutocompleteAccessory(sut)
+    }
+
+    func testSettingEmptyAddressDoesNotExpandAutocomplete() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaultFieldsToCollect: .all(autocomplete: .init())
+        )
+
+        sut.setAddress(.init())
+
+        XCTAssertNotNil(sut.autoCompleteLine)
+        XCTAssertNil(sut.line1)
+    }
+
+    func testAutocompleteDoesNotExpandForNonAddressDefaultsOrFieldUpdates() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaults: .init(name: "Jenny Rosen"),
+            defaultFieldsToCollect: .all(autocomplete: .init()),
+            additionalFields: .init(name: .enabled())
+        )
+
+        XCTAssertNotNil(sut.autoCompleteLine)
+        sut.name?.setText("Jane Doe")
+        XCTAssertNotNil(sut.autoCompleteLine)
+        XCTAssertNil(sut.line1)
+    }
+
+    func testAllFieldsToCollectDoesNotShowAutocomplete() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaultFieldsToCollect: .all()
         )
 
         XCTAssertNil(sut.autoCompleteLine)
@@ -440,5 +749,27 @@ class AddressSectionElementTest: XCTestCase {
         guard case .line1 = configuration.lineType else {
             return XCTFail("Expected line1 to omit autocomplete", file: file, line: line)
         }
+    }
+
+    private func XCTAssertDisplayed(
+        _ element: Element?,
+        in sut: AddressSectionElement,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        guard let element else {
+            return XCTFail("Expected field to exist", file: file, line: line)
+        }
+        XCTAssertTrue(sut.addressSection.elements.contains { $0 === element }, file: file, line: line)
+    }
+
+    private func XCTAssertNotDisplayed(
+        _ element: Element?,
+        in sut: AddressSectionElement,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        guard let element else { return }
+        XCTAssertFalse(sut.addressSection.elements.contains { $0 === element }, file: file, line: line)
     }
 }

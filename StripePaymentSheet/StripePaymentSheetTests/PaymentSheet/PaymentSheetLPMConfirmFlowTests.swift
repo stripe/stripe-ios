@@ -596,7 +596,9 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             paymentMethodType: .card,
             merchantCountry: merchantCountry,
             configuration: configuration,
-            allowsSetAsDefaultPM: true
+            allowsSetAsDefaultPM: true,
+            // CheckoutSession doesn't support set-as-default or billing address collection = .never.
+            supportsCheckoutSession: false
         ) { form in
             form.getCardSection().panElement.setText("4242424242424242")
             form.getCardSection().expiryElement.setText("1228")
@@ -784,7 +786,9 @@ extension PaymentSheetLPMConfirmFlowTests {
             intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
             currency: "USD",
             paymentMethodType: .card,
-            configuration: configuration
+            configuration: configuration,
+            // CheckoutSession doesn't support billing address collection = .never.
+            supportsCheckoutSession: false
         ) { form in
             form.getCardSection().panElement.setText("4242424242424242")
             form.getCardSection().expiryElement.setText("1228")
@@ -908,6 +912,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         configuration: PaymentSheet.Configuration? = nil,
         defaultCountry: String = "US",
         allowsSetAsDefaultPM: Bool = false,
+        supportsCheckoutSession: Bool = true,
         expectedHierarchy: FormHierarchyNode? = nil,
         formCompleter: (PaymentMethodElement) -> Void
     ) async throws {
@@ -921,6 +926,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 configuration: configuration,
                 defaultCountry: defaultCountry,
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
+                supportsCheckoutSession: supportsCheckoutSession,
                 expectedHierarchy: expectedHierarchy,
                 formCompleter: formCompleter
             )
@@ -947,6 +953,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         configuration: PaymentSheet.Configuration? = nil,
         defaultCountry: String,
         allowsSetAsDefaultPM: Bool = false,
+        supportsCheckoutSession: Bool = true,
         expectedHierarchy: FormHierarchyNode? = nil,
         formCompleter: (PaymentMethodElement) -> Void
     ) async throws {
@@ -971,6 +978,9 @@ extension PaymentSheetLPMConfirmFlowTests {
         configuration.apiClient = apiClient
 
         let intents = try await makeTestIntents(intentKind: intentKind, currency: currency, amount: amount, paymentMethod: paymentMethodType, merchantCountry: merchantCountry, customer: configuration.customer?.id, apiClient: apiClient)
+            // Some configurations (e.g. .never address collection, set-as-default) aren't supported by
+            // CheckoutSession, so those tests opt its intent out.
+            .filter { supportsCheckoutSession || !$0.1.isCheckout }
 
         // Check that the form respects billingDetailsCollection
         verifyFormRespectsBillingDetailsCollectionConfiguration(paymentMethodType: paymentMethodType, defaultCountry: defaultCountry)

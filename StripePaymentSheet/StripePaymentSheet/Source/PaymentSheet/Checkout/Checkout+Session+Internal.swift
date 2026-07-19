@@ -21,6 +21,11 @@ extension Checkout.Session {
     var isPaymentMethodOptionsSetupFutureUsageSet: Bool {
         return !setupFutureUsageForPaymentMethodType.isEmpty
     }
+
+    /// Whether this Checkout Session computes automatic tax from the billing address.
+    var collectsTaxFromBillingAddress: Bool {
+        return shouldSendTaxRegion(for: "billing")
+    }
 }
 
 // MARK: - Methods

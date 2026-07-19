@@ -15,6 +15,12 @@ import UIKit
 
 extension PaymentSheetFormFactory {
 
+    static let cardMinimumFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect] = [
+        "US": .countryAndPostal,
+        "GB": .countryAndPostal,
+        "CA": .countryAndPostal,
+    ]
+
     var isLinkUI: Bool {
         switch configuration {
         case .paymentElement(_, let isLinkUI):
@@ -94,9 +100,9 @@ extension PaymentSheetFormFactory {
                 : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
             switch configuration.billingDetailsCollectionConfiguration.address {
             case .automatic:
-                return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
+                return makeBillingAddressSection(defaultFieldsToCollect: .country, minimumFieldsToCollectByCountry: Self.cardMinimumFieldsToCollectByCountry, countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .full:
-                return makeBillingAddressSection(collectionMode: .autocomplete(), countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
+                return makeBillingAddressSection(defaultFieldsToCollect: .all(autocomplete: .init()), minimumFieldsToCollectByCountry: Self.cardMinimumFieldsToCollectByCountry, countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .never:
                 return nil
             }
