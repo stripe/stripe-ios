@@ -111,9 +111,8 @@ extension CardBrandChoiceElement: TextFieldElement.CardBrandChoiceDataSource {
 
 extension PaymentMethodElementWrapper where WrappedElementType == CardBrandChoiceElement {
     var textFieldAccessory: TextFieldElement.Accessory {
-        let cardBrandChoiceElement = element
-        return TextFieldElement.Accessory(element: self) { [weak cardBrandChoiceElement] _ in
-            return cardBrandChoiceElement?.shouldShowPicker ?? false
+        return TextFieldElement.Accessory(element: self) { [weak self] _ in
+            return self?.element.shouldShowPicker ?? false
         }
     }
 }
