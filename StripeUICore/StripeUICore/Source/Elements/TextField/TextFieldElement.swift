@@ -27,6 +27,21 @@ import UIKit
             setText("")
         }
     }
+    /// An Element displayed in the text field's trailing accessory area when `shouldDisplay` returns true.
+    public struct Accessory {
+        let element: Element
+        let shouldDisplay: (String) -> Bool
+
+        public init(element: Element, shouldDisplay: @escaping (String) -> Bool) {
+            self.element = element
+            self.shouldDisplay = shouldDisplay
+        }
+    }
+
+    private let accessory: Accessory?
+    public var elements: [Element] {
+        return accessory.map { [$0.element] } ?? []
+    }
     public private(set) lazy var text: String = {
         sanitize(text: configuration.defaultValue ?? "")
     }()
@@ -87,6 +102,12 @@ import UIKit
     }
 
     var viewModel: ViewModel {
+        let accessoryView: UIView? = {
+            if let accessory, accessory.shouldDisplay(text) {
+                return accessory.element.view
+            }
+            return configuration.accessoryView(for: text, theme: theme)
+        }()
         let placeholder: String = {
             if !configuration.isOptional {
                 return configuration.label
@@ -101,7 +122,7 @@ import UIKit
             attributedText: configuration.makeDisplayText(for: text),
             keyboardProperties: configuration.keyboardProperties(for: text),
             validationState: configuration.validate(text: text, isOptional: configuration.isOptional),
-            accessoryView: configuration.accessoryView(for: text, theme: theme),
+            accessoryView: accessoryView,
             shouldShowClearButton: configuration.shouldShowClearButton,
             editConfiguration: configuration.editConfiguration,
             theme: theme,
@@ -111,9 +132,15 @@ import UIKit
 
     // MARK: - Initializer
 
-    public required init(configuration: TextFieldElementConfiguration, theme: ElementsAppearance = .default) {
+    public required init(
+        configuration: TextFieldElementConfiguration,
+        theme: ElementsAppearance = .default,
+        accessory: Accessory? = nil
+    ) {
         self.configuration = configuration
         self.theme = theme
+        self.accessory = accessory
+        accessory?.element.delegate = self
     }
 
     /// Call this to manually set the text of the text field.
@@ -140,7 +167,7 @@ import UIKit
 
 // MARK: - Element
 
-extension TextFieldElement: Element {
+extension TextFieldElement: ContainerElement {
     public var collectsUserInput: Bool { true }
     public var view: UIView {
         return textFieldView
@@ -177,6 +204,19 @@ extension TextFieldElement: Element {
     }
 }
 
+// MARK: - ElementDelegate
+
+extension TextFieldElement {
+    public func didUpdate(element: Element) {
+        textFieldView.updateUI(with: viewModel)
+        delegate?.didUpdate(element: self)
+    }
+
+    public func continueToNextField(element: Element) {
+        delegate?.continueToNextField(element: self)
+    }
+}
+
 // MARK: - TextFieldViewDelegate
 
 extension TextFieldElement: TextFieldViewDelegate {
@@ -208,6 +248,6 @@ extension TextFieldElement: TextFieldViewDelegate {
 // MARK: - DebugDescription
 extension TextFieldElement {
     public var debugDescription: String {
-        return "<TextFieldElement: \(Unmanaged.passUnretained(self).toOpaque())>; label = \(configuration.label); text = \(text); validationState = \(validationState)"
+        return "<TextFieldElement: \(Unmanaged.passUnretained(self).toOpaque())>; label = \(configuration.label); text = \(text); validationState = \(validationState)" + subElementDebugDescription
     }
 }

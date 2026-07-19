@@ -103,6 +103,21 @@ extension CardBrandChoiceElement: ElementDelegate {
     }
 }
 
+extension CardBrandChoiceElement: TextFieldElement.CardBrandChoiceDataSource {
+    var shouldShowPicker: Bool {
+        return allowedBrandCount > 1
+    }
+}
+
+extension PaymentMethodElementWrapper where WrappedElementType == CardBrandChoiceElement {
+    var textFieldAccessory: TextFieldElement.Accessory {
+        let cardBrandChoiceElement = element
+        return TextFieldElement.Accessory(element: self) { [weak cardBrandChoiceElement] _ in
+            return cardBrandChoiceElement?.shouldShowPicker ?? false
+        }
+    }
+}
+
 extension STPCardBrand {
     func makeCardBrandItem() -> SegmentedSelectorItem {
         return SegmentedSelectorItem(
