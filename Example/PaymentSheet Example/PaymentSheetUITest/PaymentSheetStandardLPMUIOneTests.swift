@@ -31,22 +31,23 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
         // Attempt payment
         payButton.waitForExistenceAndTap()
 
-        // Wait 2x 300ms for window to animate in
-        Thread.sleep(forTimeInterval: 0.60)
-
+        // Wait for the Cash App Pay redirect webview to actually present before interacting,
+        // instead of a fixed animation sleep that a loaded runner can outpace. Waiting on the
+        // Close button (not a timer) is a positive readiness signal. (RUN_MOBILESDK-5431)
+        let closeButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(closeButton.waitForExistence(timeout: 30.0), "Cash App Pay redirect webview did not present in time")
         // Close the webview, to simulate cancel
-        _ = app.otherElements["TopBrowserBar"].waitForExistence(timeout: 5.0)
-        app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap(timeout: 15.0)
+        closeButton.waitForExistenceAndTap(timeout: 15.0)
 
         // Tap to attempt a payment, but fail it
-        payButton.waitForExistenceAndTap()
+        payButton.waitForExistenceAndTap(timeout: 15.0)
         let failPaymentText = app.firstDescendant(withLabel: "FAIL TEST PAYMENT")
         failPaymentText.waitForExistenceAndTap(timeout: 15.0)
 
-        XCTAssertTrue(app.staticTexts["The customer declined this payment."].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["The customer declined this payment."].waitForExistence(timeout: 15.0))
 
         // Tap to attempt a payment
-        payButton.waitForExistenceAndTap()
+        payButton.waitForExistenceAndTap(timeout: 15.0)
         let approvePaymentText = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
         approvePaymentText.waitForExistenceAndTap(timeout: 15.0)
 
