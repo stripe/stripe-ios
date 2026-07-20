@@ -18,7 +18,6 @@ extension TextFieldElement {
     protocol CardBrandChoiceDataSource: AnyObject {
         var selectedBrand: STPCardBrand? { get }
         var brandCount: Int { get }
-        var allowedBrandCount: Int { get }
     }
 
     struct PANConfiguration: TextFieldElementConfiguration {
