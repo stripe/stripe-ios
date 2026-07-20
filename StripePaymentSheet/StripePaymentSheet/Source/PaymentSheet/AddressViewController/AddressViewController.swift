@@ -364,17 +364,7 @@ extension AddressViewController {
     private func populateAddressSection(with addressDetails: AddressSectionElement.AddressDetails) {
         guard let addressSection = addressSection else { return }
 
-        // Set country first as it affects available fields
-        if let countryIndex = addressSection.countryCodes.firstIndex(where: { $0 == addressDetails.address.country }) {
-            addressSection.country.select(index: countryIndex)
-        }
-
-        // Populate address fields
-        addressSection.line1?.setText(addressDetails.address.line1 ?? "")
-        addressSection.line2?.setText(addressDetails.address.line2 ?? "")
-        addressSection.city?.setText(addressDetails.address.city ?? "")
-        addressSection.postalCode?.setText(addressDetails.address.postalCode ?? "")
-        addressSection.state?.setRawData(addressDetails.address.state ?? "", shouldAutoAdvance: false)
+        addressSection.setAddress(addressDetails.address)
 
         // Populate name and phone if available
         addressSection.name?.setText(addressDetails.name ?? "")
@@ -397,12 +387,8 @@ extension AddressViewController {
     private func clearAddressSection() {
         guard let addressSection = addressSection else { return }
 
-        // Clear all text fields
-        addressSection.line1?.setText("")
-        addressSection.line2?.setText("")
-        addressSection.city?.setText("")
-        addressSection.postalCode?.setText("")
-        addressSection.state?.setRawData("", shouldAutoAdvance: false)
+        // Clear all fields
+        addressSection.setAddress(.init())
         addressSection.name?.setText("")
         addressSection.phone?.clearPhoneNumber()
 
@@ -416,29 +402,17 @@ extension AddressViewController {
 
 // MARK: - Private methods
 extension AddressViewController {
-    /// Expands the address section element and begin editing if the current country selection does not support auto complete
-    private func expandAddressSectionIfNeeded() {
-        // If we're in autocomplete mode and the country is not supported by autocomplete, switch to normal address collection
-        if let addressSection = addressSection,
-           case .autocomplete(_, .compact) = addressSection.collectionMode,
-           !configuration.autocompleteCountries.caseInsensitiveContains(addressSection.selectedCountryCode) {
-            addressSection.collectionMode = .autocomplete(autocompleteCountries: configuration.autocompleteCountries, presentation: .expanded)
-        }
-    }
-
     private func makeDefaultAddressSection() -> AddressSectionElement? {
         guard hasLoadedSpecs else { return nil }
 
         let defaultValues = compatibleDefaultValues ?? .init()
-        let showFullForm = compatibleDefaultValues?.address.line1?.isEmpty == false
 
         return AddressSectionElement(
             countries: configuration.allowedCountries.isEmpty ? nil : configuration.allowedCountries,
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: defaultValues),
-            collectionMode: showFullForm
-                ? .autocomplete(autocompleteCountries: configuration.autocompleteCountries, presentation: .expanded)
-                : .autocomplete(autocompleteCountries: configuration.autocompleteCountries),
+            fieldsToCollect: .all,
+            countriesSupportingAutocomplete: configuration.autocompleteCountries,
             additionalFields: .init(from: configuration.additionalFields),
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { [weak self] in
@@ -521,7 +495,6 @@ extension AddressViewController {
          self.latestError = nil // clear error on new input
          let enabled = addressSection.validationState.isValid
          button.update(status: enabled ? .enabled : .disabled, animated: true)
-         expandAddressSectionIfNeeded()
 
          // Automatically update the "shipping equals billing" checkbox based on current form state
          updateShippingEqualsBillingCheckboxState()
@@ -538,15 +511,12 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
     func didSelectManualEntry(_ line1: String) {
         guard let addressSection = addressSection else { assertionFailure(); return }
         navigationController?.popViewController(animated: true)
-        addressSection.collectionMode = .autocomplete(autocompleteCountries: configuration.autocompleteCountries, presentation: .expanded)
-        addressSection.line1?.setText(line1)
+        addressSection.beginManualEntry(with: line1)
     }
 
     func didSelectAddress(_ address: PaymentSheet.Address?) {
         guard let addressSection = addressSection else { assertionFailure(); return }
         navigationController?.popViewController(animated: true)
-        // Disable auto complete after address is selected
-        addressSection.collectionMode = .autocomplete(autocompleteCountries: configuration.autocompleteCountries, presentation: .expanded)
         guard let address = address else {
             return
         }
@@ -560,13 +530,7 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
             return
         }
 
-        if let autocompleteCountryIndex = autocompleteCountryIndex {
-            addressSection.country.select(index: autocompleteCountryIndex, shouldAutoAdvance: false)
-        }
-        addressSection.line1?.setText(address.line1 ?? "")
-        addressSection.city?.setText(address.city ?? "")
-        addressSection.postalCode?.setText(address.postalCode ?? "")
-        addressSection.state?.setRawData(address.state ?? "", shouldAutoAdvance: false)
+        addressSection.setAddress(address.addressSectionAddress)
 
         // Read back from the element so field processing (e.g. postal code truncation) is reflected
         let normalized = addressSection.addressDetails.address
@@ -638,7 +602,7 @@ extension AddressViewController {
             countries: configuration.allowedCountries.isEmpty ? nil : configuration.allowedCountries,
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: billingAddress),
-            collectionMode: .all,
+            fieldsToCollect: .all,
             additionalFields: .init(from: configuration.additionalFields),
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { /* no-op for comparison */ }
@@ -653,6 +617,17 @@ extension AddressViewController {
 }
 
 extension PaymentSheet.Address {
+    var addressSectionAddress: AddressSectionElement.AddressDetails.Address {
+        return .init(
+            city: city,
+            country: country,
+            line1: line1,
+            line2: line2,
+            postalCode: postalCode,
+            state: state
+        )
+    }
+
     var isEmpty: Bool {
         return self == .init()
     }
