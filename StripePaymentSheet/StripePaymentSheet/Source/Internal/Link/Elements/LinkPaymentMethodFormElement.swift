@@ -74,7 +74,7 @@ final class LinkPaymentMethodFormElement: Element {
 
         // TODO(link): Replace `STPPaymentMethodBillingDetails` with a custom struct for Link.
         // This matches the object that was returned by CardDetailsEditView, but won't work
-        // with `fieldsToCollect: .all`, because extra fields won't match what expected by Link.
+        // with `fieldsToCollect: .all`, because extra fields won't match what Link expects.
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = billingAddressSection?.name?.text
             ?? nameOnCardElement?.text
@@ -273,6 +273,7 @@ final class LinkPaymentMethodFormElement: Element {
             fieldsToCollect: configuration.billingDetailsCollectionConfiguration.address == .full
                 ? .all
                 : .countryAndPostal(),
+            minimumFieldsToCollectByCountry: PaymentSheetFormFactory.cardMinimumFieldsToCollectByCountry,
             disableAutocomplete: true,
             additionalFields: additionalFields,
             theme: theme

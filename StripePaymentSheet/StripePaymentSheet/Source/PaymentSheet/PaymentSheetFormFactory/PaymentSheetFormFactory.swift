@@ -483,6 +483,7 @@ extension PaymentSheetFormFactory {
 
     func makeBillingAddressSection(
         fieldsToCollect: AddressSectionElement.FieldsToCollect = .all,
+        minimumFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect] = [:],
         countries: [String]? = nil,
         countryAPIPath: String? = nil,
         includeEmail: Bool = false,
@@ -509,14 +510,17 @@ extension PaymentSheetFormFactory {
             defaultAddress.email = defaultBillingDetails().email
         }
 
+        let collectsOnlyCountry = fieldsToCollect == .countryOnly
+            && minimumFieldsToCollectByCountry.values.allSatisfy { $0 == .countryOnly }
+
         let section = AddressSectionElement(
-            // TODO: Switch between "billing address" and "billing details" strings once the localizations have landed
             // A lone country dropdown doesn't need a "Billing address" header
-            title: fieldsToCollect == .countryOnly ? nil : String.Localized.billing_address_lowercase,
+            title: collectsOnlyCountry ? nil : String.Localized.billing_address_lowercase,
             countries: countries,
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
             fieldsToCollect: fieldsToCollect,
+            minimumFieldsToCollectByCountry: minimumFieldsToCollectByCountry,
             additionalFields: .init(
                 phone: includePhone ? .enabled(isOptional: false) : .disabled,
                 email: includeEmail ? .enabled(isOptional: false) : .disabled,

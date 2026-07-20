@@ -115,6 +115,7 @@ extension SavedPaymentMethodFormFactory {
                 countries: countries,
                 defaults: currentBillingDetails(paymentMethod: configuration.paymentMethod),
                 fieldsToCollect: fieldsToCollect,
+                minimumFieldsToCollectByCountry: PaymentSheetFormFactory.cardMinimumFieldsToCollectByCountry,
                 disableAutocomplete: true,
                 additionalFields: .init(
                     billingSameAsShippingCheckbox: .disabled

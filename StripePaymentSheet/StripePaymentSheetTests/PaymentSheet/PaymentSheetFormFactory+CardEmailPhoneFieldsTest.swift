@@ -109,6 +109,68 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         XCTAssertNil(contactInfoSection, "Should not have separate contact information section when billing address includes email/phone")
     }
 
+    func testCardFormAutomaticBillingUsesCountryMinimums() throws {
+        // Given automatic billing address collection with a minimum and an unlisted country
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
+            "FR": AddressSpec(format: "ACZ", require: "ACZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
+        ]
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "FR"]
+        let factory = PaymentSheetFormFactory(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card),
+            addressSpecProvider: specProvider
+        )
+
+        // When the card form displays the US billing address
+        let address = try XCTUnwrap(
+            factory.makeCard().getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+        address.selectedCountryCode = "US"
+
+        // Then the card minimum collects country and postal code
+        XCTAssertEqual(address.fieldsToCollect, .countryAndPostal())
+        let postalCode = try XCTUnwrap(address.postalCode)
+        XCTAssertTrue(address.addressSection.elements.contains { $0 === postalCode })
+        XCTAssertNil(address.line1)
+
+        // When changing to an unlisted country
+        address.selectedCountryCode = "FR"
+
+        // Then the form falls back to country-only collection
+        XCTAssertFalse(address.addressSection.elements.contains { $0 === postalCode })
+        XCTAssertNil(address.line1)
+    }
+
+    func testCardFormFullBillingIsNotReducedByCountryMinimums() throws {
+        // Given full billing address collection
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA"]
+        let factory = PaymentSheetFormFactory(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card),
+            addressSpecProvider: dummyAddressSpecProvider
+        )
+
+        // When the card form displays a country that has a card postal minimum
+        let address = try XCTUnwrap(
+            factory.makeCard().getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+        address.selectedCountryCode = "US"
+
+        // Then the country minimum does not narrow full-address autocomplete
+        XCTAssertEqual(address.fieldsToCollect, .all)
+        XCTAssertNotNil(address.autoCompleteLine)
+    }
+
     func testCardFormWithEmailPhoneAlwaysAndNeverBilling_EmailPhoneInContactInfo() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.email = .always
