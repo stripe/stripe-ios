@@ -96,7 +96,7 @@ extension PaymentSheetFormFactory {
             case .automatic:
                 return makeBillingAddressSection(fieldsToCollect: .countryAndPostal(), countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .full:
-                return makeBillingAddressSection(fieldsToCollect: .all(autocomplete: .init()), countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
+                return makeBillingAddressSection(fieldsToCollect: .all, countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .never:
                 return nil
             }

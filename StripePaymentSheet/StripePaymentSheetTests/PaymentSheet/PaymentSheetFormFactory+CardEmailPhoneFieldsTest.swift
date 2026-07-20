@@ -356,17 +356,18 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         )
 
         let billingAddressSection = factory.makeBillingAddressSection(
-            fieldsToCollect: .all(autocomplete: .init(autocompleteCountries: ["US"])),
+            fieldsToCollect: .all,
             countries: nil,
             includeEmail: true,
             includePhone: true
         )
 
-        // Verify the autocomplete configuration preserves its countries
+        // Verify the autocomplete configuration uses the audited default countries
         XCTAssertEqual(
             billingAddressSection.element.fieldsToCollect,
-            .all(autocomplete: .init(autocompleteCountries: ["US"]))
+            .all
         )
+        XCTAssertEqual(billingAddressSection.element.countriesSupportingAutocomplete, AddressSectionElement.defaultAutocompleteCountries)
         XCTAssertNil(billingAddressSection.element.autoCompleteLine)
         XCTAssertNotNil(billingAddressSection.element.line1)
 
@@ -394,7 +395,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         )
 
         let billingAddressSection = factory.makeBillingAddressSection(
-            fieldsToCollect: .all(autocomplete: .init()),
+            fieldsToCollect: .all,
             countries: nil,
             includeEmail: false,
             includePhone: false

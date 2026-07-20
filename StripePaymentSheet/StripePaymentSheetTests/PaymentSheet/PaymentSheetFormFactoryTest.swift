@@ -2508,7 +2508,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertFalse(instantDebitsSection.enableCTA)
 
         // Set a valid address
-        instantDebitsSection.addressElement?.fieldsToCollect = .all() // simulate going to manual entry
+        instantDebitsSection.addressElement?.beginManualEntry(with: "")
         instantDebitsSection.addressElement?.city?.setText(defaultAddress.city!)
         instantDebitsSection.addressElement?.country.select(index: 0) // "US"
         instantDebitsSection.addressElement?.line1?.setText(defaultAddress.line1!)

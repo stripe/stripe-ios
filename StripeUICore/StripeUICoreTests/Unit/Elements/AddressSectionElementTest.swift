@@ -29,7 +29,8 @@ class AddressSectionElementTest: XCTestCase {
         let section = AddressSectionElement(
             title: "",
             locale: locale_enUS,
-            addressSpecProvider: specProvider
+            addressSpecProvider: specProvider,
+            disableAutocomplete: true
         ).addressSection
         XCTAssert(section.elements.first is DropdownFieldElement,
                   "'\(String(describing: section.elements.first.map { type(of: $0) }))' is not 'DropdownFieldElement')")
@@ -82,7 +83,8 @@ class AddressSectionElementTest: XCTestCase {
         let sut = AddressSectionElement(
             title: "",
             locale: locale_enUS,
-            addressSpecProvider: specProvider
+            addressSpecProvider: specProvider,
+            disableAutocomplete: true
         )
         let section = sut.addressSection
 
@@ -136,10 +138,10 @@ class AddressSectionElementTest: XCTestCase {
             title: "",
             countries: ["US"],
             locale: locale_enUS,
-            addressSpecProvider: dummyAddressSpecProvider,
-            fieldsToCollect: .all(autocomplete: .init(autocompleteCountries: ["US"]))
+            addressSpecProvider: dummyAddressSpecProvider
         )
 
+        XCTAssertEqual(sut.countriesSupportingAutocomplete, AddressSectionElement.defaultAutocompleteCountries)
         XCTAssertNotNil(sut.autoCompleteLine)
         XCTAssertNil(sut.line1)
         XCTAssertNil(sut.line2)
@@ -167,8 +169,7 @@ class AddressSectionElementTest: XCTestCase {
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            defaults: .init(address: .init(city: "San Francisco")),
-            fieldsToCollect: .all(autocomplete: .init())
+            defaults: .init(address: .init(city: "San Francisco"))
         )
 
         XCTAssertNil(sut.autoCompleteLine)
@@ -184,8 +185,7 @@ class AddressSectionElementTest: XCTestCase {
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            defaults: .init(address: .init(country: "US")),
-            fieldsToCollect: .all(autocomplete: .init())
+            defaults: .init(address: .init(country: "US"))
         )
 
         XCTAssertNotNil(sut.autoCompleteLine)
@@ -198,7 +198,7 @@ class AddressSectionElementTest: XCTestCase {
             countries: ["US", "CA"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            fieldsToCollect: .all(autocomplete: .init(autocompleteCountries: ["CA"]))
+            countriesSupportingAutocomplete: ["CA"]
         )
 
         XCTAssertEqual(sut.selectedCountryCode, "CA")
@@ -220,8 +220,7 @@ class AddressSectionElementTest: XCTestCase {
             title: "",
             countries: ["US"],
             locale: locale_enUS,
-            addressSpecProvider: dummyAddressSpecProvider,
-            fieldsToCollect: .all(autocomplete: .init())
+            addressSpecProvider: dummyAddressSpecProvider
         )
 
         sut.beginManualEntry(with: "")
@@ -235,8 +234,7 @@ class AddressSectionElementTest: XCTestCase {
             title: "",
             countries: ["US"],
             locale: locale_enUS,
-            addressSpecProvider: dummyAddressSpecProvider,
-            fieldsToCollect: .all(autocomplete: .init())
+            addressSpecProvider: dummyAddressSpecProvider
         )
         let address = AddressSectionElement.AddressDetails.Address(
             city: "San Francisco",
@@ -259,8 +257,7 @@ class AddressSectionElementTest: XCTestCase {
             title: "",
             countries: ["US"],
             locale: locale_enUS,
-            addressSpecProvider: dummyAddressSpecProvider,
-            fieldsToCollect: .all(autocomplete: .init())
+            addressSpecProvider: dummyAddressSpecProvider
         )
 
         sut.setAddress(.init())
@@ -276,7 +273,6 @@ class AddressSectionElementTest: XCTestCase {
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
             defaults: .init(name: "Jenny Rosen"),
-            fieldsToCollect: .all(autocomplete: .init()),
             additionalFields: .init(name: .enabled())
         )
 
@@ -286,18 +282,34 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertNil(sut.line1)
     }
 
-    func testAllFieldsToCollectDoesNotShowAutocomplete() {
+    func testAutocompleteCanBeDisabled() {
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            fieldsToCollect: .all()
+            disableAutocomplete: true
         )
 
         XCTAssertNil(sut.autoCompleteLine)
         XCTAssertNotNil(sut.line1)
         XCTAssertLine1DoesNotHaveAutocompleteAccessory(sut)
+    }
+
+    func testChangingFieldsToCollectPreservesAutocompleteCountries() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            fieldsToCollect: .countryOnly
+        )
+
+        sut.fieldsToCollect = .all
+
+        XCTAssertEqual(sut.countriesSupportingAutocomplete, AddressSectionElement.defaultAutocompleteCountries)
+        XCTAssertNotNil(sut.autoCompleteLine)
+        XCTAssertNil(sut.line1)
     }
 
     func test_additionalFields() {
@@ -420,7 +432,8 @@ class AddressSectionElementTest: XCTestCase {
         let sut = AddressSectionElement(
             title: "",
             locale: locale_enUS,
-            addressSpecProvider: specProvider
+            addressSpecProvider: specProvider,
+            disableAutocomplete: true
         )
 
         guard let stateDropdown = sut.state as? DropdownFieldElement else {
@@ -463,7 +476,8 @@ class AddressSectionElementTest: XCTestCase {
             title: "",
             countries: ["JP"],
             locale: locale_enUS,
-            addressSpecProvider: specProvider
+            addressSpecProvider: specProvider,
+            disableAutocomplete: true
         )
         let section = sut.addressSection
 

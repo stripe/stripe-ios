@@ -94,6 +94,7 @@ struct IdentityElementsFactory {
             countries: countries,
             locale: locale,
             addressSpecProvider: addressSpecProvider,
+            disableAutocomplete: true,
             theme: IdentityUI.identityElementsUITheme
         )
     }
