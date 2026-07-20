@@ -474,6 +474,28 @@ extension STPApplePayContext {
     }
 }
 
+private func makeFallbackBillingDetails(intent: Intent, configuration: PaymentElementConfiguration) -> StripeAPI.BillingDetails? {
+    var fallbackBillingDetails = StripeAPI.BillingDetails()
+
+    if configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod {
+        let defaultBillingDetails = configuration.defaultBillingDetails
+        fallbackBillingDetails.email = defaultBillingDetails.email
+        fallbackBillingDetails.name = defaultBillingDetails.name
+        fallbackBillingDetails.phone = defaultBillingDetails.phone
+    }
+
+    if case .checkout(let checkout) = intent,
+       fallbackBillingDetails.email == nil,
+       let email = checkout.stpSession.email {
+        fallbackBillingDetails.email = email
+    }
+
+    guard fallbackBillingDetails.email != nil || fallbackBillingDetails.name != nil || fallbackBillingDetails.phone != nil else {
+        return nil
+    }
+    return fallbackBillingDetails
+}
+
 private func makeShippingDetails(from configuration: PaymentElementConfiguration) -> StripeAPI.ShippingDetails? {
     guard let shippingDetails = configuration.shippingDetails(), let name = shippingDetails.name else {
         return nil
