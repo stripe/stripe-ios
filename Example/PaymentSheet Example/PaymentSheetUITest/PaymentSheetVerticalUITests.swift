@@ -170,7 +170,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Alipay"].waitForExistenceAndTap()
         app.buttons["Pay $50.99"].tap()
         // Cancel
-        XCTAssertTrue(app.webViews.staticTexts["Alipay test payment page"].waitForExistence(timeout: 30))
+        XCTAssertTrue(app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT").waitForExistence(timeout: 30))
         app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 1))
         // Fail payment
