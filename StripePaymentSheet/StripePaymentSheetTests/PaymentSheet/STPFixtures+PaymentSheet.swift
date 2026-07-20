@@ -379,9 +379,12 @@ extension Intent {
             json["line_item_group"] = lineItemGroup
         }
 
-        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
-        checkoutSession.billingAddress = billingAddress
-        return .checkout(Checkout(apiResponse: checkoutSession))
+        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        let checkout = Checkout(apiResponse: checkoutSession)
+        if let billingAddress {
+            checkout.dangerouslySetSessionDirectly(checkout.session.makeCopyOverriding(billingAddress: .newValue(billingAddress)))
+        }
+        return .checkout(checkout)
     }
 }
 

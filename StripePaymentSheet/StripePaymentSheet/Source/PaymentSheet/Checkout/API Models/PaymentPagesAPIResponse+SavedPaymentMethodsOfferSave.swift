@@ -1,5 +1,5 @@
 //
-//  STPCheckoutSessionAPIResponse+SavedPaymentMethodsOfferSave.swift
+//  PaymentPagesAPIResponse+SavedPaymentMethodsOfferSave.swift
 //  StripePaymentSheet
 //
 //  Created by George Birch on 2/17/26.

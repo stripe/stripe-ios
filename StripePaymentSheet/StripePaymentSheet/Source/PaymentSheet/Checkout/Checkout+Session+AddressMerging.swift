@@ -1,5 +1,5 @@
 //
-//  STPCheckoutSessionAPIResponse+AddressMerging.swift
+//  Checkout+Session+AddressMerging.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 3/2/26.

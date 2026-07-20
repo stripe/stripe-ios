@@ -1,5 +1,5 @@
 //
-//  STPCheckoutSessionAPIResponse+Session.swift
+//  PaymentPagesAPIResponse+Session.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 3/9/26.
@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-extension STPCheckoutSessionAPIResponse {
+extension PaymentPagesAPIResponse {
     var minorUnitsAmountDivisor: Int? {
         guard let currency else { return nil }
         let oneMinorUnitInMajor = NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency)
@@ -19,7 +19,7 @@ extension STPCheckoutSessionAPIResponse {
     func makePublicSession() -> Checkout.Session {
         return Checkout.Session(
             id: id,
-            billingAddress: billingAddress,
+            billingAddress: nil,
             businessName: businessName,
             currency: currency,
             currencyOptions: currencyOptions,
@@ -31,7 +31,7 @@ extension STPCheckoutSessionAPIResponse {
             paymentOption: nil,
             savedPaymentMethods: savedPaymentMethods,
             shipping: shipping,
-            shippingAddress: shippingAddress,
+            shippingAddress: nil,
             shippingOptions: shippingOptions,
             status: status,
             tax: tax,
