@@ -320,6 +320,7 @@ import UIKit
         var address = addressDetails.address
         address.line1 = line1
         updateAddressFields(for: selectedCountryCode, address: address, forceExpandAutocomplete: true)
+        self.line1?.beginEditing()
     }
 
     /// - Parameters:
@@ -350,6 +351,7 @@ import UIKit
         // Get the address spec for the country and filter out unused fields.
         let spec = addressSpecProvider.addressSpec(for: countryCode)
         let fieldOrdering = spec.fieldOrdering.filter {
+            // Compact autocomplete hides address fields and shows the dummy autocomplete trigger instead.
             guard !isCompactAutocomplete else { return false }
             switch fieldsToCollect {
             case .all:
@@ -481,6 +483,8 @@ private extension AddressSectionElement.AddressDetails.Address {
 extension AddressSectionElement: Element {
     @discardableResult
     public func beginEditing() -> Bool {
+        // If a child field is already focused, don't move focus to another field.
+        guard view.firstResponder() == nil else { return true }
         let firstInvalidNonDropDownElement = firstInvalidNonDropdownElement(elements: elements)
 
         // If first non-dropdown element is auto complete, don't do anything
