@@ -274,7 +274,7 @@ final class ImageScanningSession<
                     initialOrientation: UIDevice.current.orientation.videoOrientation,
                     focusMode: .continuousAutoFocus,
                     focusPointOfInterest: CGPoint(x: 0.5, y: 0.5),
-                    sessionPreset: .high,
+                    sessionPreset: .hd4K3840x2160,
                     outputSettings: [
                         (kCVPixelBufferPixelFormatTypeKey as String): Int(
                             IDDetectorConstants.mbRequiredPixelFormat
