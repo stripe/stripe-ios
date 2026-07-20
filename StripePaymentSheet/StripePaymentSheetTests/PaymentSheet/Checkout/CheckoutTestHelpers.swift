@@ -100,6 +100,12 @@ enum CheckoutTestHelpers {
 
     // MARK: - Checkout-flow helpers
 
+    /// Builds a `Checkout.Configuration`, replacing its `apiClient` with one that uses test stubs.
+    ///
+    /// - Parameters:
+    ///   - apiResponse: The Checkout Session response returned by the stubbed `/init` request.
+    ///   - configuration: An optional base configuration for test-specific settings.
+    ///   - stubAllOutgoingRequests: Whether to stub every outgoing API request made by the client, or only the initialization request.
     @MainActor
     static func makeConfiguration(
         apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
