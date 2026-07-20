@@ -100,7 +100,6 @@ import UIKit
 
     private let apiClient: STPAPIClient
     private let mode: Mode
-    private let setupIntentClientSecret: String?
     private let elementsSession: STPElementsSession
     private let intent: Intent
     private let paymentElementConfiguration: PaymentElementConfiguration
@@ -130,6 +129,8 @@ import UIKit
         }
     }
 
+    private var lastCreatedPaymentMethod: STPPaymentMethod?
+
     /// Details on the current Link account.
     @Published @_spi(STP) public private(set) var linkAccount: PaymentSheetLinkAccount?
 
@@ -150,7 +151,6 @@ import UIKit
     private init(
         apiClient: STPAPIClient = .shared,
         mode: Mode,
-        setupIntentClientSecret: String? = nil,
         elementsSession: STPElementsSession,
         intent: Intent,
         paymentElementConfiguration: PaymentElementConfiguration,
@@ -162,7 +162,6 @@ import UIKit
     ) {
         self.apiClient = apiClient
         self.mode = mode
-        self.setupIntentClientSecret = setupIntentClientSecret
         self.elementsSession = elementsSession
         self.intent = intent
         self.paymentElementConfiguration = paymentElementConfiguration
@@ -269,6 +268,7 @@ import UIKit
 
                 let loadResult = try await Self.loadElementsSession(
                     paymentElementConfiguration: paymentElementConfiguration,
+                    linkConfiguration: configuration,
                     analyticsHelper: analyticsHelper
                 )
 
@@ -305,20 +305,11 @@ import UIKit
     /// Creates a `LinkController` for collecting a customer's payment method via Link.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance. Defaults to `.shared`.
-    /// - Parameter setupIntentClientSecret: Optional. The `client_secret` of a
-    ///   server-side SetupIntent created with `payment_method_types: ["link"]`.
-    ///   When provided, `present(email:from:completion:)` confirms the SetupIntent
-    ///   after the user selects a payment method, attaching it to the associated
-    ///   customer automatically. The merchant does **not** need to call
-    ///   `paymentMethods.attach` separately. When `nil` (default), the existing
-    ///   behaviour applies — the raw `STPPaymentMethod` is returned and the merchant
-    ///   is responsible for attaching it.
     /// - Parameter appearance: Link UI appearance overrides.
     /// - Parameter configuration: Configuration for Link behaviour.
     /// - Parameter completion: Called with the ready `LinkController` or an error.
     @_spi(LinkControllerPreview) public static func create(
         apiClient: STPAPIClient = .shared,
-        setupIntentClientSecret: String? = nil,
         appearance: LinkAppearance? = nil,
         configuration: LinkConfiguration? = nil,
         completion: @escaping (Result<LinkController, Error>) -> Void
@@ -340,8 +331,8 @@ import UIKit
                 )
 
                 let loadResult = try await Self.loadElementsSession(
-                    setupIntentClientSecret: setupIntentClientSecret,
                     paymentElementConfiguration: paymentElementConfiguration,
+                    linkConfiguration: configuration,
                     analyticsHelper: analyticsHelper
                 )
 
@@ -356,7 +347,6 @@ import UIKit
                 let controller = LinkController(
                     apiClient: apiClient,
                     mode: .setup,
-                    setupIntentClientSecret: setupIntentClientSecret,
                     elementsSession: loadResult.elementsSession,
                     intent: loadResult.intent,
                     paymentElementConfiguration: paymentElementConfiguration,
@@ -525,7 +515,7 @@ import UIKit
             ),
             linkAppearance: appearance,
             linkConfiguration: configuration,
-            shouldShowSecondaryCta: false
+            canContinueWithoutLink: false
         ) { [weak self] confirmOption, shouldClearSelection in
             guard let confirmOption else {
                 if shouldClearSelection {
@@ -580,7 +570,7 @@ import UIKit
                 supportedPaymentMethodTypes: self.resolvedSupportedPaymentMethodTypes(override: nil),
                 linkAppearance: self.appearance,
                 linkConfiguration: self.configuration,
-                shouldShowSecondaryCta: false
+                canContinueWithoutLink: false
             ) { [weak self] confirmOption, _ in
                 guard let self else { return }
                 guard let confirmOption else {
@@ -594,16 +584,8 @@ import UIKit
                     case .failure(let error):
                         completion(.failure(error))
                     case .success(let paymentMethod):
-                        guard let cs = self.setupIntentClientSecret else {
-                            completion(.success(.completed(paymentMethod)))
-                            return
-                        }
-                        self.confirmSetupIntent(
-                            clientSecret: cs,
-                            paymentMethod: paymentMethod,
-                            from: presentingViewController,
-                            completion: completion
-                        )
+                        self.lastCreatedPaymentMethod = paymentMethod
+                        completion(.success(.completed(paymentMethod)))
                     }
                 }
             }
@@ -621,6 +603,34 @@ import UIKit
                 }
             }
         }
+    }
+
+    /// Confirms a SetupIntent using the payment method from the most recent `present()` call.
+    ///
+    /// Call this after a successful `.completed` result from `present(email:from:completion:)`.
+    /// Provide a fresh SetupIntent client secret for each confirmation — reusing a consumed
+    /// secret will fail.
+    ///
+    /// - Parameter clientSecret: The client secret of the SetupIntent to confirm.
+    /// - Parameter presentingViewController: The view controller used as the authentication context
+    ///   (e.g. for 3DS challenges).
+    /// - Parameter completion: Called with `.completed(paymentMethod)` on success,
+    ///   `.canceled` if the user cancels authentication, or an error.
+    @_spi(LinkControllerPreview) public func confirmSetupIntent(
+        clientSecret: String,
+        from presentingViewController: UIViewController,
+        completion: @escaping (Result<PaymentMethodResult, Error>) -> Void
+    ) {
+        guard let paymentMethod = lastCreatedPaymentMethod else {
+            completion(.failure(IntegrationError.noPaymentMethodSelected))
+            return
+        }
+        confirmSetupIntentInternal(
+            clientSecret: clientSecret,
+            paymentMethod: paymentMethod,
+            from: presentingViewController,
+            completion: completion
+        )
     }
 
     /// Creates a [STPPaymentMethod] from the selected Link payment method preview.
@@ -912,7 +922,7 @@ import UIKit
 
     // MARK: - Private methods
 
-    private func confirmSetupIntent(
+    private func confirmSetupIntentInternal(
         clientSecret: String,
         paymentMethod: STPPaymentMethod,
         from viewController: UIViewController,
@@ -920,6 +930,10 @@ import UIKit
     ) {
         let confirmParams = STPSetupIntentConfirmParams(clientSecret: clientSecret)
         confirmParams.paymentMethodID = paymentMethod.stripeId
+
+        // Required for off-session link PMs: captures consent given during the Link flow.
+        let mandateData = STPMandateDataParams.makeWithInferredValues()
+        confirmParams.mandateData = mandateData
 
         let authContext = ViewControllerAuthenticationContext(viewController: viewController)
         STPPaymentHandler.shared().confirmSetupIntent(
@@ -1046,27 +1060,23 @@ import UIKit
     }
 
     private static func loadElementsSession(
-        setupIntentClientSecret: String? = nil,
         paymentElementConfiguration: PaymentElementConfiguration,
+        linkConfiguration: LinkConfiguration? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) async throws -> PaymentSheetLoader.LoadResult {
-        let mode: PaymentSheet.InitializationMode
-        if let cs = setupIntentClientSecret {
-            mode = .setupIntentClientSecret(cs)
-        } else {
-            // Stub path: no real intent, PM creation handled externally.
-            let intentConfiguration = PaymentSheet.IntentConfiguration(
-                mode: .setup(
-                    currency: nil,
-                    setupFutureUsage: .offSession
-                ),
-                confirmHandler: { _, _ in
-                    stpAssertionFailure("The confirmHandler is not expected to be called in the LinkController.")
-                    return PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT
-                }
-            )
-            mode = .deferredIntent(intentConfiguration)
-        }
+        // Stub path: no real intent, PM creation and confirmation handled externally.
+        let intentConfiguration = PaymentSheet.IntentConfiguration(
+            mode: .setup(
+                currency: nil,
+                setupFutureUsage: .offSession
+            ),
+            paymentMethodTypes: linkConfiguration?.paymentMethodTypes,
+            confirmHandler: { _, _ in
+                stpAssertionFailure("The confirmHandler is not expected to be called in the LinkController.")
+                return PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT
+            }
+        )
+        let mode: PaymentSheet.InitializationMode = .deferredIntent(intentConfiguration)
 
         let (result, _) = try await PaymentSheetLoader.load(
             mode: mode,
@@ -1424,23 +1434,17 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     /// Creates a `LinkController` for collecting a customer's payment method via Link.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance. Defaults to `.shared`.
-    /// - Parameter setupIntentClientSecret: Optional. The `client_secret` of a server-side
-    ///   SetupIntent. When provided, `present(email:from:)` confirms the SetupIntent after PM
-    ///   selection, attaching it automatically. When `nil` (default), the raw
-    ///   `STPPaymentMethod` is returned and the merchant attaches it.
     /// - Parameter appearance: Link UI appearance overrides.
     /// - Parameter configuration: Configuration for Link behaviour.
     /// - Returns: A `LinkController` if successful, or throws an error if creation failed.
     static func create(
         apiClient: STPAPIClient = .shared,
-        setupIntentClientSecret: String? = nil,
         appearance: LinkAppearance? = nil,
         configuration: LinkConfiguration? = nil
     ) async throws -> LinkController {
         return try await withCheckedThrowingContinuation { continuation in
             create(
                 apiClient: apiClient,
-                setupIntentClientSecret: setupIntentClientSecret,
                 appearance: appearance,
                 configuration: configuration
             ) { result in
@@ -1481,6 +1485,31 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
             present(
                 email: email,
                 phoneNumber: phoneNumber,
+                from: presentingViewController
+            ) { result in
+                switch result {
+                case .success(let paymentMethodResult):
+                    continuation.resume(returning: paymentMethodResult)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Confirms a SetupIntent using the payment method from the most recent `present()` call.
+    ///
+    /// - Parameter clientSecret: The client secret of the SetupIntent to confirm.
+    /// - Parameter presentingViewController: The view controller used as the authentication context.
+    /// - Returns: `.completed(paymentMethod)` on success, or `.canceled` if authentication is canceled.
+    /// - Throws: An error if the confirmation fails or no payment method has been selected.
+    func confirmSetupIntent(
+        clientSecret: String,
+        from presentingViewController: UIViewController
+    ) async throws -> PaymentMethodResult {
+        try await withCheckedThrowingContinuation { continuation in
+            confirmSetupIntent(
+                clientSecret: clientSecret,
                 from: presentingViewController
             ) { result in
                 switch result {

@@ -3,6 +3,13 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+## 26.4.0 2026-07-20
+### StripeCore
+* [Added] `STPAPIClient.betas` is now public, allowing merchants to opt in to beta features that require a preview flag on the `Stripe-Version` header.
+
+### PaymentSheet
+* [Changed] Refactored `LinkController` SetupIntent confirmation into a separate `confirmSetupIntent` step (private preview).
+
 ## 26.3.0 2026-07-13
 ### CryptoOnramp (Alpha)
 * [Added] Added wallet ownership verification APIs to `CryptoOnrampCoordinator`: `getWalletOwnershipChallenge(walletAddress:network:)` and `submitWalletOwnershipSignature(challengeId:signature:)`.

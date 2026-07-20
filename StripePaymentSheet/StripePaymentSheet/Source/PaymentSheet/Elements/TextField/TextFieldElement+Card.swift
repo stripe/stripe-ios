@@ -15,6 +15,11 @@ import UIKit
 
 // MARK: - PAN Configuration
 extension TextFieldElement {
+    protocol CardBrandChoiceDataSource: AnyObject {
+        var selectedBrand: STPCardBrand? { get }
+        var brandCount: Int { get }
+    }
+
     struct PANConfiguration: TextFieldElementConfiguration {
         var label: String = String.Localized.card_number
         var binController = STPBINController.shared
@@ -22,7 +27,7 @@ extension TextFieldElement {
         let rotatingCardBrandsView = RotatingCardBrandsView()
         let defaultValue: String?
         let cardBrand: STPCardBrand?
-        let cardBrandChoiceElement: CardBrandChoiceElement?
+        weak var cardBrandChoiceDataSource: CardBrandChoiceDataSource?
         let cardBrandFilter: CardBrandFilter
         let cardFundingFilter: CardFundingFilter
         /// Separate BIN controller for funding filtering to avoid polluting
@@ -32,14 +37,14 @@ extension TextFieldElement {
         init(
             defaultValue: String? = nil,
             cardBrand: STPCardBrand? = nil,
-            cardBrandChoiceElement: CardBrandChoiceElement? = nil,
+            cardBrandChoiceDataSource: CardBrandChoiceDataSource? = nil,
             cardBrandFilter: CardBrandFilter = .default,
             cardFundingFilter: CardFundingFilter = .default,
             fundingBinController: STPBINController? = nil
         ) {
             self.defaultValue = defaultValue
             self.cardBrand = cardBrand
-            self.cardBrandChoiceElement = cardBrandChoiceElement
+            self.cardBrandChoiceDataSource = cardBrandChoiceDataSource
             self.cardBrandFilter = cardBrandFilter
             self.cardFundingFilter = cardFundingFilter
             self.fundingBinController = fundingBinController
@@ -47,11 +52,11 @@ extension TextFieldElement {
 
         private func cardBrand(for text: String) -> STPCardBrand {
             // Try to read the selected brand from the CBC selector
-            guard let cardBrandChoiceElement = cardBrandChoiceElement else {
+            guard let cardBrandChoiceDataSource else {
                 return STPCardValidator.brand(forNumber: text)
             }
 
-            let selectedBrand = cardBrandChoiceElement.selectedBrand ?? .unknown
+            let selectedBrand = cardBrandChoiceDataSource.selectedBrand ?? .unknown
             let cardBrandFromBin = STPCardValidator.brand(forNumber: text)
             return selectedBrand == .unknown ? cardBrandFromBin : selectedBrand
         }
@@ -62,7 +67,7 @@ extension TextFieldElement {
                 return label
             }
             // Show supported brands when no specific brand is detected
-            let isCBCEnabled = cardBrandChoiceElement != nil
+            let isCBCEnabled = cardBrandChoiceDataSource != nil
             let brands = RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases.filter {
                 cardBrandFilter.isAccepted(cardBrand: $0) && ($0 != .cartesBancaires || isCBCEnabled)
             })
@@ -75,20 +80,16 @@ extension TextFieldElement {
         }
 
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
-            // If CBC is enabled and the PAN is not empty...
-            if let cardBrandChoiceElement = cardBrandChoiceElement, !text.isEmpty {
+            if let cardBrandChoiceDataSource, !text.isEmpty {
                 // Show unknown card brand if we have under 9 pan digits and no card brands
-                if 9 > text.count && cardBrandChoiceElement.brandCount == 0 {
+                if 9 > text.count && cardBrandChoiceDataSource.brandCount == 0 {
                     return DynamicImageView.makeUnknownCardImageView(theme: theme)
-                } else if text.count >= 8 && cardBrandChoiceElement.allowedBrandCount > 1 {
-                    // Show the selector if we have 8 or more digits and at least 2 allowed brands, otherwise fall through and show brand as normal
-                    return cardBrandChoiceElement.view
                 }
             }
 
             // If this is coming from the LastFourConfiguration, cardBrand(for: text) will retrieve a card brand from •••• •••• •••• last4, which may be incorrect, so we pass in the card brand for that case
             if let cardBrand = cardBrand,
-               cardBrandChoiceElement == nil {
+               cardBrandChoiceDataSource == nil {
                 rotatingCardBrandsView.cardBrands = [cardBrand]
                 return rotatingCardBrandsView
             }
@@ -100,7 +101,7 @@ extension TextFieldElement {
                 } else {
                     // display all available card brands
                     // Only show Cartes Bancaires when card brand choice is enabled
-                    let isCBCEnabled = cardBrandChoiceElement != nil
+                    let isCBCEnabled = cardBrandChoiceDataSource != nil
                     rotatingCardBrandsView.cardBrands =
                     RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases.filter {
                         cardBrandFilter.isAccepted(cardBrand: $0) && ($0 != .cartesBancaires || isCBCEnabled)
@@ -176,7 +177,7 @@ extension TextFieldElement {
 
             let cardBrand = cardBrand(for: text)
             // If the merchant is CBC eligible, don't show the disallowed error until we have time to hit the card metadata service to determine brands (at 8 digits)
-            let shouldShowDisallowedError = cardBrandChoiceElement == nil || text.count > 8
+            let shouldShowDisallowedError = cardBrandChoiceDataSource == nil || text.count > 8
             if !cardBrandFilter.isAccepted(cardBrand: cardBrand) && shouldShowDisallowedError {
                 return .invalid(Error.disallowedBrand(brand: cardBrand))
             }
@@ -425,15 +426,15 @@ extension TextFieldElement {
         let lastFour: String
         let editConfiguration: EditConfiguration
         let cardBrand: STPCardBrand?
-        let cardBrandChoiceElement: CardBrandChoiceElement?
+        weak var cardBrandChoiceDataSource: CardBrandChoiceDataSource?
 
         private var lastFourFormatted: String {
             "•••• •••• •••• \(lastFour)"
         }
 
-        init(lastFour: String, editConfiguration: EditConfiguration, cardBrand: STPCardBrand?, cardBrandChoiceElement: CardBrandChoiceElement?) {
+        init(lastFour: String, editConfiguration: EditConfiguration, cardBrand: STPCardBrand?, cardBrandChoiceDataSource: CardBrandChoiceDataSource?) {
             self.lastFour = lastFour
-            self.cardBrandChoiceElement = cardBrandChoiceElement
+            self.cardBrandChoiceDataSource = cardBrandChoiceDataSource
             self.cardBrand = cardBrand
             self.editConfiguration = editConfiguration
         }
@@ -444,7 +445,7 @@ extension TextFieldElement {
 
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             // Re-use same logic from PANConfiguration for accessory view
-            return TextFieldElement.PANConfiguration(cardBrand: cardBrand, cardBrandChoiceElement: cardBrandChoiceElement).accessoryView(for: lastFourFormatted, theme: theme)
+            return TextFieldElement.PANConfiguration(cardBrand: cardBrand, cardBrandChoiceDataSource: cardBrandChoiceDataSource).accessoryView(for: lastFourFormatted, theme: theme)
         }
 
         func validate(text: String, isOptional: Bool) -> ValidationState {
