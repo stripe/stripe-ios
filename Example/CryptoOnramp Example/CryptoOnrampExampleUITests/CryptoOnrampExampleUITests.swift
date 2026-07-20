@@ -22,7 +22,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
     /// Tests a happy-path flow from log in (existing account) to successful checkout, followed by re-authentication using seamless sign-in.
     /// Disabled
     @MainActor
-    func _testCryptoOnrampEndToEnd() throws {
+    func testCryptoOnrampEndToEnd() throws {
         // Step 1: Enter email and password
         let emailField = app.textFields["Enter email address"].firstMatch
         XCTAssertTrue(emailField.waitForExistence(timeout: .networkTimeout), "Email field should exist")
