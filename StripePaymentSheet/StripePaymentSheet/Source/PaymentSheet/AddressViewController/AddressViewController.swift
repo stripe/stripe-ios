@@ -411,7 +411,8 @@ extension AddressViewController {
             countries: configuration.allowedCountries.isEmpty ? nil : configuration.allowedCountries,
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: defaultValues),
-            defaultFieldsToCollect: .all(autocomplete: .init(autocompleteCountries: configuration.autocompleteCountries)),
+            fieldsToCollect: .all,
+            countriesSupportingAutocomplete: configuration.autocompleteCountries,
             additionalFields: .init(from: configuration.additionalFields),
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { [weak self] in
@@ -601,7 +602,7 @@ extension AddressViewController {
             countries: configuration.allowedCountries.isEmpty ? nil : configuration.allowedCountries,
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: billingAddress),
-            defaultFieldsToCollect: .all(),
+            fieldsToCollect: .all,
             additionalFields: .init(from: configuration.additionalFields),
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { /* no-op for comparison */ }

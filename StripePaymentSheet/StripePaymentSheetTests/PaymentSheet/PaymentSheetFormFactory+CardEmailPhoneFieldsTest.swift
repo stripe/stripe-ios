@@ -134,7 +134,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         address.selectedCountryCode = "US"
 
         // Then the card minimum collects country and postal code
-        XCTAssertEqual(address.defaultFieldsToCollect, .country)
+        XCTAssertEqual(address.fieldsToCollect, .countryAndPostal())
         let postalCode = try XCTUnwrap(address.postalCode)
         XCTAssertTrue(address.addressSection.elements.contains { $0 === postalCode })
         XCTAssertNil(address.line1)
@@ -167,7 +167,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         address.selectedCountryCode = "US"
 
         // Then the country minimum does not narrow full-address autocomplete
-        XCTAssertEqual(address.defaultFieldsToCollect, .all(autocomplete: .init()))
+        XCTAssertEqual(address.fieldsToCollect, .all)
         XCTAssertNotNil(address.autoCompleteLine)
     }
 
@@ -418,17 +418,18 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         )
 
         let billingAddressSection = factory.makeBillingAddressSection(
-            defaultFieldsToCollect: .all(autocomplete: .init(autocompleteCountries: ["US"])),
+            fieldsToCollect: .all,
             countries: nil,
             includeEmail: true,
             includePhone: true
         )
 
-        // Verify the autocomplete configuration preserves its countries
+        // Verify the autocomplete configuration uses the audited default countries
         XCTAssertEqual(
-            billingAddressSection.element.defaultFieldsToCollect,
-            .all(autocomplete: .init(autocompleteCountries: ["US"]))
+            billingAddressSection.element.fieldsToCollect,
+            .all
         )
+        XCTAssertEqual(billingAddressSection.element.countriesSupportingAutocomplete, AddressSectionElement.defaultAutocompleteCountries)
         XCTAssertNil(billingAddressSection.element.autoCompleteLine)
         XCTAssertNotNil(billingAddressSection.element.line1)
 
@@ -456,7 +457,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         )
 
         let billingAddressSection = factory.makeBillingAddressSection(
-            defaultFieldsToCollect: .all(autocomplete: .init()),
+            fieldsToCollect: .all,
             countries: nil,
             includeEmail: false,
             includePhone: false

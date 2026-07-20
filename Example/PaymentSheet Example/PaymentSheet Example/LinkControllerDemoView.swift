@@ -26,20 +26,23 @@ struct LinkControllerDemoView: View {
         case initializing
         case ready
         case presenting
+        /// PM selected; waiting for merchant to tap "Confirm & Save" (serverSetupIntent mode only).
+        case awaitingConfirmation(STPPaymentMethod)
+        case confirming
         case completed(STPPaymentMethod)
         case error(String)
     }
 
     private var isLoading: Bool {
         switch phase {
-        case .initializing, .presenting: return true
+        case .initializing, .presenting, .confirming: return true
         default: return false
         }
     }
 
     private var isReady: Bool {
         switch phase {
-        case .ready, .completed: return true
+        case .ready, .completed, .awaitingConfirmation: return true
         default: return false
         }
     }
@@ -49,6 +52,8 @@ struct LinkControllerDemoView: View {
         case .initializing: return "Initializing..."
         case .ready: return "Ready"
         case .presenting: return "Presenting..."
+        case .awaitingConfirmation: return "Payment method selected"
+        case .confirming: return "Confirming..."
         case .completed: return "Completed"
         case .error: return "Error"
         }
@@ -110,6 +115,16 @@ struct LinkControllerDemoView: View {
                     }
                     .buttonStyle(PreviewPrimaryButtonStyle())
                     .disabled(!isReady || isLoading)
+
+                    if case .awaitingConfirmation = phase {
+                        Button("Confirm & Save") {
+                            Task { @MainActor in
+                                await confirmFlow()
+                            }
+                        }
+                        .buttonStyle(PreviewPrimaryButtonStyle())
+                        .disabled(isLoading)
+                    }
                 }
 
                 if let errorMessage {
@@ -175,16 +190,12 @@ struct LinkControllerDemoView: View {
             let cid = try await LinkControllerDemoBackendClient.fetchOrCreateCustomer(email: configuration.email)
             customerId = cid
 
-            // In serverSetupIntent mode, SI + LinkController are created fresh on each Present tap.
-            if configuration.intentMode == .sdkManaged {
-                linkController = try await LinkController.create(
-                    setupIntentClientSecret: nil,
-                    configuration: .init(
-                        supportedPaymentMethodTypes: Array(configuration.supportedPaymentMethodTypes),
-                        merchantDisplayName: "Example, Inc."
-                    )
+            linkController = try await LinkController.create(
+                configuration: .init(
+                    supportedPaymentMethodTypes: Array(configuration.supportedPaymentMethodTypes),
+                    merchantDisplayName: "Example, Inc."
                 )
-            }
+            )
 
             savedPaymentMethods = try await LinkControllerDemoBackendClient.listPaymentMethods(for: cid)
 
@@ -215,27 +226,10 @@ struct LinkControllerDemoView: View {
         statusMessage = "Presenting Link flow..."
 
         do {
-            let activeController: LinkController
-            switch configuration.intentMode {
-            case .serverSetupIntent:
-                let secret = try await LinkControllerDemoBackendClient.createSetupIntent(customerId: customerId)
-                setupIntentClientSecret = secret
-                let controller = try await LinkController.create(
-                    setupIntentClientSecret: secret,
-                    configuration: .init(
-                        supportedPaymentMethodTypes: Array(configuration.supportedPaymentMethodTypes),
-                        merchantDisplayName: "Example, Inc."
-                    )
-                )
-                linkController = controller
-                activeController = controller
-            case .sdkManaged:
-                guard let existing = linkController else {
-                    phase = .ready
-                    errorMessage = "LinkController not initialized"
-                    return
-                }
-                activeController = existing
+            guard let activeController = linkController else {
+                phase = .ready
+                errorMessage = "LinkController not initialized"
+                return
             }
 
             let result = try await activeController.present(
@@ -246,7 +240,13 @@ struct LinkControllerDemoView: View {
 
             switch result {
             case .completed(let paymentMethod):
-                if configuration.intentMode == .sdkManaged {
+                switch configuration.intentMode {
+                case .serverSetupIntent:
+                    // PM selected — wait for the merchant to tap "Confirm & Save".
+                    statusTint = .secondary
+                    statusMessage = "Payment method selected. Tap \"Confirm & Save\" to attach it."
+                    phase = .awaitingConfirmation(paymentMethod)
+                case .sdkManaged:
                     statusMessage = "Saving payment method..."
                     do {
                         try await LinkControllerDemoBackendClient.attachPaymentMethod(
@@ -257,11 +257,11 @@ struct LinkControllerDemoView: View {
                     } catch {
                         errorMessage = "Payment method created (ID: \(paymentMethod.stripeId)) but failed to save: \(error.localizedDescription)"
                     }
+                    try? await refreshSavedPaymentMethods()
+                    statusTint = .green
+                    statusMessage = "Payment method saved!"
+                    phase = .completed(paymentMethod)
                 }
-                try? await refreshSavedPaymentMethods()
-                statusTint = .green
-                statusMessage = "Payment method saved!"
-                phase = .completed(paymentMethod)
             case .canceled:
                 statusMessage = "Present flow canceled"
                 phase = .ready
@@ -269,6 +269,49 @@ struct LinkControllerDemoView: View {
         } catch {
             phase = .ready
             errorMessage = "Present flow failed: \(error.localizedDescription)"
+        }
+    }
+
+    @MainActor
+    private func confirmFlow() async {
+        guard case .awaitingConfirmation = phase, let customerId else { return }
+
+        guard let rootViewController = findViewController() else {
+            errorMessage = "Could not find root view controller"
+            return
+        }
+
+        guard let activeController = linkController else {
+            errorMessage = "LinkController not initialized"
+            return
+        }
+
+        phase = .confirming
+        errorMessage = nil
+        statusMessage = "Creating SetupIntent and confirming..."
+
+        do {
+            let secret = try await LinkControllerDemoBackendClient.createSetupIntent(customerId: customerId)
+            setupIntentClientSecret = secret
+
+            let confirmResult = try await activeController.confirmSetupIntent(
+                clientSecret: secret,
+                from: rootViewController
+            )
+
+            switch confirmResult {
+            case .completed(let paymentMethod):
+                try? await refreshSavedPaymentMethods()
+                statusTint = .green
+                statusMessage = "Payment method saved!"
+                phase = .completed(paymentMethod)
+            case .canceled:
+                statusMessage = "Confirmation canceled"
+                phase = .ready
+            }
+        } catch {
+            phase = .ready
+            errorMessage = "Confirmation failed: \(error.localizedDescription)"
         }
     }
 
