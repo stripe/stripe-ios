@@ -369,6 +369,7 @@ final class CheckoutUnitTests: XCTestCase {
     // MARK: - commitSession Tests
 
     func testUpdateSessionNotifiesDelegate() async throws {
+        // Given a Checkout with a delegate and session recorder
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
@@ -379,10 +380,13 @@ final class CheckoutUnitTests: XCTestCase {
         updatedJSON["payment_status"] = "paid"
         let confirmResponse = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: updatedJSON)!
 
+        // When the confirmed session is committed
         try await checkout.commitSession(confirmResponse)
 
+        // Then Checkout updates the session and notifies observers
         XCTAssertEqual(checkout.session.status?.type, .complete)
         XCTAssertEqual(checkout.session.status?.paymentStatus, .paid)
+        // There are two emissions: one for the committed session, one for PaymentElement re-syncing the payment option.
         XCTAssertEqual(delegate.updateSessionCallCount, 2)
         XCTAssertEqual(recorder.sessions.count, 2)
     }
@@ -460,6 +464,7 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testCommitSessionNotifiesRegularDelegate() async throws {
+        // Given a Checkout with a regular delegate
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         var callOrder: [String] = []
 
@@ -473,9 +478,12 @@ final class CheckoutUnitTests: XCTestCase {
         updatedJSON["payment_status"] = "paid"
         let updatedSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: updatedJSON)!
 
+        // When the updated session is committed
         try await checkout.commitSession(updatedSession)
 
+        // Then the delegate is notified for both session emissions
         XCTAssertEqual(callOrder, ["regular", "regular"])
+        // There are two emissions: one for the committed session, one for PaymentElement re-syncing the payment option.
         XCTAssertEqual(delegate.updateSessionCallCount, 2)
         XCTAssertEqual(recorder.sessions.count, 2)
     }
