@@ -791,16 +791,17 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
-                try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
-                self.isPaymentInFlight = false
-                self.isUserInteractionEnabled = true
-                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+                try await checkout.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
             } catch {
-                self.isPaymentInFlight = false
-                self.isUserInteractionEnabled = true
                 self.error = error
-                self.updateError()
-                self.updatePrimaryButton()
+            }
+            self.isPaymentInFlight = false
+            self.isUserInteractionEnabled = true
+            self.updateError()
+            self.updatePrimaryButton()
+
+            if self.error == nil {
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
     }

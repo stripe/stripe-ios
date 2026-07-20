@@ -241,6 +241,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                currency: "EUR",
                                paymentMethodType: .wero,
                                merchantCountry: .DE,
+                               defaultCountry: "DE",
                                expectedHierarchy: ExpectedFormHierarchy.Wero.paymentIntent) { _ in }
     }
 

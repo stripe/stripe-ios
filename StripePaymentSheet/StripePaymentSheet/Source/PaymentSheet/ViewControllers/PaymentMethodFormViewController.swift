@@ -179,7 +179,7 @@ class PaymentMethodFormViewController: UIViewController {
             let delegate = addressSection.delegate
             addressSection.delegate = nil  // Stop didUpdate delegate calls to avoid laying out while we're being presented
             if let newShippingAddress = configuration.shippingDetails()?.address {
-                addressSection.collectionMode = .allWithAutocomplete
+                addressSection.collectionMode = .autocomplete(presentation: .expanded)
                 addressSection.updateBillingSameAsShippingDefaultAddress(.init(newShippingAddress))
             } else {
                 addressSection.updateBillingSameAsShippingDefaultAddress(.init())
@@ -717,7 +717,7 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
         // Dismiss the autocomplete view controller
         presentedViewController?.dismiss(animated: true) {
             // Switch to manual entry mode and set the line1 text
-            addressSectionElement.collectionMode = .allWithAutocomplete
+            addressSectionElement.collectionMode = .autocomplete(presentation: .expanded)
             addressSectionElement.line1?.setText(line1)
             addressSectionElement.line1?.beginEditing()
         }
@@ -729,7 +729,7 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
         // Dismiss the autocomplete view controller
         presentedViewController?.dismiss(animated: true) {
             // Switch to manual entry mode after address selection
-            addressSectionElement.collectionMode = .allWithAutocomplete
+            addressSectionElement.collectionMode = .autocomplete(presentation: .expanded)
 
             guard let address = address else {
                 return

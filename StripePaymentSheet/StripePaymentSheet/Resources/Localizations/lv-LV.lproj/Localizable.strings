@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "SSN pēdējie 4 cipari";
 
-"Log in or sign up" = "Pieteikties vai reģistrēties";
-
-"Log out of %@" = "Vai iziet no %@?";
-
 "Manage SEPA debit" = "Pārvaldīt SEPA debetu";
 
 "Manage US bank account" = "Pārvaldīt ASV bankas kontu";
@@ -295,6 +291,10 @@
 "Show details" = "Rādīt informāciju";
 
 "Show menu" = "Rādīt izvēlni";
+
+"Sign in or sign up" = "Pierakstīties vai reģistrēties";
+
+"Sign out of %@" = "Izrakstīties no %@";
 
 "Simple, secure one-click payments" = "Vienkārši, droši 1 klikšķa maksājumi";
 

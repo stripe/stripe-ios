@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "4 angka terakhir SSN";
 
-"Log in or sign up" = "Masuk atau daftar";
-
-"Log out of %@" = "Keluar dari %@";
-
 "Manage SEPA debit" = "Kelola debit SEPA";
 
 "Manage US bank account" = "Kelola rekening bank AS";
@@ -295,6 +291,10 @@
 "Show details" = "Tampilkan detail";
 
 "Show menu" = "Tampilkan menu";
+
+"Sign in or sign up" = "Masuk atau mendaftar";
+
+"Sign out of %@" = "Keluar dari %@";
 
 "Simple, secure one-click payments" = "Pembayaran sekali klik yang mudah dan aman";
 

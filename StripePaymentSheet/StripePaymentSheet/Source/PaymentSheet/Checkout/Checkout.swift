@@ -39,9 +39,11 @@ public final class Checkout: ObservableObject {
     }
 
     /// The Checkout Session, updated from Stripe after every mutation.
-    @Published public internal(set) var session: Session {
+    @Published public private(set) var session: Session {
         didSet {
             nonisolatedSession = session
+            // Just some notes: Setting session causes publisher+delegate to fire even when it didn't change.
+            // AFAICT that's okay, deduping sees like a minor optimization to slightly reduce the amount of UI updates.
             delegate?.checkoutDidUpdateSession(self, session: session)
         }
     }
@@ -55,7 +57,7 @@ public final class Checkout: ObservableObject {
     // MARK: - Internal Properties
 
     /// The PaymentElement for this Checkout instance.
-    private var paymentElement: PaymentElement!
+    var paymentElement: PaymentElement!
 
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
@@ -66,8 +68,6 @@ public final class Checkout: ObservableObject {
     /// UI is presented, a window during which no mutations occur. Writes are always on MainActor
     /// because they go through `Checkout`'s MainActor-isolated mutation methods.
     nonisolated(unsafe) private(set) var nonisolatedSession: Session!
-
-    weak var integrationDelegate: CheckoutIntegrationDelegate?
 
     let flagImageManager = AdaptivePricingFlagImageManager()
     let clientSecret: String
@@ -133,12 +133,15 @@ public final class Checkout: ObservableObject {
     }
 
 #if DEBUG
-    // TODO: Refactor this away, we should extract loading into its own object and inject a dummy in tests.
+    // TODO: Remove these test-only inits. They leave paymentElement nil, which breaks
+    // any code path that touches it. Instead, construct a real PaymentElement using the
+    // internal test inits for FlowController and EmbeddedPaymentElement (both accept a
+    // loadResult directly without network calls) and make paymentElement private(set).
     /// Internal initializer for unit tests that injects a pre-loaded API response.
     init(
         clientSecret: String,
         configuration: Configuration? = nil,
-        apiResponse: STPCheckoutSessionAPIResponse,
+        apiResponse: PaymentPagesAPIResponse,
         apiClient: STPAPIClient = .shared
     ) async {
         self.clientSecret = clientSecret
@@ -153,7 +156,7 @@ public final class Checkout: ObservableObject {
     }
 
     /// Synchronous test-only initializer that wraps a pre-loaded API response without async work.
-    init(apiResponse: STPCheckoutSessionAPIResponse) {
+    init(apiResponse: PaymentPagesAPIResponse) {
         self.clientSecret = ""
         self.configuration = Configuration(clientSecret: "")
         self.apiClient = .shared
@@ -161,40 +164,6 @@ public final class Checkout: ObservableObject {
         self.nonisolatedSession = session
     }
 #endif
-
-    // MARK: - Pending Operations
-
-    /// Waits for all in-flight session updates (mutations, etc.) to complete.
-    ///
-    /// - Returns immediately if no operations are pending.
-    /// - Waits for the operations pending when this method is called; operations
-    ///   enqueued afterward are not included in this wait.
-    /// - If any pending operation throws, the first such error is rethrown.
-    /// - If the wait exceeds `timeout`, throws ``CheckoutError.timedOut``.
-    ///
-    /// - Parameters:
-    ///   - timeout: Maximum time to wait, in seconds.
-    func awaitPendingOperations(
-        timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout
-    ) async throws {
-        let snapshot = pendingOperations
-        guard !snapshot.isEmpty else { return }
-
-        let result = await withTimeout(timeout) {
-            var firstError: Error?
-            for operation in snapshot {
-                do {
-                    try await operation.value
-                } catch {
-                    firstError = firstError ?? error
-                }
-            }
-            if let firstError { throw firstError }
-        }
-        if case .failure(let error) = result {
-            throw error is TimeoutError ? CheckoutError.timedOut : error
-        }
-    }
 
     // MARK: - Promotion Codes
 
@@ -231,6 +200,13 @@ public final class Checkout: ObservableObject {
         try await performUpdate(.setShippingRate(optionId))
     }
 
+    // MARK: - Payment Option
+
+    /// Clears the currently selected payment option.
+    public func clearPaymentOption() {
+        paymentElement?.clearPaymentOption()
+    }
+
     // MARK: - Addresses
 
     /// Sets the billing address for this checkout.
@@ -257,11 +233,11 @@ public final class Checkout: ObservableObject {
         guard session.billingAddress != contactAddress else { return }
         if session.shouldSendTaxRegion(for: "billing") {
             try await performUpdate(.setTaxRegion(address), applying: { session in
-                session.makeCopyOverriding(billingAddress: contactAddress)
+                session.makeCopyOverriding(billingAddress: .newValue(contactAddress))
             }, canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
         } else {
             try await performUpdate(applying: { session in
-                session.makeCopyOverriding(billingAddress: contactAddress)
+                session.makeCopyOverriding(billingAddress: .newValue(contactAddress))
             }, canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
         }
     }
@@ -293,11 +269,11 @@ public final class Checkout: ObservableObject {
         guard session.shippingAddress != contactAddress else { return }
         if session.shouldSendTaxRegion(for: "shipping") {
             try await performUpdate(.setTaxRegion(address), applying: { session in
-                session.makeCopyOverriding(shippingAddress: contactAddress)
+                session.makeCopyOverriding(shippingAddress: .newValue(contactAddress))
             })
         } else {
             try await performUpdate(applying: { session in
-                session.makeCopyOverriding(shippingAddress: contactAddress)
+                session.makeCopyOverriding(shippingAddress: .newValue(contactAddress))
             })
         }
     }
@@ -329,7 +305,7 @@ public final class Checkout: ObservableObject {
                 throw CheckoutError.apiError(message: error.localizedDescription)
             }
             let sessionId = Self.extractSessionId(from: self.clientSecret)
-            let refreshedCheckoutSession: STPCheckoutSessionAPIResponse
+            let refreshedCheckoutSession: PaymentPagesAPIResponse
             do {
                 refreshedCheckoutSession = try await self.apiClient.initCheckoutSession(
                     checkoutSessionId: sessionId,
@@ -342,43 +318,47 @@ public final class Checkout: ObservableObject {
         }
     }
 
-    // MARK: - State updates
-
-    /// True if the session is still actionable (open or no status yet).
-    var sessionIsOpen: Bool {
-        session.status?.type == .open || session.status?.type == nil
-    }
-
-    /// Replaces the current session from an API response, preserves client-side overrides, and notifies delegates.
-    ///
-    /// Client-side address overrides are copied from the current session to the new one
-    /// automatically. To update an address, pass a `localMutation` closure.
-    func commitSession(
-        _ apiResponse: STPCheckoutSessionAPIResponse? = nil,
-        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
-    ) async throws {
-        // Generate a new session from the API response, or fall back to the current session.
-        let newSession = apiResponse?.makePublicSession() ?? session
-
-        // Preserve client-side address overrides on the new session.
-        let sessionWithLocalAddress = newSession.makeCopyOverriding(
-            billingAddress: session.billingAddress,
-            shippingAddress: session.shippingAddress
-        )
-
-        // Apply any additional local mutations to the session.
-        let finalSession = localMutation?(sessionWithLocalAddress) ?? sessionWithLocalAddress
-
-        // Update the session and notify delegates.
-        session = finalSession
-
-        try await integrationDelegate?.checkoutDidUpdate(self)
-    }
-
     // MARK: - Element methods
 
     /// Returns the PaymentElement for this Checkout instance.
     public func getPaymentElement() -> PaymentElement {
         return paymentElement
+    }
+}
+
+// MARK: - Internal session setters
+// These exist here because `session` is private(set) to enforce that session can only be mutated through these sanctioned paths.
+// Setting the session should generally only be done via `commitSession` to avoid putting us into an inconsistent state e.g. without using commitSession, MPE is not aware of the updated session.
+extension Checkout {
+    /// Replaces the current session from an API response, applies client-side mutations, and updates PaymentElement.
+    ///
+    /// Client-side address overrides are copied from the current session to the new one
+    /// automatically. To update an address, pass a `localMutation` closure.
+    func commitSession(
+        _ apiResponse: PaymentPagesAPIResponse? = nil,
+        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
+    ) async throws {
+        // === Update the session ===
+        // Generate a new session from the API response, or fall back to the current session.
+        let newSession = apiResponse?.makePublicSession() ?? session
+
+        // Preserve client-side address overrides on the new session.
+        let sessionWithLocalAddress = newSession.makeCopyOverriding(
+            billingAddress: .newValue(session.billingAddress),
+            shippingAddress: .newValue(session.shippingAddress),
+            paymentOption: .newValue(session.paymentOption)
+        )
+
+        // Apply any additional local mutations to the session.
+        let finalSession = localMutation?(sessionWithLocalAddress) ?? sessionWithLocalAddress
+        session = finalSession
+
+        // === Update Payment Element and all other asynchronously updated elements ==
+        try await paymentElement?.update(checkout: self)
+    }
+
+    /// - Warning: See `commitSession` for what this method *doesn't* do. That includes updating PaymentElement.
+    func dangerouslySetSessionDirectly(_ session: Session) {
+        self.session = session
     }
 }

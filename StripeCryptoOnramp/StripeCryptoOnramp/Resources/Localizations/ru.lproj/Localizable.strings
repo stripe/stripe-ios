@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Срок действия запроса на подтверждение кошелька истек. Попробуйте еще раз.";
 
+"This wallet verification request is invalid. Please try again." = "Этот запрос на подтверждение кошелька недействителен. Попробуйте еще раз.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Не удалось подтвердить право собственности на этот кошелек. Попробуйте еще раз.";

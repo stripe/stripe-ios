@@ -19,10 +19,10 @@ struct CheckoutPlaygroundConfigurationSection: View {
             CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
             VStack(spacing: 1) {
                 CheckoutPlayground.PickerRow(
-                    title: "Integration",
+                    title: "PaymentElement",
                     icon: "square.stack.3d.up.fill",
                     selection: $integrationType,
-                    tooltip: "Choose the payment integration.\n\n• FlowController: Uses PaymentSheet.FlowController with a payment method selector and confirm button.\n• Embedded: Uses EmbeddedPaymentElement inline in the checkout flow.",
+                    tooltip: "Choose the PaymentElement presentation.\n\n• sheet: Presents PaymentElement as a payment method selector.\n• view: Displays PaymentElement in the checkout flow.",
                     displayText: { $0.displayName }
                 )
                 CheckoutPlayground.PickerRow(

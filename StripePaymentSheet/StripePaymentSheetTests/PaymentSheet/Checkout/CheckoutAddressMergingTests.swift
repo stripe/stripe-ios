@@ -8,11 +8,10 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_billingFillsEmptyFields() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        apiResponse.billingAddress = Checkout.ContactAddress(
+        let session = apiResponse.makePublicSession().makeCopyOverriding(billingAddress: .newValue(Checkout.ContactAddress(
             name: "Jane Doe",
             address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
-        )
-        let session = apiResponse.makePublicSession()
+        )))
 
         var config = PaymentSheet.Configuration()
         session.applyAddressOverrides(to: &config)
@@ -27,11 +26,10 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_billingConfigTakesPrecedence() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        apiResponse.billingAddress = Checkout.ContactAddress(
+        let session = apiResponse.makePublicSession().makeCopyOverriding(billingAddress: .newValue(Checkout.ContactAddress(
             name: "Override Name",
             address: .init(country: "GB", line1: "Override Line1")
-        )
-        let session = apiResponse.makePublicSession()
+        )))
 
         var config = PaymentSheet.Configuration()
         config.defaultBillingDetails.name = "Config Name"
@@ -46,11 +44,10 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_shippingApplied() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        apiResponse.shippingAddress = Checkout.ContactAddress(
+        let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(Checkout.ContactAddress(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
-        )
-        let session = apiResponse.makePublicSession()
+        )))
 
         var config = PaymentSheet.Configuration()
         XCTAssertNil(config.shippingDetails())
@@ -68,11 +65,10 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_shippingNotOverriddenWhenConfigHasShipping() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        apiResponse.shippingAddress = Checkout.ContactAddress(
+        let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(Checkout.ContactAddress(
             name: "Override",
             address: .init(country: "GB")
-        )
-        let session = apiResponse.makePublicSession()
+        )))
 
         var config = PaymentSheet.Configuration()
         let existingDetails = AddressViewController.AddressDetails(
@@ -122,15 +118,18 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_embeddedBillingAndShipping() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        apiResponse.billingAddress = Checkout.ContactAddress(
+        let billingAddress = Checkout.ContactAddress(
             name: "Jane Doe",
             address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
         )
-        apiResponse.shippingAddress = Checkout.ContactAddress(
+        let shippingAddress = Checkout.ContactAddress(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )
-        let session = apiResponse.makePublicSession()
+        let session = apiResponse.makePublicSession().makeCopyOverriding(
+            billingAddress: .newValue(billingAddress),
+            shippingAddress: .newValue(shippingAddress)
+        )
 
         var config = EmbeddedPaymentElement.Configuration()
         session.applyAddressOverrides(to: &config)

@@ -133,23 +133,6 @@ extension PaymentSheet {
             }
             return false
         }
-
-        var billingDetails: STPPaymentMethodBillingDetails? {
-            switch self {
-            case .new(let confirmParams):
-                return confirmParams.paymentMethodParams.billingDetails
-            case .saved(_, let confirmParams):
-                return confirmParams?.paymentMethodParams.billingDetails
-            case .external(_, let billingDetails):
-                return billingDetails
-            case .applePay:
-                // TODO(porter) Get Apple Pay working with automatic tax
-                return nil
-            case .link:
-                // Link does not support automatic tax with billing address as source
-                return nil
-            }
-        }
     }
 
     /// A class that presents the individual steps of a payment flow
@@ -438,7 +421,6 @@ extension PaymentSheet {
                 ) { result in
                     if case .success(let flowController) = result {
                         flowController.checkout = checkout
-                        checkout.integrationDelegate = flowController
                     }
                     completion(result)
                 }
@@ -980,15 +962,11 @@ extension PaymentSheet {
     }
 }
 
-// MARK: - CheckoutIntegrationDelegate
+// MARK: - Checkout
 
-extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
-    var isSheetPresented: Bool {
-        isPresented
-    }
-
-    func checkoutDidUpdate(_ checkout: Checkout) async throws {
-        try await update(checkout: checkout)
+extension PaymentSheet.FlowController {
+    var isPresentingPaymentUI: Bool {
+        return isPresented
     }
 }
 

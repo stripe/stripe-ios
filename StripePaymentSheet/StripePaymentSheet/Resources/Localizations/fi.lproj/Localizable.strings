@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "SSN:n 4 viimeistä numeroa";
 
-"Log in or sign up" = "Kirjaudu sisään tai rekisteröidy";
-
-"Log out of %@" = "Kirjaudu ulos kohteesta %@";
-
 "Manage SEPA debit" = "Hallinnoi SEPA-pankkiveloitusta";
 
 "Manage US bank account" = "Hallinnoi yhdysvaltalaista pankkitiliä";
@@ -295,6 +291,10 @@
 "Show details" = "Näytä tiedot";
 
 "Show menu" = "Näytä valikko";
+
+"Sign in or sign up" = "Kirjaudu sisään tai rekisteröidy";
+
+"Sign out of %@" = "Kirjaudu ulos kohteesta %@";
 
 "Simple, secure one-click payments" = "Yksinkertaiset turvalliset kerran napsautettavat maksut";
 

@@ -267,7 +267,7 @@ final class LinkPaymentMethodFormElement: Element {
             countries: isBillingDetailsUpdateFlow ? configuration.billingDetailsCollectionConfiguration.allowedCountriesArray : nil,
             defaults: defaultBillingAddress,
             collectionMode: configuration.billingDetailsCollectionConfiguration.address == .full
-                ? .all()
+                ? .all
                 : .countryAndPostal(),
             additionalFields: additionalFields,
             theme: theme

@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "SSN の末尾 4 桁";
 
-"Log in or sign up" = "ログイン / 登録";
-
-"Log out of %@" = "%@ からログアウト";
-
 "Manage SEPA debit" = "SEPA デビットの管理";
 
 "Manage US bank account" = "アメリカの銀行口座の管理";
@@ -295,6 +291,10 @@
 "Show details" = "詳細を表示";
 
 "Show menu" = "メニューを表示";
+
+"Sign in or sign up" = "サインインまたは登録";
+
+"Sign out of %@" = "%@ からサインアウト";
 
 "Simple, secure one-click payments" = "シンプルで安全なワンクリック決済";
 

@@ -215,7 +215,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     }
 
     @MainActor
-    private func makeSession(selectedCurrency: String) -> STPCheckoutSessionAPIResponse {
+    private func makeSession(selectedCurrency: String) -> PaymentPagesAPIResponse {
         CheckoutTestHelpers.makeAdaptivePricingSession(currency: selectedCurrency)
     }
 }

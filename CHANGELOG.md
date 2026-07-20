@@ -1,7 +1,10 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+
+### PaymentSheet
+* [Changed] Refactored `LinkController` SetupIntent confirmation into a separate `confirmSetupIntent` step (private preview).
 
 ## 26.3.0 2026-07-13
 ### CryptoOnramp (Alpha)

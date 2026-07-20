@@ -27,8 +27,11 @@ ci_scripts/run_tests.rb --scheme StripePaymentSheet
 # Run all framework tests
 ci_scripts/run_tests.rb --all
 
-# Record snapshot reference images (tests will fail during recording)
-ci_scripts/run_tests.rb --record-snapshots --test StripePaymentSheetTests/SomeSnapshotTest
+# Record snapshot reference images and update if meaningfully different
+ci_scripts/record_snapshots.rb
+
+# Preview snapshot changes without updating reference images
+ci_scripts/record_snapshots.rb --dry-run
 
 # Record network responses (tests will fail during recording)
 ci_scripts/run_tests.rb --record-network --test StripePaymentsTests/STPCardFunctionalTest
@@ -152,12 +155,19 @@ The Stripe iOS SDK is organized as a multi-module framework with clear dependenc
 
 ### Testing Strategy
 - Comprehensive unit tests for each module in corresponding `*Tests/` directories
-- Snapshot tests for UI components using FBSnapshotTestCase
+- Snapshot tests for UI components using FBSnapshotTestCase; always record to a temp dir, CI auto-commits meaningful changes via `ci_scripts/record_snapshots.rb`
 - Integration tests with real backend APIs (marked as functional tests)
 - Example apps for manual testing in `Example/` directory
+- When adding/rewriting tests, use `// Given <setup>` / `// When <action>` / `// Then <assertion>` comments where helpful. You may use `// ...and <other setup/action/assertion>` when a section of code is doing multiple things to avoid having a single comment explain too much code.
 
 ### Dependencies Installation
 Run `bundle install && bundle exec fastlane stripeios_tests` initially to install test dependencies.
 
 ### Special Testing Notes
 - Legacy iOS versions: Separate fastlane lanes for iOS 13-16 compatibility testing
+
+### Acronyms and Terms
+- EPE = EmbeddedPaymentElement
+- PS.FC = FlowController (PaymentSheet.FlowController)
+- FC = FinancialConnections, or occasionally FlowController (see above)
+- MPE = Mobile Payment Element, an umbrella term for EmbeddedPaymentElement, PaymentSheet, and FlowController

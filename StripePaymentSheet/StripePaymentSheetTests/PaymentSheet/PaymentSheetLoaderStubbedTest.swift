@@ -501,7 +501,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
     func testCheckoutSessionWithCustomerConfigurationThrowsError() {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
+        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
 
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = stubbedAPIClient()
@@ -531,7 +531,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
     func testCheckoutSessionWithBillingAddressNeverThrowsError() {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
+        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
 
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = stubbedAPIClient()

@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Yêu cầu xác minh ví này đã hết hạn. Vui lòng thử lại.";
 
+"This wallet verification request is invalid. Please try again." = "Yêu cầu xác minh ví này không hợp lệ. Vui lòng thử lại.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Chúng tôi không thể xác minh quyền sở hữu ví này. Vui lòng thử lại.";

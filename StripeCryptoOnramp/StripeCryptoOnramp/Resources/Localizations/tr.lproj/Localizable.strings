@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Bu cüzdan doğrulama talebinin süresi doldu. Lütfen tekrar deneyin.";
 
+"This wallet verification request is invalid. Please try again." = "Bu cüzdan doğrulama talebi geçerli değil. Lütfen tekrar deneyin.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Bu cüzdanın sahipliğini doğrulayamadık. Lütfen tekrar deneyin.";

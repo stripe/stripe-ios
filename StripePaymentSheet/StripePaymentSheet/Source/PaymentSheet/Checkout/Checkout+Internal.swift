@@ -20,7 +20,45 @@ extension Checkout {
         try await performUpdate(.setCurrency(currency))
     }
 
+    // MARK: - Payment Option
+
+    func setPaymentOption(_ paymentOption: Session.PaymentOptionDisplayData?) {
+        dangerouslySetSessionDirectly(session.makeCopyOverriding(paymentOption: .newValue(paymentOption)))
+    }
+
     // MARK: - Session Updates
+
+    /// Waits for all in-flight session updates (mutations, etc.) to complete.
+    ///
+    /// - Returns immediately if no operations are pending.
+    /// - Waits for the operations pending when this method is called; operations
+    ///   enqueued afterward are not included in this wait.
+    /// - If any pending operation throws, the first such error is rethrown.
+    /// - If the wait exceeds `timeout`, throws ``CheckoutError.timedOut``.
+    ///
+    /// - Parameters:
+    ///   - timeout: Maximum time to wait, in seconds.
+    func awaitPendingOperations(
+        timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout
+    ) async throws {
+        let snapshot = pendingOperations
+        guard !snapshot.isEmpty else { return }
+
+        let result = await withTimeout(timeout) {
+            var firstError: Error?
+            for operation in snapshot {
+                do {
+                    try await operation.value
+                } catch {
+                    firstError = firstError ?? error
+                }
+            }
+            if let firstError { throw firstError }
+        }
+        if case .failure(let error) = result {
+            throw error is TimeoutError ? CheckoutError.timedOut : error
+        }
+    }
 
     /// Runs `body` as a tracked session update, serialized behind any in-flight ops.
     ///
@@ -32,7 +70,7 @@ extension Checkout {
     /// is `true`; once the queue drains it returns to `false.`
     /// - Throws: Any error thrown by `body`.
     /// - Returns: The value returned by `body`.
-    internal func enqueueSessionUpdate<T>(
+    func enqueueSessionUpdate<T>(
         _ body: @MainActor @escaping () async throws -> T
     ) async throws -> T {
         let predecessor = pendingOperations.last
@@ -62,7 +100,7 @@ extension Checkout {
     ///
     /// Use this when the enqueued work cannot fail. The operation is still
     /// serialized behind any in-flight ops in the same FIFO order.
-    internal func enqueueSessionUpdate<T>(
+    func enqueueSessionUpdate<T>(
         _ body: @MainActor @escaping () async -> T
     ) async -> T {
         // Cast body to `throws` so that we call the underlying throwing version
@@ -92,7 +130,7 @@ extension Checkout {
                 try self.requireSheetNotPresented()
             }
             do {
-                let updatedSessionAPIResponse: STPCheckoutSessionAPIResponse?
+                let updatedSessionAPIResponse: PaymentPagesAPIResponse?
                 if let update {
                     let sessionId = Checkout.extractSessionId(from: self.clientSecret)
                     updatedSessionAPIResponse = try await self.apiClient.updateCheckoutSession(
@@ -113,10 +151,15 @@ extension Checkout {
         }
     }
 
+    /// True if the session is still actionable (open or no status yet).
+    var sessionIsOpen: Bool {
+        session.status?.type == .open || session.status?.type == nil
+    }
+
     // MARK: - Validation
 
     func requireSheetNotPresented() throws {
-        guard integrationDelegate?.isSheetPresented != true else {
+        guard paymentElement?.isPresentingPaymentUI != true else {
             throw CheckoutError.sheetCurrentlyPresented
         }
     }
