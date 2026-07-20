@@ -109,6 +109,30 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         XCTAssertNil(contactInfoSection, "Should not have separate contact information section when billing address includes email/phone")
     }
 
+    func testCardFormWithFullBilling_UsesSupportedAutocompleteCountries() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card),
+            addressSpecProvider: dummyAddressSpecProvider
+        )
+
+        let cardForm = factory.makeCard()
+        let billingAddressSection = (cardForm as? ContainerElement)?.elements.compactMap { element in
+            element as? PaymentMethodElementWrapper<AddressSectionElement>
+        }.first?.element
+
+        XCTAssertEqual(AddressViewController.Configuration().autocompleteCountries, AddressAutocomplete.supportedCountries)
+        XCTAssertEqual(
+            billingAddressSection?.fieldsToCollect,
+            .all(autocomplete: .init(autocompleteCountries: AddressAutocomplete.supportedCountries))
+        )
+    }
+
     func testCardFormWithEmailPhoneAlwaysAndNeverBilling_EmailPhoneInContactInfo() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.email = .always
