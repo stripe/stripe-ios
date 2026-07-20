@@ -224,7 +224,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                 "can_detach_payment_method": canDetachPaymentMethod,
             ],
         ])
-        return .checkout(Checkout(apiResponse: session))
+        return .checkout(session.makePublicSession())
     }
 
 }

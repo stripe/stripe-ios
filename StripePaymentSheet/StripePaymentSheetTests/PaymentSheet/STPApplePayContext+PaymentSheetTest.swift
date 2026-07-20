@@ -493,6 +493,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     private func makeApplePayContext(
         for intent: Intent,
         configuration: PaymentSheet.Configuration? = nil,
+        checkout: CheckoutSessionBillingAddressUpdater? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> STPApplePayContext {
@@ -506,12 +507,20 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             elementsSession: elementsSession,
             configuration: configuration ?? self.configuration,
             clientAttributionMetadata: clientAttributionMetadata,
+            checkout: checkout ?? Self.makeCheckoutUpdaterIfNecessary(for: intent),
             completion: { _, _ in }
         ) else {
             XCTFail("Failed to create Apple Pay context", file: file, line: line)
             fatalError("Unreachable")
         }
         return context
+    }
+
+    private static func makeCheckoutUpdaterIfNecessary(for intent: Intent) -> CheckoutSessionBillingAddressUpdater? {
+        guard case .checkout(let session) = intent else {
+            return nil
+        }
+        return TestCheckoutSessionBillingAddressUpdater(session: session)
     }
 
     private func makeMerchantConfiguration() -> PaymentSheet.Configuration {
@@ -712,12 +721,12 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_CheckoutSession_NoBillingContact_WhenNoBillingAddress() {
         let intent = Intent._testCheckoutSession(mode: .payment, amount: 2345, currency: "USD")
-        guard case .checkout(let checkout) = intent else {
+        guard case .checkout(let session) = intent else {
             XCTFail("Expected checkout intent")
             return
         }
         // billingAddress is nil by default
-        XCTAssertNil(checkout.session.billingAddress)
+        XCTAssertNil(session.billingAddress)
 
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
 
@@ -832,6 +841,33 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.paymentSummaryItems.count, 1)
         XCTAssertEqual(sut.paymentSummaryItems[0].label, "Custom")
         XCTAssertEqual(sut.paymentSummaryItems[0].amount, NSDecimalNumber(string: "9.99"))
+    }
+}
+
+private final class TestCheckoutSessionBillingAddressUpdater: CheckoutSessionBillingAddressUpdater {
+    private var session: Checkout.Session
+
+    init(session: Checkout.Session) {
+        self.session = session
+    }
+
+    func commitSession(
+        _ apiResponse: PaymentPagesAPIResponse?,
+        applying localMutation: (@MainActor @Sendable (Checkout.Session) -> Checkout.Session)?
+    ) async throws {
+        session = localMutation?(apiResponse?.makePublicSession() ?? session) ?? apiResponse?.makePublicSession() ?? session
+    }
+
+    func updateBillingAddressForPaymentSheet(
+        name: String?,
+        phone: String?,
+        address: Checkout.Address,
+        canUpdateWhileSheetPresented: Bool
+    ) async throws -> Checkout.Session {
+        session = session.makeCopyOverriding(
+            billingAddress: .newValue(.init(name: name, phone: phone, address: address))
+        )
+        return session
     }
 }
 

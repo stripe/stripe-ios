@@ -70,6 +70,32 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
     }
 
+    func testCheckoutAndPaymentElementDoNotRetainEachOther() async throws {
+        weak var weakCheckout: Checkout?
+        weak var weakPaymentElement: PaymentElement?
+        weak var weakFlowController: PaymentSheet.FlowController?
+        weak var weakEmbeddedPaymentElement: EmbeddedPaymentElement?
+
+        do {
+            let checkout = await Checkout(
+                clientSecret: "cs_test_123_secret_abc",
+                apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card"])
+            )
+            let paymentElement = try await PaymentElement(checkout: checkout)
+            checkout.paymentElement = paymentElement
+
+            weakCheckout = checkout
+            weakPaymentElement = paymentElement
+            weakFlowController = paymentElement.paymentSheetFlowController
+            weakEmbeddedPaymentElement = paymentElement.embeddedPaymentElement
+        }
+
+        XCTAssertNil(weakCheckout)
+        XCTAssertNil(weakPaymentElement)
+        XCTAssertNil(weakFlowController)
+        XCTAssertNil(weakEmbeddedPaymentElement)
+    }
+
     private static func makeOpenSession(paymentMethodTypes: [String]) -> PaymentPagesAPIResponse {
         return PaymentPagesAPIResponse.decodedObject(
             fromAPIResponse: openSessionJSON(paymentMethodTypes: paymentMethodTypes)
