@@ -101,6 +101,53 @@ class AccountOnboardingControllerTests: XCTestCase {
         XCTAssertNil(weakRef, "The onboarding controller should not be retained after dismissal")
     }
 
+    @MainActor
+    func testExitNotifiesDelegateExactlyOnceAcrossExitAndDismiss() async throws {
+        // Given a presented onboarding controller with a delegate
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        let rootVC = UIViewController()
+        window.rootViewController = rootVC
+        window.makeKeyAndVisible()
+
+        let delegate = AccountOnboardingControllerDelegatePassThrough()
+        let controller = componentManager.createAccountOnboardingController()
+        controller.delegate = delegate
+        controller.present(from: rootVC, animated: false)
+
+        let didExit = expectation(description: "accountOnboardingDidExit called exactly once")
+        didExit.assertForOverFulfill = true
+        delegate.accountOnboardingDidExit = { _ in
+            didExit.fulfill()
+        }
+
+        // When the component emits exit AND the dismissal lifecycle also fires
+        try await controller.webVC.webView.evaluateSetOnExit()
+        controller.webVC.onDismiss?()
+
+        // Then the delegate is notified exactly once
+        await fulfillment(of: [didExit], timeout: TestHelpers.defaultTimeout)
+    }
+
+    @MainActor
+    func testComponentExitNotifiesDelegate() async throws {
+        // Given an onboarding controller with a delegate
+        let delegate = AccountOnboardingControllerDelegatePassThrough()
+        let controller = componentManager.createAccountOnboardingController()
+        controller.delegate = delegate
+
+        let didExit = expectation(description: "accountOnboardingDidExit called")
+        delegate.accountOnboardingDidExit = { exitedController in
+            XCTAssert(exitedController === controller)
+            didExit.fulfill()
+        }
+
+        // When the onboarding component emits its exit event (JS onExit)
+        try await controller.webVC.webView.evaluateSetOnExit()
+
+        // Then the delegate is notified
+        await fulfillment(of: [didExit], timeout: TestHelpers.defaultTimeout)
+    }
+
     private class AccountOnboardingControllerDelegatePassThrough: AccountOnboardingControllerDelegate {
 
         var accountOnboardingDidFailLoadWithError: ((_ accountOnboarding: AccountOnboardingController, _ error: Error) -> Void)?
