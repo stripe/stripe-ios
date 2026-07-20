@@ -13,5 +13,6 @@ struct FinancialConnectionsSelectInstitution: Decodable {
 }
 
 struct Text: Decodable {
-    let idConsentContentPane: FinancialConnectionsIDConsentContent
+    let idConsentContentPane: FinancialConnectionsIDConsentContent?
+    let streamlinedConsentPane: FinancialConnectionsStreamlinedConsent?
 }
