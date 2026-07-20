@@ -52,7 +52,7 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
         )
     }
 
-    func testCancelRevertsPersistedSelection() {
+    func testCancelRevertsPersistedSelectionAfterDismissal() {
         // Given card A is persisted when PaymentSheet is presented
         let customerID = "cus_ps_cancel"
         defer { CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID) }
@@ -64,15 +64,28 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
             paymentIntentClientSecret: "pi_123_secret_456",
             configuration: configuration
         )
-        let viewController = sheet.makePaymentSheetVC(
-            loadResult: makeLoadResult(savedPaymentMethods: [cardA, cardB]),
+        let loadResult = makeLoadResult(savedPaymentMethods: [cardA, cardB])
+        _ = sheet.makePaymentSheetVC(
+            loadResult: loadResult,
             previousPaymentOption: nil
-        ) as! PaymentSheetVerticalViewController
+        )
+        let viewController = DeferredDismissPaymentSheetVerticalViewController(
+            configuration: configuration,
+            loadResult: loadResult,
+            isFlowController: false,
+            analyticsHelper: sheet.analyticsHelper
+        )
         viewController.loadViewIfNeeded()
 
         // When the customer selects card B and then cancels
         viewController.didTapPaymentMethod(.saved(paymentMethod: cardB))
         sheet.paymentSheetViewControllerDidCancel(viewController)
+
+        // Then the in-flight dismissal leaves card B persisted
+        XCTAssertEqual(CustomerPaymentOption.localDefaultPaymentMethod(for: customerID), .stripeId(cardB.stripeId))
+
+        // When dismissal finishes
+        viewController.completeDismissal()
 
         // Then the persisted selection reverts to card A
         XCTAssertEqual(CustomerPaymentOption.localDefaultPaymentMethod(for: customerID), .stripeId(cardA.stripeId))
@@ -125,5 +138,18 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
             CustomerPaymentOption.localDefaultPaymentMethod(for: customerID),
             .stripeId(hiddenCard.stripeId)
         )
+    }
+}
+
+private final class DeferredDismissPaymentSheetVerticalViewController: PaymentSheetVerticalViewController {
+    private var dismissalCompletion: (() -> Void)?
+
+    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        dismissalCompletion = completion
+    }
+
+    func completeDismissal() {
+        dismissalCompletion?()
+        dismissalCompletion = nil
     }
 }
