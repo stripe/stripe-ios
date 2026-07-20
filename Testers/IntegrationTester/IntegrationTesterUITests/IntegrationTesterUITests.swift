@@ -268,15 +268,21 @@ class IntegrationTesterUITests: XCTestCase {
         try! fillCardData(app, number: cardNumber)
 
         let buyButton = app.buttons["Buy"]
-        XCTAssertTrue(buyButton.waitForExistence(timeout: 30.0))
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.forceTapElement()
 
+        // The browser-fallback challenge renders "COMPLETE" inside an in-app web view. Under
+        // iOS 26 the element is frequently present but not yet hittable; wait for hittability
+        // before tapping so the coordinate-tap fallback doesn't fire against a still-laying-out
+        // page. (RUN_MOBILESDK-5435)
         let completeButton = app.buttons["COMPLETE"]
-        XCTAssertTrue(completeButton.waitForExistence(timeout: 30.0))
+        XCTAssertTrue(completeButton.waitForExistence(timeout: 60.0))
+        expectation(for: NSPredicate(format: "isHittable == true"), evaluatedWith: completeButton)
+        waitForExpectations(timeout: 15.0)
         completeButton.forceTapElement()
 
         let statusView = app.staticTexts["Payment status view"]
-        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(statusView.waitForExistence(timeout: 30.0))
         XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
     }
 
@@ -294,9 +300,15 @@ class IntegrationTesterUITests: XCTestCase {
         if integrationMethod == .paypal {
             // PayPal uses ASWebAuthenticationSession, tap continue:
             let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-            let continueButton = springboard.buttons["Continue"]
-            XCTAssertTrue(continueButton.waitForExistence(timeout: 10.0))
-            springboard.buttons["Continue"].tap()
+            // The system consent sheet animates in; the button can exist before it is hittable,
+            // so use the hittable-aware helper and re-query rather than tapping a stale reference.
+            // Then wait for the presenting app to return to the foreground before querying its
+            // web view hierarchy. (RUN_MOBILESDK-5452)
+            XCTAssertTrue(
+                springboard.buttons["Continue"].waitForExistenceAndTap(timeout: 15.0),
+                "Failed to tap the ASWebAuthenticationSession consent 'Continue' button"
+            )
+            XCTAssertTrue(app.wait(for: .runningForeground, timeout: 15.0))
         }
 
         if shouldConfirm {
