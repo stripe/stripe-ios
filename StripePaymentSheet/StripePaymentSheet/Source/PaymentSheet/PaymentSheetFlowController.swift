@@ -914,6 +914,7 @@ extension PaymentSheet {
                     configuration: configuration,
                     loadResult: loadResult,
                     analyticsHelper: analyticsHelper,
+                    walletButtonsViewState: walletButtonsViewState,
                     previousPaymentOption: previousPaymentOption
                 )
             case .vertical:
