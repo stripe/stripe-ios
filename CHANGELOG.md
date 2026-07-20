@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### StripeCore
+* [Added] `STPAPIClient.betas` is now public, allowing merchants to opt in to beta features that require a preview flag on the `Stripe-Version` header.
 
 ### PaymentSheet
 * [Changed] Refactored `LinkController` SetupIntent confirmation into a separate `confirmSetupIntent` step (private preview).
