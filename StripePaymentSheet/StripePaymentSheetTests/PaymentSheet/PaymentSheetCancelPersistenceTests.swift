@@ -2,8 +2,6 @@
 //  PaymentSheetCancelPersistenceTests.swift
 //  StripePaymentSheetTests
 //
-//  Created by Nick Porter on 7/18/26.
-//
 
 @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
@@ -15,8 +13,15 @@ import XCTest
 @MainActor
 final class PaymentSheetCancelPersistenceTests: XCTestCase {
 
-    override func setUp() async throws {
-        await PaymentSheetLoader.loadMiscellaneousSingletons()
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        let expectation = expectation(description: "specs loaded")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
     }
 
     private func makeCard(id: String, last4: String) -> STPPaymentMethod {
@@ -76,6 +81,10 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
             analyticsHelper: sheet.analyticsHelper
         )
         viewController.loadViewIfNeeded()
+        var didComplete = false
+        sheet.completion = { _ in
+            didComplete = true
+        }
 
         // When the customer selects card B and then cancels
         viewController.didTapPaymentMethod(.saved(paymentMethod: cardB))
@@ -83,12 +92,14 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
 
         // Then the in-flight dismissal leaves card B persisted
         XCTAssertEqual(CustomerPaymentOption.localDefaultPaymentMethod(for: customerID), .stripeId(cardB.stripeId))
+        XCTAssertFalse(didComplete)
 
         // When dismissal finishes
         viewController.completeDismissal()
 
         // Then the persisted selection reverts to card A
         XCTAssertEqual(CustomerPaymentOption.localDefaultPaymentMethod(for: customerID), .stripeId(cardA.stripeId))
+        XCTAssertTrue(didComplete)
     }
 
     func testSnapshotDoesNotRestoreDeletedSavedPaymentMethod() {
