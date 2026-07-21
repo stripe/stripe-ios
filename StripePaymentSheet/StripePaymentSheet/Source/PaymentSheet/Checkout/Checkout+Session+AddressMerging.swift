@@ -22,7 +22,7 @@ extension Checkout.Session {
             configuration.shippingDetails = { details }
         }
         configuration.defaultBillingDetails.email = configuration.defaultBillingDetails.email ?? email
-        if requiresBillingAddress && configuration.billingDetailsCollectionConfiguration.address == .automatic {
+        if billingAddressCollection == .required && configuration.billingDetailsCollectionConfiguration.address == .automatic {
             configuration.billingDetailsCollectionConfiguration.address = .full
         }
     }

@@ -69,17 +69,23 @@ public final class PaymentElement {
 
     init(checkout: Checkout) async throws {
         // Note: PaymentElement is just nice user-facing packaging around the existing Embedded and FC classes
+        let configuration = checkout.configuration.paymentElement
+
         // Create FlowController
-        let paymentSheetConfiguration = checkout.configuration.paymentElement.makePaymentSheetConfiguration(
-            apiClient: checkout.apiClient
+        let paymentSheetConfiguration = configuration.makePaymentSheetConfiguration(
+            apiClient: checkout.apiClient,
+            defaults: checkout.configuration.defaults,
+            billingAddressCollection: checkout.session.billingAddressCollection
         )
         self.paymentSheetFlowController = try await PaymentSheet.FlowController.create(
             checkout: checkout,
             configuration: paymentSheetConfiguration
         )
         // Create Embedded
-        let embeddedConfiguration = checkout.configuration.paymentElement.makeEmbeddedConfiguration(
-            apiClient: checkout.apiClient
+        let embeddedConfiguration = configuration.makeEmbeddedConfiguration(
+            apiClient: checkout.apiClient,
+            defaults: checkout.configuration.defaults,
+            billingAddressCollection: checkout.session.billingAddressCollection
         )
         self.embeddedPaymentElement = try await EmbeddedPaymentElement.create(
             checkout: checkout,
@@ -127,6 +133,18 @@ extension PaymentElement {
         }
 
         // TODO: This should not be async or throws; we should not make any network requests or re-fetch things, just update the v1/e/s response.
+        let configuration = checkout.configuration.paymentElement
+        paymentSheetFlowController.configuration = configuration.makePaymentSheetConfiguration(
+            apiClient: checkout.apiClient,
+            defaults: checkout.configuration.defaults,
+            billingAddressCollection: checkout.session.billingAddressCollection
+        )
+        embeddedPaymentElement.configuration = configuration.makeEmbeddedConfiguration(
+            apiClient: checkout.apiClient,
+            defaults: checkout.configuration.defaults,
+            billingAddressCollection: checkout.session.billingAddressCollection
+        )
+
         // Update FlowController
         try await paymentSheetFlowController.update(checkout: checkout)
 

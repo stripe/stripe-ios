@@ -123,9 +123,11 @@ public final class Checkout: ObservableObject {
             self.session = loadedSession
             self.nonisolatedSession = session // temporary hack
 
+            try await applyDefaults()
+
             // Load elements
             self.paymentElement = try await PaymentElement(checkout: self)
-            await flagImageManager.prefetchFlagImages(for: loadedSession) // TODO: This should probably just load currency selector and not be a global singleton
+            await flagImageManager.prefetchFlagImages(for: session) // TODO: This should probably just load currency selector and not be a global singleton
 
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
@@ -290,6 +292,19 @@ public final class Checkout: ObservableObject {
     /// Returns the PaymentElement for this Checkout instance.
     public func getPaymentElement() -> PaymentElement {
         return paymentElement
+    }
+}
+
+// MARK: - Defaults
+
+extension Checkout {
+    func applyDefaults() async throws {
+        let defaults = configuration.defaults
+
+        if let billingDetails = defaults.billingDetails,
+           let address = billingDetails.address {
+            try await updateBillingAddress(name: billingDetails.name, address: address)
+        }
     }
 }
 

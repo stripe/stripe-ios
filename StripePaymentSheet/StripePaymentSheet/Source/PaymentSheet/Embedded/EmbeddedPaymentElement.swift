@@ -112,23 +112,21 @@ public final class EmbeddedPaymentElement {
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
         try await checkout.awaitPendingOperations()
-        var config = configuration
-        checkout.session.applyAddressOverrides(to: &config)
 
-        try validateRowSelectionConfiguration(configuration: config)
+        try validateRowSelectionConfiguration(configuration: configuration)
 
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
-        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: config)
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
 
         let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
             mode: .checkout(checkout),
-            configuration: config,
+            configuration: configuration,
             analyticsHelper: analyticsHelper,
             integrationShape: .embedded
         )
         let embeddedPaymentElement: EmbeddedPaymentElement = .init(
-            configuration: config,
+            configuration: configuration,
             loadResult: loadResult,
             confirmationChallenge: confirmationChallenge,
             analyticsHelper: analyticsHelper
@@ -173,7 +171,6 @@ public final class EmbeddedPaymentElement {
         guard checkout.sessionIsOpen else {
             return .succeeded
         }
-        checkout.session.applyAddressOverrides(to: &configuration)
         return await performUpdate(mode: .checkout(checkout))
     }
 

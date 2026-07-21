@@ -91,10 +91,15 @@ extension Checkout {
         let localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
         let exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
         let adaptivePricingActive: Bool
-        let requiresBillingAddress: Bool
+        let billingAddressCollection: BillingAddressCollection
         let automaticTaxEnabled: Bool
         let automaticTaxAddressSource: String?
         let elementsSession: STPElementsSession
+
+        enum BillingAddressCollection: String {
+            case automatic = "auto"
+            case required
+        }
     }
 }
 
