@@ -156,7 +156,14 @@ import UIKit
             )
             return
         }
-
+        assert(
+            !publishableKey.hasPrefix("sk_"),
+            "You are using a secret key. Use a publishable key instead. For more info, see https://stripe.com/docs/keys"
+        )
+        assert(
+            !publishableKey.hasPrefix("rk_"),
+            "You are using a restricted key. Use a publishable key instead. For more info, see https://stripe.com/docs/keys"
+        )
         #if !DEBUG
             if publishableKey.lowercased().hasPrefix("pk_test") && !didShowTestmodeKeyWarning {
                 print(
