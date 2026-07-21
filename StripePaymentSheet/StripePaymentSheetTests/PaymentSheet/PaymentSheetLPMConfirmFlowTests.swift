@@ -82,14 +82,10 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             session = localMutation?(updatedSession) ?? updatedSession
         }
 
-        func updateBillingAddressForPaymentSheet(
-            name: String?,
-            phone: String?,
+        func updateBillingTaxRegionIfNecessaryForPaymentSheet(
             address: Checkout.Address,
             canUpdateWhileSheetPresented: Bool
         ) async throws -> Checkout.Session {
-            let billingAddress = Checkout.ContactAddress(name: name, phone: phone, address: address)
-            session = session.makeCopyOverriding(billingAddress: .newValue(billingAddress))
             return session
         }
     }
