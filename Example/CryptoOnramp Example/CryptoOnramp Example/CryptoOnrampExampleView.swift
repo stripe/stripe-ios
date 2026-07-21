@@ -115,10 +115,11 @@ struct CryptoOnrampExampleView: View {
                             ) { wallet in
                                 flowCoordinator.advanceAfterWalletSelection(wallet)
                             }
-                        case let .payment(wallet):
+                        case let .payment(wallet, isEUCustomer):
                             PaymentView(
                                 coordinator: coordinator,
-                                wallet: wallet
+                                wallet: wallet,
+                                isEUCustomer: isEUCustomer
                             ) { response, selectedPaymentMethodDescription, settlementSpeed in
                                 flowCoordinator.advanceAfterPayment(
                                     createOnrampSessionResponse: response,

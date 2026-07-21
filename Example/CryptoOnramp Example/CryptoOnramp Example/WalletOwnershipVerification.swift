@@ -37,16 +37,35 @@ struct WalletOwnershipVerificationContext {
 
         self.init(walletAddress: wallet.walletAddress, network: network)
     }
+
+    /// Creates a wallet ownership verification context from transaction details returned by session creation.
+    /// - Parameter transactionDetails: The transaction details from a create-onramp-session response.
+    init?(transactionDetails: CreateOnrampSessionResponse.TransactionDetails) {
+        guard let network = CryptoNetwork(rawValue: transactionDetails.destinationNetwork) else {
+            return nil
+        }
+
+        self.init(walletAddress: transactionDetails.walletAddress, network: network)
+    }
 }
 
 /// Shared wallet ownership verification helpers used by the example app.
 enum WalletOwnershipVerification {
+
+    /// The `lastError` value indicating wallet ownership verification is required.
+    static let requiredLastError = "wallet_ownership_verification_required"
 
     /// An alert used when the app cannot start wallet ownership verification.
     static let unavailableAlert = Alert(
         title: "Wallet verification unavailable",
         message: "Wallet ownership verification couldn't be started. Please try again."
     )
+
+    /// Returns whether a create-onramp-session response requires wallet ownership verification.
+    /// - Parameter response: The create-onramp-session response to inspect.
+    static func isRequired(for response: CreateOnrampSessionResponse) -> Bool {
+        response.transactionDetails.lastError == requiredLastError
+    }
 
     /// Starts wallet ownership verification and updates shared loading and alert UI state.
     /// - Parameters:
@@ -77,6 +96,8 @@ enum WalletOwnershipVerification {
                     if wallet.verifiedOwnership {
                         onVerified()
                     } else {
+                        // The request to verify the wallet succeeded, but the backend is still erroneously reporting that
+                        // `verifiedOwnership` is `false`. This is not an expected use case.
                         alert.wrappedValue = Alert(
                             title: "Wallet verification failed",
                             message: "Stripe did not mark this wallet as verified. Please try again."
@@ -115,5 +136,14 @@ enum WalletOwnershipVerification {
             challengeId: challenge.challengeId,
             signature: signature
         )
+    }
+}
+
+/// Convenience helpers for interpreting wallet ownership verification requirements.
+extension CreateOnrampSessionResponse {
+
+    /// Whether this response indicates wallet ownership verification is required before continuing.
+    var requiresWalletOwnershipVerification: Bool {
+        WalletOwnershipVerification.isRequired(for: self)
     }
 }

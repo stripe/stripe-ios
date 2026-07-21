@@ -16,6 +16,13 @@ import StripePayments
 /// A view used to display a payment summary, from which the user can complete checkout.
 struct PaymentSummaryView: View {
 
+    /// Error used to interrupt checkout when wallet ownership verification is required.
+    private struct WalletOwnershipVerificationRequiredError: Error {
+
+        /// The response that indicated wallet ownership verification is required.
+        let response: CreateOnrampSessionResponse
+    }
+
     /// The coordinator to use for completing checkout.
     let coordinator: CryptoOnrampCoordinator
 
@@ -36,6 +43,8 @@ struct PaymentSummaryView: View {
 
     @State private var authenticationContext = WindowAuthenticationContext()
     @State private var alert: Alert?
+    @State private var pendingWalletOwnershipVerificationContext: WalletOwnershipVerificationContext?
+    @State private var isPresentingWalletOwnershipVerificationAlert = false
 
     private var isPresentingAlert: Binding<Bool> {
         Binding(get: {
@@ -157,6 +166,15 @@ struct PaymentSummaryView: View {
                 Text(alert.message)
             }
         )
+        .walletOwnershipVerificationRequiredAlert(
+            isPresented: $isPresentingWalletOwnershipVerificationAlert,
+            onVerify: {
+                verifyPendingWalletOwnership()
+            },
+            onCancel: {
+                pendingWalletOwnershipVerificationContext = nil
+            }
+        )
     }
 
     // MARK: - PaymentSummaryView
@@ -184,7 +202,10 @@ struct PaymentSummaryView: View {
                     authenticationContext: authenticationContext
                 ) { onrampSessionId in
                     let result = try await APIClient.shared.checkout(onrampSessionId: onrampSessionId)
-                    return  result.clientSecret
+                    if result.requiresWalletOwnershipVerification {
+                        throw WalletOwnershipVerificationRequiredError(response: result)
+                    }
+                    return result.clientSecret
                 }
 
                 await MainActor.run {
@@ -200,12 +221,39 @@ struct PaymentSummaryView: View {
                         break
                     }
                 }
+            } catch let error as WalletOwnershipVerificationRequiredError {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    if let context = WalletOwnershipVerificationContext(transactionDetails: error.response.transactionDetails) {
+                        pendingWalletOwnershipVerificationContext = context
+                        isPresentingWalletOwnershipVerificationAlert = true
+                    } else {
+                        alert = WalletOwnershipVerification.unavailableAlert
+                    }
+                }
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     alert = Alert(title: "Checkout failed", message: error.localizedDescription)
                 }
             }
+        }
+    }
+
+    private func verifyPendingWalletOwnership() {
+        guard let context = pendingWalletOwnershipVerificationContext else {
+            alert = WalletOwnershipVerification.unavailableAlert
+            return
+        }
+
+        WalletOwnershipVerification.startVerification(
+            context: context,
+            coordinator: coordinator,
+            isLoading: isLoading,
+            alert: $alert
+        ) {
+            pendingWalletOwnershipVerificationContext = nil
+            checkout()
         }
     }
 }
@@ -217,16 +265,6 @@ private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
 }
 
 private extension CreateOnrampSessionResponse {
-    static let currencyFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        // Use local formatting for the number, but assume USD for the currency.
-        formatter.locale = Locale.current
-        formatter.currencySymbol = "$"
-        formatter.currencyCode = "USD"
-        return formatter
-    }()
-
     static let currencyFormatterWithoutSymbol: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
@@ -237,7 +275,7 @@ private extension CreateOnrampSessionResponse {
 
     var totalText: String {
         let amount = Double(sourceTotalAmount) ?? 0
-        return Self.currencyFormatter.string(from: NSNumber(value: amount)) ?? "$0"
+        return formattedSourceAmount(amount)
     }
 
     var amountToReceiveText: String {
@@ -250,7 +288,7 @@ private extension CreateOnrampSessionResponse {
         let networkFee = Double(transactionDetails.fees.networkFeeAmount) ?? 0
         let transactionFee = Double(transactionDetails.fees.transactionFeeAmount) ?? 0
         let total = networkFee + transactionFee
-        return Self.currencyFormatter.string(from: NSNumber(value: total)) ?? "$0"
+        return formattedSourceAmount(total)
     }
 
     var depositToText: String {
@@ -259,6 +297,15 @@ private extension CreateOnrampSessionResponse {
         let prefix = String(address.prefix(2))
         let suffix = String(address.suffix(4))
         return "\(network) • \(prefix)••••\(suffix)"
+    }
+
+    private func formattedSourceAmount(_ amount: Double) -> String {
+        let sourceCurrencyCode = transactionDetails.sourceCurrency.uppercased()
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = Locale.current
+        formatter.currencyCode = sourceCurrencyCode
+        return formatter.string(from: NSNumber(value: amount)) ?? "\(sourceCurrencyCode) \(amount)"
     }
 }
 
