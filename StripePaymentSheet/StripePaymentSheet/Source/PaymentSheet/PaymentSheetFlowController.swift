@@ -414,8 +414,10 @@ extension PaymentSheet {
                     completion(.failure(error))
                     return
                 }
+                var config = configuration
+                checkout.session.applyAddressOverrides(to: &config)
                 create(mode: .checkout(checkout),
-                       configuration: configuration
+                       configuration: config
                 ) { result in
                     if case .success(let flowController) = result {
                         flowController.checkout = checkout
@@ -584,6 +586,7 @@ extension PaymentSheet {
                 }
                 guard !Task.isCancelled else { return }
                 self.isPresented = true
+                checkout.session.applyAddressOverrides(to: &self.configuration)
                 let updateID = UUID()
                 self.performUpdate(mode: .checkout(checkout), updateID: updateID) { [weak self] error in
                     guard let self else { return }
@@ -774,6 +777,7 @@ extension PaymentSheet {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
             let updateID = beginUpdate()
             Task { @MainActor in
+                checkout.session.applyAddressOverrides(to: &configuration)
                 performUpdate(mode: .checkout(checkout), updateID: updateID, completion: completion)
             }
         }
