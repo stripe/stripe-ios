@@ -72,11 +72,10 @@ import UIKit
     public enum FieldsToCollect: Equatable {
         /// Collects all address fields.
         case all
-        /// Collects country and postal code if the country is one of `countriesRequiringPostalCollection`
-        /// - Note: Really only useful for cards, where we only collect postal for a handful of countries
-        case countryAndPostal(countriesRequiringPostalCollection: [String] = ["US", "GB", "CA"])
+        /// Collects country and postal code.
+        case countryAndPostal
         /// Only collects the country. Used by Payment Methods that require a country but not the rest of the address.
-        case countryOnly
+        case country
     }
     /// Fields that this section can collect in addition to the address
     public struct AdditionalFields {
@@ -128,9 +127,9 @@ import UIKit
     public let sameAsCheckbox: CheckboxElement
 
     // MARK: Other properties
-    public var fieldsToCollect: FieldsToCollect {
+    public var defaultFieldsToCollect: FieldsToCollect {
         didSet {
-            if oldValue != fieldsToCollect {
+            if oldValue != defaultFieldsToCollect {
                 updateAddressFields(for: countryCodes[country.selectedIndex], address: nil)
             }
         }
@@ -171,8 +170,8 @@ import UIKit
        - locale: Locale used to generate the display names for each country
        - addressSpecProvider: Determines the list of address fields to display for a selected country
        - defaults: Default address to prepopulate address fields with
-       - fieldsToCollect: Determines which address fields to display.
-       - minimumFieldsToCollectByCountry: Per-country minimum address fields. These requirements never reduce `fieldsToCollect`.
+       - defaultFieldsToCollect: Determines which address fields to display before applying the selected country's minimum.
+       - minimumFieldsToCollectByCountry: Per-country minimum address fields. These requirements never reduce `defaultFieldsToCollect`.
        - countriesSupportingAutocomplete: Countries that support autocomplete.
        - disableAutocomplete: Whether to always display manual address entry.
      */
@@ -182,7 +181,7 @@ import UIKit
         locale: Locale = .current,
         addressSpecProvider: AddressSpecProvider = .shared,
         defaults: AddressDetails = .empty,
-        fieldsToCollect: FieldsToCollect = .all,
+        defaultFieldsToCollect: FieldsToCollect = .all,
         minimumFieldsToCollectByCountry: [String: FieldsToCollect] = [:],
         countriesSupportingAutocomplete: [String] = AddressSectionElement.defaultAutocompleteCountries,
         disableAutocomplete: Bool = false,
@@ -192,7 +191,7 @@ import UIKit
     ) {
         let dropdownCountries = countries?.map { $0.uppercased() } ?? addressSpecProvider.countries
         let countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
-        self.fieldsToCollect = fieldsToCollect
+        self.defaultFieldsToCollect = defaultFieldsToCollect
         self.minimumFieldsToCollectByCountry = minimumFieldsToCollectByCountry
         self.countriesSupportingAutocomplete = countriesSupportingAutocomplete
         self.disableAutocomplete = disableAutocomplete
@@ -332,49 +331,21 @@ import UIKit
     }
 
     private func resolvedFieldsToCollect(for countryCode: String) -> FieldsToCollect {
-        guard let minimumFieldsToCollect = minimumFieldsToCollectByCountry[countryCode] else {
-            return fieldsToCollect
-        }
-        switch (fieldsToCollect, minimumFieldsToCollect) {
-        case (.all, _), (_, .all):
-            return .all
-        case (.countryAndPostal(let countriesRequiringPostalCollection), .countryOnly):
-            return .countryAndPostal(countriesRequiringPostalCollection: countriesRequiringPostalCollection)
-        case (.countryOnly, .countryAndPostal):
-            return minimumFieldsToCollect
-        case (.countryAndPostal(let defaultCountries), .countryAndPostal(let minimumCountries)):
-            return .countryAndPostal(countriesRequiringPostalCollection: Array(Set(defaultCountries + minimumCountries)).sorted())
-        case (.countryOnly, .countryOnly):
-            return .countryOnly
-        }
-    }
-
-    private func resolvedFieldsToCollectRequiresPostal(_ fieldsToCollect: FieldsToCollect, for countryCode: String) -> Bool {
-        guard case .countryAndPostal(let countriesRequiringPostalCollection) = fieldsToCollect else {
-            return false
-        }
-        return countriesRequiringPostalCollection.caseInsensitiveContains(countryCode)
-    }
-
-    private func filteredFieldOrdering(
-        _ fieldOrdering: [AddressSpec.FieldType],
-        fieldsToCollect: FieldsToCollect,
-        countryCode: String
-    ) -> [AddressSpec.FieldType] {
-        return fieldOrdering.filter {
-            switch fieldsToCollect {
-            case .all:
-                return true
-            case .countryOnly:
-                return false
-            case .countryAndPostal:
-                if case .postal = $0 {
-                    return resolvedFieldsToCollectRequiresPostal(fieldsToCollect, for: countryCode)
-                } else {
-                    return false
-                }
+        if let minimumFieldsToCollect = minimumFieldsToCollectByCountry[countryCode] {
+            switch (defaultFieldsToCollect, minimumFieldsToCollect) {
+            case (.all, _):
+                return defaultFieldsToCollect
+            case (_, .all):
+                return minimumFieldsToCollect
+            case (.countryAndPostal, _):
+                return defaultFieldsToCollect
+            case (_, .countryAndPostal):
+                return minimumFieldsToCollect
+            case (.country, .country):
+                return defaultFieldsToCollect
             }
         }
+        return defaultFieldsToCollect
     }
 
     /// - Parameters:
@@ -405,9 +376,22 @@ import UIKit
 
         // Get the address spec for the country and filter out unused fields.
         let spec = addressSpecProvider.addressSpec(for: countryCode)
-        let fieldOrdering = autocompletePresentation == .compact
-            ? []
-            : filteredFieldOrdering(spec.fieldOrdering, fieldsToCollect: fieldsToCollect, countryCode: countryCode)
+        let fieldOrdering = spec.fieldOrdering.filter {
+            // Compact autocomplete hides address fields and shows the dummy autocomplete trigger instead.
+            guard autocompletePresentation != .compact else { return false }
+            switch fieldsToCollect {
+            case .all:
+                return true
+            case .country:
+                return false
+            case .countryAndPostal:
+                if case .postal = $0 {
+                    return true
+                } else {
+                    return false
+                }
+            }
+        }
 
         if autocompletePresentation == .compact {
             autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme, didTap: { [weak self] in self?.didTapAutocompleteButton() })

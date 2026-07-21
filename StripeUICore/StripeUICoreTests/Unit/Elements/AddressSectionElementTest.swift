@@ -133,10 +133,10 @@ class AddressSectionElementTest: XCTestCase {
             locale: locale_enUS,
             addressSpecProvider: specProvider,
             defaults: .init(address: .init(country: "US")),
-            fieldsToCollect: .countryOnly,
+            defaultFieldsToCollect: .country,
             minimumFieldsToCollectByCountry: [
                 "US": .all,
-                "CA": .countryAndPostal(),
+                "CA": .countryAndPostal,
             ],
             disableAutocomplete: true
         )
@@ -160,7 +160,28 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertNotDisplayed(sut.postalCode, in: sut)
     }
 
-    func testCountryMinimumDoesNotReduceFieldsToCollect() {
+    func testCountryAndPostalCollectsPostalForAnyCountry() {
+        // Given country-and-postal collection for a country outside the card minimum list
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "FR": AddressSpec(format: "ACZ", require: "ACZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
+        ]
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["FR"],
+            locale: locale_enUS,
+            addressSpecProvider: specProvider,
+            defaults: .init(address: .init(country: "FR")),
+            defaultFieldsToCollect: .countryAndPostal,
+            disableAutocomplete: true
+        )
+
+        // Then the mode unconditionally collects the country's postal field
+        XCTAssertNotDisplayed(sut.line1, in: sut)
+        XCTAssertDisplayed(sut.postalCode, in: sut)
+    }
+
+    func testCountryMinimumDoesNotReduceDefaultFieldsToCollect() {
         // Given a country-only minimum on a full-address default
         let sut = AddressSectionElement(
             title: "",
@@ -168,8 +189,8 @@ class AddressSectionElementTest: XCTestCase {
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
             defaults: .init(address: .init(country: "US")),
-            fieldsToCollect: .all,
-            minimumFieldsToCollectByCountry: ["US": .countryOnly],
+            defaultFieldsToCollect: .all,
+            minimumFieldsToCollectByCountry: ["US": .country],
             disableAutocomplete: true
         )
 
@@ -185,50 +206,50 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertDisplayed(sut.postalCode, in: sut)
     }
 
-    func testUpdatingFieldsToCollectRebuildsCurrentCountry() {
+    func testUpdatingDefaultFieldsToCollectRebuildsCurrentCountry() {
         // Given an element collecting only country
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            fieldsToCollect: .countryOnly,
+            defaultFieldsToCollect: .country,
             disableAutocomplete: true
         )
         XCTAssertNotDisplayed(sut.line1, in: sut)
         XCTAssertNotDisplayed(sut.postalCode, in: sut)
 
         // When the default changes to full address collection
-        sut.fieldsToCollect = .all
+        sut.defaultFieldsToCollect = .all
 
         // Then the current country is rebuilt with all fields
         XCTAssertDisplayed(sut.line1, in: sut)
         XCTAssertDisplayed(sut.postalCode, in: sut)
 
         // When the default changes to country and postal code
-        sut.fieldsToCollect = .countryAndPostal()
+        sut.defaultFieldsToCollect = .countryAndPostal
 
         // Then the current country narrows to postal code
         XCTAssertNotDisplayed(sut.line1, in: sut)
         XCTAssertDisplayed(sut.postalCode, in: sut)
     }
 
-    func testUpdatingFieldsToCollectPreservesCountryMinimum() {
+    func testUpdatingDefaultFieldsToCollectPreservesCountryMinimum() {
         // Given full-address collection with a postal minimum for the selected country
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            fieldsToCollect: .all,
-            minimumFieldsToCollectByCountry: ["US": .countryAndPostal()],
+            defaultFieldsToCollect: .all,
+            minimumFieldsToCollectByCountry: ["US": .countryAndPostal],
             disableAutocomplete: true
         )
         XCTAssertDisplayed(sut.line1, in: sut)
         XCTAssertDisplayed(sut.postalCode, in: sut)
 
         // When the default changes to country-only collection
-        sut.fieldsToCollect = .countryOnly
+        sut.defaultFieldsToCollect = .country
 
         // Then the selected country's postal minimum is preserved
         XCTAssertNotDisplayed(sut.line1, in: sut)
@@ -243,7 +264,7 @@ class AddressSectionElementTest: XCTestCase {
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
             defaults: .init(address: .init(country: "CA")),
-            fieldsToCollect: .countryOnly,
+            defaultFieldsToCollect: .country,
             minimumFieldsToCollectByCountry: [
                 "US": .all,
             ],
@@ -267,10 +288,10 @@ class AddressSectionElementTest: XCTestCase {
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
             defaults: .init(address: .init(country: "US")),
-            fieldsToCollect: .countryOnly,
+            defaultFieldsToCollect: .country,
             minimumFieldsToCollectByCountry: [
                 "US": .all,
-                "CA": .countryAndPostal(),
+                "CA": .countryAndPostal,
             ],
             disableAutocomplete: true,
             additionalFields: .init(billingSameAsShippingCheckbox: .enabled(isOptional: false))
@@ -473,16 +494,16 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertLine1DoesNotHaveAutocompleteAccessory(sut)
     }
 
-    func testChangingFieldsToCollectPreservesAutocompleteCountries() {
+    func testChangingDefaultFieldsToCollectPreservesAutocompleteCountries() {
         let sut = AddressSectionElement(
             title: "",
             countries: ["US"],
             locale: locale_enUS,
             addressSpecProvider: dummyAddressSpecProvider,
-            fieldsToCollect: .countryOnly
+            defaultFieldsToCollect: .country
         )
 
-        sut.fieldsToCollect = .all
+        sut.defaultFieldsToCollect = .all
 
         XCTAssertEqual(sut.countriesSupportingAutocomplete, AddressSectionElement.defaultAutocompleteCountries)
         XCTAssertNotNil(sut.autoCompleteLine)
