@@ -268,6 +268,7 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
+        additionalHeaders: [String: String] = [:],
         completion: @escaping (
             Result<T, Error>
         ) -> Void
@@ -277,6 +278,7 @@ extension STPAPIClient {
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
+            additionalHeaders: additionalHeaders,
             resource: resource,
             completion: completion
         )
@@ -288,6 +290,7 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
+        additionalHeaders: [String: String] = [:],
         completion: @escaping (
             Result<T, Error>
         ) -> Void
@@ -297,6 +300,7 @@ extension STPAPIClient {
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
+            additionalHeaders: additionalHeaders,
             url: url,
             completion: completion
         )
@@ -309,13 +313,15 @@ extension STPAPIClient {
         resource: String,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
-        consumerPublishableKey: String? = nil
+        consumerPublishableKey: String? = nil,
+        additionalHeaders: [String: String] = [:]
     ) -> Promise<T> {
         return request(
             method: .get,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
+            additionalHeaders: additionalHeaders,
             resource: resource
         )
     }
@@ -326,6 +332,7 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
+        additionalHeaders: [String: String] = [:],
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         request(
@@ -333,6 +340,7 @@ extension STPAPIClient {
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
+            additionalHeaders: additionalHeaders,
             resource: resource,
             completion: completion
         )
@@ -345,13 +353,15 @@ extension STPAPIClient {
         resource: String,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
-        consumerPublishableKey: String? = nil
+        consumerPublishableKey: String? = nil,
+        additionalHeaders: [String: String] = [:]
     ) -> Promise<T> {
         return request(
             method: .post,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
+            additionalHeaders: additionalHeaders,
             resource: resource
         )
     }
@@ -361,6 +371,7 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String?,
         consumerPublishableKey: String?,
+        additionalHeaders: [String: String],
         resource: String
     ) -> Promise<T> {
         let promise = Promise<T>()
@@ -369,6 +380,7 @@ extension STPAPIClient {
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
+            additionalHeaders: additionalHeaders,
             resource: resource
         ) { result in
             promise.fullfill(with: result)
@@ -381,6 +393,7 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String?,
         consumerPublishableKey: String?,
+        additionalHeaders: [String: String],
         resource: String,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
@@ -390,6 +403,7 @@ extension STPAPIClient {
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
+            additionalHeaders: additionalHeaders,
             url: url,
             completion: completion
         )
@@ -400,10 +414,11 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String?,
         consumerPublishableKey: String?,
+        additionalHeaders: [String: String],
         url: URL,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
-        var request = configuredRequest(for: url)
+        var request = configuredRequest(for: url, additionalHeaders: additionalHeaders)
         switch method {
         case .get:
             request.stp_addParameters(toURL: parameters)
@@ -445,13 +460,15 @@ extension STPAPIClient {
     @_spi(STP) public func post<I: Encodable, O: Decodable>(
         resource: String,
         object: I,
-        ephemeralKeySecret: String? = nil
+        ephemeralKeySecret: String? = nil,
+        additionalHeaders: [String: String] = [:]
     ) -> Promise<O> {
         let promise = Promise<O>()
         self.post(
             resource: resource,
             object: object,
-            ephemeralKeySecret: ephemeralKeySecret
+            ephemeralKeySecret: ephemeralKeySecret,
+            additionalHeaders: additionalHeaders
         ) { result in
             promise.fullfill(with: result)
         }
@@ -463,6 +480,7 @@ extension STPAPIClient {
         resource: String,
         object: I,
         ephemeralKeySecret: String? = nil,
+        additionalHeaders: [String: String] = [:],
         completion: @escaping (Result<O, Error>) -> Void
     ) {
         let url = apiURL.appendingPathComponent(resource)
@@ -470,6 +488,7 @@ extension STPAPIClient {
             url: url,
             object: object,
             ephemeralKeySecret: ephemeralKeySecret,
+            additionalHeaders: additionalHeaders,
             completion: completion
         )
     }
@@ -479,18 +498,19 @@ extension STPAPIClient {
         url: URL,
         object: I,
         ephemeralKeySecret: String? = nil,
+        additionalHeaders: [String: String] = [:],
         completion: @escaping (Result<O, Error>) -> Void
     ) {
         do {
             let jsonDictionary = try object.encodeJSONDictionary()
             let formData = URLEncoder.queryString(from: jsonDictionary).data(using: .utf8)
+            var additionalHeaders = additionalHeaders
+            additionalHeaders["Content-Length"] = String(format: "%lu", UInt(formData?.count ?? 0))
+            additionalHeaders["Content-Type"] = "application/x-www-form-urlencoded"
             var request = configuredRequest(
                 for: url,
                 using: ephemeralKeySecret,
-                additionalHeaders: [
-                    "Content-Length": String(format: "%lu", UInt(formData?.count ?? 0)),
-                    "Content-Type": "application/x-www-form-urlencoded",
-                ]
+                additionalHeaders: additionalHeaders
             )
             request.httpBody = formData
             request.httpMethod = HTTPMethod.post.rawValue
