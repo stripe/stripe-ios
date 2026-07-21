@@ -23,7 +23,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         case userAttestation
         case identity
         case wallets
-        case payment(wallet: CustomerWalletsResponse.Wallet)
+        case payment(wallet: CustomerWalletsResponse.Wallet, isEUCustomer: Bool)
         case paymentSummary(createOnrampSessionResponse: CreateOnrampSessionResponse, selectedPaymentMethodDescription: String, settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed)
         case checkoutSuccess(message: String)
     }
@@ -249,7 +249,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         } else if let createOnrampSessionResponse, let selectedPaymentMethodDescription, let settlementSpeed {
             path.append(.paymentSummary(createOnrampSessionResponse: createOnrampSessionResponse, selectedPaymentMethodDescription: selectedPaymentMethodDescription, settlementSpeed: settlementSpeed))
         } else if let selectedWallet {
-            path.append(.payment(wallet: selectedWallet))
+            path.append(.payment(wallet: selectedWallet, isEUCustomer: isEUCustomer))
         } else {
             path.append(.wallets)
         }
