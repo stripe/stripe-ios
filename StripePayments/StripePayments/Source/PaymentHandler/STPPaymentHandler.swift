@@ -1146,11 +1146,17 @@ public class STPPaymentHandler: NSObject {
 
         case .alipayHandleRedirect:
             if let alipayHandleRedirect = authenticationAction.alipayHandleRedirect {
+                // If the return URL is an https redirect (rather than the merchant's custom
+                // URL scheme), use ASWebAuthenticationSession so it can intercept the
+                // subsequent redirect back to the merchant's app. SFSafariViewController
+                // silently drops redirects to non-http(s) schemes, which can otherwise cause
+                // the web view to appear to freeze after the user finishes authenticating.
+                let returnURLIsHTTPRedirect = alipayHandleRedirect.returnURL.scheme == "https"
                 _handleRedirect(
                     to: alipayHandleRedirect.nativeURL,
                     fallbackURL: alipayHandleRedirect.url,
                     return: alipayHandleRedirect.returnURL,
-                    useWebAuthSession: false
+                    useWebAuthSession: returnURLIsHTTPRedirect
                 )
             } else {
                 failCurrentActionWithMissingNextActionDetails()
@@ -1832,7 +1838,21 @@ public class STPPaymentHandler: NSObject {
                         self.logURLRedirectNextActionStarted(redirectType: .ASWebAuthenticationSession)
                         // Note that ASWebAuthenticationSession will also close based on the `redirectURL` defined in the app's Info.plist if called within the ASWAS,
                         // not only via this callbackURLScheme.
-                        let asWebAuthenticationSession = ASWebAuthenticationSession(url: fallbackURL, callbackURLScheme: "stripesdk", completionHandler: { _, _ in
+                        // Default to the "stripesdk" scheme (used by redirect-based payment methods like
+                        // PayPal), but if the merchant's registered return URL uses a custom scheme,
+                        // use that instead so ASWebAuthenticationSession can intercept a redirect to it
+                        // (e.g. when the return URL first passes through an intermediate https redirect).
+                        let callbackURLScheme: String = {
+                            if let returnURLString = currentAction.returnURLString,
+                                let merchantReturnURL = URL(string: returnURLString),
+                                let scheme = merchantReturnURL.scheme,
+                                scheme != "https" && scheme != "http"
+                            {
+                                return scheme
+                            }
+                            return "stripesdk"
+                        }()
+                        let asWebAuthenticationSession = ASWebAuthenticationSession(url: fallbackURL, callbackURLScheme: callbackURLScheme, completionHandler: { _, _ in
                             if context.responds(
                                 to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))
                             ) {

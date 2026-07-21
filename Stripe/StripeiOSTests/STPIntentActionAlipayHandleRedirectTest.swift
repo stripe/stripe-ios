@@ -52,4 +52,37 @@ class STPIntentActionAlipayHandleRedirectTest: XCTestCase {
             )
         )
     }
+
+    // Some redirect flows use an intermediate https URL that ultimately redirects back to the
+    // merchant's app via a custom URL scheme, rather than returning directly with the merchant's
+    // custom scheme. Verify that we correctly parse a `return_url` in that shape.
+    func testHTTPSTrampolineReturnURL() throws {
+        let testJSONString = """
+            {
+              "alipay_handle_redirect": {
+                "native_url": "alipay://alipayclient/?fake_native_url_payload",
+                "return_url": "https://redirects.example.com/return/REDACTED/REDACTED",
+                "url": "https://hooks.stripe.com/redirect/authenticate/src_REDACTED?client_secret=src_client_secret_REDACTED"
+              },
+              "type": "alipay_handle_redirect"
+            }
+            """
+        guard
+            let testJSONData = testJSONString.data(using: .utf8),
+            let json = try? JSONSerialization.jsonObject(
+                with: testJSONData,
+                options: .allowFragments
+            ) as? [AnyHashable: Any],
+            let nextAction = STPIntentAction.decodedObject(fromAPIResponse: json),
+            let alipayRedirect = nextAction.alipayHandleRedirect
+        else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(
+            alipayRedirect.returnURL,
+            URL(string: "https://redirects.example.com/return/REDACTED/REDACTED")
+        )
+        XCTAssertEqual(alipayRedirect.returnURL.scheme, "https")
+    }
 }
