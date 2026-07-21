@@ -240,14 +240,14 @@ import UIKit
     /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
     /// - Parameter appearance: Link UI-specific appearance overrides. If not specified, `PaymentSheet.Appearance` defaults are used.
     /// - Parameter linkConfiguration: Configuration for Link behavior and content. If not specified, default behavior is used.
-    /// - Parameter requestSurface: The request surface to use for API calls. Defaults to `ios_standalone_link`.
+    /// - Parameter requestSurface: The request surface to use for API calls. Defaults to `ios_payment_element`.
     /// - Parameter completion: A closure that is called with the result of the creation. It returns a `LinkController` if successful, or an error if the creation failed.
     @_spi(STP) public static func create(
         apiClient: STPAPIClient = .shared,
         mode: LinkController.Mode,
         appearance: LinkAppearance? = nil,
         linkConfiguration configuration: LinkConfiguration? = nil,
-        requestSurface: LinkRequestSurface = .standaloneLink,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<LinkController, Error>) -> Void
     ) {
         Task {
@@ -1214,14 +1214,14 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
     /// - Parameter appearance: Link UI-specific appearance overrides. If not specified, `PaymentSheet.Configuration` defaults are used.
     /// - Parameter linkConfiguration: Configuration for Link behavior and content. If not specified, default behavior is used.
-    /// - Parameter requestSurface: The request surface to use for API calls. Defaults to `ios_standalone_link`.
+    /// - Parameter requestSurface: The request surface to use for API calls. Defaults to `ios_payment_element`.
     /// - Returns: A `LinkController` if successful, or throws an error if the creation failed.
     static func create(
         apiClient: STPAPIClient = .shared,
         mode: LinkController.Mode,
         appearance: LinkAppearance? = nil,
         linkConfiguration configuration: LinkConfiguration? = nil,
-        requestSurface: LinkRequestSurface = .standaloneLink
+        requestSurface: LinkRequestSurface = .default
     ) async throws -> LinkController {
         return try await withCheckedThrowingContinuation { continuation in
             create(
