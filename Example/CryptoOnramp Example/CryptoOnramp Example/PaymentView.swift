@@ -855,13 +855,12 @@ struct PaymentView: View {
                 let response = try await APIClient.shared.createOnrampSession(requestObject: request)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    onContinue(response, selectPaymentMethodButtonTitle, settlementSpeed)
-                }
-            } catch is WalletOwnershipVerificationRequiredError {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    pendingWalletOwnershipVerificationCryptoPaymentTokenId = cryptoPaymentTokenId
-                    isPresentingWalletOwnershipVerificationAlert = true
+                    if response.requiresWalletOwnershipVerification {
+                        pendingWalletOwnershipVerificationCryptoPaymentTokenId = cryptoPaymentTokenId
+                        isPresentingWalletOwnershipVerificationAlert = true
+                    } else {
+                        onContinue(response, selectPaymentMethodButtonTitle, settlementSpeed)
+                    }
                 }
             } catch {
                 let fallbackErrorTitle = "Failed to create onramp session"

@@ -139,13 +139,6 @@ enum WalletOwnershipVerification {
     }
 }
 
-/// Error used to interrupt the example app flow when wallet ownership verification is required.
-struct WalletOwnershipVerificationRequiredError: Error {
-
-    /// The response that indicated wallet ownership verification is required.
-    let response: CreateOnrampSessionResponse
-}
-
 /// Convenience helpers for interpreting wallet ownership verification requirements.
 extension CreateOnrampSessionResponse {
 

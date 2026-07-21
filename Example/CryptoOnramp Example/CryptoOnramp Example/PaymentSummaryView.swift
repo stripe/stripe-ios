@@ -16,6 +16,13 @@ import StripePayments
 /// A view used to display a payment summary, from which the user can complete checkout.
 struct PaymentSummaryView: View {
 
+    /// Error used to interrupt checkout when wallet ownership verification is required.
+    private struct WalletOwnershipVerificationRequiredError: Error {
+
+        /// The response that indicated wallet ownership verification is required.
+        let response: CreateOnrampSessionResponse
+    }
+
     /// The coordinator to use for completing checkout.
     let coordinator: CryptoOnrampCoordinator
 
@@ -195,6 +202,9 @@ struct PaymentSummaryView: View {
                     authenticationContext: authenticationContext
                 ) { onrampSessionId in
                     let result = try await APIClient.shared.checkout(onrampSessionId: onrampSessionId)
+                    if result.requiresWalletOwnershipVerification {
+                        throw WalletOwnershipVerificationRequiredError(response: result)
+                    }
                     return result.clientSecret
                 }
 
