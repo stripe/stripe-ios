@@ -30,13 +30,13 @@ final class PaymentElementTest: XCTestCase {
         // Given a Checkout PaymentElement with PayNow available in the real FlowController sheet UI...
         var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
         configuration.paymentElement.paymentMethodLayout = .vertical
-        let checkout = await Checkout(
-            clientSecret: "cs_test_123_secret_abc",
-            configuration: configuration,
-            apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card", "paynow"])
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card", "paynow"]),
+                configuration: configuration
+            )
         )
-        let paymentElement = try await PaymentElement(checkout: checkout)
-        checkout.paymentElement = paymentElement
+        let paymentElement = checkout.getPaymentElement()
         let viewController = try XCTUnwrap(
             paymentElement.paymentSheetFlowController.viewController as? PaymentSheetVerticalViewController
         )
@@ -77,12 +77,12 @@ final class PaymentElementTest: XCTestCase {
         weak var weakEmbeddedPaymentElement: EmbeddedPaymentElement?
 
         do {
-            let checkout = await Checkout(
-                clientSecret: "cs_test_123_secret_abc",
-                apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card"])
+            let checkout = try await Checkout(
+                configuration: CheckoutTestHelpers.makeConfiguration(
+                    apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card"])
+                )
             )
-            let paymentElement = try await PaymentElement(checkout: checkout)
-            checkout.paymentElement = paymentElement
+            let paymentElement = checkout.getPaymentElement()
 
             weakCheckout = checkout
             weakPaymentElement = paymentElement

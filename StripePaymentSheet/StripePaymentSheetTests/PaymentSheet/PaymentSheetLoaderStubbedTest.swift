@@ -499,9 +499,10 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         wait(for: [loaded2], timeout: 2)
     }
 
-    func testCheckoutSessionWithCustomerConfigurationThrowsError() {
+    func testCheckoutSessionWithCustomerConfigurationThrowsError() async throws {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
         let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession))
 
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = stubbedAPIClient()
@@ -510,7 +511,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let loaded = expectation(description: "Loaded")
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
         PaymentSheetLoader.load(
-            mode: .checkout(Checkout(apiResponse: checkoutSession)),
+            mode: .checkout(checkout),
             configuration: configuration,
             analyticsHelper: ._testValue(integrationShape: .complete),
             integrationShape: .paymentSheet
@@ -526,12 +527,13 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             }
             loaded.fulfill()
         }
-        wait(for: [loaded], timeout: 2)
+        await fulfillment(of: [loaded], timeout: 2)
     }
 
-    func testCheckoutSessionWithBillingAddressNeverThrowsError() {
+    func testCheckoutSessionWithBillingAddressNeverThrowsError() async throws {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
         let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession))
 
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = stubbedAPIClient()
@@ -540,7 +542,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let loaded = expectation(description: "Loaded")
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
         PaymentSheetLoader.load(
-            mode: .checkout(Checkout(apiResponse: checkoutSession)),
+            mode: .checkout(checkout),
             configuration: configuration,
             analyticsHelper: ._testValue(integrationShape: .complete),
             integrationShape: .paymentSheet
@@ -556,7 +558,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             }
             loaded.fulfill()
         }
-        wait(for: [loaded], timeout: 2)
+        await fulfillment(of: [loaded], timeout: 2)
     }
 
     func testSendsErrorAnalytic() {
