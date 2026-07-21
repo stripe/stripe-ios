@@ -1090,7 +1090,7 @@ extension PlaygroundController {
             body["custom_publishable_key"] = customPublishableKey
         }
         if settings.usesVippsPreview {
-            body["vipps_preview"] = true
+            body["preview_features"] = ["vipps"]
         }
 
         return body
