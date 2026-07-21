@@ -46,9 +46,12 @@ extension SavedPaymentMethodFormFactory {
             let panElementConfig = TextFieldElement.LastFourConfiguration(lastFour: configuration.paymentMethod.card?.last4 ?? "",
                                                                           editConfiguration: cardBrandSelector != nil ? .readOnlyWithoutDisabledAppearance : .readOnly,
                                                                           cardBrand: configuration.paymentMethod.calculateCardBrandToDisplay(),
-                                                                          cardBrandChoiceElement: cardBrandSelector?.element)
-
-            let panElement = panElementConfig.makeElement(theme: theme)
+                                                                          cardBrandChoiceDataSource: cardBrandSelector?.element)
+            let panElement = TextFieldElement(
+                configuration: panElementConfig,
+                theme: theme,
+                accessory: cardBrandSelector?.textFieldAccessory
+            )
             return panElement
         }()
 
@@ -94,7 +97,6 @@ extension SavedPaymentMethodFormFactory {
         let cardSection: SectionElement = {
             let allSubElements: [Element?] = [
                 panElement,
-                SectionElement.HiddenElement(cardBrandSelector),
                 SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme),
             ]
             return SectionElement(title: billingAddressSection != nil ? String.Localized.card_information : nil,

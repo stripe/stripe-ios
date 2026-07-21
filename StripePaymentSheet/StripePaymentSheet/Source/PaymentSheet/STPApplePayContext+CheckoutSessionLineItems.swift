@@ -17,12 +17,10 @@ extension STPApplePayContext {
     /// Builds Apple Pay summary items from a checkout session's current state.
     /// Falls back to a single total row (or .pending) when line items aren't available.
     static func makePaymentSummaryItems(
-        for checkout: Checkout,
+        for session: Checkout.Session,
         label: String,
         currency: String?
     ) -> [PKPaymentSummaryItem] {
-        let session: Checkout.Session = checkout.nonisolatedSession
-
         guard !session.lineItems.isEmpty, let total = session.total else {
             if let amount = session.expectedAmount() {
                 let decimalAmount = NSDecimalNumber.stp_decimalNumber(withAmount: amount, currency: currency)

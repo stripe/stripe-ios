@@ -42,19 +42,19 @@ final class SavedPaymentMethodManager {
     func update(paymentMethod: STPPaymentMethod,
                 with updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         switch intent {
-        case .checkout(let checkout):
+        case .checkout(let session):
             let billing = Checkout.PaymentMethodBillingDetails(updateParams.billingDetails)
             let expiry = Checkout.PaymentMethodExpiryDetails(updateParams.card)
             guard billing != nil || expiry != nil else {
                 throw PaymentSheetError.unknown(debugDescription: "Tried to update a payment method without billing details or expiry details.")
             }
-            let session = try await configuration.apiClient.updatePaymentMethod(
+            let updatedSession = try await configuration.apiClient.updatePaymentMethod(
                 paymentMethod.stripeId,
-                inCheckoutSession: checkout.session.id,
+                inCheckoutSession: session.id,
                 billingDetails: billing,
                 expiryDetails: expiry
             )
-            guard let updatedPaymentMethod = session.customer?.paymentMethods.first(where: { $0.stripeId == paymentMethod.stripeId }) else {
+            guard let updatedPaymentMethod = updatedSession.customer?.paymentMethods.first(where: { $0.stripeId == paymentMethod.stripeId }) else {
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
                                                   error: Error.missingUpdatedPaymentMethod,
                                                   additionalNonPIIParams: ["payment_method_id": paymentMethod.stripeId])
@@ -77,11 +77,11 @@ final class SavedPaymentMethodManager {
 
     func detach(paymentMethod: STPPaymentMethod) {
         switch intent {
-        case .checkout(let checkout):
+        case .checkout(let session):
             Task {
                 try? await configuration.apiClient.detachPaymentMethod(
                     paymentMethod.stripeId,
-                    fromCheckoutSession: checkout.nonisolatedSession.id
+                    fromCheckoutSession: session.id
                 )
             }
         case .paymentIntent, .setupIntent, .deferredIntent:

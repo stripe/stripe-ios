@@ -969,7 +969,7 @@ extension PaymentSheetFormFactory {
 
     func makeDefaultsApplierWrapper<T: PaymentMethodElement>(for element: T) -> PaymentMethodElementWrapper<T> {
         return PaymentMethodElementWrapper(
-            element,
+            updatingParamsFrom: element,
             defaultsApplier: { [configuration] _, params in
                 // Only apply defaults when the flag is on.
                 guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
@@ -991,8 +991,8 @@ extension PaymentSheetFormFactory {
                 }
                 return params
             },
-            paramsUpdater: { element, params in
-                return element.updateParams(params: params)
+            paramsUpdater: { _, params in
+                return params
             })
     }
 
@@ -1044,12 +1044,12 @@ extension PaymentSheetFormFactory {
         intent: Intent,
         elementsSession: STPElementsSession
     ) -> SavePaymentMethodConsentBehavior {
-        guard case .checkout(let checkout) = intent else {
+        guard case .checkout(let session) = intent else {
             return elementsSession.savePaymentMethodConsentBehavior
         }
 
-        guard checkout.nonisolatedSession.customerId != nil,
-              let offerSave = checkout.nonisolatedSession.savedPaymentMethodsOfferSave,
+        guard session.customerId != nil,
+              let offerSave = session.savedPaymentMethodsOfferSave,
               offerSave.enabled
         else {
             return .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled

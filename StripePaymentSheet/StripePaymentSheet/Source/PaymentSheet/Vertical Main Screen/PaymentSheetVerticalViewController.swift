@@ -78,6 +78,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let intent: Intent
     let elementsSession: STPElementsSession
     let formCache: PaymentMethodFormCache = .init()
+    weak var checkout: Checkout?
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let walletButtonsShownExternally: Bool
     var error: Swift.Error?
@@ -159,6 +160,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         isFlowController: Bool,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         walletButtonsViewState: PaymentSheet.WalletButtonsViewState = .hidden,
+        checkout: Checkout? = nil,
         previousPaymentOption: PaymentOption? = nil
     ) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
@@ -171,6 +173,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.configuration = configuration
         self.previousPaymentOption = previousPaymentOption
         self.isFlowController = isFlowController
+        self.checkout = checkout
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.paymentMethodTypes = loadResult.paymentMethodTypes
         self.walletButtonsShownExternally = walletButtonsViewState.isVisible
@@ -571,6 +574,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
+            checkout: checkout,
             callback: { [weak self] confirmOption, _ in
                 guard let self else { return }
                 self.linkConfirmOption = confirmOption
@@ -776,7 +780,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     /// Syncs billing address to the checkout session, then closes the sheet.
     /// If the sync fails, stays on the sheet and shows the error instead.
     private func syncCheckoutBillingThenClose() {
-        guard case .checkout(let checkout) = intent,
+        guard let checkout,
               let paymentOption = selectedPaymentOption else {
             flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return

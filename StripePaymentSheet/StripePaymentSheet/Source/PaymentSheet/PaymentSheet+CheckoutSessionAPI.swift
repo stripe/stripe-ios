@@ -14,17 +14,17 @@ extension PaymentSheet {
     /// Confirms a checkout session with a new payment method
     @MainActor
     static func handleCheckoutSessionConfirmation(
-        checkout: Checkout,
+        checkout: CheckoutSessionBillingAddressUpdater,
+        checkoutSession: Checkout.Session,
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
         elementsSession: STPElementsSession
     ) async -> PaymentSheetResult {
-        let checkoutSession: Checkout.Session = checkout.nonisolatedSession
         do {
             let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-                intent: .checkout(checkout),
+                intent: .checkout(checkoutSession),
                 elementsSession: elementsSession
             )
 

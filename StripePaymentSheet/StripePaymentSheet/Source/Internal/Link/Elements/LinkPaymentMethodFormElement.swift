@@ -158,10 +158,14 @@ final class LinkPaymentMethodFormElement: Element {
             lastFour: paymentMethod.cardDetails?.last4 ?? "",
             editConfiguration: isCoBranded ? .readOnlyWithoutDisabledAppearance : .readOnly,
             cardBrand: paymentMethod.cardDetails?.cardBrand,
-            cardBrandChoiceElement: cardBrandSelector?.element
+            cardBrandChoiceDataSource: cardBrandSelector?.element
         )
 
-        return panElementConfig.makeElement(theme: LinkUI.appearance.asElementsTheme)
+        return TextFieldElement(
+            configuration: panElementConfig,
+            theme: LinkUI.appearance.asElementsTheme,
+            accessory: cardBrandSelector?.textFieldAccessory
+        )
     }()
 
     private lazy var cvcElement: TextFieldElement = {
@@ -214,7 +218,7 @@ final class LinkPaymentMethodFormElement: Element {
     private lazy var cardSection: SectionElement = {
         let allElements: [Element?] = [
             nameOnCardElement,
-            panElement, SectionElement.HiddenElement(cardBrandSelector),
+            panElement,
             SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme),
         ]
         let elements = allElements.compactMap { $0 }

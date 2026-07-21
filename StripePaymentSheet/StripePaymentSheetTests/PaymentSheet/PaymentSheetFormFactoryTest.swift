@@ -15,19 +15,13 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
 
-class MockElement: Element {
+private final class ParamsCountingPaymentMethodElement: PaymentMethodElement {
     var collectsUserInput: Bool = false
-
-    var paramsUpdater: (IntentConfirmParams) -> IntentConfirmParams?
-
-    init(
-        paramsUpdater: @escaping (IntentConfirmParams) -> IntentConfirmParams?
-    ) {
-        self.paramsUpdater = paramsUpdater
-    }
+    var updateParamsCallCount = 0
 
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        return paramsUpdater(params)
+        updateParamsCallCount += 1
+        return params
     }
 
     weak var delegate: ElementDelegate?
@@ -77,7 +71,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             overrides["customer_managed_saved_payment_methods_offer_save"] = offerSave
         }
         let session = CheckoutTestHelpers.makeSession(overrides)
-        return .checkout(Checkout(apiResponse: session))
+        return .checkout(session.makePublicSession())
     }
 
     func testUpdatesParams() {
@@ -101,6 +95,68 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params?.paymentMethodParams.billingDetails?.email, "email@stripe.com")
         XCTAssertEqual(params?.paymentMethodParams.type, .SEPADebit)
         XCTAssertEqual(params?.paymentMethodType, .stripe(.SEPADebit))
+    }
+
+    func testPaymentMethodElementWrapperDoesNotImplicitlyUpdateParamsFromWrappedElement() {
+        // Given
+        let element = ParamsCountingPaymentMethodElement()
+        let wrapper = PaymentMethodElementWrapper(element) { _, params in params }
+
+        // When
+        _ = wrapper.updateParams(params: IntentConfirmParams(type: .stripe(.card)))
+
+        // Then
+        XCTAssertEqual(element.updateParamsCallCount, 0)
+    }
+
+    func testPaymentMethodElementWrapperExplicitlyUpdatesParamsFromWrappedElementOnce() {
+        // Given
+        let element = ParamsCountingPaymentMethodElement()
+        let wrapper = PaymentMethodElementWrapper(updatingParamsFrom: element) { _, params in params }
+
+        // When
+        _ = wrapper.updateParams(params: IntentConfirmParams(type: .stripe(.card)))
+
+        // Then
+        XCTAssertEqual(element.updateParamsCallCount, 1)
+    }
+
+    func testPaymentMethodElementWrapperUpdatingParamsFromTextFieldStillValidates() {
+        // Given
+        let textField = TextFieldElement(
+            configuration: TextFieldElement.PANConfiguration(),
+            theme: .default
+        )
+        var paramsUpdaterCallCount = 0
+        let wrapper = PaymentMethodElementWrapper(updatingParamsFrom: textField) { _, params in
+            paramsUpdaterCallCount += 1
+            return params
+        }
+
+        // When
+        let params = wrapper.updateParams(params: IntentConfirmParams(type: .stripe(.card)))
+
+        // Then
+        XCTAssertNil(params)
+        XCTAssertEqual(paramsUpdaterCallCount, 0)
+    }
+
+    func testDefaultsApplierWrapperUpdatesParamsFromWrappedElementOnce() {
+        // Given
+        let factory = PaymentSheetFormFactory(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.card)
+        )
+        let element = ParamsCountingPaymentMethodElement()
+        let wrapper = factory.makeDefaultsApplierWrapper(for: element)
+
+        // When
+        _ = wrapper.updateParams(params: IntentConfirmParams(type: .stripe(.card)))
+
+        // Then
+        XCTAssertEqual(element.updateParamsCallCount, 1)
     }
 
     func testNameOverrideApiPathBySpec() {
@@ -2875,7 +2931,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             }
             let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
             return PaymentSheetFormFactory(
-                intent: .checkout(Checkout(apiResponse: checkoutSession)),
+                intent: .checkout(checkoutSession.makePublicSession()),
                 elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),
                 configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
                 paymentMethod: .stripe(.payPal),

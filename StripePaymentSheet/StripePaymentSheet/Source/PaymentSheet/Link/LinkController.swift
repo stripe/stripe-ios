@@ -268,6 +268,7 @@ import UIKit
 
                 let loadResult = try await Self.loadElementsSession(
                     paymentElementConfiguration: paymentElementConfiguration,
+                    linkConfiguration: configuration,
                     analyticsHelper: analyticsHelper
                 )
 
@@ -331,6 +332,7 @@ import UIKit
 
                 let loadResult = try await Self.loadElementsSession(
                     paymentElementConfiguration: paymentElementConfiguration,
+                    linkConfiguration: configuration,
                     analyticsHelper: analyticsHelper
                 )
 
@@ -929,6 +931,10 @@ import UIKit
         let confirmParams = STPSetupIntentConfirmParams(clientSecret: clientSecret)
         confirmParams.paymentMethodID = paymentMethod.stripeId
 
+        // Required for off-session link PMs: captures consent given during the Link flow.
+        let mandateData = STPMandateDataParams.makeWithInferredValues()
+        confirmParams.mandateData = mandateData
+
         let authContext = ViewControllerAuthenticationContext(viewController: viewController)
         STPPaymentHandler.shared().confirmSetupIntent(
             params: confirmParams,
@@ -1055,6 +1061,7 @@ import UIKit
 
     private static func loadElementsSession(
         paymentElementConfiguration: PaymentElementConfiguration,
+        linkConfiguration: LinkConfiguration? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) async throws -> PaymentSheetLoader.LoadResult {
         // Stub path: no real intent, PM creation and confirmation handled externally.
@@ -1063,7 +1070,7 @@ import UIKit
                 currency: nil,
                 setupFutureUsage: .offSession
             ),
-            paymentMethodTypes: ["link"],
+            paymentMethodTypes: linkConfiguration?.paymentMethodTypes,
             confirmHandler: { _, _ in
                 stpAssertionFailure("The confirmHandler is not expected to be called in the LinkController.")
                 return PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT
