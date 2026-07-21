@@ -512,9 +512,9 @@ extension PaymentSheetFormFactory {
 
         let availableCountries = countries ?? addressSpecProvider.countries
         let collectsOnlyCountry = defaultFieldsToCollect == .country
-            && minimumFieldsToCollectByCountry.allSatisfy {
-                !availableCountries.caseInsensitiveContains($0.key) || $0.value == .country
-            }
+            && minimumFieldsToCollectByCountry
+                .filter { availableCountries.caseInsensitiveContains($0.key) }
+                .allSatisfy { $0.value == .country }
 
         let section = AddressSectionElement(
             // A lone country dropdown doesn't need a "Billing address" header
