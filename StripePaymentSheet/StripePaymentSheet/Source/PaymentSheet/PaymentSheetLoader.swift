@@ -489,7 +489,7 @@ final class PaymentSheetLoader {
             }
         case .checkout(let checkout):
             elementsSession = checkout.session.elementsSession
-            intent = .checkout(checkout)
+            intent = .checkout(checkout.session)
         }
 
         // Warn the merchant if we see unactivated payment method types in the Intent
@@ -541,8 +541,8 @@ final class PaymentSheetLoader {
         if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
             // A. SPMs are on ElementSessions object when using CustomerSession.
             savedPaymentMethods = elementsSessionPaymentMethods
-        } else if case let .checkout(checkout) = intent,
-                  let customerPaymentMethods = checkout.nonisolatedSession.customer?.paymentMethods {
+        } else if case let .checkout(session) = intent,
+                  let customerPaymentMethods = session.customer?.paymentMethods {
             // B. SPMs are on CheckoutSession object
             savedPaymentMethods = customerPaymentMethods
         } else if let prefetchedSPMs {

@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "Laatste 4 cijfers van BSN";
 
-"Log in or sign up" = "Aanmelden of registreren";
-
-"Log out of %@" = "Afmelden bij %@";
-
 "Manage SEPA debit" = "SEPA-incasso beheren";
 
 "Manage US bank account" = "Amerikaanse bankrekening beheren";
@@ -295,6 +291,10 @@
 "Show details" = "Gegevens weergeven";
 
 "Show menu" = "Menu weergeven";
+
+"Sign in or sign up" = "Log in of registreer je";
+
+"Sign out of %@" = "Log uit bij %@";
 
 "Simple, secure one-click payments" = "Betaal eenvoudig en veilig met één klik";
 

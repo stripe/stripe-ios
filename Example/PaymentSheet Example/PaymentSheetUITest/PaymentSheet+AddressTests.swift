@@ -494,12 +494,13 @@ RO
         // ...should update PaymentSheet.FlowController
         app.buttons["Payment method"].waitForExistenceAndTap()
         XCTAssertEqual(app.textFields["Country or region"].value as? String, "Uruguay")
+        XCTAssertFalse(app.textFields["Postal code"].exists)
+        XCTAssertFalse(app.textFields["ZIP"].exists)
 
         // If you change the billing address, however...
-        let updatedBillingAddressPostalCode = "12345"
-        app.textFields["Postal code"].tap()
-        let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: 5)
-        app.textFields["Postal code"].typeText(deleteString + updatedBillingAddressPostalCode)
+        app.textFields["Country or region"].tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇫🇷 France")
+        app.stp_dismissKeyboard()
 
         // ...the "Billing address is same as shipping" checkbox should become deselected...
         XCTAssertFalse(app.switches["Billing address is same as shipping"].isSelected)
@@ -517,8 +518,8 @@ RO
 
         // ...should not affect your billing address...
         app.buttons["Payment method"].waitForExistenceAndTap()
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Uruguay")
-        XCTAssertEqual(app.textFields["Postal code"].value as? String, updatedBillingAddressPostalCode)
+        XCTAssertEqual(app.textFields["Country or region"].value as? String, "France")
+        XCTAssertFalse(app.textFields["Postal code"].exists)
 
         // ...until 'Billing address is same as shipping' checkbox is selected again
         app.switches["Billing address is same as shipping"].tap()

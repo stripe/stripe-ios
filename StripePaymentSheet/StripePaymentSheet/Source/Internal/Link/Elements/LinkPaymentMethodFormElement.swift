@@ -74,7 +74,7 @@ final class LinkPaymentMethodFormElement: Element {
 
         // TODO(link): Replace `STPPaymentMethodBillingDetails` with a custom struct for Link.
         // This matches the object that was returned by CardDetailsEditView, but won't work
-        // with `collectionMode: .all`, because extra fields won't match what expected by Link.
+        // with `fieldsToCollect: .all`, because extra fields won't match what expected by Link.
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = billingAddressSection?.name?.text
             ?? nameOnCardElement?.text
@@ -158,10 +158,14 @@ final class LinkPaymentMethodFormElement: Element {
             lastFour: paymentMethod.cardDetails?.last4 ?? "",
             editConfiguration: isCoBranded ? .readOnlyWithoutDisabledAppearance : .readOnly,
             cardBrand: paymentMethod.cardDetails?.cardBrand,
-            cardBrandChoiceElement: cardBrandSelector?.element
+            cardBrandChoiceDataSource: cardBrandSelector?.element
         )
 
-        return panElementConfig.makeElement(theme: LinkUI.appearance.asElementsTheme)
+        return TextFieldElement(
+            configuration: panElementConfig,
+            theme: LinkUI.appearance.asElementsTheme,
+            accessory: cardBrandSelector?.textFieldAccessory
+        )
     }()
 
     private lazy var cvcElement: TextFieldElement = {
@@ -214,7 +218,7 @@ final class LinkPaymentMethodFormElement: Element {
     private lazy var cardSection: SectionElement = {
         let allElements: [Element?] = [
             nameOnCardElement,
-            panElement, SectionElement.HiddenElement(cardBrandSelector),
+            panElement,
             SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme),
         ]
         let elements = allElements.compactMap { $0 }
@@ -266,9 +270,10 @@ final class LinkPaymentMethodFormElement: Element {
             title: String.Localized.billing_address_lowercase,
             countries: isBillingDetailsUpdateFlow ? configuration.billingDetailsCollectionConfiguration.allowedCountriesArray : nil,
             defaults: defaultBillingAddress,
-            collectionMode: configuration.billingDetailsCollectionConfiguration.address == .full
-                ? .all()
+            fieldsToCollect: configuration.billingDetailsCollectionConfiguration.address == .full
+                ? .all
                 : .countryAndPostal(),
+            disableAutocomplete: true,
             additionalFields: additionalFields,
             theme: theme
         )

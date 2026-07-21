@@ -8,6 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+import UIKit
 
 // MARK: - Session
 
@@ -15,7 +16,7 @@ import Foundation
 @_spi(ReactNativeSDK)
 extension Checkout {
     /// A read-only representation of a Stripe Checkout Session.
-    public final class Session {
+    public struct Session {
         // MARK: - Public Properties
 
         /// The ID of the Checkout Session.
@@ -50,6 +51,9 @@ extension Checkout {
         /// The factor used to convert between minor and major currency units. For USD this
         /// is `100`; for JPY this is `1`. `nil` when the session has no currency (e.g. setup mode).
         public let minorUnitsAmountDivisor: Int?
+
+        /// The currently selected payment option.
+        public let paymentOption: PaymentOptionDisplayData?
 
         /// Payment methods attached to the customer.
         public let savedPaymentMethods: [STPPaymentMethod]
@@ -91,74 +95,22 @@ extension Checkout {
         let automaticTaxEnabled: Bool
         let automaticTaxAddressSource: String?
         let elementsSession: STPElementsSession
+    }
+}
 
-        // MARK: - Init
-
-        init(
-            id: String,
-            billingAddress: Checkout.ContactAddress?,
-            businessName: String?,
-            currency: String?,
-            currencyOptions: [Checkout.CurrencyOption],
-            discountAmounts: [Checkout.DiscountAmount],
-            email: String?,
-            lineItems: [Checkout.LineItem],
-            livemode: Bool,
-            minorUnitsAmountDivisor: Int?,
-            savedPaymentMethods: [STPPaymentMethod],
-            shipping: Checkout.SelectedShipping?,
-            shippingAddress: Checkout.ContactAddress?,
-            shippingOptions: [Checkout.ShippingOption],
-            status: Checkout.Status?,
-            tax: Checkout.Tax,
-            total: Checkout.Total?,
-            mode: Checkout.Mode,
-            paymentMethodOptions: STPPaymentMethodOptions?,
-            customer: STPCheckoutSessionCustomer?,
-            savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
-            setupFutureUsage: String?,
-            setupFutureUsageForPaymentMethodType: [String: String],
-            allowedShippingCountries: [String]?,
-            localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
-            exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?,
-            requiresBillingAddress: Bool,
-            adaptivePricingActive: Bool,
-            automaticTaxEnabled: Bool,
-            automaticTaxAddressSource: String?,
-            elementsSession: STPElementsSession
-        ) {
-            self.id = id
-            self.billingAddress = billingAddress
-            self.businessName = businessName
-            self.currency = currency
-            self.currencyOptions = currencyOptions
-            self.discountAmounts = discountAmounts
-            self.email = email
-            self.lineItems = lineItems
-            self.livemode = livemode
-            self.minorUnitsAmountDivisor = minorUnitsAmountDivisor
-            self.savedPaymentMethods = savedPaymentMethods
-            self.shipping = shipping
-            self.shippingAddress = shippingAddress
-            self.shippingOptions = shippingOptions
-            self.status = status
-            self.tax = tax
-            self.total = total
-            self.mode = mode
-            self.paymentMethodOptions = paymentMethodOptions
-            self.customer = customer
-            self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
-            self.setupFutureUsage = setupFutureUsage
-            self.setupFutureUsageForPaymentMethodType = setupFutureUsageForPaymentMethodType
-            self.allowedShippingCountries = allowedShippingCountries
-            self.localizedPricesMetas = localizedPricesMetas
-            self.exchangeRateMeta = exchangeRateMeta
-            self.requiresBillingAddress = requiresBillingAddress
-            self.adaptivePricingActive = adaptivePricingActive
-            self.automaticTaxEnabled = automaticTaxEnabled
-            self.automaticTaxAddressSource = automaticTaxAddressSource
-            self.elementsSession = elementsSession
-        }
+extension Checkout.Session {
+    /// Display data for the currently selected payment option.
+    public struct PaymentOptionDisplayData: Equatable {
+        /// An image representing a payment method, such as the Apple Pay logo or a card brand.
+        public let image: UIImage
+        /// A customer-facing label representing the payment option.
+        public let label: String
+        /// The billing details associated with the selected payment option.
+        public let billingDetails: PaymentSheet.BillingDetails?
+        /// A string representation of the selected payment method type.
+        public let paymentMethodType: String
+        /// Mandate text that must be displayed when the PaymentElement is configured not to display it.
+        public let mandateText: NSAttributedString?
     }
 }
 

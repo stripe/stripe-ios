@@ -140,6 +140,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 elementsSession: flowController.elementsSession,
                 paymentOption: .applePay,
                 paymentHandler: flowController.paymentHandler,
+                checkout: flowController.checkout,
                 analyticsHelper: flowController.analyticsHelper
             ) { result, _ in
                 if case .completed = result {
@@ -154,12 +155,13 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 intent: flowController.intent,
                 elementsSession: flowController.elementsSession,
                 configuration: flowController.configuration,
-                analyticsHelper: flowController.analyticsHelper
+                analyticsHelper: flowController.analyticsHelper,
+                checkout: flowController.checkout
             )
             linkController.presentForPaymentMethodSelection(
                 from: WindowAuthenticationContext().authenticationPresentingViewController(),
                 initiallySelectedPaymentDetailsID: nil,
-                shouldShowSecondaryCta: false,
+                canContinueWithoutLink: false,
                 completion: { confirmOptions, _ in
                     guard let confirmOptions else {
                         return

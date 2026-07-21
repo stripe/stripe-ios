@@ -59,6 +59,7 @@ final class PayWithNativeLinkController {
     private let linkAppearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
     private let confirmationChallenge: ConfirmationChallenge?
+    private weak var checkout: CheckoutSessionBillingAddressUpdater?
 
     init(
         mode: Mode,
@@ -70,6 +71,7 @@ final class PayWithNativeLinkController {
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
+        checkout: CheckoutSessionBillingAddressUpdater? = nil,
         confirmationChallenge: ConfirmationChallenge? = nil
     ) {
         self.mode = mode
@@ -82,6 +84,7 @@ final class PayWithNativeLinkController {
         self.paymentHandler = .init(apiClient: configuration.apiClient)
         self.linkAppearance = linkAppearance
         self.linkConfiguration = linkConfiguration
+        self.checkout = checkout
         self.confirmationChallenge = confirmationChallenge
     }
 
@@ -109,7 +112,7 @@ final class PayWithNativeLinkController {
     func presentForPaymentMethodSelection(
         from presentingController: UIViewController,
         initiallySelectedPaymentDetailsID: String?,
-        shouldShowSecondaryCta: Bool = true,
+        canContinueWithoutLink: Bool = true,
         completion: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         presentAsBottomSheetInternal(
@@ -120,7 +123,7 @@ final class PayWithNativeLinkController {
             initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
             callToAction: .continue,
             shouldFinishOnClose: false,
-            shouldShowSecondaryCta: shouldShowSecondaryCta
+            canContinueWithoutLink: canContinueWithoutLink
         ) { completionResult in
             guard case .paymentMethodSelection(let confirmOption, let shouldReturnToPaymentSheet) = completionResult else {
                 return
@@ -138,7 +141,7 @@ final class PayWithNativeLinkController {
         initiallySelectedPaymentDetailsID: String? = nil,
         callToAction: ConfirmButton.CallToActionType? = nil,
         shouldFinishOnClose: Bool,
-        shouldShowSecondaryCta: Bool = true,
+        canContinueWithoutLink: Bool = true,
         completion: @escaping (CompletionResult) -> Void
     ) {
         self.selfRetainer = self
@@ -154,7 +157,7 @@ final class PayWithNativeLinkController {
                 configuration: self.configuration,
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,
-                shouldShowSecondaryCta: shouldShowSecondaryCta,
+                canContinueWithoutLink: canContinueWithoutLink,
                 launchedFromFlowController: launchedFromFlowController,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 callToAction: callToAction,
@@ -224,6 +227,7 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
             elementsSession: elementsSession,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
+            checkout: checkout,
             confirmationChallenge: confirmationChallenge,
             analyticsHelper: analyticsHelper,
             completion: { result, confirmationType in
@@ -281,6 +285,7 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
             integrationShape: .complete,
+            checkout: checkout,
             confirmationChallenge: confirmationChallenge,
             analyticsHelper: analyticsHelper
         ) { result, deferredIntentConfirmationType in

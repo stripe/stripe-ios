@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "Ostatnie 4 cyfry numeru SSN";
 
-"Log in or sign up" = "Zaloguj się lub zarejestruj";
-
-"Log out of %@" = "Wyloguj się z %@";
-
 "Manage SEPA debit" = "Zarządzaj poleceniem zapłaty SEPA";
 
 "Manage US bank account" = "Zarządzaj amerykańskim kontem bankowym";
@@ -295,6 +291,10 @@
 "Show details" = "Pokaż szczegóły";
 
 "Show menu" = "Pokaż menu";
+
+"Sign in or sign up" = "Zaloguj się lub zarejestruj się";
+
+"Sign out of %@" = "Wyloguj się z %@";
 
 "Simple, secure one-click payments" = "Łatwe, bezpieczne płatności jednym kliknięciem";
 

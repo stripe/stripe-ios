@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "Последние 4 цифры SSN";
 
-"Log in or sign up" = "Войдите или зарегистрируйтесь";
-
-"Log out of %@" = "Выйти из %@";
-
 "Manage SEPA debit" = "Управление дебетованием SEPA";
 
 "Manage US bank account" = "Управление банковским счетом в США";
@@ -295,6 +291,10 @@
 "Show details" = "Показать подробности";
 
 "Show menu" = "Показать меню";
+
+"Sign in or sign up" = "Войти или зарегистрироваться";
+
+"Sign out of %@" = "Выйти из %@";
 
 "Simple, secure one-click payments" = "Защищенные безопасные платежи одним нажатием";
 

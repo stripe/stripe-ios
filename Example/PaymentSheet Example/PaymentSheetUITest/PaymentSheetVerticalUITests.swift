@@ -159,25 +159,25 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
     }
 
     func testPayingWithNoFormPMs_verticalmode() {
-        // We choose Alipay as a representative PM that does not require form details
+        // We choose Cash App Pay as a representative PM that does not require form details
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .payment
         settings.layout = .vertical
         loadPlayground(app, settings)
 
-        // Try Alipay
+        // Try Cash App Pay
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        app.buttons["Alipay"].waitForExistenceAndTap()
+        app.buttons["Cash App Pay"].waitForExistenceAndTap()
         app.buttons["Pay $50.99"].tap()
         // Cancel
-        XCTAssertTrue(app.webViews.staticTexts["Alipay test payment page"].waitForExistence(timeout: 30))
+        XCTAssertTrue(app.otherElements["TopBrowserBar"].waitForExistence(timeout: 30))
         app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 1))
         // Fail payment
         app.buttons["Pay $50.99"].tap()
         let failPaymentText = app.firstDescendant(withLabel: "FAIL TEST PAYMENT")
         failPaymentText.waitForExistenceAndTap(timeout: 30.0)
-        let errorMessage = app.staticTexts["We are unable to authenticate your payment method. Please choose a different payment method and try again."]
+        let errorMessage = app.staticTexts["The customer declined this payment."]
         XCTAssertTrue(errorMessage.waitForExistence(timeout: 30))
 
         // Try Cash App Pay

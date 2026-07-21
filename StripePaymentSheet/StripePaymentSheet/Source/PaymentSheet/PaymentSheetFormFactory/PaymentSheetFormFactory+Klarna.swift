@@ -22,19 +22,12 @@ extension PaymentSheetFormFactory {
             $0 as? PaymentMethodElementWrapper<PhoneNumberElement>
         }.first
 
-        // Klarna requires country selection
-        let countryElement = makeKlarnaCountry()
-
-        // Address without country - only show if config requires full address
-        let addressElement = configuration.billingDetailsCollectionConfiguration.address == .full
-            ? makeBillingAddressSection(
-                collectionMode: .noCountry,
-                countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
-            )
-            : nil
+        // Klarna requires a country; collect the full address only if the config requires it
+        let addressElement = makeCountryOrAddressSection(
+            countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
+        )
 
         connectBillingDetailsFields(
-            countryElement: countryElement as? PaymentMethodElementWrapper<DropdownFieldElement>,
             addressElement: addressElement,
             phoneElement: phoneElement
         )
@@ -45,7 +38,6 @@ extension PaymentSheetFormFactory {
         let allElements: [Element?] = [
             headerElement,
             contactInfoSection,
-            countryElement,
             addressElement,
             mandateElement,
         ]
@@ -61,24 +53,4 @@ extension PaymentSheetFormFactory {
         return makeMandate(mandateText: mandateText)
     }
 
-    func makeKlarnaCountry() -> PaymentMethodElement? {
-        let countryCodes = Locale.current.sortedByTheirLocalizedNames(addressSpecProvider.countries)
-        let defaultValue = defaultBillingDetails().address.country
-        let country = PaymentMethodElementWrapper(
-            DropdownFieldElement.Address.makeCountry(
-                label: String.Localized.country,
-                countryCodes: countryCodes,
-                theme: theme,
-                defaultCountry: defaultValue,
-                locale: Locale.current
-            )
-        ) { dropdown, params in
-            let countryCode = countryCodes[dropdown.selectedIndex]
-            let address = STPPaymentMethodAddress()
-            address.country = countryCode
-            params.paymentMethodParams.nonnil_billingDetails.address = address
-            return params
-        }
-        return country
-    }
 }

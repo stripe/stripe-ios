@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Šī maka verifikācijas pieprasījuma derīguma termiņš ir beidzies. Lūdzu, mēģiniet vēlreiz.";
 
+"This wallet verification request is invalid. Please try again." = "Šis maka verifikācijas pieprasījums ir nederīgs. Lūdzu, mēģiniet vēlreiz.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Mums neizdevās pārbaudīt šī maka īpašumtiesības. Lūdzu, mēģiniet vēlreiz.";

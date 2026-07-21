@@ -22,7 +22,6 @@ extension PaymentSheetFormFactory {
             $0 as? PaymentMethodElementWrapper<PhoneNumberElement>
         }.first
         connectBillingDetailsFields(
-            countryElement: nil,
             addressElement: billingAddressElement,
             phoneElement: phoneElement)
 

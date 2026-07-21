@@ -85,7 +85,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         var linkBrand: LinkBrand
         let shouldOfferApplePay: Bool
         let shouldFinishOnClose: Bool
-        let shouldShowSecondaryCta: Bool
+        let canContinueWithoutLink: Bool
         let launchedFromFlowController: Bool
         let initiallySelectedPaymentDetailsID: String?
         let callToAction: ConfirmButton.CallToActionType
@@ -137,7 +137,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         ///   - configuration: PaymentSheet configuration.
         ///   - shouldOfferApplePay: Whether or not to show Apple Pay as a payment option.
         ///   - shouldFinishOnClose: Whether or not Link should finish with `.canceled` result instead of returning to Payment Sheet when the close button is tapped.
-        ///   - shouldShowSecondaryCta: Whether or not a secondary CTA to pay another way should be shown.
+        ///   - canContinueWithoutLink: Whether the user can exit Link and pay with a different method (e.g. via PaymentSheet).
         ///   - launchedFromFlowController: Whether the flow was opened from `FlowController`.
         ///   - initiallySelectedPaymentDetailsID: The ID of an initially selected payment method. This is set when opened instead of FlowController.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
@@ -152,7 +152,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             linkBrand: LinkBrand,
             shouldOfferApplePay: Bool,
             shouldFinishOnClose: Bool,
-            shouldShowSecondaryCta: Bool = true,
+            canContinueWithoutLink: Bool = true,
             launchedFromFlowController: Bool = false,
             initiallySelectedPaymentDetailsID: String?,
             callToAction: ConfirmButton.CallToActionType?,
@@ -167,7 +167,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             self.linkBrand = linkBrand
             self.shouldOfferApplePay = shouldOfferApplePay
             self.shouldFinishOnClose = shouldFinishOnClose
-            self.shouldShowSecondaryCta = shouldShowSecondaryCta
+            self.canContinueWithoutLink = canContinueWithoutLink
             self.launchedFromFlowController = launchedFromFlowController
             self.initiallySelectedPaymentDetailsID = initiallySelectedPaymentDetailsID
             self.callToAction = callToAction ?? .makeDefaultType(intent: intent, withLock: false)
@@ -213,7 +213,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         configuration: PaymentElementConfiguration,
         shouldOfferApplePay: Bool = false,
         shouldFinishOnClose: Bool = false,
-        shouldShowSecondaryCta: Bool = true,
+        canContinueWithoutLink: Bool = true,
         launchedFromFlowController: Bool = false,
         initiallySelectedPaymentDetailsID: String? = nil,
         callToAction: ConfirmButton.CallToActionType? = nil,
@@ -232,7 +232,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,
-                shouldShowSecondaryCta: shouldShowSecondaryCta,
+                canContinueWithoutLink: canContinueWithoutLink,
                 launchedFromFlowController: launchedFromFlowController,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 callToAction: callToAction,
@@ -766,7 +766,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         linkAccount?.logout()
         linkAccount = nil
 
-        if cancel {
+        if cancel && context.canContinueWithoutLink {
             self.cancel(shouldReturnToPaymentSheet: true)
         } else {
             updateUI()

@@ -160,10 +160,6 @@
 
 "Last 4 digits of SSN" = "L-aħħar 4 ċifri tal-SSN";
 
-"Log in or sign up" = "Idħol jew irreġistra";
-
-"Log out of %@" = "Oħroġ minn %@";
-
 "Manage SEPA debit" = "Ħu ħsieb id-debitu SEPA";
 
 "Manage US bank account" = "Ħu ħsieb il-kont tal-bank tal-Istati Uniti tal-Amerka";
@@ -295,6 +291,10 @@
 "Show details" = "Uri d-dettalji";
 
 "Show menu" = "Uri l-menù";
+
+"Sign in or sign up" = "Idħol jew irreġistra";
+
+"Sign out of %@" = "Oħroġ minn %@";
 
 "Simple, secure one-click payments" = "Pagamenti sempliċi u siguri b'mossa waħda";
 

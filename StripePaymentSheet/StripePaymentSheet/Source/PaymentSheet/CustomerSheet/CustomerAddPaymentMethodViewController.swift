@@ -428,9 +428,7 @@ extension CustomerAddPaymentMethodViewController: AutoCompleteViewControllerDele
 
         // Dismiss the autocomplete view controller
         presentedViewController?.dismiss(animated: true) {
-            // Switch to manual entry mode and set the line1 text
-            addressSectionElement.collectionMode = .allWithAutocomplete
-            addressSectionElement.line1?.setText(line1)
+            addressSectionElement.beginManualEntry(with: line1)
             addressSectionElement.line1?.beginEditing()
         }
     }
@@ -440,25 +438,11 @@ extension CustomerAddPaymentMethodViewController: AutoCompleteViewControllerDele
 
         // Dismiss the autocomplete view controller
         presentedViewController?.dismiss(animated: true) {
-            // Switch to manual entry mode after address selection
-            addressSectionElement.collectionMode = .allWithAutocomplete
-
             guard let address = address else {
                 return
             }
 
-            // Set the country if it's supported
-            let autocompleteCountryIndex = addressSectionElement.countryCodes.firstIndex(where: { $0 == address.country })
-            if let autocompleteCountryIndex = autocompleteCountryIndex {
-                addressSectionElement.country.select(index: autocompleteCountryIndex, shouldAutoAdvance: false)
-            }
-
-            // Populate the address fields
-            addressSectionElement.line1?.setText(address.line1 ?? "")
-            addressSectionElement.line2?.setText(address.line2 ?? "")
-            addressSectionElement.city?.setText(address.city ?? "")
-            addressSectionElement.postalCode?.setText(address.postalCode ?? "")
-            addressSectionElement.state?.setRawData(address.state ?? "", shouldAutoAdvance: false)
+            addressSectionElement.setAddress(address.addressSectionAddress)
 
             // Read back from the element so field processing (e.g. postal code truncation) is reflected
             let normalized = addressSectionElement.addressDetails.address

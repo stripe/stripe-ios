@@ -588,13 +588,27 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
 
     func testAccessoryView_includesCartesBancairesWithCBC() {
         let cardBrandChoiceElement = CardBrandChoiceElement()
-        let configuration = TextFieldElement.PANConfiguration(cardBrandChoiceElement: cardBrandChoiceElement)
+        let configuration = TextFieldElement.PANConfiguration(cardBrandChoiceDataSource: cardBrandChoiceElement)
         let view = configuration.accessoryView(for: "", theme: .default)
         let rotatingView = view as? RotatingCardBrandsView
         XCTAssertNotNil(rotatingView)
         XCTAssertTrue(rotatingView!.cardBrands.contains(.cartesBancaires))
         XCTAssertTrue(rotatingView!.cardBrands.contains(.visa))
         XCTAssertTrue(rotatingView!.cardBrands.contains(.mastercard))
+    }
+
+    func testCardBrandChoiceDataSourceIsWeaklyHeld() {
+        // Given
+        var cardBrandChoiceElement: CardBrandChoiceElement? = CardBrandChoiceElement()
+        weak var weakCardBrandChoiceElement = cardBrandChoiceElement
+
+        // When
+        let configuration = TextFieldElement.PANConfiguration(cardBrandChoiceDataSource: cardBrandChoiceElement)
+        cardBrandChoiceElement = nil
+
+        // Then
+        XCTAssertNil(weakCardBrandChoiceElement)
+        XCTAssertNil(configuration.cardBrandChoiceDataSource)
     }
 }
 

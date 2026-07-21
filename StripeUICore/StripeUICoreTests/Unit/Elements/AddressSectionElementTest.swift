@@ -29,7 +29,8 @@ class AddressSectionElementTest: XCTestCase {
         let section = AddressSectionElement(
             title: "",
             locale: locale_enUS,
-            addressSpecProvider: specProvider
+            addressSpecProvider: specProvider,
+            disableAutocomplete: true
         ).addressSection
         XCTAssert(section.elements.first is DropdownFieldElement,
                   "'\(String(describing: section.elements.first.map { type(of: $0) }))' is not 'DropdownFieldElement')")
@@ -82,7 +83,8 @@ class AddressSectionElementTest: XCTestCase {
         let sut = AddressSectionElement(
             title: "",
             locale: locale_enUS,
-            addressSpecProvider: specProvider
+            addressSpecProvider: specProvider,
+            disableAutocomplete: true
         )
         let section = sut.addressSection
 
@@ -129,6 +131,185 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(AddressSectionElement(title: "", countries: ["UK"], addressSpecProvider: specProvider).countryCodes, ["UK"])
         // Countries not in spec
         XCTAssertEqual(AddressSectionElement(title: "", countries: ["UK", "US"], addressSpecProvider: specProvider).countryCodes, ["UK", "US"])
+    }
+
+    func testAutocompleteStartsCompactAndExpandsForManualEntry() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider
+        )
+
+        XCTAssertEqual(sut.countriesSupportingAutocomplete, AddressSectionElement.defaultAutocompleteCountries)
+        XCTAssertNotNil(sut.autoCompleteLine)
+        XCTAssertNil(sut.line1)
+        XCTAssertNil(sut.line2)
+        XCTAssertNil(sut.city)
+        XCTAssertNil(sut.state)
+        XCTAssertNil(sut.postalCode)
+        var updateCount = 0
+        sut.didUpdate = { _ in updateCount += 1 }
+
+        sut.beginManualEntry(with: "510 Townsend St.")
+
+        XCTAssertEqual(updateCount, 1)
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertEqual(sut.line1?.text, "510 Townsend St.")
+        guard let expandedLine1 = sut.line1 else {
+            return XCTFail("Expected a visible line1 field")
+        }
+        XCTAssertTrue(sut.addressSection.elements.contains { $0 === expandedLine1 })
+        XCTAssertLine1HasAutocompleteAccessory(sut)
+    }
+
+    func testAutocompleteStartsExpandedWhenAddressDefaultsArePresent() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaults: .init(address: .init(city: "San Francisco"))
+        )
+
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertEqual(sut.city?.text, "San Francisco")
+        XCTAssertLine1HasAutocompleteAccessory(sut)
+    }
+
+    func testAutocompleteStaysCompactWhenOnlyDefaultCountryIsPresent() {
+        // A default country alone (no street address) shouldn't be treated as an
+        // existing address to expand and show.
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaults: .init(address: .init(country: "US"))
+        )
+
+        XCTAssertNotNil(sut.autoCompleteLine)
+        XCTAssertNil(sut.line1)
+    }
+
+    func testAutocompleteExpandsForUnsupportedCountryAndDoesNotCollapse() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US", "CA"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            countriesSupportingAutocomplete: ["CA"]
+        )
+
+        XCTAssertEqual(sut.selectedCountryCode, "CA")
+        XCTAssertNotNil(sut.autoCompleteLine)
+
+        sut.selectedCountryCode = "US"
+
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertLine1DoesNotHaveAutocompleteAccessory(sut)
+
+        sut.selectedCountryCode = "CA"
+
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertLine1HasAutocompleteAccessory(sut)
+    }
+
+    func testAutocompleteExpandsForEmptyManualEntry() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider
+        )
+
+        sut.beginManualEntry(with: "")
+
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertLine1HasAutocompleteAccessory(sut)
+    }
+
+    func testSettingAddressExpandsAutocompleteAndPopulatesFields() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider
+        )
+        let address = AddressSectionElement.AddressDetails.Address(
+            city: "San Francisco",
+            country: "US",
+            line1: "510 Townsend St.",
+            line2: "Floor 3",
+            postalCode: "94103",
+            state: "CA"
+        )
+
+        sut.setAddress(address)
+
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertEqual(sut.addressDetails.address, address)
+        XCTAssertLine1HasAutocompleteAccessory(sut)
+    }
+
+    func testSettingEmptyAddressDoesNotExpandAutocomplete() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider
+        )
+
+        sut.setAddress(.init())
+
+        XCTAssertNotNil(sut.autoCompleteLine)
+        XCTAssertNil(sut.line1)
+    }
+
+    func testAutocompleteDoesNotExpandForNonAddressDefaultsOrFieldUpdates() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaults: .init(name: "Jenny Rosen"),
+            additionalFields: .init(name: .enabled())
+        )
+
+        XCTAssertNotNil(sut.autoCompleteLine)
+        sut.name?.setText("Jane Doe")
+        XCTAssertNotNil(sut.autoCompleteLine)
+        XCTAssertNil(sut.line1)
+    }
+
+    func testAutocompleteCanBeDisabled() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            disableAutocomplete: true
+        )
+
+        XCTAssertNil(sut.autoCompleteLine)
+        XCTAssertNotNil(sut.line1)
+        XCTAssertLine1DoesNotHaveAutocompleteAccessory(sut)
+    }
+
+    func testChangingFieldsToCollectPreservesAutocompleteCountries() {
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            fieldsToCollect: .countryOnly
+        )
+
+        sut.fieldsToCollect = .all
+
+        XCTAssertEqual(sut.countriesSupportingAutocomplete, AddressSectionElement.defaultAutocompleteCountries)
+        XCTAssertNotNil(sut.autoCompleteLine)
+        XCTAssertNil(sut.line1)
     }
 
     func test_additionalFields() {
@@ -251,7 +432,8 @@ class AddressSectionElementTest: XCTestCase {
         let sut = AddressSectionElement(
             title: "",
             locale: locale_enUS,
-            addressSpecProvider: specProvider
+            addressSpecProvider: specProvider,
+            disableAutocomplete: true
         )
 
         guard let stateDropdown = sut.state as? DropdownFieldElement else {
@@ -294,7 +476,8 @@ class AddressSectionElementTest: XCTestCase {
             title: "",
             countries: ["JP"],
             locale: locale_enUS,
-            addressSpecProvider: specProvider
+            addressSpecProvider: specProvider,
+            disableAutocomplete: true
         )
         let section = sut.addressSection
 
@@ -353,5 +536,31 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(addressDetails.address.line2, linkBillingDetails.line2)
         XCTAssertEqual(addressDetails.address.postalCode, linkBillingDetails.postalCode)
         XCTAssertEqual(addressDetails.address.state, linkBillingDetails.state)
+    }
+
+    private func XCTAssertLine1HasAutocompleteAccessory(
+        _ sut: AddressSectionElement,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        guard let configuration = sut.line1?.configuration as? TextFieldElement.Address.LineConfiguration else {
+            return XCTFail("Expected line1 to use LineConfiguration", file: file, line: line)
+        }
+        guard case .line1Autocompletable = configuration.lineType else {
+            return XCTFail("Expected line1 to show autocomplete", file: file, line: line)
+        }
+    }
+
+    private func XCTAssertLine1DoesNotHaveAutocompleteAccessory(
+        _ sut: AddressSectionElement,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        guard let configuration = sut.line1?.configuration as? TextFieldElement.Address.LineConfiguration else {
+            return XCTFail("Expected line1 to use LineConfiguration", file: file, line: line)
+        }
+        guard case .line1 = configuration.lineType else {
+            return XCTFail("Expected line1 to omit autocomplete", file: file, line: line)
+        }
     }
 }

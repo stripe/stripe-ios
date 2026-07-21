@@ -780,7 +780,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        // Fetch the full STPCheckoutSessionAPIResponse object (with allResponseFields containing elements_session)
+        // Fetch the full PaymentPagesAPIResponse object (with allResponseFields containing elements_session)
         let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
 
         let checkout = Checkout(apiResponse: checkoutSession)
@@ -793,11 +793,11 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             expectation.fulfill()
             switch result {
             case .success(let (loadResult, _)):
-                guard case let .checkout(loadedCheckout) = loadResult.intent else {
+                guard case let .checkout(loadedSession) = loadResult.intent else {
                     XCTFail("Expected checkout intent type")
                     return
                 }
-                XCTAssertEqual(loadedCheckout.session.id, checkoutSessionId)
+                XCTAssertEqual(loadedSession.id, checkoutSessionId)
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
                 XCTAssertTrue(loadResult.elementsSession.orderedPaymentMethodTypes.contains(.card))
             case .failure(let error):
@@ -829,14 +829,14 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             expectation.fulfill()
             switch result {
             case .success(let (loadResult, _)):
-                guard case let .checkout(loadedCheckout) = loadResult.intent else {
+                guard case let .checkout(loadedSession) = loadResult.intent else {
                     XCTFail("Expected checkout intent type")
                     return
                 }
-                XCTAssertEqual(loadedCheckout.session.id, checkoutSessionId)
-                XCTAssertEqual(loadedCheckout.session.mode, .setup)
-                XCTAssertEqual(loadedCheckout.session.status?.type, .open)
-                XCTAssertEqual(loadedCheckout.session.status?.paymentStatus, .noPaymentRequired)
+                XCTAssertEqual(loadedSession.id, checkoutSessionId)
+                XCTAssertEqual(loadedSession.mode, .setup)
+                XCTAssertEqual(loadedSession.status?.type, .open)
+                XCTAssertEqual(loadedSession.status?.paymentStatus, .noPaymentRequired)
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
                 XCTAssertTrue(loadResult.elementsSession.orderedPaymentMethodTypes.contains(.card))
             case .failure(let error):

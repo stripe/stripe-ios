@@ -78,14 +78,35 @@ extension Checkout.Session {
 
         return setupFutureUsage
     }
+}
 
+enum SessionFieldUpdate<Value> {
+    case keepOldValue
+    case newValue(Value?)
+
+    func resolved(currentValue: Value?) -> Value? {
+        switch self {
+        case .keepOldValue:
+            return currentValue
+        case .newValue(let newValue):
+            return newValue
+        }
+    }
+}
+
+extension Checkout.Session {
+    /// Apologetic explanation for this method:
+    /// - Situation: Session is immutable, so all mutations must create a new one.
+    /// - Complication: Optional fields need three states here: keep the old value, replace with a non-nil value, or explicitly clear to nil.
+    /// - Resolution: SessionFieldUpdate keeps that distinction visible at call sites instead of relying on double optionals.
     func makeCopyOverriding(
-        billingAddress: Checkout.ContactAddress? = nil,
-        shippingAddress: Checkout.ContactAddress? = nil
+        billingAddress: SessionFieldUpdate<Checkout.ContactAddress> = .keepOldValue,
+        shippingAddress: SessionFieldUpdate<Checkout.ContactAddress> = .keepOldValue,
+        paymentOption: SessionFieldUpdate<Checkout.Session.PaymentOptionDisplayData> = .keepOldValue
     ) -> Self {
         return Self(
             id: id,
-            billingAddress: billingAddress ?? self.billingAddress,
+            billingAddress: billingAddress.resolved(currentValue: self.billingAddress),
             businessName: businessName,
             currency: currency,
             currencyOptions: currencyOptions,
@@ -94,9 +115,10 @@ extension Checkout.Session {
             lineItems: lineItems,
             livemode: livemode,
             minorUnitsAmountDivisor: minorUnitsAmountDivisor,
+            paymentOption: paymentOption.resolved(currentValue: self.paymentOption),
             savedPaymentMethods: savedPaymentMethods,
             shipping: shipping,
-            shippingAddress: shippingAddress ?? self.shippingAddress,
+            shippingAddress: shippingAddress.resolved(currentValue: self.shippingAddress),
             shippingOptions: shippingOptions,
             status: status,
             tax: tax,
@@ -110,8 +132,8 @@ extension Checkout.Session {
             allowedShippingCountries: allowedShippingCountries,
             localizedPricesMetas: localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,
-            requiresBillingAddress: requiresBillingAddress,
             adaptivePricingActive: adaptivePricingActive,
+            requiresBillingAddress: requiresBillingAddress,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
             elementsSession: elementsSession

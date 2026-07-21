@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Denne forespørselen om lommebokbekreftelse har utløpt. Prøv igjen.";
 
+"This wallet verification request is invalid. Please try again." = "Denne forespørselen om lommebokbekreftelse er ugyldig. Prøv igjen.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Vi kan ikke bekrefte eierskapet til denne lommeboken. Prøv igjen.";

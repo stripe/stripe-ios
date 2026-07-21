@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Αυτό το αίτημα επαλήθευσης πορτοφολιού έληξε. Δοκιμάστε ξανά.";
 
+"This wallet verification request is invalid. Please try again." = "Αυτό το αίτημα επαλήθευσης πορτοφολιού δεν είναι έγκυρο. Δοκιμάστε ξανά.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Δεν μπορέσαμε να επαληθεύσουμε την ιδιοκτησία αυτού του πορτοφολιού. Δοκιμάστε ξανά.";
