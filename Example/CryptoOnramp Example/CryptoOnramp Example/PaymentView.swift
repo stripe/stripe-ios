@@ -158,6 +158,7 @@ struct PaymentView: View {
     @State private var achSettlementSpeed: CreateOnrampSessionRequest.SettlementSpeed = .instant
     @State private var pendingWalletOwnershipVerificationCryptoPaymentTokenId: String?
     @State private var isPresentingWalletOwnershipVerificationAlert = false
+    @State private var walletOwnershipVerificationSession: WalletOwnershipVerificationSession?
 
     private var isPresentingAlert: Binding<Bool> {
         Binding(get: {
@@ -476,6 +477,14 @@ struct PaymentView: View {
                 pendingWalletOwnershipVerificationCryptoPaymentTokenId = nil
             }
         )
+        .sheet(item: $walletOwnershipVerificationSession) { session in
+            WalletOwnershipVerificationSheet(
+                session: session,
+                coordinator: coordinator
+            ) {
+                retryPendingCreateOnrampSession()
+            }
+        }
     }
 
     // MARK: - PaymentView
@@ -912,13 +921,13 @@ struct PaymentView: View {
             return
         }
 
-        WalletOwnershipVerification.startVerification(
+        WalletOwnershipVerification.requestChallenge(
             context: context,
             coordinator: coordinator,
             isLoading: isLoading,
             alert: $alert
-        ) {
-            retryPendingCreateOnrampSession()
+        ) { session in
+            walletOwnershipVerificationSession = session
         }
     }
 
