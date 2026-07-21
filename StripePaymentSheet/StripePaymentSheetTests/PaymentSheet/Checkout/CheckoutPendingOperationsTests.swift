@@ -260,7 +260,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         }
 
         let loadResult = PaymentSheetLoader.LoadResult(
-            intent: .checkout(checkout),
+            intent: .checkout(checkout.session),
             elementsSession: checkout.session.elementsSession,
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
