@@ -102,7 +102,7 @@ extension PaymentSheetFormFactory {
             case .automatic:
                 return makeBillingAddressSection(defaultFieldsToCollect: .country, minimumFieldsToCollectByCountry: Self.cardMinimumFieldsToCollectByCountry, countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .full:
-                return makeBillingAddressSection(defaultFieldsToCollect: .all, minimumFieldsToCollectByCountry: Self.cardMinimumFieldsToCollectByCountry, countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
+                return makeBillingAddressSection(defaultFieldsToCollect: .all, countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .never:
                 return nil
             }
