@@ -621,12 +621,13 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
             didRedirect.fulfill()
         }
 
-        paymentHandler.confirmPaymentIntent(
-            params: paymentIntentParams,
-            authenticationContext: self
-        ) { _, _, _ in }
-
-        wait(for: [didRedirect], timeout: 2.0)
+        confirmPaymentWithSucceed(
+            nextActionData: nextActionData,
+            paymentMethodData: paymentMethodData,
+            didRedirect: didRedirect,
+            paymentHandler: paymentHandler,
+            paymentIntentParams: paymentIntentParams
+        )
     }
 
     private func confirmPaymentWithSucceed(
