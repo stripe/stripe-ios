@@ -1083,7 +1083,8 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
         if !didCancel {
             self.didPresentAndContinue = true
         }
-        flowControllerViewController.dismiss(animated: true) {
+        let presentedViewController = flowControllerViewController.bottomSheetController ?? flowControllerViewController
+        presentedViewController.dismiss(animated: true) {
             if didCancel {
                 self.revertSelectionAfterCancellation()
             }
