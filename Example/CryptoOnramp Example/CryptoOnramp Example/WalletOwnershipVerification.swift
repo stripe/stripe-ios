@@ -96,6 +96,8 @@ enum WalletOwnershipVerification {
                     if wallet.verifiedOwnership {
                         onVerified()
                     } else {
+                        // The request to verify the wallet succeeded, but the backend is still erroneously reporting that
+                        // `verifiedOwnership` is `false`. This is not an expected use case.
                         alert.wrappedValue = Alert(
                             title: "Wallet verification failed",
                             message: "Stripe did not mark this wallet as verified. Please try again."
