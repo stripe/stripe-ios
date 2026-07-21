@@ -137,28 +137,16 @@ public class PaymentSheet {
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
         Task { @MainActor in
-            // Overwrite completion closure to retain self until called
-            let completion: (PaymentSheetResult) -> Void = { status in
-                // Dismiss if necessary
-                if let presentingViewController = self.bottomSheetViewController.presentingViewController {
-                    // Calling `dismiss()` on the presenting view controller causes
-                    // the bottom sheet and any presented view controller by
-                    // bottom sheet (i.e. Link) to be dismissed all at the same time.
-                    presentingViewController.dismiss(animated: true) {
-                        completion(status)
-                    }
-                } else {
-                    completion(status)
-                }
-                self.completion = nil
+            // Retain PaymentSheet until the presentation finishes.
+            self.completion = { [self] result in
+                dismissAndCompletePresentation(with: result, merchantCompletion: completion)
             }
-            self.completion = completion
 
             // Guard against basic user error
             guard presentingViewController.presentedViewController == nil else {
                 assertionFailure(PaymentSheetError.alreadyPresented.debugDescription)
                 let error = PaymentSheetError.alreadyPresented
-                completion(.failed(error: error))
+                self.completion?(.failed(error: error))
                 return
             }
             // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
@@ -207,12 +195,57 @@ public class PaymentSheet {
                         presentPaymentSheet()
                     }
                 case .failure(let error):
-                    completion(.failed(error: error))
+                    self.completion?(.failed(error: error))
                 }
             }
             self.bottomSheetViewController.setViewControllers([self.loadingViewController])
             presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
         }
+    }
+
+    private func dismissAndCompletePresentation(
+        with result: PaymentSheetResult,
+        merchantCompletion: @escaping (PaymentSheetResult) -> Void
+    ) {
+        // Clear the stored completion before dismissal so this presentation can't finish twice.
+        completion = nil
+
+        guard let presentingViewController = bottomSheetViewController.presentingViewController else {
+            completePresentation(with: result, merchantCompletion: merchantCompletion)
+            return
+        }
+
+        // This also dismisses anything presented by PaymentSheet, such as Link.
+        presentingViewController.dismiss(animated: true) { [self] in
+            completePresentation(with: result, merchantCompletion: merchantCompletion)
+        }
+    }
+
+    private func completePresentation(
+        with result: PaymentSheetResult,
+        merchantCompletion: (PaymentSheetResult) -> Void
+    ) {
+        switch result {
+        case .canceled:
+            // Native Link can return `.canceled` without calling the PaymentSheet cancel delegate.
+            revertPersistedSelectionUsingCurrentPaymentMethodsIfNeeded()
+        case .completed, .failed:
+            // The snapshot is only needed to undo a canceled presentation.
+            persistedSelectionSnapshotBeforePresentation = nil
+        }
+
+        merchantCompletion(result)
+    }
+
+    private func revertPersistedSelectionUsingCurrentPaymentMethodsIfNeeded() {
+        guard let paymentSheetViewController = bottomSheetViewController.contentStack.first(
+            where: { $0 is PaymentSheetViewControllerProtocol }
+        ) as? PaymentSheetViewControllerProtocol else {
+            return
+        }
+        revertPersistedSelectionAfterCancellationIfNeeded(
+            using: paymentSheetViewController.savedPaymentMethods
+        )
     }
 
     /// Presents a sheet for a customer to complete their payment
@@ -246,6 +279,9 @@ public class PaymentSheet {
 
     /// A user-supplied completion block. Nil until `present` is called.
     var completion: ((PaymentSheetResult) -> Void)?
+
+    /// Used to revert persisted selection changes if the customer cancels PaymentSheet.
+    private var persistedSelectionSnapshotBeforePresentation: CustomerPaymentOption.PersistedSelectionSnapshot?
 
     /// Loading View Controller
     lazy var loadingViewController = LoadingViewController(
@@ -290,6 +326,10 @@ public class PaymentSheet {
             }
             return checkout
         }()
+        persistedSelectionSnapshotBeforePresentation = .init(
+            customerID: configuration.customer?.id,
+            availableSavedPaymentMethods: loadResult.savedPaymentMethods
+        )
         switch loadResult.paymentMethodOrientation {
         case .horizontal:
             let vc = PaymentSheetViewController(
@@ -386,8 +426,24 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
 
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
         paymentSheetViewController.dismiss(animated: true) {
+            // Restoring earlier can relayout the outgoing PaymentSheet during dismissal.
+            self.revertPersistedSelectionAfterCancellationIfNeeded(
+                using: paymentSheetViewController.savedPaymentMethods
+            )
             self.completion?(.canceled)
         }
+    }
+
+    private func revertPersistedSelectionAfterCancellationIfNeeded(
+        using currentlyAvailableSavedPaymentMethods: [STPPaymentMethod]
+    ) {
+        guard let persistedSelectionSnapshot = persistedSelectionSnapshotBeforePresentation else {
+            return
+        }
+        // The cancel delegate and native Link completion can both reach this method. Clear the snapshot
+        // before applying it so the selection is reverted only once.
+        persistedSelectionSnapshotBeforePresentation = nil
+        persistedSelectionSnapshot.revertPersistedSelection(using: currentlyAvailableSavedPaymentMethods)
     }
 
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
@@ -423,6 +479,7 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSheetContentViewController {
     var intent: Intent { get }
     var elementsSession: STPElementsSession { get }
+    var savedPaymentMethods: [STPPaymentMethod] { get }
 
     func pay(with paymentOption: PaymentOption)
     func clearTextFields()
