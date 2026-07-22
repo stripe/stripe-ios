@@ -115,6 +115,7 @@ public final class Checkout: ObservableObject {
 
         let sessionId = Self.extractSessionId(from: clientSecret)
         do {
+            // Call /init
             let apiResponse = try await configuration.apiClient.initCheckoutSession(
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
@@ -123,7 +124,18 @@ public final class Checkout: ObservableObject {
             self.session = loadedSession
             self.nonisolatedSession = session // temporary hack
 
-            try await applyDefaults()
+            // Apply defaults
+            let defaults = configuration.defaults
+            if let defaultBillingAddress = defaults.billingDetails?.address {
+                try await updateBillingTaxRegionIfNecessary(address: defaultBillingAddress)
+            }
+            if let shippingDetails = defaults.shippingDetails,
+               let address = shippingDetails.address {
+                try await updateShippingAddress(
+                    name: shippingDetails.name,
+                    address: address
+                )
+            }
 
             // Load elements
             self.paymentElement = try await PaymentElement(checkout: self)
@@ -278,19 +290,6 @@ public final class Checkout: ObservableObject {
     /// Returns the PaymentElement for this Checkout instance.
     public func getPaymentElement() -> PaymentElement {
         return paymentElement
-    }
-}
-
-// MARK: - Defaults
-
-extension Checkout {
-    func applyDefaults() async throws {
-        let defaults = configuration.defaults
-
-        if let billingDetails = defaults.billingDetails,
-           let address = billingDetails.address {
-            try await updateBillingTaxRegionIfNecessary(address: address)
-        }
     }
 }
 
