@@ -13,15 +13,16 @@ function suggest_no_verify() {
   tput sgr0 # reset
 }
 
-if ! command -v swiftlint &> /dev/null; then
-  echo "swiftlint is not installed! Use:"
-  tput setaf 7 # white
-  echo
-  echo '    brew install swiftlint'
-  echo
-  tput sgr0 # reset
-  exit 1
-fi
+# Resolve the real ci_scripts directory (following symlinks, so this works when
+# invoked as a .git/hooks/pre-commit symlink) and ensure the pinned SwiftLint
+# version is installed, exporting $SWIFTLINT (RUN_MOBILESDK-5167).
+source_path="${BASH_SOURCE[0]}"
+while [ -h "$source_path" ]; do
+  source_dir="$(cd -P "$(dirname "$source_path")" && pwd)"
+  source_path="$(readlink "$source_path")"
+  [[ $source_path != /* ]] && source_path="$source_dir/$source_path"
+done
+source "$(cd -P "$(dirname "$source_path")" && pwd)/ensure_swiftlint.sh"
 
 IS_HOOK=false
 if [ $(dirname "$0") == ".git/hooks" ]; then
@@ -52,7 +53,7 @@ fi
 export SCRIPT_INPUT_FILE_COUNT=$count
 
 if [ "$count" -ne 0 ]; then
-  swiftlint --fix --use-script-input-files --config .swiftlint.yml
+  "$SWIFTLINT" --fix --use-script-input-files --config .swiftlint.yml
 fi
 
 EXIT_CODE=$?
