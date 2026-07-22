@@ -245,7 +245,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         await AddressSpecProvider.shared.loadAddressSpecs()
 
         // Given a Checkout update is still pending
-        let checkout = await makeCheckoutWithOpenSession()
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let gate = CheckoutPendingOperationsTestGate()
 
         let operationTask = Task { @MainActor in
@@ -279,7 +279,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         // When payment options finish loading, Link is selected and the sheet is canceled
         let originalViewController = fc.viewController
         let presentCompleted = expectation(description: "presentPaymentOptions completion called")
-        fc.presentPaymentOptions(from: UIViewController()) { didCancel in
+        fc.presentPaymentOptions(from: UIViewController()) { (didCancel: Bool) in
             XCTAssertTrue(didCancel)
             presentCompleted.fulfill()
         }
@@ -290,7 +290,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
             fc.viewController !== originalViewController
         }
 
-        fc.viewController.linkConfirmOption = .wallet(brand: .link)
+        fc.viewController.linkConfirmOption = PaymentSheet.LinkConfirmOption.wallet(brand: .link)
         fc.viewController.didTapOrSwipeToDismiss()
 
         await fulfillment(of: [presentCompleted], timeout: 2.0)
