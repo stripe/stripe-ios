@@ -320,6 +320,12 @@ public class PaymentSheet {
         loadResult: PaymentSheetLoader.LoadResult,
         previousPaymentOption: PaymentOption?
     ) -> PaymentSheetViewControllerProtocol {
+        let checkout: Checkout? = {
+            guard case .checkout(let checkout) = mode else {
+                return nil
+            }
+            return checkout
+        }()
         persistedSelectionSnapshotBeforePresentation = .init(
             customerID: configuration.customer?.id,
             availableSavedPaymentMethods: loadResult.savedPaymentMethods
@@ -340,7 +346,7 @@ public class PaymentSheet {
                 loadResult: loadResult,
                 isFlowController: false,
                 analyticsHelper: analyticsHelper,
-                checkout: mode.checkout,
+                checkout: checkout,
                 previousPaymentOption: previousPaymentOption
             )
             vc.paymentSheetDelegate = self

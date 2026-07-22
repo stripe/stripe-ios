@@ -109,6 +109,140 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         XCTAssertNil(contactInfoSection, "Should not have separate contact information section when billing address includes email/phone")
     }
 
+    func testCardFormAutomaticBillingUsesCountryMinimums() throws {
+        // Given automatic billing address collection with a minimum and an unlisted country
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
+            "CA": AddressSpec(format: "ACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
+            "GB": AddressSpec(format: "ACZ", require: "ACZ", cityNameType: .post_town, stateNameType: .county, zip: "", zipNameType: .postal_code),
+            "FR": AddressSpec(format: "ACZ", require: "ACZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
+        ]
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA", "GB", "FR"]
+        let factory = PaymentSheetFormFactory(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card),
+            addressSpecProvider: specProvider
+        )
+
+        // When the card form displays each country with a card postal minimum
+        let address = try XCTUnwrap(
+            factory.makeCard().getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+        XCTAssertEqual(address.defaultFieldsToCollect, .country)
+        XCTAssertEqual(address.addressSection.title, String.Localized.billing_address_lowercase)
+        for countryCode in ["US", "CA", "GB"] {
+            address.selectedCountryCode = countryCode
+
+            // Then the card minimum collects country and postal code
+            let postalCode = try XCTUnwrap(address.postalCode)
+            XCTAssertTrue(address.addressSection.elements.contains { $0 === postalCode })
+            XCTAssertNil(address.line1)
+        }
+
+        // When changing to an unlisted country
+        address.selectedCountryCode = "FR"
+
+        // Then the form falls back to country collection
+        XCTAssertNil(address.postalCode)
+        XCTAssertNil(address.line1)
+    }
+
+    func testCardFormAutomaticBillingHidesTitleWhenAvailableCountriesHaveNoMinimums() throws {
+        // Given automatic billing address collection with only a country that has no card minimum available
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "FR": AddressSpec(format: "ACZ", require: "ACZ", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
+        ]
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+        let factory = PaymentSheetFormFactory(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card),
+            addressSpecProvider: specProvider
+        )
+
+        // When the card form is built
+        let address = try XCTUnwrap(
+            factory.makeCard().getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then the address spec provider's lone country selector has no billing address title
+        XCTAssertNil(address.addressSection.title)
+        XCTAssertNil(address.postalCode)
+    }
+
+    func testCardFormFullBillingIsNotReducedByCountryMinimums() throws {
+        // Given full billing address collection
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA"]
+        let factory = PaymentSheetFormFactory(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card),
+            addressSpecProvider: dummyAddressSpecProvider
+        )
+
+        // When the card form displays a country that has a card postal minimum
+        let address = try XCTUnwrap(
+            factory.makeCard().getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+        address.selectedCountryCode = "US"
+
+        // Then full billing collection remains a full address
+        XCTAssertEqual(address.defaultFieldsToCollect, .all)
+        XCTAssertNotNil(address.autoCompleteLine)
+    }
+
+    func testSavedCardFormAutomaticBillingUsesCountryMinimums() throws {
+        // Given an editable saved card with automatic billing address collection
+        var billingConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration()
+        billingConfiguration.address = .automatic
+        billingConfiguration.allowedCountries = ["US", "FR"]
+        let configuration = UpdatePaymentMethodViewController.Configuration(
+            paymentMethod: STPPaymentMethod._testCard(),
+            appearance: .default,
+            billingDetailsCollectionConfiguration: billingConfiguration,
+            hostedSurface: .paymentSheet,
+            cardBrandFilter: .default,
+            canRemove: true,
+            canUpdate: true,
+            isCBCEligible: false,
+            allowsSetAsDefaultPM: false,
+            isDefault: false
+        )
+
+        // When the saved card form displays the US billing address
+        let address = try XCTUnwrap(
+            SavedPaymentMethodFormFactory()
+                .makeCard(configuration: configuration)
+                .getAllUnwrappedSubElements()
+                .compactMap { $0 as? AddressSectionElement }
+                .first
+        )
+        address.selectedCountryCode = "US"
+
+        // Then the card minimum collects postal code
+        XCTAssertEqual(address.defaultFieldsToCollect, .country)
+        XCTAssertNotNil(address.postalCode)
+        XCTAssertNil(address.line1)
+
+        // When changing to an unlisted country
+        address.selectedCountryCode = "FR"
+
+        // Then the form falls back to country collection
+        XCTAssertNil(address.postalCode)
+        XCTAssertNil(address.line1)
+    }
+
     func testCardFormWithEmailPhoneAlwaysAndNeverBilling_EmailPhoneInContactInfo() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.email = .always
@@ -356,7 +490,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         )
 
         let billingAddressSection = factory.makeBillingAddressSection(
-            fieldsToCollect: .all,
+            defaultFieldsToCollect: .all,
             countries: nil,
             includeEmail: true,
             includePhone: true
@@ -364,7 +498,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
 
         // Verify the autocomplete configuration uses the audited default countries
         XCTAssertEqual(
-            billingAddressSection.element.fieldsToCollect,
+            billingAddressSection.element.defaultFieldsToCollect,
             .all
         )
         XCTAssertEqual(billingAddressSection.element.countriesSupportingAutocomplete, AddressSectionElement.defaultAutocompleteCountries)
@@ -395,7 +529,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         )
 
         let billingAddressSection = factory.makeBillingAddressSection(
-            fieldsToCollect: .all,
+            defaultFieldsToCollect: .all,
             countries: nil,
             includeEmail: false,
             includePhone: false
