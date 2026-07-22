@@ -133,7 +133,7 @@ extension Checkout.Session {
             localizedPricesMetas: localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,
             adaptivePricingActive: adaptivePricingActive,
-            requiresBillingAddress: requiresBillingAddress,
+            billingAddressCollection: billingAddressCollection,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
             elementsSession: elementsSession

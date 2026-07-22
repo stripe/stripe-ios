@@ -17,6 +17,7 @@ struct CheckoutCartView: View {
     @State private var errorMessage: String?
 
     let clientSecret: String
+    let shippingAddressCollection: Bool
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
@@ -31,6 +32,7 @@ struct CheckoutCartView: View {
                     CheckoutCartContentView(
                         checkout: checkout,
                         currencySelectorAppearance: currencySelectorAppearance,
+                        showsShippingAddressSection: shippingAddressCollection,
                         isLoading: $isLoading,
                         errorMessage: $errorMessage
                     )
@@ -84,8 +86,6 @@ struct CheckoutCartView: View {
         do {
             var config = Checkout.Configuration(clientSecret: clientSecret)
             config.adaptivePricing.allowed = adaptivePricing
-            config.paymentElement.billingDetailsCollectionConfiguration.name = .always
-            config.paymentElement.billingDetailsCollectionConfiguration.address = .full
             checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription

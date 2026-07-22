@@ -200,24 +200,24 @@ final class CheckoutUnitTests: XCTestCase {
 
     // MARK: - Address Collection Decoding Tests
 
-    func testRequiresBillingAddress_whenRequired() {
+    func testBillingAddressCollection_whenRequired() {
         var json = CheckoutTestHelpers.openSessionJSON
         json["billing_address_collection"] = "required"
         let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
-        XCTAssertTrue(session.requiresBillingAddress)
+        XCTAssertEqual(session.billingAddressCollection, .required)
     }
 
-    func testRequiresBillingAddress_whenAutoOrNil() {
-        // "auto" should not be required
+    func testBillingAddressCollection_whenAutoOrNil() {
+        // "auto" should decode as automatic
         var jsonAuto = CheckoutTestHelpers.openSessionJSON
         jsonAuto["billing_address_collection"] = "auto"
         let sessionAuto = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: jsonAuto)!
-        XCTAssertFalse(sessionAuto.requiresBillingAddress)
+        XCTAssertEqual(sessionAuto.billingAddressCollection, .automatic)
 
-        // absent field should not be required
+        // absent field should default to automatic
         let jsonNil = CheckoutTestHelpers.openSessionJSON
         let sessionNil = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: jsonNil)!
-        XCTAssertFalse(sessionNil.requiresBillingAddress)
+        XCTAssertEqual(sessionNil.billingAddressCollection, .automatic)
     }
 
     func testAllowedShippingCountries_whenPresent() {
@@ -355,7 +355,7 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(session.tax.taxAmounts?.first?.displayName, "Sales Tax")
 
         // Verify address collection settings
-        XCTAssertTrue(session.requiresBillingAddress)
+        XCTAssertEqual(session.billingAddressCollection, .required)
         XCTAssertTrue(session.makePublicSession().requiresShippingAddress)
         XCTAssertEqual(session.allowedShippingCountries, ["US", "CA", "GB"])
 
