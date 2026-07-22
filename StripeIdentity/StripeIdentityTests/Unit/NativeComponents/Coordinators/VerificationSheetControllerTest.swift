@@ -135,7 +135,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertFalse(mockResponse.has3DFaceCaptureExperiment)
     }
 
-    func testVerificationPageMatches3DFaceCaptureExperiment() throws {
+    func testVerificationPageEnables3DFaceCaptureFromExperiment() throws {
         let mockResponse = try VerificationPageMock.response200.make().withExperiments([
             .init(
                 experimentName: "idprod_3d_face_capture_mobile",

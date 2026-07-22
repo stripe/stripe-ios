@@ -305,7 +305,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         sheetController: VerificationSheetControllerProtocol
     ) {
         self.apiConfig = apiConfig
-        self.enable3DFaceCapture = enable3DFaceCapture ?? apiConfig.enable3DFaceCapture
+        self.enable3DFaceCapture = enable3DFaceCapture ?? false
         self.consentSelection = trainingConsent ?? false
         self.imageScanningSession = imageScanningSession
         self.selfieUploader = selfieUploader
