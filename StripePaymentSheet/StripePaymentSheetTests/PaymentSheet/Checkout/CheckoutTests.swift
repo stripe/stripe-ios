@@ -156,6 +156,33 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(3000, checkout.session.total?.total.minorUnitsAmount)
     }
 
+    func testUpdateEmail() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
+
+        XCTAssertNil(checkout.session.email)
+
+        try await checkout.updateEmail("jane@example.com")
+        XCTAssertEqual(checkout.session.email, "jane@example.com")
+
+        try await checkout.updateEmail(nil)
+        XCTAssertNil(checkout.session.email)
+    }
+
+    func testUpdatePhone() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
+
+        XCTAssertNil(checkout.session.customer?.phone)
+
+        try await checkout.updatePhone("+15551234567")
+        XCTAssertEqual(checkout.session.customer?.phone, "+15551234567")
+    }
+
     func testUpdateBillingTaxRegionIfNecessary() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             merchantCountry: "us_tax",

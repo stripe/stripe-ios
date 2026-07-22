@@ -233,6 +233,13 @@ public final class Checkout: ObservableObject {
         }
     }
 
+    // MARK: - Customer Details
+
+    /// Use this method to update the Customer's email address.
+    public func updateEmail(_ email: String?) async throws {
+        try await performUpdate(.setEmail(email))
+    }
+
     // MARK: - Server Updates
 
     /// Runs an async function that calls your server to update the Checkout Session,

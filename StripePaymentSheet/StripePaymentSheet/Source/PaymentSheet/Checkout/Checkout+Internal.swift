@@ -26,6 +26,12 @@ extension Checkout {
         dangerouslySetSessionDirectly(session.makeCopyOverriding(paymentOption: .newValue(paymentOption)))
     }
 
+    // MARK: - Customer Details
+
+    func updatePhone(_ phone: String) async throws {
+        try await performUpdate(.setPhone(phone))
+    }
+
     // MARK: - Session Updates
 
     /// Waits for all in-flight session updates (mutations, etc.) to complete.
