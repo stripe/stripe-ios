@@ -72,11 +72,10 @@ import UIKit
     public enum FieldsToCollect: Equatable {
         /// Collects all address fields.
         case all
-        /// Collects country and postal code if the country is one of `countriesRequiringPostalCollection`
-        /// - Note: Really only useful for cards, where we only collect postal for a handful of countries
-        case countryAndPostal(countriesRequiringPostalCollection: [String] = ["US", "GB", "CA"])
+        /// Collects country and postal code.
+        case countryAndPostal
         /// Only collects the country. Used by Payment Methods that require a country but not the rest of the address.
-        case countryOnly
+        case country
     }
     /// Fields that this section can collect in addition to the address
     public struct AdditionalFields {
@@ -128,13 +127,14 @@ import UIKit
     public let sameAsCheckbox: CheckboxElement
 
     // MARK: Other properties
-    public var fieldsToCollect: FieldsToCollect {
+    public var defaultFieldsToCollect: FieldsToCollect {
         didSet {
-            if oldValue != fieldsToCollect {
+            if oldValue != defaultFieldsToCollect {
                 updateAddressFields(for: countryCodes[country.selectedIndex], address: nil)
             }
         }
     }
+    private let minimumFieldsToCollectByCountry: [String: FieldsToCollect]
     /// When collecting a full address, autocomplete is available for countries in this list.
     public let countriesSupportingAutocomplete: [String]
     public var selectedCountryCode: String {
@@ -143,10 +143,7 @@ import UIKit
         }
         set {
             guard let index = countryCodes.firstIndex(of: newValue) else { return }
-            country.selectedIndex = index
-            updateAddressFields(
-                for: countryCodes[index]
-            )
+            selectCountry(index: index)
         }
     }
     public var addressDetails: AddressDetails {
@@ -173,7 +170,8 @@ import UIKit
        - locale: Locale used to generate the display names for each country
        - addressSpecProvider: Determines the list of address fields to display for a selected country
        - defaults: Default address to prepopulate address fields with
-       - fieldsToCollect: Determines which address fields to display.
+       - defaultFieldsToCollect: Determines which address fields to display before applying the selected country's minimum.
+       - minimumFieldsToCollectByCountry: Per-country minimum address fields. These requirements never reduce `defaultFieldsToCollect`.
        - countriesSupportingAutocomplete: Countries that support autocomplete.
        - disableAutocomplete: Whether to always display manual address entry.
      */
@@ -183,7 +181,8 @@ import UIKit
         locale: Locale = .current,
         addressSpecProvider: AddressSpecProvider = .shared,
         defaults: AddressDetails = .empty,
-        fieldsToCollect: FieldsToCollect = .all,
+        defaultFieldsToCollect: FieldsToCollect = .all,
+        minimumFieldsToCollectByCountry: [String: FieldsToCollect] = [:],
         countriesSupportingAutocomplete: [String] = AddressSectionElement.defaultAutocompleteCountries,
         disableAutocomplete: Bool = false,
         additionalFields: AdditionalFields = .init(),
@@ -192,7 +191,8 @@ import UIKit
     ) {
         let dropdownCountries = countries?.map { $0.uppercased() } ?? addressSpecProvider.countries
         let countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
-        self.fieldsToCollect = fieldsToCollect
+        self.defaultFieldsToCollect = defaultFieldsToCollect
+        self.minimumFieldsToCollectByCountry = minimumFieldsToCollectByCountry
         self.countriesSupportingAutocomplete = countriesSupportingAutocomplete
         self.disableAutocomplete = disableAutocomplete
         self.countryCodes = countryCodes
@@ -256,20 +256,17 @@ import UIKit
             address: defaults.address
         )
         country.didUpdate = { [weak self] index in
-            guard let self = self else { return }
-            self.updateAddressFields(
-                for: self.countryCodes[index]
-            )
+            guard let self else { return }
+            self.selectCountry(index: index)
         }
         sameAsCheckbox.didToggle = { [weak self] isToggled in
-            guard let self = self else { return }
+            guard let self else { return }
             if isToggled {
-                // Set the country to the default country
-                self.country.selectedIndex = self.country.items.firstIndex {
+                let index = self.country.items.firstIndex {
                     $0.rawData == self.defaults.address.country ?? ""
                 } ?? self.country.selectedIndex
-                // Populate our fields with the provided defaults
-                self.updateAddressFields(for: self.defaults.address.country ?? self.country.selectedItem.rawData, address: self.defaults.address)
+                // Return to the default country and populate its address.
+                self.selectCountry(index: index, address: self.defaults.address)
             } else {
                 // Clear the fields
                 self.updateAddressFields(for: self.country.selectedItem.rawData, address: .init())
@@ -293,10 +290,10 @@ import UIKit
         // Finally...
         if sameAsCheckbox.isSelected {
             // ...update the fields with the default values if billing checkbox is shown and checked
-            self.country.selectedIndex = self.country.items.firstIndex {
+            let index = self.country.items.firstIndex {
                 $0.rawData == defaults.address.country ?? ""
             } ?? self.country.selectedIndex
-            updateAddressFields(for: defaults.address.country ?? self.country.selectedItem.rawData, address: defaults.address)
+            selectCountry(index: index, address: defaults.address)
         } else {
             // ...or select the checkbox if the address matches
             sameAsCheckbox.isSelected = displayedAddressEqualTo(address: defaultAddress)
@@ -325,6 +322,32 @@ import UIKit
         self.line1?.beginEditing()
     }
 
+    /// Selects a country and rebuilds its address fields using its country-specific minimum, if any.
+    private func selectCountry(index: Int, address: AddressDetails.Address? = nil) {
+        if country.selectedIndex != index {
+            country.selectedIndex = index
+        }
+        updateAddressFields(for: countryCodes[index], address: address)
+    }
+
+    private func resolvedFieldsToCollect(for countryCode: String) -> FieldsToCollect {
+        if let minimumFieldsToCollect = minimumFieldsToCollectByCountry[countryCode] {
+            switch (defaultFieldsToCollect, minimumFieldsToCollect) {
+            case (.all, _):
+                return defaultFieldsToCollect
+            case (_, .all):
+                return minimumFieldsToCollect
+            case (.countryAndPostal, _):
+                return defaultFieldsToCollect
+            case (_, .countryAndPostal):
+                return minimumFieldsToCollect
+            case (.country, .country):
+                return defaultFieldsToCollect
+            }
+        }
+        return defaultFieldsToCollect
+    }
+
     /// - Parameters:
     ///   - address: Populates the new fields with the provided defaults, or the current fields' text if `nil`.
     ///   - forceExpandAutocomplete: Expands autocomplete regardless of the address values or selected country.
@@ -343,10 +366,12 @@ import UIKit
             state: state?.rawData
         )
 
+        let fieldsToCollect = resolvedFieldsToCollect(for: countryCode)
         let autocompletePresentation = updateAutocompletePresentation(
             for: countryCode,
             address: address,
-            forceExpand: forceExpandAutocomplete
+            forceExpand: forceExpandAutocomplete,
+            fieldsToCollect: fieldsToCollect
         )
 
         // Get the address spec for the country and filter out unused fields.
@@ -357,13 +382,13 @@ import UIKit
             switch fieldsToCollect {
             case .all:
                 return true
-            case .countryOnly:
+            case .country:
                 return false
-            case .countryAndPostal(let countriesRequiringPostalCollection):
+            case .countryAndPostal:
                 if case .postal = $0 {
-                    return countriesRequiringPostalCollection.contains(countryCode)
+                    return true
                 } else {
-                   return false
+                    return false
                 }
             }
         }
@@ -457,7 +482,8 @@ private extension AddressSectionElement {
     func updateAutocompletePresentation(
         for countryCode: String,
         address: AddressSectionElement.AddressDetails.Address,
-        forceExpand: Bool
+        forceExpand: Bool,
+        fieldsToCollect: FieldsToCollect
     ) -> AutocompletePresentation {
         if forceExpand {
             hasExpandedToManualEntry = true

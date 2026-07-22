@@ -57,7 +57,7 @@ public final class Checkout: ObservableObject {
     // MARK: - Internal Properties
 
     /// The PaymentElement for this Checkout instance.
-    var paymentElement: PaymentElement!
+    private(set) var paymentElement: PaymentElement!
 
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
@@ -131,39 +131,6 @@ public final class Checkout: ObservableObject {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
     }
-
-#if DEBUG
-    // TODO: Remove these test-only inits. They leave paymentElement nil, which breaks
-    // any code path that touches it. Instead, construct a real PaymentElement using the
-    // internal test inits for FlowController and EmbeddedPaymentElement (both accept a
-    // loadResult directly without network calls) and make paymentElement private(set).
-    /// Internal initializer for unit tests that injects a pre-loaded API response.
-    init(
-        clientSecret: String,
-        configuration: Configuration? = nil,
-        apiResponse: PaymentPagesAPIResponse,
-        apiClient: STPAPIClient = .shared
-    ) async {
-        self.clientSecret = clientSecret
-        var resolvedConfiguration = configuration ?? Configuration(clientSecret: clientSecret)
-        resolvedConfiguration.apiClient = apiClient
-        self.configuration = resolvedConfiguration
-        self.apiClient = apiClient
-        let loadedSession = apiResponse.makePublicSession()
-        await flagImageManager.prefetchFlagImages(for: loadedSession)
-        self.session = loadedSession
-        self.nonisolatedSession = session
-    }
-
-    /// Synchronous test-only initializer that wraps a pre-loaded API response without async work.
-    init(apiResponse: PaymentPagesAPIResponse) {
-        self.clientSecret = ""
-        self.configuration = Configuration(clientSecret: "")
-        self.apiClient = .shared
-        self.session = apiResponse.makePublicSession()
-        self.nonisolatedSession = session
-    }
-#endif
 
     // MARK: - Promotion Codes
 

@@ -7,6 +7,10 @@
 //
 
 import Combine
+import OHHTTPStubs
+import OHHTTPStubsSwift
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
@@ -96,9 +100,64 @@ enum CheckoutTestHelpers {
 
     // MARK: - Checkout-flow helpers
 
-    static func makeCheckoutWithOpenSession() async -> Checkout {
-        let session = makeOpenSession()
-        return await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: session)
+    /// Builds a `Checkout.Configuration`, replacing its `apiClient` with one that uses test stubs.
+    ///
+    /// - Parameters:
+    ///   - apiResponse: The Checkout Session response returned by the stubbed `/init` request.
+    ///   - configuration: An optional base configuration for test-specific settings.
+    ///   - stubAllOutgoingRequests: Whether to stub every outgoing API request made by the client, or only the initialization request.
+    @MainActor
+    static func makeConfiguration(
+        apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
+        configuration: Checkout.Configuration? = nil,
+        stubAllOutgoingRequests: Bool = true
+    ) -> Checkout.Configuration {
+        // Use the production Checkout initializer with a test-controlled API client.
+        let clientSecret = configuration?.clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
+        var resolvedConfiguration = configuration ?? Checkout.Configuration(clientSecret: clientSecret)
+        resolvedConfiguration.apiClient = makeStubbedAPIClient(
+            apiResponse: apiResponse,
+            clientSecret: clientSecret,
+            stubAllOutgoingRequests: stubAllOutgoingRequests
+        )
+        return resolvedConfiguration
+    }
+
+    @MainActor
+    static func makeStubbedAPIClient(
+        apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
+        clientSecret: String? = nil,
+        stubAllOutgoingRequests: Bool = true
+    ) -> STPAPIClient {
+        let resolvedClientSecret = clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
+        let sessionId = Checkout.extractSessionId(from: resolvedClientSecret)
+        let apiClient = APIStubbedTestCase.stubbedAPIClient()
+
+        // Keep tests offline except for explicitly stubbed Checkout init work.
+        if stubAllOutgoingRequests {
+            APIStubbedTestCase.stubAllOutgoingRequests()
+        }
+        StubbedBackend.stubLookup()
+        stub(condition: { request in
+            let url = request.url?.absoluteString ?? ""
+            return url.contains("/v3/fingerprinted/img/payment-methods")
+                || url.contains("/ocs-mobile/assets/flags/")
+        }) { _ in
+            HTTPStubsResponse(data: Data(), statusCode: 404, headers: nil)
+        }
+        stub(condition: { request in
+            request.httpMethod == "POST"
+                && request.url?.path == "/v1/payment_pages/\(sessionId)/init"
+        }) { _ in
+            // Feed Checkout(configuration:) the session fixture this test requested.
+            var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
+            responseJSON["client_secret"] = resolvedClientSecret
+            responseJSON["session_id"] = responseJSON["session_id"] ?? sessionId
+            let data = try! JSONSerialization.data(withJSONObject: responseJSON, options: [])
+            return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
+        }
+
+        return apiClient
     }
 
     static let openSessionJSON: [AnyHashable: Any] = [
@@ -173,6 +232,23 @@ enum CheckoutTestHelpers {
         }
 
         return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+    }
+
+    private static func jsonObject(_ value: Any) -> Any {
+        switch value {
+        case let dictionary as [AnyHashable: Any]:
+            return Dictionary(uniqueKeysWithValues: dictionary.map { key, value in
+                (String(describing: key), jsonObject(value))
+            })
+        case let dictionary as [String: Any]:
+            return Dictionary(uniqueKeysWithValues: dictionary.map { key, value in
+                (key, jsonObject(value))
+            })
+        case let array as [Any]:
+            return array.map(jsonObject)
+        default:
+            return value
+        }
     }
 }
 

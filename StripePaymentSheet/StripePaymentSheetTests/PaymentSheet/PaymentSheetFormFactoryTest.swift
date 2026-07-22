@@ -2833,7 +2833,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 paymentMethod: .stripe(.klarna),
                 previousCustomerInput: previousCustomerInput
             )
-            return factory.makeBillingAddressSection(fieldsToCollect: .countryOnly, countryAPIPath: apiPath)
+            return factory.makeBillingAddressSection(defaultFieldsToCollect: .country, countryAPIPath: apiPath)
         }
         let apiPathValues: [String?] = [nil, "billing_details[address][country]"] // Test the same thing with and without an api path
         apiPathValues.forEach { apiPath in

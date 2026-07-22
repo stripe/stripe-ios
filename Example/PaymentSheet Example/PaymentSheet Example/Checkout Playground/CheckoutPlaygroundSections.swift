@@ -8,7 +8,6 @@ import SwiftUI
 
 struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var integrationType: CheckoutPlayground.IntegrationType
-    @Binding var mode: CheckoutPlayground.SessionMode
     @Binding var currency: CheckoutPlayground.Currency
     @Binding var customerType: CheckoutPlayground.CustomerType
     @Binding var checkoutEndpointOption: CheckoutPlayground.EndpointOption
@@ -24,13 +23,6 @@ struct CheckoutPlaygroundConfigurationSection: View {
                     selection: $integrationType,
                     tooltip: "Choose the PaymentElement presentation.\n\n• sheet: Presents PaymentElement as a payment method selector.\n• view: Displays PaymentElement in the checkout flow.",
                     displayText: { $0.displayName }
-                )
-                CheckoutPlayground.PickerRow(
-                    title: "Mode",
-                    icon: "arrow.triangle.2.circlepath",
-                    selection: $mode,
-                    tooltip: "Determines the type of checkout session.\n\n• Payment: One-time payment.\n• Subscription: Recurring payment.\n• Setup: Save payment details for future use.",
-                    displayText: { $0.rawValue.capitalized }
                 )
                 CheckoutPlayground.PickerRow(
                     title: "Currency",
@@ -156,7 +148,6 @@ struct CheckoutPlaygroundLineItemCard: View {
 }
 
 struct CheckoutPlaygroundFeaturesSection: View {
-    let mode: CheckoutPlayground.SessionMode
     let customerType: CheckoutPlayground.CustomerType
     @Binding var shippingAddressCollection: Bool
     @Binding var billingAddressCollection: Bool
@@ -168,12 +159,8 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var adaptivePricingCountry: CheckoutPlayground.AdaptivePricingCountry
     @Binding var automaticPaymentMethods: Bool
 
-    private var supportsSetupRestrictedFeatures: Bool {
-        return mode != .setup
-    }
-
     private var shouldShowAutomaticTax: Bool {
-        return supportsSetupRestrictedFeatures && customerType != .new
+        return customerType != .new
     }
 
     var body: some View {
@@ -195,43 +182,41 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $automaticPaymentMethods,
                     tooltip: "Sends `automatic_payment_methods: true` instead of an explicit `payment_method_types` array. Stripe selects the best payment methods for the session."
                 )
-                if supportsSetupRestrictedFeatures {
+                CheckoutPlayground.ToggleRow(
+                    title: "Allow Promo Codes",
+                    isOn: $allowPromotionCodes,
+                    tooltip: "Sets `allow_promotion_codes: true`. Adds a coupon code input field to the checkout page."
+                )
+                if shouldShowAutomaticTax {
                     CheckoutPlayground.ToggleRow(
-                        title: "Allow Promo Codes",
-                        isOn: $allowPromotionCodes,
-                        tooltip: "Sets `allow_promotion_codes: true`. Adds a coupon code input field to the checkout page."
+                        title: "Automatic Tax",
+                        isOn: $automaticTax,
+                        tooltip: "Sets `automatic_tax: { enabled: true }`. Enables Stripe Tax for automatic tax calculation based on shipping/billing address. Prices must use `tax_behavior: 'exclusive'` or `'inclusive'`."
                     )
-                    if shouldShowAutomaticTax {
-                        CheckoutPlayground.ToggleRow(
-                            title: "Automatic Tax",
-                            isOn: $automaticTax,
-                            tooltip: "Sets `automatic_tax: { enabled: true }`. Enables Stripe Tax for automatic tax calculation based on shipping/billing address. Prices must use `tax_behavior: 'exclusive'` or `'inclusive'`."
-                        )
-                    }
-                    CheckoutPlayground.ToggleRow(
-                        title: "Adaptive Pricing",
-                        isOn: $adaptivePricing,
-                        tooltip: "Sets `adaptive_pricing: { enabled: true }`. Displays prices in the customer's local currency."
+                }
+                CheckoutPlayground.ToggleRow(
+                    title: "Adaptive Pricing",
+                    isOn: $adaptivePricing,
+                    tooltip: "Sets `adaptive_pricing: { enabled: true }`. Displays prices in the customer's local currency."
+                )
+                CheckoutPlayground.ToggleRow(
+                    title: "Payment Method Offer Save",
+                    isOn: $checkoutSessionPaymentMethodSave,
+                    tooltip: "Sets `saved_payment_method_options.payment_method_save` to `enabled`. When on, Checkout can offer to save the payment method for future use."
+                )
+                CheckoutPlayground.ToggleRow(
+                    title: "Payment Method Remove",
+                    isOn: $checkoutSessionPaymentMethodRemove,
+                    tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
+                )
+                if adaptivePricing {
+                    CheckoutPlayground.PickerRow(
+                        title: "Country",
+                        icon: "globe",
+                        selection: $adaptivePricingCountry,
+                        tooltip: "Simulates the customer's country for adaptive pricing by sending a location-formatted customer_email. 'None' skips the email override.",
+                        displayText: { $0.displayName }
                     )
-                    CheckoutPlayground.ToggleRow(
-                        title: "Payment Method Offer Save",
-                        isOn: $checkoutSessionPaymentMethodSave,
-                        tooltip: "Sets `saved_payment_method_options.payment_method_save` to `enabled`. When on, Checkout can offer to save the payment method for future use."
-                    )
-                    CheckoutPlayground.ToggleRow(
-                        title: "Payment Method Remove",
-                        isOn: $checkoutSessionPaymentMethodRemove,
-                        tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
-                    )
-                    if adaptivePricing {
-                        CheckoutPlayground.PickerRow(
-                            title: "Country",
-                            icon: "globe",
-                            selection: $adaptivePricingCountry,
-                            tooltip: "Simulates the customer's country for adaptive pricing by sending a location-formatted customer_email. 'None' skips the email override.",
-                            displayText: { $0.displayName }
-                        )
-                    }
                 }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
