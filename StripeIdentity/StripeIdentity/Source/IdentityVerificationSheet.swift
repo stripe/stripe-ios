@@ -12,6 +12,7 @@ import UIKit
 /// A drop-in class that presents a sheet for a user to verify their identity.
 /// This class is in beta; see https://stripe.com/docs/identity for access
 final public class IdentityVerificationSheet {
+    @_spi(STP) public static var local3DFaceCaptureOverride: Bool?
 
     /// The result of an attempt to finish an identity verification flow
     @frozen public enum VerificationFlowResult {
