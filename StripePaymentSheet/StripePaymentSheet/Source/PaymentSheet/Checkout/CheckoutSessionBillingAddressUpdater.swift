@@ -5,8 +5,6 @@
 //  Created by Yuki Tokuhiro on 7/17/26.
 //
 
-@_spi(STP) import StripePayments
-
 /// Narrow Checkout interface for MPE billing address updates.
 ///
 /// This keeps MPE plumbing from depending on the full `Checkout` object or reading
