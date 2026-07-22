@@ -469,7 +469,6 @@ struct CheckoutCartContentView: View {
             do {
                 try await checkout.updateShippingAddress(
                     name: details.name,
-                    phone: nil,
                     address: checkoutAddress(from: details.address)
                 )
             } catch {

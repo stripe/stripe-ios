@@ -218,14 +218,12 @@ public final class Checkout: ObservableObject {
     ///
     /// - Parameters:
     ///   - name: The customer's full name.
-    ///   - phone: The customer's phone number.
     ///   - address: The shipping address to set. To reset tax computation
     ///     to a country-only region, pass a ``Checkout.Address`` with just the country.
     /// - Throws: ``CheckoutError`` if the session is not open, or if
     ///   the server request fails.
     public func updateShippingAddress(
         name: String? = nil,
-        phone: String? = nil,
         address: Address
     ) async throws {
         if let allowedCountries = session.allowedShippingCountries,
