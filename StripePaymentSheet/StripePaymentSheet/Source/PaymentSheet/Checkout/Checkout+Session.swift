@@ -95,6 +95,12 @@ extension Checkout {
         let automaticTaxEnabled: Bool
         let automaticTaxAddressSource: String?
         let elementsSession: STPElementsSession
+        var availableExpressButtonTypes: [ExpressButtonType] = []
+
+        /// Whether Express Checkout Element has any wallet buttons to display for this session.
+        public var isExpressCheckoutElementAvailable: Bool {
+            return !availableExpressButtonTypes.isEmpty
+        }
     }
 }
 

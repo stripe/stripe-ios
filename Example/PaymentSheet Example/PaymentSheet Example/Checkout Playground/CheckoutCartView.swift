@@ -41,6 +41,8 @@ struct CheckoutCartView: View {
                                 CheckoutCartPaymentButton(checkout: checkout)
                             case .embedded:
                                 CheckoutCartEmbeddedPaymentView(checkout: checkout)
+                            case .expressCheckout:
+                                CheckoutCartExpressCheckoutView(checkout: checkout)
                             }
                         }
                     }
@@ -86,6 +88,10 @@ struct CheckoutCartView: View {
             config.adaptivePricing.allowed = adaptivePricing
             config.paymentElement.billingDetailsCollectionConfiguration.name = .always
             config.paymentElement.billingDetailsCollectionConfiguration.address = .full
+            config.applePayConfiguration = .init(
+                merchantId: "merchant.com.stripe.umbrella.test",
+                merchantCountryCode: "US"
+            )
             checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription

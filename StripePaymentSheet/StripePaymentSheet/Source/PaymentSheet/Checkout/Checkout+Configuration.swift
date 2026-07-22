@@ -36,8 +36,14 @@ extension Checkout {
         /// Default: ``AdaptivePricing.init()`` (`allowed: false`).
         public var adaptivePricing: AdaptivePricing = AdaptivePricing()
 
+        /// Apple Pay configuration. Required for Apple Pay to appear in the ExpressCheckoutElement.
+        public var applePayConfiguration: Checkout.ApplePayConfiguration?
+
         /// Configuration for PaymentElement.
         public var paymentElement: PaymentElement.Configuration = .init()
+
+        /// Configuration for ExpressCheckoutElement.
+        public var expressCheckoutElement: ExpressCheckoutElement.Configuration = .init()
 
         /// Creates a configuration.
         /// - Parameter clientSecret: The client secret for your Checkout Session.

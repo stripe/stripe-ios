@@ -125,6 +125,11 @@ public final class Checkout: ObservableObject {
 
             // Load elements
             self.paymentElement = try await PaymentElement(checkout: self)
+            self.session.availableExpressButtonTypes = ExpressButtonType.available(
+                in: self.paymentElement.paymentSheetFlowController.elementsSession,
+                configuration: configuration.expressCheckoutElement,
+                hasApplePayConfiguration: configuration.applePayConfiguration != nil
+            )
             await flagImageManager.prefetchFlagImages(for: loadedSession) // TODO: This should probably just load currency selector and not be a global singleton
 
         } catch {
@@ -350,7 +355,14 @@ extension Checkout {
         )
 
         // Apply any additional local mutations to the session.
-        let finalSession = localMutation?(sessionWithLocalAddress) ?? sessionWithLocalAddress
+        var finalSession = localMutation?(sessionWithLocalAddress) ?? sessionWithLocalAddress
+        if paymentElement != nil {
+            finalSession.availableExpressButtonTypes = ExpressButtonType.available(
+                in:finalSession.elementsSession,
+                configuration: configuration.expressCheckoutElement,
+                hasApplePayConfiguration: configuration.applePayConfiguration != nil
+            )
+        }
         session = finalSession
 
         // === Update Payment Element and all other asynchronously updated elements ==
