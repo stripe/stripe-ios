@@ -22,9 +22,10 @@ extension Checkout.Session {
             configuration.shippingDetails = { details }
         }
         configuration.defaultBillingDetails.email = configuration.defaultBillingDetails.email ?? email
-        if billingAddressCollection == .required && configuration.billingDetailsCollectionConfiguration.address == .automatic {
-            configuration.billingDetailsCollectionConfiguration.address = .full
-        }
+        configuration.billingDetailsCollectionConfiguration.address = resolvedAddressCollectionMode(
+            serverBillingAddressCollection: billingAddressCollection,
+            clientBillingAddressCollection: configuration.billingDetailsCollectionConfiguration.address
+        )
     }
 
     private func shippingAddressDetails(from shipping: Checkout.ContactAddress) -> AddressViewController.AddressDetails {
@@ -54,6 +55,21 @@ extension Checkout.Session {
         details.address.city = details.address.city ?? billing.address.city
         details.address.state = details.address.state ?? billing.address.state
         details.address.postalCode = details.address.postalCode ?? billing.address.postalCode
+    }
+
+    private func resolvedAddressCollectionMode(
+        serverBillingAddressCollection: BillingAddressCollection,
+        clientBillingAddressCollection: PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode
+    ) -> PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode {
+        switch (serverBillingAddressCollection, clientBillingAddressCollection) {
+        case (.required, .automatic), (.required, .full):
+            return .full
+        case (.required, .never):
+            assertionFailure("billingDetailsCollectionConfiguration.address = .never is not supported with CheckoutSession.")
+            return .never
+        case (.automatic, let clientBillingAddressCollection):
+            return clientBillingAddressCollection
+        }
     }
 
 }

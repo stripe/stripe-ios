@@ -45,12 +45,8 @@ extension PaymentElement {
         /// Describes how billing details should be collected.
         public var billingDetailsCollectionConfiguration: BillingDetailsCollectionConfiguration = .init() {
             didSet {
-                paymentSheetConfiguration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration(
-                    billingAddressCollection: .automatic
-                )
-                embeddedConfiguration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration(
-                    billingAddressCollection: .automatic
-                )
+                paymentSheetConfiguration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
+                embeddedConfiguration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             }
         }
 
@@ -132,14 +128,11 @@ extension PaymentElement {
 
         func makeEmbeddedConfiguration(
             apiClient: STPAPIClient,
-            defaults: Checkout.Configuration.Defaults,
-            billingAddressCollection: Checkout.Session.BillingAddressCollection
+            defaults: Checkout.Configuration.Defaults
         ) -> EmbeddedPaymentElement.Configuration {
             var configuration = embeddedConfiguration
             configuration.apiClient = apiClient
-            configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration(
-                billingAddressCollection: billingAddressCollection
-            )
+            configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
             }
@@ -148,14 +141,11 @@ extension PaymentElement {
 
         func makePaymentSheetConfiguration(
             apiClient: STPAPIClient,
-            defaults: Checkout.Configuration.Defaults,
-            billingAddressCollection: Checkout.Session.BillingAddressCollection
+            defaults: Checkout.Configuration.Defaults
         ) -> PaymentSheet.Configuration {
             var configuration = paymentSheetConfiguration
             configuration.apiClient = apiClient
-            configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration(
-                billingAddressCollection: billingAddressCollection
-            )
+            configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
             }
@@ -227,33 +217,24 @@ extension PaymentElement {
 }
 
 private extension PaymentElement.BillingDetailsCollectionConfiguration {
-    func paymentSheetConfiguration(
-        billingAddressCollection: Checkout.Session.BillingAddressCollection
-    ) -> PaymentSheet.BillingDetailsCollectionConfiguration {
+    func paymentSheetConfiguration() -> PaymentSheet.BillingDetailsCollectionConfiguration {
         var configuration = PaymentSheet.BillingDetailsCollectionConfiguration()
         configuration.name = .init(rawValue: name.rawValue)!
         configuration.phone = .init(rawValue: phone.rawValue)!
         configuration.email = .init(rawValue: email.rawValue)!
-        configuration.address = resolvedAddressCollectionMode(
-            serverBillingAddressCollection: billingAddressCollection
-        )
+        configuration.address = address.paymentSheetAddressCollectionMode
         configuration.attachDefaultsToPaymentMethod = attachDefaultsToPaymentMethod
         configuration.allowedCountries = allowedCountries
         return configuration
     }
+}
 
-    private func resolvedAddressCollectionMode(
-        serverBillingAddressCollection: Checkout.Session.BillingAddressCollection
-    ) -> PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode {
-        let clientBillingAddressCollection = address
-        switch (serverBillingAddressCollection, clientBillingAddressCollection) {
-        case (.automatic, .automatic):
+private extension PaymentElement.BillingDetailsCollectionConfiguration.AddressCollectionMode {
+    var paymentSheetAddressCollectionMode: PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode {
+        switch self {
+        case .automatic:
             return .automatic
-        case (.automatic, .full):
-            return .full
-        case (.required, .automatic):
-            return .full
-        case (.required, .full):
+        case .full:
             return .full
         }
     }

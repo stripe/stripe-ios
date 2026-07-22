@@ -74,8 +74,7 @@ public final class PaymentElement {
         // Create FlowController
         let paymentSheetConfiguration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
-            defaults: checkout.configuration.defaults,
-            billingAddressCollection: checkout.session.billingAddressCollection
+            defaults: checkout.configuration.defaults
         )
         self.paymentSheetFlowController = try await PaymentSheet.FlowController.create(
             checkout: checkout,
@@ -84,8 +83,7 @@ public final class PaymentElement {
         // Create Embedded
         let embeddedConfiguration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
-            defaults: checkout.configuration.defaults,
-            billingAddressCollection: checkout.session.billingAddressCollection
+            defaults: checkout.configuration.defaults
         )
         self.embeddedPaymentElement = try await EmbeddedPaymentElement.create(
             checkout: checkout,
@@ -136,13 +134,11 @@ extension PaymentElement {
         let configuration = checkout.configuration.paymentElement
         paymentSheetFlowController.configuration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
-            defaults: checkout.configuration.defaults,
-            billingAddressCollection: checkout.session.billingAddressCollection
+            defaults: checkout.configuration.defaults
         )
         embeddedPaymentElement.configuration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
-            defaults: checkout.configuration.defaults,
-            billingAddressCollection: checkout.session.billingAddressCollection
+            defaults: checkout.configuration.defaults
         )
 
         // Update FlowController
