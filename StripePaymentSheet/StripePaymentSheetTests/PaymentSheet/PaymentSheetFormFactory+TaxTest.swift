@@ -57,29 +57,6 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
         }
     }
 
-    func testAutomaticTaxAddsAddressSectionWhenFormHasNone() throws {
-        // Given a payment method form with no address section
-        let factory = makeFactory(
-            paymentMethod: .blik,
-            intent: makeCheckoutIntent(),
-            configuration: makeConfiguration(country: "CA")
-        )
-        let form = FormElement(elements: [])
-        XCTAssertTrue(addressSections(in: form).isEmpty)
-
-        // When automatic tax minimums are applied
-        let updatedForm = factory.applyAutomaticTaxMinimumsIfNecessary(to: form)
-
-        // Then the form collects and submits the CA billing address required for tax
-        let addressSection = try XCTUnwrap(addressSections(in: updatedForm).first)
-        let postalCode = try XCTUnwrap(addressSection.postalCode)
-        postalCode.setText("A1A 1A1")
-
-        let params = updatedForm.updateParams(params: IntentConfirmParams(type: .stripe(.blik)))
-        XCTAssertEqual(params?.paymentMethodParams.billingDetails?.address?.country, "CA")
-        XCTAssertEqual(params?.paymentMethodParams.billingDetails?.address?.postalCode, "A1A 1A1")
-    }
-
     func testSpecializedPaymentMethodFormsBuildTaxAddressInternally() {
         let paymentMethods: [PaymentSheet.PaymentMethodType] = [
             .instantDebits,

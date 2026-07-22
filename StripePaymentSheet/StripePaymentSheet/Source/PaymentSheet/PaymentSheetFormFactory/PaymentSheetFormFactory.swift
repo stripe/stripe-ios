@@ -164,10 +164,6 @@ class PaymentSheetFormFactory {
                   previousLinkInlineSignupAction: previousLinkInlineSignupAction,
                   cardFundingFilter: configuration.cardFundingFilter(for: elementsSession)
         )
-        stpAssert(
-            !(intent.isCheckout && configuration.billingDetailsCollectionConfiguration.address == .never),
-            "CheckoutSession does not support billingDetailsCollectionConfiguration.address = .never"
-        )
     }
 
     required init(

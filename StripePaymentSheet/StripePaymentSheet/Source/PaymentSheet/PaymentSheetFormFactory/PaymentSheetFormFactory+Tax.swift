@@ -9,6 +9,15 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+/// The minimum address fields needed to compute tax in each country.
+private let taxMinimumFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect] = [
+    "US": .all,
+    "PR": .all,
+    "CA": .countryAndPostal,
+    "GB": .countryAndPostal,
+    "IN": .countryAndPostal,
+]
+
 extension PaymentSheetFormFactory {
     /// Applies tax requirements after the LPM form is built so they replace its country-specific minimums.
     func applyAutomaticTaxMinimumsIfNecessary(to form: PaymentMethodElement) -> PaymentMethodElement {
@@ -16,17 +25,16 @@ extension PaymentSheetFormFactory {
             return form
         }
 
-        let taxMinimums = taxMinimumFieldsToCollectByCountry()
         let addressSections = form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }
         stpAssert(
             addressSections.count <= 1,
             "A payment method form should contain at most one billing address section"
         )
         guard let addressSection = addressSections.first else {
-            return appendingTaxAddressSection(to: form, minimums: taxMinimums)
+            return appendingTaxAddressSection(to: form, minimums: taxMinimumFieldsToCollectByCountry)
         }
 
-        addressSection.addMinimumFieldsToCollectByCountry(taxMinimums)
+        addressSection.addMinimumFieldsToCollectByCountry(taxMinimumFieldsToCollectByCountry)
         return form
     }
 
@@ -42,16 +50,5 @@ extension PaymentSheetFormFactory {
         )
 
         return FormElement(elements: [form, billingAddress], theme: theme)
-    }
-
-    /// Returns the minimum address fields needed to compute tax in each country.
-    private func taxMinimumFieldsToCollectByCountry() -> [String: AddressSectionElement.FieldsToCollect] {
-        return [
-            "US": .all,
-            "PR": .all,
-            "CA": .countryAndPostal,
-            "GB": .countryAndPostal,
-            "IN": .countryAndPostal,
-        ]
     }
 }
