@@ -46,9 +46,12 @@ extension SavedPaymentMethodFormFactory {
             let panElementConfig = TextFieldElement.LastFourConfiguration(lastFour: configuration.paymentMethod.card?.last4 ?? "",
                                                                           editConfiguration: cardBrandSelector != nil ? .readOnlyWithoutDisabledAppearance : .readOnly,
                                                                           cardBrand: configuration.paymentMethod.calculateCardBrandToDisplay(),
-                                                                          cardBrandChoiceElement: cardBrandSelector?.element)
-
-            let panElement = panElementConfig.makeElement(theme: theme)
+                                                                          cardBrandChoiceDataSource: cardBrandSelector?.element)
+            let panElement = TextFieldElement(
+                configuration: panElementConfig,
+                theme: theme,
+                accessory: cardBrandSelector?.textFieldAccessory
+            )
             return panElement
         }()
 
@@ -83,9 +86,9 @@ extension SavedPaymentMethodFormFactory {
                 : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
             switch configuration.billingDetailsCollectionConfiguration.address {
             case .automatic:
-                return makeBillingAddressSection(configuration, collectionMode: .countryAndPostal(), countries: countries)
+                return makeBillingAddressSection(configuration, defaultFieldsToCollect: .country, countries: countries)
             case .full:
-                return makeBillingAddressSection(configuration, collectionMode: .all(), countries: countries)
+                return makeBillingAddressSection(configuration, defaultFieldsToCollect: .all, countries: countries)
             case .never:
                 return nil
             }
@@ -94,7 +97,6 @@ extension SavedPaymentMethodFormFactory {
         let cardSection: SectionElement = {
             let allSubElements: [Element?] = [
                 panElement,
-                SectionElement.HiddenElement(cardBrandSelector),
                 SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme),
             ]
             return SectionElement(title: billingAddressSection != nil ? String.Localized.card_information : nil,
@@ -106,13 +108,15 @@ extension SavedPaymentMethodFormFactory {
 
     func makeBillingAddressSection(
         _ configuration: UpdatePaymentMethodViewController.Configuration,
-        collectionMode: AddressSectionElement.CollectionMode = .all(),
+        defaultFieldsToCollect: AddressSectionElement.FieldsToCollect = .all,
         countries: [String]? = nil) -> PaymentMethodElementWrapper<AddressSectionElement> {
             let section = AddressSectionElement(
                 title: String.Localized.billing_address_lowercase,
                 countries: countries,
                 defaults: currentBillingDetails(paymentMethod: configuration.paymentMethod),
-                collectionMode: collectionMode,
+                defaultFieldsToCollect: defaultFieldsToCollect,
+                minimumFieldsToCollectByCountry: PaymentSheetFormFactory.cardMinimumFieldsToCollectByCountry,
+                disableAutocomplete: true,
                 additionalFields: .init(
                     billingSameAsShippingCheckbox: .disabled
                 ),

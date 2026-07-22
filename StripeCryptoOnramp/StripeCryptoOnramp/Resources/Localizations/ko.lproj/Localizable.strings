@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "이 간편결제 인증 요청은 만료되었습니다. 다시 시도해 주십시오.";
 
+"This wallet verification request is invalid. Please try again." = "이 간편결제 인증 요청은 유효하지 않습니다. 다시 시도해 주십시오.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "이 간편결제의 소유권을 확인할 수 없습니다. 다시 시도해 주십시오.";

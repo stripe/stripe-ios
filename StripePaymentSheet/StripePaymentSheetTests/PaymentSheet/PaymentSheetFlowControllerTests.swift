@@ -461,11 +461,10 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             analyticsHelper: ._testValue()
         )
 
-        let session = CheckoutTestHelpers.makeOpenSession()
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: session)
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
 
         // Move session to complete
-        let completedSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: {
+        let completedSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: {
             var json = CheckoutTestHelpers.openSessionJSON
             json["status"] = "complete"
             json["payment_status"] = "paid"
@@ -481,5 +480,30 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             exp.fulfill()
         }
         await fulfillment(of: [exp], timeout: 2.0)
+    }
+
+    // MARK: - PaymentOption.checkoutBillingDetails
+
+    func testSavedPaymentOptionCheckoutBillingDetails_fallsBackToSavedPaymentMethod() {
+        // Given a saved PM that carries its own billing address and no confirmParams (the usual saved case)...
+        let savedCard = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
+        let option = PaymentSheet.PaymentOption.saved(paymentMethod: savedCard, confirmParams: nil)
+
+        // ...checkoutBillingDetails falls back to the saved PM's billing details (rather than returning nil).
+        XCTAssertEqual(option.checkoutBillingDetails?.address?.country, "US")
+        XCTAssertEqual(option.checkoutBillingDetails?.address?.line1, "123 Main St")
+        XCTAssertEqual(option.checkoutBillingDetails?.address?.postalCode, "94105")
+    }
+
+    func testSavedPaymentOptionCheckoutBillingDetails_prefersConfirmParams() {
+        // Given a saved PM plus confirmParams (e.g. CVC recollection) that carry their own billing...
+        let savedCard = STPPaymentMethod._testCard(line1: "123 Main St", postalCode: "94105", countryCode: "US")
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        confirmParams.paymentMethodParams.nonnil_billingDetails.address = STPPaymentMethodAddress()
+        confirmParams.paymentMethodParams.nonnil_billingDetails.address?.country = "CA"
+        let option = PaymentSheet.PaymentOption.saved(paymentMethod: savedCard, confirmParams: confirmParams)
+
+        // ...confirmParams billing wins over the saved PM's billing.
+        XCTAssertEqual(option.checkoutBillingDetails?.address?.country, "CA")
     }
 }

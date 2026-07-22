@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Este pedido de verificação de carteira expirou. Tente novamente.";
 
+"This wallet verification request is invalid. Please try again." = "Este pedido de verificação de carteira é inválido. Tente novamente.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Não foi possível verificar a propriedade desta carteira. Tente novamente.";

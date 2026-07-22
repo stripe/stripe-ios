@@ -27,22 +27,18 @@ struct CheckoutPlaygroundView: View {
 
                         CheckoutPlaygroundConfigurationSection(
                             integrationType: $viewModel.integrationType,
-                            mode: $viewModel.mode,
                             currency: $viewModel.currency,
                             customerType: $viewModel.customerType,
                             checkoutEndpointOption: $viewModel.checkoutEndpointOption,
                             checkoutEndpoint: $viewModel.checkoutEndpoint
                         )
 
-                        if viewModel.mode != .setup {
-                            CheckoutPlaygroundLineItemsSection(
-                                lineItems: viewModel.lineItems,
-                                currency: viewModel.currency
-                            )
-                        }
+                        CheckoutPlaygroundLineItemsSection(
+                            lineItems: viewModel.lineItems,
+                            currency: viewModel.currency
+                        )
 
                         CheckoutPlaygroundFeaturesSection(
-                            mode: viewModel.mode,
                             customerType: viewModel.customerType,
                             shippingAddressCollection: $viewModel.shippingAddressCollection,
                             billingAddressCollection: $viewModel.billingAddressCollection,

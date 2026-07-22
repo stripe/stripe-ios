@@ -89,6 +89,7 @@ class EmbeddedFormViewController: UIViewController {
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+    private weak var checkout: Checkout?
     private var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
     /// Previous customer input - in the `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
@@ -170,6 +171,7 @@ class EmbeddedFormViewController: UIViewController {
          previousPaymentOption: PaymentOption? = nil,
          analyticsHelper: PaymentSheetAnalyticsHelper,
          paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+         checkout: Checkout? = nil,
          formCache: PaymentMethodFormCache = .init(),
          delegate: EmbeddedFormViewControllerDelegate
     ) {
@@ -180,6 +182,7 @@ class EmbeddedFormViewController: UIViewController {
         self.previousPaymentOption = previousPaymentOption
         self.analyticsHelper = analyticsHelper
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+        self.checkout = checkout
         self.paymentMethodType = paymentMethodType
         self.formCache = formCache
         self.delegate = delegate
@@ -389,7 +392,7 @@ class EmbeddedFormViewController: UIViewController {
     /// Syncs billing address to the checkout session, then tells the delegate to continue.
     /// If the sync fails, stays on the sheet and shows the error instead.
     private func syncCheckoutBillingThenContinue() {
-        guard case .checkout(let checkout) = intent,
+        guard let checkout,
               let paymentOption = selectedPaymentOption else {
             delegate?.embeddedFormViewControllerDidContinue(self)
             return
@@ -405,7 +408,7 @@ class EmbeddedFormViewController: UIViewController {
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
-                try await checkout.syncBillingAddress(from: paymentOption.billingDetails)
+                try await checkout.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
             } catch {
                 self.error = error
             }

@@ -15,19 +15,13 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
 
-class MockElement: Element {
+private final class ParamsCountingPaymentMethodElement: PaymentMethodElement {
     var collectsUserInput: Bool = false
-
-    var paramsUpdater: (IntentConfirmParams) -> IntentConfirmParams?
-
-    init(
-        paramsUpdater: @escaping (IntentConfirmParams) -> IntentConfirmParams?
-    ) {
-        self.paramsUpdater = paramsUpdater
-    }
+    var updateParamsCallCount = 0
 
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        return paramsUpdater(params)
+        updateParamsCallCount += 1
+        return params
     }
 
     weak var delegate: ElementDelegate?
@@ -77,7 +71,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             overrides["customer_managed_saved_payment_methods_offer_save"] = offerSave
         }
         let session = CheckoutTestHelpers.makeSession(overrides)
-        return .checkout(Checkout(apiResponse: session))
+        return .checkout(session.makePublicSession())
     }
 
     func testUpdatesParams() {
@@ -101,6 +95,68 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params?.paymentMethodParams.billingDetails?.email, "email@stripe.com")
         XCTAssertEqual(params?.paymentMethodParams.type, .SEPADebit)
         XCTAssertEqual(params?.paymentMethodType, .stripe(.SEPADebit))
+    }
+
+    func testPaymentMethodElementWrapperDoesNotImplicitlyUpdateParamsFromWrappedElement() {
+        // Given
+        let element = ParamsCountingPaymentMethodElement()
+        let wrapper = PaymentMethodElementWrapper(element) { _, params in params }
+
+        // When
+        _ = wrapper.updateParams(params: IntentConfirmParams(type: .stripe(.card)))
+
+        // Then
+        XCTAssertEqual(element.updateParamsCallCount, 0)
+    }
+
+    func testPaymentMethodElementWrapperExplicitlyUpdatesParamsFromWrappedElementOnce() {
+        // Given
+        let element = ParamsCountingPaymentMethodElement()
+        let wrapper = PaymentMethodElementWrapper(updatingParamsFrom: element) { _, params in params }
+
+        // When
+        _ = wrapper.updateParams(params: IntentConfirmParams(type: .stripe(.card)))
+
+        // Then
+        XCTAssertEqual(element.updateParamsCallCount, 1)
+    }
+
+    func testPaymentMethodElementWrapperUpdatingParamsFromTextFieldStillValidates() {
+        // Given
+        let textField = TextFieldElement(
+            configuration: TextFieldElement.PANConfiguration(),
+            theme: .default
+        )
+        var paramsUpdaterCallCount = 0
+        let wrapper = PaymentMethodElementWrapper(updatingParamsFrom: textField) { _, params in
+            paramsUpdaterCallCount += 1
+            return params
+        }
+
+        // When
+        let params = wrapper.updateParams(params: IntentConfirmParams(type: .stripe(.card)))
+
+        // Then
+        XCTAssertNil(params)
+        XCTAssertEqual(paramsUpdaterCallCount, 0)
+    }
+
+    func testDefaultsApplierWrapperUpdatesParamsFromWrappedElementOnce() {
+        // Given
+        let factory = PaymentSheetFormFactory(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.card)
+        )
+        let element = ParamsCountingPaymentMethodElement()
+        let wrapper = factory.makeDefaultsApplierWrapper(for: element)
+
+        // When
+        _ = wrapper.updateParams(params: IntentConfirmParams(type: .stripe(.card)))
+
+        // Then
+        XCTAssertEqual(element.updateParamsCallCount, 1)
     }
 
     func testNameOverrideApiPathBySpec() {
@@ -477,7 +533,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         let updatedParams = formElement.updateParams(params: params)
 
-        XCTAssertNil(updatedParams?.paymentMethodParams.billingDetails?.address?.country)
+        // The country is written to both billing details and the API path
+        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.country, "US")
         XCTAssertEqual(
             updatedParams?.paymentMethodParams.additionalAPIParameters[
                 "billing_details[address][country]"
@@ -810,8 +867,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.FPX)
         )
-        let country = factory.makeCountry(countryCodes: ["AT", "BE"], apiPath: nil)
-        (country as! PaymentMethodElementWrapper<DropdownFieldElement>).element.select(index: 1) // select a different index than the default of 0
+        let country = factory.makeCountryOrAddressSection(countries: ["AT", "BE"])
+        country.element.country.select(index: 1) // select a different index than the default of 0
 
         let params = IntentConfirmParams(type: .stripe(.FPX))
         let updatedParams = country.updateParams(params: params)
@@ -827,7 +884,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.FPX),
             previousCustomerInput: updatedParams
-        ).makeCountry(countryCodes: ["AT", "BE"], apiPath: nil)
+        ).makeCountryOrAddressSection(countries: ["AT", "BE"])
         // ...should result in a valid, filled out element
         XCTAssert(country_with_previous_input.validationState == .valid)
         let updatedParams_with_previous_input = country_with_previous_input.updateParams(params: .init(type: .stripe(.FPX)))
@@ -2507,7 +2564,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertFalse(instantDebitsSection.enableCTA)
 
         // Set a valid address
-        instantDebitsSection.addressElement?.collectionMode = .all() // simulate going to manual entry
+        instantDebitsSection.addressElement?.beginManualEntry(with: "")
         instantDebitsSection.addressElement?.city?.setText(defaultAddress.city!)
         instantDebitsSection.addressElement?.country.select(index: 0) // "US"
         instantDebitsSection.addressElement?.line1?.setText(defaultAddress.line1!)
@@ -2768,7 +2825,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     }
 
     func testAppliesPreviousCustomerInput_klarna_country() {
-        func makeKlarnaCountry(apiPath: String?, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElementWrapper<DropdownFieldElement> {
+        func makeKlarnaCountry(apiPath: String?, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElementWrapper<AddressSectionElement> {
             let factory = PaymentSheetFormFactory(
                 intent: ._testPaymentIntent(paymentMethodTypes: [.klarna], currency: "eur"),
                 elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
@@ -2776,19 +2833,19 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 paymentMethod: .stripe(.klarna),
                 previousCustomerInput: previousCustomerInput
             )
-            return factory.makeKlarnaCountry(apiPath: apiPath) as! PaymentMethodElementWrapper<DropdownFieldElement>
+            return factory.makeBillingAddressSection(defaultFieldsToCollect: .country, countryAPIPath: apiPath)
         }
         let apiPathValues: [String?] = [nil, "billing_details[address][country]"] // Test the same thing with and without an api path
         apiPathValues.forEach { apiPath in
             // Given a klarna country...
             let klarnaCountry = makeKlarnaCountry(apiPath: apiPath, previousCustomerInput: nil)
             // ...with a selection *different* from the default of 0
-            klarnaCountry.element.select(index: 1)
+            klarnaCountry.element.country.select(index: 1)
             // ...using its params as previous customer input to create a new klarna country...
             let previousCustomerInput = klarnaCountry.updateParams(params: IntentConfirmParams(type: .stripe(.klarna)))
             let klarnaCountry_with_previous_customer_input = makeKlarnaCountry(apiPath: apiPath, previousCustomerInput: previousCustomerInput)
             // ...should result in a valid element filled out with the previous customer input
-            XCTAssertEqual(klarnaCountry_with_previous_customer_input.element.selectedIndex, 1)
+            XCTAssertEqual(klarnaCountry_with_previous_customer_input.element.country.selectedIndex, 1)
             XCTAssertEqual(klarnaCountry_with_previous_customer_input.validationState, .valid)
         }
     }
@@ -2872,9 +2929,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             if let paymentMethodOptions {
                 json["payment_method_options"] = paymentMethodOptions
             }
-            let checkoutSession = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
+            let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
             return PaymentSheetFormFactory(
-                intent: .checkout(Checkout(apiResponse: checkoutSession)),
+                intent: .checkout(checkoutSession.makePublicSession()),
                 elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),
                 configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
                 paymentMethod: .stripe(.payPal),

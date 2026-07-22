@@ -14,8 +14,8 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
     // MARK: - Auto-hide tests
 
-    func testHiddenWhenSessionIsNil() async {
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: CheckoutTestHelpers.makeOpenSession())
+    func testHiddenWhenSessionIsNil() async throws {
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let view = Checkout.CurrencySelectorView(checkout: checkout)
 
         // Session is nil before load(), so the view should be hidden
@@ -23,7 +23,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     }
 
     func testHiddenWhenAdaptivePricingNotActive() async throws {
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: CheckoutTestHelpers.makeOpenSession())
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let session = makeSession(adaptivePricingActive: false)
         try await checkout.commitSession(session)
 
@@ -39,7 +39,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     }
 
     func testHiddenWhenLocalizedPricesEmpty() async throws {
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: CheckoutTestHelpers.makeOpenSession())
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let session = makeSession(includeLocalizedPrices: false)
         try await checkout.commitSession(session)
 
@@ -54,7 +54,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     }
 
     func testHiddenWhenExchangeRateMetaNil() async throws {
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: CheckoutTestHelpers.makeOpenSession())
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let session = makeSession(includeExchangeRateFields: false)
         try await checkout.commitSession(session)
 
@@ -69,7 +69,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     }
 
     func testVisibleWhenAdaptivePricingActive() async throws {
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: CheckoutTestHelpers.makeOpenSession())
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let session = makeSession()
         try await checkout.commitSession(session)
 
@@ -84,7 +84,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     }
 
     func testTransitionsFromHiddenToVisibleOnSessionUpdate() async throws {
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: CheckoutTestHelpers.makeOpenSession())
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let view = Checkout.CurrencySelectorView(checkout: checkout)
 
         // Initially hidden
@@ -105,7 +105,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     // MARK: - Label update tests
 
     func testLabelsUpdateWhenSessionAmountChanges() async throws {
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: CheckoutTestHelpers.makeOpenSession())
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let session = makeSession(integrationAmount: 1200, localAmount: 1000)
         try await checkout.commitSession(session)
 
@@ -202,7 +202,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         includeExchangeRateFields: Bool = true,
         integrationAmount: Int = 1200,
         localAmount: Int = 1000
-    ) -> STPCheckoutSessionAPIResponse {
+    ) -> PaymentPagesAPIResponse {
         CheckoutTestHelpers.makeAdaptivePricingSession(
             adaptivePricingActive: adaptivePricingActive,
             includeLocalizedPrices: includeLocalizedPrices,

@@ -47,14 +47,6 @@ enum CheckoutPlayground {
         }
     }
 
-    enum SessionMode: String, CaseIterable, Identifiable {
-        case payment
-        case subscription
-        case setup
-
-        var id: String { rawValue }
-    }
-
     enum Currency: String, CaseIterable, Identifiable {
         case usd
         case eur

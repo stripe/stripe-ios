@@ -83,6 +83,30 @@ struct PaymentView: View {
         let id = UUID()
     }
 
+    private enum SourceCurrency: String, CaseIterable, Identifiable {
+        case usd
+        case eur
+
+        var displayName: String {
+            rawValue.uppercased()
+        }
+
+        var symbol: String {
+            switch self {
+            case .usd:
+                "$"
+            case .eur:
+                "€"
+            }
+        }
+
+        // MARK: - Identifiable
+
+        var id: String {
+            rawValue
+        }
+    }
+
     /// The coordinator to use for collecting new payment methods and creating crypto payment tokens.
     let coordinator: CryptoOnrampCoordinator
 
@@ -96,6 +120,28 @@ struct PaymentView: View {
         _ settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed
     ) -> Void
 
+    /// Creates a new instance of `PaymentView`.
+    /// - Parameters:
+    ///   - coordinator: The coordinator to use for collecting new payment methods and creating crypto payment tokens.
+    ///   - wallet: The wallet being funded.
+    ///   - isEUCustomer: Whether the user's KYC region is EU.
+    ///   - onContinue: Called with the created onramp session when the user continues.
+    init(
+        coordinator: CryptoOnrampCoordinator,
+        wallet: CustomerWalletsResponse.Wallet,
+        isEUCustomer: Bool,
+        onContinue: @escaping (
+            CreateOnrampSessionResponse,
+            _ selectedPaymentMethodDescription: String,
+            _ settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed
+        ) -> Void
+    ) {
+        self.coordinator = coordinator
+        self.wallet = wallet
+        self.onContinue = onContinue
+        self._sourceCurrency = State(initialValue: isEUCustomer ? .eur : .usd)
+    }
+
     @Environment(\.isLoading) private var isLoading
     @Environment(\.locale) private var locale
 
@@ -105,10 +151,13 @@ struct PaymentView: View {
     @State private var paymentTokens: [PaymentTokensResponse.PaymentToken] = []
     @State private var alert: Alert?
     @State private var selectedPaymentMethod: SelectedPaymentMethod?
+    @State private var sourceCurrency: SourceCurrency
     @State private var destinationCurrency: String = "usdc"
     @State private var editCurrencyAlert: EditCurrencyAlert?
     @State private var editingCurrencyText: String = ""
     @State private var achSettlementSpeed: CreateOnrampSessionRequest.SettlementSpeed = .instant
+    @State private var pendingWalletOwnershipVerificationCryptoPaymentTokenId: String?
+    @State private var isPresentingWalletOwnershipVerificationAlert = false
 
     private var isPresentingAlert: Binding<Bool> {
         Binding(get: {
@@ -129,8 +178,7 @@ struct PaymentView: View {
             }
         })
     }
-    // This example UI is intended for USD ($) only, but we respect the
-    // current locale’s decimal separator.
+    // This example UI respects the current locale’s decimal separator.
     //
     // Additionally, we don’t use a currency number formatter while
     // editing in order to allow fully typing a dollar and cents amount
@@ -209,26 +257,39 @@ struct PaymentView: View {
             Spacer()
 
             VStack(spacing: 8) {
-                Text("$" + (amountText.isEmpty ? "0" : amountText))
+                Text(sourceCurrency.symbol + (amountText.isEmpty ? "0" : amountText))
                     .font(.system(size: 56, weight: .bold))
                     .monospacedDigit()
                     .frame(maxWidth: .infinity, alignment: .center)
 
-                Button {
-                    editingCurrencyText = destinationCurrency
-                    editCurrencyAlert = EditCurrencyAlert()
-                } label: {
-                    HStack(spacing: 4) {
-                        Text("to \(destinationCurrency)")
+                HStack(spacing: 0) {
+                    Picker(selection: $sourceCurrency) {
+                        ForEach(SourceCurrency.allCases) { currency in
+                            Text(currency.displayName).tag(currency)
+                        }
+                    } label: {
+                        Text(sourceCurrency.displayName)
                             .font(.callout)
                             .foregroundColor(.secondary)
-
-                        Image(systemName: "pencil")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundColor(.secondary)
                     }
+                    .pickerStyle(.menu)
+
+                    Button {
+                        editingCurrencyText = destinationCurrency
+                        editCurrencyAlert = EditCurrencyAlert()
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text("to \(destinationCurrency)")
+                                .font(.callout)
+                                .foregroundColor(.secondary)
+
+                            Image(systemName: "pencil")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
 
             Spacer()
@@ -406,6 +467,15 @@ struct PaymentView: View {
                 Text("Enter the destination currency code (e.g. usdc, btc, eth)")
             }
         )
+        .walletOwnershipVerificationRequiredAlert(
+            isPresented: $isPresentingWalletOwnershipVerificationAlert,
+            onVerify: {
+                verifyWalletOwnershipForPendingCreateOnrampSession()
+            },
+            onCancel: {
+                pendingWalletOwnershipVerificationCryptoPaymentTokenId = nil
+            }
+        )
     }
 
     // MARK: - PaymentView
@@ -528,15 +598,15 @@ struct PaymentView: View {
     }
 
     @ViewBuilder
-    private func makePresetAmountButton(_ dollarAmount: Int) -> some View {
+    private func makePresetAmountButton(_ amount: Int) -> some View {
         Button {
-            amountText = "\(dollarAmount)"
+            amountText = "\(amount)"
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color(.secondarySystemBackground))
 
-                Text("$\(dollarAmount)")
+                Text("\(sourceCurrency.symbol)\(amount)")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.primary)
             }
@@ -717,9 +787,17 @@ struct PaymentView: View {
             return
         }
 
-        let request = StripeAPI.paymentRequest(withMerchantIdentifier: "merchant.com.stripe.umbrella.test", country: "US", currency: "USD")
+        let request = StripeAPI.paymentRequest(
+            withMerchantIdentifier: "merchant.com.stripe.umbrella.test",
+            country: "US",
+            currency: sourceCurrency.displayName
+        )
         request.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: "$\(amountText) usd + fees", amount: .zero, type: .pending)
+            PKPaymentSummaryItem(
+                label: "\(sourceCurrency.symbol)\(amountText) \(sourceCurrency.rawValue) + fees",
+                amount: .zero,
+                type: .pending
+            ),
         ]
 
         isLoading.wrappedValue = true
@@ -762,7 +840,7 @@ struct PaymentView: View {
         let request = CreateOnrampSessionRequest(
             paymentToken: cryptoPaymentTokenId,
             sourceAmount: Decimal(string: amountText) ?? 0,
-            sourceCurrency: "usd", // <--- hardcoded for demo
+            sourceCurrency: sourceCurrency.rawValue,
             destinationCurrency: destinationCurrency,
             destinationNetwork: wallet.network,
             destinationCurrencies: [destinationCurrency],
@@ -777,7 +855,12 @@ struct PaymentView: View {
                 let response = try await APIClient.shared.createOnrampSession(requestObject: request)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    onContinue(response, selectPaymentMethodButtonTitle, settlementSpeed)
+                    if response.requiresWalletOwnershipVerification {
+                        pendingWalletOwnershipVerificationCryptoPaymentTokenId = cryptoPaymentTokenId
+                        isPresentingWalletOwnershipVerificationAlert = true
+                    } else {
+                        onContinue(response, selectPaymentMethodButtonTitle, settlementSpeed)
+                    }
                 }
             } catch {
                 let fallbackErrorTitle = "Failed to create onramp session"
@@ -820,6 +903,32 @@ struct PaymentView: View {
                 }
             }
         }
+    }
+
+    private func verifyWalletOwnershipForPendingCreateOnrampSession() {
+        guard let context = WalletOwnershipVerificationContext(wallet: wallet) else {
+            pendingWalletOwnershipVerificationCryptoPaymentTokenId = nil
+            alert = WalletOwnershipVerification.unavailableAlert
+            return
+        }
+
+        WalletOwnershipVerification.startVerification(
+            context: context,
+            coordinator: coordinator,
+            isLoading: isLoading,
+            alert: $alert
+        ) {
+            retryPendingCreateOnrampSession()
+        }
+    }
+
+    private func retryPendingCreateOnrampSession() {
+        guard let cryptoPaymentTokenId = pendingWalletOwnershipVerificationCryptoPaymentTokenId else {
+            return
+        }
+
+        pendingWalletOwnershipVerificationCryptoPaymentTokenId = nil
+        createOnrampSession(withCryptoPaymentTokenId: cryptoPaymentTokenId)
     }
 
     private func shouldFetchCustomerInfoForRecovery(forErrorCode code: String) -> Bool {
@@ -931,8 +1040,10 @@ private extension PaymentTokensResponse.PaymentToken {
                 object: "",
                 livemode: false,
                 network: "solana",
-                walletAddress: ""
+                walletAddress: "",
+                verifiedOwnership: false
             ),
+            isEUCustomer: false,
             onContinue: { _, _, _ in }
         )
     }

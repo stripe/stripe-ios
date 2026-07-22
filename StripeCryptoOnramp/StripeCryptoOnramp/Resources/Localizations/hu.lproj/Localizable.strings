@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "A pénztárca ellenőrzési kérelme lejárt. Kérjük, próbálja újra.";
 
+"This wallet verification request is invalid. Please try again." = "Ez a pénztárca-hitelesítési kérés érvénytelen. Kérjük, próbálja újra.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Nem tudtuk ellenőrizni ennek a pénztárcának a tulajdonjogát. Kérjük, próbálja újra.";

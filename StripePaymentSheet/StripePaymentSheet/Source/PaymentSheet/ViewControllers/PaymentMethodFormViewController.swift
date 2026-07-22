@@ -179,7 +179,6 @@ class PaymentMethodFormViewController: UIViewController {
             let delegate = addressSection.delegate
             addressSection.delegate = nil  // Stop didUpdate delegate calls to avoid laying out while we're being presented
             if let newShippingAddress = configuration.shippingDetails()?.address {
-                addressSection.collectionMode = .allWithAutocomplete
                 addressSection.updateBillingSameAsShippingDefaultAddress(.init(newShippingAddress))
             } else {
                 addressSection.updateBillingSameAsShippingDefaultAddress(.init())
@@ -364,10 +363,10 @@ extension PaymentMethodFormViewController {
                 return .setup(setupIntent.stripeID)
             case .deferredIntent:
                 return .deferred(elementsSession.sessionID)
-            case .checkout(let checkout):
+            case .checkout(let session):
                 // This ID is used for financial incentive eligibility. Ideally we'd use the underlying
                 // paymentIntentId or setupIntentId, but those are not yet populated on CheckoutSession.
-                return .deferred(checkout.nonisolatedSession.id)
+                return .deferred(session.id)
             }
         }()
 
@@ -557,13 +556,13 @@ extension PaymentMethodFormViewController {
                 intentType: .deferred,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .checkout(let checkout):
+        case .checkout(let session):
             client.collectBankAccountForDeferredIntentOrCheckoutSession(
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
-                amount: checkout.nonisolatedSession.expectedAmount(),
-                currency: checkout.nonisolatedSession.currency,
+                amount: session.expectedAmount(),
+                currency: session.currency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
@@ -673,13 +672,13 @@ extension PaymentMethodFormViewController {
                 intentType: .deferred,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .checkout(let checkout):
+        case .checkout(let session):
             client.collectBankAccountForDeferredIntentOrCheckoutSession(
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
-                amount: checkout.nonisolatedSession.expectedAmount(),
-                currency: checkout.nonisolatedSession.currency,
+                amount: session.expectedAmount(),
+                currency: session.currency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
@@ -716,9 +715,7 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
 
         // Dismiss the autocomplete view controller
         presentedViewController?.dismiss(animated: true) {
-            // Switch to manual entry mode and set the line1 text
-            addressSectionElement.collectionMode = .allWithAutocomplete
-            addressSectionElement.line1?.setText(line1)
+            addressSectionElement.beginManualEntry(with: line1)
             addressSectionElement.line1?.beginEditing()
         }
     }
@@ -728,25 +725,11 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
 
         // Dismiss the autocomplete view controller
         presentedViewController?.dismiss(animated: true) {
-            // Switch to manual entry mode after address selection
-            addressSectionElement.collectionMode = .allWithAutocomplete
-
             guard let address = address else {
                 return
             }
 
-            // Set the country if it's supported
-            let autocompleteCountryIndex = addressSectionElement.countryCodes.firstIndex(where: { $0 == address.country })
-            if let autocompleteCountryIndex = autocompleteCountryIndex {
-                addressSectionElement.country.select(index: autocompleteCountryIndex, shouldAutoAdvance: false)
-            }
-
-            // Populate the address fields
-            addressSectionElement.line1?.setText(address.line1 ?? "")
-            addressSectionElement.line2?.setText(address.line2 ?? "")
-            addressSectionElement.city?.setText(address.city ?? "")
-            addressSectionElement.postalCode?.setText(address.postalCode ?? "")
-            addressSectionElement.state?.setRawData(address.state ?? "", shouldAutoAdvance: false)
+            addressSectionElement.setAddress(address.addressSectionAddress)
 
             // Read back from the element so field processing (e.g. postal code truncation) is reflected
             let normalized = addressSectionElement.addressDetails.address

@@ -29,9 +29,7 @@ struct CheckoutCartEmbeddedPaymentView: View {
                 showEmbeddedScreen = true
             } label: {
                 HStack {
-                    Text("Select payment method")
-                        .font(.subheadline)
-                        .foregroundColor(.primary)
+                    paymentMethodLabel
                     Spacer()
                     Image(systemName: "chevron.right")
                         .font(.caption)
@@ -79,6 +77,25 @@ struct CheckoutCartEmbeddedPaymentView: View {
             Color(UIColor.systemBackground)
                 .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
         )
+    }
+
+    @ViewBuilder
+    private var paymentMethodLabel: some View {
+        if let paymentOption = session.paymentOption {
+            HStack(spacing: 8) {
+                Image(uiImage: paymentOption.image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 16)
+                Text(paymentOption.label)
+                    .font(.subheadline)
+                    .foregroundColor(.primary)
+            }
+        } else {
+            Text("Select payment method")
+                .font(.subheadline)
+                .foregroundColor(.primary)
+        }
     }
 }
 

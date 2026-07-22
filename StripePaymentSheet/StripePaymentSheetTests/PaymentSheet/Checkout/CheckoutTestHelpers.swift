@@ -7,6 +7,10 @@
 //
 
 import Combine
+import OHHTTPStubs
+import OHHTTPStubsSwift
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
@@ -14,7 +18,7 @@ import XCTest
 extension Checkout.Amount {
     /// Test helper for constructing a ``Checkout/Amount`` from a minor-units integer.
     static func testValue(_ minorUnits: Int, currency: String = "usd") -> Checkout.Amount {
-        return STPCheckoutSessionAPIResponse.makeAmount(minorUnits, currency: currency)
+        return PaymentPagesAPIResponse.makeAmount(minorUnits, currency: currency)
     }
 }
 
@@ -80,12 +84,12 @@ enum CheckoutTestHelpers {
         "elements_session": minimalElementsSessionJSON,
     ]
 
-    /// Creates an `STPCheckoutSessionAPIResponse` from `baseSessionJSON` with top-level key overrides.
+    /// Creates a `PaymentPagesAPIResponse` from `baseSessionJSON` with top-level key overrides.
     /// To test field *absence*, mutate `baseSessionJSON` directly instead.
-    static func makeSession(_ overrides: [String: Any] = [:]) -> STPCheckoutSessionAPIResponse {
+    static func makeSession(_ overrides: [String: Any] = [:]) -> PaymentPagesAPIResponse {
         let json = makeSessionJSON(overrides)
-        guard let session = STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json) else {
-            fatalError("makeSession: failed to decode STPCheckoutSessionAPIResponse from \(json)")
+        guard let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json) else {
+            fatalError("makeSession: failed to decode PaymentPagesAPIResponse from \(json)")
         }
         return session
     }
@@ -96,9 +100,64 @@ enum CheckoutTestHelpers {
 
     // MARK: - Checkout-flow helpers
 
-    static func makeCheckoutWithOpenSession() async -> Checkout {
-        let session = makeOpenSession()
-        return await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: session)
+    /// Builds a `Checkout.Configuration`, replacing its `apiClient` with one that uses test stubs.
+    ///
+    /// - Parameters:
+    ///   - apiResponse: The Checkout Session response returned by the stubbed `/init` request.
+    ///   - configuration: An optional base configuration for test-specific settings.
+    ///   - stubAllOutgoingRequests: Whether to stub every outgoing API request made by the client, or only the initialization request.
+    @MainActor
+    static func makeConfiguration(
+        apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
+        configuration: Checkout.Configuration? = nil,
+        stubAllOutgoingRequests: Bool = true
+    ) -> Checkout.Configuration {
+        // Use the production Checkout initializer with a test-controlled API client.
+        let clientSecret = configuration?.clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
+        var resolvedConfiguration = configuration ?? Checkout.Configuration(clientSecret: clientSecret)
+        resolvedConfiguration.apiClient = makeStubbedAPIClient(
+            apiResponse: apiResponse,
+            clientSecret: clientSecret,
+            stubAllOutgoingRequests: stubAllOutgoingRequests
+        )
+        return resolvedConfiguration
+    }
+
+    @MainActor
+    static func makeStubbedAPIClient(
+        apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
+        clientSecret: String? = nil,
+        stubAllOutgoingRequests: Bool = true
+    ) -> STPAPIClient {
+        let resolvedClientSecret = clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
+        let sessionId = Checkout.extractSessionId(from: resolvedClientSecret)
+        let apiClient = APIStubbedTestCase.stubbedAPIClient()
+
+        // Keep tests offline except for explicitly stubbed Checkout init work.
+        if stubAllOutgoingRequests {
+            APIStubbedTestCase.stubAllOutgoingRequests()
+        }
+        StubbedBackend.stubLookup()
+        stub(condition: { request in
+            let url = request.url?.absoluteString ?? ""
+            return url.contains("/v3/fingerprinted/img/payment-methods")
+                || url.contains("/ocs-mobile/assets/flags/")
+        }) { _ in
+            HTTPStubsResponse(data: Data(), statusCode: 404, headers: nil)
+        }
+        stub(condition: { request in
+            request.httpMethod == "POST"
+                && request.url?.path == "/v1/payment_pages/\(sessionId)/init"
+        }) { _ in
+            // Feed Checkout(configuration:) the session fixture this test requested.
+            var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
+            responseJSON["client_secret"] = resolvedClientSecret
+            responseJSON["session_id"] = responseJSON["session_id"] ?? sessionId
+            let data = try! JSONSerialization.data(withJSONObject: responseJSON, options: [])
+            return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
+        }
+
+        return apiClient
     }
 
     static let openSessionJSON: [AnyHashable: Any] = [
@@ -114,24 +173,24 @@ enum CheckoutTestHelpers {
         "elements_session": minimalElementsSessionJSON,
     ]
 
-    static func makeOpenSession(customerEmail: String? = nil, billingAddressCollection: String? = nil) -> STPCheckoutSessionAPIResponse {
+    static func makeOpenSession(customerEmail: String? = nil, billingAddressCollection: String? = nil) -> PaymentPagesAPIResponse {
         var json = openSessionJSON
         json["customer_email"] = customerEmail
         json["billing_address_collection"] = billingAddressCollection
-        return STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
+        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
     }
 
-    static func makeClosedSession() -> STPCheckoutSessionAPIResponse {
+    static func makeClosedSession() -> PaymentPagesAPIResponse {
         var json = openSessionJSON
         json["status"] = "complete"
         json["payment_status"] = "paid"
-        return STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
+        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
     }
 
-    static func makeOpenSession(allowedCountries: [String]) -> STPCheckoutSessionAPIResponse {
+    static func makeOpenSession(allowedCountries: [String]) -> PaymentPagesAPIResponse {
         var json = openSessionJSON
         json["shipping_address_collection"] = ["allowed_countries": allowedCountries]
-        return STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
+        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
     }
 
     static func makeAdaptivePricingSession(
@@ -141,7 +200,7 @@ enum CheckoutTestHelpers {
         includeExchangeRateFields: Bool = true,
         integrationAmount: Int = 1200,
         localAmount: Int = 1000
-    ) -> STPCheckoutSessionAPIResponse {
+    ) -> PaymentPagesAPIResponse {
         var json: [AnyHashable: Any] = openSessionJSON
         json["currency"] = currency
         json["total_summary"] = [
@@ -172,24 +231,41 @@ enum CheckoutTestHelpers {
             ]
         }
 
-        return STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
+        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+    }
+
+    private static func jsonObject(_ value: Any) -> Any {
+        switch value {
+        case let dictionary as [AnyHashable: Any]:
+            return Dictionary(uniqueKeysWithValues: dictionary.map { key, value in
+                (String(describing: key), jsonObject(value))
+            })
+        case let dictionary as [String: Any]:
+            return Dictionary(uniqueKeysWithValues: dictionary.map { key, value in
+                (key, jsonObject(value))
+            })
+        case let array as [Any]:
+            return array.map(jsonObject)
+        default:
+            return value
+        }
     }
 }
 
-// MARK: - STPCheckoutSessionAPIResponse decorator helpers
+// MARK: - PaymentPagesAPIResponse decorator helpers
 
-extension STPCheckoutSessionAPIResponse {
-    func withCustomer(id: String = "cus_123") -> STPCheckoutSessionAPIResponse {
+extension PaymentPagesAPIResponse {
+    func withCustomer(id: String = "cus_123") -> PaymentPagesAPIResponse {
         withOverrides(["customer": ["id": id]])
     }
 
-    func withSessionId(_ id: String) -> STPCheckoutSessionAPIResponse {
+    func withSessionId(_ id: String) -> PaymentPagesAPIResponse {
         withOverrides(["session_id": id])
     }
 
-    private func withOverrides(_ overrides: [String: Any]) -> STPCheckoutSessionAPIResponse {
+    private func withOverrides(_ overrides: [String: Any]) -> PaymentPagesAPIResponse {
         let json = (allResponseFields as? [String: Any] ?? [:])
             .merging(overrides) { _, new in new }
-        return STPCheckoutSessionAPIResponse.decodedObject(fromAPIResponse: json)!
+        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
     }
 }

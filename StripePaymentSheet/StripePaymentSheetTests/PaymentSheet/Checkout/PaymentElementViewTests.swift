@@ -14,14 +14,11 @@ import XCTest
 final class PaymentElementViewTests: XCTestCase {
 
     func testSwiftUIViewUpdatesHeightWhenEmbeddedPaymentElementHeightChanges() async throws {
+        // Given a PaymentElement SwiftUI view hosted in a window
         var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
         configuration.paymentElement.displaysMandateText = true
-        let checkout = await Checkout(
-            clientSecret: configuration.clientSecret,
-            configuration: configuration,
-            apiResponse: CheckoutTestHelpers.makeOpenSession()
-        )
-        let paymentElement = try await PaymentElement(checkout: checkout)
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(configuration: configuration))
+        let paymentElement = checkout.getPaymentElement()
 
         let hostingController = UIHostingController(
             rootView: paymentElement.view.transaction { $0.animation = nil }
@@ -31,18 +28,25 @@ final class PaymentElementViewTests: XCTestCase {
         window.makeKeyAndVisible()
         hostingController.view.frame = window.bounds
 
+        // When the initial SwiftUI height has been resolved
         layout(hostingController)
         try await waitUntil {
+            window.setNeedsLayout()
+            window.layoutIfNeeded()
             layout(hostingController)
-            return paymentElement.uiView.frame.height > 0
+            return hostingController.sizeThatFits(in: window.bounds.size).height > 0
         }
-        let initialHeight = paymentElement.uiView.frame.height
+        let initialHeight = hostingController.sizeThatFits(in: window.bounds.size).height
 
+        // ...and the embedded payment element updates its height
         paymentElement.embeddedPaymentElement.testHeightChange()
 
+        // Then the hosted SwiftUI view updates its height
         try await waitUntil {
+            window.setNeedsLayout()
+            window.layoutIfNeeded()
             layout(hostingController)
-            return abs(paymentElement.uiView.frame.height - initialHeight) > 1
+            return abs(hostingController.sizeThatFits(in: window.bounds.size).height - initialHeight) > 1
         }
     }
 

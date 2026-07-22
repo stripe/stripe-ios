@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "Din it-talba għal verifika tal-kartiera skadiet. Jekk jogħġbok erġa' pprova.";
 
+"This wallet verification request is invalid. Please try again." = "Din it-talba ta' verifika tal-kartiera hija invalida. Jekk jogħġbok erġa' pprova.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Ma stajniex nivverifikaw is-sjieda ta' din il-kartiera. Jekk jogħġbok erġa' pprova.";

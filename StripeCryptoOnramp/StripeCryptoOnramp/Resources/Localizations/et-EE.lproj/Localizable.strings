@@ -10,4 +10,6 @@
 
 "This wallet verification request expired. Please try again." = "See rahakoti kinnitamise taotlus aegus. Palun proovige uuesti.";
 
+"This wallet verification request is invalid. Please try again." = "See rahakoti kinnitamise taotlus on kehtetu. Palun proovige uuesti.";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Me ei suutnud selle rahakoti omandiõigust kinnitada. Palun proovige uuesti.";

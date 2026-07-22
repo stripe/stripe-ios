@@ -29,7 +29,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkoutSession.status?.paymentStatus, .unpaid)
         XCTAssertEqual(checkoutSession.currency, "usd")
         XCTAssertFalse(checkoutSession.livemode)
-        XCTAssertTrue(checkoutSession.paymentMethodTypes.contains(.card))
+        XCTAssertTrue((checkoutSession.allResponseFields["payment_method_types"] as? [String])?.contains("card") ?? false)
 
         // Verify elements session fields
         let elementsSessionDict = checkoutSession.allResponseFields["elements_session"] as! [String: Any]
@@ -246,7 +246,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkoutSession.status?.paymentStatus, .noPaymentRequired)
         XCTAssertEqual(checkoutSession.currency, "usd")
         XCTAssertFalse(checkoutSession.livemode)
-        XCTAssertTrue(checkoutSession.paymentMethodTypes.contains(.card))
+        XCTAssertTrue((checkoutSession.allResponseFields["payment_method_types"] as? [String])?.contains("card") ?? false)
 
         // Verify elements session fields
         let elementsSessionDict = checkoutSession.allResponseFields["elements_session"] as! [String: Any]
