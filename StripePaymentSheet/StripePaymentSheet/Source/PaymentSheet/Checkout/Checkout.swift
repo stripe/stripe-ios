@@ -232,15 +232,15 @@ public final class Checkout: ObservableObject {
            !allowedCountries.contains(address.country) {
             throw CheckoutError.invalidShippingCountry(countryCode: address.country)
         }
-        let contactAddress = ContactAddress(name: name, phone: phone, address: address)
-        guard session.shippingAddress != contactAddress else { return }
+        let shippingAddress = Session.ShippingAddress(name: name, address: .init(address))
+        guard session.shippingAddress != shippingAddress else { return }
         if session.shouldSendTaxRegion(for: "shipping") {
             try await performUpdate(.setTaxRegion(address), applying: { session in
-                session.makeCopyOverriding(shippingAddress: .newValue(contactAddress))
+                session.makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
             })
         } else {
             try await performUpdate(applying: { session in
-                session.makeCopyOverriding(shippingAddress: .newValue(contactAddress))
+                session.makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
             })
         }
     }

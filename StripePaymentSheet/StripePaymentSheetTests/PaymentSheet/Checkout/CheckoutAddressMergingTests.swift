@@ -7,9 +7,9 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_shippingApplied() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(Checkout.ContactAddress(
+        let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(Checkout.Session.ShippingAddress(
             name: "John Smith",
-            address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
+            address: .init(country: "US", line1: "456 Oak Ave", city: "LA", postalCode: "90001", state: "CA")
         )))
 
         var config = PaymentSheet.Configuration()
@@ -28,7 +28,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_shippingOverridesConfigShipping() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(Checkout.ContactAddress(
+        let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(Checkout.Session.ShippingAddress(
             name: "John Smith",
             address: .init(country: "GB")
         )))
@@ -81,9 +81,9 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_embeddedShipping() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let shippingAddress = Checkout.ContactAddress(
+        let shippingAddress = Checkout.Session.ShippingAddress(
             name: "John Smith",
-            address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
+            address: .init(country: "US", line1: "456 Oak Ave", city: "LA", postalCode: "90001", state: "CA")
         )
         let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
 

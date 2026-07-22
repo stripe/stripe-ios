@@ -140,7 +140,7 @@ struct CheckoutCartContentView: View {
             if let override = checkout.session.shippingAddress {
                 addressCard(
                     name: override.name,
-                    address: override.address,
+                    address: .init(override.address),
                     onEdit: { showShippingAddressSheet = true }
                 )
             } else {
@@ -236,7 +236,7 @@ struct CheckoutCartContentView: View {
 
     private func makeAddressConfiguration(
         title: String,
-        override: Checkout.ContactAddress?
+        override: Checkout.Session.ShippingAddress?
     ) -> AddressElement.Configuration {
         var config = AddressElement.Configuration()
         config.title = title
@@ -531,5 +531,18 @@ struct CheckoutCartSheet: View {
                 }
             }
         }
+    }
+}
+
+private extension Checkout.Address {
+    init(_ address: Checkout.Session.Address) {
+        self.init(
+            country: address.country,
+            line1: address.line1,
+            line2: address.line2,
+            city: address.city,
+            state: address.state,
+            postalCode: address.postalCode
+        )
     }
 }

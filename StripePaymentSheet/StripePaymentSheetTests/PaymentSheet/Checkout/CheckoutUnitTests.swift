@@ -374,7 +374,7 @@ final class CheckoutUnitTests: XCTestCase {
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
 
         // Set address overrides on the initial session
-        let shippingUpdate = Checkout.ContactAddress(
+        let shippingUpdate = Checkout.Session.ShippingAddress(
             name: "Jane Doe",
             address: .init(country: "US")
         )

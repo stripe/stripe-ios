@@ -28,7 +28,7 @@ extension Checkout.Session {
         )
     }
 
-    private func shippingAddressDetails(from shipping: Checkout.ContactAddress) -> AddressViewController.AddressDetails {
+    private func shippingAddressDetails(from shipping: ShippingAddress) -> AddressViewController.AddressDetails {
         AddressViewController.AddressDetails(
             address: .init(
                 city: shipping.address.city,
@@ -39,7 +39,7 @@ extension Checkout.Session {
                 state: shipping.address.state
             ),
             name: shipping.name,
-            phone: shipping.phone
+            phone: nil
         )
     }
 
