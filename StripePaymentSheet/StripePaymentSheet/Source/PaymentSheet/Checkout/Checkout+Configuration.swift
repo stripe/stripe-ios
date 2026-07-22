@@ -42,6 +42,12 @@ extension Checkout {
         /// Configuration for PaymentElement.
         public var paymentElement: PaymentElement.Configuration = .init()
 
+        /// Configuration for ExpressCheckoutElement.
+        public var expressCheckoutElement: ExpressCheckoutElement.Configuration = .init()
+
+        /// Apple Pay configuration. Required for Apple Pay to appear in ``ExpressCheckoutElement``.
+        public var applePayConfiguration: ApplePayConfiguration?
+
         /// Creates a configuration.
         /// - Parameter clientSecret: The client secret for your Checkout Session.
         public init(clientSecret: String) {

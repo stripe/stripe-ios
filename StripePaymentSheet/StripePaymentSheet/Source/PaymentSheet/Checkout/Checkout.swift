@@ -293,6 +293,11 @@ public final class Checkout: ObservableObject {
     public func getPaymentElement() -> PaymentElement {
         return paymentElement
     }
+
+    /// Returns an ExpressCheckoutElement for this Checkout instance.
+    public func getExpressCheckoutElement() -> ExpressCheckoutElement {
+        return ExpressCheckoutElement(checkout: self)
+    }
 }
 
 // MARK: - Defaults
