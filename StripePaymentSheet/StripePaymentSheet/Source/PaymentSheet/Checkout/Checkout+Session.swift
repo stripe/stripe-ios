@@ -22,9 +22,6 @@ extension Checkout {
         /// The ID of the Checkout Session.
         public let id: String
 
-        /// Billing details of the customer.
-        public let billingAddress: Checkout.ContactAddress?
-
         /// The business name as configured in the Business Public Details settings of
         /// your Stripe account.
         public let businessName: String?
@@ -91,10 +88,15 @@ extension Checkout {
         let localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
         let exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
         let adaptivePricingActive: Bool
-        let requiresBillingAddress: Bool
+        let billingAddressCollection: BillingAddressCollection
         let automaticTaxEnabled: Bool
         let automaticTaxAddressSource: String?
         let elementsSession: STPElementsSession
+
+        enum BillingAddressCollection: String {
+            case automatic = "auto"
+            case required
+        }
     }
 }
 

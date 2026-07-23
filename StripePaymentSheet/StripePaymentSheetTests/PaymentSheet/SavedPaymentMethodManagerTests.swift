@@ -108,7 +108,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkout(Checkout(apiResponse: checkoutSession))
+            intent: .checkout(checkoutSession.makePublicSession())
         )
 
         let card = STPPaymentMethodCardParams()
@@ -143,7 +143,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkout(Checkout(apiResponse: checkoutSession))
+            intent: .checkout(checkoutSession.makePublicSession())
         )
 
         let card = STPPaymentMethodCardParams()
@@ -167,7 +167,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkout(Checkout(apiResponse: checkoutSession))
+            intent: .checkout(checkoutSession.makePublicSession())
         )
 
         do {
@@ -231,7 +231,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkout(Checkout(apiResponse: checkoutSession))
+            intent: .checkout(checkoutSession.makePublicSession())
         )
         sut.detach(paymentMethod: paymentMethod)
 

@@ -19,7 +19,6 @@ extension PaymentPagesAPIResponse {
     func makePublicSession() -> Checkout.Session {
         return Checkout.Session(
             id: id,
-            billingAddress: nil,
             businessName: businessName,
             currency: currency,
             currencyOptions: currencyOptions,
@@ -46,7 +45,7 @@ extension PaymentPagesAPIResponse {
             localizedPricesMetas: localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,
             adaptivePricingActive: adaptivePricingActive,
-            requiresBillingAddress: requiresBillingAddress,
+            billingAddressCollection: billingAddressCollection,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
             elementsSession: elementsSession

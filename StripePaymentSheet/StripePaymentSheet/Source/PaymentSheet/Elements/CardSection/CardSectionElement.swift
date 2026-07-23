@@ -119,13 +119,19 @@ final class CardSectionElement: ContainerElement {
                 return params
             }
         }
-        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(
+        let panConfiguration = TextFieldElement.PANConfiguration(
             defaultValue: defaultValues.pan,
-            cardBrandChoiceElement: cardBrandSelector?.element,
+            cardBrandChoiceDataSource: cardBrandSelector?.element,
             cardBrandFilter: cardBrandFilter,
             cardFundingFilter: cardFundingFilter,
             fundingBinController: fundingBinController
-        ), theme: theme) { field, params in
+        )
+        let panTextField = TextFieldElement(
+            configuration: panConfiguration,
+            theme: theme,
+            accessory: cardBrandSelector?.textFieldAccessory
+        )
+        let panElement = PaymentMethodElementWrapper(updatingParamsFrom: panTextField) { field, params in
             cardParams(for: params).number = field.text
             return params
         }
@@ -150,7 +156,7 @@ final class CardSectionElement: ContainerElement {
 
         let allSubElements: [Element?] = [
             nameElement,
-            panElement, SectionElement.HiddenElement(cardBrandSelector),
+            panElement,
             SectionElement.MultiElementRow([expiryElement, cvcElement], theme: theme),
         ]
         let subElements = allSubElements.compactMap { $0 }

@@ -461,8 +461,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             analyticsHelper: ._testValue()
         )
 
-        let session = CheckoutTestHelpers.makeOpenSession()
-        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", apiResponse: session)
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
 
         // Move session to complete
         let completedSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: {

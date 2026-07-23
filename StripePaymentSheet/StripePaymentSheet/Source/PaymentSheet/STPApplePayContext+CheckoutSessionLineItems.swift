@@ -17,12 +17,10 @@ extension STPApplePayContext {
     /// Builds Apple Pay summary items from a checkout session's current state.
     /// Falls back to a single total row (or .pending) when line items aren't available.
     static func makePaymentSummaryItems(
-        for checkout: Checkout,
+        for session: Checkout.Session,
         label: String,
         currency: String?
     ) -> [PKPaymentSummaryItem] {
-        let session: Checkout.Session = checkout.nonisolatedSession
-
         guard !session.lineItems.isEmpty, let total = session.total else {
             if let amount = session.expectedAmount() {
                 let decimalAmount = NSDecimalNumber.stp_decimalNumber(withAmount: amount, currency: currency)
@@ -126,21 +124,21 @@ extension STPApplePayContext {
         )
     }
 
-    /// Converts a `Checkout.ContactAddress` into a `PKContact` for pre-populating the Apple Pay sheet.
-    static func makeBillingContact(from contactAddress: Checkout.ContactAddress) -> PKContact {
+    /// Converts default billing details into a `PKContact` for pre-populating the Apple Pay sheet.
+    static func makeBillingContact(from billingDetails: PaymentSheet.BillingDetails) -> PKContact {
         let contact = PKContact()
 
-        if let name = contactAddress.name {
+        if let name = billingDetails.name {
             contact.name = PersonNameComponentsFormatter().personNameComponents(from: name)
         }
 
-        if let phone = contactAddress.phone {
+        if let phone = billingDetails.phone {
             contact.phoneNumber = CNPhoneNumber(stringValue: phone)
         }
 
         let postalAddress = CNMutablePostalAddress()
-        let address = contactAddress.address
-        postalAddress.isoCountryCode = address.country
+        let address = billingDetails.address
+        postalAddress.isoCountryCode = address.country ?? ""
 
         var streetComponents: [String] = []
         if let line1 = address.line1 { streetComponents.append(line1) }

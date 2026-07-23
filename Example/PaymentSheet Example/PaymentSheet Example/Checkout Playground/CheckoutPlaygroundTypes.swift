@@ -47,14 +47,6 @@ enum CheckoutPlayground {
         }
     }
 
-    enum SessionMode: String, CaseIterable, Identifiable {
-        case payment
-        case subscription
-        case setup
-
-        var id: String { rawValue }
-    }
-
     enum Currency: String, CaseIterable, Identifiable {
         case usd
         case eur
@@ -111,6 +103,20 @@ enum CheckoutPlayground {
             case .jp: return "JP"
             case .gb: return "GB"
             case .br: return "BR"
+            }
+        }
+    }
+
+    enum BillingAddressCollection: String, CaseIterable, Identifiable {
+        case automatic
+        case required
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .automatic: return "Auto"
+            case .required: return "Required"
             }
         }
     }

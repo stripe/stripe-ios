@@ -77,8 +77,8 @@ import UIKit
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
     )
 
-    /// A set of beta headers to add to Stripe API requests e.g. `Set(["alipay_beta=v1"])`.
-    @_spi(STP) public var betas: Set<String> = []
+    /// A set of beta headers to add to Stripe API requests e.g. `["alipay_beta=v1"]`.
+    public var betas: Set<String> = []
 
     /// Returns `true` if `publishableKey` is actually a user key, `false` otherwise.
     @_spi(STP) public var publishableKeyIsUserKey: Bool {

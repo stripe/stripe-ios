@@ -15,8 +15,8 @@ import Foundation
  This exists separate from `Element` because `IntentConfirmParams` is a type specific to `StripePaymentSheet`, whereas `Element` is shared
  across modules that don't have this type.
  
- - Remark:In practice, only "leaf" Elements - text fields, drop downs, etc. - have any user data to update params with. These elements can be wrapped in `PaymentMethodElementWrapper`.
- Other elements can rely on the default implementation provided in this file.
+ - Remark: In practice, Elements such as text fields and dropdowns that have user data to add to params can be wrapped in `PaymentMethodElementWrapper`.
+ Container Elements can rely on the default implementation provided in this file to collect params from their children.
  */
 protocol PaymentMethodElement: Element {
     /// Modify the params according to your input, or return nil if invalid.
@@ -59,6 +59,9 @@ extension ContainerElement {
 extension FormElement: PaymentMethodElement {}
 
 extension SectionElement: PaymentMethodElement {}
+
+// A text field can contain an accessory Element that contributes its own params.
+extension TextFieldElement: PaymentMethodElement {}
 
 extension StaticElement: PaymentMethodElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {

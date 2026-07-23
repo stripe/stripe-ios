@@ -193,6 +193,7 @@ struct LinkControllerDemoView: View {
             linkController = try await LinkController.create(
                 configuration: .init(
                     supportedPaymentMethodTypes: Array(configuration.supportedPaymentMethodTypes),
+                    paymentMethodTypes: configuration.paymentMethodTypes,
                     merchantDisplayName: "Example, Inc."
                 )
             )

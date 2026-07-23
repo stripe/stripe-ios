@@ -482,7 +482,8 @@ extension PaymentSheetFormFactory {
     }
 
     func makeBillingAddressSection(
-        collectionMode: AddressSectionElement.CollectionMode = .autocomplete(),
+        defaultFieldsToCollect: AddressSectionElement.FieldsToCollect = .all,
+        minimumFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect] = [:],
         countries: [String]? = nil,
         countryAPIPath: String? = nil,
         includeEmail: Bool = false,
@@ -509,31 +510,20 @@ extension PaymentSheetFormFactory {
             defaultAddress.email = defaultBillingDetails().email
         }
 
-        // Determine the collection mode based on whether we have default values
-        let finalCollectionMode: AddressSectionElement.CollectionMode = {
-            // If we have default address values, show the expanded form so those values are visible.
-            let hasDefaultAddressValues = defaultBillingDetails().address != .init() || (configuration.shippingDetails() != nil && displayBillingSameAsShippingCheckbox)
-            if hasDefaultAddressValues {
-                switch collectionMode {
-                case .autocomplete(let autocompleteCountries, .compact):
-                    // Preserve any autocomplete country restrictions while expanding so default values are visible.
-                    return .autocomplete(autocompleteCountries: autocompleteCountries, presentation: .expanded)
-                default:
-                    return collectionMode
-                }
-            } else {
-                return collectionMode
-            }
-        }()
+        let availableCountries = countries ?? addressSpecProvider.countries
+        let collectsOnlyCountry = defaultFieldsToCollect == .country
+            && minimumFieldsToCollectByCountry
+                .filter { availableCountries.caseInsensitiveContains($0.key) }
+                .allSatisfy { $0.value == .country }
 
         let section = AddressSectionElement(
-            // TODO: Switch between "billing address" and "billing details" strings once the localizations have landed
             // A lone country dropdown doesn't need a "Billing address" header
-            title: finalCollectionMode == .countryOnly ? nil : String.Localized.billing_address_lowercase,
+            title: collectsOnlyCountry ? nil : String.Localized.billing_address_lowercase,
             countries: countries,
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
-            collectionMode: finalCollectionMode,
+            defaultFieldsToCollect: defaultFieldsToCollect,
+            minimumFieldsToCollectByCountry: minimumFieldsToCollectByCountry,
             additionalFields: .init(
                 phone: includePhone ? .enabled(isOptional: false) : .disabled,
                 email: includeEmail ? .enabled(isOptional: false) : .disabled,
@@ -701,7 +691,7 @@ extension PaymentSheetFormFactory {
         let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
         let addressElement = configuration.billingDetailsCollectionConfiguration.address == .full
             ? makeBillingAddressSection(
-                collectionMode: .autocomplete(),
+                defaultFieldsToCollect: .all,
                 countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
             )
             : nil
@@ -799,7 +789,7 @@ extension PaymentSheetFormFactory {
         countryAPIPath: String? = nil
     ) -> PaymentMethodElementWrapper<AddressSectionElement> {
         makeBillingAddressSection(
-            collectionMode: configuration.billingDetailsCollectionConfiguration.address == .full ? .all : .countryOnly,
+            defaultFieldsToCollect: configuration.billingDetailsCollectionConfiguration.address == .full ? .all : .country,
             countries: countries,
             countryAPIPath: countryAPIPath
         )
@@ -889,7 +879,7 @@ extension PaymentSheetFormFactory {
 
         let countries = configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
         let addressElement = billingConfiguration.address == .full
-            ? makeBillingAddressSection(collectionMode: .autocomplete(), countries: countries)
+            ? makeBillingAddressSection(defaultFieldsToCollect: .all, countries: countries)
             : nil
 
         // An email is required, so only hide the email field iff:
@@ -982,7 +972,7 @@ extension PaymentSheetFormFactory {
 
     func makeDefaultsApplierWrapper<T: PaymentMethodElement>(for element: T) -> PaymentMethodElementWrapper<T> {
         return PaymentMethodElementWrapper(
-            element,
+            updatingParamsFrom: element,
             defaultsApplier: { [configuration] _, params in
                 // Only apply defaults when the flag is on.
                 guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
@@ -1004,8 +994,8 @@ extension PaymentSheetFormFactory {
                 }
                 return params
             },
-            paramsUpdater: { element, params in
-                return element.updateParams(params: params)
+            paramsUpdater: { _, params in
+                return params
             })
     }
 
@@ -1042,6 +1032,7 @@ extension PaymentSheetFormFactory {
         }
     }
 }
+
 extension PaymentSheetFormFactory {
     enum SavePaymentMethodConsentBehavior: Equatable {
         case legacy
@@ -1056,12 +1047,12 @@ extension PaymentSheetFormFactory {
         intent: Intent,
         elementsSession: STPElementsSession
     ) -> SavePaymentMethodConsentBehavior {
-        guard case .checkout(let checkout) = intent else {
+        guard case .checkout(let session) = intent else {
             return elementsSession.savePaymentMethodConsentBehavior
         }
 
-        guard checkout.nonisolatedSession.customerId != nil,
-              let offerSave = checkout.nonisolatedSession.savedPaymentMethodsOfferSave,
+        guard session.customerId != nil,
+              let offerSave = session.savedPaymentMethodsOfferSave,
               offerSave.enabled
         else {
             return .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled

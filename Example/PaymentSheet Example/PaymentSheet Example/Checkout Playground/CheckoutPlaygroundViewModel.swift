@@ -15,13 +15,12 @@ extension CheckoutPlayground {
         ]
 
         @Published var integrationType: IntegrationType = .flowController
-        @Published var mode: SessionMode = .payment
         @Published var currency: Currency = .usd
         @Published var customerType: CustomerType = .guest
         @Published var lineItems: [LineItemConfig] = LineItemConfig.defaults
         @Published var allowPromotionCodes = true
         @Published var shippingAddressCollection = true
-        @Published var billingAddressCollection = false
+        @Published var billingAddressCollection: BillingAddressCollection = .automatic
         @Published var automaticTax = true
         @Published var adaptivePricing = false
         @Published var checkoutSessionPaymentMethodSave = true
@@ -39,7 +38,7 @@ extension CheckoutPlayground {
         @Published var navigateToCheckout = false
 
         var isButtonDisabled: Bool {
-            isCreating || (!automaticPaymentMethods && paymentMethodTypes.isEmpty) || (mode != .setup && lineItems.isEmpty)
+            isCreating || (!automaticPaymentMethods && paymentMethodTypes.isEmpty) || lineItems.isEmpty
         }
 
         func createSession() async {
@@ -85,21 +84,14 @@ extension CheckoutPlayground {
         }
 
         private func buildRequestBody() -> [String: Any] {
-            // The backend currently applies setup-mode restrictions for these fields.
-            // Send explicit safe values so setup mode never requests unsupported options.
-            let supportsAdvancedCollection = mode != .setup
-            let allowPromotionCodesForRequest = supportsAdvancedCollection ? allowPromotionCodes : false
-            let automaticTaxForRequest = supportsAdvancedCollection ? automaticTax : false
-
             var body: [String: Any] = [
                 "merchant_country_code": "us_tax",
-                "mode": mode.rawValue,
                 "currency": currency.rawValue,
                 "customer": customerType.rawValue,
-                "allow_promotion_codes": allowPromotionCodesForRequest,
+                "allow_promotion_codes": allowPromotionCodes,
                 "shipping_address_collection": shippingAddressCollection,
-                "billing_address_collection": billingAddressCollection,
-                "automatic_tax": automaticTaxForRequest,
+                "billing_address_collection": billingAddressCollection == .required,
+                "automatic_tax": automaticTax,
                 "adaptive_pricing": adaptivePricing,
                 "checkout_session_payment_method_save": checkoutSessionPaymentMethodSave ? "enabled" : "disabled",
                 "checkout_session_payment_method_remove": checkoutSessionPaymentMethodRemove ? "enabled" : "disabled",
