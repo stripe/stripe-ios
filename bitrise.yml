@@ -481,6 +481,12 @@ workflows:
     - prep_all
     after_run:
     - notify_ci
+    envs:
+    # Belt-and-suspenders alongside the scheme's own STP_NO_NETWORK_MOCKS env var:
+    # xcodebuild forwards TEST_RUNNER_-prefixed vars to the test process on every
+    # invocation, so this survives test-repetition relaunches even when Xcode's
+    # scheme-declared TestAction env vars don't.
+    - TEST_RUNNER_STP_NO_NETWORK_MOCKS: "true"
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
