@@ -130,8 +130,10 @@ import UIKit
         let payload = payload(from: analytic, apiClient: apiClient)
 
         #if DEBUG
-        NSLog("V1 LOG ANALYTICS: \(analytic.event.rawValue)")
-        STPAnalyticsClient.debugPrintPayload(payload)
+        if STPAnalyticsClient.debugConsoleLoggingEnabled {
+            NSLog("V1 LOG ANALYTICS: \(analytic.event.rawValue)")
+            STPAnalyticsClient.debugPrintPayload(payload)
+        }
         delegate?.analyticsClientDidLog(analyticsClient: self, payload: payload)
         #endif
 
@@ -169,6 +171,10 @@ import UIKit
 // MARK: - Helpers
 
 extension STPAnalyticsClient {
+    static var debugConsoleLoggingEnabled: Bool {
+        return ProcessInfo.processInfo.environment["STP_ENABLE_ANALYTICS_DEBUG_LOGS"] == "1"
+    }
+
     static func debugPrintPayload(_ payload: [String: Any]) {
         let jsonString = String(
             data: (try? JSONSerialization.data(

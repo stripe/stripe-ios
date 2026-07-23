@@ -21,7 +21,13 @@ public final class EmbeddedPaymentElement {
     }
 
     /// A view controller to present on.
-    public var presentingViewController: UIViewController?
+    public var presentingViewController: UIViewController? {
+        didSet {
+            #if DEBUG
+            print("[STPEPEDebug] presentingViewController didSet \(stpDebugDescriptionForPresenter(presentingViewController))")
+            #endif
+        }
+    }
 
     /// This contains the `configuration` you passed in to `create`.
     /// - Note: `internal(set)` because checkout session updates may apply address overrides to the configuration.
@@ -476,6 +482,19 @@ public final class EmbeddedPaymentElement {
         self.lastUpdatedPaymentOption = paymentOption
     }
 }
+
+#if DEBUG
+private func stpDebugDescriptionForPresenter(_ viewController: UIViewController?) -> String {
+    guard let viewController else {
+        return "nil"
+    }
+
+    let window = viewController.view.window
+    let sceneID = window?.windowScene?.session.persistentIdentifier ?? "nil"
+    let windowID = window.map { String(describing: ObjectIdentifier($0)) } ?? "nil"
+    return "vc=\(type(of: viewController)) window=\(windowID) scene=\(sceneID)"
+}
+#endif
 
 // MARK: - Checkout
 
