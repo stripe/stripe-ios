@@ -20,6 +20,11 @@ struct CheckoutCartView: View {
     let shippingAddressCollection: Bool
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
+    var showExpressCheckoutElement: Bool = false
+    var applePayVisibility: CheckoutPlayground.WalletVisibilityOption = .automatic
+    var applePayButtonTypeOption: CheckoutPlayground.ApplePayButtonTypeOption = .plain
+    var linkVisibility: CheckoutPlayground.WalletVisibilityOption = .automatic
+    var linkDisplayOption: CheckoutPlayground.LinkDisplayOption = .automatic
     var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
 
     var body: some View {
@@ -37,14 +42,31 @@ struct CheckoutCartView: View {
                         errorMessage: $errorMessage
                     )
                     .overlay(alignment: .bottom) {
-                        if checkout.session.total != nil {
-                            switch integrationType {
-                            case .flowController:
-                                CheckoutCartPaymentButton(checkout: checkout)
-                            case .embedded:
-                                CheckoutCartEmbeddedPaymentView(checkout: checkout)
+                        VStack(spacing: 0) {
+                            if showExpressCheckoutElement {
+                                checkout.getExpressCheckoutElement()
+                                    .padding(.horizontal)
+                                    .padding(.top, 16)
+                                    .padding(.bottom, integrationType != .disabled && checkout.session.total != nil ? 0 : 16)
+                            }
+                            if integrationType != .disabled, checkout.session.total != nil {
+                                switch integrationType {
+                                case .flowController:
+                                    CheckoutCartPaymentButton(checkout: checkout)
+                                        .clipped()
+                                case .embedded:
+                                    CheckoutCartEmbeddedPaymentView(checkout: checkout)
+                                        .clipped()
+                                case .disabled:
+                                    EmptyView()
+                                }
                             }
                         }
+                        .background(
+                            Color(UIColor.systemBackground)
+                                .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
+                                .ignoresSafeArea()
+                        )
                     }
                 } else if isLoading {
                     ProgressView("Loading Cart...")
@@ -86,6 +108,17 @@ struct CheckoutCartView: View {
         do {
             var config = Checkout.Configuration(clientSecret: clientSecret)
             config.adaptivePricing.allowed = adaptivePricing
+            config.linkConfiguration = Checkout.LinkConfiguration(display: linkDisplayOption.linkDisplay)
+            if applePayVisibility != .never {
+                config.applePayConfiguration = Checkout.ApplePayConfiguration(
+                    merchantId: "merchant.com.stripe.paymentsheet.example",
+                    buttonType: applePayButtonTypeOption.pkButtonType
+                )
+            }
+            if showExpressCheckoutElement {
+                config.expressCheckoutElement.applePay = applePayVisibility.walletVisibility
+                config.expressCheckoutElement.link = linkVisibility.walletVisibility
+            }
             checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription
