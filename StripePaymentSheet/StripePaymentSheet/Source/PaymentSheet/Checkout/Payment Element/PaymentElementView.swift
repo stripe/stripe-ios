@@ -20,7 +20,7 @@ public struct PaymentElementView: View {
     public var body: some View {
         PaymentElementViewRepresentable(viewModel: viewModel)
             .frame(maxWidth: .infinity)
-            .frame(height: viewModel.height > 0 ? viewModel.height : nil)
+            .frame(height: viewModel.height)
     }
 }
 
@@ -28,7 +28,7 @@ public struct PaymentElementView: View {
 final class PaymentElementViewModel: ObservableObject {
     let uiView: PaymentElementUIView
 
-    @Published private(set) var height: CGFloat = 0
+    @Published private(set) var height: CGFloat?
 
     private var width: CGFloat = 0
 
@@ -59,7 +59,9 @@ final class PaymentElementViewModel: ObservableObject {
             verticalFittingPriority: .fittingSizeLevel
         ).height
 
-        guard abs(height - newHeight) > 1 else { return }
+        if let height, abs(height - newHeight) <= 1 {
+            return
+        }
 
         if animated {
             withAnimation(.easeInOut(duration: 0.2)) {

@@ -105,13 +105,11 @@ extension Checkout.Session {
     /// - Complication: Optional fields need three states here: keep the old value, replace with a non-nil value, or explicitly clear to nil.
     /// - Resolution: SessionFieldUpdate keeps that distinction visible at call sites instead of relying on double optionals.
     func makeCopyOverriding(
-        billingAddress: SessionFieldUpdate<Checkout.ContactAddress> = .keepOldValue,
         shippingAddress: SessionFieldUpdate<Checkout.ContactAddress> = .keepOldValue,
         paymentOption: SessionFieldUpdate<Checkout.Session.PaymentOptionDisplayData> = .keepOldValue
     ) -> Self {
         return Self(
             id: id,
-            billingAddress: billingAddress.resolved(currentValue: self.billingAddress),
             businessName: businessName,
             currency: currency,
             currencyOptions: currencyOptions,
@@ -138,7 +136,7 @@ extension Checkout.Session {
             localizedPricesMetas: localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,
             adaptivePricingActive: adaptivePricingActive,
-            requiresBillingAddress: requiresBillingAddress,
+            billingAddressCollection: billingAddressCollection,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
             elementsSession: elementsSession

@@ -8,6 +8,38 @@
 import XCTest
 
 class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
+    // acct_1ONGjdKULGu5EgSk is enrolled in alipay_cn_to_alipay_plus_migration_gate,
+    // so its Alipay redirects use the pm-redirects.stripe.com EVO trampoline.
+    func testAlipayEVO() {
+        // Given PaymentSheet configured for the gated China merchant
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.customerMode = .guest
+        settings.apmsEnabled = .off
+        settings.applePayEnabled = .off
+        settings.currency = .cny
+        settings.merchantCountryCode = .CN
+        settings.supportedPaymentMethods = "card,alipay"
+        loadPlayground(app, settings)
+
+        // When the customer authorizes an Alipay payment through the EVO redirect
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        tapPaymentMethod("Alipay")
+        let payButton = app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "Pay ")
+        ).firstMatch
+        payButton.waitForExistenceAndTap()
+
+        XCTAssertTrue(
+            webviewAuthorizePaymentButton.waitForExistence(timeout: 30.0),
+            "Alipay redirect webview did not present in time"
+        )
+        webviewAuthorizePaymentButton.waitForExistenceAndTap()
+
+        // Then the trampoline returns to the app and PaymentSheet completes
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 30.0))
+    }
+
     // This Cash App test is a good way to test the cancellation/success behavior
     // of the refresh endpoint E2E.
     func testRefreshEndpointUsingCashAppPay() throws {

@@ -28,6 +28,9 @@ extension Checkout {
         /// The API client used to make requests to Stripe.
         public var apiClient: STPAPIClient = .shared
 
+        /// Default customer details used to pre-populate Checkout integrations.
+        public var defaults: Defaults = Defaults()
+
         /// Controls whether adaptive pricing is requested for this session.
         ///
         /// When allowed, Stripe may present prices in the customer's local
@@ -43,6 +46,38 @@ extension Checkout {
         /// - Parameter clientSecret: The client secret for your Checkout Session.
         public init(clientSecret: String) {
             self.clientSecret = clientSecret
+        }
+    }
+}
+
+@_spi(STP)
+@_spi(ReactNativeSDK)
+extension Checkout.Configuration {
+    /// Default customer details used to pre-populate Checkout integrations.
+    public struct Defaults {
+        /// Default billing details.
+        public var billingDetails: BillingDetails?
+
+        /// Creates default customer details.
+        public init(
+            billingDetails: BillingDetails? = nil
+        ) {
+            self.billingDetails = billingDetails
+        }
+
+        /// Default billing details.
+        public struct BillingDetails {
+            /// The customer's full name.
+            public var name: String?
+
+            /// The customer's billing address.
+            public var address: Checkout.Address?
+
+            /// Creates default billing details.
+            public init(name: String? = nil, address: Checkout.Address? = nil) {
+                self.name = name
+                self.address = address
+            }
         }
     }
 }

@@ -308,8 +308,7 @@ extension Intent {
         taxAmount: Int = 0,
         automaticTaxEnabled: Bool? = nil,
         automaticTaxAddressSource: String? = nil,
-        discountAmount: Int = 0,
-        billingAddress: Checkout.ContactAddress? = nil
+        discountAmount: Int = 0
     ) -> Intent {
         let modeParam = switch mode {
         case .payment: "payment"
@@ -392,11 +391,7 @@ extension Intent {
         }
 
         let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
-        var session = checkoutSession.makePublicSession()
-        if let billingAddress {
-            session = session.makeCopyOverriding(billingAddress: .newValue(billingAddress))
-        }
-        return .checkout(session)
+        return .checkout(checkoutSession.makePublicSession())
     }
 }
 
