@@ -9,7 +9,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
         let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(Checkout.Session.ShippingAddress(
             name: "John Smith",
-            address: .init(country: "US", line1: "456 Oak Ave", city: "LA", postalCode: "90001", state: "CA")
+            address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )))
 
         var config = PaymentSheet.Configuration()
@@ -83,7 +83,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
         let shippingAddress = Checkout.Session.ShippingAddress(
             name: "John Smith",
-            address: .init(country: "US", line1: "456 Oak Ave", city: "LA", postalCode: "90001", state: "CA")
+            address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )
         let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
 
