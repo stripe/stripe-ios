@@ -186,16 +186,11 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             }
         )
 
-        // Saved payment methods are restored by the saved-method list. Only reuse input for a new payment method.
-        let previousNewPaymentMethodInput: IntentConfirmParams?
-        if case let .new(confirmParams) = previousPaymentOption {
-            previousNewPaymentMethodInput = confirmParams
-        } else {
-            // Saved and wallet selections are restored outside the new-payment form.
-            previousNewPaymentMethodInput = nil
-        }
+        // Restore the customer's previous payment method.
+        // For saved PMs, this happens naturally, so we just need to handle new payment methods.
+        let previousConfirmParams = previousPaymentOption?.newConfirmParams
 
-        if previousNewPaymentMethodInput != nil {
+        if previousConfirmParams != nil {
             self.mode = .addingNew
         } else if loadResult.savedPaymentMethods.isEmpty {
             self.mode = .addingNew
@@ -208,7 +203,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             elementsSession: loadResult.elementsSession,
             configuration: configuration,
             paymentMethodOrientation: loadResult.paymentMethodOrientation,
-            previousCustomerInput: previousNewPaymentMethodInput,
+            previousCustomerInput: previousConfirmParams,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             formCache: formCache,
             analyticsHelper: analyticsHelper,

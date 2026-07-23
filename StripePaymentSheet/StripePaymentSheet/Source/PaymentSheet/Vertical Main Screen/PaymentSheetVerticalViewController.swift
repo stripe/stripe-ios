@@ -95,12 +95,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
         switch previousPaymentOption {
         case .saved(_, let confirmParams):
-            return confirmParams
-        case .new, .external:
-            return previousPaymentOption.formConfirmParams
+            return confirmParams?.isFormBackedSavedPaymentMethod == true ? confirmParams : nil
+        case .new:
+            return previousPaymentOption.newConfirmParams
         case .link(let confirmOption):
             return confirmOption.signupConfirmParams
-        case .applePay:
+        case .applePay, .external:
             return nil
         }
     }
