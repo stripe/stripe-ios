@@ -17,6 +17,7 @@ extension Checkout.Session {
     /// has none, and requires full billing address collection when the Checkout
     /// Session requires it.
     func applyAddressOverrides<C: PaymentElementConfiguration>(to configuration: inout C) {
+        stpAssert(configuration.shippingDetails() == nil, "Nothing should set configuration.shippingDetails, we overwrite it unconditionally to match checkout.session.shipping")
         if let shipping = shippingAddress {
             let details = shippingAddressDetails(from: shipping)
             configuration.shippingDetails = { details }
