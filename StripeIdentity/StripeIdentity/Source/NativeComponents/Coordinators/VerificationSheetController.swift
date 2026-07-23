@@ -113,14 +113,20 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     func overrideTestModeReturnValue(result: IdentityVerificationSheet.VerificationFlowResult)
 
     /// Transition to DocumentCaptureViewController without any API request
-    func transitionToSelfieCapture()
+    func transitionToSelfieCapture(
+        trainingConsent: Bool?
+    )
 
     /// Transition to DocumentCaptureViewController without any API request
     func transitionToDocumentCapture()
+
+    /// Transition to the web fallback without any API request
+    func transitionToFallbackUrl()
 }
 
 private enum VerificationSheetControllerError: String, AnalyticLoggableStringErrorV2 {
     case missingVerificationPageResponseForFallbackUpdate
+    case missingVerificationPageResponseForFallbackUrlTransition
     case missingVerificationPageResponseForCountryNotListedTransition
     case missingVerificationPageResponseForIndividualTransition
     case missingVerificationPageResponseForSelfieCaptureTransition
@@ -229,8 +235,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             from: verificationPage.documentCapture,
             with: self
         )
-        if let selfiePageConfig = verificationPage.selfie {
-            mlModelLoader.startLoadingFaceModels(from: selfiePageConfig)
+        if verificationPage.selfie != nil {
+            mlModelLoader.startLoadingFaceModels(from: verificationPage)
         }
     }
 
@@ -521,7 +527,9 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         )
     }
 
-    func transitionToSelfieCapture() {
+    func transitionToSelfieCapture(
+        trainingConsent: Bool?
+    ) {
         guard let verificationPageResponse = verificationPageResponseOrLogMissing(
             .missingVerificationPageResponseForSelfieCaptureTransition,
             assertionMessage: "verificationPageResponse is nil"
@@ -531,7 +539,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
         flowController.transitionToSelfieCaptureScreen(
             staticContentResult: verificationPageResponse,
-            sheetController: self
+            sheetController: self,
+            trainingConsent: trainingConsent
         )
     }
 
@@ -544,6 +553,20 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
 
         flowController.transitionToDocumentCaptureScreen(
+            staticContentResult: verificationPageResponse,
+            sheetController: self
+        )
+    }
+
+    func transitionToFallbackUrl() {
+        guard let verificationPageResponse = verificationPageResponseOrLogMissing(
+            .missingVerificationPageResponseForFallbackUrlTransition,
+            assertionMessage: "verificationPageResponse is nil"
+        ) else {
+            return
+        }
+
+        flowController.transitionToFallbackUrlScreen(
             staticContentResult: verificationPageResponse,
             sheetController: self
         )
@@ -580,6 +603,12 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         completion: @escaping () -> Void
     ) {
         analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
+        let shouldSubmit3DFaceCaptureData: Bool
+        if case .success(let verificationPage)? = verificationPageResponse {
+            shouldSubmit3DFaceCaptureData = verificationPage.shouldSubmit3DFaceCaptureData
+        } else {
+            shouldSubmit3DFaceCaptureData = false
+        }
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
         selfieUploader.uploadFuture?.chained {
             [weak self, apiClient] uploadedFiles -> Future<StripeAPI.VerificationPageData> in
@@ -588,7 +617,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                     uploadedFiles: uploadedFiles,
                     capturedImages: capturedImages,
                     bestFrameExifMetadata: capturedImages.bestMiddle.cameraExifMetadata,
-                    trainingConsent: trainingConsent
+                    trainingConsent: trainingConsent,
+                    shouldSubmit3DFaceCaptureData: shouldSubmit3DFaceCaptureData
                 )
             )
             optionalCollectedData = collectedData

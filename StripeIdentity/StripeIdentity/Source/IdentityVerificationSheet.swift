@@ -12,7 +12,6 @@ import UIKit
 /// A drop-in class that presents a sheet for a user to verify their identity.
 /// This class is in beta; see https://stripe.com/docs/identity for access
 final public class IdentityVerificationSheet {
-
     /// The result of an attempt to finish an identity verification flow
     @frozen public enum VerificationFlowResult {
         /// User completed the verification flow
@@ -31,16 +30,21 @@ final public class IdentityVerificationSheet {
         /// displayed in both light and dark modes, if the app supports it. Use a
         /// dynamic UIImage to support different images in light vs dark mode.
         public var brandLogo: UIImage
+        /// Optional background color for the native flow's primary action buttons.
+        public var brandColor: UIColor?
 
         /// Initializes a Configuration.
         /// - Parameters:
         ///   - brandLogo: An image of your customer-facing business logo.
         ///     The recommended image size is 32 x 32 points. The image will be
         ///     displayed in both light and dark modes, if the app supports it.
+        ///   - brandColor: Optional background color for the native flow's primary action buttons.
         public init(
-            brandLogo: UIImage
+            brandLogo: UIImage,
+            brandColor: UIColor? = nil
         ) {
             self.brandLogo = brandLogo
+            self.brandColor = brandColor
         }
     }
 
@@ -91,7 +95,8 @@ final public class IdentityVerificationSheet {
                     ephemeralKeySecret: ephemeralKeySecret
                 ),
                 flowController: VerificationSheetFlowController(
-                    brandLogo: configuration.brandLogo
+                    brandLogo: configuration.brandLogo,
+                    brandColor: configuration.brandColor
                 ),
                 mlModelLoader: IdentityMLModelLoader(),
                 analyticsClient: IdentityAnalyticsClient(

@@ -36,6 +36,43 @@ final class SelfieWarmupViewControllerTest: XCTestCase {
 
         // Verify transitioned to selfie capture
         XCTAssertTrue(mockSheetController.transitionedToSelfieCapture)
+        XCTAssertNil(mockSheetController.transitionedToSelfieCaptureTrainingConsent)
+    }
+
+    func testTapAllowCapturesTrainingConsent() {
+        let vc = try! SelfieWarmupViewController(
+            sheetController: mockSheetController,
+            trainingConsentText: SelfieWarmupViewControllerTest.mockVerificationPage.selfie?
+                .trainingConsentText
+        )
+
+        XCTAssertEqual(vc.flowViewModel.buttons.count, 2)
+
+        vc.flowViewModel.buttons.first?.didTap()
+
+        XCTAssertTrue(mockSheetController.transitionedToSelfieCapture)
+        XCTAssertEqual(
+            mockSheetController.transitionedToSelfieCaptureTrainingConsent,
+            true
+        )
+    }
+
+    func testTapDeclineCapturesTrainingConsent() {
+        let vc = try! SelfieWarmupViewController(
+            sheetController: mockSheetController,
+            trainingConsentText: SelfieWarmupViewControllerTest.mockVerificationPage.selfie?
+                .trainingConsentText
+        )
+
+        XCTAssertEqual(vc.flowViewModel.buttons.count, 2)
+
+        vc.flowViewModel.buttons.last?.didTap()
+
+        XCTAssertTrue(mockSheetController.transitionedToSelfieCapture)
+        XCTAssertEqual(
+            mockSheetController.transitionedToSelfieCaptureTrainingConsent,
+            false
+        )
     }
 
 }
@@ -152,6 +189,31 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
         )
         XCTAssert(analytic: analytic, hasMetadata: "camera_event_kind", withValue: "runtime_error")
     }
+
+    func testHavingTroubleTransitionsToFallbackUrl() {
+        let vc = makeViewController()
+
+        guard case .scan(let viewModel) = vc.selfieCaptureViewModel else {
+            return XCTFail("Expected selfie capture view model to be in scan state")
+        }
+        viewModel.havingTroubleHandler?()
+
+        XCTAssertTrue(mockSheetController.transitionedToFallbackUrl)
+    }
+
+    func testAutoCaptureStatesDoNotShowBottomButton() {
+        XCTAssertTrue(
+            makeViewController(initialState: .initial).buttonViewModels.isEmpty
+        )
+        XCTAssertTrue(
+            makeViewController(initialState: .scanning(.empty, .initialValue())).buttonViewModels.isEmpty
+        )
+        XCTAssertTrue(
+            makeViewController(
+                initialState: .saving(.empty, makeFaceCaptureData())
+            ).buttonViewModels.isEmpty
+        )
+    }
 }
 
 private extension SelfieCaptureViewControllerTest {
@@ -169,6 +231,31 @@ private extension SelfieCaptureViewControllerTest {
             cameraPermissionsManager: mockCameraPermissionsManager,
             appSettingsHelper: mockAppSettingsHelper
         )
+    }
+
+    func makeFaceCaptureData() -> FaceCaptureData {
+        let image = CapturedImageMock.frontDriversLicense.image.cgImage!
+        let faceRect = CGRect(x: 0.3, y: 0.2, width: 0.4, height: 0.4)
+        let samples: [FaceScannerInputOutput] = [0.7, 0.8, 0.9].map { score in
+            FaceScannerInputOutput(
+                image: image,
+                scannerOutput: .init(
+                    faceDetectorOutput: .init(
+                        predictions: [
+                            .init(
+                                rect: faceRect,
+                                score: score
+                            ),
+                        ]
+                    ),
+                    cameraProperties: nil,
+                    motionBlurResult: nil,
+                    isValid: true
+                ),
+                cameraExifMetadata: nil
+            )
+        }
+        return FaceCaptureData(samples: samples)!
     }
 }
 

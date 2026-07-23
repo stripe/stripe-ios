@@ -56,6 +56,26 @@ extension StripeAPI {
 }
 
 extension StripeAPI.VerificationPage {
+    private enum ThreeDFaceCaptureExperiment {
+        static let experimentName = "idprod_3d_face_capture_mobile"
+        static let eventName = "screen_presented"
+        static let screenNameKey = "screen_name"
+        static let selfieScreenName = "selfie"
+    }
+
+    var has3DFaceCaptureExperiment: Bool {
+        return experiments.contains { experiment in
+            experiment.experimentName == ThreeDFaceCaptureExperiment.experimentName
+        }
+    }
+
+    var enable3DFaceCapture: Bool {
+        return has3DFaceCaptureExperiment
+    }
+
+    var shouldSubmit3DFaceCaptureData: Bool {
+        return has3DFaceCaptureExperiment
+    }
     func copyWithNewMissings(newMissings: Set<StripeAPI.VerificationPageFieldType>) -> StripeAPI.VerificationPage {
         return StripeAPI.VerificationPage(biometricConsent: self.biometricConsent, documentCapture: self.documentCapture, documentSelect: self.documentSelect, individual: self.individual, countryNotListed: self.countryNotListed, individualWelcome: self.individualWelcome, phoneOtp: self.phoneOtp, fallbackUrl: self.fallbackUrl, id: self.id, livemode: self.livemode, requirements: StripeAPI.VerificationPageRequirements(missing: newMissings), selfie: self.selfie, status: self.status, submitted: self.submitted, success: self.success, unsupportedClient: self.unsupportedClient, bottomsheet: self.bottomsheet, userSessionId: self.userSessionId, experiments: self.experiments, isStripe: self.isStripe, skipSuccessPage: self.skipSuccessPage)
     }

@@ -15,7 +15,9 @@ class PlaygroundViewController: UIViewController {
     // View and fork the backend code here: https://codesandbox.io/p/devbox/dsx4vq
     let baseURL = "https://stripe-mobile-identity-verification-playground.stripedemos.com"
     let verifyEndpoint = "/verification-sessions"
-    let reuseEndpoint = "/reuse-verification-session"
+    var is3DFaceCaptureEnabled: Bool {
+        return faceCaptureEnabledSwitch.isOn
+    }
 
     // Outlets
     @IBOutlet private weak var nativeOrWebSelector: UISegmentedControl!
@@ -48,6 +50,8 @@ class PlaygroundViewController: UIViewController {
     private let phoneElement: PhoneNumberElement
 
     private let phoneView: UIView
+    private let faceCaptureEnabledSwitch = UISwitch()
+    private let faceCaptureEnabledContainerView = UIStackView()
 
     enum InvocationType: CaseIterable {
         case native
@@ -102,6 +106,10 @@ class PlaygroundViewController: UIViewController {
         return VerificationType.allCases[verificationTypeSelector.selectedSegmentIndex]
     }
 
+    var requireMatchingSelfie: Bool {
+        return requireSelfieSwitch.isOn || is3DFaceCaptureEnabled
+    }
+
     /// List of allowed document types based on UI toggles
     var documentAllowedTypes: [DocumentAllowedType] {
         var result: [DocumentAllowedType] = []
@@ -138,9 +146,14 @@ class PlaygroundViewController: UIViewController {
 
         activityIndicator.hidesWhenStopped = true
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
+        add3DFaceCaptureSwitch()
+        requireSelfieSwitch.isOn = true
+        newOrReuseSelector.isHidden = true
+        reuseVerificationIDContainerView.isHidden = true
+        reuseVerificationSessionIDInput.isHidden = true
         // TODO(ccen) enable phoneOtpContainerView when backend adds support to PII
         phoneOtpContainerView.isHidden = true
-        didChangeNewOrReuse(self)
+        didChangeVerificationType(self)
     }
 
     @objc
@@ -156,109 +169,102 @@ class PlaygroundViewController: UIViewController {
         phoneView.isHidden = !uiSwitch.isOn
     }
 
+    func add3DFaceCaptureSwitch() {
+        guard
+            faceCaptureEnabledContainerView.superview == nil,
+            let playgroundStackView = verificationTypeContainerView.superview as? UIStackView
+        else {
+            return
+        }
+
+        let label = UILabel()
+        label.text = "3D face capture enabled"
+        label.font = .systemFont(ofSize: 17)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
+        faceCaptureEnabledSwitch.isOn = true
+        faceCaptureEnabledSwitch.setContentHuggingPriority(.required, for: .horizontal)
+
+        faceCaptureEnabledContainerView.axis = .horizontal
+        faceCaptureEnabledContainerView.alignment = .center
+        faceCaptureEnabledContainerView.spacing = 8
+        faceCaptureEnabledContainerView.translatesAutoresizingMaskIntoConstraints = false
+        faceCaptureEnabledContainerView.addArrangedSubview(label)
+        faceCaptureEnabledContainerView.addArrangedSubview(faceCaptureEnabledSwitch)
+
+        let insertionIndex = playgroundStackView.arrangedSubviews.firstIndex(of: verificationTypeContainerView)
+            .map { $0 + 1 }
+            ?? playgroundStackView.arrangedSubviews.count
+        playgroundStackView.insertArrangedSubview(faceCaptureEnabledContainerView, at: insertionIndex)
+    }
+
     func requestVerificationSession() {
         // Disable the button while we make the request
         updateButtonState(isLoading: true)
-        var endpoint: String
-        var requestDict: [String: Any]
 
-        if creationMethod == .reuse {
-            endpoint = reuseEndpoint
+        // Forwarding VerificationSession options from the client to server to
+        // for demo purposes. In production, these are typically set by the
+        // server depending on the desired behavior.
+        var requestDict: [String: Any] = [
+            "type": verificationType.rawValue,
+            "3d_face_capture_enabled": is3DFaceCaptureEnabled,
+        ]
 
-            requestDict = [
-                "verification_session": reuseVerificationSessionIDInput.text ?? ""
+        var options: [String: Any] = [:]
+
+        switch verificationType {
+        case .document:
+            options = [
+                "document": [
+                    "allowed_types": documentAllowedTypes.map { $0.rawValue },
+                    "require_id_number": requireIDNumberSwitch.isOn,
+                    "require_live_capture": requireLiveCaptureSwitch.isOn,
+                    "require_matching_selfie": requireMatchingSelfie,
+                    "require_address": requireAddressSwitch.isOn,
+                ],
             ]
-        } else {
-            // Make request to our verification endpoint
-            endpoint = verifyEndpoint
-
-            // Forwarding VerificationSession options from the client to server to
-            // for demo purposes. In production, these are typically set by the
-            // server depending on the desired behavior.
-            requestDict = [
-                "type": verificationType.rawValue
-            ]
-
-            var options: [String: Any] = [:]
-
-            switch verificationType {
-            case .document:
-                options = [
-                    "document": [
-                        "allowed_types": documentAllowedTypes.map { $0.rawValue },
-                        "require_id_number": requireIDNumberSwitch.isOn,
-                        "require_live_capture": requireLiveCaptureSwitch.isOn,
-                        "require_matching_selfie": requireSelfieSwitch.isOn,
-                        "require_address": requireAddressSwitch.isOn,
-                    ],
+            if requirePhoneNumberSwitch.isOn {
+                options["phone"] = [
+                    "require_verification": true,
                 ]
-                if requirePhoneNumberSwitch.isOn {
-                    options["phone"] = [
-                        "require_verification": true,
-                    ]
-                    requestDict["provided_details"] = [
-                        "phone": phoneElement.phoneNumber?.string(as: .e164),
-                    ]
-                }
-            case .idNumber:
-                if requirePhoneNumberSwitch.isOn {
-                    options["phone"] = [
-                        "require_verification": true,
-                    ]
-                    requestDict["provided_details"] = [
-                        "phone": phoneElement.phoneNumber?.string(as: .e164),
-                    ]
-                }
-            case .address:
-                // no-op
-                break
-            case .phone:
-                options["phone_otp"] = [
-                    "check": otpCheckType.rawValue,
+                requestDict["provided_details"] = [
+                    "phone": phoneElement.phoneNumber?.string(as: .e164),
                 ]
-                if fallbackToDocumentSwitch.isOn {
-                    options["document"] = [
-                        "allowed_types": documentAllowedTypes.map { $0.rawValue },
-                        "require_id_number": requireIDNumberSwitch.isOn,
-                        "require_live_capture": requireLiveCaptureSwitch.isOn,
-                        "require_matching_selfie": requireSelfieSwitch.isOn,
-                        "require_address": requireAddressSwitch.isOn,
-                    ]
-                    options["phone_records"] = [
-                        "fallback": "document",
-                    ]
-                }
             }
-            requestDict["options"] = options
+        case .idNumber:
+            if requirePhoneNumberSwitch.isOn {
+                options["phone"] = [
+                    "require_verification": true,
+                ]
+                requestDict["provided_details"] = [
+                    "phone": phoneElement.phoneNumber?.string(as: .e164),
+                ]
+            }
+        case .address:
+            // no-op
+            break
+        case .phone:
+            options["phone_otp"] = [
+                "check": otpCheckType.rawValue,
+            ]
+            if fallbackToDocumentSwitch.isOn {
+                options["document"] = [
+                    "allowed_types": documentAllowedTypes.map { $0.rawValue },
+                    "require_id_number": requireIDNumberSwitch.isOn,
+                    "require_live_capture": requireLiveCaptureSwitch.isOn,
+                    "require_matching_selfie": requireMatchingSelfie,
+                    "require_address": requireAddressSwitch.isOn,
+                ]
+                options["phone_records"] = [
+                    "fallback": "document",
+                ]
+            }
         }
+        requestDict["options"] = options
 
-        performRequest(to: endpoint, requestDict: requestDict) { [weak self] responseJson in
-            guard let self = self else {
-                return
-            }
-
-            if self.creationMethod == .new,
-                self.invocationType == .native
-            {
-                guard let verificationSessionId = responseJson["id"] else {
-                    self.updateButtonState(isLoading: false)
-                    assertionFailure("Did not receive a valid id.")
-                    return
-                }
-
-                self.performRequest(
-                    to: self.reuseEndpoint,
-                    requestDict: [
-                        "verification_session": verificationSessionId,
-                    ]
-                ) { [weak self] responseJson in
-                    self?.updateButtonState(isLoading: false)
-                    self?.startVerificationFlow(responseJson: responseJson)
-                }
-            } else {
-                self.updateButtonState(isLoading: false)
-                self.startVerificationFlow(responseJson: responseJson)
-            }
+        performRequest(to: verifyEndpoint, requestDict: requestDict) { [weak self] responseJson in
+            self?.updateButtonState(isLoading: false)
+            self?.startVerificationFlow(responseJson: responseJson)
         }
     }
 
@@ -363,7 +369,8 @@ class PlaygroundViewController: UIViewController {
             verificationSessionId: verificationSessionId,
             ephemeralKeySecret: ephemeralKeySecret,
             configuration: IdentityVerificationSheet.Configuration(
-                brandLogo: UIImage(named: "BrandLogo")!
+                brandLogo: UIImage(named: "BrandLogo")!,
+                brandColor: UIColor(named: "BrandColor")
             )
         )
     }
