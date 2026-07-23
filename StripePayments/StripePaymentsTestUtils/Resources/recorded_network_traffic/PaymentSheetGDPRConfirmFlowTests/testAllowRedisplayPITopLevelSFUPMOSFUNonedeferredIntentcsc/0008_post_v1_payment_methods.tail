@@ -3,22 +3,25 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=QcrDqd34jU-FkE5FfT_Xq3w9-J4g2F362l6Rmm5XzMvA9wWIJV1OXJBwST3pF9hNxZ6xqjlj8yG6PqsJ
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=WO9R5jxQgkthAJ63hbhOV-XTAzYxvrSt6r7aOZ0WjxrC1FlqA5M45RpijNTNFhiOXLkWkivvE_Y0cNUb; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHIJ
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=WO9R5jxQgkthAJ63hbhOV-XTAzYxvrSt6r7aOZ0WjxrC1FlqA5M45RpijNTNFhiOXLkWkivvE_Y0cNUb&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-06-24.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=WO9R5jxQgkthAJ63hbhOV-XTAzYxvrSt6r7aOZ0WjxrC1FlqA5M45RpijNTNFhiOXLkWkivvE_Y0cNUb&t=1"}],"include_subdomains":true}
+request-id: req_ZD74CsE0znwe7C
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_XRb53ZCX0cCzrw
-Content-Length: 994
+Content-Length: 1062
 Vary: Origin
-Date: Thu, 07 Aug 2025 18:25:22 GMT
-original-request: req_XRb53ZCX0cCzrw
+Date: Thu, 23 Jul 2026 18:49:32 GMT
+original-request: req_ZD74CsE0znwe7C
 stripe-version: 2020-08-27
-idempotency-key: e6aba9de-367d-4a29-baff-942aba1c5b2b
+idempotency-key: fa0f0306-d218-456e-9506-488294505c52
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[co
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RtYVCFY0qyl6XeW1ogsguB9",
+  "id" : "pm_1TwRgVFY0qyl6XeWHXryDcID",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -69,8 +72,10 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[co
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1754591122,
+  "created" : 1784832572,
   "allow_redisplay" : "unspecified",
+  "shared_payment_granted_token" : null,
+  "customer" : null,
   "type" : "card",
-  "customer" : null
+  "customer_account" : null
 }
