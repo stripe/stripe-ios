@@ -926,21 +926,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         Self.confirmEndpoint(for: checkoutEndpoint)
     }
 
-    var usesVippsPreview: Bool {
-        if currency == .nok, apmsEnabled == .on {
-            return true
-        }
-
-        guard let supportedPaymentMethods else {
-            return false
-        }
-
-        return supportedPaymentMethods
-            .split(separator: ",")
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() }
-            .contains("vipps")
-    }
-
     var base64Data: String {
         let jsonData = try! JSONEncoder().encode(self)
         let compressedData = try! (jsonData as NSData).compressed(using: .lzfse) as Data
