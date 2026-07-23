@@ -14,14 +14,13 @@ protocol VerifyDocumentViaWalletManagerProtocol: AnyObject {
     @MainActor func requestDocumentData() async throws -> VerifyDocumentViaWalletData
 }
 
-struct VerifyDocumentViaWalletData {
-    let walletIdentitySession: String
-    let encryptedData: Data
+@_spi(VerifyWithWallet) public struct VerifyDocumentViaWalletData {
+    public let walletIdentitySession: String
+    public let encryptedData: Data
 }
 
 enum VerifyDocumentViaWalletManagerError: Error {
     case unavailable
-    case invalidNonce
     case missingDocument
     case unsupportedRequestedElements
 }
@@ -29,20 +28,30 @@ enum VerifyDocumentViaWalletManagerError: Error {
 @_spi(VerifyWithWallet) public final class VerifyDocumentViaWalletManager: VerifyDocumentViaWalletManagerProtocol {
     // TODO: remove once the API returns this
     public static var shouldEnableVerifyDocumentViaWallet: Bool = false
+    public static let localMerchantIdentifier = "merchant.com.stripe.IdentityVerification-Example"
+    public private(set) static var localNonce: Data?
 
     private var shouldEnableVerifyDocumentViaWallet: Bool
     private var idDocumentTypeAllowlistKeys: [String]
-    private let apiClient: IdentityAPIClient
+    private let apiClient: IdentityAPIClient?
     private var activeAuthorizationController: AnyObject?
 
     init(
         shouldEnableVerifyDocumentViaWallet: Bool?,
         idDocumentTypeAllowlistKeys: [String],
-        apiClient: IdentityAPIClient
+        apiClient: IdentityAPIClient?
     ) {
         self.shouldEnableVerifyDocumentViaWallet = shouldEnableVerifyDocumentViaWallet ?? VerifyDocumentViaWalletManager.shouldEnableVerifyDocumentViaWallet
         self.idDocumentTypeAllowlistKeys = idDocumentTypeAllowlistKeys
         self.apiClient = apiClient
+    }
+
+    public convenience init(idDocumentTypeAllowlistKeys: [String]) {
+        self.init(
+            shouldEnableVerifyDocumentViaWallet: true,
+            idDocumentTypeAllowlistKeys: idDocumentTypeAllowlistKeys,
+            apiClient: nil
+        )
     }
 
     func isVerifyDocumentViaWalletAvailable() async -> Bool {
@@ -58,7 +67,7 @@ enum VerifyDocumentViaWalletManagerError: Error {
     }
 
     @MainActor
-    func requestDocumentData() async throws -> VerifyDocumentViaWalletData {
+    public func requestDocumentData() async throws -> VerifyDocumentViaWalletData {
         guard shouldEnableVerifyDocumentViaWallet else {
             throw VerifyDocumentViaWalletManagerError.unavailable
         }
@@ -67,24 +76,20 @@ enum VerifyDocumentViaWalletManagerError: Error {
             throw VerifyDocumentViaWalletManagerError.unavailable
         }
 
-        let walletSession = try await createWalletIdentitySession()
-        guard let nonce = walletSession.request.nonce.base64URLDecodedData else {
-            throw VerifyDocumentViaWalletManagerError.invalidNonce
-        }
+        let nonce = Data((0..<32).map { _ in UInt8.random(in: .min ... .max) })
+        Self.localNonce = nonce
 
-        guard let descriptor = try await makeRequestableDocumentDescriptor(
-            documentRequests: walletSession.request.documentRequests
-        ) else {
+        guard let descriptor = await requestableDocumentDescriptors().first else {
             throw VerifyDocumentViaWalletManagerError.unavailable
         }
 
         let request = PKIdentityRequest()
         request.descriptor = descriptor
         request.nonce = nonce
-        request.merchantIdentifier = walletSession.request.merchantIdentifier
+        request.merchantIdentifier = Self.localMerchantIdentifier
 
         return VerifyDocumentViaWalletData(
-            walletIdentitySession: walletSession.sessionId,
+            walletIdentitySession: "local",
             encryptedData: try await requestDocument(request).encryptedData
         )
     }
@@ -254,6 +259,9 @@ enum VerifyDocumentViaWalletManagerError: Error {
     }
 
     private func createWalletIdentitySession() async throws -> StripeAPI.VerificationPageWalletIdentitySession {
+        guard let apiClient else {
+            throw VerifyDocumentViaWalletManagerError.unavailable
+        }
         return try await withCheckedThrowingContinuation { continuation in
             apiClient.createWalletIdentitySession().observe { result in
                 continuation.resume(with: result)

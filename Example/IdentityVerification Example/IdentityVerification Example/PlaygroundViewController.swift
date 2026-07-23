@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 3/3/21.
 //
 
-import StripeIdentity
+@_spi(VerifyWithWallet) import StripeIdentity
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -147,7 +147,78 @@ class PlaygroundViewController: UIViewController {
 
     @objc
     func didTapVerifyButton() {
+        if invocationType == .native,
+            creationMethod == .new,
+            verificationType == .document,
+            enableVerifyViaWalletSwitch.isOn
+        {
+            requestLocalWalletDocument()
+            return
+        }
         requestVerificationSession()
+    }
+
+    func requestLocalWalletDocument() {
+        updateButtonState(isLoading: true)
+        let manager = VerifyDocumentViaWalletManager(
+            idDocumentTypeAllowlistKeys: documentAllowedTypes.map(\.rawValue)
+        )
+        Task { @MainActor [weak self] in
+            guard let self else {
+                return
+            }
+            defer {
+                updateButtonState(isLoading: false)
+            }
+            do {
+                let walletDocumentData = try await manager.requestDocumentData()
+                guard let nonce = VerifyDocumentViaWalletManager.localNonce else {
+                    return
+                }
+                let payload = try JSONSerialization.data(
+                    withJSONObject: [
+                        "nonce": nonce.base64EncodedString()
+                            .replacingOccurrences(of: "+", with: "-")
+                            .replacingOccurrences(of: "/", with: "_")
+                            .replacingOccurrences(of: "=", with: ""),
+                        "merchant_identifier": VerifyDocumentViaWalletManager.localMerchantIdentifier,
+                        "encrypted_data": walletDocumentData.encryptedData.base64EncodedString(),
+                    ],
+                    options: [.prettyPrinted, .sortedKeys]
+                )
+                presentWalletPayload(String(decoding: payload, as: UTF8.self))
+            } catch {
+                displayAlert("Verify via Wallet failed", String(describing: error))
+            }
+        }
+    }
+
+    func presentWalletPayload(_ payload: String) {
+        let textView = UITextView()
+        textView.text = payload
+        textView.font = .monospacedSystemFont(ofSize: 12, weight: .regular)
+        textView.isEditable = false
+        textView.translatesAutoresizingMaskIntoConstraints = false
+
+        let viewController = UIViewController()
+        viewController.title = "Wallet payload"
+        viewController.view.backgroundColor = .systemBackground
+        viewController.view.addSubview(textView)
+        NSLayoutConstraint.activate([
+            textView.leadingAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            textView.trailingAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            textView.topAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            textView.bottomAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+        ])
+        viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(
+            systemItem: .close,
+            primaryAction: UIAction { [weak viewController] _ in viewController?.dismiss(animated: true) }
+        )
+        viewController.navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Copy",
+            primaryAction: UIAction { _ in UIPasteboard.general.string = payload }
+        )
+        present(UINavigationController(rootViewController: viewController), animated: true)
     }
 
     @IBAction func fallbackToDocumentValueChanged(_ uiSwitch: UISwitch) {
