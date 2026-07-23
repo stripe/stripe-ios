@@ -19,13 +19,18 @@ struct WalletOwnershipVerificationContext {
     /// The Stripe crypto network for the wallet address.
     let network: CryptoNetwork
 
+    /// Whether the wallet is being verified in test mode.
+    let isTestMode: Bool
+
     /// Creates a wallet ownership verification context.
     /// - Parameters:
     ///   - walletAddress: The wallet address being verified.
     ///   - network: The Stripe crypto network for the wallet address.
-    init(walletAddress: String, network: CryptoNetwork) {
+    ///   - isTestMode: Whether the wallet is being verified in test mode.
+    init(walletAddress: String, network: CryptoNetwork, isTestMode: Bool) {
         self.walletAddress = walletAddress
         self.network = network
+        self.isTestMode = isTestMode
     }
 
     /// Creates a wallet ownership verification context from a customer wallet response.
@@ -35,17 +40,44 @@ struct WalletOwnershipVerificationContext {
             return nil
         }
 
-        self.init(walletAddress: wallet.walletAddress, network: network)
+        self.init(
+            walletAddress: wallet.walletAddress,
+            network: network,
+            isTestMode: !wallet.livemode
+        )
     }
 
     /// Creates a wallet ownership verification context from transaction details returned by session creation.
-    /// - Parameter transactionDetails: The transaction details from a create-onramp-session response.
-    init?(transactionDetails: CreateOnrampSessionResponse.TransactionDetails) {
+    /// - Parameters:
+    ///   - transactionDetails: The transaction details from a create-onramp-session response.
+    ///   - isTestMode: Whether the wallet is being verified in test mode.
+    init?(transactionDetails: CreateOnrampSessionResponse.TransactionDetails, isTestMode: Bool) {
         guard let network = CryptoNetwork(rawValue: transactionDetails.destinationNetwork) else {
             return nil
         }
 
-        self.init(walletAddress: transactionDetails.walletAddress, network: network)
+        self.init(
+            walletAddress: transactionDetails.walletAddress,
+            network: network,
+            isTestMode: isTestMode
+        )
+    }
+}
+
+/// A server-issued challenge ready to be displayed for wallet ownership verification.
+struct WalletOwnershipVerificationSession: Identifiable {
+
+    /// The challenge that must be signed.
+    let challenge: WalletOwnershipChallenge
+
+    /// Whether the wallet is being verified in test mode.
+    let isTestMode: Bool
+
+    // MARK: - Identifiable
+
+    /// The identifier used to present this challenge in a sheet.
+    var id: String {
+        challenge.challengeId
     }
 }
 
@@ -67,42 +99,38 @@ enum WalletOwnershipVerification {
         response.transactionDetails.lastError == requiredLastError
     }
 
-    /// Starts wallet ownership verification and updates shared loading and alert UI state.
+    /// Requests a wallet ownership challenge and updates shared loading and alert UI state.
     /// - Parameters:
     ///   - context: Context needed to verify wallet ownership.
     ///   - coordinator: The coordinator used to call wallet ownership APIs.
     ///   - isLoading: Binding that controls the example app's shared loading state.
     ///   - alert: Binding used to present verification failure alerts.
-    ///   - onVerified: Called when Stripe returns the wallet as verified.
-    static func startVerification(
+    ///   - onChallengeReceived: Called when the challenge is ready to display.
+    static func requestChallenge(
         context: WalletOwnershipVerificationContext,
         coordinator: CryptoOnrampCoordinator,
         isLoading: Binding<Bool>,
         alert: Binding<Alert?>,
-        onVerified: @escaping @MainActor () -> Void
+        onChallengeReceived: @escaping @MainActor (WalletOwnershipVerificationSession) -> Void
     ) {
         isLoading.wrappedValue = true
         alert.wrappedValue = nil
 
         Task {
             do {
-                let wallet = try await verify(
-                    context: context,
-                    coordinator: coordinator
+                let challenge = try await coordinator.getWalletOwnershipChallenge(
+                    walletAddress: context.walletAddress,
+                    network: context.network
                 )
 
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    if wallet.verifiedOwnership {
-                        onVerified()
-                    } else {
-                        // The request to verify the wallet succeeded, but the backend is still erroneously reporting that
-                        // `verifiedOwnership` is `false`. This is not an expected use case.
-                        alert.wrappedValue = Alert(
-                            title: "Wallet verification failed",
-                            message: "Stripe did not mark this wallet as verified. Please try again."
+                    onChallengeReceived(
+                        WalletOwnershipVerificationSession(
+                            challenge: challenge,
+                            isTestMode: context.isTestMode
                         )
-                    }
+                    )
                 }
             } catch {
                 await MainActor.run {
@@ -114,28 +142,6 @@ enum WalletOwnershipVerification {
                 }
             }
         }
-    }
-
-    /// Requests a wallet ownership challenge, signs it, and submits the signature.
-    /// - Parameters:
-    ///   - context: Context needed to verify wallet ownership.
-    ///   - coordinator: The coordinator used to call wallet ownership APIs.
-    private static func verify(
-        context: WalletOwnershipVerificationContext,
-        coordinator: CryptoOnrampCoordinator
-    ) async throws -> CryptoConsumerWallet {
-        let challenge = try await coordinator.getWalletOwnershipChallenge(
-            walletAddress: context.walletAddress,
-            network: context.network
-        )
-
-        // Note: This constant signature is accepted in test mode. For live mode, an actual signature
-        // of `challenge.message` must be produced using the wallet.
-        let signature = "abcd"
-        return try await coordinator.submitWalletOwnershipSignature(
-            challengeId: challenge.challengeId,
-            signature: signature
-        )
     }
 }
 
