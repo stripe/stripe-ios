@@ -13,15 +13,19 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
     @ObservedObject var viewModel: EmbeddedPaymentElementViewModel
 
     public func makeUIView(context: Context) -> UIView {
-        let containerView = UIView()
+        let containerView = EmbeddedViewContainerView()
         containerView.backgroundColor = .clear
         containerView.layoutMargins = .zero
+        containerView.didMoveToWindowHandler = {
+            DispatchQueue.main.async {
+                viewModel.objectWillChange.send()
+            }
+        }
 
         guard let embeddedPaymentElement = viewModel.embeddedPaymentElement else {
             stpAssertionFailure("embeddedPaymentElement was nil in EmbeddedViewRepresentable.makeUIView(). Ensure you do not show the EmbeddedPaymentElementView before isLoaded is true on the EmbeddedPaymentElementViewModel.")
             return containerView
         }
-        embeddedPaymentElement.presentingViewController = UIWindow.visibleViewController
 
         let paymentElementView = embeddedPaymentElement.view
         paymentElementView.translatesAutoresizingMaskIntoConstraints = false
@@ -37,7 +41,7 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
     }
 
     public func updateUIView(_ uiView: UIView, context: Context) {
-        guard let visibleVC = UIWindow.visibleViewController else { return }
+        guard let visibleVC = visibleViewController(for: uiView) else { return }
 
         #if DEBUG
         debugPrintPresenterLookup(uiView: uiView, visibleVC: visibleVC)
@@ -58,6 +62,10 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
         }
     }
 
+    private func visibleViewController(for uiView: UIView) -> UIViewController? {
+        return uiView.window?.rootViewController?.findTopMostPresentedViewController()
+    }
+
     #if DEBUG
     private func debugPrintPresenterLookup(uiView: UIView, visibleVC: UIViewController) {
         let actualWindow = uiView.window
@@ -72,12 +80,21 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
             """
             [STPEPEDebug] updateUIView actualWindow=\(actualWindowID) actualScene=\(actualSceneID) \
             selectedWindow=\(selectedWindowID) selectedScene=\(selectedSceneID) \
-            selectedVC=\(type(of: visibleVC)) \
+            localVC=\(type(of: visibleVC)) \
             sceneMatch=\(actualSceneID == selectedSceneID) windowMatch=\(actualWindowID == selectedWindowID)
             """
         )
     }
     #endif
+}
+
+private final class EmbeddedViewContainerView: UIView {
+    var didMoveToWindowHandler: (() -> Void)?
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        didMoveToWindowHandler?()
+    }
 }
 
 // MARK: UIWindow and UIViewController helpers
