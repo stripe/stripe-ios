@@ -43,10 +43,6 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
     public func updateUIView(_ uiView: UIView, context: Context) {
         guard let visibleVC = visibleViewController(for: uiView) else { return }
 
-        #if DEBUG
-        debugPrintPresenterLookup(uiView: uiView, visibleVC: visibleVC)
-        #endif
-
         // If visibleVC in the process of dismissing, skip for now and retry shortly.
         // updateUIView can be trigged by a view controller (such as a form) being dismissed
         guard !visibleVC.isBeingDismissed else {
@@ -65,27 +61,6 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
     private func visibleViewController(for uiView: UIView) -> UIViewController? {
         return uiView.window?.rootViewController?.findTopMostPresentedViewController()
     }
-
-    #if DEBUG
-    private func debugPrintPresenterLookup(uiView: UIView, visibleVC: UIViewController) {
-        let actualWindow = uiView.window
-        let selectedWindow = UIApplication.shared.stp_hackilyFumbleAroundUntilYouFindAKeyWindow()
-
-        let actualSceneID = actualWindow?.windowScene?.session.persistentIdentifier ?? "nil"
-        let selectedSceneID = selectedWindow?.windowScene?.session.persistentIdentifier ?? "nil"
-        let actualWindowID = actualWindow.map { String(describing: ObjectIdentifier($0)) } ?? "nil"
-        let selectedWindowID = selectedWindow.map { String(describing: ObjectIdentifier($0)) } ?? "nil"
-
-        print(
-            """
-            [STPEPEDebug] updateUIView actualWindow=\(actualWindowID) actualScene=\(actualSceneID) \
-            selectedWindow=\(selectedWindowID) selectedScene=\(selectedSceneID) \
-            localVC=\(type(of: visibleVC)) \
-            sceneMatch=\(actualSceneID == selectedSceneID) windowMatch=\(actualWindowID == selectedWindowID)
-            """
-        )
-    }
-    #endif
 }
 
 private final class EmbeddedViewContainerView: UIView {

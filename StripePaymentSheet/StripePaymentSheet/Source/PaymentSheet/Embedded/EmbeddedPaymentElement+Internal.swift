@@ -176,9 +176,6 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Present the current selection's form VC
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         let bottomSheet = bottomSheetController(with: selectedFormViewController)
-        #if DEBUG
-        debugPrintPresenterAtPresentationBoundary(context: "tapPaymentMethodRow")
-        #endif
         let presentingViewController = resolvedPresentingViewController
         assert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
         stpAssert(selectedFormViewController.delegate != nil)
@@ -208,9 +205,6 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                          configuration: updateConfig)
             updateViewController.delegate = self
             let bottomSheetVC = bottomSheetController(with: updateViewController)
-            #if DEBUG
-            debugPrintPresenterAtPresentationBoundary(context: "tapViewMoreSingleSavedPaymentMethod")
-            #endif
             resolvedPresentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
             return
         }
@@ -226,9 +220,6 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         )
         verticalSavedPaymentMethodsViewController.delegate = self
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
-        #if DEBUG
-        debugPrintPresenterAtPresentationBoundary(context: "tapViewMoreSavedPaymentMethods")
-        #endif
         resolvedPresentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
     }
 
@@ -249,35 +240,6 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         ) != nil
     }
 }
-
-#if DEBUG
-private extension EmbeddedPaymentElement {
-    func debugPrintPresenterAtPresentationBoundary(context: String) {
-        let cachedPresenter = presentingViewController
-        let freshVisibleViewController = UIWindow.visibleViewController
-
-        print(
-            """
-            [STPEPEDebug] presentationBoundary=\(context) \
-            cached=\(debugDescriptionForPresenter(cachedPresenter)) \
-            fresh=\(debugDescriptionForPresenter(freshVisibleViewController)) \
-            presenterMatch=\(cachedPresenter === freshVisibleViewController)
-            """
-        )
-    }
-
-    func debugDescriptionForPresenter(_ viewController: UIViewController?) -> String {
-        guard let viewController else {
-            return "nil"
-        }
-
-        let window = viewController.view.window
-        let sceneID = window?.windowScene?.session.persistentIdentifier ?? "nil"
-        let windowID = window.map { String(describing: ObjectIdentifier($0)) } ?? "nil"
-        return "vc=\(type(of: viewController)) window=\(windowID) scene=\(sceneID)"
-    }
-}
-#endif
 
 // MARK: UpdatePaymentMethodViewControllerDelegate
 extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {

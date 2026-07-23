@@ -90,10 +90,8 @@ import UIKit
         let payload = payload(withEventName: eventName, parameters: parameters)
 
         #if DEBUG
-        if STPAnalyticsClient.debugConsoleLoggingEnabled {
-            NSLog("V2 LOG ANALYTICS: \(eventName)")
-            STPAnalyticsClient.debugPrintPayload(payload)
-        }
+        NSLog("V2 LOG ANALYTICS: \(eventName)")
+        STPAnalyticsClient.debugPrintPayload(payload)
         #endif
 
         guard AnalyticsClientV2.shouldCollectAnalytics else {
