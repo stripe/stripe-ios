@@ -468,19 +468,26 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         // The user is continuing with an LPM, so we un-select Link
         isHackyLinkButtonSelected = false
 
-        if let selectedPaymentOption {
-            analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
-        } else {
-            stpAssertionFailure("didTapContinueButton called w/o a payment option")
-        }
-
         switch mode {
         case .selectingSaved:
+            if let selectedPaymentOption {
+                analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
+            } else {
+                stpAssertionFailure("didTapContinueButton called w/o a payment option")
+            }
             syncCheckoutBillingThenClose()
         case .addingNew:
+            // If the form has overridden the primary button (e.g. to initiate bank linking),
+            // hand control to the form before checking selectedPaymentOption — it will be nil
+            // until the bank linking flow completes.
             if addPaymentMethodViewController.overridePrimaryButtonState != nil {
                 addPaymentMethodViewController.didTapCallToActionButton(from: self)
             } else {
+                if let selectedPaymentOption {
+                    analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
+                } else {
+                    stpAssertionFailure("didTapContinueButton called w/o a payment option")
+                }
                 addPaymentMethodViewController.logBillingAddressCompletionIfNeeded()
                 syncCheckoutBillingThenClose()
             }
