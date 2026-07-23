@@ -61,10 +61,6 @@ extension StripeAPI.VerificationPage {
         static let eventName = "screen_presented"
         static let screenNameKey = "screen_name"
         static let selfieScreenName = "selfie"
-
-        static var localOverride: Bool? {
-            return IdentityVerificationSheet.local3DFaceCaptureOverride
-        }
     }
 
     var has3DFaceCaptureExperiment: Bool {
@@ -74,16 +70,10 @@ extension StripeAPI.VerificationPage {
     }
 
     var enable3DFaceCapture: Bool {
-        if let localOverride = ThreeDFaceCaptureExperiment.localOverride {
-            return localOverride
-        }
         return has3DFaceCaptureExperiment
     }
 
     var shouldSubmit3DFaceCaptureData: Bool {
-        if let localOverride = ThreeDFaceCaptureExperiment.localOverride {
-            return localOverride
-        }
         return has3DFaceCaptureExperiment
     }
     func copyWithNewMissings(newMissings: Set<StripeAPI.VerificationPageFieldType>) -> StripeAPI.VerificationPage {

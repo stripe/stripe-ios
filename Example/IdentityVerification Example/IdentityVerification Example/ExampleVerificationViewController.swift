@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 3/3/21.
 //
 
-@_spi(STP) import StripeIdentity
+import StripeIdentity
 import UIKit
 
 class ExampleVerificationViewController: UIViewController {
@@ -41,7 +41,6 @@ class ExampleVerificationViewController: UIViewController {
     func requestVerificationSession() {
         // Disable the button while we make the request
         updateButtonState(isLoading: true)
-        setLocal3DFaceCaptureOverride()
 
         // Make request to our verification endpoint
         let session = URLSession.shared
@@ -108,10 +107,6 @@ class ExampleVerificationViewController: UIViewController {
         } else {
             activityIndicator.stopAnimating()
         }
-    }
-
-    func setLocal3DFaceCaptureOverride() {
-        IdentityVerificationSheet.local3DFaceCaptureOverride = is3DFaceCaptureEnabled
     }
 
     func add3DFaceCaptureSwitch() {
