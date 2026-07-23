@@ -93,21 +93,6 @@ class STPAPIClientTest: XCTestCase {
         XCTAssertEqual(accountHeader, "acct_123")
     }
 
-    func testConfiguredRequestIncludesMerchantProvidedBetas() {
-        let sut = STPAPIClient(publishableKey: "pk_foo")
-        sut.betas = ["merchant_beta=v1"]
-
-        let stripeVersion = sut.configuredRequest(
-            for: URL(string: "https://www.stripe.com")!,
-            additionalHeaders: [:]
-        ).allHTTPHeaderFields?["Stripe-Version"]
-
-        XCTAssertEqual(
-            Set(stripeVersion?.split(separator: ";").map { $0.trimmingCharacters(in: .whitespaces) } ?? []),
-            [STPAPIClient.apiVersion, "merchant_beta=v1"]
-        )
-    }
-
     private struct MockUAUsageClass: STPAnalyticsProtocol {
         static let stp_analyticsIdentifier = "MockUAUsageClass"
     }

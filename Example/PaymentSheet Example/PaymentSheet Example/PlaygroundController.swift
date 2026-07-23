@@ -165,7 +165,6 @@ import UIKit
 
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = apiClient
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
         configuration.customPaymentMethodConfiguration = customPaymentMethodConfiguration
         switch settings.externalPaymentMethods {
@@ -286,7 +285,6 @@ import UIKit
         }()
 
         var configuration = EmbeddedPaymentElement.Configuration()
-        configuration.apiClient = apiClient
         configuration.formSheetAction = formSheetAction
         configuration.embeddedViewDisplaysMandateText = settings.embeddedViewDisplaysMandateText == .on
         configuration.rowSelectionBehavior = settings.rowSelectionBehavior == .default ? .default : .immediateAction { [weak self] in
@@ -604,10 +602,6 @@ import UIKit
         set {
             settings.checkoutEndpoint = newValue
         }
-    }
-
-    var apiClient: STPAPIClient {
-        STPAPIClient.shared.makeCopy()
     }
 
     func makeAlertController() -> UIAlertController {
@@ -946,11 +940,10 @@ extension PlaygroundController {
                 // Load checkout session using Checkout SDK if using CheckoutSession
                 if let checkoutSessionClientSecret = json["checkoutSessionClientSecret"] {
                     do {
-                         var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionClientSecret, returnURL: "payments-example://stripe-redirect")
-                         checkoutConfiguration.adaptivePricing.allowed = settingsToLoad.csAdaptivePricing == .on
-                         checkoutConfiguration.currencySelectorElement.appearance = self.currencySelectorAppearance
-                         checkoutConfiguration.apiClient = self.apiClient
-                         self.checkout = try await Checkout(configuration: checkoutConfiguration)
+                        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionClientSecret, returnURL: "payments-example://stripe-redirect")
+                        checkoutConfiguration.adaptivePricing.allowed = settingsToLoad.csAdaptivePricing == .on
+                        checkoutConfiguration.currencySelectorElement.appearance = self.currencySelectorAppearance
+                        self.checkout = try await Checkout(configuration: checkoutConfiguration)
                     } catch {
                         self.checkout = nil
                         print("Failed to load checkout session: \(error)")
@@ -1077,18 +1070,6 @@ extension PlaygroundController {
         }
     }
 
-    private func backendRequestOptions() -> [String: Any] {
-        var body: [String: Any] = [:]
-
-        if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
-            body["custom_secret_key"] = customSecretKey
-        }
-        if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
-            body["custom_publishable_key"] = customPublishableKey
-        }
-        return body
-    }
-
     /// Builds the common request body parameters used for both loading backend and creating intents
     private func buildRequestBody(shouldCreateCustomerKey: Bool = true) -> [String: Any] {
         var body = [
@@ -1133,10 +1114,14 @@ extension PlaygroundController {
             }
         }
 
+        // Send custom keys to backend if provided
+        if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
+            body["custom_secret_key"] = customSecretKey
+        }
         if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
+            body["custom_publishable_key"] = customPublishableKey
             STPAPIClient.shared.publishableKey = customPublishableKey
         }
-        body.merge(backendRequestOptions()) { _, new in new }
 
         if settings.apmsEnabled == .off, let supportedPaymentMethods = settings.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
             body["supported_payment_methods"] = supportedPaymentMethods
@@ -1291,9 +1276,8 @@ extension PlaygroundController {
             body["payment_method_id"] = paymentMethodId
             body["should_save_payment_method"] = shouldSavePaymentMethod
         }
-        body.merge(backendRequestOptions()) { _, new in new }
 
-        makeRequest(with: settings.confirmEndpoint, body: body, completionHandler: { data, response, error in
+        makeRequest(with: PaymentSheetTestPlaygroundSettings.confirmEndpoint, body: body, completionHandler: { data, response, error in
             guard
                 error == nil,
                 let data = data,
