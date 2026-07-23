@@ -6,6 +6,8 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
@@ -196,6 +198,74 @@ final class CheckoutUnitTests: XCTestCase {
         )
 
         XCTAssertEqual(checkout.session.shippingAddress?.address.country, "CA")
+    }
+
+    func testUpdateShippingAddress_taxUpdateFailurePreservesPreviousAddress() async throws {
+        // Given a Checkout Session using shipping address for automatic tax calculation
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["tax_context"] = [
+            "automatic_tax_enabled": true,
+            "automatic_tax_address_source": "session.shipping",
+        ]
+        let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session))
+
+        // ...and a previously stored local shipping address
+        let previousAddress = Checkout.ContactAddress(
+            name: "Jane Doe",
+            address: .init(
+                country: "US",
+                line1: "123 Main St",
+                city: "San Francisco",
+                state: "CA",
+                postalCode: "94105"
+            )
+        )
+        checkout.dangerouslySetSessionDirectly(
+            checkout.session.makeCopyOverriding(shippingAddress: .newValue(previousAddress))
+        )
+
+        // ...and the server tax update fails
+        stub(condition: { request in
+            request.httpMethod == "POST"
+                && request.url?.path == "/v1/payment_pages/cs_test_123"
+        }) { _ in
+            HTTPStubsResponse(
+                jsonObject: [
+                    "error": [
+                        "type": "invalid_request_error",
+                        "message": "Tax update failed",
+                    ],
+                ],
+                statusCode: 500,
+                headers: nil
+            )
+        }
+
+        // When the customer updates their shipping address
+        do {
+            try await checkout.updateShippingAddress(
+                name: "John Smith",
+                address: .init(
+                    country: "US",
+                    line1: "456 Oak Ave",
+                    city: "Los Angeles",
+                    state: "CA",
+                    postalCode: "90001"
+                )
+            )
+            XCTFail("Expected CheckoutError.apiError")
+        } catch let error as CheckoutError {
+            guard case .apiError = error else {
+                XCTFail("Expected .apiError, got \(error)")
+                return
+            }
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+
+        // Then the previous local shipping address is preserved
+        XCTAssertEqual(checkout.session.shippingAddress, previousAddress)
     }
 
     // MARK: - Address Collection Decoding Tests
