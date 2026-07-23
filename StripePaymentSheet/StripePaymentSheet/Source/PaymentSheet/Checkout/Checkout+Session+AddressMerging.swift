@@ -11,14 +11,10 @@ import Foundation
 
 extension Checkout.Session {
 
-    /// Applies Checkout Session customer details to a PaymentElement configuration.
-    /// Copies `session.shippingAddress` into `configuration.shippingDetails`,
-    /// sets the default billing email from `session.email` when the configuration
-    /// has none, and requires full billing address collection when the Checkout
-    /// Session requires it.
+    /// Populates empty fields in the configuration with checkout-collected addresses.
+    /// Configuration values always take precedence over checkout-collected values.
     func applyAddressOverrides<C: PaymentElementConfiguration>(to configuration: inout C) {
-        stpAssert(configuration.shippingDetails() == nil, "Nothing should set configuration.shippingDetails, we overwrite it unconditionally to match checkout.session.shipping")
-        if let shipping = shippingAddress {
+        if let shipping = shippingAddress, configuration.shippingDetails() == nil {
             let details = shippingAddressDetails(from: shipping)
             configuration.shippingDetails = { details }
         }

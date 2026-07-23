@@ -26,7 +26,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
         XCTAssertEqual(details?.address.postalCode, "90001")
     }
 
-    func testApplyAddressOverrides_shippingOverridesConfigShipping() {
+    func testApplyAddressOverrides_configShippingTakesPrecedence() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
         let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(Checkout.Session.ShippingAddress(
             name: "John Smith",
@@ -43,8 +43,8 @@ final class CheckoutAddressMergingTests: XCTestCase {
         session.applyAddressOverrides(to: &config)
 
         let details = config.shippingDetails()
-        XCTAssertEqual(details?.name, "John Smith")
-        XCTAssertEqual(details?.address.country, "GB")
+        XCTAssertEqual(details?.name, "Existing Name")
+        XCTAssertEqual(details?.address.country, "US")
     }
 
     // MARK: - Email

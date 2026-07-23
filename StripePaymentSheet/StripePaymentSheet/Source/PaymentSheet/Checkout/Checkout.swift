@@ -124,18 +124,7 @@ public final class Checkout: ObservableObject {
             self.session = loadedSession
             self.nonisolatedSession = session // temporary hack
 
-            // Apply defaults
-            let defaults = configuration.defaults
-            if let defaultBillingAddress = defaults.billingDetails?.address {
-                try await updateBillingTaxRegionIfNecessary(address: defaultBillingAddress)
-            }
-            if let shippingDetails = defaults.shippingDetails,
-               let address = shippingDetails.address {
-                try await updateShippingAddress(
-                    name: shippingDetails.name,
-                    address: address
-                )
-            }
+            try await applyDefaults()
 
             // Load elements
             self.paymentElement = try await PaymentElement(checkout: self)
@@ -291,6 +280,25 @@ public final class Checkout: ObservableObject {
     }
 }
 
+// MARK: - Defaults
+
+extension Checkout {
+    func applyDefaults() async throws {
+        let defaults = configuration.defaults
+
+        if let billingDetails = defaults.billingDetails,
+           let address = billingDetails.address {
+            try await updateBillingTaxRegionIfNecessary(address: address)
+        }
+        if let shippingDetails = defaults.shippingDetails,
+           let address = shippingDetails.address {
+            try await updateShippingAddress(
+                name: shippingDetails.name,
+                address: address
+            )
+        }
+    }
+}
 // MARK: - Internal session setters
 // These exist here because `session` is private(set) to enforce that session can only be mutated through these sanctioned paths.
 // Setting the session should generally only be done via `commitSession` to avoid putting us into an inconsistent state e.g. without using commitSession, MPE is not aware of the updated session.
