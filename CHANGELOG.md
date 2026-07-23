@@ -1,7 +1,10 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+
+### PaymentSheet
+* [Added] Added `billingDetailsCollectionConfiguration` to `LinkConfiguration` (private preview).
 
 ## 26.4.0 2026-07-20
 ### StripeCore
