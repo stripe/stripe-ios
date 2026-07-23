@@ -20,6 +20,7 @@ PATCH
 
 ### PaymentSheet
 * [Added] Added standalone Link wallet APIs in private preview via `LinkController`.
+* [Fixed] Fixed a crash when a saved payment method icon fails to load.
 
 ### StripeConnect
 * [Changed] `PaymentsViewController`, `PaymentsViewControllerDelegate`, `PayoutsViewController`, `PayoutsViewControllerDelegate`, and `EmbeddedComponentManager.PaymentsListDefaultFiltersOptions` are now part of the public API and no longer require `@_spi(PreviewConnect)` to access.
