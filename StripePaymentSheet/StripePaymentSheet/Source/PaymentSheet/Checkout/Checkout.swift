@@ -123,9 +123,11 @@ public final class Checkout: ObservableObject {
             self.session = loadedSession
             self.nonisolatedSession = session // temporary hack
 
+            try await applyDefaults()
+
             // Load elements
             self.paymentElement = try await PaymentElement(checkout: self)
-            await flagImageManager.prefetchFlagImages(for: loadedSession) // TODO: This should probably just load currency selector and not be a global singleton
+            await flagImageManager.prefetchFlagImages(for: session) // TODO: This should probably just load currency selector and not be a global singleton
 
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
@@ -176,37 +178,23 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Addresses
 
-    /// Sets the billing address for this checkout.
+    /// Updates the billing tax region for this checkout, if billing is the session's tax address source.
     ///
-    /// The address is stored locally and merged into PaymentSheet configuration
-    /// when presenting payment UI. If automatic tax is enabled and the tax
-    /// address source is "billing", the address is also sent to the server to
-    /// compute updated tax amounts.
+    /// If automatic tax is enabled and the tax address source is "billing",
+    /// the address is sent to the server to compute updated tax amounts.
     ///
-    /// - Parameters:
-    ///   - name: The customer's full name.
-    ///   - phone: The customer's phone number.
-    ///   - address: The billing address to set. To reset tax computation
-    ///     to a country-only region, pass a ``Checkout.Address`` with just the country.
+    /// - Parameter address: The billing address to use for tax calculation. To reset tax computation
+    ///   to a country-only region, pass a ``Checkout.Address`` with just the country.
     /// - Throws: ``CheckoutError`` if the session is not open, or if
     ///   the server request fails.
-    func updateBillingAddress(
-        name: String? = nil,
-        phone: String? = nil,
+    func updateBillingTaxRegionIfNecessary(
         address: Address,
         canUpdateWhileSheetPresented: Bool = false
     ) async throws {
-        let contactAddress = ContactAddress(name: name, phone: phone, address: address)
-        guard session.billingAddress != contactAddress else { return }
-        if session.shouldSendTaxRegion(for: "billing") {
-            try await performUpdate(.setTaxRegion(address), applying: { session in
-                session.makeCopyOverriding(billingAddress: .newValue(contactAddress))
-            }, canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
-        } else {
-            try await performUpdate(applying: { session in
-                session.makeCopyOverriding(billingAddress: .newValue(contactAddress))
-            }, canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
+        guard session.shouldSendTaxRegion(for: "billing") else {
+            return
         }
+        try await performUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
     }
 
     /// Sets the shipping address for this checkout.
@@ -293,6 +281,19 @@ public final class Checkout: ObservableObject {
     }
 }
 
+// MARK: - Defaults
+
+extension Checkout {
+    func applyDefaults() async throws {
+        let defaults = configuration.defaults
+
+        if let billingDetails = defaults.billingDetails,
+           let address = billingDetails.address {
+            try await updateBillingTaxRegionIfNecessary(address: address)
+        }
+    }
+}
+
 // MARK: - Internal session setters
 // These exist here because `session` is private(set) to enforce that session can only be mutated through these sanctioned paths.
 // Setting the session should generally only be done via `commitSession` to avoid putting us into an inconsistent state e.g. without using commitSession, MPE is not aware of the updated session.
@@ -311,7 +312,6 @@ extension Checkout {
 
         // Preserve client-side address overrides on the new session.
         let sessionWithLocalAddress = newSession.makeCopyOverriding(
-            billingAddress: .newValue(session.billingAddress),
             shippingAddress: .newValue(session.shippingAddress),
             paymentOption: .newValue(session.paymentOption)
         )

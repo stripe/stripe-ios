@@ -63,6 +63,41 @@ class CheckoutEmissionRecorder {
     }
 }
 
+// MARK: - Request Recording
+
+enum CheckoutSessionRequestKind: Equatable {
+    case initSession
+    case updateSession
+}
+
+struct CheckoutSessionRequest {
+    let kind: CheckoutSessionRequestKind
+    let params: [String: String]
+}
+
+final class CheckoutSessionRequestRecorder: @unchecked Sendable {
+    private let lock = NSLock()
+    private var _requests: [CheckoutSessionRequest] = []
+
+    var requests: [CheckoutSessionRequest] {
+        lock.lock()
+        defer { lock.unlock() }
+        return _requests
+    }
+
+    func append(_ request: CheckoutSessionRequest) {
+        lock.lock()
+        defer { lock.unlock() }
+        _requests.append(request)
+    }
+
+    func removeAll() {
+        lock.lock()
+        defer { lock.unlock() }
+        _requests.removeAll()
+    }
+}
+
 // MARK: - Shared Helpers
 
 enum CheckoutTestHelpers {
@@ -158,6 +193,54 @@ enum CheckoutTestHelpers {
         }
 
         return apiClient
+    }
+
+    /// Stubs Checkout Session `/init` and update requests, recording each request's decoded form params in order.
+    ///
+    /// Use this when a test needs to verify Checkout initialization, follow-up session updates, or both:
+    ///
+    /// ```swift
+    /// let recorder = CheckoutSessionRequestRecorder()
+    /// CheckoutTestHelpers.stubCheckoutSessionRequests(
+    ///     sessionId: "cs_test_123",
+    ///     requestRecorder: recorder,
+    ///     sessionJSON: { CheckoutTestHelpers.openSessionJSON }
+    /// )
+    ///
+    /// _ = try await Checkout(configuration: configuration)
+    /// XCTAssertEqual(recorder.requests.map(\.kind), [.initSession, .updateSession])
+    /// XCTAssertEqual(recorder.requests[1].params["tax_region[country]"], "US")
+    /// ```
+    static func stubCheckoutSessionRequests(
+        sessionId: String,
+        requestRecorder: CheckoutSessionRequestRecorder,
+        sessionJSON: @escaping () -> [AnyHashable: Any],
+        initStatusCode: Int32 = 200,
+        updateStatusCode: Int32 = 200
+    ) {
+        stub { request in
+            request.url?.path == "/v1/payment_pages/\(sessionId)/init"
+        } response: { request in
+            requestRecorder.append(
+                .init(
+                    kind: .initSession,
+                    params: RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+                )
+            )
+            return HTTPStubsResponse(jsonObject: sessionJSON(), statusCode: initStatusCode, headers: nil)
+        }
+
+        stub { request in
+            request.url?.path == "/v1/payment_pages/\(sessionId)"
+        } response: { request in
+            requestRecorder.append(
+                .init(
+                    kind: .updateSession,
+                    params: RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+                )
+            )
+            return HTTPStubsResponse(jsonObject: sessionJSON(), statusCode: updateStatusCode, headers: nil)
+        }
     }
 
     static let openSessionJSON: [AnyHashable: Any] = [

@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension Checkout {
-    /// Syncs the billing address from the payment method's billing details onto the checkout session.
+    /// Syncs the payment method's billing address to Checkout tax calculation when needed.
     func syncBillingAddress(from billingDetails: STPPaymentMethodBillingDetails?) async throws {
         // We need at least a country to build an Address for tax region calculation. Billing details
         // are optional on payment methods, so it's fine to just skip if we don't have enough info.
@@ -27,9 +27,7 @@ extension Checkout {
             state: source?.state?.nonEmpty,
             postalCode: source?.postalCode?.nonEmpty
         )
-        try await updateBillingAddress(
-            name: billingDetails.name,
-            phone: billingDetails.phone,
+        try await updateBillingTaxRegionIfNecessary(
             address: address,
             canUpdateWhileSheetPresented: true
         )

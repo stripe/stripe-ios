@@ -661,7 +661,6 @@ extension PaymentSheet {
 
         /// How to collect the email field.
         /// Defaults to `automatic`.
-        /// - Note: When using CheckoutSessions, email is always set to `.always` regardless of the value provided.
         public var email: CollectionMode = .automatic
 
         /// How to collect the billing address.

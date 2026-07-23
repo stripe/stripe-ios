@@ -6,42 +6,6 @@ import XCTest
 @MainActor
 final class CheckoutAddressMergingTests: XCTestCase {
 
-    func testApplyAddressOverrides_billingFillsEmptyFields() {
-        let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let session = apiResponse.makePublicSession().makeCopyOverriding(billingAddress: .newValue(Checkout.ContactAddress(
-            name: "Jane Doe",
-            address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
-        )))
-
-        var config = PaymentSheet.Configuration()
-        session.applyAddressOverrides(to: &config)
-
-        XCTAssertEqual(config.defaultBillingDetails.name, "Jane Doe")
-        XCTAssertEqual(config.defaultBillingDetails.address.country, "US")
-        XCTAssertEqual(config.defaultBillingDetails.address.line1, "123 Main St")
-        XCTAssertEqual(config.defaultBillingDetails.address.city, "SF")
-        XCTAssertEqual(config.defaultBillingDetails.address.state, "CA")
-        XCTAssertEqual(config.defaultBillingDetails.address.postalCode, "94105")
-    }
-
-    func testApplyAddressOverrides_billingConfigTakesPrecedence() {
-        let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let session = apiResponse.makePublicSession().makeCopyOverriding(billingAddress: .newValue(Checkout.ContactAddress(
-            name: "Override Name",
-            address: .init(country: "GB", line1: "Override Line1")
-        )))
-
-        var config = PaymentSheet.Configuration()
-        config.defaultBillingDetails.name = "Config Name"
-        config.defaultBillingDetails.address.country = "US"
-        session.applyAddressOverrides(to: &config)
-
-        XCTAssertEqual(config.defaultBillingDetails.name, "Config Name")
-        XCTAssertEqual(config.defaultBillingDetails.address.country, "US")
-        // line1 was empty in config, so override fills it
-        XCTAssertEqual(config.defaultBillingDetails.address.line1, "Override Line1")
-    }
-
     func testApplyAddressOverrides_shippingApplied() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
         let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(Checkout.ContactAddress(
@@ -116,27 +80,16 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     // MARK: - EmbeddedPaymentElement.Configuration
 
-    func testApplyAddressOverrides_embeddedBillingAndShipping() {
+    func testApplyAddressOverrides_embeddedShipping() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let billingAddress = Checkout.ContactAddress(
-            name: "Jane Doe",
-            address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
-        )
         let shippingAddress = Checkout.ContactAddress(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )
-        let session = apiResponse.makePublicSession().makeCopyOverriding(
-            billingAddress: .newValue(billingAddress),
-            shippingAddress: .newValue(shippingAddress)
-        )
+        let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
 
         var config = EmbeddedPaymentElement.Configuration()
         session.applyAddressOverrides(to: &config)
-
-        XCTAssertEqual(config.defaultBillingDetails.name, "Jane Doe")
-        XCTAssertEqual(config.defaultBillingDetails.address.country, "US")
-        XCTAssertEqual(config.defaultBillingDetails.address.line1, "123 Main St")
 
         let shipping = config.shippingDetails()
         XCTAssertNotNil(shipping)
