@@ -20,6 +20,7 @@ struct CheckoutCartView: View {
     let shippingAddressCollection: Bool
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
+    var showExpressCheckoutElement: Bool = false
     var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
 
     var body: some View {
@@ -37,14 +38,29 @@ struct CheckoutCartView: View {
                         errorMessage: $errorMessage
                     )
                     .overlay(alignment: .bottom) {
-                        if checkout.session.total != nil {
-                            switch integrationType {
-                            case .flowController:
-                                CheckoutCartPaymentButton(checkout: checkout)
-                            case .embedded:
-                                CheckoutCartEmbeddedPaymentView(checkout: checkout)
+                        VStack(spacing: 0) {
+                            if showExpressCheckoutElement {
+                                checkout.getExpressCheckoutElement()
+                                    .padding(.horizontal)
+                                    .padding(.top, 16)
+                                    .padding(.bottom, checkout.session.total != nil ? 0 : 16)
+                            }
+                            if checkout.session.total != nil {
+                                switch integrationType {
+                                case .flowController:
+                                    CheckoutCartPaymentButton(checkout: checkout)
+                                        .clipped()
+                                case .embedded:
+                                    CheckoutCartEmbeddedPaymentView(checkout: checkout)
+                                        .clipped()
+                                }
                             }
                         }
+                        .background(
+                            Color(UIColor.systemBackground)
+                                .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
+                                .ignoresSafeArea()
+                        )
                     }
                 } else if isLoading {
                     ProgressView("Loading Cart...")
@@ -86,6 +102,9 @@ struct CheckoutCartView: View {
         do {
             var config = Checkout.Configuration(clientSecret: clientSecret)
             config.adaptivePricing.allowed = adaptivePricing
+            config.applePayConfiguration = Checkout.ApplePayConfiguration(
+                merchantId: "merchant.com.stripe.paymentsheet.example"
+            )
             checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription

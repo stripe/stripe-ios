@@ -30,7 +30,8 @@ struct CheckoutPlaygroundView: View {
                             currency: $viewModel.currency,
                             customerType: $viewModel.customerType,
                             checkoutEndpointOption: $viewModel.checkoutEndpointOption,
-                            checkoutEndpoint: $viewModel.checkoutEndpoint
+                            checkoutEndpoint: $viewModel.checkoutEndpoint,
+                            expressCheckoutElementOption: $viewModel.expressCheckoutElementOption
                         )
 
                         CheckoutPlaygroundLineItemsSection(
@@ -86,6 +87,7 @@ struct CheckoutPlaygroundView: View {
                         shippingAddressCollection: viewModel.shippingAddressCollection,
                         adaptivePricing: viewModel.adaptivePricing,
                         integrationType: viewModel.integrationType,
+                        showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .enabled,
                         currencySelectorAppearance: viewModel.currencySelectorAppearance
                     )
                 }

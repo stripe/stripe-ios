@@ -15,6 +15,7 @@ extension CheckoutPlayground {
         ]
 
         @Published var integrationType: IntegrationType = .flowController
+        @Published var expressCheckoutElementOption: ExpressCheckoutElementOption = .disabled
         @Published var currency: Currency = .usd
         @Published var customerType: CustomerType = .guest
         @Published var lineItems: [LineItemConfig] = LineItemConfig.defaults
