@@ -607,11 +607,7 @@ import UIKit
     }
 
     var apiClient: STPAPIClient {
-        let apiClient = STPAPIClient.shared.makeCopy()
-        if settings.usesVippsPreview {
-            apiClient.betas.insert("vipps_preview=v1")
-        }
-        return apiClient
+        STPAPIClient.shared.makeCopy()
     }
 
     func makeAlertController() -> UIAlertController {
@@ -1090,10 +1086,6 @@ extension PlaygroundController {
         if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
             body["custom_publishable_key"] = customPublishableKey
         }
-        if settings.usesVippsPreview {
-            body["preview_features"] = ["vipps"]
-        }
-
         return body
     }
 
