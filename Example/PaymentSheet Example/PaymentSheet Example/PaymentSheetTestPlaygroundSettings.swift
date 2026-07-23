@@ -900,30 +900,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     static var defaultCheckoutEndpoint: String {
         return "\(baseEndpoint)/checkout"
     }
-    static var defaultConfirmEndpoint: String {
+    static var confirmEndpoint: String {
         return "\(baseEndpoint)/confirm_intent"
-    }
-
-    static func confirmEndpoint(for checkoutEndpoint: String) -> String {
-        guard var components = URLComponents(string: checkoutEndpoint) else {
-            return defaultConfirmEndpoint
-        }
-
-        var pathComponents = components.path.split(separator: "/").map(String.init)
-        guard pathComponents.last == "checkout" else {
-            return defaultConfirmEndpoint
-        }
-
-        pathComponents[pathComponents.count - 1] = "confirm_intent"
-        components.path = "/" + pathComponents.joined(separator: "/")
-        components.query = nil
-        components.fragment = nil
-
-        return components.url?.absoluteString ?? defaultConfirmEndpoint
-    }
-
-    var confirmEndpoint: String {
-        Self.confirmEndpoint(for: checkoutEndpoint)
     }
 
     var base64Data: String {

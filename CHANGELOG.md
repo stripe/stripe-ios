@@ -3,7 +3,7 @@ PATCH
 
 ## X.Y.Z - changes pending release
 ### PaymentSheet
-* [Added] Added public `STPAPIClient.betas` support for merchant-supplied beta headers. To use Vipps in PaymentSheet beta, set `vipps_preview=v1` on the `STPAPIClient` instance that you pass into PaymentSheet or Checkout, for example `Set(["vipps_preview=v1"])`.
+* [Added] Added Vipps support to PaymentSheet beta. To opt in, set `vipps_preview=v1` on the `STPAPIClient` instance that you pass into PaymentSheet or Checkout, for example `["vipps_preview=v1"]`.
 
 ## 26.4.0 2026-07-20
 ### StripeCore
@@ -25,6 +25,7 @@ PATCH
 
 ### StripeConnect
 * [Changed] `PaymentsViewController`, `PaymentsViewControllerDelegate`, `PayoutsViewController`, `PayoutsViewControllerDelegate`, and `EmbeddedComponentManager.PaymentsListDefaultFiltersOptions` are now part of the public API and no longer require `@_spi(PreviewConnect)` to access.
+
 ## 26.2.0 2026-07-06
 ### CryptoOnramp (Alpha)
 * [Added] Added `AppAttestationUnavailableError`, a rich `StripeCryptoOnrampError` surfaced when configuration fails because app attestation is missing or native Link is unavailable.

@@ -91,6 +91,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var swish: STPPaymentMethodSwishParams?
     /// If this is a MobilePay PaymentMethod, this contains additional details.
     @objc public var mobilePay: STPPaymentMethodMobilePayParams?
+    /// If this is a Vipps PaymentMethod, this contains additional details.
+    @objc public var vipps: STPPaymentMethodVippsParams?
     /// If this is a AmazonPay PaymentMethod, this contains additional details.
     @objc public var amazonPay: STPPaymentMethodAmazonPayParams?
     /// If this is a Alma PaymentMethod, this contains additional details.
@@ -113,8 +115,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var wero: STPPaymentMethodWeroParams?
     /// If this is a Pay by Bank PaymentMethod, this contains additional details.
     @objc public var payByBank: STPPaymentMethodPayByBankParams?
-    /// If this is a Vipps PaymentMethod, this contains additional details.
-    @objc public var vipps: STPPaymentMethodVippsParams?
 
     /// Radar options that may contain HCaptcha token
     @objc @_spi(STP) public var radarOptions: STPRadarOptions?
@@ -820,6 +820,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: revolutPay)): "revolut_pay",
             NSStringFromSelector(#selector(getter: swish)): "swish",
             NSStringFromSelector(#selector(getter: mobilePay)): "mobilepay",
+            NSStringFromSelector(#selector(getter: vipps)): "vipps",
             NSStringFromSelector(#selector(getter: amazonPay)): "amazon_pay",
             NSStringFromSelector(#selector(getter: alma)): "alma",
             NSStringFromSelector(#selector(getter: sunbit)): "sunbit",
@@ -831,7 +832,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: twint)): "twint",
             NSStringFromSelector(#selector(getter: wero)): "wero",
             NSStringFromSelector(#selector(getter: payByBank)): "pay_by_bank",
-            NSStringFromSelector(#selector(getter: vipps)): "vipps",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
@@ -1257,6 +1257,8 @@ extension STPPaymentMethodParams {
             swish = STPPaymentMethodSwishParams()
         case .mobilePay:
             mobilePay = STPPaymentMethodMobilePayParams()
+        case .vipps:
+            vipps = STPPaymentMethodVippsParams()
         case .amazonPay:
             amazonPay = STPPaymentMethodAmazonPayParams()
         case .alma:
@@ -1279,8 +1281,6 @@ extension STPPaymentMethodParams {
             wero = STPPaymentMethodWeroParams()
         case .payByBank:
             payByBank = STPPaymentMethodPayByBankParams()
-        case .vipps:
-            vipps = STPPaymentMethodVippsParams()
         case .cardPresent, .paynow, .zip, .konbini, .promptPay:
             // These payment methods don't have any params
             break
