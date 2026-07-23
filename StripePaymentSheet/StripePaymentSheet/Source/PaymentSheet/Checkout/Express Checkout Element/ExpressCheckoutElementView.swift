@@ -120,7 +120,6 @@ extension Checkout.ExpressCheckoutElementView {
             switch button {
             case .applePay:
                 if configuration.applePayConfiguration != nil
-                    && session.elementsSession.isApplePayEnabled
                     && StripeAPI.deviceSupportsApplePay() {
                     buttons.append(.applePay)
                 }
