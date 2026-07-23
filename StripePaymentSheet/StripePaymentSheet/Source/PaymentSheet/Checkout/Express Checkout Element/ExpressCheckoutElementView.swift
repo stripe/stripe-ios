@@ -6,6 +6,7 @@
 //
 
 import PassKit
+@_spi(STP) import StripeCore
 import UIKit
 
 @_spi(STP)
@@ -119,7 +120,8 @@ extension Checkout.ExpressCheckoutElementView {
             switch button {
             case .applePay:
                 if configuration.applePayConfiguration != nil
-                    && PKPaymentAuthorizationViewController.canMakePayments() {
+                    && session.elementsSession.isApplePayEnabled
+                    && StripeAPI.deviceSupportsApplePay() {
                     buttons.append(.applePay)
                 }
             case .link:
