@@ -25,27 +25,12 @@ extension Checkout {
         public init(checkout: Checkout) {
             self.checkout = checkout
             super.init(frame: .zero)
-
-            handleSessionUpdate()
+            // TODO: Render express buttons
         }
 
         @available(*, unavailable)
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
-        }
-
-        // MARK: - Private Methods
-
-        private func handleSessionUpdate() {
-            let buttons = Self.expressButtons(
-                from: checkout.session,
-                configuration: checkout.configuration
-            )
-            configure(buttons: buttons)
-        }
-
-        private func configure(buttons: [ExpressButton]) {
-            // TODO: Render express buttons
         }
     }
 }
