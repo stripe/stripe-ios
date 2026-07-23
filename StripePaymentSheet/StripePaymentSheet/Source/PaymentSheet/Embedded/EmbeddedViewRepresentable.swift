@@ -13,15 +13,19 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
     @ObservedObject var viewModel: EmbeddedPaymentElementViewModel
 
     public func makeUIView(context: Context) -> UIView {
-        let containerView = UIView()
+        let containerView = EmbeddedViewContainerView()
         containerView.backgroundColor = .clear
         containerView.layoutMargins = .zero
+        containerView.didMoveToWindowHandler = {
+            DispatchQueue.main.async {
+                viewModel.objectWillChange.send()
+            }
+        }
 
         guard let embeddedPaymentElement = viewModel.embeddedPaymentElement else {
             stpAssertionFailure("embeddedPaymentElement was nil in EmbeddedViewRepresentable.makeUIView(). Ensure you do not show the EmbeddedPaymentElementView before isLoaded is true on the EmbeddedPaymentElementViewModel.")
             return containerView
         }
-        embeddedPaymentElement.presentingViewController = UIWindow.visibleViewController
 
         let paymentElementView = embeddedPaymentElement.view
         paymentElementView.translatesAutoresizingMaskIntoConstraints = false
@@ -37,7 +41,7 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
     }
 
     public func updateUIView(_ uiView: UIView, context: Context) {
-        guard let visibleVC = UIWindow.visibleViewController else { return }
+        guard let visibleVC = visibleViewController(for: uiView) else { return }
 
         // If visibleVC in the process of dismissing, skip for now and retry shortly.
         // updateUIView can be trigged by a view controller (such as a form) being dismissed
@@ -52,6 +56,19 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
         if !(visibleVC is StripePaymentSheet.BottomSheetViewController) {
             viewModel.embeddedPaymentElement?.presentingViewController = visibleVC
         }
+    }
+
+    private func visibleViewController(for uiView: UIView) -> UIViewController? {
+        return uiView.window?.rootViewController?.findTopMostPresentedViewController()
+    }
+}
+
+private final class EmbeddedViewContainerView: UIView {
+    var didMoveToWindowHandler: (() -> Void)?
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        didMoveToWindowHandler?()
     }
 }
 
