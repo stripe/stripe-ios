@@ -181,11 +181,7 @@ import AVKit
             }
 
             self.session.beginConfiguration()
-            if self.session.canSetSessionPreset(configuration.sessionPreset) {
-                self.session.sessionPreset = configuration.sessionPreset
-            } else if self.session.canSetSessionPreset(.high) {
-                self.session.sessionPreset = .high
-            }
+            self.session.sessionPreset = configuration.sessionPreset
             self.session.commitConfiguration()
 
             self.configureSessionInput(with: configuration.initialCameraPosition).chained {
