@@ -80,14 +80,6 @@ final class PaymentSheetLoader {
                let error = intentConfiguration.validate() {
                 throw error
             }
-            if case .checkout = mode, configuration.customer != nil {
-                stpAssertionFailure("Configuration.customer must not be set when using a CheckoutSession. The CheckoutSession manages its own customer.")
-                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "PaymentSheet.Configuration.customer must not be set when using a CheckoutSession.")
-            }
-            if case .checkout = mode, configuration.billingDetailsCollectionConfiguration.address == .never {
-                stpAssertionFailure("billingDetailsCollectionConfiguration.address = .never is not supported with CheckoutSession.")
-                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "billingDetailsCollectionConfiguration.address = .never is not supported with CheckoutSession.")
-            }
 
             // Fetch ElementsSession
             // ⚠️ Note using `async let` instead of Tasks here triggered a crash when compiling with Xcode 26.4 / Swift 6.3

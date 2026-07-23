@@ -499,68 +499,6 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         wait(for: [loaded2], timeout: 2)
     }
 
-    func testCheckoutSessionWithCustomerConfigurationThrowsError() async throws {
-        let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession))
-
-        var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = stubbedAPIClient()
-        configuration.customer = PaymentSheet.CustomerConfiguration(id: "cus_123", ephemeralKeySecret: "ek_456")
-
-        let loaded = expectation(description: "Loaded")
-        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
-        PaymentSheetLoader.load(
-            mode: .checkout(checkout),
-            configuration: configuration,
-            analyticsHelper: ._testValue(integrationShape: .complete),
-            integrationShape: .paymentSheet
-        ) { result in
-            switch result {
-            case .success:
-                XCTFail("Expected failure when customer is set with CheckoutSession mode")
-            case .failure(let error):
-                guard case PaymentSheetError.integrationError = error else {
-                    XCTFail("Expected PaymentSheetError.integrationError, got \(error)")
-                    return
-                }
-            }
-            loaded.fulfill()
-        }
-        await fulfillment(of: [loaded], timeout: 2)
-    }
-
-    func testCheckoutSessionWithBillingAddressNeverThrowsError() async throws {
-        let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession))
-
-        var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = stubbedAPIClient()
-        configuration.billingDetailsCollectionConfiguration.address = .never
-
-        let loaded = expectation(description: "Loaded")
-        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
-        PaymentSheetLoader.load(
-            mode: .checkout(checkout),
-            configuration: configuration,
-            analyticsHelper: ._testValue(integrationShape: .complete),
-            integrationShape: .paymentSheet
-        ) { result in
-            switch result {
-            case .success:
-                XCTFail("Expected failure when billingDetailsCollectionConfiguration.address is .never with CheckoutSession mode")
-            case .failure(let error):
-                guard case PaymentSheetError.integrationError = error else {
-                    XCTFail("Expected PaymentSheetError.integrationError, got \(error)")
-                    return
-                }
-            }
-            loaded.fulfill()
-        }
-        await fulfillment(of: [loaded], timeout: 2)
-    }
-
     func testSendsErrorAnalytic() {
         // If v1/elements/session and the fallback fail to load...
         let analyticsClient = STPAnalyticsClient()
