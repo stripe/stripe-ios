@@ -30,7 +30,8 @@ struct CheckoutPlaygroundView: View {
                             currency: $viewModel.currency,
                             customerType: $viewModel.customerType,
                             checkoutEndpointOption: $viewModel.checkoutEndpointOption,
-                            checkoutEndpoint: $viewModel.checkoutEndpoint
+                            checkoutEndpoint: $viewModel.checkoutEndpoint,
+                            expressCheckoutElementOption: $viewModel.expressCheckoutElementOption
                         )
 
                         CheckoutPlaygroundLineItemsSection(
@@ -49,6 +50,18 @@ struct CheckoutPlaygroundView: View {
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
                             adaptivePricingCountry: $viewModel.adaptivePricingCountry,
                             automaticPaymentMethods: $viewModel.automaticPaymentMethods
+                        )
+
+                        if viewModel.expressCheckoutElementOption == .enabled {
+                            CheckoutPlaygroundExpressCheckoutSettingsSection(
+                                applePayVisibility: $viewModel.applePayVisibility,
+                                applePayButtonTypeOption: $viewModel.applePayButtonTypeOption,
+                                linkVisibility: $viewModel.linkVisibility
+                            )
+                        }
+
+                        CheckoutPlaygroundWalletSettingsSection(
+                            linkDisplayOption: $viewModel.linkDisplayOption
                         )
 
                         if viewModel.adaptivePricing {
@@ -86,6 +99,12 @@ struct CheckoutPlaygroundView: View {
                         shippingAddressCollection: viewModel.shippingAddressCollection,
                         adaptivePricing: viewModel.adaptivePricing,
                         integrationType: viewModel.integrationType,
+                        showPaymentElement: viewModel.integrationType != .disabled,
+                        showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .enabled,
+                        applePay: viewModel.applePayVisibility,
+                        applePayButtonTypeOption: viewModel.applePayButtonTypeOption,
+                        link: viewModel.linkVisibility,
+                        linkDisplayOption: viewModel.linkDisplayOption,
                         currencySelectorAppearance: viewModel.currencySelectorAppearance
                     )
                 }
