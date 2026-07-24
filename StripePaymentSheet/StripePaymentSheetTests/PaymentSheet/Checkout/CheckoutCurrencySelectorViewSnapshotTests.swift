@@ -182,7 +182,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
                 configuration: configuration
             )
         )
-        let view = checkout.getCurrencySelectorElement().uiView
+        let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
 
         view.setNeedsLayout()
         view.layoutIfNeeded()
