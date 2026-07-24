@@ -682,6 +682,8 @@ extension PaymentSheet {
                 allowedCountries = Set(allowedCountries.map { $0.uppercased() })
             }
         }
+
+        public init() {}
     }
 
     /// Configuration for external payment methods
