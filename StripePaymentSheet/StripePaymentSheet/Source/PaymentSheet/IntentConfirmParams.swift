@@ -37,12 +37,6 @@ final class IntentConfirmParams {
     var financialConnectionsLinkedBank: FinancialConnectionsLinkedBank?
     var instantDebitsLinkedBank: InstantDebitsLinkedBank?
 
-    /// Whether these params contain a linked bank represented as `.saved` but reconstructed through its
-    /// Instant Debits or Link Card Brand form.
-    var isFormBackedSavedPaymentMethod: Bool {
-        return instantDebitsLinkedBank != nil
-    }
-
     var paymentSheetLabel: String {
         return paymentSheetLabel(brand: .link)
     }

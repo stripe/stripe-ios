@@ -90,19 +90,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     /// The selection used to seed this controller when it is rebuilt.
     private var previousPaymentOption: PaymentOption?
     private var previousFormConfirmParams: IntentConfirmParams? {
-        guard let previousPaymentOption else {
-            return nil
-        }
-        switch previousPaymentOption {
-        case .saved(_, let confirmParams):
-            return confirmParams?.isFormBackedSavedPaymentMethod == true ? confirmParams : nil
-        case .new:
-            return previousPaymentOption.newConfirmParams
-        case .link(let confirmOption):
-            return confirmOption.signupConfirmParams
-        case .applePay, .external:
-            return nil
-        }
+        return previousPaymentOption?.formConfirmParamsForCancellationRestoration
     }
     weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
     weak var paymentSheetDelegate: PaymentSheetViewControllerDelegate?

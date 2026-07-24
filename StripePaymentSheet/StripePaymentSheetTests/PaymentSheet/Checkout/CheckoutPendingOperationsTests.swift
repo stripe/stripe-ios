@@ -267,10 +267,8 @@ final class CheckoutPendingOperationsTests: XCTestCase {
             paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
-        var configuration = PaymentSheet.Configuration()
-        configuration.paymentMethodLayout = .vertical
         let fc = PaymentSheet.FlowController(
-            configuration: configuration,
+            configuration: PaymentSheet.Configuration(),
             loadResult: loadResult,
             analyticsHelper: ._testValue()
         )
