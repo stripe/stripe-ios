@@ -833,6 +833,23 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.paymentSummaryItems[0].label, "Custom")
         XCTAssertEqual(sut.paymentSummaryItems[0].amount, NSDecimalNumber(string: "9.99"))
     }
+
+    func testCreatePaymentRequest_automaticTaxFromBillingRequestsPostalAddress() {
+        var config = configuration
+        config.billingDetailsCollectionConfiguration.address = .automatic
+
+        let request = STPApplePayContext.createPaymentRequest(
+            intent: ._testCheckoutSession(
+                automaticTaxEnabled: true,
+                automaticTaxAddressSource: "session.billing"
+            ),
+            configuration: config,
+            applePay: applePayConfiguration
+        )
+
+        // Apple Pay cannot vary billing fields by country, so `.automatic` requests the postal address.
+        XCTAssertTrue(request.requiredBillingContactFields.contains(.postalAddress))
+    }
 }
 
 private final class TestCheckoutSessionBillingAddressUpdater: CheckoutSessionBillingAddressUpdater {

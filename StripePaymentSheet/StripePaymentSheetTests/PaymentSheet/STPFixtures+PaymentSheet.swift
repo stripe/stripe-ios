@@ -306,6 +306,8 @@ extension Intent {
         subtotal: Int? = nil,
         shippingAmount: Int = 0,
         taxAmount: Int = 0,
+        automaticTaxEnabled: Bool? = nil,
+        automaticTaxAddressSource: String? = nil,
         discountAmount: Int = 0
     ) -> Intent {
         let modeParam = switch mode {
@@ -335,6 +337,16 @@ extension Intent {
                 "subtotal": subtotal ?? amount,
                 "total": amount,
             ]
+        }
+        if automaticTaxEnabled != nil || automaticTaxAddressSource != nil {
+            var taxContext: [String: Any] = [:]
+            if let automaticTaxEnabled {
+                taxContext["automatic_tax_enabled"] = automaticTaxEnabled
+            }
+            if let automaticTaxAddressSource {
+                taxContext["automatic_tax_address_source"] = automaticTaxAddressSource
+            }
+            json["tax_context"] = taxContext
         }
 
         var lineItemGroup: [String: Any] = [:]
