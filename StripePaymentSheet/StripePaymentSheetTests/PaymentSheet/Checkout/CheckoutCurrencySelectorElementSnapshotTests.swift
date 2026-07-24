@@ -46,7 +46,7 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
             )
         )
 
-        return checkout.getCurrencySelectorElement().view
+        return try XCTUnwrap(checkout.getCurrencySelectorElement()).view
             .disabled(disabled)
             .frame(width: 320)
             .ignoresSafeArea()

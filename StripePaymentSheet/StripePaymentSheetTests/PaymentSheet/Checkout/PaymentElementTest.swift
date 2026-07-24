@@ -162,7 +162,7 @@ final class PaymentElementTest: XCTestCase {
             weakCheckout = checkout
             weakPaymentElement = paymentElement
             weakCurrencySelectorElement = currencySelectorElement
-            weakCurrencySelectorUIView = currencySelectorElement.uiView
+            weakCurrencySelectorUIView = currencySelectorElement?.uiView
             weakFlowController = paymentElement.paymentSheetFlowController
             weakEmbeddedPaymentElement = paymentElement.embeddedPaymentElement
         }

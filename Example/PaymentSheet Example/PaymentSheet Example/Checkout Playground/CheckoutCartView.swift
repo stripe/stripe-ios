@@ -31,7 +31,6 @@ struct CheckoutCartView: View {
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
-                        currencySelectorAppearance: currencySelectorAppearance,
                         showsShippingAddressSection: shippingAddressCollection,
                         isLoading: $isLoading,
                         errorMessage: $errorMessage

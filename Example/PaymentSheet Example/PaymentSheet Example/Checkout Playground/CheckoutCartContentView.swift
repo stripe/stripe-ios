@@ -11,7 +11,6 @@ import SwiftUI
 
 struct CheckoutCartContentView: View {
     @ObservedObject var checkout: Checkout
-    var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
     var showsShippingAddressSection: Bool
     @Binding var isLoading: Bool
     @Binding var errorMessage: String?
@@ -509,7 +508,6 @@ struct CheckoutCartSheet: View {
 
                 CheckoutCartContentView(
                     checkout: checkout,
-                    currencySelectorAppearance: currencySelectorAppearance,
                     showsShippingAddressSection: true,
                     isLoading: $isLoading,
                     errorMessage: $errorMessage
