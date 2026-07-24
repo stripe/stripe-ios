@@ -19,7 +19,7 @@ extension Checkout {
         // MARK: - Private Properties
 
         private let checkout: Checkout
-        private let appearance: Appearance
+        private let appearance: ExpressCheckoutElement.Appearance
         private let stackView = UIStackView()
 
         // MARK: - Init
@@ -28,7 +28,7 @@ extension Checkout {
         /// - Parameters:
         ///   - checkout: The ``Checkout`` instance managing the session.
         ///   - appearance: Visual customization for the element's buttons.
-        public init(checkout: Checkout, appearance: Appearance = .init()) {
+        public init(checkout: Checkout, appearance: ExpressCheckoutElement.Appearance = .init()) {
             self.checkout = checkout
             self.appearance = appearance
             super.init(frame: .zero)

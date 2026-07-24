@@ -21,7 +21,7 @@ import SwiftUI
 @MainActor
 public struct ExpressCheckoutElement: View {
     private let checkout: Checkout
-    private let appearance: Checkout.ExpressCheckoutElementView.Appearance
+    private let appearance: ExpressCheckoutElement.Appearance
 
     /// Creates an express checkout element.
     /// - Parameters:
@@ -29,7 +29,7 @@ public struct ExpressCheckoutElement: View {
     ///   - appearance: Visual customization for the element's buttons.
     public init(
         checkout: Checkout,
-        appearance: Checkout.ExpressCheckoutElementView.Appearance = .init()
+        appearance: ExpressCheckoutElement.Appearance = .init()
     ) {
         self.checkout = checkout
         self.appearance = appearance
@@ -45,7 +45,7 @@ public struct ExpressCheckoutElement: View {
 
 private struct ExpressCheckoutElementRepresentable: UIViewRepresentable {
     let checkout: Checkout
-    let appearance: Checkout.ExpressCheckoutElementView.Appearance
+    let appearance: ExpressCheckoutElement.Appearance
 
     func makeUIView(context: Context) -> Checkout.ExpressCheckoutElementView {
         return Checkout.ExpressCheckoutElementView(checkout: checkout, appearance: appearance)
