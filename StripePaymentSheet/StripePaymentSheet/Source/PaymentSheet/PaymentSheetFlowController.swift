@@ -62,6 +62,8 @@ extension PaymentSheet {
         var formConfirmParamsForCancellationRestoration: IntentConfirmParams? {
             switch self {
             case .saved(_, let confirmParams):
+                // Linked banks are represented as `.saved` but rebuilt through their Instant
+                // Debits or Link Card Brand form. Other saved methods restore from savedPaymentMethods.
                 return confirmParams?.instantDebitsLinkedBank != nil ? confirmParams : nil
             case .new, .external:
                 return newConfirmParams
@@ -904,7 +906,15 @@ extension PaymentSheet {
         }
 
         private func revertSelectionAfterCancellation() {
-            guard let selection = selectionSnapshotBeforePresentation?.selectionForRebuilding(
+            guard let snapshot = selectionSnapshotBeforePresentation else {
+                return
+            }
+
+            snapshot.revertPersistedSelection(
+                using: viewController.savedPaymentMethods
+            )
+
+            guard let selection = snapshot.selectionForRebuilding(
                 using: viewController
             ) else {
                 return
@@ -1073,7 +1083,6 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
                 self.revertSelectionAfterCancellation()
             }
             self.presentPaymentOptionsCompletionWithResult?(didCancel)
-            self.updatePaymentOption()
             self.isPresented = false
         }
     }

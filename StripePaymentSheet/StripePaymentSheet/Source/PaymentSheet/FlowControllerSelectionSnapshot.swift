@@ -11,8 +11,17 @@ import Foundation
 /// Captures the selection when payment options open so it can be restored if the customer cancels.
 internal struct FlowControllerSelectionSnapshot {
     struct Selection {
+        /// The payment option that should be selected after cancellation.
         var paymentOption: PaymentOption?
+        /// Completed form input used if restoring that option requires rebuilding the controller.
+        /// This is separate because horizontal can select Link while retaining a completed form
+        /// behind the Link header.
         let formConfirmParams: IntentConfirmParams?
+    }
+
+    /// Reverts the saved-method selection persisted while payment options were open.
+    func revertPersistedSelection(using savedPaymentMethods: [STPPaymentMethod]) {
+        persistedSelection.revertPersistedSelection(using: savedPaymentMethods)
     }
 
     private let selection: Selection
@@ -35,10 +44,6 @@ internal struct FlowControllerSelectionSnapshot {
     func selectionForRebuilding(
         using viewController: FlowControllerViewControllerProtocol
     ) -> Selection? {
-        // Selecting a saved method updates its persisted default immediately, so cancellation
-        // must roll that back even when the current view controller can be reused.
-        persistedSelection.revertPersistedSelection(using: viewController.savedPaymentMethods)
-
         var selectionToRestore = selection
         // Form-backed `.saved` options are not expected in savedPaymentMethods. For ordinary
         // saved options, however, a missing payment method means it was deleted while the sheet
