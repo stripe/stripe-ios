@@ -23,10 +23,6 @@ public final class CurrencySelectorElement {
     /// A UIKit view that displays the currency selector.
     public let uiView: CurrencySelectorElementUIView
 
-    // MARK: - Private Properties
-
-    private let viewModel: CurrencySelectorElementViewModel
-
     // MARK: - Internal Methods
 
     init(checkout: Checkout) async {
@@ -44,7 +40,6 @@ public final class CurrencySelectorElement {
         )
 
         self.uiView = uiView
-        self.viewModel = viewModel
         self.view = CurrencySelectorElementView(viewModel: viewModel)
         STPAnalyticsClient.sharedClient.log(
             analytic: PaymentSheetAnalytic(
