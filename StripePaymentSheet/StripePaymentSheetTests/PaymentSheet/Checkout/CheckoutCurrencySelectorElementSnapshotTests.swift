@@ -33,13 +33,20 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
     @MainActor
     private func makeCurrencySelectorElement(
         selectedCurrency: String = "usd",
-        appearance: Checkout.CurrencySelectorView.Appearance = .init(),
+        appearance: CurrencySelectorElement.Appearance = .init(),
         disabled: Bool = false
     ) async throws -> some View {
         let session = CheckoutTestHelpers.makeAdaptivePricingSession(currency: selectedCurrency)
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session))
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        configuration.currencySelectorElement.appearance = appearance
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                apiResponse: session,
+                configuration: configuration
+            )
+        )
 
-        return Checkout.CurrencySelectorElement(checkout: checkout, appearance: appearance)
+        return checkout.getCurrencySelectorElement().view
             .disabled(disabled)
             .frame(width: 320)
             .ignoresSafeArea()

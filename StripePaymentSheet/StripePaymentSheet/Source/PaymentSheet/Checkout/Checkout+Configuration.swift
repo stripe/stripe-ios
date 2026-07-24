@@ -42,6 +42,10 @@ extension Checkout {
         /// Configuration for PaymentElement.
         public var paymentElement: PaymentElement.Configuration = .init()
 
+        /// Configuration for the Adaptive Pricing currency selector returned by
+        /// ``Checkout.getCurrencySelectorElement()``.
+        public var currencySelectorElement: CurrencySelectorElement.Configuration = .init()
+
         /// Creates a configuration.
         /// - Parameter clientSecret: The client secret for your Checkout Session.
         public init(clientSecret: String) {

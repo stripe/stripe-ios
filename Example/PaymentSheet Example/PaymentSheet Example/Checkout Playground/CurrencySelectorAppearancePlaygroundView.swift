@@ -9,8 +9,8 @@
 import SwiftUI
 
 struct CurrencySelectorAppearancePlaygroundView: View {
-    @State var appearance: Checkout.CurrencySelectorView.Appearance
-    var doneAction: ((Checkout.CurrencySelectorView.Appearance) -> Void)
+    @State var appearance: CurrencySelectorElement.Appearance
+    var doneAction: ((CurrencySelectorElement.Appearance) -> Void)
 
     static let fonts = ["System Default", "AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
 
@@ -131,8 +131,8 @@ struct CurrencySelectorAppearancePlaygroundView: View {
     private var contentSection: some View {
         Section("Content") {
             Picker("Label Content", selection: $appearance.labelContent) {
-                Text("Currency Code").tag(Checkout.CurrencySelectorView.Appearance.LabelContent.currencyCode)
-                Text("Amount").tag(Checkout.CurrencySelectorView.Appearance.LabelContent.amount)
+                Text("Currency Code").tag(CurrencySelectorElement.Appearance.LabelContent.currencyCode)
+                Text("Amount").tag(CurrencySelectorElement.Appearance.LabelContent.amount)
             }
         }
     }
@@ -144,7 +144,7 @@ struct CurrencySelectorAppearancePlaygroundView: View {
         Section {
             Button("Reset to Defaults") {
                 withAnimation {
-                    appearance = Checkout.CurrencySelectorView.Appearance()
+                    appearance = CurrencySelectorElement.Appearance()
                 }
             }
             .foregroundColor(.red)

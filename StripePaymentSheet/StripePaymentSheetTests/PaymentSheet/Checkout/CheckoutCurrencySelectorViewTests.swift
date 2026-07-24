@@ -14,11 +14,10 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
     // MARK: - Auto-hide tests
 
-    func testHiddenWhenSessionIsNil() async throws {
+    func testHiddenWhenAdaptivePricingIsUnavailableAtInitialization() async throws {
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        let view = Checkout.CurrencySelectorView(checkout: checkout)
+        let view = checkout.getCurrencySelectorElement().uiView
 
-        // Session is nil before load(), so the view should be hidden
         XCTAssertTrue(view.isHidden)
     }
 
@@ -27,15 +26,9 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         let session = makeSession(adaptivePricingActive: false)
         try await checkout.commitSession(session)
 
-        let view = Checkout.CurrencySelectorView(checkout: checkout)
+        let view = checkout.getCurrencySelectorElement().uiView
 
-        // Give Combine time to deliver
-        let expectation = expectation(description: "View updates")
-        DispatchQueue.main.async {
-            XCTAssertTrue(view.isHidden)
-            expectation.fulfill()
-        }
-        await fulfillment(of: [expectation], timeout: 1.0)
+        XCTAssertTrue(view.isHidden)
     }
 
     func testHiddenWhenLocalizedPricesEmpty() async throws {
@@ -43,14 +36,9 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         let session = makeSession(includeLocalizedPrices: false)
         try await checkout.commitSession(session)
 
-        let view = Checkout.CurrencySelectorView(checkout: checkout)
+        let view = checkout.getCurrencySelectorElement().uiView
 
-        let expectation = expectation(description: "View updates")
-        DispatchQueue.main.async {
-            XCTAssertTrue(view.isHidden)
-            expectation.fulfill()
-        }
-        await fulfillment(of: [expectation], timeout: 1.0)
+        XCTAssertTrue(view.isHidden)
     }
 
     func testHiddenWhenExchangeRateMetaNil() async throws {
@@ -58,14 +46,9 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         let session = makeSession(includeExchangeRateFields: false)
         try await checkout.commitSession(session)
 
-        let view = Checkout.CurrencySelectorView(checkout: checkout)
+        let view = checkout.getCurrencySelectorElement().uiView
 
-        let expectation = expectation(description: "View updates")
-        DispatchQueue.main.async {
-            XCTAssertTrue(view.isHidden)
-            expectation.fulfill()
-        }
-        await fulfillment(of: [expectation], timeout: 1.0)
+        XCTAssertTrue(view.isHidden)
     }
 
     func testVisibleWhenAdaptivePricingActive() async throws {
@@ -73,67 +56,58 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         let session = makeSession()
         try await checkout.commitSession(session)
 
-        let view = Checkout.CurrencySelectorView(checkout: checkout)
+        let view = checkout.getCurrencySelectorElement().uiView
 
-        let expectation = expectation(description: "View updates")
-        DispatchQueue.main.async {
-            XCTAssertFalse(view.isHidden)
-            expectation.fulfill()
-        }
-        await fulfillment(of: [expectation], timeout: 1.0)
+        XCTAssertFalse(view.isHidden)
     }
 
     func testTransitionsFromHiddenToVisibleOnSessionUpdate() async throws {
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        let view = Checkout.CurrencySelectorView(checkout: checkout)
+        let view = checkout.getCurrencySelectorElement().uiView
 
-        // Initially hidden
         XCTAssertTrue(view.isHidden)
 
-        // Update with AP session
         let session = makeSession()
         try await checkout.commitSession(session)
 
-        let expectation = expectation(description: "View becomes visible")
-        DispatchQueue.main.async {
-            XCTAssertFalse(view.isHidden)
-            expectation.fulfill()
-        }
-        await fulfillment(of: [expectation], timeout: 1.0)
+        XCTAssertFalse(view.isHidden)
+    }
+
+    func testTransitionsFromVisibleToHiddenOnSessionUpdate() async throws {
+        let session = makeSession()
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session)
+        )
+        let view = checkout.getCurrencySelectorElement().uiView
+
+        XCTAssertFalse(view.isHidden)
+
+        let updatedSession = makeSession(adaptivePricingActive: false)
+        try await checkout.commitSession(updatedSession)
+
+        XCTAssertTrue(view.isHidden)
     }
 
     // MARK: - Label update tests
 
     func testLabelsUpdateWhenSessionAmountChanges() async throws {
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        configuration.currencySelectorElement.appearance.labelContent = .amount
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeConfiguration(configuration: configuration)
+        )
         let session = makeSession(integrationAmount: 1200, localAmount: 1000)
         try await checkout.commitSession(session)
 
-        var appearance = Checkout.CurrencySelectorView.Appearance()
-        appearance.labelContent = .amount
-        let view = Checkout.CurrencySelectorView(checkout: checkout, appearance: appearance)
-
-        // Wait for initial build
-        let built = expectation(description: "Initial build")
-        DispatchQueue.main.async {
-            built.fulfill()
-        }
-        await fulfillment(of: [built], timeout: 1.0)
+        let view = checkout.getCurrencySelectorElement().uiView
 
         let selectorView = view.subviews.compactMap { ($0 as? UIStackView)?.arrangedSubviews.compactMap { $0 as? TwoOptionSelectorView }.first }.first
         XCTAssertNotNil(selectorView)
         XCTAssertTrue(selectorView!.leftItem.displayText.string.contains("10"))
         XCTAssertTrue(selectorView!.rightItem.displayText.string.contains("12"))
 
-        // Update session with new amounts
         let updatedSession = makeSession(integrationAmount: 2400, localAmount: 2000)
         try await checkout.commitSession(updatedSession)
-
-        let updated = expectation(description: "Labels updated")
-        DispatchQueue.main.async {
-            updated.fulfill()
-        }
-        await fulfillment(of: [updated], timeout: 1.0)
 
         XCTAssertTrue(selectorView!.leftItem.displayText.string.contains("20"))
         XCTAssertTrue(selectorView!.rightItem.displayText.string.contains("24"))

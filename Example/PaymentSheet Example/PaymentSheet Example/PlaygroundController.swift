@@ -592,7 +592,7 @@ import UIKit
     var paymentMethodTypes: [String]?
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
-    var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
+    var currencySelectorAppearance = CurrencySelectorElement.Appearance()
     var currentDataTask: URLSessionDataTask?
 
     var checkoutEndpoint: String {
@@ -942,6 +942,7 @@ extension PlaygroundController {
                     do {
                         var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionClientSecret)
                         checkoutConfiguration.adaptivePricing.allowed = settingsToLoad.csAdaptivePricing == .on
+                        checkoutConfiguration.currencySelectorElement.appearance = self.currencySelectorAppearance
                         self.checkout = try await Checkout(configuration: checkoutConfiguration)
                     } catch {
                         self.checkout = nil

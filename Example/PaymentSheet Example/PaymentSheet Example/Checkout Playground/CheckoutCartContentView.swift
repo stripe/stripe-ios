@@ -334,8 +334,10 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var currencySelectorSection: some View {
-        Checkout.CurrencySelectorElement(checkout: checkout, appearance: currencySelectorAppearance)
-            .padding(.horizontal)
+        if let currencySelectorElement = checkout.getCurrencySelectorElement() {
+            currencySelectorElement.view
+                .padding(.horizontal)
+        }
     }
 
     @ViewBuilder
@@ -496,7 +498,6 @@ struct CheckoutCartContentView: View {
 struct CheckoutCartSheet: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var checkout: Checkout
-    var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
     @State private var isLoading = false
     @State private var errorMessage: String?
 
