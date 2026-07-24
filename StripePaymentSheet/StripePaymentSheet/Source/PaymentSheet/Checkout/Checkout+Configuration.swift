@@ -56,6 +56,7 @@ extension Checkout {
             self.returnURL = returnURL
         }
 
+        // MARK: - Debug-only return URL validation
 #if DEBUG
         /// Debug-only listener used to verify Checkout return URLs can be routed through
         /// `StripeAPI.handleURLCallback(with:)`.
@@ -72,10 +73,8 @@ extension Checkout {
                 return true
             }
         }
-#endif
 
         func validateReturnURL() {
-            #if DEBUG
             guard let url = URL(string: returnURL),
                   let scheme = url.scheme,
                   !scheme.isEmpty else {
@@ -104,8 +103,8 @@ extension Checkout {
                 registeredSchemes.contains(scheme.lowercased()),
                 "Checkout.Configuration.returnURL uses the custom URL scheme '\(scheme)', but it is not registered in CFBundleURLTypes."
             )
-            #endif
         }
+#endif
     }
 }
 
