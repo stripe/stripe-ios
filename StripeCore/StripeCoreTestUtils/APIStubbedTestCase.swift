@@ -21,8 +21,8 @@ open class APIStubbedTestCase: XCTestCase {
         APIStubbedTestCase.stubAllOutgoingRequests()
     }
     public override func tearDown() {
-        super.tearDown()
         HTTPStubs.removeAllStubs()
+        super.tearDown()
     }
 
     public func stubbedAPIClient(configuration: URLSessionConfiguration? = nil) -> STPAPIClient {

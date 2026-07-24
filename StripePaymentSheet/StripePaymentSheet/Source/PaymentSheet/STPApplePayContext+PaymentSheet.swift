@@ -381,7 +381,7 @@ extension STPApplePayContext {
                     var session = checkoutSession
                     if let postalAddress = pkPaymentMethod.billingAddress?.postalAddresses.first?.value,
                        let address = STPApplePayContext.makeCheckoutAddress(from: postalAddress) {
-                        session = (try? await checkout.updateBillingAddressForPaymentSheet(address: address, canUpdateWhileSheetPresented: true)) ?? session
+                        session = (try? await checkout.updateBillingTaxRegionIfNecessaryForPaymentSheet(address: address, canUpdateWhileSheetPresented: true)) ?? session
                     }
                     completion(PKPaymentRequestPaymentMethodUpdate(
                         paymentSummaryItems: STPApplePayContext.makePaymentSummaryItems(for: session, label: label, currency: currency)
@@ -427,6 +427,10 @@ extension STPApplePayContext {
             currency: intent.currency ?? "USD"
         )
         paymentRequest.requiredBillingContactFields = makeRequiredBillingDetails(from: configuration)
+        // Apple Pay can't vary billing fields by country, so automatic tax from billing needs the postal address.
+        if intent.collectsTaxFromBillingAddress {
+            paymentRequest.requiredBillingContactFields.insert(.postalAddress)
+        }
         paymentRequest.requiredShippingContactFields = makeRequiredShippingDetails(from: configuration)
 
         let label = intent.sellerDetails?.businessName ?? configuration.merchantDisplayName
@@ -474,12 +478,11 @@ extension STPApplePayContext {
             paymentRequest.merchantCapabilities = merchantCapabilities
         }
 
-        // Pre-populate billingContact from the CheckoutSession's billing address, but only
+        // Pre-populate billingContact from the configuration's default billing details, but only
         // if it has a street. Otherwise Apple Pay will show "Update Billing Address".
-        if case .checkout(let session) = intent,
-           let billingAddress = session.billingAddress,
-           billingAddress.address.line1 != nil {
-            paymentRequest.billingContact = Self.makeBillingContact(from: billingAddress)
+        if case .checkout = intent,
+           configuration.defaultBillingDetails.address.line1 != nil {
+            paymentRequest.billingContact = Self.makeBillingContact(from: configuration.defaultBillingDetails)
         }
 
         return paymentRequest

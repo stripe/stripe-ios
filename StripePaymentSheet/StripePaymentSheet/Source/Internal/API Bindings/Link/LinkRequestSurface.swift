@@ -12,6 +12,8 @@ import Foundation
     case paymentElement = "ios_payment_element"
     /// Used for requests from the `StripeCryptoOnramp` SDK.
     case cryptoOnramp = "ios_crypto_onramp"
+    /// Used for requests from the standalone `LinkController` API.
+    case standaloneLink = "ios_link_standalone"
 }
 
 @_spi(STP) public extension LinkRequestSurface {
