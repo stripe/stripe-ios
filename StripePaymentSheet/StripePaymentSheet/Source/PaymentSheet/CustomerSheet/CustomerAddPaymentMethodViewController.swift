@@ -255,6 +255,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             accountService: nil,
             cardBrandChoiceEligible: cbcEligible,
             isPaymentIntent: false,
+            collectsTaxFromBillingAddress: false,
             isSettingUp: true,
             countryCode: nil,
             savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior,

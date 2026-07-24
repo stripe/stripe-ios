@@ -19,7 +19,6 @@ extension PaymentPagesAPIResponse {
     func makePublicSession() -> Checkout.Session {
         return Checkout.Session(
             id: id,
-            billingAddress: nil,
             businessName: businessName,
             currency: currency,
             currencyOptions: currencyOptions,

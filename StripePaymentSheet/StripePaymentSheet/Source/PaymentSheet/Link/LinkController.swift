@@ -357,7 +357,7 @@ import UIKit
                     appearance: appearance,
                     configuration: configuration,
                     analyticsHelper: analyticsHelper,
-                    requestSurface: .default
+                    requestSurface: .standaloneLink
                 )
                 completion(.success(controller))
             } catch {
