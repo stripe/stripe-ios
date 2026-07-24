@@ -26,7 +26,8 @@ public final class ExpressCheckoutElement {
 
     init(checkout: Checkout) {
         let uiView = ExpressCheckoutElementUIView(checkout: checkout)
+        let viewModel = ExpressCheckoutElementViewModel(checkout: checkout, uiView: uiView)
         self.uiView = uiView
-        self.view = ExpressCheckoutElementView(uiView: uiView)
+        self.view = ExpressCheckoutElementView(viewModel: viewModel)
     }
 }

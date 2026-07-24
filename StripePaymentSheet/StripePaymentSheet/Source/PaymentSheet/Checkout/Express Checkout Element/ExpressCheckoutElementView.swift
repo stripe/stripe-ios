@@ -11,16 +11,18 @@ import SwiftUI
 @_spi(STP)
 @_spi(ReactNativeSDK)
 public struct ExpressCheckoutElementView: View {
-    private let uiView: ExpressCheckoutElementUIView
+    @ObservedObject private var viewModel: ExpressCheckoutElementViewModel
 
     @MainActor
-    init(uiView: ExpressCheckoutElementUIView) {
-        self.uiView = uiView
+    init(viewModel: ExpressCheckoutElementViewModel) {
+        self.viewModel = viewModel
     }
 
     public var body: some View {
-        ExpressCheckoutElementUIViewRepresentable(uiView: uiView)
-            .fixedSize(horizontal: false, vertical: true)
+        if viewModel.isAvailable {
+            ExpressCheckoutElementUIViewRepresentable(uiView: viewModel.uiView)
+                .fixedSize(horizontal: false, vertical: true)
+        }
     }
 }
 
