@@ -92,8 +92,8 @@ class EmbeddedFormViewController: UIViewController {
     private weak var checkout: Checkout?
     private var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
-    /// Previous customer input - in the `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
-    private(set) var previousPaymentOption: PaymentOption?
+    /// The payment option to restore if the customer cancels this form.
+    private(set) var paymentOptionToRestoreOnCancellation: PaymentOption?
 
     // MARK: - UI properties
 
@@ -124,13 +124,7 @@ class EmbeddedFormViewController: UIViewController {
     }()
 
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
-        let previousCustomerInput: IntentConfirmParams? = {
-            if case let .new(confirmParams: confirmParams) = previousPaymentOption {
-                return confirmParams
-            } else {
-                return nil
-            }
-        }()
+        let previousCustomerInput = paymentOptionToRestoreOnCancellation?.formConfirmParamsForCancellationRestoration
 
         let headerView = FormHeaderView(
             paymentMethodType: paymentMethodType,
@@ -179,7 +173,7 @@ class EmbeddedFormViewController: UIViewController {
         self.elementsSession = elementsSession
         self.shouldUseNewCardNewCardHeader = shouldUseNewCardNewCardHeader
         self.configuration = configuration
-        self.previousPaymentOption = previousPaymentOption
+        self.paymentOptionToRestoreOnCancellation = previousPaymentOption
         self.analyticsHelper = analyticsHelper
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.checkout = checkout
@@ -268,6 +262,11 @@ class EmbeddedFormViewController: UIViewController {
             stpAssertionFailure()
             dismiss(animated: true)
         }
+    }
+
+    /// Captures the valid form state accepted by Continue so later canceled edits can restore it.
+    func capturePaymentOptionForCancellationRestoration() {
+        paymentOptionToRestoreOnCancellation = selectedPaymentOption
     }
 
     required init?(coder: NSCoder) {
