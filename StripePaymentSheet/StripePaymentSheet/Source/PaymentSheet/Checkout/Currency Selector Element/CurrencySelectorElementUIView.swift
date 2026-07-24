@@ -200,7 +200,7 @@ public final class CurrencySelectorElementUIView: UIView {
 }
 
 extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
-    func twoOptionSelectorView(_ view: TwoOptionSelectorView, didSelectItemWithId id: String) {
+    func twoOptionSelectorView(_: TwoOptionSelectorView, didSelectItemWithId id: String) {
         let fromCurrency = lastSelectedCurrency
         lastSelectedCurrency = id
         selectorView?.setEnabled(false)
