@@ -17,6 +17,20 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthenticationContext {
+    func testCallConfirmAlipayRedirectUsesConfirmTimeReturnURL() {
+        assertAlipayRedirectReturnURL(
+            confirmTimeReturnURL: "payments-example://stripe-redirect",
+            expectedReturnURL: "payments-example://stripe-redirect"
+        )
+    }
+
+    func testCallConfirmAlipayRedirectWithoutConfirmTimeReturnURLUsesNextActionReturnURL() {
+        assertAlipayRedirectReturnURL(
+            confirmTimeReturnURL: nil,
+            expectedReturnURL: "https://pm-redirects.stripe.com/return/acct_123/pa_nonce_456"
+        )
+    }
+
     func testCallConfirmAfterpay_Redirect_thenCanceled() {
         let nextActionData = """
               {
@@ -547,6 +561,73 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         // deinit should have reset the global flag
         let freshHandler = STPPaymentHandler(apiClient: stubbedAPIClient())
         XCTAssertFalse(freshHandler.isInProgress, "inProgress should be reset when handler is deallocated mid-flow")
+    }
+
+    private func assertAlipayRedirectReturnURL(
+        confirmTimeReturnURL: String?,
+        expectedReturnURL: String
+    ) {
+        // Given an EVO Alipay next action whose return URL is an intermediate Stripe trampoline
+        let nextActionData = """
+              {
+                "alipay_handle_redirect": {
+                  "native_url": "https://pm-redirects.stripe.com/authorize/acct_123/pa_nonce_123",
+                  "return_url": "https://pm-redirects.stripe.com/return/acct_123/pa_nonce_456",
+                  "url": "https://pm-redirects.stripe.com/authorize/acct_123/pa_nonce_123"
+                },
+                "type": "alipay_handle_redirect"
+              }
+            """
+        let paymentMethodData = """
+              {
+                "id": "pm_123",
+                "object": "payment_method",
+                "alipay": {},
+                "billing_details": {},
+                "created": 1658187899,
+                "livemode": false,
+                "type": "alipay"
+              }
+            """
+        let paymentHandler = STPPaymentHandler(apiClient: stubbedAPIClient())
+        stubConfirm(
+            fileMock: .paymentIntentResponse,
+            responseCallback: { data in
+                self.replaceData(
+                    data: data,
+                    variables: [
+                        "<next_action>": nextActionData,
+                        "<payment_method>": paymentMethodData,
+                        "<status>": "\"requires_action\"",
+                    ]
+                )
+            }
+        )
+
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "pi_123456_secret_654321")
+        paymentIntentParams.returnURL = confirmTimeReturnURL
+        paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
+            alipay: STPPaymentMethodAlipayParams(),
+            billingDetails: nil,
+            metadata: nil
+        )
+
+        // When confirmation starts the Alipay redirect
+        let didRedirect = expectation(description: "didRedirect")
+        paymentHandler._redirectShim = { _, returnToURL, _ in
+            // Then the handler uses the confirm-time URL when available and preserves
+            // the legacy fallback otherwise
+            XCTAssertEqual(returnToURL?.absoluteString, expectedReturnURL)
+            didRedirect.fulfill()
+        }
+
+        confirmPaymentWithSucceed(
+            nextActionData: nextActionData,
+            paymentMethodData: paymentMethodData,
+            didRedirect: didRedirect,
+            paymentHandler: paymentHandler,
+            paymentIntentParams: paymentIntentParams
+        )
     }
 
     private func confirmPaymentWithSucceed(

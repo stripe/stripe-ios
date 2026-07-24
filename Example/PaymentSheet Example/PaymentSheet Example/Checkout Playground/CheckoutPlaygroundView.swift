@@ -99,11 +99,10 @@ struct CheckoutPlaygroundView: View {
                         shippingAddressCollection: viewModel.shippingAddressCollection,
                         adaptivePricing: viewModel.adaptivePricing,
                         integrationType: viewModel.integrationType,
-                        showPaymentElement: viewModel.integrationType != .disabled,
                         showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .enabled,
-                        applePay: viewModel.applePayVisibility,
+                        applePayVisibility: viewModel.applePayVisibility,
                         applePayButtonTypeOption: viewModel.applePayButtonTypeOption,
-                        link: viewModel.linkVisibility,
+                        linkVisibility: viewModel.linkVisibility,
                         linkDisplayOption: viewModel.linkDisplayOption,
                         currencySelectorAppearance: viewModel.currencySelectorAppearance
                     )

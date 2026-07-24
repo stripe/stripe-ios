@@ -21,6 +21,17 @@ extension CheckoutPlayground {
                 }
             }
         }
+        @Published var expressCheckoutElementOption: ExpressCheckoutElementOption = .disabled {
+            didSet {
+                if expressCheckoutElementOption == .disabled && integrationType == .disabled {
+                    integrationType = .flowController
+                }
+            }
+        }
+        @Published var applePayVisibility: WalletVisibilityOption = .automatic
+        @Published var applePayButtonTypeOption: ApplePayButtonTypeOption = .plain
+        @Published var linkVisibility: WalletVisibilityOption = .automatic
+        @Published var linkDisplayOption: LinkDisplayOption = .automatic
         @Published var currency: Currency = .usd
         @Published var customerType: CustomerType = .guest
         @Published var lineItems: [LineItemConfig] = LineItemConfig.defaults

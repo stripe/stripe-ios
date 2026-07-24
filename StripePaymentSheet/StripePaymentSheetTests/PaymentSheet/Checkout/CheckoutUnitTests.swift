@@ -6,6 +6,8 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
@@ -126,27 +128,6 @@ final class CheckoutUnitTests: XCTestCase {
 
 // MARK: - Address Override Tests
 
-    func testUpdateBillingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        let delegate = MockCheckoutDelegate()
-        checkout.delegate = delegate
-        let recorder = CheckoutEmissionRecorder(checkout)
-
-        try await checkout.updateBillingAddress(
-            name: "Jane Doe",
-            address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
-        )
-
-        let stored = checkout.session.billingAddress
-        XCTAssertEqual(stored?.name, "Jane Doe")
-        XCTAssertEqual(stored?.address.country, "US")
-        XCTAssertEqual(delegate.updateSessionCallCount, 2)
-        XCTAssertEqual(delegate.beginLoadingCallCount, 1)
-        XCTAssertEqual(delegate.finishLoadingCallCount, 1)
-        XCTAssertEqual(recorder.sessions.count, 2)
-        XCTAssertEqual(recorder.loading, [true, false])
-    }
-
     func testUpdateShippingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let delegate = MockCheckoutDelegate()
@@ -196,6 +177,74 @@ final class CheckoutUnitTests: XCTestCase {
         )
 
         XCTAssertEqual(checkout.session.shippingAddress?.address.country, "CA")
+    }
+
+    func testUpdateShippingAddress_taxUpdateFailurePreservesPreviousAddress() async throws {
+        // Given a Checkout Session using shipping address for automatic tax calculation
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["tax_context"] = [
+            "automatic_tax_enabled": true,
+            "automatic_tax_address_source": "session.shipping",
+        ]
+        let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session))
+
+        // ...and a previously stored local shipping address
+        let previousAddress = Checkout.ContactAddress(
+            name: "Jane Doe",
+            address: .init(
+                country: "US",
+                line1: "123 Main St",
+                city: "San Francisco",
+                state: "CA",
+                postalCode: "94105"
+            )
+        )
+        checkout.dangerouslySetSessionDirectly(
+            checkout.session.makeCopyOverriding(shippingAddress: .newValue(previousAddress))
+        )
+
+        // ...and the server tax update fails
+        stub(condition: { request in
+            request.httpMethod == "POST"
+                && request.url?.path == "/v1/payment_pages/cs_test_123"
+        }) { _ in
+            HTTPStubsResponse(
+                jsonObject: [
+                    "error": [
+                        "type": "invalid_request_error",
+                        "message": "Tax update failed",
+                    ],
+                ],
+                statusCode: 500,
+                headers: nil
+            )
+        }
+
+        // When the customer updates their shipping address
+        do {
+            try await checkout.updateShippingAddress(
+                name: "John Smith",
+                address: .init(
+                    country: "US",
+                    line1: "456 Oak Ave",
+                    city: "Los Angeles",
+                    state: "CA",
+                    postalCode: "90001"
+                )
+            )
+            XCTFail("Expected CheckoutError.apiError")
+        } catch let error as CheckoutError {
+            guard case .apiError = error else {
+                XCTFail("Expected .apiError, got \(error)")
+                return
+            }
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+
+        // Then the previous local shipping address is preserved
+        XCTAssertEqual(checkout.session.shippingAddress, previousAddress)
     }
 
     // MARK: - Address Collection Decoding Tests
@@ -395,11 +444,11 @@ final class CheckoutUnitTests: XCTestCase {
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
 
         // Set address overrides on the initial session
-        let billingUpdate = Checkout.ContactAddress(
+        let shippingUpdate = Checkout.ContactAddress(
             name: "Jane Doe",
             address: .init(country: "US")
         )
-        checkout.dangerouslySetSessionDirectly(checkout.session.makeCopyOverriding(billingAddress: .newValue(billingUpdate)))
+        checkout.dangerouslySetSessionDirectly(checkout.session.makeCopyOverriding(shippingAddress: .newValue(shippingUpdate)))
 
         // Simulate a confirm response
         var updatedJSON = CheckoutTestHelpers.openSessionJSON
@@ -410,23 +459,12 @@ final class CheckoutUnitTests: XCTestCase {
         try await checkout.commitSession(confirmResponse)
 
         // Address overrides should be carried over to the new session
-        XCTAssertEqual(checkout.session.billingAddress?.name, "Jane Doe")
-        XCTAssertEqual(checkout.session.billingAddress?.address.country, "US")
+        XCTAssertEqual(checkout.session.shippingAddress?.name, "Jane Doe")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.country, "US")
     }
 
     func testUpdateSessionCanBeCalledMultipleTimes() async throws {
-        // Initialize with billing address already set so it doesn't emit a change
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        checkout.dangerouslySetSessionDirectly(
-            checkout.session.makeCopyOverriding(
-                billingAddress: .newValue(
-                    Checkout.ContactAddress(
-                        name: "Jane Doe",
-                        address: .init(country: "US")
-                    )
-                )
-            )
-        )
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
@@ -438,7 +476,6 @@ final class CheckoutUnitTests: XCTestCase {
 
         try await checkout.commitSession(firstConfirm)
         XCTAssertEqual(checkout.session.status?.type, .complete)
-        XCTAssertEqual(checkout.session.billingAddress?.name, "Jane Doe")
 
         var secondResponse = CheckoutTestHelpers.openSessionJSON
         secondResponse["status"] = "open"
@@ -446,7 +483,6 @@ final class CheckoutUnitTests: XCTestCase {
 
         try await checkout.commitSession(secondSession)
         XCTAssertEqual(checkout.session.status?.type, .open)
-        XCTAssertEqual(checkout.session.billingAddress?.name, "Jane Doe")
         XCTAssertEqual(delegate.updateSessionCallCount, 4)
         XCTAssertEqual(recorder.sessions.count, 4)
     }

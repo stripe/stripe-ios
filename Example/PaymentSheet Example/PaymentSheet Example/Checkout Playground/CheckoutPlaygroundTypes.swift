@@ -153,22 +153,6 @@ enum CheckoutPlayground {
         }
     }
 
-    enum LinkDisplayOption: String, CaseIterable, Identifiable {
-        case automatic
-        case never
-
-        var id: String { rawValue }
-
-        var displayName: String { rawValue }
-
-        var linkDisplay: Checkout.LinkConfiguration.Display {
-            switch self {
-            case .automatic: return .automatic
-            case .never: return .never
-            }
-        }
-    }
-
     enum WalletVisibilityOption: String, CaseIterable, Identifiable {
         case automatic
         case always
@@ -182,6 +166,22 @@ enum CheckoutPlayground {
             switch self {
             case .automatic: return .automatic
             case .always: return .always
+            case .never: return .never
+            }
+        }
+    }
+
+    enum LinkDisplayOption: String, CaseIterable, Identifiable {
+        case automatic
+        case never
+
+        var id: String { rawValue }
+
+        var displayName: String { rawValue }
+
+        var linkDisplay: Checkout.LinkConfiguration.Display {
+            switch self {
+            case .automatic: return .automatic
             case .never: return .never
             }
         }
@@ -205,6 +205,20 @@ enum CheckoutPlayground {
             case .checkout: return .checkout
             case .subscribe: return .subscribe
             case .donate: return .donate
+            }
+        }
+    }
+
+    enum ExpressCheckoutElementOption: String, CaseIterable, Identifiable {
+        case disabled
+        case enabled
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .disabled: return "none"
+            case .enabled: return "show"
             }
         }
     }

@@ -20,11 +20,10 @@ struct CheckoutCartView: View {
     let shippingAddressCollection: Bool
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
-    let showPaymentElement: Bool
-    let showExpressCheckoutElement: Bool
-    var applePay: CheckoutPlayground.WalletVisibilityOption = .automatic
+    var showExpressCheckoutElement: Bool = false
+    var applePayVisibility: CheckoutPlayground.WalletVisibilityOption = .automatic
     var applePayButtonTypeOption: CheckoutPlayground.ApplePayButtonTypeOption = .plain
-    var link: CheckoutPlayground.WalletVisibilityOption = .automatic
+    var linkVisibility: CheckoutPlayground.WalletVisibilityOption = .automatic
     var linkDisplayOption: CheckoutPlayground.LinkDisplayOption = .automatic
     var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
 
@@ -44,13 +43,13 @@ struct CheckoutCartView: View {
                     )
                     .overlay(alignment: .bottom) {
                         VStack(spacing: 0) {
-                            if showExpressCheckoutElement {
+                            if showExpressCheckoutElement && checkout.session.isExpressCheckoutElementAvailable {
                                 checkout.getExpressCheckoutElement()
                                     .padding(.horizontal)
                                     .padding(.top, 16)
-                                    .padding(.bottom, showPaymentElement && checkout.session.total != nil ? 0 : 16)
+                                    .padding(.bottom, integrationType != .disabled && checkout.session.total != nil ? 0 : 16)
                             }
-                            if showPaymentElement, checkout.session.total != nil {
+                            if checkout.session.total != nil {
                                 switch integrationType {
                                 case .flowController:
                                     CheckoutCartPaymentButton(checkout: checkout)
@@ -109,18 +108,14 @@ struct CheckoutCartView: View {
         do {
             var config = Checkout.Configuration(clientSecret: clientSecret)
             config.adaptivePricing.allowed = adaptivePricing
-            if applePay != .never {
-                config.applePayConfiguration = Checkout.ApplePayConfiguration(
-                    merchantId: "merchant.com.stripe.paymentsheet.example",
-                    buttonType: applePayButtonTypeOption.pkButtonType
-                )
-            }
-            if link != .never {
-                config.linkConfiguration = Checkout.LinkConfiguration(display: linkDisplayOption.linkDisplay)
-            }
+            config.applePayConfiguration = Checkout.ApplePayConfiguration(
+                merchantId: "merchant.com.stripe.paymentsheet.example",
+                buttonType: applePayButtonTypeOption.pkButtonType
+            )
+            config.linkConfiguration = Checkout.LinkConfiguration(display: linkDisplayOption.linkDisplay)
             if showExpressCheckoutElement {
-                config.expressCheckoutElement.applePay = applePay.walletVisibility
-                config.expressCheckoutElement.link = link.walletVisibility
+                config.expressCheckoutElement.applePay = applePayVisibility.walletVisibility
+                config.expressCheckoutElement.link = linkVisibility.walletVisibility
             }
             checkout = try await Checkout(configuration: config)
         } catch {

@@ -156,7 +156,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(3000, checkout.session.total?.total.minorUnitsAmount)
     }
 
-    func testUpdateBillingAddress() async throws {
+    func testUpdateBillingTaxRegionIfNecessary() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             merchantCountry: "us_tax",
             allowAdjustableLineItemQuantity: true,
@@ -167,15 +167,12 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         let checkout = try await Checkout(configuration: configuration)
 
-        XCTAssertNil(checkout.session.billingAddress)
-
         // Pre-tax price, CA sales has not yet been applied
         XCTAssertEqual(checkout.session.total?.subtotal.minorUnitsAmount, 5050)
         XCTAssertEqual(checkout.session.total?.total.minorUnitsAmount, 5050)
 
-        // Update the billing address to get tax applied
-        try await checkout.updateBillingAddress(
-            name: "Jane Doe",
+        // Update the billing tax region to get tax applied
+        try await checkout.updateBillingTaxRegionIfNecessary(
             address: .init(
                 country: "US",
                 line1: "123 Main St",
@@ -184,16 +181,6 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
                 postalCode: "94105"
             )
         )
-
-        // Address should be stored on the session
-        let storedBilling = checkout.session.billingAddress
-        XCTAssertNotNil(storedBilling)
-        XCTAssertEqual(storedBilling?.name, "Jane Doe")
-        XCTAssertEqual(storedBilling?.address.country, "US")
-        XCTAssertEqual(storedBilling?.address.line1, "123 Main St")
-        XCTAssertEqual(storedBilling?.address.city, "San Francisco")
-        XCTAssertEqual(storedBilling?.address.state, "CA")
-        XCTAssertEqual(storedBilling?.address.postalCode, "94105")
 
         // Session should be refreshed (tax_region was sent to the server)
         XCTAssertEqual(checkout.session.status?.type, .open)
