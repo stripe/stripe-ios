@@ -87,8 +87,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var isBusy: Bool { isPaymentInFlight || isReloading }
     private(set) var savedPaymentMethods: [STPPaymentMethod]
     let isFlowController: Bool
-    /// Previous customer input - in FlowController's `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
+    /// The selection used to seed this controller when it is rebuilt.
     private var previousPaymentOption: PaymentOption?
+    private var previousFormConfirmParams: IntentConfirmParams? {
+        return previousPaymentOption?.formConfirmParamsForCancellationRestoration
+    }
     weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
     weak var paymentSheetDelegate: PaymentSheetViewControllerDelegate?
     let shouldShowApplePayInList: Bool
@@ -183,13 +186,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
 
-        regenerateUI()
-
         if case let .link(linkConfirmOption) = previousPaymentOption {
             self.linkConfirmOption = linkConfirmOption
         }
+        regenerateUI()
 
-        // Only use the previous customer input for the first form shown
+        // Initial construction is complete. Clear the seed so later UI regeneration preserves the customer's current selection.
         self.previousPaymentOption = nil
     }
 
@@ -233,27 +235,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             let paymentMethodListViewController = makePaymentMethodListViewController(selection: updatedListSelection)
             self.paymentMethodListViewController = paymentMethodListViewController
 
-            let confirmParams: IntentConfirmParams? = {
-                guard let paymentOption = previousPaymentOption else {
-                    return nil
-                }
-                switch paymentOption {
-                case .saved(_, let confirmParams):
-                    if let confirmParams {
-                        return confirmParams
-                    } else {
-                        return nil
-                    }
-                case .new(let confirmParams):
-                    return confirmParams
-                case .link(let confirmOption):
-                    return confirmOption.signupConfirmParams
-                case .applePay, .external:
-                    return nil
-                }
-            }()
-
-            if let confirmParams,
+            if let confirmParams = previousFormConfirmParams,
                 paymentMethodTypes.contains(confirmParams.paymentMethodType),
                 shouldDisplayForm(for: confirmParams.paymentMethodType)
             {
@@ -948,17 +930,6 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     }
 
     private func makeFormVC(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodFormViewController {
-        let previousCustomerInput: IntentConfirmParams? = {
-            if case let .new(confirmParams: confirmParams) = previousPaymentOption {
-                return confirmParams
-            } else if case let .saved(_, confirmParams) = previousPaymentOption {
-                return confirmParams
-            } else if case let .link(confirmOption) = previousPaymentOption {
-                return confirmOption.signupConfirmParams
-            } else {
-                return nil
-            }
-        }()
         let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = {
             if case let .link(confirmOption) = previousPaymentOption {
                 return confirmOption.signupAction
@@ -1013,7 +984,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             type: paymentMethodType,
             intent: intent,
             elementsSession: elementsSession,
-            previousCustomerInput: previousCustomerInput,
+            previousCustomerInput: previousFormConfirmParams,
             formCache: formCache,
             configuration: configuration,
             paymentMethodOrientation: loadResult.paymentMethodOrientation,
