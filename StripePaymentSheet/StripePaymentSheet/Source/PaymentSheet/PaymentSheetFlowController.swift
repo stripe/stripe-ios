@@ -1049,8 +1049,7 @@ extension PaymentSheet.FlowController: LoadingViewControllerDelegate {
     func shouldDismiss(_ loadingViewController: LoadingViewController) {
         pendingPresentTask?.cancel()
         pendingPresentTask = nil
-        let presentedViewController = loadingViewController.bottomSheetController ?? loadingViewController
-        presentedViewController.dismiss(animated: true) {
+        loadingViewController.dismiss(animated: true) {
             self.isPresented = false
             self.presentPaymentOptionsCompletionWithResult?(true)
         }
