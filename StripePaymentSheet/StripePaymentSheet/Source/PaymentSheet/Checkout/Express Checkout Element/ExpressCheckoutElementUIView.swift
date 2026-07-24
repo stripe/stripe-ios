@@ -13,7 +13,7 @@ import UIKit
 @MainActor
 public final class ExpressCheckoutElementUIView: UIView {
 
-    private let checkout: Checkout
+    private weak var checkout: Checkout?
 
     init(checkout: Checkout) {
         self.checkout = checkout
