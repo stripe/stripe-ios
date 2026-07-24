@@ -19,18 +19,22 @@ extension Checkout {
         // MARK: - Private Properties
 
         private let checkout: Checkout
+        private let appearance: Appearance
         private let stackView = UIStackView()
 
         // MARK: - Init
 
         /// Creates an express checkout element view.
-        /// - Parameter checkout: The ``Checkout`` instance managing the session.
-        public init(checkout: Checkout) {
+        /// - Parameters:
+        ///   - checkout: The ``Checkout`` instance managing the session.
+        ///   - appearance: Visual customization for the element's buttons.
+        public init(checkout: Checkout, appearance: Appearance = .init()) {
             self.checkout = checkout
+            self.appearance = appearance
             super.init(frame: .zero)
 
             stackView.axis = .vertical
-            stackView.spacing = 8
+            stackView.spacing = appearance.buttonSpacing
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
             addSubview(stackView)
@@ -81,20 +85,18 @@ extension Checkout {
         private func makeApplePayButton() -> UIView {
             let buttonType = checkout.configuration.applePayConfiguration?.buttonType ?? .plain
             let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: .automatic)
-            // TODO: Appearance
-            button.cornerRadius = 6
+            button.cornerRadius = appearance.cornerRadius
             button.translatesAutoresizingMaskIntoConstraints = false
-            button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            button.heightAnchor.constraint(equalToConstant: appearance.buttonHeight).isActive = true
             button.addTarget(self, action: #selector(handleApplePayTapped), for: .touchUpInside)
             return button
         }
 
         private func makeLinkButton() -> UIView {
             let button = PayWithLinkButton()
-            // TODO: Appearance
-            button.cornerRadius = 6
+            button.cornerRadius = appearance.cornerRadius
             button.translatesAutoresizingMaskIntoConstraints = false
-            button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            button.heightAnchor.constraint(equalToConstant: appearance.buttonHeight).isActive = true
             button.addTarget(self, action: #selector(handleLinkTapped), for: .touchUpInside)
             return button
         }
