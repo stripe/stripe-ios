@@ -251,9 +251,6 @@ extension PaymentSheet {
         var viewController: FlowControllerViewControllerProtocol
 
         private var presentPaymentOptionsCompletionWithResult: ((Bool) -> Void)?
-        // Dismiss the exact container presented for payment options. Resolving the container
-        // through its content during dismissal can trigger an unnecessary height update.
-        private weak var paymentOptionsBottomSheetViewController: BottomSheetViewController?
         /// The selection captured when payment options open, used only to undo a canceled presentation.
         private var selectionSnapshotBeforePresentation: FlowControllerSelectionSnapshot?
         private var didDismissLinkVerificationDialog: Bool = false
@@ -556,8 +553,6 @@ extension PaymentSheet {
                         self?.paymentHandler.cancel3DS2ChallengeFlow()
                     }
                 )
-                self.paymentOptionsBottomSheetViewController = bottomSheetVC
-
                 self.isPresented = true
                 presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
             }
@@ -594,7 +589,6 @@ extension PaymentSheet {
                     self?.paymentHandler.cancel3DS2ChallengeFlow()
                 }
             )
-            paymentOptionsBottomSheetViewController = bottomSheetVC
             presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
 
             pendingPresentTask = Task { @MainActor [weak self] in
@@ -1051,11 +1045,8 @@ extension PaymentSheet.FlowController: LoadingViewControllerDelegate {
     func shouldDismiss(_ loadingViewController: LoadingViewController) {
         pendingPresentTask?.cancel()
         pendingPresentTask = nil
-        let presentedViewController = paymentOptionsBottomSheetViewController
-            ?? loadingViewController.bottomSheetController
-            ?? loadingViewController
+        let presentedViewController = loadingViewController.bottomSheetController ?? loadingViewController
         presentedViewController.dismiss(animated: true) {
-            self.paymentOptionsBottomSheetViewController = nil
             self.isPresented = false
             self.presentPaymentOptionsCompletionWithResult?(true)
         }
@@ -1077,11 +1068,8 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
         if !didCancel {
             self.didPresentAndContinue = true
         }
-        let presentedViewController = paymentOptionsBottomSheetViewController
-            ?? flowControllerViewController.bottomSheetController
-            ?? flowControllerViewController
+        let presentedViewController = flowControllerViewController.bottomSheetController ?? flowControllerViewController
         presentedViewController.dismiss(animated: true) {
-            self.paymentOptionsBottomSheetViewController = nil
             if didCancel {
                 self.revertSelectionAfterCancellation()
             }
