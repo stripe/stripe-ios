@@ -96,6 +96,16 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private var isHackyLinkButtonSelected: Bool = false
     var linkConfirmOption: PaymentSheet.LinkConfirmOption?
 
+    var formConfirmParamsForCancellationRestoration: IntentConfirmParams? {
+        if isHackyLinkButtonSelected {
+            // Preserve the completed form behind the accepted Link header selection in case
+            // cancellation later requires this controller to be rebuilt.
+            return addPaymentMethodViewController.paymentOption?
+                .formConfirmParamsForCancellationRestoration
+        }
+        return selectedPaymentOption?.formConfirmParamsForCancellationRestoration
+    }
+
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
     }()
@@ -174,8 +184,10 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         checkout: Checkout? = nil,
-        previousPaymentOption: PaymentOption? = nil
+        initialState: FlowControllerViewControllerInitialState = .preservingFormInput(from: nil)
     ) {
+        let previousConfirmParams = initialState.previousCustomerInputForHorizontalController
+
         self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
@@ -186,11 +198,10 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.configuration = configuration
         self.analyticsHelper = analyticsHelper
 
-        // Restore the customer's previous payment method. For saved PMs, this happens naturally already, so we just need to handle new payment methods.
+        // Restore completed form input from the selected initialization policy.
         // Caveats:
         // - Only payment method details (including checkbox state) and billing details are restored
         // - Only restored if the previous input resulted in a completed form i.e. partial or invalid input is still discarded
-        let previousConfirmParams = previousPaymentOption?.newConfirmParams
 
         // Default to saved payment selection mode, as long as we aren't restoring a customer's previous new payment method input
         // and they have saved PMs or Apple Pay or Link is enabled
@@ -236,6 +247,31 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper
         )
         super.init(nibName: nil, bundle: nil)
+
+        // The carousel derives its initial selection from customer/server defaults. Cancellation
+        // restoration is authoritative, so apply it after the carousel has been constructed.
+        if case let .restoringAfterCancellation(selection) = initialState,
+           let paymentOptionToRestore = selection.paymentOption {
+            savedPaymentOptionsViewController.setSelectionForCancellationRestoration(
+                to: paymentOptionToRestore
+            )
+            if case let .link(linkConfirmOption) = paymentOptionToRestore {
+                switch linkConfirmOption {
+                case .wallet where isLinkEnabled:
+                    if linkOnlyMode {
+                        // Link-only mode renders Link in the wallet header instead of the carousel.
+                        mode = .addingNew
+                        isHackyLinkButtonSelected = true
+                    }
+                case .wallet:
+                    // Link is no longer available. Keep the carousel's available fallback.
+                    break
+                case .signUp, .withPaymentMethod, .withPaymentDetails:
+                    // The carousel only knows that Link is selected; retain the exact option.
+                    self.linkConfirmOption = linkConfirmOption
+                }
+            }
+        }
         self.savedPaymentOptionsViewController.delegate = self
         self.addPaymentMethodViewController.delegate = self
     }
