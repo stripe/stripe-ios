@@ -17,12 +17,14 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
 
     init(checkout: Checkout, uiView: ExpressCheckoutElementUIView) {
         self.uiView = uiView
-        self.isAvailable = checkout.session.isExpressCheckoutElementAvailable
+        // TODO: Derive from session (e.g. session.isExpressCheckoutElementAvailable)
+        self.isAvailable = true
         sessionCancellable = checkout.$session
             .dropFirst()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] session in
-                self?.isAvailable = session.isExpressCheckoutElementAvailable
+            .sink { [weak self] _ in
+                // TODO: Derive from session (e.g. session.isExpressCheckoutElementAvailable)
+                self?.isAvailable = true
             }
     }
 }
