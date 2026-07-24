@@ -40,7 +40,7 @@ struct CheckoutCartView: View {
                     .overlay(alignment: .bottom) {
                         VStack(spacing: 0) {
                             if showExpressCheckoutElement && checkout.session.isExpressCheckoutElementAvailable {
-                                checkout.getExpressCheckoutElement()
+                                checkout.getExpressCheckoutElement().view
                                     .padding(.horizontal)
                                     .padding(.top, 16)
                                     .padding(.bottom, checkout.session.total != nil ? 0 : 16)

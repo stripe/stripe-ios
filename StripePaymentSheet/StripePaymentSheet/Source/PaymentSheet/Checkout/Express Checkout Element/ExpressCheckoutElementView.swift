@@ -5,130 +5,56 @@
 //  Created by Joyce Qin on 7/22/26.
 //
 
-import PassKit
-@_spi(STP) import StripeCore
-import UIKit
+import Combine
+import SwiftUI
 
+/// A SwiftUI view that displays wallet payment buttons (Apple Pay, Link).
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout {
-    /// A UIKit view that displays wallet payment buttons (Apple Pay, Link).
+public struct ExpressCheckoutElementView: View {
+    @ObservedObject private var viewModel: ExpressCheckoutElementViewModel
+
     @MainActor
-    public final class ExpressCheckoutElementView: UIView {
+    init(viewModel: ExpressCheckoutElementViewModel) {
+        self.viewModel = viewModel
+    }
 
-        // MARK: - Private Properties
-
-        private let checkout: Checkout
-        private let stackView = UIStackView()
-
-        // MARK: - Init
-
-        /// Creates an express checkout element view.
-        /// - Parameter checkout: The ``Checkout`` instance managing the session.
-        public init(checkout: Checkout) {
-            self.checkout = checkout
-            super.init(frame: .zero)
-
-            stackView.axis = .vertical
-            stackView.spacing = 8
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-
-            addSubview(stackView)
-            NSLayoutConstraint.activate([
-                stackView.topAnchor.constraint(equalTo: topAnchor),
-                stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-                stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-                stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            ])
-
-            configure(buttons: Self.expressButtons(
-                from: checkout.session,
-                configuration: checkout.configuration
-            ))
-        }
-
-        @available(*, unavailable)
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
-
-        // MARK: - Public Methods
-
-        public override var intrinsicContentSize: CGSize {
-            CGSize(
-                width: UIView.noIntrinsicMetric,
-                height: stackView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-            )
-        }
-
-        // MARK: - Private Methods
-
-        private func configure(buttons: [ExpressButton]) {
-            stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-            buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
-            invalidateIntrinsicContentSize()
-        }
-
-        private func makeButton(for button: ExpressButton) -> UIView {
-            switch button {
-            case .applePay:
-                return makeApplePayButton()
-            case .link:
-                return makeLinkButton()
-            }
-        }
-
-        private func makeApplePayButton() -> UIView {
-            let buttonType = checkout.configuration.applePayConfiguration?.buttonType ?? .plain
-            let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: .automatic)
-            // TODO: Appearance
-            button.cornerRadius = 6
-            button.translatesAutoresizingMaskIntoConstraints = false
-            button.heightAnchor.constraint(equalToConstant: 44).isActive = true
-            button.addTarget(self, action: #selector(handleApplePayTapped), for: .touchUpInside)
-            return button
-        }
-
-        private func makeLinkButton() -> UIView {
-            let button = PayWithLinkButton()
-            // TODO: Appearance
-            button.cornerRadius = 6
-            button.translatesAutoresizingMaskIntoConstraints = false
-            button.heightAnchor.constraint(equalToConstant: 44).isActive = true
-            button.addTarget(self, action: #selector(handleLinkTapped), for: .touchUpInside)
-            return button
-        }
-
-        @objc private func handleApplePayTapped() {
-            // TODO: Handle Apple Pay
-        }
-
-        @objc private func handleLinkTapped() {
-            // TODO: Handle Link
+    public var body: some View {
+        if viewModel.isAvailable {
+            ExpressCheckoutElementUIViewRepresentable(uiView: viewModel.uiView)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 }
 
-// MARK: - Button Computation
+/// Bridges ExpressCheckoutElement's UIKit state into SwiftUI without retaining Checkout.
+@MainActor
+final class ExpressCheckoutElementViewModel: ObservableObject {
+    let uiView: ExpressCheckoutElementUIView
+    @Published var isAvailable: Bool
 
-extension Checkout.ExpressCheckoutElementView {
-    /// Returns the express buttons to display for the given session and configuration.
-    static func expressButtons(
-        from session: Checkout.Session,
-        configuration: Checkout.Configuration
-    ) -> [ExpressButton] {
-        var buttons: [ExpressButton] = []
-        for button in session.availableExpressButtonTypes {
-            switch button {
-            case .applePay:
-                if configuration.applePayConfiguration != nil
-                    && StripeAPI.deviceSupportsApplePay() {
-                    buttons.append(.applePay)
-                }
-            case .link:
-                buttons.append(.link)
+    private var sessionCancellable: AnyCancellable?
+
+    init(checkout: Checkout, uiView: ExpressCheckoutElementUIView) {
+        self.uiView = uiView
+        // TODO: Derive from session (e.g. session.isExpressCheckoutElementAvailable)
+        self.isAvailable = true
+        sessionCancellable = checkout.$session
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                // TODO: Derive from session (e.g. session.isExpressCheckoutElementAvailable)
+                self?.isAvailable = true
             }
-        }
-        return buttons
     }
+}
+
+private struct ExpressCheckoutElementUIViewRepresentable: UIViewRepresentable {
+    let uiView: ExpressCheckoutElementUIView
+
+    func makeUIView(context: Context) -> ExpressCheckoutElementUIView {
+        return uiView
+    }
+
+    func updateUIView(_ uiView: ExpressCheckoutElementUIView, context: Context) {}
 }
