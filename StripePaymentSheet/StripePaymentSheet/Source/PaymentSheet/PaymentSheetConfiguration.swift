@@ -683,7 +683,21 @@ extension PaymentSheet {
             }
         }
 
-        public init() {}
+        public init(
+            name: CollectionMode = .automatic,
+            phone: CollectionMode = .automatic,
+            email: CollectionMode = .automatic,
+            address: AddressCollectionMode = .automatic,
+            attachDefaultsToPaymentMethod: Bool = false,
+            allowedCountries: Set<String> = []
+        ) {
+            self.name = name
+            self.phone = phone
+            self.email = email
+            self.address = address
+            self.attachDefaultsToPaymentMethod = attachDefaultsToPaymentMethod
+            self.allowedCountries = allowedCountries
+        }
     }
 
     /// Configuration for external payment methods
