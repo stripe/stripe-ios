@@ -68,15 +68,15 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         navBar.delegate = self
         return navBar
     }()
-    /// Returns true if Apple Pay is not enabled and Link is enabled and there are no saved payment methods
-    private var linkOnlyMode: Bool {
+    /// Returns true when Link should render in the wallet header because there are no selectable carousel options.
+    private var shouldUseLinkOnlyWalletHeader: Bool {
         return couldShowLinkInHeader && !savedPaymentOptionsViewController.hasOptionsExcludingAdd
     }
-    // Only show the wallet header when Link is the only available PM
+    // Only show the wallet header when Link is the only header option.
     private var shouldShowWalletHeader: Bool {
         switch mode {
         case .addingNew:
-            return linkOnlyMode
+            return shouldUseLinkOnlyWalletHeader
         case .selectingSaved:
             return false
         }
@@ -258,8 +258,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             if case let .link(linkConfirmOption) = paymentOptionToRestore {
                 switch linkConfirmOption {
                 case .wallet where isLinkEnabled:
-                    if linkOnlyMode {
-                        // Link-only mode renders Link in the wallet header instead of the carousel.
+                    if shouldUseLinkOnlyWalletHeader {
+                        // Link renders in the wallet header instead of the carousel when it is the only header option.
                         mode = .addingNew
                         isHackyLinkButtonSelected = true
                     }
@@ -274,6 +274,21 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         }
         self.savedPaymentOptionsViewController.delegate = self
         self.addPaymentMethodViewController.delegate = self
+        if shouldUseLinkOnlyWalletHeader && Self.customerDefaultIsLink(configuration: configuration, elementsSession: elementsSession) {
+            mode = .addingNew
+            isHackyLinkButtonSelected = true
+        }
+    }
+
+    private static func customerDefaultIsLink(
+        configuration: PaymentSheet.Configuration,
+        elementsSession: STPElementsSession
+    ) -> Bool {
+        return CustomerPaymentOption.selectedPaymentMethod(
+            for: configuration.customer?.id,
+            elementsSession: elementsSession,
+            surface: .paymentSheet
+        ) == .link
     }
 
     // MARK: - UIViewController Methods
@@ -316,8 +331,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
 
-        // Automatically switch into the adding new mode when Link is the only available payment method
-        if linkOnlyMode {
+        // Automatically switch into adding-new mode when Link is the only header option.
+        if shouldUseLinkOnlyWalletHeader {
             mode = .addingNew
         }
 
@@ -700,7 +715,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControllerDelegate {
     func getWalletHeaders() -> [String] {
-        return linkOnlyMode ? ["link"] : []
+        return shouldUseLinkOnlyWalletHeader ? ["link"] : []
     }
 
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
@@ -752,7 +767,7 @@ extension PaymentSheetFlowControllerViewController: WalletHeaderViewDelegate {
     }
 
     func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
-        // Link should be the selected payment option, as the Link header button is only available in `linkOnlyMode`
+        // Link should be the selected payment option, as the Link header button is only available here.
         mode = .addingNew
 
         if canPresentLinkOnWalletButton {
