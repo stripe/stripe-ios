@@ -38,28 +38,39 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.status?.type, .open)
     }
 
-    func testGetCurrencySelectorElementReturnsStableInstance() async throws {
+    func testGetCurrencySelectorElementReturnsNilWhenAdaptivePricingIsNotAllowed() async throws {
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
 
-        XCTAssertTrue(checkout.getCurrencySelectorElement() === checkout.getCurrencySelectorElement())
+        XCTAssertNil(checkout.getCurrencySelectorElement())
     }
 
-    func testGetCurrencySelectorElementLogsInitializationOnce() async throws {
+    func testGetCurrencySelectorElementReturnsStableInstanceWhenAdaptivePricingIsAllowed() async throws {
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
+        )
+
+        let firstElement = try XCTUnwrap(checkout.getCurrencySelectorElement())
+        let secondElement = try XCTUnwrap(checkout.getCurrencySelectorElement())
+        XCTAssertTrue(firstElement === secondElement)
+    }
+
+    func testCurrencySelectorElementLogsInitializationOnce() async throws {
         let analyticsClient = STPAnalyticsClient.sharedClient
         let previousLogHistory = analyticsClient._testLogHistory
         analyticsClient._testLogHistory = []
         defer { analyticsClient._testLogHistory = previousLogHistory }
 
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
+        )
 
-        XCTAssertEqual(currencySelectorInitEvents(in: analyticsClient).count, 0)
+        XCTAssertEqual(currencySelectorInitEvents(in: analyticsClient).count, 1)
 
         _ = checkout.getCurrencySelectorElement()
         _ = checkout.getCurrencySelectorElement()
 
         let events = currencySelectorInitEvents(in: analyticsClient)
         XCTAssertEqual(events.count, 1)
-        XCTAssertEqual(events.first?["is_standalone_element"] as? Bool, true)
     }
 
     func testSessionPaymentOptionUpdatesAndClears() async throws {

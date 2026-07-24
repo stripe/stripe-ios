@@ -152,7 +152,7 @@ final class PaymentElementTest: XCTestCase {
 
         do {
             let checkout = try await Checkout(
-                configuration: CheckoutTestHelpers.makeConfiguration(
+                configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(
                     apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card"])
                 )
             )
