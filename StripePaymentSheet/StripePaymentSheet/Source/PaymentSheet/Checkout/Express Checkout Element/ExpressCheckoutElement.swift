@@ -17,14 +17,19 @@ public final class ExpressCheckoutElement {
     // MARK: - Public Properties
 
     /// A SwiftUI view that displays the express checkout buttons.
-    public let view: ExpressCheckoutElementView
+    public internal(set) var view: ExpressCheckoutElementView
 
     /// A UIKit view that displays the express checkout buttons.
-    public let uiView: ExpressCheckoutElementUIView
+    public internal(set) var uiView: ExpressCheckoutElementUIView
+
+    // MARK: - Internal Properties
+
+    weak var checkout: Checkout?
 
     // MARK: - Init
 
     init(checkout: Checkout) {
+        self.checkout = checkout
         let uiView = ExpressCheckoutElementUIView(checkout: checkout)
         let viewModel = ExpressCheckoutElementViewModel(checkout: checkout, uiView: uiView)
         self.uiView = uiView
