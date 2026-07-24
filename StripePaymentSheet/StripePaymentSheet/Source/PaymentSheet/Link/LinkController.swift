@@ -497,6 +497,9 @@ import UIKit
         var paymentElementConfiguration = self.paymentElementConfiguration
         paymentElementConfiguration.defaultBillingDetails.email = email
 
+        if let billingConfig = configuration?.billingDetailsCollectionConfiguration {
+            paymentElementConfiguration.billingDetailsCollectionConfiguration = billingConfig
+        }
         if collectName {
             paymentElementConfiguration.billingDetailsCollectionConfiguration.name = .always
         }
@@ -559,6 +562,9 @@ import UIKit
             paymentElementConfiguration.defaultBillingDetails.email = email
             if let phoneNumber {
                 paymentElementConfiguration.defaultBillingDetails.phone = phoneNumber
+            }
+            if let billingConfig = self.configuration?.billingDetailsCollectionConfiguration {
+                paymentElementConfiguration.billingDetailsCollectionConfiguration = billingConfig
             }
 
             presentingViewController.presentNativeLink(

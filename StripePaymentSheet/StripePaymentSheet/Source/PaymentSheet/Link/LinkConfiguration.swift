@@ -28,6 +28,10 @@ public struct LinkConfiguration {
     /// If `nil`, defaults to the host app's `CFBundleDisplayName` / `CFBundleName`.
     @_spi(LinkControllerPreview) public let merchantDisplayName: String?
 
+    /// Configures billing details collection in the Link sheet.
+    /// If `nil`, uses the billing details collection configuration from the `PaymentElementConfiguration` passed at init.
+    @_spi(LinkControllerPreview) public let billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration?
+
     /// Creates a new instance of `LinkConfiguration`.
     /// - Parameters:
     ///   - hintMessage: Custom hint message to display in the wallet view. If `nil`, no hint will be shown.
@@ -41,6 +45,7 @@ public struct LinkConfiguration {
         self.supportedPaymentMethodTypes = nil
         self.paymentMethodTypes = nil
         self.merchantDisplayName = nil
+        self.billingDetailsCollectionConfiguration = nil
     }
 
     /// Creates a new instance of `LinkConfiguration`.
@@ -49,16 +54,19 @@ public struct LinkConfiguration {
     ///   - paymentMethodTypes: The payment method types to use when creating the setup intent. If `nil`, the payment method types used will be chosen automatically.
     ///   - allowLogout: Whether to allow the user to log out. When `false`, the logout menu button will be hidden. Defaults to `true`.
     ///   - merchantDisplayName: The merchant name displayed in Link UI. If `nil`, defaults to the app's `CFBundleDisplayName`.
+    ///   - billingDetailsCollectionConfiguration: Configures billing details collection in the Link sheet. If `nil`, uses the billing details collection configuration from the `PaymentElementConfiguration` passed at init.
     @_spi(LinkControllerPreview) public init(
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         paymentMethodTypes: [String]? = nil,
         allowLogout: Bool = true,
-        merchantDisplayName: String? = nil
+        merchantDisplayName: String? = nil,
+        billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration? = nil
     ) {
         self.hintMessage = nil
         self.allowLogout = allowLogout
         self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
         self.paymentMethodTypes = paymentMethodTypes
         self.merchantDisplayName = merchantDisplayName
+        self.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
     }
 }
