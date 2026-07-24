@@ -133,7 +133,7 @@ public final class Checkout: ObservableObject {
 
             // Load elements
             self.paymentElement = try await PaymentElement(checkout: self)
-            if CurrencySelectorUtilities.adaptivePricingData(from: session) != nil {
+            if configuration.adaptivePricing.allowed {
                 self.currencySelectorElement = await CurrencySelectorElement(checkout: self)
             }
 
