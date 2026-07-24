@@ -1,5 +1,5 @@
 //
-//  Checkout+CurrencySelectorViewAppearance+TwoOptionSelectorViewAppearance.swift
+//  CurrencySelectorElement+TwoOptionSelectorViewAppearance.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 5/14/26.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension Checkout.CurrencySelectorView.Appearance: TwoOptionSelectorViewAppearance {
+extension CurrencySelectorElement.Appearance: TwoOptionSelectorViewAppearance {
     var trackBackground: UIColor { background }
     var pillBackground: UIColor { selectedBackground }
     var selectedTextColor: UIColor { selectedText }

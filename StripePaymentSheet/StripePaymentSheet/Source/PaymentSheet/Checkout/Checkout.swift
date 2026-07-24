@@ -59,6 +59,9 @@ public final class Checkout: ObservableObject {
     /// The PaymentElement for this Checkout instance.
     private(set) var paymentElement: PaymentElement!
 
+    /// The CurrencySelectorElement for this Checkout instance, when Adaptive Pricing is available.
+    private var currencySelectorElement: CurrencySelectorElement?
+
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
     /// A snapshot of the current ``session`` accessible from non-MainActor contexts.
@@ -69,7 +72,6 @@ public final class Checkout: ObservableObject {
     /// because they go through `Checkout`'s MainActor-isolated mutation methods.
     nonisolated(unsafe) private(set) var nonisolatedSession: Session!
 
-    let flagImageManager = AdaptivePricingFlagImageManager()
     let clientSecret: String
     let apiClient: STPAPIClient
 
@@ -127,7 +129,9 @@ public final class Checkout: ObservableObject {
 
             // Load elements
             self.paymentElement = try await PaymentElement(checkout: self)
-            await flagImageManager.prefetchFlagImages(for: session) // TODO: This should probably just load currency selector and not be a global singleton
+            if configuration.adaptivePricing.allowed {
+                self.currencySelectorElement = await CurrencySelectorElement(checkout: self)
+            }
 
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
@@ -279,6 +283,11 @@ public final class Checkout: ObservableObject {
     public func getPaymentElement() -> PaymentElement {
         return paymentElement
     }
+
+    /// Returns the CurrencySelectorElement when Adaptive Pricing is available for this Checkout instance.
+    public func getCurrencySelectorElement() -> CurrencySelectorElement? {
+        return currencySelectorElement
+    }
 }
 
 // MARK: - Defaults
@@ -298,7 +307,7 @@ extension Checkout {
 // These exist here because `session` is private(set) to enforce that session can only be mutated through these sanctioned paths.
 // Setting the session should generally only be done via `commitSession` to avoid putting us into an inconsistent state e.g. without using commitSession, MPE is not aware of the updated session.
 extension Checkout {
-    /// Replaces the current session from an API response, applies client-side mutations, and updates PaymentElement.
+    /// Replaces the current session from an API response, applies client-side mutations, and updates Checkout elements.
     ///
     /// Client-side address overrides are copied from the current session to the new one
     /// automatically. To update an address, pass a `localMutation` closure.
@@ -324,7 +333,7 @@ extension Checkout {
         try await paymentElement?.update(checkout: self)
     }
 
-    /// - Warning: See `commitSession` for what this method *doesn't* do. That includes updating PaymentElement.
+    /// - Warning: See `commitSession` for what this method *doesn't* do. That includes updating Checkout elements.
     func dangerouslySetSessionDirectly(_ session: Session) {
         self.session = session
     }

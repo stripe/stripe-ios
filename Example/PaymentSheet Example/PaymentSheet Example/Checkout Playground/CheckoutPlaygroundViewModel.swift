@@ -28,7 +28,7 @@ extension CheckoutPlayground {
         @Published var adaptivePricingCountry: AdaptivePricingCountry = .none
         @Published var automaticPaymentMethods = false
         @Published var paymentMethodTypes: Set<String> = ["card"]
-        @Published var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
+        @Published var currencySelectorAppearance = CurrencySelectorElement.Appearance()
         @Published var checkoutEndpointOption: EndpointOption = .hosted
         @Published var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
 

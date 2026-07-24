@@ -158,6 +158,18 @@ enum CheckoutTestHelpers {
         return resolvedConfiguration
     }
 
+    /// Builds a stubbed Checkout configuration that opts into Adaptive Pricing.
+    @MainActor
+    static func makeCurrencySelectorConfiguration(
+        apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
+        configuration: Checkout.Configuration? = nil
+    ) -> Checkout.Configuration {
+        let clientSecret = configuration?.clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
+        var resolvedConfiguration = configuration ?? Checkout.Configuration(clientSecret: clientSecret)
+        resolvedConfiguration.adaptivePricing.allowed = true
+        return makeConfiguration(apiResponse: apiResponse, configuration: resolvedConfiguration)
+    }
+
     @MainActor
     static func makeStubbedAPIClient(
         apiResponse: PaymentPagesAPIResponse = makeOpenSession(),

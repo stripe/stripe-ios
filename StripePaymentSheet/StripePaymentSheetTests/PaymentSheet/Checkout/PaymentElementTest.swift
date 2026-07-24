@@ -142,28 +142,35 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
     }
 
-    func testCheckoutAndPaymentElementDoNotRetainEachOther() async throws {
+    func testCheckoutAndElementsDoNotRetainEachOther() async throws {
         weak var weakCheckout: Checkout?
         weak var weakPaymentElement: PaymentElement?
+        weak var weakCurrencySelectorElement: CurrencySelectorElement?
+        weak var weakCurrencySelectorUIView: CurrencySelectorElementUIView?
         weak var weakFlowController: PaymentSheet.FlowController?
         weak var weakEmbeddedPaymentElement: EmbeddedPaymentElement?
 
         do {
             let checkout = try await Checkout(
-                configuration: CheckoutTestHelpers.makeConfiguration(
+                configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(
                     apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card"])
                 )
             )
             let paymentElement = checkout.getPaymentElement()
+            let currencySelectorElement = checkout.getCurrencySelectorElement()
 
             weakCheckout = checkout
             weakPaymentElement = paymentElement
+            weakCurrencySelectorElement = currencySelectorElement
+            weakCurrencySelectorUIView = currencySelectorElement?.uiView
             weakFlowController = paymentElement.paymentSheetFlowController
             weakEmbeddedPaymentElement = paymentElement.embeddedPaymentElement
         }
 
         XCTAssertNil(weakCheckout)
         XCTAssertNil(weakPaymentElement)
+        XCTAssertNil(weakCurrencySelectorElement)
+        XCTAssertNil(weakCurrencySelectorUIView)
         XCTAssertNil(weakFlowController)
         XCTAssertNil(weakEmbeddedPaymentElement)
     }

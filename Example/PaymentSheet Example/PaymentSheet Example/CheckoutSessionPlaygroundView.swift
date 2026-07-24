@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CheckoutSessionPlaygroundView: View {
     @State var viewModel: PaymentSheetTestPlaygroundSettings
-    @Binding var currencySelectorAppearance: Checkout.CurrencySelectorView.Appearance
+    @Binding var currencySelectorAppearance: CurrencySelectorElement.Appearance
     @State private var showCurrencySelectorAppearance = false
     var doneAction: ((PaymentSheetTestPlaygroundSettings) -> Void) = { _ in }
 
