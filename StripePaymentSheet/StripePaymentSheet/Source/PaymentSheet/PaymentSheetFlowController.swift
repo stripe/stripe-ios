@@ -887,8 +887,7 @@ extension PaymentSheet {
             prioritizing paymentOption: PaymentOption? = nil
         ) -> PaymentSheetLoader.LoadResult {
             var savedPaymentMethods = viewController.savedPaymentMethods
-            // The vertical main screen displays one saved method. Move the captured method into
-            // that slot without changing horizontal carousel order.
+            // Move the prioritized payment option to the front of the saved payment methods if present
             if viewController.loadResult.paymentMethodOrientation == .vertical,
                case let .saved(paymentMethod, _) = paymentOption,
                let index = savedPaymentMethods.firstIndex(where: { $0.stripeId == paymentMethod.stripeId }) {
