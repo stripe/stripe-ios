@@ -5,45 +5,31 @@
 //  Created by Joyce Qin on 7/22/26.
 //
 
-import UIKit
+import SwiftUI
 
+/// A SwiftUI view that displays wallet payment buttons (Apple Pay, Link).
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout {
-    /// A UIKit view that displays wallet payment buttons (Apple Pay, Link).
+public struct ExpressCheckoutElementView: View {
+    private let uiView: ExpressCheckoutElementUIView
+
     @MainActor
-    public final class ExpressCheckoutElementView: UIView {
+    init(uiView: ExpressCheckoutElementUIView) {
+        self.uiView = uiView
+    }
 
-        // MARK: - Private Properties
-
-        private let checkout: Checkout
-
-        // MARK: - Init
-
-        /// Creates an express checkout element view.
-        /// - Parameter checkout: The ``Checkout`` instance managing the session.
-        public init(checkout: Checkout) {
-            self.checkout = checkout
-            super.init(frame: .zero)
-            // TODO: Render express buttons
-        }
-
-        @available(*, unavailable)
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
+    public var body: some View {
+        ExpressCheckoutElementUIViewRepresentable(uiView: uiView)
+            .fixedSize(horizontal: false, vertical: true)
     }
 }
 
-// MARK: - Button Computation
+private struct ExpressCheckoutElementUIViewRepresentable: UIViewRepresentable {
+    let uiView: ExpressCheckoutElementUIView
 
-extension Checkout.ExpressCheckoutElementView {
-    /// Returns the express buttons to display for the given session and configuration.
-    static func expressButtons(
-        from session: Checkout.Session,
-        configuration: Checkout.Configuration
-    ) -> [ExpressButton] {
-        // TODO: Compute from elements session
-        return []
+    func makeUIView(context: Context) -> ExpressCheckoutElementUIView {
+        return uiView
     }
+
+    func updateUIView(_ uiView: ExpressCheckoutElementUIView, context: Context) {}
 }
