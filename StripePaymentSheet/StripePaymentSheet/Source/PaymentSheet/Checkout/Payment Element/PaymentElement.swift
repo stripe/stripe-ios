@@ -112,6 +112,7 @@ public final class PaymentElement {
             embeddedPaymentElement.paymentOption.map(Checkout.Session.PaymentOptionDisplayData.init)
         )
         paymentOptionSourceOfTruthIsFlowController = false // We used embedded's payment option
+        try await checkout.syncBillingAddress(from: embeddedPaymentElement._paymentOption?.checkoutBillingDetails)
     }
 }
 
