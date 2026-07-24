@@ -38,8 +38,12 @@ extension UIViewController {
         }
 
         // Prevent the presenting view from regaining focus when editing ends in the bottom sheet.
-        viewIfLoaded?.endEditing(true)
-        present(viewControllerToPresent, animated: true, completion: completion)
+        // Both calls are dispatched together (preserving their relative order) so endEditing's
+        // state mutation happens outside the current SwiftUI view update pass.
+        DispatchQueue.main.async { [weak self] in
+            self?.viewIfLoaded?.endEditing(true)
+            self?.present(viewControllerToPresent, animated: true, completion: completion)
+        }
     }
 
     var bottomSheetController: BottomSheetViewController? {
