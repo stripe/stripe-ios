@@ -9,11 +9,12 @@ import SwiftUI
 
 /// A SwiftUI view that displays wallet payment buttons (Apple Pay, Link) for express checkout.
 ///
-/// Place this view on your cart or checkout page to let customers pay quickly using their
-/// saved payment methods.
+/// Obtain this view by calling ``Checkout/getExpressCheckoutElement()`` rather than
+/// instantiating it directly. Place it on your cart or checkout page to let customers pay
+/// quickly using their saved payment methods.
 ///
 /// ```swift
-/// ExpressCheckoutElement(checkout: checkout)
+/// checkout.getExpressCheckoutElement()
 /// ```
 @_spi(STP)
 @_spi(ReactNativeSDK)
