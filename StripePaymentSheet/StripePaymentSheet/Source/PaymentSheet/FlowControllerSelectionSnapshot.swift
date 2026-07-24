@@ -19,11 +19,6 @@ internal struct FlowControllerSelectionSnapshot {
         let formConfirmParams: IntentConfirmParams?
     }
 
-    /// Reverts the saved-method selection persisted while payment options were open.
-    func revertPersistedSelection(using savedPaymentMethods: [STPPaymentMethod]) {
-        persistedSelection.revertPersistedSelection(using: savedPaymentMethods)
-    }
-
     private let selection: Selection
     private let persistedSelection: CustomerPaymentOption.PersistedSelectionSnapshot
 
@@ -38,9 +33,13 @@ internal struct FlowControllerSelectionSnapshot {
         )
     }
 
+    /// Reverts the saved-method selection persisted while payment options were open.
+    func revertPersistedSelection(using savedPaymentMethods: [STPPaymentMethod]) {
+        persistedSelection.revertPersistedSelection(using: savedPaymentMethods)
+    }
+
     /// Returns the captured selection when the current view controller must be rebuilt to restore it.
-    /// Returns nil when the current controller can be reused to preserve form state not represented
-    /// by PaymentOption.
+    /// Returns nil when the current controller can be reused.
     func selectionForRebuilding(
         using viewController: FlowControllerViewControllerProtocol
     ) -> Selection? {
@@ -55,13 +54,40 @@ internal struct FlowControllerSelectionSnapshot {
             selectionToRestore.paymentOption = viewController.selectedPaymentOption
         }
 
-        switch (selectionToRestore.paymentOption, viewController.selectedPaymentOption) {
-        case (nil, nil):
+        if canReuseCurrentViewController(
+            restoring: selectionToRestore.paymentOption,
+            currentSelection: viewController.selectedPaymentOption
+        ) {
             return nil
-        case (.link(.wallet)?, .link(.wallet)?):
-            return nil
+        }
+        return selectionToRestore
+    }
+
+    /// Returns whether the current controller can be reused without comparing editable form state.
+    /// A captured nil has no accepted option to reconstruct, so the current/default selection remains.
+    /// Apple Pay, Link wallet, and ordinary saved methods have stable identities. All form-backed
+    /// options rebuild.
+    private func canReuseCurrentViewController(
+        restoring capturedSelection: PaymentOption?,
+        currentSelection: PaymentOption?
+    ) -> Bool {
+        switch (capturedSelection, currentSelection) {
+        case (nil, _), (.applePay?, .applePay?), (.link(.wallet)?, .link(.wallet)?):
+            return true
+        case let (
+            .saved(capturedPaymentMethod, capturedConfirmParams)?,
+            .saved(currentPaymentMethod, currentConfirmParams)?
+        ):
+            // Ordinary saved methods are the same selection when their Stripe IDs match.
+            // Linked banks also use `.saved` but carry editable form state, so always rebuild them.
+            let isCapturedSelectionFormBacked = capturedConfirmParams?.instantDebitsLinkedBank != nil
+            let isCurrentSelectionFormBacked = currentConfirmParams?.instantDebitsLinkedBank != nil
+            let isSamePaymentMethod = capturedPaymentMethod.stripeId == currentPaymentMethod.stripeId
+            return !isCapturedSelectionFormBacked
+                && !isCurrentSelectionFormBacked
+                && isSamePaymentMethod
         default:
-            return selectionToRestore
+            return false
         }
     }
 }

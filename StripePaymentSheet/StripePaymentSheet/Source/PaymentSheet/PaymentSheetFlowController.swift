@@ -522,8 +522,7 @@ extension PaymentSheet {
                 return
             }
 
-            // Capture the accepted selection before presenting payment options. If the customer
-            // cancels, both horizontal and vertical layouts restore this state.
+            // Capture the accepted selection before presenting payment options.
             selectionSnapshotBeforePresentation = FlowControllerSelectionSnapshot(
                 viewController: viewController,
                 customerID: configuration.customer?.id
@@ -531,7 +530,7 @@ extension PaymentSheet {
 
             // Overwrite completion closure to retain self until called
             let wrappedCompletion: (Bool) -> Void = { didCancel in
-                // Cancellation restoration, if needed, has finished. The snapshot is no longer needed.
+                // The snapshot is no longer needed on completion
                 self.selectionSnapshotBeforePresentation = nil
 
                 self.updatePaymentOption()
@@ -930,10 +929,6 @@ extension PaymentSheet {
                 initialState: .restoringAfterCancellation(selection)
             )
             self.viewController.flowControllerDelegate = self
-            if selection.paymentOption == nil {
-                // Initialization may select a default, but cancellation must restore the captured nil.
-                self.viewController.clearSelection()
-            }
         }
 
         /// Updates the published paymentOption property based on the current state
