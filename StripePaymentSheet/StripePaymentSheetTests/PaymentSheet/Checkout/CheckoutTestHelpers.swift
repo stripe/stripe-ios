@@ -191,6 +191,17 @@ enum CheckoutTestHelpers {
             let data = try! JSONSerialization.data(withJSONObject: responseJSON, options: [])
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
         }
+        // Init can trigger a session update (e.g. billing address tax sync); just echo the session back.
+        stub(condition: { request in
+            request.httpMethod == "POST"
+                && request.url?.path == "/v1/payment_pages/\(sessionId)"
+        }) { _ in
+            var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
+            responseJSON["client_secret"] = resolvedClientSecret
+            responseJSON["session_id"] = responseJSON["session_id"] ?? sessionId
+            let data = try! JSONSerialization.data(withJSONObject: responseJSON, options: [])
+            return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
+        }
 
         return apiClient
     }

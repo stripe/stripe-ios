@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 7/15/26.
 //
 
+import OHHTTPStubs
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
@@ -24,6 +25,12 @@ final class PaymentElementTest: XCTestCase {
             }
         }
         waitForExpectations(timeout: 1)
+        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
+    }
+
+    override func tearDown() {
+        HTTPStubs.removeAllStubs()
+        super.tearDown()
     }
 
     func testConfigurationSetsCheckoutDefaultBillingDetails() async throws {
@@ -98,6 +105,28 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.billingDetailsCollectionConfiguration.address, .full)
     }
 
+    func testInitialSavedPaymentOptionUpdatesCheckoutBillingTaxRegion() async throws {
+        // Given a Checkout Session with automatic tax sourced from billing and a saved card...
+        let (configuration, requestRecorder) = try stubAutomaticTaxSavedCardCheckout()
+
+        // When Checkout loads its PaymentElement...
+        let checkout = try await Checkout(configuration: configuration)
+
+        // Then the saved card's billing address is used to update the tax region...
+        let requests = requestRecorder.requests
+        XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession])
+        let updateRequest = try XCTUnwrap(requests.first { $0.kind == .updateSession })
+        XCTAssertEqual(updateRequest.params["tax_region[country]"], "US")
+        XCTAssertEqual(updateRequest.params["tax_region[line1]"], "354 Oyster Point Blvd")
+        XCTAssertEqual(updateRequest.params["tax_region[city]"], "South San Francisco")
+        XCTAssertEqual(updateRequest.params["tax_region[state]"], "CA")
+        XCTAssertEqual(updateRequest.params["tax_region[postal_code]"], "94080")
+
+        // ...and the saved card remains selected after PaymentElement refreshes.
+        XCTAssertEqual(checkout.session.paymentOption?.label, "•••• 4242")
+        XCTAssertEqual(checkout.session.paymentOption?.billingDetails?.address.country, "US")
+    }
+
     func testCheckoutSessionUpdatePreservesFlowControllerPaymentOption() async throws {
         // Given a Checkout PaymentElement with PayNow available in the real FlowController sheet UI...
         var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
@@ -166,6 +195,23 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertNil(weakPaymentElement)
         XCTAssertNil(weakFlowController)
         XCTAssertNil(weakEmbeddedPaymentElement)
+    }
+
+    /// `CheckoutSession.json` already has automatic tax sourced from billing and a saved card with a full billing address.
+    private func stubAutomaticTaxSavedCardCheckout() throws -> (
+        configuration: Checkout.Configuration,
+        requestRecorder: CheckoutSessionRequestRecorder
+    ) {
+        let sessionJSON = STPTestUtils.jsonNamed("CheckoutSession")!
+        let session = try XCTUnwrap(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: sessionJSON))
+        let requestRecorder = CheckoutSessionRequestRecorder()
+        let configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: session)
+        CheckoutTestHelpers.stubCheckoutSessionRequests(
+            sessionId: session.id,
+            requestRecorder: requestRecorder,
+            sessionJSON: { sessionJSON }
+        )
+        return (configuration, requestRecorder)
     }
 
     private static func makeOpenSession(paymentMethodTypes: [String]) -> PaymentPagesAPIResponse {
