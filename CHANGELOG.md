@@ -9,6 +9,7 @@ PATCH
 
 ### PaymentSheet
 * [Fixed] Fixed SwiftUI `EmbeddedPaymentElement` presentation in multi-scene apps.
+* [Fixed] FlowController now defaults to Link when it was the last selected payment option even when it is displayed as a wallet button instead of in the list of payment methods.
 
 ## 26.4.0 2026-07-20
 ### StripeCore
