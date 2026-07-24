@@ -39,7 +39,9 @@ import XCTest
         disableMocking = ProcessInfo.processInfo.environment["STP_NO_NETWORK_MOCKS"] != nil
 
         if disableMocking {
-            // Don't set this up
+            // Clear any stubs left behind by other test cases (e.g. APIStubbedTestCase) that
+            // share this process, so we actually hit the live network as intended.
+            HTTPStubs.removeAllStubs()
             return
         }
 
