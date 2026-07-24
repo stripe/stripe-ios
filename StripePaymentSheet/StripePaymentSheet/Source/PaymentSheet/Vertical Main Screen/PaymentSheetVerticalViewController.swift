@@ -185,6 +185,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && (shouldShowApplePayInList || walletButtonsViewState.showApplePay) && Self.walletButtonsViewAllowsExpressType(.link, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
+        // Link can be the customer's default even when it is rendered as a wallet button instead of a selected row.
+        // FlowController asks its UI for the selected payment option, so the UI needs to mark the wallet button as selected.
+        if previousPaymentOption == nil && isFlowController && isLinkShownAsWalletButton && customerDefaultIsLink {
+            isLinkWalletButtonSelected = true
+        }
 
         if case let .link(linkConfirmOption) = previousPaymentOption {
             self.linkConfirmOption = linkConfirmOption
@@ -193,6 +198,35 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         // Initial construction is complete. Clear the seed so later UI regeneration preserves the customer's current selection.
         self.previousPaymentOption = nil
+    }
+
+    private var customerDefaultIsLink: Bool {
+        CustomerPaymentOption.selectedPaymentMethod(
+            for: configuration.customer?.id,
+            elementsSession: elementsSession,
+            surface: .paymentSheet
+        ) == .link
+    }
+
+    private var isLinkShownAsWalletButton: Bool {
+        walletHeaderOptions.contains(.link)
+    }
+
+    private var walletHeaderOptions: PaymentSheetViewController.WalletHeaderView.WalletOptions {
+        var walletOptions: PaymentSheetViewController.WalletHeaderView.WalletOptions = []
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
+            && !shouldShowApplePayInList
+            && !walletButtonsShownExternally
+            && !configuration.willUseWalletButtonsView {
+            walletOptions.insert(.applePay)
+        }
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+            && !shouldShowLinkInList
+            && !walletButtonsShownExternally
+            && !configuration.willUseWalletButtonsView {
+            walletOptions.insert(.link)
+        }
+        return walletOptions
     }
 
     static func walletButtonsViewAllowsExpressType(_ expressType: PaymentSheet.WalletButtonsVisibility.ExpressType, walletButtonsViewState: PaymentSheet.WalletButtonsViewState, configuration: PaymentSheet.Configuration) -> Bool {
@@ -466,13 +500,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func makeWalletHeaderView() -> UIView? {
-        var walletOptions: PaymentSheetViewController.WalletHeaderView.WalletOptions = []
-        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowApplePayInList && !walletButtonsShownExternally && !configuration.willUseWalletButtonsView {
-            walletOptions.insert(.applePay)
-        }
-        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowLinkInList && !walletButtonsShownExternally && !configuration.willUseWalletButtonsView {
-            walletOptions.insert(.link)
-        }
+        let walletOptions = walletHeaderOptions
         guard !walletOptions.isEmpty else {
             return nil
         }
