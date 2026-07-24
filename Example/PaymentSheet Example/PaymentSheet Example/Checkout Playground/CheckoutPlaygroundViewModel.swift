@@ -48,17 +48,6 @@ extension CheckoutPlayground {
         @Published var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
         @Published var checkoutEndpointOption: EndpointOption = .hosted
         @Published var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
-        @Published var expressCheckoutElementOption: ExpressCheckoutElementOption = .disabled {
-            didSet {
-                if expressCheckoutElementOption == .disabled && integrationType == .disabled {
-                    integrationType = .flowController
-                }
-            }
-        }
-        @Published var applePayVisibility: WalletVisibilityOption = .automatic
-        @Published var applePayButtonTypeOption: ApplePayButtonTypeOption = .plain
-        @Published var linkVisibility: WalletVisibilityOption = .automatic
-        @Published var linkDisplayOption: LinkDisplayOption = .automatic
 
         @Published var isCreating = false
         @Published var errorMessage: String?
