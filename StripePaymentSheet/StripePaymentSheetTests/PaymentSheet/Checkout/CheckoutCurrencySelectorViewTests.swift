@@ -15,14 +15,18 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     // MARK: - Auto-hide tests
 
     func testHiddenWhenAdaptivePricingIsUnavailableAtInitialization() async throws {
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
+        )
         let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
 
         XCTAssertTrue(view.isHidden)
     }
 
     func testHiddenWhenAdaptivePricingNotActive() async throws {
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
+        )
         let session = makeSession(adaptivePricingActive: false)
         try await checkout.commitSession(session)
 
@@ -32,7 +36,9 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     }
 
     func testHiddenWhenLocalizedPricesEmpty() async throws {
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
+        )
         let session = makeSession(includeLocalizedPrices: false)
         try await checkout.commitSession(session)
 
@@ -42,7 +48,9 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     }
 
     func testHiddenWhenExchangeRateMetaNil() async throws {
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
+        )
         let session = makeSession(includeExchangeRateFields: false)
         try await checkout.commitSession(session)
 
@@ -52,7 +60,9 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     }
 
     func testVisibleWhenAdaptivePricingActive() async throws {
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
+        )
         let session = makeSession()
         try await checkout.commitSession(session)
 
@@ -62,7 +72,9 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     }
 
     func testTransitionsFromHiddenToVisibleOnSessionUpdate() async throws {
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
+        )
         let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
 
         XCTAssertTrue(view.isHidden)
@@ -76,7 +88,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     func testTransitionsFromVisibleToHiddenOnSessionUpdate() async throws {
         let session = makeSession()
         let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session)
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
         )
         let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
 
@@ -94,7 +106,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
         configuration.currencySelectorElement.appearance.labelContent = .amount
         let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeConfiguration(configuration: configuration)
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(configuration: configuration)
         )
         let session = makeSession(integrationAmount: 1200, localAmount: 1000)
         try await checkout.commitSession(session)

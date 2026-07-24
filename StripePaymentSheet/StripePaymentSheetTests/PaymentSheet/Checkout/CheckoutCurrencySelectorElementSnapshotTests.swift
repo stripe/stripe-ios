@@ -40,7 +40,7 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
         var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
         configuration.currencySelectorElement.appearance = appearance
         let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeConfiguration(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(
                 apiResponse: session,
                 configuration: configuration
             )

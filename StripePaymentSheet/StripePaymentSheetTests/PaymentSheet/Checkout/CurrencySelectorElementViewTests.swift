@@ -15,7 +15,9 @@ final class CurrencySelectorElementViewTests: XCTestCase {
 
     func testVisibilityUpdatesWithAdaptivePricingAvailability() async throws {
         // Given a currency selector without Adaptive Pricing data
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
+        )
         let element = checkout.getCurrencySelectorElement()
         let hostingController = UIHostingController(rootView: try XCTUnwrap(element).view)
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
