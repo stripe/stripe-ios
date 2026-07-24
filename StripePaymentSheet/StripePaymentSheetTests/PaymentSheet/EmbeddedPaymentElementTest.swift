@@ -884,7 +884,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCheckoutSession() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = apiClient
         let checkout = try await Checkout(configuration: checkoutConfiguration)
 
@@ -904,7 +904,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCheckoutSessionCancelsInFlight() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = apiClient
         let checkout = try await Checkout(configuration: checkoutConfiguration)
 
@@ -928,7 +928,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCheckoutSessionNoOpsForCompleteSession() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = apiClient
         let checkout = try await Checkout(configuration: checkoutConfiguration)
 
@@ -959,7 +959,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCheckoutSessionNoOpsForExpiredSession() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = apiClient
         let checkout = try await Checkout(configuration: checkoutConfiguration)
 

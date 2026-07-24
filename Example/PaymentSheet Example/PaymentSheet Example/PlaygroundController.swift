@@ -940,7 +940,7 @@ extension PlaygroundController {
                 // Load checkout session using Checkout SDK if using CheckoutSession
                 if let checkoutSessionClientSecret = json["checkoutSessionClientSecret"] {
                     do {
-                        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionClientSecret)
+                        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionClientSecret, returnURL: "payments-example://stripe-redirect")
                         checkoutConfiguration.adaptivePricing.allowed = settingsToLoad.csAdaptivePricing == .on
                         self.checkout = try await Checkout(configuration: checkoutConfiguration)
                     } catch {
