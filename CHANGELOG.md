@@ -3,6 +3,13 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+## 26.4.1 2026-07-23
+### Payments
+* [Fixed] Fixed an issue where some Alipay payments incorrectly reported failure after succeeding.
+
+### PaymentSheet
+* [Fixed] Fixed SwiftUI `EmbeddedPaymentElement` presentation in multi-scene apps.
+
 ## 26.4.0 2026-07-20
 ### StripeCore
 * [Added] `STPAPIClient.betas` is now public, allowing merchants to opt in to beta features that require a preview flag on the `Stripe-Version` header.

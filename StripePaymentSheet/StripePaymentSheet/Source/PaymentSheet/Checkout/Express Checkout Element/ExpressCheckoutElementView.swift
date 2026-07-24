@@ -6,6 +6,7 @@
 //
 
 import PassKit
+@_spi(STP) import StripeCore
 import UIKit
 
 @_spi(STP)
@@ -80,6 +81,7 @@ extension Checkout {
         private func makeApplePayButton() -> UIView {
             let buttonType = checkout.configuration.applePayConfiguration?.buttonType ?? .plain
             let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: .automatic)
+            // TODO: Appearance
             button.cornerRadius = 6
             button.translatesAutoresizingMaskIntoConstraints = false
             button.heightAnchor.constraint(equalToConstant: 44).isActive = true
@@ -89,6 +91,7 @@ extension Checkout {
 
         private func makeLinkButton() -> UIView {
             let button = PayWithLinkButton()
+            // TODO: Appearance
             button.cornerRadius = 6
             button.translatesAutoresizingMaskIntoConstraints = false
             button.heightAnchor.constraint(equalToConstant: 44).isActive = true
@@ -116,13 +119,12 @@ extension Checkout.ExpressCheckoutElementView {
     ) -> [ExpressButton] {
         let eceConfig = configuration.expressCheckoutElement
         var buttons: [ExpressButton] = []
-
         for button in session.availableExpressButtonTypes {
             switch button {
             case .applePay:
-                if eceConfig.applePay != .never
-                    && configuration.applePayConfiguration != nil
-                    && PKPaymentAuthorizationViewController.canMakePayments() {
+                if eceConfig.applePay != .never,
+                    configuration.applePayConfiguration != nil,
+                    StripeAPI.deviceSupportsApplePay() {
                     buttons.append(.applePay)
                 }
             case .link:
@@ -134,13 +136,14 @@ extension Checkout.ExpressCheckoutElementView {
         }
 
         // .always: include even if the session does not advertise the wallet
-        if eceConfig.applePay == .always
-            && configuration.applePayConfiguration != nil
-            && PKPaymentAuthorizationViewController.canMakePayments()
-            && !buttons.contains(.applePay) {
+        if eceConfig.applePay == .always,
+            configuration.applePayConfiguration != nil,
+            StripeAPI.deviceSupportsApplePay(),
+            !buttons.contains(.applePay) {
             buttons.append(.applePay)
         }
-        if eceConfig.link == .always && !buttons.contains(.link) {
+        if eceConfig.link == .always,
+            !buttons.contains(.link) {
             buttons.append(.link)
         }
 
