@@ -38,6 +38,30 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.status?.type, .open)
     }
 
+    func testGetCurrencySelectorElementReturnsStableInstance() async throws {
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+
+        XCTAssertTrue(checkout.getCurrencySelectorElement() === checkout.getCurrencySelectorElement())
+    }
+
+    func testGetCurrencySelectorElementLogsInitializationOnce() async throws {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let previousLogHistory = analyticsClient._testLogHistory
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = previousLogHistory }
+
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+
+        XCTAssertEqual(currencySelectorInitEvents(in: analyticsClient).count, 0)
+
+        _ = checkout.getCurrencySelectorElement()
+        _ = checkout.getCurrencySelectorElement()
+
+        let events = currencySelectorInitEvents(in: analyticsClient)
+        XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events.first?["is_standalone_element"] as? Bool, true)
+    }
+
     func testSessionPaymentOptionUpdatesAndClears() async throws {
         // Given a Checkout with a PaymentElement and valid card payment option
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
@@ -616,4 +640,10 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(params.count, 3)
     }
 
+}
+
+private func currencySelectorInitEvents(in analyticsClient: STPAnalyticsClient) -> [[String: Any]] {
+    analyticsClient._testLogHistory.filter {
+        $0["event"] as? String == STPAnalyticEvent.adaptivePricingCurrencySelectorInit.rawValue
+    }
 }
