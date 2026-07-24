@@ -10,6 +10,32 @@ import Foundation
 // MARK: - Computed Properties
 
 extension Checkout.Session {
+    /// The express button types available for this session, derived from the elements session.
+    var availableExpressButtonTypes: [ExpressButton] {
+        var types: [ExpressButton] = []
+        for type in elementsSession.orderedPaymentMethodTypesAndWallets {
+            switch type {
+            case "apple_pay" where !types.contains(.applePay):
+                types.append(.applePay)
+            case "link" where !types.contains(.link):
+                types.append(.link)
+            default:
+                continue
+            }
+        }
+        if elementsSession.linkPassthroughModeEnabled, !types.contains(.link) {
+            types.append(.link)
+        }
+        return types
+    }
+
+    /// Whether `ExpressCheckoutElement` has any buttons to display for this session.
+    @_spi(STP)
+    @_spi(ReactNativeSDK)
+    public var isExpressCheckoutElementAvailable: Bool {
+        !availableExpressButtonTypes.isEmpty
+    }
+
     var customerId: String? {
         return customer?.id
     }

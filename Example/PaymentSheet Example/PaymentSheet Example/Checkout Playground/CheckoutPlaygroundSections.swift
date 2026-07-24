@@ -12,6 +12,7 @@ struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var customerType: CheckoutPlayground.CustomerType
     @Binding var checkoutEndpointOption: CheckoutPlayground.EndpointOption
     @Binding var checkoutEndpoint: String
+    @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -22,6 +23,12 @@ struct CheckoutPlaygroundConfigurationSection: View {
                     icon: "square.stack.3d.up.fill",
                     selection: $integrationType,
                     tooltip: "Choose the PaymentElement presentation.\n\n• sheet: Presents PaymentElement as a payment method selector.\n• view: Displays PaymentElement in the checkout flow.",
+                    displayText: { $0.displayName }
+                )
+                CheckoutPlayground.PickerRow(
+                    title: "ExpressCheckoutElement",
+                    icon: "bolt.fill",
+                    selection: $expressCheckoutElementOption,
                     displayText: { $0.displayName }
                 )
                 CheckoutPlayground.PickerRow(

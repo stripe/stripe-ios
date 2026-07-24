@@ -135,6 +135,20 @@ enum CheckoutPlayground {
         }
     }
 
+    enum ExpressCheckoutElementOption: String, CaseIterable, Identifiable {
+        case disabled
+        case enabled
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .disabled: return "none"
+            case .enabled: return "show"
+            }
+        }
+    }
+
     struct LineItemConfig: Identifiable {
         let id = UUID()
         var name: String
