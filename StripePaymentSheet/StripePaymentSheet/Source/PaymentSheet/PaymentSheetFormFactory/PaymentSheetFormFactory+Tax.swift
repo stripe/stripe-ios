@@ -9,15 +9,6 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-/// The minimum address fields needed to compute tax in each country.
-private let taxMinimumFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect] = [
-    "US": .all,
-    "PR": .all,
-    "CA": .countryAndPostal,
-    "GB": .countryAndPostal,
-    "IN": .countryAndPostal,
-]
-
 extension PaymentSheetFormFactory {
     /// Applies tax requirements after the LPM form is built so they replace its country-specific minimums.
     func applyAutomaticTaxMinimumsIfNecessary(to form: PaymentMethodElement) -> PaymentMethodElement {
@@ -31,10 +22,15 @@ extension PaymentSheetFormFactory {
             "A payment method form should contain at most one billing address section"
         )
         guard let addressSection = addressSections.first else {
-            return appendingTaxAddressSection(to: form, minimums: taxMinimumFieldsToCollectByCountry)
+            return appendingTaxAddressSection(
+                to: form,
+                minimums: AutomaticTaxBillingAddressRequirements.minimumFieldsToCollectByCountry
+            )
         }
 
-        addressSection.addMinimumFieldsToCollectByCountry(taxMinimumFieldsToCollectByCountry)
+        addressSection.addMinimumFieldsToCollectByCountry(
+            AutomaticTaxBillingAddressRequirements.minimumFieldsToCollectByCountry
+        )
         return form
     }
 
