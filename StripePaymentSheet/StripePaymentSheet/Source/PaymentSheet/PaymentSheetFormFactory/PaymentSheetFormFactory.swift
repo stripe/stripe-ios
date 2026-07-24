@@ -965,15 +965,15 @@ extension PaymentSheetFormFactory {
         requiredByPaymentMethod: Bool
     ) -> Element? {
         let defaultFieldsToCollect: AddressSectionElement.FieldsToCollect? = {
-            switch configuration.billingDetailsCollectionConfiguration.address {
-            case .automatic where requiredByPaymentMethod:
+            switch (configuration.billingDetailsCollectionConfiguration.address, requiredByPaymentMethod) {
+            case (.automatic, true):
                 return .all
-            case .automatic where collectsTaxFromBillingAddress:
+            case (.automatic, false) where collectsTaxFromBillingAddress:
                 // Tax always needs the country; country overrides collect any additional fields required for that country.
                 return .country
-            case .full:
+            case (.full, _):
                 return .all
-            case .automatic, .never:
+            case (.automatic, false), (.never, _):
                 return nil
             }
         }()
