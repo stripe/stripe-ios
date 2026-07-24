@@ -420,6 +420,13 @@ final class PaymentSheetLoader {
                 return false
             }
 
+            // Checkout automatic tax cannot use a saved payment method whose billing
+            // address is missing fields needed to calculate tax.
+            if intent.collectsTaxFromBillingAddress,
+               !AutomaticTaxBillingAddressRequirements.areSatisfied(by: paymentMethod.billingDetails?.address) {
+                return false
+            }
+
             // Filter out pm whose billing country is not allowed
             guard Self.shouldIncludePaymentMethod(paymentMethod, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries) else {
                 return false
