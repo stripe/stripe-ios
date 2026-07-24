@@ -81,6 +81,7 @@ extension Checkout {
         private func makeApplePayButton() -> UIView {
             let buttonType = checkout.configuration.applePayConfiguration?.buttonType ?? .plain
             let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: .automatic)
+            // TODO: Appearance
             button.cornerRadius = 6
             button.translatesAutoresizingMaskIntoConstraints = false
             button.heightAnchor.constraint(equalToConstant: 44).isActive = true
@@ -90,6 +91,7 @@ extension Checkout {
 
         private func makeLinkButton() -> UIView {
             let button = PayWithLinkButton()
+            // TODO: Appearance
             button.cornerRadius = 6
             button.translatesAutoresizingMaskIntoConstraints = false
             button.heightAnchor.constraint(equalToConstant: 44).isActive = true
