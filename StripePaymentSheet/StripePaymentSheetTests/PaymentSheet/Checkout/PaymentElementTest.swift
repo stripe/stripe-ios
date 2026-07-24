@@ -28,7 +28,7 @@ final class PaymentElementTest: XCTestCase {
 
     func testConfigurationSetsCheckoutDefaultBillingDetails() async throws {
         // Given Checkout billing defaults
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         var billingDetails = Checkout.Configuration.Defaults.BillingDetails()
         billingDetails.name = "Jane Doe"
         billingDetails.address = .init(
@@ -50,6 +50,7 @@ final class PaymentElementTest: XCTestCase {
         let embeddedConfiguration = paymentElement.embeddedPaymentElement.configuration
 
         // Then both configurations receive the same default billing details
+        XCTAssertEqual(checkout.configuration.returnURL, "stripe-ios-test://checkout-return")
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.name, "Jane Doe")
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.country, "US")
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.line1, "123 Main St")
@@ -63,7 +64,7 @@ final class PaymentElementTest: XCTestCase {
 
     func testConfigurationSetsCheckoutDefaultShippingDetails() async throws {
         // Given Checkout shipping defaults
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Jane Doe"
         shippingDetails.address = .init(
@@ -104,7 +105,7 @@ final class PaymentElementTest: XCTestCase {
 
     func testConfigurationSetsFullBillingAddressCollectionWhenCheckoutRequiresBillingAddress() async throws {
         // Given automatic billing address collection in PaymentElement
-        let checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        let checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "required")
 
         // When Checkout requires billing address collection
@@ -123,7 +124,7 @@ final class PaymentElementTest: XCTestCase {
 
     func testConfigurationPreservesFullBillingAddressCollectionWhenCheckoutBillingAddressCollectionIsAutomatic() async throws {
         // Given full billing address collection in PaymentElement
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.paymentElement.billingDetailsCollectionConfiguration.address = .full
 
         // When Checkout uses automatic billing address collection
@@ -139,7 +140,7 @@ final class PaymentElementTest: XCTestCase {
 
     func testCheckoutSessionUpdatePreservesFlowControllerPaymentOption() async throws {
         // Given a Checkout PaymentElement with PayNow available in the real FlowController sheet UI...
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.paymentElement.paymentMethodLayout = .vertical
         let checkout = try await Checkout(
             configuration: CheckoutTestHelpers.makeConfiguration(

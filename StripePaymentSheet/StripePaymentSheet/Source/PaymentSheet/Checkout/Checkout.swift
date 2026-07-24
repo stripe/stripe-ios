@@ -109,6 +109,7 @@ public final class Checkout: ObservableObject {
         guard !clientSecret.isEmpty else {
             throw CheckoutError.invalidClientSecret
         }
+        configuration.validateReturnURL()
         self.clientSecret = clientSecret
         self.configuration = configuration
         self.apiClient = configuration.apiClient

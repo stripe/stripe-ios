@@ -84,7 +84,7 @@ struct CheckoutCartView: View {
         isLoading = true
         errorMessage = nil
         do {
-            var config = Checkout.Configuration(clientSecret: clientSecret)
+            var config = Checkout.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
             config.adaptivePricing.allowed = adaptivePricing
             checkout = try await Checkout(configuration: config)
         } catch {

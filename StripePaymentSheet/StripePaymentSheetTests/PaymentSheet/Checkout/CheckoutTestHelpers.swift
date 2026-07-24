@@ -149,7 +149,7 @@ enum CheckoutTestHelpers {
     ) -> Checkout.Configuration {
         // Use the production Checkout initializer with a test-controlled API client.
         let clientSecret = configuration?.clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
-        var resolvedConfiguration = configuration ?? Checkout.Configuration(clientSecret: clientSecret)
+        var resolvedConfiguration = configuration ?? Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         resolvedConfiguration.apiClient = makeStubbedAPIClient(
             apiResponse: apiResponse,
             clientSecret: clientSecret,
