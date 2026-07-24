@@ -39,10 +39,8 @@ public final class ExpressCheckoutElementUIView: UIView {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        configure(buttons: Self.expressButtons(
-            from: checkout.session,
-            configuration: checkout.configuration
-        ))
+        let buttons = Self.expressButtons(from: checkout.session, configuration: checkout.configuration)
+        buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
     }
 
     @available(*, unavailable)
@@ -60,12 +58,6 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     // MARK: - Private Methods
-
-    private func configure(buttons: [ExpressButton]) {
-        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
-        invalidateIntrinsicContentSize()
-    }
 
     private func makeButton(for button: ExpressButton) -> UIView {
         switch button {
