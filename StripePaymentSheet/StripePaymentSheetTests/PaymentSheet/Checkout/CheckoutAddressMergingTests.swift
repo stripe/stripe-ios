@@ -1,4 +1,3 @@
-@testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
@@ -8,7 +7,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_shippingApplied() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(Checkout.ContactAddress(
+        let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(Checkout.Session.ShippingAddress(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )))
@@ -27,10 +26,10 @@ final class CheckoutAddressMergingTests: XCTestCase {
         XCTAssertEqual(details?.address.postalCode, "90001")
     }
 
-    func testApplyAddressOverrides_shippingNotOverriddenWhenConfigHasShipping() {
+    func testApplyAddressOverrides_configShippingTakesPrecedence() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(Checkout.ContactAddress(
-            name: "Override",
+        let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(Checkout.Session.ShippingAddress(
+            name: "John Smith",
             address: .init(country: "GB")
         )))
 
@@ -82,7 +81,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_embeddedShipping() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let shippingAddress = Checkout.ContactAddress(
+        let shippingAddress = Checkout.Session.ShippingAddress(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )
