@@ -68,11 +68,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         navBar.delegate = self
         return navBar
     }()
-    /// Returns true when Link should render in the wallet header because there are no selectable carousel options.
+    /// Returns true when Link should render in the wallet header because there are no selectable carousel options (no Apple Pay and no SPMs).
     private var shouldUseLinkOnlyWalletHeader: Bool {
         return couldShowLinkInHeader && !savedPaymentOptionsViewController.hasOptionsExcludingAdd
     }
-    // Only show the wallet header when Link is the only header option.
+    // Only show the wallet header in adding new mode when there is a wallet header to show
     private var shouldShowWalletHeader: Bool {
         switch mode {
         case .addingNew:
@@ -259,7 +259,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 switch linkConfirmOption {
                 case .wallet where isLinkEnabled:
                     if shouldUseLinkOnlyWalletHeader {
-                        // Link renders in the wallet header instead of the carousel when it is the only header option.
+                        // Link renders in the wallet header on the 'adding new' screen instead of the carousel
                         mode = .addingNew
                         isHackyLinkButtonSelected = true
                     }
@@ -331,7 +331,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
 
-        // Automatically switch into adding-new mode when Link is the only header option.
+        // Automatically switch into adding-new mode when showing Link wallet, there are no SPMs/Apple Pay in that case.
         if shouldUseLinkOnlyWalletHeader {
             mode = .addingNew
         }

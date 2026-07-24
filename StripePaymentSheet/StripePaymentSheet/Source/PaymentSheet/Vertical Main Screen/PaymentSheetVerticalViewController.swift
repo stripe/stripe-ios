@@ -186,7 +186,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
         // Link can be the customer's default even when it is rendered as a wallet button instead of a selected row.
-        // FlowController asks its UI for the selected payment option, so the UI needs to mark the wallet button as selected.
+        // Unfortunately, FlowController asks its UI (this code), rather than a view model, for the selected payment option (see `selectedPaymentOption`), so we need to mark the wallet button as selected.
         if previousPaymentOption == nil && isFlowController && isLinkShownAsWalletButton && customerDefaultIsLink {
             isLinkWalletButtonSelected = true
         }
@@ -601,13 +601,17 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             didSendLogShow = true
             analyticsHelper.logShow(showingSavedPMList: false) // We never show the saved PM list first
         }
+        // These Link selection fields are used to report a selection to FlowController,
+        // not to persist selection across presentations. Clear them before the sheet is
+        // visible again so the primary button reflects the current selectedPaymentOption.
+        isLinkWalletButtonSelected = false
+        linkConfirmOption = nil
+        updatePrimaryButton()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         logInitialDisplayedPaymentMethods()
-        isLinkWalletButtonSelected = false
-        linkConfirmOption = nil
     }
 
     private func logInitialDisplayedPaymentMethods() {
