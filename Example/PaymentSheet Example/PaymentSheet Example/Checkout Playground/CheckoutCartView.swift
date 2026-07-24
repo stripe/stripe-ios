@@ -21,6 +21,10 @@ struct CheckoutCartView: View {
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     var showExpressCheckoutElement: Bool = false
+    var applePayVisibility: CheckoutPlayground.WalletVisibilityOption = .automatic
+    var applePayButtonTypeOption: CheckoutPlayground.ApplePayButtonTypeOption = .plain
+    var linkVisibility: CheckoutPlayground.WalletVisibilityOption = .automatic
+    var linkDisplayOption: CheckoutPlayground.LinkDisplayOption = .automatic
     var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
 
     var body: some View {
@@ -43,7 +47,7 @@ struct CheckoutCartView: View {
                                 checkout.getExpressCheckoutElement()
                                     .padding(.horizontal)
                                     .padding(.top, 16)
-                                    .padding(.bottom, checkout.session.total != nil ? 0 : 16)
+                                    .padding(.bottom, integrationType != .disabled && checkout.session.total != nil ? 0 : 16)
                             }
                             if checkout.session.total != nil {
                                 switch integrationType {
@@ -53,6 +57,8 @@ struct CheckoutCartView: View {
                                 case .embedded:
                                     CheckoutCartEmbeddedPaymentView(checkout: checkout)
                                         .clipped()
+                                case .disabled:
+                                    EmptyView()
                                 }
                             }
                         }
@@ -103,8 +109,14 @@ struct CheckoutCartView: View {
             var config = Checkout.Configuration(clientSecret: clientSecret)
             config.adaptivePricing.allowed = adaptivePricing
             config.applePayConfiguration = Checkout.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.paymentsheet.example"
+                merchantId: "merchant.com.stripe.paymentsheet.example",
+                buttonType: applePayButtonTypeOption.pkButtonType
             )
+            config.linkConfiguration = Checkout.LinkConfiguration(display: linkDisplayOption.linkDisplay)
+            if showExpressCheckoutElement {
+                config.expressCheckoutElement.applePay = applePayVisibility.walletVisibility
+                config.expressCheckoutElement.link = linkVisibility.walletVisibility
+            }
             checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription

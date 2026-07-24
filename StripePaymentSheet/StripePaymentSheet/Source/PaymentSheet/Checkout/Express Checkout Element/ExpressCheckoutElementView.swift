@@ -117,18 +117,36 @@ extension Checkout.ExpressCheckoutElementView {
         from session: Checkout.Session,
         configuration: Checkout.Configuration
     ) -> [ExpressButton] {
+        let eceConfig = configuration.expressCheckoutElement
         var buttons: [ExpressButton] = []
         for button in session.availableExpressButtonTypes {
             switch button {
             case .applePay:
-                if configuration.applePayConfiguration != nil
-                    && StripeAPI.deviceSupportsApplePay() {
+                if eceConfig.applePay != .never,
+                    configuration.applePayConfiguration != nil,
+                    StripeAPI.deviceSupportsApplePay() {
                     buttons.append(.applePay)
                 }
             case .link:
-                buttons.append(.link)
+                if eceConfig.link != .never
+                    && configuration.linkConfiguration?.display != .never {
+                    buttons.append(.link)
+                }
             }
         }
+
+        // .always: include even if the session does not advertise the wallet
+        if eceConfig.applePay == .always,
+            configuration.applePayConfiguration != nil,
+            StripeAPI.deviceSupportsApplePay(),
+            !buttons.contains(.applePay) {
+            buttons.append(.applePay)
+        }
+        if eceConfig.link == .always,
+            !buttons.contains(.link) {
+            buttons.append(.link)
+        }
+
         return buttons
     }
 }

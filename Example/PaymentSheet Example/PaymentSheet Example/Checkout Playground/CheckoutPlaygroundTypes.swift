@@ -5,6 +5,8 @@
 //  Created by Nick Porter on 2/24/26.
 
 import Foundation
+import PassKit
+@_spi(STP) import StripePaymentSheet
 
 enum CheckoutPlayground {
     enum EndpointOption: String, CaseIterable, Identifiable {
@@ -124,6 +126,7 @@ enum CheckoutPlayground {
     enum IntegrationType: String, CaseIterable, Identifiable {
         case flowController
         case embedded
+        case disabled
 
         var id: String { rawValue }
 
@@ -131,6 +134,77 @@ enum CheckoutPlayground {
             switch self {
             case .flowController: return "sheet"
             case .embedded: return "view"
+            case .disabled: return "none"
+            }
+        }
+    }
+
+    enum ExpressCheckoutElementOption: String, CaseIterable, Identifiable {
+        case disabled
+        case enabled
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .disabled: return "none"
+            case .enabled: return "show"
+            }
+        }
+    }
+
+    enum WalletVisibilityOption: String, CaseIterable, Identifiable {
+        case automatic
+        case always
+        case never
+
+        var id: String { rawValue }
+
+        var displayName: String { rawValue }
+
+        var walletVisibility: ExpressCheckoutElement.Configuration.WalletVisibility {
+            switch self {
+            case .automatic: return .automatic
+            case .always: return .always
+            case .never: return .never
+            }
+        }
+    }
+
+    enum LinkDisplayOption: String, CaseIterable, Identifiable {
+        case automatic
+        case never
+
+        var id: String { rawValue }
+
+        var displayName: String { rawValue }
+
+        var linkDisplay: Checkout.LinkConfiguration.Display {
+            switch self {
+            case .automatic: return .automatic
+            case .never: return .never
+            }
+        }
+    }
+
+    enum ApplePayButtonTypeOption: String, CaseIterable, Identifiable {
+        case plain
+        case buy
+        case checkout
+        case subscribe
+        case donate
+
+        var id: String { rawValue }
+
+        var displayName: String { rawValue }
+
+        var pkButtonType: PKPaymentButtonType {
+            switch self {
+            case .plain: return .plain
+            case .buy: return .buy
+            case .checkout: return .checkout
+            case .subscribe: return .subscribe
+            case .donate: return .donate
             }
         }
     }

@@ -52,6 +52,18 @@ struct CheckoutPlaygroundView: View {
                             automaticPaymentMethods: $viewModel.automaticPaymentMethods
                         )
 
+                        if viewModel.expressCheckoutElementOption == .enabled {
+                            CheckoutPlaygroundExpressCheckoutSettingsSection(
+                                applePayVisibility: $viewModel.applePayVisibility,
+                                applePayButtonTypeOption: $viewModel.applePayButtonTypeOption,
+                                linkVisibility: $viewModel.linkVisibility
+                            )
+                        }
+
+                        CheckoutPlaygroundWalletSettingsSection(
+                            linkDisplayOption: $viewModel.linkDisplayOption
+                        )
+
                         if viewModel.adaptivePricing {
                             currencySelectorAppearanceSection
                         }
@@ -88,6 +100,10 @@ struct CheckoutPlaygroundView: View {
                         adaptivePricing: viewModel.adaptivePricing,
                         integrationType: viewModel.integrationType,
                         showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .enabled,
+                        applePayVisibility: viewModel.applePayVisibility,
+                        applePayButtonTypeOption: viewModel.applePayButtonTypeOption,
+                        linkVisibility: viewModel.linkVisibility,
+                        linkDisplayOption: viewModel.linkDisplayOption,
                         currencySelectorAppearance: viewModel.currencySelectorAppearance
                     )
                 }
