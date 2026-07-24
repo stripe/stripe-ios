@@ -66,19 +66,10 @@ class BottomSheetPresentationAnimator: NSObject {
             let fromVC = transitionContext.viewController(forKey: .from)
         else { return }
 
-        // Custom dismissal removes the view directly, so UIKit does not automatically
-        // resign a text field that is still the first responder.
-        fromVC.view.endEditing(true)
-        let distainceToBottom = transitionContext.containerView.bounds.maxY - fromVC.view.frame.minY
-
         Self.animate({
-            // Auto Layout keeps the sheet pinned to the bottom during this transition.
-            // Animate a transform so a concurrent layout pass cannot snap the sheet back.
-            fromVC.view.transform = CGAffineTransform(translationX: 0, y: distainceToBottom)
+            fromVC.view.frame.origin.y = transitionContext.containerView.frame.height
         }) { didComplete in
             fromVC.view.removeFromSuperview()
-            // PaymentSheet can reuse this controller for a later presentation
-            fromVC.view.transform = .identity
             transitionContext.completeTransition(didComplete)
         }
     }
