@@ -637,6 +637,7 @@ private func SetupPlayground(
 
     var urlRequest = URLRequest(url: url)
     urlRequest.httpMethod = "POST"
+    urlRequest.cachePolicy = .reloadIgnoringLocalCacheData
     urlRequest.httpBody = {
         var requestBody: [String: Any] = [:]
         requestBody["new_playground"] = true
@@ -653,7 +654,7 @@ private func SetupPlayground(
     urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
     urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-    URLSession.shared
+    nonCachingSession
         .dataTask(
             with: urlRequest
         ) { data, response, error in
@@ -774,6 +775,7 @@ private func CreatePaymentIntent(
 
     var urlRequest = URLRequest(url: url)
     urlRequest.httpMethod = "POST"
+    urlRequest.cachePolicy = .reloadIgnoringLocalCacheData
     urlRequest.httpBody = try! JSONSerialization.data(
         withJSONObject: configuration,
         options: .prettyPrinted
@@ -781,7 +783,7 @@ private func CreatePaymentIntent(
     urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
     urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-    URLSession.shared.dataTask(
+    nonCachingSession.dataTask(
         with: urlRequest,
         completionHandler: { data, _, error in
             guard error == nil, let data else {
@@ -800,6 +802,8 @@ private func CreatePaymentIntent(
     )
     .resume()
 }
+
+private let nonCachingSession = STPAPIClient.nonCachingURLSession(from: .shared)
 
 struct CreatePaymentIntentResponse: Decodable {
     let id: String
