@@ -21,7 +21,7 @@ public struct CurrencySelectorElementView: View {
 
     public var body: some View {
         if viewModel.isAvailable {
-            CurrencySelectorElementUIViewRepresentable(uiView: viewModel.uiView)
+            CurrencySelectorElementUIViewRepresentable(viewModel: viewModel)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -35,24 +35,28 @@ final class CurrencySelectorElementViewModel: ObservableObject {
 
     private var sessionCancellable: AnyCancellable?
 
-    init(checkout: Checkout, uiView: CurrencySelectorElementUIView) {
+    init(
+        sessionSource: CurrencySelectorElementSessionSource,
+        uiView: CurrencySelectorElementUIView
+    ) {
         self.uiView = uiView
-        self.isAvailable = CurrencySelectorUtilities.adaptivePricingData(from: checkout.session) != nil
-        sessionCancellable = checkout.$session
+        self.isAvailable = CurrencySelectorUtilities.adaptivePricingData(from: sessionSource.initialSession) != nil
+        sessionCancellable = sessionSource.sessionPublisher
             .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
+                self?.uiView.update(with: session)
                 self?.isAvailable = CurrencySelectorUtilities.adaptivePricingData(from: session) != nil
             }
     }
 }
 
 private struct CurrencySelectorElementUIViewRepresentable: UIViewRepresentable {
-    let uiView: CurrencySelectorElementUIView
+    let viewModel: CurrencySelectorElementViewModel
 
     func makeUIView(context: Context) -> CurrencySelectorElementUIView {
-        uiView.isEnabled = context.environment.isEnabled
-        return uiView
+        viewModel.uiView.isEnabled = context.environment.isEnabled
+        return viewModel.uiView
     }
 
     func updateUIView(_ uiView: CurrencySelectorElementUIView, context: Context) {

@@ -7,6 +7,13 @@
 
 @_spi(STP) import StripeCore
 
+/// Handles Checkout mutations requested by a CurrencySelectorElement.
+@MainActor
+protocol CurrencySelectorElementDelegate: AnyObject {
+    /// Selects the currency identified by its three-letter ISO currency code.
+    func selectCurrency(_ currency: String) async throws
+}
+
 /// An Adaptive Pricing currency selector backed by a Checkout Session.
 ///
 /// Obtain an instance from ``Checkout/getCurrencySelectorElement()`` and use
@@ -25,17 +32,18 @@ public final class CurrencySelectorElement {
 
     // MARK: - Internal Methods
 
-    init(checkout: Checkout) async {
-        let flagImageManager = AdaptivePricingFlagImageManager()
-        await flagImageManager.prefetchFlagImages(for: checkout.session)
-
-        let uiView = CurrencySelectorElementUIView(
-            checkout: checkout,
-            appearance: checkout.configuration.currencySelectorElement.appearance,
-            flagImageManager: flagImageManager
+    init(
+        sessionSource: CurrencySelectorElementSessionSource,
+        configuration: Configuration,
+        delegate: CurrencySelectorElementDelegate
+    ) async {
+        let uiView = await CurrencySelectorElementUIView(
+            session: sessionSource.initialSession,
+            delegate: delegate,
+            appearance: configuration.appearance
         )
         let viewModel = CurrencySelectorElementViewModel(
-            checkout: checkout,
+            sessionSource: sessionSource,
             uiView: uiView,
         )
 

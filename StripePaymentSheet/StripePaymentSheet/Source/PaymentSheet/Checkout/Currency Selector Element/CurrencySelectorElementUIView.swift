@@ -5,7 +5,6 @@
 //  Created by Nick Porter on 4/6/26.
 //
 
-import Combine
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
@@ -24,10 +23,9 @@ public final class CurrencySelectorElementUIView: UIView {
         }
     }
 
-    private weak var checkout: Checkout?
+    private weak var delegate: CurrencySelectorElementDelegate?
     private let appearance: CurrencySelectorElement.Appearance
-    private let flagImageManager: AdaptivePricingFlagImageManager
-    private var sessionCancellable: AnyCancellable?
+    private let flagImageManager = AdaptivePricingFlagImageManager()
     private var selectorView: TwoOptionSelectorView?
     private var lastSelectedCurrency: String?
     private let containerStackView = UIStackView()
@@ -41,23 +39,17 @@ public final class CurrencySelectorElementUIView: UIView {
     }()
 
     init(
-        checkout: Checkout,
-        appearance: CurrencySelectorElement.Appearance,
-        flagImageManager: AdaptivePricingFlagImageManager
-    ) {
-        self.checkout = checkout
+        session: Checkout.Session,
+        delegate: CurrencySelectorElementDelegate,
+        appearance: CurrencySelectorElement.Appearance
+    ) async {
+        self.delegate = delegate
         self.appearance = appearance
-        self.flagImageManager = flagImageManager
         super.init(frame: .zero)
 
+        await flagImageManager.prefetchFlagImages(for: session)
         setupContainerStackView()
-        handleSessionUpdate(checkout.session)
-        sessionCancellable = checkout.$session
-            .dropFirst()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] session in
-                self?.handleSessionUpdate(session)
-            }
+        update(with: session)
     }
 
     @available(*, unavailable)
@@ -90,7 +82,7 @@ public final class CurrencySelectorElementUIView: UIView {
         containerStackView.addArrangedSubview(errorLabel)
     }
 
-    private func handleSessionUpdate(_ session: Checkout.Session) {
+    func update(with session: Checkout.Session) {
         guard let (_, exchangeRateMeta, rawCurrency) =
                 CurrencySelectorUtilities.adaptivePricingData(from: session)
         else {
@@ -206,9 +198,9 @@ extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
         selectorView?.setEnabled(false)
 
         Task { [weak self] in
-            guard let self, let checkout else { return }
+            guard let self, let delegate else { return }
             do {
-                try await checkout.selectCurrency(id)
+                try await delegate.selectCurrency(id)
                 STPAnalyticsClient.sharedClient.log(
                     analytic: PaymentSheetAnalytic(
                         event: .adaptivePricingCurrencyToggled,
