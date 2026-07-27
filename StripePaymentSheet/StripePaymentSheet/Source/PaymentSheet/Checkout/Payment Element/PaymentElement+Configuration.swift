@@ -133,6 +133,8 @@ extension PaymentElement {
             var configuration = embeddedConfiguration
             configuration.apiClient = apiClient
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
+            // Match EwCS: Checkout collects email outside PaymentElement.
+            configuration.billingDetailsCollectionConfiguration.email = .never
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
             }
@@ -146,6 +148,8 @@ extension PaymentElement {
             var configuration = paymentSheetConfiguration
             configuration.apiClient = apiClient
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
+            // Match EwCS: Checkout collects email outside PaymentElement.
+            configuration.billingDetailsCollectionConfiguration.email = .never
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
             }

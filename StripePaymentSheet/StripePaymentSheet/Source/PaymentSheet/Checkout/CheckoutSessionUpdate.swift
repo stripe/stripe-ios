@@ -16,6 +16,7 @@ extension Checkout {
         case setShippingRate(String)
         case setTaxRegion(Address)
         case setCurrency(String)
+        case setEmail(String?)
 
         var parameters: [String: Any] {
             switch self {
@@ -39,6 +40,8 @@ extension Checkout {
                 ] as [String: Any?]).compactMapValues { $0 }
             case .setCurrency(let currency):
                 return ["updated_currency": currency]
+            case .setEmail(let email):
+                return ["customer_email": email ?? ""]
             }
         }
     }
