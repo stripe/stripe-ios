@@ -297,7 +297,7 @@ extension Checkout {
         let defaults = configuration.defaults
 
         if let email = defaults.email,
-           session.email != email {
+           session.email == nil {
             try await updateEmail(email)
         }
         if let billingDetails = defaults.billingDetails,

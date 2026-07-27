@@ -89,9 +89,9 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         XCTAssertEqual(requests[1].params["customer_email"], "jane@example.com")
     }
 
-    func testInitDoesNotApplyEmailDefaultWhenAlreadyOnSession() async throws {
-        // Given a Checkout Session with the default email already applied
-        stubCheckoutSessionRequests(customerEmail: "jane@example.com")
+    func testInitDoesNotApplyEmailDefaultWhenSessionReturnsEmail() async throws {
+        // Given Payment Pages returns a Checkout Session email
+        stubCheckoutSessionRequests(customerEmail: "session@example.com")
 
         var configuration = Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
@@ -101,7 +101,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         let checkout = try await Checkout(configuration: configuration)
         let requests = requestRecorder.requests
 
-        // Then Checkout does not send a redundant email update
+        // Then Checkout does not overwrite the existing session email
         XCTAssertNotNil(checkout.getPaymentElement())
         XCTAssertEqual(requests.map(\.kind), [.initSession])
     }
