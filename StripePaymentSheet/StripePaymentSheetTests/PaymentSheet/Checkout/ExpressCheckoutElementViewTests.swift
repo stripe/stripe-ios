@@ -54,6 +54,84 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertTrue(buttons.contains(.link))
     }
 
+    // MARK: - Link WalletVisibility tests
+
+    func testLinkNeverSuppressesLinkWhenSessionAdvertisesIt() {
+        // Given a session with link and ECE link visibility set to .never
+        let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        configuration.expressCheckoutElement.link = .never
+
+        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        XCTAssertFalse(buttons.contains(.link))
+    }
+
+    func testLinkAlwaysShowsLinkWhenSessionDoesNotAdvertiseIt() {
+        // Given a session without link and ECE link visibility set to .always
+        let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        configuration.expressCheckoutElement.link = .always
+
+        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        XCTAssertTrue(buttons.contains(.link))
+    }
+
+    func testLinkConfigurationDisplayNeverSuppressesLink() {
+        // Given a session with link and ECE link .automatic, but linkConfiguration.display = .never
+        let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        configuration.linkConfiguration = Checkout.LinkConfiguration(display: .never)
+
+        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        XCTAssertFalse(buttons.contains(.link))
+    }
+
+    func testLinkAlwaysOverridesLinkConfigurationDisplayNever() {
+        // Given ECE link .always and linkConfiguration.display = .never, .always wins
+        let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        configuration.expressCheckoutElement.link = .always
+        configuration.linkConfiguration = Checkout.LinkConfiguration(display: .never)
+
+        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        XCTAssertTrue(buttons.contains(.link))
+    }
+
+    // MARK: - Apple Pay WalletVisibility tests
+
+    func testApplePayNeverSuppressesApplePayWhenSessionAdvertisesIt() {
+        // Given a session with apple_pay, applePayConfiguration set, but ECE apple pay .never
+        let session = makeSessionWithWalletTypes(["apple_pay"]).makePublicSession()
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        configuration.applePayConfiguration = Checkout.ApplePayConfiguration(merchantId: "merchant.com.example")
+        configuration.expressCheckoutElement.applePay = .never
+
+        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        XCTAssertFalse(buttons.contains(.applePay))
+    }
+
+    func testApplePayAlwaysShowsApplePayWhenSessionDoesNotAdvertiseIt() {
+        // Given a session without apple_pay, applePayConfiguration set, ECE apple pay .always
+        let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        configuration.applePayConfiguration = Checkout.ApplePayConfiguration(merchantId: "merchant.com.example")
+        configuration.expressCheckoutElement.applePay = .always
+
+        // Whether Apple Pay appears depends on device capability
+        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        XCTAssertEqual(buttons.contains(.applePay), StripeAPI.deviceSupportsApplePay())
+    }
+
+    func testApplePayAlwaysWithoutApplePayConfigurationShowsNoApplePay() {
+        // Given ECE apple pay .always but no applePayConfiguration
+        let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        configuration.expressCheckoutElement.applePay = .always
+
+        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        XCTAssertFalse(buttons.contains(.applePay))
+    }
+
     // MARK: - isExpressCheckoutElementAvailable tests
 
     func testIsExpressCheckoutElementAvailableFalseWithNoWalletTypes() {
