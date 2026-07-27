@@ -35,10 +35,10 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
 
     private var sessionCancellable: AnyCancellable?
 
-    init(checkout: Checkout, uiView: ExpressCheckoutElementUIView) {
+    init(sessionSource: ExpressCheckoutElementSessionSource, uiView: ExpressCheckoutElementUIView) {
         self.uiView = uiView
-        self.isAvailable = checkout.session.isExpressCheckoutElementAvailable
-        sessionCancellable = checkout.$session
+        self.isAvailable = sessionSource.session.isExpressCheckoutElementAvailable
+        sessionCancellable = sessionSource.$session
             .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in

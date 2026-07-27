@@ -28,10 +28,7 @@ extension CheckoutPlayground {
                 }
             }
         }
-        @Published var applePayVisibility: WalletVisibilityOption = .automatic
-        @Published var applePayButtonTypeOption: ApplePayButtonTypeOption = .plain
-        @Published var linkVisibility: WalletVisibilityOption = .automatic
-        @Published var linkDisplayOption: LinkDisplayOption = .automatic
+
         @Published var currency: Currency = .usd
         @Published var customerType: CustomerType = .guest
         @Published var lineItems: [LineItemConfig] = LineItemConfig.defaults
@@ -48,6 +45,11 @@ extension CheckoutPlayground {
         @Published var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
         @Published var checkoutEndpointOption: EndpointOption = .hosted
         @Published var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
+
+        @Published var applePayVisibility: WalletVisibilityOption = .automatic
+        @Published var applePayButtonTypeOption: ApplePayButtonTypeOption = .plain
+        @Published var linkVisibility: WalletVisibilityOption = .automatic
+        @Published var linkDisplayOption: LinkDisplayOption = .automatic
 
         @Published var isCreating = false
         @Published var errorMessage: String?
