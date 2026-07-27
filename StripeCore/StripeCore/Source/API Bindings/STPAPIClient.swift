@@ -115,12 +115,16 @@ import UIKit
     @_spi(STP) public func configuredRequest(
         for url: URL,
         using ephemeralKeySecret: String? = nil,
+        apiVersionOverride: String? = nil,
         additionalHeaders: [String: String] = [:]
     )
         -> URLRequest
     {
         var request = URLRequest(url: url)
-        var headers = defaultHeaders(ephemeralKeySecret: ephemeralKeySecret)
+        var headers = defaultHeaders(
+            ephemeralKeySecret: ephemeralKeySecret,
+            apiVersionOverride: apiVersionOverride
+        )
         // additionalHeaders can overwrite defaultHeaders.
         for (k, v) in additionalHeaders { headers[k] = v }
         headers.forEach { key, value in
@@ -130,10 +134,13 @@ import UIKit
     }
 
     /// Headers common to all API requests for a given API Client.
-    func defaultHeaders(ephemeralKeySecret: String?) -> [String: String] {
+    func defaultHeaders(
+        ephemeralKeySecret: String?,
+        apiVersionOverride: String? = nil
+    ) -> [String: String] {
         var defaultHeaders: [String: String] = [:]
         defaultHeaders["X-Stripe-User-Agent"] = STPAPIClient.stripeUserAgentDetails(with: appInfo)
-        var stripeVersion = APIVersion
+        var stripeVersion = apiVersionOverride ?? APIVersion
         for beta in betas {
             stripeVersion += "; \(beta)"
         }
@@ -268,7 +275,7 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
-        additionalHeaders: [String: String] = [:],
+        apiVersionOverride: String? = nil,
         completion: @escaping (
             Result<T, Error>
         ) -> Void
@@ -278,7 +285,7 @@ extension STPAPIClient {
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
-            additionalHeaders: additionalHeaders,
+            apiVersionOverride: apiVersionOverride,
             resource: resource,
             completion: completion
         )
@@ -290,7 +297,7 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
-        additionalHeaders: [String: String] = [:],
+        apiVersionOverride: String? = nil,
         completion: @escaping (
             Result<T, Error>
         ) -> Void
@@ -300,7 +307,7 @@ extension STPAPIClient {
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
-            additionalHeaders: additionalHeaders,
+            apiVersionOverride: apiVersionOverride,
             url: url,
             completion: completion
         )
@@ -314,14 +321,14 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
-        additionalHeaders: [String: String] = [:]
+        apiVersionOverride: String? = nil
     ) -> Promise<T> {
         return request(
             method: .get,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
-            additionalHeaders: additionalHeaders,
+            apiVersionOverride: apiVersionOverride,
             resource: resource
         )
     }
@@ -332,7 +339,7 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
-        additionalHeaders: [String: String] = [:],
+        apiVersionOverride: String? = nil,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         request(
@@ -340,7 +347,7 @@ extension STPAPIClient {
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
-            additionalHeaders: additionalHeaders,
+            apiVersionOverride: apiVersionOverride,
             resource: resource,
             completion: completion
         )
@@ -354,14 +361,14 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
-        additionalHeaders: [String: String] = [:]
+        apiVersionOverride: String? = nil
     ) -> Promise<T> {
         return request(
             method: .post,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
-            additionalHeaders: additionalHeaders,
+            apiVersionOverride: apiVersionOverride,
             resource: resource
         )
     }
@@ -371,7 +378,7 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String?,
         consumerPublishableKey: String?,
-        additionalHeaders: [String: String],
+        apiVersionOverride: String?,
         resource: String
     ) -> Promise<T> {
         let promise = Promise<T>()
@@ -380,7 +387,7 @@ extension STPAPIClient {
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
-            additionalHeaders: additionalHeaders,
+            apiVersionOverride: apiVersionOverride,
             resource: resource
         ) { result in
             promise.fullfill(with: result)
@@ -393,7 +400,7 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String?,
         consumerPublishableKey: String?,
-        additionalHeaders: [String: String],
+        apiVersionOverride: String?,
         resource: String,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
@@ -403,7 +410,7 @@ extension STPAPIClient {
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
-            additionalHeaders: additionalHeaders,
+            apiVersionOverride: apiVersionOverride,
             url: url,
             completion: completion
         )
@@ -414,11 +421,11 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String?,
         consumerPublishableKey: String?,
-        additionalHeaders: [String: String],
+        apiVersionOverride: String?,
         url: URL,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
-        var request = configuredRequest(for: url, additionalHeaders: additionalHeaders)
+        var request = configuredRequest(for: url, apiVersionOverride: apiVersionOverride)
         switch method {
         case .get:
             request.stp_addParameters(toURL: parameters)
@@ -461,14 +468,14 @@ extension STPAPIClient {
         resource: String,
         object: I,
         ephemeralKeySecret: String? = nil,
-        additionalHeaders: [String: String] = [:]
+        apiVersionOverride: String? = nil
     ) -> Promise<O> {
         let promise = Promise<O>()
         self.post(
             resource: resource,
             object: object,
             ephemeralKeySecret: ephemeralKeySecret,
-            additionalHeaders: additionalHeaders
+            apiVersionOverride: apiVersionOverride
         ) { result in
             promise.fullfill(with: result)
         }
@@ -480,7 +487,7 @@ extension STPAPIClient {
         resource: String,
         object: I,
         ephemeralKeySecret: String? = nil,
-        additionalHeaders: [String: String] = [:],
+        apiVersionOverride: String? = nil,
         completion: @escaping (Result<O, Error>) -> Void
     ) {
         let url = apiURL.appendingPathComponent(resource)
@@ -488,7 +495,7 @@ extension STPAPIClient {
             url: url,
             object: object,
             ephemeralKeySecret: ephemeralKeySecret,
-            additionalHeaders: additionalHeaders,
+            apiVersionOverride: apiVersionOverride,
             completion: completion
         )
     }
@@ -498,19 +505,20 @@ extension STPAPIClient {
         url: URL,
         object: I,
         ephemeralKeySecret: String? = nil,
-        additionalHeaders: [String: String] = [:],
+        apiVersionOverride: String? = nil,
         completion: @escaping (Result<O, Error>) -> Void
     ) {
         do {
             let jsonDictionary = try object.encodeJSONDictionary()
             let formData = URLEncoder.queryString(from: jsonDictionary).data(using: .utf8)
-            var additionalHeaders = additionalHeaders
-            additionalHeaders["Content-Length"] = String(format: "%lu", UInt(formData?.count ?? 0))
-            additionalHeaders["Content-Type"] = "application/x-www-form-urlencoded"
             var request = configuredRequest(
                 for: url,
                 using: ephemeralKeySecret,
-                additionalHeaders: additionalHeaders
+                apiVersionOverride: apiVersionOverride,
+                additionalHeaders: [
+                    "Content-Length": String(format: "%lu", UInt(formData?.count ?? 0)),
+                    "Content-Type": "application/x-www-form-urlencoded",
+                ]
             )
             request.httpBody = formData
             request.httpMethod = HTTPMethod.post.rawValue

@@ -1209,6 +1209,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.getPlatformSettingsAPIPath)
             XCTAssertEqual(request.httpMethod, "GET")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Version"), Constant.cryptoOnrampAPIVersion)
 
             guard let queryParametersString = request.url?.query else {
                 XCTFail("Expected query parameters but found none.")

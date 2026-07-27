@@ -361,7 +361,7 @@ private extension STPAPIClient {
             post(
                 resource: resource,
                 object: object,
-                additionalHeaders: CryptoOnrampAPI.additionalHeaders
+                apiVersionOverride: CryptoOnrampAPI.stripeAPIVersion
             ) { (result: Result<T, Error>) in
                 continuation.resume(with: result)
             }
@@ -374,7 +374,7 @@ private extension STPAPIClient {
             get(
                 resource: resource,
                 parameters: parameters,
-                additionalHeaders: CryptoOnrampAPI.additionalHeaders
+                apiVersionOverride: CryptoOnrampAPI.stripeAPIVersion
             ) { (result: Result<T, Error>) in
                 continuation.resume(with: result)
             }
@@ -386,5 +386,4 @@ private enum CryptoOnrampAPI {
     // Use a preview API version for networks and parameters behind preview API features.
     // Bump this when new onramp features require a newer API version.
     static let stripeAPIVersion = "2026-03-25.preview"
-    static let additionalHeaders = ["Stripe-Version": stripeAPIVersion]
 }
