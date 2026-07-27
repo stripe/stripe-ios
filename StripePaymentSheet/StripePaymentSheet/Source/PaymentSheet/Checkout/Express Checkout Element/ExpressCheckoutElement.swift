@@ -33,13 +33,13 @@ public final class ExpressCheckoutElement {
     // MARK: - Init
 
     init(
-        sessionPublisher: Published<Checkout.Session>.Publisher,
+        sessionSource: ExpressCheckoutElementSessionSource,
         configuration: Checkout.Configuration,
         delegate: ExpressCheckoutElementDelegate
     ) {
         self.delegate = delegate
-        let uiView = ExpressCheckoutElementUIView(configuration: configuration)
-        let viewModel = ExpressCheckoutElementViewModel(sessionPublisher: sessionPublisher, uiView: uiView)
+        let uiView = ExpressCheckoutElementUIView(session: sessionSource.session, configuration: configuration)
+        let viewModel = ExpressCheckoutElementViewModel(sessionSource: sessionSource, uiView: uiView)
         self.uiView = uiView
         self.view = ExpressCheckoutElementView(viewModel: viewModel)
     }

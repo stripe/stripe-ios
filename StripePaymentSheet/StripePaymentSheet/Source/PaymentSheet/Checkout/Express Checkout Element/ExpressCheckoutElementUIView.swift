@@ -13,7 +13,7 @@ import UIKit
 @MainActor
 public final class ExpressCheckoutElementUIView: UIView {
 
-    init(configuration: Checkout.Configuration) {
+    init(session: Checkout.Session, configuration: Checkout.Configuration) {
         super.init(frame: .zero)
         // TODO: Render express buttons
     }

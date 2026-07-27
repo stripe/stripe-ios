@@ -133,7 +133,10 @@ public final class Checkout: ObservableObject {
             self.paymentElement = try await PaymentElement(checkout: self)
             await flagImageManager.prefetchFlagImages(for: session) // TODO: This should probably just load currency selector and not be a global singleton
             self.expressCheckoutElement = ExpressCheckoutElement(
-                sessionPublisher: $session,
+                sessionSource: ExpressCheckoutElementSessionSource(
+                    initialSession: session,
+                    sessionPublisher: $session
+                ),
                 configuration: configuration,
                 delegate: self
             )
