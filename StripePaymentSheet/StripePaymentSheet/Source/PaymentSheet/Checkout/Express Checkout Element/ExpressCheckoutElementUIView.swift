@@ -6,7 +6,6 @@
 //
 
 import PassKit
-@_spi(STP) import StripeCore
 import UIKit
 
 /// A UIKit view that displays wallet payment buttons (Apple Pay, Link).
@@ -17,14 +16,12 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Properties
 
-    private let session: Checkout.Session
     private let configuration: Checkout.Configuration
     private let stackView = UIStackView()
 
     // MARK: - Init
 
     init(session: Checkout.Session, configuration: Checkout.Configuration) {
-        self.session = session
         self.configuration = configuration
         super.init(frame: .zero)
 
@@ -41,13 +38,22 @@ public final class ExpressCheckoutElementUIView: UIView {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        let buttons = Self.expressButtons(from: session, configuration: configuration)
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
     }
 
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Internal Methods
+
+    func update(session: Checkout.Session) {
+        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
+        buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
+        invalidateIntrinsicContentSize()
     }
 
     // MARK: - Public Methods
@@ -97,46 +103,5 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     @objc private func handleLinkTapped() {
         // TODO: Handle Link
-    }
-}
-
-// MARK: - Button Computation
-
-extension ExpressCheckoutElementUIView {
-    static func expressButtons(
-        from session: Checkout.Session,
-        configuration: Checkout.Configuration
-    ) -> [ExpressButton] {
-        let eceConfig = configuration.expressCheckoutElement
-        var buttons: [ExpressButton] = []
-
-        for button in session.availableExpressButtonTypes {
-            switch button {
-            case .applePay:
-                if eceConfig.applePay != .never,
-                    configuration.applePayConfiguration != nil,
-                    StripeAPI.deviceSupportsApplePay() {
-                    buttons.append(.applePay)
-                }
-            case .link:
-                if eceConfig.link != .never
-                    && configuration.linkConfiguration?.display != .never {
-                    buttons.append(.link)
-                }
-            }
-        }
-
-        // .always: include even if the session does not advertise the wallet
-        if eceConfig.applePay == .always,
-            configuration.applePayConfiguration != nil,
-            StripeAPI.deviceSupportsApplePay(),
-            !buttons.contains(.applePay) {
-            buttons.append(.applePay)
-        }
-        if eceConfig.link == .always, !buttons.contains(.link) {
-            buttons.append(.link)
-        }
-
-        return buttons
     }
 }

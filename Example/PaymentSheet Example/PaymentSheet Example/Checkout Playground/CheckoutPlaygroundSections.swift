@@ -84,7 +84,6 @@ struct CheckoutPlaygroundConfigurationSection: View {
 
 struct CheckoutPlaygroundExpressCheckoutSettingsSection: View {
     @Binding var applePayVisibility: CheckoutPlayground.WalletVisibilityOption
-    @Binding var applePayButtonTypeOption: CheckoutPlayground.ApplePayButtonTypeOption
     @Binding var linkVisibility: CheckoutPlayground.WalletVisibilityOption
 
     var body: some View {
@@ -95,22 +94,14 @@ struct CheckoutPlaygroundExpressCheckoutSettingsSection: View {
                     title: "Apple Pay",
                     icon: "apple.logo",
                     selection: $applePayVisibility,
-                    tooltip: "Controls Apple Pay visibility in ExpressCheckoutElement.\n\n• automatic: Show if the session includes Apple Pay.\n• always: Show regardless of session.\n• never: Hide.",
+                    tooltip: "Controls Apple Pay visibility in ExpressCheckoutElement.\n\n• automatic: Defer to Wallet Settings.\n• always: Show in ECE regardless of Wallet Settings.\n• never: Hide in ECE regardless of Wallet Settings.",
                     displayText: { $0.displayName }
                 )
-                if applePayVisibility != .never {
-                    CheckoutPlayground.PickerRow(
-                        title: "Button Type",
-                        icon: "rectangle.and.hand.point.up.left.fill",
-                        selection: $applePayButtonTypeOption,
-                        displayText: { $0.displayName }
-                    )
-                }
                 CheckoutPlayground.PickerRow(
                     title: "Link",
                     icon: "link",
                     selection: $linkVisibility,
-                    tooltip: "Controls Link visibility in ExpressCheckoutElement.\n\n• automatic: Show if the session includes Link.\n• always: Show regardless of session.\n• never: Hide.",
+                    tooltip: "Controls Link visibility in ExpressCheckoutElement.\n\n• automatic: Defer to Wallet Settings.\n• always: Show in ECE regardless of Wallet Settings.\n• never: Hide in ECE regardless of Wallet Settings.",
                     displayText: { $0.displayName }
                 )
             }
@@ -121,6 +112,7 @@ struct CheckoutPlaygroundExpressCheckoutSettingsSection: View {
 }
 
 struct CheckoutPlaygroundWalletSettingsSection: View {
+    @Binding var applePayButtonTypeOption: CheckoutPlayground.ApplePayButtonTypeOption
     @Binding var linkDisplayOption: CheckoutPlayground.LinkDisplayOption
 
     var body: some View {
@@ -128,10 +120,16 @@ struct CheckoutPlaygroundWalletSettingsSection: View {
             CheckoutPlayground.SectionHeader(title: "Wallet Settings", icon: "wallet.pass.fill")
             VStack(spacing: 1) {
                 CheckoutPlayground.PickerRow(
+                    title: "Apple Pay Button Type",
+                    icon: "apple.logo",
+                    selection: $applePayButtonTypeOption,
+                    displayText: { $0.displayName }
+                )
+                CheckoutPlayground.PickerRow(
                     title: "Link",
                     icon: "link",
                     selection: $linkDisplayOption,
-                    tooltip: "Controls Link visibility across all elements (PaymentElement and ExpressCheckoutElement).\n\n• automatic: Show Link when available.\n• never: Always hide Link.",
+                    tooltip: "Controls Link visibility across Checkout elements.\n\n• automatic: Show Link when available.\n• never: Always hide Link.",
                     displayText: { $0.displayName }
                 )
             }
