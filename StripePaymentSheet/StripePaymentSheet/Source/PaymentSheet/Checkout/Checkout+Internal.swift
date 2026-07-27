@@ -9,6 +9,8 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
+extension Checkout: ExpressCheckoutElementDelegate {}
+
 extension Checkout {
 
     // MARK: - Currency

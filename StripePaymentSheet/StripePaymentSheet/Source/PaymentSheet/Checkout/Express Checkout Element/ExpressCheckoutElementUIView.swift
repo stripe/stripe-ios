@@ -13,10 +13,7 @@ import UIKit
 @MainActor
 public final class ExpressCheckoutElementUIView: UIView {
 
-    private weak var checkout: Checkout?
-
-    init(checkout: Checkout) {
-        self.checkout = checkout
+    init(configuration: Checkout.Configuration) {
         super.init(frame: .zero)
         // TODO: Render express buttons
     }

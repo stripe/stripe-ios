@@ -60,7 +60,7 @@ public final class Checkout: ObservableObject {
     private(set) var paymentElement: PaymentElement!
 
     /// The ExpressCheckoutElement for this Checkout instance.
-    private(set) var expressCheckoutElement: ExpressCheckoutElement!
+    private var expressCheckoutElement: ExpressCheckoutElement?
 
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
@@ -132,7 +132,11 @@ public final class Checkout: ObservableObject {
             // Load elements
             self.paymentElement = try await PaymentElement(checkout: self)
             await flagImageManager.prefetchFlagImages(for: session) // TODO: This should probably just load currency selector and not be a global singleton
-            self.expressCheckoutElement = ExpressCheckoutElement(checkout: self)
+            self.expressCheckoutElement = ExpressCheckoutElement(
+                sessionPublisher: $session,
+                configuration: configuration,
+                delegate: self
+            )
 
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
@@ -284,7 +288,7 @@ public final class Checkout: ObservableObject {
     }
 
     /// Returns the ExpressCheckoutElement for this Checkout instance.
-    public func getExpressCheckoutElement() -> ExpressCheckoutElement {
+    public func getExpressCheckoutElement() -> ExpressCheckoutElement? {
         return expressCheckoutElement
     }
 }
