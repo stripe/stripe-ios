@@ -122,7 +122,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                 backgroundColor: .systemBackground,
                 headerType: .plain,
                 titleText: STPLocalizedString(
-                    "Selfie captures",
+                    "Selfie",
                     "Title of selfie capture screen"
                 )
             ),
