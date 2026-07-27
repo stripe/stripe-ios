@@ -32,12 +32,6 @@ struct CheckoutPlaygroundConfigurationSection: View {
                     displayText: { $0.displayName }
                 )
                 CheckoutPlayground.PickerRow(
-                    title: "ExpressCheckoutElement",
-                    icon: "bolt.fill",
-                    selection: $expressCheckoutElementOption,
-                    displayText: { $0.displayName }
-                )
-                CheckoutPlayground.PickerRow(
                     title: "Currency",
                     icon: "banknote",
                     selection: $currency,
