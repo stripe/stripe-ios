@@ -1,0 +1,139 @@
+//
+//  ExpressCheckoutElementUIView.swift
+//  StripePaymentSheet
+//
+//  Created by Joyce Qin on 7/22/26.
+//
+
+import PassKit
+@_spi(STP) import StripeCore
+import UIKit
+
+/// A UIKit view that displays wallet payment buttons (Apple Pay, Link).
+@_spi(STP)
+@_spi(ReactNativeSDK)
+@MainActor
+public final class ExpressCheckoutElementUIView: UIView {
+
+    // MARK: - Private Properties
+
+    private weak var checkout: Checkout?
+    private let appearance: ExpressCheckoutElement.Appearance
+    private let stackView = UIStackView()
+
+    // MARK: - Init
+
+    init(checkout: Checkout, appearance: ExpressCheckoutElement.Appearance) {
+        self.checkout = checkout
+        self.appearance = appearance
+        super.init(frame: .zero)
+
+        stackView.axis = .vertical
+        stackView.spacing = appearance.buttonSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(stackView)
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
+
+        let buttons = Self.expressButtons(from: checkout.session, configuration: checkout.configuration)
+        buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Public Methods
+
+    public override var intrinsicContentSize: CGSize {
+        CGSize(
+            width: UIView.noIntrinsicMetric,
+            height: stackView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+        )
+    }
+
+    // MARK: - Private Methods
+
+    private func makeButton(for button: ExpressButton) -> UIView {
+        switch button {
+        case .applePay:
+            return makeApplePayButton()
+        case .link:
+            return makeLinkButton()
+        }
+    }
+
+    private func makeApplePayButton() -> UIView {
+        let buttonType = checkout?.configuration.applePayConfiguration?.buttonType ?? .plain
+        let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: .automatic)
+        button.cornerRadius = appearance.cornerRadius
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: appearance.buttonHeight).isActive = true
+        button.addTarget(self, action: #selector(handleApplePayTapped), for: .touchUpInside)
+        return button
+    }
+
+    private func makeLinkButton() -> UIView {
+        let button = PayWithLinkButton()
+        button.cornerRadius = appearance.cornerRadius
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: appearance.buttonHeight).isActive = true
+        button.addTarget(self, action: #selector(handleLinkTapped), for: .touchUpInside)
+        return button
+    }
+
+    @objc private func handleApplePayTapped() {
+        // TODO: Handle Apple Pay
+    }
+
+    @objc private func handleLinkTapped() {
+        // TODO: Handle Link
+    }
+}
+
+// MARK: - Button Computation
+
+extension ExpressCheckoutElementUIView {
+    static func expressButtons(
+        from session: Checkout.Session,
+        configuration: Checkout.Configuration
+    ) -> [ExpressButton] {
+        let eceConfig = configuration.expressCheckoutElement
+        var buttons: [ExpressButton] = []
+
+        for button in session.availableExpressButtonTypes {
+            switch button {
+            case .applePay:
+                if eceConfig.applePay != .never,
+                    configuration.applePayConfiguration != nil,
+                    StripeAPI.deviceSupportsApplePay() {
+                    buttons.append(.applePay)
+                }
+            case .link:
+                if eceConfig.link != .never
+                    && configuration.linkConfiguration?.display != .never {
+                    buttons.append(.link)
+                }
+            }
+        }
+
+        // .always: include even if the session does not advertise the wallet
+        if eceConfig.applePay == .always,
+            configuration.applePayConfiguration != nil,
+            StripeAPI.deviceSupportsApplePay(),
+            !buttons.contains(.applePay) {
+            buttons.append(.applePay)
+        }
+        if eceConfig.link == .always, !buttons.contains(.link) {
+            buttons.append(.link)
+        }
+
+        return buttons
+    }
+}
