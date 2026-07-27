@@ -36,7 +36,7 @@ final class CurrencySelectorElementViewModel: ObservableObject {
     private var sessionCancellable: AnyCancellable?
 
     init(
-        sessionSource: CurrencySelectorElementSessionSource,
+        sessionSource: CheckoutSessionSource,
         uiView: CurrencySelectorElementUIView
     ) {
         self.uiView = uiView

@@ -33,7 +33,7 @@ public final class CurrencySelectorElement {
     // MARK: - Internal Methods
 
     init(
-        sessionSource: CurrencySelectorElementSessionSource,
+        sessionSource: CheckoutSessionSource,
         configuration: Configuration,
         delegate: CurrencySelectorElementDelegate
     ) async {

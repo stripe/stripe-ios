@@ -135,7 +135,7 @@ public final class Checkout: ObservableObject {
             self.paymentElement = try await PaymentElement(checkout: self)
             if configuration.adaptivePricing.allowed {
                 self.currencySelectorElement = await CurrencySelectorElement(
-                    sessionSource: CurrencySelectorElementSessionSource(
+                    sessionSource: CheckoutSessionSource(
                         initialSession: session,
                         sessionPublisher: $session
                     ),
