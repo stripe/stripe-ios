@@ -107,6 +107,20 @@ enum CheckoutPlayground {
         }
     }
 
+    enum BillingAddressCollection: String, CaseIterable, Identifiable {
+        case automatic
+        case required
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .automatic: return "Auto"
+            case .required: return "Required"
+            }
+        }
+    }
+
     enum IntegrationType: String, CaseIterable, Identifiable {
         case flowController
         case embedded

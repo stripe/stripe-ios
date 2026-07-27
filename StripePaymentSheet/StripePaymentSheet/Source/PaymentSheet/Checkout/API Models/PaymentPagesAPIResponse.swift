@@ -101,8 +101,8 @@ class PaymentPagesAPIResponse: NSObject {
     /// Per-payment-method setup_future_usage overrides for payment-mode checkout sessions.
     let setupFutureUsageForPaymentMethodType: [String: String]
 
-    /// Whether billing address collection is required for this session.
-    let requiresBillingAddress: Bool
+    /// Billing address collection behavior for this session.
+    let billingAddressCollection: Checkout.Session.BillingAddressCollection
 
     /// The allowed countries for shipping address collection, or `nil` if shipping
     /// address collection is not configured.
@@ -205,7 +205,7 @@ class PaymentPagesAPIResponse: NSObject {
         savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
         setupFutureUsage: String?,
         setupFutureUsageForPaymentMethodType: [String: String],
-        requiresBillingAddress: Bool,
+        billingAddressCollection: Checkout.Session.BillingAddressCollection,
         allowedShippingCountries: [String]?,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?,
@@ -242,7 +242,7 @@ class PaymentPagesAPIResponse: NSObject {
         self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
         self.setupFutureUsage = setupFutureUsage
         self.setupFutureUsageForPaymentMethodType = setupFutureUsageForPaymentMethodType
-        self.requiresBillingAddress = requiresBillingAddress
+        self.billingAddressCollection = billingAddressCollection
         self.allowedShippingCountries = allowedShippingCountries
         self.localizedPricesMetas = localizedPricesMetas
         self.exchangeRateMeta = exchangeRateMeta
@@ -362,7 +362,10 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
         let setupFutureUsageForPaymentMethodType = dict["setup_future_usage_for_payment_method_type"] as? [String: String] ?? [:]
 
         // Address collection settings
-        let requiresBillingAddress = (dict["billing_address_collection"] as? String) == "required"
+        let billingAddressCollectionRawValue = dict["billing_address_collection"] as? String
+        let billingAddressCollection = billingAddressCollectionRawValue.flatMap {
+            Checkout.Session.BillingAddressCollection(rawValue: $0)
+        } ?? .automatic
         let allowedShippingCountries: [String]? = {
             guard let shippingCollection = dict["shipping_address_collection"] as? [String: Any],
                   let countries = shippingCollection["allowed_countries"] as? [String]
@@ -464,7 +467,7 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
             setupFutureUsage: setupFutureUsage,
             setupFutureUsageForPaymentMethodType: setupFutureUsageForPaymentMethodType,
-            requiresBillingAddress: requiresBillingAddress,
+            billingAddressCollection: billingAddressCollection,
             allowedShippingCountries: allowedShippingCountries,
             localizedPricesMetas: localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,

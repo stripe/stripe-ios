@@ -20,7 +20,7 @@ extension CheckoutPlayground {
         @Published var lineItems: [LineItemConfig] = LineItemConfig.defaults
         @Published var allowPromotionCodes = true
         @Published var shippingAddressCollection = true
-        @Published var billingAddressCollection = false
+        @Published var billingAddressCollection: BillingAddressCollection = .automatic
         @Published var automaticTax = true
         @Published var adaptivePricing = false
         @Published var checkoutSessionPaymentMethodSave = true
@@ -90,7 +90,7 @@ extension CheckoutPlayground {
                 "customer": customerType.rawValue,
                 "allow_promotion_codes": allowPromotionCodes,
                 "shipping_address_collection": shippingAddressCollection,
-                "billing_address_collection": billingAddressCollection,
+                "billing_address_collection": billingAddressCollection == .required,
                 "automatic_tax": automaticTax,
                 "adaptive_pricing": adaptivePricing,
                 "checkout_session_payment_method_save": checkoutSessionPaymentMethodSave ? "enabled" : "disabled",

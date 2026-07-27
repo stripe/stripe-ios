@@ -12,6 +12,7 @@ import SwiftUI
 struct CheckoutCartContentView: View {
     @ObservedObject var checkout: Checkout
     var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
+    var showsShippingAddressSection: Bool
     @Binding var isLoading: Bool
     @Binding var errorMessage: String?
 
@@ -32,7 +33,9 @@ struct CheckoutCartContentView: View {
 
                 currencySelectorSection
                 lineItemsSection
-                shippingAddressSection
+                if showsShippingAddressSection {
+                    shippingAddressSection
+                }
                 promotionCodeSection
                 orderSummarySection
 
@@ -233,7 +236,7 @@ struct CheckoutCartContentView: View {
 
     private func makeAddressConfiguration(
         title: String,
-        override: Checkout.ContactAddress?
+        override: Checkout.Session.ShippingAddress?
     ) -> AddressElement.Configuration {
         var config = AddressElement.Configuration()
         config.title = title
@@ -466,7 +469,6 @@ struct CheckoutCartContentView: View {
             do {
                 try await checkout.updateShippingAddress(
                     name: details.name,
-                    phone: nil,
                     address: checkoutAddress(from: details.address)
                 )
             } catch {
@@ -506,6 +508,7 @@ struct CheckoutCartSheet: View {
                 CheckoutCartContentView(
                     checkout: checkout,
                     currencySelectorAppearance: currencySelectorAppearance,
+                    showsShippingAddressSection: true,
                     isLoading: $isLoading,
                     errorMessage: $errorMessage
                 )

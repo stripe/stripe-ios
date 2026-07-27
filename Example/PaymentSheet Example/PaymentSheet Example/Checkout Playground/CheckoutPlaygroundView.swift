@@ -83,6 +83,7 @@ struct CheckoutPlaygroundView: View {
                 if let clientSecret = viewModel.clientSecret {
                     CheckoutCartView(
                         clientSecret: clientSecret,
+                        shippingAddressCollection: viewModel.shippingAddressCollection,
                         adaptivePricing: viewModel.adaptivePricing,
                         integrationType: viewModel.integrationType,
                         currencySelectorAppearance: viewModel.currencySelectorAppearance

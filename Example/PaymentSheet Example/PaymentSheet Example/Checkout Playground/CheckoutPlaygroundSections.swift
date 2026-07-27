@@ -150,7 +150,7 @@ struct CheckoutPlaygroundLineItemCard: View {
 struct CheckoutPlaygroundFeaturesSection: View {
     let customerType: CheckoutPlayground.CustomerType
     @Binding var shippingAddressCollection: Bool
-    @Binding var billingAddressCollection: Bool
+    @Binding var billingAddressCollection: CheckoutPlayground.BillingAddressCollection
     @Binding var allowPromotionCodes: Bool
     @Binding var automaticTax: Bool
     @Binding var adaptivePricing: Bool
@@ -172,10 +172,11 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $shippingAddressCollection,
                     tooltip: "Sets `shipping_address_collection` to allow specific countries (US, CA, GB, AU). Necessary for physical goods."
                 )
-                CheckoutPlayground.ToggleRow(
-                    title: "Collect Billing Address",
-                    isOn: $billingAddressCollection,
-                    tooltip: "Sets `billing_address_collection: 'required'`. If off, defaults to 'auto' (only collected if the payment method needs it)."
+                CheckoutPlayground.PickerRow(
+                    title: "Billing Address",
+                    selection: $billingAddressCollection,
+                    tooltip: "Sets `billing_address_collection` to `auto` or `required`.",
+                    displayText: { $0.displayName }
                 )
                 CheckoutPlayground.ToggleRow(
                     title: "Automatic Payment Methods",

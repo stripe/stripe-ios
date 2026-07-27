@@ -26,6 +26,117 @@ final class PaymentElementTest: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 
+    func testConfigurationSetsCheckoutDefaultBillingDetails() async throws {
+        // Given Checkout billing defaults
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var billingDetails = Checkout.Configuration.Defaults.BillingDetails()
+        billingDetails.name = "Jane Doe"
+        billingDetails.address = .init(
+            country: "US",
+            line1: "123 Main St",
+            line2: "Apt 4",
+            city: "San Francisco",
+            state: "CA",
+            postalCode: "94105"
+        )
+        checkoutConfiguration.defaults.billingDetails = billingDetails
+
+        // When Checkout creates PaymentElement
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
+        )
+        let paymentElement = checkout.getPaymentElement()
+        let paymentSheetConfiguration = paymentElement.paymentSheetFlowController.configuration
+        let embeddedConfiguration = paymentElement.embeddedPaymentElement.configuration
+
+        // Then both configurations receive the same default billing details
+        XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.name, "Jane Doe")
+        XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.country, "US")
+        XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.line1, "123 Main St")
+        XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.line2, "Apt 4")
+        XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.city, "San Francisco")
+        XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.state, "CA")
+        XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.postalCode, "94105")
+
+        XCTAssertEqual(embeddedConfiguration.defaultBillingDetails, paymentSheetConfiguration.defaultBillingDetails)
+    }
+
+    func testConfigurationSetsCheckoutDefaultShippingDetails() async throws {
+        // Given Checkout shipping defaults
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
+        shippingDetails.name = "Jane Doe"
+        shippingDetails.address = .init(
+            country: "US",
+            line1: "123 Main St",
+            line2: "Apt 4",
+            city: "San Francisco",
+            state: "CA",
+            postalCode: "94105"
+        )
+        checkoutConfiguration.defaults.shippingDetails = shippingDetails
+
+        // When Checkout creates PaymentElement
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
+        )
+        let paymentElement = checkout.getPaymentElement()
+        let paymentSheetShipping = paymentElement.paymentSheetFlowController.configuration.shippingDetails()
+        let embeddedShipping = paymentElement.embeddedPaymentElement.configuration.shippingDetails()
+
+        // Then both configurations receive the same default shipping details
+        XCTAssertEqual(paymentSheetShipping?.name, "Jane Doe")
+        XCTAssertEqual(paymentSheetShipping?.address.country, "US")
+        XCTAssertEqual(paymentSheetShipping?.address.line1, "123 Main St")
+        XCTAssertEqual(paymentSheetShipping?.address.line2, "Apt 4")
+        XCTAssertEqual(paymentSheetShipping?.address.city, "San Francisco")
+        XCTAssertEqual(paymentSheetShipping?.address.state, "CA")
+        XCTAssertEqual(paymentSheetShipping?.address.postalCode, "94105")
+
+        XCTAssertEqual(embeddedShipping?.name, paymentSheetShipping?.name)
+        XCTAssertEqual(embeddedShipping?.address.country, paymentSheetShipping?.address.country)
+        XCTAssertEqual(embeddedShipping?.address.line1, paymentSheetShipping?.address.line1)
+        XCTAssertEqual(embeddedShipping?.address.line2, paymentSheetShipping?.address.line2)
+        XCTAssertEqual(embeddedShipping?.address.city, paymentSheetShipping?.address.city)
+        XCTAssertEqual(embeddedShipping?.address.state, paymentSheetShipping?.address.state)
+        XCTAssertEqual(embeddedShipping?.address.postalCode, paymentSheetShipping?.address.postalCode)
+    }
+
+    func testConfigurationSetsFullBillingAddressCollectionWhenCheckoutRequiresBillingAddress() async throws {
+        // Given automatic billing address collection in PaymentElement
+        let checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "required")
+
+        // When Checkout requires billing address collection
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                apiResponse: session,
+                configuration: checkoutConfiguration
+            )
+        )
+        let paymentElement = checkout.getPaymentElement()
+
+        // Then both configurations collect full billing address
+        XCTAssertEqual(paymentElement.paymentSheetFlowController.configuration.billingDetailsCollectionConfiguration.address, .full)
+        XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.billingDetailsCollectionConfiguration.address, .full)
+    }
+
+    func testConfigurationPreservesFullBillingAddressCollectionWhenCheckoutBillingAddressCollectionIsAutomatic() async throws {
+        // Given full billing address collection in PaymentElement
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        checkoutConfiguration.paymentElement.billingDetailsCollectionConfiguration.address = .full
+
+        // When Checkout uses automatic billing address collection
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
+        )
+        let paymentElement = checkout.getPaymentElement()
+
+        // Then both configurations preserve full billing address collection
+        XCTAssertEqual(paymentElement.paymentSheetFlowController.configuration.billingDetailsCollectionConfiguration.address, .full)
+        XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.billingDetailsCollectionConfiguration.address, .full)
+    }
+
     func testCheckoutSessionUpdatePreservesFlowControllerPaymentOption() async throws {
         // Given a Checkout PaymentElement with PayNow available in the real FlowController sheet UI...
         var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")

@@ -149,6 +149,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case myr
         case mxn
         case jpy
+        case cny
         case brl
         case thb
         case sek
@@ -167,6 +168,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case MY
         case MX
         case JP
+        case CN
         case BR
         case TH
         case DE

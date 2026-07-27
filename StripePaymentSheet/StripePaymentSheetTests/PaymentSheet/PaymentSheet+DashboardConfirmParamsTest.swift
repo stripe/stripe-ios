@@ -313,16 +313,6 @@ private extension PaymentSheetConfirmParamsTest {
     }
 
     func bodyParams(from request: URLRequest, line: UInt) -> [String: String] {
-        guard let httpBody = request.httpBodyOrBodyStream,
-              let query = String(data: httpBody, encoding: .utf8)?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
-              let components = URLComponents(string: "http://someurl.com?\(query)") else {
-            XCTFail("Request body empty", line: line)
-            return [:]
-        }
-
-        return components.queryItems?.reduce(into: [:], { partialResult, item in
-            guard item.value != "" else { return }
-            partialResult[item.name] = item.value?.removingPercentEncoding
-        }) ?? [:]
+        return RequestBodyTestHelpers.formEncodedBodyParams(from: request, omittingEmptyValues: true, line: line)
     }
 }

@@ -1146,10 +1146,14 @@ public class STPPaymentHandler: NSObject {
 
         case .alipayHandleRedirect:
             if let alipayHandleRedirect = authenticationAction.alipayHandleRedirect {
+                // Post-EVO Alipay's next-action return URL is an intermediate tramopline.
+                // Register the confirm-time return URL as the expected callback instead.
+                let returnURL = currentAction.returnURLString.flatMap(URL.init(string:))
+                    ?? alipayHandleRedirect.returnURL
                 _handleRedirect(
                     to: alipayHandleRedirect.nativeURL,
                     fallbackURL: alipayHandleRedirect.url,
-                    return: alipayHandleRedirect.returnURL,
+                    return: returnURL,
                     useWebAuthSession: false
                 )
             } else {
