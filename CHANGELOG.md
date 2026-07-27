@@ -5,6 +5,7 @@ MINOR
 
 ### PaymentSheet
 * [Added] Added `billingDetailsCollectionConfiguration` to `LinkConfiguration`, allowing `LinkControllerPreview` consumers to configure billing details collection in the Link sheet (private preview).
+* [Added] `LinkController` now supports appearance customization via `LinkAppearance` (private preview).
 
 ## 26.4.1 2026-07-23
 ### Payments
