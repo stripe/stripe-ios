@@ -11,6 +11,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
 
     override func tearDown() {
         HTTPStubs.removeAllStubs()
+        requestRecorder.removeAll()
         super.tearDown()
     }
 
@@ -19,18 +20,16 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
 
         var configuration = Checkout.Configuration(clientSecret: clientSecret)
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        configuration.defaults = .init(
-            billingDetails: .init(
-                name: "Billing Name",
-                address: .init(
-                    country: "US",
-                    line1: "123 Billing St",
-                    city: "San Francisco",
-                    state: "CA",
-                    postalCode: "94105"
-                )
-            )
+        var billingDetails = Checkout.Configuration.Defaults.BillingDetails()
+        billingDetails.name = "Billing Name"
+        billingDetails.address = .init(
+            country: "US",
+            line1: "123 Billing St",
+            city: "San Francisco",
+            state: "CA",
+            postalCode: "94105"
         )
+        configuration.defaults.billingDetails = billingDetails
 
         let checkout = try await Checkout(configuration: configuration)
         let requests = requestRecorder.requests
@@ -40,6 +39,36 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         XCTAssertEqual(requests[1].params["tax_region[country]"], "US")
         XCTAssertEqual(requests[1].params["tax_region[line1]"], "123 Billing St")
         XCTAssertEqual(requests[1].params["tax_region[city]"], "San Francisco")
+    }
+
+    func testInitAppliesShippingDefaultThroughShippingUpdateWhenNeeded() async throws {
+        // Given a Checkout Session that uses shipping for tax
+        stubCheckoutSessionRequests(automaticTaxAddressSource: "shipping")
+
+        var configuration = Checkout.Configuration(clientSecret: clientSecret)
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
+        shippingDetails.name = "Shipping Name"
+        shippingDetails.address = .init(
+            country: "US",
+            line1: "123 Shipping St",
+            city: "San Francisco",
+            state: "CA",
+            postalCode: "94105"
+        )
+        configuration.defaults.shippingDetails = shippingDetails
+
+        // When Checkout initializes
+        let checkout = try await Checkout(configuration: configuration)
+        let requests = requestRecorder.requests
+
+        // Then the shipping default is applied before PaymentElement loads
+        XCTAssertNotNil(checkout.getPaymentElement())
+        XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession])
+        XCTAssertEqual(requests[1].params["tax_region[country]"], "US")
+        XCTAssertEqual(requests[1].params["tax_region[line1]"], "123 Shipping St")
+        XCTAssertEqual(requests[1].params["tax_region[city]"], "San Francisco")
+        XCTAssertEqual(checkout.session.shippingAddress?.name, "Shipping Name")
     }
 
     // MARK: - Stubs

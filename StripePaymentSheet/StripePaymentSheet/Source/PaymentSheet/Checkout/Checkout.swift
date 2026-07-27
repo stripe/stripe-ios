@@ -59,6 +59,9 @@ public final class Checkout: ObservableObject {
     /// The PaymentElement for this Checkout instance.
     private(set) var paymentElement: PaymentElement!
 
+    /// The ExpressCheckoutElement for this Checkout instance.
+    private(set) var expressCheckoutElement: ExpressCheckoutElement!
+
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
     /// A snapshot of the current ``session`` accessible from non-MainActor contexts.
@@ -115,6 +118,7 @@ public final class Checkout: ObservableObject {
 
         let sessionId = Self.extractSessionId(from: clientSecret)
         do {
+            // Call /init
             let apiResponse = try await configuration.apiClient.initCheckoutSession(
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
@@ -128,6 +132,7 @@ public final class Checkout: ObservableObject {
             // Load elements
             self.paymentElement = try await PaymentElement(checkout: self)
             await flagImageManager.prefetchFlagImages(for: session) // TODO: This should probably just load currency selector and not be a global singleton
+            self.expressCheckoutElement = ExpressCheckoutElement(checkout: self)
 
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
@@ -206,29 +211,27 @@ public final class Checkout: ObservableObject {
     ///
     /// - Parameters:
     ///   - name: The customer's full name.
-    ///   - phone: The customer's phone number.
     ///   - address: The shipping address to set. To reset tax computation
     ///     to a country-only region, pass a ``Checkout.Address`` with just the country.
     /// - Throws: ``CheckoutError`` if the session is not open, or if
     ///   the server request fails.
     public func updateShippingAddress(
         name: String? = nil,
-        phone: String? = nil,
         address: Address
     ) async throws {
         if let allowedCountries = session.allowedShippingCountries,
            !allowedCountries.contains(address.country) {
             throw CheckoutError.invalidShippingCountry(countryCode: address.country)
         }
-        let contactAddress = ContactAddress(name: name, phone: phone, address: address)
-        guard session.shippingAddress != contactAddress else { return }
+        let shippingAddress = Session.ShippingAddress(name: name, address: address)
+        guard session.shippingAddress != shippingAddress else { return }
         if session.shouldSendTaxRegion(for: "shipping") {
             try await performUpdate(.setTaxRegion(address), applying: { session in
-                session.makeCopyOverriding(shippingAddress: .newValue(contactAddress))
+                session.makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
             })
         } else {
             try await performUpdate(applying: { session in
-                session.makeCopyOverriding(shippingAddress: .newValue(contactAddress))
+                session.makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
             })
         }
     }
@@ -280,9 +283,9 @@ public final class Checkout: ObservableObject {
         return paymentElement
     }
 
-    /// Returns an ExpressCheckoutElement for this Checkout instance.
+    /// Returns the ExpressCheckoutElement for this Checkout instance.
     public func getExpressCheckoutElement() -> ExpressCheckoutElement {
-        return ExpressCheckoutElement(checkout: self)
+        return expressCheckoutElement
     }
 }
 
@@ -296,9 +299,15 @@ extension Checkout {
            let address = billingDetails.address {
             try await updateBillingTaxRegionIfNecessary(address: address)
         }
+        if let shippingDetails = defaults.shippingDetails,
+           let address = shippingDetails.address {
+            try await updateShippingAddress(
+                name: shippingDetails.name,
+                address: address
+            )
+        }
     }
 }
-
 // MARK: - Internal session setters
 // These exist here because `session` is private(set) to enforce that session can only be mutated through these sanctioned paths.
 // Setting the session should generally only be done via `commitSession` to avoid putting us into an inconsistent state e.g. without using commitSession, MPE is not aware of the updated session.
