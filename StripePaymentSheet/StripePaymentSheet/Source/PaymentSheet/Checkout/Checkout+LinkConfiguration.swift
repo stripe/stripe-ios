@@ -25,5 +25,15 @@ extension Checkout {
             /// Never show Link.
             case never
         }
+
+        /// Bridges to a ``PaymentSheet/LinkConfiguration``.
+        func makePaymentSheetConfiguration() -> PaymentSheet.LinkConfiguration {
+            let display: PaymentSheet.LinkConfiguration.Display
+            switch self.display {
+            case .automatic: display = .automatic
+            case .never: display = .never
+            }
+            return PaymentSheet.LinkConfiguration(display: display)
+        }
     }
 }

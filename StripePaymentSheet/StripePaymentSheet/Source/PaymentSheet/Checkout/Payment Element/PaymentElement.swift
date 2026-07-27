@@ -72,12 +72,15 @@ public final class PaymentElement {
         let configuration = checkout.configuration.paymentElement
 
         // Create FlowController
+        let applePayConfiguration = checkout.configuration.applePayConfiguration?
+            .makePaymentSheetConfiguration(merchantCountryCode: checkout.session.elementsSession.merchantCountryCode)
+        let linkConfiguration = checkout.configuration.linkConfiguration?
+            .makePaymentSheetConfiguration()
         let paymentSheetConfiguration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
-            applePayConfiguration: checkout.configuration.applePayConfiguration,
-            merchantCountryCode: checkout.session.elementsSession.merchantCountryCode,
-            linkConfiguration: checkout.configuration.linkConfiguration
+            applePayConfiguration: applePayConfiguration,
+            linkConfiguration: linkConfiguration
         )
         self.paymentSheetFlowController = try await PaymentSheet.FlowController.create(
             checkout: checkout,
@@ -87,9 +90,8 @@ public final class PaymentElement {
         let embeddedConfiguration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
-            applePayConfiguration: checkout.configuration.applePayConfiguration,
-            merchantCountryCode: checkout.session.elementsSession.merchantCountryCode,
-            linkConfiguration: checkout.configuration.linkConfiguration
+            applePayConfiguration: applePayConfiguration,
+            linkConfiguration: linkConfiguration
         )
         self.embeddedPaymentElement = try await EmbeddedPaymentElement.create(
             checkout: checkout,
@@ -138,19 +140,21 @@ extension PaymentElement {
 
         // TODO: This should not be async or throws; we should not make any network requests or re-fetch things, just update the v1/e/s response.
         let configuration = checkout.configuration.paymentElement
+        let applePayConfiguration = checkout.configuration.applePayConfiguration?
+            .makePaymentSheetConfiguration(merchantCountryCode: checkout.session.elementsSession.merchantCountryCode)
+        let linkConfiguration = checkout.configuration.linkConfiguration?
+            .makePaymentSheetConfiguration()
         paymentSheetFlowController.configuration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
-            applePayConfiguration: checkout.configuration.applePayConfiguration,
-            merchantCountryCode: checkout.session.elementsSession.merchantCountryCode,
-            linkConfiguration: checkout.configuration.linkConfiguration
+            applePayConfiguration: applePayConfiguration,
+            linkConfiguration: linkConfiguration
         )
         embeddedPaymentElement.configuration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
-            applePayConfiguration: checkout.configuration.applePayConfiguration,
-            merchantCountryCode: checkout.session.elementsSession.merchantCountryCode,
-            linkConfiguration: checkout.configuration.linkConfiguration
+            applePayConfiguration: applePayConfiguration,
+            linkConfiguration: linkConfiguration
         )
 
         // Update FlowController

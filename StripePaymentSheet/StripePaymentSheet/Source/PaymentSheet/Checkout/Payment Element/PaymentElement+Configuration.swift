@@ -129,9 +129,8 @@ extension PaymentElement {
         func makeEmbeddedConfiguration(
             apiClient: STPAPIClient,
             defaults: Checkout.Configuration.Defaults,
-            applePayConfiguration: Checkout.ApplePayConfiguration? = nil,
-            merchantCountryCode: String? = nil,
-            linkConfiguration: Checkout.LinkConfiguration? = nil
+            applePayConfiguration: PaymentSheet.ApplePayConfiguration? = nil,
+            linkConfiguration: PaymentSheet.LinkConfiguration? = nil
         ) -> EmbeddedPaymentElement.Configuration {
             var configuration = embeddedConfiguration
             configuration.apiClient = apiClient
@@ -139,15 +138,9 @@ extension PaymentElement {
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
             }
-            if let applePayConfig = applePayConfiguration, let countryCode = merchantCountryCode {
-                configuration.applePay = PaymentSheet.ApplePayConfiguration(
-                    merchantId: applePayConfig.merchantId,
-                    merchantCountryCode: countryCode,
-                    buttonType: applePayConfig.buttonType ?? .plain
-                )
-            }
-            if linkConfiguration?.display == .never {
-                configuration.link.display = .never
+            configuration.applePay = applePayConfiguration
+            if let linkConfiguration {
+                configuration.link = linkConfiguration
             }
             return configuration
         }
@@ -155,9 +148,8 @@ extension PaymentElement {
         func makePaymentSheetConfiguration(
             apiClient: STPAPIClient,
             defaults: Checkout.Configuration.Defaults,
-            applePayConfiguration: Checkout.ApplePayConfiguration? = nil,
-            merchantCountryCode: String? = nil,
-            linkConfiguration: Checkout.LinkConfiguration? = nil
+            applePayConfiguration: PaymentSheet.ApplePayConfiguration? = nil,
+            linkConfiguration: PaymentSheet.LinkConfiguration? = nil
         ) -> PaymentSheet.Configuration {
             var configuration = paymentSheetConfiguration
             configuration.apiClient = apiClient
@@ -165,15 +157,9 @@ extension PaymentElement {
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
             }
-            if let applePayConfig = applePayConfiguration, let countryCode = merchantCountryCode {
-                configuration.applePay = PaymentSheet.ApplePayConfiguration(
-                    merchantId: applePayConfig.merchantId,
-                    merchantCountryCode: countryCode,
-                    buttonType: applePayConfig.buttonType ?? .plain
-                )
-            }
-            if linkConfiguration?.display == .never {
-                configuration.link.display = .never
+            configuration.applePay = applePayConfiguration
+            if let linkConfiguration {
+                configuration.link = linkConfiguration
             }
             return configuration
         }
