@@ -116,6 +116,7 @@ final class SelfieScanningView: UIView {
 
         enum StatusText: Equatable {
             case placeFace
+            case moveCloser
             case holdStill
             case lookLeft
             case lookLeftBottom
@@ -132,6 +133,11 @@ final class SelfieScanningView: UIView {
                     return STPLocalizedString(
                         "Place your face within the frame",
                         "Status text displayed over the selfie viewfinder while positioning a face"
+                    )
+                case .moveCloser:
+                    return STPLocalizedString(
+                        "Move closer",
+                        "Status text displayed over the selfie viewfinder when a face is too far away"
                     )
                 case .holdStill:
                     return STPLocalizedString(
@@ -176,6 +182,7 @@ final class SelfieScanningView: UIView {
             var showsActivityIndicator: Bool {
                 switch self {
                 case .placeFace,
+                    .moveCloser,
                     .holdStill,
                     .lookLeft,
                     .lookLeftBottom,
@@ -193,6 +200,7 @@ final class SelfieScanningView: UIView {
             var isCenteredInViewfinder: Bool {
                 switch self {
                 case .placeFace,
+                    .moveCloser,
                     .holdStill,
                     .lookLeftBottom,
                     .lookRightBottom,
@@ -211,6 +219,7 @@ final class SelfieScanningView: UIView {
             var usesLivePreviewBlur: Bool {
                 switch self {
                 case .placeFace,
+                    .moveCloser,
                     .holdStill,
                     .lookLeftBottom,
                     .lookRightBottom,
@@ -239,6 +248,8 @@ final class SelfieScanningView: UIView {
                     .lookRight,
                     .uploading:
                     return false
+                case .moveCloser:
+                    return false
                 }
             }
 
@@ -249,6 +260,7 @@ final class SelfieScanningView: UIView {
                 case .lookRight:
                     return "→"
                 case .placeFace,
+                    .moveCloser,
                     .holdStill,
                     .lookLeftBottom,
                     .lookRightBottom,
@@ -694,6 +706,7 @@ final class SelfieScanningView: UIView {
             case .capturedFront:
                 return false
             case .placeFace,
+                .moveCloser,
                 .holdStill,
                 .lookLeftBottom,
                 .lookRightBottom,

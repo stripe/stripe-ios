@@ -292,6 +292,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     private var poseCaptureFallbackPhase: FaceCaptureScanningState.Phase?
     private var poseCaptureFallbackDidExpire = false
     private var latestPoseCaptureFallbackSample: FaceScannerInputOutput?
+    private var latestFaceValidationIssue: FaceScannerOutput.ValidationIssue?
 
     // MARK: Init
 
@@ -556,6 +557,11 @@ extension SelfieCaptureViewController {
     func statusText(
         for scanningState: FaceCaptureScanningState
     ) -> SelfieScanningView.ViewModel.StatusText? {
+        if scanningState.phase == .front,
+            latestFaceValidationIssue == .tooFar
+        {
+            return .moveCloser
+        }
         if enable3DFaceCapture,
             poseBestFramePicker.isCollecting(for: scanningState.phase)
         {
@@ -754,6 +760,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         clearPoseCaptureFallbackState()
         clearPoseBestFrameState()
         latestScanningState = .initialValue()
+        latestFaceValidationIssue = nil
         selfieUploader.reset()
     }
 
@@ -777,6 +784,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         clearPoseCaptureFallbackState()
         clearPoseBestFrameState()
         latestScanningState = .initialValue()
+        latestFaceValidationIssue = nil
         // Focus the accessibility VoiceOver back onto the capture view
         UIAccessibility.post(notification: .layoutChanged, argument: self.selfieCaptureView)
 
@@ -811,6 +819,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         stopPoseInstructionTimer()
         clearPoseCaptureFallbackState()
         clearPoseBestFrameState()
+        latestFaceValidationIssue = nil
     }
 
     func imageScanningSessionDidScanImage(
@@ -830,6 +839,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         }
 
         guard scannerOutput.isValid else {
+            latestFaceValidationIssue = scannerOutput.validationIssue
             if poseBestFramePicker.isCollecting(for: scanningState.phase) {
                 currentCaptureGuideHighlight = .none
                 currentCaptureGuideProgress = 1
@@ -845,6 +855,8 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
             updateUI()
             return
         }
+
+        latestFaceValidationIssue = nil
 
         switch scanningState.phase {
         case .front:

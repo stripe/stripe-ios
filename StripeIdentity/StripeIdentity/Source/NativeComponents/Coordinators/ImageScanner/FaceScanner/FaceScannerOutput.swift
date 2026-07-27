@@ -11,6 +11,16 @@ import Foundation
 @_spi(STP) import StripeCameraCore
 
 struct FaceScannerOutput: Equatable {
+    enum ValidationIssue: Equatable {
+        case faceCount
+        case adjustingFocus
+        case motionBlur
+        case offCenter
+        case nearEdge
+        case tooFar
+        case tooClose
+    }
+
     private enum BestFrame {
         static let faceScoreWeight: Float = 0.25
         static let centeringWeight: Float = 0.25
@@ -24,6 +34,7 @@ struct FaceScannerOutput: Equatable {
     let motionBlurResult: MotionBlurDetector.Output?
     let facePose: FacePose?
     let faceLandmarkResult: String?
+    let validationIssue: ValidationIssue?
     let isValid: Bool
 
     init(
@@ -32,6 +43,7 @@ struct FaceScannerOutput: Equatable {
         motionBlurResult: MotionBlurDetector.Output?,
         facePose: FacePose? = nil,
         faceLandmarkResult: String? = nil,
+        validationIssue: ValidationIssue? = nil,
         isValid: Bool
     ) {
         self.faceDetectorOutput = faceDetectorOutput
@@ -39,6 +51,7 @@ struct FaceScannerOutput: Equatable {
         self.motionBlurResult = motionBlurResult
         self.facePose = facePose
         self.faceLandmarkResult = faceLandmarkResult
+        self.validationIssue = validationIssue
         self.isValid = isValid
     }
 
@@ -102,26 +115,12 @@ extension FaceScannerOutput {
         facePose: FacePose? = nil,
         faceLandmarkResult: String? = nil
     ) {
-        var isValid = false
-        if let rect = faceDetectorOutput.predictions.first?.rect {
-            isValid =
-                cameraProperties?.isAdjustingFocus != true
-                && faceDetectorOutput.predictions.count == 1
-                && motionBlurResult?.hasMotionBlur != true
-                && FaceScannerOutput.isFaceCentered(
-                    rect: rect,
-                    maxCenteredThreshold: configuration.maxCenteredThreshold
-                )
-                && FaceScannerOutput.isFaceAwayFromEdges(
-                    rect: rect,
-                    minEdgeThreshold: configuration.minEdgeThreshold
-                )
-                && FaceScannerOutput.isFaceWithinCoverageThresholds(
-                    rect: rect,
-                    min: configuration.minCoverageThreshold,
-                    max: configuration.maxCoverageThreshold
-                )
-        }
+        let validationIssue = FaceScannerOutput.validationIssue(
+            faceDetectorOutput: faceDetectorOutput,
+            cameraProperties: cameraProperties,
+            motionBlurResult: motionBlurResult,
+            configuration: configuration
+        )
 
         self.init(
             faceDetectorOutput: faceDetectorOutput,
@@ -129,8 +128,49 @@ extension FaceScannerOutput {
             motionBlurResult: motionBlurResult,
             facePose: facePose,
             faceLandmarkResult: faceLandmarkResult,
-            isValid: isValid
+            validationIssue: validationIssue,
+            isValid: validationIssue == nil
         )
+    }
+
+    private static func validationIssue(
+        faceDetectorOutput: FaceDetectorOutput,
+        cameraProperties: CameraSession.DeviceProperties?,
+        motionBlurResult: MotionBlurDetector.Output?,
+        configuration: FaceScanner.Configuration
+    ) -> ValidationIssue? {
+        guard faceDetectorOutput.predictions.count == 1,
+            let rect = faceDetectorOutput.predictions.first?.rect
+        else {
+            return .faceCount
+        }
+        guard cameraProperties?.isAdjustingFocus != true else {
+            return .adjustingFocus
+        }
+        guard motionBlurResult?.hasMotionBlur != true else {
+            return .motionBlur
+        }
+        guard FaceScannerOutput.isFaceCentered(
+            rect: rect,
+            maxCenteredThreshold: configuration.maxCenteredThreshold
+        ) else {
+            return .offCenter
+        }
+        guard FaceScannerOutput.isFaceAwayFromEdges(
+            rect: rect,
+            minEdgeThreshold: configuration.minEdgeThreshold
+        ) else {
+            return .nearEdge
+        }
+
+        let coverage = rect.width * rect.height
+        if coverage <= configuration.minCoverageThreshold {
+            return .tooFar
+        }
+        if coverage >= configuration.maxCoverageThreshold {
+            return .tooClose
+        }
+        return nil
     }
 
     /// Is the face’s bounding box is centered in the frame within max thresholds

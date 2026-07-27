@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 3/3/21.
 //
 
-import StripeIdentity
+@_spi(STP) import StripeIdentity
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -201,6 +201,7 @@ class PlaygroundViewController: UIViewController {
     func requestVerificationSession() {
         // Disable the button while we make the request
         updateButtonState(isLoading: true)
+        setLocal3DFaceCaptureOverride()
 
         // Forwarding VerificationSession options from the client to server to
         // for demo purposes. In production, these are typically set by the
@@ -323,6 +324,10 @@ class PlaygroundViewController: UIViewController {
             }
         }
         task.resume()
+    }
+
+    func setLocal3DFaceCaptureOverride() {
+        IdentityVerificationSheet.local3DFaceCaptureOverride = is3DFaceCaptureEnabled
     }
 
     func startVerificationFlow(responseJson: [String: String]) {
