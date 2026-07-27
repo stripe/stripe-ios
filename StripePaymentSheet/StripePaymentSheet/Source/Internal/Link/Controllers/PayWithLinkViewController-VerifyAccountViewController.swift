@@ -21,7 +21,8 @@ extension PayWithLinkViewController {
             let vc = LinkVerificationViewController(
                 mode: .embedded,
                 linkAccount: linkAccount,
-                brand: context.linkBrand
+                brand: context.linkBrand,
+                appearance: context.linkAppearance
             )
             vc.delegate = self
             vc.view.backgroundColor = .clear
