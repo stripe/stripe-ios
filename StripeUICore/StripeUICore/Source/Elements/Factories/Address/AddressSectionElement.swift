@@ -134,7 +134,7 @@ import UIKit
             }
         }
     }
-    private let minimumFieldsToCollectByCountry: [String: FieldsToCollect]
+    private var minimumFieldsToCollectByCountry: [String: FieldsToCollect]
     /// When collecting a full address, autocomplete is available for countries in this list.
     public let countriesSupportingAutocomplete: [String]
     public var selectedCountryCode: String {
@@ -322,6 +322,16 @@ import UIKit
         self.line1?.beginEditing()
     }
 
+    /// Adds country-specific minimums without reducing existing requirements.
+    @_spi(STP) public func addMinimumFieldsToCollectByCountry(
+        _ additionalMinimums: [String: FieldsToCollect]
+    ) {
+        minimumFieldsToCollectByCountry.merge(additionalMinimums) { existing, additional in
+            return existing.widened(toMeet: additional)
+        }
+        updateAddressFields(for: selectedCountryCode)
+    }
+
     /// Selects a country and rebuilds its address fields using its country-specific minimum, if any.
     private func selectCountry(index: Int, address: AddressDetails.Address? = nil) {
         if country.selectedIndex != index {
@@ -502,6 +512,25 @@ private extension AddressSectionElement {
             return .unavailable
         }
         return hasExpandedToManualEntry ? .expanded : .compact
+    }
+}
+
+private extension AddressSectionElement.FieldsToCollect {
+    func widened(toMeet minimum: Self) -> Self {
+        switch (self, minimum) {
+        case (.all, _):
+            return self
+        case (_, .all):
+            return minimum
+        case (.countryAndPostal, .country):
+            return self
+        case (.country, .countryAndPostal):
+            return minimum
+        case (.countryAndPostal, .countryAndPostal):
+            return self
+        case (.country, .country):
+            return self
+        }
     }
 }
 

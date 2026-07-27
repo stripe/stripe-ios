@@ -29,19 +29,17 @@ final class PaymentElementTest: XCTestCase {
     func testConfigurationSetsCheckoutDefaultBillingDetails() async throws {
         // Given Checkout billing defaults
         var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
-        checkoutConfiguration.defaults = .init(
-            billingDetails: Checkout.Configuration.Defaults.BillingDetails(
-                name: "Jane Doe",
-                address: .init(
-                    country: "US",
-                    line1: "123 Main St",
-                    line2: "Apt 4",
-                    city: "San Francisco",
-                    state: "CA",
-                    postalCode: "94105"
-                )
-            )
+        var billingDetails = Checkout.Configuration.Defaults.BillingDetails()
+        billingDetails.name = "Jane Doe"
+        billingDetails.address = .init(
+            country: "US",
+            line1: "123 Main St",
+            line2: "Apt 4",
+            city: "San Francisco",
+            state: "CA",
+            postalCode: "94105"
         )
+        checkoutConfiguration.defaults.billingDetails = billingDetails
 
         // When Checkout creates PaymentElement
         let checkout = try await Checkout(
@@ -61,6 +59,47 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.postalCode, "94105")
 
         XCTAssertEqual(embeddedConfiguration.defaultBillingDetails, paymentSheetConfiguration.defaultBillingDetails)
+    }
+
+    func testConfigurationSetsCheckoutDefaultShippingDetails() async throws {
+        // Given Checkout shipping defaults
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
+        shippingDetails.name = "Jane Doe"
+        shippingDetails.address = .init(
+            country: "US",
+            line1: "123 Main St",
+            line2: "Apt 4",
+            city: "San Francisco",
+            state: "CA",
+            postalCode: "94105"
+        )
+        checkoutConfiguration.defaults.shippingDetails = shippingDetails
+
+        // When Checkout creates PaymentElement
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
+        )
+        let paymentElement = checkout.getPaymentElement()
+        let paymentSheetShipping = paymentElement.paymentSheetFlowController.configuration.shippingDetails()
+        let embeddedShipping = paymentElement.embeddedPaymentElement.configuration.shippingDetails()
+
+        // Then both configurations receive the same default shipping details
+        XCTAssertEqual(paymentSheetShipping?.name, "Jane Doe")
+        XCTAssertEqual(paymentSheetShipping?.address.country, "US")
+        XCTAssertEqual(paymentSheetShipping?.address.line1, "123 Main St")
+        XCTAssertEqual(paymentSheetShipping?.address.line2, "Apt 4")
+        XCTAssertEqual(paymentSheetShipping?.address.city, "San Francisco")
+        XCTAssertEqual(paymentSheetShipping?.address.state, "CA")
+        XCTAssertEqual(paymentSheetShipping?.address.postalCode, "94105")
+
+        XCTAssertEqual(embeddedShipping?.name, paymentSheetShipping?.name)
+        XCTAssertEqual(embeddedShipping?.address.country, paymentSheetShipping?.address.country)
+        XCTAssertEqual(embeddedShipping?.address.line1, paymentSheetShipping?.address.line1)
+        XCTAssertEqual(embeddedShipping?.address.line2, paymentSheetShipping?.address.line2)
+        XCTAssertEqual(embeddedShipping?.address.city, paymentSheetShipping?.address.city)
+        XCTAssertEqual(embeddedShipping?.address.state, paymentSheetShipping?.address.state)
+        XCTAssertEqual(embeddedShipping?.address.postalCode, paymentSheetShipping?.address.postalCode)
     }
 
     func testConfigurationSetsFullBillingAddressCollectionWhenCheckoutRequiresBillingAddress() async throws {

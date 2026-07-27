@@ -58,12 +58,11 @@ extension Checkout.Configuration {
         /// Default billing details.
         public var billingDetails: BillingDetails?
 
+        /// Default shipping details.
+        public var shippingDetails: ShippingDetails?
+
         /// Creates default customer details.
-        public init(
-            billingDetails: BillingDetails? = nil
-        ) {
-            self.billingDetails = billingDetails
-        }
+        public init() {}
 
         /// Default billing details.
         public struct BillingDetails {
@@ -74,10 +73,19 @@ extension Checkout.Configuration {
             public var address: Checkout.Address?
 
             /// Creates default billing details.
-            public init(name: String? = nil, address: Checkout.Address? = nil) {
-                self.name = name
-                self.address = address
-            }
+            public init() {}
+        }
+
+        /// Default shipping details.
+        public struct ShippingDetails {
+            /// The customer's full name.
+            public var name: String?
+
+            /// The customer's shipping address.
+            public var address: Checkout.Address?
+
+            /// Creates default shipping details.
+            public init() {}
         }
     }
 }

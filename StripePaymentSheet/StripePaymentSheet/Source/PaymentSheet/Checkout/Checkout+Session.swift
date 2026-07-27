@@ -59,7 +59,7 @@ extension Checkout {
         public let shipping: Checkout.SelectedShipping?
 
         /// Shipping address of the customer.
-        public let shippingAddress: Checkout.ContactAddress?
+        public let shippingAddress: ShippingAddress?
 
         /// The list of shipping options that can be selected.
         public let shippingOptions: [Checkout.ShippingOption]

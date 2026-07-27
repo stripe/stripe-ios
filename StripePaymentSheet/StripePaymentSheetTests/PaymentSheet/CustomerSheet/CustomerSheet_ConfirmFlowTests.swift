@@ -361,6 +361,7 @@ extension CustomerSheet_ConfirmFlowTests {
                                                   accountService: LinkAccountService._testValue(),
                                                   cardBrandChoiceEligible: false,
                                                   isPaymentIntent: false,
+                                                  collectsTaxFromBillingAddress: false,
                                                   isSettingUp: true,
                                                   countryCode: nil,
                                                   savePaymentMethodConsentBehavior: .legacy,

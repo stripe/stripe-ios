@@ -165,9 +165,7 @@ extension PaymentSheetFormFactory {
         case .phone:
             return configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
         case .billingAddress:
-            return configuration.billingDetailsCollectionConfiguration.address == .full
-                ? makeBillingAddressSection(countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
-                : nil
+            return makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         case .billingAddressWithoutCountry:
             // The address (including country) is collected by the accompanying country /
             // klarna_country AddressSectionElement, so this placeholder produces nothing.
