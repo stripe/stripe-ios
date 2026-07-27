@@ -17,13 +17,11 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Properties
 
-    private weak var checkout: Checkout?
     private let stackView = UIStackView()
 
     // MARK: - Init
 
-    init(checkout: Checkout) {
-        self.checkout = checkout
+    init(session: Checkout.Session, configuration: Checkout.Configuration) {
         super.init(frame: .zero)
 
         // TODO: Appearance
