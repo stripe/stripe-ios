@@ -21,7 +21,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
 
         XCTAssertEqual(
-            Checkout.ExpressCheckoutElementView.expressButtons(from: session, configuration: configuration),
+            ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration),
             []
         )
     }
@@ -31,7 +31,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let session = makeSessionWithWalletTypes(["apple_pay"]).makePublicSession()
         let configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
 
-        let buttons = Checkout.ExpressCheckoutElementView.expressButtons(from: session, configuration: configuration)
+        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
         XCTAssertFalse(buttons.contains(.applePay))
     }
 
@@ -41,7 +41,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
         configuration.applePayConfiguration = Checkout.ApplePayConfiguration(merchantId: "merchant.com.example")
 
-        let buttons = Checkout.ExpressCheckoutElementView.expressButtons(from: session, configuration: configuration)
+        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
         XCTAssertEqual(buttons.contains(.applePay), StripeAPI.deviceSupportsApplePay())
     }
 
@@ -50,7 +50,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
         let configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
 
-        let buttons = Checkout.ExpressCheckoutElementView.expressButtons(from: session, configuration: configuration)
+        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
         XCTAssertTrue(buttons.contains(.link))
     }
 
