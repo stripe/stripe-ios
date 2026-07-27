@@ -165,7 +165,7 @@ enum CheckoutTestHelpers {
         configuration: Checkout.Configuration? = nil
     ) -> Checkout.Configuration {
         let clientSecret = configuration?.clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
-        var resolvedConfiguration = configuration ?? Checkout.Configuration(clientSecret: clientSecret)
+        var resolvedConfiguration = configuration ?? Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         resolvedConfiguration.adaptivePricing.allowed = true
         return makeConfiguration(apiResponse: apiResponse, configuration: resolvedConfiguration)
     }

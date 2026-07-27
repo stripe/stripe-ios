@@ -103,7 +103,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     // MARK: - Label update tests
 
     func testLabelsUpdateWhenSessionAmountChanges() async throws {
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.currencySelectorElement.appearance.labelContent = .amount
         let checkout = try await Checkout(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(configuration: configuration)

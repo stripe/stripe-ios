@@ -37,7 +37,7 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
         disabled: Bool = false
     ) async throws -> some View {
         let session = CheckoutTestHelpers.makeAdaptivePricingSession(currency: selectedCurrency)
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.currencySelectorElement.appearance = appearance
         let checkout = try await Checkout(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(
