@@ -1126,6 +1126,7 @@ private final class CaptureTickMarksView: UIView {
         view.alpha = 0
         view.isHidden = true
         view.backgroundColor = .clear
+        view.isOpaque = false
         view.isUserInteractionEnabled = false
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOffset = CGSize(width: 0, height: 2)
@@ -1920,7 +1921,8 @@ private final class CaptureSuccessCheckmarkView: UIView {
         checkmarkPath.lineCapStyle = .round
         checkmarkPath.lineJoinStyle = .round
         checkmarkPath.lineWidth = 2.6
-        CaptureTickMarksView.Styling.acceptedTickColor.setStroke()
+        context.setBlendMode(.clear)
+        UIColor.white.setStroke()
         checkmarkPath.stroke()
     }
 }
