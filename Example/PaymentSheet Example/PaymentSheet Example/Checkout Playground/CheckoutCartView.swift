@@ -20,7 +20,7 @@ struct CheckoutCartView: View {
     let shippingAddressCollection: Bool
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
-    var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
+    var currencySelectorAppearance = CurrencySelectorElement.Appearance()
 
     var body: some View {
         NavigationView {
@@ -31,7 +31,6 @@ struct CheckoutCartView: View {
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
-                        currencySelectorAppearance: currencySelectorAppearance,
                         showsShippingAddressSection: shippingAddressCollection,
                         isLoading: $isLoading,
                         errorMessage: $errorMessage
@@ -84,8 +83,9 @@ struct CheckoutCartView: View {
         isLoading = true
         errorMessage = nil
         do {
-            var config = Checkout.Configuration(clientSecret: clientSecret)
+            var config = Checkout.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
             config.adaptivePricing.allowed = adaptivePricing
+            config.currencySelectorElement.appearance = currencySelectorAppearance
             checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription
