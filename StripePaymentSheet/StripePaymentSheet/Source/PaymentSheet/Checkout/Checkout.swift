@@ -296,6 +296,10 @@ extension Checkout {
     func applyDefaults() async throws {
         let defaults = configuration.defaults
 
+        if let email = defaults.email,
+           session.email != email {
+            try await updateEmail(email)
+        }
         if let billingDetails = defaults.billingDetails,
            let address = billingDetails.address {
             try await updateBillingTaxRegionIfNecessary(address: address)

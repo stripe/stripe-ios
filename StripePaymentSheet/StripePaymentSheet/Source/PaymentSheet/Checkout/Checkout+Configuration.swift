@@ -119,6 +119,9 @@ extension Checkout.Configuration {
         /// Default shipping details.
         public var shippingDetails: ShippingDetails?
 
+        /// The customer's email address.
+        public var email: String?
+
         /// Creates default customer details.
         public init() {}
 
