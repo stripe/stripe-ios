@@ -3,8 +3,8 @@
 //  PaymentSheet Example
 //
 
-import UIKit
 @_spi(LinkControllerPreview) import StripePaymentSheet
+import UIKit
 
 struct LinkControllerDemoConfiguration {
     var email: String = "foo@bar.com"
