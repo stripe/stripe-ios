@@ -69,6 +69,47 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(embeddedConfiguration.defaultBillingDetails, paymentSheetConfiguration.defaultBillingDetails)
     }
 
+    func testConfigurationSetsCheckoutMerchantDisplayName() async throws {
+        // Given Checkout merchant display name
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        checkoutConfiguration.merchantDisplayName = "Configured Merchant"
+
+        // When Checkout creates PaymentElement
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card"], businessName: "Dashboard Merchant"),
+                configuration: checkoutConfiguration
+            )
+        )
+        let paymentElement = checkout.getPaymentElement()
+        let paymentSheetConfiguration = paymentElement.paymentSheetFlowController.configuration
+        let embeddedConfiguration = paymentElement.embeddedPaymentElement.configuration
+
+        // Then both configurations use the configured merchant display name
+        XCTAssertEqual(paymentSheetConfiguration.merchantDisplayName, "Configured Merchant")
+        XCTAssertEqual(embeddedConfiguration.merchantDisplayName, "Configured Merchant")
+    }
+
+    func testConfigurationDefaultsMerchantDisplayNameToCheckoutSessionBusinessName() async throws {
+        // Given Checkout Session business name
+        let checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+
+        // When Checkout creates PaymentElement without an explicit merchant display name
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card"], businessName: "Dashboard Merchant"),
+                configuration: checkoutConfiguration
+            )
+        )
+        let paymentElement = checkout.getPaymentElement()
+        let paymentSheetConfiguration = paymentElement.paymentSheetFlowController.configuration
+        let embeddedConfiguration = paymentElement.embeddedPaymentElement.configuration
+
+        // Then both configurations use the Checkout Session business name
+        XCTAssertEqual(paymentSheetConfiguration.merchantDisplayName, "Dashboard Merchant")
+        XCTAssertEqual(embeddedConfiguration.merchantDisplayName, "Dashboard Merchant")
+    }
+
     func testConfigurationSetsCheckoutDefaultShippingDetails() async throws {
         // Given Checkout shipping defaults
         var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
@@ -254,17 +295,18 @@ final class PaymentElementTest: XCTestCase {
         return (configuration, requestRecorder)
     }
 
-    private static func makeOpenSession(paymentMethodTypes: [String]) -> PaymentPagesAPIResponse {
+    private static func makeOpenSession(paymentMethodTypes: [String], businessName: String? = nil) -> PaymentPagesAPIResponse {
         return PaymentPagesAPIResponse.decodedObject(
-            fromAPIResponse: openSessionJSON(paymentMethodTypes: paymentMethodTypes)
+            fromAPIResponse: openSessionJSON(paymentMethodTypes: paymentMethodTypes, businessName: businessName)
         )!
     }
 
-    private static func openSessionJSON(paymentMethodTypes: [String]) -> [AnyHashable: Any] {
+    private static func openSessionJSON(paymentMethodTypes: [String], businessName: String? = nil) -> [AnyHashable: Any] {
         var elementsSessionJSON = CheckoutTestHelpers.minimalElementsSessionJSON
         elementsSessionJSON["payment_method_preference"] = [
             "ordered_payment_method_types": paymentMethodTypes,
         ]
+        elementsSessionJSON["business_name"] = businessName
 
         var json = CheckoutTestHelpers.openSessionJSON
         json["payment_method_types"] = paymentMethodTypes

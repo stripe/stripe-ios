@@ -72,6 +72,9 @@ public final class Checkout: ObservableObject {
     let flagImageManager = AdaptivePricingFlagImageManager()
     let clientSecret: String
     let apiClient: STPAPIClient
+    var effectiveMerchantDisplayName: String {
+        configuration.merchantDisplayName ?? session.businessName ?? Bundle.displayName ?? ""
+    }
 
     /// Serial queue of in-flight session updates. Each task waits for the previous task before running.
     var pendingOperations: [Task<Void, Error>] = [] {

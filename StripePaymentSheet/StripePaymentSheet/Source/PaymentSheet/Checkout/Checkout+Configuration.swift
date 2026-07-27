@@ -34,6 +34,12 @@ extension Checkout {
         /// The API client used to make requests to Stripe.
         public var apiClient: STPAPIClient = .shared
 
+        /// Customer-facing business name.
+        ///
+        /// If `nil`, Checkout uses the business name from your Dashboard's
+        /// Business Public Details settings.
+        public var merchantDisplayName: String?
+
         /// Default customer details used to pre-populate Checkout integrations.
         public var defaults: Defaults = Defaults()
 
