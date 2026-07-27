@@ -46,7 +46,7 @@ enum Intent {
                 return false
             }
         case .checkout(let session):
-            return session.mode == .payment || session.mode == .subscription
+            return !session.isSetupStyle
         }
     }
 
@@ -137,15 +137,7 @@ enum Intent {
             }
             return nil
         case .checkout(let session):
-            switch session.mode {
-            case .payment:
-                return session.setupFutureUsage
-            case .setup:
-                return nil
-            case .subscription, .unknown:
-                stpAssertionFailure("subscription and unknown not implemented")
-                return nil
-            }
+            return session.isSetupStyle ? nil : session.setupFutureUsage
         case .setupIntent:
             return nil
         }
@@ -189,18 +181,11 @@ enum Intent {
                 return true
             }
         case .checkout(let session):
-            switch session.mode {
-            case .payment:
-                guard let setupFutureUsage = session.setupFutureUsage(for: paymentMethodType) else {
-                    return false
-                }
-                return setupFutureUsage != "none"
-            case .setup:
-                return true
-            case .subscription, .unknown:
-                stpAssertionFailure("subscription and unknown not implemented")
+            guard !session.isSetupStyle else { return true }
+            guard let setupFutureUsage = session.setupFutureUsage(for: paymentMethodType) else {
                 return false
             }
+            return setupFutureUsage != "none"
         }
     }
 

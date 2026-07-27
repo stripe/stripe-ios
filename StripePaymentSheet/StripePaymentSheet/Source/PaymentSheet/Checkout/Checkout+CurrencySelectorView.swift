@@ -153,18 +153,18 @@ extension Checkout {
             updateCaption(currency: currency, exchangeRateMeta: exchangeRateMeta)
         }
 
-        private func resolveLabelContent(session: Checkout.Session) -> Appearance.LabelContent {
+        private func resolveLabelContent() -> Appearance.LabelContent {
             guard case .automatic = appearance.labelContent else {
                 return appearance.labelContent
             }
-            return session.mode == .subscription ? .currencyCode : .amount
+            return .amount
         }
 
         private func buildSelectorItems(
             session: Checkout.Session,
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta
         ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
-            let resolvedLabelContent = resolveLabelContent(session: session)
+            let resolvedLabelContent = resolveLabelContent()
             let flagFont = appearance.scaledFont(for: appearance.font, style: .footnote)
             return CurrencySelectorUtilities.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,

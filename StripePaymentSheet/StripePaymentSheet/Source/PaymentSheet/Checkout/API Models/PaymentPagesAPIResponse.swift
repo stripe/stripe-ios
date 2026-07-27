@@ -65,8 +65,8 @@ class PaymentPagesAPIResponse: NSObject {
 
     // MARK: - Internal SDK-only fields
 
-    /// The mode of the Checkout Session (payment, setup, or subscription).
-    let mode: Checkout.Mode
+    /// The top-level payment status, which is present even when `status` is omitted.
+    let paymentStatus: Checkout.PaymentStatus
 
     /// The ID of the PaymentIntent for Checkout Sessions in payment mode.
     let paymentIntentId: String?
@@ -130,24 +130,16 @@ class PaymentPagesAPIResponse: NSObject {
     /// The raw API response used to create this object.
     let allResponseFields: [AnyHashable: Any]
 
-    /// Extracts the client secret from the expanded PaymentIntent or SetupIntent based on mode.
+    /// Extracts the client secret from whichever expanded intent is present in the response.
     func intentClientSecret() throws -> String {
-        switch mode {
-        case .setup:
-            guard let setupIntent = setupIntent else {
-                throw PaymentSheetError.unknown(debugDescription: "Missing setup intent in confirm response")
-            }
+        if let setupIntent {
             return setupIntent.clientSecret
-        case .payment:
-            guard let paymentIntent = paymentIntent else {
-                throw PaymentSheetError.unknown(debugDescription: "Missing payment intent in confirm response")
-            }
+        } else if let paymentIntent {
             return paymentIntent.clientSecret
-        case .subscription:
-            throw PaymentSheetError.unknown(debugDescription: "Subscriptions are not yet supported with checkout sessions")
-        case .unknown:
-            throw PaymentSheetError.unknown(debugDescription: "Unknown checkout session mode")
         }
+        throw PaymentSheetError.unknown(
+            debugDescription: "No intent found in checkout session response"
+        )
     }
 
     /// :nodoc:
@@ -193,7 +185,7 @@ class PaymentPagesAPIResponse: NSObject {
         status: Checkout.Status?,
         tax: Checkout.Tax,
         total: Checkout.Total?,
-        mode: Checkout.Mode,
+        paymentStatus: Checkout.PaymentStatus,
         paymentIntentId: String?,
         setupIntentId: String?,
         paymentIntent: STPPaymentIntent?,
@@ -230,7 +222,7 @@ class PaymentPagesAPIResponse: NSObject {
         self.status = status
         self.tax = tax
         self.total = total
-        self.mode = mode
+        self.paymentStatus = paymentStatus
         self.paymentIntentId = paymentIntentId
         self.setupIntentId = setupIntentId
         self.paymentIntent = paymentIntent
@@ -264,7 +256,6 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
         guard let dict = response,
               let id = dict["session_id"] as? String,
               let livemode = dict["livemode"] as? Bool,
-              let rawMode = dict["mode"] as? String,
               let rawPaymentStatus = dict["payment_status"] as? String,
               (dict["payment_method_types"] as? [String]) != nil
         else {
@@ -453,7 +444,7 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
             status: status,
             tax: tax,
             total: total,
-            mode: Checkout.Mode.mode(from: rawMode),
+            paymentStatus: paymentStatus,
             paymentIntentId: paymentIntentId,
             setupIntentId: setupIntentId,
             paymentIntent: paymentIntent,
