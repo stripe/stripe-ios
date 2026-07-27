@@ -34,6 +34,24 @@ final class SelfieScanningView: UIView {
         static let statusLabelFadeOutDuration: TimeInterval = 0.6
         static let turnPromptArrowAnimationDuration: TimeInterval = 0.45
         static let turnPromptArrowAnimationOffset: CGFloat = 5
+        static var statusLabelFont: UIFont {
+            .systemFont(ofSize: 14, weight: .medium)
+        }
+        static let statusLabelLineHeight: CGFloat = 18
+        static func statusLabelAttributedString(_ text: String) -> NSAttributedString {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.minimumLineHeight = statusLabelLineHeight
+            paragraphStyle.maximumLineHeight = statusLabelLineHeight
+            paragraphStyle.alignment = .center
+            return NSAttributedString(
+                string: text,
+                attributes: [
+                    .font: statusLabelFont,
+                    .foregroundColor: UIColor.white,
+                    .paragraphStyle: paragraphStyle,
+                ]
+            )
+        }
         static var troubleLinkFont: UIFont {
             IdentityUI.preferredFont(forTextStyle: .body).withSize(12)
         }
@@ -334,7 +352,7 @@ final class SelfieScanningView: UIView {
 
     private let trailingTurnPromptArrowLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.font = Styling.statusLabelFont
         label.textColor = .white
         label.adjustsFontForContentSizeCategory = true
         label.isHidden = true
@@ -384,7 +402,7 @@ final class SelfieScanningView: UIView {
 
     private let leadingTurnPromptArrowLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.font = Styling.statusLabelFont
         label.textColor = .white
         label.adjustsFontForContentSizeCategory = true
         label.isHidden = true
@@ -397,7 +415,7 @@ final class SelfieScanningView: UIView {
 
     private let statusLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.font = Styling.statusLabelFont
         label.textColor = .white
         label.adjustsFontForContentSizeCategory = true
         label.layer.shadowColor = UIColor.black.cgColor
@@ -899,7 +917,7 @@ extension SelfieScanningView {
     }
 
     fileprivate func configureStatusLabel(_ statusText: ViewModel.StatusText, animated: Bool) {
-        statusLabel.text = statusText.text
+        statusLabel.attributedText = Styling.statusLabelAttributedString(statusText.text)
         configureTurnPromptArrow(for: statusText)
         statusLabelBottomConstraint.isActive = !statusText.isCenteredInViewfinder
         statusLabelCenterYConstraint.isActive = statusText.isCenteredInViewfinder
@@ -949,7 +967,7 @@ extension SelfieScanningView {
             ? leadingTurnPromptArrowLabel
             : trailingTurnPromptArrowLabel
         hiddenArrowLabel.isHidden = true
-        arrowLabel.text = configuration.text
+        arrowLabel.attributedText = Styling.statusLabelAttributedString(configuration.text)
         arrowLabel.isHidden = false
 
         let offset = configuration.placesAfterText
