@@ -544,7 +544,7 @@ struct ExampleLinkControllerView: View {
 
         do {
             let result = try await linkController.present(
-                email: email,
+                email: email.isEmpty ? nil : email,
                 phoneNumber: phone.isEmpty ? nil : phone,
                 from: rootViewController
             )

@@ -25,7 +25,7 @@ struct ExampleLinkControllerPreviewView: View {
                     DemoSection(title: "User Information") {
                         VStack(alignment: .leading, spacing: 16) {
                             VStack(alignment: .leading, spacing: 8) {
-                                Text("Email")
+                                Text("Email (optional)")
                                     .font(.subheadline)
                                 TextField("Enter email address", text: $configuration.email)
                                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -104,11 +104,10 @@ struct ExampleLinkControllerPreviewView: View {
                         Text("Continue")
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(configuration.email.isEmpty ? Color.blue.opacity(0.4) : Color.blue)
+                            .background(Color.blue)
                             .foregroundColor(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
-                    .disabled(configuration.email.isEmpty)
                 }
                 .padding()
         }
