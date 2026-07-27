@@ -356,6 +356,41 @@ extension STPTestingAPIClient {
         return try await makeRequest(endpoint: "create_checkout_session_setup", params: params)
     }
 
+    /// Creates a unified (modeless) CheckoutSession, backed by `checkout_items` rather than
+    /// `line_items`. Requires the merchant account to be gated into `checkout_item_one_time_price`
+    /// and `enable_custom_checkout_product_catalog_v2`.
+    ///
+    /// Unlike `fetchCheckoutSessionPaymentMode`, there's no `adaptivePricingEnabled` flag: the
+    /// `adaptive_pricing` creation param is rejected outright for modeless sessions ("You can not
+    /// pass `adaptive_pricing` in `modeless` mode."). Adaptive pricing activates automatically for
+    /// modeless sessions based on the account-level Adaptive Pricing setting plus the
+    /// `adaptive_pricing_enable_for_modeless_checkout_sessions` feature flag; use
+    /// `customerEmailLocation` to simulate a customer's location on accounts that have both enabled
+    /// (e.g. `us_tax`).
+    func fetchCheckoutSessionUnifiedMode(
+        types: [String] = ["card"],
+        currency: String = "usd",
+        amount: Int? = nil,
+        merchantCountry: String? = "us",
+        customerID: String? = nil,
+        customerEmailLocation: String? = nil,
+        additionalParameters: [String: Any] = [:]
+    ) async throws -> CreateCheckoutSessionResponse {
+        var additionalParameters = additionalParameters
+        if let customerEmailLocation {
+            additionalParameters["customer_email"] = "test+location_\(customerEmailLocation)@example.com"
+        }
+        let params: [String: Any?] = [
+            "account": merchantCountry,
+            "payment_method_types": types,
+            "currency": currency,
+            "amount": amount,
+            "customer": customerID,
+            "additional_parameters": additionalParameters.isEmpty ? nil : additionalParameters,
+        ]
+        return try await makeRequest(endpoint: "create_checkout_session_unified", params: params)
+    }
+
     // MARK: - Helpers
 
     fileprivate func makeRequest<ResponseType: Decodable>(

@@ -24,7 +24,6 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // Verify checkout session fields
         XCTAssertEqual(checkoutSession.id, checkoutSessionId)
-        XCTAssertEqual(checkoutSession.mode, .payment)
         XCTAssertEqual(checkoutSession.status?.type, .open)
         XCTAssertEqual(checkoutSession.status?.paymentStatus, .unpaid)
         XCTAssertEqual(checkoutSession.currency, "usd")
@@ -88,7 +87,6 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // Verify standard checkout session fields
         XCTAssertEqual(checkoutSession.id, checkoutSessionId)
-        XCTAssertEqual(checkoutSession.mode, .payment)
         XCTAssertEqual(checkoutSession.status?.type, .open)
         XCTAssertFalse(checkoutSession.livemode)
 
@@ -113,7 +111,6 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // Verify standard checkout session fields
         XCTAssertEqual(checkoutSession.id, checkoutSessionId)
-        XCTAssertEqual(checkoutSession.mode, .payment)
         XCTAssertEqual(checkoutSession.status?.type, .open)
         XCTAssertFalse(checkoutSession.livemode)
 
@@ -241,7 +238,6 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // Verify checkout session fields
         XCTAssertEqual(checkoutSession.id, checkoutSessionId)
-        XCTAssertEqual(checkoutSession.mode, .setup)
         XCTAssertEqual(checkoutSession.status?.type, .open)
         XCTAssertEqual(checkoutSession.status?.paymentStatus, .noPaymentRequired)
         XCTAssertEqual(checkoutSession.currency, "usd")

@@ -65,19 +65,28 @@ class PaymentPagesAPIResponse: NSObject {
 
     // MARK: - Internal SDK-only fields
 
-    /// The mode of the Checkout Session (payment, setup, or subscription).
-    let mode: Checkout.Mode
+    /// The top-level payment status. Unlike ``Checkout.Session.status``, this is always present —
+    /// the API guarantees a `payment_status` even when it omits the overall session `status`.
+    /// Used to distinguish setup-style sessions (``Checkout.PaymentStatus.noPaymentRequired``) from
+    /// payment-style ones, since `total` can be present-but-zero on setup-style sessions too.
+    let paymentStatus: Checkout.PaymentStatus
 
-    /// The ID of the PaymentIntent for Checkout Sessions in payment mode.
+    /// `total_summary.due`: the amount the server expects to be charged right now, as opposed
+    /// to ``Checkout.Total.total``'s full order total. The confirm endpoint validates the
+    /// `expected_amount` it's sent against this value, so it must always be sent as-is
+    /// (including `0` on setup-style sessions) rather than derived from `total`.
+    let amountDue: Int?
+
+    /// The ID of this session's PaymentIntent, for payment-style sessions.
     let paymentIntentId: String?
 
-    /// The ID of the SetupIntent for Checkout Sessions in setup mode.
+    /// The ID of this session's SetupIntent, for setup-style sessions.
     let setupIntentId: String?
 
-    /// The expanded PaymentIntent for this session, if in `payment` or `subscription` mode.
+    /// The expanded PaymentIntent, present on payment-style sessions.
     let paymentIntent: STPPaymentIntent?
 
-    /// The expanded SetupIntent for this session, if in `setup` mode.
+    /// The expanded SetupIntent, present on setup-style sessions.
     let setupIntent: STPSetupIntent?
 
     /// Payment-method-specific configuration for this CheckoutSession.
@@ -130,24 +139,16 @@ class PaymentPagesAPIResponse: NSObject {
     /// The raw API response used to create this object.
     let allResponseFields: [AnyHashable: Any]
 
-    /// Extracts the client secret from the expanded PaymentIntent or SetupIntent based on mode.
+    /// Extracts the client secret from whichever expanded intent is present in the response.
     func intentClientSecret() throws -> String {
-        switch mode {
-        case .setup:
-            guard let setupIntent = setupIntent else {
-                throw PaymentSheetError.unknown(debugDescription: "Missing setup intent in confirm response")
-            }
+        if let setupIntent = setupIntent {
             return setupIntent.clientSecret
-        case .payment:
-            guard let paymentIntent = paymentIntent else {
-                throw PaymentSheetError.unknown(debugDescription: "Missing payment intent in confirm response")
-            }
+        } else if let paymentIntent = paymentIntent {
             return paymentIntent.clientSecret
-        case .subscription:
-            throw PaymentSheetError.unknown(debugDescription: "Subscriptions are not yet supported with checkout sessions")
-        case .unknown:
-            throw PaymentSheetError.unknown(debugDescription: "Unknown checkout session mode")
         }
+        throw PaymentSheetError.unknown(
+            debugDescription: "No intent found in checkout session response"
+        )
     }
 
     /// :nodoc:
@@ -193,7 +194,8 @@ class PaymentPagesAPIResponse: NSObject {
         status: Checkout.Status?,
         tax: Checkout.Tax,
         total: Checkout.Total?,
-        mode: Checkout.Mode,
+        paymentStatus: Checkout.PaymentStatus,
+        amountDue: Int?,
         paymentIntentId: String?,
         setupIntentId: String?,
         paymentIntent: STPPaymentIntent?,
@@ -230,7 +232,8 @@ class PaymentPagesAPIResponse: NSObject {
         self.status = status
         self.tax = tax
         self.total = total
-        self.mode = mode
+        self.paymentStatus = paymentStatus
+        self.amountDue = amountDue
         self.paymentIntentId = paymentIntentId
         self.setupIntentId = setupIntentId
         self.paymentIntent = paymentIntent
@@ -264,7 +267,6 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
         guard let dict = response,
               let id = dict["session_id"] as? String,
               let livemode = dict["livemode"] as? Bool,
-              let rawMode = dict["mode"] as? String,
               let rawPaymentStatus = dict["payment_status"] as? String,
               (dict["payment_method_types"] as? [String]) != nil
         else {
@@ -326,6 +328,7 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
                 balanceAppliedToNextInvoice: balanceAppliedToNextInvoice
             )
         }()
+        let amountDue = (dict["total_summary"] as? [AnyHashable: Any])?["due"] as? Int
 
         // Tax
         let taxStatus: Checkout.TaxStatus = {
@@ -453,7 +456,8 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
             status: status,
             tax: tax,
             total: total,
-            mode: Checkout.Mode.mode(from: rawMode),
+            paymentStatus: paymentStatus,
+            amountDue: amountDue,
             paymentIntentId: paymentIntentId,
             setupIntentId: setupIntentId,
             paymentIntent: paymentIntent,
@@ -500,11 +504,56 @@ extension PaymentPagesAPIResponse {
     // MARK: Line Items
 
     static func parseLineItems(from dict: [AnyHashable: Any], defaultCurrency: String?) -> [Checkout.LineItem] {
-        guard let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any],
-              let lineItems = lineItemGroup["line_items"] as? [[AnyHashable: Any]] else {
+        if let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any],
+           let lineItems = lineItemGroup["line_items"] as? [[AnyHashable: Any]] {
+            return lineItems.compactMap { parseLineItem(from: $0, defaultCurrency: defaultCurrency) }
+        }
+        // Modeless (unified-mode) sessions never populate `line_item_group` — their items live
+        // under `checkout_items` instead.
+        guard let checkoutItems = dict["checkout_items"] as? [[AnyHashable: Any]] else {
             return []
         }
-        return lineItems.compactMap { parseLineItem(from: $0, defaultCurrency: defaultCurrency) }
+        return checkoutItems.compactMap { parseCheckoutItem(from: $0, defaultCurrency: defaultCurrency) }
+    }
+
+    /// Parses a `checkout_items` entry into a ``Checkout/LineItem``. Only `one_time_price_item`
+    /// is supported today (the only type the mobile SDK can create); other types (rate cards,
+    /// pricing plans, subscriptions) are skipped rather than surfaced incorrectly.
+    private static func parseCheckoutItem(from dict: [AnyHashable: Any], defaultCurrency: String?) -> Checkout.LineItem? {
+        guard let key = dict["key"] as? String,
+              let oneTimePriceItem = dict["one_time_price_item"] as? [AnyHashable: Any],
+              let quantity = oneTimePriceItem["quantity"] as? Int,
+              let price = oneTimePriceItem["price"] as? [AnyHashable: Any],
+              let product = price["product"] as? [AnyHashable: Any],
+              let name = product["name"] as? String else {
+            return nil
+        }
+        let currency = (price["currency"] as? String) ?? defaultCurrency
+        let unitAmount: Checkout.Amount? = (price["unit_amount"] as? Int).map {
+            makeAmount($0, currency: currency)
+        }
+        let unitAmountDecimal = parseDecimalAmount(
+            price["unit_amount_decimal"] as? String,
+            currency: currency
+        )
+
+        return Checkout.LineItem(
+            id: key,
+            name: name,
+            description: product["description"] as? String,
+            images: product["images"] as? [String] ?? [],
+            quantity: quantity,
+            unitAmount: unitAmount,
+            unitAmountDecimal: unitAmountDecimal,
+            subtotal: nil,
+            discount: nil,
+            taxExclusive: nil,
+            taxInclusive: nil,
+            total: nil,
+            discountAmounts: [],
+            taxAmounts: [],
+            adjustableQuantity: nil
+        )
     }
 
     private static func parseLineItem(from dict: [AnyHashable: Any], defaultCurrency: String?) -> Checkout.LineItem? {
@@ -587,6 +636,11 @@ extension PaymentPagesAPIResponse {
         return options.compactMap { parseShippingOption(from: $0, defaultCurrency: defaultCurrency) }
     }
 
+    // `shipping_options` (and therefore a selected shipping rate) is rejected outright for
+    // modeless sessions ("`shipping_options` can only be used in payment mode.", verified live),
+    // so `line_item_group.shipping_rate` is the only place a selected rate can ever appear —
+    // no modeless fallback needed here, unlike line items/tax/discounts.
+
     static func parseSelectedShippingAmount(from dict: [AnyHashable: Any]) -> Int {
         if let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any],
            let shippingRate = lineItemGroup["shipping_rate"] as? [AnyHashable: Any],
@@ -661,11 +715,32 @@ extension PaymentPagesAPIResponse {
         return Checkout.DeliveryEstimate.Bound(unit: unit, value: value)
     }
 
+    /// Reads an array field that lives under `line_item_group` for classic-mode sessions, or
+    /// under `recurring_details` for modeless sessions, which never populate `line_item_group`.
+    ///
+    /// Verified against a live modeless session: `total_summary.total_tax_amounts` stays `[]`
+    /// even once tax is computed and folded into `total_summary.total` — despite matching the
+    /// same schema as the classic-mode fields, it's never actually populated for mobile clients.
+    /// `recurring_details.total_tax_amounts`/`total_discount_amounts` (despite the name, present
+    /// and correct for one-time, non-recurring modeless purchases too) are the real source.
+    private static func lineItemGroupOrModelessRecurringDetailsArray(
+        from dict: [AnyHashable: Any],
+        lineItemGroupKey: String,
+        recurringDetailsKey: String
+    ) -> [[AnyHashable: Any]] {
+        (dict["line_item_group"] as? [AnyHashable: Any])?[lineItemGroupKey] as? [[AnyHashable: Any]]
+            ?? (dict["recurring_details"] as? [AnyHashable: Any])?[recurringDetailsKey] as? [[AnyHashable: Any]]
+            ?? []
+    }
+
     // MARK: Discounts
 
     static func parseDiscountAmounts(from dict: [AnyHashable: Any], currency: String?) -> [Checkout.DiscountAmount] {
-        let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any]
-        let discountAmounts = lineItemGroup?["discount_amounts"] as? [[AnyHashable: Any]] ?? []
+        let discountAmounts = lineItemGroupOrModelessRecurringDetailsArray(
+            from: dict,
+            lineItemGroupKey: "discount_amounts",
+            recurringDetailsKey: "total_discount_amounts"
+        )
         return discountAmounts.compactMap { discount in
             parseDiscountAmount(from: discount, currency: currency)
         }
@@ -703,13 +778,12 @@ extension PaymentPagesAPIResponse {
         from dict: [AnyHashable: Any],
         currency: String?
     ) -> [Checkout.TaxAmount] {
-        guard let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any] else {
-            return []
-        }
-        return parseLineTaxAmounts(
-            from: lineItemGroup["tax_amounts"] as? [[AnyHashable: Any]] ?? [],
-            currency: currency
+        let taxAmounts = lineItemGroupOrModelessRecurringDetailsArray(
+            from: dict,
+            lineItemGroupKey: "tax_amounts",
+            recurringDetailsKey: "total_tax_amounts"
         )
+        return parseLineTaxAmounts(from: taxAmounts, currency: currency)
     }
 
     private static func parseLineTaxAmounts(

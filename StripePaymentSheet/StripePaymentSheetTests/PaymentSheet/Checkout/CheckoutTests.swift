@@ -236,6 +236,125 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.total?.total.minorUnitsAmount, 5542)
     }
 
+    func testLoadUnifiedModeCheckoutSession() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionUnifiedMode(
+            merchantCountry: "us_tax"
+        )
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
+
+        let session = checkout.session
+        XCTAssertEqual(session.id, checkoutSessionResponse.id)
+        XCTAssertEqual(session.status?.type, .open)
+        XCTAssertFalse(session.isSetupOnly)
+        XCTAssertEqual(session.total?.total.minorUnitsAmount, 2000)
+        XCTAssertEqual(session.expectedAmountForConfirm(), 2000)
+
+        // Regression test: unified-mode sessions carry their items under `checkout_items`, not
+        // `line_item_group` — the cart must not come back empty.
+        XCTAssertEqual(session.lineItems.count, 1)
+        XCTAssertEqual(session.lineItems.first?.quantity, 1)
+        XCTAssertEqual(session.lineItems.first?.unitAmount?.minorUnitsAmount, 2000)
+    }
+
+    /// Regression test: `total_summary.total_tax_amounts` is never populated for unified-mode
+    /// sessions (verified against a live session), so tax must be read from `recurring_details`
+    /// instead. Uses a hardcoded pre-created Price with a real tax code, since the CI backend's
+    /// dynamically-created unified-mode Price has no tax code and would compute $0 tax regardless
+    /// of address.
+    func testUpdateShippingAddressUnifiedMode() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionUnifiedMode(
+            merchantCountry: "us_tax",
+            additionalParameters: [
+                "checkout_items": [
+                    [
+                        "type": "one_time_price_item",
+                        "one_time_price_item": [
+                            "price": "price_1TxraFK8p6Sx2i8aHUda5nwK",
+                            "quantity": 1,
+                        ],
+                    ],
+                ],
+                "automatic_tax": ["enabled": true],
+                "shipping_address_collection": ["allowed_countries": ["US"]],
+            ]
+        )
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
+
+        // Pre-tax, no address yet.
+        XCTAssertEqual(checkout.session.total?.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(checkout.session.total?.total.minorUnitsAmount, 2000)
+        XCTAssertNil(checkout.session.tax.taxAmounts)
+
+        try await checkout.updateShippingAddress(
+            name: "John Smith",
+            address: .init(
+                country: "US",
+                line1: "456 Oak Ave",
+                city: "Los Angeles",
+                state: "CA",
+                postalCode: "90001"
+            )
+        )
+
+        // Post-tax: CA sales tax applied. Subtotal unchanged proves the increase is purely tax,
+        // and `tax.taxAmounts` must be non-empty -- this is the actual line-item tax display data.
+        XCTAssertEqual(checkout.session.total?.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(checkout.session.total?.total.minorUnitsAmount, 2195)
+        XCTAssertEqual(checkout.session.tax.taxAmounts?.count, 1)
+        XCTAssertEqual(checkout.session.tax.taxAmounts?.first?.amount.minorUnitsAmount, 195)
+    }
+
+    /// `shipping_options` (merchant-defined rate selection) is rejected outright for unified-mode
+    /// sessions -- confirmed live: "`shipping_options` can only be used in payment mode." A
+    /// selected shipping rate can therefore only ever appear under `line_item_group`, never as a
+    /// modeless top-level field, so `PaymentPagesAPIResponse` intentionally has no modeless
+    /// fallback for it (unlike line items/tax/discounts). This test guards that assumption.
+    func testShippingOptionsRejectedForUnifiedModeCheckoutSession() async throws {
+        do {
+            _ = try await STPTestingAPIClient.shared.fetchCheckoutSessionUnifiedMode(
+                additionalParameters: [
+                    "shipping_options": [
+                        [
+                            "shipping_rate_data": [
+                                "display_name": "Standard",
+                                "type": "fixed_amount",
+                                "fixed_amount": ["amount": 500, "currency": "usd"],
+                            ] as [String: Any],
+                        ] as [String: Any],
+                    ],
+                ]
+            )
+            XCTFail("Expected fetchCheckoutSessionUnifiedMode to fail when shipping_options is provided")
+        } catch {
+            // Expected: the CI backend surfaces the API's rejection as a non-2xx response body
+            // that fails to decode as a CreateCheckoutSessionResponse.
+        }
+    }
+
+    func testAdaptivePricingActiveForUnifiedModeCheckoutSession() async throws {
+        // `us_tax` has both the account-level Adaptive Pricing setting and the
+        // `adaptive_pricing_enable_for_modeless_checkout_sessions` feature flag enabled, so unified
+        // (modeless) sessions get localized pricing automatically -- there's no per-request AP param
+        // for modeless sessions (the API rejects it outright).
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionUnifiedMode(
+            merchantCountry: "us_tax",
+            customerEmailLocation: "FR"
+        )
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        configuration.adaptivePricing.allowed = true
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
+
+        let session = checkout.session
+        XCTAssertEqual(session.currency, "eur")
+        XCTAssertTrue(session.adaptivePricingActive)
+        XCTAssertNotNil(session.exchangeRateMeta)
+    }
+
     func testSelectCurrency() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             adaptivePricingEnabled: true,

@@ -26,6 +26,12 @@ extension Checkout.Session {
     var collectsTaxFromBillingAddress: Bool {
         return shouldSendTaxRegion(for: "billing")
     }
+
+    /// `true` for a setup-style session (no payment due now). Sessions can have a present-but-zero
+    /// `total` even when setup-only, so this checks `paymentStatus` rather than `total != nil`.
+    var isSetupOnly: Bool {
+        return paymentStatus == .noPaymentRequired
+    }
 }
 
 // MARK: - Methods
@@ -38,22 +44,39 @@ extension Checkout.Session {
         return automaticTaxEnabled && automaticTaxAddressSource == addressType
     }
 
-    /// Returns the expectedAmount if in `payment` mode, `nil` if in `setup` mode, and asserts
-    /// if in `subscription` or `unknown` mode.
-    func expectedAmount() -> Int? {
-        switch mode {
-        case .payment:
-            guard let total = total?.total.minorUnitsAmount else {
-                stpAssertionFailure("Missing expected amount from checkout session")
-                return nil
-            }
-            return total
-        case .setup:
-            return nil
-        case .unknown, .subscription:
-            stpAssertionFailure("Unknown and subscription modes are not currently supported with checkout sessions")
+    /// The amount to *display* to the customer for payment-style sessions (payment, subscription,
+    /// unified with priced items). Setup-style sessions (setup, unified setup-only) return `nil`,
+    /// even if `total` is present (the real API can return a present-but-zero `total` on
+    /// setup-only sessions).
+    ///
+    /// This governs UI decisions (e.g. whether Apple Pay shows a `.final` charge amount or a
+    /// `.pending` placeholder) — it is deliberately *not* used for the confirm endpoint's
+    /// `expected_amount` parameter, which has a different contract. Use ``expectedAmountForConfirm()``
+    /// for that.
+    func displayAmount() -> Int? {
+        guard !isSetupOnly else { return nil }
+        guard let amount = total?.total.minorUnitsAmount else {
+            stpAssertionFailure("Missing expected amount from a payment-style checkout session")
             return nil
         }
+        return amount
+    }
+
+    /// The `expected_amount` to send when confirming this session. The confirm endpoint validates
+    /// this against `total_summary.due` and requires it always be sent — including `0` on
+    /// setup-style sessions — so this must not be derived from ``isSetupOnly``/``total`` the way
+    /// ``displayAmount()`` is.
+    func expectedAmountForConfirm() -> Int? {
+        guard let amountDue else {
+            stpAssertionFailure("Missing expected amount from checkout session")
+            let errorAnalytic = ErrorAnalytic(
+                event: .unexpectedPaymentSheetConfirmationError,
+                error: PaymentSheetError.unknown(debugDescription: "Missing total_summary.due when confirming a checkout session")
+            )
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            return nil
+        }
+        return amountDue
     }
 
     func merchantWillSavePaymentMethod(_ paymentMethodType: STPPaymentMethodType) -> Bool {
@@ -61,18 +84,15 @@ extension Checkout.Session {
             return false
         }
 
-        switch mode {
-        case .setup:
+        // Setup-only sessions always save by definition.
+        guard !isSetupOnly else {
             return true
-        case .payment:
-            guard let setupFutureUsage = setupFutureUsage(for: paymentMethodType) else {
-                return false
-            }
-            return setupFutureUsage != "none"
-        case .subscription, .unknown:
-            stpAssertionFailure("Unknown and subscription modes are not currently supported with checkout sessions")
+        }
+
+        guard let setupFutureUsage = setupFutureUsage(for: paymentMethodType) else {
             return false
         }
+        return setupFutureUsage != "none"
     }
 
     func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
@@ -126,7 +146,8 @@ extension Checkout.Session {
             status: status,
             tax: tax,
             total: total,
-            mode: mode,
+            paymentStatus: paymentStatus,
+            amountDue: amountDue,
             paymentMethodOptions: paymentMethodOptions,
             customer: customer,
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,

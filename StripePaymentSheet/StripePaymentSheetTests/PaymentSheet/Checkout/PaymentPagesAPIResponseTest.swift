@@ -29,7 +29,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let requiredFields = [
             "session_id",
             "livemode",
-            "mode",
             "payment_status",
             "payment_method_types",
             "elements_session",
@@ -63,7 +62,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.total?.subtotal.minorUnitsAmount, 2000)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertEqual(session.minorUnitsAmountDivisor, 100)
-        XCTAssertEqual(session.mode, .payment)
         XCTAssertEqual(session.status?.type, .open)  // status is nullable but present in JSON
         XCTAssertEqual(session.status?.paymentStatus, .unpaid)
         XCTAssertEqual(session.paymentIntentId, "pi_test123456789")
@@ -189,7 +187,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         XCTAssertEqual(session.id, "cs_test_minimal")
         XCTAssertNil(session.status)
-        XCTAssertEqual(session.mode, .payment)
         XCTAssertTrue(session.livemode)
 
         // Optional fields should be nil
@@ -206,20 +203,66 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNil(session.setupFutureUsage)
     }
 
-    func testDecodedObjectWithSetupMode() {
+    func testDecodedObjectWithModelessSetupIntentSession() {
         let session = CheckoutTestHelpers.makeSession([
             "session_id": "cs_test_setup",
             "status": "open",
-            "mode": "setup",
+            "mode": "modeless",
             "payment_status": "no_payment_required",
             "setup_intent": "seti_test123456",
         ])
 
-        XCTAssertEqual(session.mode, .setup)
         XCTAssertEqual(session.status?.type, .open)
         XCTAssertEqual(session.status?.paymentStatus, .noPaymentRequired)
         XCTAssertEqual(session.setupIntentId, "seti_test123456")
         XCTAssertNil(session.paymentIntentId)
+    }
+
+    /// The real server can return a `total_summary` with `total: 0` for a setup-only session
+    /// (see `STPApplePayContext+PaymentSheetTest.testCreatePaymentRequest_CheckoutSession_SetupMode_WithZeroAmount`).
+    /// `displayAmount()` must key off `payment_status`, not `total`'s presence, or it wrongly
+    /// reports an amount due on a setup-only session.
+    func testDisplayAmount_setupOnlySessionWithPresentButZeroTotal() {
+        let session = CheckoutTestHelpers.makeSession([
+            "payment_status": "no_payment_required",
+            "total_summary": ["subtotal": 0, "total": 0],
+        ]).makePublicSession()
+
+        XCTAssertTrue(session.isSetupOnly)
+        XCTAssertNil(session.displayAmount())
+    }
+
+    func testDisplayAmount_paymentStyleSessionWithTotal() {
+        let session = CheckoutTestHelpers.makeSession([
+            "payment_status": "unpaid",
+            "total_summary": ["subtotal": 2345, "total": 2345],
+        ]).makePublicSession()
+
+        XCTAssertFalse(session.isSetupOnly)
+        XCTAssertEqual(session.displayAmount(), 2345)
+    }
+
+    /// Unlike `displayAmount()`, `expectedAmountForConfirm()` must always return a value — the
+    /// confirm endpoint validates `expected_amount` against `total_summary.due` and requires it
+    /// be sent even when `0` on a setup-only session.
+    func testExpectedAmountForConfirm_setupOnlySessionReturnsZero() {
+        let session = CheckoutTestHelpers.makeSession([
+            "payment_status": "no_payment_required",
+            "total_summary": ["subtotal": 0, "total": 0, "due": 0],
+        ]).makePublicSession()
+
+        XCTAssertTrue(session.isSetupOnly)
+        XCTAssertEqual(session.expectedAmountForConfirm(), 0)
+    }
+
+    func testExpectedAmountForConfirm_paymentStyleSessionReturnsDue() {
+        let session = CheckoutTestHelpers.makeSession([
+            "payment_status": "unpaid",
+            "total_summary": ["subtotal": 2345, "total": 2345, "due": 2345],
+        ]).makePublicSession()
+
+        XCTAssertFalse(session.isSetupOnly)
+        XCTAssertEqual(session.expectedAmountForConfirm(), 2345)
     }
 
     func testDecodedObjectParsesTopLevelSetupFutureUsage() {
@@ -305,14 +348,109 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.tax.taxAmounts?[0].displayName, "Sales Tax")
     }
 
+    /// Modeless (unified-mode) sessions never populate `line_item_group` — items live under
+    /// `checkout_items`, and tax/discount amounts are aggregated on `total_summary` instead.
+    func testUnifiedModeSessionParsesCheckoutItemsTaxAndDiscounts() {
+        let session = CheckoutTestHelpers.makeSession([
+            // `total_summary.total_tax_amounts`/`total_discount_amounts` are never populated for
+            // modeless sessions (verified live) — `recurring_details` is the real source, despite
+            // the name, even for one-time (non-recurring) purchases.
+            "total_summary": ["due": 1816, "subtotal": 2000, "total": 1816],
+            "recurring_details": [
+                "total_tax_amounts": [
+                    ["amount": 148, "inclusive": false, "taxable_amount": 2000,
+                     "tax_rate": ["percentage": 7.4, "display_name": "Sales Tax"], ],
+                ],
+                "total_discount_amounts": [
+                    ["amount": 332, "coupon": ["id": "co_test", "name": "Welcome"]],
+                ],
+            ],
+            "checkout_items": [
+                [
+                    "key": "checkout_item_abc123",
+                    "type": "one_time_price_item",
+                    "one_time_price_item": [
+                        "quantity": 2,
+                        "price": [
+                            "id": "price_test123",
+                            "currency": "usd",
+                            "unit_amount": 1000,
+                            "unit_amount_decimal": "1000",
+                            "product": [
+                                "name": "Classic T-Shirt",
+                                "description": "A comfy shirt",
+                                "images": ["https://example.com/shirt.png"],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ])
+
+        XCTAssertEqual(session.lineItems.count, 1)
+        let item = session.lineItems[0]
+        XCTAssertEqual(item.id, "checkout_item_abc123")
+        XCTAssertEqual(item.name, "Classic T-Shirt")
+        XCTAssertEqual(item.description, "A comfy shirt")
+        XCTAssertEqual(item.images, ["https://example.com/shirt.png"])
+        XCTAssertEqual(item.quantity, 2)
+        XCTAssertEqual(item.unitAmount?.minorUnitsAmount, 1000)
+
+        XCTAssertEqual(session.tax.taxAmounts?.count, 1)
+        XCTAssertEqual(session.tax.taxAmounts?[0].amount.minorUnitsAmount, 148)
+        XCTAssertEqual(session.tax.taxAmounts?[0].displayName, "Sales Tax")
+
+        XCTAssertEqual(session.discountAmounts.count, 1)
+        XCTAssertEqual(session.discountAmounts[0].amount.minorUnitsAmount, 332)
+        XCTAssertEqual(session.discountAmounts[0].displayName, "Welcome")
+
+        XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 148)
+        XCTAssertEqual(session.total?.discount.minorUnitsAmount, 332)
+        XCTAssertEqual(session.total?.total.minorUnitsAmount, 1816)
+    }
+
+    /// Unknown checkout item types (e.g. rate cards, pricing plans) aren't supported by the
+    /// mobile SDK yet — they should be skipped, not crash or surface bogus data.
+    func testUnifiedModeSessionSkipsUnsupportedCheckoutItemTypes() {
+        let session = CheckoutTestHelpers.makeSession([
+            "checkout_items": [
+                ["key": "checkout_item_abc123", "type": "rate_card_subscription_item"],
+            ],
+        ])
+
+        XCTAssertEqual(session.lineItems.count, 0)
+    }
+
+    /// A malformed `one_time_price_item` (e.g. an unexpanded `price` that's missing its
+    /// `product`) should also be skipped rather than surface a nameless/bogus cart item.
+    func testUnifiedModeSessionSkipsOneTimePriceItemMissingProductName() {
+        let session = CheckoutTestHelpers.makeSession([
+            "checkout_items": [
+                [
+                    "key": "checkout_item_abc123",
+                    "type": "one_time_price_item",
+                    "one_time_price_item": [
+                        "quantity": 1,
+                        "price": ["id": "price_test123", "currency": "usd", "unit_amount": 1000],
+                    ],
+                ],
+            ],
+        ])
+
+        XCTAssertEqual(session.lineItems.count, 0)
+    }
+
     func testMerchantWillSavePaymentMethod_paymentModeWithoutSetupFutureUsage() {
-        let session = CheckoutTestHelpers.makeSession([:]).withCustomer()
+        let session = CheckoutTestHelpers.makeSession([
+            "total_summary": ["subtotal": 2345, "total": 2345],
+        ]).withCustomer()
 
         XCTAssertFalse(session.makePublicSession().merchantWillSavePaymentMethod(.card))
     }
 
     func testMerchantWillSavePaymentMethod_paymentModeWithTopLevelSetupFutureUsage() {
         let session = CheckoutTestHelpers.makeSession([
+            "total_summary": ["subtotal": 2345, "total": 2345],
             "setup_future_usage": "off_session",
         ]).withCustomer()
 
@@ -321,6 +459,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testMerchantWillSavePaymentMethod_paymentModeWithTopLevelSetupFutureUsageNone() {
         let session = CheckoutTestHelpers.makeSession([
+            "total_summary": ["subtotal": 2345, "total": 2345],
             "setup_future_usage": "none",
         ]).withCustomer()
 
@@ -330,6 +469,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testMerchantWillSavePaymentMethod_paymentModeWithPerPaymentMethodSetupFutureUsage() {
         let session = CheckoutTestHelpers.makeSession([
+            "total_summary": ["subtotal": 2345, "total": 2345],
             "payment_method_types": ["card", "us_bank_account"],
             "setup_future_usage_for_payment_method_type": [
                 "card": "off_session",
@@ -343,6 +483,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testMerchantWillSavePaymentMethod_paymentModeWithoutCustomer() {
         let session = CheckoutTestHelpers.makeSession([
+            "total_summary": ["subtotal": 2345, "total": 2345],
             "setup_future_usage": "off_session",
         ])
 
@@ -351,7 +492,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testMerchantWillSavePaymentMethod_setupModeWithCustomer() {
         let session = CheckoutTestHelpers.makeSession([
-            "mode": "setup",
+            "mode": "modeless",
             "payment_status": "no_payment_required",
         ]).withCustomer()
 
@@ -360,7 +501,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testMerchantWillSavePaymentMethod_setupModeWithoutCustomer() {
         let session = CheckoutTestHelpers.makeSession([
-            "mode": "setup",
+            "mode": "modeless",
             "payment_status": "no_payment_required",
         ])
 
@@ -369,6 +510,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testCheckoutSessionIntent_setupFutureUsageString() {
         let session = CheckoutTestHelpers.makeSession([
+            "total_summary": ["subtotal": 2345, "total": 2345],
             "setup_future_usage": "off_session",
         ]).withCustomer()
 
@@ -388,6 +530,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevel() {
         let session = CheckoutTestHelpers.makeSession([
+            "total_summary": ["subtotal": 2345, "total": 2345],
             "setup_future_usage": "off_session",
             "payment_method_types": ["paypal"],
         ]).withCustomer()
@@ -397,6 +540,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevelNone() {
         let session = CheckoutTestHelpers.makeSession([
+            "total_summary": ["subtotal": 2345, "total": 2345],
             "setup_future_usage": "none",
             "payment_method_types": ["paypal"],
         ]).withCustomer()
@@ -418,6 +562,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_perPaymentMethodNoneOverridesTopLevel() {
         let session = CheckoutTestHelpers.makeSession([
+            "total_summary": ["subtotal": 2345, "total": 2345],
             "setup_future_usage": "off_session",
             "setup_future_usage_for_payment_method_type": [
                 "paypal": "none",

@@ -349,7 +349,7 @@ extension SavedPaymentMethodManagerTests {
                 jsonObject: [
                     "session_id": checkoutSessionId,
                     "livemode": false,
-                    "mode": "payment",
+                    "mode": "modeless",
                     "payment_status": "unpaid",
                     "payment_method_types": ["card"],
                 ],

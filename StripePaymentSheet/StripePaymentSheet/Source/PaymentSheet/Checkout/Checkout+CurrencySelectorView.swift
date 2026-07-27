@@ -153,18 +153,20 @@ extension Checkout {
             updateCaption(currency: currency, exchangeRateMeta: exchangeRateMeta)
         }
 
-        private func resolveLabelContent(session: Checkout.Session) -> Appearance.LabelContent {
+        private func resolveLabelContent() -> Appearance.LabelContent {
             guard case .automatic = appearance.labelContent else {
                 return appearance.labelContent
             }
-            return session.mode == .subscription ? .currencyCode : .amount
+            // This used to show `.currencyCode` for subscription-mode sessions instead of `.amount`,
+            // but subscription mode was never actually supported, so that branch was dead code.
+            return .amount
         }
 
         private func buildSelectorItems(
             session: Checkout.Session,
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta
         ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
-            let resolvedLabelContent = resolveLabelContent(session: session)
+            let resolvedLabelContent = resolveLabelContent()
             let flagFont = appearance.scaledFont(for: appearance.font, style: .footnote)
             return CurrencySelectorUtilities.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,

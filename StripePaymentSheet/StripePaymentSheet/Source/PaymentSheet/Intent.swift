@@ -46,7 +46,8 @@ enum Intent {
                 return false
             }
         case .checkout(let session):
-            return session.mode == .payment || session.mode == .subscription
+            // Payment-style sessions (payment, subscription, unified with priced items) produce a PaymentIntent.
+            return !session.isSetupOnly
         }
     }
 
@@ -123,7 +124,7 @@ enum Intent {
                 return nil
             }
         case .checkout(let session):
-            return session.expectedAmount()
+            return session.displayAmount()
         }
     }
 
@@ -137,15 +138,8 @@ enum Intent {
             }
             return nil
         case .checkout(let session):
-            switch session.mode {
-            case .payment:
-                return session.setupFutureUsage
-            case .setup:
-                return nil
-            case .subscription, .unknown:
-                stpAssertionFailure("subscription and unknown not implemented")
-                return nil
-            }
+            // Setup-style sessions don't have a top-level setup_future_usage.
+            return session.isSetupOnly ? nil : session.setupFutureUsage
         case .setupIntent:
             return nil
         }
@@ -189,18 +183,12 @@ enum Intent {
                 return true
             }
         case .checkout(let session):
-            switch session.mode {
-            case .payment:
-                guard let setupFutureUsage = session.setupFutureUsage(for: paymentMethodType) else {
-                    return false
-                }
-                return setupFutureUsage != "none"
-            case .setup:
-                return true
-            case .subscription, .unknown:
-                stpAssertionFailure("subscription and unknown not implemented")
+            // Setup-style sessions always have setup future usage set by definition.
+            guard !session.isSetupOnly else { return true }
+            guard let setupFutureUsage = session.setupFutureUsage(for: paymentMethodType) else {
                 return false
             }
+            return setupFutureUsage != "none"
         }
     }
 

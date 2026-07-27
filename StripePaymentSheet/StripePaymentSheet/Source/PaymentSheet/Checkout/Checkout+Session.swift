@@ -78,7 +78,15 @@ extension Checkout {
 
         // MARK: - Internal Properties
 
-        let mode: Checkout.Mode
+        /// The top-level payment status, always present. Used to distinguish setup-style sessions
+        /// (``Checkout.PaymentStatus.noPaymentRequired``) from payment-style ones — unlike ``total``,
+        /// which can be present-but-zero on setup-style sessions too.
+        let paymentStatus: Checkout.PaymentStatus
+
+        /// `total_summary.due`: the amount currently owed, as validated by the confirm endpoint's
+        /// `expected_amount` parameter. Unlike ``total``, this is `0` (not the full order total)
+        /// on setup-style sessions, and must always be sent to confirm — never omitted.
+        let amountDue: Int?
         let paymentMethodOptions: STPPaymentMethodOptions?
         let customer: STPCheckoutSessionCustomer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
@@ -113,23 +121,5 @@ extension Checkout.Session {
         public let paymentMethodType: String
         /// Mandate text that must be displayed when the PaymentElement is configured not to display it.
         public let mandateText: NSAttributedString?
-    }
-}
-
-// MARK: - Mode
-
-@_spi(STP)
-@_spi(ReactNativeSDK)
-extension Checkout {
-    /// The mode of a checkout session.
-    public enum Mode: Sendable {
-        /// A mode not recognized by this version of the SDK.
-        case unknown
-        /// Accept one-time payments for cards, iDEAL, and more.
-        case payment
-        /// Save payment details to charge your customers later.
-        case setup
-        /// Use Stripe Billing to set up fixed-price subscriptions.
-        case subscription
     }
 }

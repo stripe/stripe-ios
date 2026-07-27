@@ -56,18 +56,12 @@ extension PaymentSheet {
             }
 
             // 2. Get expected amount and save_payment_method from checkout session
-            let expectedAmount = checkoutSession.expectedAmount()
+            let expectedAmount = checkoutSession.expectedAmountForConfirm()
             let savePaymentMethod: Bool? = {
-                switch checkoutSession.mode {
-                case .setup:
-                    // setup mode does not send the save_payment_method param
-                    return nil
-                case .payment:
-                    return confirmType.savePaymentMethodForCheckoutSession
-                case .subscription, .unknown:
-                    stpAssertionFailure("Only payment and setup mode implemented")
-                    return nil
-                }
+                // Setup-style sessions don't send the param.
+                guard !checkoutSession.isSetupOnly else { return nil }
+                // Payment-style sessions send the save checkbox state.
+                return confirmType.savePaymentMethodForCheckoutSession
             }()
 
             // 3. Call confirm API
@@ -86,10 +80,9 @@ extension PaymentSheet {
             // Update the Checkout instance with the confirmed session response
             try await checkout.commitSession(response)
 
-            // 4. Handle response based on checkout session mode
+            // 4. Handle response based on which intent is present
             return try await handleCheckoutSessionConfirmResponse(
                 response: response,
-                checkoutSession: checkoutSession,
                 configuration: configuration,
                 authenticationContext: authenticationContext,
                 paymentHandler: paymentHandler
@@ -102,32 +95,31 @@ extension PaymentSheet {
     @MainActor
     private static func handleCheckoutSessionConfirmResponse(
         response: PaymentPagesAPIResponse,
-        checkoutSession: Checkout.Session,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler
     ) async throws -> PaymentSheetResult {
-        if checkoutSession.mode == .setup {
-            // Setup mode - handle SetupIntent
-            guard let setupIntent = response.setupIntent else {
-                throw PaymentSheetError.unknown(debugDescription: "Missing setup intent in confirm response")
-            }
+        // Exactly one of setupIntent/paymentIntent is expected to be present; setupIntent is
+        // checked first arbitrarily since the two are mutually exclusive in practice.
+        if let setupIntent = response.setupIntent {
+            // Setup path (setup mode or unified setup-only sessions)
             return await handleCheckoutSessionSetupIntentResponse(
                 setupIntent: setupIntent,
                 configuration: configuration,
                 authenticationContext: authenticationContext,
                 paymentHandler: paymentHandler
             )
-        } else {
-            // Payment/Subscription mode - handle PaymentIntent
-            guard let paymentIntent = response.paymentIntent else {
-                throw PaymentSheetError.unknown(debugDescription: "Missing payment intent in confirm response")
-            }
+        } else if let paymentIntent = response.paymentIntent {
+            // Payment path (payment/subscription mode or unified sessions with priced items)
             return await handleCheckoutSessionPaymentIntentResponse(
                 paymentIntent: paymentIntent,
                 configuration: configuration,
                 authenticationContext: authenticationContext,
                 paymentHandler: paymentHandler
+            )
+        } else {
+            throw PaymentSheetError.unknown(
+                debugDescription: "Checkout session confirm response contained neither a PaymentIntent nor a SetupIntent"
             )
         }
     }

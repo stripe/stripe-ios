@@ -63,6 +63,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var overrides: [String: Any] = [
             "status": "open",
             "currency": "usd",
+            "total_summary": ["subtotal": 1000, "total": 1000],
         ]
         if hasCustomer {
             overrides["customer"] = ["id": "cus_test_checkout_save"]
@@ -2905,6 +2906,14 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     }
 
     func testCheckoutSessionSetupFutureUsage_appliesMandateBehavior() {
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
         func makeCheckoutSessionPayPalForm(
             setupFutureUsage: String? = nil,
             paymentMethodOptions: [String: Any]? = nil,
@@ -2914,10 +2923,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 "session_id": "cs_test_paypal",
                 "object": "checkout.session",
                 "livemode": false,
-                "mode": "payment",
+                "mode": "modeless",
                 "payment_status": "unpaid",
                 "payment_method_types": ["paypal"],
                 "customer": ["id": "cus_123"],
+                "total_summary": ["subtotal": 1000, "total": 1000],
                 "elements_session": [
                     "session_id": "es_test",
                     "payment_method_preference": ["ordered_payment_method_types": ["paypal"]],

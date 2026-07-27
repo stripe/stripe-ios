@@ -298,7 +298,7 @@ extension Intent {
     }
 
     @MainActor static func _testCheckoutSession(
-        mode: Checkout.Mode = .payment,
+        hasPaymentDue: Bool = true,
         amount: Int? = 2345,
         currency: String = "USD",
         email: String? = nil,
@@ -310,20 +310,9 @@ extension Intent {
         automaticTaxAddressSource: String? = nil,
         discountAmount: Int = 0
     ) -> Intent {
-        let modeParam = switch mode {
-        case .payment: "payment"
-        case .setup: "setup"
-        default: fatalError("TODO: implement for subscription/unknown mode")
-        }
-        guard let paymentStatus = switch mode {
-        case .payment: "unpaid"
-        case .setup: "no_payment_required"
-        case .subscription, .unknown: nil
-        } else {
-            fatalError("TODO: add subscription/unknown support")
-        }
+        let paymentStatus = hasPaymentDue ? "unpaid" : "no_payment_required"
         var json = CheckoutTestHelpers.makeSessionJSON([
-            "mode": modeParam,
+            "mode": "modeless",
             "status": "open",
             "payment_status": paymentStatus,
             "currency": currency.lowercased(),

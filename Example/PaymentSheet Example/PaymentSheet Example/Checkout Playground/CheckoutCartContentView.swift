@@ -16,7 +16,6 @@ struct CheckoutCartContentView: View {
     @Binding var isLoading: Bool
     @Binding var errorMessage: String?
 
-    @State private var promoCodeInput = ""
     @State private var showShippingAddressSheet = false
     @State private var shippingAddressDetails: AddressElement.AddressDetails?
 
@@ -36,7 +35,6 @@ struct CheckoutCartContentView: View {
                 if showsShippingAddressSection {
                     shippingAddressSection
                 }
-                promotionCodeSection
                 orderSummarySection
 
                 Spacer().frame(height: 160)
@@ -258,81 +256,6 @@ struct CheckoutCartContentView: View {
     }
 
     @ViewBuilder
-    private var promotionCodeSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Promotion Code")
-                .font(.title2).bold()
-                .padding(.horizontal)
-
-            VStack {
-                if let appliedCode = appliedPromotionCode {
-                    HStack {
-                        Image(systemName: "tag.fill")
-                            .foregroundColor(.green)
-                        Text(appliedCode)
-                            .font(.headline)
-                            .foregroundColor(.green)
-                        Spacer()
-                        Button("Remove") {
-                            removePromotionCode()
-                        }
-                        .foregroundColor(.red)
-                        .font(.subheadline)
-                    }
-                    .padding()
-                    .background(Color.green.opacity(0.1))
-                    .cornerRadius(12)
-                } else {
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            Image(systemName: "tag")
-                                .foregroundColor(.secondary)
-                            TextField("Enter code", text: $promoCodeInput)
-                                .autocapitalization(.allCharacters)
-                                .font(.body)
-                            Spacer()
-                            Button("Apply") {
-                                applyPromotionCode(promoCodeInput)
-                            }
-                            .foregroundColor(.blue)
-                            .font(.headline)
-                            .disabled(promoCodeInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                        }
-                        .padding()
-                        .background(Color(UIColor.systemBackground))
-                        .cornerRadius(16)
-                        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
-
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                Button(action: { applyPromotionCode("IOSVIP25") }) {
-                                    Text("25% off")
-                                        .font(.caption).bold()
-                                        .padding(.horizontal, 12)
-                                        .padding(.vertical, 6)
-                                        .background(Color.blue.opacity(0.1))
-                                        .foregroundColor(.blue)
-                                        .cornerRadius(12)
-                                }
-                                Button(action: { applyPromotionCode("IOSWELCOME10") }) {
-                                    Text("10% off")
-                                        .font(.caption).bold()
-                                        .padding(.horizontal, 12)
-                                        .padding(.vertical, 6)
-                                        .background(Color.blue.opacity(0.1))
-                                        .foregroundColor(.blue)
-                                        .cornerRadius(12)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            .padding(.horizontal)
-        }
-    }
-
-    @ViewBuilder
     private var currencySelectorSection: some View {
         Checkout.CurrencySelectorElement(checkout: checkout, appearance: currencySelectorAppearance)
             .padding(.horizontal)
@@ -406,10 +329,6 @@ struct CheckoutCartContentView: View {
         }
     }
 
-    private var appliedPromotionCode: String? {
-        checkout.session.discountAmounts.first(where: { $0.promotionCode != nil })?.promotionCode
-    }
-
     // MARK: - Actions
 
     private func updateQuantity(for lineItemId: String, to quantity: Int) {
@@ -418,20 +337,6 @@ struct CheckoutCartContentView: View {
             errorMessage = nil
             do {
                 try await checkout.updateQuantity(lineItemId: lineItemId, quantity: quantity)
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-            isLoading = false
-        }
-    }
-
-    private func applyPromotionCode(_ code: String) {
-        Task {
-            isLoading = true
-            errorMessage = nil
-            do {
-                try await checkout.applyPromotionCode(code)
-                promoCodeInput = ""
             } catch {
                 errorMessage = error.localizedDescription
             }
@@ -479,18 +384,6 @@ struct CheckoutCartContentView: View {
         }
     }
 
-    private func removePromotionCode() {
-        Task {
-            isLoading = true
-            errorMessage = nil
-            do {
-                try await checkout.removePromotionCode()
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-            isLoading = false
-        }
-    }
 }
 
 struct CheckoutCartSheet: View {

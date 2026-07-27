@@ -22,7 +22,7 @@ extension STPApplePayContext {
         currency: String?
     ) -> [PKPaymentSummaryItem] {
         guard !session.lineItems.isEmpty, let total = session.total else {
-            if let amount = session.expectedAmount() {
+            if let amount = session.displayAmount() {
                 let decimalAmount = NSDecimalNumber.stp_decimalNumber(withAmount: amount, currency: currency)
                 return [PKPaymentSummaryItem(label: label, amount: decimalAmount, type: .final)]
             } else {

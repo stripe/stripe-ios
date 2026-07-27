@@ -1,0 +1,17 @@
+POST
+https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session_unified$
+402
+text/html
+x-content-type-options: nosniff
+x-cloud-trace-context: 23c2afa06cc7d0fa19f67cff910b0ad8;o=1
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=zKioJ%2Fcm7WjhiFSzo%2B0G%2F4if2ZbyYDTBq%2FgUtGUCEmrhl0Bi3H9Pt%2FFQYwddJ5GPRXJwSOa%2B2wwc%2BY1sxaF9jmtxs1%2Bh536mm0H6j6mYtPd59L%2BDpNaLxA5eguunXU5ySArj8Z0KU5zYOWNNGn%2Bo5Dq9vB855qEWGLS4U9qgbMxPuei63fRZbs4YoUpmfk%2FP%2BYGH2pfcITbMsCJ759yWU2Pu9FnAg06eMijyquAdBCM%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Mon, 27 Jul 2026 16:50:23 GMT
+x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 127
+Alt-Svc: h3=":443"; ma=2592000
+
+Error creating CheckoutSession (unified): `shipping_options` can only be used in payment mode. (request_id: req_u1NXqrX81Q240Y)
