@@ -46,7 +46,7 @@ extension PaymentSheet {
                 params.clientAttributionMetadata = clientAttributionMetadata
                 stpAssert(params.billingDetails?.email == nil, "Checkout collects email outside PaymentElement.")
                 // Use the Checkout Session email for the PaymentMethod.
-                if params.billingDetails?.email == nil, let customerEmail = checkoutSession.email {
+                if let customerEmail = checkoutSession.email {
                     params.nonnil_billingDetails.email = customerEmail
                 }
                 paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params)
