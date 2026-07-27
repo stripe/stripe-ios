@@ -33,5 +33,8 @@ extension ExpressCheckoutElement {
 
         /// Creates a configuration with default values.
         public init() {}
+
+        /// Describes the appearance of the express checkout element.
+        public var appearance: Appearance = .init()
     }
 }

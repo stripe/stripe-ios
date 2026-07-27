@@ -18,17 +18,18 @@ public final class ExpressCheckoutElementUIView: UIView {
     // MARK: - Private Properties
 
     private weak var checkout: Checkout?
+    private let appearance: ExpressCheckoutElement.Appearance
     private let stackView = UIStackView()
 
     // MARK: - Init
 
-    init(checkout: Checkout) {
+    init(checkout: Checkout, appearance: ExpressCheckoutElement.Appearance) {
         self.checkout = checkout
+        self.appearance = appearance
         super.init(frame: .zero)
 
-        // TODO: Appearance
         stackView.axis = .vertical
-        stackView.spacing = 8
+        stackView.spacing = appearance.buttonSpacing
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(stackView)
@@ -71,20 +72,18 @@ public final class ExpressCheckoutElementUIView: UIView {
     private func makeApplePayButton() -> UIView {
         let buttonType = checkout?.configuration.applePayConfiguration?.buttonType ?? .plain
         let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: .automatic)
-        // TODO: Appearance
-        button.cornerRadius = 6
+        button.cornerRadius = appearance.cornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: appearance.buttonHeight).isActive = true
         button.addTarget(self, action: #selector(handleApplePayTapped), for: .touchUpInside)
         return button
     }
 
     private func makeLinkButton() -> UIView {
         let button = PayWithLinkButton()
-        // TODO: Appearance
-        button.cornerRadius = 6
+        button.cornerRadius = appearance.cornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: appearance.buttonHeight).isActive = true
         button.addTarget(self, action: #selector(handleLinkTapped), for: .touchUpInside)
         return button
     }
