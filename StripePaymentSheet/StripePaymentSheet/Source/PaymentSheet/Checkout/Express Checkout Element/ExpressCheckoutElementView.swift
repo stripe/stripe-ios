@@ -37,7 +37,7 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
 
     init(sessionSource: ExpressCheckoutElementSessionSource, uiView: ExpressCheckoutElementUIView) {
         self.uiView = uiView
-        self.isAvailable = checkout.session.isExpressCheckoutElementAvailable
+        self.isAvailable = sessionSource.session.isExpressCheckoutElementAvailable
         sessionCancellable = sessionSource.$session
             .dropFirst()
             .receive(on: DispatchQueue.main)

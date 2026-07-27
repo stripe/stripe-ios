@@ -39,13 +39,14 @@ struct CheckoutCartView: View {
                     )
                     .overlay(alignment: .bottom) {
                         VStack(spacing: 0) {
-                            if showExpressCheckoutElement && checkout.session.isExpressCheckoutElementAvailable {
-                                checkout.getExpressCheckoutElement().view
-                                    .padding(.horizontal)
-                                    .padding(.top, 16)
-                                    .padding(.bottom, checkout.session.total != nil ? 0 : 16)
-                            }
                             if checkout.session.total != nil {
+                                if showExpressCheckoutElement,
+                                   checkout.session.isExpressCheckoutElementAvailable,
+                                   let ece = checkout.getExpressCheckoutElement() {
+                                    ece.view
+                                        .padding(.horizontal)
+                                        .padding(.top, 16)
+                                }
                                 switch integrationType {
                                 case .flowController:
                                     CheckoutCartPaymentButton(checkout: checkout)
@@ -53,6 +54,8 @@ struct CheckoutCartView: View {
                                 case .embedded:
                                     CheckoutCartEmbeddedPaymentView(checkout: checkout)
                                         .clipped()
+                                case .disabled:
+                                    EmptyView()
                                 }
                             }
                         }

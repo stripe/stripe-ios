@@ -17,11 +17,15 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Properties
 
+    private let session: Checkout.Session
+    private let configuration: Checkout.Configuration
     private let stackView = UIStackView()
 
     // MARK: - Init
 
     init(session: Checkout.Session, configuration: Checkout.Configuration) {
+        self.session = session
+        self.configuration = configuration
         super.init(frame: .zero)
 
         // TODO: Appearance
@@ -37,7 +41,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        let buttons = Self.expressButtons(from: checkout.session, configuration: checkout.configuration)
+        let buttons = Self.expressButtons(from: session, configuration: configuration)
         buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
     }
 
@@ -67,7 +71,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     private func makeApplePayButton() -> UIView {
-        let buttonType = checkout?.configuration.applePayConfiguration?.buttonType ?? .plain
+        let buttonType = configuration.applePayConfiguration?.buttonType ?? .plain
         let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: .automatic)
         // TODO: Appearance
         button.cornerRadius = 6
