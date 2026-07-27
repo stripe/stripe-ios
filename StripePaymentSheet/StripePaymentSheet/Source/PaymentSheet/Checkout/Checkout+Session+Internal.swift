@@ -62,11 +62,12 @@ extension Checkout.Session {
         return amount
     }
 
-    /// The `expected_amount` to send when confirming this session. The confirm endpoint validates
-    /// this against `total_summary.due` and requires it always be sent — including `0` on
-    /// setup-style sessions — so this must not be derived from ``isSetupOnly``/``total`` the way
-    /// ``displayAmount()`` is.
+    /// The `expected_amount` to send when confirming a payment-style session. The confirm
+    /// endpoint does not accept this parameter for setup-only sessions.
     func expectedAmountForConfirm() -> Int? {
+        guard !isSetupOnly else {
+            return nil
+        }
         guard let amountDue else {
             stpAssertionFailure("Missing expected amount from checkout session")
             let errorAnalytic = ErrorAnalytic(

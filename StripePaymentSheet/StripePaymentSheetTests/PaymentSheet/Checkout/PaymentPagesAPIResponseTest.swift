@@ -242,17 +242,14 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.displayAmount(), 2345)
     }
 
-    /// Unlike `displayAmount()`, `expectedAmountForConfirm()` must always return a value — the
-    /// confirm endpoint validates `expected_amount` against `total_summary.due` and requires it
-    /// be sent even when `0` on a setup-only session.
-    func testExpectedAmountForConfirm_setupOnlySessionReturnsZero() {
+    func testExpectedAmountForConfirm_setupOnlySessionReturnsNil() {
         let session = CheckoutTestHelpers.makeSession([
             "payment_status": "no_payment_required",
             "total_summary": ["subtotal": 0, "total": 0, "due": 0],
         ]).makePublicSession()
 
         XCTAssertTrue(session.isSetupOnly)
-        XCTAssertEqual(session.expectedAmountForConfirm(), 0)
+        XCTAssertNil(session.expectedAmountForConfirm())
     }
 
     func testExpectedAmountForConfirm_paymentStyleSessionReturnsDue() {
