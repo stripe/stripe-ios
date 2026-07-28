@@ -127,7 +127,7 @@ final class LinkVerificationView: UIView {
     }()
 
     private lazy var logoutView: LogoutView = {
-        let logoutView = LogoutView(linkAccount: linkAccount)
+        let logoutView = LogoutView(linkAccount: linkAccount, foregroundColor: appearance?.colors?.primary)
         logoutView.button.addTarget(self, action: #selector(didTapOnLogout(_:)), for: .touchUpInside)
         return logoutView
     }()

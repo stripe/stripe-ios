@@ -98,6 +98,15 @@ struct ExampleLinkControllerPreviewView: View {
                         }
                     }
 
+                    DemoSection(title: "Appearance") {
+                        Toggle("Custom Appearance", isOn: $configuration.useCustomAppearance)
+                        if configuration.useCustomAppearance {
+                            Text("Purple primary color, always dark mode, slightly less rounded button.")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+
                     NavigationLink {
                         LinkControllerDemoView(configuration: configuration)
                     } label: {

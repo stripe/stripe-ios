@@ -23,7 +23,7 @@ final class ConsentLogoView: UIView {
         horizontalStackView.axis = .horizontal
         horizontalStackView.alignment = .center
 
-        if merchantLogo.count == 2 || merchantLogo.count == 3 {
+        if (1...3).contains(merchantLogo.count) {
             for i in 0..<merchantLogo.count {
                 let urlString = merchantLogo[i]
                 let logoView = CreateRoundedLogoView(urlString: urlString)
@@ -335,14 +335,12 @@ import SwiftUI
 
 private struct ConsentLogoViewUIViewRepresentable: UIViewRepresentable {
 
+    var merchantLogo: [String]
     var showsAnimatedDots: Bool
 
     func makeUIView(context: Context) -> ConsentLogoView {
         ConsentLogoView(
-            merchantLogo: [
-                "https://stripe-camo.global.ssl.fastly.net/a2f7a55341b7cdb849d5b2d68a465f95cc06ee6ec2449ea468b3623a61c17393/68747470733a2f2f66696c65732e7374726970652e636f6d2f6c696e6b732f4d44423859574e6a64463878546d5978575664445356553457474a6f52326c5966475a7358327870646d56664d58526f617a5a526454523354573144566a4a4e57584659526d6c3161464646303077384f5a645a3166",
-                "https://b.stripecdn.com/connections-statics-srv/assets/BrandIcon--stripe-4x.png",
-            ],
+            merchantLogo: merchantLogo,
             showsAnimatedDots: showsAnimatedDots
         )
     }
@@ -350,12 +348,21 @@ private struct ConsentLogoViewUIViewRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: ConsentLogoView, context: Context) {}
 }
 
+private let twoLogos = [
+    "https://stripe-camo.global.ssl.fastly.net/a2f7a55341b7cdb849d5b2d68a465f95cc06ee6ec2449ea468b3623a61c17393/68747470733a2f2f66696c65732e7374726970652e636f6d2f6c696e6b732f4d44423859574e6a64463878546d5978575664445356553457474a6f52326c5966475a7358327870646d56664d58526f617a5a526454523354573144566a4a4e57584659526d6c3161464646303077384f5a645a3166",
+    "https://b.stripecdn.com/connections-statics-srv/assets/BrandIcon--stripe-4x.png",
+]
+
 struct ConsentLogoView_Previews: PreviewProvider {
     static var previews: some View {
-        VStack(alignment: .center) {
-            ConsentLogoViewUIViewRepresentable(showsAnimatedDots: true)
+        VStack(alignment: .center, spacing: 24) {
+            ConsentLogoViewUIViewRepresentable(
+                merchantLogo: ["https://b.stripecdn.com/connections-statics-srv/assets/BrandIcon--stripe-4x.png"],
+                showsAnimatedDots: false
+            )
+            ConsentLogoViewUIViewRepresentable(merchantLogo: twoLogos, showsAnimatedDots: true)
             Spacer()
-            ConsentLogoViewUIViewRepresentable(showsAnimatedDots: false)
+            ConsentLogoViewUIViewRepresentable(merchantLogo: twoLogos, showsAnimatedDots: false)
         }
         .padding()
     }
