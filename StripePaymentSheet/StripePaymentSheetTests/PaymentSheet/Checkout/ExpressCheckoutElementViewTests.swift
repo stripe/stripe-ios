@@ -132,7 +132,6 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertFalse(buttons.contains(.applePay))
     }
 
-
     // MARK: - Helpers
 
     private func makeSessionWithWalletTypes(_ walletTypes: [String]) -> PaymentPagesAPIResponse {
