@@ -5,6 +5,7 @@
 //  Created by Nick Porter on 4/6/26.
 //
 
+@testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
@@ -100,6 +101,71 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         XCTAssertTrue(view.isHidden)
     }
 
+    // MARK: - Analytics tests
+
+    func testCurrencyToggledEventIncludesCheckoutSessionId() async throws {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let previousLogHistory = analyticsClient._testLogHistory
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = previousLogHistory }
+
+        let session = CheckoutTestHelpers.makeOpenSession()
+        let delegate = MockCurrencySelectorElementDelegate()
+        let view = await CurrencySelectorElementUIView(
+            session: session.makePublicSession(),
+            delegate: delegate,
+            appearance: .init()
+        )
+
+        view.twoOptionSelectorView(makeSelectorView(), didSelectItemWithId: "gbp")
+
+        try await waitUntil {
+            currencySelectorEvents(.adaptivePricingCurrencyToggled, in: analyticsClient).count == 1
+        }
+        let event = try XCTUnwrap(currencySelectorEvents(.adaptivePricingCurrencyToggled, in: analyticsClient).first)
+        XCTAssertEqual(event["checkout_session_id"] as? String, session.id)
+    }
+
+    func testCurrencyToggledFailedEventIncludesCheckoutSessionId() async throws {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let previousLogHistory = analyticsClient._testLogHistory
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = previousLogHistory }
+
+        let session = CheckoutTestHelpers.makeOpenSession()
+        let delegate = MockCurrencySelectorElementDelegate(error: CurrencySelectorElementTestError())
+        let view = await CurrencySelectorElementUIView(
+            session: session.makePublicSession(),
+            delegate: delegate,
+            appearance: .init()
+        )
+
+        view.twoOptionSelectorView(makeSelectorView(), didSelectItemWithId: "gbp")
+
+        try await waitUntil {
+            currencySelectorEvents(.adaptivePricingCurrencyToggledFailed, in: analyticsClient).count == 1
+        }
+        let event = try XCTUnwrap(currencySelectorEvents(.adaptivePricingCurrencyToggledFailed, in: analyticsClient).first)
+        XCTAssertEqual(event["checkout_session_id"] as? String, session.id)
+    }
+
+    func testFlagImageLoadFailedEventsIncludeCheckoutSessionId() async throws {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let previousLogHistory = analyticsClient._testLogHistory
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = previousLogHistory }
+
+        _ = CheckoutTestHelpers.makeStubbedAPIClient()
+        let session = makeSession()
+        let manager = AdaptivePricingFlagImageManager(analyticsClient: analyticsClient)
+
+        await manager.prefetchFlagImages(for: session.makePublicSession())
+
+        let events = currencySelectorEvents(.adaptivePricingFlagImageLoadFailed, in: analyticsClient)
+        XCTAssertEqual(events.count, 2)
+        XCTAssertTrue(events.allSatisfy { $0["checkout_session_id"] as? String == session.id })
+    }
+
     // MARK: - Label update tests
 
     func testLabelsUpdateWhenSessionAmountChanges() async throws {
@@ -182,6 +248,49 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
     // MARK: - Helpers
 
+    private func makeSelectorView() -> TwoOptionSelectorView {
+        TwoOptionSelectorView(
+            leftItem: makeSelectorItem(id: "usd"),
+            rightItem: makeSelectorItem(id: "gbp"),
+            selectedItemId: "usd",
+            appearance: CurrencySelectorElement.Appearance()
+        )
+    }
+
+    private func makeSelectorItem(id: String) -> TwoOptionSelectorItem {
+        TwoOptionSelectorItem(
+            id: id,
+            displayText: NSAttributedString(string: id.uppercased()),
+            accessibilityLabel: id.uppercased(),
+            accessibilityIdentifier: id
+        )
+    }
+
+    private func currencySelectorEvents(
+        _ event: STPAnalyticEvent,
+        in analyticsClient: STPAnalyticsClient
+    ) -> [[String: Any]] {
+        analyticsClient._testLogHistory.filter {
+            $0["event"] as? String == event.rawValue
+        }
+    }
+
+    private func waitUntil(
+        timeout: TimeInterval = 2,
+        file: StaticString = #filePath,
+        line: UInt = #line,
+        _ condition: () -> Bool
+    ) async throws {
+        let deadline = Date().addingTimeInterval(timeout)
+        while !condition() {
+            if Date() >= deadline {
+                XCTFail("Condition not met within \(timeout) seconds", file: file, line: line)
+                throw CurrencySelectorViewTestTimeoutError()
+            }
+            try await Task.sleep(nanoseconds: 10_000_000)
+        }
+    }
+
     private func makeSession(
         adaptivePricingActive: Bool = true,
         includeLocalizedPrices: Bool = true,
@@ -198,3 +307,21 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         )
     }
 }
+
+private final class MockCurrencySelectorElementDelegate: CurrencySelectorElementDelegate {
+    private let error: Error?
+
+    init(error: Error? = nil) {
+        self.error = error
+    }
+
+    func selectCurrency(_ currency: String) async throws {
+        if let error {
+            throw error
+        }
+    }
+}
+
+private struct CurrencySelectorElementTestError: Error {}
+
+private struct CurrencySelectorViewTestTimeoutError: Error {}

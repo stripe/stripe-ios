@@ -14,6 +14,18 @@ protocol CurrencySelectorElementDelegate: AnyObject {
     func selectCurrency(_ currency: String) async throws
 }
 
+enum CurrencySelectorAnalytics {
+    static func additionalParams(checkoutSessionId: String) -> [String: Any] {
+        return ["checkout_session_id": checkoutSessionId]
+    }
+
+    static func additionalParams(checkoutSessionId: String, merging params: [String: Any]) -> [String: Any] {
+        var params = params
+        params["checkout_session_id"] = checkoutSessionId
+        return params
+    }
+}
+
 /// An Adaptive Pricing currency selector backed by a Checkout Session.
 ///
 /// Obtain an instance from ``Checkout/getCurrencySelectorElement()`` and use
@@ -52,7 +64,9 @@ public final class CurrencySelectorElement {
         STPAnalyticsClient.sharedClient.log(
             analytic: PaymentSheetAnalytic(
                 event: .adaptivePricingCurrencySelectorInit,
-                additionalParams: [:],
+                additionalParams: CurrencySelectorAnalytics.additionalParams(
+                    checkoutSessionId: sessionSource.initialSession.id
+                ),
             )
         )
     }

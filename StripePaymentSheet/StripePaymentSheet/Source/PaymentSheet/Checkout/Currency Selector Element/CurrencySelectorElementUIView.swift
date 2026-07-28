@@ -25,6 +25,7 @@ public final class CurrencySelectorElementUIView: UIView {
 
     private weak var delegate: CurrencySelectorElementDelegate?
     private let appearance: CurrencySelectorElement.Appearance
+    private var checkoutSessionId: String
     private let flagImageManager = AdaptivePricingFlagImageManager()
     private var selectorView: TwoOptionSelectorView?
     private var lastSelectedCurrency: String?
@@ -45,6 +46,7 @@ public final class CurrencySelectorElementUIView: UIView {
     ) async {
         self.delegate = delegate
         self.appearance = appearance
+        self.checkoutSessionId = session.id
         super.init(frame: .zero)
 
         await flagImageManager.prefetchFlagImages(for: session)
@@ -83,6 +85,7 @@ public final class CurrencySelectorElementUIView: UIView {
     }
 
     func update(with session: Checkout.Session) {
+        checkoutSessionId = session.id
         guard let (_, exchangeRateMeta, rawCurrency) =
                 CurrencySelectorUtilities.adaptivePricingData(from: session)
         else {
@@ -194,6 +197,7 @@ public final class CurrencySelectorElementUIView: UIView {
 extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
     func twoOptionSelectorView(_: TwoOptionSelectorView, didSelectItemWithId id: String) {
         let fromCurrency = lastSelectedCurrency
+        let eventCheckoutSessionId = checkoutSessionId
         lastSelectedCurrency = id
         selectorView?.setEnabled(false)
 
@@ -204,7 +208,9 @@ extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
                 STPAnalyticsClient.sharedClient.log(
                     analytic: PaymentSheetAnalytic(
                         event: .adaptivePricingCurrencyToggled,
-                        additionalParams: [:]
+                        additionalParams: CurrencySelectorAnalytics.additionalParams(
+                            checkoutSessionId: eventCheckoutSessionId
+                        )
                     )
                 )
             } catch {
@@ -216,7 +222,10 @@ extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
                 STPAnalyticsClient.sharedClient.log(
                     analytic: PaymentSheetAnalytic(
                         event: .adaptivePricingCurrencyToggledFailed,
-                        additionalParams: error.serializeForV1Analytics()
+                        additionalParams: CurrencySelectorAnalytics.additionalParams(
+                            checkoutSessionId: eventCheckoutSessionId,
+                            merging: error.serializeForV1Analytics()
+                        )
                     )
                 )
                 showError(error.localizedDescription)

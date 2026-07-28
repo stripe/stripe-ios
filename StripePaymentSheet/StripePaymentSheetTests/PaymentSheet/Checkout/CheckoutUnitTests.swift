@@ -71,6 +71,7 @@ final class CheckoutUnitTests: XCTestCase {
 
         let events = currencySelectorInitEvents(in: analyticsClient)
         XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events.first?["checkout_session_id"] as? String, checkout.session.id)
     }
 
     func testSessionPaymentOptionUpdatesAndClears() async throws {

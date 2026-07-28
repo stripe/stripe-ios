@@ -62,10 +62,10 @@ final class AdaptivePricingFlagImageManager {
         case let (localResult, integrationResult):
             imagesByCurrencyCode = nil
             if case .failure(let url) = localResult {
-                logFailure(countryCode: localCountry, url: url)
+                logFailure(countryCode: localCountry, url: url, checkoutSessionId: session.id)
             }
             if case .failure(let url) = integrationResult {
-                logFailure(countryCode: integrationCountry, url: url)
+                logFailure(countryCode: integrationCountry, url: url, checkoutSessionId: session.id)
             }
         }
     }
@@ -125,14 +125,17 @@ final class AdaptivePricingFlagImageManager {
         }
     }
 
-    private func logFailure(countryCode: String, url: URL) {
+    private func logFailure(countryCode: String, url: URL, checkoutSessionId: String) {
         analyticsClient.log(
             analytic: PaymentSheetAnalytic(
                 event: .adaptivePricingFlagImageLoadFailed,
-                additionalParams: [
-                    "country_code": countryCode,
-                    "url": url.absoluteString,
-                ]
+                additionalParams: CurrencySelectorAnalytics.additionalParams(
+                    checkoutSessionId: checkoutSessionId,
+                    merging: [
+                        "country_code": countryCode,
+                        "url": url.absoluteString,
+                    ]
+                )
             )
         )
     }
