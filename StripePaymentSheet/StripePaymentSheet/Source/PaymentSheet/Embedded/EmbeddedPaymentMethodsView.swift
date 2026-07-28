@@ -103,7 +103,7 @@ class EmbeddedPaymentMethodsView: UIView {
         mandateView.directionalLayoutMargins.top = 12
         return mandateView
     }()
-    private lazy var errorLabel = ElementsUI.makeErrorLabel(theme: appearance.asElementsTheme)
+    lazy var errorLabel = ElementsUI.makeErrorLabel(theme: appearance.asElementsTheme)
     private lazy var errorContainerView: UIView = {
         let view = UIView()
         view.addAndPinSubview(
@@ -113,11 +113,6 @@ class EmbeddedPaymentMethodsView: UIView {
         view.setHiddenIfNecessary(true)
         return view
     }()
-#if DEBUG
-    var _test_displayedErrorMessage: String? {
-        return errorLabel.text
-    }
-#endif
     private var savedPaymentMethodButton: RowButton?
     private(set) var rowButtons: [RowButton]
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?

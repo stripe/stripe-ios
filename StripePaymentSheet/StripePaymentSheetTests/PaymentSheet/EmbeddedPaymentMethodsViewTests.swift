@@ -166,12 +166,12 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
             animated: false
         )
         embeddedView.autosizeHeight(width: 300)
-        XCTAssertNotNil(embeddedView._test_displayedErrorMessage)
+        XCTAssertNotNil(embeddedView.errorLabel.text)
         XCTAssertGreaterThan(embeddedView.bounds.height, initialHeight)
 
         embeddedView.didTap(rowButton: embeddedView.getRowButton(accessibilityIdentifier: "Card"))
         embeddedView.autosizeHeight(width: 300)
-        XCTAssertNil(embeddedView._test_displayedErrorMessage)
+        XCTAssertNil(embeddedView.errorLabel.text)
         XCTAssertEqual(embeddedView.bounds.height, initialHeight)
     }
 }

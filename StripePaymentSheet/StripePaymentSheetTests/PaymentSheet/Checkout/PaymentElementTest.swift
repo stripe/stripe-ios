@@ -268,7 +268,7 @@ final class PaymentElementTest: XCTestCase {
         embeddedPaymentElement.informDelegateIfPaymentOptionUpdated()
 
         // When the customer selects a saved payment method
-        let errorExpectation = notNullExpectation(for: embeddedView, keyPath: \._test_displayedErrorMessage)
+        let errorExpectation = notNullExpectation(for: embeddedView, keyPath: \.errorLabel.text)
         embeddedView.didTap(rowButton: savedPaymentMethodRow)
         await fulfillment(of: [errorExpectation])
 
@@ -281,7 +281,7 @@ final class PaymentElementTest: XCTestCase {
             .new(paymentMethodType: .stripe(.paynow))
         )
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
-        XCTAssertFalse(try XCTUnwrap(embeddedView._test_displayedErrorMessage).isEmpty)
+        XCTAssertFalse(try XCTUnwrap(embeddedView.errorLabel.text).isEmpty)
     }
 
     func testCheckoutAndElementsDoNotRetainEachOther() async throws {
