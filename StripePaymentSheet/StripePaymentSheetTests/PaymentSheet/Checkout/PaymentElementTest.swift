@@ -388,7 +388,7 @@ final class PaymentElementTest: XCTestCase {
             updateStatusCode: updateStatusCode
         )
 
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         configuration.paymentElement.rowSelectionBehavior = .immediateAction(
             didSelectPaymentOption: didSelectPaymentOption
