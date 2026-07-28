@@ -30,6 +30,12 @@ final class SelfieScanningView: UIView {
         static var livePreviewBlurEffect: UIBlurEffect {
             UIBlurEffect(style: .systemUltraThinMaterial)
         }
+        /// Tint used in place of `livePreviewBlurEffect` when Reduce Transparency
+        /// is enabled, since blur materials become opaque and would otherwise
+        /// completely obscure the camera feed.
+        static var livePreviewBlurReduceTransparencyTint: UIColor {
+            UIColor.black.withAlphaComponent(0.35)
+        }
         static let statusLabelFadeInDuration: TimeInterval = 0.18
         static let statusLabelFadeOutDuration: TimeInterval = 0.6
         static let turnPromptArrowAnimationDuration: TimeInterval = 0.45
@@ -725,7 +731,7 @@ final class SelfieScanningView: UIView {
             }
             previewBlurAnimator?.stopAnimation(true)
             previewBlurAnimator = nil
-            capturedImageBlurView.effect = isVisible ? Styling.livePreviewBlurEffect : nil
+            applyPreviewBlurEffect(visible: isVisible)
             capturedImageBlurView.isHidden = !isVisible
             return
         }
@@ -741,13 +747,13 @@ final class SelfieScanningView: UIView {
         }
 
         guard animated, window != nil else {
-            capturedImageBlurView.effect = isVisible ? Styling.livePreviewBlurEffect : nil
+            applyPreviewBlurEffect(visible: isVisible)
             capturedImageBlurView.isHidden = !isVisible
             return
         }
 
         let animator = UIViewPropertyAnimator(duration: duration, curve: .easeInOut) {
-            self.capturedImageBlurView.effect = isVisible ? Styling.livePreviewBlurEffect : nil
+            self.applyPreviewBlurEffect(visible: isVisible)
         }
         animator.addCompletion { [weak self] _ in
             guard let self = self else {
@@ -760,6 +766,24 @@ final class SelfieScanningView: UIView {
         }
         previewBlurAnimator = animator
         animator.startAnimation()
+    }
+
+    private func applyPreviewBlurEffect(visible isVisible: Bool) {
+        guard isVisible else {
+            capturedImageBlurView.effect = nil
+            capturedImageBlurView.backgroundColor = .clear
+            return
+        }
+        if UIAccessibility.isReduceTransparencyEnabled {
+            // Blur materials render as an opaque veil when Reduce Transparency
+            // is enabled, completely obscuring the camera feed. Use a
+            // translucent tint instead so the feed stays visible.
+            capturedImageBlurView.effect = nil
+            capturedImageBlurView.backgroundColor = Styling.livePreviewBlurReduceTransparencyTint
+        } else {
+            capturedImageBlurView.backgroundColor = .clear
+            capturedImageBlurView.effect = Styling.livePreviewBlurEffect
+        }
     }
 
     private func setStatusLabelVisible(_ isVisible: Bool, animated: Bool) {
@@ -815,6 +839,8 @@ final class SelfieScanningView: UIView {
                 tintColor: self.tintColor
             )
             self.configureHavingTroubleLabel()
+            // Re-apply in case Reduce Transparency was toggled while visible
+            self.applyPreviewBlurEffect(visible: self.isPreviewBlurVisible)
         }
     }
 
