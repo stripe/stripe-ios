@@ -15,6 +15,13 @@ import UIKit
 @MainActor
 public final class EmbeddedPaymentElement {
 
+    struct PendingBillingAddressSyncSelection {
+        let paymentMethodID: String
+        let billingDetails: STPPaymentMethodBillingDetails
+        let previousSelection: RowButtonType?
+        let previousPaymentOption: PaymentOption?
+    }
+
     /// A view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
     public var view: UIView {
         return containerView
@@ -280,6 +287,10 @@ public final class EmbeddedPaymentElement {
                 previousSelectedRowChangeButtonState: shouldSelectPreviousRow ? previousSelectedRowChangeButtonState : nil,
                 delegate: self
             )
+            if self.pendingBillingAddressSyncSelection != nil {
+                self.embeddedPaymentMethodsView.isUserInteractionEnabled = false
+                self.embeddedPaymentMethodsView.selectedRowButton?.setLoading(true, animated: false)
+            }
             self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
             informDelegateIfPaymentOptionUpdated()
             return .succeeded
@@ -299,7 +310,7 @@ public final class EmbeddedPaymentElement {
         if case .succeeded = updateResult {
             clearPaymentOptionIfNeeded()
         }
-        embeddedPaymentMethodsView.isUserInteractionEnabled = true
+        embeddedPaymentMethodsView.isUserInteractionEnabled = pendingBillingAddressSyncSelection == nil
         analyticsHelper.logEmbeddedUpdateFinished(result: updateResult, duration: Date().timeIntervalSince(startTime))
         return updateResult
     }
@@ -382,6 +393,8 @@ public final class EmbeddedPaymentElement {
     internal private(set) var formCache: PaymentMethodFormCache = .init()
     /// The form view controller for the currently selected payment method.
     internal var selectedFormViewController: EmbeddedFormViewController?
+    /// The saved payment method waiting for its billing address to sync to Checkout.
+    internal var pendingBillingAddressSyncSelection: PendingBillingAddressSyncSelection?
     /// Indicates if a payment has been successfully completed.
     internal var hasConfirmedIntent = false
     /// Tracks info about the currently in-flight or most recent update attempt.

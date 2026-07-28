@@ -32,10 +32,17 @@ class RowButton: UIView, EventHandler {
     let defaultBadgeLabel: UILabel?
     /// The view indicating any incentives associated with this payment method
     let promoBadge: PromoBadgeView?
+    private lazy var loadingIndicator: ActivityIndicator = {
+        let loadingIndicator = ActivityIndicator(size: .medium)
+        loadingIndicator.tintColor = appearance.colors.primary
+        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return loadingIndicator
+    }()
 
     // MARK: State
 
     private(set) var isSelected: Bool = false
+    private(set) var isLoading: Bool = false
 
     /// When enabled the `didTap` closure will be called when the button is tapped. When false the `didTap` closure will not be called on taps
     var isEnabled: Bool = true {
@@ -183,9 +190,49 @@ class RowButton: UIView, EventHandler {
     }
 
     func setKeyContent(alpha: CGFloat) {
-        [imageView, label, sublabel].compactMap { $0 }.forEach {
-            $0.alpha = alpha
+        imageView.alpha = isLoading ? 0 : alpha
+        label.alpha = alpha
+        sublabel.alpha = alpha
+    }
+
+    /// Replaces the payment method icon with a spinner while work for this row is in flight.
+    func setLoading(_ loading: Bool, animated: Bool = true) {
+        guard loading != isLoading else { return }
+        isLoading = loading
+
+        if loading {
+            addSubview(loadingIndicator)
+            NSLayoutConstraint.activate([
+                loadingIndicator.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
+                loadingIndicator.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
+            ])
+            loadingIndicator.alpha = 0
+            loadingIndicator.startAnimating()
         }
+
+        let animations = { [weak self] in
+            guard let self else { return }
+            loadingIndicator.alpha = loading ? 1 : 0
+            imageView.alpha = loading ? 0 : label.alpha
+        }
+        let completion: (Bool) -> Void = { [weak self] _ in
+            guard let self, self.isLoading == loading, !loading else { return }
+            self.loadingIndicator.stopAnimating()
+            self.loadingIndicator.removeFromSuperview()
+        }
+
+        guard animated else {
+            animations()
+            completion(true)
+            return
+        }
+        UIView.animate(
+            withDuration: 0.2,
+            delay: 0,
+            options: .beginFromCurrentState,
+            animations: animations,
+            completion: completion
+        )
     }
 
     func updateSelectedState(_ isSelected: Bool, willDisplayForm: Bool) {
