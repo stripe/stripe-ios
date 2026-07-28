@@ -334,6 +334,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
     }
 
+    /// Selects the saved payment method if it is still displayed.
     func selectSavedPaymentMethod(withStripeId stripeId: String) -> Bool {
         guard let rowButton = rowButtons.first(where: {
             $0.type.savedPaymentMethod?.stripeId == stripeId

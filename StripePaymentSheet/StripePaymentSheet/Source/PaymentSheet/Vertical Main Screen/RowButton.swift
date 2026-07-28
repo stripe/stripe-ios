@@ -43,6 +43,7 @@ class RowButton: UIView, EventHandler {
 
     private(set) var isSelected: Bool = false
     private(set) var isLoading: Bool = false
+    private var keyContentAlpha: CGFloat = 1
 
     /// When enabled the `didTap` closure will be called when the button is tapped. When false the `didTap` closure will not be called on taps
     var isEnabled: Bool = true {
@@ -190,6 +191,7 @@ class RowButton: UIView, EventHandler {
     }
 
     func setKeyContent(alpha: CGFloat) {
+        keyContentAlpha = alpha
         imageView.alpha = isLoading ? 0 : alpha
         label.alpha = alpha
         sublabel.alpha = alpha
@@ -201,11 +203,13 @@ class RowButton: UIView, EventHandler {
         isLoading = loading
 
         if loading {
-            addSubview(loadingIndicator)
-            NSLayoutConstraint.activate([
-                loadingIndicator.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
-                loadingIndicator.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
-            ])
+            if loadingIndicator.superview == nil {
+                addSubview(loadingIndicator)
+                NSLayoutConstraint.activate([
+                    loadingIndicator.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
+                    loadingIndicator.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
+                ])
+            }
             loadingIndicator.alpha = 0
             loadingIndicator.startAnimating()
         }
@@ -213,7 +217,7 @@ class RowButton: UIView, EventHandler {
         let animations = { [weak self] in
             guard let self else { return }
             loadingIndicator.alpha = loading ? 1 : 0
-            imageView.alpha = loading ? 0 : label.alpha
+            imageView.alpha = loading ? 0 : keyContentAlpha
         }
         let completion: (Bool) -> Void = { [weak self] _ in
             guard let self, self.isLoading == loading, !loading else { return }

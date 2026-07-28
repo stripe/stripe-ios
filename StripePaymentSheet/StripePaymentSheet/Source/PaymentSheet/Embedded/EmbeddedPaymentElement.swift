@@ -15,13 +15,6 @@ import UIKit
 @MainActor
 public final class EmbeddedPaymentElement {
 
-    struct PendingBillingAddressSyncSelection {
-        let paymentMethodID: String
-        let billingDetails: STPPaymentMethodBillingDetails?
-        let previousSelection: RowButtonType?
-        let previousPaymentOption: PaymentOption?
-    }
-
     /// A view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
     public var view: UIView {
         return containerView
@@ -287,6 +280,7 @@ public final class EmbeddedPaymentElement {
                 previousSelectedRowChangeButtonState: shouldSelectPreviousRow ? previousSelectedRowChangeButtonState : nil,
                 delegate: self
             )
+            // Keep the rebuilt view loading while the billing sync finishes.
             if self.pendingBillingAddressSyncSelection != nil {
                 self.embeddedPaymentMethodsView.isUserInteractionEnabled = false
                 self.embeddedPaymentMethodsView.selectedRowButton?.setLoading(true, animated: false)
@@ -310,6 +304,7 @@ public final class EmbeddedPaymentElement {
         if case .succeeded = updateResult {
             clearPaymentOptionIfNeeded()
         }
+        // A billing sync may still be running when this update finishes.
         embeddedPaymentMethodsView.isUserInteractionEnabled = pendingBillingAddressSyncSelection == nil
         analyticsHelper.logEmbeddedUpdateFinished(result: updateResult, duration: Date().timeIntervalSince(startTime))
         return updateResult
