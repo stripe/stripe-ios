@@ -52,7 +52,7 @@ public final class CurrencySelectorElement {
         STPAnalyticsClient.sharedClient.log(
             analytic: PaymentSheetAnalytic(
                 event: .adaptivePricingCurrencySelectorInit,
-                additionalParams: [:],
+                additionalParams: ["checkout_session_id": sessionSource.initialSession.id],
             )
         )
     }
