@@ -8,7 +8,7 @@
 import UIKit
 
 // Customizable appearance-related configuration for Stripe-provided Link UI.
-@_spi(CryptoOnrampAlpha)
+@_spi(CryptoOnrampAlpha) @_spi(LinkControllerPreview)
 public struct LinkAppearance {
 
     /// Configuration values for the primary button.

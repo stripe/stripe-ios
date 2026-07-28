@@ -668,7 +668,7 @@ struct PaymentSheetButtons: View {
         }
         .sheet(isPresented: $showingCart) {
             if let checkout = playgroundController.checkout {
-                CheckoutCartSheet(checkout: checkout, currencySelectorAppearance: playgroundController.currencySelectorAppearance)
+                CheckoutCartSheet(checkout: checkout)
             }
         }
     }
