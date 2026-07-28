@@ -658,7 +658,13 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             clientSecret: linkAccountSession.clientSecret,
             returnURL: context.configuration.returnURL,
             existingConsumer: consumer,
-            style: .automatic,
+            style: {
+                switch context.linkAppearance?.style {
+                case .alwaysLight: return .alwaysLight
+                case .alwaysDark: return .alwaysDark
+                default: return .automatic
+                }
+            }(),
             elementsSessionContext: ElementsSessionContext(
                 linkSettings: context.elementsSession.linkSettings.map {
                     ElementsSessionContext.LinkSettings(
@@ -840,7 +846,8 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
                         mode: .modal,
                         linkAccount: account,
                         brand: account.linkBrand ?? self.context.linkBrand,
-                        configuration: self.context.configuration
+                        configuration: self.context.configuration,
+                        appearance: self.context.linkAppearance
                     )
                     verificationController.present(from: self) { result in
                         switch result {
