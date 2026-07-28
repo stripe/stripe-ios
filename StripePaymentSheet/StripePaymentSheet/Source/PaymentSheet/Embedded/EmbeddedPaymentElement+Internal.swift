@@ -145,16 +145,13 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 
     func embeddedPaymentMethodsViewWillSelect(_ rowButtonType: RowButtonType) {
         guard let checkout,
-              case .saved(let paymentMethod) = rowButtonType,
-              let billingDetails = paymentMethod.billingDetails,
-              checkout.session.collectsTaxFromBillingAddress,
-              billingDetails.address?.country?.nonEmpty != nil else {
+              case .saved(let paymentMethod) = rowButtonType else {
             persistDefaultPaymentMethodSelection(rowButtonType)
             return
         }
         pendingBillingAddressSyncSelection = .init(
             paymentMethodID: paymentMethod.stripeId,
-            billingDetails: billingDetails,
+            billingDetails: paymentMethod.billingDetails,
             previousSelection: embeddedPaymentMethodsView.selectedRowButton?.type,
             previousPaymentOption: _paymentOption
         )

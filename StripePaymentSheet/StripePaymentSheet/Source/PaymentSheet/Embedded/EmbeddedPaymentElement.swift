@@ -17,7 +17,7 @@ public final class EmbeddedPaymentElement {
 
     struct PendingBillingAddressSyncSelection {
         let paymentMethodID: String
-        let billingDetails: STPPaymentMethodBillingDetails
+        let billingDetails: STPPaymentMethodBillingDetails?
         let previousSelection: RowButtonType?
         let previousPaymentOption: PaymentOption?
     }

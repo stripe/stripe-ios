@@ -17,12 +17,6 @@ import XCTest
 @MainActor
 final class PaymentElementTest: XCTestCase {
 
-    override func tearDown() {
-        HTTPStubs.removeAllStubs()
-        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
-        super.tearDown()
-    }
-
     override func setUp() {
         super.setUp()
         let expectation = expectation(description: "Load specs")
@@ -248,30 +242,6 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(try XCTUnwrap(requests.last).params["tax_region[country]"], "US")
     }
 
-    func testSelectingSavedPaymentMethodInEmbeddedViewWithoutBillingTaxCompletesSynchronously() async throws {
-        // Given a Checkout Session that doesn't calculate tax from billing address
-        var didSelectPaymentOption = false
-        let (_, embeddedPaymentElement, savedPaymentMethodRow, requestRecorder) =
-            try await makeSavedPaymentMethodSelectionFixture(
-            automaticTaxFromBilling: false,
-            didSelectPaymentOption: {
-                didSelectPaymentOption = true
-            }
-        )
-
-        // When the customer selects a saved payment method
-        embeddedPaymentElement.embeddedPaymentMethodsView.didTap(rowButton: savedPaymentMethodRow)
-
-        // Then selection completes synchronously without an unnecessary update
-        XCTAssertTrue(didSelectPaymentOption)
-        XCTAssertEqual(requestRecorder.requests.map(\.kind), [.initSession])
-        let savedPaymentMethod = try XCTUnwrap(savedPaymentMethodRow.type.savedPaymentMethod)
-        XCTAssertEqual(
-            CustomerPaymentOption.localDefaultPaymentMethod(for: nil),
-            .stripeId(savedPaymentMethod.stripeId)
-        )
-    }
-
     func testSelectingSavedPaymentMethodInEmbeddedViewRevertsSelectionAndDisplaysBillingSyncError() async throws {
         // Given PayNow is selected and the Checkout billing address update will fail
         var didSelectPaymentOption = false
@@ -410,7 +380,10 @@ final class PaymentElementTest: XCTestCase {
         )
         CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
 
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var configuration = Checkout.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         configuration.paymentElement.rowSelectionBehavior = .immediateAction(
             didSelectPaymentOption: didSelectPaymentOption
