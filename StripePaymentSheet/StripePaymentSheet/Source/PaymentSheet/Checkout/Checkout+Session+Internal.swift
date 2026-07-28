@@ -29,13 +29,6 @@ extension Checkout.Session {
         return types
     }
 
-    /// Whether `ExpressCheckoutElement` has any buttons to display for this session.
-    @_spi(STP)
-    @_spi(ReactNativeSDK)
-    public var isExpressCheckoutElementAvailable: Bool {
-        !availableExpressButtonTypes.isEmpty
-    }
-
     var customerId: String? {
         return customer?.id
     }

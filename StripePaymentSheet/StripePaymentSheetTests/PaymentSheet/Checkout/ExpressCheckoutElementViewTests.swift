@@ -13,7 +13,7 @@ import XCTest
 @MainActor
 final class ExpressCheckoutElementViewTests: XCTestCase {
 
-    // MARK: - expressButtons tests
+    // MARK: - resolveButtons tests
 
     func testNoButtonsWhenSessionHasNoWalletTypes() {
         // Given a session with no wallet types in the elements session
@@ -21,7 +21,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
 
         XCTAssertEqual(
-            ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration),
+            ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration),
             []
         )
     }
@@ -31,7 +31,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let session = makeSessionWithWalletTypes(["apple_pay"]).makePublicSession()
         let configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
 
-        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertFalse(buttons.contains(.applePay))
     }
 
@@ -41,7 +41,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
         configuration.applePayConfiguration = Checkout.ApplePayConfiguration(merchantId: "merchant.com.example")
 
-        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertEqual(buttons.contains(.applePay), StripeAPI.deviceSupportsApplePay())
     }
 
@@ -50,7 +50,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
         let configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
 
-        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertTrue(buttons.contains(.link))
     }
 
@@ -62,7 +62,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
         configuration.expressCheckoutElement.link = .never
 
-        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertFalse(buttons.contains(.link))
     }
 
@@ -72,7 +72,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
         configuration.expressCheckoutElement.link = .always
 
-        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertTrue(buttons.contains(.link))
     }
 
@@ -82,7 +82,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
         configuration.linkConfiguration = Checkout.LinkConfiguration(display: .never)
 
-        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertFalse(buttons.contains(.link))
     }
 
@@ -93,7 +93,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         configuration.expressCheckoutElement.link = .always
         configuration.linkConfiguration = Checkout.LinkConfiguration(display: .never)
 
-        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertTrue(buttons.contains(.link))
     }
 
@@ -106,7 +106,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         configuration.applePayConfiguration = Checkout.ApplePayConfiguration(merchantId: "merchant.com.example")
         configuration.expressCheckoutElement.applePay = .never
 
-        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertFalse(buttons.contains(.applePay))
     }
 
@@ -118,7 +118,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         configuration.expressCheckoutElement.applePay = .always
 
         // Whether Apple Pay appears depends on device capability
-        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertEqual(buttons.contains(.applePay), StripeAPI.deviceSupportsApplePay())
     }
 
@@ -128,21 +128,10 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
         configuration.expressCheckoutElement.applePay = .always
 
-        let buttons = ExpressCheckoutElementUIView.expressButtons(from: session, configuration: configuration)
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertFalse(buttons.contains(.applePay))
     }
 
-    // MARK: - isExpressCheckoutElementAvailable tests
-
-    func testIsExpressCheckoutElementAvailableFalseWithNoWalletTypes() {
-        let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
-        XCTAssertFalse(session.isExpressCheckoutElementAvailable)
-    }
-
-    func testIsExpressCheckoutElementAvailableTrueWithWalletTypes() {
-        let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
-        XCTAssertTrue(session.isExpressCheckoutElementAvailable)
-    }
 
     // MARK: - Helpers
 

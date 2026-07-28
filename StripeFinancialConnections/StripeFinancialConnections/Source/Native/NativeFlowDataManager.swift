@@ -66,15 +66,11 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     }
     var merchantLogo: [String]? {
         let merchantLogo = visualUpdate.merchantLogo
-        if merchantLogo.isEmpty || merchantLogo.count == 2 || merchantLogo.count == 3 {
+        if merchantLogo.isEmpty || (1...3).contains(merchantLogo.count) {
             // show merchant logo inside of consent pane
             return visualUpdate.merchantLogo
         } else {
             // if `merchantLogo.count > 3`, that is an invalid case
-            //
-            // we want to log experiment exposure regardless because
-            // if experiment is not working fine (ex. returns 1 or 4 logos)
-            // then the "cost" of those bugs should show up in the `treatment` data
             return nil
         }
     }

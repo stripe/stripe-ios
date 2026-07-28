@@ -25,7 +25,7 @@ struct CheckoutCartView: View {
     var applePayButtonTypeOption: CheckoutPlayground.ApplePayButtonTypeOption = .plain
     var linkVisibility: CheckoutPlayground.WalletVisibilityOption = .automatic
     var linkDisplayOption: CheckoutPlayground.LinkDisplayOption = .automatic
-    var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
+    var currencySelectorAppearance = CurrencySelectorElement.Appearance()
 
     var body: some View {
         NavigationView {
@@ -36,7 +36,6 @@ struct CheckoutCartView: View {
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
-                        currencySelectorAppearance: currencySelectorAppearance,
                         showsShippingAddressSection: shippingAddressCollection,
                         isLoading: $isLoading,
                         errorMessage: $errorMessage
@@ -45,7 +44,6 @@ struct CheckoutCartView: View {
                         VStack(spacing: 0) {
                             if checkout.session.total != nil {
                                 if showExpressCheckoutElement,
-                                   checkout.session.isExpressCheckoutElementAvailable,
                                    let ece = checkout.getExpressCheckoutElement() {
                                     ece.view
                                         .padding(.horizontal)
@@ -107,7 +105,7 @@ struct CheckoutCartView: View {
         isLoading = true
         errorMessage = nil
         do {
-            var config = Checkout.Configuration(clientSecret: clientSecret)
+            var config = Checkout.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
             config.adaptivePricing.allowed = adaptivePricing
             config.applePayConfiguration = Checkout.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example",
@@ -118,6 +116,7 @@ struct CheckoutCartView: View {
                 config.expressCheckoutElement.applePay = applePayVisibility.walletVisibility
                 config.expressCheckoutElement.link = linkVisibility.walletVisibility
             }
+            config.currencySelectorElement.appearance = currencySelectorAppearance
             checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription

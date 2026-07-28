@@ -149,13 +149,25 @@ enum CheckoutTestHelpers {
     ) -> Checkout.Configuration {
         // Use the production Checkout initializer with a test-controlled API client.
         let clientSecret = configuration?.clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
-        var resolvedConfiguration = configuration ?? Checkout.Configuration(clientSecret: clientSecret)
+        var resolvedConfiguration = configuration ?? Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         resolvedConfiguration.apiClient = makeStubbedAPIClient(
             apiResponse: apiResponse,
             clientSecret: clientSecret,
             stubAllOutgoingRequests: stubAllOutgoingRequests
         )
         return resolvedConfiguration
+    }
+
+    /// Builds a stubbed Checkout configuration that opts into Adaptive Pricing.
+    @MainActor
+    static func makeCurrencySelectorConfiguration(
+        apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
+        configuration: Checkout.Configuration? = nil
+    ) -> Checkout.Configuration {
+        let clientSecret = configuration?.clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
+        var resolvedConfiguration = configuration ?? Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        resolvedConfiguration.adaptivePricing.allowed = true
+        return makeConfiguration(apiResponse: apiResponse, configuration: resolvedConfiguration)
     }
 
     @MainActor
@@ -185,6 +197,17 @@ enum CheckoutTestHelpers {
                 && request.url?.path == "/v1/payment_pages/\(sessionId)/init"
         }) { _ in
             // Feed Checkout(configuration:) the session fixture this test requested.
+            var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
+            responseJSON["client_secret"] = resolvedClientSecret
+            responseJSON["session_id"] = responseJSON["session_id"] ?? sessionId
+            let data = try! JSONSerialization.data(withJSONObject: responseJSON, options: [])
+            return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
+        }
+        // Init can trigger a session update (e.g. billing address tax sync); just echo the session back.
+        stub(condition: { request in
+            request.httpMethod == "POST"
+                && request.url?.path == "/v1/payment_pages/\(sessionId)"
+        }) { _ in
             var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
             responseJSON["client_secret"] = resolvedClientSecret
             responseJSON["session_id"] = responseJSON["session_id"] ?? sessionId
