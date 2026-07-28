@@ -239,7 +239,7 @@ enum CheckoutTestHelpers {
         requestRecorder: CheckoutSessionRequestRecorder,
         sessionJSON: @escaping () -> [AnyHashable: Any],
         initStatusCode: Int32 = 200,
-        updateStatusCode: Int32 = 200
+        updateStatusCode: @escaping () -> Int32 = { 200 }
     ) {
         stub { request in
             request.url?.path == "/v1/payment_pages/\(sessionId)/init"
@@ -262,7 +262,7 @@ enum CheckoutTestHelpers {
                     params: RequestBodyTestHelpers.formEncodedBodyParams(from: request)
                 )
             )
-            return HTTPStubsResponse(jsonObject: sessionJSON(), statusCode: updateStatusCode, headers: nil)
+            return HTTPStubsResponse(jsonObject: sessionJSON(), statusCode: updateStatusCode(), headers: nil)
         }
     }
 

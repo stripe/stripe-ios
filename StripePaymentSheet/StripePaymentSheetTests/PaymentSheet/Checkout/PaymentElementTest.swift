@@ -239,7 +239,7 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertTrue(currentEmbeddedView.isUserInteractionEnabled)
         XCTAssertEqual(currentEmbeddedView.selectedRowButton?.type.savedPaymentMethod?.stripeId, paymentMethodID)
         let requests = requestRecorder.requests
-        XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession])
+        XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession, .updateSession])
         XCTAssertEqual(try XCTUnwrap(requests.last).params["tax_region[country]"], "US")
     }
 
@@ -372,7 +372,13 @@ final class PaymentElementTest: XCTestCase {
             paymentMethodTypes: paymentMethodTypes,
             customerSessionData: [:],
             paymentMethods: [
-                STPPaymentMethod._testCard(countryCode: "US").allResponseFields,
+                STPPaymentMethod._testCard(
+                    line1: "123 Main St",
+                    city: "San Francisco",
+                    state: "CA",
+                    postalCode: "94105",
+                    countryCode: "US"
+                ).allResponseFields,
             ]
         )
         var sessionJSON = Self.openSessionJSON(paymentMethodTypes: paymentMethodTypes)
@@ -385,7 +391,11 @@ final class PaymentElementTest: XCTestCase {
             sessionId: "cs_test_123",
             requestRecorder: requestRecorder,
             sessionJSON: { sessionJSON },
-            updateStatusCode: updateStatusCode
+            updateStatusCode: {
+                // Checkout syncs the initially selected card during setup. Only fail the re-selection.
+                let updateCount = requestRecorder.requests.filter { $0.kind == .updateSession }.count
+                return updateCount == 1 ? 200 : updateStatusCode
+            }
         )
 
         var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
