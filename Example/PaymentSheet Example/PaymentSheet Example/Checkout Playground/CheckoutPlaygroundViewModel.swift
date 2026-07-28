@@ -11,7 +11,7 @@ extension CheckoutPlayground {
     @MainActor
     final class ViewModel: ObservableObject {
         static let availablePaymentMethods = [
-            "card", "us_bank_account", "cashapp", "affirm", "klarna",
+            "card", "us_bank_account", "cashapp", "affirm", "klarna", "link",
         ]
 
         @Published var integrationType: IntegrationType = .flowController

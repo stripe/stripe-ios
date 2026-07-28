@@ -26,9 +26,8 @@ extension PaymentOption {
         case .applePay:
             // TODO(porter) Get Apple Pay working with automatic tax
             return nil
-        case .link:
-            // Link does not support automatic tax with billing address as source
-            return nil
+        case .link(let option):
+            return option.billingDetails
         }
     }
 }

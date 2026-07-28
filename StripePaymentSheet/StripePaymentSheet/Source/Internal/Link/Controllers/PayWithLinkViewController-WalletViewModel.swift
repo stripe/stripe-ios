@@ -25,11 +25,37 @@ extension PayWithLinkViewController {
 
         weak var delegate: PayWithLinkWalletViewModelDelegate?
 
+        enum TaxSyncState: Equatable {
+            case idle
+            case syncing
+            case failed(Error)
+
+            static func == (lhs: TaxSyncState, rhs: TaxSyncState) -> Bool {
+                switch (lhs, rhs) {
+                case (.idle, .idle), (.syncing, .syncing):
+                    return true
+                case (.failed, .failed):
+                    return true
+                default:
+                    return false
+                }
+            }
+        }
+
+        private(set) var taxSyncState: TaxSyncState = .idle {
+            didSet {
+                delegate?.viewModelDidChange(self)
+            }
+        }
+
+        private var lastSyncedBillingAddress: Checkout.Address?
+
         /// Index of currently selected payment method.
         var selectedPaymentMethodIndex: Int {
             didSet {
                 if oldValue != selectedPaymentMethodIndex {
                     delegate?.viewModelDidChange(self)
+                    syncBillingAddressForTax()
                 }
             }
         }
@@ -170,10 +196,17 @@ extension PayWithLinkViewController {
 
         /// CTA
         var confirmButtonCallToAction: ConfirmButton.CallToActionType {
-            context.callToAction
+            if case .syncing = taxSyncState {
+                return .custom(title: String.Localized.calculating_tax)
+            }
+            return context.callToAction
         }
 
         var confirmButtonStatus: ConfirmButton.Status {
+            if case .syncing = taxSyncState {
+                return .spinnerWithInteractionDisabled
+            }
+
             if !selectedPaymentMethodIsSupported {
                 // Selected payment method not supported
                 return .disabled
@@ -320,6 +353,51 @@ extension PayWithLinkViewController {
 
         func isPaymentMethodSupported(paymentMethod: ConsumerPaymentDetails?) -> Bool {
             paymentMethod?.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, configuration: context.configuration, cardBrandFilter: context.configuration.cardBrandFilter, cardFundingFilter: context.configuration.cardFundingFilter(for: context.elementsSession)) ?? false
+        }
+
+        /// Syncs the selected payment method's billing address with the checkout session for automatic tax calculation.
+        /// No-op when automatic tax with billing source is not enabled, or when the address hasn't changed.
+        func syncBillingAddressForTax() {
+            guard let checkout = context.checkout,
+                  case .checkout(let session) = context.intent,
+                  session.collectsTaxFromBillingAddress else {
+                return
+            }
+
+            guard let billingAddress = selectedPaymentMethod?.billingAddress,
+                  let countryCode = billingAddress.countryCode?.nonEmpty else {
+                return
+            }
+
+            let address = Checkout.Address(
+                country: countryCode,
+                line1: billingAddress.line1?.nonEmpty,
+                line2: billingAddress.line2?.nonEmpty,
+                city: billingAddress.city?.nonEmpty,
+                state: billingAddress.state?.nonEmpty,
+                postalCode: billingAddress.postalCode?.nonEmpty
+            )
+
+            guard address != lastSyncedBillingAddress else {
+                return
+            }
+
+            taxSyncState = .syncing
+
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                do {
+                    let updatedSession = try await checkout.updateBillingTaxRegionIfNecessaryForPaymentSheet(
+                        address: address,
+                        canUpdateWhileSheetPresented: true
+                    )
+                    self.lastSyncedBillingAddress = address
+                    self.context.callToAction = .makeDefaultType(intent: .checkout(updatedSession), withLock: false)
+                    self.taxSyncState = .idle
+                } catch {
+                    self.taxSyncState = .failed(error)
+                }
+            }
         }
     }
 }

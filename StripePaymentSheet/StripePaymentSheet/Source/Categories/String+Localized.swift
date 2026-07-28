@@ -779,4 +779,11 @@ extension String.Localized {
             quantity
         )
     }
+
+    static var calculating_tax: String {
+        STPLocalizedString(
+            "Calculating tax…",
+            "Label shown on the pay button in the Link wallet while the tax amount is being computed based on the selected billing address."
+        )
+    }
 }

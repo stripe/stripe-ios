@@ -88,8 +88,9 @@ final class PayWithLinkViewController: BottomSheetViewController {
         let canContinueWithoutLink: Bool
         let launchedFromFlowController: Bool
         let initiallySelectedPaymentDetailsID: String?
-        let callToAction: ConfirmButton.CallToActionType
+        var callToAction: ConfirmButton.CallToActionType
         let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
+        weak var checkout: CheckoutSessionBillingAddressUpdater?
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         var analyticsHelper: PaymentSheetAnalyticsHelper
         let linkAppearance: LinkAppearance?
@@ -159,7 +160,8 @@ final class PayWithLinkViewController: BottomSheetViewController {
             supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             linkAppearance: LinkAppearance? = nil,
-            linkConfiguration: LinkConfiguration? = nil
+            linkConfiguration: LinkConfiguration? = nil,
+            checkout: CheckoutSessionBillingAddressUpdater? = nil
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
@@ -175,6 +177,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             self.analyticsHelper = analyticsHelper
             self.linkAppearance = linkAppearance
             self.linkConfiguration = linkConfiguration
+            self.checkout = checkout
         }
     }
 
@@ -220,7 +223,8 @@ final class PayWithLinkViewController: BottomSheetViewController {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkAppearance: LinkAppearance? = nil,
-        linkConfiguration: LinkConfiguration? = nil
+        linkConfiguration: LinkConfiguration? = nil,
+        checkout: CheckoutSessionBillingAddressUpdater? = nil
     ) {
         LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
 
@@ -239,7 +243,8 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 analyticsHelper: analyticsHelper,
                 linkAppearance: linkAppearance,
-                linkConfiguration: linkConfiguration
+                linkConfiguration: linkConfiguration,
+                checkout: checkout
             ),
             linkAccount: linkAccount
         )

@@ -164,7 +164,8 @@ final class PayWithNativeLinkController {
                 analyticsHelper: self.analyticsHelper,
                 supportedPaymentMethodTypes: self.supportedPaymentMethodTypes,
                 linkAppearance: self.linkAppearance,
-                linkConfiguration: self.linkConfiguration
+                linkConfiguration: self.linkConfiguration,
+                checkout: self.checkout
             )
 
             payWithLinkVC.payWithLinkDelegate = self

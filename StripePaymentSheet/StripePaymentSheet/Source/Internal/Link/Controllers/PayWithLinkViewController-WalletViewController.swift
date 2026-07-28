@@ -275,6 +275,13 @@ extension PayWithLinkViewController {
                 status: viewModel.confirmButtonStatus,
                 callToAction: viewModel.confirmButtonCallToAction
             )
+
+            if case .failed(let error) = viewModel.taxSyncState {
+                updateErrorLabel(for: error)
+            } else if case .syncing = viewModel.taxSyncState {
+                // Clear any previous error while syncing
+                updateErrorLabel(for: nil)
+            }
         }
 
         func updateErrorLabel(for error: Error?) {
@@ -870,6 +877,7 @@ extension PayWithLinkViewController.WalletViewController: UpdatePaymentViewContr
     ) {
         viewModel.updatePaymentMethod(paymentMethod)
         self.paymentPicker.reloadData()
+        viewModel.syncBillingAddressForTax()
 
         if let confirmationExtras {
             // The update screen was only opened to collect missing billing details. Now that we have them,

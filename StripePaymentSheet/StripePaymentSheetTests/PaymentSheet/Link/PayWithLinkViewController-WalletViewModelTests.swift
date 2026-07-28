@@ -6,6 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 import StripeCoreTestUtils
 import XCTest
 
@@ -392,6 +394,350 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
         XCTAssertNil(sut.cancelButtonConfiguration)
     }
 }
+
+// MARK: - Tax Sync Tests
+
+extension PayWithLinkViewController_WalletViewModelTests {
+
+    // MARK: Helpers
+
+    @MainActor
+    private func makeSUTWithCheckout(
+        automaticTaxEnabled: Bool,
+        automaticTaxAddressSource: String? = "billing",
+        amount: Int = 1000,
+        paymentMethods: [ConsumerPaymentDetails] = LinkStubs.paymentMethods(),
+        checkout: CheckoutSessionBillingAddressUpdater? = nil
+    ) throws -> PayWithLinkViewController.WalletViewModel {
+        let intent = Intent._testCheckoutSession(
+            amount: amount,
+            currency: "USD",
+            automaticTaxEnabled: automaticTaxEnabled,
+            automaticTaxAddressSource: automaticTaxAddressSource
+        )
+        let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession()
+
+        return PayWithLinkViewController.WalletViewModel(
+            linkAccount: .init(
+                email: "user@example.com",
+                session: LinkStubs.consumerSession(),
+                publishableKey: nil,
+                displayablePaymentDetails: nil,
+                useMobileEndpoints: false,
+                canSyncAttestationState: false
+            ),
+            context: .init(
+                intent: intent,
+                elementsSession: elementsSession,
+                configuration: PaymentSheet.Configuration(),
+                linkBrand: .link,
+                shouldOfferApplePay: false,
+                shouldFinishOnClose: false,
+                initiallySelectedPaymentDetailsID: nil,
+                callToAction: nil,
+                analyticsHelper: ._testValue(),
+                checkout: checkout
+            ),
+            paymentMethods: paymentMethods
+        )
+    }
+
+    static func makePaymentMethodWithBillingAddress(
+        stripeID: String = "pm_1",
+        countryCode: String = "US",
+        postalCode: String = "10001",
+        isDefault: Bool = true
+    ) -> ConsumerPaymentDetails {
+        ConsumerPaymentDetails(
+            stripeID: stripeID,
+            details: .card(card: .init(
+                expiryYear: 30,
+                expiryMonth: 10,
+                brand: "visa",
+                networks: ["visa"],
+                last4: "4242",
+                funding: .debit,
+                checks: nil
+            )),
+            billingAddress: BillingAddress(
+                name: nil,
+                line1: nil,
+                line2: nil,
+                city: nil,
+                state: nil,
+                postalCode: postalCode,
+                countryCode: countryCode
+            ),
+            billingEmailAddress: nil,
+            nickname: nil,
+            isDefault: isDefault
+        )
+    }
+
+    // MARK: No-op cases
+
+    @MainActor
+    func test_syncBillingAddressForTax_noOp_whenNotCheckoutSession() throws {
+        // Given a payment intent (not a checkout session)
+        let sut = try makeSUT()
+        let mockCheckout = MockCheckoutSessionBillingAddressUpdater()
+        sut.context.checkout = mockCheckout
+
+        // When selecting a payment method
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.bankAccount
+
+        // Then no sync is attempted
+        XCTAssertEqual(mockCheckout.callCount, 0)
+        XCTAssertEqual(sut.taxSyncState, .idle)
+    }
+
+    @MainActor
+    func test_syncBillingAddressForTax_noOp_whenAutomaticTaxDisabled() throws {
+        // Given a checkout session with automatic tax disabled
+        let sut = try makeSUTWithCheckout(
+            automaticTaxEnabled: false,
+            paymentMethods: [Self.makePaymentMethodWithBillingAddress()]
+        )
+        let mockCheckout = MockCheckoutSessionBillingAddressUpdater()
+        sut.context.checkout = mockCheckout
+
+        // When sync is called
+        sut.syncBillingAddressForTax()
+
+        // Then no network call is made
+        XCTAssertEqual(mockCheckout.callCount, 0)
+        XCTAssertEqual(sut.taxSyncState, .idle)
+    }
+
+    @MainActor
+    func test_syncBillingAddressForTax_noOp_whenTaxSourceIsNotBilling() throws {
+        // Given a checkout session using shipping as the tax source
+        let sut = try makeSUTWithCheckout(
+            automaticTaxEnabled: true,
+            automaticTaxAddressSource: "shipping",
+            paymentMethods: [Self.makePaymentMethodWithBillingAddress()]
+        )
+        let mockCheckout = MockCheckoutSessionBillingAddressUpdater()
+        sut.context.checkout = mockCheckout
+
+        // When sync is called
+        sut.syncBillingAddressForTax()
+
+        // Then no network call is made
+        XCTAssertEqual(mockCheckout.callCount, 0)
+        XCTAssertEqual(sut.taxSyncState, .idle)
+    }
+
+    @MainActor
+    func test_syncBillingAddressForTax_noOp_whenPaymentMethodHasNoBillingAddress() throws {
+        // Given a checkout session with automatic tax, but the selected PM has no billing address
+        let pmWithoutAddress = ConsumerPaymentDetails(
+            stripeID: "pm_no_address",
+            details: .card(card: .init(expiryYear: 30, expiryMonth: 10, brand: "visa", networks: ["visa"], last4: "4242", funding: .debit, checks: nil)),
+            billingAddress: nil,
+            billingEmailAddress: nil,
+            nickname: nil,
+            isDefault: true
+        )
+        let sut = try makeSUTWithCheckout(
+            automaticTaxEnabled: true,
+            paymentMethods: [pmWithoutAddress]
+        )
+        let mockCheckout = MockCheckoutSessionBillingAddressUpdater()
+        sut.context.checkout = mockCheckout
+
+        // When sync is called
+        sut.syncBillingAddressForTax()
+
+        // Then no network call is made
+        XCTAssertEqual(mockCheckout.callCount, 0)
+        XCTAssertEqual(sut.taxSyncState, .idle)
+    }
+
+    @MainActor
+    func test_syncBillingAddressForTax_noOp_whenNoCheckoutReference() throws {
+        // Given a checkout session with automatic tax but no checkout reference
+        let sut = try makeSUTWithCheckout(
+            automaticTaxEnabled: true,
+            paymentMethods: [Self.makePaymentMethodWithBillingAddress()],
+            checkout: nil
+        )
+
+        // When sync is called
+        sut.syncBillingAddressForTax()
+
+        // Then state remains idle
+        XCTAssertEqual(sut.taxSyncState, .idle)
+    }
+
+    // MARK: Successful sync
+
+    @MainActor
+    func test_syncBillingAddressForTax_updatesCallToAction_onSuccess() async throws {
+        // Given a checkout session with automatic tax and an updated amount on success
+        let updatedAmount = 1200
+        let mockCheckout = MockCheckoutSessionBillingAddressUpdater(updatedAmount: updatedAmount)
+        let sut = try makeSUTWithCheckout(
+            automaticTaxEnabled: true,
+            amount: 1000,
+            paymentMethods: [Self.makePaymentMethodWithBillingAddress()],
+            checkout: mockCheckout
+        )
+
+        // When sync is triggered
+        sut.syncBillingAddressForTax()
+
+        // Then the state goes to syncing and the CTA shows "Calculating tax..."
+        XCTAssertEqual(sut.taxSyncState, .syncing)
+        XCTAssertEqual(sut.confirmButtonStatus, .spinnerWithInteractionDisabled)
+        if case .custom(let title) = sut.confirmButtonCallToAction {
+            XCTAssertEqual(title, String.Localized.calculating_tax)
+        } else {
+            XCTFail("Expected .custom CTA while syncing, got \(sut.confirmButtonCallToAction)")
+        }
+
+        // ...and eventually the amount updates and state returns to idle
+        await mockCheckout.waitForCompletion()
+        XCTAssertEqual(sut.taxSyncState, .idle)
+        XCTAssertEqual(sut.confirmButtonStatus, .enabled)
+        if case .pay(let amount, _, _) = sut.confirmButtonCallToAction {
+            XCTAssertEqual(amount, updatedAmount)
+        } else {
+            XCTFail("Expected .pay CTA after sync, got \(sut.confirmButtonCallToAction)")
+        }
+    }
+
+    @MainActor
+    func test_syncBillingAddressForTax_deduplicates_sameAddress() async throws {
+        // Given a checkout with one payment method with a billing address
+        let mockCheckout = MockCheckoutSessionBillingAddressUpdater(updatedAmount: 1200)
+        let pm = Self.makePaymentMethodWithBillingAddress()
+        let sut = try makeSUTWithCheckout(
+            automaticTaxEnabled: true,
+            paymentMethods: [pm],
+            checkout: mockCheckout
+        )
+
+        // When sync is triggered once and completes
+        sut.syncBillingAddressForTax()
+        await mockCheckout.waitForCompletion()
+        XCTAssertEqual(mockCheckout.callCount, 1)
+
+        // When sync is triggered again for the same address
+        sut.syncBillingAddressForTax()
+
+        // Then no additional network call is made (address hasn't changed)
+        XCTAssertEqual(mockCheckout.callCount, 1, "Should not re-sync the same address")
+    }
+
+    @MainActor
+    func test_syncBillingAddressForTax_triggeredOnPaymentMethodSelection() async throws {
+        // Given two payment methods with different billing addresses
+        let pm1 = Self.makePaymentMethodWithBillingAddress(stripeID: "pm_1", countryCode: "US", postalCode: "10001", isDefault: true)
+        let pm2 = Self.makePaymentMethodWithBillingAddress(stripeID: "pm_2", countryCode: "GB", postalCode: "SW1A 1AA", isDefault: false)
+        let mockCheckout = MockCheckoutSessionBillingAddressUpdater(updatedAmount: 1100)
+        let sut = try makeSUTWithCheckout(
+            automaticTaxEnabled: true,
+            paymentMethods: [pm1, pm2],
+            checkout: mockCheckout
+        )
+        // pm1 is selected by default (no sync triggered during init)
+        XCTAssertEqual(mockCheckout.callCount, 0)
+
+        // When selecting the second payment method (different address)
+        sut.selectedPaymentMethodIndex = 1
+
+        // Then a sync is triggered and completes
+        await mockCheckout.waitForCompletion()
+        XCTAssertEqual(mockCheckout.callCount, 1)
+    }
+
+    // MARK: Failed sync
+
+    @MainActor
+    func test_syncBillingAddressForTax_setsFailedState_onError() async throws {
+        // Given a checkout that will fail
+        let mockCheckout = MockCheckoutSessionBillingAddressUpdater(shouldFail: true)
+        let sut = try makeSUTWithCheckout(
+            automaticTaxEnabled: true,
+            paymentMethods: [Self.makePaymentMethodWithBillingAddress()],
+            checkout: mockCheckout
+        )
+
+        // When sync is triggered
+        sut.syncBillingAddressForTax()
+        await mockCheckout.waitForCompletion()
+
+        // Then state reflects the failure
+        if case .failed = sut.taxSyncState {
+            // Expected
+        } else {
+            XCTFail("Expected .failed state, got \(sut.taxSyncState)")
+        }
+        // And button is re-enabled so the user can retry
+        XCTAssertEqual(sut.confirmButtonStatus, .enabled)
+    }
+}
+
+// MARK: - MockCheckoutSessionBillingAddressUpdater
+
+@MainActor
+final class MockCheckoutSessionBillingAddressUpdater: CheckoutSessionBillingAddressUpdater {
+
+    private(set) var callCount = 0
+    private(set) var lastAddress: Checkout.Address?
+
+    private let updatedAmount: Int
+    private let shouldFail: Bool
+    private var continuation: CheckedContinuation<Void, Never>?
+
+    init(updatedAmount: Int = 1000, shouldFail: Bool = false) {
+        self.updatedAmount = updatedAmount
+        self.shouldFail = shouldFail
+    }
+
+    func reset() {
+        callCount = 0
+        lastAddress = nil
+        continuation = nil
+    }
+
+    func waitForCompletion() async {
+        await withCheckedContinuation { cont in
+            continuation = cont
+        }
+    }
+
+    func commitSession(
+        _ apiResponse: PaymentPagesAPIResponse?,
+        applying localMutation: (@MainActor @Sendable (Checkout.Session) -> Checkout.Session)?
+    ) async throws { }
+
+    func updateBillingTaxRegionIfNecessaryForPaymentSheet(
+        address: Checkout.Address,
+        canUpdateWhileSheetPresented: Bool
+    ) async throws -> Checkout.Session {
+        callCount += 1
+        lastAddress = address
+        defer { continuation?.resume(); continuation = nil }
+
+        if shouldFail {
+            throw NSError(domain: "TestError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Tax sync failed"])
+        }
+
+        let response = CheckoutTestHelpers.makeSession([
+            "currency": "usd",
+            "total_summary": [
+                "due": updatedAmount,
+                "subtotal": updatedAmount,
+                "total": updatedAmount,
+            ],
+        ])
+        return response.makePublicSession()
+    }
+}
+
+// MARK: - Existing helpers
 
 extension PayWithLinkViewController_WalletViewModelTests {
 
