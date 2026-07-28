@@ -7,7 +7,9 @@
 
 /// Handles Checkout mutations requested by an ExpressCheckoutElement.
 @MainActor
-protocol ExpressCheckoutElementDelegate: AnyObject {}
+protocol ExpressCheckoutElementDelegate: AnyObject {
+    // TODO: Add delegate methods for Apple Pay and Link button taps
+}
 
 /// An express checkout element backed by a Checkout Session.
 ///
@@ -21,25 +23,20 @@ public final class ExpressCheckoutElement {
     // MARK: - Public Properties
 
     /// A SwiftUI view that displays the express checkout buttons.
-    public internal(set) var view: ExpressCheckoutElementView
+    public let view: ExpressCheckoutElementView
 
     /// A UIKit view that displays the express checkout buttons.
-    public internal(set) var uiView: ExpressCheckoutElementUIView
-
-    // MARK: - Internal Properties
-
-    private weak var delegate: ExpressCheckoutElementDelegate?
+    public let uiView: ExpressCheckoutElementUIView
 
     // MARK: - Init
 
     init(
-        sessionSource: ExpressCheckoutElementSessionSource,
+        sessionSource: CheckoutSessionSource,
         configuration: Checkout.Configuration,
         delegate: ExpressCheckoutElementDelegate
     ) {
-        self.delegate = delegate
-        let uiView = ExpressCheckoutElementUIView(session: sessionSource.session, configuration: configuration)
-        let viewModel = ExpressCheckoutElementViewModel(sessionSource: sessionSource, uiView: uiView)
+        let uiView = ExpressCheckoutElementUIView(session: sessionSource.initialSession, configuration: configuration, delegate: delegate)
+        let viewModel = ExpressCheckoutElementViewModel(sessionSource: sessionSource, configuration: configuration, uiView: uiView)
         self.uiView = uiView
         self.view = ExpressCheckoutElementView(viewModel: viewModel)
     }

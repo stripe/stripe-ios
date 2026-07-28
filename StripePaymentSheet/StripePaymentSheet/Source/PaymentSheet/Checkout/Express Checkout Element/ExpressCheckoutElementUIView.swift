@@ -13,7 +13,10 @@ import UIKit
 @MainActor
 public final class ExpressCheckoutElementUIView: UIView {
 
-    init(session: Checkout.Session, configuration: Checkout.Configuration) {
+    private weak var delegate: ExpressCheckoutElementDelegate?
+
+    init(session: Checkout.Session, configuration: Checkout.Configuration, delegate: ExpressCheckoutElementDelegate) {
+        self.delegate = delegate
         super.init(frame: .zero)
         // TODO: Render express buttons
     }
@@ -22,14 +25,8 @@ public final class ExpressCheckoutElementUIView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
 
-extension ExpressCheckoutElementUIView {
-    static func expressButtons(
-        from session: Checkout.Session,
-        configuration: Checkout.Configuration
-    ) -> [ExpressButton] {
-        // TODO: Compute from elements session
-        return []
+    func update(with session: Checkout.Session) {
+        // TODO: Re-render express buttons
     }
 }

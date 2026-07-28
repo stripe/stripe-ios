@@ -21,7 +21,7 @@ public struct ExpressCheckoutElementView: View {
 
     public var body: some View {
         if viewModel.isAvailable {
-            ExpressCheckoutElementUIViewRepresentable(uiView: viewModel.uiView)
+            ExpressCheckoutElementUIViewRepresentable(viewModel: viewModel)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -35,25 +35,28 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
 
     private var sessionCancellable: AnyCancellable?
 
-    init(sessionSource: ExpressCheckoutElementSessionSource, uiView: ExpressCheckoutElementUIView) {
+    init(
+        sessionSource: CheckoutSessionSource,
+        configuration: Checkout.Configuration,
+        uiView: ExpressCheckoutElementUIView
+    ) {
         self.uiView = uiView
-        // TODO: Derive from session (e.g. session.isExpressCheckoutElementAvailable)
-        self.isAvailable = true
-        sessionCancellable = sessionSource.$session
+        self.isAvailable = !ExpressCheckoutElementUtilities.resolveButtons(for: sessionSource.initialSession, configuration: configuration).isEmpty
+        sessionCancellable = sessionSource.sessionPublisher
             .dropFirst()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                // TODO: Derive from session (e.g. session.isExpressCheckoutElementAvailable)
-                self?.isAvailable = true
+            .sink { [weak self] session in
+                self?.uiView.update(with: session)
+                self?.isAvailable = !ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration).isEmpty
             }
     }
 }
 
 private struct ExpressCheckoutElementUIViewRepresentable: UIViewRepresentable {
-    let uiView: ExpressCheckoutElementUIView
+    let viewModel: ExpressCheckoutElementViewModel
 
     func makeUIView(context: Context) -> ExpressCheckoutElementUIView {
-        return uiView
+        return viewModel.uiView
     }
 
     func updateUIView(_ uiView: ExpressCheckoutElementUIView, context: Context) {}

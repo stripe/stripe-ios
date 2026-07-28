@@ -1,7 +1,12 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+### CryptoOnramp (Alpha)
+* [Added] Added support for registering wallet addresses on the Tempo network.
+
+### PaymentSheet
+* [Added] Added `billingDetailsCollectionConfiguration` to `LinkConfiguration`, allowing `LinkControllerPreview` consumers to configure billing details collection in the Link sheet (private preview).
 
 ## 26.4.1 2026-07-23
 ### Payments
