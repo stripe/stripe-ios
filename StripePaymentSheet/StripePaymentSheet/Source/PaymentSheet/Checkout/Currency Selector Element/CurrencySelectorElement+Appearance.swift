@@ -1,5 +1,5 @@
 //
-//  Checkout+CurrencySelectorViewAppearance.swift
+//  CurrencySelectorElement+Appearance.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 4/6/26.
@@ -9,8 +9,8 @@ import UIKit
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout.CurrencySelectorView {
-    /// Appearance configuration for ``Checkout.CurrencySelectorView``.
+extension CurrencySelectorElement {
+    /// Appearance configuration for ``CurrencySelectorElement``.
     public struct Appearance {
 
         // MARK: - Dimensions

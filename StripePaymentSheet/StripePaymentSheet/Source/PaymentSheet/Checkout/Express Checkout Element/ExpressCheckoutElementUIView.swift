@@ -19,11 +19,13 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     private let configuration: Checkout.Configuration
     private let stackView = UIStackView()
+    private weak var delegate: ExpressCheckoutElementDelegate?
 
     // MARK: - Init
 
-    init(session: Checkout.Session, configuration: Checkout.Configuration) {
+    init(session: Checkout.Session, configuration: Checkout.Configuration, delegate: ExpressCheckoutElementDelegate) {
         self.configuration = configuration
+        self.delegate = delegate
         super.init(frame: .zero)
 
         // TODO: Appearance
@@ -50,7 +52,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Internal Methods
 
-    func update(session: Checkout.Session) {
+    func update(with session: Checkout.Session) {
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }

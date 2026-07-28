@@ -10,6 +10,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension Checkout: ExpressCheckoutElementDelegate {}
+extension Checkout: CurrencySelectorElementDelegate {}
 
 extension Checkout {
 

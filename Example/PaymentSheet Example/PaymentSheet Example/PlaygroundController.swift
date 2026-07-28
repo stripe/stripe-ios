@@ -592,7 +592,7 @@ import UIKit
     var paymentMethodTypes: [String]?
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
-    var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
+    var currencySelectorAppearance = CurrencySelectorElement.Appearance()
     var currentDataTask: URLSessionDataTask?
 
     var checkoutEndpoint: String {
@@ -940,8 +940,9 @@ extension PlaygroundController {
                 // Load checkout session using Checkout SDK if using CheckoutSession
                 if let checkoutSessionClientSecret = json["checkoutSessionClientSecret"] {
                     do {
-                        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionClientSecret)
+                        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionClientSecret, returnURL: "payments-example://stripe-redirect")
                         checkoutConfiguration.adaptivePricing.allowed = settingsToLoad.csAdaptivePricing == .on
+                        checkoutConfiguration.currencySelectorElement.appearance = self.currencySelectorAppearance
                         self.checkout = try await Checkout(configuration: checkoutConfiguration)
                     } catch {
                         self.checkout = nil

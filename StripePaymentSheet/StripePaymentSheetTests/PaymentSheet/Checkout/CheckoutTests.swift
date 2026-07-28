@@ -18,7 +18,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
     func testLoadCheckoutSession() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
-        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         let checkout = try await Checkout(configuration: configuration)
 
@@ -36,7 +36,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
-        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         let checkout = try await Checkout(configuration: configuration)
 
@@ -61,7 +61,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
-        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         let checkout = try await Checkout(configuration: configuration)
 
@@ -81,7 +81,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
-        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         let checkout = try await Checkout(configuration: configuration)
 
@@ -103,7 +103,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
-        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         let checkout = try await Checkout(configuration: configuration)
 
@@ -122,7 +122,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowAdjustableLineItemQuantity: true
         )
-        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         let checkout = try await Checkout(configuration: configuration)
 
@@ -141,7 +141,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             includeShippingOptions: true
         )
-        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         let checkout = try await Checkout(configuration: configuration)
 
@@ -163,7 +163,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
             collectBillingAddress: true,
             automaticTax: true
         )
-        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         let checkout = try await Checkout(configuration: configuration)
 
@@ -197,7 +197,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
             collectShippingAddress: true,
             automaticTax: true
         )
-        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         let checkout = try await Checkout(configuration: configuration)
 
@@ -241,7 +241,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
             adaptivePricingEnabled: true,
             customerEmailLocation: "DE"
         )
-        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.adaptivePricing.allowed = true
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         let checkout = try await Checkout(configuration: configuration)
