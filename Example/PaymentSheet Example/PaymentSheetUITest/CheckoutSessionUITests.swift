@@ -27,6 +27,22 @@ class CheckoutSessionUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15))
     }
 
+    func testCheckoutSession_Embedded_ReturningCustomer_AutomaticTax_BrokenConstraint() {
+        // Given a Checkout Session using automatic tax with a returning customer
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .embedded
+        settings.integrationType = .checkoutSession
+        settings.customerMode = .returning
+        settings.csAutomaticTax = .on
+        loadPlayground(app, settings)
+
+        // When the embedded element is presented
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+
+        // Then building its payment method forms doesn't break any layout constraints
+        XCTAssertFalse(app.alerts["Broken constraint!"].waitForExistence(timeout: 1))
+    }
+
     // MARK: - FlowController
 
     func testCheckoutSession_FlowController_Card() throws {
