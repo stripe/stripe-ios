@@ -65,7 +65,7 @@ class PaymentPagesAPIResponse: NSObject {
 
     // MARK: - Internal SDK-only fields
 
-    /// The top-level payment status. Unlike `status`, this is never nullable.
+    /// The top-level payment status.
     let paymentStatus: Checkout.PaymentStatus
 
     /// The ID of the PaymentIntent for Checkout Sessions in payment mode.
