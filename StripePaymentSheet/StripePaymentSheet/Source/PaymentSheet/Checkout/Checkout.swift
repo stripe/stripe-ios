@@ -167,26 +167,6 @@ public final class Checkout: ObservableObject {
         try await performUpdate(.setPromotionCode(""))
     }
 
-    // MARK: - Line Items
-
-    /// Updates the quantity of a line item.
-    /// - Parameters:
-    ///   - lineItemId: The line item ID to update.
-    ///   - quantity: The new quantity to set.
-    /// - Throws: ``CheckoutError`` if the update fails.
-    public func updateQuantity(lineItemId: String, quantity: Int) async throws {
-        try await performUpdate(.setLineItemQuantity(lineItemId: lineItemId, quantity: quantity))
-    }
-
-    // MARK: - Shipping
-
-    /// Selects a shipping option for the session.
-    /// - Parameter optionId: The ID of the shipping rate to select.
-    /// - Throws: ``CheckoutError`` if the update fails.
-    public func selectShippingOption(_ optionId: String) async throws {
-        try await performUpdate(.setShippingRate(optionId))
-    }
-
     // MARK: - Payment Option
 
     /// Clears the currently selected payment option.
