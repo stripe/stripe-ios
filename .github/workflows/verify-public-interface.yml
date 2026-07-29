@@ -7,6 +7,8 @@ on:
       - '!StripeFinancialConnections/**'
       - '!StripeIdentity/**'
       - '!StripeConnections/**'
+      - 'ci_scripts/api_diff/**'
+      - '.github/workflows/verify-public-interface.yml'
 
 jobs:
   public-api-check:
@@ -25,6 +27,9 @@ jobs:
 
       - name: Setup Xcode
         run: sudo xcode-select -s /Applications/Xcode_26.4.1.app/Contents/Developer
+
+      - name: Run public-interface diff tests
+        run: ruby ci_scripts/api_diff/test_diff_public_interface.rb
 
       - name: Build frameworks and compare interfaces
         id: build-frameworks-compare-interface

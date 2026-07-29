@@ -73,35 +73,56 @@ def write_output(path, content)
   File.write(path, content)
 end
 
-final_diff_string = +''
-severity = NO_SEVERITY
-
-GetFrameworks.framework_names('./modules.yaml').each do |framework_name|
-  public_interface_dir = "#{framework_name}.framework/Modules/#{framework_name}.swiftmodule"
-  simulator_slice = 'ios-arm64_x86_64-simulator'
-
-  master_public_interface_path = "#{framework_name}-master.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.swiftinterface"
-  branch_public_interface_path = "#{framework_name}-new.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.swiftinterface"
-  public_diff_lines = sorted_diff_lines(master_public_interface_path, branch_public_interface_path)
-
-  master_private_interface_path = "#{framework_name}-master.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.private.swiftinterface"
-  branch_private_interface_path = "#{framework_name}-new.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.private.swiftinterface"
-  spi_diff_lines = sorted_diff_lines(master_private_interface_path, branch_private_interface_path).select do |line|
-    line.include?('@_spi(') && non_ignored_spi_line?(line)
-  end
-
-  if has_non_additive_changes?(public_diff_lines)
-    severity = PUBLIC_SEVERITY
-  elsif has_non_additive_changes?(spi_diff_lines) && severity == NO_SEVERITY
-    severity = SPI_SEVERITY
-  end
-
-  final_diff_string << render_module_diff(framework_name, public_diff_lines, spi_diff_lines)
+# Returns true when a diff line's content (without the leading +/-) is generated
+# interface metadata or a non-exported import that carries no public API surface.
+# @_exported import lines are excluded because removing a re-export can break callers.
+def non_api_noise_line?(prefixed_line)
+  content = prefixed_line[1..]
+  return true if content =~ /\A\/\/ swift-/
+  return true if content =~ /\A@preconcurrency import /
+  return true if content =~ /\Aimport /
+  false
 end
 
-write_output(SEVERITY_OUTPUT_PATH, severity)
-if final_diff_string.empty?
-  File.delete(DIFF_OUTPUT_PATH) if File.exist?(DIFF_OUTPUT_PATH)
-else
-  write_output(DIFF_OUTPUT_PATH, final_diff_string)
+# Removes non-API noise lines from a public-interface diff list so that generated
+# metadata and ordinary imports do not inflate severity or appear in PR comments.
+def filter_non_api_lines(diff_lines)
+  diff_lines.reject { |line| non_api_noise_line?(line) }
 end
+
+def run
+  final_diff_string = +''
+  severity = NO_SEVERITY
+
+  GetFrameworks.framework_names('./modules.yaml').each do |framework_name|
+    public_interface_dir = "#{framework_name}.framework/Modules/#{framework_name}.swiftmodule"
+    simulator_slice = 'ios-arm64_x86_64-simulator'
+
+    master_public_interface_path = "#{framework_name}-master.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.swiftinterface"
+    branch_public_interface_path = "#{framework_name}-new.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.swiftinterface"
+    public_diff_lines = filter_non_api_lines(sorted_diff_lines(master_public_interface_path, branch_public_interface_path))
+
+    master_private_interface_path = "#{framework_name}-master.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.private.swiftinterface"
+    branch_private_interface_path = "#{framework_name}-new.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.private.swiftinterface"
+    spi_diff_lines = sorted_diff_lines(master_private_interface_path, branch_private_interface_path).select do |line|
+      line.include?('@_spi(') && non_ignored_spi_line?(line)
+    end
+
+    if has_non_additive_changes?(public_diff_lines)
+      severity = PUBLIC_SEVERITY
+    elsif has_non_additive_changes?(spi_diff_lines) && severity == NO_SEVERITY
+      severity = SPI_SEVERITY
+    end
+
+    final_diff_string << render_module_diff(framework_name, public_diff_lines, spi_diff_lines)
+  end
+
+  write_output(SEVERITY_OUTPUT_PATH, severity)
+  if final_diff_string.empty?
+    File.delete(DIFF_OUTPUT_PATH) if File.exist?(DIFF_OUTPUT_PATH)
+  else
+    write_output(DIFF_OUTPUT_PATH, final_diff_string)
+  end
+end
+
+run if $PROGRAM_NAME == __FILE__
