@@ -210,10 +210,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
             return .scan(
                 .init(
                     state: .blank,
-                    instructionalText: SelfieCaptureViewController.initialInstructionText,
-                    havingTroubleHandler: { [weak self] in
-                        self?.sheetController?.transitionToFallbackUrl()
-                    }
+                    instructionalText: SelfieCaptureViewController.initialInstructionText
                 )
             )
         case .scanning(_, let scanningState):
@@ -230,10 +227,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                         captureGuideTarget: captureGuideTarget(for: scanningState.phase),
                         captureGuideProgress: currentCaptureGuideProgress
                     ),
-                    instructionalText: instructionalText(for: scanningState),
-                    havingTroubleHandler: { [weak self] in
-                        self?.sheetController?.transitionToFallbackUrl()
-                    }
+                    instructionalText: instructionalText(for: scanningState)
                 )
             )
         case .scanned(_, let faceCaptureData):

@@ -23,7 +23,6 @@ final class SelfieScanningView: UIView {
             IdentityUI.instructionsFont
         }
         static let preferredPreviewHeightToWidthRatio: CGFloat = 4 / 3
-        static let troubleLinkTopPadding: CGFloat = 12
         static let captureGuideShadowFadeInDuration: TimeInterval = 0.6
         static let livePreviewBlurFadeInDuration: TimeInterval = 0.3
         static let livePreviewBlurFadeOutDuration: TimeInterval = 0.6
@@ -58,10 +57,6 @@ final class SelfieScanningView: UIView {
                 ]
             )
         }
-        static var troubleLinkFont: UIFont {
-            IdentityUI.preferredFont(forTextStyle: .body).withSize(12)
-        }
-
         static let scannedImageSize = CGSize(width: 172, height: 172)
         static let scannedImageSpacing: CGFloat = 12
         static let scannedImageScrollIndicatorMargin: CGFloat = 8
@@ -309,16 +304,13 @@ final class SelfieScanningView: UIView {
 
         let state: State
         let instructionalText: String
-        let havingTroubleHandler: (() -> Void)?
 
         init(
             state: State,
-            instructionalText: String,
-            havingTroubleHandler: (() -> Void)? = nil
+            instructionalText: String
         ) {
             self.state = state
             self.instructionalText = instructionalText
-            self.havingTroubleHandler = havingTroubleHandler
         }
 
         var instructionalLabelViewModel: BottomAlignedLabel.ViewModel {
@@ -353,20 +345,6 @@ final class SelfieScanningView: UIView {
         cornerRadius: .viewfinder,
         shadowStyle: .viewfinder
     )
-
-    private lazy var havingTroubleLabel: UILabel = {
-        let label = UILabel()
-        label.adjustsFontForContentSizeCategory = true
-        label.isAccessibilityElement = true
-        label.accessibilityTraits = .link
-        label.isUserInteractionEnabled = true
-        label.isHidden = true
-        label.addGestureRecognizer(UITapGestureRecognizer(
-            target: self,
-            action: #selector(didTapHavingTrouble)
-        ))
-        return label
-    }()
 
     private let trailingTurnPromptArrowLabel: UILabel = {
         let label = UILabel()
@@ -552,9 +530,6 @@ final class SelfieScanningView: UIView {
     /// Called when the user taps on retake selfie button
     private var retakeSelfieHandler: (() -> Void)?
 
-    /// Called when the user taps on the "Having Trouble?" link
-    private var havingTroubleHandler: (() -> Void)?
-
     // MARK: Init
 
     init() {
@@ -575,7 +550,6 @@ final class SelfieScanningView: UIView {
     func configure(with viewModel: ViewModel, sheetController: VerificationSheetControllerProtocol?) {
 
         instructionLabelView.configure(from: viewModel.instructionalLabelViewModel)
-        havingTroubleHandler = viewModel.havingTroubleHandler
 
         let isCurrentlyShowingScanned = !scannedImageScrollView.isHidden
 
@@ -587,7 +561,6 @@ final class SelfieScanningView: UIView {
         captureTickMarksView.isHidden = true
         statusActivityIndicatorView.stopAnimating()
         previewContainerView.isHidden = true
-        havingTroubleLabel.isHidden = true
         scannedImageScrollView.isHidden = true
 
         switch viewModel.state {
@@ -599,7 +572,6 @@ final class SelfieScanningView: UIView {
             retakeSelfieStack.isHidden = true
             captureTickMarksView.setShowsCenteredShadow(false, animated: false)
             previewContainerView.isHidden = false
-            havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
 
         case .videoPreview(
             let cameraSession,
@@ -614,7 +586,6 @@ final class SelfieScanningView: UIView {
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
             previewContainerView.isHidden = false
-            havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
             let shouldBlurLivePreview = shouldBlurLivePreview(
@@ -838,7 +809,6 @@ final class SelfieScanningView: UIView {
             self.consentCheckboxButton.theme = Styling.consentCheckboxTheme(
                 tintColor: self.tintColor
             )
-            self.configureHavingTroubleLabel()
             // Re-apply in case Reduce Transparency was toggled while visible
             self.applyPreviewBlurEffect(visible: self.isPreviewBlurVisible)
         }
@@ -855,7 +825,6 @@ extension SelfieScanningView {
 
         vStack.addArrangedSubview(instructionLabelView)
         vStack.addArrangedSubview(previewContainerView)
-        vStack.addArrangedSubview(havingTroubleLabel)
         vStack.addArrangedSubview(scannedImageScrollView)
         vStack.addArrangedSubview(retakeSelfieStack)
         vStack.addArrangedSubview(consentCheckboxButton)
@@ -897,8 +866,6 @@ extension SelfieScanningView {
             Styling.consentTopPadding - Styling.scannedImageScrollIndicatorMargin,
             after: scannedImageScrollView
         )
-        vStack.setCustomSpacing(Styling.troubleLinkTopPadding, after: previewContainerView)
-        configureHavingTroubleLabel()
 
         NSLayoutConstraint.activate([
             previewContainerView.widthAnchor.constraint(
@@ -923,10 +890,6 @@ extension SelfieScanningView {
             widthAnchor.constraint(
                 equalTo: consentCheckboxButton.widthAnchor,
                 constant: Styling.contentInsets.leading + Styling.contentInsets.trailing
-            ),
-            havingTroubleLabel.widthAnchor.constraint(
-                lessThanOrEqualTo: widthAnchor,
-                constant: -(Styling.contentInsets.leading + Styling.contentInsets.trailing)
             ),
 
             // Make scroll view's content full-height
@@ -1030,20 +993,6 @@ extension SelfieScanningView {
         label.layer.removeAnimation(forKey: turnPromptArrowAnimationKey)
     }
 
-    fileprivate func configureHavingTroubleLabel() {
-        havingTroubleLabel.attributedText = NSAttributedString(
-            string: STPLocalizedString(
-                "Having Trouble?",
-                "Link text displayed under the selfie viewfinder"
-            ),
-            attributes: [
-                .font: Styling.troubleLinkFont,
-                .foregroundColor: IdentityUI.secondaryLabelColor,
-                .underlineStyle: NSUnderlineStyle.single.rawValue,
-            ]
-        )
-    }
-
     fileprivate func rebuildImageHStack(with images: [UIImage]) {
         // Remove old image views
         scannedImageHStack.subviews.forEach { $0.removeFromSuperview() }
@@ -1082,10 +1031,6 @@ extension SelfieScanningView {
 
     @objc fileprivate func didTapRetakeSelfie() {
         retakeSelfieHandler?()
-    }
-
-    @objc fileprivate func didTapHavingTrouble() {
-        havingTroubleHandler?()
     }
 }
 

@@ -190,17 +190,6 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
         XCTAssert(analytic: analytic, hasMetadata: "camera_event_kind", withValue: "runtime_error")
     }
 
-    func testHavingTroubleTransitionsToFallbackUrl() {
-        let vc = makeViewController()
-
-        guard case .scan(let viewModel) = vc.selfieCaptureViewModel else {
-            return XCTFail("Expected selfie capture view model to be in scan state")
-        }
-        viewModel.havingTroubleHandler?()
-
-        XCTAssertTrue(mockSheetController.transitionedToFallbackUrl)
-    }
-
     func testAutoCaptureStatesDoNotShowBottomButton() {
         XCTAssertTrue(
             makeViewController(initialState: .initial).buttonViewModels.isEmpty

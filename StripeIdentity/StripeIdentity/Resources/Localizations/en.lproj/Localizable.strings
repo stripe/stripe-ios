@@ -130,9 +130,6 @@
 /* Status text displayed over the blurred selfie while checking uploaded selfie images */
 "Great! Checking your images...." = "Great! Checking your images....";
 
-/* Link text displayed under the selfie viewfinder */
-"Having Trouble?" = "Having Trouble?";
-
 /* Title for the optional training consent section on the selfie warmup page */
 "Help us improve verifications" = "Help us improve verifications";
 
