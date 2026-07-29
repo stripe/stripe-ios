@@ -54,7 +54,7 @@ class PaymentPagesAPIResponse: NSObject {
     /// Available shipping options for this session.
     let shippingOptions: [Checkout.ShippingOption]
 
-    /// Status of the session (status type + payment status). `nullable` per the Checkout Session API.
+    /// Status of the session (status type + payment status).
     let status: Checkout.Status?
 
     /// Tax computation status and aggregate tax amounts.
