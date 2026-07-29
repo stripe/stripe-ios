@@ -41,28 +41,31 @@ final class SuccessViewController: IdentityFlowViewController {
             sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
         }
 
+        var flowViewModel = IdentityFlowView.ViewModel(
+            headerViewModel: .init(
+                backgroundColor: .systemBackground,
+                headerType: .banner(
+                    iconViewModel: .init(
+                        iconType: .plain,
+                        iconImage: Image.iconClock.makeImage(template: true),
+                        iconImageContentMode: .center,
+                        iconTintColor: .white,
+                        shouldIconBackgroundMatchTintColor: true,
+                        useLargeIcon: true
+                    )
+                ),
+                titleText: successContent.title
+            ),
+            contentView: htmlView,
+            buttonText: successContent.buttonText,
+            didTapButton: { [weak self] in
+                self?.didTapButton()
+            }
+        )
+        flowViewModel.flowViewDelegate = self
         configure(
             backButtonTitle: nil,
-            viewModel: .init(
-                headerViewModel: .init(
-                    backgroundColor: .systemBackground,
-                    headerType: .banner(
-                        iconViewModel: .init(
-                            iconType: .plain,
-                            iconImage: Image.iconClock.makeImage(template: true),
-                            iconImageContentMode: .center,
-                            iconTintColor: .white,
-                            shouldIconBackgroundMatchTintColor: true
-                        )
-                    ),
-                    titleText: successContent.title
-                ),
-                contentView: htmlView,
-                buttonText: successContent.buttonText,
-                didTapButton: { [weak self] in
-                    self?.didTapButton()
-                }
-            )
+            viewModel: flowViewModel
         )
     }
 
@@ -76,5 +79,20 @@ final class SuccessViewController: IdentityFlowViewController {
 extension SuccessViewController {
     fileprivate func didTapButton() {
         dismiss(animated: true, completion: nil)
+    }
+}
+
+extension SuccessViewController: IdentityFlowViewDelegate {
+    func scrollViewFullyLaiedOut(_ scrollView: UIScrollView) {
+        let availableHeight = scrollView.bounds.height - scrollView.adjustedContentInset.bottom
+        let centeredTopInset = max(0, (availableHeight - scrollView.contentSize.height) / 2)
+
+        guard scrollView.contentInset.top != centeredTopInset else {
+            return
+        }
+
+        scrollView.contentInset.top = centeredTopInset
+        scrollView.verticalScrollIndicatorInsets.top = centeredTopInset
+        scrollView.contentOffset.y = -scrollView.adjustedContentInset.top
     }
 }
