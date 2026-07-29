@@ -27,8 +27,8 @@ extension Checkout.Session {
         return shouldSendTaxRegion(for: "billing")
     }
 
-    /// Whether confirmation follows setup-style semantics.
-    var isSetupStyle: Bool {
+    /// Whether this session's `payment_status` is `no_payment_required`.
+    var noPaymentRequired: Bool {
         return paymentStatus == .noPaymentRequired
     }
 }
@@ -45,7 +45,7 @@ extension Checkout.Session {
 
     /// Returns the expected amount for payment-style sessions and `nil` for setup-style sessions.
     func expectedAmount() -> Int? {
-        guard !isSetupStyle else { return nil }
+        guard !noPaymentRequired else { return nil }
         guard let total = total?.total.minorUnitsAmount else {
             stpAssertionFailure("Missing expected amount from checkout session")
             return nil
@@ -58,7 +58,7 @@ extension Checkout.Session {
             return false
         }
 
-        if isSetupStyle {
+        if noPaymentRequired {
             return true
         }
 

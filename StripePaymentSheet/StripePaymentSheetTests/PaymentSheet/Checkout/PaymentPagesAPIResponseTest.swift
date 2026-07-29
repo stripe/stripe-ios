@@ -226,18 +226,18 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "total_summary": ["subtotal": 2345, "total": 2345, "due": 2345],
         ]).makePublicSession()
 
-        XCTAssertFalse(session.isSetupStyle)
+        XCTAssertFalse(session.noPaymentRequired)
         XCTAssertEqual(session.expectedAmount(), 2345)
     }
 
-    func testModelessSetupStyleSessionHasNoExpectedAmount() {
+    func testModelessNoPaymentRequiredSessionHasNoExpectedAmount() {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
             "payment_status": "no_payment_required",
             "total_summary": ["subtotal": 0, "total": 0, "due": 0],
         ]).makePublicSession()
 
-        XCTAssertTrue(session.isSetupStyle)
+        XCTAssertTrue(session.noPaymentRequired)
         XCTAssertNil(session.expectedAmount())
     }
 

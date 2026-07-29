@@ -46,7 +46,7 @@ enum Intent {
                 return false
             }
         case .checkout(let session):
-            return !session.isSetupStyle
+            return !session.noPaymentRequired
         }
     }
 
@@ -137,7 +137,7 @@ enum Intent {
             }
             return nil
         case .checkout(let session):
-            return session.isSetupStyle ? nil : session.setupFutureUsage
+            return session.noPaymentRequired ? nil : session.setupFutureUsage
         case .setupIntent:
             return nil
         }
@@ -181,7 +181,7 @@ enum Intent {
                 return true
             }
         case .checkout(let session):
-            guard !session.isSetupStyle else { return true }
+            guard !session.noPaymentRequired else { return true }
             guard let setupFutureUsage = session.setupFutureUsage(for: paymentMethodType) else {
                 return false
             }

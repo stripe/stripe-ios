@@ -54,7 +54,7 @@ class PaymentPagesAPIResponse: NSObject {
     /// Available shipping options for this session.
     let shippingOptions: [Checkout.ShippingOption]
 
-    /// Status of the session (status type + payment status).
+    /// Status of the session (status type + payment status). `nullable` per the Checkout Session API.
     let status: Checkout.Status?
 
     /// Tax computation status and aggregate tax amounts.
@@ -65,7 +65,7 @@ class PaymentPagesAPIResponse: NSObject {
 
     // MARK: - Internal SDK-only fields
 
-    /// The top-level payment status, which is present even when `status` is omitted.
+    /// The top-level payment status. Unlike `status`, this is never nullable.
     let paymentStatus: Checkout.PaymentStatus
 
     /// The ID of the PaymentIntent for Checkout Sessions in payment mode.
