@@ -321,8 +321,8 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testTotalTaxExclusive_singleAmount() {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["line_item_group"] = [
-            "tax_amounts": [
+        json["recurring_details"] = [
+            "total_tax_amounts": [
                 [
                     "amount": 1185,
                     "inclusive": false,
@@ -346,8 +346,8 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testTotalTaxExclusive_multipleAmounts() {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["line_item_group"] = [
-            "tax_amounts": [
+        json["recurring_details"] = [
+            "total_tax_amounts": [
                 [
                     "amount": 500,
                     "inclusive": false,
@@ -411,8 +411,8 @@ final class CheckoutUnitTests: XCTestCase {
         var json = CheckoutTestHelpers.openSessionJSON
         json["billing_address_collection"] = "required"
         json["shipping_address_collection"] = ["allowed_countries": ["US", "CA", "GB"]]
-        json["line_item_group"] = [
-            "tax_amounts": [
+        json["recurring_details"] = [
+            "total_tax_amounts": [
                 [
                     "amount": 1000,
                     "inclusive": false,

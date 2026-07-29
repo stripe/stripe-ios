@@ -491,21 +491,16 @@ extension PaymentPagesAPIResponse {
     // MARK: Line Items
 
     static func parseLineItems(from dict: [AnyHashable: Any], defaultCurrency: String?) -> [Checkout.LineItem] {
-        if let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any],
-           let lineItems = lineItemGroup["line_items"] as? [[AnyHashable: Any]] {
-            return lineItems.compactMap { parseLineItem(from: $0, defaultCurrency: defaultCurrency) }
-        }
-
         guard let checkoutItems = dict["checkout_items"] as? [[AnyHashable: Any]] else {
             return []
         }
         return checkoutItems.compactMap {
-            parseCheckoutItem(from: $0, defaultCurrency: defaultCurrency)
+            parseLineItem(from: $0, defaultCurrency: defaultCurrency)
         }
     }
 
-    /// Parses the one-time price item shape used by modeless Checkout Sessions.
-    private static func parseCheckoutItem(
+    /// Parses the one-time price item shape used by `checkout_items`.
+    private static func parseLineItem(
         from dict: [AnyHashable: Any],
         defaultCurrency: String?
     ) -> Checkout.LineItem? {
@@ -547,56 +542,6 @@ extension PaymentPagesAPIResponse {
         )
     }
 
-    private static func parseLineItem(from dict: [AnyHashable: Any], defaultCurrency: String?) -> Checkout.LineItem? {
-        guard let id = dict["id"] as? String,
-              let quantity = dict["quantity"] as? Int,
-              let name = dict["name"] as? String else {
-            return nil
-        }
-        let price = dict["price"] as? [AnyHashable: Any]
-        let currency = (price?["currency"] as? String) ?? defaultCurrency
-
-        let unitAmount: Checkout.Amount? = (price?["unit_amount"] as? Int).map {
-            makeAmount($0, currency: currency)
-        }
-        let unitAmountDecimal = parseDecimalAmount(
-            price?["unit_amount_decimal"] as? String,
-            currency: currency
-        )
-        let subtotal = makeOptionalAmount(dict["subtotal"], currency: currency)
-        let discount = makeOptionalAmount(dict["discount"], currency: currency)
-        let taxExclusive = makeOptionalAmount(dict["tax_exclusive"], currency: currency)
-        let taxInclusive = makeOptionalAmount(dict["tax_inclusive"], currency: currency)
-        let total = makeOptionalAmount(dict["total"], currency: currency)
-        let lineDiscountAmounts = parseLineDiscountAmounts(
-            from: dict["discount_amounts"] as? [[AnyHashable: Any]] ?? [],
-            currency: currency
-        )
-        let lineTaxAmounts = parseLineTaxAmounts(
-            from: dict["tax_amounts"] as? [[AnyHashable: Any]] ?? [],
-            currency: currency
-        )
-        let adjustableQuantity = parseAdjustableQuantity(from: dict["adjustable_quantity"] as? [AnyHashable: Any])
-
-        return Checkout.LineItem(
-            id: id,
-            name: name,
-            description: dict["description"] as? String,
-            images: dict["images"] as? [String] ?? [],
-            quantity: quantity,
-            unitAmount: unitAmount,
-            unitAmountDecimal: unitAmountDecimal,
-            subtotal: subtotal,
-            discount: discount,
-            taxExclusive: taxExclusive,
-            taxInclusive: taxInclusive,
-            total: total,
-            discountAmounts: lineDiscountAmounts,
-            taxAmounts: lineTaxAmounts,
-            adjustableQuantity: adjustableQuantity
-        )
-    }
-
     private static func parseDecimalAmount(_ value: String?, currency: String?) -> Checkout.DecimalAmount? {
         guard let value, let decimal = Decimal(string: value) else { return nil }
         let intValue = NSDecimalNumber(decimal: decimal).intValue
@@ -604,18 +549,6 @@ extension PaymentPagesAPIResponse {
             amount: makeAmount(intValue, currency: currency).amount,
             minorUnitsAmount: decimal
         )
-    }
-
-    private static func makeOptionalAmount(_ value: Any?, currency: String?) -> Checkout.Amount? {
-        guard let amount = value as? Int else { return nil }
-        return makeAmount(amount, currency: currency)
-    }
-
-    private static func parseAdjustableQuantity(from dict: [AnyHashable: Any]?) -> Checkout.AdjustableQuantity? {
-        guard let dict,
-              let minimum = dict["minimum"] as? Int,
-              let maximum = dict["maximum"] as? Int else { return nil }
-        return Checkout.AdjustableQuantity(minimum: minimum, maximum: maximum)
     }
 
     // MARK: Shipping Options / Selected Shipping
@@ -628,8 +561,7 @@ extension PaymentPagesAPIResponse {
     }
 
     static func parseSelectedShippingAmount(from dict: [AnyHashable: Any]) -> Int {
-        if let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any],
-           let shippingRate = lineItemGroup["shipping_rate"] as? [AnyHashable: Any],
+        if let shippingRate = dict["shipping_rate"] as? [AnyHashable: Any],
            let amount = shippingRate["amount"] as? Int {
             return amount
         }
@@ -641,8 +573,7 @@ extension PaymentPagesAPIResponse {
         shippingOptions: [Checkout.ShippingOption],
         currency: String?
     ) -> Checkout.SelectedShipping? {
-        guard let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any],
-              let shippingRate = lineItemGroup["shipping_rate"] as? [AnyHashable: Any],
+        guard let shippingRate = dict["shipping_rate"] as? [AnyHashable: Any],
               let id = shippingRate["id"] as? String else {
             return nil
         }
@@ -651,7 +582,7 @@ extension PaymentPagesAPIResponse {
         guard let option = resolvedOption else { return nil }
 
         let taxAmounts = parseLineTaxAmounts(
-            from: lineItemGroup["shipping_tax_amounts"] as? [[AnyHashable: Any]] ?? [],
+            from: dict["shipping_tax_amounts"] as? [[AnyHashable: Any]] ?? [],
             currency: currency
         )
         return Checkout.SelectedShipping(shippingOption: option, taxAmounts: taxAmounts)
@@ -701,27 +632,19 @@ extension PaymentPagesAPIResponse {
         return Checkout.DeliveryEstimate.Bound(unit: unit, value: value)
     }
 
-    /// Reads an aggregate array from the classic line-item group or the modeless recurring
-    /// details container. Despite its name, `recurring_details` also contains one-time modeless
-    /// order totals.
+    /// Reads an aggregate array from `recurring_details`. Despite its name, `recurring_details`
+    /// also contains one-time order totals.
     private static func aggregateArray(
         from dict: [AnyHashable: Any],
-        lineItemGroupKey: String,
         recurringDetailsKey: String
     ) -> [[AnyHashable: Any]] {
-        (dict["line_item_group"] as? [AnyHashable: Any])?[lineItemGroupKey] as? [[AnyHashable: Any]]
-            ?? (dict["recurring_details"] as? [AnyHashable: Any])?[recurringDetailsKey] as? [[AnyHashable: Any]]
-            ?? []
+        (dict["recurring_details"] as? [AnyHashable: Any])?[recurringDetailsKey] as? [[AnyHashable: Any]] ?? []
     }
 
     // MARK: Discounts
 
     static func parseDiscountAmounts(from dict: [AnyHashable: Any], currency: String?) -> [Checkout.DiscountAmount] {
-        let discountAmounts = aggregateArray(
-            from: dict,
-            lineItemGroupKey: "discount_amounts",
-            recurringDetailsKey: "total_discount_amounts"
-        )
+        let discountAmounts = aggregateArray(from: dict, recurringDetailsKey: "total_discount_amounts")
         return discountAmounts.compactMap { discount in
             parseDiscountAmount(from: discount, currency: currency)
         }
@@ -746,24 +669,13 @@ extension PaymentPagesAPIResponse {
         )
     }
 
-    private static func parseLineDiscountAmounts(
-        from array: [[AnyHashable: Any]],
-        currency: String?
-    ) -> [Checkout.DiscountAmount] {
-        return array.compactMap { parseDiscountAmount(from: $0, currency: currency) }
-    }
-
     // MARK: Tax Amounts
 
     private static func parseSessionTaxAmounts(
         from dict: [AnyHashable: Any],
         currency: String?
     ) -> [Checkout.TaxAmount] {
-        let taxAmounts = aggregateArray(
-            from: dict,
-            lineItemGroupKey: "tax_amounts",
-            recurringDetailsKey: "total_tax_amounts"
-        )
+        let taxAmounts = aggregateArray(from: dict, recurringDetailsKey: "total_tax_amounts")
         return parseLineTaxAmounts(from: taxAmounts, currency: currency)
     }
 

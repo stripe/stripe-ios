@@ -20,8 +20,8 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
     func testParseDiscountWithCouponAndPromotionCode() {
         let dict: [AnyHashable: Any] = [
             "currency": "usd",
-            "line_item_group": [
-                "discount_amounts": [
+            "recurring_details": [
+                "total_discount_amounts": [
                     [
                         "amount": 500,
                         "coupon": [
@@ -51,8 +51,8 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
     func testParseDiscountWithCouponOnly() {
         let dict: [AnyHashable: Any] = [
             "currency": "usd",
-            "line_item_group": [
-                "discount_amounts": [
+            "recurring_details": [
+                "total_discount_amounts": [
                     [
                         "amount": 1000,
                         "coupon": [
@@ -78,8 +78,8 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
 
     func testZeroAmountDiscountIsFiltered() {
         let dict: [AnyHashable: Any] = [
-            "line_item_group": [
-                "discount_amounts": [
+            "recurring_details": [
+                "total_discount_amounts": [
                     [
                         "amount": 0,
                         "coupon": [
@@ -99,8 +99,8 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
 
     func testEmptyDiscountAmountsArray() {
         let dict: [AnyHashable: Any] = [
-            "line_item_group": [
-                "discount_amounts": [] as [[AnyHashable: Any]],
+            "recurring_details": [
+                "total_discount_amounts": [] as [[AnyHashable: Any]],
             ],
         ]
 
@@ -108,9 +108,9 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         XCTAssertTrue(discounts.isEmpty)
     }
 
-    // MARK: - Missing line_item_group key
+    // MARK: - Missing recurring_details key
 
-    func testMissingLineItemGroup() {
+    func testMissingRecurringDetails() {
         let dict: [AnyHashable: Any] = [
             "session_id": "cs_test_123",
         ]
@@ -124,8 +124,8 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
     func testMultipleDiscounts() {
         let dict: [AnyHashable: Any] = [
             "currency": "usd",
-            "line_item_group": [
-                "discount_amounts": [
+            "recurring_details": [
+                "total_discount_amounts": [
                     [
                         "amount": 500,
                         "coupon": [
@@ -166,8 +166,8 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
     func testZeroAmountFilteredFromMultipleDiscounts() {
         let dict: [AnyHashable: Any] = [
             "currency": "usd",
-            "line_item_group": [
-                "discount_amounts": [
+            "recurring_details": [
+                "total_discount_amounts": [
                     [
                         "amount": 0,
                         "coupon": [
@@ -197,8 +197,8 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
     func testDiscountWithNoCoupon() {
         let dict: [AnyHashable: Any] = [
             "currency": "usd",
-            "line_item_group": [
-                "discount_amounts": [
+            "recurring_details": [
+                "total_discount_amounts": [
                     [
                         "amount": 100,
                     ] as [String: Any],
@@ -216,8 +216,8 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
     func testCouponWithoutNameFallsBackToId() {
         let dict: [AnyHashable: Any] = [
             "currency": "usd",
-            "line_item_group": [
-                "discount_amounts": [
+            "recurring_details": [
+                "total_discount_amounts": [
                     [
                         "amount": 250,
                         "coupon": [

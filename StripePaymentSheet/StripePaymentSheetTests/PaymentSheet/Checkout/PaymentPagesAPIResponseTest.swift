@@ -304,9 +304,10 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testTotalsWithTaxFromTaxAmounts() {
         let session = CheckoutTestHelpers.makeSession([
+            "mode": "modeless",
             "total_summary": ["due": 2186, "subtotal": 2000, "total": 2186],
-            "line_item_group": [
-                "tax_amounts": [
+            "recurring_details": [
+                "total_tax_amounts": [
                     ["amount": 186, "inclusive": false, "taxable_amount": 2000,
                      "tax_rate": ["percentage": 7.45, "display_name": "Sales Tax"], ],
                 ],
