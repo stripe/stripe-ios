@@ -236,6 +236,82 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.total?.total.minorUnitsAmount, 5542)
     }
 
+    func testLoadUnifiedModeCheckoutSession() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionUnifiedMode(
+            merchantCountry: "us_tax"
+        )
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
+
+        let session = checkout.session
+        XCTAssertEqual(session.id, checkoutSessionResponse.id)
+        XCTAssertEqual(session.status?.type, .open)
+        XCTAssertFalse(session.isSetupStyle)
+        XCTAssertEqual(session.total?.total.minorUnitsAmount, 2000)
+        XCTAssertEqual(session.expectedAmount(), 2000)
+        XCTAssertEqual(session.lineItems.count, 1)
+        XCTAssertEqual(session.lineItems.first?.quantity, 1)
+        XCTAssertEqual(session.lineItems.first?.unitAmount?.minorUnitsAmount, 2000)
+    }
+
+    func testUpdateShippingAddressUnifiedMode() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionUnifiedMode(
+            merchantCountry: "us_tax",
+            additionalParameters: [
+                "checkout_items": [
+                    [
+                        "type": "one_time_price_item",
+                        "one_time_price_item": [
+                            "price": "price_1TxraFK8p6Sx2i8aHUda5nwK",
+                            "quantity": 1,
+                        ],
+                    ],
+                ],
+                "automatic_tax": ["enabled": true],
+                "shipping_address_collection": ["allowed_countries": ["US"]],
+            ]
+        )
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
+
+        XCTAssertEqual(checkout.session.total?.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(checkout.session.total?.total.minorUnitsAmount, 2000)
+        XCTAssertNil(checkout.session.tax.taxAmounts)
+
+        try await checkout.updateShippingAddress(
+            name: "John Smith",
+            address: .init(
+                country: "US",
+                line1: "456 Oak Ave",
+                city: "Los Angeles",
+                state: "CA",
+                postalCode: "90001"
+            )
+        )
+
+        XCTAssertEqual(checkout.session.total?.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(checkout.session.total?.total.minorUnitsAmount, 2195)
+        XCTAssertEqual(checkout.session.tax.taxAmounts?.count, 1)
+        XCTAssertEqual(checkout.session.tax.taxAmounts?.first?.amount.minorUnitsAmount, 195)
+    }
+
+    func testAdaptivePricingActiveForUnifiedModeCheckoutSession() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionUnifiedMode(
+            merchantCountry: "us_tax",
+            customerEmailLocation: "FR"
+        )
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        configuration.adaptivePricing.allowed = true
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
+
+        XCTAssertEqual(checkout.session.currency, "eur")
+        XCTAssertTrue(checkout.session.adaptivePricingActive)
+        XCTAssertNotNil(checkout.session.exchangeRateMeta)
+    }
+
     func testSelectCurrency() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             adaptivePricingEnabled: true,

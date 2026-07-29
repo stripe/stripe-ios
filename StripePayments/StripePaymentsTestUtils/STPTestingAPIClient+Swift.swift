@@ -356,6 +356,32 @@ extension STPTestingAPIClient {
         return try await makeRequest(endpoint: "create_checkout_session_setup", params: params)
     }
 
+    /// Creates a unified (modeless) Checkout Session backed by `checkout_items`.
+    func fetchCheckoutSessionUnifiedMode(
+        types: [String] = ["card"],
+        currency: String = "usd",
+        amount: Int? = nil,
+        merchantCountry: String? = "us",
+        customerID: String? = nil,
+        customerEmailLocation: String? = nil,
+        additionalParameters: [String: Any] = [:]
+    ) async throws -> CreateCheckoutSessionResponse {
+        var additionalParameters = additionalParameters
+        if let customerEmailLocation {
+            additionalParameters["customer_email"] = "test+location_\(customerEmailLocation)@example.com"
+        }
+
+        let params: [String: Any?] = [
+            "account": merchantCountry,
+            "payment_method_types": types,
+            "currency": currency,
+            "amount": amount,
+            "customer": customerID,
+            "additional_parameters": additionalParameters.isEmpty ? nil : additionalParameters,
+        ]
+        return try await makeRequest(endpoint: "create_checkout_session_unified", params: params)
+    }
+
     // MARK: - Helpers
 
     fileprivate func makeRequest<ResponseType: Decodable>(
