@@ -54,6 +54,15 @@ extension Checkout {
         /// Configuration for PaymentElement.
         public var paymentElement: PaymentElement.Configuration = .init()
 
+        /// Configuration for ExpressCheckoutElement.
+        public var expressCheckoutElement: ExpressCheckoutElement.Configuration = .init()
+
+        /// Apple Pay configuration.
+        public var applePayConfiguration: ApplePayConfiguration?
+
+        /// Link configuration.
+        public var linkConfiguration: LinkConfiguration?
+
         /// Configuration for the Adaptive Pricing currency selector returned by
         /// ``Checkout.getCurrencySelectorElement()``.
         public var currencySelectorElement: CurrencySelectorElement.Configuration = .init()

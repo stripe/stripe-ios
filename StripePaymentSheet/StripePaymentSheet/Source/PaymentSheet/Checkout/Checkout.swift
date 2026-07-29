@@ -59,6 +59,9 @@ public final class Checkout: ObservableObject {
     /// The PaymentElement for this Checkout instance.
     private(set) var paymentElement: PaymentElement!
 
+    /// The ExpressCheckoutElement for this Checkout instance.
+    private var expressCheckoutElement: ExpressCheckoutElement?
+
     /// The CurrencySelectorElement for this Checkout instance, when Adaptive Pricing is available.
     private var currencySelectorElement: CurrencySelectorElement?
 
@@ -136,12 +139,15 @@ public final class Checkout: ObservableObject {
 
             // Load elements
             self.paymentElement = try await PaymentElement(checkout: self)
+            let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
+            self.expressCheckoutElement = ExpressCheckoutElement(
+                sessionSource: sessionSource,
+                configuration: configuration,
+                delegate: self
+            )
             if configuration.adaptivePricing.allowed {
                 self.currencySelectorElement = await CurrencySelectorElement(
-                    sessionSource: CheckoutSessionSource(
-                        initialSession: session,
-                        sessionPublisher: $session
-                    ),
+                    sessionSource: sessionSource,
                     configuration: configuration.currencySelectorElement,
                     delegate: self
                 )
@@ -294,6 +300,11 @@ public final class Checkout: ObservableObject {
     /// Returns the PaymentElement for this Checkout instance.
     public func getPaymentElement() -> PaymentElement {
         return paymentElement
+    }
+
+    /// Returns the ExpressCheckoutElement for this Checkout instance.
+    public func getExpressCheckoutElement() -> ExpressCheckoutElement? {
+        return expressCheckoutElement
     }
 
     /// Returns the CurrencySelectorElement when Adaptive Pricing is available for this Checkout instance.
