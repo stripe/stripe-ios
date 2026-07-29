@@ -72,6 +72,36 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 
+    @MainActor
+    func testHorizontalFlowControllerDefaultsToLinkWalletButtonWhenLinkIsCustomerDefault() {
+        // Given Link is the customer's default payment option
+        let customerID = "cus_test_horizontal_link_default"
+        defer {
+            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
+        }
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customerID)
+
+        // When horizontal FlowController is initialized with Link shown in the wallet header
+        let sut = makeHorizontalFlowController(customerID: customerID)
+
+        // Then Link is selected as the payment option
+        XCTAssertEqual(sut.paymentOption?.label, "Link")
+        XCTAssertEqual(sut.paymentOption?.paymentMethodType, "link")
+    }
+
+    @MainActor
+    func testHorizontalFlowControllerDoesNotDefaultToLinkWalletButtonWithoutLinkCustomerDefault() {
+        // Given Link is not the customer's default payment option
+        let customerID = "cus_test_horizontal_no_link_default"
+        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
+
+        // When horizontal FlowController is initialized with Link shown in the wallet header
+        let sut = makeHorizontalFlowController(customerID: customerID)
+
+        // Then there is no selected payment option
+        XCTAssertNil(sut.paymentOption)
+    }
+
     // MARK: - PaymentOptionDisplayData Labels Tests
 
     func testPaymentOptionDisplayData_CardLabels() {
@@ -505,5 +535,25 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
         // ...confirmParams billing wins over the saved PM's billing.
         XCTAssertEqual(option.checkoutBillingDetails?.address?.country, "CA")
+    }
+
+    @MainActor
+    private func makeHorizontalFlowController(customerID: String) -> PaymentSheet.FlowController {
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .horizontal
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: customerID, ephemeralKeySecret: "")
+        configuration.applePay = nil
+        return PaymentSheet.FlowController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
     }
 }
