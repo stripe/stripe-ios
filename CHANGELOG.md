@@ -15,11 +15,14 @@ MINOR
 
 ### PaymentSheet
 * [Fixed] Fixed SwiftUI `EmbeddedPaymentElement` presentation in multi-scene apps.
+* [Fixed] FlowController now defaults to Link when it was the last selected payment option even when it is displayed as a wallet button instead of in the list of payment methods.
 
 ## 26.4.0 2026-07-20
 ### StripeCore
 * [Added] `STPAPIClient.betas` is now public, allowing merchants to opt in to beta features that require a preview flag on the `Stripe-Version` header.
 
+### StripeConnect
+* [Fixed] Fixed `AccountOnboardingControllerDelegate.accountOnboardingDidExit(_:)` not being called on the first automatic dismissal after onboarding completion.
 ### PaymentSheet
 * [Changed] Refactored `LinkController` SetupIntent confirmation into a separate `confirmSetupIntent` step (private preview).
 

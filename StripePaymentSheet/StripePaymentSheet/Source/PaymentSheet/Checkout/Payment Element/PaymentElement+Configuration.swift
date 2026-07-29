@@ -128,10 +128,12 @@ extension PaymentElement {
 
         func makeEmbeddedConfiguration(
             apiClient: STPAPIClient,
-            defaults: Checkout.Configuration.Defaults
+            defaults: Checkout.Configuration.Defaults,
+            merchantDisplayName: String
         ) -> EmbeddedPaymentElement.Configuration {
             var configuration = embeddedConfiguration
             configuration.apiClient = apiClient
+            configuration.merchantDisplayName = merchantDisplayName
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
@@ -141,10 +143,12 @@ extension PaymentElement {
 
         func makePaymentSheetConfiguration(
             apiClient: STPAPIClient,
-            defaults: Checkout.Configuration.Defaults
+            defaults: Checkout.Configuration.Defaults,
+            merchantDisplayName: String
         ) -> PaymentSheet.Configuration {
             var configuration = paymentSheetConfiguration
             configuration.apiClient = apiClient
+            configuration.merchantDisplayName = merchantDisplayName
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
