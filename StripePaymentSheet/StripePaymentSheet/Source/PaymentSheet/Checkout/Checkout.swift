@@ -136,20 +136,15 @@ public final class Checkout: ObservableObject {
 
             // Load elements
             self.paymentElement = try await PaymentElement(checkout: self)
+            let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
             self.expressCheckoutElement = ExpressCheckoutElement(
-                sessionSource: CheckoutSessionSource(
-                    initialSession: session,
-                    sessionPublisher: $session
-                ),
+                sessionSource: sessionSource,
                 configuration: configuration,
                 delegate: self
             )
             if configuration.adaptivePricing.allowed {
                 self.currencySelectorElement = await CurrencySelectorElement(
-                    sessionSource: CheckoutSessionSource(
-                        initialSession: session,
-                        sessionPublisher: $session
-                    ),
+                    sessionSource: sessionSource,
                     configuration: configuration.currencySelectorElement,
                     delegate: self
                 )
