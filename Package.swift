@@ -175,7 +175,7 @@ let package = Package(
         ),
         .target(
             name: "StripeFinancialConnections",
-            dependencies: ["StripeCore", "StripeUICore"],
+            dependencies: ["StripeCore", "StripeUICore", "StripeFinancialConnectionsLite"],
             path: "StripeFinancialConnections/StripeFinancialConnections",
             exclude: ["Info.plist"],
             resources: [
