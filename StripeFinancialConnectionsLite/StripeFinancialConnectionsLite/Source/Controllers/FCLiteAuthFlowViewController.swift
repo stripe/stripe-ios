@@ -15,6 +15,7 @@ class FCLiteAuthFlowViewController: UIViewController {
     private let manifest: LinkAccountSessionManifest
     private let elementsSessionContext: ElementsSessionContext?
     private let returnUrl: URL?
+    private let prefillDetails: WebPrefillDetails?
     private let onLoad: () -> Void
     private let completion: ((FCLiteWebFlowResult) -> Void)
 
@@ -26,7 +27,8 @@ class FCLiteAuthFlowViewController: UIViewController {
             baseHostedAuthUrl: manifest.hostedAuthURL,
             isInstantDebits: manifest.isInstantDebits,
             hasExistingAccountholderToken: manifest.hasAccountholderToken,
-            elementsSessionContext: elementsSessionContext
+            elementsSessionContext: elementsSessionContext,
+            prefillDetailsOverride: prefillDetails
         )
     }
 
@@ -34,6 +36,7 @@ class FCLiteAuthFlowViewController: UIViewController {
         manifest: LinkAccountSessionManifest,
         elementsSessionContext: ElementsSessionContext?,
         returnUrl: URL?,
+        prefillDetails: WebPrefillDetails?,
         onLoad: @escaping () -> Void,
         completion: @escaping ((FCLiteWebFlowResult) -> Void)
     ) {
@@ -41,6 +44,7 @@ class FCLiteAuthFlowViewController: UIViewController {
         self.manifest = manifest
         self.elementsSessionContext = elementsSessionContext
         self.returnUrl = returnUrl
+        self.prefillDetails = prefillDetails
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
     }
