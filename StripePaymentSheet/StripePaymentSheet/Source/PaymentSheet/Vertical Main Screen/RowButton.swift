@@ -214,7 +214,7 @@ class RowButton: UIView, EventHandler {
             loadingIndicator.startAnimating()
         }
 
-        let animations = { [weak self] in
+        let updates = { [weak self] in
             guard let self else { return }
             loadingIndicator.alpha = loading ? 1 : 0
             imageView.alpha = loading ? 0 : keyContentAlpha
@@ -226,7 +226,7 @@ class RowButton: UIView, EventHandler {
         }
 
         guard animated else {
-            animations()
+            updates()
             completion(true)
             return
         }
@@ -234,7 +234,7 @@ class RowButton: UIView, EventHandler {
             withDuration: 0.2,
             delay: 0,
             options: .beginFromCurrentState,
-            animations: animations,
+            animations: updates,
             completion: completion
         )
     }

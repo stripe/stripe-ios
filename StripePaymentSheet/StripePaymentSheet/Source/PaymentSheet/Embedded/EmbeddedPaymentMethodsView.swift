@@ -348,7 +348,6 @@ class EmbeddedPaymentMethodsView: UIView {
 
     // MARK: Tap handling
     func didTap(rowButton: RowButton) {
-        guard isUserInteractionEnabled else { return }
         setError(nil)
         delegate?.embeddedPaymentMethodsViewWillSelect(rowButton.type)
         self.selectedRowButton = rowButton

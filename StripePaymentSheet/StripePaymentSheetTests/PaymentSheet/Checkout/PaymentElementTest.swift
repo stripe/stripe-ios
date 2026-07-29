@@ -391,10 +391,9 @@ final class PaymentElementTest: XCTestCase {
             sessionId: "cs_test_123",
             requestRecorder: requestRecorder,
             sessionJSON: { sessionJSON },
-            updateStatusCode: {
+            updateStatusCode: { updateRequestNumber in
                 // Checkout syncs the initially selected card during setup. Only fail the re-selection.
-                let updateCount = requestRecorder.requests.filter { $0.kind == .updateSession }.count
-                return updateCount == 1 ? 200 : updateStatusCode
+                return updateRequestNumber == 1 ? 200 : updateStatusCode
             }
         )
 
