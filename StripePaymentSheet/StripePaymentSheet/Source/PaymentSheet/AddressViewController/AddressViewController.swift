@@ -366,7 +366,7 @@ extension AddressViewController {
     private func presentDiscardChangesAlert() {
         let alertController = UIAlertController(
             title: String.Localized.discard_changes_title,
-            message: nil,
+            message: String.Localized.discard_changes_message,
             preferredStyle: .alert
         )
         alertController.addAction(UIAlertAction(title: String.Localized.keep_editing, style: .cancel))

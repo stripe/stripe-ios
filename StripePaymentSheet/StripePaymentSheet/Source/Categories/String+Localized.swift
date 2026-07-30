@@ -697,6 +697,13 @@ extension String.Localized {
         )
     }
 
+    static var discard_changes_message: String {
+        STPLocalizedString(
+            "Your address changes won't be saved.",
+            "Message of a confirmation alert warning the customer that closing the address form will discard their unsaved changes."
+        )
+    }
+
     static var discard_changes: String {
         STPLocalizedString(
             "Discard Changes",
