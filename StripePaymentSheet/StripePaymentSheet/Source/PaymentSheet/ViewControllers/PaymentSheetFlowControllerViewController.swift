@@ -138,6 +138,20 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         return button
     }()
 
+#if DEBUG
+    var _testSavedPaymentOptionsViewController: SavedPaymentOptionsViewController {
+        return savedPaymentOptionsViewController
+    }
+
+    var _testConfirmButton: ConfirmButton {
+        return confirmButton
+    }
+
+    var _testErrorLabel: UILabel {
+        return errorLabel
+    }
+#endif
+
     private var callToAction: ConfirmButton.CallToActionType {
         if let customCtaLabel = configuration.primaryButtonLabel {
             switch mode {
@@ -429,7 +443,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         )
 
         // Error
-        errorLabel.text = error?.localizedDescription
+        errorLabel.text = error?.nonGenericDescription
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
@@ -551,31 +565,18 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return
         }
-
-        view.endEditing(true)
-        error = nil
-        confirmButton.update(status: .processing, animated: true)
-        setUserInteraction(enabled: false)
-
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            do {
-                try await checkout.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
-            } catch {
-                self.error = error
-            }
-            self.setUserInteraction(enabled: true)
-            self.updateButton()
-
-            if let error = self.error {
-                self.errorLabel.text = error.nonGenericDescription
-                UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-                    self.errorLabel.setHiddenIfNecessary(false)
-                }
-            } else {
-                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
-            }
+        guard checkout.requiresBillingAddressSync(from: paymentOption.checkoutBillingDetails) else {
+            error = nil
+            updateUI()
+            flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            return
         }
+
+        syncCheckoutBillingThenClose(
+            checkout: checkout,
+            billingDetails: paymentOption.checkoutBillingDetails,
+            ui: .confirmButton
+        )
     }
 
     /// Enables or disables all interaction with the sheet, including drag/tap-to-dismiss.
@@ -623,6 +624,14 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         case sheetNavigationBarDidBack
     }
 
+    private enum CheckoutBillingSyncUI {
+        case confirmButton
+        case savedPaymentMethod(
+            selection: SavedPaymentOptionsViewController.Selection,
+            previousSelection: SavedPaymentOptionsViewController.SelectionSnapshot
+        )
+    }
+
     func didUpdate(_ viewController: SavedPaymentOptionsViewController) {
         // no-op
     }
@@ -648,7 +657,8 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
-        paymentMethodSelection: SavedPaymentOptionsViewController.Selection
+        paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
+        previousSelection: SavedPaymentOptionsViewController.SelectionSnapshot
     ) {
         analyticsHelper.logSavedPMScreenOptionSelected(option: paymentMethodSelection)
         guard case Mode.selectingSaved = mode else {
@@ -664,11 +674,93 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             mode = .addingNew
             error = nil // Clear any errors
             updateUI()
-        case .applePay, .link, .saved:
-            updateUI()
-            if isDismissable, !(selectedPaymentMethodType?.requiresMandateDisplayForSavedSelection ?? false) {
+        case .saved(let paymentMethod):
+            error = nil
+            guard isDismissable,
+                  !(selectedPaymentMethodType?.requiresMandateDisplayForSavedSelection ?? false) else {
+                updateUI()
+                return
+            }
+            if let checkout,
+               checkout.requiresBillingAddressSync(from: paymentMethod.billingDetails) {
+                syncCheckoutBillingThenClose(
+                    checkout: checkout,
+                    billingDetails: paymentMethod.billingDetails,
+                    ui: .savedPaymentMethod(
+                        selection: paymentMethodSelection,
+                        previousSelection: previousSelection
+                    )
+                )
+            } else {
+                updateUI()
                 flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
+        case .applePay, .link:
+            error = nil
+            updateUI()
+            if isDismissable {
+                flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            }
+        }
+    }
+
+    /// Syncs Checkout billing and closes the sheet, using the commit point's loading UI.
+    /// A saved-method tap is provisional and restores its previous state if the sync fails.
+    private func syncCheckoutBillingThenClose(
+        checkout: Checkout,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        ui: CheckoutBillingSyncUI
+    ) {
+        view.endEditing(true)
+        error = nil
+        updateUI()
+        setCheckoutBillingSyncInProgress(true, ui: ui)
+
+        Task { @MainActor [weak self] in
+            guard let self else {
+                return
+            }
+            do {
+                try await checkout.syncBillingAddress(from: billingDetails)
+            } catch {
+                self.error = error
+                if case .savedPaymentMethod(_, let previousSelection) = ui {
+                    self.savedPaymentOptionsViewController.restoreSelection(previousSelection)
+                }
+                self.setCheckoutBillingSyncInProgress(false, ui: ui)
+                return
+            }
+
+            if case .savedPaymentMethod(let selection, _) = ui {
+                self.savedPaymentOptionsViewController.showSuccess(for: selection)
+                try? await Task.sleep(nanoseconds: 450_000_000)
+            }
+            self.setCheckoutBillingSyncInProgress(false, ui: ui)
+            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(
+                self,
+                didCancel: false
+            )
+        }
+    }
+
+    private func setCheckoutBillingSyncInProgress(
+        _ inProgress: Bool,
+        ui: CheckoutBillingSyncUI
+    ) {
+        if inProgress {
+            setUserInteraction(enabled: false)
+        }
+        switch ui {
+        case .confirmButton:
+            if inProgress {
+                confirmButton.update(status: .processing, animated: true)
+            }
+        case .savedPaymentMethod(let selection, _):
+            savedPaymentOptionsViewController.setLoading(inProgress, for: selection)
+        }
+        if !inProgress {
+            setUserInteraction(enabled: true)
+            updateUI()
         }
     }
 

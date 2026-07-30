@@ -167,6 +167,342 @@ final class SavedPaymentMethodBillingSyncTests: APIStubbedTestCase {
         )
     }
 
+    // MARK: Horizontal FlowController
+
+    func testHorizontalSavedCell_loadingUsesSelectionIndicatorAndShowsSuccess() {
+        // Given
+        let paymentMethod = makeSavedPaymentMethod(id: "pm_saved", country: "US")
+        let cell = SavedPaymentMethodCollectionView.PaymentOptionCell(
+            frame: CGRect(x: 0, y: 0, width: 100, height: 64)
+        )
+        cell.setViewModel(
+            .saved(paymentMethod: paymentMethod),
+            cbcEligible: false,
+            allowsPaymentMethodRemoval: true,
+            allowsPaymentMethodUpdate: true
+        )
+
+        // When
+        cell.setLoading(true)
+
+        // Then
+        XCTAssertEqual(cell.paymentMethodLogo.alpha, 1)
+        XCTAssertFalse(cell.selectedIcon.isHidden)
+        XCTAssertEqual(cell.selectedIcon.imageView.alpha, 0)
+        XCTAssertEqual(activityIndicatorCount(in: cell.selectableRectangle), 0)
+        XCTAssertEqual(activityIndicatorCount(in: cell.selectedIcon), 1)
+        XCTAssertEqual(activityIndicator(in: cell.selectedIcon)?.alpha, 1)
+
+        // When
+        cell.showSuccess()
+
+        // Then
+        XCTAssertEqual(cell.selectedIcon.imageView.alpha, 1)
+        // When
+        cell.setLoading(false)
+
+        // Then
+        XCTAssertEqual(cell.paymentMethodLogo.alpha, 1)
+        XCTAssertEqual(activityIndicator(in: cell.selectedIcon)?.isAnimating, false)
+    }
+
+    func testHorizontalSavedSelection_withoutCTA_syncsBeforeClosing() async throws {
+        // Given
+        let checkout = try await makeCheckout(automaticTaxEnabled: true)
+        let updateRequest = stubCheckoutUpdate(checkout: checkout)
+        let firstPaymentMethod = makeSavedPaymentMethod(id: "pm_first", country: "US")
+        let secondPaymentMethod = makeSavedPaymentMethod(id: "pm_second", country: "CA")
+        CustomerPaymentOption.setDefaultPaymentMethod(
+            .stripeId(firstPaymentMethod.stripeId),
+            forCustomer: nil
+        )
+        let delegate = MockFlowControllerViewControllerDelegate()
+        let sut = makeHorizontalController(
+            checkout: checkout,
+            paymentMethods: [firstPaymentMethod, secondPaymentMethod]
+        )
+        sut.flowControllerDelegate = delegate
+        sut.loadViewIfNeeded()
+        let savedOptions = sut._testSavedPaymentOptionsViewController
+        savedOptions.loadViewIfNeeded()
+        sut.view.autosizeHeight(width: 375)
+        let selectedCell = try XCTUnwrap(
+            savedOptions._testCollectionView.cellForItem(at: IndexPath(item: 2, section: 0))
+                as? SavedPaymentMethodCollectionView.PaymentOptionCell
+        )
+
+        // When
+        savedOptions.collectionView(
+            savedOptions._testCollectionView,
+            didSelectItemAt: IndexPath(item: 2, section: 0)
+        )
+
+        // Then
+        XCTAssertFalse(sut.isDismissable)
+        XCTAssertEqual(selectedCell.paymentMethodLogo.alpha, 0.6, accuracy: 0.001)
+        XCTAssertEqual(selectedCell.selectedIcon.imageView.alpha, 0)
+        XCTAssertEqual(activityIndicatorCount(in: selectedCell.selectableRectangle), 0)
+        XCTAssertEqual(activityIndicatorCount(in: selectedCell.selectedIcon), 1)
+        XCTAssertEqual(delegate.closeCount, 0)
+        await fulfillment(of: [updateRequest], timeout: 5)
+        try await waitUntil {
+            selectedCell.selectedIcon.imageView.alpha == 1
+                && activityIndicator(in: selectedCell.selectedIcon)?.isAnimating == false
+        }
+        XCTAssertEqual(delegate.closeCount, 0)
+        await fulfillment(of: [delegate.closed], timeout: 5)
+        XCTAssertEqual(delegate.closeCount, 1)
+        XCTAssertFalse(delegate.didCancel)
+        XCTAssertTrue(sut.isDismissable)
+        XCTAssertTrue(sut.view.isUserInteractionEnabled)
+        XCTAssertEqual(selectedCell.paymentMethodLogo.alpha, 1)
+        XCTAssertEqual(activityIndicator(in: selectedCell.selectedIcon)?.isAnimating, false)
+    }
+
+    func testHorizontalSavedSelection_syncFails_restoresSelectionAndShowsError() async throws {
+        // Given
+        let checkout = try await makeCheckout(automaticTaxEnabled: true)
+        let updateRequest = stubCheckoutUpdate(checkout: checkout, statusCode: 500)
+        let firstPaymentMethod = makeSavedPaymentMethod(id: "pm_first", country: "US")
+        let secondPaymentMethod = makeSavedPaymentMethod(id: "pm_second", country: "CA")
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: nil)
+        let delegate = MockFlowControllerViewControllerDelegate()
+        let sut = makeHorizontalController(
+            checkout: checkout,
+            paymentMethods: [firstPaymentMethod, secondPaymentMethod]
+        )
+        sut.flowControllerDelegate = delegate
+        sut.loadViewIfNeeded()
+        let savedOptions = sut._testSavedPaymentOptionsViewController
+        savedOptions.loadViewIfNeeded()
+        sut.view.autosizeHeight(width: 375)
+        let selectedCell = try XCTUnwrap(
+            savedOptions._testCollectionView.cellForItem(at: IndexPath(item: 2, section: 0))
+                as? SavedPaymentMethodCollectionView.PaymentOptionCell
+        )
+
+        // When
+        savedOptions.collectionView(
+            savedOptions._testCollectionView,
+            didSelectItemAt: IndexPath(item: 2, section: 0)
+        )
+        await fulfillment(of: [updateRequest], timeout: 5)
+        try await waitUntil { sut.isDismissable }
+
+        // Then
+        XCTAssertEqual(
+            sut.selectedPaymentOption?.savedPaymentMethod?.stripeId,
+            firstPaymentMethod.stripeId
+        )
+        XCTAssertEqual(
+            CustomerPaymentOption.localDefaultPaymentMethod(for: nil),
+            .link
+        )
+        XCTAssertFalse(sut._testErrorLabel.isHidden)
+        XCTAssertEqual(sut._testErrorLabel.text, "Tax update failed")
+        XCTAssertEqual(selectedCell.paymentMethodLogo.alpha, 1)
+        XCTAssertEqual(activityIndicator(in: selectedCell.selectedIcon)?.isAnimating, false)
+        XCTAssertEqual(delegate.closeCount, 0)
+    }
+
+    func testHorizontalSavedSelection_withCTA_defersSyncUntilContinue() async throws {
+        // Given
+        let checkout = try await makeCheckout(automaticTaxEnabled: true)
+        let requestRecorder = CheckoutSessionRequestRecorder()
+        let updateRequest = stubCheckoutUpdate(
+            checkout: checkout,
+            requestRecorder: requestRecorder
+        )
+        let firstPaymentMethod = makeSavedPaymentMethod(id: "pm_first", country: "US")
+        let sepaPaymentMethod = makeSavedPaymentMethod(
+            id: "pm_sepa",
+            country: "CA",
+            type: "sepa_debit"
+        )
+        CustomerPaymentOption.setDefaultPaymentMethod(
+            .stripeId(firstPaymentMethod.stripeId),
+            forCustomer: nil
+        )
+        let delegate = MockFlowControllerViewControllerDelegate()
+        let sut = makeHorizontalController(
+            checkout: checkout,
+            paymentMethods: [firstPaymentMethod, sepaPaymentMethod]
+        )
+        sut.flowControllerDelegate = delegate
+        sut.loadViewIfNeeded()
+        let savedOptions = sut._testSavedPaymentOptionsViewController
+        savedOptions.loadViewIfNeeded()
+        sut.view.autosizeHeight(width: 375)
+        let selectedCell = try XCTUnwrap(
+            savedOptions._testCollectionView.cellForItem(at: IndexPath(item: 2, section: 0))
+                as? SavedPaymentMethodCollectionView.PaymentOptionCell
+        )
+
+        // When selecting the saved payment method
+        savedOptions.collectionView(
+            savedOptions._testCollectionView,
+            didSelectItemAt: IndexPath(item: 2, section: 0)
+        )
+
+        // Then no sync or dismissal happens until the CTA is tapped
+        try await Task.sleep(nanoseconds: 50_000_000)
+        XCTAssertEqual(requestRecorder.requests.count, 0)
+        XCTAssertTrue(sut.isDismissable)
+        XCTAssertEqual(selectedCell.paymentMethodLogo.alpha, 1)
+        XCTAssertEqual(activityIndicator(in: selectedCell.selectedIcon)?.isAnimating, false)
+        XCTAssertEqual(delegate.closeCount, 0)
+
+        // When tapping Continue
+        sut._testConfirmButton.sendActions(for: .touchUpInside)
+
+        // Then the CTA owns the loading state and closes after syncing
+        guard case .processing = sut._testConfirmButton.status else {
+            return XCTFail("Expected the Continue button to be processing")
+        }
+        XCTAssertFalse(sut.isDismissable)
+        await fulfillment(of: [updateRequest, delegate.closed], timeout: 5)
+        XCTAssertEqual(requestRecorder.requests.count, 1)
+        XCTAssertEqual(delegate.closeCount, 1)
+        XCTAssertTrue(sut.isDismissable)
+        XCTAssertTrue(sut.view.isUserInteractionEnabled)
+        guard case .enabled = sut._testConfirmButton.status else {
+            return XCTFail("Expected the Continue button to reset before re-presentation")
+        }
+    }
+
+    func testHorizontalSavedSelection_withCTA_withoutRequiredSync_closesSynchronously() async throws {
+        // Given
+        let checkout = try await makeCheckout(automaticTaxEnabled: false)
+        let firstPaymentMethod = makeSavedPaymentMethod(id: "pm_first", country: "US")
+        let sepaPaymentMethod = makeSavedPaymentMethod(
+            id: "pm_sepa",
+            country: "CA",
+            type: "sepa_debit"
+        )
+        let delegate = MockFlowControllerViewControllerDelegate()
+        let sut = makeHorizontalController(
+            checkout: checkout,
+            paymentMethods: [firstPaymentMethod, sepaPaymentMethod]
+        )
+        sut.flowControllerDelegate = delegate
+        sut.loadViewIfNeeded()
+        let savedOptions = sut._testSavedPaymentOptionsViewController
+        savedOptions.loadViewIfNeeded()
+        savedOptions.collectionView(
+            savedOptions._testCollectionView,
+            didSelectItemAt: IndexPath(item: 2, section: 0)
+        )
+
+        // When
+        sut._testConfirmButton.sendActions(for: .touchUpInside)
+
+        // Then
+        XCTAssertEqual(delegate.closeCount, 1)
+        XCTAssertTrue(sut.isDismissable)
+        XCTAssertTrue(sut.view.isUserInteractionEnabled)
+        guard case .enabled = sut._testConfirmButton.status else {
+            return XCTFail("Expected the Continue button to remain enabled")
+        }
+    }
+
+    func testHorizontalSavedSelection_withCTA_syncFails_remainsSelectedAndRetryable() async throws {
+        // Given
+        let checkout = try await makeCheckout(automaticTaxEnabled: true)
+        let requestRecorder = CheckoutSessionRequestRecorder()
+        let updateRequests = expectation(description: "Checkout tax region updates")
+        updateRequests.expectedFulfillmentCount = 2
+        var responseJSON = CheckoutTestHelpers.openSessionJSON
+        responseJSON["tax_context"] = [
+            "automatic_tax_enabled": true,
+            "automatic_tax_address_source": "session.billing",
+        ]
+        stub { request in
+            request.httpMethod == "POST"
+                && request.url?.path == "/v1/payment_pages/\(checkout.session.id)"
+                && RequestBodyTestHelpers.formEncodedBodyParams(from: request)[
+                    "tax_region[country]"
+                ] != nil
+        } response: { _ in
+            requestRecorder.append(
+                CheckoutSessionRequest(kind: .updateSession, params: [:])
+            )
+            updateRequests.fulfill()
+            if requestRecorder.requests.count == 1 {
+                return HTTPStubsResponse(
+                    jsonObject: [
+                        "error": [
+                            "type": "card_error",
+                            "message": "Tax update failed",
+                        ],
+                    ],
+                    statusCode: 500,
+                    headers: nil
+                )
+            }
+            return HTTPStubsResponse(
+                jsonObject: responseJSON,
+                statusCode: 200,
+                headers: nil
+            )
+        }
+        let firstPaymentMethod = makeSavedPaymentMethod(id: "pm_first", country: "US")
+        let sepaPaymentMethod = makeSavedPaymentMethod(
+            id: "pm_sepa",
+            country: "CA",
+            type: "sepa_debit"
+        )
+        CustomerPaymentOption.setDefaultPaymentMethod(
+            .stripeId(firstPaymentMethod.stripeId),
+            forCustomer: nil
+        )
+        let delegate = MockFlowControllerViewControllerDelegate()
+        let sut = makeHorizontalController(
+            checkout: checkout,
+            paymentMethods: [firstPaymentMethod, sepaPaymentMethod]
+        )
+        sut.flowControllerDelegate = delegate
+        sut.loadViewIfNeeded()
+        let savedOptions = sut._testSavedPaymentOptionsViewController
+        savedOptions.loadViewIfNeeded()
+        savedOptions.collectionView(
+            savedOptions._testCollectionView,
+            didSelectItemAt: IndexPath(item: 2, section: 0)
+        )
+
+        // When
+        sut._testConfirmButton.sendActions(for: .touchUpInside)
+        try await waitUntil {
+            requestRecorder.requests.count == 1 && sut.isDismissable
+        }
+
+        // Then
+        XCTAssertEqual(
+            sut.selectedPaymentOption?.savedPaymentMethod?.stripeId,
+            sepaPaymentMethod.stripeId
+        )
+        XCTAssertFalse(sut._testErrorLabel.isHidden)
+        XCTAssertEqual(sut._testErrorLabel.text, "Tax update failed")
+        XCTAssertEqual(delegate.closeCount, 0)
+        guard case .enabled = sut._testConfirmButton.status else {
+            return XCTFail("Expected the Continue button to be retryable")
+        }
+
+        // When retrying
+        sut._testConfirmButton.sendActions(for: .touchUpInside)
+
+        // Then
+        XCTAssertTrue(sut._testErrorLabel.isHidden)
+        await fulfillment(of: [updateRequests, delegate.closed], timeout: 5)
+        XCTAssertEqual(requestRecorder.requests.count, 2)
+        XCTAssertEqual(delegate.closeCount, 1)
+        XCTAssertTrue(sut.isDismissable)
+        XCTAssertTrue(sut.view.isUserInteractionEnabled)
+        XCTAssertTrue(sut._testErrorLabel.isHidden)
+        guard case .enabled = sut._testConfirmButton.status else {
+            return XCTFail("Expected the Continue button to reset after retry success")
+        }
+    }
+
     // MARK: Saved payment method updates
 
     func testSavedPaymentMethodManager_checkoutUpdate_commitsSessionAndSyncsEditedBilling() async throws {
@@ -439,6 +775,29 @@ private extension SavedPaymentMethodBillingSyncTests {
         await fulfillment(of: [delegate.completed], timeout: 5)
     }
 
+    func makeHorizontalController(
+        checkout: Checkout,
+        paymentMethods: [STPPaymentMethod]
+    ) -> PaymentSheetFlowControllerViewController {
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: .checkout(checkout.session),
+            elementsSession: ._testValue(
+                paymentMethodTypes: ["card", "sepa_debit"],
+                isLinkPassthroughModeEnabled: false
+            ),
+            savedPaymentMethods: paymentMethods,
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .horizontal
+        )
+        return PaymentSheetFlowControllerViewController(
+            configuration: PaymentSheet.Configuration(),
+            loadResult: loadResult,
+            analyticsHelper: ._testValue(),
+            checkout: checkout
+        )
+    }
+
     func makeSavedPaymentMethodManager(checkout: Checkout) -> SavedPaymentMethodManager {
         return SavedPaymentMethodManager(
             configuration: PaymentSheet.Configuration(),
@@ -517,6 +876,11 @@ private extension SavedPaymentMethodBillingSyncTests {
             try await Task.sleep(nanoseconds: 10_000_000)
         }
     }
+
+    func activityIndicatorCount(in view: UIView) -> Int {
+        return view.subviews.compactMap { $0 as? ActivityIndicator }.count
+    }
+
     func activityIndicator(in view: UIView) -> ActivityIndicator? {
         return view.subviews.first { $0 is ActivityIndicator } as? ActivityIndicator
     }
@@ -540,5 +904,23 @@ private final class MockVerticalSavedPaymentMethodsDelegate:
         completionCount += 1
         self.selectedPaymentMethod = selectedPaymentMethod
         completed.fulfill()
+    }
+}
+
+@MainActor
+private final class MockFlowControllerViewControllerDelegate:
+    FlowControllerViewControllerDelegate
+{
+    let closed = XCTestExpectation(description: "FlowController closed")
+    private(set) var closeCount = 0
+    private(set) var didCancel = false
+
+    func flowControllerViewControllerShouldClose(
+        _ PaymentSheetFlowControllerViewController: FlowControllerViewControllerProtocol,
+        didCancel: Bool
+    ) {
+        closeCount += 1
+        self.didCancel = didCancel
+        closed.fulfill()
     }
 }

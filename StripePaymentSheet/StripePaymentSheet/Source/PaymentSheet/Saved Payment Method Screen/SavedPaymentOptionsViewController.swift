@@ -17,7 +17,8 @@ protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: SavedPaymentOptionsViewController)
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
-        paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
+        paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
+        previousSelection: SavedPaymentOptionsViewController.SelectionSnapshot)
     func didSelectRemove(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
@@ -94,6 +95,12 @@ class SavedPaymentOptionsViewController: UIViewController {
                 return "link"
             }
         }
+    }
+
+    /// The visible and persisted selection state immediately before a customer selection.
+    struct SelectionSnapshot {
+        fileprivate let selection: Selection?
+        fileprivate let persistedPaymentOption: CustomerPaymentOption?
     }
 
     struct Configuration {
@@ -258,6 +265,18 @@ class SavedPaymentOptionsViewController: UIViewController {
 
         return IndexPath(item: index, section: 0)
     }
+
+    private var selectionSnapshot: SelectionSnapshot {
+        let selection = selectedViewModelIndex.flatMap {
+            viewModels.stp_boundSafeObject(at: $0)
+        }
+        return SelectionSnapshot(
+            selection: selection,
+            persistedPaymentOption: CustomerPaymentOption.localDefaultPaymentMethod(
+                for: configuration.customerID
+            )
+        )
+    }
     private lazy var cvcFormElement: PaymentMethodElement = {
         return makeElement()
     }()
@@ -295,6 +314,12 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.dataSource = self
         return collectionView
     }()
+
+#if DEBUG
+    var _testCollectionView: SavedPaymentMethodCollectionView {
+        return collectionView
+    }
+#endif
 
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [collectionView, cvcRecollectionContainerView, sepaMandateView])
@@ -486,6 +511,38 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.reloadItems(at: [selectedIndexPath])
     }
 
+    /// Shows or hides loading UI on the cell representing `selection`.
+    func setLoading(
+        _ loading: Bool,
+        for selection: Selection
+    ) {
+        cell(for: selection)?.setLoading(loading)
+    }
+
+    /// Transitions the spinner to a checkmark after a successful saved-method sync.
+    func showSuccess(for selection: Selection) {
+        cell(for: selection)?.showSuccess()
+    }
+
+    func restoreSelection(_ snapshot: SelectionSnapshot) {
+        if let selectedIndexPath {
+            collectionView.deselectItem(at: selectedIndexPath, animated: true)
+        }
+        CustomerPaymentOption.setDefaultPaymentMethod(
+            snapshot.persistedPaymentOption,
+            forCustomer: configuration.customerID
+        )
+        if let selection = snapshot.selection,
+           let index = viewModels.firstIndex(where: { $0.matches(selection) }) {
+            selectedViewModelIndex = index
+            collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
+        } else {
+            selectedViewModelIndex = nil
+        }
+        updateMandateView()
+        updateFormElement()
+    }
+
     /// Selects a carousel option while rebuilding canceled FlowController state, without
     /// persisting the selection or treating it as new customer input.
     func setSelectionForCancellationRestoration(to paymentOption: PaymentOption) {
@@ -517,6 +574,16 @@ class SavedPaymentOptionsViewController: UIViewController {
     private func isDefaultPaymentMethod(savedPaymentMethodId: String?) -> Bool {
         guard configuration.allowsSetAsDefaultPM, let savedPaymentMethodId, let defaultPaymentMethod else { return false }
         return savedPaymentMethodId == defaultPaymentMethod.stripeId
+    }
+
+    private func cell(
+        for selection: Selection
+    ) -> SavedPaymentMethodCollectionView.PaymentOptionCell? {
+        guard let index = viewModels.firstIndex(where: { $0.matches(selection) }) else {
+            return nil
+        }
+        return collectionView.cellForItem(at: IndexPath(item: index, section: 0))
+            as? SavedPaymentMethodCollectionView.PaymentOptionCell
     }
 
     // MARK: - Helpers
@@ -608,13 +675,18 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         }
         let viewModel = viewModels[indexPath.item]
         if case .add = viewModel {
-            delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
+            delegate?.didUpdateSelection(
+                viewController: self,
+                paymentMethodSelection: viewModel,
+                previousSelection: selectionSnapshot
+            )
             return false
         }
         return true
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let previousSelection = selectionSnapshot
         selectedViewModelIndex = indexPath.item
         let viewModel = viewModels[indexPath.item]
 
@@ -637,7 +709,24 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         updateMandateView()
         cvcFormElement.clearTextFields()
         updateFormElement()
-        delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
+        delegate?.didUpdateSelection(
+            viewController: self,
+            paymentMethodSelection: viewModel,
+            previousSelection: previousSelection
+        )
+    }
+}
+
+private extension SavedPaymentOptionsViewController.Selection {
+    func matches(_ other: Self) -> Bool {
+        switch (self, other) {
+        case (.applePay, .applePay), (.link, .link), (.add, .add):
+            return true
+        case (.saved(let lhs), .saved(let rhs)):
+            return lhs.stripeId == rhs.stripeId
+        default:
+            return false
+        }
     }
 }
 

@@ -116,6 +116,13 @@ extension SavedPaymentMethodCollectionView {
              paymentMethodLogo.heightAnchor.constraint(equalToConstant: paymentMethodLogoSize.height)
         }()
 
+        private lazy var spinner: ActivityIndicator = {
+            let spinner = ActivityIndicator(size: .medium)
+            spinner.translatesAutoresizingMaskIntoConstraints = false
+            spinner.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+            return spinner
+        }()
+
         fileprivate var viewModel: SavedPaymentOptionsViewController.Selection?
 
         var isRemovingPaymentMethods: Bool = false {
@@ -227,7 +234,12 @@ extension SavedPaymentMethodCollectionView {
                     equalTo: contentView.trailingAnchor, constant: 0),
                 accessoryButton.topAnchor.constraint(
                     equalTo: contentView.topAnchor, constant: 0),
+            ])
 
+            selectedIcon.addSubview(spinner)
+            NSLayoutConstraint.activate([
+                spinner.centerXAnchor.constraint(equalTo: selectedIcon.centerXAnchor),
+                spinner.centerYAnchor.constraint(equalTo: selectedIcon.centerYAnchor),
             ])
         }
 
@@ -266,6 +278,7 @@ extension SavedPaymentMethodCollectionView {
 
         // MARK: - Internal Methods
         func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsPaymentMethodUpdate: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false, linkBrand: LinkBrand = .link) {
+            setLoading(false)
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             selectableRectangle.isHidden = false
@@ -278,6 +291,51 @@ extension SavedPaymentMethodCollectionView {
             self.showDefaultPMBadge = showDefaultPMBadge
             self.linkBrand = linkBrand
             update()
+        }
+
+        /// Replaces the selected checkmark with a spinner while loading.
+        func setLoading(_ loading: Bool) {
+            guard loading != spinner.isAnimating else {
+                return
+            }
+
+            if loading {
+                selectedIcon.isHidden = false
+                selectedIcon.imageView.alpha = 0
+                selectedIcon.imageView.transform = CGAffineTransform(
+                    scaleX: 0.65,
+                    y: 0.65
+                )
+                spinner.tintColor = appearance.colors.primary.contrastingColor
+                spinner.alpha = 1
+                spinner.startAnimating()
+            } else {
+                spinner.stopAnimating()
+                selectedIcon.imageView.alpha = 1
+                selectedIcon.imageView.transform = .identity
+                selectedIcon.isHidden = !isSelected
+            }
+        }
+
+        /// Smoothly transitions the loading spinner back into the selected checkmark.
+        func showSuccess() {
+            guard spinner.isAnimating else {
+                return
+            }
+
+            UIView.animate(
+                withDuration: 0.25,
+                delay: 0,
+                usingSpringWithDamping: 0.72,
+                initialSpringVelocity: 0.4,
+                options: [.beginFromCurrentState, .curveEaseOut]
+            ) {
+                self.spinner.alpha = 0
+                self.selectedIcon.imageView.alpha = 1
+                self.selectedIcon.imageView.transform = .identity
+            } completion: { _ in
+                self.spinner.stopAnimating()
+            }
         }
 
         func handleEvent(_ event: STPEvent) {
