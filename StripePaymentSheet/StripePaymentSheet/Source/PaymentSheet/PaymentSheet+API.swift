@@ -663,6 +663,29 @@ extension PaymentSheet {
                 }
             }
 
+            // Called when Link UI returns a payment option that PaymentSheet should confirm recursively.
+            func confirmReturnedLinkPaymentOption(
+                linkAuthenticationContext: STPAuthenticationContext,
+                linkIntent: Intent,
+                linkElementsSession: STPElementsSession,
+                linkPaymentOption: PaymentOption,
+                linkCompletion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+            ) {
+                PaymentSheet.confirm(
+                    configuration: configuration,
+                    authenticationContext: linkAuthenticationContext,
+                    intent: linkIntent,
+                    elementsSession: linkElementsSession,
+                    paymentOption: linkPaymentOption,
+                    paymentHandler: paymentHandler,
+                    integrationShape: .complete,
+                    checkout: checkout,
+                    confirmationChallenge: confirmationChallenge,
+                    analyticsHelper: analyticsHelper,
+                    completion: linkCompletion
+                )
+            }
+
             confirmLinkPaymentOption(
                 confirmOption: confirmOption,
                 configuration: configuration,
@@ -676,7 +699,7 @@ extension PaymentSheet {
                 setAllowRedisplay: setAllowRedisplay,
                 confirmWithPaymentMethodParams: confirmWithPaymentMethodParams,
                 confirmWithPaymentMethod: confirmWithPaymentMethod,
-                checkout: checkout,
+                confirmHandler: confirmReturnedLinkPaymentOption(linkAuthenticationContext:linkIntent:linkElementsSession:linkPaymentOption:linkCompletion:),
                 paymentHandlerCompletion: paymentHandlerCompletion,
                 completion: completion
             )
@@ -702,7 +725,7 @@ extension PaymentSheet {
         setAllowRedisplay: @escaping (IntentConfirmParams, STPPaymentMethodType) -> Void,
         confirmWithPaymentMethodParams: @escaping (STPPaymentMethodParams, PaymentSheetLinkAccount?, IntentConfirmParams.SaveForFutureUseCheckboxState) -> Void,
         confirmWithPaymentMethod: @escaping (STPPaymentMethod, PaymentSheetLinkAccount?, IntentConfirmParams.SaveForFutureUseCheckboxState, STPClientAttributionMetadata?) -> Void,
-        checkout: CheckoutSessionBillingAddressUpdater? = nil,
+        confirmHandler: @escaping (STPAuthenticationContext, Intent, STPElementsSession, PaymentOption, @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void,
         paymentHandlerCompletion: @escaping (STPPaymentHandlerActionStatus, NSError?) -> Void,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
@@ -797,8 +820,8 @@ extension PaymentSheet {
                     configuration: configuration,
                     logPayment: false,
                     analyticsHelper: analyticsHelper,
-                    checkout: checkout,
-                    confirmationChallenge: confirmationChallenge
+                    confirmationChallenge: confirmationChallenge,
+                    confirmHandler: confirmHandler
                 )
                 linkController.presentAsBottomSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
                     completion(result, confirmationType)
@@ -809,8 +832,8 @@ extension PaymentSheet {
                     elementsSession: elementsSession,
                     configuration: configuration,
                     analyticsHelper: analyticsHelper,
-                    checkout: checkout,
-                    confirmationChallenge: confirmationChallenge
+                    confirmationChallenge: confirmationChallenge,
+                    confirmHandler: confirmHandler
                 )
                 linkController.present(from: authenticationContext.authenticationPresentingViewController(),
                                        completion: completion)
