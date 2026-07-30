@@ -138,12 +138,17 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
     }
 
     func testFlowControllerDefaults() {
-        func makeVC(configuration: PaymentSheet.Configuration, hasSavedPM: Bool = true) -> PaymentSheetVerticalViewController {
+        let savedPM = STPPaymentMethod._testCard()
+        func makeVC(
+            configuration: PaymentSheet.Configuration,
+            hasSavedPM: Bool = true,
+            previousPaymentOption: PaymentSheet.PaymentOption? = nil
+        ) -> PaymentSheetVerticalViewController {
             let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
             let loadResult = PaymentSheetLoader.LoadResult(
                 intent: intent,
                 elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
-                savedPaymentMethods: hasSavedPM ? [._testCard()] : [],
+                savedPaymentMethods: hasSavedPM ? [savedPM] : [],
                 paymentMethodTypes: [.stripe(.card)],
                 paymentMethodMessagingPromotionsHelper: ._testValue(),
                 paymentMethodOrientation: .vertical
@@ -153,7 +158,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
                 loadResult: loadResult,
                 isFlowController: true,
                 analyticsHelper: ._testValue(),
-                previousPaymentOption: nil
+                previousPaymentOption: previousPaymentOption
             )
         }
 
@@ -184,10 +189,37 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         vc = makeVC(configuration: configuration)
         XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .saved(paymentMethod: ._testCard()))
 
-        // And if there is no saved PM...
+        // And if there is no saved PM but Link is the customer default...
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: "cus_test")
+        vc = makeVC(configuration: configuration, hasSavedPM: false)
+        // ...it should default to the Link wallet button
+        if case .link(.wallet) = vc.selectedPaymentOption {
+            // Expected
+        } else {
+            XCTFail("Expected Link wallet to be selected")
+        }
+
+        // Given there is a previous selection
+        let previousPaymentOption = PaymentSheet.PaymentOption.saved(paymentMethod: savedPM, confirmParams: nil)
+
+        // When vertical FlowController is initialized with Link as the customer default
+        vc = makeVC(
+            configuration: configuration,
+            previousPaymentOption: previousPaymentOption
+        )
+        // Then it should not be overridden by the Link customer default
+        XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .saved(paymentMethod: savedPM))
+        if case let .saved(paymentMethod: paymentMethod, confirmParams: nil) = vc.selectedPaymentOption {
+            XCTAssertEqual(paymentMethod, savedPM)
+        } else {
+            XCTFail("Expected the previous saved PM to remain selected")
+        }
+
+        // And if there is no saved PM or customer default...
+        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: "cus_test")
         vc = makeVC(configuration: configuration, hasSavedPM: false)
         // ...it should default to nothing
-        XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, nil)
+        XCTAssertNil(vc.selectedPaymentOption)
     }
 
     func testPaymentSheetDefaults() {

@@ -130,10 +130,12 @@ extension PaymentElement {
             apiClient: STPAPIClient,
             defaults: Checkout.Configuration.Defaults,
             applePayConfiguration: PaymentSheet.ApplePayConfiguration? = nil,
-            linkConfiguration: PaymentSheet.LinkConfiguration? = nil
+            linkConfiguration: PaymentSheet.LinkConfiguration? = nil,
+            merchantDisplayName: String
         ) -> EmbeddedPaymentElement.Configuration {
             var configuration = embeddedConfiguration
             configuration.apiClient = apiClient
+            configuration.merchantDisplayName = merchantDisplayName
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
@@ -149,10 +151,12 @@ extension PaymentElement {
             apiClient: STPAPIClient,
             defaults: Checkout.Configuration.Defaults,
             applePayConfiguration: PaymentSheet.ApplePayConfiguration? = nil,
-            linkConfiguration: PaymentSheet.LinkConfiguration? = nil
+            linkConfiguration: PaymentSheet.LinkConfiguration? = nil,
+            merchantDisplayName: String
         ) -> PaymentSheet.Configuration {
             var configuration = paymentSheetConfiguration
             configuration.apiClient = apiClient
+            configuration.merchantDisplayName = merchantDisplayName
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)

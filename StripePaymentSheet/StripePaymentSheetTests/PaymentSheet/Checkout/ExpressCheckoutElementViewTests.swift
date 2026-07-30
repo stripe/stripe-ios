@@ -59,7 +59,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     func testLinkNeverSuppressesLinkWhenSessionAdvertisesIt() {
         // Given a session with link and ECE link visibility set to .never
         let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.expressCheckoutElement.link = .never
 
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
@@ -69,7 +69,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     func testLinkAlwaysShowsLinkWhenSessionDoesNotAdvertiseIt() {
         // Given a session without link and ECE link visibility set to .always
         let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.expressCheckoutElement.link = .always
 
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
@@ -79,7 +79,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     func testLinkConfigurationDisplayNeverSuppressesLink() {
         // Given a session with link and ECE link .automatic, but linkConfiguration.display = .never
         let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.linkConfiguration = Checkout.LinkConfiguration(display: .never)
 
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
@@ -89,7 +89,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     func testLinkAlwaysOverridesLinkConfigurationDisplayNever() {
         // Given ECE link .always and linkConfiguration.display = .never, .always wins
         let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.expressCheckoutElement.link = .always
         configuration.linkConfiguration = Checkout.LinkConfiguration(display: .never)
 
@@ -102,7 +102,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     func testApplePayNeverSuppressesApplePayWhenSessionAdvertisesIt() {
         // Given a session with apple_pay, applePayConfiguration set, but ECE apple pay .never
         let session = makeSessionWithWalletTypes(["apple_pay"]).makePublicSession()
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.applePayConfiguration = Checkout.ApplePayConfiguration(merchantId: "merchant.com.example")
         configuration.expressCheckoutElement.applePay = .never
 
@@ -113,7 +113,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     func testApplePayAlwaysShowsApplePayWhenSessionDoesNotAdvertiseIt() {
         // Given a session without apple_pay, applePayConfiguration set, ECE apple pay .always
         let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.applePayConfiguration = Checkout.ApplePayConfiguration(merchantId: "merchant.com.example")
         configuration.expressCheckoutElement.applePay = .always
 
@@ -125,7 +125,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     func testApplePayAlwaysWithoutApplePayConfigurationShowsNoApplePay() {
         // Given ECE apple pay .always but no applePayConfiguration
         let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc")
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.expressCheckoutElement.applePay = .always
 
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
