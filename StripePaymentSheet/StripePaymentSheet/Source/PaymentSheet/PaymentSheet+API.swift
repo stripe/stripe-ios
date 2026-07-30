@@ -32,6 +32,12 @@ extension PaymentSheet {
         }
     }
 
+    enum PreconfirmActionsResult {
+        case succeeded(intentConfirmParams: IntentConfirmParams?)
+        case canceled
+        case failed(Error)
+    }
+
     /// Confirms a PaymentIntent with the given PaymentOption and returns a PaymentResult
     static func confirm(
         configuration: PaymentElementConfiguration,
@@ -47,32 +53,85 @@ extension PaymentSheet {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
+        Task { @MainActor in
+            let preconfirmActionsResult = await handlePreconfirmActionsIfNecessary(
+                configuration: configuration,
+                authenticationContext: authenticationContext,
+                intent: intent,
+                paymentOption: paymentOption,
+                paymentHandler: paymentHandler,
+                integrationShape: integrationShape
+            )
+
+            let intentConfirmParams: IntentConfirmParams?
+            switch preconfirmActionsResult {
+            case .succeeded(let params):
+                intentConfirmParams = params
+            case .canceled:
+                completion(.canceled, nil)
+                return
+            case .failed(let error):
+                completion(.failed(error: error), nil)
+                return
+            }
+
+            confirmAfterHandlingLocalActions(
+                configuration: configuration,
+                authenticationContext: authenticationContext,
+                intent: intent,
+                elementsSession: elementsSession,
+                paymentOption: paymentOption,
+                // TODO: intentConfirmParamsForDeferredIntent is bad:
+                // - The name says "DeferredIntent", but this is also used for PaymentIntent and not used for SetupIntent.
+                // - The type is IntentConfirmParams, but downstream only consumes confirmPaymentMethodOptions.
+                // - The real contract is "saved-card CVC recollection may override payment options", which should be represented directly by a narrower type.
+                intentConfirmParamsForDeferredIntent: intentConfirmParams,
+                paymentHandler: paymentHandler,
+                checkout: checkout,
+                confirmationChallenge: confirmationChallenge,
+                analyticsHelper: analyticsHelper,
+                completion: completion
+            )
+        }
+    }
+
+    @MainActor
+    static func handlePreconfirmActionsIfNecessary(
+        configuration: PaymentElementConfiguration,
+        authenticationContext: STPAuthenticationContext,
+        intent: Intent,
+        paymentOption: PaymentOption,
+        paymentHandler: STPPaymentHandler,
+        integrationShape: IntegrationShape
+    ) async -> PreconfirmActionsResult {
         // Perform PaymentSheet-specific local actions before confirming.
         // These actions are not represented in the PaymentIntent state and are specific to
         // Payment Element (not the API bindings), so we need to handle them here.
         // First, handle any client-side required actions:
         if case let .new(confirmParams) = paymentOption,
            confirmParams.paymentMethodType == .stripe(.bacsDebit) {
-            // MARK: - Bacs Debit
-            // Display the Bacs Debit mandate view
-            let mandateView = BacsDDMandateView(email: confirmParams.paymentMethodParams.billingDetails?.email ?? "",
-                                                name: confirmParams.paymentMethodParams.billingDetails?.name ?? "",
-                                                sortCode: confirmParams.paymentMethodParams.bacsDebit?.sortCode ?? "",
-                                                accountNumber: confirmParams.paymentMethodParams.bacsDebit?.accountNumber ?? "",
-                                                confirmAction: {
-                // If confirmed, dismiss the MandateView and complete the transaction:
-                authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
-                confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, checkout: checkout, confirmationChallenge: confirmationChallenge, analyticsHelper: analyticsHelper, completion: completion)
-            }, cancelAction: {
-                // Dismiss the MandateView and return to PaymentSheet
-                authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
-                completion(.canceled, nil)
-            })
+            return await withCheckedContinuation { (continuation: CheckedContinuation<PreconfirmActionsResult, Never>) in
+                // MARK: - Bacs Debit
+                // Display the Bacs Debit mandate view
+                let mandateView = BacsDDMandateView(email: confirmParams.paymentMethodParams.billingDetails?.email ?? "",
+                                                    name: confirmParams.paymentMethodParams.billingDetails?.name ?? "",
+                                                    sortCode: confirmParams.paymentMethodParams.bacsDebit?.sortCode ?? "",
+                                                    accountNumber: confirmParams.paymentMethodParams.bacsDebit?.accountNumber ?? "",
+                                                    confirmAction: {
+                    // If confirmed, dismiss the MandateView and complete the transaction:
+                    authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
+                    continuation.resume(returning: .succeeded(intentConfirmParams: nil))
+                }, cancelAction: {
+                    // Dismiss the MandateView and return to PaymentSheet
+                    authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
+                    continuation.resume(returning: .canceled)
+                })
 
-            let hostingController = UIHostingController(rootView: mandateView)
-            hostingController.isModalInPresentation = true
-            authenticationContext.authenticationPresentingViewController().present(hostingController, animated: true)
-            _preconfirmShim?(hostingController)
+                let hostingController = UIHostingController(rootView: mandateView)
+                hostingController.isModalInPresentation = true
+                authenticationContext.authenticationPresentingViewController().present(hostingController, animated: true)
+                _preconfirmShim?(hostingController)
+            }
         } else if case let .saved(paymentMethod, _) = paymentOption,
                   paymentMethod.type == .card,
                   integrationShape.requiresInterstitialForCVC,
@@ -82,35 +141,37 @@ extension PaymentSheet {
 
             guard presentingViewController.presentedViewController == nil else {
                 assertionFailure("presentingViewController is already presenting a view controller")
-                completion(.failed(error: PaymentSheetError.alreadyPresented), nil)
-                return
+                return .failed(PaymentSheetError.alreadyPresented)
             }
-            let preConfirmationViewController = CVCReconfirmationViewController(
-                paymentMethod: paymentMethod,
-                intent: intent,
-                configuration: configuration,
-                onCompletion: { vc, intentConfirmParams in
-                    vc.dismiss(animated: true)
-                    confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: intentConfirmParams, paymentHandler: paymentHandler, checkout: checkout, confirmationChallenge: confirmationChallenge, analyticsHelper: analyticsHelper, completion: completion)
-                },
-                onCancel: { vc in
-                    vc.dismiss(animated: true)
-                    completion(.canceled, nil)
-                }
-            )
 
-            // Present CVC VC
-            let bottomSheetVC = FlowController.makeBottomSheetViewController(
-                preConfirmationViewController,
-                configuration: configuration,
-                didCancelNative3DS2: {
-                    paymentHandler.cancel3DS2ChallengeFlow()
-                }
-            )
-            presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+            return await withCheckedContinuation { (continuation: CheckedContinuation<PreconfirmActionsResult, Never>) in
+                let preConfirmationViewController = CVCReconfirmationViewController(
+                    paymentMethod: paymentMethod,
+                    intent: intent,
+                    configuration: configuration,
+                    onCompletion: { vc, intentConfirmParams in
+                        vc.dismiss(animated: true)
+                        continuation.resume(returning: .succeeded(intentConfirmParams: intentConfirmParams))
+                    },
+                    onCancel: { vc in
+                        vc.dismiss(animated: true)
+                        continuation.resume(returning: .canceled)
+                    }
+                )
+
+                // Present CVC VC
+                let bottomSheetVC = FlowController.makeBottomSheetViewController(
+                    preConfirmationViewController,
+                    configuration: configuration,
+                    didCancelNative3DS2: {
+                        paymentHandler.cancel3DS2ChallengeFlow()
+                    }
+                )
+                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+            }
         } else {
             // MARK: - No local actions
-            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, checkout: checkout, confirmationChallenge: confirmationChallenge, analyticsHelper: analyticsHelper, completion: completion)
+            return .succeeded(intentConfirmParams: nil)
         }
     }
 
