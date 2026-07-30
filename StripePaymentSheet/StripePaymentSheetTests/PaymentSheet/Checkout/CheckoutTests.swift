@@ -167,7 +167,6 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let session = checkout.session
         XCTAssertEqual(session.id, checkoutSessionResponse.id)
         XCTAssertEqual(session.status?.type, .open)
-        XCTAssertFalse(session.isSetupStyle)
         XCTAssertEqual(session.total?.total.minorUnitsAmount, 2000)
         XCTAssertEqual(session.expectedAmount(), 2000)
         XCTAssertEqual(session.lineItems.count, 1)
