@@ -7,6 +7,7 @@ import UIKit
 import XCTest
 
 @_spi(STP) @testable import StripePaymentSheet
+@testable @_spi(STP) import StripeUICore
 
 final class RowButtonTests: XCTestCase {
     func testLoadingStatePreservesKeyContentAlpha() {
@@ -21,6 +22,21 @@ final class RowButtonTests: XCTestCase {
 
         rowButton.setLoading(false, animated: false)
         XCTAssertEqual(rowButton.imageView.alpha, 0.5)
+    }
+
+    func testTrailingLoadingStatePreservesImage() throws {
+        let rowButton = SavedPaymentMethodRowButton(
+            paymentMethod: STPPaymentMethod._testCard(),
+            appearance: .default
+        ).rowButton
+        rowButton.frame = CGRect(x: 0, y: 0, width: 320, height: 64)
+
+        rowButton.setLoading(true, style: .trailing, animated: false)
+        rowButton.layoutIfNeeded()
+
+        let spinner = try XCTUnwrap(rowButton.subviews.first { $0 is ActivityIndicator })
+        XCTAssertEqual(rowButton.imageView.alpha, 1)
+        XCTAssertEqual(spinner.frame.maxX, rowButton.bounds.maxX - 16)
     }
 
     func testRowButtonForPaymentMethodType_usesPaymentMethodMessagingSublabelWhenInTreatment() {
