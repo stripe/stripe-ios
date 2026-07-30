@@ -127,6 +127,11 @@ final class SavedPaymentMethodRowButton: UIView {
         }
     }
 
+    func setLoading(_ loading: Bool) {
+        rowButton.handleEvent(loading ? .shouldDisableUserInteraction : .shouldEnableUserInteraction)
+        rowButton.setLoading(loading, style: .trailing)
+    }
+
     func updateLinkBrand(_ linkBrand: LinkBrand) {
         guard self.linkBrand != linkBrand else {
             return
