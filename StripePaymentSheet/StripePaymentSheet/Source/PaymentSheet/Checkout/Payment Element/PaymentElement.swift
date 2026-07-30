@@ -74,7 +74,8 @@ public final class PaymentElement {
         // Create FlowController
         let paymentSheetConfiguration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
-            defaults: checkout.configuration.defaults
+            defaults: checkout.configuration.defaults,
+            merchantDisplayName: checkout.effectiveMerchantDisplayName
         )
         self.paymentSheetFlowController = try await PaymentSheet.FlowController.create(
             checkout: checkout,
@@ -83,7 +84,8 @@ public final class PaymentElement {
         // Create Embedded
         let embeddedConfiguration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
-            defaults: checkout.configuration.defaults
+            defaults: checkout.configuration.defaults,
+            merchantDisplayName: checkout.effectiveMerchantDisplayName
         )
         self.embeddedPaymentElement = try await EmbeddedPaymentElement.create(
             checkout: checkout,
@@ -112,6 +114,7 @@ public final class PaymentElement {
             embeddedPaymentElement.paymentOption.map(Checkout.Session.PaymentOptionDisplayData.init)
         )
         paymentOptionSourceOfTruthIsFlowController = false // We used embedded's payment option
+        try await checkout.syncBillingAddress(from: embeddedPaymentElement._paymentOption?.checkoutBillingDetails)
     }
 }
 
@@ -134,11 +137,13 @@ extension PaymentElement {
         let configuration = checkout.configuration.paymentElement
         paymentSheetFlowController.configuration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
-            defaults: checkout.configuration.defaults
+            defaults: checkout.configuration.defaults,
+            merchantDisplayName: checkout.effectiveMerchantDisplayName
         )
         embeddedPaymentElement.configuration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
-            defaults: checkout.configuration.defaults
+            defaults: checkout.configuration.defaults,
+            merchantDisplayName: checkout.effectiveMerchantDisplayName
         )
 
         // Update FlowController

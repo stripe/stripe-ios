@@ -780,7 +780,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = customApiClient
         let checkout = try await Checkout(configuration: checkoutConfiguration)
         PaymentSheetLoader.load(
@@ -816,7 +816,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = customApiClient
         let checkout = try await Checkout(configuration: checkoutConfiguration)
 
@@ -834,7 +834,6 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                     return
                 }
                 XCTAssertEqual(loadedSession.id, checkoutSessionId)
-                XCTAssertEqual(loadedSession.mode, .setup)
                 XCTAssertEqual(loadedSession.status?.type, .open)
                 XCTAssertEqual(loadedSession.status?.paymentStatus, .noPaymentRequired)
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))

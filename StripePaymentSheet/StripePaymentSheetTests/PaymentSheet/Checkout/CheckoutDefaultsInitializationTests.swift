@@ -18,7 +18,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
     func testInitAppliesBillingDefaultThroughBillingTaxUpdateWhenNeeded() async throws {
         stubCheckoutSessionRequests()
 
-        var configuration = Checkout.Configuration(clientSecret: clientSecret)
+        var configuration = Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         var billingDetails = Checkout.Configuration.Defaults.BillingDetails()
         billingDetails.name = "Billing Name"
@@ -45,7 +45,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         // Given a Checkout Session that uses shipping for tax
         stubCheckoutSessionRequests(automaticTaxAddressSource: "shipping")
 
-        var configuration = Checkout.Configuration(clientSecret: clientSecret)
+        var configuration = Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Shipping Name"

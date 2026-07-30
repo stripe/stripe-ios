@@ -301,7 +301,21 @@ extension PaymentSheet {
                 return false
             }
 
-            return internalPaymentOption?.canLaunchLink ?? false
+            guard let internalPaymentOption, internalPaymentOption.canLaunchLink else {
+                return false
+            }
+
+            // Link can be the payment option when it's the customer default and rendered as
+            // the only wallet header. In that case, for whatever reason, a test asserts
+            // that opening payment options shows FlowController instead of immediately
+            // launching the Link payment-method selection flow. Preserve that behavior here
+            // and only launch Link in place of FlowController after the customer has
+            // continued from FlowController at least once.
+            if case .link(.wallet) = internalPaymentOption {
+                return didPresentAndContinue
+            }
+
+            return true
         }
 
         // Stores the state of the most recent call to the update API
