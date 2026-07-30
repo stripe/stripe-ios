@@ -100,7 +100,7 @@ class PaymentSheet_AddressTests: PaymentSheetUITestCase {
         if verifyAnalytics {
             let autocompleteCompleteAnalytic = analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_complete" }
             XCTAssertNotNil(autocompleteCompleteAnalytic)
-            XCTAssertEqual(autocompleteCompleteAnalytic?["character_count"] as? Int, 16)
+            XCTAssertEqual(autocompleteCompleteAnalytic?["query_length"] as? Int, 16)
             XCTAssertNotNil(autocompleteCompleteAnalytic?["source"])
         }
     }

@@ -74,19 +74,19 @@ extension STPAnalyticsClient {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         var params: [String: Any] = [
             "character_count": characterCount,
-            "session_token": sessionToken,
+            "autocomplete_session_token": sessionToken,
             "source": source,
-            "duration": duration,
+            "session_elapsed": duration,
         ]
-        if let latency { params["latency"] = latency }
+        if let latency { params["time_to_fetch"] = latency }
         log(analytic: AddressAnalytic(event: .addressAutocompleteSuggestions, params: params), apiClient: apiClient)
     }
 
     func logAddressAutocompleteComplete(characterCount: Int, sessionToken: String, source: String, duration: TimeInterval, latency: TimeInterval?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         var params: [String: Any] = [
-            "character_count": characterCount,
-            "session_token": sessionToken,
+            "query_length": characterCount,
+            "autocomplete_session_token": sessionToken,
             "source": source,
             "duration": duration,
         ]
@@ -97,8 +97,8 @@ extension STPAnalyticsClient {
     func logAddressAutocompleteError(error: Error, sessionToken: String, duration: TimeInterval, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         log(analytic: AddressAnalytic(event: .addressAutocompleteError, params: [
-            "error": error.localizedDescription,
-            "session_token": sessionToken,
+            "error_type": error.localizedDescription,
+            "autocomplete_session_token": sessionToken,
             "duration": duration,
         ]), apiClient: apiClient)
     }

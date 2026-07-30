@@ -78,10 +78,10 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let last = client._testLogHistory.last!
         XCTAssertEqual(last["event"] as? String, "mc_address_autocomplete_suggestions")
         XCTAssertEqual(last["character_count"] as? Int, 5)
-        XCTAssertEqual(last["session_token"] as? String, "tok_abc")
+        XCTAssertEqual(last["autocomplete_session_token"] as? String, "tok_abc")
         XCTAssertEqual(last["source"] as? String, "google")
-        XCTAssertEqual(last["duration"] as? Double, 1.5)
-        XCTAssertEqual(last["latency"] as? Double, 0.3)
+        XCTAssertEqual(last["session_elapsed"] as? Double, 1.5)
+        XCTAssertEqual(last["time_to_fetch"] as? Double, 0.3)
     }
 
     func testLogAddressAutocompleteSuggestions_withoutLatency() {
@@ -97,7 +97,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let last = client._testLogHistory.last!
         XCTAssertEqual(last["event"] as? String, "mc_address_autocomplete_suggestions")
         XCTAssertEqual(last["source"] as? String, "apple")
-        XCTAssertNil(last["latency"])
+        XCTAssertNil(last["time_to_fetch"])
     }
 
     func testLogAddressAutocompleteComplete_withLatency() {
@@ -112,7 +112,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         )
         let last = client._testLogHistory.last!
         XCTAssertEqual(last["event"] as? String, "mc_address_autocomplete_complete")
-        XCTAssertEqual(last["character_count"] as? Int, 7)
+        XCTAssertEqual(last["query_length"] as? Int, 7)
         XCTAssertEqual(last["source"] as? String, "google")
         XCTAssertEqual(last["latency"] as? Double, 0.4)
     }
@@ -144,8 +144,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         )
         let last = client._testLogHistory.last!
         XCTAssertEqual(last["event"] as? String, "mc_address_autocomplete_error")
-        XCTAssertEqual(last["session_token"] as? String, "tok_abc")
-        XCTAssertEqual(last["error"] as? String, "network failure")
+        XCTAssertEqual(last["autocomplete_session_token"] as? String, "tok_abc")
+        XCTAssertEqual(last["error_type"] as? String, "network failure")
         XCTAssertEqual(last["duration"] as? Double, 0.5)
     }
 }
