@@ -235,7 +235,7 @@ class PaymentSheetFormFactory {
 
     func make() -> PaymentMethodElement {
         let form = makePaymentMethodForm()
-        return applyAutomaticTaxMinimumsIfNecessary(to: form)
+        return appendingAutomaticTaxAddressIfNecessary(to: form)
     }
 
     private func makePaymentMethodForm() -> PaymentMethodElement {
@@ -519,9 +519,12 @@ extension PaymentSheetFormFactory {
             defaultAddress.email = defaultBillingDetails().email
         }
 
+        let effectiveMinimumFieldsToCollectByCountry = minimumFieldsIncludingAutomaticTax(
+            minimumFieldsToCollectByCountry
+        )
         let availableCountries = countries ?? addressSpecProvider.countries
         let collectsOnlyCountry = defaultFieldsToCollect == .country
-            && minimumFieldsToCollectByCountry
+            && effectiveMinimumFieldsToCollectByCountry
                 .filter { availableCountries.caseInsensitiveContains($0.key) }
                 .allSatisfy { $0.value == .country }
 
@@ -532,7 +535,7 @@ extension PaymentSheetFormFactory {
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
             defaultFieldsToCollect: defaultFieldsToCollect,
-            minimumFieldsToCollectByCountry: minimumFieldsToCollectByCountry,
+            minimumFieldsToCollectByCountry: effectiveMinimumFieldsToCollectByCountry,
             additionalFields: .init(
                 phone: includePhone ? .enabled(isOptional: false) : .disabled,
                 email: includeEmail ? .enabled(isOptional: false) : .disabled,

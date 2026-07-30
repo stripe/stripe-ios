@@ -15,7 +15,7 @@ extension Checkout.Session {
         var types: [ExpressButton] = []
         for type in elementsSession.orderedPaymentMethodTypesAndWallets {
             switch type {
-            case "apple_pay" where !types.contains(.applePay):
+            case "apple_pay" where !types.contains(.applePay) && elementsSession.isApplePayEnabled:
                 types.append(.applePay)
             case "link" where !types.contains(.link):
                 types.append(.link)

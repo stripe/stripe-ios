@@ -16,14 +16,14 @@ extension CheckoutPlayground {
 
         @Published var integrationType: IntegrationType = .flowController {
             didSet {
-                if integrationType == .disabled && expressCheckoutElementOption == .disabled {
-                    expressCheckoutElementOption = .enabled
+                if integrationType == .eceOnly && expressCheckoutElementOption == .hide {
+                    expressCheckoutElementOption = .show
                 }
             }
         }
-        @Published var expressCheckoutElementOption: ExpressCheckoutElementOption = .disabled {
+        @Published var expressCheckoutElementOption: ExpressCheckoutElementOption = .show {
             didSet {
-                if expressCheckoutElementOption == .disabled && integrationType == .disabled {
+                if expressCheckoutElementOption == .hide && integrationType == .eceOnly {
                     integrationType = .flowController
                 }
             }

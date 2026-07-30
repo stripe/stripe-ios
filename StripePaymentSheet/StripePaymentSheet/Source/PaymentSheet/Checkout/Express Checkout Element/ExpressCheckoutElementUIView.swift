@@ -19,6 +19,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     private let configuration: Checkout.Configuration
     private let stackView = UIStackView()
+    private var linkBrand: LinkBrand
     private weak var delegate: ExpressCheckoutElementDelegate?
 
     // MARK: - Init
@@ -26,6 +27,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     init(session: Checkout.Session, configuration: Checkout.Configuration, delegate: ExpressCheckoutElementDelegate) {
         self.configuration = configuration
         self.delegate = delegate
+        self.linkBrand = session.elementsSession.linkBrand ?? .link
         super.init(frame: .zero)
 
         // TODO: Appearance
@@ -53,6 +55,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     // MARK: - Internal Methods
 
     func update(with session: Checkout.Session) {
+        linkBrand = session.elementsSession.linkBrand ?? .link
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
@@ -91,7 +94,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     private func makeLinkButton() -> UIView {
-        let button = PayWithLinkButton()
+        let button = PayWithLinkButton(brand: linkBrand)
         // TODO: Appearance
         button.cornerRadius = 6
         button.translatesAutoresizingMaskIntoConstraints = false

@@ -17,7 +17,9 @@ enum ExpressCheckoutElementUtilities {
                     buttons.append(.applePay)
                 }
             case .link:
-                buttons.append(.link)
+                if configuration.linkConfiguration?.display != .never {
+                    buttons.append(.link)
+                }
             }
         }
         return buttons
