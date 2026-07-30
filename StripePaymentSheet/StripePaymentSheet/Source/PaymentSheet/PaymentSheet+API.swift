@@ -466,11 +466,12 @@ extension PaymentSheet {
             }
         // MARK: - Link
         case .link(let confirmOption):
-            // This is called when the customer pays in the sheet (as opposed to the Link webview) and agreed to sign up for Link
-            // Parameters:
-            // - paymentMethodParams: The params to use for the payment.
-            // - linkAccount: The Link account used for payment. Will be logged out if present after payment completes, whether it was successful or not.
-            let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, IntentConfirmParams.SaveForFutureUseCheckboxState) -> Void = { paymentMethodParams, linkAccount, saveForFutureUseCheckboxState in
+            // Called when Link produces raw payment method params, including signup fallback/direct confirm paths.
+            func confirmWithPaymentMethodParams(
+                _ paymentMethodParams: STPPaymentMethodParams,
+                _ linkAccount: PaymentSheetLinkAccount?,
+                _ saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState
+            ) {
                 Task { @MainActor in
                     let radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethodParams.type)
                     paymentMethodParams.radarOptions = radarOptions
@@ -515,26 +516,24 @@ extension PaymentSheet {
                             }
                         )
                     case .deferredIntent(let intentConfig):
-                        Task { @MainActor in
-                            let result = await routeDeferredIntentConfirmation(
-                                confirmType: .new(
-                                    params: paymentMethodParams,
-                                    paymentOptions: STPConfirmPaymentMethodOptions(),
-                                    saveForFutureUseCheckboxState: saveForFutureUseCheckboxState
-                                ),
-                                configuration: configuration,
-                                intentConfig: intentConfig,
-                                authenticationContext: authenticationContext,
-                                paymentHandler: paymentHandler,
-                                isFlowController: isFlowController,
-                                elementsSession: elementsSession
-                            )
-                            if shouldLogOutOfLink(result: result.result, elementsSession: elementsSession) {
-                                linkAccount?.logout()
-                            }
-                            await confirmationChallenge?.complete()
-                            completion(result.result, result.deferredIntentConfirmationType)
+                        let result = await routeDeferredIntentConfirmation(
+                            confirmType: .new(
+                                params: paymentMethodParams,
+                                paymentOptions: STPConfirmPaymentMethodOptions(),
+                                saveForFutureUseCheckboxState: saveForFutureUseCheckboxState
+                            ),
+                            configuration: configuration,
+                            intentConfig: intentConfig,
+                            authenticationContext: authenticationContext,
+                            paymentHandler: paymentHandler,
+                            isFlowController: isFlowController,
+                            elementsSession: elementsSession
+                        )
+                        if shouldLogOutOfLink(result: result.result, elementsSession: elementsSession) {
+                            linkAccount?.logout()
                         }
+                        await confirmationChallenge?.complete()
+                        completion(result.result, result.deferredIntentConfirmationType)
                     case .checkout(let checkoutSession):
                         guard let checkout else {
                             let result = missingCheckoutControllerResult()
@@ -563,7 +562,14 @@ extension PaymentSheet {
                     }
                 }
             }
-            let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, IntentConfirmParams.SaveForFutureUseCheckboxState, STPClientAttributionMetadata?) -> Void = { paymentMethod, linkAccount, saveForFutureUseCheckboxState, clientAttributionMetadata in
+
+            // Called when Link produces an existing/shared payment method, including Link web and passthrough share success.
+            func confirmWithPaymentMethod(
+                _ paymentMethod: STPPaymentMethod,
+                _ linkAccount: PaymentSheetLinkAccount?,
+                _ saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState,
+                _ clientAttributionMetadata: STPClientAttributionMetadata?
+            ) {
                 Task { @MainActor in
                     let radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethod.type)
                     let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
@@ -617,23 +623,21 @@ extension PaymentSheet {
                             }
                         )
                     case .deferredIntent(let intentConfig):
-                        Task { @MainActor in
-                            let result = await routeDeferredIntentConfirmation(
-                                confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
-                                configuration: configuration,
-                                intentConfig: intentConfig,
-                                authenticationContext: authenticationContext,
-                                paymentHandler: paymentHandler,
-                                isFlowController: isFlowController,
-                                elementsSession: elementsSession,
-                                isFromLink: true
-                            )
-                            if shouldLogOutOfLink(result: result.result, elementsSession: elementsSession) {
-                                linkAccount?.logout()
-                            }
-                            await confirmationChallenge?.complete()
-                            completion(result.result, result.deferredIntentConfirmationType)
+                        let result = await routeDeferredIntentConfirmation(
+                            confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
+                            configuration: configuration,
+                            intentConfig: intentConfig,
+                            authenticationContext: authenticationContext,
+                            paymentHandler: paymentHandler,
+                            isFlowController: isFlowController,
+                            elementsSession: elementsSession,
+                            isFromLink: true
+                        )
+                        if shouldLogOutOfLink(result: result.result, elementsSession: elementsSession) {
+                            linkAccount?.logout()
                         }
+                        await confirmationChallenge?.complete()
+                        completion(result.result, result.deferredIntentConfirmationType)
                     case .checkout(let checkoutSession):
                         guard let checkout else {
                             let result = missingCheckoutControllerResult()
