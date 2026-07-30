@@ -116,8 +116,7 @@ extension Checkout {
     ///
     /// - If `update` is non-nil, the side effect (if any) is applied first, then the
     ///   API mutation is performed and the session is updated from the response.
-    /// - If `update` is nil, the side effect is applied locally and delegates are
-    ///   notified without making a network request.
+    /// - If `update` is nil, the side effect is applied locally without making a network request.
     ///
     /// - Parameters:
     ///   - update: The API mutation to perform, or nil for a local-only update.
@@ -145,7 +144,7 @@ extension Checkout {
                 }
 
                 // Errors from here should still get wrapped in API errors since the only way
-                //  the integration delegate throws is if the API returned a session state that
+                //  local session application throws is if the API returned a session state that
                 //  the UI can't handle.
                 try await self.commitSession(updatedSessionAPIResponse, applying: localMutation)
             } catch {

@@ -20,8 +20,8 @@ import Foundation
 ///
 /// The async initializer loads the session from Stripe before returning.
 ///
-/// Observe loading state and session changes with SwiftUI by using ``isLoading`` and ``session``
-/// (published via `ObservableObject`), or in UIKit by setting a ``delegate``.
+/// Observe loading state and session changes with ``isLoading`` and ``session``
+/// (published via `ObservableObject`).
 @_spi(STP)
 @_spi(ReactNativeSDK)
 @MainActor
@@ -32,27 +32,19 @@ public final class Checkout: ObservableObject {
     ///
     /// After initialization this is always ``false``. It transitions to ``true``
     /// while a mutation is in flight.
-    @Published public internal(set) var isLoading: Bool = false {
-        didSet {
-            isLoading ? delegate?.checkoutDidBeginLoading(self) : delegate?.checkoutDidFinishLoading(self)
-        }
-    }
+    @Published public internal(set) var isLoading: Bool = false
 
     /// The Checkout Session, updated from Stripe after every mutation.
     @Published public private(set) var session: Session {
         didSet {
             nonisolatedSession = session
-            // Just some notes: Setting session causes publisher+delegate to fire even when it didn't change.
+            // Just some notes: Setting session causes the publisher to fire even when it didn't change.
             // AFAICT that's okay, deduping sees like a minor optimization to slightly reduce the amount of UI updates.
-            delegate?.checkoutDidUpdateSession(self, session: session)
         }
     }
 
     /// The configuration supplied at initialization.
     public let configuration: Configuration
-
-    /// A delegate notified when session data changes.
-    public weak var delegate: CheckoutDelegate?
 
     // MARK: - Internal Properties
 
@@ -86,7 +78,7 @@ public final class Checkout: ObservableObject {
         didSet {
             // If the queue has gone from empty to non-empty, we set
             //  isLoading to true. We avoid setting it if the queue
-            //  was already non-empty to prevent duplicate delegate calls
+            //  was already non-empty to prevent duplicate loading emissions.
             if !pendingOperations.isEmpty && !isLoading {
                 isLoading = true
             }
