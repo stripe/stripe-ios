@@ -12,6 +12,12 @@ import SafariServices
 import UIKit
 
 extension EmbeddedPaymentElement {
+    struct PendingBillingAddressSyncSelection {
+        let paymentMethod: STPPaymentMethod
+        let previousSelection: RowButtonType?
+        let previousPaymentOption: PaymentOption?
+    }
+
     @MainActor
     static func makeView(
         configuration: Configuration,
@@ -76,7 +82,6 @@ extension EmbeddedPaymentElement {
             mandateProvider: mandateProvider,
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
             savedPaymentMethods: loadResult.savedPaymentMethods,
-            customer: configuration.customer,
             currency: loadResult.intent.currency,
             incentive: loadResult.elementsSession.incentive,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
@@ -87,6 +92,9 @@ extension EmbeddedPaymentElement {
 
     /// Helper method to inform delegate only if the payment option changed
     func informDelegateIfPaymentOptionUpdated() {
+        // Checkout rebuilds EPE while applying the billing update. Don't publish the tapped
+        // payment method until that update finishes and the refreshed view restores its selection.
+        guard pendingBillingAddressSyncSelection == nil else { return }
         if lastUpdatedPaymentOption != paymentOption {
             delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             lastUpdatedPaymentOption = paymentOption
@@ -141,6 +149,20 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
     }
 
+    func embeddedPaymentMethodsViewWillSelect(_ rowButtonType: RowButtonType) {
+        guard checkout != nil,
+              case .saved(let paymentMethod) = rowButtonType else {
+            persistDefaultPaymentMethodSelection(rowButtonType)
+            return
+        }
+        // Save the current selection now; the tap callback uses it after the selected row changes.
+        pendingBillingAddressSyncSelection = .init(
+            paymentMethod: paymentMethod,
+            previousSelection: embeddedPaymentMethodsView.selectedRowButton?.type,
+            previousPaymentOption: _paymentOption
+        )
+    }
+
     func embeddedPaymentMethodsViewDidUpdateSelection() {
         // 1. Update the currently selection's form VC to match the selection.
         // Note `paymentOption` derives from this property
@@ -168,10 +190,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
         // 😓 Note: This method depends on `embeddedPaymentMethodsViewDidUpdateSelection` being called *before* this method is called when a row is tapped.
         guard let selectedFormViewController else {
-            // If the current selection has no form VC, simply alert the merchant of the selection if they are using immediateAction
-            if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {
-                didSelectPaymentOption()
-            }
+            handleSelectionWithoutForm()
             return
         }
         // Present the current selection's form VC
@@ -181,6 +200,107 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         assert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
         stpAssert(selectedFormViewController.delegate != nil)
         presentingViewController?.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
+    }
+
+    private func handleSelectionWithoutForm() {
+        // We aren't in Checkout, or this selection doesn't need a billing sync.
+        guard let pendingSelection = pendingBillingAddressSyncSelection,
+              let checkout else {
+            pendingBillingAddressSyncSelection = nil
+            persistDefaultPaymentMethodSelection(embeddedPaymentMethodsView.selectedRowButton?.type)
+            informDelegateIfPaymentOptionUpdated()
+            completeImmediateRowSelectionIfNeeded()
+            return
+        }
+        embeddedPaymentMethodsView.isUserInteractionEnabled = false
+        let loadingRow = embeddedPaymentMethodsView.selectedRowButton
+        loadingRow?.setLoading(true)
+
+        Task { @MainActor [weak self, weak loadingRow] in
+            guard let self else { return }
+            do {
+                try await checkout.syncBillingAddress(from: pendingSelection.paymentMethod.billingDetails)
+                self.finishSelectionAfterBillingAddressSync(
+                    for: pendingSelection,
+                    loadingRow: loadingRow
+                )
+            } catch {
+                self.restoreSelectionAfterBillingSyncFailure(
+                    error,
+                    pendingSelection: pendingSelection,
+                    loadingRow: loadingRow
+                )
+            }
+        }
+    }
+
+    private func finishSelectionAfterBillingAddressSync(
+        for pendingSelection: PendingBillingAddressSyncSelection,
+        loadingRow: RowButton?
+    ) {
+        let didReselectPaymentMethod = embeddedPaymentMethodsView.selectSavedPaymentMethod(
+            withStripeId: pendingSelection.paymentMethod.stripeId
+        )
+        let selectedRow = embeddedPaymentMethodsView.selectedRowButton
+        loadingRow?.setLoading(false, animated: loadingRow === selectedRow)
+        selectedRow?.setLoading(false)
+        pendingBillingAddressSyncSelection = nil
+        embeddedPaymentMethodsView.isUserInteractionEnabled = true
+
+        guard didReselectPaymentMethod else {
+            informDelegateIfPaymentOptionUpdated()
+            return
+        }
+        persistDefaultPaymentMethodSelection(selectedRow?.type)
+        informDelegateIfPaymentOptionUpdated()
+        completeImmediateRowSelectionIfNeeded()
+    }
+
+    private func restoreSelectionAfterBillingSyncFailure(
+        _ error: Error,
+        pendingSelection: PendingBillingAddressSyncSelection,
+        loadingRow: RowButton?
+    ) {
+        loadingRow?.setLoading(false)
+        embeddedPaymentMethodsView.resetSelectionToLastSelection()
+        _ = restoreAcceptedForm(
+            from: pendingSelection.previousPaymentOption,
+            for: pendingSelection.previousSelection
+        )
+        if let restoredSelection = embeddedPaymentMethodsView.selectedRowButton?.type {
+            updateChangeButtonAndSublabelState(for: restoredSelection)
+        }
+        pendingBillingAddressSyncSelection = nil
+        embeddedPaymentMethodsView.isUserInteractionEnabled = true
+        informDelegateIfPaymentOptionUpdated()
+        embeddedPaymentMethodsView.setError(error)
+#if !os(visionOS)
+        UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
+    }
+
+    private func completeImmediateRowSelectionIfNeeded() {
+        if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {
+            didSelectPaymentOption()
+        }
+    }
+
+    private func persistDefaultPaymentMethodSelection(_ rowButtonType: RowButtonType?) {
+        let paymentOption: CustomerPaymentOption
+        switch rowButtonType {
+        case .applePay:
+            paymentOption = .applePay
+        case .link:
+            paymentOption = .link
+        case .saved(let paymentMethod):
+            paymentOption = .stripeId(paymentMethod.stripeId)
+        case .new, nil:
+            return
+        }
+        CustomerPaymentOption.setDefaultPaymentMethod(
+            paymentOption,
+            forCustomer: configuration.customer?.id
+        )
     }
 
     func embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {

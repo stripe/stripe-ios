@@ -7,6 +7,7 @@
 
 import OHHTTPStubs
 @testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
@@ -30,6 +31,7 @@ final class PaymentElementTest: XCTestCase {
 
     override func tearDown() {
         HTTPStubs.removeAllStubs()
+        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
         super.tearDown()
     }
 
@@ -252,6 +254,77 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
     }
 
+    func testSelectingSavedPaymentMethodInEmbeddedViewSyncsBillingAddress() async throws {
+        // Given an unselected saved payment method and a Checkout Session using billing address for automatic tax
+        let didSelectPaymentOption = expectation(description: "Saved payment method selection completes")
+        let (checkout, embeddedPaymentElement, savedPaymentMethodRow, requestRecorder) =
+            try await makeSavedPaymentMethodSelectionFixture(
+            didSelectPaymentOption: {
+                didSelectPaymentOption.fulfill()
+            }
+        )
+        let embeddedView = embeddedPaymentElement.embeddedPaymentMethodsView
+        let paymentMethodID = try XCTUnwrap(savedPaymentMethodRow.type.savedPaymentMethod?.stripeId)
+
+        // When the customer selects the saved payment method directly, without opening a sheet
+        embeddedView.didTap(rowButton: savedPaymentMethodRow)
+
+        // Then the row shows a loader and Checkout keeps the previous selection while billing syncs
+        XCTAssertTrue(savedPaymentMethodRow.isLoading)
+        XCTAssertNil(checkout.session.paymentOption)
+        await fulfillment(of: [didSelectPaymentOption])
+
+        // ...and the billing country is synced before selection completes
+        XCTAssertFalse(savedPaymentMethodRow.isLoading)
+        let currentEmbeddedView = embeddedPaymentElement.embeddedPaymentMethodsView
+        XCTAssertTrue(currentEmbeddedView.isUserInteractionEnabled)
+        XCTAssertEqual(currentEmbeddedView.selectedRowButton?.type.savedPaymentMethod?.stripeId, paymentMethodID)
+        let requests = requestRecorder.requests
+        XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession, .updateSession])
+        XCTAssertEqual(try XCTUnwrap(requests.last).params["tax_region[country]"], "US")
+    }
+
+    func testSelectingSavedPaymentMethodInEmbeddedViewRevertsSelectionAndDisplaysBillingSyncError() async throws {
+        // Given PayNow is selected and the Checkout billing address update will fail
+        var didSelectPaymentOption = false
+        let (checkout, embeddedPaymentElement, savedPaymentMethodRow, _) =
+            try await makeSavedPaymentMethodSelectionFixture(
+            paymentMethodTypes: ["card", "paynow"],
+            updateStatusCode: 500,
+            didSelectPaymentOption: {
+                didSelectPaymentOption = true
+            }
+        )
+        let embeddedView = embeddedPaymentElement.embeddedPaymentMethodsView
+        let payNowRow = try XCTUnwrap(
+            embeddedView.rowButtons.first {
+                $0.type == .new(paymentMethodType: .stripe(.paynow))
+            }
+        )
+        embeddedPaymentElement.presentingViewController = UIViewController()
+        embeddedView.didTap(rowButton: payNowRow)
+        embeddedPaymentElement._test_paymentOption = .new(
+            confirmParams: IntentConfirmParams(type: .stripe(.paynow))
+        )
+        embeddedPaymentElement.informDelegateIfPaymentOptionUpdated()
+
+        // When the customer selects a saved payment method
+        let errorExpectation = notNullExpectation(for: embeddedView, keyPath: \.errorLabel.text)
+        embeddedView.didTap(rowButton: savedPaymentMethodRow)
+        await fulfillment(of: [errorExpectation])
+
+        // Then the previous selection is restored and the error is displayed under EPE
+        XCTAssertFalse(didSelectPaymentOption)
+        XCTAssertFalse(savedPaymentMethodRow.isLoading)
+        XCTAssertTrue(embeddedView.isUserInteractionEnabled)
+        XCTAssertEqual(
+            embeddedView.selectedRowButton?.type,
+            .new(paymentMethodType: .stripe(.paynow))
+        )
+        XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
+        XCTAssertFalse(try XCTUnwrap(embeddedView.errorLabel.text).isEmpty)
+    }
+
     func testCheckoutAndElementsDoNotRetainEachOther() async throws {
         weak var weakCheckout: Checkout?
         weak var weakPaymentElement: PaymentElement?
@@ -325,4 +398,63 @@ final class PaymentElementTest: XCTestCase {
         ]
         return json
     }
+
+    private func makeSavedPaymentMethodSelectionFixture(
+        paymentMethodTypes: [String] = ["card"],
+        updateStatusCode: Int32 = 200,
+        didSelectPaymentOption: @escaping () -> Void
+    ) async throws -> (
+        checkout: Checkout,
+        embeddedPaymentElement: EmbeddedPaymentElement,
+        savedPaymentMethodRow: RowButton,
+        requestRecorder: CheckoutSessionRequestRecorder
+    ) {
+        let requestRecorder = CheckoutSessionRequestRecorder()
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: paymentMethodTypes,
+            customerSessionData: [:],
+            paymentMethods: [
+                STPPaymentMethod._testCard(
+                    line1: "123 Main St",
+                    city: "San Francisco",
+                    state: "CA",
+                    postalCode: "94105",
+                    countryCode: "US"
+                ).allResponseFields,
+            ]
+        )
+        var sessionJSON = Self.openSessionJSON(paymentMethodTypes: paymentMethodTypes)
+        sessionJSON["elements_session"] = elementsSession.allResponseFields
+        sessionJSON["tax_context"] = [
+            "automatic_tax_enabled": true,
+            "automatic_tax_address_source": "session.billing",
+        ]
+        CheckoutTestHelpers.stubCheckoutSessionRequests(
+            sessionId: "cs_test_123",
+            requestRecorder: requestRecorder,
+            sessionJSON: { sessionJSON },
+            updateStatusCode: { updateRequestNumber in
+                // Checkout syncs the initially selected card during setup. Only fail the re-selection.
+                return updateRequestNumber == 1 ? 200 : updateStatusCode
+            }
+        )
+
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        configuration.paymentElement.rowSelectionBehavior = .immediateAction(
+            didSelectPaymentOption: didSelectPaymentOption
+        )
+
+        let checkout = try await Checkout(configuration: configuration)
+        let embeddedPaymentElement = checkout.getPaymentElement().embeddedPaymentElement
+        let savedPaymentMethodRow = try XCTUnwrap(
+            embeddedPaymentElement.embeddedPaymentMethodsView.rowButtons.first {
+                $0.type.isSaved
+            }
+        )
+        embeddedPaymentElement.clearPaymentOption()
+
+        return (checkout, embeddedPaymentElement, savedPaymentMethodRow, requestRecorder)
+    }
+
 }

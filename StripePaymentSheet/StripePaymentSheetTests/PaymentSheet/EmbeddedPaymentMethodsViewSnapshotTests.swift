@@ -1473,7 +1473,6 @@ extension EmbeddedPaymentMethodsView {
         mandateProvider: MandateTextProvider = MockMandateProvider(),
         shouldShowMandate: Bool = true,
         savedPaymentMethods: [STPPaymentMethod] = [],
-        customer: PaymentSheet.CustomerConfiguration? = nil,
         incentive: PaymentMethodIncentive? = nil,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
@@ -1489,7 +1488,6 @@ extension EmbeddedPaymentMethodsView {
             mandateProvider: mandateProvider,
             shouldShowMandate: shouldShowMandate,
             savedPaymentMethods: savedPaymentMethods,
-            customer: customer,
             incentive: incentive,
             analyticsHelper: ._testValue(),
             delegate: nil
