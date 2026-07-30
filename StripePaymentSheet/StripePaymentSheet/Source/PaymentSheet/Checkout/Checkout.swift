@@ -255,6 +255,13 @@ public final class Checkout: ObservableObject {
         }
     }
 
+    // MARK: - Customer Details
+
+    /// Use this method to update the Customer's email address.
+    public func updateEmail(_ email: String?) async throws {
+        try await performUpdate(.setEmail(email))
+    }
+
     // MARK: - Server Updates
 
     /// Runs an async function that calls your server to update the Checkout Session,
@@ -319,6 +326,10 @@ extension Checkout {
     func applyDefaults() async throws {
         let defaults = configuration.defaults
 
+        if let email = defaults.email,
+           session.email == nil {
+            try await updateEmail(email)
+        }
         if let billingDetails = defaults.billingDetails,
            let address = billingDetails.address {
             try await updateBillingTaxRegionIfNecessary(address: address)

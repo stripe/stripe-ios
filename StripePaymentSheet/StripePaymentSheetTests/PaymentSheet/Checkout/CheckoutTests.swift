@@ -156,6 +156,28 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(3000, checkout.session.total?.total.minorUnitsAmount)
     }
 
+    func testUpdateEmail() async throws {
+        // Given a Checkout Session without customer_email
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
+        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(configuration: configuration)
+
+        XCTAssertNil(checkout.session.email)
+
+        // When setting customer_email
+        try await checkout.updateEmail("jane@example.com")
+
+        // Then the Checkout Session reflects the updated email
+        XCTAssertEqual(checkout.session.email, "jane@example.com")
+
+        // When clearing customer_email
+        try await checkout.updateEmail(nil)
+
+        // Then the Checkout Session no longer has an email
+        XCTAssertNil(checkout.session.email)
+    }
+
     func testUpdateBillingTaxRegionIfNecessary() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             merchantCountry: "us_tax",

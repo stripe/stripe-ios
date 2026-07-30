@@ -18,7 +18,6 @@ extension Checkout.Session {
             let details = shippingAddressDetails(from: shipping)
             configuration.shippingDetails = { details }
         }
-        configuration.defaultBillingDetails.email = configuration.defaultBillingDetails.email ?? email
         configuration.billingDetailsCollectionConfiguration.address = resolvedAddressCollectionMode(
             serverBillingAddressCollection: billingAddressCollection,
             clientBillingAddressCollection: configuration.billingDetailsCollectionConfiguration.address

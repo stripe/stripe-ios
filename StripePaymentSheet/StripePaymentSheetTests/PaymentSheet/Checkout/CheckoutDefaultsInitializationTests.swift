@@ -71,26 +71,67 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         XCTAssertEqual(checkout.session.shippingAddress?.name, "Shipping Name")
     }
 
+    func testInitAppliesEmailDefaultThroughSessionUpdate() async throws {
+        // Given Checkout email defaults
+        stubCheckoutSessionRequests()
+
+        var configuration = Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        configuration.defaults.email = "jane@example.com"
+
+        // When Checkout initializes
+        let checkout = try await Checkout(configuration: configuration)
+        let requests = requestRecorder.requests
+
+        // Then the email default is applied before PaymentElement loads
+        XCTAssertNotNil(checkout.getPaymentElement())
+        XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession])
+        XCTAssertEqual(requests[1].params["customer_email"], "jane@example.com")
+    }
+
+    func testInitDoesNotApplyEmailDefaultWhenSessionReturnsEmail() async throws {
+        // Given Payment Pages returns a Checkout Session email
+        stubCheckoutSessionRequests(customerEmail: "session@example.com")
+
+        var configuration = Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        configuration.defaults.email = "jane@example.com"
+
+        // When Checkout initializes
+        let checkout = try await Checkout(configuration: configuration)
+        let requests = requestRecorder.requests
+
+        // Then Checkout does not overwrite the existing session email
+        XCTAssertNotNil(checkout.getPaymentElement())
+        XCTAssertEqual(requests.map(\.kind), [.initSession])
+    }
+
     // MARK: - Stubs
 
     private func stubCheckoutSessionRequests(
-        automaticTaxAddressSource: String = "billing"
+        automaticTaxAddressSource: String = "billing",
+        customerEmail: String? = nil
     ) {
         CheckoutTestHelpers.stubCheckoutSessionRequests(
             sessionId: sessionId,
             requestRecorder: requestRecorder,
             sessionJSON: { [self] in
-                sessionJSON(automaticTaxAddressSource: automaticTaxAddressSource)
+                sessionJSON(
+                    automaticTaxAddressSource: automaticTaxAddressSource,
+                    customerEmail: customerEmail
+                )
             }
         )
     }
 
     private func sessionJSON(
-        automaticTaxAddressSource: String = "billing"
+        automaticTaxAddressSource: String = "billing",
+        customerEmail: String? = nil
     ) -> [AnyHashable: Any] {
         var json = CheckoutTestHelpers.openSessionJSON
         json["session_id"] = sessionId
         json["client_secret"] = clientSecret
+        json["customer_email"] = customerEmail
         json["tax_context"] = [
             "automatic_tax_enabled": true,
             "automatic_tax_address_source": "session.\(automaticTaxAddressSource)",

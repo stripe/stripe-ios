@@ -67,6 +67,8 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.postalCode, "94105")
 
         XCTAssertEqual(embeddedConfiguration.defaultBillingDetails, paymentSheetConfiguration.defaultBillingDetails)
+        XCTAssertEqual(paymentSheetConfiguration.billingDetailsCollectionConfiguration.email, .never)
+        XCTAssertEqual(embeddedConfiguration.billingDetailsCollectionConfiguration.email, .never)
     }
 
     func testConfigurationSetsCheckoutMerchantDisplayName() async throws {

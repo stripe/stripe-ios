@@ -138,6 +138,11 @@ extension Checkout.Configuration {
         /// Default shipping details.
         public var shippingDetails: ShippingDetails?
 
+        /// The customer's email address.
+        /// This cannot be set if the Checkout Session was created with `customer_email`
+        /// or the Checkout Session's Customer already has an email.
+        public var email: String?
+
         /// Creates default customer details.
         public init() {}
 
