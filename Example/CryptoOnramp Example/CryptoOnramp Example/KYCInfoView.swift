@@ -200,6 +200,7 @@ struct KYCInfoView: View {
                             "Enter your first name",
                             text: $firstName,
                             field: .firstName,
+                            nextField: .lastName,
                             autocapitalization: .words
                         )
                     }
@@ -209,6 +210,7 @@ struct KYCInfoView: View {
                             "Enter your last name",
                             text: $lastName,
                             field: .lastName,
+                            nextField: residence == .us ? .idNumber : nil,
                             autocapitalization: .words
                         )
                     }
@@ -251,6 +253,7 @@ struct KYCInfoView: View {
                             "Country code",
                             text: $birthCountry,
                             field: .birthCountry,
+                            nextField: .birthCity,
                             autocapitalization: .allCharacters
                         )
                     }
@@ -260,6 +263,7 @@ struct KYCInfoView: View {
                             "Enter your city of birth",
                             text: $birthCity,
                             field: .birthCity,
+                            nextField: .nationalities,
                             autocapitalization: .words
                         )
                     }
@@ -269,6 +273,7 @@ struct KYCInfoView: View {
                             "Country codes separated by commas",
                             text: $nationalities,
                             field: .nationalities,
+                            nextField: collectionMode.requiresLevel0Fields ? .addressLine1 : nil,
                             autocapitalization: .allCharacters
                         )
                     }
@@ -280,6 +285,7 @@ struct KYCInfoView: View {
                             "Enter your street address",
                             text: $addressLine1,
                             field: .addressLine1,
+                            nextField: .addressLine2,
                             autocapitalization: .words
                         )
                     }
@@ -289,6 +295,7 @@ struct KYCInfoView: View {
                             "Apartment, suite, etc.",
                             text: $addressLine2,
                             field: .addressLine2,
+                            nextField: .city,
                             autocapitalization: .words
                         )
                     }
@@ -298,6 +305,7 @@ struct KYCInfoView: View {
                             "Enter your city",
                             text: $city,
                             field: .city,
+                            nextField: .state,
                             autocapitalization: .words
                         )
                     }
@@ -307,6 +315,7 @@ struct KYCInfoView: View {
                             "Enter your state or province",
                             text: $state,
                             field: .state,
+                            nextField: .postalCode,
                             autocapitalization: .words
                         )
                     }
@@ -315,7 +324,8 @@ struct KYCInfoView: View {
                         makeTextField(
                             "Enter your postal code",
                             text: $postalCode,
-                            field: .postalCode
+                            field: .postalCode,
+                            nextField: .country
                         )
                     }
 
@@ -343,6 +353,7 @@ struct KYCInfoView: View {
             }
             .padding()
         }
+        .accessibilityIdentifier("kyc_form")
         .navigationTitle("KYC Information")
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: residence) { newResidence in
@@ -422,6 +433,7 @@ struct KYCInfoView: View {
         _ titleKey: LocalizedStringKey,
         text: Binding<String>,
         field: Field,
+        nextField: Field? = nil,
         autocapitalization: UITextAutocapitalizationType = .none,
         keyboardType: UIKeyboardType = .default
     ) -> some View {
@@ -430,6 +442,10 @@ struct KYCInfoView: View {
             .autocapitalization(autocapitalization)
             .keyboardType(keyboardType)
             .focused($focusedField, equals: field)
+            .submitLabel(nextField == nil ? .done : .next)
+            .onSubmit {
+                focusedField = nextField
+            }
     }
 
     private var normalizedNationalities: [String]? {
