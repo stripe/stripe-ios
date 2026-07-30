@@ -45,6 +45,11 @@ extension Checkout.Session {
     var collectsTaxFromBillingAddress: Bool {
         return shouldSendTaxRegion(for: "billing")
     }
+
+    /// Whether this session's `payment_status` is `no_payment_required`.
+    var noPaymentRequired: Bool {
+        return paymentStatus == .noPaymentRequired
+    }
 }
 
 // MARK: - Methods
@@ -57,22 +62,14 @@ extension Checkout.Session {
         return automaticTaxEnabled && automaticTaxAddressSource == addressType
     }
 
-    /// Returns the expectedAmount if in `payment` mode, `nil` if in `setup` mode, and asserts
-    /// if in `subscription` or `unknown` mode.
+    /// Returns the expected amount for payment-style sessions and `nil` for setup-style sessions.
     func expectedAmount() -> Int? {
-        switch mode {
-        case .payment:
-            guard let total = total?.total.minorUnitsAmount else {
-                stpAssertionFailure("Missing expected amount from checkout session")
-                return nil
-            }
-            return total
-        case .setup:
-            return nil
-        case .unknown, .subscription:
-            stpAssertionFailure("Unknown and subscription modes are not currently supported with checkout sessions")
+        guard !noPaymentRequired else { return nil }
+        guard let total = total?.total.minorUnitsAmount else {
+            stpAssertionFailure("Missing expected amount from checkout session")
             return nil
         }
+        return total
     }
 
     func merchantWillSavePaymentMethod(_ paymentMethodType: STPPaymentMethodType) -> Bool {
@@ -80,18 +77,14 @@ extension Checkout.Session {
             return false
         }
 
-        switch mode {
-        case .setup:
+        if noPaymentRequired {
             return true
-        case .payment:
-            guard let setupFutureUsage = setupFutureUsage(for: paymentMethodType) else {
-                return false
-            }
-            return setupFutureUsage != "none"
-        case .subscription, .unknown:
-            stpAssertionFailure("Unknown and subscription modes are not currently supported with checkout sessions")
+        }
+
+        guard let setupFutureUsage = setupFutureUsage(for: paymentMethodType) else {
             return false
         }
+        return setupFutureUsage != "none"
     }
 
     func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
@@ -145,7 +138,7 @@ extension Checkout.Session {
             status: status,
             tax: tax,
             total: total,
-            mode: mode,
+            paymentStatus: paymentStatus,
             paymentMethodOptions: paymentMethodOptions,
             customer: customer,
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,

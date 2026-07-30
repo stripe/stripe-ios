@@ -35,7 +35,7 @@ extension PaymentPagesAPIResponse {
             status: status,
             tax: tax,
             total: total,
-            mode: mode,
+            paymentStatus: paymentStatus,
             paymentMethodOptions: paymentMethodOptions,
             customer: customer,
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
@@ -50,18 +50,5 @@ extension PaymentPagesAPIResponse {
             automaticTaxAddressSource: automaticTaxAddressSource,
             elementsSession: elementsSession
         )
-    }
-}
-
-// MARK: - Mode parsing
-
-extension Checkout.Mode {
-    static func mode(from string: String) -> Checkout.Mode {
-        switch string.lowercased() {
-        case "payment": return .payment
-        case "setup": return .setup
-        case "subscription": return .subscription
-        default: return .unknown
-        }
     }
 }

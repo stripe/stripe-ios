@@ -78,7 +78,7 @@ extension Checkout {
 
         // MARK: - Internal Properties
 
-        let mode: Checkout.Mode
+        let paymentStatus: Checkout.PaymentStatus
         let paymentMethodOptions: STPPaymentMethodOptions?
         let customer: STPCheckoutSessionCustomer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
@@ -113,23 +113,5 @@ extension Checkout.Session {
         public let paymentMethodType: String
         /// Mandate text that must be displayed when the PaymentElement is configured not to display it.
         public let mandateText: NSAttributedString?
-    }
-}
-
-// MARK: - Mode
-
-@_spi(STP)
-@_spi(ReactNativeSDK)
-extension Checkout {
-    /// The mode of a checkout session.
-    public enum Mode: Sendable {
-        /// A mode not recognized by this version of the SDK.
-        case unknown
-        /// Accept one-time payments for cards, iDEAL, and more.
-        case payment
-        /// Save payment details to charge your customers later.
-        case setup
-        /// Use Stripe Billing to set up fixed-price subscriptions.
-        case subscription
     }
 }
