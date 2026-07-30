@@ -32,6 +32,7 @@ final class SuccessViewController: IdentityFlowViewController {
             try htmlView.configure(
                 with: .init(
                     bodyHtmlString: successContent.body,
+                    shouldCenterBodyText: true,
                     didOpenURL: { [weak self] url in
                         self?.openInSafariViewController(url: url)
                     }
