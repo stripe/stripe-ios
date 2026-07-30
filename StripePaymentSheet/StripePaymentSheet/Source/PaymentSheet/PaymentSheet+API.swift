@@ -663,164 +663,217 @@ extension PaymentSheet {
                 }
             }
 
-            let confirmWithPaymentDetails:
-                (
-                    PaymentSheetLinkAccount,
-                    ConsumerPaymentDetails,
-                    String?, // cvc
-                    String?, // phone number
-                    IntentConfirmParams.SaveForFutureUseCheckboxState,
-                    STPPaymentMethodAllowRedisplay?
-                ) -> Void = { linkAccount, paymentDetails, cvc, billingPhoneNumber, saveForFutureUseCheckboxState, allowRedisplay in
-                    guard let paymentMethodParams = linkAccount.makePaymentMethodParams(
-                        from: paymentDetails,
-                        cvc: cvc,
-                        billingPhoneNumber: billingPhoneNumber,
-                        allowRedisplay: allowRedisplay
-                    ) else {
-                        let error = PaymentSheetError.payingWithoutValidLinkSession
-                        completion(.failed(error: error), nil)
-                        return
-                    }
-
-                    confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
-                }
-
-            let createPaymentDetailsAndConfirm:
-                (
-                    PaymentSheetLinkAccount,
-                    STPPaymentMethodParams,
-                    IntentConfirmParams.SaveForFutureUseCheckboxState
-                ) -> Void = { linkAccount, paymentMethodParams, saveForFutureUseCheckboxState in
-                    paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
-                    guard linkAccount.sessionState == .verified else {
-                        // We don't support 2FA in the native mobile Link flow, so if 2FA is required then this is a no-op.
-                        // Just fall through and don't save the card details to Link.
-                        STPAnalyticsClient.sharedClient.logLinkPopupSkipped()
-
-                        // Attempt to confirm directly with params
-                        confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
-                        return
-                    }
-
-                    linkAccount.createPaymentDetails(with: paymentMethodParams, isDefault: false) { result in
-                        switch result {
-                        case .success(let paymentDetails):
-                            // We need to explicitly pass the billing phone number to the share and payment method endpoints,
-                            // since it's not part of the consumer payment details.
-                            let billingPhoneNumber = paymentMethodParams.billingDetails?.phone
-
-                            if elementsSession.linkPassthroughModeEnabled {
-                                // If passthrough mode, share payment details
-                                linkAccount.sharePaymentDetails(
-                                    id: paymentDetails.stripeID,
-                                    cvc: paymentMethodParams.card?.cvc,
-                                    allowRedisplay: paymentMethodParams.allowRedisplay,
-                                    expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession),
-                                    billingPhoneNumber: billingPhoneNumber,
-                                    clientAttributionMetadata: clientAttributionMetadata
-                                ) { result in
-                                    switch result {
-                                    case .success(let paymentDetailsShareResponse):
-                                        confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, saveForFutureUseCheckboxState, clientAttributionMetadata)
-                                    case .failure(let error):
-                                        STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
-                                        // If this fails, confirm directly
-                                        confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
-                                    }
-                                }
-                            } else {
-                                // If not passthrough mode, confirm details directly
-                                confirmWithPaymentDetails(linkAccount, paymentDetails, paymentMethodParams.card?.cvc, billingPhoneNumber, saveForFutureUseCheckboxState, paymentMethodParams.allowRedisplay)
-                            }
-                        case .failure(let error):
-                            STPAnalyticsClient.sharedClient.logLinkCreatePaymentDetailsFailure(error: error)
-                            // Attempt to confirm directly with params
-                            confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
-                        }
-                    }
-                }
-
-            switch confirmOption {
-            case .wallet:
-                let useNativeLink = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
-                if useNativeLink {
-                    // logPayment is false because callers of PaymentSheet.confirm() are responsible for logging the payment result.
-                    let linkController = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, logPayment: false, analyticsHelper: analyticsHelper, checkout: checkout, confirmationChallenge: confirmationChallenge)
-                    linkController.presentAsBottomSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
-                        completion(result, confirmationType)
-                    })
-                } else {
-                    let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, checkout: checkout, confirmationChallenge: confirmationChallenge)
-                    linkController.present(from: authenticationContext.authenticationPresentingViewController(),
-                                           completion: completion)
-                }
-            case .signUp(_, let linkAccount, let phoneNumberFromSignup, let consentAction, let legalName, let intentConfirmParams):
-                let billingDetails = intentConfirmParams.paymentMethodParams.billingDetails
-                let countryCode = billingDetails?.address?.country ?? elementsSession.countryCode
-
-                let phoneNumber = if elementsSession.linkSignupOptInFeatureEnabled {
-                    billingDetails?.phone.flatMap { PhoneNumber.fromE164($0) }
-                } else {
-                    phoneNumberFromSignup
-                }
-
-                linkAccount.signUp(
-                    with: phoneNumber,
-                    legalName: legalName,
-                    countryCode: countryCode,
-                    consentAction: consentAction
-                ) { result in
-                    UserDefaults.standard.markLinkAsUsed()
-                    switch result {
-                    case .success:
-                        STPAnalyticsClient.sharedClient.logLinkSignupComplete()
-                        let linkPaymentMethodType: STPPaymentMethodType = elementsSession.linkPassthroughModeEnabled ? intentConfirmParams.paymentMethodParams.type : .link
-                        // Set allow_redisplay on params
-                        setAllowRedisplay(intentConfirmParams, linkPaymentMethodType)
-                        createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState)
-                    case .failure(let error as NSError):
-                        STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
-                        // Attempt to confirm directly with params as a fallback.
-                        setAllowRedisplay(intentConfirmParams, intentConfirmParams.paymentMethodParams.type)
-                        confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, linkAccount, intentConfirmParams.saveForFutureUseCheckboxState)
-                    }
-                }
-            case .withPaymentMethod(_, let paymentMethod):
-                confirmWithPaymentMethod(paymentMethod, nil, .hidden, clientAttributionMetadata) // from Link web controller
-            case .withPaymentDetails(_, let linkAccount, let paymentDetails, let confirmationExtras, _):
-                let saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState = .hidden // we don't show a save-to-merchant checkbox in Link VC
-                let allowRedisplay = paymentDetails.computeAllowRedisplay(
-                    elementsSession: elementsSession,
-                    isSettingUp: isSettingUp
-                )
-
-                if elementsSession.linkPassthroughModeEnabled {
-                    linkAccount.sharePaymentDetails(
-                        id: paymentDetails.stripeID,
-                        cvc: paymentDetails.cvc,
-                        allowRedisplay: allowRedisplay,
-                        expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession),
-                        billingPhoneNumber: confirmationExtras?.billingPhoneNumber,
-                        clientAttributionMetadata: clientAttributionMetadata
-                    ) { result in
-                        switch result {
-                        case .success(let paymentDetailsShareResponse):
-                            confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, saveForFutureUseCheckboxState, clientAttributionMetadata)
-                        case .failure(let error):
-                            STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
-                            paymentHandlerCompletion(.failed, error as NSError)
-                        }
-                    }
-                } else {
-                    confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, confirmationExtras?.billingPhoneNumber, saveForFutureUseCheckboxState, allowRedisplay)
-                }
-            }
+            confirmLinkPaymentOption(
+                confirmOption: confirmOption,
+                configuration: configuration,
+                authenticationContext: authenticationContext,
+                intent: intent,
+                elementsSession: elementsSession,
+                analyticsHelper: analyticsHelper,
+                confirmationChallenge: confirmationChallenge,
+                clientAttributionMetadata: clientAttributionMetadata,
+                isSettingUp: isSettingUp,
+                setAllowRedisplay: setAllowRedisplay,
+                confirmWithPaymentMethodParams: confirmWithPaymentMethodParams,
+                confirmWithPaymentMethod: confirmWithPaymentMethod,
+                checkout: checkout,
+                paymentHandlerCompletion: paymentHandlerCompletion,
+                completion: completion
+            )
         case let .external(externalPaymentOption, billingDetails):
             Task { @MainActor in
                 // Call confirmHandler so that the merchant completes the payment
                 let result = await externalPaymentOption.confirm(billingDetails: billingDetails)
                 completion(result, nil)
+            }
+        }
+    }
+
+    static func confirmLinkPaymentOption(
+        confirmOption: LinkConfirmOption,
+        configuration: PaymentElementConfiguration,
+        authenticationContext: STPAuthenticationContext,
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        confirmationChallenge: ConfirmationChallenge?,
+        clientAttributionMetadata: STPClientAttributionMetadata,
+        isSettingUp: @escaping (STPPaymentMethodType) -> Bool,
+        setAllowRedisplay: @escaping (IntentConfirmParams, STPPaymentMethodType) -> Void,
+        confirmWithPaymentMethodParams: @escaping (STPPaymentMethodParams, PaymentSheetLinkAccount?, IntentConfirmParams.SaveForFutureUseCheckboxState) -> Void,
+        confirmWithPaymentMethod: @escaping (STPPaymentMethod, PaymentSheetLinkAccount?, IntentConfirmParams.SaveForFutureUseCheckboxState, STPClientAttributionMetadata?) -> Void,
+        checkout: CheckoutSessionBillingAddressUpdater? = nil,
+        paymentHandlerCompletion: @escaping (STPPaymentHandlerActionStatus, NSError?) -> Void,
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
+        // This is called when the customer pays in the sheet (as opposed to the Link webview) and agreed to sign up for Link.
+        let confirmWithPaymentDetails:
+            (
+                PaymentSheetLinkAccount,
+                ConsumerPaymentDetails,
+                String?, // cvc
+                String?, // phone number
+                IntentConfirmParams.SaveForFutureUseCheckboxState,
+                STPPaymentMethodAllowRedisplay?
+            ) -> Void = { linkAccount, paymentDetails, cvc, billingPhoneNumber, saveForFutureUseCheckboxState, allowRedisplay in
+                guard let paymentMethodParams = linkAccount.makePaymentMethodParams(
+                    from: paymentDetails,
+                    cvc: cvc,
+                    billingPhoneNumber: billingPhoneNumber,
+                    allowRedisplay: allowRedisplay
+                ) else {
+                    let error = PaymentSheetError.payingWithoutValidLinkSession
+                    completion(.failed(error: error), nil)
+                    return
+                }
+
+                confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
+            }
+
+        let createPaymentDetailsAndConfirm:
+            (
+                PaymentSheetLinkAccount,
+                STPPaymentMethodParams,
+                IntentConfirmParams.SaveForFutureUseCheckboxState
+            ) -> Void = { linkAccount, paymentMethodParams, saveForFutureUseCheckboxState in
+                paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+                guard linkAccount.sessionState == .verified else {
+                    // We don't support 2FA in the native mobile Link flow, so if 2FA is required then this is a no-op.
+                    // Just fall through and don't save the card details to Link.
+                    STPAnalyticsClient.sharedClient.logLinkPopupSkipped()
+
+                    // Attempt to confirm directly with params
+                    confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
+                    return
+                }
+
+                linkAccount.createPaymentDetails(with: paymentMethodParams, isDefault: false) { result in
+                    switch result {
+                    case .success(let paymentDetails):
+                        // We need to explicitly pass the billing phone number to the share and payment method endpoints,
+                        // since it's not part of the consumer payment details.
+                        let billingPhoneNumber = paymentMethodParams.billingDetails?.phone
+
+                        if elementsSession.linkPassthroughModeEnabled {
+                            // If passthrough mode, share payment details
+                            linkAccount.sharePaymentDetails(
+                                id: paymentDetails.stripeID,
+                                cvc: paymentMethodParams.card?.cvc,
+                                allowRedisplay: paymentMethodParams.allowRedisplay,
+                                expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession),
+                                billingPhoneNumber: billingPhoneNumber,
+                                clientAttributionMetadata: clientAttributionMetadata
+                            ) { result in
+                                switch result {
+                                case .success(let paymentDetailsShareResponse):
+                                    confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, saveForFutureUseCheckboxState, clientAttributionMetadata)
+                                case .failure(let error):
+                                    STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
+                                    // If this fails, confirm directly
+                                    confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
+                                }
+                            }
+                        } else {
+                            // If not passthrough mode, confirm details directly
+                            confirmWithPaymentDetails(linkAccount, paymentDetails, paymentMethodParams.card?.cvc, billingPhoneNumber, saveForFutureUseCheckboxState, paymentMethodParams.allowRedisplay)
+                        }
+                    case .failure(let error):
+                        STPAnalyticsClient.sharedClient.logLinkCreatePaymentDetailsFailure(error: error)
+                        // Attempt to confirm directly
+                        confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
+                    }
+                }
+            }
+
+        switch confirmOption {
+        case .wallet:
+            let useNativeLink = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
+            if useNativeLink {
+                // logPayment is false because callers of PaymentSheet.confirm() are responsible for logging the payment result.
+                let linkController = PayWithNativeLinkController(
+                    mode: .full,
+                    intent: intent,
+                    elementsSession: elementsSession,
+                    configuration: configuration,
+                    logPayment: false,
+                    analyticsHelper: analyticsHelper,
+                    checkout: checkout,
+                    confirmationChallenge: confirmationChallenge
+                )
+                linkController.presentAsBottomSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
+                    completion(result, confirmationType)
+                })
+            } else {
+                let linkController = PayWithLinkController(
+                    intent: intent,
+                    elementsSession: elementsSession,
+                    configuration: configuration,
+                    analyticsHelper: analyticsHelper,
+                    checkout: checkout,
+                    confirmationChallenge: confirmationChallenge
+                )
+                linkController.present(from: authenticationContext.authenticationPresentingViewController(),
+                                       completion: completion)
+            }
+        case .signUp(_, let linkAccount, let phoneNumberFromSignup, let consentAction, let legalName, let intentConfirmParams):
+            let billingDetails = intentConfirmParams.paymentMethodParams.billingDetails
+            let countryCode = billingDetails?.address?.country ?? elementsSession.countryCode
+
+            let phoneNumber = if elementsSession.linkSignupOptInFeatureEnabled {
+                billingDetails?.phone.flatMap { PhoneNumber.fromE164($0) }
+            } else {
+                phoneNumberFromSignup
+            }
+
+            linkAccount.signUp(
+                with: phoneNumber,
+                legalName: legalName,
+                countryCode: countryCode,
+                consentAction: consentAction
+            ) { result in
+                UserDefaults.standard.markLinkAsUsed()
+                switch result {
+                case .success:
+                    STPAnalyticsClient.sharedClient.logLinkSignupComplete()
+                    let linkPaymentMethodType: STPPaymentMethodType = elementsSession.linkPassthroughModeEnabled ? intentConfirmParams.paymentMethodParams.type : .link
+                    // Set allow_redisplay on params
+                    setAllowRedisplay(intentConfirmParams, linkPaymentMethodType)
+                    createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState)
+                case .failure(let error as NSError):
+                    STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
+                    // Attempt to confirm directly with params as a fallback.
+                    setAllowRedisplay(intentConfirmParams, intentConfirmParams.paymentMethodParams.type)
+                    confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, linkAccount, intentConfirmParams.saveForFutureUseCheckboxState)
+                }
+            }
+        case .withPaymentMethod(_, let paymentMethod):
+            confirmWithPaymentMethod(paymentMethod, nil, .hidden, clientAttributionMetadata) // from Link web controller
+        case .withPaymentDetails(_, let linkAccount, let paymentDetails, let confirmationExtras, _):
+            let saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState = .hidden // we don't show a save-to-merchant checkbox in Link VC
+            let allowRedisplay = paymentDetails.computeAllowRedisplay(
+                elementsSession: elementsSession,
+                isSettingUp: isSettingUp
+            )
+
+            if elementsSession.linkPassthroughModeEnabled {
+                linkAccount.sharePaymentDetails(
+                    id: paymentDetails.stripeID,
+                    cvc: paymentDetails.cvc,
+                    allowRedisplay: allowRedisplay,
+                    expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession),
+                    billingPhoneNumber: confirmationExtras?.billingPhoneNumber,
+                    clientAttributionMetadata: clientAttributionMetadata
+                ) { result in
+                    switch result {
+                    case .success(let paymentDetailsShareResponse):
+                        confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, saveForFutureUseCheckboxState, clientAttributionMetadata)
+                    case .failure(let error):
+                        STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
+                        paymentHandlerCompletion(.failed, error as NSError)
+                    }
+                }
+            } else {
+                confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, confirmationExtras?.billingPhoneNumber, saveForFutureUseCheckboxState, allowRedisplay)
             }
         }
     }
