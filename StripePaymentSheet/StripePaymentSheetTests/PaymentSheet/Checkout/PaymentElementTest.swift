@@ -75,6 +75,7 @@ final class PaymentElementTest: XCTestCase {
         // Given Checkout merchant display name
         var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.merchantDisplayName = "Configured Merchant"
+        checkoutConfiguration.userInterfaceStyle = .alwaysDark
 
         // When Checkout creates PaymentElement
         let checkout = try await Checkout(
@@ -90,6 +91,8 @@ final class PaymentElementTest: XCTestCase {
         // Then both configurations use the configured merchant display name
         XCTAssertEqual(paymentSheetConfiguration.merchantDisplayName, "Configured Merchant")
         XCTAssertEqual(embeddedConfiguration.merchantDisplayName, "Configured Merchant")
+        XCTAssertEqual(paymentSheetConfiguration.style, .alwaysDark)
+        XCTAssertEqual(embeddedConfiguration.style, .alwaysDark)
     }
 
     func testConfigurationDefaultsMerchantDisplayNameToCheckoutSessionBusinessName() async throws {
