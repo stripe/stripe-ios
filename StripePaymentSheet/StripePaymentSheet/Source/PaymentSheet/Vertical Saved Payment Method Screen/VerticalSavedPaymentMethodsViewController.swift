@@ -37,7 +37,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     // MARK: Private properties
     private let configuration: PaymentElementConfiguration
     private let intent: Intent
-    private weak var checkout: Checkout?
+    private weak var checkout: CheckoutSessionBillingAddressUpdater?
     private let elementsSession: STPElementsSession
     private let paymentMethodRemove: Bool
     private let paymentMethodRemoveLast: Bool
@@ -185,7 +185,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     init(
         configuration: PaymentElementConfiguration,
         intent: Intent,
-        checkout: Checkout? = nil,
+        checkout: CheckoutSessionBillingAddressUpdater? = nil,
         selectedPaymentMethod: STPPaymentMethod?,
         paymentMethods: [STPPaymentMethod],
         elementsSession: STPElementsSession,
@@ -366,7 +366,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
 
         guard let checkout,
               intent.collectsTaxFromBillingAddress,
-              paymentMethod.billingDetails?.address?.country?.nonEmpty != nil else {
+              let address = paymentMethod.billingDetails?.address?.checkoutAddress else {
             persistSelection(paymentMethod)
             complete()
             return
@@ -377,7 +377,10 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
-                try await checkout.syncBillingAddress(from: paymentMethod.billingDetails)
+                _ = try await checkout.updateBillingTaxRegionIfNecessaryForPaymentSheet(
+                    address: address,
+                    canUpdateWhileSheetPresented: true
+                )
                 persistSelection(paymentMethod)
                 complete()
             } catch {
