@@ -12,8 +12,6 @@ import Foundation
 extension Checkout {
     enum SessionUpdate {
         case setPromotionCode(String)
-        case setLineItemQuantity(lineItemId: String, quantity: Int)
-        case setShippingRate(String)
         case setTaxRegion(Address)
         case setCurrency(String)
 
@@ -21,13 +19,6 @@ extension Checkout {
             switch self {
             case .setPromotionCode(let code):
                 return ["promotion_code": code]
-            case .setLineItemQuantity(let lineItemId, let quantity):
-                return [
-                    "updated_line_item_quantity[line_item_id]": lineItemId,
-                    "updated_line_item_quantity[quantity]": quantity,
-                ]
-            case .setShippingRate(let optionId):
-                return ["shipping_rate": optionId]
             case .setTaxRegion(let address):
                 return ([
                     "tax_region[country]": address.country,

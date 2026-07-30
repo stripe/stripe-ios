@@ -80,32 +80,8 @@ struct CheckoutCartContentView: View {
 
                                 Spacer()
 
-                                // Custom Stepper
-                                HStack {
-                                    Button(action: {
-                                        if item.quantity > 0 {
-                                            updateQuantity(for: item.id, to: item.quantity - 1)
-                                        }
-                                    }) {
-                                        Image(systemName: "minus.circle.fill")
-                                            .foregroundColor(item.quantity > 0 ? .primary : .gray.opacity(0.5))
-                                            .font(.system(size: 24))
-                                    }
-                                    .buttonStyle(PlainButtonStyle())
-
-                                    Text("\(item.quantity)")
-                                        .font(.body).bold()
-                                        .frame(minWidth: 24, alignment: .center)
-
-                                    Button(action: {
-                                        updateQuantity(for: item.id, to: item.quantity + 1)
-                                    }) {
-                                        Image(systemName: "plus.circle.fill")
-                                            .foregroundColor(.primary)
-                                            .font(.system(size: 24))
-                                    }
-                                    .buttonStyle(PlainButtonStyle())
-                                }
+                                Text("Qty: \(item.quantity)")
+                                    .font(.body).bold()
                             }
                             Spacer()
                             Text(formatCartCurrency(
@@ -412,19 +388,6 @@ struct CheckoutCartContentView: View {
     }
 
     // MARK: - Actions
-
-    private func updateQuantity(for lineItemId: String, to quantity: Int) {
-        Task {
-            isLoading = true
-            errorMessage = nil
-            do {
-                try await checkout.updateQuantity(lineItemId: lineItemId, quantity: quantity)
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-            isLoading = false
-        }
-    }
 
     private func applyPromotionCode(_ code: String) {
         Task {
