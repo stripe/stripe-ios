@@ -25,6 +25,7 @@ public final class CurrencySelectorElementUIView: UIView {
 
     private weak var delegate: CurrencySelectorElementDelegate?
     private let appearance: CurrencySelectorElement.Appearance
+    private let checkoutSessionId: String
     private let flagImageManager = AdaptivePricingFlagImageManager()
     private var selectorView: TwoOptionSelectorView?
     private var lastSelectedCurrency: String?
@@ -45,6 +46,7 @@ public final class CurrencySelectorElementUIView: UIView {
     ) async {
         self.delegate = delegate
         self.appearance = appearance
+        self.checkoutSessionId = session.id
         super.init(frame: .zero)
 
         await flagImageManager.prefetchFlagImages(for: session)
@@ -204,7 +206,7 @@ extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
                 STPAnalyticsClient.sharedClient.log(
                     analytic: PaymentSheetAnalytic(
                         event: .adaptivePricingCurrencyToggled,
-                        additionalParams: [:]
+                        additionalParams: ["checkout_session_id": checkoutSessionId]
                     )
                 )
             } catch {
@@ -216,7 +218,9 @@ extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
                 STPAnalyticsClient.sharedClient.log(
                     analytic: PaymentSheetAnalytic(
                         event: .adaptivePricingCurrencyToggledFailed,
-                        additionalParams: error.serializeForV1Analytics()
+                        additionalParams: error.serializeForV1Analytics().merging(
+                            ["checkout_session_id": checkoutSessionId]
+                        ) { _, checkoutSessionId in checkoutSessionId }
                     )
                 )
                 showError(error.localizedDescription)

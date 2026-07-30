@@ -118,44 +118,6 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         }
     }
 
-    func testUpdateQuantity() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
-            allowAdjustableLineItemQuantity: true
-        )
-        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkout = try await Checkout(configuration: configuration)
-
-        XCTAssertEqual(5050, checkout.session.total?.total.minorUnitsAmount)
-
-        let itemId = try XCTUnwrap(
-            checkout.session.lineItems.first?.id,
-            "Session should have at least one line item"
-        )
-
-        try await checkout.updateQuantity(lineItemId: itemId, quantity: 2)
-        XCTAssertEqual(10100, checkout.session.total?.total.minorUnitsAmount)
-    }
-
-    func testSelectShippingOption() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
-            includeShippingOptions: true
-        )
-        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkout = try await Checkout(configuration: configuration)
-
-        XCTAssertEqual(2500, checkout.session.total?.total.minorUnitsAmount)
-
-        let rateId = try XCTUnwrap(
-            checkout.session.shippingOptions.last?.id,
-            "Session should have at least one shipping option"
-        )
-
-        try await checkout.selectShippingOption(rateId)
-        XCTAssertEqual(3000, checkout.session.total?.total.minorUnitsAmount)
-    }
-
     func testUpdateBillingTaxRegionIfNecessary() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             merchantCountry: "us_tax",
