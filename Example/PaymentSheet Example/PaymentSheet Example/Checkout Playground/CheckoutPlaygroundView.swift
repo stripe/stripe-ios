@@ -87,7 +87,7 @@ struct CheckoutPlaygroundView: View {
                         shippingAddressCollection: viewModel.shippingAddressCollection,
                         adaptivePricing: viewModel.adaptivePricing,
                         integrationType: viewModel.integrationType,
-                        showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .enabled,
+                        showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
                         currencySelectorAppearance: viewModel.currencySelectorAppearance
                     )
                 }

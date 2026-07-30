@@ -13,11 +13,16 @@ enum ExpressCheckoutElementUtilities {
         for button in session.availableExpressButtonTypes {
             switch button {
             case .applePay:
-                if configuration.applePayConfiguration != nil && StripeAPI.deviceSupportsApplePay() {
+                if configuration.applePayConfiguration != nil
+                    && StripeAPI.deviceSupportsApplePay()
+                    && session.elementsSession.isApplePayEnabled {
                     buttons.append(.applePay)
                 }
             case .link:
-                buttons.append(.link)
+                if session.elementsSession.supportsLink
+                    && configuration.linkConfiguration?.display != .never {
+                    buttons.append(.link)
+                }
             }
         }
         return buttons
