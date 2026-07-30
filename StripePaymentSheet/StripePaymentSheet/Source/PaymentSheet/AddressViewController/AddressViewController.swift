@@ -56,6 +56,23 @@ public class AddressViewController: UIViewController {
     private var selectedAutoCompleteResult: PaymentSheet.Address?
     private var didLogAddressShow = false
 
+    /// The address the sheet was presented with. Returned to the delegate when the customer
+    /// cancels (taps 'X' with no changes, or discards changes) so we never hand back
+    /// edited-but-abandoned data.
+    private var initialAddressDetails: AddressDetails?
+    /// A snapshot of the form's raw values when it was first presented, used to detect unsaved changes.
+    private var initialFormSnapshot: AddressSectionElement.AddressDetails?
+    /// The additional-fields checkbox state when the form was first presented.
+    private var initialCheckboxSelected: Bool?
+
+    /// Whether the customer has changed any form value since the sheet was presented.
+    var hasChanges: Bool {
+        guard let addressSection = addressSection else { return false }
+        if addressSection.addressDetails != initialFormSnapshot { return true }
+        if checkboxElement?.checkboxButton.isSelected != initialCheckboxSelected { return true }
+        return false
+    }
+
     // MARK: - Internal properties
     let addressSpecProvider: AddressSpecProvider
     private var latestError: Error? {
@@ -337,7 +354,29 @@ extension AddressViewController {
     }
 
     @objc func didTapCloseButton() {
-        didContinue()
+        // Tapping 'X' is a cancel: if the customer changed nothing, dismiss and return the
+        // as-presented address; otherwise confirm before discarding their changes.
+        if hasChanges {
+            presentDiscardChangesAlert()
+        } else {
+            delegate?.addressViewControllerDidFinish(self, with: initialAddressDetails)
+        }
+    }
+
+    private func presentDiscardChangesAlert() {
+        let alertController = UIAlertController(
+            title: String.Localized.discard_changes_title,
+            message: nil,
+            preferredStyle: .alert
+        )
+        alertController.addAction(UIAlertAction(title: String.Localized.keep_editing, style: .cancel))
+        alertController.addAction(
+            UIAlertAction(title: String.Localized.discard_changes, style: .destructive) { [weak self] _ in
+                guard let self else { return }
+                self.delegate?.addressViewControllerDidFinish(self, with: self.initialAddressDetails)
+            }
+        )
+        present(alertController, animated: true)
     }
 
     func handleShippingEqualsBillingToggle(isSelected: Bool) {
@@ -423,6 +462,12 @@ extension AddressViewController {
 
     private func loadUI() {
         self.addressSection = makeDefaultAddressSection()
+
+        // Snapshot the form's initial state so we can (1) detect unsaved changes and
+        // (2) return the as-presented address to the delegate if the customer cancels.
+        self.initialAddressDetails = addressDetails
+        self.initialFormSnapshot = addressSection?.addressDetails
+        self.initialCheckboxSelected = checkboxElement?.checkboxButton.isSelected
 
         let stackView = UIStackView(arrangedSubviews: [headerLabel, formElement.view, errorLabel])
         stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
@@ -635,7 +680,9 @@ extension PaymentSheet.Address {
 
 // MARK: - UIAdaptivePresentationControllerDelegate
 extension AddressViewController: UIAdaptivePresentationControllerDelegate {
-    public func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
-        didContinue()
+    public func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        // Disallow swipe-to-dismiss so an accidental gesture can't discard entered address data.
+        // Customers exit via the 'X' button (which confirms if there are unsaved changes) or Continue.
+        return false
     }
 }

@@ -52,6 +52,8 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
         context.coordinator.addressViewController = addressViewController
 
         let navigationController = UINavigationController(rootViewController: addressViewController)
+        // Disallow swipe-to-dismiss so accidental gestures can't discard entered address data.
+        navigationController.isModalInPresentation = true
 
         // Set preferred content size to help SwiftUI with initial sizing
         // This prevents constraint conflicts during measurement phase and janky present animation
@@ -101,9 +103,9 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
             }
         }
 
-        // Called after the sheet has been dismissed by a swipe down
-        func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-            addressViewController?.didContinue()
+        // Disallow swipe-to-dismiss so accidental gestures can't discard entered address data.
+        func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+            return false
         }
     }
 }
