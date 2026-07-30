@@ -313,26 +313,6 @@ extension STPAPIClient {
         )
     }
 
-    /// Make a GET request using the passed parameters.
-    ///
-    /// - Returns: a promise that is fullfilled when the request is complete.
-    @_spi(STP) public func get<T: Decodable>(
-        resource: String,
-        parameters: [String: Any],
-        ephemeralKeySecret: String? = nil,
-        consumerPublishableKey: String? = nil,
-        apiVersionOverride: String? = nil
-    ) -> Promise<T> {
-        return request(
-            method: .get,
-            parameters: parameters,
-            ephemeralKeySecret: ephemeralKeySecret,
-            consumerPublishableKey: consumerPublishableKey,
-            apiVersionOverride: apiVersionOverride,
-            resource: resource
-        )
-    }
-
     /// Make a POST request using the passed parameters.
     @_spi(STP) public func post<T: Decodable>(
         resource: String,
