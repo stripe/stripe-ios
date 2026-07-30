@@ -386,7 +386,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         button: SavedPaymentMethodRowButton,
         previousButton: SavedPaymentMethodRowButton?
     ) {
-        errorLabel.setHiddenIfNecessary(true)
+        setError(nil)
         button.setLoading(true)
         Task { @MainActor [weak self] in
             guard let self else { return }
@@ -420,9 +420,20 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         button.state = button.previousSelectedState
         previousButton?.state = .selected
         setSelectionInteractionEnabled(true)
-        errorLabel.text = error.nonGenericDescription
-        animateHeightChange {
-            self.errorLabel.setHiddenIfNecessary(false)
+        setError(error)
+    }
+
+    private func setError(_ error: Error?) {
+        let shouldHideError = error == nil
+        errorLabel.text = error?.nonGenericDescription
+        animateHeightChange { [self] in
+            if let lastPaymentMethodRow = paymentMethodRows.last {
+                stackView.setCustomSpacing(shouldHideError ? 0 : 12, after: lastPaymentMethodRow)
+            }
+            errorLabel.setHiddenIfNecessary(shouldHideError)
+            guard !shouldHideError else { return }
+            errorLabel.setNeedsLayout()
+            errorLabel.layoutIfNeeded()
         }
     }
 
