@@ -262,7 +262,7 @@ US
         XCTAssertEqual(shippingButton.label, expectedAddress)
     }
 
-    func testAddressAutoComplete_UnitedStates () throws {
+    func testAddressAutoComplete_UnitedStates() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.uiStyle = .flowController
