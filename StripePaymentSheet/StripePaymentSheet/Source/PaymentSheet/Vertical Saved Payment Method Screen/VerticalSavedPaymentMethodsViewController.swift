@@ -361,17 +361,31 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         previousButton?.state = .unselected
 
         // Disable interaction to prevent double selecting or entering edit mode since we will be dismissing soon
-        view.isUserInteractionEnabled = false
-        navigationBar.isUserInteractionEnabled = false
+        setSelectionInteractionEnabled(false)
 
         guard let checkout,
               intent.collectsTaxFromBillingAddress,
               let address = paymentMethod.billingDetails?.address?.checkoutAddress else {
-            persistSelection(paymentMethod)
-            complete()
+            completeSelection(of: paymentMethod)
             return
         }
 
+        updateBillingTaxRegionAndCompleteSelection(
+            address: address,
+            using: checkout,
+            paymentMethod: paymentMethod,
+            button: button,
+            previousButton: previousButton
+        )
+    }
+
+    private func updateBillingTaxRegionAndCompleteSelection(
+        address: Checkout.Address,
+        using checkout: CheckoutSessionBillingAddressUpdater,
+        paymentMethod: STPPaymentMethod,
+        button: SavedPaymentMethodRowButton,
+        previousButton: SavedPaymentMethodRowButton?
+    ) {
         errorLabel.setHiddenIfNecessary(true)
         button.setLoading(true)
         Task { @MainActor [weak self] in
@@ -381,20 +395,40 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
                     address: address,
                     canUpdateWhileSheetPresented: true
                 )
-                persistSelection(paymentMethod)
-                complete()
+                completeSelection(of: paymentMethod)
             } catch {
-                button.setLoading(false)
-                button.state = button.previousSelectedState
-                previousButton?.state = .selected
-                view.isUserInteractionEnabled = true
-                navigationBar.isUserInteractionEnabled = true
-                errorLabel.text = error.nonGenericDescription
-                animateHeightChange {
-                    self.errorLabel.setHiddenIfNecessary(false)
-                }
+                restoreSelection(
+                    after: error,
+                    button: button,
+                    previousButton: previousButton
+                )
             }
         }
+    }
+
+    private func completeSelection(of paymentMethod: STPPaymentMethod) {
+        persistSelection(paymentMethod)
+        complete()
+    }
+
+    private func restoreSelection(
+        after error: Error,
+        button: SavedPaymentMethodRowButton,
+        previousButton: SavedPaymentMethodRowButton?
+    ) {
+        button.setLoading(false)
+        button.state = button.previousSelectedState
+        previousButton?.state = .selected
+        setSelectionInteractionEnabled(true)
+        errorLabel.text = error.nonGenericDescription
+        animateHeightChange {
+            self.errorLabel.setHiddenIfNecessary(false)
+        }
+    }
+
+    private func setSelectionInteractionEnabled(_ isEnabled: Bool) {
+        view.isUserInteractionEnabled = isEnabled
+        navigationBar.isUserInteractionEnabled = isEnabled
     }
 
     private func persistSelection(_ paymentMethod: STPPaymentMethod) {
