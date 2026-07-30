@@ -70,35 +70,35 @@ extension STPAnalyticsClient {
         log(analytic: AddressAnalytic(event: .addressAutocompleteStart, params: [:]), apiClient: apiClient)
     }
 
-    func logAddressAutocompleteSuggestions(characterCount: Int, sessionToken: String, source: String, duration: TimeInterval, latency: TimeInterval?, apiClient: STPAPIClient) {
+    func logAddressAutocompleteSuggestions(queryLength: Int, autocompleteSessionToken: String, source: String, sessionElapsed: TimeInterval, timeToFetch: TimeInterval?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         var params: [String: Any] = [
-            "character_count": characterCount,
-            "autocomplete_session_token": sessionToken,
+            "query_length": queryLength,
+            "autocomplete_session_token": autocompleteSessionToken,
             "source": source,
-            "session_elapsed": duration,
+            "session_elapsed": sessionElapsed,
         ]
-        if let latency { params["time_to_fetch"] = latency }
+        if let timeToFetch { params["time_to_fetch"] = timeToFetch }
         log(analytic: AddressAnalytic(event: .addressAutocompleteSuggestions, params: params), apiClient: apiClient)
     }
 
-    func logAddressAutocompleteComplete(characterCount: Int, sessionToken: String, source: String, duration: TimeInterval, latency: TimeInterval?, apiClient: STPAPIClient) {
+    func logAddressAutocompleteComplete(queryLength: Int, autocompleteSessionToken: String, source: String, timeToComplete: TimeInterval, latency: TimeInterval?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         var params: [String: Any] = [
-            "query_length": characterCount,
-            "autocomplete_session_token": sessionToken,
+            "query_length": queryLength,
+            "autocomplete_session_token": autocompleteSessionToken,
             "source": source,
-            "duration": duration,
+            "time_to_complete": timeToComplete,
         ]
         if let latency { params["latency"] = latency }
         log(analytic: AddressAnalytic(event: .addressAutocompleteComplete, params: params), apiClient: apiClient)
     }
 
-    func logAddressAutocompleteError(error: Error, sessionToken: String, duration: TimeInterval, apiClient: STPAPIClient) {
+    func logAddressAutocompleteError(errorType: Error, autocompleteSessionToken: String, duration: TimeInterval, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         log(analytic: AddressAnalytic(event: .addressAutocompleteError, params: [
-            "error_type": error.localizedDescription,
-            "autocomplete_session_token": sessionToken,
+            "error_type": errorType.localizedDescription,
+            "autocomplete_session_token": autocompleteSessionToken,
             "duration": duration,
         ]), apiClient: apiClient)
     }

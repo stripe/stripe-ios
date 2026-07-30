@@ -288,11 +288,11 @@ class AutoCompleteViewController: UIViewController {
         results = newResults
         if let source {
             STPAnalyticsClient.sharedClient.logAddressAutocompleteSuggestions(
-                characterCount: autoCompleteLine.text.count,
-                sessionToken: sessionToken,
+                queryLength: autoCompleteLine.text.count,
+                autocompleteSessionToken: sessionToken,
                 source: source,
-                duration: elapsedTimeSinceAutocompleteStart,
-                latency: requestLatency,
+                sessionElapsed: elapsedTimeSinceAutocompleteStart,
+                timeToFetch: requestLatency,
                 apiClient: configuration.apiClient
             )
         }
@@ -355,8 +355,8 @@ extension AutoCompleteViewController: ElementDelegate {
             } catch {
                 guard !Task.isCancelled else { return }
                 STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
-                    error: error,
-                    sessionToken: self.sessionToken,
+                    errorType: error,
+                    autocompleteSessionToken: self.sessionToken,
                     duration: self.elapsedTimeSinceAutocompleteStart,
                     apiClient: self.configuration.apiClient
                 )
@@ -448,10 +448,10 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
             // If the suggestion returned with a full address, complete with that address
             if let address = suggestion.address {
                 STPAnalyticsClient.sharedClient.logAddressAutocompleteComplete(
-                    characterCount: characterCount,
-                    sessionToken: sessionToken,
+                    queryLength: characterCount,
+                    autocompleteSessionToken: sessionToken,
                     source: source,
-                    duration: duration,
+                    timeToComplete: duration,
                     latency: nil,
                     apiClient: configuration.apiClient
                 )
@@ -473,18 +473,18 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                         )
                         let latency = Date().timeIntervalSince(requestStart)
                         STPAnalyticsClient.sharedClient.logAddressAutocompleteComplete(
-                            characterCount: characterCount,
-                            sessionToken: sessionToken,
+                            queryLength: characterCount,
+                            autocompleteSessionToken: sessionToken,
                             source: source,
-                            duration: duration,
+                            timeToComplete: duration,
                             latency: latency,
                             apiClient: configuration.apiClient
                         )
                         delegate?.didSelectAddress(details.address)
                     } catch {
                       STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
-                            error: error,
-                            sessionToken: sessionToken,
+                            errorType: error,
+                            autocompleteSessionToken: sessionToken,
                             duration: elapsedTimeSinceAutocompleteStart,
                             apiClient: configuration.apiClient
                         )
@@ -497,10 +497,10 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                 DispatchQueue.main.async {
                     guard let self else { return }
                     STPAnalyticsClient.sharedClient.logAddressAutocompleteComplete(
-                        characterCount: characterCount,
-                        sessionToken: self.sessionToken,
+                        queryLength: characterCount,
+                        autocompleteSessionToken: self.sessionToken,
                         source: source,
-                        duration: duration,
+                        timeToComplete: duration,
                         latency: nil,
                         apiClient: self.configuration.apiClient
                     )
