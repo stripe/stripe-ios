@@ -29,6 +29,38 @@ extension Checkout {
         dangerouslySetSessionDirectly(session.makeCopyOverriding(paymentOption: .newValue(paymentOption)))
     }
 
+    func updateSavedPaymentMethod(
+        _ paymentMethodID: String,
+        billingDetails: PaymentMethodBillingDetails?,
+        expiryDetails: PaymentMethodExpiryDetails?
+    ) async throws -> STPPaymentMethod {
+        try await performUpdate(
+            .updateSavedPaymentMethod(
+                paymentMethodID: paymentMethodID,
+                billingDetails: billingDetails,
+                expiryDetails: expiryDetails
+            ),
+            canUpdateWhileSheetPresented: true
+        )
+        guard let paymentMethod = session.customer?.paymentMethods.first(where: {
+            $0.stripeId == paymentMethodID
+        }) else {
+            let message = "Checkout session response didn't include the updated payment method."
+            let error = CheckoutError.apiError(message: message)
+            STPAnalyticsClient.sharedClient.log(
+                analytic: ErrorAnalytic(
+                    event: .unexpectedPaymentSheetError,
+                    error: error,
+                    additionalNonPIIParams: ["payment_method_id": paymentMethodID]
+                )
+            )
+            stpAssertionFailure(message)
+            throw error
+        }
+        try await syncBillingAddress(from: paymentMethod.billingDetails)
+        return paymentMethod
+    }
+
     // MARK: - Session Updates
 
     /// Waits for all in-flight session updates (mutations, etc.) to complete.

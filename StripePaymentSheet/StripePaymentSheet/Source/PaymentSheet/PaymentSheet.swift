@@ -337,6 +337,7 @@ public class PaymentSheet {
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
                 delegate: self,
+                checkout: checkout,
                 previousPaymentOption: previousPaymentOption
             )
             return vc
