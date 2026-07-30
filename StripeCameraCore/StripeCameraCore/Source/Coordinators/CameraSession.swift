@@ -341,6 +341,11 @@ extension CameraSession {
                 }
 
                 let newVideoDeviceInput = try self.captureDeviceInput(position: position)
+                if !newVideoDeviceInput.device.supportsSessionPreset(self.session.sessionPreset),
+                    self.session.canSetSessionPreset(.high)
+                {
+                    self.session.sessionPreset = .high
+                }
 
                 // Add video input
                 guard self.session.canAddInput(newVideoDeviceInput)

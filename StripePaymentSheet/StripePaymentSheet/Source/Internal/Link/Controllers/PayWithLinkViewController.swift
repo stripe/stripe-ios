@@ -588,7 +588,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             case .success(let session):
                 session.createLinkAccountSession(
                     linkMode: self?.context.elementsSession.linkSettings?.linkMode,
-                    intentToken: self?.context.intent.stripeId
+                    intentToken: self?.context.intent.stripeId ?? self?.context.elementsSession.sessionID
                 ) { [session, weak self] linkAccountSessionResult in
                     switch linkAccountSessionResult {
                     case .success(let linkAccountSession):

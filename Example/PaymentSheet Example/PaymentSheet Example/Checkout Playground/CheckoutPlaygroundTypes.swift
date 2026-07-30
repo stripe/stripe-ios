@@ -126,7 +126,7 @@ enum CheckoutPlayground {
     enum IntegrationType: String, CaseIterable, Identifiable {
         case flowController
         case embedded
-        case disabled
+        case eceOnly
 
         var id: String { rawValue }
 
@@ -134,21 +134,21 @@ enum CheckoutPlayground {
             switch self {
             case .flowController: return "sheet"
             case .embedded: return "view"
-            case .disabled: return "none"
+            case .eceOnly: return "ece only"
             }
         }
     }
 
     enum ExpressCheckoutElementOption: String, CaseIterable, Identifiable {
-        case disabled
-        case enabled
+        case show
+        case hide
 
         var id: String { rawValue }
 
         var displayName: String {
             switch self {
-            case .disabled: return "none"
-            case .enabled: return "show"
+            case .show: return "show"
+            case .hide: return "hide"
             }
         }
     }

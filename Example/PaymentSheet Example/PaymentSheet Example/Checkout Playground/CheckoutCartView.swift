@@ -56,7 +56,7 @@ struct CheckoutCartView: View {
                                 case .embedded:
                                     CheckoutCartEmbeddedPaymentView(checkout: checkout)
                                         .clipped()
-                                case .disabled:
+                                case .eceOnly:
                                     EmptyView()
                                 }
                             }
