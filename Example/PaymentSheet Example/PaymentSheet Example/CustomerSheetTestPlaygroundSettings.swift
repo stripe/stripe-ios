@@ -162,12 +162,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-    enum UseAutocompleteEndpoints: String, PickerEnum {
-        static let enumName: String = "useAutocompleteEndpoints"
-        case on
-        case off
-    }
-
     var customerMode: CustomerMode
     var customerId: String?
     var customerKeyType: CustomerKeyType
@@ -191,7 +185,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodSyncDefault: PaymentMethodSyncDefault
     var cardBrandAcceptance: CardBrandAcceptance
     var opensCardScannerAutomatically: OpensCardScannerAutomatically
-    var useAutocompleteEndpoints: UseAutocompleteEndpoints
 
     // For testing purposes only; keys should typically not be defined on the client
     var customSecretKey: String?
@@ -220,7 +213,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    paymentMethodSyncDefault: .disabled,
                                                    cardBrandAcceptance: .all,
                                                    opensCardScannerAutomatically: .off,
-                                                   useAutocompleteEndpoints: .off,
                                                    customSecretKey: nil,
                                                    customPublishableKey: nil)
     }

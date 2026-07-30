@@ -135,7 +135,6 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         settings.apmsEnabled = .off
         settings.linkPassthroughMode = .passthrough
         settings.collectAddress = .full
-        settings.useAutocompleteEndpoints = .on
         loadPlayground(app, settings)
 
         paymentMethodSelectorNoneButton.tap()
