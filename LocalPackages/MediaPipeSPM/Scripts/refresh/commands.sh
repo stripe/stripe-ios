@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 require_refresh_tools() {
-  local tools=(pod xcodebuild ditto lipo)
+  local tools=(cmp pod xcodebuild ditto lipo)
   local tool
 
   for tool in "${tools[@]}"; do

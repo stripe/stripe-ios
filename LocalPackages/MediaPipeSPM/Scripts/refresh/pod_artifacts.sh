@@ -32,6 +32,21 @@ stage_mediapipe_pod_artifacts() {
   strip_intel_simulator_slice "${ARTIFACTS_DIR}/MediaPipeTasksCommon.xcframework" "MediaPipeTasksCommon"
 }
 
+stage_mediapipe_license() {
+  local vision_license="${POD_WORKSPACE}/Pods/MediaPipeTasksVision/LICENSE"
+  local common_license="${POD_WORKSPACE}/Pods/MediaPipeTasksCommon/LICENSE"
+
+  require_file "${vision_license}"
+  require_file "${common_license}"
+
+  if ! cmp -s "${vision_license}" "${common_license}"; then
+    echo "error: MediaPipe pod licenses differ; preserve both before refreshing artifacts" >&2
+    exit 1
+  fi
+
+  run_command ditto "${vision_license}" "${PACKAGE_ROOT}/LICENSE-MediaPipe"
+}
+
 mediapipe_graph_libraries_dir() {
   printf '%s\n' "${POD_WORKSPACE}/Pods/MediaPipeTasksCommon/frameworks/graph_libraries"
 }

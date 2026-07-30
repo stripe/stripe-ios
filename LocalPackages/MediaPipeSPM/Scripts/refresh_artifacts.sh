@@ -15,6 +15,7 @@ main() {
   prepare_pod_workspace
   install_mediapipe_pods
   stage_mediapipe_pod_artifacts
+  stage_mediapipe_license
   assemble_graph_artifact
 
   echo "Refreshed MediaPipeSPM artifacts in ${ARTIFACTS_DIR}"
