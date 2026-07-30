@@ -76,7 +76,7 @@ class PaymentSheet_AddressTests: PaymentSheetUITestCase {
         if verifyAnalytics {
             let autocompleteSuggestionsAnalytic = analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_suggestions" }
             XCTAssertNotNil(autocompleteSuggestionsAnalytic)
-            XCTAssertEqual(autocompleteSuggestionsAnalytic?["character_count"] as? Int, 16)
+            XCTAssertEqual(autocompleteSuggestionsAnalytic?["query_length"] as? Int, 16)
             XCTAssertNotNil(autocompleteSuggestionsAnalytic?["source"])
         }
         searchedCell.tap()
