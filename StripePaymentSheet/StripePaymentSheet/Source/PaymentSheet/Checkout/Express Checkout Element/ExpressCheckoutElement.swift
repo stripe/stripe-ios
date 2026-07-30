@@ -8,7 +8,9 @@
 /// Handles Checkout mutations requested by an ExpressCheckoutElement.
 @MainActor
 protocol ExpressCheckoutElementDelegate: AnyObject {
-    // TODO: Add delegate methods for Apple Pay and Link button taps
+    /// Initiates Apple Pay confirmation.
+    func confirmApplePay(completion: @escaping (PaymentSheetResult) -> Void)
+    // TODO: Add delegate method for Link button tap
 }
 
 /// An express checkout element backed by a Checkout Session.

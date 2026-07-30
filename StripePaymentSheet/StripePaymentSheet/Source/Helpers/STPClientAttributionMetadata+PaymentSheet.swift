@@ -44,6 +44,15 @@ extension STPClientAttributionMetadata {
         }
     }
 
+    static func makeClientAttributionMetadata(checkoutSession: Checkout.Session, elementsSession: STPElementsSession) -> STPClientAttributionMetadata {
+        return .init(
+            elementsSessionConfigId: elementsSession.configID,
+            checkoutSessionId: checkoutSession.id,
+            paymentIntentCreationFlow: nil,
+            paymentMethodSelectionFlow: .automatic
+        )
+    }
+
     static func makeClientAttributionMetadataForCustomerSheet(elementsSessionConfigId: String?) -> STPClientAttributionMetadata {
         return .init(elementsSessionConfigId: elementsSessionConfigId)
     }

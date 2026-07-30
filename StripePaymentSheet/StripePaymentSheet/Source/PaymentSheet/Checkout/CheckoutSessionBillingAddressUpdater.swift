@@ -12,6 +12,9 @@
 /// billing tax changes or commit session updates.
 @MainActor
 protocol CheckoutSessionBillingAddressUpdater: AnyObject {
+    /// The current checkout session.
+    var session: Checkout.Session { get }
+
     // TODO: Delete this when CheckoutSession confirmation no longer uses `PaymentSheet.confirm`.
     func commitSession(
         _ apiResponse: PaymentPagesAPIResponse?,

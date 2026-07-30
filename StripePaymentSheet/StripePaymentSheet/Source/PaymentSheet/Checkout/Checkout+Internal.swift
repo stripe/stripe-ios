@@ -6,10 +6,51 @@
 //
 
 import Foundation
+@_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-extension Checkout: ExpressCheckoutElementDelegate {}
+extension Checkout: ExpressCheckoutElementDelegate {
+    func confirmApplePay(completion: @escaping (PaymentSheetResult) -> Void) {
+        guard let applePayConfig = configuration.applePayConfiguration,
+              StripeAPI.deviceSupportsApplePay() else {
+            completion(.failed(error: PaymentSheetError.applePayNotSupportedOrMisconfigured))
+            return
+        }
+        guard let psApplePayConfig = applePayConfig.makePaymentSheetConfiguration(
+            merchantCountryCode: session.elementsSession.merchantCountryCode
+        ) else {
+            completion(.failed(error: PaymentSheetError.applePayNotSupportedOrMisconfigured))
+            return
+        }
+        var psConfig = PaymentSheet.Configuration()
+        psConfig.merchantDisplayName = effectiveMerchantDisplayName
+        psConfig.apiClient = apiClient
+        psConfig.returnURL = configuration.returnURL
+        psConfig.applePay = psApplePayConfig
+        psConfig.billingDetailsCollectionConfiguration.email = .always
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
+            intent: .checkout(nonisolatedSession),
+            elementsSession: nonisolatedSession.elementsSession
+        )
+        guard let applePayContext = STPApplePayContext.create(
+            intent: .checkout(nonisolatedSession),
+            elementsSession: nonisolatedSession.elementsSession,
+            configuration: psConfig,
+            clientAttributionMetadata: clientAttributionMetadata,
+            checkout: self,
+            completion: { result, _ in completion(result) }
+        ) else {
+            completion(.failed(error: PaymentSheetError.applePayNotSupportedOrMisconfigured))
+            return
+        }
+        Task { @MainActor in
+            await enqueueSessionUpdate {
+                applePayContext.presentApplePay()
+            }
+        }
+    }
+}
 extension Checkout: CurrencySelectorElementDelegate {}
 
 extension Checkout {

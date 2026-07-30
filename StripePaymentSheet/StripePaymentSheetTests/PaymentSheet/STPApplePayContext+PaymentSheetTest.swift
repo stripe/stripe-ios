@@ -845,7 +845,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 }
 
 private final class TestCheckoutSessionBillingAddressUpdater: CheckoutSessionBillingAddressUpdater {
-    private var session: Checkout.Session
+    var session: Checkout.Session
 
     init(session: Checkout.Session) {
         self.session = session

@@ -101,7 +101,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     @objc private func handleApplePayTapped() {
-        // TODO: Handle Apple Pay
+        delegate?.confirmApplePay { _ in }
     }
 
     @objc private func handleLinkTapped() {
