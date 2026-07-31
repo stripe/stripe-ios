@@ -802,18 +802,18 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     elementsSession: elementsSession,
                     configuration: configuration,
                     clientAttributionMetadata: clientAttributionMetadata,
+                    checkout: testIntent.checkout,
                     completion: { result, _ in
-                        switch result {
-                        case .failed(error: let error):
-                            XCTFail("❌ \(description): Apple Pay confirm failed - \(error.nonGenericDescription)")
-                        case .canceled:
-                            XCTFail("❌ \(description): Apple Pay confirm canceled")
-                        case .completed:
-                            print("✅ \(description): Apple Pay confirm completed")
-                        }
-                        e.fulfill()
+                    switch result {
+                    case .failed(error: let error):
+                        XCTFail("❌ \(description): Apple Pay confirm failed - \(error.nonGenericDescription)")
+                    case .canceled:
+                        XCTFail("❌ \(description): Apple Pay confirm canceled")
+                    case .completed:
+                        print("✅ \(description): Apple Pay confirm completed")
                     }
-                ) else {
+                    e.fulfill()
+                }) else {
                     XCTFail("❌ \(description): Failed to create Apple Pay context")
                     continue
                 }

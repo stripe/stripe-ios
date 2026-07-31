@@ -507,6 +507,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             elementsSession: elementsSession,
             configuration: configuration ?? self.configuration,
             clientAttributionMetadata: clientAttributionMetadata,
+            checkout: checkout ?? Self.makeCheckoutUpdaterIfNecessary(for: intent),
             completion: { _, _ in }
         ) else {
             XCTFail("Failed to create Apple Pay context", file: file, line: line)

@@ -6,7 +6,6 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import Contacts
 import Foundation
 import PassKit
 @_spi(STP) import StripeApplePay
@@ -16,7 +15,6 @@ import PassKit
 typealias PaymentSheetResultCompletionBlock = ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
 
 /// A shim class; ApplePayContext expects a protocol/delegate, but PaymentSheet uses closures.
-/// Handles PaymentIntent, SetupIntent, DeferredIntent, and CheckoutSession flows.
 private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate {
     let completion: PaymentSheetResultCompletionBlock
     /// Retain this class until Apple Pay completes
@@ -185,6 +183,32 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         return clientSecret
     }
 
+    private func handleCheckoutSessionApplePay(
+        checkout: CheckoutSessionBillingAddressUpdater,
+        checkoutSession: Checkout.Session,
+        paymentMethod: StripeAPI.PaymentMethod,
+        paymentInformation: PKPayment,
+        context: STPApplePayContext
+    ) async throws -> String {
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
+            intent: intent,
+            elementsSession: elementsSession
+        )
+        let response = try await context.apiClient.confirmCheckoutSession(
+            sessionId: checkoutSession.id,
+            paymentMethod: paymentMethod.id,
+            expectedAmount: checkoutSession.expectedAmount(),
+            expectedPaymentMethodType: STPPaymentMethodType.card.identifier,
+            returnURL: context.returnUrl,
+            shipping: makeShippingDetailsParams(from: paymentInformation),
+            paymentMethodOptions: nil,
+            clientAttributionMetadata: clientAttributionMetadata
+        )
+        try await checkout.commitSession(response)
+        return try response.intentClientSecret()
+    }
+
+    /// Extracts shipping details from a PKPayment for CheckoutSession confirmation.
     private func makeShippingDetailsParams(from payment: PKPayment) -> STPPaymentIntentShippingDetailsParams? {
         guard let shippingContact = payment.shippingContact,
               let nameComponents = shippingContact.name else {
@@ -194,6 +218,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         let name = PersonNameComponentsFormatter.localizedString(from: nameComponents, style: .default)
         let shippingAddress = STPAddress(pkContact: shippingContact)
 
+        // Only create shipping params if we have a valid address line1
         guard let line1 = shippingAddress.line1 else {
             return nil
         }
@@ -282,16 +307,15 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     func applePayContext(
         _ context: STPApplePayContext,
         didSelectPaymentMethod paymentMethod: PKPaymentMethod,
-        handler: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
-    ) {
-        if let paymentMethodUpdateHandler {
-            paymentMethodUpdateHandler(paymentMethod) { result in
-                handler(result)
-            }
-        } else {
-            // Note: this method isn't called unless our delegate implements it (see this class's `responds(to:)` override)
-            stpAssertionFailure("This method should not be called unless paymentMethodUpdateHandler is set")
-            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
+        handler: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void) {
+            if let paymentMethodUpdateHandler {
+                paymentMethodUpdateHandler(paymentMethod) { result in
+                    handler(result)
+                }
+            } else {
+                // Note: this method isn't called unless our delegate implements it (see this class's `responds(to:)` override)
+                stpAssertionFailure("This method should not be called unless paymentMethodUpdateHandler is set")
+                handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
         }
     }
 
@@ -303,34 +327,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         }
         return super.responds(to: aSelector)
     }
-
-    // MARK: - Private
-
-    private func handleCheckoutSessionApplePay(
-        checkout: CheckoutSessionBillingAddressUpdater,
-        checkoutSession: Checkout.Session,
-        paymentMethod: StripeAPI.PaymentMethod,
-        paymentInformation: PKPayment,
-        context: STPApplePayContext
-    ) async throws -> String {
-        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-            intent: intent,
-            elementsSession: elementsSession
-        )
-        let response = try await context.apiClient.confirmCheckoutSession(
-            sessionId: checkoutSession.id,
-            paymentMethod: paymentMethod.id,
-            expectedAmount: checkoutSession.expectedAmount(),
-            expectedPaymentMethodType: STPPaymentMethodType.card.identifier,
-            returnURL: context.returnUrl,
-            shipping: makeShippingDetailsParams(from: paymentInformation),
-            paymentMethodOptions: nil,
-            clientAttributionMetadata: clientAttributionMetadata
-        )
-        try await checkout.commitSession(response)
-        return try response.intentClientSecret()
-    }
-
 }
 
 extension STPApplePayContext {
@@ -366,14 +362,14 @@ extension STPApplePayContext {
             }
             let label = intent.sellerDetails?.businessName ?? configuration.merchantDisplayName
             let currency = intent.currency
-            return { pkPaymentMethod, completionHandler in
+            return { pkPaymentMethod, completion in
                 Task { @MainActor in
                     var session = checkoutSession
                     if let postalAddress = pkPaymentMethod.billingAddress?.postalAddresses.first?.value,
                        let address = STPApplePayContext.makeCheckoutAddress(from: postalAddress) {
                         session = (try? await checkout.updateBillingTaxRegionIfNecessaryForPaymentSheet(address: address, canUpdateWhileSheetPresented: true)) ?? session
                     }
-                    completionHandler(PKPaymentRequestPaymentMethodUpdate(
+                    completion(PKPaymentRequestPaymentMethodUpdate(
                         paymentSummaryItems: STPApplePayContext.makePaymentSummaryItems(for: session, label: label, currency: currency)
                     ))
                 }
@@ -478,44 +474,6 @@ extension STPApplePayContext {
         return paymentRequest
     }
 
-    /// Converts default billing details into a `PKContact` for pre-populating the Apple Pay sheet.
-    static func makeBillingContact(from billingDetails: PaymentSheet.BillingDetails) -> PKContact {
-        let contact = PKContact()
-
-        if let name = billingDetails.name {
-            contact.name = PersonNameComponentsFormatter().personNameComponents(from: name)
-        }
-
-        if let phone = billingDetails.phone {
-            contact.phoneNumber = CNPhoneNumber(stringValue: phone)
-        }
-
-        let postalAddress = CNMutablePostalAddress()
-        let address = billingDetails.address
-        postalAddress.isoCountryCode = address.country ?? ""
-
-        var streetComponents: [String] = []
-        if let line1 = address.line1 { streetComponents.append(line1) }
-        if let line2 = address.line2 { streetComponents.append(line2) }
-        if !streetComponents.isEmpty {
-            postalAddress.street = streetComponents.joined(separator: "\n")
-        }
-
-        if let city = address.city {
-            postalAddress.city = city
-        }
-
-        if let state = address.state {
-            postalAddress.state = state
-        }
-
-        if let postalCode = address.postalCode {
-            postalAddress.postalCode = postalCode
-        }
-
-        contact.postalAddress = postalAddress
-        return contact
-    }
 }
 
 private func makeShippingDetails(from configuration: PaymentElementConfiguration) -> StripeAPI.ShippingDetails? {
