@@ -56,13 +56,13 @@ public class AddressViewController: UIViewController {
     private var selectedAutoCompleteResult: PaymentSheet.Address?
     private var didLogAddressShow = false
 
-    /// The address the sheet was presented with. Returned to the delegate when the customer
+    /// The address as of the last open or save. Returned to the delegate when the customer
     /// cancels (taps 'X' with no changes, or discards changes) so we never hand back
     /// edited-but-abandoned data.
     private var initialAddressDetails: AddressDetails?
-    /// A snapshot of the form's raw values when it was first presented, used to detect unsaved changes.
+    /// A snapshot of the form's raw values as of the last open or save, used to detect unsaved changes.
     private var initialFormSnapshot: AddressSectionElement.AddressDetails?
-    /// The additional-fields checkbox state when the form was first presented.
+    /// The additional-fields checkbox state as of the last open or save.
     private var initialCheckboxSelected: Bool?
 
     /// Whether the customer has changed any form value since the sheet was presented.
@@ -338,6 +338,10 @@ extension AddressViewController {
 
     func didContinue() {
         logAddressCompleted()
+        // Re-baseline change tracking to the just-saved values. The same instance can be
+        // presented again, and each save sends the form back to the merchant, so the next open
+        // should compare against what was saved here — not the state captured at first init.
+        captureInitialSnapshot()
         delegate?.addressViewControllerDidFinish(self, with: addressDetails)
     }
 
@@ -460,14 +464,18 @@ extension AddressViewController {
         )
     }
 
-    private func loadUI() {
-        self.addressSection = makeDefaultAddressSection()
-
-        // Snapshot the form's initial state so we can (1) detect unsaved changes and
-        // (2) return the as-presented address to the delegate if the customer cancels.
+    private func captureInitialSnapshot() {
+        // The baseline for change detection: the form as of the last open or save. Also the
+        // value returned to the delegate if the customer cancels, so we never hand back
+        // edited-but-abandoned data.
         self.initialAddressDetails = addressDetails
         self.initialFormSnapshot = addressSection?.addressDetails
         self.initialCheckboxSelected = checkboxElement?.checkboxButton.isSelected
+    }
+
+    private func loadUI() {
+        self.addressSection = makeDefaultAddressSection()
+        captureInitialSnapshot()
 
         let stackView = UIStackView(arrangedSubviews: [headerLabel, formElement.view, errorLabel])
         stackView.directionalLayoutMargins = configuration.appearance.topFormInsets

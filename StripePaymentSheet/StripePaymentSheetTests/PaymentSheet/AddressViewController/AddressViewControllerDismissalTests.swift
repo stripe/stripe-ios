@@ -195,6 +195,32 @@ final class AddressViewControllerDismissalTests: XCTestCase {
         XCTAssertTrue(addressCompletedWasLogged())
     }
 
+    func test_save_reBaselinesChangeTrackingForReusedInstance() {
+        // Given a seeded form the customer has edited
+        let delegate = MockDelegate()
+        let vc = makeLoadedAddressViewController(
+            configuration: makeConfiguration(defaultValues: validDefaultValues),
+            delegate: delegate
+        )
+        vc.addressSection?.line1?.setText("999 New St")
+        XCTAssertTrue(vc.hasChanges)
+
+        // When the customer saves (Continue)
+        vc.didContinue()
+
+        // Then the saved values become the new baseline: the same instance can be presented
+        // again showing these values, and there are now no unsaved changes to detect.
+        // (Before the fix the baseline stayed at first-init, so this remained true.)
+        XCTAssertFalse(vc.hasChanges)
+
+        // ...and tapping 'X' (as if reopened with no edits) finishes without a discard alert,
+        // returning the saved address rather than the stale first-init value
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        vc.didTapCloseButton()
+        XCTAssertNil(vc.presentedViewController)
+        XCTAssertEqual(delegate.lastAddress?.address.line1, "999 New St")
+    }
+
     func test_presentationControllerShouldDismiss_returnsFalseToBlockSwipe() {
         let delegate = MockDelegate()
         let vc = makeLoadedAddressViewController(configuration: makeConfiguration(), delegate: delegate)
