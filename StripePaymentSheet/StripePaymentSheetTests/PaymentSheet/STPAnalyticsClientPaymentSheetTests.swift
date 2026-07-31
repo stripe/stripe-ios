@@ -72,7 +72,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let client = STPTestingAnalyticsClient()
         client.logAddressAutocompleteSuggestions(
             resultCount: 5,
-            autocompleteSessionToken: "tok_abc",
+            sessionToken: "tok_abc",
             source: "google",
             sessionElapsed: 1.5,
             timeToFetch: 0.3,
@@ -91,7 +91,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let client = STPTestingAnalyticsClient()
         client.logAddressAutocompleteSuggestions(
             resultCount: 3,
-            autocompleteSessionToken: "tok_xyz",
+            sessionToken: "tok_xyz",
             source: "apple",
             sessionElapsed: 0.8,
             timeToFetch: nil,
@@ -107,7 +107,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let client = STPTestingAnalyticsClient()
         client.logAddressAutocompleteSelected(
             queryLength: 7,
-            autocompleteSessionToken: "tok_abc",
+            sessionToken: "tok_abc",
             source: "google",
             sessionElapsed: 2.1,
             placeId: "place_123",
@@ -127,7 +127,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let client = STPTestingAnalyticsClient()
         client.logAddressAutocompleteSelected(
             queryLength: 4,
-            autocompleteSessionToken: "tok_xyz",
+            sessionToken: "tok_xyz",
             source: "apple",
             sessionElapsed: 0.9,
             placeId: nil,
@@ -147,7 +147,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let error = NSError(domain: "test", code: 42, userInfo: [NSLocalizedDescriptionKey: "network failure"])
         client.logAddressAutocompleteError(
             error: error,
-            autocompleteSessionToken: "tok_abc",
+            sessionToken: "tok_abc",
             duration: 0.5,
             apiClient: .init(publishableKey: "pk_test_123")
         )

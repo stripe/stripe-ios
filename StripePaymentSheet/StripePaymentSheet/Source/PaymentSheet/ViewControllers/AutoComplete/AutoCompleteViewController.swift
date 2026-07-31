@@ -290,7 +290,7 @@ class AutoCompleteViewController: UIViewController {
         if let source {
             STPAnalyticsClient.sharedClient.logAddressAutocompleteSuggestions(
                 resultCount: newResults.count,
-                autocompleteSessionToken: sessionToken,
+                sessionToken: sessionToken,
                 source: source,
                 sessionElapsed: elapsedTimeSinceAutocompleteStart,
                 timeToFetch: requestLatency,
@@ -357,7 +357,7 @@ extension AutoCompleteViewController: ElementDelegate {
                 guard !Task.isCancelled else { return }
                 STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
                     error: error,
-                    autocompleteSessionToken: self.sessionToken,
+                    sessionToken: self.sessionToken,
                     duration: self.elapsedTimeSinceAutocompleteStart,
                     apiClient: self.configuration.apiClient
                 )
@@ -441,7 +441,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
 
         let result = results[indexPath.row]
         let typedText = autoCompleteLine.text
-        let characterCount = typedText.count
+        let queryLength = typedText.count
         let source = currentSource ?? ""
         let duration = elapsedTimeSinceAutocompleteStart
 
@@ -449,8 +449,8 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
             // If the suggestion returned with a full address, complete with that address
             if let address = suggestion.address {
                 STPAnalyticsClient.sharedClient.logAddressAutocompleteSelected(
-                    queryLength: characterCount,
-                    autocompleteSessionToken: sessionToken,
+                    queryLength: queryLength,
+                    sessionToken: sessionToken,
                     source: source,
                     sessionElapsed: elapsedTimeSinceAutocompleteStart,
                     placeId: suggestion.placeId,
@@ -475,8 +475,8 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                         )
                         let latency = Date().timeIntervalSince(requestStart)
                         STPAnalyticsClient.sharedClient.logAddressAutocompleteSelected(
-                            queryLength: characterCount,
-                            autocompleteSessionToken: sessionToken,
+                            queryLength: queryLength,
+                            sessionToken: sessionToken,
                             source: source,
                             sessionElapsed: elapsedTimeSinceAutocompleteStart,
                             placeId: placeId,
@@ -487,7 +487,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                     } catch {
                       STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
                             error: error,
-                            autocompleteSessionToken: sessionToken,
+                            sessionToken: sessionToken,
                             duration: elapsedTimeSinceAutocompleteStart,
                             apiClient: configuration.apiClient
                         )
@@ -500,8 +500,8 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                 DispatchQueue.main.async {
                     guard let self else { return }
                     STPAnalyticsClient.sharedClient.logAddressAutocompleteSelected(
-                        queryLength: characterCount,
-                        autocompleteSessionToken: self.sessionToken,
+                        queryLength: queryLength,
+                        sessionToken: self.sessionToken,
                         source: source,
                         sessionElapsed: self.elapsedTimeSinceAutocompleteStart,
                         placeId: nil,
