@@ -120,7 +120,7 @@ struct AddressAnalyticData {
         return ["address_country_code": addressCountryCode,
                 "auto_complete_result_selected": autoCompleteResultedSelected,
                 "edit_distance": editDistance,
-                "time_to_complete": timeToComplete,]
+                "time_to_complete": timeToComplete, ]
     }
 }
 
