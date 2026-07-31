@@ -183,6 +183,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         return clientSecret
     }
 
+    /// Handles Apple Pay confirmation for CheckoutSession by calling the confirm API with the payment method.
     private func handleCheckoutSessionApplePay(
         checkout: CheckoutSessionBillingAddressUpdater,
         checkoutSession: Checkout.Session,
@@ -190,21 +191,34 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         paymentInformation: PKPayment,
         context: STPApplePayContext
     ) async throws -> String {
+        // 1. Build client attribution metadata
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
             intent: intent,
             elementsSession: elementsSession
         )
+
+        // 2. Get expected amount from checkout session
+        let expectedAmount = checkoutSession.expectedAmount()
+
+        // 3. Extract shipping details from PKPayment (if provided)
+        let shipping = makeShippingDetailsParams(from: paymentInformation)
+
+        // 4. Call confirm API with the Apple Pay payment method
         let response = try await context.apiClient.confirmCheckoutSession(
             sessionId: checkoutSession.id,
             paymentMethod: paymentMethod.id,
-            expectedAmount: checkoutSession.expectedAmount(),
+            expectedAmount: expectedAmount,
             expectedPaymentMethodType: STPPaymentMethodType.card.identifier,
             returnURL: context.returnUrl,
-            shipping: makeShippingDetailsParams(from: paymentInformation),
+            shipping: shipping,
             paymentMethodOptions: nil,
             clientAttributionMetadata: clientAttributionMetadata
         )
+
+        // 5. Update the Checkout instance with the confirmed session response
         try await checkout.commitSession(response)
+
+        // 6. Return client secret based on checkout session mode
         return try response.intentClientSecret()
     }
 
@@ -316,8 +330,8 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 // Note: this method isn't called unless our delegate implements it (see this class's `responds(to:)` override)
                 stpAssertionFailure("This method should not be called unless paymentMethodUpdateHandler is set")
                 handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
+            }
         }
-    }
 
     // Only advertise `didSelectPaymentMethod` if we have a handler for it, otherwise it'd get called
     // when there's nothing to do.
@@ -354,7 +368,7 @@ extension STPApplePayContext {
         }
 
         // Keep tax in sync with the billing address as the user switches cards.
-        let paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void) -> Void)? = {
+        let paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping ((PKPaymentRequestPaymentMethodUpdate) -> Void)) -> Void)? = {
             guard case .checkout(let checkoutSession) = intent else { return nil }
             guard let checkout else {
                 stpAssertionFailure("Missing Checkout controller for CheckoutSession Apple Pay payment method update.")
@@ -473,7 +487,6 @@ extension STPApplePayContext {
 
         return paymentRequest
     }
-
 }
 
 private func makeShippingDetails(from configuration: PaymentElementConfiguration) -> StripeAPI.ShippingDetails? {

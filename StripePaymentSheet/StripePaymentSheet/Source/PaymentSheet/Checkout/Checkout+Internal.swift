@@ -8,7 +8,6 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-import UIKit
 
 extension Checkout: ExpressCheckoutElementDelegate {}
 extension Checkout: CurrencySelectorElementDelegate {}
