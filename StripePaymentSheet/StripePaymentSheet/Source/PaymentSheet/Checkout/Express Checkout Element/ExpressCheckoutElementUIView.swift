@@ -5,6 +5,8 @@
 //  Created by Joyce Qin on 7/22/26.
 //
 
+import PassKit
+@_spi(STP) import StripeCore
 import UIKit
 
 /// A UIKit view that displays wallet payment buttons (Apple Pay, Link).
@@ -13,12 +15,36 @@ import UIKit
 @MainActor
 public final class ExpressCheckoutElementUIView: UIView {
 
+    // MARK: - Private Properties
+
+    private let configuration: Checkout.Configuration
+    private let stackView = UIStackView()
+    private var linkBrand: LinkBrand
     private weak var delegate: ExpressCheckoutElementDelegate?
 
+    // MARK: - Init
+
     init(session: Checkout.Session, configuration: Checkout.Configuration, delegate: ExpressCheckoutElementDelegate) {
+        self.configuration = configuration
         self.delegate = delegate
+        self.linkBrand = session.elementsSession.linkBrand ?? .link
         super.init(frame: .zero)
-        // TODO: Render express buttons
+
+        // TODO: Appearance
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(stackView)
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
+
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
+        buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
     }
 
     @available(*, unavailable)
@@ -26,7 +52,62 @@ public final class ExpressCheckoutElementUIView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Internal Methods
+
     func update(with session: Checkout.Session) {
-        // TODO: Re-render express buttons
+        linkBrand = session.elementsSession.linkBrand ?? .link
+        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
+        buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
+        invalidateIntrinsicContentSize()
+    }
+
+    // MARK: - Public Methods
+
+    public override var intrinsicContentSize: CGSize {
+        CGSize(
+            width: UIView.noIntrinsicMetric,
+            height: stackView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+        )
+    }
+
+    // MARK: - Private Methods
+
+    private func makeButton(for button: ExpressButton) -> UIView {
+        switch button {
+        case .applePay:
+            return makeApplePayButton()
+        case .link:
+            return makeLinkButton()
+        }
+    }
+
+    private func makeApplePayButton() -> UIView {
+        let buttonType = configuration.applePayConfiguration?.buttonType ?? .plain
+        let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: .automatic)
+        // TODO: Appearance
+        button.cornerRadius = 6
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.addTarget(self, action: #selector(handleApplePayTapped), for: .touchUpInside)
+        return button
+    }
+
+    private func makeLinkButton() -> UIView {
+        let button = PayWithLinkButton(brand: linkBrand)
+        // TODO: Appearance
+        button.cornerRadius = 6
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.addTarget(self, action: #selector(handleLinkTapped), for: .touchUpInside)
+        return button
+    }
+
+    @objc private func handleApplePayTapped() {
+        // TODO: Handle Apple Pay
+    }
+
+    @objc private func handleLinkTapped() {
+        // TODO: Handle Link
     }
 }
