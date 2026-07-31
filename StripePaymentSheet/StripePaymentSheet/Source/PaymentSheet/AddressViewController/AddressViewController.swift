@@ -55,7 +55,6 @@ public class AddressViewController: UIViewController {
     public weak var delegate: AddressViewControllerDelegate?
     private var selectedAutoCompleteResult: PaymentSheet.Address?
     private var didLogAddressShow = false
-    private var addressShowTime: Date?
 
     // MARK: - Internal properties
     let addressSpecProvider: AddressSpecProvider
@@ -274,7 +273,6 @@ public class AddressViewController: UIViewController {
         if !didLogAddressShow {
             STPAnalyticsClient.sharedClient.logAddressShow(defaultCountryCode: addressSection?.selectedCountryCode ?? "", apiClient: configuration.apiClient)
             didLogAddressShow = true
-            addressShowTime = Date()
         }
         // Ensure we receive dismissal callbacks even when presented modally inside a UINavigationController
         navigationController?.presentationController?.delegate = self
@@ -481,12 +479,10 @@ extension AddressViewController {
             editDistance = PaymentSheet.Address(from: selectedAddress).editDistance(from: autoCompleteAddress)
         }
 
-        let timeToComplete = addressShowTime.map { Date().timeIntervalSince($0) }
         STPAnalyticsClient.sharedClient.logAddressCompleted(
             addressCountyCode: addressSection?.selectedCountryCode ?? "",
             autoCompleteResultedSelected: selectedAutoCompleteResult != nil,
             editDistance: editDistance,
-            timeToComplete: timeToComplete,
             apiClient: configuration.apiClient
         )
     }

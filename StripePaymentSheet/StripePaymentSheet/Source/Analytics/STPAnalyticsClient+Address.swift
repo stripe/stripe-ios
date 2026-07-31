@@ -31,38 +31,34 @@ extension STPAnalyticsClient {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: defaultCountryCode,
                                                autoCompleteResultedSelected: nil,
-                                               editDistance: nil,
-                                               timeToComplete: nil)
+                                               editDistance: nil)
 
         self.logAddressControllerEvent(event: .addressShow, addressAnalyticData: analyticData, apiClient: apiClient)
     }
 
-    func logAddressCompleted(addressCountyCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, timeToComplete: TimeInterval?, apiClient: STPAPIClient) {
+    func logAddressCompleted(addressCountyCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountyCode,
                                                autoCompleteResultedSelected: autoCompleteResultedSelected,
-                                               editDistance: editDistance,
-                                               timeToComplete: timeToComplete)
+                                               editDistance: editDistance)
 
         self.logAddressControllerEvent(event: .addressCompleted, addressAnalyticData: analyticData, apiClient: apiClient)
     }
 
-    func logBillingAddressCompleted(addressCountryCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, timeToComplete: TimeInterval?, apiClient: STPAPIClient) {
+    func logBillingAddressCompleted(addressCountryCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountryCode,
                                                autoCompleteResultedSelected: autoCompleteResultedSelected,
-                                               editDistance: editDistance,
-                                               timeToComplete: timeToComplete)
+                                               editDistance: editDistance)
 
         self.logAddressControllerEvent(event: .mcbillingAddressCompleted, addressAnalyticData: analyticData, apiClient: apiClient)
     }
 
-    func logCustomerSheetBillingAddressCompleted(addressCountryCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, timeToComplete: TimeInterval?, apiClient: STPAPIClient) {
+    func logCustomerSheetBillingAddressCompleted(addressCountryCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountryCode,
                                                autoCompleteResultedSelected: autoCompleteResultedSelected,
-                                               editDistance: editDistance,
-                                               timeToComplete: timeToComplete)
+                                               editDistance: editDistance)
 
         self.logAddressControllerEvent(event: .csbillingAddressCompleted, addressAnalyticData: analyticData, apiClient: apiClient)
     }
@@ -114,13 +110,11 @@ struct AddressAnalyticData {
     let addressCountryCode: String
     let autoCompleteResultedSelected: Bool?
     let editDistance: Int?
-    let timeToComplete: TimeInterval?
 
     var analyticsPayload: [String: Any?] {
         return ["address_country_code": addressCountryCode,
                 "auto_complete_result_selected": autoCompleteResultedSelected,
-                "edit_distance": editDistance,
-                "time_to_complete": timeToComplete, ]
+                "edit_distance": editDistance]
     }
 }
 
