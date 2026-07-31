@@ -23,6 +23,44 @@ extension PayWithLinkViewController {
         let linkAccount: PaymentSheetLinkAccount
         private(set) var paymentMethods: [ConsumerPaymentDetails]
 
+        var shippingAddresses: [ShippingAddressesResponse.ShippingAddress]
+
+        /// ID of the currently selected shipping address.
+        var selectedShippingAddressID: String? {
+            didSet {
+                if oldValue != selectedShippingAddressID {
+                    delegate?.viewModelDidChange(self)
+                }
+            }
+        }
+
+        var requiresShippingAddress: Bool {
+            switch context.intent {
+            case .checkout(let session): return session.requiresShippingAddress
+            default: return context.configuration.allowsPaymentMethodsRequiringShippingAddress
+            }
+        }
+
+        var allowedShippingCountries: [String]? {
+            switch context.intent {
+            case .checkout(let session): return session.allowedShippingCountries
+            default: return nil
+            }
+        }
+
+        var filteredShippingAddresses: [ShippingAddressesResponse.ShippingAddress] {
+            guard let allowed = allowedShippingCountries else { return shippingAddresses }
+            return shippingAddresses.filter { addr in
+                guard let country = addr.address.countryCode else { return false }
+                return allowed.contains(country.uppercased())
+            }
+        }
+
+        var selectedShippingAddress: ShippingAddressesResponse.ShippingAddress? {
+            guard let id = selectedShippingAddressID else { return nil }
+            return filteredShippingAddresses.first { $0.id == id }
+        }
+
         weak var delegate: PayWithLinkWalletViewModelDelegate?
 
         /// Index of currently selected payment method.
@@ -175,7 +213,6 @@ extension PayWithLinkViewController {
 
         var confirmButtonStatus: ConfirmButton.Status {
             if !selectedPaymentMethodIsSupported {
-                // Selected payment method not supported
                 return .disabled
             }
 
@@ -184,6 +221,10 @@ extension PayWithLinkViewController {
             }
 
             if shouldRecollectCardExpiryDate && expiryDate == nil {
+                return .disabled
+            }
+
+            if requiresShippingAddress && selectedShippingAddress == nil {
                 return .disabled
             }
 
@@ -206,15 +247,28 @@ extension PayWithLinkViewController {
         init(
             linkAccount: PaymentSheetLinkAccount,
             context: Context,
-            paymentMethods: [ConsumerPaymentDetails]
+            paymentMethods: [ConsumerPaymentDetails],
+            shippingAddresses: [ShippingAddressesResponse.ShippingAddress] = []
         ) {
             self.linkAccount = linkAccount
             self.context = context
             self.paymentMethods = paymentMethods
+            self.shippingAddresses = shippingAddresses
             self.selectedPaymentMethodIndex = Self.determineInitiallySelectedPaymentMethod(
                 context: context,
                 paymentMethods: paymentMethods
             )
+
+            // Pre-select default or first valid shipping address
+            let allowedCountries: [String]?
+            switch context.intent {
+            case .checkout(let session): allowedCountries = session.allowedShippingCountries
+            default: allowedCountries = nil
+            }
+            let filtered = allowedCountries.map { allowed in
+                shippingAddresses.filter { ($0.address.countryCode.map { allowed.contains($0.uppercased()) } ?? false) }
+            } ?? shippingAddresses
+            self.selectedShippingAddressID = (filtered.first(where: { $0.isDefault ?? false }) ?? filtered.first)?.id
         }
 
         func deletePaymentMethod(at index: Int, completion: @escaping (Result<Void, Error>) -> Void) {
@@ -298,6 +352,12 @@ extension PayWithLinkViewController {
                 selectedPaymentMethodIndex = index
             }
 
+            delegate?.viewModelDidChange(self)
+        }
+
+        func addShippingAddress(_ address: ShippingAddressesResponse.ShippingAddress) {
+            shippingAddresses.append(address)
+            selectedShippingAddressID = address.id
             delegate?.viewModelDidChange(self)
         }
 

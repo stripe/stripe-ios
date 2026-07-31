@@ -505,6 +505,26 @@ extension STPAPIClient {
         }
     }
 
+    func createShippingAddress(
+        for consumerSessionClientSecret: String,
+        params: CreateShippingAddressParams,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ShippingAddressesResponse.ShippingAddress, Error>) -> Void
+    ) {
+        let endpoint = "consumers/shipping_addresses"
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": requestSurface.rawValue,
+            "address": params.asAddressParameters,
+        ]
+        post(
+            resource: endpoint,
+            parameters: parameters
+        ) { (result: Result<CreateShippingAddressResponse, Error>) in
+            completion(result.map { $0.shippingAddress })
+        }
+    }
+
     func deletePaymentDetails(
         for consumerSessionClientSecret: String,
         id: String,

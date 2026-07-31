@@ -177,10 +177,16 @@ extension PayWithLinkViewController {
         init(
             linkAccount: PaymentSheetLinkAccount,
             context: Context,
-            paymentMethods: [ConsumerPaymentDetails]
+            paymentMethods: [ConsumerPaymentDetails],
+            shippingAddresses: [ShippingAddressesResponse.ShippingAddress] = []
         ) {
             self.linkAccount = linkAccount
-            self.viewModel = WalletViewModel(linkAccount: linkAccount, context: context, paymentMethods: paymentMethods)
+            self.viewModel = WalletViewModel(
+                linkAccount: linkAccount,
+                context: context,
+                paymentMethods: paymentMethods,
+                shippingAddresses: shippingAddresses
+            )
             super.init(context: context)
         }
 
@@ -230,6 +236,13 @@ extension PayWithLinkViewController {
                 containerViewBottomConstraint,
             ])
 
+            if viewModel.requiresShippingAddress {
+                let row = LinkShippingAddressRow()
+                row.configure(with: viewModel.selectedShippingAddress)
+                row.addTarget(self, action: #selector(shippingAddressRowTapped), for: .touchUpInside)
+                paymentPicker.shippingRowView = row
+            }
+
             // If the initially selected payment method is not supported, we should automatically
             // expand the payment picker to hint the user to pick another payment method.
             if !viewModel.selectedPaymentMethodIsSupported {
@@ -249,6 +262,10 @@ extension PayWithLinkViewController {
 
             if let mandate = viewModel.mandate {
                 mandateView.setText(mandate)
+            }
+
+            if let shippingRow = paymentPicker.shippingRowView as? LinkShippingAddressRow {
+                shippingRow.configure(with: viewModel.selectedShippingAddress)
             }
 
             paymentPicker.reloadData()
@@ -401,6 +418,19 @@ extension PayWithLinkViewController {
         @objc
         func cancelButtonTapped(_ sender: Button) {
             coordinator?.cancel(shouldReturnToPaymentSheet: true)
+        }
+
+        @objc
+        func shippingAddressRowTapped() {
+            let shippingVC = ShippingAddressViewController(
+                linkAccount: linkAccount,
+                viewModel: viewModel,
+                onAddressSelected: { [weak self] address in
+                    self?.viewModel.selectedShippingAddressID = address.id
+                }
+            )
+            shippingVC.coordinator = coordinator
+            bottomSheetController?.pushContentViewController(shippingVC)
         }
 
     }
@@ -649,6 +679,7 @@ extension PayWithLinkViewController.WalletViewController: PayWithLinkWalletViewM
 
     func viewModelDidChange(_ viewModel: PayWithLinkViewController.WalletViewModel) {
         updateUI(animated: true)
+        coordinator?.updateSelectedShippingAddress(viewModel.selectedShippingAddress)
     }
 
 }

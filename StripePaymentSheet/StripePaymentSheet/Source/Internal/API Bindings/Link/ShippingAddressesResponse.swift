@@ -63,3 +63,36 @@ extension ShippingAddressesResponse.ShippingAddress {
         )
     }
 }
+
+struct CreateShippingAddressResponse: Decodable {
+    let shippingAddress: ShippingAddressesResponse.ShippingAddress
+
+    private enum CodingKeys: String, CodingKey {
+        case shippingAddress = "shipping_address"
+    }
+}
+
+struct CreateShippingAddressParams {
+    var name: String?
+    var line1: String?
+    var line2: String?
+    var locality: String?
+    var administrativeArea: String?
+    var postalCode: String?
+    var countryCode: String?
+
+    var asAddressParameters: [String: Any] {
+        var params: [String: Any] = [:]
+        func set(_ key: String, _ value: String?) {
+            if let value, !value.isEmpty { params[key] = value }
+        }
+        set("name", name)
+        set("line_1", line1)
+        set("line_2", line2)
+        set("locality", locality)
+        set("administrative_area", administrativeArea)
+        set("postal_code", postalCode)
+        set("country_code", countryCode)
+        return params
+    }
+}

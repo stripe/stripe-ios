@@ -61,6 +61,7 @@ protocol PayWithLinkCoordinating: AnyObject {
     func bailToWebFlow()
     func allowSheetDismissal(_ enable: Bool)
     func cancel3DS2ChallengeFlow()
+    func updateSelectedShippingAddress(_ address: ShippingAddressesResponse.ShippingAddress?)
 }
 
 /// A view controller for paying with Link.
@@ -190,10 +191,13 @@ final class PayWithLinkViewController: BottomSheetViewController {
 
     var shippingAddressResponse: ShippingAddressesResponse?
 
-    var defaultShippingAddress: ShippingAddressesResponse.ShippingAddress? {
-        shippingAddressResponse?.shippingAddresses.first {
-            $0.isDefault ?? false
-        } ?? shippingAddressResponse?.shippingAddresses.first
+    private(set) var selectedShippingAddress: ShippingAddressesResponse.ShippingAddress?
+
+    var requiresShippingAddress: Bool {
+        switch context.intent {
+        case .checkout(let session): return session.requiresShippingAddress
+        default: return context.configuration.allowsPaymentMethodsRequiringShippingAddress
+        }
     }
 
     override var sheetCornerRadius: CGFloat? {
@@ -421,7 +425,7 @@ private extension PayWithLinkViewController {
             let shippingAddressTask = Task {
                 try? await self.fetchShippingAddress(
                     using: linkAccount,
-                    shouldFetch: context.launchedFromFlowController
+                    shouldFetch: requiresShippingAddress || context.launchedFromFlowController
                 )
             }
             defer {
@@ -512,8 +516,10 @@ private extension PayWithLinkViewController {
             let walletViewController = WalletViewController(
                 linkAccount: linkAccount,
                 context: context,
-                paymentMethods: paymentDetails
+                paymentMethods: paymentDetails,
+                shippingAddresses: shippingAddressResponse?.shippingAddresses ?? []
             )
+            selectedShippingAddress = walletViewController.viewModel.selectedShippingAddress
             viewController = walletViewController
         }
         setViewControllers([viewController])
@@ -561,7 +567,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             account: linkAccount,
             paymentDetails: paymentDetails,
             confirmationExtras: confirmationExtras,
-            shippingAddress: defaultShippingAddress
+            shippingAddress: selectedShippingAddress
         )
 
         payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: confirmOption)
@@ -723,7 +729,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                     account: linkAccount,
                     paymentDetails: paymentDetails,
                     confirmationExtras: confirmationExtras,
-                    shippingAddress: defaultShippingAddress
+                    shippingAddress: selectedShippingAddress
                 )
             ),
             completion: completion
@@ -822,6 +828,10 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
 
     func cancel3DS2ChallengeFlow() {
         payWithLinkDelegate?.payWithLinkViewControllerShouldCancel3DS2ChallengeFlow(self)
+    }
+
+    func updateSelectedShippingAddress(_ address: ShippingAddressesResponse.ShippingAddress?) {
+        selectedShippingAddress = address
     }
 
 }
