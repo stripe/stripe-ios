@@ -258,7 +258,7 @@ final class AddressViewControllerDismissalTests: XCTestCase {
 
         // Then the phone is cleared back to the empty baseline. (This needs clear-then-populate:
         // populate alone skips phone when the baseline had none, leaving the added value stale.)
-        XCTAssertNil(vc.addressSection?.phone?.phoneNumber)
+        XCTAssert(vc.addressSection?.phone?.phoneNumber?.isEmpty == true)
         XCTAssertFalse(vc.hasChanges)
     }
 
