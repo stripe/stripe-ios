@@ -1,22 +1,15 @@
-//
-//  PaymentSheet+CheckoutSessionAPI.swift
-//  StripePaymentSheet
-//
-//  Created by Nick Porter on 1/26/26.
-//
-
-import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-extension PaymentSheet {
+// MARK: - Confirm
 
+extension Checkout {
     /// Confirms a checkout session with a new payment method
     @MainActor
     static func handleCheckoutSessionConfirmation(
         checkout: CheckoutSessionBillingAddressUpdater,
         checkoutSession: Checkout.Session,
-        confirmType: ConfirmPaymentMethodType,
+        confirmType: PaymentSheet.ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
@@ -131,7 +124,7 @@ extension PaymentSheet {
                 with: authenticationContext,
                 returnURL: configuration.returnURL
             ) { status, _, error in
-                continuation.resume(returning: makePaymentSheetResult(for: status, error: error))
+                continuation.resume(returning: PaymentSheet.makePaymentSheetResult(for: status, error: error))
             }
         }
     }
@@ -149,7 +142,7 @@ extension PaymentSheet {
                 with: authenticationContext,
                 returnURL: configuration.returnURL
             ) { status, _, error in
-                continuation.resume(returning: makePaymentSheetResult(for: status, error: error))
+                continuation.resume(returning: PaymentSheet.makePaymentSheetResult(for: status, error: error))
             }
         }
     }

@@ -364,7 +364,7 @@ extension PaymentSheet {
                             completion(result, nil)
                             return
                         }
-                        let result = await handleCheckoutSessionConfirmation(
+                        let result = await Checkout.handleCheckoutSessionConfirmation(
                             checkout: checkout,
                             checkoutSession: checkoutSession,
                             confirmType: .new(
@@ -449,7 +449,7 @@ extension PaymentSheet {
                     ? intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions
                     // PaymentSheet collects CVC in sheet:
                     : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
-                    let result = await handleCheckoutSessionConfirmation(
+                    let result = await Checkout.handleCheckoutSessionConfirmation(
                         checkout: checkout,
                         checkoutSession: checkoutSession,
                         confirmType: .saved(paymentMethod,
@@ -541,7 +541,7 @@ extension PaymentSheet {
                             completion(result, nil)
                             return
                         }
-                        let result = await handleCheckoutSessionConfirmation(
+                        let result = await Checkout.handleCheckoutSessionConfirmation(
                             checkout: checkout,
                             checkoutSession: checkoutSession,
                             confirmType: .new(
@@ -645,7 +645,7 @@ extension PaymentSheet {
                             completion(result, nil)
                             return
                         }
-                        let result = await handleCheckoutSessionConfirmation(
+                        let result = await Checkout.handleCheckoutSessionConfirmation(
                             checkout: checkout,
                             checkoutSession: checkoutSession,
                             confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
