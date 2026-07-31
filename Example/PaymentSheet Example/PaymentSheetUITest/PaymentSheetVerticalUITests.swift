@@ -88,7 +88,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         try! fillSepaData(app, tapCheckboxWithText: "Save this account for future Example, Inc. payments")
         continueButton.tap()
         sleep(1) // wait for 1 second for the sheet to dismiss
-        XCTAssertEqual(paymentMethodButton.label, "SEPA Debit, sepa_debit, John Doe, test@example.com, 354 Oyster Point Blvd, South San Francisco, CA, 94080, US")
+        XCTAssertEqual(paymentMethodButton.label, "SEPA Debit, sepa_debit, John Doe, test@example.com, 354 Oyster Point Boulevard, South San Francisco, CA, 94080, US")
         app.buttons["Confirm"].waitForExistenceAndTap(timeout: 3.0)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
         XCTAssertEqual(
@@ -119,7 +119,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Reload
         reload(app, settings: settings)
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10))
-        XCTAssertEqual(paymentMethodButton.label, "••••3000, sepa_debit, John Doe, test@example.com, 354 Oyster Point Blvd, South San Francisco, CA, 94080, US")
+        XCTAssertEqual(paymentMethodButton.label, "••••3000, sepa_debit, John Doe, test@example.com, 354 Oyster Point Boulevard, South San Francisco, CA, 94080, US")
         paymentMethodButton.tap()
 
         // Switch to the saved card...
