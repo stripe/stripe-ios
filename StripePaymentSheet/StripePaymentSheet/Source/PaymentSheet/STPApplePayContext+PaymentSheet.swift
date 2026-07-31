@@ -16,8 +16,7 @@ import PassKit
 typealias PaymentSheetResultCompletionBlock = ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
 
 /// A shim class; ApplePayContext expects a protocol/delegate, but PaymentSheet uses closures.
-/// Handles PaymentIntent, SetupIntent, and DeferredIntent flows only.
-/// Checkout Session Apple Pay flows are handled by ``CheckoutApplePayContextClosureDelegate``.
+/// Handles PaymentIntent, SetupIntent, DeferredIntent, and CheckoutSession flows.
 private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate {
     let completion: PaymentSheetResultCompletionBlock
     /// Retain this class until Apple Pay completes
@@ -27,13 +26,18 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     ((PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void)?
     let shippingContactUpdateHandler:
     ((PKContact, @escaping ((PKPaymentRequestShippingContactUpdate) -> Void)) -> Void)?
+    // Non-nil only for checkout sessions that source tax from the billing address.
+    let paymentMethodUpdateHandler:
+    ((PKPaymentMethod, @escaping ((PKPaymentRequestPaymentMethodUpdate) -> Void)) -> Void)?
 
     let intent: Intent
     let elementsSession: STPElementsSession
+    private weak var checkout: CheckoutSessionBillingAddressUpdater?
 
     init(
         intent: Intent,
         elementsSession: STPElementsSession,
+        checkout: CheckoutSessionBillingAddressUpdater?,
         authorizationResultHandler: PaymentSheet.ApplePayConfiguration.Handlers.AuthorizationResultHandler?,
         shippingMethodUpdateHandler: (
             (PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void
@@ -41,14 +45,19 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         shippingContactUpdateHandler: (
             (PKContact, @escaping ((PKPaymentRequestShippingContactUpdate) -> Void)) -> Void
         )?,
+        paymentMethodUpdateHandler: (
+            (PKPaymentMethod, @escaping ((PKPaymentRequestPaymentMethodUpdate) -> Void)) -> Void
+        )? = nil,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) {
         self.completion = completion
         self.authorizationResultHandler = authorizationResultHandler
         self.shippingMethodUpdateHandler = shippingMethodUpdateHandler
         self.shippingContactUpdateHandler = shippingContactUpdateHandler
+        self.paymentMethodUpdateHandler = paymentMethodUpdateHandler
         self.intent = intent
         self.elementsSession = elementsSession
+        self.checkout = checkout
         super.init()
         self.selfRetainer = self
     }
@@ -63,9 +72,19 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             return paymentIntent.clientSecret
         case .setupIntent(let setupIntent):
             return setupIntent.clientSecret
-        case .checkout:
-            stpAssertionFailure("Checkout sessions must use CheckoutSessionApplePayContext, not ApplePayContextClosureDelegate.")
-            throw PaymentSheetError.unknown(debugDescription: "Unexpected checkout session in ApplePayContextClosureDelegate")
+        case .checkout(let checkoutSession):
+            guard let checkout else {
+                let message = "Missing Checkout controller for CheckoutSession Apple Pay confirmation."
+                stpAssertionFailure(message)
+                throw PaymentSheetError.unknown(debugDescription: message)
+            }
+            return try await handleCheckoutSessionApplePay(
+                checkout: checkout,
+                checkoutSession: checkoutSession,
+                paymentMethod: paymentMethod,
+                paymentInformation: paymentInformation,
+                context: context
+            )
         case .deferredIntent(let intentConfig):
             guard let stpPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: paymentMethod.allResponseFields) else {
                 assertionFailure("Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod!")
@@ -260,6 +279,58 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             }
         }
 
+    func applePayContext(
+        _ context: STPApplePayContext,
+        didSelectPaymentMethod paymentMethod: PKPaymentMethod,
+        handler: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
+    ) {
+        if let paymentMethodUpdateHandler {
+            paymentMethodUpdateHandler(paymentMethod) { result in
+                handler(result)
+            }
+        } else {
+            // Note: this method isn't called unless our delegate implements it (see this class's `responds(to:)` override)
+            stpAssertionFailure("This method should not be called unless paymentMethodUpdateHandler is set")
+            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
+        }
+    }
+
+    // Only advertise `didSelectPaymentMethod` if we have a handler for it, otherwise it'd get called
+    // when there's nothing to do.
+    override func responds(to aSelector: Selector!) -> Bool {
+        if aSelector == #selector(applePayContext(_:didSelectPaymentMethod:handler:)) {
+            return paymentMethodUpdateHandler != nil
+        }
+        return super.responds(to: aSelector)
+    }
+
+    // MARK: - Private
+
+    private func handleCheckoutSessionApplePay(
+        checkout: CheckoutSessionBillingAddressUpdater,
+        checkoutSession: Checkout.Session,
+        paymentMethod: StripeAPI.PaymentMethod,
+        paymentInformation: PKPayment,
+        context: STPApplePayContext
+    ) async throws -> String {
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
+            intent: intent,
+            elementsSession: elementsSession
+        )
+        let response = try await context.apiClient.confirmCheckoutSession(
+            sessionId: checkoutSession.id,
+            paymentMethod: paymentMethod.id,
+            expectedAmount: checkoutSession.expectedAmount(),
+            expectedPaymentMethodType: STPPaymentMethodType.card.identifier,
+            returnURL: context.returnUrl,
+            shipping: makeShippingDetailsParams(from: paymentInformation),
+            paymentMethodOptions: nil,
+            clientAttributionMetadata: clientAttributionMetadata
+        )
+        try await checkout.commitSession(response)
+        return try response.intentClientSecret()
+    }
+
 }
 
 extension STPApplePayContext {
@@ -269,6 +340,7 @@ extension STPApplePayContext {
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         clientAttributionMetadata: STPClientAttributionMetadata,
+        checkout: CheckoutSessionBillingAddressUpdater? = nil,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) -> STPApplePayContext? {
         guard let applePay = configuration.applePay else {
@@ -285,12 +357,37 @@ extension STPApplePayContext {
             paymentRequest = paymentRequestHandler(paymentRequest)
         }
 
+        // Keep tax in sync with the billing address as the user switches cards.
+        let paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void) -> Void)? = {
+            guard case .checkout(let checkoutSession) = intent else { return nil }
+            guard let checkout else {
+                stpAssertionFailure("Missing Checkout controller for CheckoutSession Apple Pay payment method update.")
+                return nil
+            }
+            let label = intent.sellerDetails?.businessName ?? configuration.merchantDisplayName
+            let currency = intent.currency
+            return { pkPaymentMethod, completionHandler in
+                Task { @MainActor in
+                    var session = checkoutSession
+                    if let postalAddress = pkPaymentMethod.billingAddress?.postalAddresses.first?.value,
+                       let address = STPApplePayContext.makeCheckoutAddress(from: postalAddress) {
+                        session = (try? await checkout.updateBillingTaxRegionIfNecessaryForPaymentSheet(address: address, canUpdateWhileSheetPresented: true)) ?? session
+                    }
+                    completionHandler(PKPaymentRequestPaymentMethodUpdate(
+                        paymentSummaryItems: STPApplePayContext.makePaymentSummaryItems(for: session, label: label, currency: currency)
+                    ))
+                }
+            }
+        }()
+
         let delegate = ApplePayContextClosureDelegate(
             intent: intent,
             elementsSession: elementsSession,
+            checkout: checkout,
             authorizationResultHandler: configuration.applePay?.customHandlers?.authorizationResultHandler,
             shippingMethodUpdateHandler: configuration.applePay?.customHandlers?.shippingMethodUpdateHandler,
             shippingContactUpdateHandler: configuration.applePay?.customHandlers?.shippingContactUpdateHandler,
+            paymentMethodUpdateHandler: paymentMethodUpdateHandler,
             completion: completion
         )
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: delegate) {
