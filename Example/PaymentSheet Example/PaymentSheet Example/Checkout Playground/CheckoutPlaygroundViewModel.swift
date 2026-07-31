@@ -14,7 +14,20 @@ extension CheckoutPlayground {
             "card", "us_bank_account", "cashapp", "affirm", "klarna",
         ]
 
-        @Published var integrationType: IntegrationType = .flowController
+        @Published var integrationType: IntegrationType = .flowController {
+            didSet {
+                if integrationType == .eceOnly && expressCheckoutElementOption == .hide {
+                    expressCheckoutElementOption = .show
+                }
+            }
+        }
+        @Published var expressCheckoutElementOption: ExpressCheckoutElementOption = .show {
+            didSet {
+                if expressCheckoutElementOption == .hide && integrationType == .eceOnly {
+                    integrationType = .flowController
+                }
+            }
+        }
         @Published var currency: Currency = .usd
         @Published var customerType: CustomerType = .guest
         @Published var lineItems: [LineItemConfig] = LineItemConfig.defaults
