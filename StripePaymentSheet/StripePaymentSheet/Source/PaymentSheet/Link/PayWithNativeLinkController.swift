@@ -73,7 +73,6 @@ final class PayWithNativeLinkController {
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
-        checkout: CheckoutSessionBillingAddressUpdater? = nil,
         confirmationChallenge: ConfirmationChallenge? = nil,
         confirmHandler: ConfirmHandler? = nil
     ) {
@@ -245,7 +244,12 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
             paymentHandler: paymentHandler,
             confirmationChallenge: confirmationChallenge,
             analyticsHelper: analyticsHelper,
-            completion: wrappedCompletion
+            completion: { result, confirmationType in
+                if self.logPayment {
+                    self.analyticsHelper.logPayment(paymentOption: paymentOption, result: result, deferredIntentConfirmationType: confirmationType)
+                }
+                completion(result, confirmationType)
+            }
         )
     }
 

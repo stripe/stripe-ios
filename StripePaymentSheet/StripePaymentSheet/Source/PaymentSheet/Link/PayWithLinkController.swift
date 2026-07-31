@@ -36,7 +36,6 @@ final class PayWithLinkController {
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        checkout: CheckoutSessionBillingAddressUpdater? = nil,
         confirmationChallenge: ConfirmationChallenge?,
         confirmHandler: ConfirmHandler? = nil
     ) {

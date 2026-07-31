@@ -48,11 +48,17 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         integrationShape: IntegrationShape = .complete,
         paymentMethodID: String? = nil,
-        checkout: CheckoutSessionBillingAddressUpdater? = nil,
         confirmationChallenge: ConfirmationChallenge? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
+        if case .checkout = intent {
+            let message = "Checkout Session confirmation must go through Checkout.confirm, not PaymentSheet.confirm."
+            stpAssertionFailure(message)
+            completion(.failed(error: PaymentSheetError.unknown(debugDescription: message)), nil)
+            return
+        }
+
         Task { @MainActor in
             let preconfirmActionsResult = await handlePreconfirmActionsIfNecessary(
                 configuration: configuration,
@@ -87,7 +93,6 @@ extension PaymentSheet {
                 // - The real contract is "saved-card CVC recollection may override payment options", which should be represented directly by a narrower type.
                 intentConfirmParamsForDeferredIntent: intentConfirmParams,
                 paymentHandler: paymentHandler,
-                checkout: checkout,
                 confirmationChallenge: confirmationChallenge,
                 analyticsHelper: analyticsHelper,
                 completion: completion
@@ -185,8 +190,7 @@ extension PaymentSheet {
         integrationShape: IntegrationShape = .complete,
         confirmationChallenge: ConfirmationChallenge? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        paymentMethodID: String? = nil,
-        checkout: CheckoutSessionBillingAddressUpdater? = nil
+        paymentMethodID: String? = nil
     ) async -> (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) {
         await withCheckedContinuation { continuation in
             Task { @MainActor in
@@ -199,7 +203,6 @@ extension PaymentSheet {
                     paymentHandler: paymentHandler,
                     integrationShape: integrationShape,
                     paymentMethodID: paymentMethodID,
-                    checkout: checkout,
                     confirmationChallenge: confirmationChallenge,
                     analyticsHelper: analyticsHelper
                 ) { result, deferredType in
@@ -219,7 +222,6 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool = false,
         paymentMethodID: String? = nil,
-        checkout: CheckoutSessionBillingAddressUpdater? = nil,
         confirmationChallenge: ConfirmationChallenge?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
@@ -230,26 +232,15 @@ extension PaymentSheet {
         }
 
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(intent: intent, elementsSession: elementsSession)
-        let missingCheckoutControllerResult: () -> PaymentSheetResult = {
-            let message = "Missing Checkout controller for CheckoutSession confirmation."
-            stpAssertionFailure(message)
-            return .failed(error: PaymentSheetError.unknown(debugDescription: message))
-        }
 
         let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
             intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
         }
         let setAllowRedisplay: (IntentConfirmParams, STPPaymentMethodType) -> Void = { confirmParams, paymentMethodType in
-            if case .checkout(let session) = intent {
-                confirmParams.setAllowRedisplayForCheckoutSession(
-                    merchantWillSavePaymentMethod: session.merchantWillSavePaymentMethod(paymentMethodType)
-                )
-            } else {
-                confirmParams.setAllowRedisplay(
-                    mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
-                    isSettingUp: isSettingUp(paymentMethodType)
-                )
-            }
+            confirmParams.setAllowRedisplay(
+                mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
+                isSettingUp: isSettingUp(paymentMethodType)
+            )
         }
 
         switch paymentOption {
@@ -261,7 +252,6 @@ extension PaymentSheet {
                     elementsSession: elementsSession,
                     configuration: configuration,
                     clientAttributionMetadata: clientAttributionMetadata,
-                    checkout: checkout,
                     completion: completion
                 )
             else {
@@ -355,32 +345,8 @@ extension PaymentSheet {
                         await confirmationChallenge?.complete()
                         completion(result.result, result.deferredIntentConfirmationType)
                     }
-                    // MARK: ↪ Checkout
-                case .checkout(let checkoutSession):
-                    Task { @MainActor in
-                        guard let checkout else {
-                            let result = missingCheckoutControllerResult()
-                            await confirmationChallenge?.complete()
-                            completion(result, nil)
-                            return
-                        }
-                        let result = await Checkout.handleCheckoutSessionConfirmation(
-                            checkout: checkout,
-                            checkoutSession: checkoutSession,
-                            confirmType: .new(
-                                params: confirmParams.paymentMethodParams,
-                                paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                                saveForFutureUseCheckboxState: confirmParams.saveForFutureUseCheckboxState,
-                                shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
-                            ),
-                            configuration: configuration,
-                            authenticationContext: authenticationContext,
-                            paymentHandler: paymentHandler,
-                            elementsSession: elementsSession
-                        )
-                        await confirmationChallenge?.complete()
-                        completion(result, nil)
-                    }
+                case .checkout:
+                    stpAssertionFailure()
                 }
             }
 
@@ -437,32 +403,8 @@ extension PaymentSheet {
                     )
                     completion(result.result, result.deferredIntentConfirmationType)
                 }
-                // MARK: ↪ Checkout
-            case .checkout(let checkoutSession):
-                Task { @MainActor in
-                    guard let checkout else {
-                        completion(missingCheckoutControllerResult(), nil)
-                        return
-                    }
-                    let paymentOptions = intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions != nil
-                    // Flow controller and embedded collects CVC using interstitial:
-                    ? intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions
-                    // PaymentSheet collects CVC in sheet:
-                    : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
-                    let result = await Checkout.handleCheckoutSessionConfirmation(
-                        checkout: checkout,
-                        checkoutSession: checkoutSession,
-                        confirmType: .saved(paymentMethod,
-                                            paymentOptions: paymentOptions,
-                                            clientAttributionMetadata: clientAttributionMetadata,
-                                            radarOptions: nil),
-                        configuration: configuration,
-                        authenticationContext: authenticationContext,
-                        paymentHandler: paymentHandler,
-                        elementsSession: elementsSession
-                    )
-                    completion(result, nil)
-                }
+            case .checkout:
+                stpAssertionFailure()
             }
         // MARK: - Link
         case .link(let confirmOption):
@@ -534,31 +476,8 @@ extension PaymentSheet {
                         }
                         await confirmationChallenge?.complete()
                         completion(result.result, result.deferredIntentConfirmationType)
-                    case .checkout(let checkoutSession):
-                        guard let checkout else {
-                            let result = missingCheckoutControllerResult()
-                            await confirmationChallenge?.complete()
-                            completion(result, nil)
-                            return
-                        }
-                        let result = await Checkout.handleCheckoutSessionConfirmation(
-                            checkout: checkout,
-                            checkoutSession: checkoutSession,
-                            confirmType: .new(
-                                params: paymentMethodParams,
-                                paymentOptions: STPConfirmPaymentMethodOptions(),
-                                saveForFutureUseCheckboxState: saveForFutureUseCheckboxState
-                            ),
-                            configuration: configuration,
-                            authenticationContext: authenticationContext,
-                            paymentHandler: paymentHandler,
-                            elementsSession: elementsSession
-                        )
-                        if shouldLogOutOfLink(result: result, elementsSession: elementsSession) {
-                            linkAccount?.logout()
-                        }
-                        await confirmationChallenge?.complete()
-                        completion(result, nil)
+                    case .checkout:
+                        stpAssertionFailure()
                     }
                 }
             }
@@ -638,27 +557,8 @@ extension PaymentSheet {
                         }
                         await confirmationChallenge?.complete()
                         completion(result.result, result.deferredIntentConfirmationType)
-                    case .checkout(let checkoutSession):
-                        guard let checkout else {
-                            let result = missingCheckoutControllerResult()
-                            await confirmationChallenge?.complete()
-                            completion(result, nil)
-                            return
-                        }
-                        let result = await Checkout.handleCheckoutSessionConfirmation(
-                            checkout: checkout,
-                            checkoutSession: checkoutSession,
-                            confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
-                            configuration: configuration,
-                            authenticationContext: authenticationContext,
-                            paymentHandler: paymentHandler,
-                            elementsSession: elementsSession
-                        )
-                        if shouldLogOutOfLink(result: result, elementsSession: elementsSession) {
-                            linkAccount?.logout()
-                        }
-                        await confirmationChallenge?.complete()
-                        completion(result, nil)
+                    case .checkout:
+                        stpAssertionFailure()
                     }
                 }
             }
@@ -679,7 +579,6 @@ extension PaymentSheet {
                     paymentOption: linkPaymentOption,
                     paymentHandler: paymentHandler,
                     integrationShape: .complete,
-                    checkout: checkout,
                     confirmationChallenge: confirmationChallenge,
                     analyticsHelper: analyticsHelper,
                     completion: linkCompletion
@@ -835,8 +734,7 @@ extension PaymentSheet {
                     confirmationChallenge: confirmationChallenge,
                     confirmHandler: confirmHandler
                 )
-                linkController.present(from: authenticationContext.authenticationPresentingViewController(),
-                                       completion: completion)
+                linkController.present(from: authenticationContext.authenticationPresentingViewController(), completion: completion)
             }
         case .signUp(_, let linkAccount, let phoneNumberFromSignup, let consentAction, let legalName, let intentConfirmParams):
             let billingDetails = intentConfirmParams.paymentMethodParams.billingDetails

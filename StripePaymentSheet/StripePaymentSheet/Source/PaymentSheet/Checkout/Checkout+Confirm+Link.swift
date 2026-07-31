@@ -9,25 +9,27 @@
 @_spi(STP) import StripePayments
 
 extension Checkout {
-    func confirmLink(
+    static func confirmLink(
+        checkoutSession: Session,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
-        clientAttributionMetadata: STPClientAttributionMetadata
+        clientAttributionMetadata: STPClientAttributionMetadata,
+        paymentHandler: STPPaymentHandler
     ) async -> InternalConfirmResult {
         guard case .link(let confirmOption) = confirmationContext.paymentOption else {
             stpAssertionFailure("confirmLink called with a non-Link payment option.")
             return .init(paymentSheetResult: .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption))
         }
 
-        let elementsSession = session.elementsSession
+        let elementsSession = checkoutSession.elementsSession
         let configuration = confirmationContext.configuration
         let confirmationChallenge = confirmationContext.confirmationChallenge
         let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
-            self.session.merchantWillSavePaymentMethod(paymentMethodType)
+            checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
         }
         let setAllowRedisplay: (IntentConfirmParams, STPPaymentMethodType) -> Void = { confirmParams, paymentMethodType in
             confirmParams.setAllowRedisplayForCheckoutSession(
-                merchantWillSavePaymentMethod: self.session.merchantWillSavePaymentMethod(paymentMethodType)
+                merchantWillSavePaymentMethod: checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
             )
         }
 
@@ -47,8 +49,7 @@ extension Checkout {
                     paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethodParams.type)
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     let result = await Self.handleCheckoutSessionConfirmation(
-                        checkout: self,
-                        checkoutSession: self.session,
+                        checkoutSession: checkoutSession,
                         confirmType: .new(
                             params: paymentMethodParams,
                             paymentOptions: STPConfirmPaymentMethodOptions(),
@@ -56,14 +57,14 @@ extension Checkout {
                         ),
                         configuration: configuration,
                         authenticationContext: authenticationContext,
-                        paymentHandler: self.paymentHandler,
+                        paymentHandler: paymentHandler,
                         elementsSession: elementsSession
                     )
-                    if PaymentSheet.shouldLogOutOfLink(result: result, elementsSession: elementsSession) {
+                    if PaymentSheet.shouldLogOutOfLink(result: result.paymentSheetResult, elementsSession: elementsSession) {
                         linkAccount?.logout()
                     }
                     await confirmationChallenge?.complete()
-                    completion(.init(paymentSheetResult: result), nil)
+                    completion(result, nil)
                 }
             }
 
@@ -77,8 +78,7 @@ extension Checkout {
                 Task { @MainActor in
                     let radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethod.type)
                     let result = await Self.handleCheckoutSessionConfirmation(
-                        checkout: self,
-                        checkoutSession: self.session,
+                        checkoutSession: checkoutSession,
                         confirmType: .saved(
                             paymentMethod,
                             paymentOptions: nil,
@@ -87,14 +87,14 @@ extension Checkout {
                         ),
                         configuration: configuration,
                         authenticationContext: authenticationContext,
-                        paymentHandler: self.paymentHandler,
+                        paymentHandler: paymentHandler,
                         elementsSession: elementsSession
                     )
-                    if PaymentSheet.shouldLogOutOfLink(result: result, elementsSession: elementsSession) {
+                    if PaymentSheet.shouldLogOutOfLink(result: result.paymentSheetResult, elementsSession: elementsSession) {
                         linkAccount?.logout()
                     }
                     await confirmationChallenge?.complete()
-                    completion(.init(paymentSheetResult: result), nil)
+                    completion(result, nil)
                 }
             }
 
@@ -114,10 +114,12 @@ extension Checkout {
                         confirmationChallenge: confirmationChallenge,
                         analyticsHelper: confirmationContext.analyticsHelper
                     )
-                    let result = await self.confirmPaymentOption(
+                    let result = await Self.confirmPaymentOption(
+                        checkoutSession: checkoutSession,
                         confirmationContext: linkConfirmationContext,
                         authenticationContext: linkAuthenticationContext,
-                        intentConfirmParamsForDeferredIntent: nil
+                        intentConfirmParamsForDeferredIntent: nil,
+                        paymentHandler: paymentHandler
                     )
                     linkCompletionResult = result
                     linkCompletion(result.paymentSheetResult, nil)
@@ -128,7 +130,7 @@ extension Checkout {
                 confirmOption: confirmOption,
                 configuration: configuration,
                 authenticationContext: authenticationContext,
-                intent: .checkout(session),
+                intent: .checkout(checkoutSession),
                 elementsSession: elementsSession,
                 analyticsHelper: confirmationContext.analyticsHelper,
                 confirmationChallenge: confirmationChallenge,

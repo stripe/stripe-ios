@@ -542,14 +542,12 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 let e = expectation(description: "")
                 // Confirm the intent with the form details
                 let paymentHandler = STPPaymentHandler(apiClient: apiClient)
-                PaymentSheet.confirm(
+                confirm(
+                    testIntent: testIntent,
                     configuration: configuration,
-                    authenticationContext: self,
-                    intent: intent,
                     elementsSession: elementsSession,
                     paymentOption: .saved(paymentMethod: savedSepaPM, confirmParams: nil),
                     paymentHandler: paymentHandler,
-                    checkout: testIntent.checkout,
                     analyticsHelper: ._testValue()
                 ) { result, _  in
                     e.fulfill()
@@ -1142,14 +1140,12 @@ extension PaymentSheetLPMConfirmFlowTests {
             }
 
             // Confirm the intent with the form details
-            PaymentSheet.confirm(
+            confirm(
+                testIntent: testIntent,
                 configuration: configuration,
-                authenticationContext: self,
-                intent: intent,
                 elementsSession: ._testValue(intent: intent),
                 paymentOption: .new(confirmParams: intentConfirmParams),
                 paymentHandler: paymentHandler,
-                checkout: testIntent.checkout,
                 analyticsHelper: ._testValue()
             ) { result, _  in
                 switch result {
@@ -1636,10 +1632,9 @@ extension PaymentSheetLPMConfirmFlowTests {
                     redirectShimCalled = true
                 }
 
-                PaymentSheet.confirm(
+                confirm(
+                    testIntent: testIntent,
                     configuration: configuration,
-                    authenticationContext: self,
-                    intent: intent,
                     elementsSession: ._testValue(intent: intent, linkFundingSources: linkFundingSources),
                     paymentOption: .link(
                         option: .withPaymentMethod(
@@ -1648,7 +1643,6 @@ extension PaymentSheetLPMConfirmFlowTests {
                         )
                     ),
                     paymentHandler: paymentHandler,
-                    checkout: testIntent.checkout,
                     analyticsHelper: ._testValue()
                 ) { result, _ in
                     switch result {
@@ -1737,6 +1731,47 @@ extension PaymentSheetLPMConfirmFlowTests {
         }
         XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
         XCTAssertNotNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))
+    }
+
+    func confirm(
+        testIntent: TestIntent,
+        configuration: PaymentElementConfiguration,
+        elementsSession: STPElementsSession,
+        paymentOption: PaymentOption,
+        paymentHandler: STPPaymentHandler,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
+        guard case .checkout(let checkoutSession) = testIntent.intent else {
+            PaymentSheet.confirm(
+                configuration: configuration,
+                authenticationContext: self,
+                intent: testIntent.intent,
+                elementsSession: elementsSession,
+                paymentOption: paymentOption,
+                paymentHandler: paymentHandler,
+                analyticsHelper: analyticsHelper,
+                completion: completion
+            )
+            return
+        }
+
+        Task { @MainActor in
+            let confirmationContext = Checkout.ConfirmationContext(
+                paymentOption: paymentOption,
+                configuration: configuration,
+                integrationShape: .complete,
+                confirmationChallenge: nil,
+                analyticsHelper: analyticsHelper
+            )
+            let result = await Checkout.confirm(
+                checkoutSession: checkoutSession,
+                confirmationContext: confirmationContext,
+                authenticationContext: self,
+                paymentHandler: paymentHandler
+            )
+            completion(result.paymentSheetResult, nil)
+        }
     }
 }
 

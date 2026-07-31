@@ -1,6 +1,6 @@
+@_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-import UIKit
 
 // MARK: - Confirm
 
@@ -53,20 +53,17 @@ extension Checkout {
         )
     }
 
-    func confirm(
+    static func confirm(
+        checkoutSession: Session,
         confirmationContext: ConfirmationContext,
-        presentingViewController: UIViewController
+        authenticationContext: STPAuthenticationContext,
+        paymentHandler: STPPaymentHandler
     ) async -> InternalConfirmResult {
-        let authenticationContext = AuthenticationContext(
-            presentingViewController: presentingViewController,
-            appearance: confirmationContext.configuration.appearance
-        )
-
         // 1. Handle pre-confirm actions, such as Bacs mandate acceptance or saved-card CVC recollection.
         let preconfirmActionsResult = await PaymentSheet.handlePreconfirmActionsIfNecessary(
             configuration: confirmationContext.configuration,
             authenticationContext: authenticationContext,
-            intent: .checkout(session),
+            intent: .checkout(checkoutSession),
             paymentOption: confirmationContext.paymentOption,
             paymentHandler: paymentHandler,
             integrationShape: confirmationContext.integrationShape
@@ -84,23 +81,27 @@ extension Checkout {
 
         // 2. Confirm the Checkout Session using the selected payment option.
         return await confirmPaymentOption(
+            checkoutSession: checkoutSession,
             confirmationContext: confirmationContext,
             authenticationContext: authenticationContext,
-            intentConfirmParamsForDeferredIntent: intentConfirmParams
+            intentConfirmParamsForDeferredIntent: intentConfirmParams,
+            paymentHandler: paymentHandler
         )
     }
 
-    func confirmPaymentOption(
+    static func confirmPaymentOption(
+        checkoutSession: Session,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
-        intentConfirmParamsForDeferredIntent: IntentConfirmParams?
+        intentConfirmParamsForDeferredIntent: IntentConfirmParams?,
+        paymentHandler: STPPaymentHandler
     ) async -> InternalConfirmResult {
         let paymentOption = confirmationContext.paymentOption
-        let elementsSession = session.elementsSession
+        let elementsSession = checkoutSession.elementsSession
         let configuration = confirmationContext.configuration
         let confirmationChallenge = confirmationContext.confirmationChallenge
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-            intent: .checkout(session),
+            intent: .checkout(checkoutSession),
             elementsSession: elementsSession
         )
 
@@ -121,13 +122,12 @@ extension Checkout {
                 }
             }()
             confirmParams.setAllowRedisplayForCheckoutSession(
-                merchantWillSavePaymentMethod: session.merchantWillSavePaymentMethod(paymentMethodType)
+                merchantWillSavePaymentMethod: checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
             )
             confirmParams.paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
             confirmParams.paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
             let result = await Self.handleCheckoutSessionConfirmation(
-                checkout: self,
-                checkoutSession: session,
+                checkoutSession: checkoutSession,
                 confirmType: .new(
                     params: confirmParams.paymentMethodParams,
                     paymentOptions: confirmParams.confirmPaymentMethodOptions,
@@ -140,7 +140,7 @@ extension Checkout {
                 elementsSession: elementsSession
             )
             await confirmationChallenge?.complete()
-            return .init(paymentSheetResult: result)
+            return result
 
         case .saved(let paymentMethod, let confirmParams):
             // MARK: - Saved PM
@@ -148,8 +148,7 @@ extension Checkout {
             ? intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions
             : confirmParams?.confirmPaymentMethodOptions
             let result = await Self.handleCheckoutSessionConfirmation(
-                checkout: self,
-                checkoutSession: session,
+                checkoutSession: checkoutSession,
                 confirmType: .saved(
                     paymentMethod,
                     paymentOptions: paymentOptions,
@@ -161,7 +160,7 @@ extension Checkout {
                 paymentHandler: paymentHandler,
                 elementsSession: elementsSession
             )
-            return .init(paymentSheetResult: result)
+            return result
 
         case .external:
             // MARK: - External PM
@@ -171,9 +170,11 @@ extension Checkout {
         case .link:
             // MARK: - Link
             return await confirmLink(
+                checkoutSession: checkoutSession,
                 confirmationContext: confirmationContext,
                 authenticationContext: authenticationContext,
-                clientAttributionMetadata: clientAttributionMetadata
+                clientAttributionMetadata: clientAttributionMetadata,
+                paymentHandler: paymentHandler
             )
         }
     }
@@ -181,14 +182,13 @@ extension Checkout {
     /// Confirms a checkout session with a new payment method
     @MainActor
     static func handleCheckoutSessionConfirmation(
-        checkout: CheckoutSessionBillingAddressUpdater,
         checkoutSession: Checkout.Session,
         confirmType: PaymentSheet.ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
         elementsSession: STPElementsSession
-    ) async -> PaymentSheetResult {
+    ) async -> InternalConfirmResult {
         do {
             let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
                 intent: .checkout(checkoutSession),
@@ -242,18 +242,16 @@ extension Checkout {
                 clientAttributionMetadata: clientAttributionMetadata
             )
 
-            // Update the Checkout instance with the confirmed session response
-            try await checkout.commitSession(response)
-
             // 4. Handle the intent returned by the confirm response.
-            return try await handleCheckoutSessionConfirmResponse(
+            let paymentSheetResult = try await handleCheckoutSessionConfirmResponse(
                 response: response,
                 configuration: configuration,
                 authenticationContext: authenticationContext,
                 paymentHandler: paymentHandler
             )
+            return .init(paymentSheetResult: paymentSheetResult, checkoutSessionResponse: response)
         } catch {
-            return .failed(error: error)
+            return .init(paymentSheetResult: .failed(error: error))
         }
     }
 

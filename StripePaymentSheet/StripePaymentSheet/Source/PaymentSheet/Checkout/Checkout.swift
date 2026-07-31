@@ -8,6 +8,7 @@
 
 import Combine
 import Foundation
+@_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 import UIKit
@@ -78,6 +79,7 @@ public final class Checkout: ObservableObject {
 
     let clientSecret: String
     let apiClient: STPAPIClient
+    lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: apiClient)
     var effectiveMerchantDisplayName: String {
         configuration.merchantDisplayName ?? session.businessName ?? Bundle.displayName ?? ""
     }
@@ -297,7 +299,7 @@ public final class Checkout: ObservableObject {
 
     /// Use this method to confirm the Checkout Session.
     /// - Parameter presentingViewController: The view controller used to present any view controllers required e.g. to authenticate the customer. If you're using SwiftUI, you may pass nil and it will use the topmost UIViewController from the key window (not compatible with multi-scene apps).
-    /// - Returns a `ConfirmResult` enum - either completed, canceled, or failed.
+    /// - Returns: A `ConfirmResult` enum - either succeeded, canceled, or failed.
     public func confirm(from presentingViewController: UIViewController? = nil) async -> ConfirmResult {
         guard let presentingViewController = presentingViewController ?? UIWindow.visibleViewController else {
             let errorMessage = "Checkout.confirm(from:) could not find a presenting view controller."
@@ -313,14 +315,39 @@ public final class Checkout: ObservableObject {
             return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: "Checkout.confirm(from:) was called while the Checkout Session is still loading. Wait until Checkout.isLoading is false."))
         }
 
-        // TODO: Map the internal confirm result into `ConfirmResult`.
-        return .canceled
+        guard let confirmationContext = confirmationContext(for: paymentElement) else {
+            return .failed(PaymentSheetError.confirmingWithInvalidPaymentOption)
+        }
+        let authenticationContext = AuthenticationContext(
+            presentingViewController: presentingViewController,
+            appearance: confirmationContext.configuration.appearance
+        )
+
+        do {
+            let confirmResult = try await enqueueSessionUpdate {
+                let result = await Self.confirm(
+                    checkoutSession: self.session,
+                    confirmationContext: confirmationContext,
+                    authenticationContext: authenticationContext,
+                    paymentHandler: self.paymentHandler
+                )
+                if let checkoutSessionResponse = result.checkoutSessionResponse {
+                    try await self.commitSession(checkoutSessionResponse)
+                }
+                return result
+            }
+            _ = confirmResult
+            // TODO: Map the internal confirm result into `ConfirmResult`.
+            return .canceled
+        } catch {
+            return .failed(error)
+        }
     }
 
     /// The result of an attempt to confirm a Checkout Session.
     /// This is a convenience abstraction over the underlying Checkout Session's status and paymentStatus properties.
     public enum ConfirmResult {
-        /// The Checkout Session completed.
+        /// The Checkout Session succeeded.
         /// - Parameter paymentStatus: The payment status of the Checkout Session, one of `paid`, `unpaid`, or `no_payment_required`.
         case succeeded(paymentStatus: Session.Status.PaymentStatus)
         /// The customer canceled the confirmation attempt.
