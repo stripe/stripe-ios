@@ -350,10 +350,10 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     // Internal state
     private var startTime: Date?
     private var intentID: String?
-    private var paymentState: PaymentState = .notStarted
+    var paymentState: PaymentState = .notStarted
     private var error: Swift.Error?
     /// YES if the flow cancelled or timed out.  This toggles which delegate method (didFinish or didAuthorize) calls our didComplete delegate method
-    private var didCancelOrTimeoutWhilePending = false
+    var didCancelOrTimeoutWhilePending = false
     private var didPresentApplePay = false
     /// Whether or not we fully completed the flow - if didFinish is `true`, that means `_end()` was called and this class is unusable.
     var didFinish = false
