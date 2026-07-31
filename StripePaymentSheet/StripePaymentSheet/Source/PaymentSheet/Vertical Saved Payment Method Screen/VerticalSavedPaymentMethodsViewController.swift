@@ -364,7 +364,6 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         setSelectionInteractionEnabled(false)
 
         guard let checkout,
-              intent.collectsTaxFromBillingAddress,
               let address = paymentMethod.billingDetails?.address?.checkoutAddress else {
             completeSelection(of: paymentMethod)
             return
