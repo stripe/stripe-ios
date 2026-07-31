@@ -53,9 +53,6 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
 
         let navigationController = UINavigationController(rootViewController: addressViewController)
 
-        // Disallow swipe-to-dismiss. If there are unsaved changes we want to present the customer with an alert before they discard them.
-        navigationController.isModalInPresentation = true
-
         // Set preferred content size to help SwiftUI with initial sizing
         // This prevents constraint conflicts during measurement phase and janky present animation
         navigationController.preferredContentSize = UIView.layoutFittingExpandedSize
