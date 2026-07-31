@@ -117,17 +117,17 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     // MARK: - Views
     private let addPaymentMethodViewController: AddPaymentMethodViewController
-    private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
+    let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
     private lazy var headerLabel: UILabel = {
         return PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
     }()
     private lazy var paymentContainerView: DynamicHeightContainerView = {
         return DynamicHeightContainerView()
     }()
-    private lazy var errorLabel: UILabel = {
+    lazy var errorLabel: UILabel = {
         return ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
     }()
-    private lazy var confirmButton: ConfirmButton = {
+    lazy var confirmButton: ConfirmButton = {
         let button = ConfirmButton(
             callToAction: callToAction,
             appearance: configuration.appearance,
@@ -137,20 +137,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         )
         return button
     }()
-
-#if DEBUG
-    var _testSavedPaymentOptionsViewController: SavedPaymentOptionsViewController {
-        return savedPaymentOptionsViewController
-    }
-
-    var _testConfirmButton: ConfirmButton {
-        return confirmButton
-    }
-
-    var _testErrorLabel: UILabel {
-        return errorLabel
-    }
-#endif
 
     private var callToAction: ConfirmButton.CallToActionType {
         if let customCtaLabel = configuration.primaryButtonLabel {

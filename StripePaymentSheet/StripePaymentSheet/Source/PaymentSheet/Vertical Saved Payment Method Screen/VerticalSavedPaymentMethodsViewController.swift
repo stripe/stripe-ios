@@ -159,7 +159,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return label
     }()
 
-    private lazy var errorLabel: UILabel = {
+    lazy var errorLabel: UILabel = {
         let label = ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
         label.isHidden = true
         return label
@@ -185,17 +185,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return stackView
     }()
 
-    private var paymentMethodRows: [SavedPaymentMethodRowButton] = []
-
-#if DEBUG
-    var _testPaymentMethodRows: [SavedPaymentMethodRowButton] {
-        return paymentMethodRows
-    }
-
-    var _testErrorLabel: UILabel {
-        return errorLabel
-    }
-#endif
+    var paymentMethodRows: [SavedPaymentMethodRowButton] = []
 
     init(
         configuration: PaymentElementConfiguration,

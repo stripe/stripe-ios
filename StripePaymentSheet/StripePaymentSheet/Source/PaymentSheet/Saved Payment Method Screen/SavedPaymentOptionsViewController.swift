@@ -308,18 +308,12 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
 
     // MARK: - Views
-    private lazy var collectionView: SavedPaymentMethodCollectionView = {
+    lazy var collectionView: SavedPaymentMethodCollectionView = {
         let collectionView = SavedPaymentMethodCollectionView(appearance: appearance, needsVerticalPaddingForBadge: hasDefault)
         collectionView.delegate = self
         collectionView.dataSource = self
         return collectionView
     }()
-
-#if DEBUG
-    var _testCollectionView: SavedPaymentMethodCollectionView {
-        return collectionView
-    }
-#endif
 
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [collectionView, cvcRecollectionContainerView, sepaMandateView])

@@ -37,7 +37,7 @@ final class SavedPaymentMethodBillingSyncTests: APIStubbedTestCase {
         )
         sut.delegate = delegate
         sut.loadViewIfNeeded()
-        let selectedRow = sut._testPaymentMethodRows[1]
+        let selectedRow = sut.paymentMethodRows[1]
 
         // When
         selectedRow.rowButton.handleTap()
@@ -67,8 +67,8 @@ final class SavedPaymentMethodBillingSyncTests: APIStubbedTestCase {
         )
         sut.delegate = delegate
         sut.loadViewIfNeeded()
-        let firstRow = sut._testPaymentMethodRows[0]
-        let secondRow = sut._testPaymentMethodRows[1]
+        let firstRow = sut.paymentMethodRows[0]
+        let secondRow = sut.paymentMethodRows[1]
 
         // When
         secondRow.rowButton.handleTap()
@@ -80,8 +80,8 @@ final class SavedPaymentMethodBillingSyncTests: APIStubbedTestCase {
         XCTAssertFalse(secondRow.isSelected)
         XCTAssertEqual(secondRow.rowButton.alpha, 1)
         XCTAssertEqual(activityIndicator(in: secondRow)?.isAnimating, false)
-        XCTAssertFalse(sut._testErrorLabel.isHidden)
-        XCTAssertEqual(sut._testErrorLabel.text, "Tax update failed")
+        XCTAssertFalse(sut.errorLabel.isHidden)
+        XCTAssertEqual(sut.errorLabel.text, "Tax update failed")
         XCTAssertTrue(sut.allowsDragToDismiss)
         XCTAssertEqual(CustomerPaymentOption.localDefaultPaymentMethod(for: nil), .link)
         XCTAssertEqual(delegate.completionCount, 0)
@@ -103,7 +103,7 @@ final class SavedPaymentMethodBillingSyncTests: APIStubbedTestCase {
             selectedPaymentMethod: firstPaymentMethod
         )
         sut.loadViewIfNeeded()
-        let selectedRow = sut._testPaymentMethodRows[0]
+        let selectedRow = sut.paymentMethodRows[0]
 
         // When
         selectedRow.rowButton.handleTap()
@@ -223,17 +223,17 @@ final class SavedPaymentMethodBillingSyncTests: APIStubbedTestCase {
         )
         sut.flowControllerDelegate = delegate
         sut.loadViewIfNeeded()
-        let savedOptions = sut._testSavedPaymentOptionsViewController
+        let savedOptions = sut.savedPaymentOptionsViewController
         savedOptions.loadViewIfNeeded()
         sut.view.autosizeHeight(width: 375)
         let selectedCell = try XCTUnwrap(
-            savedOptions._testCollectionView.cellForItem(at: IndexPath(item: 2, section: 0))
+            savedOptions.collectionView.cellForItem(at: IndexPath(item: 2, section: 0))
                 as? SavedPaymentMethodCollectionView.PaymentOptionCell
         )
 
         // When
         savedOptions.collectionView(
-            savedOptions._testCollectionView,
+            savedOptions.collectionView,
             didSelectItemAt: IndexPath(item: 2, section: 0)
         )
 
@@ -273,17 +273,17 @@ final class SavedPaymentMethodBillingSyncTests: APIStubbedTestCase {
         )
         sut.flowControllerDelegate = delegate
         sut.loadViewIfNeeded()
-        let savedOptions = sut._testSavedPaymentOptionsViewController
+        let savedOptions = sut.savedPaymentOptionsViewController
         savedOptions.loadViewIfNeeded()
         sut.view.autosizeHeight(width: 375)
         let selectedCell = try XCTUnwrap(
-            savedOptions._testCollectionView.cellForItem(at: IndexPath(item: 2, section: 0))
+            savedOptions.collectionView.cellForItem(at: IndexPath(item: 2, section: 0))
                 as? SavedPaymentMethodCollectionView.PaymentOptionCell
         )
 
         // When
         savedOptions.collectionView(
-            savedOptions._testCollectionView,
+            savedOptions.collectionView,
             didSelectItemAt: IndexPath(item: 2, section: 0)
         )
         await fulfillment(of: [updateRequest], timeout: 5)
@@ -298,8 +298,8 @@ final class SavedPaymentMethodBillingSyncTests: APIStubbedTestCase {
             CustomerPaymentOption.localDefaultPaymentMethod(for: nil),
             .link
         )
-        XCTAssertFalse(sut._testErrorLabel.isHidden)
-        XCTAssertEqual(sut._testErrorLabel.text, "Tax update failed")
+        XCTAssertFalse(sut.errorLabel.isHidden)
+        XCTAssertEqual(sut.errorLabel.text, "Tax update failed")
         XCTAssertEqual(selectedCell.paymentMethodLogo.alpha, 1)
         XCTAssertEqual(activityIndicator(in: selectedCell.selectedIcon)?.isAnimating, false)
         XCTAssertEqual(delegate.closeCount, 0)
@@ -330,17 +330,17 @@ final class SavedPaymentMethodBillingSyncTests: APIStubbedTestCase {
         )
         sut.flowControllerDelegate = delegate
         sut.loadViewIfNeeded()
-        let savedOptions = sut._testSavedPaymentOptionsViewController
+        let savedOptions = sut.savedPaymentOptionsViewController
         savedOptions.loadViewIfNeeded()
         sut.view.autosizeHeight(width: 375)
         let selectedCell = try XCTUnwrap(
-            savedOptions._testCollectionView.cellForItem(at: IndexPath(item: 2, section: 0))
+            savedOptions.collectionView.cellForItem(at: IndexPath(item: 2, section: 0))
                 as? SavedPaymentMethodCollectionView.PaymentOptionCell
         )
 
         // When selecting the saved payment method
         savedOptions.collectionView(
-            savedOptions._testCollectionView,
+            savedOptions.collectionView,
             didSelectItemAt: IndexPath(item: 2, section: 0)
         )
 
@@ -353,10 +353,10 @@ final class SavedPaymentMethodBillingSyncTests: APIStubbedTestCase {
         XCTAssertEqual(delegate.closeCount, 0)
 
         // When tapping Continue
-        sut._testConfirmButton.sendActions(for: .touchUpInside)
+        sut.confirmButton.sendActions(for: .touchUpInside)
 
         // Then the CTA owns the loading state and closes after syncing
-        guard case .processing = sut._testConfirmButton.status else {
+        guard case .processing = sut.confirmButton.status else {
             return XCTFail("Expected the Continue button to be processing")
         }
         XCTAssertFalse(sut.isDismissable)
@@ -365,7 +365,7 @@ final class SavedPaymentMethodBillingSyncTests: APIStubbedTestCase {
         XCTAssertEqual(delegate.closeCount, 1)
         XCTAssertTrue(sut.isDismissable)
         XCTAssertTrue(sut.view.isUserInteractionEnabled)
-        guard case .enabled = sut._testConfirmButton.status else {
+        guard case .enabled = sut.confirmButton.status else {
             return XCTFail("Expected the Continue button to reset before re-presentation")
         }
     }
@@ -386,21 +386,21 @@ final class SavedPaymentMethodBillingSyncTests: APIStubbedTestCase {
         )
         sut.flowControllerDelegate = delegate
         sut.loadViewIfNeeded()
-        let savedOptions = sut._testSavedPaymentOptionsViewController
+        let savedOptions = sut.savedPaymentOptionsViewController
         savedOptions.loadViewIfNeeded()
         savedOptions.collectionView(
-            savedOptions._testCollectionView,
+            savedOptions.collectionView,
             didSelectItemAt: IndexPath(item: 2, section: 0)
         )
 
         // When
-        sut._testConfirmButton.sendActions(for: .touchUpInside)
+        sut.confirmButton.sendActions(for: .touchUpInside)
 
         // Then
         XCTAssertEqual(delegate.closeCount, 1)
         XCTAssertTrue(sut.isDismissable)
         XCTAssertTrue(sut.view.isUserInteractionEnabled)
-        guard case .enabled = sut._testConfirmButton.status else {
+        guard case .enabled = sut.confirmButton.status else {
             return XCTFail("Expected the Continue button to remain enabled")
         }
     }
@@ -462,15 +462,15 @@ final class SavedPaymentMethodBillingSyncTests: APIStubbedTestCase {
         )
         sut.flowControllerDelegate = delegate
         sut.loadViewIfNeeded()
-        let savedOptions = sut._testSavedPaymentOptionsViewController
+        let savedOptions = sut.savedPaymentOptionsViewController
         savedOptions.loadViewIfNeeded()
         savedOptions.collectionView(
-            savedOptions._testCollectionView,
+            savedOptions.collectionView,
             didSelectItemAt: IndexPath(item: 2, section: 0)
         )
 
         // When
-        sut._testConfirmButton.sendActions(for: .touchUpInside)
+        sut.confirmButton.sendActions(for: .touchUpInside)
         try await waitUntil {
             requestRecorder.requests.count == 1 && sut.isDismissable
         }
@@ -480,25 +480,25 @@ final class SavedPaymentMethodBillingSyncTests: APIStubbedTestCase {
             sut.selectedPaymentOption?.savedPaymentMethod?.stripeId,
             sepaPaymentMethod.stripeId
         )
-        XCTAssertFalse(sut._testErrorLabel.isHidden)
-        XCTAssertEqual(sut._testErrorLabel.text, "Tax update failed")
+        XCTAssertFalse(sut.errorLabel.isHidden)
+        XCTAssertEqual(sut.errorLabel.text, "Tax update failed")
         XCTAssertEqual(delegate.closeCount, 0)
-        guard case .enabled = sut._testConfirmButton.status else {
+        guard case .enabled = sut.confirmButton.status else {
             return XCTFail("Expected the Continue button to be retryable")
         }
 
         // When retrying
-        sut._testConfirmButton.sendActions(for: .touchUpInside)
+        sut.confirmButton.sendActions(for: .touchUpInside)
 
         // Then
-        XCTAssertTrue(sut._testErrorLabel.isHidden)
+        XCTAssertTrue(sut.errorLabel.isHidden)
         await fulfillment(of: [updateRequests, delegate.closed], timeout: 5)
         XCTAssertEqual(requestRecorder.requests.count, 2)
         XCTAssertEqual(delegate.closeCount, 1)
         XCTAssertTrue(sut.isDismissable)
         XCTAssertTrue(sut.view.isUserInteractionEnabled)
-        XCTAssertTrue(sut._testErrorLabel.isHidden)
-        guard case .enabled = sut._testConfirmButton.status else {
+        XCTAssertTrue(sut.errorLabel.isHidden)
+        guard case .enabled = sut.confirmButton.status else {
             return XCTFail("Expected the Continue button to reset after retry success")
         }
     }
@@ -766,7 +766,7 @@ private extension SavedPaymentMethodBillingSyncTests {
         )
         sut.delegate = delegate
         sut.loadViewIfNeeded()
-        let selectedRow = sut._testPaymentMethodRows[1]
+        let selectedRow = sut.paymentMethodRows[1]
 
         selectedRow.rowButton.handleTap()
 
