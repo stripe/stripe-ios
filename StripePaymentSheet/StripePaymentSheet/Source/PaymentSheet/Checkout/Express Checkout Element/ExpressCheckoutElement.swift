@@ -5,10 +5,25 @@
 //  Created by Joyce Qin on 7/22/26.
 //
 
-/// Handles Checkout mutations requested by an ExpressCheckoutElement.
+import UIKit
+
+/// Handles Checkout interactions initiated by an ``ExpressCheckoutElementUIView``.
 @MainActor
 protocol ExpressCheckoutElementDelegate: AnyObject {
-    // TODO: Add delegate methods for Apple Pay and Link button taps
+    /// Called when the customer taps the Apple Pay button.
+    ///
+    /// The delegate is responsible for confirming the Checkout Session via Apple Pay and
+    /// must call `completion` with the result when the Apple Pay sheet is dismissed.
+    ///
+    /// - Parameters:
+    ///   - element: The view that received the tap.
+    ///   - window: The window to present the Apple Pay sheet from, if available.
+    ///   - completion: Called with the confirmation result.
+    func expressCheckoutElementDidTapApplePay(
+        _ element: ExpressCheckoutElementUIView,
+        window: UIWindow?,
+        completion: @escaping (Checkout.ConfirmResult) -> Void
+    )
 }
 
 /// An express checkout element backed by a Checkout Session.

@@ -8,9 +8,24 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+import UIKit
 
-extension Checkout: ExpressCheckoutElementDelegate {}
 extension Checkout: CurrencySelectorElementDelegate {}
+
+extension Checkout: ExpressCheckoutElementDelegate {
+    func expressCheckoutElementDidTapApplePay(
+        _ element: ExpressCheckoutElementUIView,
+        window: UIWindow?,
+        completion: @escaping (Checkout.ConfirmResult) -> Void
+    ) {
+        let context = CheckoutApplePayContextClosureDelegate.makeApplePayContext(for: self, completion: completion)
+        guard let context else {
+            completion(.failed(CheckoutError.apiError(message: "Unable to create Apple Pay context. Verify that Apple Pay is supported on this device and your merchant identifier is correct.")))
+            return
+        }
+        context.presentApplePay(from: window)
+    }
+}
 
 extension Checkout {
 

@@ -224,30 +224,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
     /// Extracts shipping details from a PKPayment for CheckoutSession confirmation.
     private func makeShippingDetailsParams(from payment: PKPayment) -> STPPaymentIntentShippingDetailsParams? {
-        guard let shippingContact = payment.shippingContact,
-              let nameComponents = shippingContact.name else {
-            return nil
-        }
-
-        let name = PersonNameComponentsFormatter.localizedString(from: nameComponents, style: .default)
-        let shippingAddress = STPAddress(pkContact: shippingContact)
-
-        // Only create shipping params if we have a valid address line1
-        guard let line1 = shippingAddress.line1 else {
-            return nil
-        }
-
-        let addressParams = STPPaymentIntentShippingDetailsAddressParams(line1: line1)
-        addressParams.line2 = shippingAddress.line2
-        addressParams.city = shippingAddress.city
-        addressParams.state = shippingAddress.state
-        addressParams.postalCode = shippingAddress.postalCode
-        addressParams.country = shippingAddress.country
-
-        let shippingDetailsParams = STPPaymentIntentShippingDetailsParams(address: addressParams, name: name)
-        shippingDetailsParams.phone = shippingAddress.phone
-
-        return shippingDetailsParams
+        return CheckoutApplePayShippingHelper.makeShippingDetailsParams(from: payment)
     }
 
     func applePayContext(

@@ -104,7 +104,8 @@ struct CheckoutCartView: View {
             var config = Checkout.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
             config.adaptivePricing.allowed = adaptivePricing
             config.applePayConfiguration = Checkout.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.paymentsheet.example"
+                merchantId: "merchant.com.stripe.paymentsheet.example",
+                merchantCountryCode: "US"
             )
             config.currencySelectorElement.appearance = currencySelectorAppearance
             checkout = try await Checkout(configuration: config)

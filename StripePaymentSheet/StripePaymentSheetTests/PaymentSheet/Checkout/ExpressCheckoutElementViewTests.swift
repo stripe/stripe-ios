@@ -39,7 +39,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         // Given a session with apple_pay and an applePayConfiguration
         let session = makeSessionWithWalletTypes(["apple_pay"]).makePublicSession()
         var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        configuration.applePayConfiguration = Checkout.ApplePayConfiguration(merchantId: "merchant.com.example")
+        configuration.applePayConfiguration = Checkout.ApplePayConfiguration(merchantId: "merchant.com.example", merchantCountryCode: "US")
 
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertEqual(buttons.contains(.applePay), StripeAPI.deviceSupportsApplePay())

@@ -104,7 +104,11 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     @objc private func handleApplePayTapped() {
-        // TODO: Handle Apple Pay
+        let window = self.window
+        let merchantHandler = configuration.expressCheckoutElement.applePayConfirmHandler
+        delegate?.expressCheckoutElementDidTapApplePay(self, window: window) { result in
+            merchantHandler?(result)
+        }
     }
 
     @objc private func handleLinkTapped() {
