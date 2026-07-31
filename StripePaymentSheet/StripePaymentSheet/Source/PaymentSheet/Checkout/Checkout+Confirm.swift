@@ -1,9 +1,180 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+import UIKit
 
 // MARK: - Confirm
 
 extension Checkout {
+    /// Convenience bag of params needed for confirmation
+    struct ConfirmationContext {
+        let paymentOption: PaymentOption
+        let configuration: PaymentElementConfiguration
+        let integrationShape: PaymentSheet.IntegrationShape
+        let confirmationChallenge: ConfirmationChallenge?
+        let analyticsHelper: PaymentSheetAnalyticsHelper
+    }
+
+    struct InternalConfirmResult {
+        let paymentSheetResult: PaymentSheetResult
+        let checkoutSessionResponse: PaymentPagesAPIResponse?
+
+        init(
+            paymentSheetResult: PaymentSheetResult,
+            checkoutSessionResponse: PaymentPagesAPIResponse? = nil
+        ) {
+            self.paymentSheetResult = paymentSheetResult
+            self.checkoutSessionResponse = checkoutSessionResponse
+        }
+    }
+
+    func confirmationContext(for paymentElement: PaymentElement) -> ConfirmationContext? {
+        if paymentElement.paymentOptionSourceOfTruthIsFlowController {
+            guard let paymentOption = paymentElement.paymentSheetFlowController.internalPaymentOption else {
+                return nil
+            }
+            return ConfirmationContext(
+                paymentOption: paymentOption,
+                configuration: paymentElement.paymentSheetFlowController.configuration,
+                integrationShape: .flowController,
+                confirmationChallenge: paymentElement.paymentSheetFlowController.confirmationChallenge,
+                analyticsHelper: paymentElement.paymentSheetFlowController.analyticsHelper
+            )
+        }
+
+        guard let paymentOption = paymentElement.embeddedPaymentElement._paymentOption else {
+            return nil
+        }
+        return ConfirmationContext(
+            paymentOption: paymentOption,
+            configuration: paymentElement.embeddedPaymentElement.configuration,
+            integrationShape: .embedded,
+            confirmationChallenge: paymentElement.embeddedPaymentElement.confirmationChallenge,
+            analyticsHelper: paymentElement.embeddedPaymentElement.analyticsHelper
+        )
+    }
+
+    func confirm(
+        confirmationContext: ConfirmationContext,
+        presentingViewController: UIViewController
+    ) async -> InternalConfirmResult {
+        let authenticationContext = AuthenticationContext(
+            presentingViewController: presentingViewController,
+            appearance: confirmationContext.configuration.appearance
+        )
+
+        // 1. Handle pre-confirm actions, such as Bacs mandate acceptance or saved-card CVC recollection.
+        let preconfirmActionsResult = await PaymentSheet.handlePreconfirmActionsIfNecessary(
+            configuration: confirmationContext.configuration,
+            authenticationContext: authenticationContext,
+            intent: .checkout(session),
+            paymentOption: confirmationContext.paymentOption,
+            paymentHandler: paymentHandler,
+            integrationShape: confirmationContext.integrationShape
+        )
+
+        let intentConfirmParams: IntentConfirmParams?
+        switch preconfirmActionsResult {
+        case .succeeded(let params):
+            intentConfirmParams = params
+        case .canceled:
+            return .init(paymentSheetResult: .canceled)
+        case .failed(let error):
+            return .init(paymentSheetResult: .failed(error: error))
+        }
+
+        // 2. Confirm the Checkout Session using the selected payment option.
+        return await confirmPaymentOption(
+            confirmationContext: confirmationContext,
+            authenticationContext: authenticationContext,
+            intentConfirmParamsForDeferredIntent: intentConfirmParams
+        )
+    }
+
+    func confirmPaymentOption(
+        confirmationContext: ConfirmationContext,
+        authenticationContext: STPAuthenticationContext,
+        intentConfirmParamsForDeferredIntent: IntentConfirmParams?
+    ) async -> InternalConfirmResult {
+        let paymentOption = confirmationContext.paymentOption
+        let elementsSession = session.elementsSession
+        let configuration = confirmationContext.configuration
+        let confirmationChallenge = confirmationContext.confirmationChallenge
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
+            intent: .checkout(session),
+            elementsSession: elementsSession
+        )
+
+        switch paymentOption {
+        case .applePay:
+            // MARK: - Apple Pay
+            // TODO: Make a new STPApplePayContext-wrapping thing.
+            return .init(paymentSheetResult: .canceled)
+
+        case .new(let confirmParams):
+            // MARK: - New PM
+            let paymentMethodType: STPPaymentMethodType = {
+                switch paymentOption.paymentMethodType {
+                case .stripe(let paymentMethodType):
+                    return paymentMethodType
+                default:
+                    return .unknown
+                }
+            }()
+            confirmParams.setAllowRedisplayForCheckoutSession(
+                merchantWillSavePaymentMethod: session.merchantWillSavePaymentMethod(paymentMethodType)
+            )
+            confirmParams.paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
+            confirmParams.paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+            let result = await Self.handleCheckoutSessionConfirmation(
+                checkout: self,
+                checkoutSession: session,
+                confirmType: .new(
+                    params: confirmParams.paymentMethodParams,
+                    paymentOptions: confirmParams.confirmPaymentMethodOptions,
+                    saveForFutureUseCheckboxState: confirmParams.saveForFutureUseCheckboxState,
+                    shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
+                ),
+                configuration: configuration,
+                authenticationContext: authenticationContext,
+                paymentHandler: paymentHandler,
+                elementsSession: elementsSession
+            )
+            await confirmationChallenge?.complete()
+            return .init(paymentSheetResult: result)
+
+        case .saved(let paymentMethod, let confirmParams):
+            // MARK: - Saved PM
+            let paymentOptions = intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions != nil
+            ? intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions
+            : confirmParams?.confirmPaymentMethodOptions
+            let result = await Self.handleCheckoutSessionConfirmation(
+                checkout: self,
+                checkoutSession: session,
+                confirmType: .saved(
+                    paymentMethod,
+                    paymentOptions: paymentOptions,
+                    clientAttributionMetadata: clientAttributionMetadata,
+                    radarOptions: nil
+                ),
+                configuration: configuration,
+                authenticationContext: authenticationContext,
+                paymentHandler: paymentHandler,
+                elementsSession: elementsSession
+            )
+            return .init(paymentSheetResult: result)
+
+        case .external:
+            // MARK: - External PM
+            stpAssertionFailure("External payment methods not supported.")
+            return .init(paymentSheetResult: .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption))
+
+        case .link:
+            // MARK: - Link
+            stpAssertionFailure("Link is added to Checkout.confirm in a later commit.")
+            return .init(paymentSheetResult: .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption))
+        }
+    }
+
     /// Confirms a checkout session with a new payment method
     @MainActor
     static func handleCheckoutSessionConfirmation(
