@@ -422,15 +422,28 @@ extension PayWithLinkViewController {
 
         @objc
         func shippingAddressRowTapped() {
-            let shippingVC = ShippingAddressViewController(
-                linkAccount: linkAccount,
-                viewModel: viewModel,
-                onAddressSelected: { [weak self] address in
-                    self?.viewModel.selectedShippingAddressID = address.id
-                }
-            )
-            shippingVC.coordinator = coordinator
-            bottomSheetController?.pushContentViewController(shippingVC)
+            if viewModel.filteredShippingAddresses.isEmpty {
+                let addVC = AddShippingAddressViewController(
+                    linkAccount: linkAccount,
+                    viewModel: viewModel,
+                    onAddressCreated: { [weak self] address in
+                        self?.viewModel.addShippingAddress(address)
+                        self?.viewModel.selectedShippingAddressID = address.id
+                        _ = self?.bottomSheetController?.popContentViewController()
+                    }
+                )
+                bottomSheetController?.pushContentViewController(addVC)
+            } else {
+                let shippingVC = ShippingAddressViewController(
+                    linkAccount: linkAccount,
+                    viewModel: viewModel,
+                    onAddressSelected: { [weak self] address in
+                        self?.viewModel.selectedShippingAddressID = address.id
+                    }
+                )
+                shippingVC.coordinator = coordinator
+                bottomSheetController?.pushContentViewController(shippingVC)
+            }
         }
 
     }
