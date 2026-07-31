@@ -436,6 +436,44 @@ struct LinkPMDisplayDetails {
         }
     }
 
+    func createShippingAddress(
+        params: CreateShippingAddressParams,
+        shouldRetryOnAuthError: Bool = true
+    ) async throws -> ShippingAddressesResponse.ShippingAddress {
+        return try await withCheckedThrowingContinuation { continuation in
+            createShippingAddress(params: params, shouldRetryOnAuthError: shouldRetryOnAuthError) { result in
+                switch result {
+                case .success(let address): continuation.resume(returning: address)
+                case .failure(let error): continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func createShippingAddress(
+        params: CreateShippingAddressParams,
+        shouldRetryOnAuthError: Bool = true,
+        completion: @escaping (Result<ShippingAddressesResponse.ShippingAddress, Error>) -> Void
+    ) {
+        retryingOnAuthError(
+            shouldRetry: shouldRetryOnAuthError,
+            completion: completion
+        ) { completionRetryingOnAuthErrors in
+            guard let session = self.currentSession else {
+                stpAssertionFailure()
+                completion(.failure(PaymentSheetError.unknown(debugDescription: "Creating Link shipping address without valid session")))
+                return
+            }
+
+            session.createShippingAddress(
+                with: self.apiClient,
+                params: params,
+                requestSurface: self.requestSurface,
+                completion: completionRetryingOnAuthErrors
+            )
+        }
+    }
+
     func deletePaymentDetails(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
         retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {

@@ -61,6 +61,16 @@ final class WalletViewControllerSnapshotTests: STPSnapshotTestCase {
         verify(sut.view)
     }
 
+    func testWithShippingRequired_noAddresses() {
+        let sut = makeSUT(requiresShippingAddress: true)
+        verify(sut.view)
+    }
+
+    func testWithShippingRequired_addressSelected() {
+        let sut = makeSUT(requiresShippingAddress: true, shippingAddresses: LinkStubs.shippingAddresses())
+        verify(sut.view)
+    }
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,
@@ -83,13 +93,16 @@ extension WalletViewControllerSnapshotTests {
         linkPassthroughModeEnabled: Bool = false,
         disallowedBrands: [PaymentSheet.CardBrandAcceptance.BrandCategory] = [],
         paymentMethods: [ConsumerPaymentDetails] = LinkStubs.paymentMethods(),
-        setupFutureUsage: Bool? = nil
+        setupFutureUsage: Bool? = nil,
+        requiresShippingAddress: Bool = false,
+        shippingAddresses: [ShippingAddressesResponse.ShippingAddress] = []
     ) -> PayWithLinkViewController.WalletViewController {
         var configuration = PaymentSheet.Configuration()
 
         if !disallowedBrands.isEmpty {
             configuration.cardBrandAcceptance = .disallowed(brands: disallowedBrands)
         }
+        configuration.allowsPaymentMethodsRequiringShippingAddress = requiresShippingAddress
 
         let (intent, elementsSession) = try! PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(
             linkFundingSources: linkFundingSources,
@@ -120,7 +133,8 @@ extension WalletViewControllerSnapshotTests {
                 callToAction: callToAction,
                 analyticsHelper: ._testValue()
             ),
-            paymentMethods: paymentMethods
+            paymentMethods: paymentMethods,
+            shippingAddresses: shippingAddresses
         )
     }
 }

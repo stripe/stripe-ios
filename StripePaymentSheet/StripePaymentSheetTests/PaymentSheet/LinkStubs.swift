@@ -111,6 +111,60 @@ extension LinkStubs {
         )
     }
 
+    static func shippingAddresses() -> [ShippingAddressesResponse.ShippingAddress] {
+        return [
+            makeShippingAddress(
+                id: "saddr_1",
+                name: "Foo Bar",
+                line1: "354 Oyster Point Blvd",
+                locality: "South San Francisco",
+                administrativeArea: "CA",
+                postalCode: "94080",
+                countryCode: "US",
+                isDefault: true
+            ),
+            makeShippingAddress(
+                id: "saddr_2",
+                name: "Mat Schmid",
+                line1: "98 Flora St",
+                locality: "Ottawa",
+                administrativeArea: "ON",
+                postalCode: "K2P1A8",
+                countryCode: "CA",
+                isDefault: false
+            ),
+        ]
+    }
+
+    private static func makeShippingAddress(
+        id: String,
+        name: String? = nil,
+        line1: String? = nil,
+        line2: String? = nil,
+        locality: String? = nil,
+        administrativeArea: String? = nil,
+        postalCode: String? = nil,
+        countryCode: String? = nil,
+        isDefault: Bool = false
+    ) -> ShippingAddressesResponse.ShippingAddress {
+        var addressJSON: [String: Any] = [:]
+        if let name { addressJSON["name"] = name }
+        if let line1 { addressJSON["line_1"] = line1 }
+        if let line2 { addressJSON["line_2"] = line2 }
+        if let locality { addressJSON["locality"] = locality }
+        if let administrativeArea { addressJSON["administrative_area"] = administrativeArea }
+        if let postalCode { addressJSON["postal_code"] = postalCode }
+        if let countryCode { addressJSON["country_code"] = countryCode }
+
+        let payload: [String: Any] = [
+            "id": id,
+            "is_default": isDefault,
+            "address": addressJSON,
+        ]
+        let data = try! JSONSerialization.data(withJSONObject: payload)
+        return try! JSONDecoder().decode(ShippingAddressesResponse.ShippingAddress.self, from: data)
+    }
+
     static func account(
         email: String = "user@example.com",
         session: ConsumerSession? = Self.consumerSession()

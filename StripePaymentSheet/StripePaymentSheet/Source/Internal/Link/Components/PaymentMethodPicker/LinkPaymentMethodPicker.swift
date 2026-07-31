@@ -105,22 +105,20 @@ final class LinkPaymentMethodPicker: UIView {
         }
     }
 
-    /// Calculates the maximum width required for the header labels.
+    /// Calculates the maximum width required for the header labels (Email, Payment, Shipping).
     static let widthForHeaderLabels: CGFloat = {
-        let font = LinkUI.font(forTextStyle: .bodyEmphasized)
+        let font = LinkUI.font(forTextStyle: .body)
         func sizeOf(string: String) -> CGSize {
             (string as NSString).size(withAttributes: [.font: font])
         }
 
-        // LinkPaymentMethodPicker.EmailView.emailLabel
-        let emailLabel = String.Localized.email
-        let emailLabelSize = sizeOf(string: emailLabel)
+        let emailLabelSize = sizeOf(string: String.Localized.email)
+        let paymentLabelSize = sizeOf(string: Header.Strings.payment)
+        let shippingLabelSize = sizeOf(
+            string: STPLocalizedString("Shipping", "Label for the shipping address section in the Link wallet.")
+        )
 
-        // LinkPaymentMethodPicker.Header.payWithLabel
-        let paymentLabel = Header.Strings.payment
-        let paymentLabelSize = sizeOf(string: paymentLabel)
-
-        return max(emailLabelSize.width, paymentLabelSize.width)
+        return max(emailLabelSize.width, max(paymentLabelSize.width, shippingLabelSize.width))
     }()
 
     private var needsDataReload: Bool = true
@@ -141,7 +139,29 @@ final class LinkPaymentMethodPicker: UIView {
 
     private let emailView: EmailView
     private let separatorView = LinkSeparatorView()
+    private let shippingSeparatorView = LinkSeparatorView()
     private let headerView = Header()
+
+    /// An optional view injected between the email row and the payment header.
+    /// When non-nil, a separator is also inserted between the row and the payment header.
+    var shippingRowView: UIView? {
+        didSet {
+            guard shippingRowView !== oldValue else { return }
+            // Remove previous shipping row and its separator
+            if let old = oldValue {
+                stackView.removeArrangedSubview(old)
+                old.removeFromSuperview()
+                stackView.removeArrangedSubview(shippingSeparatorView)
+                shippingSeparatorView.removeFromSuperview()
+            }
+            // Insert new shipping row (after separatorView, before headerView)
+            if let new = shippingRowView,
+               let headerIndex = stackView.arrangedSubviews.firstIndex(of: headerView) {
+                stackView.insertArrangedSubview(new, at: headerIndex)
+                stackView.insertArrangedSubview(shippingSeparatorView, at: headerIndex + 1)
+            }
+        }
+    }
 
     private lazy var listView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
