@@ -52,7 +52,8 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
         context.coordinator.addressViewController = addressViewController
 
         let navigationController = UINavigationController(rootViewController: addressViewController)
-        // Disallow swipe-to-dismiss so accidental gestures can't discard entered address data.
+        
+        // Disallow swipe-to-dismiss. If there are unsaved changes we want to present the customer with an alert before they discard them.
         navigationController.isModalInPresentation = true
 
         // Set preferred content size to help SwiftUI with initial sizing
@@ -103,7 +104,7 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
             }
         }
 
-        // Disallow swipe-to-dismiss so accidental gestures can't discard entered address data.
+        // Disallow swipe-to-dismiss. If there are unsaved changes we want to present the customer with an alert before they discard them.
         func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
             return false
         }
