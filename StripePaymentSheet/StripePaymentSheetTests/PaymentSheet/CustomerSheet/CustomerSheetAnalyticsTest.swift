@@ -69,7 +69,6 @@ final class CustomerSheetAnalyticsTest: XCTestCase {
             addressCountryCode: "US",
             autoCompleteResultedSelected: true,
             editDistance: 2,
-
             apiClient: .init(publishableKey: "pk_test_123")
         )
         let last = analyticsClient._testLogHistory.last!
@@ -85,7 +84,6 @@ final class CustomerSheetAnalyticsTest: XCTestCase {
             addressCountryCode: "GB",
             autoCompleteResultedSelected: false,
             editDistance: nil,
-
             apiClient: .init(publishableKey: "pk_test_123")
         )
         let last = analyticsClient._testLogHistory.last!
