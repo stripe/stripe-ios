@@ -481,7 +481,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
         // Given a payment intent (not a checkout session)
         let sut = try makeSUT()
         let mockCheckout = MockCheckoutSessionBillingAddressUpdater()
-        sut.context.checkout = mockCheckout
+        sut.context.automaticTaxUpdater = mockCheckout
 
         // When selecting a payment method
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.bankAccount
@@ -499,7 +499,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
             paymentMethods: [Self.makePaymentMethodWithBillingAddress()]
         )
         let mockCheckout = MockCheckoutSessionBillingAddressUpdater()
-        sut.context.checkout = mockCheckout
+        sut.context.automaticTaxUpdater = mockCheckout
 
         // When sync is called
         sut.syncBillingAddressForTax()
@@ -518,7 +518,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
             paymentMethods: [Self.makePaymentMethodWithBillingAddress()]
         )
         let mockCheckout = MockCheckoutSessionBillingAddressUpdater()
-        sut.context.checkout = mockCheckout
+        sut.context.automaticTaxUpdater = mockCheckout
 
         // When sync is called
         sut.syncBillingAddressForTax()
@@ -544,7 +544,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
             paymentMethods: [pmWithoutAddress]
         )
         let mockCheckout = MockCheckoutSessionBillingAddressUpdater()
-        sut.context.checkout = mockCheckout
+        sut.context.automaticTaxUpdater = mockCheckout
 
         // When sync is called
         sut.syncBillingAddressForTax()

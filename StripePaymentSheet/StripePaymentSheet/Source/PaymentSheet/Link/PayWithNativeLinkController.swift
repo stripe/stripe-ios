@@ -59,7 +59,7 @@ final class PayWithNativeLinkController {
     private let linkAppearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
     private let confirmationChallenge: ConfirmationChallenge?
-    private weak var checkout: CheckoutSessionBillingAddressUpdater?
+    private weak var automaticTaxUpdater: CheckoutSessionBillingAddressUpdater?
 
     init(
         mode: Mode,
@@ -84,7 +84,7 @@ final class PayWithNativeLinkController {
         self.paymentHandler = .init(apiClient: configuration.apiClient)
         self.linkAppearance = linkAppearance
         self.linkConfiguration = linkConfiguration
-        self.checkout = checkout
+        self.automaticTaxUpdater = checkout
         self.confirmationChallenge = confirmationChallenge
     }
 
@@ -165,7 +165,7 @@ final class PayWithNativeLinkController {
                 supportedPaymentMethodTypes: self.supportedPaymentMethodTypes,
                 linkAppearance: self.linkAppearance,
                 linkConfiguration: self.linkConfiguration,
-                checkout: self.checkout
+                checkout: self.automaticTaxUpdater
             )
 
             payWithLinkVC.payWithLinkDelegate = self
@@ -228,7 +228,7 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
             elementsSession: elementsSession,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
-            checkout: checkout,
+            checkout: automaticTaxUpdater,
             confirmationChallenge: confirmationChallenge,
             analyticsHelper: analyticsHelper,
             completion: { result, confirmationType in
@@ -286,7 +286,7 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
             integrationShape: .complete,
-            checkout: checkout,
+            checkout: automaticTaxUpdater,
             confirmationChallenge: confirmationChallenge,
             analyticsHelper: analyticsHelper
         ) { result, deferredIntentConfirmationType in

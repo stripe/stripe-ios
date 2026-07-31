@@ -358,7 +358,7 @@ extension PayWithLinkViewController {
         /// Syncs the selected payment method's billing address with the checkout session for automatic tax calculation.
         /// No-op when automatic tax with billing source is not enabled, or when the address hasn't changed.
         func syncBillingAddressForTax() {
-            guard let checkout = context.checkout,
+            guard let automaticTaxUpdater = context.automaticTaxUpdater,
                   case .checkout(let session) = context.intent,
                   session.collectsTaxFromBillingAddress else {
                 return
@@ -387,7 +387,7 @@ extension PayWithLinkViewController {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 do {
-                    let updatedSession = try await checkout.updateBillingTaxRegionIfNecessaryForPaymentSheet(
+                    let updatedSession = try await automaticTaxUpdater.updateBillingTaxRegionIfNecessaryForPaymentSheet(
                         address: address,
                         canUpdateWhileSheetPresented: true
                     )

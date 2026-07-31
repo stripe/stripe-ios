@@ -90,7 +90,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         let initiallySelectedPaymentDetailsID: String?
         var callToAction: ConfirmButton.CallToActionType
         let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
-        weak var checkout: CheckoutSessionBillingAddressUpdater?
+        weak var automaticTaxUpdater: CheckoutSessionBillingAddressUpdater?
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         var analyticsHelper: PaymentSheetAnalyticsHelper
         let linkAppearance: LinkAppearance?
@@ -177,7 +177,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             self.analyticsHelper = analyticsHelper
             self.linkAppearance = linkAppearance
             self.linkConfiguration = linkConfiguration
-            self.checkout = checkout
+            self.automaticTaxUpdater = checkout
         }
     }
 
