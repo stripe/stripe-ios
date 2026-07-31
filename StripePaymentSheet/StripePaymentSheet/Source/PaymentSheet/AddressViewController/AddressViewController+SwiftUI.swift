@@ -52,7 +52,7 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
         context.coordinator.addressViewController = addressViewController
 
         let navigationController = UINavigationController(rootViewController: addressViewController)
-        
+
         // Disallow swipe-to-dismiss. If there are unsaved changes we want to present the customer with an alert before they discard them.
         navigationController.isModalInPresentation = true
 

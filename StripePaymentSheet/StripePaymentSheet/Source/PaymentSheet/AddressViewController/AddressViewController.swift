@@ -376,11 +376,32 @@ extension AddressViewController {
         alertController.addAction(UIAlertAction(title: String.Localized.keep_editing, style: .cancel))
         alertController.addAction(
             UIAlertAction(title: String.Localized.discard_changes, style: .destructive) { [weak self] _ in
-                guard let self else { return }
-                self.delegate?.addressViewControllerDidFinish(self, with: self.initialAddressDetails)
+                self?.discardChanges()
             }
         )
         present(alertController, animated: true)
+    }
+
+    func discardChanges() {
+        // Revert the form to its as-opened state so a reused instance doesn't keep the discarded
+        // edits, then finish with the as-opened address (never the edited-but-abandoned values).
+        resetFormToInitialSnapshot()
+        delegate?.addressViewControllerDidFinish(self, with: initialAddressDetails)
+    }
+
+    private func resetFormToInitialSnapshot() {
+        guard let initialFormSnapshot else { return }
+        // clear-then-populate (as in handleShippingEqualsBillingToggle) restores the as-opened
+        // values AND clears fields like phone that populate alone would leave stale when the
+        // baseline had none. setAddress rebuilds every address subfield, so line1/city/state/
+        // postal/line2 revert too, and the (always-present) snapshot country is reselected.
+        clearAddressSection()
+        populateAddressSection(with: initialFormSnapshot)
+        // Additional-fields checkbox — set after repopulation (CheckboxElement.isSelected has no
+        // side effects, so this won't retrigger form population).
+        checkboxElement?.isSelected = initialCheckboxSelected ?? false
+        // Drop autocomplete analytics captured during the discarded edits.
+        selectedAutoCompleteResult = nil
     }
 
     func handleShippingEqualsBillingToggle(isSelected: Bool) {

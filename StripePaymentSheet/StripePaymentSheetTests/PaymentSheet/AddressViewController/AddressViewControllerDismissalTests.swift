@@ -221,6 +221,47 @@ final class AddressViewControllerDismissalTests: XCTestCase {
         XCTAssertEqual(delegate.lastAddress?.address.line1, "999 New St")
     }
 
+    func test_discardChanges_revertsFormToAsOpenedState() {
+        // Given a form seeded with a valid default address that the customer has edited
+        let delegate = MockDelegate()
+        let vc = makeLoadedAddressViewController(
+            configuration: makeConfiguration(defaultValues: validDefaultValues),
+            delegate: delegate
+        )
+        vc.addressSection?.line1?.setText("999 Changed Ave")
+        XCTAssertTrue(vc.hasChanges)
+
+        // When the customer discards changes
+        vc.discardChanges()
+
+        // Then the form is reverted to the as-opened values
+        XCTAssertEqual(vc.addressSection?.addressDetails.address.line1, "510 Townsend St.")
+        XCTAssertFalse(vc.hasChanges)
+        // ...and the delegate finishes once with the as-opened address, not the edited value
+        XCTAssertEqual(delegate.didFinishCallCount, 1)
+        XCTAssertEqual(delegate.lastAddress?.address.line1, "510 Townsend St.")
+    }
+
+    func test_discardChanges_clearsFieldAddedOverEmptyBaseline() {
+        // Given a form with the phone field enabled and no default values (baseline phone is nil)
+        var config = makeConfiguration()
+        config.additionalFields.phone = .optional
+        let delegate = MockDelegate()
+        let vc = makeLoadedAddressViewController(configuration: config, delegate: delegate)
+
+        // When the customer enters a phone number...
+        vc.addressSection?.phone?.setPhoneNumber("4085551234")
+        XCTAssertTrue(vc.hasChanges)
+
+        // ...and then discards changes
+        vc.discardChanges()
+
+        // Then the phone is cleared back to the empty baseline. (This needs clear-then-populate:
+        // populate alone skips phone when the baseline had none, leaving the added value stale.)
+        XCTAssertNil(vc.addressSection?.phone?.phoneNumber)
+        XCTAssertFalse(vc.hasChanges)
+    }
+
     func test_presentationControllerShouldDismiss_returnsFalseToBlockSwipe() {
         let delegate = MockDelegate()
         let vc = makeLoadedAddressViewController(configuration: makeConfiguration(), delegate: delegate)
