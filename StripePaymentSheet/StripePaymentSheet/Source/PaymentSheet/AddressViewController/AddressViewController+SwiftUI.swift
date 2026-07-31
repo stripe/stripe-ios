@@ -82,7 +82,6 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
     class Coordinator: NSObject, AddressViewControllerDelegate, UIAdaptivePresentationControllerDelegate {
         var address: Binding<AddressViewController.AddressDetails?>
         var dismiss: () -> Void
-        weak var addressViewController: AddressViewController?
 
         init(address: Binding<AddressViewController.AddressDetails?>, dismiss: @escaping () -> Void) {
             self.address = address
