@@ -49,7 +49,6 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
             configuration: configuration,
             delegate: context.coordinator
         )
-        context.coordinator.addressViewController = addressViewController
 
         let navigationController = UINavigationController(rootViewController: addressViewController)
 

@@ -709,6 +709,12 @@ extension PaymentSheet.Address {
 
 // MARK: - UIAdaptivePresentationControllerDelegate
 extension AddressViewController: UIAdaptivePresentationControllerDelegate {
+
+    public func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
+        // no-op. This isn't actually reachable since we always return false for ShouldDismiss,
+        //  but we don't want to make public API changes by removing this function.
+    }
+
     public func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
         // Disallow swipe-to-dismiss so an accidental gesture can't discard entered address data.
         // Customers exit via the 'X' button (which confirms if there are unsaved changes) or Continue.
