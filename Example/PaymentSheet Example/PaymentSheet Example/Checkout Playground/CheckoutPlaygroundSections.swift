@@ -301,6 +301,8 @@ struct CheckoutPlaygroundPaymentMethodSection: View {
             return "a.circle.fill"
         case "klarna":
             return "k.circle.fill"
+        case "link":
+            return "link"
         default:
             return "banknote.fill"
         }
