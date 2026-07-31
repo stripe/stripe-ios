@@ -923,6 +923,10 @@ extension PaymentSheetLPMConfirmFlowTests {
 
 // MARK: - Helper methods
 extension PaymentSheetLPMConfirmFlowTests {
+    /// Payment methods that Checkout supports in modeless mode. Last verified against
+    /// `/create_checkout_session_unified` on July 31, 2026.
+    static let paymentMethodsSupportedByModeless: Set<STPPaymentMethodType> = [.card]
+
     enum IntentKind: CaseIterable, Hashable {
         case paymentIntent
         case paymentIntentWithSetupFutureUsage
@@ -1174,7 +1178,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             if shouldTest(.deferredIntent) {
                 intents.append(TestIntent("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)))
             }
-            if shouldTest(.checkoutSession) {
+            if shouldTest(.checkoutSession), Self.paymentMethodsSupportedByModeless.contains(paymentMethod) {
                 let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,
