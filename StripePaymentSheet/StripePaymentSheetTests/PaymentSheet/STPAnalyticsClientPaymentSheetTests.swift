@@ -31,7 +31,6 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             addressCountryCode: "US",
             autoCompleteResultedSelected: true,
             editDistance: 3,
-
             apiClient: .init(publishableKey: "pk_test_123")
         )
         let last = client._testLogHistory.last!
@@ -48,7 +47,6 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             addressCountryCode: "CA",
             autoCompleteResultedSelected: false,
             editDistance: nil,
-
             apiClient: .init(publishableKey: "pk_test_123")
         )
         let last = client._testLogHistory.last!
