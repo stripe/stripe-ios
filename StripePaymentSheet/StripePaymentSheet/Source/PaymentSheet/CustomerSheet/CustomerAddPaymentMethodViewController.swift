@@ -469,6 +469,6 @@ extension CustomerAddPaymentMethodViewController: AutoCompleteViewControllerDele
         if let autoCompleteAddress = selectedAutoCompleteAddress {
             editDistance = submittedAddress.editDistance(from: autoCompleteAddress)
         }
-        STPAnalyticsClient.sharedClient.logCustomerSheetBillingAddressCompleted(addressCountryCode: addressSectionElement.selectedCountryCode, autoCompleteResultedSelected: selectedAutoCompleteAddress != nil, editDistance: editDistance, apiClient: configuration.apiClient)
+        STPAnalyticsClient.sharedClient.logCustomerSheetBillingAddressCompleted(addressCountryCode: addressSectionElement.selectedCountryCode, autoCompleteResultedSelected: selectedAutoCompleteAddress != nil, editDistance: editDistance, timeToComplete: nil, apiClient: configuration.apiClient)
     }
 }

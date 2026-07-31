@@ -31,6 +31,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             addressCountryCode: "US",
             autoCompleteResultedSelected: true,
             editDistance: 3,
+            timeToComplete: nil,
             apiClient: .init(publishableKey: "pk_test_123")
         )
         let last = client._testLogHistory.last!
@@ -47,6 +48,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             addressCountryCode: "CA",
             autoCompleteResultedSelected: false,
             editDistance: nil,
+            timeToComplete: nil,
             apiClient: .init(publishableKey: "pk_test_123")
         )
         let last = client._testLogHistory.last!
@@ -61,14 +63,15 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
 
     func testLogAddressAutocompleteStart() {
         let client = STPTestingAnalyticsClient()
-        client.logAddressAutocompleteStart(apiClient: .init(publishableKey: "pk_test_123"))
+        client.logAddressAutocompleteStart(sessionToken: "tok_abc", apiClient: .init(publishableKey: "pk_test_123"))
         XCTAssertEqual(client._testLogHistory.last?["event"] as? String, "mc_address_autocomplete_start")
+        XCTAssertEqual(client._testLogHistory.last?["autocomplete_session_token"] as? String, "tok_abc")
     }
 
     func testLogAddressAutocompleteSuggestions_withLatency() {
         let client = STPTestingAnalyticsClient()
         client.logAddressAutocompleteSuggestions(
-            queryLength: 5,
+            resultCount: 5,
             autocompleteSessionToken: "tok_abc",
             source: "google",
             sessionElapsed: 1.5,
@@ -77,7 +80,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         )
         let last = client._testLogHistory.last!
         XCTAssertEqual(last["event"] as? String, "mc_address_autocomplete_suggestions")
-        XCTAssertEqual(last["query_length"] as? Int, 5)
+        XCTAssertEqual(last["result_count"] as? Int, 5)
         XCTAssertEqual(last["autocomplete_session_token"] as? String, "tok_abc")
         XCTAssertEqual(last["source"] as? String, "google")
         XCTAssertEqual(last["session_elapsed"] as? Double, 1.5)
@@ -87,7 +90,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
     func testLogAddressAutocompleteSuggestions_withoutLatency() {
         let client = STPTestingAnalyticsClient()
         client.logAddressAutocompleteSuggestions(
-            queryLength: 3,
+            resultCount: 3,
             autocompleteSessionToken: "tok_xyz",
             source: "apple",
             sessionElapsed: 0.8,
@@ -100,45 +103,50 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         XCTAssertNil(last["time_to_fetch"])
     }
 
-    func testLogAddressAutocompleteComplete_withLatency() {
+    func testLogAddressAutocompleteSelected_withTimeToFetch() {
         let client = STPTestingAnalyticsClient()
-        client.logAddressAutocompleteComplete(
+        client.logAddressAutocompleteSelected(
             queryLength: 7,
             autocompleteSessionToken: "tok_abc",
             source: "google",
-            timeToComplete: 2.0,
-            latency: 0.4,
+            sessionElapsed: 2.1,
+            placeId: "place_123",
+            timeToFetch: 0.4,
             apiClient: .init(publishableKey: "pk_test_123")
         )
         let last = client._testLogHistory.last!
-        XCTAssertEqual(last["event"] as? String, "mc_address_autocomplete_complete")
+        XCTAssertEqual(last["event"] as? String, "mc_address_autocomplete_selected")
         XCTAssertEqual(last["query_length"] as? Int, 7)
         XCTAssertEqual(last["source"] as? String, "google")
-        XCTAssertEqual(last["time_to_complete"] as? Double, 2.0)
-        XCTAssertEqual(last["latency"] as? Double, 0.4)
+        XCTAssertEqual(last["session_elapsed"] as? Double, 2.1)
+        XCTAssertEqual(last["place_id"] as? String, "place_123")
+        XCTAssertEqual(last["time_to_fetch"] as? Double, 0.4)
     }
 
-    func testLogAddressAutocompleteComplete_withoutLatency() {
+    func testLogAddressAutocompleteSelected_withoutTimeToFetch() {
         let client = STPTestingAnalyticsClient()
-        client.logAddressAutocompleteComplete(
+        client.logAddressAutocompleteSelected(
             queryLength: 4,
             autocompleteSessionToken: "tok_xyz",
             source: "apple",
-            timeToComplete: 1.2,
-            latency: nil,
+            sessionElapsed: 0.9,
+            placeId: nil,
+            timeToFetch: nil,
             apiClient: .init(publishableKey: "pk_test_123")
         )
         let last = client._testLogHistory.last!
-        XCTAssertEqual(last["event"] as? String, "mc_address_autocomplete_complete")
+        XCTAssertEqual(last["event"] as? String, "mc_address_autocomplete_selected")
         XCTAssertEqual(last["source"] as? String, "apple")
-        XCTAssertNil(last["latency"])
+        XCTAssertEqual(last["session_elapsed"] as? Double, 0.9)
+        XCTAssertNil(last["place_id"])
+        XCTAssertNil(last["time_to_fetch"])
     }
 
     func testLogAddressAutocompleteError() {
         let client = STPTestingAnalyticsClient()
         let error = NSError(domain: "test", code: 42, userInfo: [NSLocalizedDescriptionKey: "network failure"])
         client.logAddressAutocompleteError(
-            errorType: error,
+            error: error,
             autocompleteSessionToken: "tok_abc",
             duration: 0.5,
             apiClient: .init(publishableKey: "pk_test_123")
@@ -146,7 +154,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let last = client._testLogHistory.last!
         XCTAssertEqual(last["event"] as? String, "mc_address_autocomplete_error")
         XCTAssertEqual(last["autocomplete_session_token"] as? String, "tok_abc")
-        XCTAssertEqual(last["error_type"] as? String, "network failure")
+        XCTAssertNotNil(last["error_type"])
+        XCTAssertNotNil(last["error_code"])
         XCTAssertEqual(last["duration"] as? Double, 0.5)
     }
 }

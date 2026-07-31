@@ -31,49 +31,55 @@ extension STPAnalyticsClient {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: defaultCountryCode,
                                                autoCompleteResultedSelected: nil,
-                                               editDistance: nil)
+                                               editDistance: nil,
+                                               timeToComplete: nil)
 
         self.logAddressControllerEvent(event: .addressShow, addressAnalyticData: analyticData, apiClient: apiClient)
     }
 
-    func logAddressCompleted(addressCountyCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, apiClient: STPAPIClient) {
+    func logAddressCompleted(addressCountyCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, timeToComplete: TimeInterval?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountyCode,
                                                autoCompleteResultedSelected: autoCompleteResultedSelected,
-                                               editDistance: editDistance)
+                                               editDistance: editDistance,
+                                               timeToComplete: timeToComplete)
 
         self.logAddressControllerEvent(event: .addressCompleted, addressAnalyticData: analyticData, apiClient: apiClient)
     }
 
-    func logBillingAddressCompleted(addressCountryCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, apiClient: STPAPIClient) {
+    func logBillingAddressCompleted(addressCountryCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, timeToComplete: TimeInterval?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountryCode,
                                                autoCompleteResultedSelected: autoCompleteResultedSelected,
-                                               editDistance: editDistance)
+                                               editDistance: editDistance,
+                                               timeToComplete: timeToComplete)
 
         self.logAddressControllerEvent(event: .mcbillingAddressCompleted, addressAnalyticData: analyticData, apiClient: apiClient)
     }
 
-    func logCustomerSheetBillingAddressCompleted(addressCountryCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, apiClient: STPAPIClient) {
+    func logCustomerSheetBillingAddressCompleted(addressCountryCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, timeToComplete: TimeInterval?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountryCode,
                                                autoCompleteResultedSelected: autoCompleteResultedSelected,
-                                               editDistance: editDistance)
+                                               editDistance: editDistance,
+                                               timeToComplete: timeToComplete)
 
         self.logAddressControllerEvent(event: .csbillingAddressCompleted, addressAnalyticData: analyticData, apiClient: apiClient)
     }
 
     // MARK: - Autocomplete
 
-    func logAddressAutocompleteStart(apiClient: STPAPIClient) {
+    func logAddressAutocompleteStart(sessionToken: String, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
-        log(analytic: AddressAnalytic(event: .addressAutocompleteStart, params: [:]), apiClient: apiClient)
+        log(analytic: AddressAnalytic(event: .addressAutocompleteStart, params: [
+            "autocomplete_session_token": sessionToken,
+        ]), apiClient: apiClient)
     }
 
-    func logAddressAutocompleteSuggestions(queryLength: Int, autocompleteSessionToken: String, source: String, sessionElapsed: TimeInterval, timeToFetch: TimeInterval?, apiClient: STPAPIClient) {
+    func logAddressAutocompleteSuggestions(resultCount: Int, autocompleteSessionToken: String, source: String, sessionElapsed: TimeInterval, timeToFetch: TimeInterval?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         var params: [String: Any] = [
-            "query_length": queryLength,
+            "result_count": resultCount,
             "autocomplete_session_token": autocompleteSessionToken,
             "source": source,
             "session_elapsed": sessionElapsed,
@@ -82,25 +88,25 @@ extension STPAnalyticsClient {
         log(analytic: AddressAnalytic(event: .addressAutocompleteSuggestions, params: params), apiClient: apiClient)
     }
 
-    func logAddressAutocompleteComplete(queryLength: Int, autocompleteSessionToken: String, source: String, timeToComplete: TimeInterval, latency: TimeInterval?, apiClient: STPAPIClient) {
+    func logAddressAutocompleteSelected(queryLength: Int, autocompleteSessionToken: String, source: String, sessionElapsed: TimeInterval, placeId: String?, timeToFetch: TimeInterval?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         var params: [String: Any] = [
             "query_length": queryLength,
             "autocomplete_session_token": autocompleteSessionToken,
             "source": source,
-            "time_to_complete": timeToComplete,
+            "session_elapsed": sessionElapsed,
         ]
-        if let latency { params["latency"] = latency }
-        log(analytic: AddressAnalytic(event: .addressAutocompleteComplete, params: params), apiClient: apiClient)
+        if let placeId { params["place_id"] = placeId }
+        if let timeToFetch { params["time_to_fetch"] = timeToFetch }
+        log(analytic: AddressAnalytic(event: .addressAutocompleteSelected, params: params), apiClient: apiClient)
     }
 
-    func logAddressAutocompleteError(errorType: Error, autocompleteSessionToken: String, duration: TimeInterval, apiClient: STPAPIClient) {
+    func logAddressAutocompleteError(error: Error, autocompleteSessionToken: String, duration: TimeInterval, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
-        log(analytic: AddressAnalytic(event: .addressAutocompleteError, params: [
-            "error_type": errorType.localizedDescription,
-            "autocomplete_session_token": autocompleteSessionToken,
-            "duration": duration,
-        ]), apiClient: apiClient)
+        var params = error.serializeForV1Analytics()
+        params["autocomplete_session_token"] = autocompleteSessionToken
+        params["duration"] = duration
+        log(analytic: AddressAnalytic(event: .addressAutocompleteError, params: params), apiClient: apiClient)
     }
 }
 
@@ -108,11 +114,13 @@ struct AddressAnalyticData {
     let addressCountryCode: String
     let autoCompleteResultedSelected: Bool?
     let editDistance: Int?
+    let timeToComplete: TimeInterval?
 
     var analyticsPayload: [String: Any?] {
         return ["address_country_code": addressCountryCode,
                 "auto_complete_result_selected": autoCompleteResultedSelected,
-                "edit_distance": editDistance, ]
+                "edit_distance": editDistance,
+                "time_to_complete": timeToComplete]
     }
 }
 
