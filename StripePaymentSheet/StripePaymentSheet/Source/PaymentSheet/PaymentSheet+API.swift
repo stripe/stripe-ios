@@ -1096,7 +1096,7 @@ extension PaymentSheet {
         return params
     }
 
-    private static func shouldLogOutOfLink(
+    static func shouldLogOutOfLink(
         result: PaymentSheetResult,
         elementsSession: STPElementsSession
     ) -> Bool {

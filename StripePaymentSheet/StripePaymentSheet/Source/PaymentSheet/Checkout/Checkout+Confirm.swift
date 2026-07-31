@@ -170,8 +170,11 @@ extension Checkout {
 
         case .link:
             // MARK: - Link
-            stpAssertionFailure("Link is added to Checkout.confirm in a later commit.")
-            return .init(paymentSheetResult: .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption))
+            return await confirmLink(
+                confirmationContext: confirmationContext,
+                authenticationContext: authenticationContext,
+                clientAttributionMetadata: clientAttributionMetadata
+            )
         }
     }
 
