@@ -97,11 +97,11 @@ extension STPAnalyticsClient {
         log(analytic: AddressAnalytic(event: .addressAutocompleteSelected, params: params), apiClient: apiClient)
     }
 
-    func logAddressAutocompleteError(error: Error, sessionToken: String, duration: TimeInterval, apiClient: STPAPIClient) {
+    func logAddressAutocompleteError(error: Error, sessionToken: String, sessionElapsed: TimeInterval, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         var params = error.serializeForV1Analytics()
         params["autocomplete_session_token"] = sessionToken
-        params["duration"] = duration
+        params["session_elapsed"] = sessionElapsed
         log(analytic: AddressAnalytic(event: .addressAutocompleteError, params: params), apiClient: apiClient)
     }
 }
