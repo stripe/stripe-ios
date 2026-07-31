@@ -148,7 +148,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         client.logAddressAutocompleteError(
             error: error,
             sessionToken: "tok_abc",
-            duration: 0.5,
+            sessionElapsed: 0.5,
             apiClient: .init(publishableKey: "pk_test_123")
         )
         let last = client._testLogHistory.last!

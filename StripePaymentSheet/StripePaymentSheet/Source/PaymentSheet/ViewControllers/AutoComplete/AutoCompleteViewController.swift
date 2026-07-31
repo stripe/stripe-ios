@@ -357,7 +357,7 @@ extension AutoCompleteViewController: ElementDelegate {
                 STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
                     error: error,
                     sessionToken: self.sessionToken,
-                    duration: self.elapsedTimeSinceAutocompleteStart,
+                    sessionElapsed: self.elapsedTimeSinceAutocompleteStart,
                     apiClient: self.configuration.apiClient
                 )
                 // Fall back to MapKit on API failure
@@ -442,7 +442,6 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
         let typedText = autoCompleteLine.text
         let queryLength = typedText.count
         let source = currentSource ?? ""
-        let duration = elapsedTimeSinceAutocompleteStart
 
         if let suggestion = result as? AddressSuggestion {
             // If the suggestion returned with a full address, complete with that address
@@ -487,7 +486,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                       STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
                             error: error,
                             sessionToken: sessionToken,
-                            duration: elapsedTimeSinceAutocompleteStart,
+                            sessionElapsed: elapsedTimeSinceAutocompleteStart,
                             apiClient: configuration.apiClient
                         )
                         delegate?.didSelectAddress(nil)
