@@ -51,13 +51,18 @@ final class CheckoutApplePayContextClosureDelegate: NSObject, ApplePayContextDel
         didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment
     ) async throws -> String {
-        let paymentStatus = try await confirmCheckoutSession(
-            context: context,
+        guard let checkout else {
+            let message = "Missing Checkout controller for CheckoutSession Apple Pay confirmation."
+            stpAssertionFailure(message)
+            throw PaymentSheetError.unknown(debugDescription: message)
+        }
+        return try await handleCheckoutSessionApplePay(
+            checkout: checkout,
+            checkoutSession: checkoutSession,
             paymentMethod: paymentMethod,
-            payment: paymentInformation
+            paymentInformation: paymentInformation,
+            context: context
         )
-        confirmedPaymentStatus = paymentStatus
-        return STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT
     }
 
     func applePayContext(
@@ -98,35 +103,45 @@ final class CheckoutApplePayContextClosureDelegate: NSObject, ApplePayContextDel
 
     // MARK: - Private
 
-    private func confirmCheckoutSession(
-        context: STPApplePayContext,
+    /// Handles Apple Pay confirmation for CheckoutSession by calling the confirm API with the payment method.
+    private func handleCheckoutSessionApplePay(
+        checkout: CheckoutSessionBillingAddressUpdater,
+        checkoutSession: Checkout.Session,
         paymentMethod: StripeAPI.PaymentMethod,
-        payment: PKPayment
-    ) async throws -> Checkout.PaymentStatus {
-        guard let checkout else {
-            let message = "Missing Checkout controller for CheckoutSession Apple Pay confirmation."
-            stpAssertionFailure(message)
-            throw PaymentSheetError.unknown(debugDescription: message)
-        }
-
-        let attributionMetadata = context.clientAttributionMetadata ?? STPClientAttributionMetadata.makeClientAttributionMetadata(
+        paymentInformation: PKPayment,
+        context: STPApplePayContext
+    ) async throws -> String {
+        // 1. Build client attribution metadata
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
             intent: .checkout(checkoutSession),
             elementsSession: checkoutSession.elementsSession
         )
 
+        // 2. Get expected amount from checkout session
+        let expectedAmount = checkoutSession.expectedAmount()
+
+        // 3. Extract shipping details from PKPayment (if provided)
+        let shipping = makeShippingDetailsParams(from: paymentInformation)
+
+        // 4. Call confirm API with the Apple Pay payment method
         let response = try await context.apiClient.confirmCheckoutSession(
             sessionId: checkoutSession.id,
             paymentMethod: paymentMethod.id,
-            expectedAmount: checkoutSession.expectedAmount(),
+            expectedAmount: expectedAmount,
             expectedPaymentMethodType: STPPaymentMethodType.card.identifier,
             returnURL: context.returnUrl,
-            shipping: makeShippingDetailsParams(from: payment),
+            shipping: shipping,
             paymentMethodOptions: nil,
-            clientAttributionMetadata: attributionMetadata
+            clientAttributionMetadata: clientAttributionMetadata
         )
 
+        // 5. Update the Checkout instance with the confirmed session response
         try await checkout.commitSession(response)
-        return response.paymentStatus
+
+        confirmedPaymentStatus = response.paymentStatus
+
+        // 6. Return client secret based on checkout session mode
+        return try response.intentClientSecret()
     }
 
     private func makeShippingDetailsParams(from payment: PKPayment) -> STPPaymentIntentShippingDetailsParams? {
