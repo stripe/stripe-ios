@@ -95,7 +95,7 @@ extension STPApplePayContext {
                         let update = PKPaymentRequestShippingContactUpdate(
                             errors: [PKPaymentRequest.paymentShippingAddressUnserviceableError(
                                 withLocalizedDescription: .Localized.does_not_support_shipping_to(countryCode: isoCountryCode)
-                            )],
+                            ),],
                             paymentSummaryItems: makePaymentSummaryItems(for: updater.session, label: label, currency: currency),
                             shippingMethods: []
                         )

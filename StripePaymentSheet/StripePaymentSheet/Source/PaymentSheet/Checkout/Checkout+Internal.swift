@@ -6,9 +6,9 @@
 //
 
 import Foundation
+import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-import StripeApplePay
 
 extension Checkout: ExpressCheckoutElementDelegate {
     /// Called by ExpressCheckoutElement when the user taps the Apple Pay button.
