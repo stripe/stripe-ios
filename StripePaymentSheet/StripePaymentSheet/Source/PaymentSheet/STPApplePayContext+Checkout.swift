@@ -1,8 +1,8 @@
 //
-//  Checkout+ApplePay.swift
+//  STPApplePayContext+Checkout.swift
 //  StripePaymentSheet
 //
-//  Created by Joyce Qin on 7/31/26.
+//  Created by Nick Porter on 5/5/26.
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
@@ -12,188 +12,6 @@ import PassKit
 @_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-import UIKit
-
-// MARK: - CheckoutApplePayContextClosureDelegate
-
-/// Handles Apple Pay confirmation for Checkout Session flows.
-///
-/// Conforms to `ApplePayContextDelegate` and uses `COMPLETE_WITHOUT_CONFIRMING_INTENT`
-/// to signal `STPApplePayContext` to skip intent-based confirmation after confirming
-/// the Checkout Session server-side.
-final class CheckoutApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate {
-    private let checkoutSession: Checkout.Session
-    private weak var checkout: CheckoutSessionBillingAddressUpdater?
-    private let confirmHandler: (Checkout.ConfirmResult) -> Void
-    private let paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void) -> Void)?
-    private var confirmedPaymentStatus: Checkout.PaymentStatus?
-    /// Retains this instance until Apple Pay completes.
-    var selfRetainer: CheckoutApplePayContextClosureDelegate?
-
-    init(
-        checkoutSession: Checkout.Session,
-        checkout: CheckoutSessionBillingAddressUpdater,
-        paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void) -> Void)?,
-        confirmHandler: @escaping (Checkout.ConfirmResult) -> Void
-    ) {
-        self.checkoutSession = checkoutSession
-        self.checkout = checkout
-        self.paymentMethodUpdateHandler = paymentMethodUpdateHandler
-        self.confirmHandler = confirmHandler
-        super.init()
-        self.selfRetainer = self
-    }
-
-    // MARK: - ApplePayContextDelegate
-
-    func applePayContext(
-        _ context: STPApplePayContext,
-        didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
-        paymentInformation: PKPayment
-    ) async throws -> String {
-        guard let checkout else {
-            let message = "Missing Checkout controller for CheckoutSession Apple Pay confirmation."
-            stpAssertionFailure(message)
-            throw PaymentSheetError.unknown(debugDescription: message)
-        }
-        return try await handleCheckoutSessionApplePay(
-            checkout: checkout,
-            checkoutSession: checkoutSession,
-            paymentMethod: paymentMethod,
-            paymentInformation: paymentInformation,
-            context: context
-        )
-    }
-
-    func applePayContext(
-        _ context: STPApplePayContext,
-        didCompleteWith status: STPApplePayContext.PaymentStatus,
-        error: Error?
-    ) {
-        switch status {
-        case .success:
-            confirmHandler(.succeeded(paymentStatus: confirmedPaymentStatus ?? .unknown))
-        case .error:
-            confirmHandler(.failed(error ?? STPApplePayContext.makeUnknownError(message: "Unknown Apple Pay error")))
-        case .userCancellation:
-            confirmHandler(.canceled)
-        }
-        selfRetainer = nil
-    }
-
-    func applePayContext(
-        _ context: STPApplePayContext,
-        didSelectPaymentMethod paymentMethod: PKPaymentMethod,
-        handler: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
-    ) {
-        guard let paymentMethodUpdateHandler else {
-            stpAssertionFailure("didSelectPaymentMethod called with no paymentMethodUpdateHandler")
-            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
-            return
-        }
-        paymentMethodUpdateHandler(paymentMethod, handler)
-    }
-
-    override func responds(to aSelector: Selector!) -> Bool {
-        if aSelector == #selector(applePayContext(_:didSelectPaymentMethod:handler:)) {
-            return paymentMethodUpdateHandler != nil
-        }
-        return super.responds(to: aSelector)
-    }
-
-    // MARK: - Private
-
-    /// Handles Apple Pay confirmation for CheckoutSession by calling the confirm API with the payment method.
-    private func handleCheckoutSessionApplePay(
-        checkout: CheckoutSessionBillingAddressUpdater,
-        checkoutSession: Checkout.Session,
-        paymentMethod: StripeAPI.PaymentMethod,
-        paymentInformation: PKPayment,
-        context: STPApplePayContext
-    ) async throws -> String {
-        // 1. Build client attribution metadata
-        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-            intent: .checkout(checkoutSession),
-            elementsSession: checkoutSession.elementsSession
-        )
-
-        // 2. Get expected amount from checkout session
-        let expectedAmount = checkoutSession.expectedAmount()
-
-        // 3. Extract shipping details from PKPayment (if provided)
-        let shipping = makeShippingDetailsParams(from: paymentInformation)
-
-        // 4. Call confirm API with the Apple Pay payment method
-        let response = try await context.apiClient.confirmCheckoutSession(
-            sessionId: checkoutSession.id,
-            paymentMethod: paymentMethod.id,
-            expectedAmount: expectedAmount,
-            expectedPaymentMethodType: STPPaymentMethodType.card.identifier,
-            returnURL: context.returnUrl,
-            shipping: shipping,
-            paymentMethodOptions: nil,
-            clientAttributionMetadata: clientAttributionMetadata
-        )
-
-        // 5. Update the Checkout instance with the confirmed session response
-        try await checkout.commitSession(response)
-
-        confirmedPaymentStatus = response.paymentStatus
-
-        // 6. Return client secret based on checkout session mode
-        return try response.intentClientSecret()
-    }
-
-    private func makeShippingDetailsParams(from payment: PKPayment) -> STPPaymentIntentShippingDetailsParams? {
-        guard let shippingContact = payment.shippingContact,
-              let nameComponents = shippingContact.name else {
-            return nil
-        }
-
-        let name = PersonNameComponentsFormatter.localizedString(from: nameComponents, style: .default)
-        let shippingAddress = STPAddress(pkContact: shippingContact)
-
-        guard let line1 = shippingAddress.line1 else {
-            return nil
-        }
-
-        let addressParams = STPPaymentIntentShippingDetailsAddressParams(line1: line1)
-        addressParams.line2 = shippingAddress.line2
-        addressParams.city = shippingAddress.city
-        addressParams.state = shippingAddress.state
-        addressParams.postalCode = shippingAddress.postalCode
-        addressParams.country = shippingAddress.country
-
-        let shippingDetailsParams = STPPaymentIntentShippingDetailsParams(address: addressParams, name: name)
-        shippingDetailsParams.phone = shippingAddress.phone
-
-        return shippingDetailsParams
-    }
-}
-
-// MARK: - Checkout Apple Pay
-
-extension Checkout {
-
-    /// Called by ExpressCheckoutElement when the user taps the Apple Pay button.
-    func confirmApplePay() {
-        let confirmHandler = configuration.expressCheckoutElement.confirmHandler
-        guard let context = STPApplePayContext.create(checkout: self, confirmHandler: { result in
-            confirmHandler?(result)
-        }) else {
-            confirmHandler?(.failed(CheckoutError.applePayNotSupportedOrMisconfigured))
-            return
-        }
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            await enqueueSessionUpdate {
-                context.presentApplePay()
-            }
-        }
-    }
-}
-
-// MARK: - STPApplePayContext + Checkout
 
 extension STPApplePayContext {
 
@@ -223,35 +41,82 @@ extension STPApplePayContext {
         if session.collectsTaxFromBillingAddress {
             paymentRequest.requiredBillingContactFields.insert(.postalAddress)
         }
+        if session.requiresShippingAddress {
+            paymentRequest.requiredShippingContactFields.formUnion([.postalAddress, .name])
+        } else if session.collectsTaxFromShippingAddress {
+            paymentRequest.requiredShippingContactFields.insert(.postalAddress)
+        }
+
+        // All session updates from within the sheet go through this protocol reference.
+        let updater: any CheckoutSessionExpressCheckoutUpdater = checkout
 
         let paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void) -> Void)? = {
             guard session.collectsTaxFromBillingAddress else { return nil }
             let currency = session.currency
-            return { [weak checkout] pkPaymentMethod, completionHandler in
-                guard let checkout else {
+            return { [weak updater] pkPaymentMethod, completionHandler in
+                guard let updater else {
                     completionHandler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
                     return
                 }
-                Task { @MainActor [weak checkout] in
-                    guard let checkout else {
+                Task { @MainActor [weak updater] in
+                    guard let updater else {
                         completionHandler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
                         return
                     }
                     if let postalAddress = pkPaymentMethod.billingAddress?.postalAddresses.first?.value,
                        let address = makeCheckoutAddress(from: postalAddress) {
-                        try? await checkout.updateBillingTaxRegionIfNecessary(address: address, canUpdateWhileSheetPresented: true)
+                        try? await updater.updateBillingTaxRegionIfNecessary(address: address, canUpdateWhileSheetPresented: true)
                     }
                     completionHandler(PKPaymentRequestPaymentMethodUpdate(
-                        paymentSummaryItems: makePaymentSummaryItems(for: checkout.session, label: label, currency: currency)
+                        paymentSummaryItems: makePaymentSummaryItems(for: updater.session, label: label, currency: currency)
+                    ))
+                }
+            }
+        }()
+
+        let shippingContactUpdateHandler: ((PKContact, @escaping (PKPaymentRequestShippingContactUpdate) -> Void) -> Void)? = {
+            guard session.collectsTaxFromShippingAddress || session.requiresShippingAddress else { return nil }
+            let currency = session.currency
+            let allowedShippingCountries = session.allowedShippingCountries
+            return { [weak updater] pkContact, completionHandler in
+                guard let updater else {
+                    completionHandler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: []))
+                    return
+                }
+                Task { @MainActor [weak updater] in
+                    guard let updater else {
+                        completionHandler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: []))
+                        return
+                    }
+                    if let allowedShippingCountries,
+                       let isoCountryCode = pkContact.postalAddress?.isoCountryCode,
+                       !isoCountryCode.isEmpty,
+                       !allowedShippingCountries.contains(isoCountryCode) {
+                        let update = PKPaymentRequestShippingContactUpdate(
+                            errors: [PKPaymentRequest.paymentShippingAddressUnserviceableError(
+                                withLocalizedDescription: .Localized.does_not_support_shipping_to(countryCode: isoCountryCode)
+                            )],
+                            paymentSummaryItems: makePaymentSummaryItems(for: updater.session, label: label, currency: currency),
+                            shippingMethods: []
+                        )
+                        completionHandler(update)
+                        return
+                    }
+                    if let postalAddress = pkContact.postalAddress,
+                       let address = makeCheckoutAddress(from: postalAddress) {
+                        try? await updater.updateShippingTaxRegionIfNecessary(address: address, canUpdateWhileSheetPresented: true)
+                    }
+                    completionHandler(PKPaymentRequestShippingContactUpdate(
+                        paymentSummaryItems: makePaymentSummaryItems(for: updater.session, label: label, currency: currency)
                     ))
                 }
             }
         }()
 
         let delegate = CheckoutApplePayContextClosureDelegate(
-            checkoutSession: session,
-            checkout: checkout,
+            checkout: updater,
             paymentMethodUpdateHandler: paymentMethodUpdateHandler,
+            shippingContactUpdateHandler: shippingContactUpdateHandler,
             confirmHandler: confirmHandler
         )
 
@@ -368,7 +233,7 @@ extension STPApplePayContext {
         return summaryItems
     }
 
-    // Partial billing address from the Apple Pay sheet (no street until authorization).
+    // Partial billing/shipping address from the Apple Pay sheet (no street until authorization).
     // Returns nil if there's no country to key tax on.
     static func makeCheckoutAddress(from postalAddress: CNPostalAddress) -> Checkout.Address? {
         guard let country = postalAddress.isoCountryCode.nonEmpty else {
