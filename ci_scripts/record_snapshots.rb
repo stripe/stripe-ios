@@ -87,13 +87,13 @@ versions.each do |os_version|
   FileUtils.rm_rf(RECORD_DIR)
   FileUtils.rm_rf("#{RECORD_DIR}_64")
 
-  # For iOS 26+, only run tests marked with // @iOS26 (test plan handles filtering)
+  # For iOS 26+, run the Liquid Glass snapshot test plan (test plan handles filtering).
   major = os_version.split('.').first.to_i
   scheme = 'AllStripeFrameworks'
   extra_args = ['--only-snapshot-tests']
   if major >= 26
-    system('ruby', 'ci_scripts/generate_ios26_testplan.rb', exception: true)
-    scheme = 'AllStripeFrameworks-iOS26'
+    system('ruby', 'ci_scripts/generate_liquid_glass_testplan.rb', exception: true)
+    scheme = 'AllStripeFrameworks-LiquidGlass'
     extra_args = [] # test plan already selects the right tests
   end
 
