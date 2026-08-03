@@ -8,7 +8,7 @@
 //
 
 @_spi(STP) import StripeCore
-import StripePayments
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
 extension PaymentSheetFormFactory {

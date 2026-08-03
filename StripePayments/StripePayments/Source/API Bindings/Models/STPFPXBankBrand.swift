@@ -9,7 +9,7 @@
 import Foundation
 
 /// The various bank brands available for FPX payments.
-@objc public enum STPFPXBankBrand: Int, CaseIterable {
+@objc public enum STPFPXBankBrand: Int {
     /// Maybank2U
     case maybank2U
     /// CIMB Clicks
@@ -49,6 +49,8 @@ import Foundation
     /// An unknown bank
     case unknown
 }
+
+@_spi(STP) extension STPFPXBankBrand: CaseIterable {}
 
 /// Convenience methods for using FPX bank brands.
 public class STPFPXBank: NSObject {

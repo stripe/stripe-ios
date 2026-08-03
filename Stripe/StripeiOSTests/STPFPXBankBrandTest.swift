@@ -7,6 +7,8 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripePayments
+
 class STPFPXBankBrandTest: XCTestCase {
     func testStringFromBrand() {
         for brand in STPFPXBankBrand.allCases {
