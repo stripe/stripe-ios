@@ -48,3 +48,12 @@ extension Checkout {
         case noPaymentRequired
     }
 }
+
+// TODO: Change these types to match the proposed API
+extension Checkout.Session {
+    public typealias Status = Checkout.Status
+}
+
+extension Checkout.Status {
+    public typealias PaymentStatus = Checkout.PaymentStatus
+}
