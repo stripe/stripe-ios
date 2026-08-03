@@ -310,7 +310,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(submitKYCButton.isEnabled, "KYC Submit button should be enabled")
         submitKYCButton.tap()
 
-        // Step 3: Submit a static value for the compliance identifier requested by the backend.
+        // Step 3: Submit an appropriately formatted value for the compliance identifier requested by the backend.
         let identifiersLabel = app.staticTexts["Add identifiers"].firstMatch
         XCTAssertTrue(identifiersLabel.waitForExistence(timeout: .networkTimeout), "Compliance identifiers screen should appear")
         waitForLoadingToFinish()
