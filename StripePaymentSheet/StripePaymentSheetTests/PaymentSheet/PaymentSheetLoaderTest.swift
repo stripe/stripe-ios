@@ -772,8 +772,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     @MainActor
     func testPaymentSheetLoadWithDirectCheckoutSessionPayment() async throws {
         let expectation = XCTestExpectation(description: "Load w/ direct CheckoutSession")
-        // Fetch a fresh checkout session from the test backend
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        // Create a fresh checkout session with the test backend
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
         let checkoutSessionId = checkoutSessionResponse.id
         let customApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         var configuration = PaymentSheet.Configuration()
@@ -808,13 +808,13 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
     // TODO(porter): Setup mode is out of scope for unified-mode private preview.
     // Rename back to `test...` once unified mode supports setup mode — but note
-    // `fetchCheckoutSession()` below creates a real payment-shaped modeless session, not
+    // `createCheckoutSession()` below creates a real payment-shaped modeless session, not
     // a setup-style one, so the `.noPaymentRequired` assertion below will need reshaping
     // too, not just the rename.
     @MainActor
     func disabled_testPaymentSheetLoadWithCheckoutSessionSetup() async throws {
         let expectation = XCTestExpectation(description: "Load w/ CheckoutSession setup mode")
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
         let checkoutSessionId = checkoutSessionResponse.id
         let customApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         var configuration = PaymentSheet.Configuration()

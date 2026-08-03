@@ -15,8 +15,8 @@ import XCTest
 final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
     func testInitCheckoutSessionPayment() async throws {
-        // Fetch a fresh checkout session from the test backend
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        // Create a fresh checkout session with the test backend
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
         let checkoutSessionId = checkoutSessionResponse.id
 
         let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -37,8 +37,8 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
     }
 
     func testConfirmCheckoutSessionPayment() async throws {
-        // 1. Fetch a checkout session from test backend
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        // 1. Create a checkout session with the test backend
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             returnURL: "stripe-ios-test://checkout-return"
         )
         let sessionId = checkoutSessionResponse.id
@@ -77,11 +77,11 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
     // MARK: - Adaptive Pricing
 
     func testInitCheckoutSessionPaymentWithAdaptivePricing() async throws {
-        // Fetch a checkout session with a DE customer location (adaptive pricing no longer
+        // Create a checkout session with a DE customer location (adaptive pricing no longer
         // needs to be requested on the session — it's active automatically). Uses the
         // `us_tax` test account, which has adaptive pricing enabled; the default `us`
         // account doesn't.
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             merchantCountry: "us_tax",
             customerEmailLocation: "DE"
         )
@@ -105,7 +105,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
     func testInitCheckoutSessionPaymentWithAdaptivePricingDisabled() async throws {
         // Same session config as above (DE location, adaptive pricing active automatically)
         // but client passes adaptivePricingAllowed: false
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             merchantCountry: "us_tax",
             customerEmailLocation: "DE"
         )
@@ -152,7 +152,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         )
 
         // 2. Create a checkout session for this customer
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             customerID: customerResponse.customer,
             additionalParameters: ["payment_intent_data": ["setup_future_usage": "on_session"]]
         )
@@ -199,7 +199,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         )
 
         // 2. Create a checkout session for this customer
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             customerID: customerResponse.customer,
             additionalParameters: ["payment_intent_data": ["setup_future_usage": "on_session"]]
         )
@@ -238,12 +238,12 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
     // TODO(porter): Setup mode is out of scope for unified-mode private preview.
     // Rename back to `test...` once unified mode supports setup mode — but note
-    // `fetchCheckoutSession()` below creates a real payment-shaped modeless session, not
+    // `createCheckoutSession()` below creates a real payment-shaped modeless session, not
     // a setup-style one, so the assertions here (`.noPaymentRequired`, etc.) will need
     // reshaping too, not just the rename.
     func disabled_testInitCheckoutSessionSetup() async throws {
-        // Fetch a fresh checkout session in setup mode from the test backend
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        // Create a fresh checkout session in setup mode with the test backend
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
         let checkoutSessionId = checkoutSessionResponse.id
 
         let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -265,8 +265,8 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
     // TODO(porter): see disabled_testInitCheckoutSessionSetup above.
     func disabled_testConfirmCheckoutSessionSetup() async throws {
-        // 1. Fetch a checkout session in setup mode from test backend
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        // 1. Create a checkout session in setup mode with the test backend
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
         let sessionId = checkoutSessionResponse.id
 
         let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)

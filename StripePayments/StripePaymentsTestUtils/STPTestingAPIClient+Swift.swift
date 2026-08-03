@@ -196,7 +196,7 @@ extension STPTestingAPIClient {
     }
 
     /// Creates a unified (modeless) Checkout Session backed by `checkout_items`.
-    func fetchCheckoutSession(
+    func createCheckoutSession(
         types: [String] = ["card"],
         currency: String = "usd",
         amount: Int? = nil,

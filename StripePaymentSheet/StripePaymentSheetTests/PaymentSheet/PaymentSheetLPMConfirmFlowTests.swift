@@ -1179,7 +1179,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 intents.append(TestIntent("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)))
             }
             if shouldTest(.checkoutSession), Self.paymentMethodsSupportedByModeless.contains(paymentMethod) {
-                let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+                let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,
                     amount: amount,
@@ -1328,7 +1328,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             // TODO(porter): Checkout rejects `payment_intent_data` (and thus `setup_future_usage`)
             // in modeless sessions. Re-enable once unified mode supports saving payment methods.
             // if shouldTest(.checkoutSession) {
-            //     let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+            //     let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             //         types: paymentMethodTypes,
             //         currency: currency,
             //         amount: amount,
@@ -1447,7 +1447,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             // setup_future_usage in modeless sessions. Re-enable once unified mode supports
             // saving payment methods.
             // if shouldTest(.checkoutSession) {
-            //     let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+            //     let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             //         types: paymentMethodTypes,
             //         currency: currency,
             //         amount: amount,
@@ -1503,7 +1503,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             // TODO(porter): Setup mode is out of scope for unified-mode private preview.
             // Re-enable once unified mode supports setup mode.
             // if shouldTest(.checkoutSession) {
-            //     let checkoutSessionResponse = try await STPTestingAPIClient.shared().fetchCheckoutSession(
+            //     let checkoutSessionResponse = try await STPTestingAPIClient.shared().createCheckoutSession(
             //         types: paymentMethodTypes,
             //         currency: currency,
             //         merchantCountry: merchantCountry.rawValue,

@@ -17,7 +17,7 @@ import XCTest
 final class CheckoutTests: STPNetworkStubbingTestCase {
 
     func testLoadCheckoutSession() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
         var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         let checkout = try await Checkout(configuration: configuration)
@@ -34,7 +34,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
     // TODO(porter): unified mode does not yet support promo codes.
     func disabled_testDelegateCalledOnPromotionCodeApply() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             additionalParameters: ["allow_promotion_codes": true]
         )
         var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
@@ -60,7 +60,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
     // TODO(porter): see disabled_testDelegateCalledOnPromotionCodeApply above.
     func disabled_testApplyPromotionCode() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             additionalParameters: ["allow_promotion_codes": true]
         )
         var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
@@ -81,7 +81,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
     // TODO(porter): see disabled_testDelegateCalledOnPromotionCodeApply above.
     func disabled_testRemovePromotionCode() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             additionalParameters: ["allow_promotion_codes": true]
         )
         var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
@@ -104,7 +104,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
     // TODO(porter): see disabled_testDelegateCalledOnPromotionCodeApply above.
     func disabled_testApplyInvalidPromotionCode() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             additionalParameters: ["allow_promotion_codes": true]
         )
         var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
@@ -123,7 +123,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testUpdateBillingTaxRegionIfNecessary() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             amount: 5050,
             merchantCountry: "us_tax",
             collectBillingAddress: true,
@@ -157,7 +157,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testLoadUnifiedModeCheckoutSession() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             merchantCountry: "us_tax"
         )
         var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
@@ -175,7 +175,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testUpdateShippingAddress() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             merchantCountry: "us_tax",
             additionalParameters: [
                 "checkout_items": [
@@ -231,7 +231,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testAdaptivePricingActiveForUnifiedModeCheckoutSession() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             merchantCountry: "us_tax",
             customerEmailLocation: "FR"
         )
@@ -246,7 +246,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testSelectCurrency() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             merchantCountry: "us_tax",
             customerEmailLocation: "DE"
         )
