@@ -65,13 +65,21 @@ class STPElementsSessionTest: XCTestCase {
                 "major": MobileSessionContractV1.contractMajor,
                 "revision": MobileSessionContractV1.contractRevision,
             ],
-            "payment_method_availability": ["card", "link"],
+            "payment_method_availability": [
+                "entries": [
+                    ["payment_method_type": "card", "available": true],
+                    ["payment_method_type": "link", "available": true],
+                ],
+            ],
         ]
 
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
         XCTAssertEqual(elementsSession.mobilePaymentElement?.contract.major, MobileSessionContractV1.contractMajor)
         XCTAssertEqual(elementsSession.mobilePaymentElement?.contract.revision, MobileSessionContractV1.contractRevision)
-        XCTAssertEqual(elementsSession.mobilePaymentElement?.paymentMethodAvailability, ["card", "link"])
+        XCTAssertEqual(
+            elementsSession.mobilePaymentElement?.paymentMethodAvailability.entries.map(\.paymentMethodType),
+            ["card", "link"]
+        )
     }
 
     func testDecodedObjectFromAPIResponseMapping_rejectsMalformedMobilePaymentElement() {

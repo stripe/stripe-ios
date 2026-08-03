@@ -1,7 +1,7 @@
 {
   "contract": {
     "major": 1,
-    "revision": "83af9999262bbcd5"
+    "revision": "eae9b348c98cf67b"
   },
-  "payment_method_availability": []
+  "payment_method_availability": {}
 }

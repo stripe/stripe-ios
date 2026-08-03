@@ -14,7 +14,7 @@
   },
   "contract": {
     "major": 1,
-    "revision": "83af9999262bbcd5"
+    "revision": "eae9b348c98cf67b"
   },
   "features": {
     "card_funding_filtering": true,
@@ -57,8 +57,13 @@
     }
   ],
   "future_optional_field": true,
-  "payment_method_availability": [
-    "card",
-    "link"
-  ]
+  "payment_method_availability": {
+    "entries": [
+      {
+        "available": true,
+        "payment_method_type": "payment_method_type_value",
+        "reason": "reason_value"
+      }
+    ]
+  }
 }

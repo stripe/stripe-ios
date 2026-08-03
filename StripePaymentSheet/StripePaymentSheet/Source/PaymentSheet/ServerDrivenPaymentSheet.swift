@@ -82,9 +82,16 @@ struct ServerDrivenPaymentSheetResponse {
         contractMajor = mobilePaymentElement.contract.major
         contractRevision = mobilePaymentElement.contract.revision
         features = try Features(mobilePaymentElement.features)
-        paymentMethodTypes = mobilePaymentElement.paymentMethodAvailability
+        paymentMethodTypes = mobilePaymentElement.paymentMethodAvailability.entries
+            .filter(\.available)
+            .map(\.paymentMethodType)
         paymentMethodCodes = mobilePaymentElement.formSpecs.reduce(into: [:]) { result, formSpec in
             result[formSpec.type] = formSpec.paymentMethodCode ?? formSpec.type
+        }
+        let availabilityPaymentMethodTypes = mobilePaymentElement.paymentMethodAvailability.entries
+            .map(\.paymentMethodType)
+        guard Set(availabilityPaymentMethodTypes).count == availabilityPaymentMethodTypes.count else {
+            throw Error.invalidFormSpec
         }
         let availablePaymentMethodTypes = Set(paymentMethodTypes)
         guard availablePaymentMethodTypes.count == paymentMethodTypes.count else {
@@ -126,10 +133,12 @@ struct ServerDrivenPaymentSheetResponse {
     }
 
     private static func validateBounds(_ response: MobilePaymentElementV1) throws {
-        guard response.paymentMethodAvailability.count <= 100,
+        guard response.paymentMethodAvailability.entries.count <= 100,
               response.assets.paymentMethods.count <= 100,
               response.formSpecs.count <= 100,
-              response.paymentMethodAvailability.allSatisfy({ $0.isWithin(100) })
+              response.paymentMethodAvailability.entries.allSatisfy({
+                  $0.paymentMethodType.isWithin(100) && $0.reason?.isWithin(200) != false
+              })
         else {
             throw Error.collectionBounds
         }
