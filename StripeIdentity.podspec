@@ -19,6 +19,7 @@ Pod::Spec.new do |s|
   s.weak_framework = 'SwiftUI'
   s.source_files                   = 'StripeIdentity/StripeIdentity/**/*.swift'
   s.ios.resource_bundle            = { 'StripeIdentityBundle' => 'StripeIdentity/StripeIdentity/Resources/**/*.{lproj,json,png,xcassets,task}' }
+  s.preserve_paths                 = 'NOTICE', 'LocalPackages/MediaPipeSPM/LICENSE-MediaPipe'
   s.dependency                       'StripeCore', "#{s.version}"
   s.dependency                       'StripeUICore', "#{s.version}"
   s.dependency                       'StripeCameraCore', "#{s.version}"

@@ -15,8 +15,9 @@ packaging changes made by this repository are documented in
 LocalPackages/MediaPipeSPM/README.md.
 
 MediaPipe is licensed under the Apache License, Version 2.0. The complete
-license text and upstream attribution notice are provided in
-LocalPackages/MediaPipeSPM/LICENSE-MediaPipe.
+license text and upstream attribution notice are provided as
+LICENSE-MediaPipe in binary distributions and as
+LocalPackages/MediaPipeSPM/LICENSE-MediaPipe in source distributions.
 
 
 ---------------------------------------------------------
