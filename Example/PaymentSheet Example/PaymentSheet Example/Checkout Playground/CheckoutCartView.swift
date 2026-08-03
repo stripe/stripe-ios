@@ -21,9 +21,9 @@ struct CheckoutCartView: View {
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     var showExpressCheckoutElement: Bool = false
-    var applePayVisibility: CheckoutPlayground.WalletVisibilityOption = .automatic
+    var applePayVisibility: CheckoutPlayground.WalletVisibilityOption = .auto
     var applePayButtonTypeOption: CheckoutPlayground.ApplePayButtonTypeOption = .plain
-    var linkVisibility: CheckoutPlayground.WalletVisibilityOption = .automatic
+    var linkVisibility: CheckoutPlayground.WalletVisibilityOption = .auto
     var linkDisplayOption: CheckoutPlayground.LinkDisplayOption = .automatic
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
 
@@ -113,8 +113,8 @@ struct CheckoutCartView: View {
             )
             config.linkConfiguration = Checkout.LinkConfiguration(display: linkDisplayOption.linkDisplay)
             if showExpressCheckoutElement {
-                config.expressCheckoutElement.applePay = applePayVisibility.walletVisibility
-                config.expressCheckoutElement.link = linkVisibility.walletVisibility
+                config.expressCheckoutElement.paymentMethods.applePay = applePayVisibility.applePayVisibility
+                config.expressCheckoutElement.paymentMethods.link = linkVisibility.linkVisibility
             }
             config.currencySelectorElement.appearance = currencySelectorAppearance
             checkout = try await Checkout(configuration: config)

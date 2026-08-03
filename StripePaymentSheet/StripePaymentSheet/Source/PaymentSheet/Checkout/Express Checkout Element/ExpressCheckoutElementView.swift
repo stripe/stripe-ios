@@ -35,19 +35,18 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
 
     private var sessionCancellable: AnyCancellable?
 
-    init(
-        sessionSource: CheckoutSessionSource,
-        configuration: Checkout.Configuration,
-        uiView: ExpressCheckoutElementUIView
-    ) {
+    init(sessionSource: CheckoutSessionSource, configuration: Checkout.Configuration, uiView: ExpressCheckoutElementUIView) {
         self.uiView = uiView
-        self.isAvailable = !ExpressCheckoutElementUtilities.resolveButtons(for: sessionSource.initialSession, configuration: configuration).isEmpty
+        let initialPaymentMethods = ExpressCheckoutElement.availablePaymentMethods(for: sessionSource.initialSession, configuration: configuration)
+        self.isAvailable = !initialPaymentMethods.isEmpty
         sessionCancellable = sessionSource.sessionPublisher
             .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
-                self?.uiView.update(with: session)
-                self?.isAvailable = !ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration).isEmpty
+                guard let self else { return }
+                let paymentMethods = ExpressCheckoutElement.availablePaymentMethods(for: session, configuration: configuration)
+                self.uiView.update(with: paymentMethods, session: session)
+                self.isAvailable = !paymentMethods.isEmpty
             }
     }
 }

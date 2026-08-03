@@ -52,7 +52,7 @@ struct CheckoutPlaygroundView: View {
                             automaticPaymentMethods: $viewModel.automaticPaymentMethods
                         )
 
-                        if viewModel.expressCheckoutElementOption == .enabled {
+                        if viewModel.expressCheckoutElementOption == .show {
                             CheckoutPlaygroundExpressCheckoutSettingsSection(
                                 applePayVisibility: $viewModel.applePayVisibility,
                                 linkVisibility: $viewModel.linkVisibility

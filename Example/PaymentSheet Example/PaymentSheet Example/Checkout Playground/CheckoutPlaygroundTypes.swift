@@ -154,7 +154,7 @@ enum CheckoutPlayground {
     }
 
     enum WalletVisibilityOption: String, CaseIterable, Identifiable {
-        case automatic
+        case auto
         case always
         case never
 
@@ -162,9 +162,17 @@ enum CheckoutPlayground {
 
         var displayName: String { rawValue }
 
-        var walletVisibility: ExpressCheckoutElement.Configuration.WalletVisibility {
+        var applePayVisibility: ExpressCheckoutElement.Configuration.PaymentMethods.ApplePayVisibility {
             switch self {
-            case .automatic: return .automatic
+            case .auto: return .auto
+            case .always: return .always
+            case .never: return .never
+            }
+        }
+
+        var linkVisibility: ExpressCheckoutElement.Configuration.PaymentMethods.LinkVisibility {
+            switch self {
+            case .auto: return .auto
             case .always: return .always
             case .never: return .never
             }
