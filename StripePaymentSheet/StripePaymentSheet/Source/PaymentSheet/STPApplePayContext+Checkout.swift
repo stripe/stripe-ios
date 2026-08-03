@@ -17,8 +17,7 @@ extension STPApplePayContext {
 
     @MainActor
     static func create(
-        checkout: Checkout,
-        confirmHandler: @escaping (Checkout.ConfirmResult) -> Void
+        checkout: Checkout
     ) -> STPApplePayContext? {
         guard let applePayConfig = checkout.configuration.applePayConfiguration else {
             return nil
@@ -38,86 +37,24 @@ extension STPApplePayContext {
             label: label,
             currency: session.currency
         )
-        if session.collectsTaxFromBillingAddress {
-            paymentRequest.requiredBillingContactFields.insert(.postalAddress)
-        }
         if session.requiresShippingAddress {
             paymentRequest.requiredShippingContactFields.formUnion([.postalAddress, .name])
-        } else if session.collectsTaxFromShippingAddress {
-            paymentRequest.requiredShippingContactFields.insert(.postalAddress)
         }
 
         // All session updates from within the sheet go through this protocol reference.
         let updater: any CheckoutSessionExpressCheckoutUpdater = checkout
 
-        let paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void) -> Void)? = {
-            guard session.collectsTaxFromBillingAddress else { return nil }
-            let currency = session.currency
-            return { [weak updater] pkPaymentMethod, completionHandler in
-                guard let updater else {
-                    completionHandler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
-                    return
-                }
-                Task { @MainActor [weak updater] in
-                    guard let updater else {
-                        completionHandler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
-                        return
-                    }
-                    if let postalAddress = pkPaymentMethod.billingAddress?.postalAddresses.first?.value,
-                       let address = makeCheckoutAddress(from: postalAddress) {
-                        try? await updater.updateBillingTaxRegionIfNecessary(address: address, canUpdateWhileSheetPresented: true)
-                    }
-                    completionHandler(PKPaymentRequestPaymentMethodUpdate(
-                        paymentSummaryItems: makePaymentSummaryItems(for: updater.session, label: label, currency: currency)
-                    ))
-                }
-            }
-        }()
+        // TODO: Wire up billing address tax updates (didSelectPaymentMethod → updateBillingTaxRegionIfNecessary).
+        let paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void) -> Void)? = nil
 
-        let shippingContactUpdateHandler: ((PKContact, @escaping (PKPaymentRequestShippingContactUpdate) -> Void) -> Void)? = {
-            guard session.collectsTaxFromShippingAddress || session.requiresShippingAddress else { return nil }
-            let currency = session.currency
-            let allowedShippingCountries = session.allowedShippingCountries
-            return { [weak updater] pkContact, completionHandler in
-                guard let updater else {
-                    completionHandler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: []))
-                    return
-                }
-                Task { @MainActor [weak updater] in
-                    guard let updater else {
-                        completionHandler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: []))
-                        return
-                    }
-                    if let allowedShippingCountries,
-                       let isoCountryCode = pkContact.postalAddress?.isoCountryCode,
-                       !isoCountryCode.isEmpty,
-                       !allowedShippingCountries.contains(isoCountryCode) {
-                        let update = PKPaymentRequestShippingContactUpdate(
-                            errors: [PKPaymentRequest.paymentShippingAddressUnserviceableError(
-                                withLocalizedDescription: .Localized.does_not_support_shipping_to(countryCode: isoCountryCode)
-                            ), ],
-                            paymentSummaryItems: makePaymentSummaryItems(for: updater.session, label: label, currency: currency),
-                            shippingMethods: []
-                        )
-                        completionHandler(update)
-                        return
-                    }
-                    if let postalAddress = pkContact.postalAddress,
-                       let address = makeCheckoutAddress(from: postalAddress) {
-                        try? await updater.updateShippingTaxRegionIfNecessary(address: address, canUpdateWhileSheetPresented: true)
-                    }
-                    completionHandler(PKPaymentRequestShippingContactUpdate(
-                        paymentSummaryItems: makePaymentSummaryItems(for: updater.session, label: label, currency: currency)
-                    ))
-                }
-            }
-        }()
+        // TODO: Wire up shipping contact handler: country validation + shipping tax updates (didSelectShippingContact → updateShippingTaxRegionIfNecessary).
+        let shippingContactUpdateHandler: ((PKContact, @escaping (PKPaymentRequestShippingContactUpdate) -> Void) -> Void)? = nil
 
         let delegate = CheckoutApplePayContextClosureDelegate(
             checkout: updater,
+            checkoutSession: checkout.session,
             paymentMethodUpdateHandler: paymentMethodUpdateHandler,
-            shippingContactUpdateHandler: shippingContactUpdateHandler,
-            confirmHandler: confirmHandler
+            shippingContactUpdateHandler: shippingContactUpdateHandler
         )
 
         guard let context = STPApplePayContext(paymentRequest: paymentRequest, delegate: delegate) else {

@@ -15,7 +15,6 @@ struct CheckoutCartView: View {
 
     @State private var isLoading = false
     @State private var errorMessage: String?
-    @State private var confirmResultMessage: String?
 
     let clientSecret: String
     let shippingAddressCollection: Bool
@@ -95,11 +94,6 @@ struct CheckoutCartView: View {
             .task {
                 await loadCheckout()
             }
-            .alert("ECE Result", isPresented: Binding(get: { confirmResultMessage != nil }, set: { if !$0 { confirmResultMessage = nil } })) {
-                Button("OK") { confirmResultMessage = nil }
-            } message: {
-                Text(confirmResultMessage ?? "")
-            }
         }
     }
 
@@ -113,16 +107,6 @@ struct CheckoutCartView: View {
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             config.currencySelectorElement.appearance = currencySelectorAppearance
-            config.expressCheckoutElement.confirmHandler = { result in
-                switch result {
-                case .succeeded(let paymentStatus):
-                    confirmResultMessage = "Succeeded! Payment status: \(paymentStatus)"
-                case .canceled:
-                    confirmResultMessage = "Canceled"
-                case .failed(let error):
-                    confirmResultMessage = "Failed: \(error.localizedDescription)"
-                }
-            }
             checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription

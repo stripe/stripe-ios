@@ -13,11 +13,8 @@ import StripeApplePay
 extension Checkout: ExpressCheckoutElementDelegate {
     /// Called by ExpressCheckoutElement when the user taps the Apple Pay button.
     func confirmApplePay() {
-        let confirmHandler = configuration.expressCheckoutElement.confirmHandler
-        guard let context = STPApplePayContext.create(checkout: self, confirmHandler: { result in
-            confirmHandler?(result)
-        }) else {
-            confirmHandler?(.failed(CheckoutError.applePayNotSupportedOrMisconfigured))
+        guard let context = STPApplePayContext.create(checkout: self) else {
+            stpAssertionFailure(CheckoutError.applePayNotSupportedOrMisconfigured.localizedDescription)
             return
         }
         Task { @MainActor [weak self] in

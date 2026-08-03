@@ -201,20 +201,6 @@ public final class Checkout: ObservableObject {
         try await performUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
     }
 
-    /// Updates the shipping tax region for this checkout, if shipping is the session's tax address source.
-    ///
-    /// Sends the tax region to the server without permanently storing the shipping address.
-    /// Used for provisional tax calculations inside the Apple Pay sheet.
-    func updateShippingTaxRegionIfNecessary(
-        address: Address,
-        canUpdateWhileSheetPresented: Bool = false
-    ) async throws {
-        guard session.shouldSendTaxRegion(for: "shipping") else {
-            return
-        }
-        try await performUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
-    }
-
     /// Sets the shipping address for this checkout.
     ///
     /// The address is stored locally and merged into PaymentSheet configuration

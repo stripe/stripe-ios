@@ -22,7 +22,7 @@ import UIKit
 /// the Checkout Session server-side.
 final class CheckoutApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate {
     private weak var checkout: (any CheckoutSessionExpressCheckoutUpdater)?
-    private let confirmHandler: (Checkout.ConfirmResult) -> Void
+    private let checkoutSession: Checkout.Session
     private let paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void) -> Void)?
     private let shippingContactUpdateHandler: ((PKContact, @escaping (PKPaymentRequestShippingContactUpdate) -> Void) -> Void)?
     private var confirmedPaymentStatus: Checkout.PaymentStatus?
@@ -31,14 +31,14 @@ final class CheckoutApplePayContextClosureDelegate: NSObject, ApplePayContextDel
 
     init(
         checkout: any CheckoutSessionExpressCheckoutUpdater,
+        checkoutSession: Checkout.Session,
         paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void) -> Void)?,
-        shippingContactUpdateHandler: ((PKContact, @escaping (PKPaymentRequestShippingContactUpdate) -> Void) -> Void)?,
-        confirmHandler: @escaping (Checkout.ConfirmResult) -> Void
+        shippingContactUpdateHandler: ((PKContact, @escaping (PKPaymentRequestShippingContactUpdate) -> Void) -> Void)?
     ) {
         self.checkout = checkout
+        self.checkoutSession = checkoutSession
         self.paymentMethodUpdateHandler = paymentMethodUpdateHandler
         self.shippingContactUpdateHandler = shippingContactUpdateHandler
-        self.confirmHandler = confirmHandler
         super.init()
         self.selfRetainer = self
     }
@@ -57,6 +57,7 @@ final class CheckoutApplePayContextClosureDelegate: NSObject, ApplePayContextDel
         }
         return try await handleCheckoutSessionApplePay(
             checkout: checkout,
+            checkoutSession: checkoutSession,
             paymentMethod: paymentMethod,
             paymentInformation: paymentInformation,
             context: context
@@ -68,14 +69,7 @@ final class CheckoutApplePayContextClosureDelegate: NSObject, ApplePayContextDel
         didCompleteWith status: STPApplePayContext.PaymentStatus,
         error: Error?
     ) {
-        switch status {
-        case .success:
-            confirmHandler(.succeeded(paymentStatus: confirmedPaymentStatus ?? .unknown))
-        case .error:
-            confirmHandler(.failed(error ?? STPApplePayContext.makeUnknownError(message: "Unknown Apple Pay error")))
-        case .userCancellation:
-            confirmHandler(.canceled)
-        }
+        // TODO: confirm handler
         selfRetainer = nil
     }
 
@@ -121,28 +115,26 @@ final class CheckoutApplePayContextClosureDelegate: NSObject, ApplePayContextDel
     @MainActor
     private func handleCheckoutSessionApplePay(
         checkout: any CheckoutSessionExpressCheckoutUpdater,
+        checkoutSession: Checkout.Session,
         paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment,
         context: STPApplePayContext
     ) async throws -> String {
-        // Use the live session so any tax updates applied during the Apple Pay sheet are reflected.
-        let currentSession = checkout.session
-
         // 1. Build client attribution metadata
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-            intent: .checkout(currentSession),
-            elementsSession: currentSession.elementsSession
+            intent: .checkout(checkoutSession),
+            elementsSession: checkoutSession.elementsSession
         )
 
         // 2. Get expected amount from the current (post-tax-update) session
-        let expectedAmount = currentSession.expectedAmount()
+        let expectedAmount = checkoutSession.expectedAmount()
 
         // 3. Extract shipping details from PKPayment (if provided)
         let shipping = makeShippingDetailsParams(from: paymentInformation)
 
         // 4. Call confirm API with the Apple Pay payment method
         let response = try await context.apiClient.confirmCheckoutSession(
-            sessionId: currentSession.id,
+            sessionId: checkoutSession.id,
             paymentMethod: paymentMethod.id,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: STPPaymentMethodType.card.identifier,
@@ -152,9 +144,7 @@ final class CheckoutApplePayContextClosureDelegate: NSObject, ApplePayContextDel
             clientAttributionMetadata: clientAttributionMetadata
         )
 
-        // 5. Update the Checkout instance with the confirmed session response
-        try await checkout.commitSession(response, applying: nil)
-
+        // 5. TODO: Update the Checkout instance with the confirmed session response
         confirmedPaymentStatus = response.paymentStatus
 
         // 6. Return client secret based on checkout session mode
