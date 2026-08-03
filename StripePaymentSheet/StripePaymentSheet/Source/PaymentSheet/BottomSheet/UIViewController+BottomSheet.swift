@@ -37,6 +37,8 @@ extension UIViewController {
             viewControllerToPresent.transitioningDelegate = BottomSheetTransitioningDelegate.default
         }
 
+        // Prevent the presenting view from regaining focus when editing ends in the bottom sheet.
+        viewIfLoaded?.endEditing(true)
         present(viewControllerToPresent, animated: true, completion: completion)
     }
 
