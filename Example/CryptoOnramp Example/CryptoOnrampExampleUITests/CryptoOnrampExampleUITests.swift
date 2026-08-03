@@ -36,7 +36,6 @@ final class CryptoOnrampExampleUITests: XCTestCase {
     }
 
     /// Tests a happy-path flow from log in (existing account) to successful checkout, followed by re-authentication using seamless sign-in.
-    @MainActor
     func testExistingUserEndToEnd() throws {
         // Step 1: Enter email and password
         waitForLoadingToFinish()
@@ -295,87 +294,39 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         waitForLoadingToFinish()
     }
 
-    @MainActor
-    private func enterText(
-        _ text: String,
-        in element: XCUIElement,
+    private func setDateOfBirth(
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        XCTAssertTrue(element.waitForExistence(timeout: .animationTimeout), "Text field should exist", file: file, line: line)
-        XCTAssertTrue(element.isHittable, "Text field should be hittable", file: file, line: line)
-        element.tap()
-        element.typeText(text)
-    }
-
-    @MainActor
-    private func setDateOfBirth() {
         let kycScrollView = app.scrollViews["kyc_form"].firstMatch
-        XCTAssertTrue(kycScrollView.waitForExistence(timeout: .animationTimeout), "KYC form should be scrollable")
+        XCTAssertTrue(
+            kycScrollView.waitForExistence(timeout: .animationTimeout),
+            "KYC form should be scrollable",
+            file: file,
+            line: line
+        )
         kycScrollView.swipeUp()
 
         let pickerWheels = app.pickerWheels
         let values = ["January", "1", "1990"]
         let firstWheel = pickerWheels.element(boundBy: 0)
-        XCTAssertTrue(firstWheel.waitForExistence(timeout: .animationTimeout), "Date of birth picker should exist")
-        XCTAssertEqual(pickerWheels.count, values.count, "Date of birth picker should contain month, day, and year wheels")
+        XCTAssertTrue(
+            firstWheel.waitForExistence(timeout: .animationTimeout),
+            "Date of birth picker should exist",
+            file: file,
+            line: line
+        )
+        XCTAssertEqual(
+            pickerWheels.count,
+            values.count,
+            "Date of birth picker should contain month, day, and year wheels",
+            file: file,
+            line: line
+        )
 
         // XCTest exposes wheel-style date pickers as separate month, day, and year elements.
         for (index, value) in values.enumerated() {
             pickerWheels.element(boundBy: index).adjust(toPickerWheelValue: value)
         }
     }
-
-    @MainActor
-    private func waitForLoadingToFinish(
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        let loadingLabel = app.staticTexts["Loading…"].firstMatch
-        XCTAssertTrue(
-            loadingLabel.waitForNonExistence(timeout: .networkTimeout),
-            "Loading indicator should disappear",
-            file: file,
-            line: line
-        )
-    }
-
-    @MainActor
-    private func dismissSavePasswordPromptIfPresent() {
-        // The prompt is owned by AuthenticationServicesAgent, so it must be handled as a system interruption.
-        let interruptionMonitor = addUIInterruptionMonitor(withDescription: "Save Password") { alert in
-            let notNowButton = alert.buttons["Not Now"].firstMatch
-            guard notNowButton.exists else {
-                return false
-            }
-
-            notNowButton.tap()
-            return true
-        }
-
-        app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1)).tap()
-        removeUIInterruptionMonitor(interruptionMonitor)
-    }
-
-    @MainActor
-    private func dismissKeyboard() {
-        let doneButton = app.toolbars.buttons["Done"].firstMatch
-        if doneButton.waitForExistence(timeout: 1) {
-            doneButton.tap()
-        } else {
-            app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.2)).tap()
-        }
-    }
-
-    private static func makeRandomUSPhoneNumber() -> String {
-        "+1212555\(String(format: "%04d", Int.random(in: 0...9999)))"
-    }
-}
-
-private extension TimeInterval {
-    /// Rough timeout value to use when awaiting an operation that relies on networking.
-    static let networkTimeout: TimeInterval = 60
-
-    /// Rough timeout value to use when awaiting an operation that performs an animation or transition.
-    static let animationTimeout: TimeInterval = 5
 }
