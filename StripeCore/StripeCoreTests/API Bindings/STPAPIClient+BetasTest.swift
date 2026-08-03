@@ -9,6 +9,14 @@
 import XCTest
 
 class STPAPIClient_BetasTest: XCTestCase {
+    func testStripeVersionHeaderUsesCurrentAPIVersion() {
+        let apiClient = STPAPIClient(publishableKey: "pk_test_123")
+
+        let request = apiClient.configuredRequest(for: URL(string: "https://api.stripe.com/v1/tokens")!)
+
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Version"), "2026-07-29.dahlia")
+    }
+
     func testBetasAreAppendedToStripeVersionHeader() {
         let apiClient = STPAPIClient(publishableKey: "pk_test_123")
         apiClient.betas = ["alipay_beta=v1"]

@@ -2,6 +2,9 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### StripeCore
+* [Changed] Updated the Stripe API version used by the SDK to `2026-07-29.dahlia`.
+
 ### CryptoOnramp (Alpha)
 * [Added] Added support for registering wallet addresses on the Tempo network.
 
