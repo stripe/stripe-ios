@@ -12,6 +12,11 @@ import WebKit
 
 class ConnectComponentWebViewController: ConnectWebViewController {
 
+    enum LayoutMode {
+        case fillsAvailableSpace
+        case sizesToContent((CGFloat) -> Void)
+    }
+
     var onDismiss: (() -> Void)?
 
     /// The embedded component manager that will be used for requests.
@@ -49,6 +54,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
     let componentType: ComponentType
 
+    let layoutMode: LayoutMode
+
     let bundleIdProvider: () -> String?
 
     // If applicable, these are supplied via fetchInitProps which happens after construction
@@ -60,6 +67,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         componentType: ComponentType,
         loadContent: Bool,
         analyticsClientFactory: ComponentAnalyticsClientFactory,
+        layoutMode: LayoutMode = .fillsAvailableSpace,
         fetchInitProps: @escaping () -> InitProps,
         didFailLoadWithError: @escaping (Error) -> Void,
         // Should only be overridden for tests
@@ -76,6 +84,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         self.didFailLoadWithError = didFailLoadWithError
         self.financialConnectionsPresenter = financialConnectionsPresenter
         self.componentType = componentType
+        self.layoutMode = layoutMode
         self.bundleIdProvider = bundleIdProvider
 
         let config = WKWebViewConfiguration()
@@ -102,6 +111,13 @@ class ConnectComponentWebViewController: ConnectWebViewController {
             activityIndicator.centerXAnchor.constraint(equalTo: webView.centerXAnchor),
             activityIndicator.topAnchor.constraint(equalTo: webView.safeAreaLayoutGuide.topAnchor, constant: 50),
         ])
+
+        if case .sizesToContent = layoutMode {
+            activityIndicator.isHidden = true
+            webView.scrollView.isScrollEnabled = false
+            webView.scrollView.bounces = false
+            webView.scrollView.showsVerticalScrollIndicator = false
+        }
 
         // Colors
         updateColors(appearance: componentManager.appearance)
@@ -295,6 +311,11 @@ extension ConnectComponentWebViewController {
         }
     }
 
+    func requestContentHeightUpdate() {
+        guard case .sizesToContent = layoutMode else { return }
+        webView.evaluateJavaScript("window.__stripeConnectReportContentHeight?.()")
+    }
+
     func updateAppearance(appearance: Appearance) {
         sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.toLanguageTag(), appearance: .init(appearance: appearance, traitCollection: traitCollection))))
         updateColors(appearance: appearance)
@@ -381,6 +402,22 @@ private extension ConnectComponentWebViewController {
         self.addMessageHandler(CallSupplementalFunctionMessageHandler(analyticsClient: self.analyticsClient, didReceiveMessage: { [weak self] payload in
             self?.dispatch(payload)
         }))
+
+        if case .sizesToContent(let onContentHeightChange) = layoutMode {
+            contentController.addUserScript(WKUserScript(
+                source: Self.contentHeightObserverScript,
+                injectionTime: .atDocumentEnd,
+                forMainFrameOnly: true
+            ))
+            addMessageHandler(ScriptMessageHandler<ContentHeightPayload>(
+                name: "connectContentHeight",
+                analyticsClient: analyticsClient
+            ) { payload in
+                let height = CGFloat(payload.height)
+                guard height.isFinite, height >= 0 else { return }
+                onContentHeightChange(height)
+            })
+        }
     }
 
     /// Adds NotificationCenter observers
@@ -404,6 +441,11 @@ private extension ConnectComponentWebViewController {
         webView.backgroundColor = backgroundColor
         webView.isOpaque = false
         activityIndicator.tintColor = appearance.colors.loadingIndicatorColor
+
+        if case .sizesToContent = layoutMode {
+            view.layer.cornerRadius = appearance.cornerRadius.base ?? 8
+            view.clipsToBounds = true
+        }
 
         let navAppearance = UINavigationBarAppearance()
         navAppearance.configureWithOpaqueBackground()
@@ -481,4 +523,31 @@ private extension ConnectComponentWebViewController {
             )))
         }
     }
+
+    static let contentHeightObserverScript = """
+    (function() {
+      if (window.__stripeConnectHeightObserver) { return; }
+      window.__stripeConnectHeightObserver = true;
+      var last = -1;
+      function report(force) {
+        var b = document.body;
+        if (!b) { return; }
+        var h = b.getBoundingClientRect().height;
+        if (!force && last >= 0 && Math.abs(h - last) < 0.5) { return; }
+        last = h;
+        try { window.webkit.messageHandlers.connectContentHeight.postMessage({ height: h }); } catch (e) {}
+      }
+      window.__stripeConnectReportContentHeight = function() { report(true); };
+      try {
+        var ro = new ResizeObserver(function() { report(); });
+        ro.observe(document.body || document.documentElement);
+      } catch (e) {}
+      report();
+      window.addEventListener('load', report);
+    })();
+    """
+}
+
+private struct ContentHeightPayload: Decodable {
+    let height: Double
 }
