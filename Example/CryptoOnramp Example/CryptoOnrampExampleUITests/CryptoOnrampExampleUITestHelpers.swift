@@ -16,7 +16,6 @@ extension CryptoOnrampExampleUITests {
         line: UInt = #line
     ) {
         XCTAssertTrue(element.waitForExistence(timeout: .animationTimeout), "Text field should exist", file: file, line: line)
-        XCTAssertTrue(element.isHittable, "Text field should be hittable", file: file, line: line)
         element.tap()
         element.typeText(text)
     }

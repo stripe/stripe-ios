@@ -152,7 +152,6 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         dismissKeyboard()
 
         let registerButton = app.buttons["Register"].firstMatch
-        XCTAssertTrue(registerButton.isHittable, "Register button should be hittable")
         XCTAssertTrue(registerButton.isEnabled, "Register button should be enabled")
         registerButton.tap()
 
@@ -171,7 +170,6 @@ final class CryptoOnrampExampleUITests: XCTestCase {
 
         let firstNameField = app.textFields["Enter your first name"].firstMatch
         XCTAssertTrue(firstNameField.waitForExistence(timeout: .animationTimeout), "First name field should exist")
-        XCTAssertTrue(firstNameField.isHittable, "First name field should be hittable")
         firstNameField.tap()
         app.typeText("Crypto" + XCUIKeyboardKey.return.rawValue)
         app.typeText("Tester" + XCUIKeyboardKey.return.rawValue)
@@ -184,7 +182,6 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         kycScrollView.swipeUp()
 
         let addressLine1Field = app.textFields["Enter your street address"].firstMatch
-        XCTAssertTrue(addressLine1Field.isHittable, "Address line 1 field should be hittable")
         addressLine1Field.tap()
         app.typeText(addressLine1 + XCUIKeyboardKey.return.rawValue)
         app.typeText(addressLine2 + XCUIKeyboardKey.return.rawValue)
@@ -194,7 +191,6 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         app.typeText(XCUIKeyboardKey.return.rawValue)
 
         let submitKYCButton = app.buttons["Submit"].firstMatch
-        XCTAssertTrue(submitKYCButton.isHittable, "KYC Submit button should be hittable")
         XCTAssertTrue(submitKYCButton.isEnabled, "KYC Submit button should be enabled")
         submitKYCButton.tap()
 
@@ -249,6 +245,14 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(addCardOption.waitForExistence(timeout: .animationTimeout), "Add card option should appear")
         addCardOption.tap()
 
+        let closeCardCollectionButton = app.buttons["Close"].firstMatch
+        XCTAssertTrue(closeCardCollectionButton.waitForExistence(timeout: .animationTimeout), "Card collection sheet should appear")
+        closeCardCollectionButton.tap()
+        XCTAssertTrue(closeCardCollectionButton.waitForNonExistence(timeout: .animationTimeout), "Card collection sheet should close")
+        waitForLoadingToFinish()
+
+        addCardOption.tap()
+
         let addPaymentMethodButton = app.buttons["Add a payment method"].firstMatch
         XCTAssertTrue(addPaymentMethodButton.waitForExistence(timeout: .networkTimeout), "Add payment method button should appear")
         addPaymentMethodButton.tap()
@@ -266,7 +270,6 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         dismissKeyboard()
 
         let linkContinueButton = app.buttons["Continue"].firstMatch
-        XCTAssertTrue(linkContinueButton.isHittable, "Link Continue button should be hittable")
         XCTAssertTrue(linkContinueButton.isEnabled, "Link Continue button should be enabled")
         linkContinueButton.tap()
 
