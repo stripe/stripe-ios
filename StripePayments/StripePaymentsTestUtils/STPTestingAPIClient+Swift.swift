@@ -195,165 +195,41 @@ extension STPTestingAPIClient {
         let publishableKey: String
     }
 
-    static func checkoutSessionAdditionalParameters(
-        currency: String = "usd",
-        amount: Int? = nil,
-        setupFutureUsage: String? = nil,
-        paymentMethodOptionsSetupFutureUsage: [String: String]? = nil,
-        allowPromotionCodes: Bool = false,
-        allowAdjustableLineItemQuantity: Bool = false,
-        includeShippingOptions: Bool = false,
-        collectShippingAddress: Bool = false,
-        collectBillingAddress: Bool = false,
-        automaticTax: Bool = false,
-        enableTaxIdCollection: Bool = false,
-        adaptivePricingEnabled: Bool = false,
-        customerEmailLocation: String? = nil,
-        enablePaymentMethodSave: Bool = false
-    ) -> [String: Any] {
-        var additionalParameters: [String: Any] = [:]
-        if allowPromotionCodes {
-            additionalParameters["allow_promotion_codes"] = true
-        }
-        if allowAdjustableLineItemQuantity {
-            additionalParameters["line_items"] = [
-                [
-                    "price_data": [
-                        "currency": currency,
-                        "product_data": ["name": "Test Product", "tax_code": "txcd_99999999", ],
-                        "unit_amount": amount ?? 5050,
-                        "tax_behavior": "exclusive",
-                    ] as [String: Any],
-                    "quantity": 1,
-                    "adjustable_quantity": [
-                        "enabled": true,
-                        "minimum": 1,
-                        "maximum": 10,
-                    ] as [String: Any],
-                ] as [String: Any],
-            ]
-        }
-        if includeShippingOptions {
-            additionalParameters["shipping_options"] = [
-                [
-                    "shipping_rate_data": [
-                        "display_name": "Standard Shipping",
-                        "type": "fixed_amount",
-                        "fixed_amount": [
-                            "amount": 500,
-                            "currency": currency,
-                        ] as [String: Any],
-                    ] as [String: Any],
-                ] as [String: Any],
-                [
-                    "shipping_rate_data": [
-                        "display_name": "Express Shipping",
-                        "type": "fixed_amount",
-                        "fixed_amount": [
-                            "amount": 1000,
-                            "currency": currency,
-                        ] as [String: Any],
-                    ] as [String: Any],
-                ] as [String: Any],
-            ]
-        }
-        if collectShippingAddress {
-            additionalParameters["shipping_address_collection"] = ["allowed_countries": ["US", "CA"]]
-        }
-        if collectBillingAddress {
-            additionalParameters["billing_address_collection"] = "required"
-        }
-        if automaticTax {
-            additionalParameters["automatic_tax"] = ["enabled": true]
-        }
-        if enableTaxIdCollection {
-            additionalParameters["tax_id_collection"] = ["enabled": true]
-        }
-        if adaptivePricingEnabled {
-            additionalParameters["adaptive_pricing"] = ["enabled": true]
-        }
-        if let customerEmailLocation {
-            additionalParameters["customer_email"] = "test+location_\(customerEmailLocation)@example.com"
-        }
-        if let setupFutureUsage {
-            var paymentIntentData = additionalParameters["payment_intent_data"] as? [String: Any] ?? [:]
-            paymentIntentData["setup_future_usage"] = setupFutureUsage
-            additionalParameters["payment_intent_data"] = paymentIntentData
-        }
-        if let paymentMethodOptionsSetupFutureUsage, !paymentMethodOptionsSetupFutureUsage.isEmpty {
-            additionalParameters["payment_method_options"] = paymentMethodOptionsSetupFutureUsage.reduce(into: [String: Any]()) { result, entry in
-                result[entry.key] = [
-                    "setup_future_usage": entry.value,
-                ]
-            }
-        }
-        if enablePaymentMethodSave {
-            additionalParameters["saved_payment_method_options"] = [
-                "payment_method_save": "enabled",
-            ]
-        }
-        return additionalParameters
-    }
-
-    func fetchCheckoutSessionPaymentMode(
+    /// Creates a unified (modeless) Checkout Session backed by `checkout_items`.
+    func createCheckoutSession(
         types: [String] = ["card"],
         currency: String = "usd",
         amount: Int? = nil,
         merchantCountry: String? = "us",
         customerID: String? = nil,
-        setupFutureUsage: String? = nil,
-        paymentMethodOptionsSetupFutureUsage: [String: String]? = nil,
-        allowPromotionCodes: Bool = false,
-        allowAdjustableLineItemQuantity: Bool = false,
-        includeShippingOptions: Bool = false,
-        collectShippingAddress: Bool = false,
         collectBillingAddress: Bool = false,
         automaticTax: Bool = false,
-        enableTaxIdCollection: Bool = false,
-        adaptivePricingEnabled: Bool = false,
         customerEmailLocation: String? = nil,
-        enablePaymentMethodSave: Bool = false
+        returnURL: String? = nil,
+        additionalParameters: [String: Any] = [:]
     ) async throws -> CreateCheckoutSessionResponse {
-        let additionalParameters = Self.checkoutSessionAdditionalParameters(
-            currency: currency,
-            amount: amount,
-            setupFutureUsage: setupFutureUsage,
-            paymentMethodOptionsSetupFutureUsage: paymentMethodOptionsSetupFutureUsage,
-            allowPromotionCodes: allowPromotionCodes,
-            allowAdjustableLineItemQuantity: allowAdjustableLineItemQuantity,
-            includeShippingOptions: includeShippingOptions,
-            collectShippingAddress: collectShippingAddress,
-            collectBillingAddress: collectBillingAddress,
-            automaticTax: automaticTax,
-            enableTaxIdCollection: enableTaxIdCollection,
-            adaptivePricingEnabled: adaptivePricingEnabled,
-            customerEmailLocation: customerEmailLocation,
-            enablePaymentMethodSave: enablePaymentMethodSave
-        )
+        var mergedParameters: [String: Any] = [:]
+        if collectBillingAddress {
+            mergedParameters["billing_address_collection"] = "required"
+        }
+        if automaticTax {
+            mergedParameters["automatic_tax"] = ["enabled": true]
+        }
+        if let customerEmailLocation {
+            mergedParameters["customer_email"] = "test+location_\(customerEmailLocation)@example.com"
+        }
+        mergedParameters.merge(additionalParameters) { _, override in override }
+
         let params: [String: Any?] = [
             "account": merchantCountry,
             "payment_method_types": types,
             "currency": currency,
             "amount": amount,
             "customer": customerID,
-            "additional_parameters": additionalParameters.isEmpty ? nil : additionalParameters,
+            "return_url": returnURL,
+            "additional_parameters": mergedParameters.isEmpty ? nil : mergedParameters,
         ]
-        return try await makeRequest(endpoint: "create_checkout_session", params: params)
-    }
-
-    func fetchCheckoutSessionSetupMode(
-        types: [String] = ["card"],
-        currency: String = "usd",
-        merchantCountry: String? = "us",
-        customerID: String? = nil
-    ) async throws -> CreateCheckoutSessionResponse {
-        let params: [String: Any?] = [
-            "account": merchantCountry,
-            "payment_method_types": types,
-            "currency": currency,
-            "customer": customerID,
-        ]
-        return try await makeRequest(endpoint: "create_checkout_session_setup", params: params)
+        return try await makeRequest(endpoint: "create_checkout_session_unified", params: params)
     }
 
     // MARK: - Helpers

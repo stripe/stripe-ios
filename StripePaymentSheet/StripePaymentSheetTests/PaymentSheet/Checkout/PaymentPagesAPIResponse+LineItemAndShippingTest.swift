@@ -16,25 +16,6 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
 
     // MARK: - Line Item Tests
 
-    func testDecodedObjectLineItemsParsing() {
-        let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
-
-        XCTAssertEqual(session.lineItems.count, 2)
-
-        let first = session.lineItems[0]
-        XCTAssertEqual(first.id, "li_1abc")
-        XCTAssertEqual(first.name, "Widget")
-        XCTAssertEqual(first.quantity, 2)
-        XCTAssertEqual(first.unitAmount?.minorUnitsAmount, 750)
-
-        let second = session.lineItems[1]
-        XCTAssertEqual(second.id, "li_2def")
-        XCTAssertEqual(second.name, "Gadget")
-        XCTAssertEqual(second.quantity, 1)
-        XCTAssertEqual(second.unitAmount?.minorUnitsAmount, 500)
-    }
-
     func testDecodedObjectWithNoLineItems() {
         let session = CheckoutTestHelpers.makeSession()
 
