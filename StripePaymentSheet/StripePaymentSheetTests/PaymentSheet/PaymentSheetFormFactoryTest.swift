@@ -28,6 +28,15 @@ private final class ParamsCountingPaymentMethodElement: PaymentMethodElement {
     lazy var view: UIView = { UIView() }()
 }
 
+private final class MockFormSpecProvider: FormSpecProvider {
+    var formSpecCallCount = 0
+
+    override func formSpec(for paymentMethodType: String) -> FormSpec? {
+        formSpecCallCount += 1
+        return nil
+    }
+}
+
 @MainActor
 class PaymentSheetFormFactoryTest: XCTestCase {
     private func extractBNPLHeaderView(from subtitle: SubtitleElement) -> BNPLFormHeaderView? {
@@ -1941,7 +1950,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Given no loaded form specs and a merchant-configured name field
         let originalFormSpecProvider = FormSpecProvider.shared
         defer { FormSpecProvider.shared = originalFormSpecProvider }
-        FormSpecProvider.shared = FormSpecProvider()
+        let formSpecProvider = MockFormSpecProvider()
+        FormSpecProvider.shared = formSpecProvider
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.name = .always
         let paymentMethodTypes: [STPPaymentMethodType] = [
@@ -1965,6 +1975,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 1,
                 "Expected an explicit form for \(paymentMethodType)"
             )
+            XCTAssertEqual(
+                formSpecProvider.formSpecCallCount,
+                0,
+                "Expected \(paymentMethodType) not to request a form spec"
+            )
         }
     }
 
@@ -1972,7 +1987,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Given no loaded form specs and automatic billing detail collection
         let originalFormSpecProvider = FormSpecProvider.shared
         defer { FormSpecProvider.shared = originalFormSpecProvider }
-        FormSpecProvider.shared = FormSpecProvider()
+        let formSpecProvider = MockFormSpecProvider()
+        FormSpecProvider.shared = formSpecProvider
 
         for paymentMethodType in [STPPaymentMethodType.promptPay, .multibanco] {
             // When building a payment method that requires email
@@ -1999,6 +2015,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 "foo@bar.com"
             )
             XCTAssertNil(params?.paymentMethodParams.billingDetails?.email)
+            XCTAssertEqual(
+                formSpecProvider.formSpecCallCount,
+                0,
+                "Expected \(paymentMethodType) not to request a form spec"
+            )
         }
     }
 
