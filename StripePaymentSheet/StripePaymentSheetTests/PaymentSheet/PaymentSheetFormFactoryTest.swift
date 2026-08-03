@@ -37,6 +37,14 @@ private final class MockFormSpecProvider: FormSpecProvider {
     }
 }
 
+private struct BankFormExpectation {
+    let paymentMethod: STPPaymentMethodType
+    let apiPath: String
+    let itemCount: Int
+    let firstValue: String
+    let lastValue: String
+}
+
 @MainActor
 class PaymentSheetFormFactoryTest: XCTestCase {
     private func extractBNPLHeaderView(from subtitle: SubtitleElement) -> BNPLFormHeaderView? {
@@ -2021,6 +2029,76 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 "Expected \(paymentMethodType) not to request a form spec"
             )
         }
+    }
+
+    func testBankDebitFormsDoNotRequireFormSpecs() {
+        // Given no loaded form specs and billing detail collection disabled
+        let originalFormSpecProvider = FormSpecProvider.shared
+        defer { FormSpecProvider.shared = originalFormSpecProvider }
+        FormSpecProvider.shared = FormSpecProvider()
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .never
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.phone = .never
+        configuration.billingDetailsCollectionConfiguration.address = .never
+        let bankForms: [BankFormExpectation] = [
+            .init(
+                paymentMethod: .EPS,
+                apiPath: "eps[bank]",
+                itemCount: 27,
+                firstValue: "arzte_und_apotheker_bank",
+                lastValue: "vr_bank_braunau"
+            ),
+            .init(
+                paymentMethod: .przelewy24,
+                apiPath: "p24[bank]",
+                itemCount: 24,
+                firstValue: "alior_bank",
+                lastValue: "volkswagen_bank"
+            ),
+            .init(
+                paymentMethod: .FPX,
+                apiPath: "fpx[bank]",
+                itemCount: 18,
+                firstValue: "affin_bank",
+                lastValue: "uob"
+            ),
+        ]
+
+        for bankForm in bankForms {
+            // When building a bank-selector form
+            let form = PaymentSheetFormFactory(
+                intent: ._testPaymentIntent(paymentMethodTypes: [bankForm.paymentMethod]),
+                elementsSession: ._testValue(paymentMethodTypes: [bankForm.paymentMethod.identifier]),
+                configuration: .paymentElement(configuration),
+                paymentMethod: .stripe(bankForm.paymentMethod)
+            ).make()
+
+            // Then the complete selector is built without consulting FormSpecProvider
+            let dropdown = form.getAllUnwrappedSubElements()
+                .compactMap { $0 as? DropdownFieldElement }
+                .first
+            XCTAssertEqual(dropdown?.items.count, bankForm.itemCount)
+            XCTAssertEqual(dropdown?.items.first?.rawData, bankForm.firstValue)
+            XCTAssertEqual(dropdown?.items.last?.rawData, bankForm.lastValue)
+            let params = form.updateParams(params: .init(type: .stripe(bankForm.paymentMethod)))
+            XCTAssertEqual(
+                params?.paymentMethodParams.additionalAPIParameters[bankForm.apiPath] as? String,
+                bankForm.firstValue
+            )
+        }
+
+        // And AU BECS keeps its two account fields without a form spec
+        let auBecsForm = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.AUBECSDebit]),
+            elementsSession: ._testValue(paymentMethodTypes: [STPPaymentMethodType.AUBECSDebit.identifier]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.AUBECSDebit)
+        ).make()
+        XCTAssertEqual(
+            auBecsForm.getAllUnwrappedSubElements().compactMap { $0 as? TextFieldElement }.count,
+            2
+        )
     }
 
     func testLinkPMModeCardFormContainsMandateText() {
