@@ -46,11 +46,6 @@ extension Checkout.Session {
         return shouldSendTaxRegion(for: "billing")
     }
 
-    /// Whether this Checkout Session computes automatic tax from the shipping address.
-    var collectsTaxFromShippingAddress: Bool {
-        return shouldSendTaxRegion(for: "shipping")
-    }
-
     /// Whether this session's `payment_status` is `no_payment_required`.
     var noPaymentRequired: Bool {
         return paymentStatus == .noPaymentRequired

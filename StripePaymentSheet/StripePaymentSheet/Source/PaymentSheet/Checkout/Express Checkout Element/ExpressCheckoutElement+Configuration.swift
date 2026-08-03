@@ -12,6 +12,5 @@ extension ExpressCheckoutElement {
     public struct Configuration {
         /// Creates a configuration with default values.
         public init() {}
-
     }
 }
