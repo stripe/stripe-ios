@@ -23,6 +23,15 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         state: "NJ"
     )
 
+    private static let euTestAddress = Address(
+        city: "Athens",
+        country: "GR",
+        line1: "1 Fake Street",
+        line2: "Apt 2",
+        postalCode: "11145",
+        state: "Attica"
+    )
+
     private static let solanaWalletAddress = "DBhBRyb9y6xyAbhdgpPKqQG2CfXmwHiaKvmzVjDCguXq"
 
     var app: XCUIApplication!
@@ -122,7 +131,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(walletsLabel2.waitForExistence(timeout: .networkTimeout), "Wallet selection screen should appear")
     }
 
-    /// Tests the complete new-user flow, including registration, KYC, identity and wallet verification, and card checkout.
+    /// Tests the complete new-user flow, including registration, KYC, identity verification, wallet registration, and card checkout.
     @MainActor
     func testNewUserEndToEnd() throws {
         let email = "crypto-onramp-ui-tests-\(UUID().uuidString.lowercased())@stripe.com"
@@ -208,7 +217,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(submitVerificationButton.isEnabled, "Identity verification Submit button should be enabled")
         submitVerificationButton.tap()
 
-        // Step 6: Register and verify a new Solana wallet.
+        // Step 6: Register a new Solana wallet.
         let walletsLabel = app.staticTexts["Wallets"].firstMatch
         XCTAssertTrue(walletsLabel.waitForExistence(timeout: .networkTimeout), "Wallet selection screen should appear after successful identity verification")
         waitForLoadingToFinish()
@@ -223,12 +232,6 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         submitWalletButton.tap()
 
         XCTAssertTrue(app.staticTexts[Self.solanaWalletAddress].firstMatch.waitForExistence(timeout: .networkTimeout), "The new Solana wallet should appear")
-
-        // The example’s wallet ownership verifier submits the test signature "abcd".
-        let verifyOwnershipButton = app.buttons["Verify Ownership"].firstMatch
-        XCTAssertTrue(verifyOwnershipButton.waitForExistence(timeout: .animationTimeout), "Verify Ownership button should appear")
-        verifyOwnershipButton.tap()
-        XCTAssertTrue(app.staticTexts["Verified"].firstMatch.waitForExistence(timeout: .networkTimeout), "The wallet should become verified")
 
         let nextButton = app.buttons["Next"].firstMatch
         XCTAssertTrue(nextButton.wait(for: \.isEnabled, toEqual: true, timeout: .networkTimeout), "Next button should become enabled")
@@ -296,6 +299,160 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         let successLabel = app.staticTexts["Purchase successful"].firstMatch
         XCTAssertTrue(successLabel.waitForExistence(timeout: .networkTimeout), "Checkout success screen should appear")
         waitForLoadingToFinish()
+    }
+
+    /// Tests EU registration and KYC, compliance identifiers, user attestation, identity verification, and wallet verification.
+    @MainActor
+    func testNewEUUserThroughWalletVerification() throws {
+        let email = "crypto-onramp-ui-tests-\(UUID().uuidString.lowercased())@stripe.com"
+        let phoneNumber = Self.makeRandomGreekPhoneNumber()
+        let address = Self.euTestAddress
+        let addressLine1 = try XCTUnwrap(address.line1)
+        let addressLine2 = try XCTUnwrap(address.line2)
+        let city = try XCTUnwrap(address.city)
+        let state = try XCTUnwrap(address.state)
+        let postalCode = try XCTUnwrap(address.postalCode)
+        let country = try XCTUnwrap(address.country)
+
+        // Step 1: Create a new account with unique credentials.
+        waitForLoadingToFinish()
+        enterText(email, in: app.textFields["Enter email address"].firstMatch)
+        enterText("testing1234", in: app.secureTextFields["Enter password"].firstMatch)
+        app.buttons["Sign Up"].firstMatch.tap()
+
+        // Step 2: Register the new Link user in Greece.
+        let registrationLabel = app.staticTexts["Registration"].firstMatch
+        XCTAssertTrue(registrationLabel.waitForExistence(timeout: .networkTimeout), "Registration screen should appear")
+        waitForLoadingToFinish()
+        dismissSavePasswordPromptIfPresent()
+        enterText("Crypto Onramp EU UI Tests", in: app.textFields["Enter your full name"].firstMatch)
+        enterText(phoneNumber, in: app.textFields["Enter phone number (e.g., +12125551234)"].firstMatch)
+
+        let registrationCountryField = app.textFields["Country code"].firstMatch
+        XCTAssertTrue(registrationCountryField.waitForExistence(timeout: .animationTimeout), "Registration country field should exist")
+        registrationCountryField.tap()
+
+        // Remove the default "US" value before entering the EU test country's code.
+        registrationCountryField.typeText(
+            String(repeating: XCUIKeyboardKey.delete.rawValue, count: 2) + country
+        )
+        dismissKeyboard()
+
+        let registerButton = app.buttons["Register"].firstMatch
+        XCTAssertTrue(registerButton.isEnabled, "Register button should be enabled")
+        registerButton.tap()
+
+        let authenticateButton = app.buttons["Authenticate"].firstMatch
+        XCTAssertTrue(authenticateButton.waitForExistence(timeout: .networkTimeout), "Authenticate button should appear after registration")
+        authenticateButton.tap()
+
+        // Step 3: Complete Link authentication using the test-mode OTP.
+        enterText("000000", in: app.textViews["Code field"].firstMatch)
+
+        // Step 4: Provide full EU KYC information.
+        let kycLabel = app.staticTexts["KYC Information"].firstMatch
+        XCTAssertTrue(kycLabel.waitForExistence(timeout: .networkTimeout), "KYC screen should appear")
+        waitForLoadingToFinish()
+
+        let euResidenceButton = app.segmentedControls.buttons["EU"].firstMatch
+        XCTAssertTrue(euResidenceButton.waitForExistence(timeout: .animationTimeout), "EU residence option should exist")
+        euResidenceButton.tap()
+
+        let firstNameField = app.textFields["Enter your first name"].firstMatch
+        XCTAssertTrue(firstNameField.waitForExistence(timeout: .animationTimeout), "First name field should exist")
+        firstNameField.tap()
+        app.typeText("Crypto" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("Tester" + XCUIKeyboardKey.return.rawValue)
+
+        setDateOfBirth()
+
+        let kycScrollView = app.scrollViews["kyc_form"].firstMatch
+        kycScrollView.swipeUp()
+
+        let birthCountryField = app.textFields["Country code"].firstMatch
+        XCTAssertTrue(birthCountryField.waitForExistence(timeout: .animationTimeout), "Birth country field should exist")
+        birthCountryField.tap()
+        app.typeText(country + XCUIKeyboardKey.return.rawValue)
+        app.typeText(city + XCUIKeyboardKey.return.rawValue)
+        app.typeText("GR, MT" + XCUIKeyboardKey.return.rawValue)
+        app.typeText(addressLine1 + XCUIKeyboardKey.return.rawValue)
+        app.typeText(addressLine2 + XCUIKeyboardKey.return.rawValue)
+        app.typeText(city + XCUIKeyboardKey.return.rawValue)
+        app.typeText(state + XCUIKeyboardKey.return.rawValue)
+        app.typeText(postalCode + XCUIKeyboardKey.return.rawValue)
+        app.typeText(country + XCUIKeyboardKey.return.rawValue)
+
+        let submitKYCButton = app.buttons["Submit"].firstMatch
+        XCTAssertTrue(submitKYCButton.isEnabled, "KYC Submit button should be enabled")
+        submitKYCButton.tap()
+
+        // Step 5: Submit a static value for the compliance identifier requested by the backend.
+        let identifiersLabel = app.staticTexts["Add identifiers"].firstMatch
+        XCTAssertTrue(identifiersLabel.waitForExistence(timeout: .networkTimeout), "Compliance identifiers screen should appear")
+        waitForLoadingToFinish()
+
+        enterText("1234567M", in: app.textFields.firstMatch)
+        dismissKeyboard()
+
+        let submitIdentifiersButton = app.buttons["Submit Identifiers"].firstMatch
+        XCTAssertTrue(submitIdentifiersButton.isEnabled, "Submit Identifiers button should be enabled")
+        submitIdentifiersButton.tap()
+
+        // Step 6: Cancel user attestation once, then re-present and accept it.
+        let userAttestationLabel = app.staticTexts["Accept user attestation"].firstMatch
+        XCTAssertTrue(userAttestationLabel.waitForExistence(timeout: .networkTimeout), "User attestation screen should appear")
+        waitForLoadingToFinish()
+
+        let reviewAttestationButton = app.buttons["Review Attestation"].firstMatch
+        reviewAttestationButton.tap()
+
+        let declarationsLabel = app.staticTexts["Declarations"].firstMatch
+        XCTAssertTrue(declarationsLabel.waitForExistence(timeout: .networkTimeout), "User attestation sheet should appear")
+        app.buttons["Close"].firstMatch.tap()
+        XCTAssertTrue(declarationsLabel.waitForNonExistence(timeout: .animationTimeout), "User attestation sheet should close")
+
+        reviewAttestationButton.tap()
+        XCTAssertTrue(declarationsLabel.waitForExistence(timeout: .networkTimeout), "User attestation sheet should appear again")
+
+        let attestationScrollView = app.scrollViews.firstMatch
+        XCTAssertTrue(attestationScrollView.waitForExistence(timeout: .animationTimeout), "User attestation content should be scrollable")
+        attestationScrollView.swipeUp(velocity: .fast)
+        app.buttons["Accept"].firstMatch.tap()
+
+        // Step 7: Complete document verification with the synchronous test-mode success option.
+        let verifyIdentityButton = app.buttons["Verify Identity"].firstMatch
+        XCTAssertTrue(verifyIdentityButton.waitForExistence(timeout: .networkTimeout), "Identity verification screen should appear")
+        waitForLoadingToFinish()
+        verifyIdentityButton.tap()
+
+        let verificationSuccessOption = app.staticTexts["Verification success"].firstMatch
+        XCTAssertTrue(verificationSuccessOption.waitForExistence(timeout: .networkTimeout), "Identity test-mode options should appear")
+        verificationSuccessOption.tap()
+
+        let submitVerificationButton = app.buttons["Submit"].firstMatch
+        XCTAssertTrue(submitVerificationButton.isEnabled, "Identity verification Submit button should be enabled")
+        submitVerificationButton.tap()
+
+        // Step 8: Register and verify a Solana wallet.
+        let walletsLabel = app.staticTexts["Wallets"].firstMatch
+        XCTAssertTrue(walletsLabel.waitForExistence(timeout: .networkTimeout), "Wallet selection screen should appear after successful identity verification")
+        waitForLoadingToFinish()
+
+        let addWalletButton = app.buttons["Add Wallet…"].firstMatch
+        XCTAssertTrue(addWalletButton.waitForExistence(timeout: .animationTimeout), "Add Wallet button should appear for a new user")
+        addWalletButton.tap()
+
+        enterText(Self.solanaWalletAddress, in: app.textFields["Enter wallet address"].firstMatch)
+        let submitWalletButton = app.buttons["Submit"].firstMatch
+        XCTAssertTrue(submitWalletButton.isEnabled, "Wallet Submit button should be enabled")
+        submitWalletButton.tap()
+
+        XCTAssertTrue(app.staticTexts[Self.solanaWalletAddress].firstMatch.waitForExistence(timeout: .networkTimeout), "The Solana wallet should appear")
+
+        let verifyOwnershipButton = app.buttons["Verify Ownership"].firstMatch
+        XCTAssertTrue(verifyOwnershipButton.waitForExistence(timeout: .animationTimeout), "Verify Ownership button should appear")
+        verifyOwnershipButton.tap()
+        XCTAssertTrue(app.staticTexts["Verified"].firstMatch.waitForExistence(timeout: .networkTimeout), "The wallet should become verified")
     }
 
     private func setDateOfBirth(

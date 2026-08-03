@@ -60,6 +60,10 @@ extension CryptoOnrampExampleUITests {
     static func makeRandomUSPhoneNumber() -> String {
         "+1212555\(String(format: "%04d", Int.random(in: 0...9999)))"
     }
+
+    static func makeRandomGreekPhoneNumber() -> String {
+        "+3069\(String(format: "%08d", Int.random(in: 0...99_999_999)))"
+    }
 }
 
 extension TimeInterval {
