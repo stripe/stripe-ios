@@ -23,5 +23,5 @@ Pod::Spec.new do |s|
   s.dependency                       'StripeCore', "#{s.version}"
   s.dependency                       'StripeUICore', "#{s.version}"
   s.dependency                       'StripeCameraCore', "#{s.version}"
-  s.dependency                       'StripeCameraCore', "#{s.version}"
+  s.dependency                       'MediaPipeTasksVision', '0.10.21'
 end

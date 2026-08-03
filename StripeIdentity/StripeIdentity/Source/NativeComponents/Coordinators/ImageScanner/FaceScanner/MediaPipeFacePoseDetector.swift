@@ -14,7 +14,11 @@ import UIKit
 
 #if canImport(MediaPipeSPMRuntime)
 internal import MediaPipeSPMRuntime
+#elseif canImport(MediaPipeTasksVision)
+internal import MediaPipeTasksVision
+#endif
 
+#if canImport(MediaPipeSPMRuntime) || canImport(MediaPipeTasksVision)
 final class MediaPipeFacePoseDetector: FaceGeometryDetector {
     private enum Configuration {
         static let maxNumFaces = 1
@@ -24,7 +28,9 @@ final class MediaPipeFacePoseDetector: FaceGeometryDetector {
     private let faceLandmarker: FaceLandmarker
 
     init(modelPath: String) throws {
+        #if canImport(MediaPipeSPMRuntime)
         prepareMediaPipeSPMFaceLandmarkerGraph()
+        #endif
 
         let options = FaceLandmarkerOptions()
         options.baseOptions.modelAssetPath = modelPath
@@ -206,7 +212,7 @@ enum FaceGeometryDetectorFactoryError: Error, CustomStringConvertible {
     var description: String {
         switch self {
         case .mediaPipeModuleUnavailable:
-            return "MediaPipeSPMRuntime module is not available to StripeIdentity"
+            return "MediaPipe Tasks Vision module is not available to StripeIdentity"
         case .missingModelResource(let bundlePath):
             return "face_landmarker.task was not found in \(bundlePath)"
         case .failedToInitializeMediaPipeLandmarker(let errorDescription):
@@ -226,7 +232,7 @@ enum FaceGeometryDetectorFactory {
             )
         }
 
-        #if canImport(MediaPipeSPMRuntime)
+        #if canImport(MediaPipeSPMRuntime) || canImport(MediaPipeTasksVision)
         do {
             return try MediaPipeFacePoseDetector(modelPath: modelPath)
         } catch {
