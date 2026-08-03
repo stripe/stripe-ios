@@ -145,8 +145,8 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         // Step 2: Register the new Link user with a unique US phone number.
         let registrationLabel = app.staticTexts["Registration"].firstMatch
         XCTAssertTrue(registrationLabel.waitForExistence(timeout: .networkTimeout), "Registration screen should appear")
-        dismissSavePasswordPromptIfPresent()
         waitForLoadingToFinish()
+        dismissSavePasswordPromptIfPresent()
         enterText("Crypto Onramp UI Tests", in: app.textFields["Enter your full name"].firstMatch)
         enterText(phoneNumber, in: app.textFields["Enter phone number (e.g., +12125551234)"].firstMatch)
         dismissKeyboard()
@@ -245,6 +245,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(addCardOption.waitForExistence(timeout: .animationTimeout), "Add card option should appear")
         addCardOption.tap()
 
+        // Dismiss to test cancelation of the UI, before re-presenting and entering details.
         let closeCardCollectionButton = app.buttons["Close"].firstMatch
         XCTAssertTrue(closeCardCollectionButton.waitForExistence(timeout: .animationTimeout), "Card collection sheet should appear")
         closeCardCollectionButton.tap()
