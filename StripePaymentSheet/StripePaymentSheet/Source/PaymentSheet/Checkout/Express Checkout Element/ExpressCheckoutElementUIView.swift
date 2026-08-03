@@ -24,7 +24,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Init
 
-    init(session: Checkout.Session, configuration: Checkout.Configuration, delegate: ExpressCheckoutElementDelegate) {
+    init(paymentMethods: [ExpressCheckoutElement.PaymentMethod], session: Checkout.Session, configuration: Checkout.Configuration, delegate: ExpressCheckoutElementDelegate) {
         self.configuration = configuration
         self.delegate = delegate
         self.linkBrand = session.elementsSession.linkBrand ?? .link
@@ -43,8 +43,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
-        buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
+        paymentMethods.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
     }
 
     @available(*, unavailable)
@@ -54,11 +53,10 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Internal Methods
 
-    func update(with session: Checkout.Session) {
+    func update(with paymentMethods: [ExpressCheckoutElement.PaymentMethod], session: Checkout.Session) {
         linkBrand = session.elementsSession.linkBrand ?? .link
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
-        buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
+        paymentMethods.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
         invalidateIntrinsicContentSize()
     }
 
@@ -73,8 +71,8 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Methods
 
-    private func makeButton(for button: ExpressButton) -> UIView {
-        switch button {
+    private func makeButton(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> UIView {
+        switch paymentMethod {
         case .applePay:
             return makeApplePayButton()
         case .link:

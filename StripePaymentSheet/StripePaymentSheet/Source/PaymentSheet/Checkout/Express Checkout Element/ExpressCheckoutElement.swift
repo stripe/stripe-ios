@@ -5,6 +5,8 @@
 //  Created by Joyce Qin on 7/22/26.
 //
 
+@_spi(STP) import StripeCore
+
 /// Handles Checkout mutations requested by an ExpressCheckoutElement.
 @MainActor
 protocol ExpressCheckoutElementDelegate: AnyObject {
@@ -35,9 +37,61 @@ public final class ExpressCheckoutElement {
         configuration: Checkout.Configuration,
         delegate: ExpressCheckoutElementDelegate
     ) {
-        let uiView = ExpressCheckoutElementUIView(session: sessionSource.initialSession, configuration: configuration, delegate: delegate)
-        let viewModel = ExpressCheckoutElementViewModel(sessionSource: sessionSource, configuration: configuration, uiView: uiView)
+        let paymentMethods = ExpressCheckoutElement.availablePaymentMethods(
+            for: sessionSource.initialSession,
+            configuration: configuration
+        )
+        let uiView = ExpressCheckoutElementUIView(
+            paymentMethods: paymentMethods,
+            session: sessionSource.initialSession,
+            configuration: configuration,
+            delegate: delegate
+        )
+        let viewModel = ExpressCheckoutElementViewModel(
+            sessionSource: sessionSource,
+            configuration: configuration,
+            uiView: uiView
+        )
         self.uiView = uiView
         self.view = ExpressCheckoutElementView(viewModel: viewModel)
+    }
+
+    // MARK: - Payment Method Resolution
+
+    static func availablePaymentMethods(
+        for session: Checkout.Session,
+        configuration: Checkout.Configuration
+    ) -> [PaymentMethod] {
+        let eceConfig = configuration.expressCheckoutElement
+
+        var buttons: [PaymentMethod] = []
+
+        for button in session.availableExpressCheckoutPaymentMethods {
+            switch button {
+            case .applePay:
+                if eceConfig.paymentMethods.applePay != .never,
+                    configuration.applePayConfiguration != nil,
+                    StripeAPI.deviceSupportsApplePay() {
+                    buttons.append(.applePay)
+                }
+            case .link:
+                if eceConfig.paymentMethods.link != .never && configuration.linkConfiguration?.display != .never {
+                    buttons.append(.link)
+                }
+            }
+        }
+
+        // .always: include even if the session does not advertise the wallet
+        if eceConfig.paymentMethods.applePay == .always,
+            configuration.applePayConfiguration != nil,
+            StripeAPI.deviceSupportsApplePay(),
+            !buttons.contains(.applePay) {
+            buttons.append(.applePay)
+        }
+        if eceConfig.paymentMethods.link == .always, !buttons.contains(.link) {
+            buttons.append(.link)
+        }
+
+        return buttons
     }
 }

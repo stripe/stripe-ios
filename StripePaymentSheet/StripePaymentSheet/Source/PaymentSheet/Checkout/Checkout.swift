@@ -56,6 +56,10 @@ public final class Checkout: ObservableObject {
     /// A delegate notified when session data changes.
     public weak var delegate: CheckoutDelegate?
 
+    public var availableExpressCheckoutPaymentMethods: [ExpressCheckoutElement.PaymentMethod] {
+        ExpressCheckoutElement.availablePaymentMethods(for: session, configuration: configuration)
+    }
+
     // MARK: - Internal Properties
 
     /// The PaymentElement for this Checkout instance.
@@ -143,11 +147,7 @@ public final class Checkout: ObservableObject {
             // Load elements
             self.paymentElement = try await PaymentElement(checkout: self)
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
-            self.expressCheckoutElement = ExpressCheckoutElement(
-                sessionSource: sessionSource,
-                configuration: configuration,
-                delegate: self
-            )
+            self.expressCheckoutElement = ExpressCheckoutElement(sessionSource: sessionSource, configuration: configuration, delegate: self)
             if configuration.adaptivePricing.allowed {
                 self.currencySelectorElement = await CurrencySelectorElement(
                     sessionSource: sessionSource,
