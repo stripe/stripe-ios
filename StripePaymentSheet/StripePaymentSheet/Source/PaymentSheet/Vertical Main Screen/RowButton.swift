@@ -16,6 +16,11 @@ import UIKit
 class RowButton: UIView, EventHandler {
     typealias DidTapClosure = (RowButton) -> Void
 
+    enum LoadingStyle: Equatable {
+        case replacingImage
+        case trailing
+    }
+
     // MARK: Subviews
 
     /// Exists for accessibility reasons to give the RowButton accessible features while keeping the accessory button accessible
@@ -43,6 +48,7 @@ class RowButton: UIView, EventHandler {
 
     private(set) var isSelected: Bool = false
     private(set) var isLoading: Bool = false
+    private var loadingStyle: LoadingStyle = .replacingImage
     private var keyContentAlpha: CGFloat = 1
 
     /// When enabled the `didTap` closure will be called when the button is tapped. When false the `didTap` closure will not be called on taps
@@ -192,21 +198,31 @@ class RowButton: UIView, EventHandler {
 
     func setKeyContent(alpha: CGFloat) {
         keyContentAlpha = alpha
-        imageView.alpha = isLoading ? 0 : alpha
+        imageView.alpha = isLoading && loadingStyle == .replacingImage ? 0 : alpha
         label.alpha = alpha
         sublabel.alpha = alpha
     }
 
-    /// Replaces the payment method icon with a spinner while work for this row is in flight.
-    func setLoading(_ loading: Bool, animated: Bool = true) {
+    func setLoading(
+        _ loading: Bool,
+        style: LoadingStyle = .replacingImage,
+        animated: Bool = true
+    ) {
         guard loading != isLoading else { return }
         isLoading = loading
 
         if loading {
+            loadingStyle = style
             if loadingIndicator.superview == nil {
                 addSubview(loadingIndicator)
+                let horizontalConstraint = switch style {
+                case .replacingImage:
+                    loadingIndicator.centerXAnchor.constraint(equalTo: imageView.centerXAnchor)
+                case .trailing:
+                    loadingIndicator.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+                }
                 NSLayoutConstraint.activate([
-                    loadingIndicator.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
+                    horizontalConstraint,
                     loadingIndicator.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
                 ])
             }
@@ -217,7 +233,7 @@ class RowButton: UIView, EventHandler {
         let updates = { [weak self] in
             guard let self else { return }
             loadingIndicator.alpha = loading ? 1 : 0
-            imageView.alpha = loading ? 0 : keyContentAlpha
+            imageView.alpha = loading && loadingStyle == .replacingImage ? 0 : keyContentAlpha
         }
         let completion: (Bool) -> Void = { [weak self] _ in
             guard let self, self.isLoading == loading, !loading else { return }

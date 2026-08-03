@@ -28,6 +28,15 @@ private final class ParamsCountingPaymentMethodElement: PaymentMethodElement {
     lazy var view: UIView = { UIView() }()
 }
 
+private final class MockFormSpecProvider: FormSpecProvider {
+    var formSpecCallCount = 0
+
+    override func formSpec(for paymentMethodType: String) -> FormSpec? {
+        formSpecCallCount += 1
+        return nil
+    }
+}
+
 @MainActor
 class PaymentSheetFormFactoryTest: XCTestCase {
     private func extractBNPLHeaderView(from subtitle: SubtitleElement) -> BNPLFormHeaderView? {
@@ -1935,6 +1944,83 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(errorAnalytic["event"] as? String, STPAnalyticEvent.unexpectedPaymentSheetFormFactoryError.rawValue)
         XCTAssertEqual(errorAnalytic["payment_method"] as? String, "card_present")
         XCTAssertEqual(errorAnalytic["error_code"] as? String, "missingFormSpec")
+    }
+
+    func testSimplePaymentMethodFormsDoNotRequireFormSpecs() {
+        // Given no loaded form specs and a merchant-configured name field
+        let originalFormSpecProvider = FormSpecProvider.shared
+        defer { FormSpecProvider.shared = originalFormSpecProvider }
+        let formSpecProvider = MockFormSpecProvider()
+        FormSpecProvider.shared = formSpecProvider
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        let paymentMethodTypes: [STPPaymentMethodType] = [
+            .payPal, .revolutPay, .amazonPay, .alma, .sunbit, .billie, .satispay,
+            .crypto, .mobilePay, .zip, .cashApp, .grabPay, .alipay, .paynow, .twint,
+            .payPay, .payByBank,
+        ]
+
+        for paymentMethodType in paymentMethodTypes {
+            // When building a simple payment method form
+            let form = PaymentSheetFormFactory(
+                intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]),
+                elementsSession: ._testValue(paymentMethodTypes: [paymentMethodType.identifier]),
+                configuration: .paymentElement(configuration),
+                paymentMethod: .stripe(paymentMethodType)
+            ).make()
+
+            // Then the configured field is built without consulting FormSpecProvider
+            XCTAssertEqual(
+                form.getAllUnwrappedSubElements().compactMap { $0 as? TextFieldElement }.count,
+                1,
+                "Expected an explicit form for \(paymentMethodType)"
+            )
+            XCTAssertEqual(
+                formSpecProvider.formSpecCallCount,
+                0,
+                "Expected \(paymentMethodType) not to request a form spec"
+            )
+        }
+    }
+
+    func testEmailRequiredPaymentMethodFormsDoNotRequireFormSpecs() {
+        // Given no loaded form specs and automatic billing detail collection
+        let originalFormSpecProvider = FormSpecProvider.shared
+        defer { FormSpecProvider.shared = originalFormSpecProvider }
+        let formSpecProvider = MockFormSpecProvider()
+        FormSpecProvider.shared = formSpecProvider
+
+        for paymentMethodType in [STPPaymentMethodType.promptPay, .multibanco] {
+            // When building a payment method that requires email
+            let form = PaymentSheetFormFactory(
+                intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]),
+                elementsSession: ._testValue(paymentMethodTypes: [paymentMethodType.identifier]),
+                configuration: .paymentElement(PaymentSheet.Configuration()),
+                paymentMethod: .stripe(paymentMethodType)
+            ).make()
+
+            // Then its email field is built without consulting FormSpecProvider
+            let emailElement = form.getAllUnwrappedSubElements()
+                .compactMap { $0 as? TextFieldElement }
+                .first
+            emailElement?.setText("foo@bar.com")
+            XCTAssertEqual(
+                form.getAllUnwrappedSubElements().compactMap { $0 as? TextFieldElement }.count,
+                1,
+                "Expected an explicit email form for \(paymentMethodType)"
+            )
+            let params = form.updateParams(params: .init(type: .stripe(paymentMethodType)))
+            XCTAssertEqual(
+                params?.paymentMethodParams.additionalAPIParameters["billing_details[email]"] as? String,
+                "foo@bar.com"
+            )
+            XCTAssertNil(params?.paymentMethodParams.billingDetails?.email)
+            XCTAssertEqual(
+                formSpecProvider.formSpecCallCount,
+                0,
+                "Expected \(paymentMethodType) not to request a form spec"
+            )
+        }
     }
 
     func testLinkPMModeCardFormContainsMandateText() {

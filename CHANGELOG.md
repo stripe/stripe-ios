@@ -5,6 +5,7 @@ MINOR
 ### StripeCore
 * [Changed] Updated the Stripe API version used by the SDK to `2026-07-29.dahlia`.
 
+## 26.5.0 2026-08-03
 ### CryptoOnramp (Alpha)
 * [Added] Added support for registering wallet addresses on the Tempo network.
 
