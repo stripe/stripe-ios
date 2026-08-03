@@ -281,14 +281,14 @@ class PaymentSheetFormFactory {
                 return makeSepaDebit()
             case .grabPay, .alipay, .paynow, .payPay, .mobilePay, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank:
-                return makeBillingDetailsForm()
+                return makeContactInformationAndBillingAddressForm()
             case .promptPay, .multibanco:
-                return makeBillingDetailsForm(
+                return makeContactInformationAndBillingAddressForm(
                     emailRequired: true,
                     emailAPIPath: "billing_details[email]"
                 )
             case .cashApp, .payPal, .revolutPay, .amazonPay, .satispay, .twint:
-                return makeBillingDetailsForm(
+                return makeContactInformationAndBillingAddressForm(
                     additionalElements: makeSetupMandateElements(for: paymentMethod)
                 )
             case .FPX, .AUBECSDebit, .przelewy24, .EPS, .netBanking, .weChatPay,
@@ -791,8 +791,8 @@ extension PaymentSheetFormFactory {
         return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
     }
 
-    /// Creates a form that only collects the billing details required by the payment method or configuration.
-    func makeBillingDetailsForm(
+    /// Creates a form that collects configured contact information and billing address details.
+    func makeContactInformationAndBillingAddressForm(
         emailRequired: Bool = false,
         emailAPIPath: String? = nil,
         additionalElements: [Element] = []
