@@ -9,30 +9,7 @@
 
 class STPFPXBankBrandTest: XCTestCase {
     func testStringFromBrand() {
-        let brands: [STPFPXBankBrand] = [
-            .affinBank,
-            .allianceBank,
-            .ambank,
-            .bankIslam,
-            .bankMuamalat,
-            .bankRakyat,
-            .BSN,
-            .CIMB,
-            .hongLeongBank,
-            .HSBC,
-            .KFH,
-            .maybank2E,
-            .maybank2U,
-            .ocbc,
-            .publicBank,
-            .CIMB,
-            .RHB,
-            .standardChartered,
-            .UOB,
-            .unknown,
-        ]
-
-        for brand in brands {
+        for brand in STPFPXBankBrand.allCases {
             let brandName = STPFPXBank.stringFrom(brand)
             let brandID = STPFPXBank.identifierFrom(brand)
             let reverseTransformedBrand = STPFPXBank.brandFrom(brandID)

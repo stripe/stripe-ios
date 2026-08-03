@@ -8,6 +8,7 @@
 //
 
 @_spi(STP) import StripeCore
+import StripePayments
 @_spi(STP) import StripeUICore
 
 extension PaymentSheetFormFactory {
@@ -196,24 +197,15 @@ private enum BankDropdown {
         ("Volkswagen Bank", "volkswagen_bank"),
     ]
 
-    static let fpx: [(name: String, value: String)] = [
-        ("Affin Bank", "affin_bank"),
-        ("Alliance Bank", "alliance_bank"),
-        ("AmBank", "ambank"),
-        ("Bank Islam", "bank_islam"),
-        ("Bank Muamalat", "bank_muamalat"),
-        ("Bank Rakyat", "bank_rakyat"),
-        ("BSN", "bsn"),
-        ("CIMB Clicks", "cimb"),
-        ("Hong Leong Bank", "hong_leong_bank"),
-        ("HSBC BANK", "hsbc"),
-        ("KFH", "kfh"),
-        ("Maybank2E", "maybank2e"),
-        ("Maybank2U", "maybank2u"),
-        ("OCBC Bank", "ocbc"),
-        ("Public Bank", "public_bank"),
-        ("RHB Bank", "rhb"),
-        ("Standard Chartered", "standard_chartered"),
-        ("UOB Bank", "uob"),
-    ]
+    static let fpx: [(name: String, value: String)] = STPFPXBankBrand.allCases
+        .compactMap { brand in
+            guard brand != .unknown,
+                  let name = STPFPXBank.stringFrom(brand),
+                  let value = STPFPXBank.identifierFrom(brand)
+            else {
+                return nil
+            }
+            return (name, value)
+        }
+        .sorted { $0.value < $1.value }
 }
