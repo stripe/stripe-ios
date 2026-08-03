@@ -111,6 +111,42 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params?.paymentMethodType, .stripe(.SEPADebit))
     }
 
+    func testServerDrivenCardNativeComponentsRenderAsOrderedAtoms() {
+        let factory = PaymentSheetFormFactory(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.card)
+        )
+        let components: [FormSpec.NativeComponentSpec.Component] = [
+            .cardDetails,
+            .cardBillingDetails,
+            .cardSavePaymentMethod,
+            .cardLinkInlineSignup,
+            .cardMandate,
+        ]
+        let fields: [FormSpec.FieldSpec] = components.map { component in
+            .native_component(
+                FormSpec.NativeComponentSpec(
+                    component: component,
+                    subtitle: nil,
+                    disableBillingDetailCollection: nil
+                )
+            )
+        }
+        let spec = FormSpec(
+            type: "card",
+            async: false,
+            fields: fields,
+            selectorIcon: nil
+        )
+
+        let rendered = factory.makeFormElementFromSpec(spec: spec).element
+
+        XCTAssertEqual(rendered.elements.count, components.count)
+        XCTAssertTrue(rendered.elements.allSatisfy { $0 is FormElement })
+    }
+
     func testNameOverrideApiPathBySpec() {
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.name = "someName"
@@ -1875,15 +1911,19 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
         let analyticsClient = STPAnalyticsClient()
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["fpx", "card"])
+        elementsSession.serverDrivenPaymentSheet = ._testValue(paymentMethodTypes: ["card_present"])
+        let analyticsHelper = PaymentSheetAnalyticsHelper._testValue(analyticsClient: analyticsClient)
+        analyticsHelper.elementsSession = elementsSession
 
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.FPX, .card]),
-            elementsSession: ._testValue(paymentMethodTypes: ["fpx", "card"]),
+            elementsSession: elementsSession,
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.cardPresent), // A payment method that doesn't have LUXE specs and in-code form definition
             paymentMethodOrientation: .vertical,
             accountService: LinkAccountService._testValue(),
-            analyticsHelper: ._testValue(analyticsClient: analyticsClient)
+            analyticsHelper: analyticsHelper
         )
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
         _ = factory.make()
@@ -1892,9 +1932,14 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(errorAnalytic["event"] as? String, STPAnalyticEvent.unexpectedPaymentSheetFormFactoryError.rawValue)
         XCTAssertEqual(errorAnalytic["payment_method"] as? String, "card_present")
         XCTAssertEqual(errorAnalytic["error_code"] as? String, "missingFormSpec")
+        let renderAnalytic = analyticsClient._testLogHistory.last!
+        XCTAssertEqual(renderAnalytic["event"] as? String, STPAnalyticEvent.mobileSessionFormRender.rawValue)
+        XCTAssertEqual(renderAnalytic["selected_lpm"] as? String, "card_present")
+        XCTAssertEqual(renderAnalytic["mobile_session_render_outcome"] as? String, "failure")
+        XCTAssertEqual(renderAnalytic["mobile_session_render_error_code"] as? String, "missing_form_spec")
     }
 
-    func testMakeUsesServerNativeFormSpecInsteadOfPaymentMethodType() {
+    func testMakeUsesServerBacsAtomsInsteadOfSelectorType() {
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
             _ = FormSpecProvider.shared.loadFrom([
@@ -1902,8 +1947,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                     "type": "card_present",
                     "fields": [
                         [
-                            "type": "native_payment_method_form",
-                            "form_type": "bacs_debit",
+                            "type": "bacs_debit_bank_account",
+                        ],
+                        [
+                            "type": "bacs_debit_mandate",
                         ],
                     ],
                 ] as NSDictionary,
@@ -1912,17 +1959,118 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
         waitForExpectations(timeout: 1)
 
+        let analyticsClient = STPAnalyticsClient()
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card_present"])
+        elementsSession.serverDrivenPaymentSheet = ._testValue(paymentMethodTypes: ["card_present"])
+        let analyticsHelper = PaymentSheetAnalyticsHelper._testValue(analyticsClient: analyticsClient)
+        analyticsHelper.elementsSession = elementsSession
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.cardPresent]),
-            elementsSession: ._testValue(paymentMethodTypes: ["card_present"]),
+            elementsSession: elementsSession,
             configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
-            paymentMethod: .stripe(.cardPresent)
+            paymentMethod: .stripe(.cardPresent),
+            analyticsHelper: analyticsHelper
         )
 
         let form = factory.make()
 
         XCTAssertTrue(form.toHierarchyNode().description.contains("Bank account"))
         XCTAssertTrue(form.toHierarchyNode().description.contains("Sort code"))
+        let renderAnalytic = analyticsClient._testLogHistory.last!
+        XCTAssertEqual(renderAnalytic["event"] as? String, STPAnalyticEvent.mobileSessionFormRender.rawValue)
+        XCTAssertEqual(renderAnalytic["selected_lpm"] as? String, "card_present")
+        XCTAssertEqual(renderAnalytic["mobile_session_render_outcome"] as? String, "success")
+        XCTAssertNil(renderAnalytic["mobile_session_render_error_code"])
+    }
+
+    func testServerFormSpecsReplaceTheBundledCatalogInsteadOfMerging() {
+        let provider = FormSpecProvider()
+        XCTAssertTrue(provider.loadFrom([
+            [
+                "type": "card",
+                "fields": [],
+            ] as NSDictionary,
+        ]))
+        XCTAssertTrue(provider.replaceWith([
+            [
+                "type": "card_present",
+                "fields": [],
+            ] as NSDictionary,
+        ]))
+
+        XCTAssertNil(provider.formSpec(for: "card"))
+        XCTAssertNotNil(provider.formSpec(for: "card_present"))
+    }
+
+    func testServerDrivenBillingFieldsRenderWithoutLocalBillingDecisions() throws {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .never
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.phone = .never
+        configuration.billingDetailsCollectionConfiguration.address = .never
+
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["grabpay"])
+        elementsSession.serverDrivenPaymentSheet = ._testValue(paymentMethodTypes: ["grabpay"])
+        let analyticsHelper = PaymentSheetAnalyticsHelper._testValue()
+        analyticsHelper.elementsSession = elementsSession
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.grabPay]),
+            elementsSession: elementsSession,
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.grabPay),
+            analyticsHelper: analyticsHelper
+        )
+        let fields: [[String: Any]] = [
+            ["type": "name"],
+            ["type": "email"],
+            ["type": "billing_address", "allowed_country_codes": ["CA"]],
+            ["type": "placeholder", "for": "phone"],
+        ]
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+        for field in fields {
+            let data = try JSONSerialization.data(withJSONObject: [
+                "type": "grabpay",
+                "fields": [field],
+            ])
+            let spec = try decoder.decode(FormSpec.self, from: data)
+
+            XCTAssertFalse(factory.makeFormElementFromSpec(spec: spec).element.elements.isEmpty)
+        }
+    }
+
+    func testServerDrivenAddressPlaceholderUsesServerCountryCodes() throws {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .never
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
+
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["grabpay"])
+        elementsSession.serverDrivenPaymentSheet = ._testValue(paymentMethodTypes: ["grabpay"])
+        let analyticsHelper = PaymentSheetAnalyticsHelper._testValue()
+        analyticsHelper.elementsSession = elementsSession
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.grabPay]),
+            elementsSession: elementsSession,
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.grabPay),
+            analyticsHelper: analyticsHelper
+        )
+        let data = try JSONSerialization.data(withJSONObject: [
+            "type": "grabpay",
+            "fields": [[
+                "type": "placeholder",
+                "for": "billing_address",
+                "allowed_country_codes": ["CA"],
+            ]],
+        ])
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let spec = try decoder.decode(FormSpec.self, from: data)
+        let form = factory.makeFormElementFromSpec(spec: spec)
+
+        let address = try XCTUnwrap(firstAddressSectionElement(formElement: form.element))
+        XCTAssertEqual(address.countryCodes, ["CA"])
     }
 
     func testLinkPMModeCardFormContainsMandateText() {
@@ -2229,8 +2377,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                             "for": "billing_address",
                         ],
                         [
-                            "type": "native_mandate",
-                            "mandate_type": "sepa",
+                            "type": "mandate_text",
+                            "text_key": "sepa",
+                            "localized_text_template": "Localized mandate for {{merchant_display_name}}.",
                             "setup_future_usage_required": true,
                         ],
                     ],
@@ -2264,7 +2413,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let iDEALForm_pi_pmo_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL], paymentMethodOptionsSetupFutureUsage: [.iDEAL: "off_session"]))
         XCTAssertTrue(iDEALForm_pi_pmo_sfu.getMandateElement() != nil)
         // iDEAL displays SEPA mandate if setting up
-        XCTAssertEqual(iDEALForm_pi_pmo_sfu.getMandateElement()?.mandateTextView.textView.text, String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
+        XCTAssertEqual(
+            iDEALForm_pi_pmo_sfu.getMandateElement()?.mandateTextView.textView.text,
+            "Localized mandate for (configuration.merchantDisplayName)."
+        )
 
         let iDEALForm_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.iDEAL: "none"]))
         XCTAssertTrue(iDEALForm_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
@@ -2272,7 +2424,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let iDEALForm_deferred_pi_pmo_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.iDEAL], paymentMethodOptionsSetupFutureUsage: [.iDEAL: .offSession]))
         XCTAssertTrue(iDEALForm_deferred_pi_pmo_sfu.getMandateElement() != nil)
         // iDEAL displays SEPA mandate if setting up
-        XCTAssertEqual(iDEALForm_deferred_pi_pmo_sfu.getMandateElement()?.mandateTextView.textView.text, String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
+        XCTAssertEqual(
+            iDEALForm_deferred_pi_pmo_sfu.getMandateElement()?.mandateTextView.textView.text,
+            "Localized mandate for (configuration.merchantDisplayName)."
+        )
 
         let iDEALForm_deferred_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.iDEAL], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.iDEAL: .none]))
         XCTAssertTrue(iDEALForm_deferred_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)

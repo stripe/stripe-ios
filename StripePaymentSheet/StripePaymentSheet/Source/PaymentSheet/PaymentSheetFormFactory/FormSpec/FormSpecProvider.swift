@@ -14,7 +14,7 @@ private let formSpecsURL = StripePaymentSheetBundleLocator.resourcesBundle.url(f
 
 /// Provides FormSpecs for a given a payment method type.
 /// - Note: You must `load(completion:)` to load the specs json file into memory before calling `formSpec(for:)`
-/// - To overwrite any of these specs use load(from:)
+/// - To overwrite any of these specs use loadFrom(_:)
 class FormSpecProvider {
     enum Error: Swift.Error {
         case failedToLoadSpecs
@@ -87,6 +87,38 @@ class FormSpecProvider {
             }
         }
         return decodedSuccessfully
+    }
+
+    /// Replaces the entire catalog with validated server-owned form specs.
+    /// The existing catalog is left untouched if any spec fails to decode.
+    func replaceWith(_ formSpecsAny: Any) -> Bool {
+        guard let formSpecs = formSpecsAny as? [NSDictionary] else {
+            STPAnalyticsClient.sharedClient.logLUXESerializeFailure()
+            return false
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        var decodedFormSpecs: [FormSpec] = []
+        do {
+            for formSpec in formSpecs {
+                let data = try JSONSerialization.data(withJSONObject: formSpec)
+                decodedFormSpecs.append(try decoder.decode(FormSpec.self, from: data))
+            }
+        } catch {
+            STPAnalyticsClient.sharedClient.logLUXESpecSerilizeFailure(error: error)
+            return false
+        }
+
+        var replacement: [String: FormSpec] = [:]
+        for formSpec in decodedFormSpecs {
+            guard replacement[formSpec.type] == nil else {
+                return false
+            }
+            replacement[formSpec.type] = formSpec
+        }
+        self.formSpecs = replacement
+        return true
     }
 
     func formSpec(for paymentMethodType: String) -> FormSpec? {

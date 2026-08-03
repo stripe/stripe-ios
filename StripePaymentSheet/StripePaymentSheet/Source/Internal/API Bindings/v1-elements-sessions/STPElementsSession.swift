@@ -67,6 +67,9 @@ import Foundation
     /// Customer details, returned when v1/elements/sessions is called with CustomerSession info
     let customer: ElementsCustomer?
 
+    /// Mobile Payment Element data returned by v1/elements/sessions.
+    let mobilePaymentElement: MobilePaymentElementV1?
+
     /// A flag that indicates that this instance was created as a best-effort
     let isBackupInstance: Bool
 
@@ -92,6 +95,7 @@ import Foundation
         customPaymentMethods: [CustomPaymentMethod],
         passiveCaptchaData: PassiveCaptchaData?,
         customer: ElementsCustomer?,
+        mobilePaymentElement: MobilePaymentElementV1? = nil,
         isBackupInstance: Bool = false
     ) {
         self.allResponseFields = allResponseFields
@@ -113,6 +117,7 @@ import Foundation
         self.customPaymentMethods = customPaymentMethods
         self.passiveCaptchaData = passiveCaptchaData
         self.customer = customer
+        self.mobilePaymentElement = mobilePaymentElement
         self.isBackupInstance = isBackupInstance
         super.init()
     }
@@ -159,6 +164,7 @@ import Foundation
             customPaymentMethods: [],
             passiveCaptchaData: nil,
             customer: nil,
+            mobilePaymentElement: nil,
             isBackupInstance: true
         )
     }
@@ -255,6 +261,32 @@ extension STPElementsSession: STPAPIResponseDecodable {
             return cpms
         }()
 
+        let mobilePaymentElementKey = "mobile_payment_element"
+        let mobilePaymentElement: MobilePaymentElementV1?
+        if response[mobilePaymentElementKey] == nil || response[mobilePaymentElementKey] is NSNull {
+            mobilePaymentElement = nil
+        } else {
+            guard let mobilePaymentElementJSON = response[mobilePaymentElementKey] as? [AnyHashable: Any],
+                  JSONSerialization.isValidJSONObject(mobilePaymentElementJSON)
+            else {
+                return nil
+            }
+            do {
+                let data = try JSONSerialization.data(withJSONObject: mobilePaymentElementJSON)
+                mobilePaymentElement = try StripeJSONDecoder().decode(MobilePaymentElementV1.self, from: data)
+                guard mobilePaymentElement?.contract.major == MobileSessionContractV1.contractMajor,
+                      mobilePaymentElement?.contract.revision.range(
+                          of: "^[0-9a-f]{16}$",
+                          options: .regularExpression
+                      ) != nil
+                else {
+                    return nil
+                }
+            } catch {
+                return nil
+            }
+        }
+
         return self.init(
             allResponseFields: response,
             sessionID: sessionID,
@@ -276,7 +308,8 @@ extension STPElementsSession: STPAPIResponseDecodable {
             externalPaymentMethods: externalPaymentMethods,
             customPaymentMethods: customPaymentMethods,
             passiveCaptchaData: passiveCaptchaData,
-            customer: customer
+            customer: customer,
+            mobilePaymentElement: mobilePaymentElement
         )
     }
 }

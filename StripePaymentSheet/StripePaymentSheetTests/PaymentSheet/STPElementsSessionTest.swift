@@ -54,7 +54,50 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.flags, ["cbc_in_link_popup": true, "disable_cbc_in_link_popup": false])
         XCTAssertTrue(elementsSession.isApplePayEnabled)
         XCTAssertFalse(elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+        XCTAssertNil(elementsSession.mobilePaymentElement)
         XCTAssertEqual(elementsSession.allResponseFields as NSDictionary, elementsSessionJson as NSDictionary)
+    }
+
+    func testDecodedObjectFromAPIResponseMapping_mobilePaymentElement() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["mobile_payment_element"] = [
+            "contract": [
+                "major": MobileSessionContractV1.contractMajor,
+                "revision": MobileSessionContractV1.contractRevision,
+            ],
+            "payment_method_availability": ["card", "link"],
+        ]
+
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertEqual(elementsSession.mobilePaymentElement?.contract.major, MobileSessionContractV1.contractMajor)
+        XCTAssertEqual(elementsSession.mobilePaymentElement?.contract.revision, MobileSessionContractV1.contractRevision)
+        XCTAssertEqual(elementsSession.mobilePaymentElement?.paymentMethodAvailability, ["card", "link"])
+    }
+
+    func testDecodedObjectFromAPIResponseMapping_rejectsMalformedMobilePaymentElement() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["mobile_payment_element"] = [
+            "contract": [
+                "major": MobileSessionContractV1.contractMajor,
+                "revision": MobileSessionContractV1.contractRevision,
+            ],
+            "payment_method_availability": "card",
+        ]
+
+        XCTAssertNil(STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson))
+    }
+
+    func testDecodedObjectFromAPIResponseMapping_rejectsUnsupportedMobilePaymentElementContractMajor() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["mobile_payment_element"] = [
+            "contract": [
+                "major": MobileSessionContractV1.contractMajor + 1,
+                "revision": MobileSessionContractV1.contractRevision,
+            ],
+            "payment_method_availability": ["card"],
+        ]
+
+        XCTAssertNil(STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson))
     }
 
     func testDecodedObjectFromAPIResponseMapping_attestation() {

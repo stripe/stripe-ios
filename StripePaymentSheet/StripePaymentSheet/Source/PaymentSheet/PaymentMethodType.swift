@@ -155,10 +155,12 @@ extension PaymentSheet {
 
             if let serverDrivenPaymentSheet = elementsSession.serverDrivenPaymentSheet {
                 return serverDrivenPaymentSheet.paymentMethodTypes.compactMap { paymentMethodType in
-                    switch paymentMethodType {
-                    case "instant_debits":
+                    let paymentMethodCode = serverDrivenPaymentSheet.paymentMethodCodes[paymentMethodType]
+                        ?? paymentMethodType
+                    switch (paymentMethodType, paymentMethodCode) {
+                    case ("instant_debits", "link"):
                         return .instantDebits
-                    case "link_card_brand":
+                    case ("link_card_brand", "link"):
                         return .linkCardBrand
                     default:
                         let stripePaymentMethodType = STPPaymentMethod.type(from: paymentMethodType)

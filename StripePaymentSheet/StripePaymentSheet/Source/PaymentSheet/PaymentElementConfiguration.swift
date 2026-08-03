@@ -38,6 +38,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var externalPaymentMethodConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration? { get set }
     var customPaymentMethodConfiguration: PaymentSheet.CustomPaymentMethodConfiguration? { get set }
     var paymentMethodOrder: [String]? { get set }
+    var paymentMethodLayout: PaymentSheet.PaymentMethodLayout { get set }
     var allowsRemovalOfLastSavedPaymentMethod: Bool { get set }
     var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance { get set }
     var allowedCardFundingTypes: PaymentSheet.CardFundingType { get set }

@@ -1,0 +1,131 @@
+{
+  "allowed_card_funding_types": [
+    "credit"
+  ],
+  "allows_delayed_payment_methods": true,
+  "allows_payment_methods_requiring_shipping_address": true,
+  "allows_removal_of_last_saved_payment_method": true,
+  "appearance_customized": true,
+  "apple_pay": {
+    "authorization_result_handler_provided": true,
+    "button_type": "plain",
+    "merchant_country_code": "US",
+    "merchant_id": "merchant.com.example",
+    "payment_request_handler_provided": true,
+    "payment_summary_items_provided": true,
+    "shipping_contact_update_handler_provided": true,
+    "shipping_method_update_handler_provided": true
+  },
+  "billing_details_collection_configuration": {
+    "address": "automatic",
+    "allowed_countries": [
+      "allowed_countries_value"
+    ],
+    "attach_defaults_to_payment_method": true,
+    "email": "automatic",
+    "name": "automatic",
+    "phone": "automatic"
+  },
+  "card_brand_acceptance": {
+    "brands": [
+      "visa"
+    ],
+    "filter": "all"
+  },
+  "custom_api_client": true,
+  "custom_payment_method_handler_provided": true,
+  "custom_payment_method_ids": [
+    "custom_payment_method_ids_value"
+  ],
+  "custom_payment_methods": [
+    {
+      "disable_billing_detail_collection": true,
+      "id": "id_value",
+      "subtitle_provided": true
+    }
+  ],
+  "customer_access_type": "legacy",
+  "customer_configured": true,
+  "default_billing_details": {
+    "address": true,
+    "address_city": true,
+    "address_country_code": "address_country_code_value",
+    "address_line1": true,
+    "address_line2": true,
+    "address_postal_code": true,
+    "address_state": true,
+    "email": true,
+    "name": true,
+    "phone": true
+  },
+  "disable_wallet_payment_method_filtering": true,
+  "external_payment_method_handler_provided": true,
+  "external_payment_methods": [
+    "external_payment_methods_value"
+  ],
+  "google_pay": {
+    "additional_enabled_networks": [
+      "additional_enabled_networks_value"
+    ],
+    "amount_provided": true,
+    "button_type": "buy",
+    "currency_code": "currency_code_value",
+    "environment": "production",
+    "label_provided": true,
+    "merchant_country_code": "US"
+  },
+  "google_places_api_key_provided": true,
+  "link": {
+    "allow_logout": true,
+    "allow_user_email_edits": true,
+    "brand": "brand_value",
+    "collect_missing_billing_details_for_existing_payment_methods": true,
+    "disabled_funding_sources": [
+      "disabled_funding_sources_value"
+    ],
+    "display": "automatic"
+  },
+  "link_payment_methods_only": true,
+  "merchant_country_code": "US",
+  "merchant_display_name_provided": true,
+  "opens_card_scanner_automatically": true,
+  "payment_method_layout": "automatic",
+  "payment_method_order": [
+    "card",
+    "link"
+  ],
+  "preferred_networks": [
+    "preferred_networks_value"
+  ],
+  "primary_button_label_provided": true,
+  "remove_saved_payment_method_message_provided": true,
+  "return_url_provided": true,
+  "save_payment_method_opt_in_behavior": "automatic",
+  "shipping_details_provided": true,
+  "shop_pay": {
+    "allowed_shipping_countries": [
+      "allowed_shipping_countries_value"
+    ],
+    "billing_address_required": true,
+    "email_required": true,
+    "line_items_provided": true,
+    "shipping_address_required": true,
+    "shipping_contact_update_handler_provided": true,
+    "shipping_method_update_handler_provided": true,
+    "shipping_rates_provided": true
+  },
+  "terms_display": {
+    "card": "automatic"
+  },
+  "user_interface_style": "automatic",
+  "user_override_country": "user_override_country_value",
+  "wallet_buttons": {
+    "payment_element": {
+      "card": "automatic"
+    },
+    "wallet_buttons_view": {
+      "card": "automatic"
+    },
+    "will_display_externally": true
+  }
+}

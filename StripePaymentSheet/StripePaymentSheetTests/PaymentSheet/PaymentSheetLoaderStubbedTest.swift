@@ -627,6 +627,27 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         XCTAssertTrue(FinancialConnectionsSDKAvailability.remoteFcLiteOverride)
     }
 
+    func testApplyServerDrivenFeatures_automaticClearsRemoteFCLiteDecisions() {
+        defer {
+            FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = false
+            FinancialConnectionsSDKAvailability.remoteFcLiteOverride = false
+        }
+        FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = true
+        FinancialConnectionsSDKAvailability.remoteFcLiteOverride = true
+
+        PaymentSheetLoader.applyServerDrivenFeatures(
+            .init(
+                financialConnectionsLite: .automatic,
+                linkGlobalHoldbackLookup: true,
+                forceVerticalPaymentMethodLayout: false,
+                cardFundingFiltering: false
+            )
+        )
+
+        XCTAssertFalse(FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled)
+        XCTAssertFalse(FinancialConnectionsSDKAvailability.remoteFcLiteOverride)
+    }
+
     @MainActor
     private func assertLinkLookup(
         experimentAssignments: [String: ExperimentGroup]?,

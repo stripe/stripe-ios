@@ -188,6 +188,13 @@ final class PaymentSheetAnalyticsHelper {
         if let didLinkLookupTimeOut {
             params["link_lookup_timed_out"] = didLinkLookupTimeOut
         }
+        if let mobileSession = elementsSession.serverDrivenPaymentSheet {
+            params["mobile_session_requested_contract_major"] = MobileSessionContractV1.contractMajor
+            params["mobile_session_served_contract_major"] = mobileSession.contractMajor
+            params["mobile_session_contract_revision_matches"] =
+                mobileSession.contractRevision == MobileSessionContractV1.contractRevision
+            params["mobile_session_decode_outcome"] = "success"
+        }
 
         log(
             event: .paymentSheetLoadSucceeded,
@@ -214,6 +221,22 @@ final class PaymentSheetAnalyticsHelper {
             }
         }()
         log(event: event)
+    }
+
+    func logMobileSessionFormRender(paymentMethod: String, errorCode: String? = nil) {
+        guard elementsSession?.serverDrivenPaymentSheet != nil else { return }
+
+        var params: [String: Any] = [
+            "mobile_session_render_outcome": errorCode == nil ? "success" : "failure",
+        ]
+        if let errorCode {
+            params["mobile_session_render_error_code"] = errorCode
+        }
+        log(
+            event: .mobileSessionFormRender,
+            selectedLPM: paymentMethod,
+            params: params
+        )
     }
 
     func logInitialDisplayedPaymentMethods(visiblePaymentMethods: [String], hiddenPaymentMethods: [String]) {

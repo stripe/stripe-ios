@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "mobile_session_contract_unsupported_major",
+    "type": "invalid_request_error"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "capabilities": [
+    "server_driven_assets",
+    "server_driven_forms",
+    "string_payment_method_availability"
+  ],
+  "contract_digest": "83af9999262bbcd52d5fb730b6f2b077e204c825918261349423dfd07b07a557",
+  "contract_major": 1,
+  "contract_revision": "83af9999262bbcd5",
+  "generator_digest": "9a876d147c7af50e015da2b2fceda08c0d32c04301c14322ce5551faab13770b",
+  "lifecycle": "experimental",
+  "mint_commit": "9e445902fafe1467057f937e5ecb02e847becd29"
+}

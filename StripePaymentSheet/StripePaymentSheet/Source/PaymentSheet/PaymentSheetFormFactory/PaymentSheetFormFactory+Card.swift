@@ -184,6 +184,153 @@ extension PaymentSheetFormFactory {
             customSpacing: customSpacing)
     }
 
+    func makeCardDetailsComponent(linkAppearance: LinkAppearance? = nil) -> PaymentMethodElement {
+        let previousCardInput = previousCustomerInput?.paymentMethodParams.card
+        let formattedExpiry: String? = {
+            guard let expiryMonth = previousCardInput?.expMonth?.intValue,
+                  let expiryYear = previousCardInput?.expYear?.intValue
+            else {
+                return nil
+            }
+            return String(format: "%02d%02d", expiryMonth, expiryYear % 100)
+        }()
+        let cardSection = CardSectionElement(
+            collectName: configuration.billingDetailsCollectionConfiguration.name == .always,
+            defaultValues: CardSectionElement.DefaultValues(
+                name: defaultBillingDetails().name,
+                pan: previousCardInput?.number,
+                cvc: previousCardInput?.cvc,
+                expiry: formattedExpiry
+            ),
+            preferredNetworks: configuration.preferredNetworks,
+            cardBrandChoiceEligible: cardBrandChoiceEligible,
+            hostedSurface: .init(config: configuration),
+            theme: theme,
+            analyticsHelper: analyticsHelper,
+            cardBrandFilter: configuration.cardBrandFilter,
+            cardFundingFilter: cardFundingFilter,
+            opensCardScannerAutomatically: configuration.opensCardScannerAutomatically,
+            linkAppearance: linkAppearance
+        )
+        let customSpacing = configuration.linkPaymentMethodsOnly
+            ? [(cardSection as Element, LinkUI.largeContentSpacing)]
+            : []
+        return FormElement(elements: [cardSection], theme: theme, customSpacing: customSpacing)
+    }
+
+    func makeCardBillingDetailsComponent() -> PaymentMethodElement {
+        let shouldIncludeEmail = configuration.billingDetailsCollectionConfiguration.email == .always
+        let shouldIncludePhone = configuration.billingDetailsCollectionConfiguration.phone == .always
+        let countries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty
+            ? nil
+            : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
+        let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {
+            switch configuration.billingDetailsCollectionConfiguration.address {
+            case .automatic:
+                return makeBillingAddressSection(
+                    collectionMode: .countryAndPostal(),
+                    countries: countries,
+                    includeEmail: shouldIncludeEmail,
+                    includePhone: shouldIncludePhone
+                )
+            case .full:
+                return makeBillingAddressSection(
+                    collectionMode: .autoCompletable,
+                    countries: countries,
+                    includeEmail: shouldIncludeEmail,
+                    includePhone: shouldIncludePhone
+                )
+            case .never:
+                return nil
+            }
+        }()
+        let contactSection: SectionElement? = {
+            guard billingAddressSection == nil else { return nil }
+            let elements: [Element] = [
+                shouldIncludeEmail ? makeEmail() : nil,
+                shouldIncludePhone ? makePhone() : nil,
+            ].compactMap { $0 }
+            guard !elements.isEmpty else { return nil }
+            return SectionElement(title: .Localized.contact_information, elements: elements, theme: theme)
+        }()
+        let phoneElement = contactSection?.elements.compactMap {
+            $0 as? PaymentMethodElementWrapper<PhoneNumberElement>
+        }.first
+        connectBillingDetailsFields(
+            countryElement: nil,
+            addressElement: billingAddressSection,
+            phoneElement: phoneElement
+        )
+        return FormElement(
+            elements: [contactSection, billingAddressSection],
+            theme: theme
+        )
+    }
+
+    func makeCardSavePaymentMethodComponent() -> PaymentMethodElement {
+        let defaultCheckbox: Element? = {
+            guard allowsSetAsDefaultPM else { return nil }
+            let checkbox = makeDefaultCheckbox()
+            return shouldDisplayDefaultCheckbox ? checkbox : SectionElement.HiddenElement(checkbox)
+        }()
+        let saveCheckbox = makeSaveCheckbox(
+            label: String.Localized.save_payment_details_for_future_$merchant_payments(
+                merchantDisplayName: configuration.merchantDisplayName
+            )
+        ) { selected in
+            if let defaultCheckbox {
+                UIView.transition(
+                    with: defaultCheckbox.view,
+                    duration: 0.2,
+                    options: .transitionCrossDissolve,
+                    animations: { defaultCheckbox.view.isHidden = !selected }
+                )
+            }
+        }
+        defaultCheckbox?.view.isHidden = !saveCheckbox.element.isSelected
+        return FormElement(
+            elements: [shouldDisplaySaveCheckbox ? saveCheckbox : nil, defaultCheckbox],
+            theme: theme
+        )
+    }
+
+    func makeCardLinkInlineSignupComponent() -> PaymentMethodElement {
+        guard case .paymentElement(let paymentElementConfiguration, _) = configuration,
+              let accountService,
+              showLinkInlineCardSignup
+        else {
+            return FormElement(elements: [], theme: theme)
+        }
+        let element = LinkInlineSignupElement(
+            configuration: paymentElementConfiguration,
+            brand: linkBrand,
+            linkAccount: linkAccount,
+            country: countryCode,
+            showCheckbox: !shouldDisplaySaveCheckbox,
+            accountService: accountService,
+            allowsDefaultOptIn: allowsLinkDefaultOptIn,
+            signupOptInFeatureEnabled: signupOptInFeatureEnabled,
+            signupOptInInitialValue: signupOptInInitialValue || previouslyHadLinkSignupSelected,
+            analyticsHelper: analyticsHelper
+        )
+        return FormElement(elements: [element], theme: theme)
+    }
+
+    func makeCardMandateComponent() -> PaymentMethodElement {
+        let mandate: Element? = {
+            if forceSaveFutureUseBehavior {
+                return makeMandate()
+            }
+            guard configuration.termsDisplayFor(paymentMethodType: .stripe(.card)) != .never,
+                  isSettingUp
+            else {
+                return nil
+            }
+            return makeMandate()
+        }()
+        return FormElement(elements: [mandate], theme: theme)
+    }
+
     private func makeMandate() -> SimpleMandateElement {
         let shouldCheckSignupCheckbox = showLinkInlineCardSignup && signupOptInFeatureEnabled && signupOptInInitialValue
         let shouldSignUpToLink = shouldCheckSignupCheckbox && !isLinkUI

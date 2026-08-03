@@ -1,0 +1,69 @@
+{
+  "assets": {
+    "payment_methods": [
+      {
+        "display_name": "display_name_value",
+        "locale": "locale_value",
+        "payment_method_type": "payment_method_type_value",
+        "selector_icon": {
+          "dark_theme_png": "dark_theme_png_value",
+          "light_theme_png": "light_theme_png_value"
+        }
+      }
+    ]
+  },
+  "contract": {
+    "major": 2,
+    "revision": "a524134331da8fe7"
+  },
+  "features": {
+    "card_funding_filtering": true,
+    "financial_connections_lite": "automatic",
+    "force_vertical_payment_method_layout": true,
+    "link_global_holdback_lookup": true
+  },
+  "form_specs": [
+    {
+      "fields": [
+        {
+          "allowed_country_codes": [
+            "allowed_country_codes_value"
+          ],
+          "api_path": "api_path_value",
+          "component": "card_details",
+          "disable_billing_detail_collection": true,
+          "items": [
+            {
+              "api_value": "api_value_value",
+              "display_text": "display_text_value"
+            }
+          ],
+          "localized_text_template": "Authorize {{merchant_display_name}}.",
+          "placeholder_for": "name",
+          "setup_future_usage_required": true,
+          "subtitle": "subtitle_value",
+          "text_key": "cash_app_pay",
+          "translation_id": "upe.labels.ideal.bank",
+          "type": "name"
+        }
+      ],
+      "payment_method_code": "payment_method_code_value",
+      "requires_form_screen": true,
+      "selector_icon": {
+        "dark_theme_png": "dark_theme_png_value",
+        "light_theme_png": "light_theme_png_value"
+      },
+      "type": "type_value"
+    }
+  ],
+  "future_optional_field": true,
+  "payment_method_availability": {
+    "entries": [
+      {
+        "available": true,
+        "payment_method_type": "payment_method_type_value",
+        "reason": "reason_value"
+      }
+    ]
+  }
+}

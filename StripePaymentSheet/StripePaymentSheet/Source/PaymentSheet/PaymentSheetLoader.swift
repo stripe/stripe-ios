@@ -131,11 +131,10 @@ final class PaymentSheetLoader {
             let elementsSession = elementsSessionAndIntent.elementsSession
 
             loadTimings.logStart("loadServerDrivenPaymentSheet")
-            if let serverDrivenPaymentSheet = ServerDrivenPaymentSheetMockServer.load(
-                configuration: configuration,
-                intent: intent,
-                elementsSession: elementsSession
-            ) {
+            if let mobilePaymentElement = elementsSession.mobilePaymentElement {
+                let serverDrivenPaymentSheet = try ServerDrivenPaymentSheetResponse(
+                    mobilePaymentElement: mobilePaymentElement
+                )
                 elementsSession.serverDrivenPaymentSheet = serverDrivenPaymentSheet
                 ServerDrivenPaymentSheetAssetStore.shared.install(serverDrivenPaymentSheet.assets)
             }
@@ -144,7 +143,9 @@ final class PaymentSheetLoader {
             // Overwrite the form specs that were already loaded from disk
             loadTimings.logStart("loadFormSpecs")
             if let serverFormSpecs = elementsSession.serverDrivenPaymentSheet?.formSpecs {
-                _ = FormSpecProvider.shared.loadFrom(serverFormSpecs.map { $0 as NSDictionary })
+                guard FormSpecProvider.shared.replaceWith(serverFormSpecs.map { $0 as NSDictionary }) else {
+                    throw ServerDrivenPaymentSheetResponse.Error.invalidFormSpec
+                }
             } else {
                 switch intent {
                 case .paymentIntent, .deferredIntent, .checkoutSession:
@@ -603,6 +604,13 @@ final class PaymentSheetLoader {
             }) {
                 let defaultPM = savedPaymentMethods.remove(at: defaultPMIndex)
                 savedPaymentMethods.insert(defaultPM, at: 0)
+            }
+        }
+
+        if let serverDrivenPaymentSheet = elementsSession.serverDrivenPaymentSheet {
+            let serverSelectedPaymentMethodCodes = Set(serverDrivenPaymentSheet.paymentMethodCodes.values)
+            return savedPaymentMethods.filter { paymentMethod in
+                serverSelectedPaymentMethodCodes.contains(paymentMethod.type.identifier)
             }
         }
 

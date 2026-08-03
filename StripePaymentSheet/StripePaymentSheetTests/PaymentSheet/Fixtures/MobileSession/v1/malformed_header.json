@@ -1,0 +1,4 @@
+{
+  "expected_error_code": "mobile_session_contract_malformed",
+  "header": "major=1,revision=not-a-revision"
+}

@@ -70,28 +70,14 @@ extension ServerDrivenPaymentSheetResponse {
     static func _testValue(
         features: Features = .defaults,
         paymentMethodTypes: [String] = ["card"],
+        paymentMethodCodes: [String: String]? = nil,
         assets: Assets = .init(paymentMethodDisplayNames: [:], selectorIconURLs: [:]),
         formSpecs: [[String: Any]] = []
     ) -> ServerDrivenPaymentSheetResponse {
         return .init(
-            mobileTeamContact: "mobile-paymentsheet-backend@example.invalid",
-            sdkVersionHeader: STPAPIClient.mobileSDKVersionHeaderValue,
-            serializedConfiguration: .init(
-                merchantDisplayName: "Test Merchant",
-                allowsDelayedPaymentMethods: false,
-                allowsPaymentMethodsRequiringShippingAddress: false,
-                hasApplePay: false,
-                linkEnabled: true,
-                returnURLProvided: false,
-                paymentMethodOrder: nil,
-                billingDetailsCollection: [:],
-                defaultBillingDetails: [:],
-                mode: "payment",
-                amount: 1099,
-                currency: "usd"
-            ),
             features: features,
             paymentMethodTypes: paymentMethodTypes,
+            paymentMethodCodes: paymentMethodCodes,
             assets: assets,
             formSpecs: formSpecs
         )

@@ -11,27 +11,29 @@ import Foundation
 @_spi(STP) import StripeUICore
 
 extension PaymentSheetFormFactory {
-    private typealias NativePaymentMethodFormBuilder = (PaymentSheetFormFactory, FormSpec.NativePaymentMethodFormSpec) -> PaymentMethodElement
-    private typealias NativeMandateBuilder = (PaymentSheetFormFactory) -> Element
+    private typealias NativeComponentBuilder = (PaymentSheetFormFactory, FormSpec.NativeComponentSpec) -> PaymentMethodElement
+    private typealias MandateTextBuilder = (PaymentSheetFormFactory) -> Element
 
-    private static let nativePaymentMethodFormBuilders: [FormSpec.NativePaymentMethodFormSpec.FormType: NativePaymentMethodFormBuilder] = [
-        .card: { factory, _ in factory.makeCard(linkAppearance: factory.linkAppearance) },
-        .usBankAccount: { factory, _ in factory.makeUSBankAccount(merchantName: factory.configuration.merchantDisplayName) },
-        .instantDebits: { factory, _ in factory.makeInstantDebits() },
-        .externalPaymentMethod: { factory, spec in
+    private static let nativeComponentBuilders: [FormSpec.NativeComponentSpec.Component: NativeComponentBuilder] = [
+        .cardDetails: { factory, _ in factory.makeCardDetailsComponent(linkAppearance: factory.linkAppearance) },
+        .cardBillingDetails: { factory, _ in factory.makeCardBillingDetailsComponent() },
+        .cardSavePaymentMethod: { factory, _ in factory.makeCardSavePaymentMethodComponent() },
+        .cardLinkInlineSignup: { factory, _ in factory.makeCardLinkInlineSignupComponent() },
+        .cardMandate: { factory, _ in factory.makeCardMandateComponent() },
+        .usBankAccountCollection: { factory, _ in factory.makeUSBankAccount(merchantName: factory.configuration.merchantDisplayName) },
+        .instantDebitsCollection: { factory, _ in factory.makeInstantDebits() },
+        .linkCardCollection: { factory, _ in factory.makeInstantDebits() },
+        .externalConfirmation: { factory, spec in
             factory.makeExternalPaymentMethodForm(
                 subtitle: spec.subtitle,
                 disableBillingDetailCollection: spec.disableBillingDetailCollection ?? false
             )
         },
-        .bacsDebit: { factory, _ in factory.makeBacsDebit() },
-        .blik: { factory, _ in factory.makeBLIK() },
-        .konbini: { factory, _ in factory.makeKonbini() },
-        .boleto: { factory, _ in factory.makeBoleto() },
+        .blikConfirmation: { factory, _ in factory.makeBLIK() },
     ]
 
-    private static let nativeMandateBuilders: [FormSpec.NativeMandateSpec.MandateType: NativeMandateBuilder] = [
-        .cashApp: { factory in factory.makeCashAppMandate() },
+    private static let mandateTextBuilders: [FormSpec.MandateTextSpec.TextKey: MandateTextBuilder] = [
+        .cashAppPay: { factory in factory.makeCashAppMandate() },
         .paypal: { factory in factory.makePaypalMandate() },
         .revolutPay: { factory in factory.makeRevolutPayMandate() },
         .amazonPay: { factory in factory.makeAmazonPayMandate() },
@@ -40,6 +42,10 @@ extension PaymentSheetFormFactory {
         .sepa: { factory in factory.makeSepaMandate() },
         .klarna: { factory in factory.makeKlarnaMandate() },
     ]
+
+    private var isServerDrivenFormSpec: Bool {
+        return analyticsHelper?.elementsSession?.serverDrivenPaymentSheet != nil
+    }
 
     func makeFormElementFromSpec(
         spec: FormSpec,
@@ -88,17 +94,17 @@ extension PaymentSheetFormFactory {
     private func fieldSpecToElement(fieldSpec: FormSpec.FieldSpec) -> Element? {
         switch fieldSpec {
         case let .name(spec):
-            return configuration.billingDetailsCollectionConfiguration.name != .never
+            return isServerDrivenFormSpec || configuration.billingDetailsCollectionConfiguration.name != .never
                 ? makeName(label: spec.translationId?.localizedValue, apiPath: spec.apiPath?["v1"])
                 : nil
         case let .email(spec):
-            return configuration.billingDetailsCollectionConfiguration.email != .never
+            return isServerDrivenFormSpec || configuration.billingDetailsCollectionConfiguration.email != .never
                 ? makeEmail(apiPath: spec.apiPath?["v1"])
                 : nil
         case let .selector(selectorSpec):
             return makeDropdown(for: selectorSpec)
         case let .billing_address(countrySpec):
-            return configuration.billingDetailsCollectionConfiguration.address != .never
+            return isServerDrivenFormSpec || configuration.billingDetailsCollectionConfiguration.address != .never
                 ? makeBillingAddressSection(countries: countrySpec.allowedCountryCodes)
                 : nil
         case let .country(spec):
@@ -121,12 +127,20 @@ extension PaymentSheetFormFactory {
             return makeIban(apiPath: spec.apiPath?["v1"])
         case .sepa_mandate:
             return makeSepaMandate()
+        case .bacs_debit_bank_account:
+            return makeBacsDebitBankAccount()
+        case .bacs_debit_mandate:
+            return makeBacsMandate()
+        case .boleto_tax_id:
+            return makeBoletoTaxID()
+        case .konbini_confirmation_number:
+            return makeKonbiniConfirmationNumber()
         case let .placeholder(spec):
             return makePlaceholder(for: spec)
-        case let .native_payment_method_form(spec):
-            return makeNativePaymentMethodForm(for: spec)
-        case let .native_mandate(spec):
-            return makeNativeMandate(for: spec)
+        case let .native_component(spec):
+            return makeNativeComponent(for: spec)
+        case let .mandate_text(spec):
+            return makeMandateText(for: spec)
         case let .unknown(fieldType):
             logUnsupportedFormSpecField(fieldType)
             return nil
@@ -148,25 +162,62 @@ extension PaymentSheetFormFactory {
         print("STPAssertionFailure: \(assertMessage)")
     }
 
-    func makeNativePaymentMethodForm(for spec: FormSpec.NativePaymentMethodFormSpec) -> PaymentMethodElement? {
-        return Self.nativePaymentMethodFormBuilders[spec.formType]?(self, spec)
+    func makeNativeComponent(for spec: FormSpec.NativeComponentSpec) -> PaymentMethodElement? {
+        return Self.nativeComponentBuilders[spec.component]?(self, spec)
     }
 
-    func makeNativeMandate(for spec: FormSpec.NativeMandateSpec) -> Element? {
-        if spec.setupFutureUsageRequired == true && !isSettingUp {
+    func makeMandateText(for spec: FormSpec.MandateTextSpec) -> Element? {
+        if spec.setupFutureUsageRequired == true, !isSettingUp {
             return nil
         }
 
-        return Self.nativeMandateBuilders[spec.mandateType]?(self)
+        if let localizedTextTemplate = spec.localizedTextTemplate {
+            let mandateText = localizedTextTemplate.replacingOccurrences(
+                of: "{{merchant_display_name}}",
+                with: configuration.merchantDisplayName
+            )
+            return makeMandate(mandateText: mandateText)
+        }
+
+        guard let textKey = spec.textKey else { return nil }
+        return Self.mandateTextBuilders[textKey]?(self)
     }
 
     func makePlaceholder(for spec: FormSpec.PlaceholderSpec) -> Element? {
         let field = spec.field
         guard field != .unknown else { return nil }
-        return makeOptionalBillingDetailsField(for: field)
+        return makeOptionalBillingDetailsField(
+            for: field,
+            allowedCountryCodes: spec.allowedCountryCodes
+        )
     }
 
-    func makeOptionalBillingDetailsField(for field: FormSpec.PlaceholderSpec.PlaceholderField) -> Element? {
+    func makeOptionalBillingDetailsField(
+        for field: FormSpec.PlaceholderSpec.PlaceholderField,
+        allowedCountryCodes: [String]? = nil
+    ) -> Element? {
+        if isServerDrivenFormSpec {
+            switch field {
+            case .name:
+                return makeName()
+            case .email:
+                return makeEmail()
+            case .phone:
+                return makePhone()
+            case .billingAddress:
+                return makeBillingAddressSection(
+                    countries: allowedCountryCodes
+                )
+            case .billingAddressWithoutCountry:
+                return makeBillingAddressSection(
+                    collectionMode: .noCountry,
+                    countries: allowedCountryCodes
+                )
+            case .unknown:
+                return nil
+            }
+        }
+
         switch field {
         case .name:
             return configuration.billingDetailsCollectionConfiguration.name == .always ? makeName() : nil
@@ -248,9 +299,9 @@ extension FormSpec.FieldSpec {
 }
 
 extension FormSpec {
-    var nativePaymentMethodFormSpec: NativePaymentMethodFormSpec? {
+    var rootNativeComponentSpec: NativeComponentSpec? {
         guard fields.count == 1,
-              case let .native_payment_method_form(spec) = fields.first
+              case let .native_component(spec) = fields.first
         else {
             return nil
         }

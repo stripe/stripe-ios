@@ -16,7 +16,22 @@ struct FormSpec: Decodable {
     let type: String
     let async: Bool?
     let fields: [FieldSpec]
+    let requiresFormScreen: Bool?
     let selectorIcon: DownloadableImageSpec?
+
+    init(
+        type: String,
+        async: Bool?,
+        fields: [FieldSpec],
+        requiresFormScreen: Bool? = nil,
+        selectorIcon: DownloadableImageSpec?
+    ) {
+        self.type = type
+        self.async = async
+        self.fields = fields
+        self.requiresFormScreen = requiresFormScreen
+        self.selectorIcon = selectorIcon
+    }
 
     enum FieldSpec: Decodable, Equatable {
         case name(NameFieldSpec)
@@ -38,10 +53,14 @@ struct FormSpec: Decodable {
 
         case iban(BaseFieldSpec)
         case sepa_mandate
+        case bacs_debit_bank_account
+        case bacs_debit_mandate
+        case boleto_tax_id
+        case konbini_confirmation_number
 
         case placeholder(PlaceholderSpec)
-        case native_payment_method_form(NativePaymentMethodFormSpec)
-        case native_mandate(NativeMandateSpec)
+        case native_component(NativeComponentSpec)
+        case mandate_text(MandateTextSpec)
 
         case unknown(String)
 
@@ -82,12 +101,20 @@ struct FormSpec: Decodable {
                 self = try .iban(BaseFieldSpec(from: decoder))
             case "sepa_mandate":
                 self = .sepa_mandate
+            case "bacs_debit_bank_account":
+                self = .bacs_debit_bank_account
+            case "bacs_debit_mandate":
+                self = .bacs_debit_mandate
+            case "boleto_tax_id":
+                self = .boleto_tax_id
+            case "konbini_confirmation_number":
+                self = .konbini_confirmation_number
             case "placeholder":
                 self = try .placeholder(PlaceholderSpec(from: decoder))
-            case "native_payment_method_form":
-                self = try .native_payment_method_form(NativePaymentMethodFormSpec(from: decoder))
-            case "native_mandate":
-                self = try .native_mandate(NativeMandateSpec(from: decoder))
+            case "native_component":
+                self = try .native_component(NativeComponentSpec(from: decoder))
+            case "mandate_text":
+                self = try .mandate_text(MandateTextSpec(from: decoder))
             default:
                 self = .unknown(field_type)
             }
@@ -145,8 +172,12 @@ extension FormSpec {
     struct PlaceholderSpec: Decodable, Equatable {
         let field: PlaceholderField
 
+        /// The server-selected country set for billing-address placeholders.
+        let allowedCountryCodes: [String]?
+
         enum CodingKeys: String, CodingKey {
             case field = "for"
+            case allowedCountryCodes
         }
 
         enum PlaceholderField: String, Decodable, Equatable {
@@ -163,29 +194,32 @@ extension FormSpec {
         }
     }
 
-    struct NativePaymentMethodFormSpec: Decodable, Equatable {
-        let formType: FormType
+    struct NativeComponentSpec: Decodable, Equatable {
+        let component: Component
         let subtitle: String?
         let disableBillingDetailCollection: Bool?
 
-        enum FormType: String, Decodable, Equatable {
-            case card
-            case usBankAccount = "us_bank_account"
-            case instantDebits = "instant_debits"
-            case externalPaymentMethod = "external_payment_method"
-            case bacsDebit = "bacs_debit"
-            case blik
-            case konbini
-            case boleto
+        enum Component: String, Decodable, Equatable {
+            case cardDetails = "card_details"
+            case cardBillingDetails = "card_billing_details"
+            case cardSavePaymentMethod = "card_save_payment_method"
+            case cardLinkInlineSignup = "card_link_inline_signup"
+            case cardMandate = "card_mandate"
+            case usBankAccountCollection = "us_bank_account_collection"
+            case instantDebitsCollection = "instant_debits_collection"
+            case linkCardCollection = "link_card_collection"
+            case externalConfirmation = "external_confirmation"
+            case blikConfirmation = "blik_confirmation"
         }
     }
 
-    struct NativeMandateSpec: Decodable, Equatable {
-        let mandateType: MandateType
+    struct MandateTextSpec: Decodable, Equatable {
+        let textKey: TextKey?
+        let localizedTextTemplate: String?
         let setupFutureUsageRequired: Bool?
 
-        enum MandateType: String, Decodable, Equatable {
-            case cashApp = "cashapp"
+        enum TextKey: String, Decodable, Equatable {
+            case cashAppPay = "cash_app_pay"
             case paypal
             case revolutPay = "revolut_pay"
             case amazonPay = "amazon_pay"

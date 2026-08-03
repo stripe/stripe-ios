@@ -96,6 +96,7 @@ import Foundation
 
     // MARK: - PaymentSheet Render
     case mcInitialDisplayedPaymentMethods = "mc_initial_displayed_payment_methods"
+    case mobileSessionFormRender = "mc_mobile_session_form_render"
 
     // MARK: - PaymentSheet Payment
     case mcPaymentCustomNewPMSuccess = "mc_custom_payment_newpm_success"

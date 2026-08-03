@@ -17,7 +17,16 @@ extension PaymentSheetFormFactory {
             emailRequiredByPaymentMethod: true,
             phoneRequiredByPaymentMethod: false
         )
-        let taxIdElement = TextFieldElement(
+        let addressSection = configuration.billingDetailsCollectionConfiguration.address != .never
+            ? makeBillingAddressSection(countries: ["BR"])
+            : nil
+        let allElements: [Element?] = [contactInfoSection, makeBoletoTaxID(), addressSection]
+        let elements = allElements.compactMap { $0 }
+        return FormElement(autoSectioningElements: elements, theme: theme)
+    }
+
+    func makeBoletoTaxID() -> SectionElement {
+        let taxIDElement = TextFieldElement(
             configuration: IDNumberTextFieldConfiguration(
                 type: .BR_CPF_CNPJ,
                 label: String.Localized.cpf_cpnj,
@@ -25,19 +34,13 @@ extension PaymentSheetFormFactory {
             ),
             theme: theme
         )
-        let taxIdElementWrapper = PaymentMethodElementWrapper(taxIdElement) { element, params in
+        let taxIDElementWrapper = PaymentMethodElementWrapper(taxIDElement) { element, params in
             params.paymentMethodParams.boleto?.taxID = element.text
             return params
         }
-        let taxIdSection = SectionElement(
-            elements: [taxIdElementWrapper],
+        return SectionElement(
+            elements: [taxIDElementWrapper],
             theme: theme
         )
-        let addressSection = configuration.billingDetailsCollectionConfiguration.address != .never
-            ? makeBillingAddressSection(countries: ["BR"])
-            : nil
-        let allElements: [Element?] = [contactInfoSection, taxIdSection, addressSection]
-        let elements = allElements.compactMap { $0 }
-        return FormElement(autoSectioningElements: elements, theme: theme)
     }
 }

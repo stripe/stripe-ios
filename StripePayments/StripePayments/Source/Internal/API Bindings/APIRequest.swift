@@ -68,6 +68,7 @@ let JSONKeyObject = "object"
         additionalHeaders: [String: String] = [:],
         parameters: [String: Any],
         timeout: TimeInterval? = nil,
+        responseValidator: (([AnyHashable: Any], HTTPURLResponse) throws -> Void)? = nil,
         completion: @escaping STPAPIResponseBlock
     ) {
         // Build url
@@ -86,7 +87,14 @@ let JSONKeyObject = "object"
         apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
             completionHandler: { body, response, error in
-                self.parseResponse(response, method: "GET", body: body, error: error, completion: completion)
+                self.parseResponse(
+                    response,
+                    method: "GET",
+                    body: body,
+                    error: error,
+                    responseValidator: responseValidator,
+                    completion: completion
+                )
             }
         )
     }
@@ -97,10 +105,18 @@ let JSONKeyObject = "object"
         endpoint: String,
         additionalHeaders: [String: String] = [:],
         timeout: TimeInterval? = nil,
-        parameters: [String: Any]
+        parameters: [String: Any],
+        responseValidator: (([AnyHashable: Any], HTTPURLResponse) throws -> Void)? = nil
     ) async throws -> ResponseType {
         return try await withCheckedThrowingContinuation { continuation in
-            getWith(apiClient, endpoint: endpoint, additionalHeaders: additionalHeaders, parameters: parameters, timeout: timeout) { responseObject, _, error in
+            getWith(
+                apiClient,
+                endpoint: endpoint,
+                additionalHeaders: additionalHeaders,
+                parameters: parameters,
+                timeout: timeout,
+                responseValidator: responseValidator
+            ) { responseObject, _, error in
                 guard let responseObject else {
                     continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
                     return
@@ -139,6 +155,7 @@ let JSONKeyObject = "object"
         method: String,
         body: Data?,
         error: Error?,
+        responseValidator: (([AnyHashable: Any], HTTPURLResponse) throws -> Void)? = nil,
         completion: @escaping (ResponseType?, HTTPURLResponse?, Error?) -> Void
     ) {
         // Derive HTTP URL response
@@ -173,6 +190,15 @@ let JSONKeyObject = "object"
             print("[Stripe SDK]: \(method) \"\(url.relativePath)\" \(httpResponse.statusCode) \(requestId)")
         }
         #endif
+
+        if let httpResponse, (200 ... 299).contains(httpResponse.statusCode), let jsonDictionary {
+            do {
+                try responseValidator?(jsonDictionary, httpResponse)
+            } catch {
+                safeCompletion(nil, error)
+                return
+            }
+        }
 
         if
             let httpResponse, (200...299).contains(httpResponse.statusCode),

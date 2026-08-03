@@ -228,20 +228,31 @@ class PaymentSheetFormFactory {
         guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
             analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
+            analyticsHelper?.logMobileSessionFormRender(
+                paymentMethod: paymentMethod.identifier,
+                errorCode: "missing_form_spec"
+            )
             return FormElement(elements: [], theme: theme)
         }
 
-        if let nativeFormSpec = spec.nativePaymentMethodFormSpec {
-            guard let nativeForm = makeNativePaymentMethodForm(for: nativeFormSpec) else {
+        if let nativeComponentSpec = spec.rootNativeComponentSpec {
+            guard let nativeForm = makeNativeComponent(for: nativeComponentSpec) else {
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.unsupportedNativeFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
                 analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
+                analyticsHelper?.logMobileSessionFormRender(
+                    paymentMethod: paymentMethod.identifier,
+                    errorCode: "unsupported_native_component"
+                )
                 stpAssertionFailure("Unsupported native PaymentSheet form spec for \(paymentMethod.identifier)")
                 return FormElement(elements: [], theme: theme)
             }
+            analyticsHelper?.logMobileSessionFormRender(paymentMethod: paymentMethod.identifier)
             return nativeForm
         }
 
-        return makeFormElementFromSpec(spec: spec)
+        let form = makeFormElementFromSpec(spec: spec)
+        analyticsHelper?.logMobileSessionFormRender(paymentMethod: paymentMethod.identifier)
+        return form
     }
 }
 
@@ -561,17 +572,19 @@ extension PaymentSheetFormFactory {
             phoneRequiredByPaymentMethod: false
         )
         let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: true)
-        let sortCodeField = makeSortCode()
-        let accountNumberField = makeBacsAccountNumber()
         let mandate = makeBacsMandate()
-        let bacsAccountSection = SectionElement(
-            title: String.Localized.bank_account_sentence_case,
-            elements: [sortCodeField, accountNumberField],
-            theme: theme
-        )
+        let bacsAccountSection = makeBacsDebitBankAccount()
         let elements: [Element?] = [contactSection, bacsAccountSection, addressSection, mandate]
         return FormElement(
             autoSectioningElements: elements.compactMap { $0 },
+            theme: theme
+        )
+    }
+
+    func makeBacsDebitBankAccount() -> SectionElement {
+        return SectionElement(
+            title: String.Localized.bank_account_sentence_case,
+            elements: [makeSortCode(), makeBacsAccountNumber()],
             theme: theme
         )
     }
@@ -635,7 +648,12 @@ extension PaymentSheetFormFactory {
     func makeKonbini() -> PaymentMethodElement {
         let contactInfoSection = makeContactInformationSection(nameRequiredByPaymentMethod: true, emailRequiredByPaymentMethod: true, phoneRequiredByPaymentMethod: false)
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
-        let konbiniPhoneNumber = PaymentMethodElementWrapper(TextFieldElement.makeKonbini(theme: theme)) { textField, params in
+        let elements = [contactInfoSection, makeKonbiniConfirmationNumber(), billingDetails].compactMap { $0 }
+        return FormElement(autoSectioningElements: elements, theme: theme)
+    }
+
+    func makeKonbiniConfirmationNumber() -> PaymentMethodElementWrapper<TextFieldElement> {
+        return PaymentMethodElementWrapper(TextFieldElement.makeKonbini(theme: theme)) { textField, params in
             let confirmationNumber = textField.text
             if !confirmationNumber.isEmpty {
                 params.confirmPaymentMethodOptions.konbiniOptions = .init()
@@ -643,8 +661,6 @@ extension PaymentSheetFormFactory {
             }
             return params
         }
-        let elements = [contactInfoSection, konbiniPhoneNumber, billingDetails].compactMap { $0 }
-        return FormElement(autoSectioningElements: elements, theme: theme)
     }
 
     /// All external payment methods use the same form that collects no user input except for any details the merchant configured PaymentSheet to collect (name, email, phone, billing address).
