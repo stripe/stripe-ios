@@ -281,7 +281,7 @@ extension PaymentSheet {
         }
 
         /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
-        private var internalPaymentOption: PaymentOption? {
+        var internalPaymentOption: PaymentOption? {
             guard viewController.error == nil else {
                 return nil
             }
@@ -339,7 +339,7 @@ extension PaymentSheet {
         private var isPresented = false
         private var pendingPresentTask: Task<Void, Never>?
         private(set) var didPresentAndContinue: Bool = false
-        private var confirmationChallenge: ConfirmationChallenge?
+        var confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
         private var linkAccountObserver: LinkAccountContextObserver?
 
@@ -572,6 +572,7 @@ extension PaymentSheet {
                 let bottomSheetVC = Self.makeBottomSheetViewController(
                     self.viewController,
                     configuration: self.configuration,
+                    // TODO(MOBILESDK-864): didCancelNative3DS2 is not used in FlowController
                     didCancelNative3DS2: { [weak self] in
                         self?.paymentHandler.cancel3DS2ChallengeFlow()
                     }
@@ -609,6 +610,7 @@ extension PaymentSheet {
             let bottomSheetVC = Self.makeBottomSheetViewController(
                 loadingVC,
                 configuration: configuration,
+                // TODO(MOBILESDK-864): didCancelNative3DS2 is not used in FlowController
                 didCancelNative3DS2: { [weak self] in
                     self?.paymentHandler.cancel3DS2ChallengeFlow()
                 }
@@ -680,7 +682,6 @@ extension PaymentSheet {
                 intent: intent,
                 elementsSession: elementsSession,
                 analyticsHelper: analyticsHelper,
-                checkout: checkout,
                 callback: completionCallback
             )
         }
@@ -749,7 +750,6 @@ extension PaymentSheet {
                         paymentOption: paymentOption,
                         paymentHandler: self.paymentHandler,
                         integrationShape: .flowController,
-                        checkout: self.checkout,
                         confirmationChallenge: self.confirmationChallenge,
                         analyticsHelper: self.analyticsHelper
                     ) { result, deferredIntentConfirmationType in

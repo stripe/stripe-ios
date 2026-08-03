@@ -334,7 +334,6 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             configuration: configuration,
             intent: intent,
             checkout: checkout,
-            syncsCheckoutBillingBeforeCompletion: checkout != nil,
             selectedPaymentMethod: selectedSavedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,
@@ -707,8 +706,7 @@ extension EmbeddedPaymentElement {
                 paymentHandler: self.paymentHandler,
                 integrationShape: .embedded,
                 confirmationChallenge: self.confirmationChallenge,
-                analyticsHelper: self.analyticsHelper,
-                checkout: self.checkout
+                analyticsHelper: self.analyticsHelper
             )
         }
 

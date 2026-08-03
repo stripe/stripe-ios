@@ -59,15 +59,6 @@ public class PaymentSheet {
             }
         }
 
-        var checkout: Checkout? {
-            switch self {
-            case .checkout(let checkout):
-                return checkout
-            case .paymentIntentClientSecret, .setupIntentClientSecret, .deferredIntent:
-                return nil
-            }
-        }
-
         var isDeferred: Bool {
             if case .deferredIntent = self {
                 return true
@@ -374,7 +365,6 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 paymentOption: paymentOption,
                 paymentHandler: self.paymentHandler,
                 integrationShape: .complete,
-                checkout: self.mode.checkout,
                 confirmationChallenge: self.confirmationChallenge,
                 analyticsHelper: self.analyticsHelper
             ) { result, deferredIntentConfirmationType in

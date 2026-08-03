@@ -69,13 +69,6 @@ final class SavedPaymentMethodRowButton: UIView {
 
     // MARK: Private views
 
-    private lazy var spinner: ActivityIndicator = {
-        let spinner = ActivityIndicator(size: .medium)
-        spinner.tintColor = appearance.colors.primary
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        return spinner
-    }()
-
     private(set) lazy var chevronButton: RowButton.RightAccessoryButton = {
         let chevronButton = RowButton.RightAccessoryButton(accessoryType: .update, appearance: appearance, didTap: handleUpdateButtonTapped)
         chevronButton.isHidden = !isEditing
@@ -114,11 +107,6 @@ final class SavedPaymentMethodRowButton: UIView {
         super.init(frame: .zero)
 
         addAndPinSubview(rowButton)
-        addSubview(spinner)
-        NSLayoutConstraint.activate([
-            spinner.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            spinner.centerYAnchor.constraint(equalTo: centerYAnchor),
-        ])
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -139,19 +127,9 @@ final class SavedPaymentMethodRowButton: UIView {
         }
     }
 
-    /// Shows or hides the trailing spinner and dims the row content while loading.
     func setLoading(_ loading: Bool) {
-        guard loading != spinner.isAnimating else {
-            return
-        }
-
-        if loading {
-            spinner.startAnimating()
-            rowButton.alpha = 0.6
-        } else {
-            spinner.stopAnimating()
-            rowButton.alpha = 1
-        }
+        rowButton.handleEvent(loading ? .shouldDisableUserInteraction : .shouldEnableUserInteraction)
+        rowButton.setLoading(loading, style: .trailing)
     }
 
     func updateLinkBrand(_ linkBrand: LinkBrand) {

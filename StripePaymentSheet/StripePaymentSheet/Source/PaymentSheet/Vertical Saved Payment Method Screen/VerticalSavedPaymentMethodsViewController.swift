@@ -33,11 +33,11 @@ protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
 
 /// A view controller that shows a list of saved payment methods in a vertical orientation
 class VerticalSavedPaymentMethodsViewController: UIViewController {
+
     // MARK: Private properties
     private let configuration: PaymentElementConfiguration
     private let intent: Intent
-    private weak var checkout: Checkout?
-    private let syncsCheckoutBillingBeforeCompletion: Bool
+    private weak var checkout: CheckoutSessionBillingAddressUpdater?
     private let elementsSession: STPElementsSession
     private let paymentMethodRemove: Bool
     private let paymentMethodRemoveLast: Bool
@@ -130,12 +130,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(
-            configuration: configuration,
-            elementsSession: elementsSession,
-            intent: intent,
-            checkout: checkout
-        )
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
     }()
 
     // MARK: Internal properties
@@ -159,7 +154,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return label
     }()
 
-    lazy var errorLabel: UILabel = {
+    private lazy var errorLabel: UILabel = {
         let label = ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
         label.isHidden = true
         return label
@@ -185,13 +180,12 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return stackView
     }()
 
-    var paymentMethodRows: [SavedPaymentMethodRowButton] = []
+    private var paymentMethodRows: [SavedPaymentMethodRowButton] = []
 
     init(
         configuration: PaymentElementConfiguration,
         intent: Intent,
-        checkout: Checkout? = nil,
-        syncsCheckoutBillingBeforeCompletion: Bool = false,
+        checkout: CheckoutSessionBillingAddressUpdater? = nil,
         selectedPaymentMethod: STPPaymentMethod?,
         paymentMethods: [STPPaymentMethod],
         elementsSession: STPElementsSession,
@@ -201,7 +195,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.configuration = configuration
         self.intent = intent
         self.checkout = checkout
-        self.syncsCheckoutBillingBeforeCompletion = syncsCheckoutBillingBeforeCompletion
         self.elementsSession = elementsSession
         self.defaultPaymentMethod = defaultPaymentMethod
         self.paymentMethodRemove = intent.allowsPaymentMethodRemoval(elementsSession: elementsSession)
@@ -211,12 +204,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
-        if syncsCheckoutBillingBeforeCompletion {
-            stpAssert(
-                checkout != nil,
-                "Checkout is required to sync billing before selection completion."
-            )
-        }
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
         setInitialState(selectedPaymentMethod: selectedPaymentMethod)
     }
@@ -339,7 +326,7 @@ extension VerticalSavedPaymentMethodsViewController: BottomSheetContentViewContr
     }
 
     func didTapOrSwipeToDismiss() {
-        if view.isUserInteractionEnabled {
+        if allowsDragToDismiss {
             complete(didTapToDismiss: true)
         }
     }
@@ -370,97 +357,98 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
 
     func didSelectButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
         analyticsHelper.logSavedPMScreenOptionSelected(option: .saved(paymentMethod: paymentMethod))
-        let previousSelectedButton = paymentMethodRows.first { $0 != button && $0.isSelected }
-        let previousCustomerPaymentOption = CustomerPaymentOption.localDefaultPaymentMethod(
-            for: configuration.customer?.id
-        )
-        if !elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
-            // Set local storage default
-            CustomerPaymentOption.setDefaultPaymentMethod(
-                .stripeId(paymentMethod.stripeId),
-                forCustomer: configuration.customer?.id
-            )
-        }
-
-        // Deselect previous button
-        previousSelectedButton?.state = .unselected
+        let previousButton = paymentMethodRows.first { $0 != button && $0.isSelected }
+        previousButton?.state = .unselected
 
         // Disable interaction to prevent double selecting or entering edit mode since we will be dismissing soon
-        view.isUserInteractionEnabled = false
-        navigationBar.isUserInteractionEnabled = false
+        setSelectionInteractionEnabled(false)
 
-        guard syncsCheckoutBillingBeforeCompletion,
-              let checkout,
-              checkout.requiresBillingAddressSync(from: paymentMethod.billingDetails) else {
-            complete()
+        guard let checkout,
+              let address = paymentMethod.billingDetails?.address?.checkoutAddress else {
+            completeSelection(of: paymentMethod)
             return
         }
 
-        syncBillingAddressThenComplete(
-            checkout: checkout,
+        updateBillingTaxRegionAndCompleteSelection(
+            address: address,
+            using: checkout,
             paymentMethod: paymentMethod,
             button: button,
-            previousSelectedButton: previousSelectedButton,
-            previousCustomerPaymentOption: previousCustomerPaymentOption
+            previousButton: previousButton
         )
     }
 
-    private func syncBillingAddressThenComplete(
-        checkout: Checkout,
+    private func updateBillingTaxRegionAndCompleteSelection(
+        address: Checkout.Address,
+        using checkout: CheckoutSessionBillingAddressUpdater,
         paymentMethod: STPPaymentMethod,
         button: SavedPaymentMethodRowButton,
-        previousSelectedButton: SavedPaymentMethodRowButton?,
-        previousCustomerPaymentOption: CustomerPaymentOption?
+        previousButton: SavedPaymentMethodRowButton?
     ) {
-        showError(nil)
+        setError(nil)
         button.setLoading(true)
-        setSiblingRowsEnabled(false, selectedRow: button)
-
         Task { @MainActor [weak self] in
-            guard let self else {
-                return
-            }
+            guard let self else { return }
             do {
-                try await checkout.syncBillingAddress(from: paymentMethod.billingDetails)
-                self.complete()
+                _ = try await checkout.updateBillingTaxRegionIfNecessaryForPaymentSheet(
+                    address: address,
+                    canUpdateWhileSheetPresented: true
+                )
+                completeSelection(of: paymentMethod)
             } catch {
-                button.setLoading(false)
-                self.setSiblingRowsEnabled(true, selectedRow: button)
-                button.state = button.previousSelectedState
-                previousSelectedButton?.state = .selected
-                if !self.elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
-                    CustomerPaymentOption.setDefaultPaymentMethod(
-                        previousCustomerPaymentOption,
-                        forCustomer: self.configuration.customer?.id
-                    )
-                }
-                self.view.isUserInteractionEnabled = true
-                self.navigationBar.isUserInteractionEnabled = true
-                self.showError(error)
+                restoreSelection(
+                    after: error,
+                    button: button,
+                    previousButton: previousButton
+                )
             }
         }
     }
 
-    private func setSiblingRowsEnabled(
-        _ enabled: Bool,
-        selectedRow: SavedPaymentMethodRowButton
+    private func completeSelection(of paymentMethod: STPPaymentMethod) {
+        persistSelection(paymentMethod)
+        complete()
+    }
+
+    private func restoreSelection(
+        after error: Error,
+        button: SavedPaymentMethodRowButton,
+        previousButton: SavedPaymentMethodRowButton?
     ) {
-        for row in paymentMethodRows where row != selectedRow {
-            sendEventToSubviews(
-                enabled ? .shouldEnableUserInteraction : .shouldDisableUserInteraction,
-                from: row
-            )
+        button.setLoading(false)
+        button.state = button.previousSelectedState
+        previousButton?.state = .selected
+        setSelectionInteractionEnabled(true)
+        setError(error)
+    }
+
+    private func setError(_ error: Error?) {
+        let shouldHideError = error == nil
+        errorLabel.text = error?.nonGenericDescription
+        animateHeightChange { [self] in
+            if let lastPaymentMethodRow = paymentMethodRows.last {
+                stackView.setCustomSpacing(shouldHideError ? 0 : 12, after: lastPaymentMethodRow)
+            }
+            errorLabel.setHiddenIfNecessary(shouldHideError)
+            guard !shouldHideError else { return }
+            errorLabel.setNeedsLayout()
+            errorLabel.layoutIfNeeded()
         }
     }
 
-    private func showError(_ error: Error?) {
-        errorLabel.text = error?.nonGenericDescription
-        if let lastPaymentMethodRow = paymentMethodRows.last {
-            stackView.setCustomSpacing(error == nil ? 0 : 12, after: lastPaymentMethodRow)
+    private func setSelectionInteractionEnabled(_ isEnabled: Bool) {
+        view.isUserInteractionEnabled = isEnabled
+        navigationBar.isUserInteractionEnabled = isEnabled
+    }
+
+    private func persistSelection(_ paymentMethod: STPPaymentMethod) {
+        guard !elementsSession.paymentMethodSetAsDefaultForPaymentSheet else {
+            return
         }
-        animateHeightChange {
-            self.errorLabel.setHiddenIfNecessary(error == nil)
-        }
+        CustomerPaymentOption.setDefaultPaymentMethod(
+            .stripeId(paymentMethod.stripeId),
+            forCustomer: configuration.customer?.id
+        )
     }
 
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
