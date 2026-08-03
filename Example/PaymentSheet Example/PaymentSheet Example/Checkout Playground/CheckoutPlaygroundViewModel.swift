@@ -10,19 +10,31 @@ import SwiftUI
 extension CheckoutPlayground {
     @MainActor
     final class ViewModel: ObservableObject {
+        // Unified mode currently supports card and Link.
         static let availablePaymentMethods = [
-            "card", "us_bank_account", "cashapp", "affirm", "klarna",
+            "card", "link",
         ]
 
-        @Published var integrationType: IntegrationType = .flowController
+        @Published var integrationType: IntegrationType = .flowController {
+            didSet {
+                if integrationType == .eceOnly && expressCheckoutElementOption == .hide {
+                    expressCheckoutElementOption = .show
+                }
+            }
+        }
+        @Published var expressCheckoutElementOption: ExpressCheckoutElementOption = .show {
+            didSet {
+                if expressCheckoutElementOption == .hide && integrationType == .eceOnly {
+                    integrationType = .flowController
+                }
+            }
+        }
         @Published var currency: Currency = .usd
         @Published var customerType: CustomerType = .guest
         @Published var lineItems: [LineItemConfig] = LineItemConfig.defaults
-        @Published var allowPromotionCodes = true
         @Published var shippingAddressCollection = true
         @Published var billingAddressCollection: BillingAddressCollection = .automatic
         @Published var automaticTax = true
-        @Published var adaptivePricing = false
         @Published var checkoutSessionPaymentMethodSave = true
         @Published var checkoutSessionPaymentMethodRemove = true
         @Published var adaptivePricingCountry: AdaptivePricingCountry = .none
@@ -86,13 +98,12 @@ extension CheckoutPlayground {
         private func buildRequestBody() -> [String: Any] {
             var body: [String: Any] = [
                 "merchant_country_code": "us_tax",
+                "mode": "unified",
                 "currency": currency.rawValue,
                 "customer": customerType.rawValue,
-                "allow_promotion_codes": allowPromotionCodes,
                 "shipping_address_collection": shippingAddressCollection,
                 "billing_address_collection": billingAddressCollection == .required,
                 "automatic_tax": automaticTax,
-                "adaptive_pricing": adaptivePricing,
                 "checkout_session_payment_method_save": checkoutSessionPaymentMethodSave ? "enabled" : "disabled",
                 "checkout_session_payment_method_remove": checkoutSessionPaymentMethodRemove ? "enabled" : "disabled",
             ]
@@ -101,7 +112,7 @@ extension CheckoutPlayground {
             } else {
                 body["payment_method_types"] = Array(paymentMethodTypes)
             }
-            if adaptivePricing, adaptivePricingCountry != .none {
+            if adaptivePricingCountry != .none {
                 let countryCode = adaptivePricingCountry.rawValue.uppercased()
                 body["customer_email"] = "test+location_\(countryCode)@example.com"
             }
