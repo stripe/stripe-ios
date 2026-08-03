@@ -107,7 +107,18 @@ class PlaygroundViewController: UIViewController {
     }
 
     var requireMatchingSelfie: Bool {
-        return requireSelfieSwitch.isOn || is3DFaceCaptureEnabled
+        guard requireSelfieSwitch.isOn else {
+            return false
+        }
+
+        switch verificationType {
+        case .document:
+            return true
+        case .phone:
+            return fallbackToDocumentSwitch.isOn
+        case .idNumber, .address:
+            return false
+        }
     }
 
     /// List of allowed document types based on UI toggles
@@ -208,8 +219,11 @@ class PlaygroundViewController: UIViewController {
         // server depending on the desired behavior.
         var requestDict: [String: Any] = [
             "type": verificationType.rawValue,
-            "3d_face_capture_enabled": is3DFaceCaptureEnabled,
         ]
+
+        if requireMatchingSelfie {
+            requestDict["3d_face_capture_enabled"] = is3DFaceCaptureEnabled
+        }
 
         var options: [String: Any] = [:]
 
