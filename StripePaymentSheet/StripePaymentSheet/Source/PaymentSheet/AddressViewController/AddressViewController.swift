@@ -29,20 +29,19 @@ public class AddressViewController: UIViewController {
     public let configuration: Configuration
     /// A valid address or nil.
     private var addressDetails: AddressDetails? {
-        guard let addressSection = addressSection else { return nil }
-
-        guard case .valid = addressSection.validationState,
-              let line1 = addressSection.line1?.text.nonEmpty
-        else {
+        guard let addressSection,
+              let normalizedAddress = AddressViewControllerAddressNormalizer.normalizedAddress(from: addressSection),
+              let country = normalizedAddress.country,
+              let line1 = normalizedAddress.line1 else {
             return nil
         }
         let address = AddressDetails.Address(
-            city: addressSection.city?.text.nonEmpty,
-            country: addressSection.selectedCountryCode,
+            city: normalizedAddress.city,
+            country: country,
             line1: line1,
-            line2: addressSection.line2?.text.nonEmpty,
-            postalCode: addressSection.postalCode?.text.nonEmpty,
-            state: addressSection.state?.rawData.nonEmpty
+            line2: normalizedAddress.line2,
+            postalCode: normalizedAddress.postalCode,
+            state: normalizedAddress.state
         )
         return .init(
             address: address,
@@ -131,57 +130,38 @@ public class AddressViewController: UIViewController {
 
     /// Returns the shipping address if it is compatible with allowed countries, otherwise returns the billing address if compatible.
     private var compatibleDefaultValues: AddressViewController.Configuration.DefaultAddressDetails? {
-        // Try shipping address (defaultValues) first
-        if !configuration.defaultValues.address.isEmpty {
-            if isAddressCompatible(configuration.defaultValues) {
-                return configuration.defaultValues
-            }
-        } else if configuration.defaultValues.name?.isEmpty == false {
+        // Preserve a name-only default instead of falling back to the billing address.
+        if configuration.defaultValues.address.isEmpty,
+           configuration.defaultValues.name?.isEmpty == false {
             return configuration.defaultValues
         }
 
-        // Fall back to billing address
-        if let billingAddress = configuration.billingAddress {
-            if isAddressCompatible(billingAddress) {
-                return billingAddress
-            }
+        switch AddressViewControllerAddressNormalizer.addressSource(
+            defaultAddress: configuration.defaultValues.address,
+            fallbackAddress: configuration.billingAddress?.address,
+            allowedCountries: configuration.allowedCountries
+        ) {
+        case .defaultAddress:
+            return configuration.defaultValues
+        case .fallbackAddress:
+            return configuration.billingAddress
+        case nil:
+            return nil
         }
-
-        return nil
     }
 
     /// Checks if an address is compatible with the allowed countries configuration.
     private func isAddressCompatible(_ addressDetails: AddressViewController.Configuration.DefaultAddressDetails) -> Bool {
-        // No default address provided, early exit
-        guard !addressDetails.address.isEmpty else { return false }
-
-        // No blocked countries, allow all default addresses
-        guard !configuration.allowedCountries.isEmpty else { return true }
-
-        // Default address has no country specified, allow it
-        guard let defaultCountry = addressDetails.address.country else { return true }
-
-        // Only allow default addresses with allowed countries
-        return configuration.allowedCountries.contains(defaultCountry)
+        return AddressViewControllerAddressNormalizer.isCompatible(
+            addressDetails.address,
+            allowedCountries: configuration.allowedCountries
+        )
     }
 
     private lazy var shippingEqualsBillingCheckbox: CheckboxElement? = {
         // Show checkbox when billing address is provided and is compatible with allowed countries
         guard let billingAddress = configuration.billingAddress else { return nil }
-
-        // Check if billing address is compatible with allowed countries
-        let isCompatible: Bool = {
-            // No blocked countries, allow all billing addresses
-            guard !configuration.allowedCountries.isEmpty else { return true }
-
-            // Billing address has no country specified, allow it
-            guard let billingCountry = billingAddress.address.country else { return true }
-
-            // Only show checkbox for billing addresses with allowed countries
-            return configuration.allowedCountries.contains(billingCountry)
-        }()
-
-        guard isCompatible else { return nil }
+        guard isAddressCompatible(billingAddress) else { return nil }
 
         // Only show checkbox if billing address has at least line1
         guard billingAddress.address.line1?.nonEmpty != nil else { return nil }
