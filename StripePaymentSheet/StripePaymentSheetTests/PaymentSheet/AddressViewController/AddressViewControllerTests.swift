@@ -42,6 +42,7 @@ final class AddressViewControllerTests: XCTestCase {
         // Then only the integration delegate receives the valid address
         XCTAssertEqual(integrationDelegate.receivedAddressDetails.count, 1)
         let addressDetails = integrationDelegate.receivedAddressDetails[0]
+        XCTAssertEqual(addressDetails?.name, "Jane Doe")
         XCTAssertEqual(addressDetails?.address.city, "San Francisco")
         XCTAssertEqual(addressDetails?.address.country, "US")
         XCTAssertEqual(addressDetails?.address.line1, "354 Oyster Point Blvd")
@@ -94,6 +95,7 @@ final class AddressViewControllerTests: XCTestCase {
 
         // Then the merchant receives the address and completion is logged
         XCTAssertEqual(merchantDelegate.receivedAddressDetails.count, 1)
+        XCTAssertEqual(merchantDelegate.receivedAddressDetails[0]?.name, "Jane Doe")
         XCTAssertEqual(merchantDelegate.receivedAddressDetails[0]?.address.line1, "354 Oyster Point Blvd")
         XCTAssertNotNil(addressCompletionEvent)
     }
@@ -158,7 +160,7 @@ final class AddressViewControllerTests: XCTestCase {
         configuration.allowedCountries = ["US"]
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         if let defaultAddress {
-            configuration.defaultValues = .init(address: defaultAddress)
+            configuration.defaultValues = .init(address: defaultAddress, name: "Jane Doe")
         }
         return configuration
     }
