@@ -47,9 +47,6 @@ import Foundation
     /// Link to the merchant's logo asset.
     let merchantLogoUrl: URL?
 
-    /// A map describing payment method types form specs.
-    let paymentMethodSpecs: [[AnyHashable: Any]]?
-
     /// Card brand choice settings for the merchant.
     let cardBrandChoice: STPCardBrandChoice?
 
@@ -89,7 +86,6 @@ import Foundation
         linkSettings: LinkSettings?,
         experimentsData: ExperimentsData?,
         flags: [String: Bool],
-        paymentMethodSpecs: [[AnyHashable: Any]]?,
         cardBrandChoice: STPCardBrandChoice?,
         isApplePayEnabled: Bool,
         externalPaymentMethods: [ExternalPaymentMethod],
@@ -110,7 +106,6 @@ import Foundation
         self.linkSettings = linkSettings
         self.experimentsData = experimentsData
         self.flags = flags
-        self.paymentMethodSpecs = paymentMethodSpecs
         self.cardBrandChoice = cardBrandChoice
         self.isApplePayEnabled = isApplePayEnabled
         self.externalPaymentMethods = externalPaymentMethods
@@ -156,7 +151,6 @@ import Foundation
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
-            paymentMethodSpecs: nil,
             cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: [:]),
             isApplePayEnabled: true,
             externalPaymentMethods: [],
@@ -267,7 +261,6 @@ extension STPElementsSession: STPAPIResponseDecodable {
             ),
             experimentsData: experimentsData,
             flags: flags,
-            paymentMethodSpecs: response["payment_method_specs"] as? [[AnyHashable: Any]],
             cardBrandChoice: cardBrandChoice,
             isApplePayEnabled: isApplePayEnabled,
             externalPaymentMethods: externalPaymentMethods,

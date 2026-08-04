@@ -16,10 +16,6 @@ extension STPAnalyticsClient {
         self.logPaymentSheetEvent(event: .luxeSpecSerializeFailure, error: error)
     }
 
-    func logImageSelectorIconDownloadedIfNeeded(paymentMethod: PaymentSheet.PaymentMethodType) {
-        self.logPaymentSheetEvent(event: .luxeImageSelectorIconDownloaded, params: ["payment_method": paymentMethod.identifier])
-    }
-
     func logImageSelectorIconFromBundleIfNeeded(paymentMethod: PaymentSheet.PaymentMethodType) {
         self.logPaymentSheetEvent(event: .luxeImageSelectorIconFromBundle, params: ["payment_method": paymentMethod.identifier])
     }

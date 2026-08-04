@@ -85,35 +85,13 @@ extension PaymentSheet {
                     updateHandler: updateHandler
                 )
             case .stripe(let paymentMethodType):
-                // Get the client-side asset first
                 let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle)
-                // Next, try to download the image from the spec if possible
-                if
-                    FormSpecProvider.shared.isLoaded,
-                    let spec = FormSpecProvider.shared.formSpec(for: identifier),
-                    let selectorIcon = spec.selectorIcon,
-                    var imageUrl = URL(string: selectorIcon.lightThemePng),
-                    paymentMethodType != .crypto // special case, don't use remote URL for crypto so we can use the local image based on iconStyle
-                {
-                    if forDarkBackground,
-                       let darkImageString = selectorIcon.darkThemePng,
-                       let darkImageUrl = URL(string: darkImageString)
-                    {
-                        imageUrl = darkImageUrl
-                    }
-                    if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
-                        STPAnalyticsClient.sharedClient.logImageSelectorIconDownloadedIfNeeded(paymentMethod: self)
-                    }
-                    // If there's a form spec, download the spec's image, using the local image as a placeholder until it loads
-                    return DownloadManager.sharedManager.downloadImage(url: imageUrl, placeholder: localImage, updateHandler: updateHandler)
-                } else if let localImage {
+                if let localImage {
                     if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
                         STPAnalyticsClient.sharedClient.logImageSelectorIconFromBundleIfNeeded(paymentMethod: self)
                     }
-                    // If there's no form spec, return the local image if it exists
                     return localImage
                 } else {
-                    // If the local image doesn't exist and there's no form spec, fire an analytic and return an empty image
                     assertionFailure()
                     if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
                         STPAnalyticsClient.sharedClient.logImageSelectorIconNotFoundIfNeeded(paymentMethod: self)

@@ -179,7 +179,6 @@ import Foundation
     case luxeSerializeFailure = "luxe_serialize_failure"
     case luxeSpecSerializeFailure = "luxe_spec_serialize_failure"
 
-    case luxeImageSelectorIconDownloaded = "luxe_image_selector_icon_downloaded"
     case luxeImageSelectorIconFromBundle = "luxe_image_selector_icon_from_bundle"
     case luxeImageSelectorIconNotFound = "luxe_image_selector_icon_not_found"
 
