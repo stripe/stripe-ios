@@ -298,8 +298,8 @@ extension SavedPaymentMethodCollectionView {
                 return
             }
 
-            selectedIcon.isHidden = !loading && !isSelected
-            selectedIcon.imageView.isHidden = loading
+            selectedIcon.setHiddenIfNecessary(!loading && !isSelected)
+            selectedIcon.imageView.setHiddenIfNecessary(loading)
             if loading {
                 spinner.tintColor = appearance.colors.primary.contrastingColor
                 spinner.startAnimating()
