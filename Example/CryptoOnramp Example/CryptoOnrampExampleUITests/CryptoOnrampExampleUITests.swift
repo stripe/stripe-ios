@@ -23,6 +23,15 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         state: "NJ"
     )
 
+    private static let refreshedTestAddress = Address(
+        city: "Jersey City",
+        country: "US",
+        line1: "456 Fake St.",
+        line2: "Apartment 2B",
+        postalCode: "07302",
+        state: "NJ"
+    )
+
     private static let euTestAddress = Address(
         city: "Athens",
         country: "GR",
@@ -136,10 +145,6 @@ final class CryptoOnrampExampleUITests: XCTestCase {
     func testNewUserEndToEnd() throws {
         let phoneNumber = Self.makeRandomUSPhoneNumber()
         let address = Self.testAddress
-        let addressLine1 = try XCTUnwrap(address.line1)
-        let addressLine2 = try XCTUnwrap(address.line2)
-        let city = try XCTUnwrap(address.city)
-        let state = try XCTUnwrap(address.state)
         let postalCode = try XCTUnwrap(address.postalCode)
 
         // Step 1: Create, register, and authenticate a new Link user.
@@ -150,35 +155,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         )
 
         // Step 2: Provide full US KYC information.
-        let kycLabel = app.staticTexts["KYC Information"].firstMatch
-        XCTAssertTrue(kycLabel.waitForExistence(timeout: .networkTimeout), "KYC screen should appear")
-        waitForLoadingToFinish()
-
-        let firstNameField = app.textFields["Enter your first name"].firstMatch
-        XCTAssertTrue(firstNameField.waitForExistence(timeout: .animationTimeout), "First name field should exist")
-        firstNameField.tap()
-        app.typeText("Crypto" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("Tester" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("000000000" + XCUIKeyboardKey.return.rawValue)
-
-        setDateOfBirth()
-
-        let kycScrollView = app.scrollViews["kyc_form"].firstMatch
-        XCTAssertTrue(kycScrollView.waitForExistence(timeout: .animationTimeout), "KYC form should be scrollable")
-        kycScrollView.swipeUp()
-
-        let addressLine1Field = app.textFields["Enter your street address"].firstMatch
-        addressLine1Field.tap()
-        app.typeText(addressLine1 + XCUIKeyboardKey.return.rawValue)
-        app.typeText(addressLine2 + XCUIKeyboardKey.return.rawValue)
-        app.typeText(city + XCUIKeyboardKey.return.rawValue)
-        app.typeText(state + XCUIKeyboardKey.return.rawValue)
-        app.typeText(postalCode + XCUIKeyboardKey.return.rawValue)
-        app.typeText(XCUIKeyboardKey.return.rawValue)
-
-        let submitKYCButton = app.buttons["Submit"].firstMatch
-        XCTAssertTrue(submitKYCButton.isEnabled, "KYC Submit button should be enabled")
-        submitKYCButton.tap()
+        try completeFullUSKYC(address: address)
 
         // Step 3: Complete document verification with the synchronous test-mode success option.
         completeSuccessfulIdentityVerification()
@@ -254,6 +231,161 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         waitForLoadingToFinish()
     }
 
+    /// Tests a complete new-user checkout using a refreshed KYC address and a standard ACH bank payment.
+    @MainActor
+    func testNewUserStandardACHCheckoutAfterKYCRefresh() throws {
+        let phoneNumber = Self.makeRandomUSPhoneNumber()
+        let refreshedAddress = Self.refreshedTestAddress
+        let refreshedAddressLine1 = try XCTUnwrap(refreshedAddress.line1)
+        let refreshedAddressLine2 = try XCTUnwrap(refreshedAddress.line2)
+        let refreshedCity = try XCTUnwrap(refreshedAddress.city)
+        let refreshedState = try XCTUnwrap(refreshedAddress.state)
+        let refreshedPostalCode = try XCTUnwrap(refreshedAddress.postalCode)
+        let refreshedCountry = try XCTUnwrap(refreshedAddress.country)
+        let refreshedFormattedAddress = [
+            refreshedAddressLine1,
+            refreshedAddressLine2,
+            refreshedCity,
+            refreshedState,
+            refreshedCountry,
+            refreshedPostalCode,
+        ].joined(separator: ", ")
+
+        // Step 1: Create, register, and authenticate a new Link user.
+        signUpAndAuthenticateNewUser(
+            fullName: "Crypto Onramp ACH UI Tests",
+            phoneNumber: phoneNumber,
+            countryCode: "US"
+        )
+
+        // Step 2: Provide full US KYC information.
+        try completeFullUSKYC(address: Self.testAddress)
+
+        // Step 3: Complete document verification with the synchronous test-mode success option.
+        completeSuccessfulIdentityVerification()
+
+        // Step 4: Register a new Solana wallet and continue to payment.
+        addSolanaWallet(address: Self.solanaWalletAddress)
+
+        let nextButton = app.buttons["Next"].firstMatch
+        XCTAssertTrue(nextButton.wait(for: \.isEnabled, toEqual: true, timeout: .networkTimeout), "Next button should become enabled")
+        nextButton.tap()
+
+        let paymentLabel = app.staticTexts["Payment"].firstMatch
+        XCTAssertTrue(paymentLabel.waitForExistence(timeout: .networkTimeout), "Payment screen should appear")
+        waitForLoadingToFinish()
+
+        // Step 5: Refresh the customer's KYC address from the authenticated-user toolbar.
+        let userButton = app.images["person.fill"].firstMatch
+        XCTAssertTrue(userButton.exists, "User toolbar button should exist")
+        userButton.tap()
+
+        let verifyKYCMenuItem = app.buttons["Verify KYC Info…"].firstMatch
+        XCTAssertTrue(verifyKYCMenuItem.waitForExistence(timeout: .animationTimeout), "Verify KYC menu item should exist")
+        verifyKYCMenuItem.tap()
+
+        let confirmInformationLabel = app.staticTexts["Confirm your information"].firstMatch
+        XCTAssertTrue(confirmInformationLabel.waitForExistence(timeout: .networkTimeout), "KYC confirmation sheet should appear")
+
+        let editAddressButton = app.buttons["Edit address"].firstMatch
+        XCTAssertTrue(editAddressButton.waitForExistence(timeout: .animationTimeout), "Edit address button should appear")
+        editAddressButton.tap()
+
+        let updateAddressNavigationBar = app.navigationBars["Update Address"].firstMatch
+        XCTAssertTrue(updateAddressNavigationBar.waitForExistence(timeout: .animationTimeout), "Update Address screen should appear")
+
+        let addressLine1Field = app.textFields["Enter your street address"].firstMatch
+        enterText(refreshedAddressLine1 + XCUIKeyboardKey.return.rawValue, in: addressLine1Field)
+        app.typeText(refreshedAddressLine2 + XCUIKeyboardKey.return.rawValue)
+        app.typeText(refreshedCity + XCUIKeyboardKey.return.rawValue)
+        app.typeText(refreshedState + XCUIKeyboardKey.return.rawValue)
+        app.typeText(refreshedPostalCode)
+        dismissKeyboard()
+
+        let submitAddressButton = app.buttons["Submit"].firstMatch
+        XCTAssertTrue(submitAddressButton.isEnabled, "Updated address Submit button should be enabled")
+        submitAddressButton.tap()
+
+        XCTAssertTrue(confirmInformationLabel.waitForExistence(timeout: .networkTimeout), "Updated KYC confirmation sheet should appear")
+        XCTAssertTrue(app.staticTexts[refreshedFormattedAddress].firstMatch.exists, "Updated KYC confirmation should show the new address")
+
+        let confirmKYCButton = app.buttons["Confirm"].firstMatch
+        XCTAssertTrue(confirmKYCButton.isEnabled, "KYC Confirm button should be enabled")
+        confirmKYCButton.tap()
+
+        let successAlert = app.alerts["Success"].firstMatch
+        XCTAssertTrue(successAlert.waitForExistence(timeout: .networkTimeout), "KYC refresh success alert should appear")
+        XCTAssertTrue(successAlert.staticTexts["KYC information confirmed."].exists, "KYC refresh should be confirmed")
+        successAlert.buttons["OK"].tap()
+
+        // Step 6: Add the Success test bank account and select standard ACH.
+        app.buttons["$3"].firstMatch.tap()
+        app.buttons["Select a payment method"].firstMatch.tap()
+
+        let addBankAccountOption = app.staticTexts["Add Bank Account"].firstMatch
+        XCTAssertTrue(addBankAccountOption.waitForExistence(timeout: .animationTimeout), "Add Bank Account option should appear")
+        addBankAccountOption.tap()
+
+        let agreeAndContinueButton = app.buttons["consent_agree_button"].firstMatch
+        XCTAssertTrue(agreeAndContinueButton.waitForExistence(timeout: .networkTimeout), "Financial Connections consent screen should appear")
+        agreeAndContinueButton.tap()
+
+        let successBank = app.tables.cells.staticTexts["Success"].firstMatch
+        XCTAssertTrue(successBank.waitForExistence(timeout: .networkTimeout), "Success test bank should appear")
+        successBank.tap()
+
+        let connectAccountsButton = app.buttons["connect_accounts_button"].firstMatch
+        XCTAssertTrue(connectAccountsButton.waitForExistence(timeout: .networkTimeout), "Connect accounts button should appear")
+        connectAccountsButton.tap()
+
+        let bankSuccessDoneButton = app.buttons["success_done_button"].firstMatch
+        XCTAssertTrue(bankSuccessDoneButton.waitForExistence(timeout: .networkTimeout), "Bank account success screen should appear")
+        bankSuccessDoneButton.tap()
+        XCTAssertTrue(bankSuccessDoneButton.waitForNonExistence(timeout: .networkTimeout), "Bank account success screen should close")
+
+        let linkSheet = app.otherElements["Stripe.Link.PayWithLinkViewController"].firstMatch
+        let linkBankContinueButton = linkSheet.buttons["Continue"].firstMatch
+        XCTAssertTrue(linkBankContinueButton.waitForExistence(timeout: .networkTimeout), "Link bank account Continue button should appear")
+        linkBankContinueButton.tap()
+
+        let confirmPaymentDetailsLabel = linkSheet.staticTexts["Confirm payment details"].firstMatch
+        XCTAssertTrue(confirmPaymentDetailsLabel.waitForExistence(timeout: .networkTimeout), "Bank billing details form should appear")
+        enterText("Crypto Onramp ACH UI Tests", in: linkSheet.textFields["Full name"].firstMatch)
+        enterText(refreshedPostalCode, in: linkSheet.textFields["ZIP"].firstMatch)
+        dismissKeyboard()
+
+        let billingDetailsContinueButton = linkSheet.buttons["Continue"].firstMatch
+        XCTAssertTrue(
+            billingDetailsContinueButton.wait(for: \.isEnabled, toEqual: true, timeout: .animationTimeout),
+            "Bank billing details Continue button should become enabled"
+        )
+        billingDetailsContinueButton.tap()
+        XCTAssertTrue(linkSheet.waitForNonExistence(timeout: .networkTimeout), "Link bank account sheet should close")
+        waitForLoadingToFinish()
+
+        let standardACHButton = app.segmentedControls.buttons["Standard"].firstMatch
+        XCTAssertTrue(standardACHButton.waitForExistence(timeout: .animationTimeout), "Standard ACH option should appear")
+        standardACHButton.tap()
+        XCTAssertTrue(standardACHButton.isSelected, "Standard ACH should be selected")
+
+        let paymentContinueButton = app.buttons["Continue"].firstMatch
+        XCTAssertTrue(
+            paymentContinueButton.wait(for: \.isEnabled, toEqual: true, timeout: .networkTimeout),
+            "Payment Continue button should become enabled"
+        )
+        paymentContinueButton.tap()
+
+        // Step 7: Confirm checkout and reach the success screen.
+        let reviewLabel = app.staticTexts["Review"].firstMatch
+        XCTAssertTrue(reviewLabel.waitForExistence(timeout: .networkTimeout), "Review screen should appear")
+        waitForLoadingToFinish()
+        app.buttons["Confirm"].firstMatch.tap()
+
+        let purchaseSuccessLabel = app.staticTexts["Purchase successful"].firstMatch
+        XCTAssertTrue(purchaseSuccessLabel.waitForExistence(timeout: .networkTimeout), "Checkout success screen should appear")
+        waitForLoadingToFinish()
+    }
+
     /// Tests EU registration and KYC, compliance identifiers, user attestation, identity verification, and wallet verification.
     @MainActor
     func testNewEUUserThroughWalletVerification() throws {
@@ -290,13 +422,9 @@ final class CryptoOnrampExampleUITests: XCTestCase {
 
         setDateOfBirth()
 
-        let kycScrollView = app.scrollViews["kyc_form"].firstMatch
-        kycScrollView.swipeUp()
-
         let birthCountryField = app.textFields["Country code"].firstMatch
         XCTAssertTrue(birthCountryField.waitForExistence(timeout: .animationTimeout), "Birth country field should exist")
-        birthCountryField.tap()
-        app.typeText(country + XCUIKeyboardKey.return.rawValue)
+        birthCountryField.typeText(country + XCUIKeyboardKey.return.rawValue)
         app.typeText(city + XCUIKeyboardKey.return.rawValue)
         app.typeText("GR, MT" + XCUIKeyboardKey.return.rawValue)
         app.typeText(addressLine1 + XCUIKeyboardKey.return.rawValue)
@@ -355,209 +483,4 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Verified"].firstMatch.waitForExistence(timeout: .networkTimeout), "The wallet should become verified")
     }
 
-    /// Tests stepping a US customer up from KYC level 0 to level 1 while completing a bank account purchase.
-    @MainActor
-    func testKYCLevelStepUpToLevel1AndCheckout() throws {
-        let phoneNumber = Self.makeRandomUSPhoneNumber()
-        let address = Self.testAddress
-        let addressLine1 = try XCTUnwrap(address.line1)
-        let addressLine2 = try XCTUnwrap(address.line2)
-        let city = try XCTUnwrap(address.city)
-        let state = try XCTUnwrap(address.state)
-        let postalCode = try XCTUnwrap(address.postalCode)
-
-        // Step 1: Enable L0 KYC mode, then create, register, and authenticate a new Link user.
-        waitForLoadingToFinish()
-
-        let settingsButton = app.images["gearshape"].firstMatch
-        XCTAssertTrue(settingsButton.waitForExistence(timeout: .animationTimeout), "Settings button should exist")
-        settingsButton.tap()
-
-        let l0ModeButton = app.buttons["L0 KYC Mode"].firstMatch
-        XCTAssertTrue(l0ModeButton.waitForExistence(timeout: .animationTimeout), "L0 KYC Mode menu item should exist")
-        l0ModeButton.tap()
-
-        signUpAndAuthenticateNewUser(
-            fullName: "Crypto Onramp L0 UI Tests",
-            phoneNumber: phoneNumber,
-            countryCode: "US"
-        )
-
-        // Step 2: Provide only the required US level 0 KYC information.
-        let kycLabel = app.staticTexts["KYC Information"].firstMatch
-        XCTAssertTrue(kycLabel.waitForExistence(timeout: .networkTimeout), "KYC screen should appear")
-        waitForLoadingToFinish()
-
-        let firstNameField = app.textFields["Enter your first name"].firstMatch
-        XCTAssertTrue(firstNameField.waitForExistence(timeout: .animationTimeout), "First name field should exist")
-        firstNameField.tap()
-        app.typeText("Crypto" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("Tester" + XCUIKeyboardKey.return.rawValue)
-        dismissKeyboard()
-
-        let kycScrollView = app.scrollViews["kyc_form"].firstMatch
-        XCTAssertTrue(kycScrollView.waitForExistence(timeout: .animationTimeout), "KYC form should be scrollable")
-        kycScrollView.swipeUp()
-
-        let addressLine1Field = app.textFields["Enter your street address"].firstMatch
-        XCTAssertTrue(addressLine1Field.waitForExistence(timeout: .animationTimeout), "Address line 1 field should exist")
-        addressLine1Field.tap()
-        app.typeText(addressLine1 + XCUIKeyboardKey.return.rawValue)
-        app.typeText(addressLine2 + XCUIKeyboardKey.return.rawValue)
-        app.typeText(city + XCUIKeyboardKey.return.rawValue)
-        app.typeText(state + XCUIKeyboardKey.return.rawValue)
-        app.typeText(postalCode + XCUIKeyboardKey.return.rawValue)
-        app.typeText(XCUIKeyboardKey.return.rawValue)
-
-        let submitKYCButton = app.buttons["Submit"].firstMatch
-        XCTAssertTrue(submitKYCButton.isEnabled, "KYC Submit button should be enabled")
-        submitKYCButton.tap()
-
-        // Step 3: Add a Solana wallet and continue to payment.
-        addSolanaWallet(address: Self.solanaWalletAddress)
-
-        let nextButton = app.buttons["Next"].firstMatch
-        XCTAssertTrue(nextButton.wait(for: \.isEnabled, toEqual: true, timeout: .networkTimeout), "Next button should become enabled")
-        nextButton.tap()
-
-        // Step 4: Add a test bank account and attempt a $75 purchase.
-        let paymentLabel = app.staticTexts["Payment"].firstMatch
-        XCTAssertTrue(paymentLabel.waitForExistence(timeout: .networkTimeout), "Payment screen should appear")
-        waitForLoadingToFinish()
-
-        app.buttons["Select a payment method"].firstMatch.tap()
-
-        let addBankAccountOption = app.staticTexts["Add Bank Account"].firstMatch
-        XCTAssertTrue(addBankAccountOption.waitForExistence(timeout: .animationTimeout), "Add Bank Account option should appear")
-        addBankAccountOption.tap()
-
-        let agreeAndContinueButton = app.buttons["consent_agree_button"].firstMatch
-        XCTAssertTrue(agreeAndContinueButton.waitForExistence(timeout: .networkTimeout), "Financial Connections consent screen should appear")
-        agreeAndContinueButton.tap()
-
-        let successBank = app.tables.cells.staticTexts["Success"].firstMatch
-        XCTAssertTrue(successBank.waitForExistence(timeout: .networkTimeout), "Success test bank should appear")
-        successBank.tap()
-
-        let connectAccountsButton = app.buttons["connect_accounts_button"].firstMatch
-        XCTAssertTrue(connectAccountsButton.waitForExistence(timeout: .networkTimeout), "Connect accounts button should appear")
-        connectAccountsButton.tap()
-
-        let bankSuccessDoneButton = app.buttons["success_done_button"].firstMatch
-        XCTAssertTrue(bankSuccessDoneButton.waitForExistence(timeout: .networkTimeout), "Bank account success screen should appear")
-        bankSuccessDoneButton.tap()
-        XCTAssertTrue(bankSuccessDoneButton.waitForNonExistence(timeout: .networkTimeout), "Bank account success screen should close")
-
-        let linkSheet = app.otherElements["Stripe.Link.PayWithLinkViewController"].firstMatch
-        let linkBankContinueButton = linkSheet.buttons["Continue"].firstMatch
-        XCTAssertTrue(linkBankContinueButton.waitForExistence(timeout: .networkTimeout), "Link bank account Continue button should appear")
-        linkBankContinueButton.tap()
-
-        let confirmPaymentDetailsLabel = linkSheet.staticTexts["Confirm payment details"].firstMatch
-        XCTAssertTrue(confirmPaymentDetailsLabel.waitForExistence(timeout: .networkTimeout), "Bank billing details form should appear")
-        enterText("Crypto Onramp L0 UI Tests", in: linkSheet.textFields["Full name"].firstMatch)
-        enterText(postalCode, in: linkSheet.textFields["ZIP"].firstMatch)
-        dismissKeyboard()
-
-        let billingDetailsContinueButton = linkSheet.buttons["Continue"].firstMatch
-        XCTAssertTrue(
-            billingDetailsContinueButton.wait(for: \.isEnabled, toEqual: true, timeout: .animationTimeout),
-            "Bank billing details Continue button should become enabled"
-        )
-        billingDetailsContinueButton.tap()
-        XCTAssertTrue(linkSheet.waitForNonExistence(timeout: .networkTimeout), "Link bank account sheet should close")
-        waitForLoadingToFinish()
-
-        let standardACHButton = app.segmentedControls.buttons["Standard"].firstMatch
-        XCTAssertTrue(standardACHButton.waitForExistence(timeout: .animationTimeout), "Standard ACH option should appear")
-        if !standardACHButton.isSelected {
-            standardACHButton.tap()
-        }
-        XCTAssertTrue(standardACHButton.isSelected, "Standard ACH should be selected")
-
-        for digit in ["7", "5"] {
-            app.buttons[digit].firstMatch.tap()
-        }
-        XCTAssertTrue(app.staticTexts["$75"].firstMatch.exists, "Purchase amount should be $75")
-
-        let paymentContinueButton = app.buttons["Continue"].firstMatch
-        XCTAssertTrue(paymentContinueButton.isEnabled, "Payment Continue button should be enabled")
-        paymentContinueButton.tap()
-        waitForLoadingToFinish()
-
-        // Step 5: Complete the required level 1 step-up with SSN and date of birth, then retry the transaction.
-        XCTAssertTrue(kycLabel.waitForExistence(timeout: .networkTimeout), "Level 1 KYC step-up should appear")
-        waitForLoadingToFinish()
-        enterText("000000000", in: app.textFields["Enter your SSN"].firstMatch)
-        dismissKeyboard()
-        setDateOfBirth()
-
-        let submitLevel1Button = app.buttons["Submit"].firstMatch
-        XCTAssertTrue(submitLevel1Button.isEnabled, "Level 1 Submit button should be enabled")
-        submitLevel1Button.tap()
-
-        XCTAssertTrue(kycLabel.waitForNonExistence(timeout: .networkTimeout), "Level 1 KYC step-up should finish")
-        let level1CompleteAlert = app.alerts["Verification complete"].firstMatch
-        XCTAssertTrue(level1CompleteAlert.waitForExistence(timeout: .networkTimeout), "Level 1 completion alert should appear")
-        XCTAssertTrue(level1CompleteAlert.staticTexts["Please try the transaction again."].exists, "Level 1 completion alert should request a retry")
-        level1CompleteAlert.buttons["OK"].tap()
-
-        XCTAssertTrue(paymentLabel.waitForExistence(timeout: .animationTimeout), "Payment screen should reappear")
-        waitForLoadingToFinish()
-        paymentContinueButton.tap()
-        XCTAssertTrue(
-            app.staticTexts["Loading…"].firstMatch.waitForExistence(timeout: .animationTimeout),
-            "The second transaction attempt should start"
-        )
-        waitForLoadingToFinish()
-
-        // Step 6: Confirm the retried transaction and reach checkout success.
-        let reviewLabel = app.staticTexts["Review"].firstMatch
-        XCTAssertTrue(reviewLabel.waitForExistence(timeout: .networkTimeout), "Review screen should appear")
-        waitForLoadingToFinish()
-
-        let confirmButton = app.buttons["Confirm"].firstMatch
-        XCTAssertTrue(confirmButton.exists, "Confirm button should exist")
-        confirmButton.tap()
-
-        let successLabel = app.staticTexts["Purchase successful"].firstMatch
-        XCTAssertTrue(successLabel.waitForExistence(timeout: .networkTimeout), "Checkout success screen should appear")
-        waitForLoadingToFinish()
-    }
-
-    private func setDateOfBirth(
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        let kycScrollView = app.scrollViews["kyc_form"].firstMatch
-        XCTAssertTrue(
-            kycScrollView.waitForExistence(timeout: .animationTimeout),
-            "KYC form should be scrollable",
-            file: file,
-            line: line
-        )
-        kycScrollView.swipeUp()
-
-        let pickerWheels = app.pickerWheels
-        let values = ["January", "1", "1990"]
-        let firstWheel = pickerWheels.element(boundBy: 0)
-        XCTAssertTrue(
-            firstWheel.waitForExistence(timeout: .animationTimeout),
-            "Date of birth picker should exist",
-            file: file,
-            line: line
-        )
-        XCTAssertEqual(
-            pickerWheels.count,
-            values.count,
-            "Date of birth picker should contain month, day, and year wheels",
-            file: file,
-            line: line
-        )
-
-        // XCTest exposes wheel-style date pickers as separate month, day, and year elements.
-        for (index, value) in values.enumerated() {
-            pickerWheels.element(boundBy: index).adjust(toPickerWheelValue: value)
-        }
-    }
 }

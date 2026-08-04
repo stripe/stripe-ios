@@ -6,6 +6,10 @@
 //
 
 import Foundation
+
+@_spi(CryptoOnrampAlpha)
+import StripeCryptoOnramp
+
 import XCTest
 
 extension CryptoOnrampExampleUITests {
@@ -101,6 +105,54 @@ extension CryptoOnrampExampleUITests {
         submitButton.tap()
     }
 
+    func completeFullUSKYC(
+        address: Address,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) throws {
+        let addressLine1 = try XCTUnwrap(address.line1, file: file, line: line)
+        let addressLine2 = try XCTUnwrap(address.line2, file: file, line: line)
+        let city = try XCTUnwrap(address.city, file: file, line: line)
+        let state = try XCTUnwrap(address.state, file: file, line: line)
+        let postalCode = try XCTUnwrap(address.postalCode, file: file, line: line)
+
+        let kycLabel = app.staticTexts["KYC Information"].firstMatch
+        XCTAssertTrue(
+            kycLabel.waitForExistence(timeout: .networkTimeout),
+            "KYC screen should appear",
+            file: file,
+            line: line
+        )
+        waitForLoadingToFinish(file: file, line: line)
+
+        let firstNameField = app.textFields["Enter your first name"].firstMatch
+        XCTAssertTrue(
+            firstNameField.waitForExistence(timeout: .animationTimeout),
+            "First name field should exist",
+            file: file,
+            line: line
+        )
+        firstNameField.tap()
+        app.typeText("Crypto" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("Tester" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("000000000")
+
+        setDateOfBirth(file: file, line: line)
+
+        let addressLine1Field = app.textFields["Enter your street address"].firstMatch
+        app.typeText(XCUIKeyboardKey.return.rawValue)
+        addressLine1Field.typeText(addressLine1 + XCUIKeyboardKey.return.rawValue)
+        app.typeText(addressLine2 + XCUIKeyboardKey.return.rawValue)
+        app.typeText(city + XCUIKeyboardKey.return.rawValue)
+        app.typeText(state + XCUIKeyboardKey.return.rawValue)
+        app.typeText(postalCode + XCUIKeyboardKey.return.rawValue)
+        app.typeText(XCUIKeyboardKey.return.rawValue)
+
+        let submitButton = app.buttons["Submit"].firstMatch
+        XCTAssertTrue(submitButton.isEnabled, "KYC Submit button should be enabled", file: file, line: line)
+        submitButton.tap()
+    }
+
     func addSolanaWallet(
         address: String,
         file: StaticString = #filePath,
@@ -182,6 +234,33 @@ extension CryptoOnrampExampleUITests {
         let doneButton = app.toolbars.buttons["Done"].firstMatch
         if doneButton.waitForExistence(timeout: 1) {
             doneButton.tap()
+        }
+    }
+
+    func setDateOfBirth(
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let pickerWheels = app.pickerWheels
+        let values = ["January", "1", "1990"]
+        let firstWheel = pickerWheels.element(boundBy: 0)
+        XCTAssertTrue(
+            firstWheel.waitForExistence(timeout: .animationTimeout),
+            "Date of birth picker should exist",
+            file: file,
+            line: line
+        )
+        XCTAssertEqual(
+            pickerWheels.count,
+            values.count,
+            "Date of birth picker should contain month, day, and year wheels",
+            file: file,
+            line: line
+        )
+
+        // XCTest exposes wheel-style date pickers as separate month, day, and year elements.
+        for (index, value) in values.enumerated() {
+            pickerWheels.element(boundBy: index).adjust(toPickerWheelValue: value)
         }
     }
 
