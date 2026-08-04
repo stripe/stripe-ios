@@ -9,6 +9,9 @@ MAJOR
 * [Changed] `PaymentSheet.IntentConfiguration.Mode.payment` now requires an explicit `captureMethod`. Set it to the same value used to create the PaymentIntent on your server: `.automatic`, `.automaticAsync`, or `.manual`.
 * [Changed] Client-side PaymentIntent and SetupIntent confirmation may now require `PaymentSheet.Configuration.returnURL` when redirect-based payment methods are enabled. You can continue to omit it for integrations that exclude redirect-based payment methods on the server.
 
+### Payments
+* [Changed] `STPPaymentIntent.allResponseFields` no longer contains the `charges` field. Use `latest_charge` to access the most recent Charge ID.
+
 ## 26.5.0 2026-08-03
 ### CryptoOnramp (Alpha)
 * [Added] Added support for registering wallet addresses on the Tempo network.
