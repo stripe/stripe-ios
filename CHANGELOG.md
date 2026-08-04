@@ -6,7 +6,8 @@ MAJOR
 * [Changed] Updated the Stripe API version used by the SDK to `2026-07-29.dahlia`.
 
 ### PaymentSheet
-* [Changed] `PaymentSheet.IntentConfiguration` now defaults to asynchronous automatic capture to match the current Stripe API default. Set `captureMethod` to `.automatic` to retain synchronous automatic capture.
+* [Changed] `PaymentSheet.IntentConfiguration.Mode.payment` now requires an explicit `captureMethod`. Set it to the same value used to create the PaymentIntent on your server: `.automatic`, `.automaticAsync`, or `.manual`.
+* [Changed] Client-side PaymentIntent and SetupIntent confirmation may now require `PaymentSheet.Configuration.returnURL` when redirect-based payment methods are enabled. You can continue to omit it for integrations that exclude redirect-based payment methods on the server.
 
 ## 26.5.0 2026-08-03
 ### CryptoOnramp (Alpha)

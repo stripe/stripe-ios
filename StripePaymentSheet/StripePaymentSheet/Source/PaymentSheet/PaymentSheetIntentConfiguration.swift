@@ -198,7 +198,7 @@ public extension PaymentSheet {
             /// Place a hold on the funds when the customer authorizes the payment, but don’t capture the funds until later. (Not all payment methods support this.)
             case manual = "manual"
 
-            /// (Default) Asynchronously capture funds when the customer authorizes the payment.
+            /// Asynchronously capture funds when the customer authorizes the payment.
             /// - Note: Recommended over `CaptureMethod.automatic` due to improved latency, but may require additional integration changes.
             /// - Seealso: https://stripe.com/docs/payments/payment-intents/asynchronous-capture-automatic-async
             case automaticAsync = "automatic_async"
@@ -241,7 +241,7 @@ public extension PaymentSheet {
                 /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-setup_future_usage
                 setupFutureUsage: SetupFutureUsage? = nil,
                 /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-capture_method
-                captureMethod: CaptureMethod = .automaticAsync,
+                captureMethod: CaptureMethod,
                 /// Additional payment method options params
                 /// - Seealso: https://docs.stripe.com/api/payment_intents/create#create_payment_intent-payment_method_options
                 paymentMethodOptions: PaymentMethodOptions? = nil

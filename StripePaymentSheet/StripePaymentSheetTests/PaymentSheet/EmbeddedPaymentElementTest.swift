@@ -22,12 +22,12 @@ class EmbeddedPaymentElementTest: XCTestCase {
         config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         return config
     }()
-    let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _ in
+    let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic), paymentMethodTypes: ["card", "cashapp"]) { _, _ in
         // These tests don't confirm, so this is unused
         XCTFail("paymentIntentConfig confirm handler should not be called.")
         return ""
     }
-    let paymentIntentConfigWithConfirmHandler = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { paymentMethod, _ in
+    let paymentIntentConfigWithConfirmHandler = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic), paymentMethodTypes: ["card", "cashapp"]) { paymentMethod, _ in
         try await withCheckedThrowingContinuation { continuation in
             STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"],
                                                           currency: "USD",
@@ -37,7 +37,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
             }
         }
     }
-    let paymentIntentConfig2 = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 999, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _ in
+    let paymentIntentConfig2 = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 999, currency: "USD", captureMethod: .automatic), paymentMethodTypes: ["card", "cashapp"]) { _, _ in
         // These tests don't confirm, so this is unused
         XCTFail("paymentIntentConfig2 confirm handler should not be called.")
         return ""
@@ -241,7 +241,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
 
         // ...updating w/ a broken config...
-        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _ in
+        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency", captureMethod: .automatic), confirmHandler: { _, _ in
             // These tests shouldn't confirm, so this is unused
             XCTFail("Unexpectedly called confirm handler of broken config")
             return ""
@@ -276,7 +276,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.view.autosizeHeight(width: 320)
         sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         // ...updating w/ a broken config...
-        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _ in
+        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency", captureMethod: .automatic), confirmHandler: { _, _ in
             XCTFail("Unexpectedly called confirm handler of broken config")
             return ""
         })
@@ -656,7 +656,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // Given an EmbeddedPaymentElement w/ CBC enabled...
         await AddressSpecProvider.shared.loadAddressSpecs()
         await FormSpecProvider.shared.load()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(cardBrandChoice: ._testValue())
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let loadResult = PaymentSheetLoader.LoadResult(
@@ -712,7 +712,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
             analyticsClient: STPTestingAnalyticsClient(),
             analyticsClientV2: analyticsClientV2
         )
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(experimentsData: experimentsData)
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let promotionsHelper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
@@ -1144,7 +1144,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // - rowSelectionBehavior = .immediateAction
         // - formSheetAction = .confirm
         var config = configuration
-        let failureConfirmHandler = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card"]) {_, _ in
+        let failureConfirmHandler = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic), paymentMethodTypes: ["card"]) {_, _ in
             throw TestError.testFailure
         }
         config.embeddedViewDisplaysMandateText = false

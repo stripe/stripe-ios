@@ -294,7 +294,7 @@ extension Intent {
         setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage? = nil,
         paymentMethodOptionsSetupFutureUsage: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage]? = nil
     ) -> Intent {
-        return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _ in return "" }))
+        return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, captureMethod: .automatic, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _ in return "" }))
     }
 
     @MainActor static func _testCheckoutSession(
@@ -388,7 +388,7 @@ extension Intent {
 
 extension PaymentSheet.IntentConfiguration {
     static func _testValue() -> Self {
-        return .init(mode: .payment(amount: 100, currency: "USD")) { _, _ in return "" }
+        return .init(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
     }
 }
 
@@ -442,7 +442,7 @@ extension PaymentSheet.Appearance {
 
 extension PaymentSheetLoader.LoadResult {
     static func _testValue(paymentMethodTypes: [String], savedPaymentMethods: [STPPaymentMethod]) -> Self {
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: paymentMethodTypes
         )
@@ -469,7 +469,7 @@ extension PaymentSheetLoader.LoadResult {
 
 extension PaymentMethodMessagingPromotionsHelper {
     static func _testValue() -> PaymentMethodMessagingPromotionsHelper? {
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         return PaymentMethodMessagingPromotionsHelper(
@@ -482,7 +482,7 @@ extension PaymentMethodMessagingPromotionsHelper {
     }
 
     static func _testValueInTreatment() -> PaymentMethodMessagingPromotionsHelper {
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
         let experimentsData = ExperimentsData(
             arbId: "test_arb_id",
             experimentAssignments: [PaymentMethodMessagingPromotionsExperiment.experimentName: .treatment],

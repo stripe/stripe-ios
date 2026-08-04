@@ -289,7 +289,7 @@ extension MPELatencyTest {
             analyticsClient: analyticsClient
             // TODO: AnalyticsClientV2
         )
-        let deferredIntent = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodConfigurationId: pmcWithLinkEnabled, confirmationTokenConfirmHandler: { _ in return "" })
+        let deferredIntent = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic), paymentMethodConfigurationId: pmcWithLinkEnabled, confirmationTokenConfirmHandler: { _ in return "" })
         let mode = PaymentSheet.InitializationMode.deferredIntent(deferredIntent)
 
         // 1. Load

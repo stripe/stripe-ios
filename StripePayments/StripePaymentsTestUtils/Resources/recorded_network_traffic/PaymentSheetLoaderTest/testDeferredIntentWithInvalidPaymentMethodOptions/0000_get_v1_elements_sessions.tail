@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bamount%5D=1000&deferred_intent%5Bcapture_method%5D=automatic_async&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bpayment_method_options%5D%5Bcard_present%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Boxxo%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_types%5D%5B0%5D=card_present&deferred_intent%5Bpayment_method_types%5D%5B1%5D=oxxo&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bamount%5D=1000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bpayment_method_options%5D%5Bcard_present%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Boxxo%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_types%5D%5B0%5D=card_present&deferred_intent%5Bpayment_method_types%5D%5B1%5D=oxxo&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
 400
 application/json
 Content-Type: application/json

@@ -868,7 +868,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
         func callFilteredPaymentMethodTypes(withIntentTypes paymentMethodTypes: [String], externalPMTypes: [String]) -> [PaymentSheet.PaymentMethodType] {
             let intent = Intent.deferredIntent(
-                intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in return "" })
+                intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", captureMethod: .automatic), confirmHandler: { _, _ in return "" })
             )
             // Note: 👇 `filteredPaymentMethodTypes` is the function we are testing
             return PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: ._testValue(paymentMethodTypes: paymentMethodTypes, externalPaymentMethodTypes: externalPMTypes), configuration: configuration)
@@ -942,7 +942,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
 
         let intent = Intent.deferredIntent(
-            intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in return "" })
+            intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", captureMethod: .automatic), confirmHandler: { _, _ in return "" })
         )
 
         // Mixed-case CPM id in paymentMethodOrder is matched correctly

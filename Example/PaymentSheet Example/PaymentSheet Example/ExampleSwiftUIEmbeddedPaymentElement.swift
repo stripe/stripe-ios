@@ -75,7 +75,8 @@ class BackendViewModel: ObservableObject {
             mode: .payment(
                 amount: amount,
                 currency: "USD",
-                setupFutureUsage: usage
+                setupFutureUsage: usage,
+                captureMethod: .automaticAsync
             )
         ) { [weak self] paymentMethod, shouldSavePaymentMethod in
             guard let self = self else {

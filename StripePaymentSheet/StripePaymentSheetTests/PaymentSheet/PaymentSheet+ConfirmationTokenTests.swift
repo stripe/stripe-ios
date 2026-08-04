@@ -122,7 +122,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             )
         }
 
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic))
         let confirmType = createTestSavedConfirmType()
 
         let params = PaymentSheet.createConfirmationTokenParams(
@@ -145,7 +145,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     // MARK: - Payment Method Configuration Tests
 
     func testCreateConfirmationTokenParams_savedPaymentMethod() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic))
         let paymentMethod = createTestSavedPaymentMethod()
         let paymentOptions = STPConfirmPaymentMethodOptions()
         let clientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_123")
@@ -171,7 +171,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     }
 
     func testCreateConfirmationTokenParams_newPaymentMethod() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic))
         let paymentMethodParams = createTestPaymentMethodParams()
         let clientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_123")
         paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
@@ -204,7 +204,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     }
 
     func testCreateConfirmationTokenParams_setAsDefaultPM_whenAllowed() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic))
         let confirmType = createTestNewConfirmType(shouldSave: false, shouldSetAsDefaultPM: true)
 
         let params = PaymentSheet.createConfirmationTokenParams(
@@ -219,7 +219,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     }
 
     func testCreateConfirmationTokenParams_setAsDefaultPM_whenNotAllowed() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic))
         let confirmType = createTestNewConfirmType(shouldSave: false, shouldSetAsDefaultPM: true)
 
         let params = PaymentSheet.createConfirmationTokenParams(
@@ -250,7 +250,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     }
 
     func testCreateConfirmationTokenParams_paymentIntent_withTopLevelSFU() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .onSession))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .onSession, captureMethod: .automatic))
         let confirmType = createTestNewConfirmType(shouldSave: false)
 
         let params = PaymentSheet.createConfirmationTokenParams(
@@ -273,7 +273,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
                 amount: 100,
                 currency: "USD",
                 setupFutureUsage: .onSession, // Top-level SFU
-                paymentMethodOptions: .init(setupFutureUsageValues: [.card: .none]) // PMO SFU=none
+                captureMethod: .automatic, paymentMethodOptions: .init(setupFutureUsageValues: [.card: .none]) // PMO SFU=none
             )
         ) { _, _ in return "pi_test_123_secret_abc" }
 
@@ -298,7 +298,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
                 amount: 100,
                 currency: "USD",
                 setupFutureUsage: .offSession, // Top-level SFU
-                paymentMethodOptions: .init(setupFutureUsageValues: [.card: .none]) // PMO SFU should win
+                captureMethod: .automatic, paymentMethodOptions: .init(setupFutureUsageValues: [.card: .none]) // PMO SFU should win
             )
         ) { _, _ in return "pi_test_123_secret_abc" }
 
@@ -335,7 +335,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             mode: .payment(
                 amount: 100,
                 currency: "USD",
-                paymentMethodOptions: .init(setupFutureUsageValues: [.payPal: .offSession])
+                captureMethod: .automatic, paymentMethodOptions: .init(setupFutureUsageValues: [.payPal: .offSession])
             )
         ) { _, _ in return "pi_test_123_secret_abc" }
 
@@ -350,7 +350,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     }
 
     func testCreateConfirmationTokenParams_autoGeneratedMandate_usBankAccount() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic))
 
         // Create a US Bank Account payment method
         let usBankPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
@@ -383,7 +383,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     }
 
     func testCreateConfirmationTokenParams_cardWithoutSFU_noMandate() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic))
         let confirmType = createTestSavedConfirmType()
 
         let params = PaymentSheet.createConfirmationTokenParams(

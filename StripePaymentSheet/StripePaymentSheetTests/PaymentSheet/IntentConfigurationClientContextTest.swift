@@ -15,7 +15,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
 
     func testCreateClientContextFromPaymentModeMinimal() {
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "usd"),
+            mode: .payment(amount: 1000, currency: "usd", captureMethod: .automatic),
             confirmHandler: { _, _ in return "" }
         )
 
@@ -24,7 +24,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
         XCTAssertEqual(clientContext.mode, "payment")
         XCTAssertEqual(clientContext.currency, "usd")
         XCTAssertNil(clientContext.setupFutureUsage)
-        XCTAssertEqual(clientContext.captureMethod, "automatic_async") // default
+        XCTAssertEqual(clientContext.captureMethod, "automatic")
         XCTAssertNil(clientContext.paymentMethodOptions)
         XCTAssertNil(clientContext.paymentMethodTypes)
         XCTAssertNil(clientContext.onBehalfOf)
@@ -136,7 +136,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
             mode: .payment(
                 amount: 1000,
                 currency: "usd",
-                paymentMethodOptions: paymentMethodOptions
+                captureMethod: .automatic, paymentMethodOptions: paymentMethodOptions
             ),
             confirmHandler: { _, _ in return "" }
         )
@@ -152,7 +152,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
 
     func testCreateClientContextWithCVCRecollectionEnabled() {
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "usd"),
+            mode: .payment(amount: 1000, currency: "usd", captureMethod: .automatic),
             confirmHandler: { _, _ in return "" },
             requireCVCRecollection: true
         )
@@ -167,7 +167,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
 
     func testCreateClientContextWithCVCRecollectionDisabled() {
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "usd"),
+            mode: .payment(amount: 1000, currency: "usd", captureMethod: .automatic),
             confirmHandler: { _, _ in return "" },
             requireCVCRecollection: false
         )
@@ -187,7 +187,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
             mode: .payment(
                 amount: 1000,
                 currency: "usd",
-                paymentMethodOptions: paymentMethodOptions
+                captureMethod: .automatic, paymentMethodOptions: paymentMethodOptions
             ),
             confirmHandler: { _, _ in return "" },
             requireCVCRecollection: true
@@ -214,7 +214,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
             mode: .payment(
                 amount: 1000,
                 currency: "usd",
-                paymentMethodOptions: paymentMethodOptions
+                captureMethod: .automatic, paymentMethodOptions: paymentMethodOptions
             ),
             confirmHandler: { _, _ in return "" },
             requireCVCRecollection: true
