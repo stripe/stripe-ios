@@ -39,19 +39,4 @@ struct FaceCaptureScanningState: Equatable, ScanningState {
         self.supportsPoseCapture = supportsPoseCapture
     }
 
-    var isComplete: Bool {
-        return leftSide != nil && rightSide != nil
-    }
-
-    func captureData() -> FaceCaptureData? {
-        guard isComplete else {
-            return nil
-        }
-
-        return FaceCaptureData(
-            samples: frontSamples,
-            leftSide: leftSide,
-            rightSide: rightSide
-        )
-    }
 }
