@@ -1,5 +1,5 @@
 //
-//  AddressViewControllerAddressNormalizerTest.swift
+//  AddressFormNormalizerTest.swift
 //  StripePaymentSheetTests
 //
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
@@ -10,7 +10,7 @@
 import UIKit
 import XCTest
 
-final class AddressViewControllerAddressNormalizerTest: XCTestCase {
+final class AddressFormNormalizerTest: XCTestCase {
     private let addressSpecProvider: AddressSpecProvider = {
         let addressSpecProvider = AddressSpecProvider()
         addressSpecProvider.addressSpecs = [
@@ -46,7 +46,7 @@ final class AddressViewControllerAddressNormalizerTest: XCTestCase {
         )
 
         // When
-        let result = AddressViewControllerAddressNormalizer.normalize(
+        let result = AddressFormNormalizer.normalize(
             defaultAddress: defaultAddress,
             fallbackAddress: nil,
             allowedCountries: [],
@@ -75,7 +75,7 @@ final class AddressViewControllerAddressNormalizerTest: XCTestCase {
         )
 
         // When
-        let result = AddressViewControllerAddressNormalizer.normalize(
+        let result = AddressFormNormalizer.normalize(
             defaultAddress: .init(),
             fallbackAddress: fallbackAddress,
             allowedCountries: [],
@@ -99,7 +99,7 @@ final class AddressViewControllerAddressNormalizerTest: XCTestCase {
         )
 
         // When
-        let result = AddressViewControllerAddressNormalizer.normalize(
+        let result = AddressFormNormalizer.normalize(
             defaultAddress: defaultAddress,
             fallbackAddress: fallbackAddress,
             allowedCountries: ["US"],
@@ -116,7 +116,7 @@ final class AddressViewControllerAddressNormalizerTest: XCTestCase {
         let fallbackAddress = PaymentSheet.Address(country: "CA", line1: "456 Front St.")
 
         // When
-        let result = AddressViewControllerAddressNormalizer.normalize(
+        let result = AddressFormNormalizer.normalize(
             defaultAddress: defaultAddress,
             fallbackAddress: fallbackAddress,
             allowedCountries: ["US"],
@@ -132,7 +132,7 @@ final class AddressViewControllerAddressNormalizerTest: XCTestCase {
         let addressWithoutPostalCode = PaymentSheet.Address(line1: "123 Main St.")
 
         // When
-        let usResult = AddressViewControllerAddressNormalizer.normalize(
+        let usResult = AddressFormNormalizer.normalize(
             defaultAddress: .init(
                 country: "US",
                 line1: addressWithoutPostalCode.line1
@@ -141,7 +141,7 @@ final class AddressViewControllerAddressNormalizerTest: XCTestCase {
             allowedCountries: [],
             addressSpecProvider: addressSpecProvider
         )
-        let caResult = AddressViewControllerAddressNormalizer.normalize(
+        let caResult = AddressFormNormalizer.normalize(
             defaultAddress: .init(
                 country: "CA",
                 line1: addressWithoutPostalCode.line1
@@ -182,7 +182,7 @@ final class AddressViewControllerAddressNormalizerTest: XCTestCase {
         viewController.didContinue()
 
         // Then
-        let expectedAddress = AddressViewControllerAddressNormalizer.normalize(
+        let expectedAddress = AddressFormNormalizer.normalize(
             defaultAddress: defaultAddress,
             fallbackAddress: nil,
             allowedCountries: [],

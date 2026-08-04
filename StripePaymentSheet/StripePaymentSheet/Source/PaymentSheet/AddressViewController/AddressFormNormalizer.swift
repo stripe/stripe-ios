@@ -1,5 +1,5 @@
 //
-//  AddressViewControllerAddressNormalizer.swift
+//  AddressFormNormalizer.swift
 //  StripePaymentSheet
 //
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-enum AddressViewControllerAddressNormalizer {
+enum AddressFormNormalizer {
     enum AddressSource {
         case defaultAddress
         case fallbackAddress

@@ -30,7 +30,7 @@ public class AddressViewController: UIViewController {
     /// A valid address or nil.
     private var addressDetails: AddressDetails? {
         guard let addressSection,
-              let normalizedAddress = AddressViewControllerAddressNormalizer.normalizedAddress(from: addressSection),
+              let normalizedAddress = AddressFormNormalizer.normalizedAddress(from: addressSection),
               let country = normalizedAddress.country,
               let line1 = normalizedAddress.line1 else {
             return nil
@@ -136,7 +136,7 @@ public class AddressViewController: UIViewController {
             return configuration.defaultValues
         }
 
-        switch AddressViewControllerAddressNormalizer.addressSource(
+        switch AddressFormNormalizer.addressSource(
             defaultAddress: configuration.defaultValues.address,
             fallbackAddress: configuration.billingAddress?.address,
             allowedCountries: configuration.allowedCountries
@@ -150,18 +150,13 @@ public class AddressViewController: UIViewController {
         }
     }
 
-    /// Checks if an address is compatible with the allowed countries configuration.
-    private func isAddressCompatible(_ addressDetails: AddressViewController.Configuration.DefaultAddressDetails) -> Bool {
-        return AddressViewControllerAddressNormalizer.isCompatible(
-            addressDetails.address,
-            allowedCountries: configuration.allowedCountries
-        )
-    }
-
     private lazy var shippingEqualsBillingCheckbox: CheckboxElement? = {
         // Show checkbox when billing address is provided and is compatible with allowed countries
         guard let billingAddress = configuration.billingAddress else { return nil }
-        guard isAddressCompatible(billingAddress) else { return nil }
+        guard AddressFormNormalizer.isCompatible(
+            billingAddress.address,
+            allowedCountries: configuration.allowedCountries
+        ) else { return nil }
 
         // Only show checkbox if billing address has at least line1
         guard billingAddress.address.line1?.nonEmpty != nil else { return nil }
@@ -323,7 +318,11 @@ extension AddressViewController {
     func handleShippingEqualsBillingToggle(isSelected: Bool) {
         if isSelected {
             // Populate with billing address when checked
-            if let billingAddress = configuration.billingAddress, isAddressCompatible(billingAddress) {
+            if let billingAddress = configuration.billingAddress,
+               AddressFormNormalizer.isCompatible(
+                   billingAddress.address,
+                   allowedCountries: configuration.allowedCountries
+               ) {
                 populateAddressSection(with: .init(from: billingAddress))
             }
         } else {
@@ -331,7 +330,11 @@ extension AddressViewController {
             clearAddressSection()
 
             // Then optionally populate with shipping address (defaultValues) if they exist and are different from billing
-            if !configuration.defaultValues.address.isEmpty && isAddressCompatible(configuration.defaultValues) {
+            if !configuration.defaultValues.address.isEmpty &&
+                AddressFormNormalizer.isCompatible(
+                    configuration.defaultValues.address,
+                    allowedCountries: configuration.allowedCountries
+                ) {
                 // Only populate with default values if they're different from billing address
                 if let billingAddress = configuration.billingAddress,
                    configuration.defaultValues.address != billingAddress.address {
