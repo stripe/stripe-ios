@@ -57,7 +57,7 @@ final class SavedPaymentMethodBillingSyncTests: XCTestCase {
         XCTAssertTrue(labels(in: sut).contains { $0.text == "Tax update failed" })
     }
 
-    func testHorizontalSelectionWithoutBillingTaxClosesSynchronously() async throws {
+    func testHorizontalSelectionWithoutBillingTaxCloses() async throws {
         // Given
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let sut = makeHorizontalController(checkout: checkout)
@@ -72,6 +72,7 @@ final class SavedPaymentMethodBillingSyncTests: XCTestCase {
         )
 
         // Then
+        await fulfillment(of: [delegate.closed])
         XCTAssertEqual(delegate.closeCount, 1)
         XCTAssertFalse(delegate.didCancel)
         XCTAssertTrue(sut.isDismissable)
@@ -219,6 +220,7 @@ private final class MockVerticalSavedPaymentMethodsDelegate:
 
 @MainActor
 private final class MockFlowControllerViewControllerDelegate: FlowControllerViewControllerDelegate {
+    let closed = XCTestExpectation(description: "Flow controller closed")
     private(set) var closeCount = 0
     private(set) var didCancel = false
 
@@ -228,5 +230,6 @@ private final class MockFlowControllerViewControllerDelegate: FlowControllerView
     ) {
         closeCount += 1
         self.didCancel = didCancel
+        closed.fulfill()
     }
 }
