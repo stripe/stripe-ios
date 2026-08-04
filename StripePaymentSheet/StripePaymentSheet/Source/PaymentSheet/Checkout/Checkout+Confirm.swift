@@ -57,7 +57,8 @@ extension Checkout {
         checkoutSession: Session,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
-        paymentHandler: STPPaymentHandler
+        paymentHandler: STPPaymentHandler,
+        applePayContext: CheckoutApplePayContext? = nil
     ) async -> InternalConfirmResult {
         // 1. Handle pre-confirm actions, such as Bacs mandate acceptance or saved-card CVC recollection.
         let preconfirmActionsResult = await PaymentSheet.handlePreconfirmActionsIfNecessary(
@@ -85,7 +86,8 @@ extension Checkout {
             confirmationContext: confirmationContext,
             authenticationContext: authenticationContext,
             intentConfirmParamsForDeferredIntent: intentConfirmParams,
-            paymentHandler: paymentHandler
+            paymentHandler: paymentHandler,
+            applePayContext: applePayContext
         )
     }
 
@@ -94,7 +96,8 @@ extension Checkout {
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
         intentConfirmParamsForDeferredIntent: IntentConfirmParams?,
-        paymentHandler: STPPaymentHandler
+        paymentHandler: STPPaymentHandler,
+        applePayContext: CheckoutApplePayContext? = nil
     ) async -> InternalConfirmResult {
         let paymentOption = confirmationContext.paymentOption
         let elementsSession = checkoutSession.elementsSession
@@ -108,8 +111,11 @@ extension Checkout {
         switch paymentOption {
         case .applePay:
             // MARK: - Apple Pay
-            // TODO: Make a new STPApplePayContext-wrapping thing.
-            return .init(paymentSheetResult: .canceled)
+            guard let applePayContext else {
+                stpAssertionFailure("CheckoutApplePayContext must be provided for Apple Pay confirmation")
+                return .init(paymentSheetResult: .canceled)
+            }
+            return await applePayContext.present()
 
         case .new(let confirmParams):
             // MARK: - New PM

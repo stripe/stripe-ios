@@ -15,67 +15,6 @@ import PassKit
 
 extension STPApplePayContext {
 
-    @MainActor
-    static func create(
-        checkout: Checkout
-    ) -> STPApplePayContext? {
-        guard let applePayConfig = checkout.configuration.applePayConfiguration else {
-            return nil
-        }
-
-        let session = checkout.session
-        let countryCode = session.elementsSession.merchantCountryCode ?? "US"
-        let paymentRequest = StripeAPI.paymentRequest(
-            withMerchantIdentifier: applePayConfig.merchantId,
-            country: countryCode,
-            currency: session.currency ?? "USD"
-        )
-
-        let label = session.businessName ?? checkout.configuration.merchantDisplayName ?? ""
-        paymentRequest.paymentSummaryItems = makePaymentSummaryItems(
-            for: session,
-            label: label,
-            currency: session.currency
-        )
-        if session.requiresShippingAddress {
-            paymentRequest.requiredShippingContactFields.formUnion([.postalAddress, .name])
-        }
-
-        // All session updates from within the sheet go through this protocol reference.
-        let updater: any CheckoutSessionExpressCheckoutUpdater = checkout
-
-        // TODO: Wire up billing address tax updates (didSelectPaymentMethod → updateBillingTaxRegionIfNecessary).
-        let paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void) -> Void)? = nil
-
-        // TODO: Wire up shipping contact handler: country validation + shipping tax updates (didSelectShippingContact → updateShippingTaxRegionIfNecessary).
-        let shippingContactUpdateHandler: ((PKContact, @escaping (PKPaymentRequestShippingContactUpdate) -> Void) -> Void)? = nil
-
-        let delegate = CheckoutApplePayContextClosureDelegate(
-            checkout: updater,
-            checkoutSession: checkout.session,
-            paymentMethodUpdateHandler: paymentMethodUpdateHandler,
-            shippingContactUpdateHandler: shippingContactUpdateHandler
-        )
-
-        guard let context = STPApplePayContext(paymentRequest: paymentRequest, delegate: delegate) else {
-            delegate.selfRetainer = nil
-            return nil
-        }
-
-        context.apiClient = checkout.apiClient
-        context.returnUrl = checkout.configuration.returnURL
-        context.clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-            intent: .checkout(session),
-            elementsSession: session.elementsSession
-        )
-        if let email = session.email {
-            var billingDetails = StripeAPI.BillingDetails()
-            billingDetails.email = email
-            context.fallbackBillingDetails = billingDetails
-        }
-        return context
-    }
-
     /// Builds Apple Pay summary items from a checkout session's current state.
     /// Falls back to a single total row (or .pending) when line items aren't available.
     static func makePaymentSummaryItems(

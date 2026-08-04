@@ -323,13 +323,25 @@ public final class Checkout: ObservableObject {
             appearance: confirmationContext.configuration.appearance
         )
 
+        let applePayContext: CheckoutApplePayContext?
+        if case .applePay = confirmationContext.paymentOption {
+            applePayContext = CheckoutApplePayContext.create(
+                checkout: self,
+                authenticationContext: authenticationContext,
+                paymentHandler: paymentHandler
+            )
+        } else {
+            applePayContext = nil
+        }
+
         do {
             let confirmResult = try await enqueueSessionUpdate {
                 let result = await Self.confirm(
                     checkoutSession: self.session,
                     confirmationContext: confirmationContext,
                     authenticationContext: authenticationContext,
-                    paymentHandler: self.paymentHandler
+                    paymentHandler: self.paymentHandler,
+                    applePayContext: applePayContext
                 )
                 if let checkoutSessionResponse = result.checkoutSessionResponse {
                     try await self.commitSession(checkoutSessionResponse)
