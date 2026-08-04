@@ -148,6 +148,7 @@ struct PaymentView: View {
     @State private var amountText: String = "0"
     @State private var shouldShowPaymentMethodSheet: Bool = false
     @State private var kycRecoveryLevels: KYCRecoveryFlowView.Levels?
+    @State private var didCompleteKYCRecovery: Bool = false
     @State private var paymentTokens: [PaymentTokensResponse.PaymentToken] = []
     @State private var alert: Alert?
     @State private var selectedPaymentMethod: SelectedPaymentMethod?
@@ -418,15 +419,22 @@ struct PaymentView: View {
             }
             .presentationDetents([.medium])
         }
-        .sheet(item: $kycRecoveryLevels) { kycRecoveryLevels in
+        .sheet(item: $kycRecoveryLevels, onDismiss: {
+            guard didCompleteKYCRecovery else {
+                return
+            }
+
+            didCompleteKYCRecovery = false
+            alert = Alert(
+                title: "Verification complete",
+                message: "Please try the transaction again."
+            )
+        }) { kycRecoveryLevels in
             KYCRecoveryFlowView(
                 coordinator: coordinator,
                 levels: kycRecoveryLevels
             ) {
-                alert = Alert(
-                    title: "Verification complete",
-                    message: "Please try the transaction again."
-                )
+                didCompleteKYCRecovery = true
             }
             .environment(\.isLoading, isLoading)
         }
