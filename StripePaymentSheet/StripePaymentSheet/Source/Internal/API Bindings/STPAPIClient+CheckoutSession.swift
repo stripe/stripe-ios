@@ -84,32 +84,6 @@ extension STPAPIClient {
         )
     }
 
-    /// Updates a saved payment method's billing details and/or card expiry on a Checkout Session.
-    /// - Parameters:
-    ///   - paymentMethodId: The ID of the payment method to update (e.g., "pm_xxx").
-    ///   - checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx").
-    ///   - billingDetails: Optional billing details to update (name, email, phone, address).
-    ///   - expiryDetails: Optional card expiry to update (month and year).
-    /// - Returns: The updated Payment Pages API response.
-    func updatePaymentMethod(
-        _ paymentMethodId: String,
-        inCheckoutSession checkoutSessionId: String,
-        billingDetails: Checkout.PaymentMethodBillingDetails? = nil,
-        expiryDetails: Checkout.PaymentMethodExpiryDetails? = nil
-    ) async throws -> PaymentPagesAPIResponse {
-        var params = Self.updatePaymentMethodParameters(
-            paymentMethodId: paymentMethodId,
-            billingDetails: billingDetails,
-            expiryDetails: expiryDetails
-        )
-        params["elements_session_client"] = ["is_aggregation_expected": true]
-        return try await APIRequest<PaymentPagesAPIResponse>.post(
-            with: self,
-            endpoint: "payment_pages/\(checkoutSessionId)",
-            parameters: params
-        )
-    }
-
     static func updatePaymentMethodParameters(
         paymentMethodId: String,
         billingDetails: Checkout.PaymentMethodBillingDetails?,

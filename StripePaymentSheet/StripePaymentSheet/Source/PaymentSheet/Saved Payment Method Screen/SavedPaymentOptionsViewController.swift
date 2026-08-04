@@ -99,7 +99,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     /// The visible and persisted selection state immediately before a customer selection.
     struct SelectionSnapshot {
-        fileprivate let selection: Selection?
+        fileprivate let selectedIndex: Int?
         fileprivate let persistedPaymentOption: CustomerPaymentOption?
     }
 
@@ -267,11 +267,8 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
 
     private var selectionSnapshot: SelectionSnapshot {
-        let selection = selectedViewModelIndex.flatMap {
-            viewModels.stp_boundSafeObject(at: $0)
-        }
         return SelectionSnapshot(
-            selection: selection,
+            selectedIndex: selectedViewModelIndex,
             persistedPaymentOption: CustomerPaymentOption.localDefaultPaymentMethod(
                 for: configuration.customerID
             )
@@ -505,17 +502,13 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.reloadItems(at: [selectedIndexPath])
     }
 
-    /// Shows or hides loading UI on the cell representing `selection`.
-    func setLoading(
-        _ loading: Bool,
-        for selection: Selection
-    ) {
-        cell(for: selection)?.setLoading(loading)
-    }
-
-    /// Transitions the spinner to a checkmark after a successful saved-method sync.
-    func showSuccess(for selection: Selection) {
-        cell(for: selection)?.showSuccess()
+    func setSelectedCellLoading(_ loading: Bool) {
+        guard let selectedIndexPath else {
+            return
+        }
+        let cell = collectionView.cellForItem(at: selectedIndexPath)
+            as? SavedPaymentMethodCollectionView.PaymentOptionCell
+        cell?.setLoading(loading)
     }
 
     func restoreSelection(_ snapshot: SelectionSnapshot) {
@@ -526,8 +519,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             snapshot.persistedPaymentOption,
             forCustomer: configuration.customerID
         )
-        if let selection = snapshot.selection,
-           let index = viewModels.firstIndex(where: { $0.matches(selection) }) {
+        if let index = snapshot.selectedIndex, viewModels.indices.contains(index) {
             selectedViewModelIndex = index
             collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
         } else {
@@ -568,16 +560,6 @@ class SavedPaymentOptionsViewController: UIViewController {
     private func isDefaultPaymentMethod(savedPaymentMethodId: String?) -> Bool {
         guard configuration.allowsSetAsDefaultPM, let savedPaymentMethodId, let defaultPaymentMethod else { return false }
         return savedPaymentMethodId == defaultPaymentMethod.stripeId
-    }
-
-    private func cell(
-        for selection: Selection
-    ) -> SavedPaymentMethodCollectionView.PaymentOptionCell? {
-        guard let index = viewModels.firstIndex(where: { $0.matches(selection) }) else {
-            return nil
-        }
-        return collectionView.cellForItem(at: IndexPath(item: index, section: 0))
-            as? SavedPaymentMethodCollectionView.PaymentOptionCell
     }
 
     // MARK: - Helpers
@@ -708,19 +690,6 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             paymentMethodSelection: viewModel,
             previousSelection: previousSelection
         )
-    }
-}
-
-private extension SavedPaymentOptionsViewController.Selection {
-    func matches(_ other: Self) -> Bool {
-        switch (self, other) {
-        case (.applePay, .applePay), (.link, .link), (.add, .add):
-            return true
-        case (.saved(let lhs), .saved(let rhs)):
-            return lhs.stripeId == rhs.stripeId
-        default:
-            return false
-        }
     }
 }
 

@@ -119,7 +119,6 @@ extension SavedPaymentMethodCollectionView {
         private lazy var spinner: ActivityIndicator = {
             let spinner = ActivityIndicator(size: .medium)
             spinner.translatesAutoresizingMaskIntoConstraints = false
-            spinner.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             return spinner
         }()
 
@@ -299,42 +298,13 @@ extension SavedPaymentMethodCollectionView {
                 return
             }
 
+            selectedIcon.isHidden = !loading && !isSelected
+            selectedIcon.imageView.isHidden = loading
             if loading {
-                selectedIcon.isHidden = false
-                selectedIcon.imageView.alpha = 0
-                selectedIcon.imageView.transform = CGAffineTransform(
-                    scaleX: 0.65,
-                    y: 0.65
-                )
                 spinner.tintColor = appearance.colors.primary.contrastingColor
-                spinner.alpha = 1
                 spinner.startAnimating()
             } else {
                 spinner.stopAnimating()
-                selectedIcon.imageView.alpha = 1
-                selectedIcon.imageView.transform = .identity
-                selectedIcon.isHidden = !isSelected
-            }
-        }
-
-        /// Smoothly transitions the loading spinner back into the selected checkmark.
-        func showSuccess() {
-            guard spinner.isAnimating else {
-                return
-            }
-
-            UIView.animate(
-                withDuration: 0.25,
-                delay: 0,
-                usingSpringWithDamping: 0.72,
-                initialSpringVelocity: 0.4,
-                options: [.beginFromCurrentState, .curveEaseOut]
-            ) {
-                self.spinner.alpha = 0
-                self.selectedIcon.imageView.alpha = 1
-                self.selectedIcon.imageView.transform = .identity
-            } completion: { _ in
-                self.spinner.stopAnimating()
             }
         }
 
