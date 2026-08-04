@@ -225,6 +225,27 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
         wait(for: [exp], timeout: 1)
     }
 
+    func testTestModeConfiguresImageUploaders() throws {
+        // Given test mode static content
+        let staticContent = try VerificationPageMock.response200TestMode.make()
+
+        // When document and selfie uploaders are created
+        let documentUploader = flowController.makeDocumentUploader(
+            staticContent: staticContent,
+            sheetController: mockSheetController
+        )
+        let selfieViewController = flowController.makeSelfieCaptureViewController(
+            faceScannerResult: .success(AnyFaceScanner(FaceScannerMock())),
+            staticContent: staticContent,
+            sheetController: mockSheetController
+        ) as? SelfieCaptureViewController
+        let selfieUploader = selfieViewController?.selfieUploader as? SelfieUploader
+
+        // Then both uploaders replace captured images with test mode placeholders
+        XCTAssertTrue(documentUploader.isTestMode)
+        XCTAssertTrue(selfieUploader?.isTestMode == true)
+    }
+
     func testNextViewControllerSuccess() throws {
         let exp = expectation(description: "testNextViewControllerSuccess")
         try nextViewController(

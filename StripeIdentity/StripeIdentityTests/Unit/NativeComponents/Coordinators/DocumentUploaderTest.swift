@@ -84,6 +84,7 @@ final class DocumentUploaderTest: XCTestCase {
         .init(isBlurry: false, variance: 0.1)
     )
 
+    // swiftlint:disable:next static_over_final_class
     override class func setUp() {
         super.setUp()
         mockStripeFile = try! FileMock.identityDocument.make()
@@ -106,6 +107,56 @@ final class DocumentUploaderTest: XCTestCase {
         )
         mockDelegate = MockDocumentUploaderDelegate()
         uploader.delegate = mockDelegate
+    }
+
+    func testUploadImagesInTestModeUsesPlaceholderImages() {
+        // Given a test mode uploader
+        uploader = DocumentUploader(
+            imageUploader: IdentityImageUploader(
+                configuration: mockConfig,
+                sheetController: VerificationSheetControllerMock(
+                    apiClient: mockAPIClient,
+                    analyticsClient: .init(verificationSessionId: "")
+                )
+            ),
+            isTestMode: true
+        )
+        let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 4)
+
+        // When real front and back document images are provided
+        for side in [DocumentSide.front, .back] {
+            uploader.uploadImages(
+                for: side,
+                originalImage: mockImage,
+                documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutputLegacy,
+                exifMetadata: mockExifData,
+                method: .autoCapture
+            )
+        }
+        wait(for: uploadRequestExpectations, timeout: 1)
+
+        // Then the high-resolution requests use the bundled placeholders without cropping
+        let frontRequest = mockAPIClient.imageUpload.requestHistory.first {
+            $0.fileName == "\(mockVS)_front"
+        }
+        let backRequest = mockAPIClient.imageUpload.requestHistory.first {
+            $0.fileName == "\(mockVS)_back"
+        }
+        let frontPlaceholder = try! TestModeImage.documentFront.makeCGImage()
+        let backPlaceholder = try! TestModeImage.documentBack.makeCGImage()
+        XCTAssertEqual(frontRequest?.image.size, UIImage(cgImage: frontPlaceholder).size)
+        XCTAssertEqual(backRequest?.image.size, UIImage(cgImage: backPlaceholder).size)
+        XCTAssertNotEqual(frontRequest?.image.size, UIImage(cgImage: mockImage).size)
+        XCTAssertNotEqual(backRequest?.image.size, UIImage(cgImage: mockImage).size)
+
+        mockAPIClient.imageUpload.respondToRequests(
+            with: .success(
+                (
+                    file: DocumentUploaderTest.mockStripeFile,
+                    metrics: DocumentUploaderTest.mockUploadMetrics
+                )
+            )
+        )
     }
 
     // Tests the happy path where both images are uploaded successfully
