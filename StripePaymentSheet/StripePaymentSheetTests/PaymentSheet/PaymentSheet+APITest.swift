@@ -32,7 +32,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
         config.allowsDelayedPaymentMethods = true
-        config.returnURL = "foo://bar"
+        config.returnURL = disableMocking ? "foo://bar" : nil
         config.shippingDetails = {
             return .init(
                 address: .init(
@@ -849,23 +849,27 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     }
                 }
                 if isPaymentIntent {
-                    let params: [String: Any] = isServerSideConfirm ?
+                    var params: [String: Any] = isServerSideConfirm ?
                     [
                         "amount": 1050,
                         "payment_method": paymentMethod.stripeId,
                         "confirm": true,
-                        "return_url": self.configuration.returnURL!,
                         "payment_method_options[card][setup_future_usage]": expectedShouldSavePaymentMethod ? "off_session" : "",
                     ] : [
                         "amount": 1050,
                     ]
+                    if isServerSideConfirm, let returnURL = self.configuration.returnURL {
+                        params["return_url"] = returnURL
+                    }
                     STPTestingAPIClient.shared.createPaymentIntent(withParams: params, completion: createIntentCompletion)
                 } else {
-                    let params: [String: Any] = isServerSideConfirm ? [
+                    var params: [String: Any] = isServerSideConfirm ? [
                         "confirm": "true",
                         "payment_method": paymentMethod.stripeId,
-                        "return_url": self.configuration.returnURL!,
                     ] : [:]
+                    if isServerSideConfirm, let returnURL = self.configuration.returnURL {
+                        params["return_url"] = returnURL
+                    }
                     STPTestingAPIClient.shared.createSetupIntent(withParams: params, completion: createIntentCompletion)
                 }
             }
@@ -969,12 +973,15 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let e = expectation(description: "confirm completes")
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1080, currency: "USD")) { paymentMethod, _ in
             try await withCheckedThrowingContinuation { continuation in
-                STPTestingAPIClient.shared.createPaymentIntent(withParams: [
+                var params: [String: Any] = [
                     "amount": 1050,
                     "confirm": true,
                     "payment_method": paymentMethod.stripeId,
-                    "return_url": self.configuration.returnURL!,
-                ]) { pi, _ in
+                ]
+                if let returnURL = self.configuration.returnURL {
+                    params["return_url"] = returnURL
+                }
+                STPTestingAPIClient.shared.createPaymentIntent(withParams: params) { pi, _ in
                     continuation.resume(returning: pi!)
                 }
             }
@@ -1003,12 +1010,15 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let e = expectation(description: "confirm completes")
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD")) { paymentMethod, _ in
             try await withCheckedThrowingContinuation { continuation in
-                STPTestingAPIClient.shared.createSetupIntent(withParams: [
+                var params: [String: Any] = [
                     "usage": "on_session",
                     "payment_method": paymentMethod.stripeId,
                     "confirm": true,
-                    "return_url": self.configuration.returnURL!,
-                ]) { si, _ in
+                ]
+                if let returnURL = self.configuration.returnURL {
+                    params["return_url"] = returnURL
+                }
+                STPTestingAPIClient.shared.createSetupIntent(withParams: params) { si, _ in
                     continuation.resume(returning: si!)
                 }
             }
