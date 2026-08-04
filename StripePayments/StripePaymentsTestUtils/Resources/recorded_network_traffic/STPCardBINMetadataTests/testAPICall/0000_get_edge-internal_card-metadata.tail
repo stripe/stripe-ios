@@ -1,0 +1,28 @@
+GET
+https:\/\/api\.stripe\.com\/edge-internal\/card-metadata\?bin_prefix=625035$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+timing-allow-origin: *
+Date: Wed, 31 Jul 2024 03:47:44 GMT
+access-control-allow-credentials: true
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+
+{
+  "data" : [
+    {
+      "pan_length" : 16,
+      "brand" : "UNIONPAY",
+      "country" : "CN",
+      "account_range_high" : "6250359999999999",
+      "account_range_low" : "6250350000000000",
+      "funding" : "DEBIT"
+    }
+  ]
+}

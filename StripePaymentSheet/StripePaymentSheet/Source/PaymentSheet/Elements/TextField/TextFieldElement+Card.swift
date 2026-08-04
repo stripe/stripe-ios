@@ -30,8 +30,7 @@ extension TextFieldElement {
         weak var cardBrandChoiceDataSource: CardBrandChoiceDataSource?
         let cardBrandFilter: CardBrandFilter
         let cardFundingFilter: CardFundingFilter
-        /// Separate BIN controller for funding filtering to avoid polluting
-        /// See: https://jira.corp.stripe.com/browse/RUN_MOBILESDK-5052
+        /// Separate BIN controller for funding filtering to avoid polluting shared state
         let fundingBinController: STPBINController?
 
         init(
@@ -187,8 +186,7 @@ extension TextFieldElement {
             let minimumValidLength: Int = {
                 let isCorrectPANLengthKnownYet = binController.hasBINRanges(forPrefix: text)
                 if !isCorrectPANLengthKnownYet {
-                    // If `hasBINRanges` returns false, we need to call `retrieveBINRanges` to fetch the correct card length from the card metadata service. See go/card-metadata-edge.
-                    // TODO: BIN retrieval is broken if you don't use STPAPIClient.shared (https://jira.corp.stripe.com/browse/MOBILESDK-4322)
+                    // If `hasBINRanges` returns false, we need to call `retrieveBINRanges` to fetch the correct card length from the card metadata service.
                     binController.retrieveBINRanges(apiClient: STPAPIClient.shared, forPrefix: text, recordErrorsAsSuccess: false) { _ in }
                     // If we don't know the correct length, return the shortest possible length for the brand
                     return binController.minCardNumberLength(for: binRange.brand)

@@ -29,10 +29,6 @@
   },
   "testTargets" : [
     {
-      "skippedTests" : [
-        "STPCardBINMetadataTests",
-        "TextFieldElementCardTest\/testBINRangeThatRequiresNetworkCallToValidate()"
-      ],
       "target" : {
         "containerPath" : "container:Stripe.xcodeproj",
         "identifier" : "8BE23AD5D9A3D939AF46F31E",

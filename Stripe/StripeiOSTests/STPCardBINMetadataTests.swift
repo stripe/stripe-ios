@@ -7,6 +7,7 @@
 //
 
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
@@ -14,7 +15,7 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPCardBINMetadataTests: XCTestCase {
+class STPCardBINMetadataTests: STPNetworkStubbingTestCase {
     func testAPICall() {
         let expectation = self.expectation(description: "Retrieve card metadata")
 
@@ -33,22 +34,22 @@ class STPCardBINMetadataTests: XCTestCase {
     }
 
     func testLoadingInBINRange() {
+        let binController = STPBINController()
         let expectation = self.expectation(description: "Retrieve card metadata")
-        let hardCodedBinRanges = STPBINController.shared.allRanges()
-        STPBINController.shared.retrieveBINRanges(
+        let hardCodedBinRanges = binController.allRanges()
+        binController.retrieveBINRanges(
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
             forPrefix: "625035") { result in
             let ranges = try! result.get()
             XCTAssertTrue(ranges.count > 0)
             XCTAssertTrue(
-                STPBINController.shared.allRanges().count == hardCodedBinRanges.count + ranges.count
+                binController.allRanges().count == hardCodedBinRanges.count + ranges.count
             )
             for range in ranges {
-                XCTAssertTrue(STPBINController.shared.allRanges().contains(range))
+                XCTAssertTrue(binController.allRanges().contains(range))
             }
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
-
     }
 }

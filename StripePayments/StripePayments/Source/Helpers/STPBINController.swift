@@ -262,13 +262,13 @@ extension STPBINRange {
 
     /// This will asynchronously check if we have already fetched metadata for this prefix and if we have not will
     /// issue a network request to retrieve it if possible.
-    /// - Parameter recordErrorsAsSuccess: An unfortunate toggle for behavior that STPCardFormView/STPPaymentCardTextField depends on. See https://jira.corp.stripe.com/browse/MOBILESDK-724
+    /// - Parameter recordErrorsAsSuccess: An unfortunate toggle for behavior that STPCardFormView/STPPaymentCardTextField depends on.
     /// - Parameter onlyFetchForVariableLengthBINs: Only hit the network if a BIN is known to be variable length. (e.g. UnionPay).
     /// If this is disabled, we will *always* fetch and cache BIN information for the passed BIN.
     /// Use caution when disabling this: The BIN length information coming from the service may not be correct, which will
     /// cause issues when validating PAN length.
     @_spi(STP) public func retrieveBINRanges(
-        apiClient: STPAPIClient, // TODO: BIN retrieval is broken if you don't use STPAPIClient.shared (https://jira.corp.stripe.com/browse/MOBILESDK-4322)
+        apiClient: STPAPIClient,
         forPrefix binPrefix: String,
         recordErrorsAsSuccess: Bool = true,
         onlyFetchForVariableLengthBINs: Bool = true,

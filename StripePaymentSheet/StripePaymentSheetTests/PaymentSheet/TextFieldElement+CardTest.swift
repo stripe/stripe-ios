@@ -96,7 +96,6 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         configuration.binController = binController
 
         // Given a 19-digit Union Pay variable length number i.e., requires a network call in order to be know the correct length...
-        // (I got this number from https://hubble.corp.stripe.com/queries/ek/5612e1d3)
         let unionPay19 = "6235510000000000009"  // 19-digit, valid luhn Union Pay
         // a 16-digit valid luhn Union Pay that should be 19 digits according to its BIN prefix.
         let unionPay19_but_16_digits_entered = "6235510000000002"
@@ -162,7 +161,6 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         configuration.binController = binController
 
         // Given a 19-digit Union Pay variable length number i.e., requires a network call in order to be know the correct length...
-        // (I got this number from https://hubble.corp.stripe.com/queries/ek/5612e1d3)
         let unionPay19 = "6235510000000000009"  // 19-digit, valid luhn Union Pay
         // a 16-digit valid luhn Union Pay that should be 19 digits according to its BIN prefix.
         let unionPay19_but_16_digits_entered = "6235510000000002"
