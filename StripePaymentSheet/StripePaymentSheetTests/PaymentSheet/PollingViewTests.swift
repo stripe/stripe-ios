@@ -27,6 +27,6 @@ class PollingViewTests: XCTestCase {
 
         XCTAssertEqual(pollingViewModel.CTA, .Localized.mb_way_confirm_payment)
         XCTAssertEqual(pollingViewModel.retryInterval, 3)
-        XCTAssertFalse(pollingViewModel.usesCountdownTimer)
+        XCTAssertEqual(pollingViewModel.deadline.timeIntervalSinceNow, 60 * 4, accuracy: 0.5)
     }
 }

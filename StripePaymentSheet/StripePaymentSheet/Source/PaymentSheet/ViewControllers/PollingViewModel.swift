@@ -32,8 +32,12 @@ class PollingViewModel {
         switch paymentMethodType {
         case .blik:
             return Date().addingTimeInterval(60) // 60 seconds
-        case .paynow, .promptPay, .mbWay:
+        case .paynow, .promptPay:
             return Date().addingTimeInterval(60 * 60) // 1 hour
+        case .mbWay:
+            // Keep in sync with:
+            // https://stripe.sourcegraphcloud.com/stripe-internal/mint/-/blob/pay-server/lib/payment_flows/private/payment_methods/mb_way/constants.rb
+            return Date().addingTimeInterval(60 * 4) // 4 minutes
         default:
             fatalError("Polling deadline has not been implemented for \(paymentMethodType)")
         }
@@ -47,10 +51,6 @@ class PollingViewModel {
         default:
             fatalError("Polling retry interval has not been implemented for \(paymentMethodType)")
         }
-    }
-
-    var usesCountdownTimer: Bool {
-        paymentMethodType != .mbWay
     }
 
     init(paymentMethodType: STPPaymentMethodType) {
