@@ -44,10 +44,8 @@ class PollingViewModel {
     }()
     var retryInterval: TimeInterval {
         switch paymentMethodType {
-        case .blik, .paynow, .promptPay:
+        case .blik, .paynow, .promptPay, .mbWay:
             return 1
-        case .mbWay:
-            return 3
         default:
             fatalError("Polling retry interval has not been implemented for \(paymentMethodType)")
         }

@@ -26,7 +26,7 @@ class PollingViewTests: XCTestCase {
         let pollingViewModel = PollingViewModel(paymentMethodType: .mbWay)
 
         XCTAssertEqual(pollingViewModel.CTA, .Localized.mb_way_confirm_payment)
-        XCTAssertEqual(pollingViewModel.retryInterval, 3)
+        XCTAssertEqual(pollingViewModel.retryInterval, 1)
         XCTAssertEqual(pollingViewModel.deadline.timeIntervalSinceNow, 60 * 4, accuracy: 0.5)
     }
 }
