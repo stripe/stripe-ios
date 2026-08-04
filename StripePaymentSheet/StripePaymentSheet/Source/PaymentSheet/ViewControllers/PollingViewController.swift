@@ -54,16 +54,14 @@ class PollingViewController: UIViewController {
     }
 
     private var instructionLabelAttributedText: NSAttributedString {
-        let formattedTimeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
-        let attrText = NSMutableAttributedString(string: String(
-            format: viewModel.CTA,
-            formattedTimeRemaining
-        ))
-        attrText.addAttributes(
-            [.foregroundColor: appearance.colors.primary],
-            range: NSString(string: attrText.string).range(of: formattedTimeRemaining)
-        )
-        return attrText
+               let timeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
+               let attrText = NSMutableAttributedString(string: String(
+                format: viewModel.CTA,
+                   timeRemaining
+               ))
+               attrText.addAttributes([.foregroundColor: appearance.colors.primary],
+                                      range: NSString(string: attrText.string).range(of: timeRemaining))
+               return attrText
     }
 
     private var pollingState: PollingState = .polling {
