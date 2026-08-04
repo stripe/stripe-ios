@@ -32,6 +32,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
         config.allowsDelayedPaymentMethods = true
+        config.returnURL = disableMocking ? "foo://bar" : nil
         config.shippingDetails = {
             return .init(
                 address: .init(
@@ -170,7 +171,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 }
             }
         }
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD"),
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD", captureMethod: .automaticAsync),
                                                             paymentMethodTypes: types,
                                                             confirmHandler: confirmHandler)
         PaymentSheetLoader.load(
@@ -235,7 +236,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 }
             }
         }
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD"),
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD", captureMethod: .automaticAsync),
                                                             paymentMethodTypes: types,
                                                             confirmHandler: serverSideConfirmHandler)
         PaymentSheetLoader.load(
@@ -517,7 +518,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             callbackExpectation.fulfill()
             return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types, currency: "USD", amount: 100, shouldSavePM: true, customerID: configuration.customer?.id)
         }
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession])),
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", captureMethod: .automaticAsync, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession])),
                                                             paymentMethodTypes: types,
                                                             confirmHandler: confirmHandler)
         PaymentSheetLoader.load(
@@ -848,7 +849,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     }
                 }
                 if isPaymentIntent {
-                    let params: [String: Any] = isServerSideConfirm ?
+                    var params: [String: Any] = isServerSideConfirm ?
                     [
                         "amount": 1050,
                         "payment_method": paymentMethod.stripeId,
@@ -857,19 +858,25 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     ] : [
                         "amount": 1050,
                     ]
+                    if isServerSideConfirm, let returnURL = self.configuration.returnURL {
+                        params["return_url"] = returnURL
+                    }
                     STPTestingAPIClient.shared.createPaymentIntent(withParams: params, completion: createIntentCompletion)
                 } else {
-                    let params: [String: Any] = isServerSideConfirm ? [
+                    var params: [String: Any] = isServerSideConfirm ? [
                         "confirm": "true",
                         "payment_method": paymentMethod.stripeId,
                     ] : [:]
+                    if isServerSideConfirm, let returnURL = self.configuration.returnURL {
+                        params["return_url"] = returnURL
+                    }
                     STPTestingAPIClient.shared.createSetupIntent(withParams: params, completion: createIntentCompletion)
                 }
             }
         }
         let intentConfigMode: PaymentSheet.IntentConfiguration.Mode = {
             if isPaymentIntent {
-                return .payment(amount: 1050, currency: "USD")
+                return .payment(amount: 1050, currency: "USD", captureMethod: .automaticAsync)
             } else {
                 return .setup(currency: nil)
             }
@@ -932,7 +939,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     func testDeferredConfirm_paymentintent_client_side_confirm_validates() {
         // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we perform validation in the paymentintent confirm flow
         let e = expectation(description: "confirm completes")
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD")) { _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD", captureMethod: .automaticAsync)) { _, _ in
             try await withCheckedThrowingContinuation { continuation in
                 STPTestingAPIClient.shared.createPaymentIntent(withParams: [
                     "amount": 1050,
@@ -964,13 +971,17 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     func testDeferredConfirm_paymentintent_server_side_confirm_doesnt_validate() {
         // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we **don't** perform validation in the paymentintent server-side confirm flow
         let e = expectation(description: "confirm completes")
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1080, currency: "USD")) { paymentMethod, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1080, currency: "USD", captureMethod: .automaticAsync)) { paymentMethod, _ in
             try await withCheckedThrowingContinuation { continuation in
-                STPTestingAPIClient.shared.createPaymentIntent(withParams: [
+                var params: [String: Any] = [
                     "amount": 1050,
                     "confirm": true,
                     "payment_method": paymentMethod.stripeId,
-                ]) { pi, _ in
+                ]
+                if let returnURL = self.configuration.returnURL {
+                    params["return_url"] = returnURL
+                }
+                STPTestingAPIClient.shared.createPaymentIntent(withParams: params) { pi, _ in
                     continuation.resume(returning: pi!)
                 }
             }
@@ -999,11 +1010,15 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let e = expectation(description: "confirm completes")
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD")) { paymentMethod, _ in
             try await withCheckedThrowingContinuation { continuation in
-                STPTestingAPIClient.shared.createSetupIntent(withParams: [
+                var params: [String: Any] = [
                     "usage": "on_session",
                     "payment_method": paymentMethod.stripeId,
                     "confirm": true,
-                ]) { si, _ in
+                ]
+                if let returnURL = self.configuration.returnURL {
+                    params["return_url"] = returnURL
+                }
+                STPTestingAPIClient.shared.createSetupIntent(withParams: params) { si, _ in
                     continuation.resume(returning: si!)
                 }
             }
@@ -1031,7 +1046,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     func testUpdate() {
         STPAnalyticsClient.sharedClient._testLogHistory = []
-        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automaticAsync)) { _, _ in
             // These tests don't confirm, so this is unused
             return ""
         }
@@ -1052,7 +1067,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     firstUpdateExpectation.fulfill()
 
                     // ...updating the intent config multiple times should succeed...
-                    intentConfig.mode = .payment(amount: 100, currency: "USD", setupFutureUsage: nil)
+                    intentConfig.mode = .payment(amount: 100, currency: "USD", setupFutureUsage: nil, captureMethod: .automaticAsync)
                     sut.update(intentConfiguration: intentConfig) { error in
                         XCTAssertNil(error)
                         XCTAssertNil(sut.paymentOption)
@@ -1083,7 +1098,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     }
 
     func testUpdateFails() {
-        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automaticAsync)) { _, _ in
             // These tests don't confirm, so this is unused
             return ""
         }
@@ -1119,7 +1134,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     }
 
     func testUpdateIgnoresInFlightUpdate() {
-        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automaticAsync)) { _, _ in
             // These tests don't confirm, so this is unused
             return ""
         }
@@ -1464,17 +1479,17 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     }
 
     func testMakeDeferredPaymentUserAgent() {
-        let intentConfig_with_nil_payment_method_types = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD"), confirmHandler: { _, _  in return "" })
+        let intentConfig_with_nil_payment_method_types = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD", captureMethod: .automaticAsync), confirmHandler: { _, _  in return "" })
         XCTAssertEqual(
             PaymentSheet.makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig_with_nil_payment_method_types),
             ["deferred-intent", "autopm"]
         )
-        let intentConfig_with_empty_payment_method_types = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD"), paymentMethodTypes: [], confirmHandler: { _, _  in return "" })
+        let intentConfig_with_empty_payment_method_types = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD", captureMethod: .automaticAsync), paymentMethodTypes: [], confirmHandler: { _, _  in return "" })
         XCTAssertEqual(
             PaymentSheet.makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig_with_empty_payment_method_types),
             ["deferred-intent", "autopm"]
         )
-        let intentConfig_with_payment_method_types = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD"), paymentMethodTypes: ["card"], confirmHandler: { _, _ in return "" })
+        let intentConfig_with_payment_method_types = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD", captureMethod: .automaticAsync), paymentMethodTypes: ["card"], confirmHandler: { _, _ in return "" })
         XCTAssertEqual(
             PaymentSheet.makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig_with_payment_method_types),
             ["deferred-intent"]
@@ -1491,7 +1506,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
         }
 
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", captureMethod: .automaticAsync)) { _, _ in
             return try await STPTestingAPIClient.shared().createPaymentIntent(withParams: ["amount": 100])
         }
 
@@ -1514,7 +1529,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let clientSecret = try await STPTestingAPIClient.shared().createPaymentIntent(withParams: ["amount": 100, "setup_future_usage": "off_session"])
         let paymentIntent = try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
 
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession)) { _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession, captureMethod: .automaticAsync)) { _, _ in
             return try await STPTestingAPIClient.shared().createPaymentIntent(withParams: ["amount": 100, "setup_future_usage": "off_session"])
         }
 

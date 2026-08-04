@@ -25,7 +25,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_PaymentIntent() {
         let intent = Intent._testValue()
-        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD"), confirmHandler: dummyDeferredConfirmHandler))
+        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", captureMethod: .automatic), confirmHandler: dummyDeferredConfirmHandler))
         for intent in [intent, deferredIntent] {
             let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
             XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
@@ -43,7 +43,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_PaymentIntentWithSetupFutureUsage() {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession)
-        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", setupFutureUsage: .offSession), confirmHandler: dummyDeferredConfirmHandler))
+        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", setupFutureUsage: .offSession, captureMethod: .automatic), confirmHandler: dummyDeferredConfirmHandler))
         for intent in [intent, deferredIntent] {
             let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
             XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
@@ -63,7 +63,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
         config.applePay = applePayConfiguration
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card], paymentMethodOptionsSetupFutureUsage: [.card: "off_session"])
-        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession])), confirmHandler: dummyDeferredConfirmHandler))
+        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", captureMethod: .automatic, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession])), confirmHandler: dummyDeferredConfirmHandler))
         for intent in [intent, deferredIntent] {
             let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: config, applePay: applePayConfiguration)
             XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
@@ -83,7 +83,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
         config.applePay = applePayConfiguration
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: "none"])
-        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", setupFutureUsage: .offSession, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none])), confirmHandler: dummyDeferredConfirmHandler))
+        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", setupFutureUsage: .offSession, captureMethod: .automatic, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none])), confirmHandler: dummyDeferredConfirmHandler))
         for intent in [intent, deferredIntent] {
             let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: config, applePay: applePayConfiguration)
             XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
@@ -121,7 +121,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         var configuration = configuration
         configuration.cardBrandAcceptance = .all
         let intent = Intent._testValue()
-        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD"), confirmHandler: dummyDeferredConfirmHandler))
+        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", captureMethod: .automatic), confirmHandler: dummyDeferredConfirmHandler))
         for intent in [intent, deferredIntent] {
             let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
             XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
@@ -140,7 +140,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         var configuration = configuration
         configuration.cardBrandAcceptance = .disallowed(brands: [.amex, .visa])
         let intent = Intent._testValue()
-        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD"), confirmHandler: dummyDeferredConfirmHandler))
+        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", captureMethod: .automatic), confirmHandler: dummyDeferredConfirmHandler))
         for intent in [intent, deferredIntent] {
             let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
             XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
@@ -159,7 +159,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         var configuration = configuration
         configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         let intent = Intent._testValue()
-        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD"), confirmHandler: dummyDeferredConfirmHandler))
+        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", captureMethod: .automatic), confirmHandler: dummyDeferredConfirmHandler))
         for intent in [intent, deferredIntent] {
             let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
             XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
@@ -303,7 +303,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         configuration.merchantDisplayName = "Merchant Name"
         let deferredIntent = Intent.deferredIntent(
             intentConfig: .init(
-                mode: .payment(amount: 2345, currency: "USD"),
+                mode: .payment(amount: 2345, currency: "USD", captureMethod: .automatic),
                 confirmHandler: dummyDeferredConfirmHandler
             )
         )
@@ -316,7 +316,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         configuration.merchantDisplayName = "Merchant Name"
         let deferredIntent = Intent.deferredIntent(
             intentConfig: .init(
-                sharedPaymentTokenSessionWithMode: .payment(amount: 2345, currency: "USD"),
+                sharedPaymentTokenSessionWithMode: .payment(amount: 2345, currency: "USD", captureMethod: .automatic),
                 sellerDetails: nil,
                 preparePaymentMethodHandler: { _, _ in /* no-op */ }
             )
@@ -330,7 +330,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         configuration.merchantDisplayName = "Merchant Name"
         let deferredIntent = Intent.deferredIntent(
             intentConfig: .init(
-                sharedPaymentTokenSessionWithMode: .payment(amount: 2345, currency: "USD"),
+                sharedPaymentTokenSessionWithMode: .payment(amount: 2345, currency: "USD", captureMethod: .automatic),
                 sellerDetails: .init(
                     networkId: "networkID",
                     externalId: "externalID",
@@ -349,7 +349,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         // Test that confirmation token deferred intents create proper payment requests
         let confirmationTokenDeferredIntent = Intent.deferredIntent(
             intentConfig: .init(
-                mode: .payment(amount: 2345, currency: "USD"),
+                mode: .payment(amount: 2345, currency: "USD", captureMethod: .automatic),
                 confirmationTokenConfirmHandler: dummyConfirmationTokenConfirmHandler
             )
         )
@@ -387,7 +387,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         // Test that confirmation token deferred intents with setup future usage work
         let confirmationTokenDeferredIntent = Intent.deferredIntent(
             intentConfig: .init(
-                mode: .payment(amount: 2345, currency: "USD", setupFutureUsage: .offSession),
+                mode: .payment(amount: 2345, currency: "USD", setupFutureUsage: .offSession, captureMethod: .automatic),
                 confirmationTokenConfirmHandler: dummyConfirmationTokenConfirmHandler
             )
         )
@@ -417,7 +417,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
                 mode: .payment(
                     amount: 2345,
                     currency: "USD",
-                    paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(
+                    captureMethod: .automatic, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(
                         setupFutureUsageValues: [.card: .offSession]
                     )
                 ),
@@ -751,7 +751,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
         let intent = Intent.deferredIntent(
             intentConfig: .init(
-                mode: .payment(amount: 2345, currency: "USD"),
+                mode: .payment(amount: 2345, currency: "USD", captureMethod: .automatic),
                 confirmHandler: dummyDeferredConfirmHandler
             )
         )
@@ -776,7 +776,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = false
         let intent = Intent.deferredIntent(
             intentConfig: .init(
-                mode: .payment(amount: 2345, currency: "USD"),
+                mode: .payment(amount: 2345, currency: "USD", captureMethod: .automatic),
                 confirmHandler: dummyDeferredConfirmHandler
             )
         )

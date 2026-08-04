@@ -18,7 +18,7 @@ Access-Control-Allow-Origin: *
     "X-Forwarded-Host" : "stripe-mobile-luxurious-alpine-devourer.stripedemos.com",
     "Connection" : "close",
     "Accept-Encoding" : "gzip, deflate, br",
-    "Stripe-Version" : "2020-08-27",
+    "Stripe-Version" : "2026-07-29.dahlia",
     "User-Agent" : "xctest\/22719 CFNetwork\/1406.0.4 Darwin\/23.5.0",
     "Authorization" : "Bearer",
     "X-Stripe-User-Agent" : "{\"vendor_identifier\":\"6B9BD889-FE40-4D9D-BD6E-CA93E8B754A3\",\"model\":\"iPhone\",\"type\":\"arm64\",\"os_version\":\"16.4\",\"bindings_version\":\"23.28.1\",\"lang\":\"objective-c\"}",

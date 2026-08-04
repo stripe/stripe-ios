@@ -29,7 +29,7 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         return config
     }()
-    let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card"]) { _, _ in
+    let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic), paymentMethodTypes: ["card"]) { _, _ in
         // These tests don't confirm, so this is unused
         return ""
     }
@@ -189,7 +189,7 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
 
         // ...and updating the amount...
         var updatedIntentConfig = paymentIntentConfig
-        updatedIntentConfig.mode = .payment(amount: 1234, currency: "USD")
+        updatedIntentConfig.mode = .payment(amount: 1234, currency: "USD", captureMethod: .automatic)
         let result = await sut.update(intentConfiguration: updatedIntentConfig)
         guard case .succeeded = result else {
             XCTFail()

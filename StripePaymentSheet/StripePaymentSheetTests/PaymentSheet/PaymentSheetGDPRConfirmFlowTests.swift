@@ -668,7 +668,7 @@ extension PaymentSheetGDPRConfirmFlowTests {
             }()
             return .paymentIntent(paymentIntent)
         case .paymentIntent_deferredIntent_csc:
-            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency)) { _, _ in
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, captureMethod: .automatic)) { _, _ in
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -680,7 +680,7 @@ extension PaymentSheetGDPRConfirmFlowTests {
             }
             return .deferredIntent(intentConfig: deferredCSC)
         case .paymentIntent_deferredIntent_ssc:
-            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency)) { paymentMethod, shouldSavePM in
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, captureMethod: .automatic)) { paymentMethod, shouldSavePM in
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -711,7 +711,7 @@ extension PaymentSheetGDPRConfirmFlowTests {
             }()
             return .paymentIntent(paymentIntent)
         case .paymentIntentSFU_deferredIntent_csc:
-            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession)) { _, _ in
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession, captureMethod: .automatic)) { _, _ in
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -724,7 +724,7 @@ extension PaymentSheetGDPRConfirmFlowTests {
             }
             return .deferredIntent(intentConfig: deferredCSC)
         case .paymentIntentSFU_deferredIntent_ssc:
-            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession)) { paymentMethod, shouldSavePM in
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession, captureMethod: .automatic)) { paymentMethod, shouldSavePM in
                 let otherParams = [
                     "setup_future_usage": "off_session",
                 ].merging(self.paramsForServerSideConfirmation) { _, b in b }
@@ -759,7 +759,7 @@ extension PaymentSheetGDPRConfirmFlowTests {
             }()
             return .paymentIntent(paymentIntent)
         case .paymentIntentPMOSFU_deferredIntent_csc:
-            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession]))) { _, _ in
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, captureMethod: .automatic, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession]))) { _, _ in
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -772,7 +772,7 @@ extension PaymentSheetGDPRConfirmFlowTests {
             }
             return .deferredIntent(intentConfig: deferredCSC)
         case .paymentIntentPMOSFU_deferredIntent_ssc:
-            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession]))) { paymentMethod, shouldSavePM in
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, captureMethod: .automatic, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession]))) { paymentMethod, shouldSavePM in
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -804,7 +804,7 @@ extension PaymentSheetGDPRConfirmFlowTests {
             }()
             return .paymentIntent(paymentIntent)
         case .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_csc:
-            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none]))) { _, _ in
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession, captureMethod: .automatic, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none]))) { _, _ in
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -818,7 +818,7 @@ extension PaymentSheetGDPRConfirmFlowTests {
             }
             return .deferredIntent(intentConfig: deferredCSC)
         case .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_ssc:
-            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none]))) { paymentMethod, shouldSavePM in
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession, captureMethod: .automatic, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none]))) { paymentMethod, shouldSavePM in
                 let otherParams = [
                     "setup_future_usage": "off_session",
                 ].merging(self.paramsForServerSideConfirmation) { _, b in b }

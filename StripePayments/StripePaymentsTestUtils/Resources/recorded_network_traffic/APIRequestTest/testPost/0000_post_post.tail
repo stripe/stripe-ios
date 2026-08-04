@@ -20,7 +20,7 @@ X-Stripe-Mock-Request: foo=bar
     "Connection" : "close",
     "Accept-Encoding" : "gzip, deflate, br",
     "Content-Type" : "application\/x-www-form-urlencoded",
-    "Stripe-Version" : "2020-08-27",
+    "Stripe-Version" : "2026-07-29.dahlia",
     "User-Agent" : "xctest\/22719 CFNetwork\/1406.0.4 Darwin\/23.5.0",
     "X-Stripe-Mock-Request" : "foo=bar",
     "Authorization" : "Bearer",

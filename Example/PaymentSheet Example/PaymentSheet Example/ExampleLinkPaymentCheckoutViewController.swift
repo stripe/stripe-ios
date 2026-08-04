@@ -55,7 +55,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                 if self.deferredSwitch.isOn {
                     let intentConfiguration = PaymentSheet
                         .IntentConfiguration(
-                            mode: .payment(amount: 100, currency: "usd"),
+                            mode: .payment(amount: 100, currency: "usd", captureMethod: .automaticAsync),
                             paymentMethodTypes: ["link"]) { [weak self] paymentMethod, shouldSavePaymentMethod in
                                 try await withCheckedThrowingContinuation { continuation in
                                     self?.handleDeferredIntent(clientSecret: paymentIntentClientSecret,

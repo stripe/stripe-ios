@@ -229,7 +229,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testElementsSessionParameters_DeferredPayment_WithSellerDetails() throws {
         let sellerDetails = PaymentSheet.IntentConfiguration.SellerDetails(networkId: "network_123", externalId: "external_456", businessName: "Till's Pills")
         let intentConfig = PaymentSheet.IntentConfiguration(
-            sharedPaymentTokenSessionWithMode: .payment(amount: 2000, currency: "USD"),
+            sharedPaymentTokenSessionWithMode: .payment(amount: 2000, currency: "USD", captureMethod: .automatic),
             sellerDetails: sellerDetails,
             paymentMethodTypes: ["card"],
             preparePaymentMethodHandler: { _, _ in }
@@ -252,7 +252,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
 
     func testElementsSessionParameters_DeferredPayment_WithoutSellerDetails() throws {
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 2000, currency: "USD"),
+            mode: .payment(amount: 2000, currency: "USD", captureMethod: .automatic),
             paymentMethodTypes: ["card"],
             confirmHandler: { _, _ in return "" }
         )
