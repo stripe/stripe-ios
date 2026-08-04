@@ -112,7 +112,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     // MARK: - Views
     private let addPaymentMethodViewController: AddPaymentMethodViewController
-    private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
+    let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
     private lazy var headerLabel: UILabel = {
         return PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
     }()
