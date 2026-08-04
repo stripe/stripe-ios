@@ -114,12 +114,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var defaultPaymentMethod: STPPaymentMethod?
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(
-            configuration: configuration,
-            elementsSession: elementsSession,
-            intent: intent,
-            checkout: checkout
-        )
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
     }()
 
     // MARK: - UI properties
@@ -858,7 +853,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         let vc = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             intent: intent,
-            checkout: checkout,
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,

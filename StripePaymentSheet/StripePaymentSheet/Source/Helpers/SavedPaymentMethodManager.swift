@@ -14,12 +14,12 @@ final class SavedPaymentMethodManager {
 
     enum Error: Swift.Error {
         case missingEphemeralKey
+        case missingUpdatedPaymentMethod
     }
 
     let configuration: PaymentElementConfiguration
     let elementsSession: STPElementsSession
     let intent: Intent
-    private weak var checkout: Checkout?
 
     private lazy var ephemeralKey: String? = {
         guard let ephemeralKey = configuration.customer?.ephemeralKeySecret(basedOn: elementsSession) else {
@@ -33,44 +33,34 @@ final class SavedPaymentMethodManager {
         return ephemeralKey
     }()
 
-    init(
-        configuration: PaymentElementConfiguration,
-        elementsSession: STPElementsSession,
-        intent: Intent,
-        checkout: Checkout? = nil
-    ) {
+    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession, intent: Intent) {
         self.configuration = configuration
         self.elementsSession = elementsSession
         self.intent = intent
-        self.checkout = checkout
     }
 
     func update(paymentMethod: STPPaymentMethod,
                 with updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         switch intent {
-        case .checkout:
+        case .checkout(let session):
             let billing = Checkout.PaymentMethodBillingDetails(updateParams.billingDetails)
             let expiry = Checkout.PaymentMethodExpiryDetails(updateParams.card)
             guard billing != nil || expiry != nil else {
                 throw PaymentSheetError.unknown(debugDescription: "Tried to update a payment method without billing details or expiry details.")
             }
-            guard let checkout else {
-                let error = PaymentSheetError.unknown(
-                    debugDescription: "Failed to update a Checkout saved payment method without Checkout."
-                )
-                let errorAnalytic = ErrorAnalytic(
-                    event: .unexpectedPaymentSheetError,
-                    error: error
-                )
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                stpAssertionFailure("SavedPaymentMethodManager requires Checkout for a Checkout intent.")
-                throw error
-            }
-            let updatedPaymentMethod = try await checkout.updateSavedPaymentMethod(
+            let updatedSession = try await configuration.apiClient.updatePaymentMethod(
                 paymentMethod.stripeId,
+                inCheckoutSession: session.id,
                 billingDetails: billing,
                 expiryDetails: expiry
             )
+            guard let updatedPaymentMethod = updatedSession.customer?.paymentMethods.first(where: { $0.stripeId == paymentMethod.stripeId }) else {
+                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                                  error: Error.missingUpdatedPaymentMethod,
+                                                  additionalNonPIIParams: ["payment_method_id": paymentMethod.stripeId])
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                throw PaymentSheetError.unknown(debugDescription: "Checkout session response didn't include the updated payment method.")
+            }
             updatedPaymentMethod.updateLocalFields(from: paymentMethod)
             return updatedPaymentMethod
         case .paymentIntent, .setupIntent, .deferredIntent:

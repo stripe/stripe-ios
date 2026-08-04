@@ -49,7 +49,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     let loadResult: PaymentSheetLoader.LoadResult
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
-    private weak var checkout: Checkout?
 
     // MARK: - Writable Properties
     weak var delegate: PaymentSheetViewControllerDelegate?
@@ -65,12 +64,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private(set) var isDismissable: Bool = true
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        return SavedPaymentMethodManager(
-            configuration: configuration,
-            elementsSession: elementsSession,
-            intent: intent,
-            checkout: checkout
-        )
+        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
     }()
 
     // MARK: - Views
@@ -152,7 +146,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: PaymentSheetViewControllerDelegate,
-        checkout: Checkout? = nil,
         previousPaymentOption: PaymentOption? = nil
     ) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
@@ -166,7 +159,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         self.isCVCRecollectionEnabled = isCVCRecollectionEnabled
         self.delegate = delegate
-        self.checkout = checkout
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
             savedPaymentMethods: loadResult.savedPaymentMethods,
             configuration: .init(
