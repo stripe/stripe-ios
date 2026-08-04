@@ -210,7 +210,7 @@ struct KYCInfoView: View {
                             "Enter your last name",
                             text: $lastName,
                             field: .lastName,
-                            nextField: residence == .us ? .idNumber : nil,
+                            nextField: residence == .us ? .idNumber : .birthCountry,
                             autocapitalization: .words
                         )
                     }
@@ -222,6 +222,7 @@ struct KYCInfoView: View {
                             "Enter your SSN",
                             text: $idNumber,
                             field: .idNumber,
+                            nextField: collectionMode.requiresLevel0Fields ? .addressLine1 : nil,
                             keyboardType: .numberPad
                         )
                     }
