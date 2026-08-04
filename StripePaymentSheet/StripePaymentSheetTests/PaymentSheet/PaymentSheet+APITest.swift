@@ -32,6 +32,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
         config.allowsDelayedPaymentMethods = true
+        config.returnURL = "foo://bar"
         config.shippingDetails = {
             return .init(
                 address: .init(
@@ -853,6 +854,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                         "amount": 1050,
                         "payment_method": paymentMethod.stripeId,
                         "confirm": true,
+                        "return_url": self.configuration.returnURL!,
                         "payment_method_options[card][setup_future_usage]": expectedShouldSavePaymentMethod ? "off_session" : "",
                     ] : [
                         "amount": 1050,
@@ -862,6 +864,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     let params: [String: Any] = isServerSideConfirm ? [
                         "confirm": "true",
                         "payment_method": paymentMethod.stripeId,
+                        "return_url": self.configuration.returnURL!,
                     ] : [:]
                     STPTestingAPIClient.shared.createSetupIntent(withParams: params, completion: createIntentCompletion)
                 }
@@ -970,6 +973,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     "amount": 1050,
                     "confirm": true,
                     "payment_method": paymentMethod.stripeId,
+                    "return_url": self.configuration.returnURL!,
                 ]) { pi, _ in
                     continuation.resume(returning: pi!)
                 }
@@ -1003,6 +1007,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     "usage": "on_session",
                     "payment_method": paymentMethod.stripeId,
                     "confirm": true,
+                    "return_url": self.configuration.returnURL!,
                 ]) { si, _ in
                     continuation.resume(returning: si!)
                 }
