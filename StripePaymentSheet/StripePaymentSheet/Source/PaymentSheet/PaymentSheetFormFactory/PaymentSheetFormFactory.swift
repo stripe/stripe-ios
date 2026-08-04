@@ -360,7 +360,7 @@ extension PaymentSheetFormFactory {
         return details
     }
 
-    /// Fields generated from form specs i.e. LUXE can write their values to arbitrary keys (`apiPath`)  in `additionalAPIParameters`.
+    /// Some fields write their values to arbitrary keys (`apiPath`) in `additionalAPIParameters`.
     func getPreviousCustomerInput(for apiPath: String?) -> String? {
         guard let apiPath = apiPath else {
             return nil

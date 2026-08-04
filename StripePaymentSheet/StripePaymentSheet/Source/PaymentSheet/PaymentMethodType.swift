@@ -22,9 +22,6 @@ extension PaymentSheet {
         case instantDebits
         case linkCardBrand
 
-        static var analyticLogForIcon: Set<PaymentMethodType> = []
-        static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
-
         var displayName: String {
             switch self {
             case .stripe(let paymentMethodType):
@@ -61,14 +58,6 @@ extension PaymentSheet {
             }
         }
 
-        static func shouldLogAnalytic(paymentMethod: PaymentSheet.PaymentMethodType) -> Bool {
-            analyticLogForIconSemaphore.wait()
-            defer { analyticLogForIconSemaphore.signal() }
-            guard !analyticLogForIcon.contains(paymentMethod) else { return false }
-            analyticLogForIcon.insert(paymentMethod)
-            return true
-        }
-
         /// makeImage will immediately return an UImage that is either the image or a placeholder.
         /// If the image is immediately available, the updateHandler will not be called.
         /// If the image is not immediately available, the updateHandler will be called if we are able
@@ -87,15 +76,9 @@ extension PaymentSheet {
             case .stripe(let paymentMethodType):
                 let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle)
                 if let localImage {
-                    if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
-                        STPAnalyticsClient.sharedClient.logImageSelectorIconFromBundleIfNeeded(paymentMethod: self)
-                    }
                     return localImage
                 } else {
                     assertionFailure()
-                    if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
-                        STPAnalyticsClient.sharedClient.logImageSelectorIconNotFoundIfNeeded(paymentMethod: self)
-                    }
                     return DownloadManager.sharedManager.imagePlaceHolder()
                 }
             case .instantDebits, .linkCardBrand:
