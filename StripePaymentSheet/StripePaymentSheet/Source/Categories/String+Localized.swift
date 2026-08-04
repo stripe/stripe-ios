@@ -694,6 +694,10 @@ extension String.Localized {
         STPLocalizedString("Confirm your information", "Title label for a know-your-customer (KYC) verification screen")
     }
 
+    static var edit_address: String {
+        STPLocalizedString("Edit address", "Accessibility label for a button that lets the user update their address")
+    }
+
     static var user_attestation: String {
         STPLocalizedString("Declarations", "Title label for a screen showing user attestation")
     }

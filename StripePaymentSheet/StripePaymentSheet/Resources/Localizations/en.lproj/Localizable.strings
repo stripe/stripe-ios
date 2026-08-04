@@ -210,6 +210,9 @@ with the transaction. */
 /* Label for the discount row in an order summary, applied as a negative amount. */
 "Discount" = "Discount";
 
+/* Accessibility label for a button that lets the user update their address */
+"Edit address" = "Edit address";
+
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
 
