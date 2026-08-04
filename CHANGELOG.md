@@ -10,7 +10,9 @@ MAJOR
 * [Changed] Client-side PaymentIntent and SetupIntent confirmation may now require `PaymentSheet.Configuration.returnURL` when redirect-based payment methods are enabled. You can continue to omit it for integrations that exclude redirect-based payment methods on the server.
 
 ### Payments
+* [Changed] `STPCustomer.allResponseFields` no longer contains the `default_currency` field.
 * [Changed] `STPPaymentIntent.allResponseFields` no longer contains the `charges` field. Use `latest_charge` to access the most recent Charge ID.
+* [Changed] For Connect platforms, bank-account PaymentMethod fingerprints are now platform-scoped instead of connected-account-scoped. This affects `us_bank_account`, `acss_debit`, `sepa_debit`, `bacs_debit`, and `au_becs_debit` PaymentMethods.
 
 ## 26.5.0 2026-08-03
 ### CryptoOnramp (Alpha)
