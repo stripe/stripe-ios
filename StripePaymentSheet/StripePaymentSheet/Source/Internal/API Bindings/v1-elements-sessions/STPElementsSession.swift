@@ -64,9 +64,6 @@ import Foundation
     /// Customer details, returned when v1/elements/sessions is called with CustomerSession info
     let customer: ElementsCustomer?
 
-    /// A flag that indicates that this instance was created as a best-effort
-    let isBackupInstance: Bool
-
     // TODO(joyceqin) Re-enable as part of the ECE workstream
     // Link doesn't support automatic tax from billing address
     var disableLinkForAutomaticTaxBilling: Bool = false
@@ -91,8 +88,7 @@ import Foundation
         externalPaymentMethods: [ExternalPaymentMethod],
         customPaymentMethods: [CustomPaymentMethod],
         passiveCaptchaData: PassiveCaptchaData?,
-        customer: ElementsCustomer?,
-        isBackupInstance: Bool = false
+        customer: ElementsCustomer?
     ) {
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
@@ -112,7 +108,6 @@ import Foundation
         self.customPaymentMethods = customPaymentMethods
         self.passiveCaptchaData = passiveCaptchaData
         self.customer = customer
-        self.isBackupInstance = isBackupInstance
         super.init()
     }
 
@@ -156,8 +151,7 @@ import Foundation
             externalPaymentMethods: [],
             customPaymentMethods: [],
             passiveCaptchaData: nil,
-            customer: nil,
-            isBackupInstance: true
+            customer: nil
         )
     }
 }

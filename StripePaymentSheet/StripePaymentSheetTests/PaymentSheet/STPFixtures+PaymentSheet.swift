@@ -81,8 +81,7 @@ extension STPElementsSession {
         externalPaymentMethods: [ExternalPaymentMethod] = [],
         customPaymentMethods: [CustomPaymentMethod] = [],
         passiveCaptchaData: PassiveCaptchaData? = nil,
-        customer: ElementsCustomer? = nil,
-        isBackupInstance: Bool = false
+        customer: ElementsCustomer? = nil
     ) -> STPElementsSession {
         return .init(
             allResponseFields: [:],
