@@ -33,7 +33,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     // TODO(porter): unified mode does not yet support promo codes.
-    func disabled_testDelegateCalledOnPromotionCodeApply() async throws {
+    func disabled_testPromotionCodeApplyEmitsSessionUpdates() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             additionalParameters: ["allow_promotion_codes": true]
         )
@@ -41,24 +41,18 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         let checkout = try await Checkout(configuration: configuration)
 
-        let delegate = MockCheckoutDelegate()
-        checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
 
         try await checkout.applyPromotionCode("SAVE25")
 
         // Applying the promotion code emits once for the server-backed Checkout session update
         // and once when PaymentElement re-syncs its local payment option.
-        XCTAssertEqual(delegate.updateSessionCallCount, 2)
-        XCTAssertEqual(delegate.beginLoadingCallCount, 1)
-        XCTAssertEqual(delegate.finishLoadingCallCount, 1)
-        XCTAssertNotNil(delegate.lastSession)
-        XCTAssertEqual(promotionCode(in: delegate.lastSession), "SAVE25")
         XCTAssertEqual(recorder.sessions.count, 2)
+        XCTAssertEqual(promotionCode(in: recorder.sessions.last), "SAVE25")
         XCTAssertEqual(recorder.loading, [true, false])
     }
 
-    // TODO(porter): see disabled_testDelegateCalledOnPromotionCodeApply above.
+    // TODO(porter): see disabled_testPromotionCodeApplyEmitsSessionUpdates above.
     func disabled_testApplyPromotionCode() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             additionalParameters: ["allow_promotion_codes": true]
@@ -79,7 +73,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(1500, session.total?.total.minorUnitsAmount)
     }
 
-    // TODO(porter): see disabled_testDelegateCalledOnPromotionCodeApply above.
+    // TODO(porter): see disabled_testPromotionCodeApplyEmitsSessionUpdates above.
     func disabled_testRemovePromotionCode() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             additionalParameters: ["allow_promotion_codes": true]
@@ -102,7 +96,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(2000, session.total?.total.minorUnitsAmount)
     }
 
-    // TODO(porter): see disabled_testDelegateCalledOnPromotionCodeApply above.
+    // TODO(porter): see disabled_testPromotionCodeApplyEmitsSessionUpdates above.
     func disabled_testApplyInvalidPromotionCode() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             additionalParameters: ["allow_promotion_codes": true]
