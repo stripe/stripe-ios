@@ -14,6 +14,14 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class PaymentSheetPaymentMethodTypeTest: XCTestCase {
+    private func availability(_ paymentMethodTypes: [String]) -> PaymentMethodAvailabilityV1 {
+        PaymentMethodAvailabilityV1(
+            entries: paymentMethodTypes.map {
+                PaymentMethodAvailabilityEntryV1(paymentMethodType: $0, available: true)
+            }
+        )
+    }
+
     func makeConfiguration(
         hasReturnURL: Bool = false
     ) -> PaymentSheet.Configuration {
@@ -34,7 +42,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                 major: MobileSessionContractV1.contractMajor,
                 revision: MobileSessionContractV1.contractRevision
             ),
-            paymentMethodAvailability: ["sepa_debit", "card"],
+            paymentMethodAvailability: availability(["sepa_debit", "card"]),
             features: MobilePaymentElementFeaturesV1(
                 financialConnectionsLite: "preferred",
                 linkGlobalHoldbackLookup: true,
@@ -85,7 +93,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     func testServerDrivenPaymentSheetRejectsUnsupportedContractMajor() {
         let generated = MobilePaymentElementV1(
             contract: ContractMetadataV1(major: MobileSessionContractV1.contractMajor + 1, revision: "0000000000000000"),
-            paymentMethodAvailability: []
+            paymentMethodAvailability: availability([])
         )
 
         XCTAssertThrowsError(try ServerDrivenPaymentSheetResponse(mobilePaymentElement: generated)) { error in
@@ -101,7 +109,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                 major: MobileSessionContractV1.contractMajor,
                 revision: MobileSessionContractV1.contractRevision
             ),
-            paymentMethodAvailability: Array(repeating: "card", count: 101)
+            paymentMethodAvailability: availability(Array(repeating: "card", count: 101))
         )
 
         XCTAssertThrowsError(try ServerDrivenPaymentSheetResponse(mobilePaymentElement: generated)) { error in
@@ -118,7 +126,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                 major: MobileSessionContractV1.contractMajor,
                 revision: MobileSessionContractV1.contractRevision
             ),
-            paymentMethodAvailability: ["card"],
+            paymentMethodAvailability: availability(["card"]),
             assets: MobilePaymentElementAssetsV1(paymentMethods: [
                 PaymentMethodAssetV1(
                     paymentMethodType: "card",
@@ -142,7 +150,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                 major: MobileSessionContractV1.contractMajor,
                 revision: MobileSessionContractV1.contractRevision
             ),
-            paymentMethodAvailability: ["card"],
+            paymentMethodAvailability: availability(["card"]),
             assets: MobilePaymentElementAssetsV1(paymentMethods: [
                 PaymentMethodAssetV1(
                     paymentMethodType: "card",
@@ -169,14 +177,14 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
         let unknownElement = MobilePaymentElementV1(
             contract: contract,
-            paymentMethodAvailability: ["card"],
+            paymentMethodAvailability: availability(["card"]),
             formSpecs: [
                 PaymentMethodFormSpecV1(type: "card", fields: [FormElementSpecV1(type: "future_code")]),
             ]
         )
         let unapprovedAsset = MobilePaymentElementV1(
             contract: contract,
-            paymentMethodAvailability: ["card"],
+            paymentMethodAvailability: availability(["card"]),
             assets: MobilePaymentElementAssetsV1(paymentMethods: [
                 PaymentMethodAssetV1(
                     paymentMethodType: "card",
@@ -187,7 +195,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
         let malformedMandateTemplate = MobilePaymentElementV1(
             contract: contract,
-            paymentMethodAvailability: ["card"],
+            paymentMethodAvailability: availability(["card"]),
             formSpecs: [
                 PaymentMethodFormSpecV1(
                     type: "card",
@@ -215,7 +223,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                 major: MobileSessionContractV1.contractMajor,
                 revision: MobileSessionContractV1.contractRevision
             ),
-            paymentMethodAvailability: [paymentMethodType],
+            paymentMethodAvailability: availability([paymentMethodType]),
             assets: MobilePaymentElementAssetsV1(paymentMethods: [
                 PaymentMethodAssetV1(
                     paymentMethodType: paymentMethodType,
@@ -268,7 +276,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             try ServerDrivenPaymentSheetResponse(
                 mobilePaymentElement: MobilePaymentElementV1(
                     contract: contract,
-                    paymentMethodAvailability: ["card"],
+                    paymentMethodAvailability: availability(["card"]),
                     formSpecs: [cardForm]
                 )
             )
@@ -282,7 +290,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             try ServerDrivenPaymentSheetResponse(
                 mobilePaymentElement: MobilePaymentElementV1(
                     contract: contract,
-                    paymentMethodAvailability: ["card"],
+                    paymentMethodAvailability: availability(["card"]),
                     assets: MobilePaymentElementAssetsV1(paymentMethods: [cardAsset]),
                     formSpecs: [cardForm, PaymentMethodFormSpecV1(type: "future_payment_method")]
                 )

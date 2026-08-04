@@ -7,17 +7,14 @@
 //
 
 import Foundation
+import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
 enum MobileSessionContractError: Error, AnalyticLoggableError, LocalizedError {
-    case missingResponseHeader
-    case malformedResponseHeader
     case missingPayload
     case decodeFailure
     case unsupportedContractMajor(Int)
-    case invalidContractRevision
-    case responseHeaderBodyMismatch
     case requestFailed(Error)
 
     var analyticsErrorType: String {
@@ -26,13 +23,9 @@ enum MobileSessionContractError: Error, AnalyticLoggableError, LocalizedError {
 
     var analyticsErrorCode: String {
         switch self {
-        case .missingResponseHeader: return "missing_response_header"
-        case .malformedResponseHeader: return "malformed_response_header"
         case .missingPayload: return "missing_payload"
         case .decodeFailure: return "decode_failure"
         case .unsupportedContractMajor: return "unsupported_contract_major"
-        case .invalidContractRevision: return "invalid_contract_revision"
-        case .responseHeaderBodyMismatch: return "response_header_body_mismatch"
         case .requestFailed: return "request_failed"
         }
     }
@@ -40,28 +33,25 @@ enum MobileSessionContractError: Error, AnalyticLoggableError, LocalizedError {
     var errorDescription: String? {
         "The server returned an invalid Mobile Session response (\(analyticsErrorCode))."
     }
+
+    var additionalNonPIIErrorDetails: [String: Any] {
+        [:]
+    }
 }
 
 extension STPAPIClient {
     typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
 
-    static let mobileSessionContractHeader = "Stripe-Mobile-Session-Contract"
-    static var mobileSessionContractHeaderValue: String {
-        "major=\(MobileSessionContractV1.contractMajor); revision=\(MobileSessionContractV1.contractRevision)"
-    }
+    static let mobileSessionAPIVersion = "2026-07-29.dahlia"
 
-    var mobileSessionContractHeaders: [String: String] {
-        [Self.mobileSessionContractHeader: Self.mobileSessionContractHeaderValue]
+    var mobileSessionAPIVersionHeaders: [String: String] {
+        ["Stripe-Version": Self.mobileSessionAPIVersion]
     }
 
     static func validateMobileSessionContractResponse(
         _ responseJSON: [AnyHashable: Any],
-        _ response: HTTPURLResponse
+        _: HTTPURLResponse
     ) throws {
-        guard let responseHeader = response.value(forHTTPHeaderField: mobileSessionContractHeader) else {
-            throw MobileSessionContractError.missingResponseHeader
-        }
-        let headerContract = try parseMobileSessionContractHeader(responseHeader)
         guard let mobilePaymentElementJSON = responseJSON["mobile_payment_element"] as? [AnyHashable: Any] else {
             throw MobileSessionContractError.missingPayload
         }
@@ -79,37 +69,6 @@ extension STPAPIClient {
         guard mobilePaymentElement.contract.major == MobileSessionContractV1.contractMajor else {
             throw MobileSessionContractError.unsupportedContractMajor(mobilePaymentElement.contract.major)
         }
-        guard isValidMobileSessionContractRevision(mobilePaymentElement.contract.revision) else {
-            throw MobileSessionContractError.invalidContractRevision
-        }
-        guard headerContract.major == mobilePaymentElement.contract.major,
-              headerContract.revision == mobilePaymentElement.contract.revision
-        else {
-            throw MobileSessionContractError.responseHeaderBodyMismatch
-        }
-    }
-
-    private static func parseMobileSessionContractHeader(_ value: String) throws -> (major: Int, revision: String) {
-        let components = value.components(separatedBy: "; ")
-        guard components.count == 2,
-              components[0].hasPrefix("major="),
-              components[1].hasPrefix("revision=")
-        else {
-            throw MobileSessionContractError.malformedResponseHeader
-        }
-        let majorString = String(components[0].dropFirst("major=".count))
-        let revision = String(components[1].dropFirst("revision=".count))
-        guard let major = Int(majorString),
-              String(major) == majorString,
-              isValidMobileSessionContractRevision(revision)
-        else {
-            throw MobileSessionContractError.malformedResponseHeader
-        }
-        return (major, revision)
-    }
-
-    private static func isValidMobileSessionContractRevision(_ value: String) -> Bool {
-        value.range(of: "^[0-9a-f]{16}$", options: .regularExpression) != nil
     }
 
     private func retrieveMobileSessionElementsSession(parameters: [String: Any]) async throws -> STPElementsSession {
@@ -117,7 +76,7 @@ extension STPAPIClient {
             return try await APIRequest<STPElementsSession>.getWith(
                 self,
                 endpoint: APIEndpointElementsSessions,
-                additionalHeaders: mobileSessionContractHeaders,
+                additionalHeaders: mobileSessionAPIVersionHeaders,
                 parameters: parameters,
                 responseValidator: Self.validateMobileSessionContractResponse
             )
@@ -512,7 +471,7 @@ extension PaymentElementConfiguration {
             externalPaymentMethodHandlerProvided: externalPaymentMethodConfiguration != nil,
             customPaymentMethodHandlerProvided: customPaymentMethodConfiguration != nil,
             paymentMethodOrder: paymentMethodOrder ?? [],
-            paymentMethodLayout: paymentMethodLayout.analyticValue,
+            paymentMethodLayout: paymentMethodLayout.description,
             cardBrandAcceptance: cardBrandAcceptance.mobileSessionValue,
             allowedCardFundingTypes: allowedCardFundingTypes.mobileSessionValues,
             termsDisplay: Dictionary(

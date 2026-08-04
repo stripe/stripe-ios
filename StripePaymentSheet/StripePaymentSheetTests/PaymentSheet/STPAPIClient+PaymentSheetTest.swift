@@ -15,60 +15,43 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPAPIClient_PaymentSheetTest: XCTestCase {
-    func testMobileSessionContractHeader() {
+    func testMobileSessionUsesDahliaAPIVersion() {
         let apiClient = STPAPIClient(publishableKey: "pk_test")
 
         XCTAssertEqual(
-            apiClient.mobileSessionContractHeaders[STPAPIClient.mobileSessionContractHeader],
-            "major=\(MobileSessionContractV1.contractMajor); revision=\(MobileSessionContractV1.contractRevision)"
+            apiClient.mobileSessionAPIVersionHeaders["Stripe-Version"],
+            "2026-07-29.dahlia"
         )
     }
 
-    func testMobileSessionResponseValidatorAcceptsSameMajorServerRevision() throws {
+    func testMobileSessionResponseValidatorAcceptsDiagnosticRevisionDrift() throws {
         let serverRevision = "0000000000000000"
-        let response = makeMobileSessionHTTPResponse(
-            headerValue: "major=\(MobileSessionContractV1.contractMajor); revision=\(serverRevision)"
-        )
+        let response = makeMobileSessionHTTPResponse()
         let responseJSON = makeMobileSessionResponseJSON(revision: serverRevision)
 
         try STPAPIClient.validateMobileSessionContractResponse(responseJSON, response)
     }
 
-    func testMobileSessionResponseValidatorRejectsMissingHeader() {
+    func testMobileSessionResponseValidatorRejectsUnsupportedMajor() {
         assertMobileSessionContractError(
-            expectedCode: "missing_response_header",
-            response: makeMobileSessionHTTPResponse(headerValue: nil)
-        )
-    }
-
-    func testMobileSessionResponseValidatorRejectsMalformedHeader() {
-        assertMobileSessionContractError(
-            expectedCode: "malformed_response_header",
-            response: makeMobileSessionHTTPResponse(headerValue: "major=1, revision=bad")
-        )
-    }
-
-    func testMobileSessionResponseValidatorRejectsHeaderBodyMismatch() {
-        assertMobileSessionContractError(
-            expectedCode: "response_header_body_mismatch",
-            response: makeMobileSessionHTTPResponse(
-                headerValue: "major=\(MobileSessionContractV1.contractMajor); revision=0000000000000000"
-            )
+            expectedCode: "unsupported_contract_major",
+            response: makeMobileSessionHTTPResponse(),
+            responseJSON: makeMobileSessionResponseJSON(major: MobileSessionContractV1.contractMajor + 1)
         )
     }
 
     func testMobileSessionResponseValidatorRejectsMissingPayload() {
         assertMobileSessionContractError(
             expectedCode: "missing_payload",
-            response: makeMobileSessionHTTPResponse(headerValue: STPAPIClient.mobileSessionContractHeaderValue),
+            response: makeMobileSessionHTTPResponse(),
             responseJSON: [:]
         )
     }
 
     func testAPIRequestPropagatesMobileSessionResponseValidationError() throws {
         let expectation = expectation(description: "response validator")
-        let response = makeMobileSessionHTTPResponse(headerValue: "major=1, revision=bad")
-        let responseJSON = makeMobileSessionResponseJSON()
+        let response = makeMobileSessionHTTPResponse()
+        let responseJSON = makeMobileSessionResponseJSON(major: MobileSessionContractV1.contractMajor + 1)
         let body = try JSONSerialization.data(withJSONObject: responseJSON)
 
         APIRequest<STPElementsSession>.parseResponse(
@@ -79,7 +62,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             responseValidator: STPAPIClient.validateMobileSessionContractResponse
         ) { object, _, error in
             XCTAssertNil(object)
-            XCTAssertEqual((error as? MobileSessionContractError)?.analyticsErrorCode, "malformed_response_header")
+            XCTAssertEqual((error as? MobileSessionContractError)?.analyticsErrorCode, "unsupported_contract_major")
             expectation.fulfill()
         }
 
@@ -120,14 +103,12 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         }
     }
 
-    private func makeMobileSessionHTTPResponse(headerValue: String?) -> HTTPURLResponse {
-        var headers: [String: String] = [:]
-        headers[STPAPIClient.mobileSessionContractHeader] = headerValue
+    private func makeMobileSessionHTTPResponse() -> HTTPURLResponse {
         return HTTPURLResponse(
             url: URL(string: "https://api.stripe.com/v1/elements/sessions")!,
             statusCode: 200,
             httpVersion: nil,
-            headerFields: headers
+            headerFields: [:]
         )!
     }
 
@@ -146,7 +127,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
                     "major": major,
                     "revision": revision,
                 ],
-                "payment_method_availability": [],
+                "payment_method_availability": ["entries": []],
             ],
         ]
     }

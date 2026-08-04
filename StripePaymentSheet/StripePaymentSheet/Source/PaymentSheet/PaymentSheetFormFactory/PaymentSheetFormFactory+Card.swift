@@ -247,8 +247,8 @@ extension PaymentSheetFormFactory {
         let contactSection: SectionElement? = {
             guard billingAddressSection == nil else { return nil }
             let elements: [Element] = [
-                shouldIncludeEmail ? makeEmail() : nil,
-                shouldIncludePhone ? makePhone() : nil,
+                shouldIncludeEmail ? makeEmail() as Element : nil,
+                shouldIncludePhone ? makePhone() as Element : nil,
             ].compactMap { $0 }
             guard !elements.isEmpty else { return nil }
             return SectionElement(title: .Localized.contact_information, elements: elements, theme: theme)

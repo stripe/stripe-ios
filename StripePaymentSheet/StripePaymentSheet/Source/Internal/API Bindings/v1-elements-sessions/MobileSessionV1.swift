@@ -17,8 +17,8 @@ import Foundation
     @_spi(STP) public static let contractRevision = "eae9b348c98cf67b"
     @_spi(STP) public static let contractMajor = 1
     @_spi(STP) public static let contractDigest = "eae9b348c98cf67b22e31322185f8ec64623e7d5d585cce083d844404d2a8a74"
-    @_spi(STP) public static let generatorDigest = "1c73661c349629c8618462a0fc49288e2ea503cb1d18e8a88aa47f77ab0a1838"
-    @_spi(STP) public static let mintCommit = "0e0af7a5520f591076157a04f20df631a1418055"
+    @_spi(STP) public static let generatorDigest = "0c88f2a5a9217e261d82cdad233e898a9612f8c6a4699685b5973f069cfb5d97"
+    @_spi(STP) public static let mintCommit = "ddfcb9410dc5e7d81f9bcac242c9bfe153abc16d"
 }
 
 /// Serializable Apple Pay settings from PaymentSheet.Configuration.
@@ -900,13 +900,14 @@ import Foundation
 }
 
 /// Nested object on the elements/sessions response carrying mobile Payment Element data.
-@_spi(STP) public struct MobilePaymentElementV1: UnknownFieldsDecodable, Encodable, Equatable {
+@_spi(STP) public struct MobilePaymentElementV1: UnknownFieldsCodable, Equatable {
     @_spi(STP) public var contract: ContractMetadataV1
     @_spi(STP) public var paymentMethodAvailability: PaymentMethodAvailabilityV1
     @_spi(STP) public var features: MobilePaymentElementFeaturesV1
     @_spi(STP) public var assets: MobilePaymentElementAssetsV1
     @_spi(STP) public var formSpecs: [PaymentMethodFormSpecV1]
     @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
+    @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
 
     private enum CodingKeys: String, CodingKey {
         case contract = "contract"
@@ -953,6 +954,7 @@ import Foundation
             forKey: .formSpecs
         ) ?? []
         self._allResponseFieldsStorage = nil
+        self._additionalParametersStorage = nil
     }
 
     public static func == (lhs: MobilePaymentElementV1, rhs: MobilePaymentElementV1) -> Bool {
@@ -961,10 +963,9 @@ import Foundation
 }
 
 /// Contract family and exact server schema revision used for this response.
-@_spi(STP) public struct ContractMetadataV1: UnknownFieldsDecodable, Encodable, Equatable {
+@_spi(STP) public struct ContractMetadataV1: Codable, Equatable {
     @_spi(STP) public var major: Int
     @_spi(STP) public var revision: String
-    @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
 
     private enum CodingKeys: String, CodingKey {
         case major = "major"
@@ -989,7 +990,6 @@ import Foundation
             String.self,
             forKey: .revision
         )
-        self._allResponseFieldsStorage = nil
     }
 
     public static func == (lhs: ContractMetadataV1, rhs: ContractMetadataV1) -> Bool {
@@ -998,9 +998,8 @@ import Foundation
 }
 
 /// Availability envelope with an explicit decision for every payment method.
-@_spi(STP) public struct PaymentMethodAvailabilityV1: UnknownFieldsDecodable, Encodable, Equatable {
+@_spi(STP) public struct PaymentMethodAvailabilityV1: Codable, Equatable {
     @_spi(STP) public var entries: [PaymentMethodAvailabilityEntryV1]
-    @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
 
     private enum CodingKeys: String, CodingKey {
         case entries = "entries"
@@ -1016,7 +1015,6 @@ import Foundation
             [PaymentMethodAvailabilityEntryV1].self,
             forKey: .entries
         ) ?? []
-        self._allResponseFieldsStorage = nil
     }
 
     public static func == (lhs: PaymentMethodAvailabilityV1, rhs: PaymentMethodAvailabilityV1) -> Bool {
@@ -1025,11 +1023,10 @@ import Foundation
 }
 
 /// One server-owned payment-method availability decision.
-@_spi(STP) public struct PaymentMethodAvailabilityEntryV1: UnknownFieldsDecodable, Encodable, Equatable {
+@_spi(STP) public struct PaymentMethodAvailabilityEntryV1: Codable, Equatable {
     @_spi(STP) public var paymentMethodType: String
     @_spi(STP) public var available: Bool
     @_spi(STP) public var reason: String?
-    @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
 
     private enum CodingKeys: String, CodingKey {
         case paymentMethodType = "payment_method_type"
@@ -1061,7 +1058,6 @@ import Foundation
             String.self,
             forKey: .reason
         )
-        self._allResponseFieldsStorage = nil
     }
 
     public static func == (lhs: PaymentMethodAvailabilityEntryV1, rhs: PaymentMethodAvailabilityEntryV1) -> Bool {
@@ -1070,12 +1066,11 @@ import Foundation
 }
 
 /// Server-owned feature decisions consumed directly by the mobile SDKs.
-@_spi(STP) public struct MobilePaymentElementFeaturesV1: UnknownFieldsDecodable, Encodable, Equatable {
+@_spi(STP) public struct MobilePaymentElementFeaturesV1: Codable, Equatable {
     @_spi(STP) public var financialConnectionsLite: String
     @_spi(STP) public var linkGlobalHoldbackLookup: Bool
     @_spi(STP) public var forceVerticalPaymentMethodLayout: Bool
     @_spi(STP) public var cardFundingFiltering: Bool
-    @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
 
     private enum CodingKeys: String, CodingKey {
         case financialConnectionsLite = "financial_connections_lite"
@@ -1114,7 +1109,6 @@ import Foundation
             Bool.self,
             forKey: .cardFundingFiltering
         ) ?? false
-        self._allResponseFieldsStorage = nil
     }
 
     public static func == (lhs: MobilePaymentElementFeaturesV1, rhs: MobilePaymentElementFeaturesV1) -> Bool {
@@ -1123,9 +1117,8 @@ import Foundation
 }
 
 /// Localized display data and approved selector icons for available payment methods.
-@_spi(STP) public struct MobilePaymentElementAssetsV1: UnknownFieldsDecodable, Encodable, Equatable {
+@_spi(STP) public struct MobilePaymentElementAssetsV1: Codable, Equatable {
     @_spi(STP) public var paymentMethods: [PaymentMethodAssetV1]
-    @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
 
     private enum CodingKeys: String, CodingKey {
         case paymentMethods = "payment_methods"
@@ -1141,7 +1134,6 @@ import Foundation
             [PaymentMethodAssetV1].self,
             forKey: .paymentMethods
         ) ?? []
-        self._allResponseFieldsStorage = nil
     }
 
     public static func == (lhs: MobilePaymentElementAssetsV1, rhs: MobilePaymentElementAssetsV1) -> Bool {
@@ -1150,12 +1142,11 @@ import Foundation
 }
 
 /// Localized display data for one payment method.
-@_spi(STP) public struct PaymentMethodAssetV1: UnknownFieldsDecodable, Encodable, Equatable {
+@_spi(STP) public struct PaymentMethodAssetV1: Codable, Equatable {
     @_spi(STP) public var paymentMethodType: String
     @_spi(STP) public var locale: String
     @_spi(STP) public var displayName: String
     @_spi(STP) public var selectorIcon: SelectorIconV1?
-    @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
 
     private enum CodingKeys: String, CodingKey {
         case paymentMethodType = "payment_method_type"
@@ -1194,7 +1185,6 @@ import Foundation
             SelectorIconV1.self,
             forKey: .selectorIcon
         )
-        self._allResponseFieldsStorage = nil
     }
 
     public static func == (lhs: PaymentMethodAssetV1, rhs: PaymentMethodAssetV1) -> Bool {
@@ -1203,10 +1193,9 @@ import Foundation
 }
 
 /// HTTPS selector icon URLs hosted on an approved Stripe-controlled origin.
-@_spi(STP) public struct SelectorIconV1: UnknownFieldsDecodable, Encodable, Equatable {
+@_spi(STP) public struct SelectorIconV1: Codable, Equatable {
     @_spi(STP) public var lightThemePng: String
     @_spi(STP) public var darkThemePng: String?
-    @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
 
     private enum CodingKeys: String, CodingKey {
         case lightThemePng = "light_theme_png"
@@ -1231,7 +1220,6 @@ import Foundation
             String.self,
             forKey: .darkThemePng
         )
-        self._allResponseFieldsStorage = nil
     }
 
     public static func == (lhs: SelectorIconV1, rhs: SelectorIconV1) -> Bool {
@@ -1240,13 +1228,12 @@ import Foundation
 }
 
 /// Declarative native form definition for one available payment method.
-@_spi(STP) public struct PaymentMethodFormSpecV1: UnknownFieldsDecodable, Encodable, Equatable {
+@_spi(STP) public struct PaymentMethodFormSpecV1: Codable, Equatable {
     @_spi(STP) public var type: String
     @_spi(STP) public var paymentMethodCode: String?
     @_spi(STP) public var fields: [FormElementSpecV1]
     @_spi(STP) public var requiresFormScreen: Bool
     @_spi(STP) public var selectorIcon: SelectorIconV1?
-    @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
 
     private enum CodingKeys: String, CodingKey {
         case type = "type"
@@ -1292,7 +1279,6 @@ import Foundation
             SelectorIconV1.self,
             forKey: .selectorIcon
         )
-        self._allResponseFieldsStorage = nil
     }
 
     public static func == (lhs: PaymentMethodFormSpecV1, rhs: PaymentMethodFormSpecV1) -> Bool {
@@ -1301,10 +1287,9 @@ import Foundation
 }
 
 /// One closed dropdown option in a declarative form element.
-@_spi(STP) public struct FormElementOptionV1: UnknownFieldsDecodable, Encodable, Equatable {
+@_spi(STP) public struct FormElementOptionV1: Codable, Equatable {
     @_spi(STP) public var displayText: String
     @_spi(STP) public var apiValue: String?
-    @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
 
     private enum CodingKeys: String, CodingKey {
         case displayText = "display_text"
@@ -1329,7 +1314,6 @@ import Foundation
             String.self,
             forKey: .apiValue
         )
-        self._allResponseFieldsStorage = nil
     }
 
     public static func == (lhs: FormElementOptionV1, rhs: FormElementOptionV1) -> Bool {
@@ -1338,7 +1322,7 @@ import Foundation
 }
 
 /// Closed declarative form element interpreted by native SDK rendering code.
-@_spi(STP) public struct FormElementSpecV1: UnknownFieldsDecodable, Encodable, Equatable {
+@_spi(STP) public struct FormElementSpecV1: Codable, Equatable {
     @_spi(STP) public var type: String
     @_spi(STP) public var apiPath: String?
     @_spi(STP) public var translationId: String?
@@ -1351,7 +1335,6 @@ import Foundation
     @_spi(STP) public var textKey: String?
     @_spi(STP) public var localizedTextTemplate: String?
     @_spi(STP) public var setupFutureUsageRequired: Bool?
-    @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
 
     private enum CodingKeys: String, CodingKey {
         case type = "type"
@@ -1446,7 +1429,6 @@ import Foundation
             Bool.self,
             forKey: .setupFutureUsageRequired
         )
-        self._allResponseFieldsStorage = nil
     }
 
     public static func == (lhs: FormElementSpecV1, rhs: FormElementSpecV1) -> Bool {

@@ -1969,6 +1969,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             elementsSession: elementsSession,
             configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
             paymentMethod: .stripe(.cardPresent),
+            paymentMethodOrientation: .vertical,
+            accountService: LinkAccountService._testValue(),
             analyticsHelper: analyticsHelper
         )
 
@@ -2018,6 +2020,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             elementsSession: elementsSession,
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.grabPay),
+            paymentMethodOrientation: .vertical,
+            accountService: LinkAccountService._testValue(),
             analyticsHelper: analyticsHelper
         )
         let fields: [[String: Any]] = [
@@ -2054,6 +2058,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             elementsSession: elementsSession,
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.grabPay),
+            paymentMethodOrientation: .vertical,
+            accountService: LinkAccountService._testValue(),
             analyticsHelper: analyticsHelper
         )
         let data = try JSONSerialization.data(withJSONObject: [

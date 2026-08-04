@@ -43,6 +43,10 @@ struct ServerDrivenPaymentSheetResponse {
             case .fieldBounds: return "field_bounds"
             }
         }
+
+        var additionalNonPIIErrorDetails: [String: Any] {
+            [:]
+        }
     }
 
     let contractMajor: Int

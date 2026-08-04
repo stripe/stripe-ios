@@ -119,6 +119,11 @@ extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
         set {}
     }
 
+    var paymentMethodLayout: PaymentSheet.PaymentMethodLayout {
+        get { return .vertical }
+        set {}
+    }
+
     func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout {
         .vertical
     }

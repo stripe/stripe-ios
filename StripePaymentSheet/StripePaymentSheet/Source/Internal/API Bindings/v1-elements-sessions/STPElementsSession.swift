@@ -274,12 +274,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             do {
                 let data = try JSONSerialization.data(withJSONObject: mobilePaymentElementJSON)
                 mobilePaymentElement = try StripeJSONDecoder().decode(MobilePaymentElementV1.self, from: data)
-                guard mobilePaymentElement?.contract.major == MobileSessionContractV1.contractMajor,
-                      mobilePaymentElement?.contract.revision.range(
-                          of: "^[0-9a-f]{16}$",
-                          options: .regularExpression
-                      ) != nil
-                else {
+                guard mobilePaymentElement?.contract.major == MobileSessionContractV1.contractMajor else {
                     return nil
                 }
             } catch {
