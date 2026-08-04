@@ -11,6 +11,8 @@ import Foundation
 @_spi(STP)
 @_spi(ReactNativeSDK)
 extension Checkout {
+    public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
+
     /// Configuration options for a ``Checkout`` instance.
     ///
     /// Supply a configuration when creating a ``Checkout`` to customize behavior:
@@ -62,6 +64,9 @@ extension Checkout {
 
         /// Link configuration.
         public var linkConfiguration: LinkConfiguration?
+
+        /// The color styling to use for Checkout UI.
+        public var userInterfaceStyle: UserInterfaceStyle = .automatic
 
         /// Configuration for the Adaptive Pricing currency selector returned by
         /// ``Checkout.getCurrencySelectorElement()``.
