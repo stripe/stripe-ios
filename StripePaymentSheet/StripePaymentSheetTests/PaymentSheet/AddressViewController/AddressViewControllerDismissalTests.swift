@@ -15,6 +15,14 @@ final class AddressViewControllerDismissalTests: XCTestCase {
     private let addressSpecProvider: AddressSpecProvider = {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
+            "GB": AddressSpec(
+                format: "NOACSZ",
+                require: "ACSZ",
+                cityNameType: .city,
+                stateNameType: .state,
+                zip: "",
+                zipNameType: .zip
+            ),
             "US": AddressSpec(
                 format: "NOACSZ",
                 require: "ACSZ",
@@ -127,6 +135,31 @@ final class AddressViewControllerDismissalTests: XCTestCase {
         XCTAssertTrue(vc.hasChanges)
     }
 
+    func test_hasChanges_detectsEmptyPhoneCountryChangeAndDiscardRestoresIt() throws {
+        // Given a form with an empty optional phone field
+        var config = makeConfiguration()
+        config.additionalFields.phone = .optional
+        let delegate = MockDelegate()
+        let vc = makeLoadedAddressViewController(configuration: config, delegate: delegate)
+        let phone = try XCTUnwrap(vc.addressSection?.phone)
+        let initialCountryCode = phone.selectedCountryCode
+        XCTAssert(phone.phoneNumber?.isEmpty == true)
+        XCTAssertFalse(vc.hasChanges)
+
+        // When the customer changes only the phone country
+        phone.setSelectedCountryCode(initialCountryCode == "GB" ? "US" : "GB")
+
+        // Then the form is considered changed
+        XCTAssertTrue(vc.hasChanges)
+
+        // When the customer discards the change
+        vc.discardChanges()
+
+        // Then the original phone country is restored
+        XCTAssertEqual(phone.selectedCountryCode, initialCountryCode)
+        XCTAssertFalse(vc.hasChanges)
+    }
+
     func test_closeWithNoChanges_finishesWithSeededAddressWithoutAlertOrCompletionLog() {
         // Given a form seeded with a valid default address and no edits
         let delegate = MockDelegate()
@@ -219,6 +252,46 @@ final class AddressViewControllerDismissalTests: XCTestCase {
         vc.didTapCloseButton()
         XCTAssertNil(vc.presentedViewController)
         XCTAssertEqual(delegate.lastAddress?.address.line1, "999 New St")
+    }
+
+    func test_save_clearsAutocompleteResultForNextSave() {
+        // Given a valid autocomplete result
+        let delegate = MockDelegate()
+        let vc = makeLoadedAddressViewController(
+            configuration: makeConfiguration(defaultValues: validDefaultValues),
+            delegate: delegate
+        )
+        vc.didSelectAddress(
+            PaymentSheet.Address(
+                city: "San Francisco",
+                country: "US",
+                line1: "1 Market St.",
+                postalCode: "94105",
+                state: "California"
+            )
+        )
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+
+        // When the customer saves
+        vc.didContinue()
+
+        // Then the save is attributed to autocomplete
+        let firstSave = STPAnalyticsClient.sharedClient._testLogHistory.last {
+            $0["event"] as? String == "mc_address_completed"
+        }
+        let firstSaveData = firstSave?["address_data_blob"] as? [String: Any?]
+        XCTAssertEqual(firstSaveData?["auto_complete_result_selected"] as? Bool, true)
+
+        // When the reused controller saves again without another autocomplete selection
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        vc.didContinue()
+
+        // Then the previous autocomplete result is not attributed to the new save
+        let secondSave = STPAnalyticsClient.sharedClient._testLogHistory.last {
+            $0["event"] as? String == "mc_address_completed"
+        }
+        let secondSaveData = secondSave?["address_data_blob"] as? [String: Any?]
+        XCTAssertEqual(secondSaveData?["auto_complete_result_selected"] as? Bool, false)
     }
 
     func test_discardChanges_revertsFormToAsOpenedState() {

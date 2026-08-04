@@ -62,6 +62,8 @@ public class AddressViewController: UIViewController {
     private var initialAddressDetails: AddressDetails?
     /// A snapshot of the form's raw values as of the last open or save, used to detect unsaved changes.
     private var initialFormSnapshot: AddressSectionElement.AddressDetails?
+    /// The phone field's country as of the last open or save.
+    private var initialPhoneCountryCode: String?
     /// The additional-fields checkbox state as of the last open or save.
     private var initialCheckboxSelected: Bool?
 
@@ -69,6 +71,7 @@ public class AddressViewController: UIViewController {
     var hasChanges: Bool {
         guard let addressSection = addressSection else { return false }
         if addressSection.addressDetails != initialFormSnapshot { return true }
+        if addressSection.phone?.selectedCountryCode != initialPhoneCountryCode { return true }
         if checkboxElement?.checkboxButton.isSelected != initialCheckboxSelected { return true }
         return false
     }
@@ -338,6 +341,7 @@ extension AddressViewController {
 
     func didContinue() {
         logAddressCompleted()
+        selectedAutoCompleteResult = nil
         // Re-baseline change tracking to the just-saved values. The same instance can be
         // presented again, and each save sends the form back to the merchant, so the next open
         // should compare against what was saved here — not the state captured at first init.
@@ -397,6 +401,9 @@ extension AddressViewController {
         // postal/line2 revert too, and the (always-present) snapshot country is reselected.
         clearAddressSection()
         populateAddressSection(with: initialFormSnapshot)
+        if let phoneCountryCode = initialPhoneCountryCode {
+            addressSection?.phone?.setSelectedCountryCode(phoneCountryCode)
+        }
         // Additional-fields checkbox — set after repopulation (CheckboxElement.isSelected has no
         // side effects, so this won't retrigger form population).
         checkboxElement?.isSelected = initialCheckboxSelected ?? false
@@ -491,6 +498,7 @@ extension AddressViewController {
         // edited-but-abandoned data.
         self.initialAddressDetails = addressDetails
         self.initialFormSnapshot = addressSection?.addressDetails
+        self.initialPhoneCountryCode = addressSection?.phone?.selectedCountryCode
         self.initialCheckboxSelected = checkboxElement?.checkboxButton.isSelected
     }
 
