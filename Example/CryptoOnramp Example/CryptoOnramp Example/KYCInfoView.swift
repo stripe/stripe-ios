@@ -354,7 +354,6 @@ struct KYCInfoView: View {
             }
             .padding()
         }
-        .accessibilityIdentifier("kyc_form")
         .navigationTitle("KYC Information")
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: residence) { newResidence in

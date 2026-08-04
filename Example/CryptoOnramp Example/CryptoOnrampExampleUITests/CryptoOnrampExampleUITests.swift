@@ -228,7 +228,6 @@ final class CryptoOnrampExampleUITests: XCTestCase {
 
         let successLabel = app.staticTexts["Purchase successful"].firstMatch
         XCTAssertTrue(successLabel.waitForExistence(timeout: .networkTimeout), "Checkout success screen should appear")
-        waitForLoadingToFinish()
     }
 
     /// Tests a complete new-user checkout using a refreshed KYC address and a standard ACH bank payment.
@@ -383,7 +382,6 @@ final class CryptoOnrampExampleUITests: XCTestCase {
 
         let purchaseSuccessLabel = app.staticTexts["Purchase successful"].firstMatch
         XCTAssertTrue(purchaseSuccessLabel.waitForExistence(timeout: .networkTimeout), "Checkout success screen should appear")
-        waitForLoadingToFinish()
     }
 
     /// Tests EU registration and KYC, compliance identifiers, user attestation, identity verification, and wallet verification.
@@ -482,5 +480,4 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         verifyOwnershipButton.tap()
         XCTAssertTrue(app.staticTexts["Verified"].firstMatch.waitForExistence(timeout: .networkTimeout), "The wallet should become verified")
     }
-
 }
