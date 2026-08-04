@@ -15,13 +15,15 @@ import UIKit
 class PollingViewModel {
 
     let paymentMethodType: STPPaymentMethodType
-    let supportedPaymentMethods: [STPPaymentMethodType] = [.blik, .paynow, .promptPay]
+    let supportedPaymentMethods: [STPPaymentMethodType] = [.blik, .paynow, .promptPay, .mbWay]
     lazy var CTA: String = {
         switch paymentMethodType {
         case .blik:
             return .Localized.blik_confirm_payment
         case .paynow, .promptPay:
             return .Localized.paynow_confirm_payment
+        case .mbWay:
+            return .Localized.mb_way_confirm_payment
         default:
             fatalError("Polling CTA has not been implemented for \(paymentMethodType)")
         }
@@ -30,7 +32,7 @@ class PollingViewModel {
         switch paymentMethodType {
         case .blik:
             return Date().addingTimeInterval(60) // 60 seconds
-        case .paynow, .promptPay:
+        case .paynow, .promptPay, .mbWay:
             return Date().addingTimeInterval(60 * 60) // 1 hour
         default:
             fatalError("Polling deadline has not been implemented for \(paymentMethodType)")
@@ -40,9 +42,15 @@ class PollingViewModel {
         switch paymentMethodType {
         case .blik, .paynow, .promptPay:
             return 1
+        case .mbWay:
+            return 3
         default:
             fatalError("Polling retry interval has not been implemented for \(paymentMethodType)")
         }
+    }
+
+    var usesCountdownTimer: Bool {
+        paymentMethodType != .mbWay
     }
 
     init(paymentMethodType: STPPaymentMethodType) {

@@ -70,6 +70,9 @@ import Foundation
     /// The action type is Multibanco payment. We provide `STPPaymentHandler` to display the Multibanco voucher.
     case multibancoDisplayDetails
 
+    /// The action type for MB WAY. The customer must authorize the payment in the MB WAY app.
+    case mbWayAwaitAuthorization
+
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
     /// - Parameter string: the NSString with the `next_action.type`
@@ -105,6 +108,8 @@ import Foundation
             self = .swishHandleRedirect
         case "multibanco_display_details":
             self = .multibancoDisplayDetails
+        case "mb_way_await_authorization":
+            self = .mbWayAwaitAuthorization
         default:
             self = .unknown
         }
@@ -143,6 +148,8 @@ import Foundation
             return "swish_handle_redirect_or_display_qr_code"
         case .multibancoDisplayDetails:
             return "multibanco_display_details"
+        case .mbWayAwaitAuthorization:
+            return "mb_way_await_authorization"
         case .unknown:
             break
         }
@@ -240,6 +247,8 @@ public class STPIntentAction: NSObject {
                 props.append("boletoDisplayDetails = \(boletoDisplayDetails)")
             }
         case .BLIKAuthorize:
+            break  // no additional details
+        case .mbWayAwaitAuthorization:
             break  // no additional details
         case .verifyWithMicrodeposits:
             if let verifyWithMicrodeposits = verifyWithMicrodeposits {
@@ -388,6 +397,8 @@ extension STPIntentAction: STPAPIResponseDecodable {
                 type = .unknown
             }
         case .BLIKAuthorize:
+            break  // no additional details
+        case .mbWayAwaitAuthorization:
             break  // no additional details
         case .verifyWithMicrodeposits:
             verifyWithMicrodeposits = STPIntentActionVerifyWithMicrodeposits.decodedObject(

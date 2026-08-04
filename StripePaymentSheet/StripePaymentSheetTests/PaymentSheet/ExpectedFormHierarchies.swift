@@ -56,6 +56,21 @@ enum ExpectedFormHierarchy {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
 
+    // MARK: - MB WAY
+
+    enum MBWay {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "PhoneNumberElement", children: [
+                        FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "239"]),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Phone number"]),
+                    ]),
+                ]),
+            ])
+        }
+    }
+
     // MARK: - Twint
 
     enum Twint {

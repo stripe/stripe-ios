@@ -2023,6 +2023,27 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
     }
 
+    func testMBWayRequiresPhoneWithoutFormSpec() {
+        // Given no loaded form specs and automatic billing detail collection
+        let originalFormSpecProvider = FormSpecProvider.shared
+        defer { FormSpecProvider.shared = originalFormSpecProvider }
+        let formSpecProvider = MockFormSpecProvider()
+        FormSpecProvider.shared = formSpecProvider
+
+        // When building an MB WAY form
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.mbWay]),
+            elementsSession: ._testValue(paymentMethodTypes: [STPPaymentMethodType.mbWay.identifier]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.mbWay)
+        ).make()
+
+        // Then phone is required and the in-code form doesn't consult FormSpecProvider
+        XCTAssertNotNil(form.getPhoneNumberElement())
+        XCTAssertNil(form.updateParams(params: .init(type: .stripe(.mbWay))))
+        XCTAssertEqual(formSpecProvider.formSpecCallCount, 0)
+    }
+
     func testLinkPMModeCardFormContainsMandateText() {
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {

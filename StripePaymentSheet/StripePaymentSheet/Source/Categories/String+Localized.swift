@@ -356,6 +356,11 @@ extension String.Localized {
                            "Text for alert message when user needs to confirm payment in their banking app")
     }
 
+    static var mb_way_confirm_payment: String {
+        STPLocalizedString("Confirm the payment in your MB WAY app to complete the purchase.",
+                           "Instructions shown while waiting for an MB WAY payment authorization")
+    }
+
     static var cpf_cpnj: String {
         STPLocalizedString("CPF/CPNJ", "Label for CPF/CPNJ (Brazil tax ID) field")
     }

@@ -54,14 +54,19 @@ class PollingViewController: UIViewController {
     }
 
     private var instructionLabelAttributedText: NSAttributedString {
-               let timeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
-               let attrText = NSMutableAttributedString(string: String(
-                format: viewModel.CTA,
-                   timeRemaining
-               ))
-               attrText.addAttributes([.foregroundColor: appearance.colors.primary],
-                                      range: NSString(string: attrText.string).range(of: timeRemaining))
-               return attrText
+        guard viewModel.usesCountdownTimer else {
+            return NSAttributedString(string: viewModel.CTA)
+        }
+        let formattedTimeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
+        let attrText = NSMutableAttributedString(string: String(
+            format: viewModel.CTA,
+            formattedTimeRemaining
+        ))
+        attrText.addAttributes(
+            [.foregroundColor: appearance.colors.primary],
+            range: NSString(string: attrText.string).range(of: formattedTimeRemaining)
+        )
+        return attrText
     }
 
     private var pollingState: PollingState = .polling {
@@ -203,7 +208,7 @@ class PollingViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if oneSecondTimer == nil {
+        if viewModel.usesCountdownTimer && oneSecondTimer == nil {
             oneSecondTimer = Timer.scheduledTimer(timeInterval: 1,
                                   target: self,
                                   selector: (#selector(updateTimer)),

@@ -1,7 +1,10 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+
+### PaymentSheet
+* [Added] Added support for MB WAY payments.
 
 ## 26.5.0 2026-08-03
 ### CryptoOnramp (Alpha)
