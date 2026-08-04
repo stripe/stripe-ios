@@ -2,8 +2,7 @@
 //  AddressFormNormalizerTest.swift
 //  StripePaymentSheetTests
 //
-//  Copyright © 2026 Stripe, Inc. All rights reserved.
-//
+//  Created by George Birch on 8/4/26.
 
 @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripeUICore
@@ -14,9 +13,27 @@ final class AddressFormNormalizerTest: XCTestCase {
     private let addressSpecProvider: AddressSpecProvider = {
         let addressSpecProvider = AddressSpecProvider()
         addressSpecProvider.addressSpecs = [
+            "BR": AddressSpec(
+                format: "AS",
+                require: "AS",
+                cityNameType: .city,
+                stateNameType: .state,
+                zip: nil,
+                zipNameType: .postal_code,
+                subKeys: ["RO"],
+                subLabels: ["Rondônia"]
+            ),
             "CA": AddressSpec(
                 format: "ACSZ",
                 require: "A",
+                cityNameType: .city,
+                stateNameType: .province,
+                zip: "",
+                zipNameType: .postal_code
+            ),
+            "FR": AddressSpec(
+                format: "ACZ",
+                require: "ACZ",
                 cityNameType: .city,
                 stateNameType: .province,
                 zip: "",
@@ -154,6 +171,75 @@ final class AddressFormNormalizerTest: XCTestCase {
         // Then
         XCTAssertNil(usResult)
         XCTAssertEqual(caResult, PaymentSheet.Address(country: "CA", line1: "123 Main St."))
+    }
+
+    func testNormalizeDropsStateWhenCountryDoesNotCollectState() {
+        // Given
+        let defaultAddress = PaymentSheet.Address(
+            city: "Paris",
+            country: "FR",
+            line1: "1 Rue de Rivoli",
+            postalCode: "75001",
+            state: "Île-de-France"
+        )
+
+        // When
+        let result = AddressFormNormalizer.normalize(
+            defaultAddress: defaultAddress,
+            fallbackAddress: nil,
+            allowedCountries: [],
+            addressSpecProvider: addressSpecProvider
+        )
+
+        // Then
+        XCTAssertEqual(
+            result,
+            PaymentSheet.Address(
+                city: "Paris",
+                country: "FR",
+                line1: "1 Rue de Rivoli",
+                postalCode: "75001"
+            )
+        )
+    }
+
+    func testNormalizeReturnsNilWhenStateDoesNotMatchDropdownOption() {
+        // Given
+        let matchingAddress = PaymentSheet.Address(
+            country: "BR",
+            line1: "123 Avenida Principal",
+            state: "Rondônia"
+        )
+        let nonmatchingAddress = PaymentSheet.Address(
+            country: "BR",
+            line1: "123 Avenida Principal",
+            state: "Rondonia"
+        )
+
+        // When
+        let matchingResult = AddressFormNormalizer.normalize(
+            defaultAddress: matchingAddress,
+            fallbackAddress: nil,
+            allowedCountries: [],
+            addressSpecProvider: addressSpecProvider
+        )
+        let nonmatchingResult = AddressFormNormalizer.normalize(
+            defaultAddress: nonmatchingAddress,
+            fallbackAddress: nil,
+            allowedCountries: [],
+            addressSpecProvider: addressSpecProvider
+        )
+
+        // Then
+        XCTAssertEqual(
+            matchingResult,
+            PaymentSheet.Address(
+                country: "BR",
+                line1: "123 Avenida Principal",
+                state: "RO"
+            )
+        )
+        XCTAssertNil(nonmatchingResult)
     }
 
     func testAddressViewControllerReturnsNormalizedAddress() throws {

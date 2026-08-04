@@ -2,8 +2,7 @@
 //  AddressFormNormalizer.swift
 //  StripePaymentSheet
 //
-//  Copyright © 2026 Stripe, Inc. All rights reserved.
-//
+//  Created by George Birch on 8/4/26.
 
 import Foundation
 @_spi(STP) import StripeCore
