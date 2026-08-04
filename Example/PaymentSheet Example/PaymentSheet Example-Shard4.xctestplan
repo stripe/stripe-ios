@@ -35,7 +35,6 @@
         "CustomerSheetSnapshotTests",
         "CustomerSheetUITest",
         "FCLiteUITests",
-        "FCLiteUITests\/testFCLiteInitialPaneAndDismiss()",
         "InstantBankPaymentsControllerUITest",
         "PaymentSheetBillingCollectionBankTests",
         "PaymentSheetBillingCollectionLPMUITests",
