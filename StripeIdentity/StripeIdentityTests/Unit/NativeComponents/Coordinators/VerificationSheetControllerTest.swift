@@ -11,7 +11,7 @@
 import UIKit
 import XCTest
 
-@testable import StripeIdentity
+@_spi(STP) @testable import StripeIdentity
 
 final class VerificationSheetControllerTest: XCTestCase {
 
@@ -310,6 +310,12 @@ final class VerificationSheetControllerTest: XCTestCase {
     }
 
     func testSaveSelfieDataIncludes3DFieldsWhenLocalOverrideIsEnabled() throws {
+        let previousOverride = IdentityVerificationSheet.local3DFaceCaptureOverride
+        IdentityVerificationSheet.local3DFaceCaptureOverride = true
+        defer {
+            IdentityVerificationSheet.local3DFaceCaptureOverride = previousOverride
+        }
+
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         let mockResponse = try VerificationPageDataMock.noErrors.make()
