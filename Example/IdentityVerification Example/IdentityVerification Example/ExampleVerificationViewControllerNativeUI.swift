@@ -22,7 +22,7 @@ class ExampleVerificationViewControllerNativeUI: UIViewController {
     // View and fork the backend code here: https://codesandbox.io/p/devbox/dsx4vq
     let baseURL = "https://stripe-mobile-identity-verification-playground.stripedemos.com"
     let verifyEndpoint = "/verification-sessions"
-    var is3DFaceCaptureEnabled: Bool {
+    private var is3DFaceCaptureEnabled: Bool {
         return faceCaptureEnabledSwitch.isOn
     }
 
@@ -131,11 +131,11 @@ class ExampleVerificationViewControllerNativeUI: UIViewController {
         }
     }
 
-    func setLocal3DFaceCaptureOverride() {
+    private func setLocal3DFaceCaptureOverride() {
         IdentityVerificationSheet.local3DFaceCaptureOverride = is3DFaceCaptureEnabled
     }
 
-    func add3DFaceCaptureSwitch() {
+    private func add3DFaceCaptureSwitch() {
         let label = UILabel()
         label.text = "3D face capture enabled"
         label.textColor = .white

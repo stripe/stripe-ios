@@ -58,9 +58,6 @@ extension StripeAPI {
 extension StripeAPI.VerificationPage {
     private enum ThreeDFaceCaptureExperiment {
         static let experimentName = "idprod_3d_face_capture_mobile"
-        static let eventName = "screen_presented"
-        static let screenNameKey = "screen_name"
-        static let selfieScreenName = "selfie"
 
         static var localOverride: Bool? {
             return IdentityVerificationSheet.local3DFaceCaptureOverride

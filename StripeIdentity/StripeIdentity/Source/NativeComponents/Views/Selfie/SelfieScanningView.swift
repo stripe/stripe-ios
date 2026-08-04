@@ -1821,6 +1821,7 @@ private final class CaptureTickMarksView: UIView {
             return .pi
         }
     }
+
     private func shouldDrawBaseTick(at angle: CGFloat) -> Bool {
         return !isTickCoveredByAcceptedState(at: angle)
     }

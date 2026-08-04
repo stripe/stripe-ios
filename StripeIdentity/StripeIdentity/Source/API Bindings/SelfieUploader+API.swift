@@ -172,6 +172,7 @@ extension StripeAPI.VerificationPageDataFaceFrameData {
         static let maxEncodedLength = 5000
         static let scorePrecision = 4
     }
+
     init(
         capturedImage: FaceScannerInputOutput,
         faceScoreVariance: Float,

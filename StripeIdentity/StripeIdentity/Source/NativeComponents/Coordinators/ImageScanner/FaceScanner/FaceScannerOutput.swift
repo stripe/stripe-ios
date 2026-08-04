@@ -29,6 +29,7 @@ struct FaceScannerOutput: Equatable {
         static let targetCoverage: CGFloat = 0.16
         static let maxCoverageDelta: CGFloat = 0.16
     }
+
     let faceDetectorOutput: FaceDetectorOutput
     let cameraProperties: CameraSession.DeviceProperties?
     let motionBlurResult: MotionBlurDetector.Output?
@@ -185,11 +186,5 @@ extension FaceScannerOutput {
             && rect.maxY < (1 - minEdgeThreshold)
             && rect.minX > minEdgeThreshold
             && rect.maxX < (1 - minEdgeThreshold)
-    }
-
-    /// Whether the face's bounding box area is between the minimum and maximum thresholds.
-    static func isFaceWithinCoverageThresholds(rect: CGRect, min: CGFloat, max: CGFloat) -> Bool {
-        let coverage = rect.width * rect.height
-        return coverage > min && coverage < max
     }
 }

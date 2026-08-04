@@ -65,7 +65,7 @@ final class SelfieUploader: SelfieUploaderProtocol {
         self.imageUploader = imageUploader
     }
 
-    /// Uploads a high and low resolution image for each of the captured images.
+    /// Uploads high- and low-resolution front frames and full-frame side captures.
     /// - Parameters:
     ///   - capturedImages: The original images and scanner output for each captured selfie image.
     func uploadImages(

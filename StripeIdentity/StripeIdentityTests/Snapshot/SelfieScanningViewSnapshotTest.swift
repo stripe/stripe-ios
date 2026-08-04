@@ -208,7 +208,7 @@ final class SelfieScanningViewSnapshotTest: STPSnapshotTestCase {
     }
 }
 
-extension SelfieScanningViewSnapshotTest {
+private extension SelfieScanningViewSnapshotTest {
     static let mockSelfieImage: UIImage = {
         let size = CGSize(width: 300, height: 400)
         let renderer = UIGraphicsImageRenderer(size: size)
@@ -267,7 +267,7 @@ extension SelfieScanningViewSnapshotTest {
         }
     }()
 
-    fileprivate func verifyView(
+    func verifyView(
         with viewModel: SelfieScanningView.ViewModel,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -277,7 +277,7 @@ extension SelfieScanningViewSnapshotTest {
         STPSnapshotVerifyView(view, file: file, line: line)
     }
 
-    fileprivate func verify3DFaceCaptureVideoPreview(
+    func verify3DFaceCaptureVideoPreview(
         statusText: SelfieScanningView.ViewModel.StatusText? = nil,
         captureGuideHighlight: SelfieScanningView.ViewModel.CaptureGuideHighlight = .none,
         captureGuideTarget: SelfieScanningView.ViewModel.CaptureGuideTarget = .none,

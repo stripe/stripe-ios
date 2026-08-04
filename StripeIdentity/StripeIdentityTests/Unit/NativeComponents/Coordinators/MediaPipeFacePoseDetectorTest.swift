@@ -11,7 +11,7 @@ import XCTest
 @_spi(STP) @testable import StripeIdentity
 
 final class MediaPipeFacePoseDetectorTest: XCTestCase {
-    func testDefaultDetectorInitializes() throws {
+    func testDefaultDetectorInitializes() {
         XCTAssertNoThrow(try FaceGeometryDetectorFactory.makeDefaultDetector())
     }
 }

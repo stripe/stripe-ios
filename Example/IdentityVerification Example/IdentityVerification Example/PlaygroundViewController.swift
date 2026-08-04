@@ -15,7 +15,7 @@ class PlaygroundViewController: UIViewController {
     // View and fork the backend code here: https://codesandbox.io/p/devbox/dsx4vq
     let baseURL = "https://stripe-mobile-identity-verification-playground.stripedemos.com"
     let verifyEndpoint = "/verification-sessions"
-    var is3DFaceCaptureEnabled: Bool {
+    private var is3DFaceCaptureEnabled: Bool {
         return faceCaptureEnabledSwitch.isOn
     }
 
@@ -106,7 +106,7 @@ class PlaygroundViewController: UIViewController {
         return VerificationType.allCases[verificationTypeSelector.selectedSegmentIndex]
     }
 
-    var requireMatchingSelfie: Bool {
+    private var requireMatchingSelfie: Bool {
         guard requireSelfieSwitch.isOn else {
             return false
         }
@@ -180,7 +180,7 @@ class PlaygroundViewController: UIViewController {
         phoneView.isHidden = !uiSwitch.isOn
     }
 
-    func add3DFaceCaptureSwitch() {
+    private func add3DFaceCaptureSwitch() {
         guard
             faceCaptureEnabledContainerView.superview == nil,
             let playgroundStackView = verificationTypeContainerView.superview as? UIStackView
@@ -340,7 +340,7 @@ class PlaygroundViewController: UIViewController {
         task.resume()
     }
 
-    func setLocal3DFaceCaptureOverride() {
+    private func setLocal3DFaceCaptureOverride() {
         IdentityVerificationSheet.local3DFaceCaptureOverride = is3DFaceCaptureEnabled
     }
 
