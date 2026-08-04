@@ -12,7 +12,11 @@ internal extension PaymentSheet.Appearance {
     var topFormInsets: NSDirectionalEdgeInsets {
         return .insets(top: formInsets.top, leading: formInsets.leading, trailing: formInsets.trailing)
     }
+
+    static let defaultBorderWidth: CGFloat = 1
     static let defaultCornerRadius: CGFloat = 6
+    static let defaultTextFieldInsets: NSDirectionalEdgeInsets = .init(top: 4, leading: 11, bottom: 4, trailing: 11)
+    static let defaultFormInsets: NSDirectionalEdgeInsets = .init(top: 0, leading: 20, bottom: 40, trailing: 20)
 }
 
 extension PaymentSheet.Appearance.NavigationBarStyle {

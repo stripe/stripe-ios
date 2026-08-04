@@ -59,6 +59,10 @@ extension Checkout {
         /// Configuration for ExpressCheckoutElement.
         public var expressCheckoutElement: ExpressCheckoutElement.Configuration = .init()
 
+        /// Configuration for the shipping address form returned by
+        /// ``Checkout.getShippingAddressElement()``.
+        public var shippingAddressElement: ShippingAddressElement.Configuration = .init()
+
         /// Apple Pay configuration.
         public var applePayConfiguration: ApplePayConfiguration?
 
