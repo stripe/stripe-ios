@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_UBZqobbxxocd1I9OpQdQsx4uQZ6ufuiN1ncFjZpeQFTVclE&deferred_intent%5Bamount%5D=100&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bpayment_method_configuration%5D%5Bid%5D=pmc_1TDCXsFY0qyl6XeWiCXTY4if&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=.*&mobile_app_id=.*&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_UBZqobbxxocd1I9OpQdQsx4uQZ6ufuiN1ncFjZpeQFTVclE&deferred_intent%5Bamount%5D=100&deferred_intent%5Bcapture_method%5D=automatic_async&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bpayment_method_configuration%5D%5Bid%5D=pmc_1TDCXsFY0qyl6XeWiCXTY4if&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=.*&mobile_app_id=.*&type=deferred_intent$
 200
 application/json
 Content-Type: application/json

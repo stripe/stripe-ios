@@ -24,7 +24,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
         XCTAssertEqual(clientContext.mode, "payment")
         XCTAssertEqual(clientContext.currency, "usd")
         XCTAssertNil(clientContext.setupFutureUsage)
-        XCTAssertEqual(clientContext.captureMethod, "automatic") // default
+        XCTAssertEqual(clientContext.captureMethod, "automatic_async") // default
         XCTAssertNil(clientContext.paymentMethodOptions)
         XCTAssertNil(clientContext.paymentMethodTypes)
         XCTAssertNil(clientContext.onBehalfOf)

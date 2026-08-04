@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_default_payment_method=pm_1Sc4CpFY0qyl6XeWThu3QpWE&deferred_intent%5Bamount%5D=100&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&legacy_customer_ephemeral_key=ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLFhPbGt4VjFVT0ZJd0VibktLYXVrRkxrcExicVJtT2o_00YKEl7ume&locale=.*&mobile_app_id=.*&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_default_payment_method=pm_1Sc4CpFY0qyl6XeWThu3QpWE&deferred_intent%5Bamount%5D=100&deferred_intent%5Bcapture_method%5D=automatic_async&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&legacy_customer_ephemeral_key=ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLFhPbGt4VjFVT0ZJd0VibktLYXVrRkxrcExicVJtT2o_00YKEl7ume&locale=.*&mobile_app_id=.*&type=deferred_intent$
 200
 application/json
 Content-Type: application/json

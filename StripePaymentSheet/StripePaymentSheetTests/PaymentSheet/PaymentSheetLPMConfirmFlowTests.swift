@@ -1139,12 +1139,6 @@ extension PaymentSheetLPMConfirmFlowTests {
 
         var intents: [TestIntent] = []
         let paymentMethodTypes = [paymentMethod.identifier].compactMap { $0 }
-        let intentAmount = amount ?? 1099
-        let paymentIntentParams: [String: Any] = [
-            // IntentConfiguration defaults to `.automatic`; specify it because newer API versions
-            // default newly created PaymentIntents to `automatic_async`.
-            "capture_method": "automatic",
-        ]
         guard !Self.confirmationTypesToTest.isEmpty else {
             return []
         }
@@ -1157,22 +1151,20 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
-                    amount: intentAmount,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
-                    customerID: customer,
-                    otherParams: paymentIntentParams
+                    customerID: customer
                 )
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
 
-            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: intentAmount, currency: currency)) { _, _ in
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency)) { _, _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
-                    amount: intentAmount,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
-                    customerID: customer,
-                    otherParams: paymentIntentParams
+                    customerID: customer
                 )
             }
 
@@ -1186,7 +1178,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,
-                    amount: intentAmount,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer,
                     returnURL: "https://foo.com"
@@ -1203,16 +1195,16 @@ extension PaymentSheetLPMConfirmFlowTests {
                 // Blik doesn't support server-side confirmation
                 return intents
             }
-            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: intentAmount, currency: currency)) { paymentMethod, _ in
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency)) { paymentMethod, _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
-                    amount: intentAmount,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     paymentMethodID: paymentMethod.stripeId,
                     customerID: customer,
                     confirm: true,
-                    otherParams: paymentIntentParams.merging(paramsForServerSideConfirmation) { _, new in new }
+                    otherParams: paramsForServerSideConfirmation
                 )
             }
 
@@ -1223,26 +1215,25 @@ extension PaymentSheetLPMConfirmFlowTests {
             intents.append(TestIntent("Deferred PaymentIntent - server side confirmation", makeDeferredIntent(deferredSSC)))
 
             // Confirmation token variations
-            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: intentAmount, currency: currency), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { _ in
+            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
-                    amount: intentAmount,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
-                    customerID: customer,
-                    otherParams: paymentIntentParams
+                    customerID: customer
                 )
             })
 
-            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: intentAmount, currency: currency), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { confirmationToken in
+            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { confirmationToken in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
-                    amount: intentAmount,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer,
                     confirm: true,
-                    otherParams: paymentIntentParams.merging(["confirmation_token": confirmationToken.stripeId]) { _, new in new }
+                    otherParams: ["confirmation_token": confirmationToken.stripeId]
                 )
             })
 
@@ -1260,32 +1251,31 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
-                    amount: intentAmount,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer,
-                    otherParams: paymentIntentParams.merging(["setup_future_usage": "off_session"]) { _, new in new }
+                    otherParams: ["setup_future_usage": "off_session"]
                 )
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
-            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: intentAmount, currency: currency, setupFutureUsage: .offSession)) { _, _ in
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession)) { _, _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
-                    amount: intentAmount,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer,
-                    otherParams: paymentIntentParams.merging(["setup_future_usage": "off_session"]) { _, new in new }
+                    otherParams: ["setup_future_usage": "off_session"]
                 )
             }
-            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: intentAmount, currency: currency, setupFutureUsage: .offSession)) { paymentMethod, _ in
-                let otherParams: [String: Any] = [
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession)) { paymentMethod, _ in
+                let otherParams = [
                     "setup_future_usage": "off_session",
-                ].merging(paymentIntentParams) { _, new in new }
-                    .merging(paramsForServerSideConfirmation) { _, new in new }
+                ].merging(paramsForServerSideConfirmation) { _, b in b }
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
-                    amount: intentAmount,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     paymentMethodID: paymentMethod.stripeId,
                     customerID: customer,
@@ -1294,28 +1284,27 @@ extension PaymentSheetLPMConfirmFlowTests {
                 )
             }
             // Confirmation token variations
-            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: intentAmount, currency: currency, setupFutureUsage: .offSession), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { _ in
+            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
-                    amount: intentAmount,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
-                    customerID: customer,
-                    otherParams: paymentIntentParams
+                    customerID: customer
                 )
             })
 
-            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: intentAmount, currency: currency, setupFutureUsage: .offSession), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { confirmationToken in
+            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { confirmationToken in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
-                    amount: intentAmount,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer,
                     confirm: true,
-                    otherParams: paymentIntentParams.merging([
-                        "confirmation_token": confirmationToken.stripeId,
-                    ]) { _, new in new }
+                    otherParams: [
+                        "confirmation_token": confirmationToken.stripeId
+                    ]
                 )
             })
 
@@ -1363,23 +1352,23 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
-                    amount: intentAmount,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer,
-                    otherParams: paymentIntentParams.merging([
+                    otherParams: [
                         "payment_method_options": [
                             paymentMethod.identifier: [
                                 "setup_future_usage": "off_session"
                             ],
                         ],
-                    ]) { _, new in new }
+                    ]
                 )
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
 
             // Backend PI does NOT have PMO SFU
             let mode = PaymentSheet.IntentConfiguration.Mode.payment(
-                amount: intentAmount,
+                amount: amount ?? 1099,
                 currency: currency,
                 paymentMethodOptions: .init(setupFutureUsageValues: [paymentMethod: .offSession])
             )
@@ -1388,10 +1377,9 @@ extension PaymentSheetLPMConfirmFlowTests {
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
-                    amount: intentAmount,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
-                    customerID: customer,
-                    otherParams: paymentIntentParams
+                    customerID: customer
                 )
             }
 
@@ -1399,12 +1387,12 @@ extension PaymentSheetLPMConfirmFlowTests {
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
-                    amount: intentAmount,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     paymentMethodID: paymentMethod.stripeId,
                     customerID: customer,
                     confirm: true,
-                    otherParams: paymentIntentParams.merging(paramsForServerSideConfirmation) { _, new in new }
+                    otherParams: paramsForServerSideConfirmation
                 )
             }
 
@@ -1416,10 +1404,9 @@ extension PaymentSheetLPMConfirmFlowTests {
                     return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                         types: paymentMethodTypes,
                         currency: currency,
-                        amount: intentAmount,
+                        amount: amount,
                         merchantCountry: merchantCountry.rawValue,
-                        customerID: customer,
-                        otherParams: paymentIntentParams
+                        customerID: customer
                     )
                 }
             )
@@ -1431,11 +1418,11 @@ extension PaymentSheetLPMConfirmFlowTests {
                     return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                         types: paymentMethodTypes,
                         currency: currency,
-                        amount: intentAmount,
+                        amount: amount,
                         merchantCountry: merchantCountry.rawValue,
                         customerID: customer,
                         confirm: true,
-                        otherParams: paymentIntentParams.merging(["confirmation_token": confirmationToken.stripeId]) { _, new in new }
+                        otherParams: ["confirmation_token": confirmationToken.stripeId]
                     )
                 }
             )

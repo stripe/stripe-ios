@@ -1,9 +1,12 @@
 The next release's version bump will so far be:
-MINOR
+MAJOR
 
 ## X.Y.Z - changes pending release
 ### StripeCore
 * [Changed] Updated the Stripe API version used by the SDK to `2026-07-29.dahlia`.
+
+### PaymentSheet
+* [Changed] `PaymentSheet.IntentConfiguration` now defaults to asynchronous automatic capture to match the current Stripe API default. Set `captureMethod` to `.automatic` to retain synchronous automatic capture.
 
 ## 26.5.0 2026-08-03
 ### CryptoOnramp (Alpha)
