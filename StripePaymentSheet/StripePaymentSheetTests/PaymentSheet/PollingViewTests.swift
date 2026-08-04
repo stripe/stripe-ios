@@ -29,4 +29,12 @@ class PollingViewTests: XCTestCase {
         XCTAssertEqual(pollingViewModel.retryInterval, 1)
         XCTAssertEqual(pollingViewModel.deadline.timeIntervalSinceNow, 60 * 4, accuracy: 0.5)
     }
+
+    func testPollingViewModelBizum() {
+        let pollingViewModel = PollingViewModel(paymentMethodType: .bizum)
+
+        XCTAssertEqual(pollingViewModel.CTA, .Localized.bizum_confirm_payment)
+        XCTAssertEqual(pollingViewModel.retryInterval, 1)
+        XCTAssertEqual(pollingViewModel.deadline.timeIntervalSinceNow, 70 * 60, accuracy: 0.5)
+    }
 }

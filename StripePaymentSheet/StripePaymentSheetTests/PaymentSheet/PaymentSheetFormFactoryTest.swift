@@ -1446,6 +1446,27 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
     }
 
+    func testBizumRequiresPhoneWithoutFormSpec() {
+        // Given no loaded form specs and automatic billing detail collection
+        let originalFormSpecProvider = FormSpecProvider.shared
+        defer { FormSpecProvider.shared = originalFormSpecProvider }
+        let formSpecProvider = MockFormSpecProvider()
+        FormSpecProvider.shared = formSpecProvider
+
+        // When building a Bizum form
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.bizum]),
+            elementsSession: ._testValue(paymentMethodTypes: [STPPaymentMethodType.bizum.identifier]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.bizum)
+        ).make()
+
+        // Then phone is required and the in-code form doesn't consult FormSpecProvider
+        XCTAssertNotNil(form.getPhoneNumberElement())
+        XCTAssertNil(form.updateParams(params: .init(type: .stripe(.bizum))))
+        XCTAssertEqual(formSpecProvider.formSpecCallCount, 0)
+    }
+
     func testLinkPMModeCardFormContainsMandateText() {
         let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
