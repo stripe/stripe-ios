@@ -333,6 +333,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         let verticalSavedPaymentMethodsViewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             intent: intent,
+            checkout: checkout,
             selectedPaymentMethod: selectedSavedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,
@@ -705,8 +706,7 @@ extension EmbeddedPaymentElement {
                 paymentHandler: self.paymentHandler,
                 integrationShape: .embedded,
                 confirmationChallenge: self.confirmationChallenge,
-                analyticsHelper: self.analyticsHelper,
-                checkout: self.checkout
+                analyticsHelper: self.analyticsHelper
             )
         }
 

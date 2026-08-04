@@ -336,45 +336,49 @@ extension Intent {
             json["tax_context"] = taxContext
         }
 
-        var lineItemGroup: [String: Any] = [:]
         if !lineItems.isEmpty {
-            lineItemGroup["line_items"] = lineItems.map { item -> [String: Any] in
+            json["checkout_items"] = lineItems.map { item -> [String: Any] in
                 return [
-                    "id": item.id,
-                    "name": item.name,
-                    "quantity": item.quantity,
-                    "price": [
-                        "unit_amount": item.unitAmount?.minorUnitsAmount ?? 0,
-                        "currency": currency.lowercased(),
+                    "key": item.id,
+                    "type": "one_time_price_item",
+                    "one_time_price_item": [
+                        "quantity": item.quantity,
+                        "price": [
+                            "id": "price_\(item.id)",
+                            "currency": currency.lowercased(),
+                            "unit_amount": item.unitAmount?.minorUnitsAmount ?? 0,
+                            "product": ["name": item.name],
+                        ],
                     ],
                 ]
             }
         }
         if shippingAmount != 0 {
-            lineItemGroup["shipping_rate"] = [
+            json["shipping_rate"] = [
                 "id": "shr_test",
                 "display_name": "Standard",
                 "amount": shippingAmount,
                 "currency": currency.lowercased(),
             ]
         }
+        var recurringDetails: [String: Any] = [:]
         if taxAmount != 0 {
-            lineItemGroup["tax_amounts"] = [[
+            recurringDetails["total_tax_amounts"] = [[
                 "amount": taxAmount,
                 "inclusive": false,
                 "taxable_amount": (subtotal ?? amount ?? 0),
             ], ]
         }
         if discountAmount != 0 {
-            lineItemGroup["discount_amounts"] = [[
+            recurringDetails["total_discount_amounts"] = [[
                 "amount": discountAmount,
                 "coupon": [
                     "id": "coupon_test",
                 ],
             ], ]
         }
-        if !lineItemGroup.isEmpty {
-            json["line_item_group"] = lineItemGroup
+        if !recurringDetails.isEmpty {
+            json["recurring_details"] = recurringDetails
         }
 
         let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
