@@ -19,6 +19,24 @@ public protocol AddressViewControllerDelegate: AnyObject {
     func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?)
 }
 
+@MainActor
+protocol AddressViewControllerSaveHandler: AnyObject {
+    /// Saves an address. Implementations that show loading are responsible for hiding it before returning.
+    func save(
+        address: AddressViewController.AddressDetails,
+        setLoading: (Bool) -> Void
+    ) async throws
+}
+
+final class DefaultAddressViewControllerSaveHandler: AddressViewControllerSaveHandler {
+    nonisolated init() {}
+
+    func save(
+        address: AddressViewController.AddressDetails,
+        setLoading: (Bool) -> Void
+    ) async throws {}
+}
+
 /// A view controller that collects a name and an address, with full localization and autocomplete.
 /// - Note: It uses `navigationItem` and can push a view controller, so it must be shown inside a `UINavigationController`.
 /// - Seealso: https://stripe.com/docs/elements/address-element?platform=ios
@@ -53,8 +71,10 @@ public class AddressViewController: UIViewController {
     }
     /// The delegate, notified when the customer completes or cancels.
     public weak var delegate: AddressViewControllerDelegate?
+    private let saveHandler: AddressViewControllerSaveHandler
     private var selectedAutoCompleteResult: PaymentSheet.Address?
     private var didLogAddressShow = false
+    private var isSaving = false
 
     // MARK: - Internal properties
     let addressSpecProvider: AddressSpecProvider
@@ -75,7 +95,7 @@ public class AddressViewController: UIViewController {
             callToAction: .custom(title: configuration.buttonTitle),
             appearance: configuration.appearance
         ) { [weak self] in
-            self?.didContinue()
+            self?.didTapSaveButton()
         }
         return button
     }()
@@ -224,11 +244,13 @@ public class AddressViewController: UIViewController {
     init(
         addressSpecProvider: AddressSpecProvider,
         configuration: Configuration,
-        delegate: AddressViewControllerDelegate
+        delegate: AddressViewControllerDelegate,
+        saveHandler: AddressViewControllerSaveHandler = DefaultAddressViewControllerSaveHandler()
     ) {
         self.addressSpecProvider = addressSpecProvider
         self.configuration = configuration
         self.delegate = delegate
+        self.saveHandler = saveHandler
         super.init(nibName: nil, bundle: nil)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
         if configuration.useNavigationBarTitle {
@@ -319,9 +341,50 @@ extension AddressViewController {
 // MARK: - Internal methods
 extension AddressViewController {
 
+    func didTapSaveButton() {
+        guard !isSaving else { return }
+        guard let addressDetails else {
+            assertionFailure("Save was attempted with an invalid address")
+            return
+        }
+
+        isSaving = true
+        view.endEditing(true)
+        latestError = nil
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                try await saveHandler.save(address: addressDetails) { [weak self] isLoading in
+                    self?.setLoading(isLoading)
+                }
+                guard isSaving else { return }
+                isSaving = false
+                finish(with: addressDetails)
+            } catch {
+                guard isSaving else { return }
+                isSaving = false
+                latestError = error
+            }
+        }
+    }
+
     func didContinue() {
-        logAddressCompleted()
+        isSaving = false
+        finish(with: addressDetails)
+    }
+
+    private func finish(with addressDetails: AddressDetails?) {
+        logAddressCompleted(addressDetails: addressDetails)
         delegate?.addressViewControllerDidFinish(self, with: addressDetails)
+    }
+
+    private func setLoading(_ isLoading: Bool) {
+        view.isUserInteractionEnabled = !isLoading
+        closeButton.isEnabled = !isLoading
+        button.update(
+            status: isLoading ? .spinnerWithInteractionDisabled : (addressDetails == nil ? .disabled : .enabled),
+            animated: true
+        )
     }
 
     @objc func didTapBackground() {
@@ -473,7 +536,7 @@ extension AddressViewController {
         }
     }
 
-    private func logAddressCompleted() {
+    private func logAddressCompleted(addressDetails: AddressDetails?) {
         var editDistance: Int?
         if let selectedAddress = addressDetails?.address, let autoCompleteAddress = selectedAutoCompleteResult {
             editDistance = PaymentSheet.Address(from: selectedAddress).editDistance(from: autoCompleteAddress)
