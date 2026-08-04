@@ -85,4 +85,8 @@ actor ConfirmationChallenge {
         await attestationChallenge?.complete()
     }
 
+    func cancel() async {
+        await passiveCaptchaChallenge?.cancel()
+    }
+
 }

@@ -75,6 +75,11 @@ actor PassiveCaptchaChallenge {
         _ = Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
     }
 
+    func cancel() {
+        tokenTask?.cancel()
+        tokenTask = nil
+    }
+
     public func fetchToken() async throws -> String {
         if hasSessionExpired {
             resetSession()
