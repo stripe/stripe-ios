@@ -173,13 +173,13 @@ extension FaceScannerOutput {
         return nil
     }
 
-    /// Is the face’s bounding box is centered in the frame within max thresholds
+    /// Whether the face's bounding box is centered in the frame within the maximum thresholds.
     static func isFaceCentered(rect: CGRect, maxCenteredThreshold: CGPoint) -> Bool {
         return abs(1 - (rect.maxY + rect.minY)) < maxCenteredThreshold.y
             && abs(1 - (rect.maxX + rect.minX)) < maxCenteredThreshold.x
     }
 
-    /// Is the face’s bounding box is away from the edges of the image by a minimum threshold
+    /// Whether the face's bounding box is away from the image edges by the minimum threshold.
     static func isFaceAwayFromEdges(rect: CGRect, minEdgeThreshold: CGFloat) -> Bool {
         return rect.minY > minEdgeThreshold
             && rect.maxY < (1 - minEdgeThreshold)
@@ -187,7 +187,7 @@ extension FaceScannerOutput {
             && rect.maxX < (1 - minEdgeThreshold)
     }
 
-    /// Is the face’s bounding box area (coverage) is between a min & max threshold
+    /// Whether the face's bounding box area is between the minimum and maximum thresholds.
     static func isFaceWithinCoverageThresholds(rect: CGRect, min: CGFloat, max: CGFloat) -> Bool {
         let coverage = rect.width * rect.height
         return coverage > min && coverage < max

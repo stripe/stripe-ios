@@ -60,8 +60,8 @@ final class SelfieWarmupViewController: IdentityFlowViewController {
             }
 
             return .init(
-                text: SelfieWarmupViewController.trainingConsentHTMLText(trainingConsentText),
-                style: .html(makeStyle: SelfieWarmupViewController.trainingConsentHTMLStyle),
+                text: Self.trainingConsentHTMLText(trainingConsentText),
+                style: .html(makeStyle: Self.trainingConsentHTMLStyle),
                 didOpenURL: { url in
                     didOpenURLHandler?(url)
                 }
@@ -89,7 +89,6 @@ final class SelfieWarmupViewController: IdentityFlowViewController {
     ) {
         fatalError("init(coder:) has not been implemented")
     }
-
 }
 
 private extension SelfieWarmupViewController {

@@ -101,7 +101,7 @@ final class SelfieUploader: SelfieUploaderProtocol {
         }
     }
 
-    static func uploadedOptionalFile(
+    private static func uploadedOptionalFile(
         from future: Future<StripeFile>?
     ) -> Future<StripeFile?> {
         guard let future else {
@@ -134,7 +134,7 @@ final class SelfieUploader: SelfieUploaderProtocol {
         )
     }
 
-    func uploadFullFrameImage(
+    private func uploadFullFrameImage(
         _ capturedImage: FaceScannerInputOutput,
         ofType type: ImageType
     ) -> Future<StripeFile> {

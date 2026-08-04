@@ -6,8 +6,6 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
-
 struct FaceCaptureScanningState: Equatable, ScanningState {
     enum Phase: Equatable {
         case front
@@ -38,5 +36,4 @@ struct FaceCaptureScanningState: Equatable, ScanningState {
         self.rightSide = rightSide
         self.supportsPoseCapture = supportsPoseCapture
     }
-
 }

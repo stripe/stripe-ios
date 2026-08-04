@@ -76,8 +76,6 @@ final class MediaPipeFacePoseDetector: FaceGeometryDetector {
             )
         )
     }
-
-    func reset() {}
 }
 
 private extension MediaPipeFacePoseDetector {

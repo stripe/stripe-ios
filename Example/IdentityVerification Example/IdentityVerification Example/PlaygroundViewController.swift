@@ -214,7 +214,7 @@ class PlaygroundViewController: UIViewController {
         updateButtonState(isLoading: true)
         setLocal3DFaceCaptureOverride()
 
-        // Forwarding VerificationSession options from the client to server to
+        // Forwarding VerificationSession options from the client to the server
         // for demo purposes. In production, these are typically set by the
         // server depending on the desired behavior.
         var requestDict: [String: Any] = [

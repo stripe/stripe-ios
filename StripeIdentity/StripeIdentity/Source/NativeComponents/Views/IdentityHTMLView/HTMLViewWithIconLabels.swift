@@ -228,7 +228,7 @@ extension HTMLViewWithIconLabels.Styling {
 
     private static func htmlStyle(
         for textStyle: UIFont.TextStyle,
-        shouldCenterText ceterText: Bool = false
+        shouldCenterText: Bool = false
     ) -> HTMLStyle {
         let boldFont = IdentityUI.preferredFont(forTextStyle: textStyle, weight: .bold)
         return .init(
@@ -241,7 +241,7 @@ extension HTMLViewWithIconLabels.Styling {
             h5Font: boldFont,
             h6Font: boldFont,
             isLinkUnderlined: false,
-            shouldCenterText: ceterText
+            shouldCenterText: shouldCenterText
         )
     }
 }

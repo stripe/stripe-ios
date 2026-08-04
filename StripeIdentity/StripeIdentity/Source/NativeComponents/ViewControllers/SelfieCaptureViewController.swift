@@ -408,7 +408,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
 }
 
 // MARK: - Helpers
-extension SelfieCaptureViewController {
+private extension SelfieCaptureViewController {
     func updateUI() {
         configure(
             backButtonTitle: STPLocalizedString(
@@ -950,8 +950,8 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
 
 // MARK: - Selfie Capture Flow
 
-extension SelfieCaptureViewController {
-    fileprivate func handleFrontCapture(
+private extension SelfieCaptureViewController {
+    func handleFrontCapture(
         _ scanningSession: SelfieImageScanningSession,
         scanningState: FaceCaptureScanningState,
         image: CGImage,
@@ -1026,7 +1026,7 @@ extension SelfieCaptureViewController {
         }
     }
 
-    fileprivate func handlePoseCapture(
+    func handlePoseCapture(
         _ scanningSession: SelfieImageScanningSession,
         scanningState: FaceCaptureScanningState,
         expectedPose: FaceCapturePose,
@@ -1070,7 +1070,7 @@ extension SelfieCaptureViewController {
         )
     }
 
-    fileprivate func acceptPoseCapture(
+    func acceptPoseCapture(
         _ scanningSession: SelfieImageScanningSession,
         scanningState: FaceCaptureScanningState,
         expectedPose: FaceCapturePose,
@@ -1133,7 +1133,7 @@ extension SelfieCaptureViewController {
         scanningSession.updateScanningState(nextState)
     }
 
-    fileprivate func scheduleCaptureAcknowledgement(
+    func scheduleCaptureAcknowledgement(
         duration: TimeInterval? = nil,
         _ block: @escaping () -> Void
     ) {
@@ -1150,7 +1150,7 @@ extension SelfieCaptureViewController {
         }
     }
 
-    fileprivate func captureGuideHighlight(
+    func captureGuideHighlight(
         for pose: FaceCapturePose
     ) -> SelfieScanningView.ViewModel.CaptureGuideHighlight {
         switch pose {
@@ -1163,7 +1163,7 @@ extension SelfieCaptureViewController {
         }
     }
 
-    fileprivate func notifyCaptureAccepted() {
+    func notifyCaptureAccepted() {
         captureAcceptanceFeedbackGenerator.notifyCaptureAccepted()
     }
 }

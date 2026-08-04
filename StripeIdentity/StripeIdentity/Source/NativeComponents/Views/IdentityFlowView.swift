@@ -11,7 +11,7 @@
 import UIKit
 
 protocol IdentityFlowViewDelegate: AnyObject {
-    func scrollViewFullyLaiedOut(_ scrollView: UIScrollView)
+    func scrollViewFullyLaidOut(_ scrollView: UIScrollView)
 }
 
 // swift-format-ignore: DontRepeatTypeInStaticProperties
@@ -204,7 +204,7 @@ class IdentityFlowView: UIView {
         scrollView.contentInset.bottom = bottomInset
 
         if scrollView.contentSize.height > 0 {
-            flowViewDelegate?.scrollViewFullyLaiedOut(scrollView)
+            flowViewDelegate?.scrollViewFullyLaidOut(scrollView)
         }
 
         initialScrollViewBottomInsect = scrollView.contentInset.bottom

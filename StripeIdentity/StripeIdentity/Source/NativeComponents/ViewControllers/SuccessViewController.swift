@@ -84,7 +84,7 @@ extension SuccessViewController {
 }
 
 extension SuccessViewController: IdentityFlowViewDelegate {
-    func scrollViewFullyLaiedOut(_ scrollView: UIScrollView) {
+    func scrollViewFullyLaidOut(_ scrollView: UIScrollView) {
         let availableHeight = scrollView.bounds.height - scrollView.adjustedContentInset.bottom
         let centeredTopInset = max(0, (availableHeight - scrollView.contentSize.height) / 2)
 

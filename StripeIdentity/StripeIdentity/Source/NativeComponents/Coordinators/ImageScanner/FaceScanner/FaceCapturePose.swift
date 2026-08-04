@@ -7,7 +7,6 @@
 //
 
 import CoreVideo
-import Foundation
 
 enum FaceCapturePose: String, Equatable {
     case front

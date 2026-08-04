@@ -129,6 +129,7 @@ final class VerificationSheetControllerTest: XCTestCase {
             return XCTFail("Expected failure")
         }
     }
+
     func testVerificationPageDoesNotMatchNon3DFaceCaptureExperiment() throws {
         let mockResponse = try VerificationPageMock.response200.make()
 
@@ -1128,8 +1129,8 @@ private extension StripeAPI.VerificationPage {
     }
 }
 
-extension VerificationSheetControllerTest {
-    fileprivate func makeFaceCaptureData() -> FaceCaptureData {
+private extension VerificationSheetControllerTest {
+    func makeFaceCaptureData() -> FaceCaptureData {
         let image = CapturedImageMock.frontDriversLicense.image.cgImage!
         let faceRect = CGRect(x: 0.3, y: 0.2, width: 0.4, height: 0.4)
         let samples: [FaceScannerInputOutput] = [0.7, 0.8, 0.9].map { score in
@@ -1154,7 +1155,7 @@ extension VerificationSheetControllerTest {
         return FaceCaptureData(samples: samples)!
     }
 
-    fileprivate func makeFaceCaptureData(includeSideFrames: Bool) -> FaceCaptureData {
+    func makeFaceCaptureData(includeSideFrames: Bool) -> FaceCaptureData {
         guard includeSideFrames else {
             return makeFaceCaptureData()
         }
@@ -1228,7 +1229,7 @@ extension VerificationSheetControllerTest {
         )!
     }
 
-    fileprivate func makeUploadedSelfieFiles(includeSideFrames: Bool = false) throws -> SelfieUploader.FileData {
+    func makeUploadedSelfieFiles(includeSideFrames: Bool = false) throws -> SelfieUploader.FileData {
         return .init(
             bestHighResFile: try makeStripeFile(id: "best_high"),
             bestLowResFile: try makeStripeFile(id: "best_low"),
@@ -1240,7 +1241,8 @@ extension VerificationSheetControllerTest {
             rightFullFrameFile: includeSideFrames ? try makeStripeFile(id: "right_low") : nil
         )
     }
-    fileprivate func makeFaceScannerInputOutput(
+
+    func makeFaceScannerInputOutput(
         faceLandmarkResult: String?
     ) -> FaceScannerInputOutput {
         let image = CapturedImageMock.frontDriversLicense.image.cgImage!
@@ -1266,7 +1268,7 @@ extension VerificationSheetControllerTest {
         )
     }
 
-    fileprivate func makeVerboseFaceLandmarkResult(
+    func makeVerboseFaceLandmarkResult(
         categoryCount: Int,
         categoryNameLength: Int,
         displayNameLength: Int
@@ -1286,7 +1288,7 @@ extension VerificationSheetControllerTest {
         return data.base64EncodedString()
     }
 
-    fileprivate func makeStripeFile(id: String) throws -> StripeFile {
+    func makeStripeFile(id: String) throws -> StripeFile {
         let data = Data("""
         {
           "created": 0,
