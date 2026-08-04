@@ -112,7 +112,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     // MARK: - Views
     private let addPaymentMethodViewController: AddPaymentMethodViewController
-    let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
+    private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
     private lazy var headerLabel: UILabel = {
         return PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
     }()
@@ -423,7 +423,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         )
 
         // Error
-        errorLabel.text = error?.nonGenericDescription
+        errorLabel.text = error?.localizedDescription
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
@@ -552,12 +552,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return
         }
-        guard checkout.requiresBillingAddressSync(from: paymentOption.checkoutBillingDetails) else {
-            error = nil
-            updateUI()
-            flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
-            return
-        }
 
         view.endEditing(true)
         error = nil
@@ -676,8 +670,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
                 updateUI()
                 return
             }
-            if let checkout,
-               checkout.requiresBillingAddressSync(from: paymentMethod.billingDetails) {
+            if let checkout {
                 syncCheckoutBillingThenClose(
                     checkout: checkout,
                     billingDetails: paymentMethod.billingDetails,

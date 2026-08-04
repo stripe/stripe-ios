@@ -10,19 +10,11 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension Checkout {
-    /// Whether selecting a payment method with the given billing details requires a server update
-    /// to keep Checkout automatic tax in sync.
-    func requiresBillingAddressSync(from billingDetails: STPPaymentMethodBillingDetails?) -> Bool {
-        return session.collectsTaxFromBillingAddress
-            && billingDetails?.address?.country?.nonEmpty != nil
-    }
-
     /// Syncs the payment method's billing address to Checkout tax calculation when needed.
     func syncBillingAddress(from billingDetails: STPPaymentMethodBillingDetails?) async throws {
         // We need at least a country to build an Address for tax region calculation. Billing details
         // are optional on payment methods, so it's fine to just skip if we don't have enough info.
-        guard requiresBillingAddressSync(from: billingDetails),
-              let billingDetails,
+        guard let billingDetails,
               let country = billingDetails.address?.country?.nonEmpty else {
             return
         }
