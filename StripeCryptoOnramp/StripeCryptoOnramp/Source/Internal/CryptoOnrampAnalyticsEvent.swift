@@ -21,6 +21,7 @@ enum CryptoOnrampOperation: String {
     case verifyKycInfo = "verify_kyc_info"
     case verifyIdentity = "verify_identity"
     case registerWalletAddress = "register_wallet_address"
+    case deleteWalletAddress = "delete_wallet_address"
     case getWalletOwnershipChallenge = "get_wallet_ownership_challenge"
     case submitWalletOwnershipSignature = "submit_wallet_ownership_signature"
     case collectPaymentMethod = "collect_payment_method"
@@ -47,6 +48,7 @@ enum CryptoOnrampAnalyticsEvent {
     case kycInfoVerificationStarted
     case kycInfoVerificationCompleted
     case walletRegistered(network: String)
+    case walletDeleted
     case walletOwnershipChallengeRetrieved(network: String)
     case walletOwnershipVerified(network: String)
     case collectPaymentMethodStarted(paymentMethodType: String)
@@ -93,6 +95,8 @@ enum CryptoOnrampAnalyticsEvent {
             return "onramp.kyc_info_verification_completed"
         case .walletRegistered:
             return "onramp.wallet_registered"
+        case .walletDeleted:
+            return "onramp.wallet_deleted"
         case .walletOwnershipChallengeRetrieved:
             return "onramp.wallet_ownership_challenge_retrieved"
         case .walletOwnershipVerified:
@@ -129,6 +133,7 @@ enum CryptoOnrampAnalyticsEvent {
              .userAttestationStarted,
              .kycInfoVerificationStarted,
              .kycInfoVerificationCompleted,
+             .walletDeleted,
              .userLoggedOut:
             return [:]
         case let .identifiersSubmitted(completed):
