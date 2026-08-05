@@ -79,36 +79,11 @@ class STPCardFormViewTests: XCTestCase {
         }
     }
 
-    func testHidingPostalUPECodeOnInit() {
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK")) {
-            let cardForm = STPCardFormView(
-                billingAddressCollection: .automatic,
-                style: .standard,
-                postalCodeRequirement: .upe,
-                prefillDetails: nil
-            )
-            XCTAssertTrue(cardForm.postalCodeField.isHidden)
-        }
-    }
-
-    func testNotHidingPostalUPECodeOnInit() {
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US")) {
-            let cardForm = STPCardFormView(
-                billingAddressCollection: .automatic,
-                style: .standard,
-                postalCodeRequirement: .upe,
-                prefillDetails: nil
-            )
-            XCTAssertFalse(cardForm.postalCodeField.isHidden)
-        }
-    }
-
     func testPanLockedOnInit() {
         NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US")) {
             let cardForm = STPCardFormView(
                 billingAddressCollection: .automatic,
                 style: .standard,
-                postalCodeRequirement: .upe,
                 prefillDetails: nil,
                 inputMode: .panLocked
             )
@@ -127,7 +102,6 @@ class STPCardFormViewTests: XCTestCase {
             let cardForm = STPCardFormView(
                 billingAddressCollection: .automatic,
                 style: .standard,
-                postalCodeRequirement: .upe,
                 prefillDetails: prefillDeatils,
                 inputMode: .panLocked
             )
