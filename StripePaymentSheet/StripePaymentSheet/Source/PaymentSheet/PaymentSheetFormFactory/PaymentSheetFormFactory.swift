@@ -291,7 +291,15 @@ class PaymentSheetFormFactory {
                 return makeContactInformationAndBillingAddressForm(
                     additionalElements: makeSetupMandateElements(for: paymentMethod)
                 )
-            case .FPX, .AUBECSDebit, .przelewy24, .EPS, .netBanking, .weChatPay,
+            case .EPS:
+                return makeEPS()
+            case .przelewy24:
+                return makePrzelewy24()
+            case .AUBECSDebit:
+                return makeAUBECSDebit()
+            case .FPX:
+                return makeFPX()
+            case .netBanking, .weChatPay,
                  .link, .cardPresent, .unknown:
                 return makeFormSpecBasedForm(for: paymentMethod)
             @unknown default:
