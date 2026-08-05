@@ -243,11 +243,13 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - walletId: The ID of the crypto wallet to delete.
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: An empty response.
     /// Throws if `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
+    @discardableResult
     func deleteWalletAddress(
         walletId: String,
         linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
-    ) async throws {
+    ) async throws -> EmptyResponse {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
@@ -259,7 +261,7 @@ extension STPAPIClient {
             walletId: walletId,
             consumerSessionClientSecret: consumerSessionClientSecret
         )
-        let _: EmptyResponse = try await delete(resource: endpoint, object: requestObject)
+        return try await delete(resource: endpoint, object: requestObject)
     }
 
     /// Creates a short-lived server-issued challenge for a registered wallet.
