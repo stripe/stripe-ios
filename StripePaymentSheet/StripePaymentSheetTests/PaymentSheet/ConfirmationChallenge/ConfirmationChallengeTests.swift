@@ -20,8 +20,6 @@ class ConfirmationChallengeTests: XCTestCase {
     var mockAttestBackend: MockAttestBackend!
     var stripeAttest: StripeAttest!
     let apiClient = STPAPIClient(publishableKey: "pk_test_abc123")
-    var currentConfirmationChallenge: ConfirmationChallenge?
-
     override func setUp() {
         super.setUp()
         STPAnalyticsClient.sharedClient._testLogHistory = []
@@ -54,13 +52,9 @@ class ConfirmationChallengeTests: XCTestCase {
         STPAnalyticsClient.sharedClient._testLogHistory = []
         window?.isHidden = true
         window = nil
-        // Cancel the current challenge to stop background HCaptcha WebViews from running
-        // into the next test and causing resource contention / spurious analytics.
+        // Reset delays for next test
         let expectation = self.expectation(description: "Wait for teardown")
-        let challenge = currentConfirmationChallenge
-        currentConfirmationChallenge = nil
         Task { @MainActor in
-            await challenge?.cancel()
             await mockAttestService.setAttestationDelay(0)
             await mockAttestService.setAssertionDelay(0)
             expectation.fulfill()
@@ -103,7 +97,7 @@ class ConfirmationChallengeTests: XCTestCase {
     // MARK: - Confirmation challenge tests
     func testConfirmationChallenge() async throws {
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest)
-        currentConfirmationChallenge = confirmationChallenge
+
         await confirmationChallenge.setTimeout(timeout: 30)
         // wait to make sure that the tokens will be ready by the time we call fetchToken
         try await Task.sleep(nanoseconds: 6_000_000_000)
@@ -132,7 +126,7 @@ class ConfirmationChallengeTests: XCTestCase {
 
     func testConfirmationChallengeCaptchaTimeout() async {
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest, hcaptchaFactory: TestDelayHCaptchaFactory())
-        currentConfirmationChallenge = confirmationChallenge
+
         await confirmationChallenge.setTimeout(timeout: 3)
         let startTime = Date()
         let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
@@ -148,7 +142,7 @@ class ConfirmationChallengeTests: XCTestCase {
         // Inject a delay longer than timeout to force attestation to time out
         await mockAttestService.setAttestationDelay(15.0)
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest)
-        currentConfirmationChallenge = confirmationChallenge
+
         await confirmationChallenge.setTimeout(timeout: 10)
         let startTime = Date()
         let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
@@ -166,7 +160,7 @@ class ConfirmationChallengeTests: XCTestCase {
         // Inject a delay longer than timeout to force attestation to time out
         await mockAttestService.setAssertionDelay(15.0)
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest)
-        currentConfirmationChallenge = confirmationChallenge
+
         await confirmationChallenge.setTimeout(timeout: 10)
         let startTime = Date()
         let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
@@ -184,7 +178,7 @@ class ConfirmationChallengeTests: XCTestCase {
         // Inject delays to force both to time out
         await mockAttestService.setAssertionDelay(15.0)
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest, hcaptchaFactory: TestDelayHCaptchaFactory())
-        currentConfirmationChallenge = confirmationChallenge
+
         await confirmationChallenge.setTimeout(timeout: 1)
         let startTime = Date()
         let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
@@ -198,7 +192,7 @@ class ConfirmationChallengeTests: XCTestCase {
     // MARK: - makeRadarOptions Payment Method Type Tests
     func testMakeRadarOptionsForCard() async throws {
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest)
-        currentConfirmationChallenge = confirmationChallenge
+
         await confirmationChallenge.setTimeout(timeout: 30)
         let radarOptions = await confirmationChallenge.makeRadarOptions(for: .card)
         // Card payment methods should return radar options
@@ -210,7 +204,7 @@ class ConfirmationChallengeTests: XCTestCase {
 
     func testMakeRadarOptionsForLink() async throws {
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest)
-        currentConfirmationChallenge = confirmationChallenge
+
         await confirmationChallenge.setTimeout(timeout: 30)
         let radarOptions = await confirmationChallenge.makeRadarOptions(for: .link)
         // Link payment methods should return radar options
@@ -222,7 +216,7 @@ class ConfirmationChallengeTests: XCTestCase {
 
     func testMakeRadarOptionsForUSBankAccount() async throws {
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest)
-        currentConfirmationChallenge = confirmationChallenge
+
         await confirmationChallenge.setTimeout(timeout: 30)
         let radarOptions = await confirmationChallenge.makeRadarOptions(for: .USBankAccount)
         // US Bank Account payment methods should not return radar options
