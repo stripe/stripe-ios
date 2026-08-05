@@ -34,6 +34,7 @@ pipelines:
       framework-tests: {}
       framework-tests-ios-26: {}
       test-builds-xcode-26-1: {}
+      test-builds-xcode-27: {}
       install-tests: {}
       size-report: {}
       ui-tests-paymentsheet:
@@ -499,6 +500,20 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-26.1.x
+  test-builds-xcode-27:
+    steps:
+    - xcode-build-for-test@2:
+        inputs:
+        - scheme: AllStripeFrameworks
+        - destination: generic/platform=iOS Simulator
+    - deploy-to-bitrise-io@2: {}
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 17,OS=27.0
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-27.0.x-edge
   install-tests:
     steps:
     - fastlane@3:
