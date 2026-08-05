@@ -96,6 +96,10 @@
 
 "Default payment method" = "預設支付方式";
 
+"Discard Changes" = "放棄變更";
+
+"Discard changes?" = "要放棄變更嗎？";
+
 "EPS Bank" = "EPS 銀行";
 
 "Enter address manually" = "手動輸入地址";
@@ -111,6 +115,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "我理解 Stripe 將代表 %@ 收取直接扣款，且確認我是該開戶人，且是唯一一個需要授權該帳戶扣款的人。";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "繼續編輯";
 
 "Manage SEPA debit" = "管理 SEPA 借記";
 
@@ -265,5 +271,7 @@
 "View more" = "檢視更多";
 
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 應以兩個字母的國家代碼開頭。";
+
+"Your address changes won't be saved." = "您的地址變更將不會儲存。";
 
 "iDEAL Bank" = "iDEAL 銀行";
