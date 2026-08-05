@@ -240,9 +240,6 @@ with the transaction. */
 /* Label for an IBAN field */
 "IBAN" = "IBAN";
 
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL Bank";
-
 /* Label for displaying the last 4 digits of the user's social security number */
 "Last 4 digits of SSN" = "Last 4 digits of SSN";
 
