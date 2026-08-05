@@ -150,10 +150,13 @@ class ConfirmationChallengeTests: XCTestCase {
     }
 
     func testConfirmationChallengeAttestationTimeoutDuringAssertion() async throws {
-        // Inject a delay longer than timeout to force attestation to time out
-        await mockAttestService.setAssertionDelay(15.0)
+        // Inject an assertion delay well beyond the timeout so the assertion path
+        // deterministically times out. Use a 10s timeout (rather than 5s) so the real
+        // HCaptcha WebView — which needs ~3-4s in the test environment — has a comfortable
+        // margin to succeed and doesn't race the clock on a loaded CI runner. (RUN_MOBILESDK-5451)
+        await mockAttestService.setAssertionDelay(20.0)
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest)
-        await confirmationChallenge.setTimeout(timeout: 5)
+        await confirmationChallenge.setTimeout(timeout: 10)
         let startTime = Date()
         let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 15)
