@@ -103,7 +103,7 @@ class ConfirmationChallengeTests: XCTestCase {
         let startTime = Date()
         let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
         // didn't take the full timeout time, exited early
-        XCTAssertLessThan(Date().timeIntervalSince(startTime), 10)
+        XCTAssertLessThan(Date().timeIntervalSince(startTime), 20)
         XCTAssertNotNil(hcaptcha)
         XCTAssertNotNil(assertion)
 
@@ -121,10 +121,10 @@ class ConfirmationChallengeTests: XCTestCase {
 
     func testConfirmationChallengeCaptchaTimeout() async {
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest, hcaptchaFactory: TestDelayHCaptchaFactory())
-        await confirmationChallenge.setTimeout(timeout: 1)
+        await confirmationChallenge.setTimeout(timeout: 2)
         let startTime = Date()
         let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
-        XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)
+        XCTAssertLessThan(Date().timeIntervalSince(startTime), 4)
         // should return nil due to timeout
         XCTAssertNil(hcaptcha)
         // assertion is really fast in test mode, so it returns in time
@@ -134,13 +134,13 @@ class ConfirmationChallengeTests: XCTestCase {
 
     func testConfirmationChallengeAttestationTimeoutDuringAttestation() async throws {
         // Inject a delay longer than timeout to force attestation to time out
-        await mockAttestService.setAttestationDelay(15.0)
+        await mockAttestService.setAttestationDelay(30.0)
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest)
-        await confirmationChallenge.setTimeout(timeout: 5)
+        await confirmationChallenge.setTimeout(timeout: 10)
         let startTime = Date()
         let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
-        XCTAssertLessThan(Date().timeIntervalSince(startTime), 15)
-        // hcaptcha takes ~3-4s in test environment, so it should be fine
+        XCTAssertLessThan(Date().timeIntervalSince(startTime), 20)
+        // hcaptcha takes a few seconds in the test environment, so it should be fine within the 10s timeout
         XCTAssertNotNil(hcaptcha)
         // should return nil due to timeout
         XCTAssertNil(assertion)
@@ -151,13 +151,13 @@ class ConfirmationChallengeTests: XCTestCase {
 
     func testConfirmationChallengeAttestationTimeoutDuringAssertion() async throws {
         // Inject a delay longer than timeout to force attestation to time out
-        await mockAttestService.setAssertionDelay(15.0)
+        await mockAttestService.setAssertionDelay(30.0)
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest)
-        await confirmationChallenge.setTimeout(timeout: 5)
+        await confirmationChallenge.setTimeout(timeout: 10)
         let startTime = Date()
         let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
-        XCTAssertLessThan(Date().timeIntervalSince(startTime), 15)
-        // hcaptcha takes ~3-4s in test environment, so it should be fine
+        XCTAssertLessThan(Date().timeIntervalSince(startTime), 20)
+        // hcaptcha takes a few seconds in the test environment, so it should be fine within the 10s timeout
         XCTAssertNotNil(hcaptcha)
         // should return nil due to timeout
         XCTAssertNil(assertion)

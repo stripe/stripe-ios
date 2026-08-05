@@ -22,7 +22,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         [.biometricConsent], [.idDocumentFront, .idDocumentBack],
     ]
 
-let flowController = VerificationSheetFlowController(brandLogo: UIImage())
+    let flowController = VerificationSheetFlowController(brandLogo: UIImage())
     var mockMLModelLoader: IdentityMLModelLoaderMock!
     var mockSheetController: VerificationSheetControllerMock!
 
@@ -158,7 +158,7 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
         wait(for: [exp], timeout: 1)
     }
 
-    // Requires document photo without type - should return DocumentTypeSelectViewController
+    // Requires document photo without type - should return DocumentWarmupViewController
     func testMissingDocFrontNoType() throws {
         // Mock that document ML models successfully loaded
         mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))

@@ -10,7 +10,7 @@ import UIKit
 
 /// For internal SDK use only.
 @objc(STP_Internal_DownloadManager)
-// TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
+// TODO: Refactor this class to reduce complexity.
 @_spi(STP) public class DownloadManager: NSObject {
     public typealias UpdateImageHandler = (UIImage) -> Void
 
