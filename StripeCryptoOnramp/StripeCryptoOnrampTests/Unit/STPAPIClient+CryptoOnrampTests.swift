@@ -976,7 +976,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
         noSecretLinkAccountInfo.consumerSessionClientSecret = nil
         await XCTAssertThrowsErrorAsync(
-            try await apiClient.deleteWalletAddress(
+            _ = try await apiClient.deleteWalletAddress(
                 walletId: Constant.validWalletId,
                 linkAccountInfo: noSecretLinkAccountInfo
             )
@@ -985,7 +985,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
         await XCTAssertThrowsErrorAsync(
-            try await apiClient.deleteWalletAddress(
+            _ = try await apiClient.deleteWalletAddress(
                 walletId: Constant.validWalletId,
                 linkAccountInfo: unverifiedLinkAccountInfo
             )
