@@ -64,10 +64,6 @@ extension String.Localized {
         )
     }
 
-    static var ideal_bank: String {
-        STPLocalizedString("iDEAL Bank", "iDEAL bank section title for iDEAL form entry.")
-    }
-
     static var bank_account_sentence_case: String {
         STPLocalizedString("Bank account", "Title for collected bank account information")
     }
