@@ -85,5 +85,4 @@ actor ConfirmationChallenge {
         await attestationChallenge?.complete()
     }
 
-
 }
