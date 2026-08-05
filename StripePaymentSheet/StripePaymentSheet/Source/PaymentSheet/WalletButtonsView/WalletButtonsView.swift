@@ -160,7 +160,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 from: WindowAuthenticationContext().authenticationPresentingViewController(),
                 initiallySelectedPaymentDetailsID: nil,
                 canContinueWithoutLink: false,
-                completion: { confirmOptions, _ in
+                completion: { confirmOptions, _, _ in
                     guard let confirmOptions else {
                         return
                     }
