@@ -25,6 +25,9 @@ struct WalletSelectionRowView: View {
     /// Called when the wallet ownership verification action is selected.
     let onVerifyWalletOwnership: () -> Void
 
+    /// Called when the wallet deletion action is selected.
+    let onDelete: () -> Void
+
     // MARK: - View
 
     var body: some View {
@@ -37,31 +40,33 @@ struct WalletSelectionRowView: View {
             }
             .buttonStyle(.plain)
 
-            if shouldShowVerifyWalletButton {
-                Divider()
-                    .padding(.horizontal)
+            Divider()
+                .padding(.horizontal)
 
-                Button(action: onVerifyWalletOwnership) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "checkmark.shield")
-                            .font(.caption)
-
-                        Text("Verify Ownership")
+            HStack(spacing: 16) {
+                if shouldShowVerifyWalletButton {
+                    Button(action: onVerifyWalletOwnership) {
+                        Label("Verify Ownership", systemImage: "checkmark.shield")
                             .font(.caption.weight(.medium))
-
-                        Spacer()
+                            .foregroundStyle(.tint)
                     }
-                    .foregroundStyle(.tint)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                    .padding(.top, 12)
-                    .padding(.bottom)
-                    .contentShape(Rectangle())
+                    .buttonStyle(.plain)
+                }
+
+                Spacer()
+
+                Button(role: .destructive, action: onDelete) {
+                    Label("Delete", systemImage: "trash")
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(.red)
                 }
                 .buttonStyle(.plain)
-                .disabled(isLoading)
-                .opacity(isLoading ? 0.5 : 1)
             }
+            .padding(.horizontal)
+            .padding(.top, 12)
+            .padding(.bottom)
+            .disabled(isLoading)
+            .opacity(isLoading ? 0.5 : 1)
         }
         .background(
             RoundedRectangle(cornerRadius: 8)
@@ -142,7 +147,8 @@ struct WalletSelectionRowView: View {
             isSelected: true,
             isLoading: false,
             onSelect: {},
-            onVerifyWalletOwnership: {}
+            onVerifyWalletOwnership: {},
+            onDelete: {}
         )
 
         WalletSelectionRowView(
@@ -157,7 +163,8 @@ struct WalletSelectionRowView: View {
             isSelected: false,
             isLoading: false,
             onSelect: {},
-            onVerifyWalletOwnership: {}
+            onVerifyWalletOwnership: {},
+            onDelete: {}
         )
     }
     .padding()
