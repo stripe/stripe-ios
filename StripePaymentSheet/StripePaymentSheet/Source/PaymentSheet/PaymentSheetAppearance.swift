@@ -40,7 +40,7 @@ public extension PaymentSheet {
         /// The border used for inputs and tabs in PaymentSheet
         /// - Note: The thickness of divider lines between input fields also uses `borderWidth` for consistency, with a minimum thickness of 0.5.
         /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
-        public var borderWidth: CGFloat = 1.0
+        public var borderWidth: CGFloat = defaultBorderWidth
 
         /// The border width used for selected buttons and tabs in PaymentSheet
         /// - Note: If `nil`, defaults to  `borderWidth * 1.5`
@@ -61,10 +61,10 @@ public extension PaymentSheet {
 
         /// The insets used for all input fields (e.g. textfields, dropdowns) in PaymentSheet.
         @_spi(AppearanceAPIAdditionsPreview)
-        public var textFieldInsets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 4, leading: 11, bottom: 4, trailing: 11)
+        public var textFieldInsets: NSDirectionalEdgeInsets = defaultTextFieldInsets
 
         /// Describes the padding used for all forms
-        public var formInsets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 40, trailing: 20)
+        public var formInsets: NSDirectionalEdgeInsets = defaultFormInsets
 
         /// Controls the vertical spacing between distinct sections in the form (e.g., between payment fields and billing address).
         /// - Note: This spacing is applied between different conceptual sections of the form, not between individual input fields within a section.
@@ -291,7 +291,7 @@ public extension PaymentSheet {
 
             /// The border width of the primary button
             /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
-            public var borderWidth: CGFloat = 1.0
+            public var borderWidth: CGFloat = Appearance.defaultBorderWidth
 
             /// The font used for the text of the primary button
             /// - Note: If `nil`, `appearance.font.base` will be used as the primary button font

@@ -31,9 +31,6 @@ extension PaymentSheet {
         case instantDebits
         case linkCardBrand
 
-        static var analyticLogForIcon: Set<PaymentMethodType> = []
-        static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
-
         var displayName: String {
             switch self {
             case .stripe(let paymentMethodType):
@@ -68,14 +65,6 @@ extension PaymentSheet {
             case .instantDebits, .linkCardBrand:
                 return "link_instant_debits"
             }
-        }
-
-        static func shouldLogAnalytic(paymentMethod: PaymentSheet.PaymentMethodType) -> Bool {
-            analyticLogForIconSemaphore.wait()
-            defer { analyticLogForIconSemaphore.signal() }
-            guard !analyticLogForIcon.contains(paymentMethod) else { return false }
-            analyticLogForIcon.insert(paymentMethod)
-            return true
         }
 
         /// Returns the best immediately available image without starting a network request.
@@ -129,36 +118,10 @@ extension PaymentSheet {
                 )
             case .stripe(let paymentMethodType):
                 let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle)
-                if
-                    FormSpecProvider.shared.isLoaded,
-                    let spec = FormSpecProvider.shared.formSpec(for: identifier),
-                    let selectorIcon = spec.selectorIcon,
-                    var imageUrl = URL(string: selectorIcon.lightThemePng),
-                    paymentMethodType != .crypto // special case, don't use remote URL for crypto so we can use the local image based on iconStyle
-                {
-                    if forDarkBackground,
-                       let darkImageString = selectorIcon.darkThemePng,
-                       let darkImageUrl = URL(string: darkImageString)
-                    {
-                        imageUrl = darkImageUrl
-                    }
-                    if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
-                        STPAnalyticsClient.sharedClient.logImageSelectorIconDownloadedIfNeeded(paymentMethod: self)
-                    }
-                    return ImageSource(
-                        fallback: localImage ?? Self.imagePlaceholder,
-                        remoteURL: imageUrl
-                    )
-                } else if let localImage {
-                    if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
-                        STPAnalyticsClient.sharedClient.logImageSelectorIconFromBundleIfNeeded(paymentMethod: self)
-                    }
+                if let localImage {
                     return ImageSource(fallback: localImage, remoteURL: nil)
                 } else {
                     assertionFailure()
-                    if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
-                        STPAnalyticsClient.sharedClient.logImageSelectorIconNotFoundIfNeeded(paymentMethod: self)
-                    }
                     return ImageSource(fallback: Self.imagePlaceholder, remoteURL: nil)
                 }
             case .instantDebits, .linkCardBrand:

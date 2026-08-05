@@ -5,8 +5,6 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import OHHTTPStubs
-import OHHTTPStubsSwift
 import StripeCoreTestUtils
 import XCTest
 
@@ -27,39 +25,8 @@ class PaymentSheetPaymentMethodTypeTest: APIStubbedTestCase {
     }
 
     // MARK: - Images
-    func testMakeImage_with_client_asset_and_form_spec() async throws {
-        let e = expectation(description: "Load specs")
-        FormSpecProvider.shared.load { _ in
-            e.fulfill()
-        }
-        await fulfillment(of: [e], timeout: 10)
-        // A Payment methods with a client-side asset and a form spec image URL...
-        let clientImage = STPPaymentMethodType.cashApp.makeImage()!
-        let paymentMethodType = PaymentSheet.PaymentMethodType.stripe(.cashApp)
-        let imageURL = try XCTUnwrap(
-            FormSpecProvider.shared.formSpec(for: paymentMethodType.identifier)?.selectorIcon?.lightThemePng
-        )
-        let remoteImage = UIGraphicsImageRenderer(size: CGSize(width: 2, height: 3)).image { context in
-            UIColor.red.setFill()
-            context.fill(CGRect(x: 0, y: 0, width: 2, height: 3))
-        }
-        let downloadManager = makeDownloadManager(returning: remoteImage, at: try XCTUnwrap(URL(string: imageURL)))
-        let image = paymentMethodType.makeImage(
-            forDarkBackground: false,
-            using: downloadManager
-        )
-        // ...should default to the client-side asset
-        XCTAssertEqual(image, clientImage)
-        // ...and asynchronously return the form spec image.
-        let downloadedImage = await paymentMethodType.loadImage(
-            forDarkBackground: false,
-            using: downloadManager
-        )
-        XCTAssertEqual(downloadedImage.pngData(), remoteImage.pngData())
-    }
-
-    func testMakeImage_with_client_asset_but_no_form_spec() async {
-        // A Payment methods with a client-side asset but without a form spec image URL...
+    func testMakeImage_with_client_asset() async {
+        // A payment method with a client-side asset...
         let paymentMethodType = PaymentSheet.PaymentMethodType.stripe(.USBankAccount)
         let usBankAccountImage = paymentMethodType.makeImage(forDarkBackground: false)
         // ...should default to the client-side asset
@@ -82,11 +49,10 @@ class PaymentSheetPaymentMethodTypeTest: APIStubbedTestCase {
         XCTAssertNotNil(image.cgImage)
     }
 
-    private func makeDownloadManager(returning image: UIImage, at url: URL) -> DownloadManager {
-        stub(condition: { $0.url == url }) { _ in
-            HTTPStubsResponse(data: image.pngData()!, statusCode: 200, headers: nil)
+    func testAllSupportedPaymentMethodsHaveClientAssets() {
+        for paymentMethod in PaymentSheet.supportedPaymentMethods {
+            XCTAssertNotNil(paymentMethod.makeImage(), "Missing client asset for \(paymentMethod)")
         }
-        return DownloadManager(urlSessionConfiguration: Self.stubbedURLSessionConfig())
     }
 
     // MARK: - Cards

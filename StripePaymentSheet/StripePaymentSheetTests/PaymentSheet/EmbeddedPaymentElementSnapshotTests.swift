@@ -40,7 +40,6 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
 
     override func setUp() async throws {
         await AddressSpecProvider.shared.loadAddressSpecs()
-        await FormSpecProvider.shared.load()
     }
 
     func testUpdateFromCardToCardAndUSBankAccount() async throws {
