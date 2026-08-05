@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 PATCH
 
 ## X.Y.Z - changes pending release
+### PaymentSheet
+* [Fixed] LinkController (private preview) now returns an error when no funding sources are available for a Link session, rather than silently falling back to card.
 
 ## 26.5.0 2026-08-03
 ### CryptoOnramp (Alpha)
