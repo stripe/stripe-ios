@@ -165,6 +165,14 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .link, darkMode: true)
     }
 
+    func test_UpdatePaymentMethodViewControllerLinkGeneric_lightMode() {
+        _test_UpdatePaymentMethodViewController(paymentMethod: STPPaymentMethod._testLinkGeneric(), darkMode: false)
+    }
+
+    func test_UpdatePaymentMethodViewControllerLinkGeneric_darkMode() {
+        _test_UpdatePaymentMethodViewController(paymentMethod: STPPaymentMethod._testLinkGeneric(), darkMode: true)
+    }
+
     func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType,
                                                  darkMode: Bool,
                                                  appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible(),
@@ -198,6 +206,30 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                 fatalError("Updating payment method has not been implemented for type \(paymentMethodType)")
             }
         }()
+        _test_UpdatePaymentMethodViewController(
+            paymentMethod: paymentMethod,
+            darkMode: darkMode,
+            appearance: appearance,
+            addressCollectionMode: addressCollectionMode,
+            canRemove: canRemove,
+            canUpdate: canUpdate,
+            isCBCEligible: isCBCEligible,
+            canSetAsDefaultPM: canSetAsDefaultPM,
+            isDefault: isDefault,
+            cardBrandFilter: cardBrandFilter
+        )
+    }
+
+    func _test_UpdatePaymentMethodViewController(paymentMethod: STPPaymentMethod,
+                                                 darkMode: Bool,
+                                                 appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible(),
+                                                 addressCollectionMode: PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode = .never,
+                                                 canRemove: Bool = true,
+                                                 canUpdate: Bool = false,
+                                                 isCBCEligible: Bool = false,
+                                                 canSetAsDefaultPM: Bool = false,
+                                                 isDefault: Bool = false,
+                                                 cardBrandFilter: CardBrandFilter = .default) {
         let billingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration(name: .never,
                                                                                                        phone: .never,
                                                                                                        email: .never,
