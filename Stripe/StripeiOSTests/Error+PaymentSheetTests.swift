@@ -55,20 +55,58 @@ class Error_PaymentSheetTests: XCTestCase {
         XCTAssertEqual("Your card was declined.", error.nonGenericDescription)
     }
 
-    func testError_InvalidRequestError_ShowsGenericMessage() {
-        // Simulates an invalid_request_error from the Stripe API (e.g. disabled Connect account).
-        // These are developer-facing and should never be shown to end users.
+    func testError_InvalidRequestError_LiveMode_ShowsGenericMessageWithRequestId() {
+        // Non-card errors in live mode should show a generic message with the request ID.
+        let httpResponse = HTTPURLResponse(
+            url: URL(string: "https://api.stripe.com")!,
+            statusCode: 400,
+            httpVersion: nil,
+            headerFields: ["request-id": "req_livetest123"]
+        )
+        let intent: [String: Any] = ["object": "payment_intent", "livemode": true]
         let error = NSError.stp_error(
             errorType: "invalid_request_error",
             stripeErrorCode: nil,
             stripeErrorMessage: "This Connect account cannot currently make live charges.",
             errorParam: nil,
             declineCode: nil,
-            intent: nil,
+            intent: intent,
+            httpResponse: httpResponse
+        )
+
+        XCTAssertEqual("Something went wrong. Request ID: req_livetest123", error.nonGenericDescription)
+    }
+
+    func testError_InvalidRequestError_LiveMode_NoRequestId_ShowsGenericFallback() {
+        // Non-card errors in live mode without a request ID fall back to the generic error string.
+        let intent: [String: Any] = ["object": "payment_intent", "livemode": true]
+        let error = NSError.stp_error(
+            errorType: "invalid_request_error",
+            stripeErrorCode: nil,
+            stripeErrorMessage: "This Connect account cannot currently make live charges.",
+            errorParam: nil,
+            declineCode: nil,
+            intent: intent,
             httpResponse: nil
         )
 
         XCTAssertEqual(NSError.stp_unexpectedErrorMessage(), error.nonGenericDescription)
+    }
+
+    func testError_InvalidRequestError_TestMode_ShowsRawMessage() {
+        // Non-card errors in test mode preserve the raw server message so developers can diagnose issues.
+        let intent: [String: Any] = ["object": "payment_intent", "livemode": false]
+        let error = NSError.stp_error(
+            errorType: "invalid_request_error",
+            stripeErrorCode: nil,
+            stripeErrorMessage: "This Connect account cannot currently make live charges.",
+            errorParam: nil,
+            declineCode: nil,
+            intent: intent,
+            httpResponse: nil
+        )
+
+        XCTAssertEqual("This Connect account cannot currently make live charges.", error.nonGenericDescription)
     }
 
     func testError_NoErrorType_ShowsMessage() {
@@ -87,6 +125,22 @@ class Error_PaymentSheetTests: XCTestCase {
     }
 
     // MARK: - PaymentHandler wrapped errors (from STPPaymentHandler confirmation flow)
+
+    func testError_CardError_LiveMode_StillShowsCardMessage() {
+        // card_error messages should always be shown regardless of live/test mode.
+        let intent: [String: Any] = ["object": "payment_intent", "livemode": true]
+        let error = NSError.stp_error(
+            errorType: "card_error",
+            stripeErrorCode: "card_declined",
+            stripeErrorMessage: "Your card was declined.",
+            errorParam: nil,
+            declineCode: nil,
+            intent: intent,
+            httpResponse: nil
+        )
+
+        XCTAssertEqual("Your card was declined.", error.nonGenericDescription)
+    }
 
     func testError_PaymentHandlerWrapped_CardError_ShowsMessage() {
         // Simulates STPPaymentHandler wrapping a card_error API response as NSUnderlyingError
@@ -109,16 +163,17 @@ class Error_PaymentSheetTests: XCTestCase {
         XCTAssertEqual("Your card has insufficient funds.", error.nonGenericDescription)
     }
 
-    func testError_PaymentHandlerWrapped_NonCardError_ShowsGenericMessage() {
+    func testError_PaymentHandlerWrapped_NonCardError_LiveMode_ShowsGenericMessage() {
         // Simulates STPPaymentHandler wrapping an invalid_request_error as NSUnderlyingError
-        // (e.g. disabled Connect account error during confirmation).
+        // (e.g. disabled Connect account error during confirmation) in live mode.
+        let intent: [String: Any] = ["object": "payment_intent", "livemode": true]
         let underlyingError = NSError.stp_error(
             errorType: "invalid_request_error",
             stripeErrorCode: nil,
             stripeErrorMessage: "This Connect account cannot currently make live charges.",
             errorParam: nil,
             declineCode: nil,
-            intent: nil,
+            intent: intent,
             httpResponse: nil
         )
         let error = NSError(
@@ -128,6 +183,28 @@ class Error_PaymentSheetTests: XCTestCase {
         )
 
         XCTAssertEqual(NSError.stp_unexpectedErrorMessage(), error.nonGenericDescription)
+    }
+
+    func testError_PaymentHandlerWrapped_NonCardError_TestMode_ShowsRawMessage() {
+        // Simulates STPPaymentHandler wrapping an invalid_request_error as NSUnderlyingError
+        // in test mode; the raw server message is preserved for developer debugging.
+        let intent: [String: Any] = ["object": "payment_intent", "livemode": false]
+        let underlyingError = NSError.stp_error(
+            errorType: "invalid_request_error",
+            stripeErrorCode: nil,
+            stripeErrorMessage: "This Connect account cannot currently make live charges.",
+            errorParam: nil,
+            declineCode: nil,
+            intent: intent,
+            httpResponse: nil
+        )
+        let error = NSError(
+            domain: "STPPaymentHandlerErrorDomain",
+            code: 2,
+            userInfo: [NSUnderlyingErrorKey: underlyingError]
+        )
+
+        XCTAssertEqual("This Connect account cannot currently make live charges.", error.nonGenericDescription)
     }
 
     // MARK: - Non-generic localizedDescription
