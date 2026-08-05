@@ -241,7 +241,8 @@ class PlaygroundViewController: UIViewController {
             }
 
             if self.creationMethod == .new,
-                self.invocationType == .native
+                self.invocationType == .native,
+                responseJson["ephemeral_key_secret"] == nil
             {
                 guard let verificationSessionId = responseJson["id"] else {
                     self.updateButtonState(isLoading: false)
