@@ -42,6 +42,7 @@ public enum PaymentSheetError: Error, LocalizedError {
     // MARK: Deferred intent errors
     case intentConfigurationValidationFailed(message: String)
     case deferredIntentValidationFailed(message: String)
+    case paymentMethodConfigurationAndSellerDetailsMutuallyExclusive
 
     // MARK: - Link errors
     case linkSignUpNotRequired
@@ -132,6 +133,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "New payment method should not have been created yet"
             case .intentConfigurationValidationFailed(message: let message):
                 return message
+            case .paymentMethodConfigurationAndSellerDetailsMutuallyExclusive:
+                return "`paymentMethodConfigurationId` and `sellerDetails` are mutually exclusive and cannot both be set on IntentConfiguration."
             case .embeddedPaymentElementAlreadyConfirmedIntent:
                 return "This instance of EmbeddedPaymentElement has already confirmed an intent successfully. Create a new instance of EmbeddedPaymentElement to confirm a new intent."
             case .integrationError(nonPIIDebugDescription: let nonPIIDebugDescription):
