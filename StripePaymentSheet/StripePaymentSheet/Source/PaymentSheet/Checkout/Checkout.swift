@@ -359,8 +359,11 @@ extension Checkout {
            let address = billingDetails.address {
             try await updateBillingTaxRegionIfNecessary(address: address)
         }
+        
+        // Set the passed default shipping address IF it is non-nil and the country is in the allowed shipping countries
         if let shippingDetails = defaults.shippingDetails,
-           let address = shippingDetails.address {
+           let address = shippingDetails.address,
+           session.allowedShippingCountries?.contains(address.country) != false {
             try await updateShippingAddress(
                 name: shippingDetails.name,
                 address: address
