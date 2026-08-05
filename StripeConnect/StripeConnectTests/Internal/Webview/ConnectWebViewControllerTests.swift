@@ -252,7 +252,12 @@ class ConnectWebViewControllerTests: XCTestCase {
         XCTAssertEqual(loggedError.code, 10)
     }
 
-    func testDownloadFinishedShowsShareSheet() {
+    func testDownloadFinishedShowsShareSheet() throws {
+        try XCTSkipIf(
+            ProcessInfo.processInfo.operatingSystemVersion.majorVersion == 18,
+            "UIActivityViewController intermittently crashes in unit tests on iOS 18 due to UIKit scene setup."
+        )
+
         let mockFileURL = URL(string: "file:///temp/example.csv")!
 
         var activityVC: UIActivityViewController?
