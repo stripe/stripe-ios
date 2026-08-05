@@ -239,6 +239,29 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
+    /// Deletes the given crypto wallet from the current Link account.
+    /// - Parameters:
+    ///   - walletId: The ID of the crypto wallet to delete.
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// Throws if `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
+    func deleteWalletAddress(
+        walletId: String,
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/wallet"
+        let requestObject = DeleteWalletRequest(
+            walletId: walletId,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+        let _: EmptyResponse = try await delete(resource: endpoint, object: requestObject)
+    }
+
     /// Creates a short-lived server-issued challenge for a registered wallet.
     /// - Parameters:
     ///   - walletAddress: The registered wallet address to verify.
@@ -361,6 +384,20 @@ private extension STPAPIClient {
             post(
                 resource: resource,
                 object: object,
+                apiVersionOverride: CryptoOnrampAPI.stripeAPIVersion
+            ) { (result: Result<T, Error>) in
+                continuation.resume(with: result)
+            }
+        }
+    }
+
+    /// Helper method to wrap the closure-based delete method for Swift concurrency.
+    func delete<T: Decodable>(resource: String, object: Encodable) async throws -> T {
+        let parameters = try object.encodeJSONDictionary()
+        return try await withCheckedThrowingContinuation { continuation in
+            delete(
+                resource: resource,
+                parameters: parameters,
                 apiVersionOverride: CryptoOnrampAPI.stripeAPIVersion
             ) { (result: Result<T, Error>) in
                 continuation.resume(with: result)
