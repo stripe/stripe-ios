@@ -76,14 +76,12 @@ extension STPElementsSession {
         linkSettings: LinkSettings? = nil,
         experimentsData: ExperimentsData? = nil,
         flags: [String: Bool] = [:],
-        paymentMethodSpecs: [[AnyHashable: Any]]? = nil,
         cardBrandChoice: STPCardBrandChoice? = nil,
         isApplePayEnabled: Bool = true,
         externalPaymentMethods: [ExternalPaymentMethod] = [],
         customPaymentMethods: [CustomPaymentMethod] = [],
         passiveCaptchaData: PassiveCaptchaData? = nil,
-        customer: ElementsCustomer? = nil,
-        isBackupInstance: Bool = false
+        customer: ElementsCustomer? = nil
     ) -> STPElementsSession {
         return .init(
             allResponseFields: [:],
@@ -98,7 +96,6 @@ extension STPElementsSession {
             linkSettings: linkSettings,
             experimentsData: experimentsData,
             flags: flags,
-            paymentMethodSpecs: paymentMethodSpecs,
             cardBrandChoice: cardBrandChoice,
             isApplePayEnabled: isApplePayEnabled,
             externalPaymentMethods: externalPaymentMethods,
