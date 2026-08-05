@@ -125,11 +125,12 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         )
 
         // /v1/crypto/internal/wallet
-        static let collectWalletAddressAPIPath = "/v1/crypto/internal/wallet"
+        static let walletAPIPath = "/v1/crypto/internal/wallet"
         static let validWalletAddress = "11111111111111111111111111111111"
+        static let validWalletId = "ccw_12345"
         static let validNetwork = CryptoNetwork.solana
         static let registerWalletMockResponseObject = RegisterWalletResponse(
-            id: "ccw_12345"
+            id: validWalletId
         )
 
         // /v1/crypto/internal/wallet_ownership_challenge
@@ -830,7 +831,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let mockResponseData = try jsonEncoder.encode(Constant.registerWalletMockResponseObject)
 
         stub { request in
-            XCTAssertEqual(request.url?.path, Constant.collectWalletAddressAPIPath)
+            XCTAssertEqual(request.url?.path, Constant.walletAPIPath)
             XCTAssertEqual(request.httpMethod, "POST")
             XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Version"), Constant.cryptoOnrampAPIVersion)
 
@@ -867,7 +868,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
     func testCollectWalletAddressFailure() async {
         stub { request in
-            XCTAssertEqual(request.url?.path, Constant.collectWalletAddressAPIPath)
+            XCTAssertEqual(request.url?.path, Constant.walletAPIPath)
             return true
         } response: { _ in
             return HTTPStubsResponse(error: NSError(domain: Constant.errorDomain, code: 400))
@@ -906,6 +907,86 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             _ = try await apiClient.collectWalletAddress(
                 walletAddress: Constant.validWalletAddress,
                 network: Constant.validNetwork,
+                linkAccountInfo: unverifiedLinkAccountInfo
+            )
+        )
+    }
+
+    func testDeleteWalletAddressSuccess() async throws {
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.walletAPIPath)
+            XCTAssertEqual(request.httpMethod, "DELETE")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer \(Constant.validPublishableKey)")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "application/x-www-form-urlencoded")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Version"), Constant.cryptoOnrampAPIVersion)
+
+            guard let httpBody = request.ohhttpStubs_httpBody else {
+                XCTFail("Expected an httpBody data but found none.")
+                return false
+            }
+
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
+
+            XCTAssertEqual(parameters.count, 2)
+            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+            XCTAssertEqual(parameters["wallet_token"], Constant.validWalletId)
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(jsonObject: [:], statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        apiClient.publishableKey = Constant.validPublishableKey
+
+        do {
+            try await apiClient.deleteWalletAddress(
+                walletId: Constant.validWalletId,
+                linkAccountInfo: Constant.validLinkAccountInfo
+            )
+        } catch {
+            XCTFail("Expected a success response but got an error: \(error).")
+        }
+    }
+
+    func testDeleteWalletAddressFailure() async {
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.walletAPIPath)
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(error: NSError(domain: Constant.errorDomain, code: 400))
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            try await apiClient.deleteWalletAddress(
+                walletId: Constant.validWalletId,
+                linkAccountInfo: Constant.validLinkAccountInfo
+            )
+            XCTFail("Expected failure but got success.")
+        } catch {
+            XCTAssertEqual((error as NSError).domain, Constant.errorDomain)
+        }
+    }
+
+    func testDeleteWalletAddressThrowsWithInvalidArguments() async {
+        let apiClient = stubbedAPIClient()
+
+        var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
+        noSecretLinkAccountInfo.consumerSessionClientSecret = nil
+        await XCTAssertThrowsErrorAsync(
+            try await apiClient.deleteWalletAddress(
+                walletId: Constant.validWalletId,
+                linkAccountInfo: noSecretLinkAccountInfo
+            )
+        )
+
+        var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
+        unverifiedLinkAccountInfo.sessionState = .requiresVerification
+        await XCTAssertThrowsErrorAsync(
+            try await apiClient.deleteWalletAddress(
+                walletId: Constant.validWalletId,
                 linkAccountInfo: unverifiedLinkAccountInfo
             )
         )
