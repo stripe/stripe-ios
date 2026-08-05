@@ -48,7 +48,7 @@ class PaymentMethodTypeImageView: UIImageView {
 
     func updateImage() {
         imageTask?.cancel()
-        let forDarkBackground = contrastMatchingColor.roundToBlackOrWhite == .white
+        let forDarkBackground = resolvedContrastMatchingColor == .white
         let paymentMethodType = self.paymentMethodType
         let currency = self.currency
         let iconStyle = self.iconStyle
@@ -73,10 +73,18 @@ class PaymentMethodTypeImageView: UIImageView {
     func setImage(_ image: UIImage) {
         if self.paymentMethodType.iconRequiresTinting  {
             self.image = image.withRenderingMode(.alwaysTemplate)
-            tintColor = contrastMatchingColor.roundToBlackOrWhite
+            tintColor = resolvedContrastMatchingColor
         } else {
             self.image = image
             tintColor = nil
         }
+    }
+
+    private var resolvedContrastMatchingColor: UIColor {
+        var resolvedColor: UIColor = .black
+        traitCollection.performAsCurrent {
+            resolvedColor = contrastMatchingColor.roundToBlackOrWhite
+        }
+        return resolvedColor
     }
 }

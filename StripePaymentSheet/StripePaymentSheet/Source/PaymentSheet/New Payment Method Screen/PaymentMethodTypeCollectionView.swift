@@ -329,7 +329,7 @@ extension PaymentMethodTypeCollectionView {
 
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             let paymentMethodType = self.paymentMethodType
-            let forDarkBackground = appearance.colors.componentBackground.contrastingColor == .white
+            let forDarkBackground = componentBackgroundContrastingColor == .white
             let currency = self.currency
             let iconStyle = appearance.iconStyle
             updateImage(
@@ -372,12 +372,20 @@ extension PaymentMethodTypeCollectionView {
             // tint icon for a few PMs to be a contrasting color to the component background
             if paymentMethodType.iconRequiresTinting  {
                 image = image.withRenderingMode(.alwaysTemplate)
-                paymentMethodLogo.tintColor = appearance.colors.componentBackground.contrastingColor
+                paymentMethodLogo.tintColor = componentBackgroundContrastingColor
             }
 
             paymentMethodLogo.image = image
             paymentMethodLogoWidthConstraint.constant = paymentMethodLogoSize.height / image.size.height * image.size.width
             setNeedsLayout()
+        }
+
+        private var componentBackgroundContrastingColor: UIColor {
+            var contrastingColor: UIColor = .black
+            traitCollection.performAsCurrent {
+                contrastingColor = appearance.colors.componentBackground.contrastingColor
+            }
+            return contrastingColor
         }
     }
 }
