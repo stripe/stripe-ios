@@ -69,6 +69,19 @@ class PaymentSheetPaymentMethodTypeTest: APIStubbedTestCase {
         XCTAssertEqual(loadedImage, usBankAccountImage)
     }
 
+    func testMakeImage_withoutCachedOrLocalImage_returnsNonzeroPlaceholder() {
+        let paymentMethodType = PaymentSheet.PaymentMethodType.external(._testBufoPayValue())
+        let downloadManager = DownloadManager(urlSessionConfiguration: Self.stubbedURLSessionConfig())
+
+        let image = paymentMethodType.makeImage(
+            forDarkBackground: false,
+            using: downloadManager
+        )
+
+        XCTAssertEqual(image.size, CGSize(width: 1, height: 1))
+        XCTAssertNotNil(image.cgImage)
+    }
+
     private func makeDownloadManager(returning image: UIImage, at url: URL) -> DownloadManager {
         stub(condition: { $0.url == url }) { _ in
             HTTPStubsResponse(data: image.pngData()!, statusCode: 200, headers: nil)

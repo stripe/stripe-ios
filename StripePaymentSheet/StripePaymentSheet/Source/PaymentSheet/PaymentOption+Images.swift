@@ -151,15 +151,21 @@ extension STPPaymentMethod {
         guard let cardArtURL = cardArtCDNURL() else {
             return nil
         }
-        return downloadManager.cachedImage(for: cardArtURL)?.roundedWithBorder(radius: 3)
+        return downloadManager.promoteCachedImage(for: cardArtURL)?.roundedWithBorder(radius: 3)
     }
 
-    /// Populates the card art cache with a best-effort network request.
-    func preloadCardArtImage(downloadManager: DownloadManager = .shared) async {
+    /// Synchronously promotes cached card art into memory, or starts a best-effort download.
+    @discardableResult
+    func preloadCardArtImage(downloadManager: DownloadManager = .shared) -> Task<Void, Never>? {
         guard let cardArtURL = cardArtCDNURL() else {
-            return
+            return nil
         }
-        _ = try? await downloadManager.image(for: cardArtURL)
+        guard downloadManager.promoteCachedImage(for: cardArtURL) == nil else {
+            return nil
+        }
+        return Task {
+            _ = try? await downloadManager.image(for: cardArtURL)
+        }
     }
 }
 

@@ -53,6 +53,16 @@ final class DownloadManagerTest: APIStubbedTestCase {
         XCTAssertNil(downloadManager.cachedImage(for: validURL))
     }
 
+    func testPromoteCachedImageReadsURLCacheAndCachesDecodedImage() throws {
+        seedURLCache(url: validURL, data: validImageData())
+
+        let promotedImage = try XCTUnwrap(downloadManager.promoteCachedImage(for: validURL))
+        XCTAssertEqual(promotedImage.size, validImageSize)
+
+        urlCache.removeAllCachedResponses()
+        XCTAssertEqual(downloadManager.cachedImage(for: validURL)?.size, validImageSize)
+    }
+
     func testConcurrentImageRequestsSucceed() async throws {
         stubImage(at: validURL, data: validImageData(), responseTime: 0.05)
 

@@ -383,7 +383,7 @@ extension CustomerSheet {
                     return nil
                 }
                 Task {
-                    await matchingPaymentMethod.preloadCardArtImage()
+                    await matchingPaymentMethod.preloadCardArtImage()?.value
                 }
                 return CustomerSheet.PaymentOptionSelection.paymentMethod(matchingPaymentMethod)
             default:

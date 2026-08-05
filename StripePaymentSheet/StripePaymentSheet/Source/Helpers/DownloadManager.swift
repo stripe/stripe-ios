@@ -24,8 +24,7 @@ import UIKit
     private let analyticsClient: STPAnalyticsClient
     private let imageCache = NSCache<NSURL, UIImage>()
 
-    /// Creates an image downloader backed by a dedicated on-disk response cache.
-    public convenience init() {
+    private convenience init() {
         self.init(urlSessionConfiguration: Self.makeDefaultConfiguration())
     }
 
@@ -41,6 +40,21 @@ import UIKit
     /// Returns an image from the in-memory cache without performing any I/O.
     public func cachedImage(for url: URL) -> UIImage? {
         imageCache.object(forKey: url as NSURL)
+    }
+
+    /// Synchronously promotes an image from the URL response cache into the decoded image cache.
+    func promoteCachedImage(for url: URL) -> UIImage? {
+        if let image = cachedImage(for: url) {
+            return image
+        }
+
+        let request = URLRequest(url: url)
+        guard let data = session.configuration.urlCache?.cachedResponse(for: request)?.data,
+              let image = try? Self.decodeImage(from: data) else {
+            return nil
+        }
+        cache(image, for: url as NSURL)
+        return image
     }
 
     /// Returns the image at `url`, using cached data whenever possible.

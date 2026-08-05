@@ -14,6 +14,15 @@ import UIKit
 
 extension PaymentSheet {
     enum PaymentMethodType: Equatable, Hashable {
+        private struct ImageSource {
+            let fallback: UIImage
+            let remoteURL: URL?
+        }
+
+        private static let imagePlaceholder = UIGraphicsImageRenderer(
+            size: CGSize(width: 1, height: 1)
+        ).image { _ in }
+
         case stripe(STPPaymentMethodType)
         case external(ExternalPaymentOption)
 
@@ -110,11 +119,14 @@ extension PaymentSheet {
             forDarkBackground: Bool,
             currency: String?,
             iconStyle: PaymentSheet.Appearance.IconStyle
-        ) -> (fallback: UIImage, remoteURL: URL?) {
+        ) -> ImageSource {
             switch self {
             case .external(let paymentMethod):
                 let url = forDarkBackground ? paymentMethod.darkImageUrl : paymentMethod.lightImageUrl
-                return (UIImage(), url ?? paymentMethod.lightImageUrl)
+                return ImageSource(
+                    fallback: Self.imagePlaceholder,
+                    remoteURL: url ?? paymentMethod.lightImageUrl
+                )
             case .stripe(let paymentMethodType):
                 let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle)
                 if
@@ -133,22 +145,28 @@ extension PaymentSheet {
                     if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
                         STPAnalyticsClient.sharedClient.logImageSelectorIconDownloadedIfNeeded(paymentMethod: self)
                     }
-                    return (localImage ?? UIImage(), imageUrl)
+                    return ImageSource(
+                        fallback: localImage ?? Self.imagePlaceholder,
+                        remoteURL: imageUrl
+                    )
                 } else if let localImage {
                     if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
                         STPAnalyticsClient.sharedClient.logImageSelectorIconFromBundleIfNeeded(paymentMethod: self)
                     }
-                    return (localImage, nil)
+                    return ImageSource(fallback: localImage, remoteURL: nil)
                 } else {
                     assertionFailure()
                     if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
                         STPAnalyticsClient.sharedClient.logImageSelectorIconNotFoundIfNeeded(paymentMethod: self)
                     }
-                    return (UIImage(), nil)
+                    return ImageSource(fallback: Self.imagePlaceholder, remoteURL: nil)
                 }
             case .instantDebits, .linkCardBrand:
-                let image = STPPaymentMethodType.USBankAccount.makeImage(forDarkBackground: forDarkBackground, iconStyle: iconStyle) ?? UIImage()
-                return (image, nil)
+                let image = STPPaymentMethodType.USBankAccount.makeImage(
+                    forDarkBackground: forDarkBackground,
+                    iconStyle: iconStyle
+                ) ?? Self.imagePlaceholder
+                return ImageSource(fallback: image, remoteURL: nil)
             }
         }
 
