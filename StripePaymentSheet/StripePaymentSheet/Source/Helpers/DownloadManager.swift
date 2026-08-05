@@ -1,180 +1,119 @@
 //
 //  DownloadManager.swift
-//  StripeCore
+//  StripePaymentSheet
 //
 
-import CoreGraphics
 import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
-/// For internal SDK use only.
-@objc(STP_Internal_DownloadManager)
-// TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
-@_spi(STP) public class DownloadManager: NSObject {
-    public typealias UpdateImageHandler = (UIImage) -> Void
-
+/// Downloads images and caches both their responses and decoded representations.
+@_spi(STP) public final class DownloadManager {
+    // Keep this internal: ErrorAnalytic records its reflected type name.
     enum Error: Swift.Error {
         case failedToMakeImageFromData
     }
 
-    public static let sharedManager = DownloadManager()
+    public static let shared = DownloadManager()
+
+    private static let decodedImageCacheCostLimit = 5_000_000
+    private static let responseCacheMemoryCapacity = 5_000_000
+    private static let responseCacheDiskCapacity = 30_000_000
 
     private let session: URLSession
     private let analyticsClient: STPAnalyticsClient
-    private let imageCacheLock = NSLock()
-    private var imageCache: [URL: UIImage] = [:]
+    private let imageCache = NSCache<NSURL, UIImage>()
 
-    public init(
-        urlSessionConfiguration: URLSessionConfiguration = .default,
-        analyticsClient: STPAnalyticsClient = .sharedClient,
-        isTesting: Bool = false
+    /// Creates an image downloader backed by a dedicated on-disk response cache.
+    public convenience init() {
+        self.init(urlSessionConfiguration: Self.makeDefaultConfiguration())
+    }
+
+    init(
+        urlSessionConfiguration: URLSessionConfiguration,
+        analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
-        let configuration = urlSessionConfiguration
-        if !isTesting, let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
-            .first
-        {
-            let diskCacheURL = cachesURL.appendingPathComponent("STPCache")
-            // 5MB memory cache, 30MB Disk cache
-            let cache = URLCache(
-                memoryCapacity: 5_000_000,
-                diskCapacity: 30_000_000,
-                directory: diskCacheURL
-            )
-            configuration.urlCache = cache
-            configuration.requestCachePolicy = .useProtocolCachePolicy
-        }
-
-        session = URLSession(configuration: configuration)
+        session = URLSession(configuration: urlSessionConfiguration)
         self.analyticsClient = analyticsClient
-        super.init()
-    }
-}
-
-// MARK: - Download management
-extension DownloadManager {
-
-    /// Downloads an image from a provided URL, using either a synchronous method or an asynchronous method.
-    /// If no `updateHandler` is provided, this function will block the current thread until the image is downloaded. If an `updateHandler` is provided, the function does not wait for the download to finish and returns the image if it was cached or a placeholder image instead. When the image finishes downloading, the `updateHandler` will be called with the downloaded image.
-    /// - Parameters:
-    ///   - url: The URL from which to download the image.
-    ///   - placeholder: An optional parameter indicating a placeholder image to display while the download is in progress. If not provided, a default placeholder image will be used instead.
-    ///   - updateHandler: An optional closure that's called when the image finishes downloading. The downloaded image is passed as a parameter to this closure.
-    ///
-    /// - Returns: A `UIImage` instance. If `updateHandler` is `nil`, this would be the downloaded image, otherwise, this would be the placeholder image.
-    public func downloadImage(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
-        let placeholder = placeholder ?? imagePlaceHolder()
-        imageCacheLock.lock()
-        var cachedImage = imageCache[url]
-        imageCacheLock.unlock()
-
-        // If there is no cached image, attempt to promote from diskCache
-        if cachedImage == nil,
-           let diskImage = promoteFromDiskCache(url: url) {
-            cachedImage = diskImage
-        }
-
-        if let updateHandler {
-            Task {
-                if let image = try? await downloadImageSkippingCacheRead(url: url) {
-                    updateHandler(image)
-                }
-            }
-        }
-        // Immediately return the cached image or a placeholder. When the download operation completes `updateHandler` will be called with the downloaded image.
-        return cachedImage ?? placeholder
+        imageCache.totalCostLimit = Self.decodedImageCacheCostLimit
     }
 
-    /// Downloads an image from a provided URL asynchronously.
-    /// - Parameter url: The URL from which to download the image.
-    /// - Returns: The downloaded image.
-    /// Throws if an error occurs while downloading the image.
-    public func downloadImage(url: URL) async throws -> UIImage {
-        if let cachedImage = imageCacheLock.withLock( { imageCache[url] }) {
-            return cachedImage
-        }
-
-        return try await downloadImageSkippingCacheRead(url: url)
+    /// Returns an image from the in-memory cache without performing any I/O.
+    public func cachedImage(for url: URL) -> UIImage? {
+        imageCache.object(forKey: url as NSURL)
     }
 
-    // Common download functions
-
-    private func promoteFromDiskCache(url: URL) -> UIImage? {
-        let request = URLRequest(url: url)
-        guard let cachedResponse = session.configuration.urlCache?.cachedResponse(for: request),
-              let image = try? UIImage.from(imageData: cachedResponse.data) else {
-            return nil
+    /// Returns the image at `url`, using cached data whenever possible.
+    public func image(for url: URL) async throws -> UIImage {
+        if let image = cachedImage(for: url) {
+            return image
         }
-        imageCacheLock.withLock {
-            imageCache[url] = image
-        }
-        return image
-    }
 
-    private func downloadImageSkippingCacheRead(url: URL) async throws -> UIImage {
         var errorParams: [String: Any] = ["url": url.absoluteString]
         do {
             let (data, response) = try await session.data(from: url)
-            // log extra info about response for analytics in case of error
-            if let httpResponse = response as? HTTPURLResponse {
-                errorParams["http_status"] = httpResponse.statusCode
-                errorParams["content_type"] = httpResponse.allHeaderFields["Content-Type"]
-                errorParams["content_length"] = httpResponse.allHeaderFields["Content-Length"]
+            if let response = response as? HTTPURLResponse {
+                errorParams["http_status"] = response.statusCode
+                errorParams["content_type"] = response.value(forHTTPHeaderField: "Content-Type")
+                errorParams["content_length"] = response.value(forHTTPHeaderField: "Content-Length")
             }
-            let image = try UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
-            Task {
-                // Cache the image in memory
-                self.imageCacheLock.withLock {
-                    self.imageCache[url] = image
-                }
-            }
+
+            let image = try Self.decodeImage(from: data)
+            cache(image, for: url as NSURL)
             return image
         } catch {
-            let errorAnalytic = ErrorAnalytic(event: .stripePaymentSheetDownloadManagerError,
-                                              error: error,
-                                              additionalNonPIIParams: errorParams)
-            analyticsClient.log(analytic: errorAnalytic)
+            if (error as? URLError)?.code != .cancelled {
+                analyticsClient.log(
+                    analytic: ErrorAnalytic(
+                        event: .stripePaymentSheetDownloadManagerError,
+                        error: error,
+                        additionalNonPIIParams: errorParams
+                    )
+                )
+            }
             throw error
         }
     }
 
-    func resetCache() {
+    func clearCache() {
         session.configuration.urlCache?.removeAllCachedResponses()
-        imageCacheLock.lock()
-        imageCache = [:]
-        imageCacheLock.unlock()
-    }
-}
-
-// MARK: Image Placeholder
-extension DownloadManager {
-    public func imagePlaceHolder() -> UIImage {
-        return imageWithSize(size: CGSize(width: 1.0, height: 1.0))
+        imageCache.removeAllObjects()
     }
 
-    private func imageWithSize(size: CGSize) -> UIImage {
-        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
-        UIColor.clear.set()
-        UIRectFill(rect)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image!
+    private func cache(_ image: UIImage, for key: NSURL) {
+        imageCache.setObject(image, forKey: key, cost: image.decodedByteCount)
     }
-}
 
-// MARK: UIImage helpers
-private extension UIImage {
-    static func from(imageData: Data) throws -> UIImage {
+    private static func decodeImage(from data: Data) throws -> UIImage {
         #if os(visionOS)
         let scale = 1.0
         #else
         let scale = UIScreen.main.scale
         #endif
-        guard let image = UIImage(data: imageData, scale: scale) else {
-            throw DownloadManager.Error.failedToMakeImageFromData
+        guard let image = UIImage(data: data, scale: scale) else {
+            throw Error.failedToMakeImageFromData
         }
-
         return image
+    }
+
+    private static func makeDefaultConfiguration() -> URLSessionConfiguration {
+        let configuration = URLSessionConfiguration.default
+        let directory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+            .first?
+            .appendingPathComponent("STPCache")
+        configuration.urlCache = URLCache(
+            memoryCapacity: responseCacheMemoryCapacity,
+            diskCapacity: responseCacheDiskCapacity,
+            directory: directory
+        )
+        configuration.requestCachePolicy = .useProtocolCachePolicy
+        return configuration
+    }
+}
+
+private extension UIImage {
+    var decodedByteCount: Int {
+        guard let cgImage else { return 0 }
+        return cgImage.bytesPerRow * cgImage.height
     }
 }

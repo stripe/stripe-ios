@@ -42,8 +42,7 @@ extension PaymentOption {
             return PaymentSheet.PaymentMethodType.external(paymentMethod).makeImage(
                 forDarkBackground: isDarkMode,
                 currency: currency,
-                iconStyle: iconStyle,
-                updateHandler: nil
+                iconStyle: iconStyle
             )
         }
     }
@@ -148,38 +147,24 @@ extension STPPaymentMethod {
         }
     }
 
-    func cachedCardArtImage(downloadManager: DownloadManager = DownloadManager.sharedManager) -> UIImage? {
+    func cachedCardArtImage(downloadManager: DownloadManager = .shared) -> UIImage? {
         guard let cardArtURL = cardArtCDNURL() else {
             return nil
         }
-        let placeholder = downloadManager.imagePlaceHolder()
-        let image = downloadManager.downloadImage(
-            url: cardArtURL,
-            placeholder: placeholder,
-            updateHandler: nil
-        )
-        return image == placeholder ? nil : image.roundedWithBorder(radius: 3)
+        return downloadManager.cachedImage(for: cardArtURL)?.roundedWithBorder(radius: 3)
     }
 
-    // Populates the in-memory card art cache. Promotes from disk cache if available,
-    // then fires a best-effort network request to fetch the latest image.
-    func preloadCardArtImage(downloadManager: DownloadManager = DownloadManager.sharedManager) {
+    /// Populates the card art cache with a best-effort network request.
+    func preloadCardArtImage(downloadManager: DownloadManager = .shared) async {
         guard let cardArtURL = cardArtCDNURL() else {
             return
         }
-        // Passing a non-nil updateHandler triggers a best-effort network
-        // download that refreshes the in-memory cache.
-        let updateHandler: ((UIImage) -> Void)? = { _ in }
-        _ = downloadManager.downloadImage(
-            url: cardArtURL,
-            placeholder: nil,
-            updateHandler: updateHandler
-        )
+        _ = try? await downloadManager.image(for: cardArtURL)
     }
 }
 
- extension STPPaymentMethodParams {
-     func makeIcon(forDarkBackground: Bool, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+extension STPPaymentMethodParams {
+    func makeIcon(forDarkBackground: Bool, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         switch type {
         case .card:
             let brand = STPCardValidator.brand(for: card)
@@ -187,7 +172,11 @@ extension STPPaymentMethod {
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
             // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
-            return PaymentSheet.PaymentMethodType.stripe(type).makeImage(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle, updateHandler: updateHandler)
+            return PaymentSheet.PaymentMethodType.stripe(type).makeImage(
+                forDarkBackground: forDarkBackground,
+                currency: currency,
+                iconStyle: iconStyle
+            )
         }
     }
 }

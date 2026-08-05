@@ -69,25 +69,54 @@ extension PaymentSheet {
             return true
         }
 
-        /// makeImage will immediately return an UImage that is either the image or a placeholder.
-        /// If the image is immediately available, the updateHandler will not be called.
-        /// If the image is not immediately available, the updateHandler will be called if we are able
-        /// to download the image.
-        func makeImage(forDarkBackground: Bool, currency: String? = nil, iconStyle: PaymentSheet.Appearance.IconStyle = .filled, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
-            // TODO(RUN_MOBILESDK-3167): Make this return a dynamic UIImage
-            // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
+        /// Returns the best immediately available image without starting a network request.
+        func makeImage(
+            forDarkBackground: Bool,
+            currency: String? = nil,
+            iconStyle: PaymentSheet.Appearance.IconStyle = .filled,
+            using downloadManager: DownloadManager = .shared
+        ) -> UIImage {
+            let source = imageSource(
+                forDarkBackground: forDarkBackground,
+                currency: currency,
+                iconStyle: iconStyle
+            )
+            guard let remoteURL = source.remoteURL else {
+                return source.fallback
+            }
+            return downloadManager.cachedImage(for: remoteURL) ?? source.fallback
+        }
+
+        /// Returns the preferred image, downloading and caching it when necessary.
+        /// Falls back to the best locally available image if the download fails.
+        func loadImage(
+            forDarkBackground: Bool,
+            currency: String? = nil,
+            iconStyle: PaymentSheet.Appearance.IconStyle = .filled,
+            using downloadManager: DownloadManager = .shared
+        ) async -> UIImage {
+            let source = imageSource(
+                forDarkBackground: forDarkBackground,
+                currency: currency,
+                iconStyle: iconStyle
+            )
+            guard let remoteURL = source.remoteURL else {
+                return source.fallback
+            }
+            return (try? await downloadManager.image(for: remoteURL)) ?? source.fallback
+        }
+
+        private func imageSource(
+            forDarkBackground: Bool,
+            currency: String?,
+            iconStyle: PaymentSheet.Appearance.IconStyle
+        ) -> (fallback: UIImage, remoteURL: URL?) {
             switch self {
             case .external(let paymentMethod):
                 let url = forDarkBackground ? paymentMethod.darkImageUrl : paymentMethod.lightImageUrl
-                return DownloadManager.sharedManager.downloadImage(
-                    url: url ?? paymentMethod.lightImageUrl,
-                    placeholder: nil,
-                    updateHandler: updateHandler
-                )
+                return (UIImage(), url ?? paymentMethod.lightImageUrl)
             case .stripe(let paymentMethodType):
-                // Get the client-side asset first
                 let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle)
-                // Next, try to download the image from the spec if possible
                 if
                     FormSpecProvider.shared.isLoaded,
                     let spec = FormSpecProvider.shared.formSpec(for: identifier),
@@ -104,24 +133,22 @@ extension PaymentSheet {
                     if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
                         STPAnalyticsClient.sharedClient.logImageSelectorIconDownloadedIfNeeded(paymentMethod: self)
                     }
-                    // If there's a form spec, download the spec's image, using the local image as a placeholder until it loads
-                    return DownloadManager.sharedManager.downloadImage(url: imageUrl, placeholder: localImage, updateHandler: updateHandler)
+                    return (localImage ?? UIImage(), imageUrl)
                 } else if let localImage {
                     if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
                         STPAnalyticsClient.sharedClient.logImageSelectorIconFromBundleIfNeeded(paymentMethod: self)
                     }
-                    // If there's no form spec, return the local image if it exists
-                    return localImage
+                    return (localImage, nil)
                 } else {
-                    // If the local image doesn't exist and there's no form spec, fire an analytic and return an empty image
                     assertionFailure()
                     if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
                         STPAnalyticsClient.sharedClient.logImageSelectorIconNotFoundIfNeeded(paymentMethod: self)
                     }
-                    return DownloadManager.sharedManager.imagePlaceHolder()
+                    return (UIImage(), nil)
                 }
             case .instantDebits, .linkCardBrand:
-                return STPPaymentMethodType.USBankAccount.makeImage(forDarkBackground: forDarkBackground, iconStyle: iconStyle) ?? UIImage()
+                let image = STPPaymentMethodType.USBankAccount.makeImage(forDarkBackground: forDarkBackground, iconStyle: iconStyle) ?? UIImage()
+                return (image, nil)
             }
         }
 

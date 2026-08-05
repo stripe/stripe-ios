@@ -22,7 +22,7 @@ final class STPPaymentMethodCardArtImageTest: APIStubbedTestCase {
         urlSessionConfig = APIStubbedTestCase.stubbedURLSessionConfig()
         urlSessionConfig.urlCache = URLCache(memoryCapacity: 5_000_000, diskCapacity: 0)
         downloadManager = DownloadManager(urlSessionConfiguration: urlSessionConfig)
-        downloadManager.resetCache()
+        downloadManager.clearCache()
     }
 
     // MARK: - STPPaymentMethod.cardArtImage
@@ -37,13 +37,15 @@ final class STPPaymentMethodCardArtImageTest: APIStubbedTestCase {
         XCTAssertNil(pm.cachedCardArtImage(downloadManager: downloadManager))
     }
 
-    func testCardArtImage_returnsImageWhenCached() {
+    func testCardArtImage_returnsImageWhenPreloaded() async {
         let pm = STPPaymentMethod._testCardWithCardArt()
         let cardArtURL = pm.cardArtCDNURL()!
 
-        // Pre-seed the URL cache so downloadImage returns the real image
         let imageData = generateUIImage(size: CGSize(width: 100, height: 26)).pngData()!
-        seedURLCache(url: cardArtURL, data: imageData)
+        stub(condition: { $0.url == cardArtURL }) { _ in
+            HTTPStubsResponse(data: imageData, statusCode: 200, headers: nil)
+        }
+        await pm.preloadCardArtImage(downloadManager: downloadManager)
 
         let result = pm.cachedCardArtImage(downloadManager: downloadManager)
         XCTAssertNotNil(result)
@@ -53,13 +55,6 @@ final class STPPaymentMethodCardArtImageTest: APIStubbedTestCase {
     }
 
     // MARK: - Helpers
-
-    private func seedURLCache(url: URL, data: Data) {
-        let request = URLRequest(url: url)
-        let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
-        let cachedResponse = CachedURLResponse(response: response, data: data)
-        urlSessionConfig.urlCache?.storeCachedResponse(cachedResponse, for: request)
-    }
 
     private func generateUIImage(size: CGSize) -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)

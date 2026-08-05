@@ -5,6 +5,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
+import StripeCoreTestUtils
 import XCTest
 
 @testable@_spi(STP) import StripeCore
@@ -13,7 +16,7 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
-class PaymentSheetPaymentMethodTypeTest: XCTestCase {
+class PaymentSheetPaymentMethodTypeTest: APIStubbedTestCase {
 
     func makeConfiguration(
         hasReturnURL: Bool = false
@@ -24,39 +27,53 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     // MARK: - Images
-    func testMakeImage_with_client_asset_and_form_spec() {
+    func testMakeImage_with_client_asset_and_form_spec() async throws {
         let e = expectation(description: "Load specs")
         FormSpecProvider.shared.load { _ in
             e.fulfill()
         }
-        DownloadManager.sharedManager.resetCache()
-        waitForExpectations(timeout: 10)
+        await fulfillment(of: [e], timeout: 10)
         // A Payment methods with a client-side asset and a form spec image URL...
-        let loadExpectation = expectation(description: "Load form spec image")
         let clientImage = STPPaymentMethodType.cashApp.makeImage()!
-        let image = PaymentSheet.PaymentMethodType.stripe(.cashApp).makeImage(forDarkBackground: false) { image in
-            // ...should update to the form spec image
-            XCTAssertNotEqual(image, clientImage)
-            XCTAssertTrue(image.size.width > 1) // Sanity check
-            loadExpectation.fulfill()
+        let paymentMethodType = PaymentSheet.PaymentMethodType.stripe(.cashApp)
+        let imageURL = try XCTUnwrap(
+            FormSpecProvider.shared.formSpec(for: paymentMethodType.identifier)?.selectorIcon?.lightThemePng
+        )
+        let remoteImage = UIGraphicsImageRenderer(size: CGSize(width: 2, height: 3)).image { context in
+            UIColor.red.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 2, height: 3))
         }
+        let downloadManager = makeDownloadManager(returning: remoteImage, at: try XCTUnwrap(URL(string: imageURL)))
+        let image = paymentMethodType.makeImage(
+            forDarkBackground: false,
+            using: downloadManager
+        )
         // ...should default to the client-side asset
         XCTAssertEqual(image, clientImage)
-        waitForExpectations(timeout: 10)
+        // ...and asynchronously return the form spec image.
+        let downloadedImage = await paymentMethodType.loadImage(
+            forDarkBackground: false,
+            using: downloadManager
+        )
+        XCTAssertEqual(downloadedImage.pngData(), remoteImage.pngData())
     }
 
-    func testMakeImage_with_client_asset_but_no_form_spec() {
+    func testMakeImage_with_client_asset_but_no_form_spec() async {
         // A Payment methods with a client-side asset but without a form spec image URL...
-        let e = expectation(description: "Load form spec image")
-        e.isInverted = true
-        let usBankAccountImage = PaymentSheet.PaymentMethodType.stripe(.USBankAccount).makeImage(forDarkBackground: false) { _ in
-            // This shouldn't be called
-            XCTFail()
-            e.fulfill()
-        }
+        let paymentMethodType = PaymentSheet.PaymentMethodType.stripe(.USBankAccount)
+        let usBankAccountImage = paymentMethodType.makeImage(forDarkBackground: false)
         // ...should default to the client-side asset
         XCTAssertEqual(usBankAccountImage, STPPaymentMethodType.USBankAccount.makeImage())
-        waitForExpectations(timeout: 0.1)
+        // ...and have no different image to load asynchronously.
+        let loadedImage = await paymentMethodType.loadImage(forDarkBackground: false)
+        XCTAssertEqual(loadedImage, usBankAccountImage)
+    }
+
+    private func makeDownloadManager(returning image: UIImage, at url: URL) -> DownloadManager {
+        stub(condition: { $0.url == url }) { _ in
+            HTTPStubsResponse(data: image.pngData()!, statusCode: 200, headers: nil)
+        }
+        return DownloadManager(urlSessionConfiguration: Self.stubbedURLSessionConfig())
     }
 
     // MARK: - Cards

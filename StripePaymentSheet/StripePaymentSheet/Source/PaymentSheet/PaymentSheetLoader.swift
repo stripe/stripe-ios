@@ -188,7 +188,9 @@ final class PaymentSheetLoader {
             // TODO: Revisit overall pre-loading approach to make this work for other payment methods
             if let defaultPaymentMethod = paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
                case .saved(let stpPaymentMethod) = defaultPaymentMethod {
-                stpPaymentMethod.preloadCardArtImage()
+                Task {
+                    await stpPaymentMethod.preloadCardArtImage()
+                }
             }
             loadTimings.logEnd("makeViewModels")
 
