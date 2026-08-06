@@ -382,7 +382,9 @@ extension CustomerSheet {
                 guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
                     return nil
                 }
-                matchingPaymentMethod.preloadCardArtImage()
+                Task {
+                    await matchingPaymentMethod.preloadCardArtImage()?.value
+                }
                 return CustomerSheet.PaymentOptionSelection.paymentMethod(matchingPaymentMethod)
             default:
                 return nil

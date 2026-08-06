@@ -14,6 +14,15 @@ import UIKit
 
 extension PaymentSheet {
     enum PaymentMethodType: Equatable, Hashable {
+        private struct ImageSource {
+            let fallback: UIImage
+            let remoteURL: URL?
+        }
+
+        private static let imagePlaceholder = UIGraphicsImageRenderer(
+            size: CGSize(width: 1, height: 1)
+        ).image { _ in }
+
         case stripe(STPPaymentMethodType)
         case external(ExternalPaymentOption)
 
@@ -58,31 +67,69 @@ extension PaymentSheet {
             }
         }
 
-        /// makeImage will immediately return an UImage that is either the image or a placeholder.
-        /// If the image is immediately available, the updateHandler will not be called.
-        /// If the image is not immediately available, the updateHandler will be called if we are able
-        /// to download the image.
-        func makeImage(forDarkBackground: Bool, currency: String? = nil, iconStyle: PaymentSheet.Appearance.IconStyle = .filled, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
-            // TODO(RUN_MOBILESDK-3167): Make this return a dynamic UIImage
-            // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
+        /// Returns the best immediately available image without starting a network request.
+        func makeImage(
+            forDarkBackground: Bool,
+            currency: String? = nil,
+            iconStyle: PaymentSheet.Appearance.IconStyle = .filled,
+            using downloadManager: DownloadManager = .shared
+        ) -> UIImage {
+            let source = imageSource(
+                forDarkBackground: forDarkBackground,
+                currency: currency,
+                iconStyle: iconStyle
+            )
+            guard let remoteURL = source.remoteURL else {
+                return source.fallback
+            }
+            return downloadManager.cachedImage(for: remoteURL) ?? source.fallback
+        }
+
+        /// Returns the preferred image, downloading and caching it when necessary.
+        /// Falls back to the best locally available image if the download fails.
+        func loadImage(
+            forDarkBackground: Bool,
+            currency: String? = nil,
+            iconStyle: PaymentSheet.Appearance.IconStyle = .filled,
+            using downloadManager: DownloadManager = .shared
+        ) async -> UIImage {
+            let source = imageSource(
+                forDarkBackground: forDarkBackground,
+                currency: currency,
+                iconStyle: iconStyle
+            )
+            guard let remoteURL = source.remoteURL else {
+                return source.fallback
+            }
+            return (try? await downloadManager.image(for: remoteURL)) ?? source.fallback
+        }
+
+        private func imageSource(
+            forDarkBackground: Bool,
+            currency: String?,
+            iconStyle: PaymentSheet.Appearance.IconStyle
+        ) -> ImageSource {
             switch self {
             case .external(let paymentMethod):
                 let url = forDarkBackground ? paymentMethod.darkImageUrl : paymentMethod.lightImageUrl
-                return DownloadManager.sharedManager.downloadImage(
-                    url: url ?? paymentMethod.lightImageUrl,
-                    placeholder: nil,
-                    updateHandler: updateHandler
+                return ImageSource(
+                    fallback: Self.imagePlaceholder,
+                    remoteURL: url ?? paymentMethod.lightImageUrl
                 )
             case .stripe(let paymentMethodType):
                 let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle)
                 if let localImage {
-                    return localImage
+                    return ImageSource(fallback: localImage, remoteURL: nil)
                 } else {
                     assertionFailure()
-                    return DownloadManager.sharedManager.imagePlaceHolder()
+                    return ImageSource(fallback: Self.imagePlaceholder, remoteURL: nil)
                 }
             case .instantDebits, .linkCardBrand:
-                return STPPaymentMethodType.USBankAccount.makeImage(forDarkBackground: forDarkBackground, iconStyle: iconStyle) ?? UIImage()
+                let image = STPPaymentMethodType.USBankAccount.makeImage(
+                    forDarkBackground: forDarkBackground,
+                    iconStyle: iconStyle
+                ) ?? Self.imagePlaceholder
+                return ImageSource(fallback: image, remoteURL: nil)
             }
         }
 
