@@ -478,6 +478,18 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         let verifyOwnershipButton = app.buttons["Verify Ownership"].firstMatch
         XCTAssertTrue(verifyOwnershipButton.waitForExistence(timeout: .animationTimeout), "Verify Ownership button should appear")
         verifyOwnershipButton.tap()
+
+        let verifyWalletNavigationBar = app.navigationBars["Verify Wallet"].firstMatch
+        XCTAssertTrue(verifyWalletNavigationBar.waitForExistence(timeout: .networkTimeout), "Wallet verification sheet should appear")
+
+        let signatureField = app.textFields["Paste signature"].firstMatch
+        XCTAssertTrue(signatureField.waitForExistence(timeout: .animationTimeout), "Wallet signature field should appear")
+        XCTAssertEqual(signatureField.value as? String, "abcd", "The test-mode signature should be pre-populated")
+
+        let submitSignatureButton = app.buttons["Submit"].firstMatch
+        XCTAssertTrue(submitSignatureButton.isEnabled, "Wallet signature Submit button should be enabled")
+        submitSignatureButton.tap()
+
         XCTAssertTrue(app.staticTexts["Verified"].firstMatch.waitForExistence(timeout: .networkTimeout), "The wallet should become verified")
     }
 }
