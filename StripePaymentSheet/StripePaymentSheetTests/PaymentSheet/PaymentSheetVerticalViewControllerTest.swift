@@ -15,11 +15,9 @@ import XCTest
 final class PaymentSheetVerticalViewControllerTest: XCTestCase {
 
     override func setUpWithError() throws {
-        let expectation = expectation(description: "Load specs")
+        let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load { _ in
-                expectation.fulfill()
-            }
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
     }
