@@ -154,6 +154,6 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         XCTAssertEqual(last["autocomplete_session_token"] as? String, "tok_abc")
         XCTAssertNotNil(last["error_type"])
         XCTAssertNotNil(last["error_code"])
-        XCTAssertEqual(last["duration"] as? Double, 0.5)
+        XCTAssertEqual(last["session_elapsed"] as? Double, 0.5)
     }
 }
