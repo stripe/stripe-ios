@@ -72,8 +72,7 @@ actor PassiveCaptchaChallenge {
         self.passiveCaptchaData = passiveCaptchaData
         self.hcaptchaFactory = hcaptchaFactory
         // Use [weak self] so this task does not prevent the actor from being deallocated.
-        // When the actor is deallocated, deinit cancels tokenTask, which causes this task
-        // to stop (fetchToken throws CancellationError, absorbed by try?).
+        // When the actor is deallocated, deinit cancels tokenTask.
         Task { [weak self] in
             _ = try? await self?.fetchToken()
         }
