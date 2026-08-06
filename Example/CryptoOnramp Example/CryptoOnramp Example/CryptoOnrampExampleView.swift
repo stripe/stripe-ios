@@ -21,6 +21,8 @@ struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var livemode: Bool = false
     @State private var isL0KYCModeEnabled: Bool = false
+    @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.requiredScopes)
+    @State private var isShowingScopesSheet = false
     @State private var alert: Alert?
     @State private var seamlessSignInEmail: String? = APIClient.shared.seamlessSignInEmail
 
@@ -56,14 +58,16 @@ struct CryptoOnrampExampleView: View {
                         coordinator: coordinator,
                         flowCoordinator: flowCoordinator,
                         email: seamlessSignInEmail,
+                        isL0KYCModeEnabled: isL0KYCModeEnabled,
                         alert: $alert
                     )
                 } else {
                     LogInSignUpView(
                         coordinator: coordinator,
                         flowCoordinator: flowCoordinator,
-                        livemode: $livemode,
-                        isL0KYCModeEnabled: $isL0KYCModeEnabled,
+                        livemode: livemode,
+                        isL0KYCModeEnabled: isL0KYCModeEnabled,
+                        selectedScopes: selectedScopes,
                         alert: $alert
                     )
                 }
@@ -71,6 +75,45 @@ struct CryptoOnrampExampleView: View {
             .animation(.default, value: seamlessSignInEmail)
             .navigationTitle("CryptoOnramp Example")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                if flowCoordinator.path.isEmpty {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Menu {
+                            Toggle(isOn: $livemode) {
+                                Label("Livemode", systemImage: "server.rack")
+                            }
+                            // Livemode is disabled on the simulator.
+                            .disabled(isRunningOnSimulator)
+
+                            Toggle(isOn: $isL0KYCModeEnabled) {
+                                Label("L0 KYC Mode", systemImage: "person.text.rectangle")
+                            }
+
+                            Divider()
+
+                            Button {
+                                isShowingScopesSheet = true
+                            } label: {
+                                Label("OAuth Scopes…", systemImage: "slider.horizontal.3")
+                            }
+                        } label: {
+                            Image(systemName: "gearshape")
+                        }
+                    }
+                }
+            }
+            .sheet(isPresented: $isShowingScopesSheet) {
+                OAuthScopeSelectionView(
+                    selectedScopes: $selectedScopes,
+                    onOnrampScopesSelected: {
+                        selectedScopes = Set(OAuthScopes.requiredScopes)
+                    },
+                    onAllScopesSelected: {
+                        selectedScopes = Set(OAuthScopes.allScopes)
+                    }
+                )
+                .presentationDetents([.medium])
+            }
             .navigationDestination(for: CryptoOnrampFlowCoordinator.Route.self) { route in
                 if let coordinator {
                     ZStack {
