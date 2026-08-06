@@ -59,6 +59,9 @@ public final class Checkout: ObservableObject {
     /// The CurrencySelectorElement for this Checkout instance, when Adaptive Pricing is available.
     private var currencySelectorElement: CurrencySelectorElement?
 
+    /// The ShippingAddressElement for this Checkout instance.
+    private var shippingAddressElement: ShippingAddressElement!
+
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
     /// A snapshot of the current ``session`` accessible from non-MainActor contexts.
@@ -133,6 +136,7 @@ public final class Checkout: ObservableObject {
             try await applyDefaults()
 
             // Load elements
+            self.shippingAddressElement = ShippingAddressElement(checkout: self)
             self.paymentElement = try await PaymentElement(checkout: self)
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
             self.expressCheckoutElement = ExpressCheckoutElement(
@@ -285,6 +289,11 @@ public final class Checkout: ObservableObject {
     /// Returns the CurrencySelectorElement when Adaptive Pricing is available for this Checkout instance.
     public func getCurrencySelectorElement() -> CurrencySelectorElement? {
         return currencySelectorElement
+    }
+
+    /// Returns the ShippingAddressElement for this Checkout instance.
+    public func getShippingAddressElement() -> ShippingAddressElement {
+        return shippingAddressElement
     }
 
     // MARK: - Confirm
