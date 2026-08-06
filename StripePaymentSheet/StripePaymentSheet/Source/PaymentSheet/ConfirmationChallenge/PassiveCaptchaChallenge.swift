@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripePayments
 
 /// PassiveCaptcha, delivered in the `v1/elements/sessions` response.
-/// - Seealso: https://git.corp.stripe.com/stripe-internal/pay-server/blob/master/lib/elements/api/resources/elements_passive_captcha_resource.rb
 struct PassiveCaptchaData: Equatable, Hashable {
 
     let siteKey: String
@@ -55,6 +54,8 @@ actor PassiveCaptchaChallenge {
     let passiveCaptchaData: PassiveCaptchaData
     private let hcaptchaFactory: HCaptchaFactory
     private var tokenTask: Task<String, Error>?
+    /// Stored so it can be cancelled when this actor is deallocated.
+    private var prefetchTask: Task<Void, Never>?
     var isTokenReady: Bool { // used for the attach analytic to indicate whether it's blocking checkout
         return hasFetchedToken && !hasSessionExpired
     }
@@ -72,7 +73,19 @@ actor PassiveCaptchaChallenge {
     init(passiveCaptchaData: PassiveCaptchaData, hcaptchaFactory: HCaptchaFactory) {
         self.passiveCaptchaData = passiveCaptchaData
         self.hcaptchaFactory = hcaptchaFactory
-        _ = Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
+        // Use weak self so this task does not prevent the actor from being deallocated.
+        // Store the task so it can be cancelled in deinit if needed.
+        let task = Task { [weak self] in
+            _ = try? await self?.fetchToken()
+        }
+        self.prefetchTask = task
+    }
+
+    deinit {
+        // Cancel outstanding tasks so that lingering HCaptcha WebViews do not
+        // continue running (and logging analytics) after this challenge is released.
+        prefetchTask?.cancel()
+        tokenTask?.cancel()
     }
 
     public func fetchToken() async throws -> String {
