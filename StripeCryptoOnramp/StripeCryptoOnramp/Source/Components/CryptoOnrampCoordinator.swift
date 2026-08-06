@@ -388,7 +388,11 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             if let stripeError = error as? StripeError,
                case let .apiError(stripeAPIError) = stripeError,
                stripeAPIError.code == "link_auth_token_invalid" || stripeAPIError.code == "resource_missing" {
-                analyticsClient.log(.errorOccurred(during: .authenticateUserWithAuthToken, errorMessage: stripeAPIError.message ?? error.localizedDescription))
+                analyticsClient.log(.errorOccurred(
+                    during: .authenticateUserWithAuthToken,
+                    errorMessage: stripeAPIError.message ?? error.localizedDescription,
+                    requestID: stripeAPIError.requestID
+                ))
                 throw CryptoOnrampCoordinator.Error.seamlessSignInTokenInvalid(reason: stripeAPIError.message)
             } else {
                 try logAndThrow(error, during: .authenticateUserWithAuthToken)
@@ -974,7 +978,12 @@ private extension CryptoOnrampCoordinator {
             additionalSDKVersions: additionalSDKVersions
         )
         let errorMessage = (mappedError as? StripeCryptoOnrampError)?.developerMessage ?? mappedError.localizedDescription
-        analyticsClient.log(.errorOccurred(during: operation, errorMessage: errorMessage))
+        let requestID = (mappedError as? StripeCryptoOnrampAPIError)?.requestID
+        analyticsClient.log(.errorOccurred(
+            during: operation,
+            errorMessage: errorMessage,
+            requestID: requestID
+        ))
 
         #if DEBUG
         print("[Stripe SDK] CryptoOnrampCoordinator error: \(errorMessage)")
@@ -989,7 +998,11 @@ private extension CryptoOnrampCoordinator {
            stripeAPIError.type == .invalidRequestError,
            let message = stripeAPIError.message,
            message.hasPrefix("There was an issue parsing the phone number") {
-            analyticsClient.log(.errorOccurred(during: operation, errorMessage: "Invalid phone number format"))
+            analyticsClient.log(.errorOccurred(
+                during: operation,
+                errorMessage: "Invalid phone number format",
+                requestID: stripeAPIError.requestID
+            ))
             throw Error.invalidPhoneFormat
         } else {
             try logAndThrow(error, during: operation)

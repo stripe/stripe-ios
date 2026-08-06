@@ -57,7 +57,7 @@ enum CryptoOnrampAnalyticsEvent {
     case checkoutStarted(onrampSessionId: String)
     case checkoutCompleted(onrampSessionId: String, requiredAction: Bool)
     case userLoggedOut
-    case errorOccurred(during: CryptoOnrampOperation, errorMessage: String)
+    case errorOccurred(during: CryptoOnrampOperation, errorMessage: String, requestID: String? = nil)
 
     var eventName: String {
         switch self {
@@ -161,11 +161,17 @@ enum CryptoOnrampAnalyticsEvent {
                 "onramp_session_id": onrampSessionId,
                 "required_action": requiredAction,
             ]
-        case let .errorOccurred(operationName, errorMessage):
-            return [
+        case let .errorOccurred(operationName, errorMessage, requestID):
+            var parameters: [String: Any] = [
                 "operation_name": operationName.rawValue,
                 "error_message": errorMessage,
             ]
+
+            if let requestID {
+                parameters["request_id"] = requestID
+            }
+
+            return parameters
         }
     }
 }
