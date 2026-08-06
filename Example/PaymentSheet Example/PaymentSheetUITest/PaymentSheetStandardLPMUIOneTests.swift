@@ -58,7 +58,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
             XCTFail()
             return
         }
-        cashApp.waitForExistenceAndTap()
+        cashApp.tap()
 
         // Attempt payment
         payButton.waitForExistenceAndTap()
