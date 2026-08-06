@@ -3,6 +3,7 @@
 //  StripePaymentSheetTests
 //
 
+import OHHTTPStubs
 import StripeCoreTestUtils
 @testable @_spi(STP) import StripePaymentSheet
 import UIKit
@@ -14,6 +15,11 @@ final class SavedPaymentMethodBillingSyncTests: XCTestCase {
         ._testCard(id: "pm_first", country: "US"),
         ._testCard(id: "pm_second", country: "CA"),
     ]
+
+    override func tearDown() {
+        HTTPStubs.removeAllStubs()
+        super.tearDown()
+    }
 
     func testSelectionWaitsForBillingTaxUpdate() async {
         let (sut, updater) = makeController(suspendUpdate: true)
@@ -50,6 +56,27 @@ final class SavedPaymentMethodBillingSyncTests: XCTestCase {
         XCTAssertFalse(rows[1].isSelected)
         XCTAssertTrue(labels(in: sut).contains { $0.text == "Tax update failed" })
     }
+
+    func testHorizontalSelectionWithoutBillingTaxCloses() async throws {
+        // Given
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let sut = makeHorizontalController(checkout: checkout)
+        let delegate = MockFlowControllerViewControllerDelegate()
+        sut.flowControllerDelegate = delegate
+
+        // When
+        let savedOptions = sut.savedPaymentOptionsViewController
+        savedOptions.collectionView(
+            savedOptions.collectionView,
+            didSelectItemAt: IndexPath(item: 2, section: 0)
+        )
+
+        // Then
+        await fulfillment(of: [delegate.closed])
+        XCTAssertEqual(delegate.closeCount, 1)
+        XCTAssertFalse(delegate.didCancel)
+        XCTAssertTrue(sut.isDismissable)
+    }
 }
 
 private extension SavedPaymentMethodBillingSyncTests {
@@ -80,6 +107,28 @@ private extension SavedPaymentMethodBillingSyncTests {
             defaultPaymentMethod: nil
         )
         return (viewController, updater)
+    }
+
+    func makeHorizontalController(
+        checkout: Checkout
+    ) -> PaymentSheetFlowControllerViewController {
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: .checkout(checkout.session),
+            elementsSession: ._testValue(
+                paymentMethodTypes: ["card"],
+                isLinkPassthroughModeEnabled: false
+            ),
+            savedPaymentMethods: paymentMethods,
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .horizontal
+        )
+        return PaymentSheetFlowControllerViewController(
+            configuration: PaymentSheet.Configuration(),
+            loadResult: loadResult,
+            analyticsHelper: ._testValue(),
+            checkout: checkout
+        )
     }
 
     func paymentMethodRows(
@@ -166,5 +215,21 @@ private final class MockVerticalSavedPaymentMethodsDelegate:
     ) {
         self.selectedPaymentMethod = selectedPaymentMethod
         completed.fulfill()
+    }
+}
+
+@MainActor
+private final class MockFlowControllerViewControllerDelegate: FlowControllerViewControllerDelegate {
+    let closed = XCTestExpectation(description: "Flow controller closed")
+    private(set) var closeCount = 0
+    private(set) var didCancel = false
+
+    func flowControllerViewControllerShouldClose(
+        _ viewController: FlowControllerViewControllerProtocol,
+        didCancel: Bool
+    ) {
+        closeCount += 1
+        self.didCancel = didCancel
+        closed.fulfill()
     }
 }
