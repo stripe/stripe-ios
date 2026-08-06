@@ -46,6 +46,8 @@ class ConnectWebViewController: UIViewController {
     /// Camera permission requests from allowed hosts use the app's camera permissions while all other requests will explicitly ask for user permission.
     let allowedHosts: [String]
 
+    private var nativeAccessoryLayerViewControllers: [NativeAccessoryLayerViewController] = []
+
     init(configuration: WKWebViewConfiguration,
          analyticsClient: ComponentAnalyticsClient,
          allowedHosts: [String],
@@ -185,6 +187,66 @@ private extension ConnectWebViewController {
         return popupVC.webView
     }
 
+    func isNativeAccessoryLayerURL(_ url: URL) -> Bool {
+        guard let host = url.host else {
+            return false
+        }
+        let isAllowedHost = allowedHosts.contains(host) ||
+            host == webView.url?.host ||
+            (isLoopbackHost(host) && allowedHosts.contains(where: isLoopbackHost))
+
+        guard isAllowedHost,
+              url.lastPathComponent.hasPrefix("accessory_layer_"),
+              url.lastPathComponent.hasSuffix(".html"),
+              let fragment = url.fragment,
+              let components = URLComponents(string: "?\(fragment)") else {
+            return false
+        }
+
+        return components.queryItems?.contains(where: {
+            $0.name == "native_overlay_presentation" && $0.value == "true"
+        }) == true
+    }
+
+    func isLoopbackHost(_ host: String) -> Bool {
+        ["localhost", "127.0.0.1", "::1", "[::1]"].contains(host)
+    }
+
+    func openInNativeAccessoryLayer(
+        configuration: WKWebViewConfiguration,
+        url: URL
+    ) -> WKWebView? {
+        guard let fragment = url.fragment,
+              let components = URLComponents(string: "?\(fragment)"),
+              let nativeLayerId = components.queryItems?.first(where: {
+                  $0.name == "native_overlay_id"
+              })?.value else {
+            return nil
+        }
+        let nativeOverlaySize = components.queryItems?.first(where: {
+            $0.name == "native_overlay_size"
+        })?.value
+        let nativeOverlayName = components.queryItems?.first(where: {
+            $0.name == "native_overlay_name"
+        })?.value
+
+        let accessoryLayerViewController = NativeAccessoryLayerViewController(
+            configuration: configuration,
+            nativeLayerId: nativeLayerId,
+            prefersLargeDetent: nativeOverlaySize == "large",
+            name: nativeOverlayName
+        )
+        accessoryLayerViewController.didClose = { [weak self, weak accessoryLayerViewController] in
+            self?.nativeAccessoryLayerViewControllers.removeAll {
+                $0 === accessoryLayerViewController
+            }
+        }
+        let presenter = nativeAccessoryLayerViewControllers.last ?? self
+        nativeAccessoryLayerViewControllers.append(accessoryLayerViewController)
+        presenter.present(accessoryLayerViewController, animated: true)
+        return accessoryLayerViewController.webView
+    }
+
     // Opens the given URL in an SFSafariViewController
     func openInAppSafari(url: URL) {
         let safariVC = SFSafariViewController(url: url)
@@ -241,6 +303,13 @@ extension ConnectWebViewController: WKUIDelegate {
         guard navigationAction.targetFrame == nil else { return nil }
 
         if let url = navigationAction.request.url {
+            if isNativeAccessoryLayerURL(url) {
+                return openInNativeAccessoryLayer(
+                    configuration: configuration,
+                    url: url
+                )
+            }
+
             // Only `http` or `https` URL schemes can be opened in WKWebView or
             // SFSafariViewController. Opening other schemes, like `mailto`, will
             // cause a fatal error.
