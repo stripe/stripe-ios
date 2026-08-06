@@ -54,11 +54,15 @@ extension XCTestCase {
         )
         waitForExpectations(timeout: 10, handler: nil)
     }
-    /// Reloads the playground repeatedly until the latest `mc_load_succeeded` analytics event
-    /// reports `has_default_payment_method == true`. Fails the test if this is not achieved
-    /// within `maxAttempts`. This is useful when the backend sets a default payment method
-    /// asynchronously after a payment, and the test needs to wait for that to propagate.
-    func reloadAndWaitForDefaultPaymentMethod(
+    /// Reloads the playground and presents PaymentSheet, retrying until the latest
+    /// `mc_load_succeeded` analytics event reports `has_default_payment_method == true`.
+    /// Leaves the sheet open on success. Fails the test if not achieved within `maxAttempts`.
+    ///
+    /// `mc_load_succeeded` is fired during sheet presentation (not on reload), so each attempt
+    /// presents the sheet to obtain a fresh event, then closes and retries if needed.
+    /// This is useful when the backend sets a default payment method asynchronously after a
+    /// payment confirmation and the test needs to wait for that propagation.
+    func reloadAndPresentUntilDefaultPaymentMethod(
         _ app: XCUIApplication,
         settings: PaymentSheetTestPlaygroundSettings,
         analyticsLog: () -> [[String: Any]],
@@ -66,12 +70,18 @@ extension XCTestCase {
     ) {
         for _ in 1...maxAttempts {
             reload(app, settings: settings)
+            app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+            // Wait for the sheet to render; mc_load_succeeded fires during initialization
+            _ = app.buttons["Pay $50.99"].waitForExistence(timeout: 10)
+
             let hasDefault = analyticsLog()
                 .filter { $0["event"] as? String == "mc_load_succeeded" }
                 .last?["has_default_payment_method"] as? Bool == true
             if hasDefault {
-                return
+                return  // sheet remains open for the caller
             }
+            // Default not yet propagated — close and retry
+            app.buttons["Close"].waitForExistenceAndTap()
         }
         XCTFail("Default payment method was not reflected in analytics after \(maxAttempts) reload attempts")
     }
