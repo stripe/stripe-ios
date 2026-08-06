@@ -21,7 +21,7 @@ import XCTest
 final class DocumentUploaderTest: XCTestCase {
 
     var uploader: DocumentUploader!
-    fileprivate var mockDelegate: MockDocumentUploaderDelegate!
+    private var mockDelegate: MockDocumentUploaderDelegate!
     var mockAPIClient: IdentityAPIClientTestMock!
     static var mockStripeFile: StripeFile!
     static var mockUploadMetrics = STPAPIClient.ImageUploadMetrics(
@@ -101,7 +101,7 @@ final class DocumentUploaderTest: XCTestCase {
         uploader.delegate = mockDelegate
     }
 
-    func testUploadImagesInTestModeUsesPlaceholderImages() {
+    func testUploadImagesInTestModeUsesPlaceholderImages() throws {
         // Given a test mode uploader
         uploader = makeUploader(isTestMode: true)
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 4)
@@ -119,38 +119,33 @@ final class DocumentUploaderTest: XCTestCase {
         wait(for: uploadRequestExpectations, timeout: 1)
 
         // Then every request uses the correct bundled placeholder without cropping
-        let requestsByFileName = Dictionary(
-            uniqueKeysWithValues: mockAPIClient.imageUpload.requestHistory.map {
-                ($0.fileName, $0)
-            }
-        )
-        let frontPlaceholder = try! TestModeImage.documentFront.makeCGImage()
-        let backPlaceholder = try! TestModeImage.documentBack.makeCGImage()
+        let frontPlaceholder = try TestModeImage.documentFront.makeCGImage()
+        let backPlaceholder = try TestModeImage.documentBack.makeCGImage()
         XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.count, 4)
         XCTAssertEqual(
-            requestsByFileName["\(mockVS)_front"]?.image.pngData(),
-            resizedPNGData(
+            uploadRequest(named: "\(mockVS)_front")?.image.pngData(),
+            try resizedPNGData(
                 for: frontPlaceholder,
                 maxDimension: mockConfig.highResImageMaxDimension
             )
         )
         XCTAssertEqual(
-            requestsByFileName["\(mockVS)_front_full_frame"]?.image.pngData(),
-            resizedPNGData(
+            uploadRequest(named: "\(mockVS)_front_full_frame")?.image.pngData(),
+            try resizedPNGData(
                 for: frontPlaceholder,
                 maxDimension: mockConfig.lowResImageMaxDimension
             )
         )
         XCTAssertEqual(
-            requestsByFileName["\(mockVS)_back"]?.image.pngData(),
-            resizedPNGData(
+            uploadRequest(named: "\(mockVS)_back")?.image.pngData(),
+            try resizedPNGData(
                 for: backPlaceholder,
                 maxDimension: mockConfig.highResImageMaxDimension
             )
         )
         XCTAssertEqual(
-            requestsByFileName["\(mockVS)_back_full_frame"]?.image.pngData(),
-            resizedPNGData(
+            uploadRequest(named: "\(mockVS)_back_full_frame")?.image.pngData(),
+            try resizedPNGData(
                 for: backPlaceholder,
                 maxDimension: mockConfig.lowResImageMaxDimension
             )
@@ -166,7 +161,7 @@ final class DocumentUploaderTest: XCTestCase {
         )
     }
 
-    func testUploadImagesInTestModeWithoutROIUsesPlaceholderImage() {
+    func testUploadImagesInTestModeWithoutROIUsesPlaceholderImage() throws {
         // Given a test mode uploader and no document scanner output
         uploader = makeUploader(isTestMode: true)
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
@@ -182,12 +177,12 @@ final class DocumentUploaderTest: XCTestCase {
         wait(for: uploadRequestExpectations, timeout: 1)
 
         // Then only the bundled front placeholder is uploaded at high resolution
-        let frontPlaceholder = try! TestModeImage.documentFront.makeCGImage()
+        let frontPlaceholder = try TestModeImage.documentFront.makeCGImage()
         XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.count, 1)
         XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.first?.fileName, "\(mockVS)_front")
         XCTAssertEqual(
             mockAPIClient.imageUpload.requestHistory.first?.image.pngData(),
-            resizedPNGData(
+            try resizedPNGData(
                 for: frontPlaceholder,
                 maxDimension: mockConfig.highResImageMaxDimension
             )
@@ -428,8 +423,14 @@ final class DocumentUploaderTest: XCTestCase {
     }
 }
 
-extension DocumentUploaderTest {
-    fileprivate func makeUploader(isTestMode: Bool = false) -> DocumentUploader {
+private extension DocumentUploaderTest {
+    func uploadRequest(
+        named fileName: String
+    ) -> IdentityAPIClientTestMock.ImageUploadRequestParams? {
+        return mockAPIClient.imageUpload.requestHistory.first { $0.fileName == fileName }
+    }
+
+    func makeUploader(isTestMode: Bool = false) -> DocumentUploader {
         return DocumentUploader(
             imageUploader: IdentityImageUploader(
                 configuration: mockConfig,
@@ -442,14 +443,14 @@ extension DocumentUploaderTest {
         )
     }
 
-    fileprivate func resizedPNGData(for image: CGImage, maxDimension: Int) -> Data {
-        let resizedImage = try! image.scaledDown(
+    func resizedPNGData(for image: CGImage, maxDimension: Int) throws -> Data {
+        let resizedImage = try image.scaledDown(
             toMaxPixelDimension: CGSize(width: maxDimension, height: maxDimension)
         )
-        return UIImage(cgImage: resizedImage).pngData()!
+        return try XCTUnwrap(UIImage(cgImage: resizedImage).pngData())
     }
 
-    fileprivate func uploadMockFrontAndBack() -> [XCTestExpectation] {
+    func uploadMockFrontAndBack() -> [XCTestExpectation] {
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 4)
 
         uploader.uploadImages(
@@ -470,7 +471,7 @@ extension DocumentUploaderTest {
         return uploadRequestExpectations
     }
 
-    fileprivate static func verifyFileData(
+    static func verifyFileData(
         _ data: StripeAPI.VerificationPageDataDocumentFileData,
         expectedHighResImage: String,
         expectedLowResImage: String?,
@@ -526,7 +527,7 @@ extension DocumentUploaderTest {
         )
     }
 
-    fileprivate func verifyUploadSide(
+    func verifyUploadSide(
         _ side: DocumentSide,
         getThisSideUploadFuture: () -> Future<StripeAPI.VerificationPageDataDocumentFileData>?,
         getOtherSideUploadFuture: () -> Future<StripeAPI.VerificationPageDataDocumentFileData>?,

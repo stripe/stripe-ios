@@ -41,6 +41,7 @@ import Foundation
     case testModeSelfie = "test_mode_selfie"
 }
 
+/// Bundled placeholder images uploaded for test-mode verification sessions.
 enum TestModeImage {
     case documentFront
     case documentBack

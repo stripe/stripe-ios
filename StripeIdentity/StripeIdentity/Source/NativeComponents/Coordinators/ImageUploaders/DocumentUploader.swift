@@ -141,10 +141,9 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
     /// Uploads a high and low resolution image for a specific side of the
     /// document and updates either `frontUploadFuture` or `backUploadFuture`.
-    /// - Note: If `idDetectorOutput` is non-nil, a high and low-res image will
-    /// be uploaded. In live mode, the high-res image is cropped. If
-    /// `idDetectorOutput` is nil, then only an uncropped high-res image is
-    /// uploaded.
+    /// - Note: If `idDetectorOutput` is non-nil, high- and low-resolution images
+    /// are uploaded. In live mode, the high-resolution image is cropped. If
+    /// `idDetectorOutput` is nil, only an uncropped high-resolution image is uploaded.
     /// - Parameters:
     ///   - side: The side of the image (front or back) to upload.
     ///   - originalImage: The original image captured or uploaded by the user.

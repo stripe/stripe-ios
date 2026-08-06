@@ -175,7 +175,7 @@ class PlaygroundViewController: UIViewController {
             // Make request to our verification endpoint
             endpoint = testModeSwitch.isOn ? testVerifyEndpoint : verifyEndpoint
 
-            // Forwarding VerificationSession options from the client to server to
+            // Forwarding VerificationSession options from the client to the server
             // for demo purposes. In production, these are typically set by the
             // server depending on the desired behavior.
             requestDict = [
