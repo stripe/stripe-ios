@@ -3,6 +3,9 @@ MINOR
 
 ## X.Y.Z - changes pending release
 
+### CryptoOnramp (Alpha)
+* [Added] Added `CryptoOnrampCoordinator.deleteWalletAddress(walletId:)` to delete a registered wallet address.
+
 ### PaymentSheet
 * [Added] Added support for MB WAY payments.
 

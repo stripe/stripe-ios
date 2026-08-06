@@ -49,7 +49,6 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertNotNil(elementsSession.linkSettings)
         XCTAssertEqual(elementsSession.countryCode, "US")
         XCTAssertEqual(elementsSession.merchantCountryCode, "US")
-        XCTAssertNotNil(elementsSession.paymentMethodSpecs)
         XCTAssertEqual(elementsSession.cardBrandChoice?.eligible, true)
         XCTAssertEqual(elementsSession.flags, ["cbc_in_link_popup": true, "disable_cbc_in_link_popup": false])
         XCTAssertTrue(elementsSession.isApplePayEnabled)

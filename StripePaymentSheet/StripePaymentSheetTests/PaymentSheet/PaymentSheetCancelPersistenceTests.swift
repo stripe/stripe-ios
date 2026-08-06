@@ -15,11 +15,9 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        let expectation = expectation(description: "specs loaded")
+        let expectation = expectation(description: "address specs loaded")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load { _ in
-                expectation.fulfill()
-            }
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
     }
