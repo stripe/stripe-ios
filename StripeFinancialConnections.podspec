@@ -19,6 +19,7 @@ Pod::Spec.new do |s|
     s.weak_framework = 'SwiftUI'
     s.dependency   'StripeCore', "#{s.version}"
     s.dependency   'StripeUICore', "#{s.version}"
+    s.dependency   'StripeFinancialConnectionsLite', "#{s.version}"
     s.source_files                   = 'StripeFinancialConnections/StripeFinancialConnections/**/*.swift'
     s.ios.resource_bundle            = { 'StripeFinancialConnectionsBundle' => ['StripeFinancialConnections/StripeFinancialConnections/Resources/**/*.{lproj,png}', 'StripeFinancialConnections/StripeFinancialConnections/PrivacyInfo.xcprivacy'] }
 end

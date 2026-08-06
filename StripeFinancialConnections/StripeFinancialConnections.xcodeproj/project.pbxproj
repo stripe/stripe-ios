@@ -14,6 +14,8 @@
 		9CE29EA549C4BFA447AB82E0 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C650E82A4195A7566AA54298 /* StripeCore.framework */; };
 		D0C6D94867FA04B1BF80D56D /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9AB787FE87EDD702B1BBF09 /* StripeCoreTestUtils.framework */; };
 		D50E771043434AD80EA28628 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6652EBE38C47B36962AD370A /* StripeUICore.framework */; };
+		FC11FEDA000000000000AA02 /* StripeFinancialConnectionsLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC11FEDA000000000000AA01 /* StripeFinancialConnectionsLite.framework */; };
+		FC11FEDA000000000000AA03 /* StripeFinancialConnectionsLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC11FEDA000000000000AA01 /* StripeFinancialConnectionsLite.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +64,7 @@
 		CFEEBA73EBBCE02A50B2DB7A /* StripeFinancialConnectionsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeFinancialConnectionsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E37D8CE9CD73443A9AAF2AE8 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9AB787FE87EDD702B1BBF09 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC11FEDA000000000000AA01 /* StripeFinancialConnectionsLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnectionsLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -99,6 +102,7 @@
 				D0C6D94867FA04B1BF80D56D /* StripeCoreTestUtils.framework in Frameworks */,
 				864C5159C62C562C655B53F7 /* StripeFinancialConnections.framework in Frameworks */,
 				971E6F5E78BC3265CD80D0C6 /* StripeUICore.framework in Frameworks */,
+				FC11FEDA000000000000AA03 /* StripeFinancialConnectionsLite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,6 +112,7 @@
 			files = (
 				06445472B3008395FCA92FEC /* StripeCore.framework in Frameworks */,
 				D50E771043434AD80EA28628 /* StripeUICore.framework in Frameworks */,
+				FC11FEDA000000000000AA02 /* StripeFinancialConnectionsLite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,6 +168,7 @@
 				E37D8CE9CD73443A9AAF2AE8 /* StripeFinancialConnections.framework */,
 				CFEEBA73EBBCE02A50B2DB7A /* StripeFinancialConnectionsTests.xctest */,
 				6652EBE38C47B36962AD370A /* StripeUICore.framework */,
+				FC11FEDA000000000000AA01 /* StripeFinancialConnectionsLite.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -277,6 +283,8 @@
 				"zh-Hans",
 				"zh-Hant",
 				Base,
+				"nn-NO",
+				th,
 			);
 			mainGroup = 7879CBA341D7E807714A831B;
 			packageReferences = (

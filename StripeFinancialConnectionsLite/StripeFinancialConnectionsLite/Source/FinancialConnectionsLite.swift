@@ -17,11 +17,21 @@ import UIKit
     /// If not provided, all bank authentication sessions will happen in a secure browser within this app.
     let returnUrl: URL?
 
+    /// The API client used for all Financial Connections requests.
+    let apiClient: STPAPIClient
+
     /// Any additional Elements context useful for the Financial Connections SDK.
     @_spi(STP) public var elementsSessionContext: ElementsSessionContext?
 
     /// A existing consumer, if avaialble.
     @_spi(STP) public var existingConsumer: FinancialConnectionsConsumer?
+
+    /// The consumer publishable key to use for requests, if available.
+    /// Takes precedence over `existingConsumer?.publishableKey`.
+    @_spi(STP) public var consumerPublishableKey: String?
+
+    /// Details used to prefill the Link login pane, if available.
+    @_spi(STP) public var prefillDetails: WebPrefillDetails?
 
     private var navigationController: UINavigationController?
     private var wrapperViewController: FCLiteModalPresentationWrapper?
@@ -34,12 +44,15 @@ import UIKit
     /// - Parameters:
     ///   - clientSecret: The client secret of a Stripe `FinancialConnectionsSession` object.
     ///   - returnUrl: A URL that that `FinancialConnectionsLite` can use to redirect back to your app after completing authentication in another app (such as a bank's app or Safari).
+    ///   - apiClient: The API client to use for requests. Defaults to `STPAPIClient.shared`.
     @_spi(STP) public init(
         clientSecret: String,
-        returnUrl: URL?
+        returnUrl: URL?,
+        apiClient: STPAPIClient = .shared
     ) {
         self.clientSecret = clientSecret
         self.returnUrl = returnUrl
+        self.apiClient = apiClient
     }
 
     /// Launches the Financial Connections flow on the provided view controller.
@@ -53,14 +66,15 @@ import UIKit
         Self.activeInstance = self
         self.completionHandler = completion
 
-        var apiClient: FCLiteAPIClient = FCLiteAPIClient(backingAPIClient: .shared)
-        apiClient.consumerPublishableKey = existingConsumer?.publishableKey
+        var fcLiteApiClient = FCLiteAPIClient(backingAPIClient: apiClient)
+        fcLiteApiClient.consumerPublishableKey = consumerPublishableKey ?? existingConsumer?.publishableKey
 
         let containerVC = FCLiteContainerViewController(
             clientSecret: clientSecret,
             returnUrl: returnUrl,
-            apiClient: apiClient,
+            apiClient: fcLiteApiClient,
             elementsSessionContext: elementsSessionContext,
+            prefillDetails: prefillDetails,
             completion: { [weak self] result in
                 guard let self else { return }
                 self.handleFlowCompletion(result: result)
