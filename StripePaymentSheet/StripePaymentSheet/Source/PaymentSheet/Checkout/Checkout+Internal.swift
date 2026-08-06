@@ -6,10 +6,25 @@
 //
 
 import Foundation
+import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-extension Checkout: ExpressCheckoutElementDelegate {}
+extension Checkout: ExpressCheckoutElementDelegate {
+    /// Called by ExpressCheckoutElement when the user taps the Apple Pay button.
+    func confirmApplePay() {
+        guard let context = STPApplePayContext.create(checkout: self) else {
+            stpAssertionFailure(CheckoutError.applePayNotSupportedOrMisconfigured.localizedDescription)
+            return
+        }
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            await enqueueSessionUpdate {
+                context.presentApplePay()
+            }
+        }
+    }
+}
 extension Checkout: CurrencySelectorElementDelegate {}
 
 extension Checkout {
