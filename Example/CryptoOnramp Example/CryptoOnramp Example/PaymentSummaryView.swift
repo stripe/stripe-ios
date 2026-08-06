@@ -45,6 +45,7 @@ struct PaymentSummaryView: View {
     @State private var alert: Alert?
     @State private var pendingWalletOwnershipVerificationContext: WalletOwnershipVerificationContext?
     @State private var isPresentingWalletOwnershipVerificationAlert = false
+    @State private var walletOwnershipVerificationSession: WalletOwnershipVerificationSession?
 
     private var isPresentingAlert: Binding<Bool> {
         Binding(get: {
@@ -175,6 +176,15 @@ struct PaymentSummaryView: View {
                 pendingWalletOwnershipVerificationContext = nil
             }
         )
+        .sheet(item: $walletOwnershipVerificationSession) { session in
+            WalletOwnershipVerificationSheet(
+                session: session,
+                coordinator: coordinator
+            ) {
+                pendingWalletOwnershipVerificationContext = nil
+                checkout()
+            }
+        }
     }
 
     // MARK: - PaymentSummaryView
@@ -224,7 +234,10 @@ struct PaymentSummaryView: View {
             } catch let error as WalletOwnershipVerificationRequiredError {
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    if let context = WalletOwnershipVerificationContext(transactionDetails: error.response.transactionDetails) {
+                    if let context = WalletOwnershipVerificationContext(
+                        transactionDetails: error.response.transactionDetails,
+                        isTestMode: !error.response.livemode
+                    ) {
                         pendingWalletOwnershipVerificationContext = context
                         isPresentingWalletOwnershipVerificationAlert = true
                     } else {
@@ -246,14 +259,13 @@ struct PaymentSummaryView: View {
             return
         }
 
-        WalletOwnershipVerification.startVerification(
+        WalletOwnershipVerification.requestChallenge(
             context: context,
             coordinator: coordinator,
             isLoading: isLoading,
             alert: $alert
-        ) {
-            pendingWalletOwnershipVerificationContext = nil
-            checkout()
+        ) { session in
+            walletOwnershipVerificationSession = session
         }
     }
 }

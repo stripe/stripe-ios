@@ -21,6 +21,7 @@ enum CryptoOnrampOperation: String {
     case verifyKycInfo = "verify_kyc_info"
     case verifyIdentity = "verify_identity"
     case registerWalletAddress = "register_wallet_address"
+    case deleteWalletAddress = "delete_wallet_address"
     case getWalletOwnershipChallenge = "get_wallet_ownership_challenge"
     case submitWalletOwnershipSignature = "submit_wallet_ownership_signature"
     case collectPaymentMethod = "collect_payment_method"
@@ -47,6 +48,7 @@ enum CryptoOnrampAnalyticsEvent {
     case kycInfoVerificationStarted
     case kycInfoVerificationCompleted
     case walletRegistered(network: String)
+    case walletDeleted
     case walletOwnershipChallengeRetrieved(network: String)
     case walletOwnershipVerified(network: String)
     case collectPaymentMethodStarted(paymentMethodType: String)
@@ -55,7 +57,7 @@ enum CryptoOnrampAnalyticsEvent {
     case checkoutStarted(onrampSessionId: String)
     case checkoutCompleted(onrampSessionId: String, requiredAction: Bool)
     case userLoggedOut
-    case errorOccurred(during: CryptoOnrampOperation, errorMessage: String)
+    case errorOccurred(during: CryptoOnrampOperation, errorMessage: String, requestID: String? = nil)
 
     var eventName: String {
         switch self {
@@ -93,6 +95,8 @@ enum CryptoOnrampAnalyticsEvent {
             return "onramp.kyc_info_verification_completed"
         case .walletRegistered:
             return "onramp.wallet_registered"
+        case .walletDeleted:
+            return "onramp.wallet_deleted"
         case .walletOwnershipChallengeRetrieved:
             return "onramp.wallet_ownership_challenge_retrieved"
         case .walletOwnershipVerified:
@@ -129,6 +133,7 @@ enum CryptoOnrampAnalyticsEvent {
              .userAttestationStarted,
              .kycInfoVerificationStarted,
              .kycInfoVerificationCompleted,
+             .walletDeleted,
              .userLoggedOut:
             return [:]
         case let .identifiersSubmitted(completed):
@@ -156,11 +161,17 @@ enum CryptoOnrampAnalyticsEvent {
                 "onramp_session_id": onrampSessionId,
                 "required_action": requiredAction,
             ]
-        case let .errorOccurred(operationName, errorMessage):
-            return [
+        case let .errorOccurred(operationName, errorMessage, requestID):
+            var parameters: [String: Any] = [
                 "operation_name": operationName.rawValue,
                 "error_message": errorMessage,
             ]
+
+            if let requestID {
+                parameters["request_id"] = requestID
+            }
+
+            return parameters
         }
     }
 }
