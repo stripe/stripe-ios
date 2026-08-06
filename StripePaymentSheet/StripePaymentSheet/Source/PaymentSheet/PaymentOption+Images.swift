@@ -292,6 +292,8 @@ extension STPPaymentMethodType {
                 return .pm_type_konbini
             case .mobilePay:
                 return .pm_type_mobilepay
+            case .mbWay:
+                return .pm_type_mbway
             case .multibanco:
                 return .pm_type_multibanco
             case .OXXO:

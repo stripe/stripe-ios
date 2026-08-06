@@ -592,6 +592,17 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
+    func testMBWayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .mbWay,
+                               merchantCountry: .FR,
+                               expectedHierarchy: ExpectedFormHierarchy.MBWay.paymentIntent) { form in
+            form.getPhoneNumberElement().setSelectedCountryCode("PT")
+            form.getPhoneNumberElement().setPhoneNumber("911111112")
+        }
+    }
+
     func testRevolutPayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "GBP",

@@ -174,6 +174,9 @@ with the transaction. */
 /* Text for alert message when user needs to confirm payment in their banking app */
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirm the payment in your bank's app within %@ to complete the purchase.";
 
+/* Instructions shown while waiting for an MB WAY payment authorization */
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Confirm the payment in your MB WAY app within %@ to complete the purchase.";
+
 /* Title for prompting for a card's CVC on confirming the payment */
 "Confirm your CVC" = "Confirm your CVC";
 

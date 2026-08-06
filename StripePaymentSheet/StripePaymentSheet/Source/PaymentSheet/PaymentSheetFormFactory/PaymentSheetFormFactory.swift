@@ -286,6 +286,8 @@ class PaymentSheetFormFactory {
                     emailRequired: true,
                     emailAPIPath: "billing_details[email]"
                 )
+            case .mbWay:
+                return makeContactInformationAndBillingAddressForm(phoneRequired: true)
             case .cashApp, .payPal, .revolutPay, .amazonPay, .satispay, .twint:
                 return makeContactInformationAndBillingAddressForm(
                     additionalElements: makeSetupMandateElements(for: paymentMethod)
@@ -798,12 +800,13 @@ extension PaymentSheetFormFactory {
     func makeContactInformationAndBillingAddressForm(
         emailRequired: Bool = false,
         emailAPIPath: String? = nil,
+        phoneRequired: Bool = false,
         additionalElements: [Element] = []
     ) -> PaymentMethodElement {
         let contactInfoSection = makeContactInformationSection(
             nameRequiredByPaymentMethod: false,
             emailRequiredByPaymentMethod: emailRequired,
-            phoneRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: phoneRequired,
             emailAPIPath: emailAPIPath
         )
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
