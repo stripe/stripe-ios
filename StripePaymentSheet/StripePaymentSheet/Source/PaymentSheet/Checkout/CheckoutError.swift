@@ -23,6 +23,9 @@ public enum CheckoutError: Error, LocalizedError, Sendable {
 
     case invalidShippingCountry(countryCode: String)
 
+    /// Apple Pay is not supported on this device or is misconfigured.
+    case applePayNotSupportedOrMisconfigured
+
     /// The Stripe API returned an error with the given message.
     case apiError(message: String)
 
@@ -38,6 +41,8 @@ public enum CheckoutError: Error, LocalizedError, Sendable {
             return "Timed out waiting for a Checkout operation to complete."
         case .invalidShippingCountry(let countryCode):
             return "Country code '\(countryCode)' is not in allowedShippingCountries"
+        case .applePayNotSupportedOrMisconfigured:
+            return "Apple Pay is not supported on this device or the Apple Pay configuration is missing or invalid."
         case .apiError(let message):
             return message
         }
