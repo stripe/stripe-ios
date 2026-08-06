@@ -1,0 +1,390 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 70;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1B2C3D4E5F60001A1B2C3D4 /* StripeFinancialConnectionsLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002A1B2C3D4 /* StripeFinancialConnectionsLite.framework */; };
+		A1B2C3D4E5F60003A1B2C3D4 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60004A1B2C3D4 /* StripeCore.framework */; };
+		A1B2C3D4E5F60005A1B2C3D4 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60006A1B2C3D4 /* XCTest.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A1B2C3D4E5F60007A1B2C3D4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A1B2C3D4E5F60008A1B2C3D4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1B2C3D4E5F60009A1B2C3D4;
+			remoteInfo = StripeFinancialConnectionsLite;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A1B2C3D4E5F6000AA1B2C3D4 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1B2C3D4E5F6000BA1B2C3D4 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		A1B2C3D4E5F6000CA1B2C3D4 /* StripeFinancialConnectionsLiteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeFinancialConnectionsLiteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B2C3D4E5F60002A1B2C3D4 /* StripeFinancialConnectionsLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnectionsLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B2C3D4E5F6000DA1B2C3D4 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000EA1B2C3D4 /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000FA1B2C3D4 /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
+		A1B2C3D4E5F60010A1B2C3D4 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
+		A1B2C3D4E5F60004A1B2C3D4 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B2C3D4E5F60006A1B2C3D4 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		A1B2C3D4E5F60011A1B2C3D4 /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
+		A1B2C3D4E5F60012A1B2C3D4 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A1B2C3D4E5F60013A1B2C3D4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			publicHeaders = (
+				StripeFinancialConnectionsLite.h,
+			);
+			target = A1B2C3D4E5F60009A1B2C3D4 /* StripeFinancialConnectionsLite */;
+		};
+		A1B2C3D4E5F60014A1B2C3D4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A1B2C3D4E5F60015A1B2C3D4 /* StripeFinancialConnectionsLiteTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		A1B2C3D4E5F60016A1B2C3D4 /* StripeFinancialConnectionsLite */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (A1B2C3D4E5F60013A1B2C3D4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = StripeFinancialConnectionsLite; sourceTree = "<group>"; };
+		A1B2C3D4E5F60017A1B2C3D4 /* StripeFinancialConnectionsLiteTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (A1B2C3D4E5F60014A1B2C3D4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = StripeFinancialConnectionsLiteTests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A1B2C3D4E5F60018A1B2C3D4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1B2C3D4E5F60003A1B2C3D4 /* StripeCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1B2C3D4E5F60019A1B2C3D4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1B2C3D4E5F60005A1B2C3D4 /* XCTest.framework in Frameworks */,
+				A1B2C3D4E5F60001A1B2C3D4 /* StripeFinancialConnectionsLite.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A1B2C3D4E5F6001AA1B2C3D4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F60006A1B2C3D4 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A1B2C3D4E5F6001BA1B2C3D4 /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F6000DA1B2C3D4 /* Project-Debug.xcconfig */,
+				A1B2C3D4E5F60012A1B2C3D4 /* Project-Release.xcconfig */,
+				A1B2C3D4E5F6000EA1B2C3D4 /* StripeiOS Tests-Debug.xcconfig */,
+				A1B2C3D4E5F60011A1B2C3D4 /* StripeiOS Tests-Release.xcconfig */,
+				A1B2C3D4E5F6000FA1B2C3D4 /* StripeiOS-Debug.xcconfig */,
+				A1B2C3D4E5F60010A1B2C3D4 /* StripeiOS-Release.xcconfig */,
+			);
+			name = BuildConfigurations;
+			path = ../BuildConfigurations;
+			sourceTree = "<group>";
+		};
+		A1B2C3D4E5F6001CA1B2C3D4 = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F6001DA1B2C3D4 /* Project */,
+				A1B2C3D4E5F6001AA1B2C3D4 /* Frameworks */,
+				A1B2C3D4E5F6001EA1B2C3D4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A1B2C3D4E5F6001EA1B2C3D4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F60002A1B2C3D4 /* StripeFinancialConnectionsLite.framework */,
+				A1B2C3D4E5F6000CA1B2C3D4 /* StripeFinancialConnectionsLiteTests.xctest */,
+				A1B2C3D4E5F60004A1B2C3D4 /* StripeCore.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A1B2C3D4E5F6001DA1B2C3D4 /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F6001BA1B2C3D4 /* BuildConfigurations */,
+				A1B2C3D4E5F60016A1B2C3D4 /* StripeFinancialConnectionsLite */,
+				A1B2C3D4E5F60017A1B2C3D4 /* StripeFinancialConnectionsLiteTests */,
+			);
+			name = Project;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		A1B2C3D4E5F6001FA1B2C3D4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		A1B2C3D4E5F60009A1B2C3D4 /* StripeFinancialConnectionsLite */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1B2C3D4E5F60020A1B2C3D4 /* Build configuration list for PBXNativeTarget "StripeFinancialConnectionsLite" */;
+			buildPhases = (
+				A1B2C3D4E5F6001FA1B2C3D4 /* Headers */,
+				A1B2C3D4E5F60021A1B2C3D4 /* Sources */,
+				A1B2C3D4E5F60022A1B2C3D4 /* Resources */,
+				A1B2C3D4E5F6000BA1B2C3D4 /* Embed Frameworks */,
+				A1B2C3D4E5F60018A1B2C3D4 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A1B2C3D4E5F60016A1B2C3D4 /* StripeFinancialConnectionsLite */,
+			);
+			name = StripeFinancialConnectionsLite;
+			productName = StripeFinancialConnectionsLite;
+			productReference = A1B2C3D4E5F60002A1B2C3D4 /* StripeFinancialConnectionsLite.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		A1B2C3D4E5F60015A1B2C3D4 /* StripeFinancialConnectionsLiteTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1B2C3D4E5F60023A1B2C3D4 /* Build configuration list for PBXNativeTarget "StripeFinancialConnectionsLiteTests" */;
+			buildPhases = (
+				A1B2C3D4E5F60024A1B2C3D4 /* Sources */,
+				A1B2C3D4E5F60025A1B2C3D4 /* Resources */,
+				A1B2C3D4E5F6000AA1B2C3D4 /* Embed Frameworks */,
+				A1B2C3D4E5F60019A1B2C3D4 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A1B2C3D4E5F60026A1B2C3D4 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A1B2C3D4E5F60017A1B2C3D4 /* StripeFinancialConnectionsLiteTests */,
+			);
+			name = StripeFinancialConnectionsLiteTests;
+			productName = StripeFinancialConnectionsLiteTests;
+			productReference = A1B2C3D4E5F6000CA1B2C3D4 /* StripeFinancialConnectionsLiteTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A1B2C3D4E5F60008A1B2C3D4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = A1B2C3D4E5F60027A1B2C3D4 /* Build configuration list for PBXProject "StripeFinancialConnectionsLite" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = A1B2C3D4E5F6001CA1B2C3D4;
+			productRefGroup = A1B2C3D4E5F6001EA1B2C3D4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1B2C3D4E5F60009A1B2C3D4 /* StripeFinancialConnectionsLite */,
+				A1B2C3D4E5F60015A1B2C3D4 /* StripeFinancialConnectionsLiteTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A1B2C3D4E5F60025A1B2C3D4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1B2C3D4E5F60022A1B2C3D4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1B2C3D4E5F60021A1B2C3D4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1B2C3D4E5F60024A1B2C3D4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A1B2C3D4E5F60026A1B2C3D4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = StripeFinancialConnectionsLite;
+			target = A1B2C3D4E5F60009A1B2C3D4 /* StripeFinancialConnectionsLite */;
+			targetProxy = A1B2C3D4E5F60007A1B2C3D4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A1B2C3D4E5F60028A1B2C3D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1B2C3D4E5F60011A1B2C3D4 /* StripeiOS Tests-Release.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				INFOPLIST_FILE = StripeFinancialConnectionsLiteTests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeFinancialConnectionsLiteTests;
+				PRODUCT_NAME = StripeFinancialConnectionsLiteTests;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		A1B2C3D4E5F60029A1B2C3D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1B2C3D4E5F60010A1B2C3D4 /* StripeiOS-Release.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = StripeFinancialConnectionsLite/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-financial-connections-lite";
+				PRODUCT_NAME = StripeFinancialConnectionsLite;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+			};
+			name = Release;
+		};
+		A1B2C3D4E5F6002AA1B2C3D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1B2C3D4E5F6000FA1B2C3D4 /* StripeiOS-Debug.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = StripeFinancialConnectionsLite/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-financial-connections-lite";
+				PRODUCT_NAME = StripeFinancialConnectionsLite;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+			};
+			name = Debug;
+		};
+		A1B2C3D4E5F6002BA1B2C3D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1B2C3D4E5F60012A1B2C3D4 /* Project-Release.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		A1B2C3D4E5F6002CA1B2C3D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1B2C3D4E5F6000DA1B2C3D4 /* Project-Debug.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		A1B2C3D4E5F6002DA1B2C3D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1B2C3D4E5F6000EA1B2C3D4 /* StripeiOS Tests-Debug.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				INFOPLIST_FILE = StripeFinancialConnectionsLiteTests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeFinancialConnectionsLiteTests;
+				PRODUCT_NAME = StripeFinancialConnectionsLiteTests;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A1B2C3D4E5F60027A1B2C3D4 /* Build configuration list for PBXProject "StripeFinancialConnectionsLite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1B2C3D4E5F6002CA1B2C3D4 /* Debug */,
+				A1B2C3D4E5F6002BA1B2C3D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1B2C3D4E5F60023A1B2C3D4 /* Build configuration list for PBXNativeTarget "StripeFinancialConnectionsLiteTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1B2C3D4E5F6002DA1B2C3D4 /* Debug */,
+				A1B2C3D4E5F60028A1B2C3D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1B2C3D4E5F60020A1B2C3D4 /* Build configuration list for PBXNativeTarget "StripeFinancialConnectionsLite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1B2C3D4E5F6002AA1B2C3D4 /* Debug */,
+				A1B2C3D4E5F60029A1B2C3D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A1B2C3D4E5F60008A1B2C3D4 /* Project object */;
+}
