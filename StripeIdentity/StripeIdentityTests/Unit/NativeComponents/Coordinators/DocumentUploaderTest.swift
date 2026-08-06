@@ -96,31 +96,14 @@ final class DocumentUploaderTest: XCTestCase {
             verificationSessionId: mockVS,
             ephemeralKeySecret: mockEAK
         )
-        uploader = DocumentUploader(
-            imageUploader: IdentityImageUploader(
-                configuration: mockConfig,
-                sheetController: VerificationSheetControllerMock(
-                    apiClient: mockAPIClient,
-                    analyticsClient: .init(verificationSessionId: "")
-                )
-            )
-        )
+        uploader = makeUploader()
         mockDelegate = MockDocumentUploaderDelegate()
         uploader.delegate = mockDelegate
     }
 
     func testUploadImagesInTestModeUsesPlaceholderImages() {
         // Given a test mode uploader
-        uploader = DocumentUploader(
-            imageUploader: IdentityImageUploader(
-                configuration: mockConfig,
-                sheetController: VerificationSheetControllerMock(
-                    apiClient: mockAPIClient,
-                    analyticsClient: .init(verificationSessionId: "")
-                )
-            ),
-            isTestMode: true
-        )
+        uploader = makeUploader(isTestMode: true)
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 4)
 
         // When real front and back document images are provided
@@ -135,19 +118,80 @@ final class DocumentUploaderTest: XCTestCase {
         }
         wait(for: uploadRequestExpectations, timeout: 1)
 
-        // Then the high-resolution requests use the bundled placeholders without cropping
-        let frontRequest = mockAPIClient.imageUpload.requestHistory.first {
-            $0.fileName == "\(mockVS)_front"
-        }
-        let backRequest = mockAPIClient.imageUpload.requestHistory.first {
-            $0.fileName == "\(mockVS)_back"
-        }
+        // Then every request uses the correct bundled placeholder without cropping
+        let requestsByFileName = Dictionary(
+            uniqueKeysWithValues: mockAPIClient.imageUpload.requestHistory.map {
+                ($0.fileName, $0)
+            }
+        )
         let frontPlaceholder = try! TestModeImage.documentFront.makeCGImage()
         let backPlaceholder = try! TestModeImage.documentBack.makeCGImage()
-        XCTAssertEqual(frontRequest?.image.size, UIImage(cgImage: frontPlaceholder).size)
-        XCTAssertEqual(backRequest?.image.size, UIImage(cgImage: backPlaceholder).size)
-        XCTAssertNotEqual(frontRequest?.image.size, UIImage(cgImage: mockImage).size)
-        XCTAssertNotEqual(backRequest?.image.size, UIImage(cgImage: mockImage).size)
+        XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.count, 4)
+        XCTAssertEqual(
+            requestsByFileName["\(mockVS)_front"]?.image.pngData(),
+            resizedPNGData(
+                for: frontPlaceholder,
+                maxDimension: mockConfig.highResImageMaxDimension
+            )
+        )
+        XCTAssertEqual(
+            requestsByFileName["\(mockVS)_front_full_frame"]?.image.pngData(),
+            resizedPNGData(
+                for: frontPlaceholder,
+                maxDimension: mockConfig.lowResImageMaxDimension
+            )
+        )
+        XCTAssertEqual(
+            requestsByFileName["\(mockVS)_back"]?.image.pngData(),
+            resizedPNGData(
+                for: backPlaceholder,
+                maxDimension: mockConfig.highResImageMaxDimension
+            )
+        )
+        XCTAssertEqual(
+            requestsByFileName["\(mockVS)_back_full_frame"]?.image.pngData(),
+            resizedPNGData(
+                for: backPlaceholder,
+                maxDimension: mockConfig.lowResImageMaxDimension
+            )
+        )
+
+        mockAPIClient.imageUpload.respondToRequests(
+            with: .success(
+                (
+                    file: DocumentUploaderTest.mockStripeFile,
+                    metrics: DocumentUploaderTest.mockUploadMetrics
+                )
+            )
+        )
+    }
+
+    func testUploadImagesInTestModeWithoutROIUsesPlaceholderImage() {
+        // Given a test mode uploader and no document scanner output
+        uploader = makeUploader(isTestMode: true)
+        let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
+
+        // When a real front document image is provided
+        uploader.uploadImages(
+            for: .front,
+            originalImage: mockImage,
+            documentScannerOutput: nil,
+            exifMetadata: nil,
+            method: .fileUpload
+        )
+        wait(for: uploadRequestExpectations, timeout: 1)
+
+        // Then only the bundled front placeholder is uploaded at high resolution
+        let frontPlaceholder = try! TestModeImage.documentFront.makeCGImage()
+        XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.count, 1)
+        XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.first?.fileName, "\(mockVS)_front")
+        XCTAssertEqual(
+            mockAPIClient.imageUpload.requestHistory.first?.image.pngData(),
+            resizedPNGData(
+                for: frontPlaceholder,
+                maxDimension: mockConfig.highResImageMaxDimension
+            )
+        )
 
         mockAPIClient.imageUpload.respondToRequests(
             with: .success(
@@ -385,6 +429,26 @@ final class DocumentUploaderTest: XCTestCase {
 }
 
 extension DocumentUploaderTest {
+    fileprivate func makeUploader(isTestMode: Bool = false) -> DocumentUploader {
+        return DocumentUploader(
+            imageUploader: IdentityImageUploader(
+                configuration: mockConfig,
+                sheetController: VerificationSheetControllerMock(
+                    apiClient: mockAPIClient,
+                    analyticsClient: .init(verificationSessionId: "")
+                )
+            ),
+            isTestMode: isTestMode
+        )
+    }
+
+    fileprivate func resizedPNGData(for image: CGImage, maxDimension: Int) -> Data {
+        let resizedImage = try! image.scaledDown(
+            toMaxPixelDimension: CGSize(width: maxDimension, height: maxDimension)
+        )
+        return UIImage(cgImage: resizedImage).pngData()!
+    }
+
     fileprivate func uploadMockFrontAndBack() -> [XCTestExpectation] {
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 4)
 
