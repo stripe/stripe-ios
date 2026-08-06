@@ -2,6 +2,11 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+
+### CryptoOnramp (Alpha)
+* [Added] Added `CryptoOnrampCoordinator.deleteWalletAddress(walletId:)` to delete a registered wallet address.
+
+## 26.5.0 2026-08-03
 ### CryptoOnramp (Alpha)
 * [Added] Added support for registering wallet addresses on the Tempo network.
 

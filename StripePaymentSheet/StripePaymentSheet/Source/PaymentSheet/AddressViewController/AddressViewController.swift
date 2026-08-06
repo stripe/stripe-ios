@@ -58,6 +58,15 @@ public class AddressViewController: UIViewController {
     private var addressShowStart: Date?
 
     // MARK: - Internal properties
+
+    /// Delegate provided by the integration entry point (legacy Address Element or Checkout Sessions Shipping Address Element) that handles address saving and analytics
+    @MainActor
+    protocol IntegrationDelegate: AnyObject {
+        /// Handles completion with the customer's collected address details.
+        func save(addressDetails: AddressDetails?, setLoading: (Bool) -> Void) async throws
+    }
+
+    weak var integrationDelegate: IntegrationDelegate?
     let addressSpecProvider: AddressSpecProvider
     private var latestError: Error? {
         didSet {
@@ -219,13 +228,19 @@ public class AddressViewController: UIViewController {
         configuration: Configuration,
         delegate: AddressViewControllerDelegate
     ) {
-        self.init(addressSpecProvider: .shared, configuration: configuration, delegate: delegate)
+        self.init(
+            addressSpecProvider: .shared,
+            configuration: configuration,
+            delegate: delegate,
+            integrationDelegate: nil
+        )
     }
 
     init(
         addressSpecProvider: AddressSpecProvider,
         configuration: Configuration,
-        delegate: AddressViewControllerDelegate
+        delegate: AddressViewControllerDelegate,
+        integrationDelegate: IntegrationDelegate? = nil
     ) {
         self.addressSpecProvider = addressSpecProvider
         self.configuration = configuration
@@ -235,6 +250,9 @@ public class AddressViewController: UIViewController {
         if configuration.useNavigationBarTitle {
             title = configuration.title
         }
+
+        // Set the integration delegate if provided. Otherwise use the default legacy one
+        self.integrationDelegate = integrationDelegate ?? self
     }
 
     required init?(coder: NSCoder) {
@@ -322,8 +340,17 @@ extension AddressViewController {
 extension AddressViewController {
 
     func didContinue() {
-        logAddressCompleted()
-        delegate?.addressViewControllerDidFinish(self, with: addressDetails)
+        Task { @MainActor in
+            do {
+                try await self.integrationDelegate?.save(
+                    addressDetails: addressDetails,
+                    // TODO(gbirch) fill in loading UI behavior
+                    setLoading: { _ in }
+                )
+            } catch {
+                self.latestError = error
+            }
+        }
     }
 
     @objc func didTapBackground() {
@@ -492,6 +519,15 @@ extension AddressViewController {
             timeToComplete: timeToComplete,
             apiClient: configuration.apiClient
         )
+    }
+}
+
+// MARK: - IntegrationDelegate
+// Default implementation that logs completion and forwards address details to the merchant delegate
+extension AddressViewController: AddressViewController.IntegrationDelegate {
+    func save(addressDetails: AddressDetails?, setLoading: (Bool) -> Void) async throws {
+        logAddressCompleted()
+        delegate?.addressViewControllerDidFinish(self, with: addressDetails)
     }
 }
 

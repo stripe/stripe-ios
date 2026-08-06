@@ -175,14 +175,6 @@ import Foundation
     case linkAccountLookupFailure = "link.account_lookup.failure"
     case linkEmailSuggestionAccepted = "link.email_suggestion.accepted"
 
-    // MARK: - LUXE
-    case luxeSerializeFailure = "luxe_serialize_failure"
-    case luxeSpecSerializeFailure = "luxe_spec_serialize_failure"
-
-    case luxeImageSelectorIconDownloaded = "luxe_image_selector_icon_downloaded"
-    case luxeImageSelectorIconFromBundle = "luxe_image_selector_icon_from_bundle"
-    case luxeImageSelectorIconNotFound = "luxe_image_selector_icon_not_found"
-
     // MARK: - CustomerSheet initialization
     case customerSheetInitWithCustomerAdapter = "cs_init_with_customer_adapter"
     case customerSheetInitWithCustomerSession = "cs_init_with_customer_session"

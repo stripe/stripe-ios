@@ -169,7 +169,16 @@ Run `bundle install && bundle exec fastlane stripeios_tests` initially to instal
 - Legacy iOS versions: Separate fastlane lanes for iOS 13-16 compatibility testing
 
 ### Acronyms and Terms
+- AP = Adaptive Pricing
+- CS = Checkout Session (`CheckoutSession`), the server-backed source of truth for checkout state, or Customer Session (`CustomerSession`), depending on context
+- Mobile Checkout Elements (also Checkout Elements) = the native Checkout Session integration for composing a checkout from Stripe Elements and merchant-owned UI
+- Checkout SDK / `CheckoutController` = the client-side coordinator that loads and observes a CS, serializes updates from the merchant and Elements, exposes session state, and confirms the checkout
+- ECE = Express Checkout Element, the element for one-click payment methods such as Apple Pay and Google Pay outside of Payment Element
 - EPE = EmbeddedPaymentElement
+- PE = Payment Element; in Checkout Elements, this is a single payment-method collection surface that can be embedded or presented as a sheet
 - PS.FC = FlowController (PaymentSheet.FlowController)
 - FC = FinancialConnections, or occasionally FlowController (see above)
 - MPE = Mobile Payment Element, an umbrella term for EmbeddedPaymentElement, PaymentSheet, and FlowController
+- AE = Address Element; SAE = Shipping Address Element
+- CSE = Currency Selector Element, the Adaptive Pricing currency control
+- SPM = Saved Payment Method

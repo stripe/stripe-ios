@@ -210,6 +210,9 @@ with the transaction. */
 /* Label for the discount row in an order summary, applied as a negative amount. */
 "Discount" = "Discount";
 
+/* Accessibility label for a button that lets the user update their address */
+"Edit address" = "Edit address";
+
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
 
@@ -239,9 +242,6 @@ with the transaction. */
 
 /* Label for an IBAN field */
 "IBAN" = "IBAN";
-
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL Bank";
 
 /* Label for displaying the last 4 digits of the user's social security number */
 "Last 4 digits of SSN" = "Last 4 digits of SSN";

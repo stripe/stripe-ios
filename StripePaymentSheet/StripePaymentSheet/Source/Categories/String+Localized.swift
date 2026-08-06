@@ -64,10 +64,6 @@ extension String.Localized {
         )
     }
 
-    static var ideal_bank: String {
-        STPLocalizedString("iDEAL Bank", "iDEAL bank section title for iDEAL form entry.")
-    }
-
     static var bank_account_sentence_case: String {
         STPLocalizedString("Bank account", "Title for collected bank account information")
     }
@@ -692,6 +688,10 @@ extension String.Localized {
 
     static var confirm_your_information: String {
         STPLocalizedString("Confirm your information", "Title label for a know-your-customer (KYC) verification screen")
+    }
+
+    static var edit_address: String {
+        STPLocalizedString("Edit address", "Accessibility label for a button that lets the user update their address")
     }
 
     static var user_attestation: String {

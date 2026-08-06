@@ -32,6 +32,7 @@ class AutoCompleteViewController: UIViewController {
     /// Session token for grouping autocomplete and place details calls.
     let sessionToken: String = UUID().uuidString
 
+    private let minimumQueryLength: Int = 3
     private let indendationWidth: CGFloat = 5
     private lazy var addressSearchCompleter: MKLocalSearchCompleter = {
        let searchCompleter = MKLocalSearchCompleter()
@@ -316,7 +317,7 @@ extension AutoCompleteViewController: ElementDelegate {
         if configuration.useAutocompleteEndpoints {
             guard query != lastFetchedQuery else { return }
             lastFetchedQuery = query
-            guard query.count >= 2 else {
+            guard query.count >= minimumQueryLength else {
                 debounceTask?.cancel()
                 fetchTask?.cancel()
                 setResults([], source: nil)
