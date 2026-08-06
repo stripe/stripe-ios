@@ -115,7 +115,7 @@ struct AddressAnalyticData {
     var analyticsPayload: [String: Any?] {
         return ["address_country_code": addressCountryCode,
                 "auto_complete_result_selected": autoCompleteResultedSelected,
-                "edit_distance": editDistance]
+                "edit_distance": editDistance,]
     }
 }
 
