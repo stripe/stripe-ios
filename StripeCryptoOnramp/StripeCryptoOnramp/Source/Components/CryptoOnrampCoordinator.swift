@@ -135,6 +135,13 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws if an authenticated Link user is not available, or an API error occurs.
     func registerWalletAddress(walletAddress: String, network: CryptoNetwork) async throws
 
+    /// Deletes the given crypto wallet from the current Link account.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter walletId: The ID of the crypto wallet to delete.
+    /// Throws if an authenticated Link user is not available, or an API error occurs.
+    func deleteWalletAddress(walletId: String) async throws
+
     /// Creates a short-lived server-issued challenge for a registered wallet.
     /// Requires an authenticated Link user.
     ///
@@ -550,6 +557,18 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.walletRegistered(network: network.rawValue))
         } catch {
             try logAndThrow(error, during: .registerWalletAddress)
+        }
+    }
+
+    public func deleteWalletAddress(walletId: String) async throws {
+        do {
+            try await apiClient.deleteWalletAddress(
+                walletId: walletId,
+                linkAccountInfo: linkAccountInfo
+            )
+            analyticsClient.log(.walletDeleted)
+        } catch {
+            try logAndThrow(error, during: .deleteWalletAddress)
         }
     }
 
