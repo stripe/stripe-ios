@@ -10,7 +10,6 @@
 import SwiftUI
 import UIKit
 
-@available(iOS 15.0, *)
 struct PMMETestPlayground: View {
 
     private var config: PaymentMethodMessagingElement.Configuration {
@@ -172,7 +171,6 @@ struct PMMETestPlayground: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct PMMEPlaygroundSettingView<T: PMMEPlaygroundSetting>: View {
 
     let title: String

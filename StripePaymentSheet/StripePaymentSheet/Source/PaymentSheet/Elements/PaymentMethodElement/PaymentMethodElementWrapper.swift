@@ -47,6 +47,20 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
         self.init(privateElement: element, defaultsApplier: defaultsApplier, paramsUpdater: paramsUpdater)
     }
 
+    /// Creates a wrapper that applies `paramsUpdater`, then lets the wrapped element contribute its own params.
+    convenience init(
+        updatingParamsFrom element: WrappedElementType,
+        defaultsApplier: DefaultsApplier? = nil,
+        paramsUpdater: @escaping ParamsUpdater
+    ) where WrappedElementType: PaymentMethodElement {
+        self.init(privateElement: element, defaultsApplier: defaultsApplier) { element, params in
+            guard let params = paramsUpdater(element, params) else {
+                return nil
+            }
+            return element.updateParams(params: params)
+        }
+    }
+
     convenience init(
         _ element: TextFieldElement,
         defaultsApplier: DefaultsApplier? = nil,
@@ -57,6 +71,20 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
                 return nil
             }
             return paramsUpdater(textField, params)
+        }
+    }
+
+    /// Creates a validated text field wrapper that also collects params from the text field's children.
+    convenience init(
+        updatingParamsFrom element: TextFieldElement,
+        defaultsApplier: DefaultsApplier? = nil,
+        paramsUpdater: @escaping ParamsUpdater
+    ) where WrappedElementType == TextFieldElement {
+        self.init(element, defaultsApplier: defaultsApplier) { textField, params in
+            guard let params = paramsUpdater(textField, params) else {
+                return nil
+            }
+            return textField.updateParams(params: params)
         }
     }
     convenience init(

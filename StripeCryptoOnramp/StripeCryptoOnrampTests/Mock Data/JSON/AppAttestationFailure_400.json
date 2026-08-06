@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "link_failed_to_attest_request",
+    "message": "App identifier intentionally_invalid_app_id_for_testing (bundle ID on iOS or package name on Android) isn't registered as a trusted application in test mode for this Stripe account. Contact Stripe to register it and try again.",
+    "reason": "app_not_registered",
+    "type": "invalid_request_error"
+  }
+}

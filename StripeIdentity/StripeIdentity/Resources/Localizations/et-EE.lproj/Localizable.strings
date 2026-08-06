@@ -6,6 +6,8 @@
 
 "App Settings" = "Rakenduse sätted";
 
+"Auto" = "Automaatne";
+
 "Back %@ photo successfully uploaded" = "%@ tagumine foto on edukalt üles laaditud.";
 
 "Back identity document photo successfully uploaded" = "Foto isikut tõendava dokumendi tagaküljest on edukalt üles laaditud";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Pilt on udune. Hoidke telefoni kindlalt ja proovige uuesti.";
 
+"Image taken" = "Pilt tehtud";
+
 "Individual CPF" = "Eraisiku CPF";
 
 "Invalid document" = "Kehtetu dokument";
@@ -85,6 +89,8 @@
 "Loading" = "Laadimine";
 
 "Make sure you're in a well lit space." = "Veenduge, et olete hästi valgustatud kohas.";
+
+"Manual" = "Käsiraamat";
 
 "Move closer" = "Asetage lähemale";
 

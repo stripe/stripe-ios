@@ -31,11 +31,12 @@
     {
       "parallelizable" : true,
       "skippedTests" : [
+        "CheckoutSessionUITests",
         "CustomerSheetSnapshotTests",
         "CustomerSheetUITest",
         "EmbeddedUITests",
         "EmbeddedUITests\/testUpdate()",
-        "LinkPaymentControllerUITest",
+        "InstantBankPaymentsControllerUITest",
         "PaymentSheetBillingCollectionBankTests",
         "PaymentSheetBillingCollectionLPMUITests",
         "PaymentSheetBillingCollectionUICardTests",

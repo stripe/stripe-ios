@@ -555,10 +555,11 @@
       "zip":"\\d{5}"
    },
    "JP":{
-      "fmt":"〒%Z%n%S%n%A%n%O%n%N",
-      "lfmt":"%N%n%O%n%A, %S%n%Z",
-      "require":"ASZ",
+      "fmt":"〒%Z%n%S%C%n%A%n%O%n%N",
+      "lfmt":"%N%n%O%n%A, %C, %S%n%Z",
+      "require":"ACSZ",
       "state_name_type":"prefecture",
+      "locality_name_type":"city",
       "zip":"\\d{3}-?\\d{4}"
    },
    "KE":{

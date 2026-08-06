@@ -42,6 +42,11 @@ final class FinancialConnectionsAsyncAPIClient {
             }
         }
     }
+    var authenticatedLinkBrand: LinkBrand? {
+        didSet {
+            PresentationManager.shared.setAuthenticatedLinkBrand(authenticatedLinkBrand)
+        }
+    }
 
     private lazy var logger = FinancialConnectionsAPIClientLogger()
 
@@ -752,7 +757,7 @@ extension FinancialConnectionsAsyncAPIClient {
         customEmailType: String?,
         connectionsMerchantName: String?,
         consumerSessionClientSecret: String
-    ) async throws -> ConsumerSessionResponse {
+    ) async throws -> ConsumerSessionStartVerificationResponse {
         var parameters: [String: Any] = [
             "request_surface": requestSurface,
             "type": otpType,
@@ -770,7 +775,7 @@ extension FinancialConnectionsAsyncAPIClient {
         otpCode: String,
         otpType: String,
         consumerSessionClientSecret: String
-    ) async throws -> ConsumerSessionResponse {
+    ) async throws -> ConsumerSessionConfirmVerificationResponse {
         let parameters: [String: Any] = [
             "type": otpType,
             "code": otpCode,

@@ -6,6 +6,8 @@
 
 "App Settings" = "การตั้งค่าแอป";
 
+"Auto" = "อัตโนมัติ";
+
 "Back %@ photo successfully uploaded" = "อัปโหลดรูปภาพ %@ ด้านหลังเรียบร้อย";
 
 "Back identity document photo successfully uploaded" = "อัปโหลดรูปภาพด้านหลังเอกสารประจำตัวเรียบร้อย";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "รูปภาพเบลอ โปรดถือโทรศัพท์ให้นิ่งแล้วลองอีกครั้ง";
 
+"Image taken" = "ถ่ายภาพแล้ว";
+
 "Individual CPF" = "CPF ส่วนบุคคล";
 
 "Invalid document" = "เอกสารไม่ถูกต้อง";
@@ -85,6 +89,8 @@
 "Loading" = "กำลังโหลด";
 
 "Make sure you're in a well lit space." = "ตรวจสอบว่าคุณอยู่ในสภาพแวดล้อมที่มีแสงสว่างเพียงพอ";
+
+"Manual" = "ด้วยตนเอง";
 
 "Move closer" = "เลื่อนเข้ามา";
 

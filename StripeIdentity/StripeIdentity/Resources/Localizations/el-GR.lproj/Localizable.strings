@@ -6,6 +6,8 @@
 
 "App Settings" = "Ρυθμίσεις εφαρμογής";
 
+"Auto" = "Αυτόματα";
+
 "Back %@ photo successfully uploaded" = "Η πίσω %@ φωτογραφία ανέβηκε επιτυχώς";
 
 "Back identity document photo successfully uploaded" = "Η πίσω φωτογραφία του εγγράφου ταυτότητας ανέβηκε επιτυχώς";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Η εικόνα είναι θολή. Κρατήστε σταθερό το τηλέφωνο και δοκιμάστε ξανά.";
 
+"Image taken" = "Η εικόνα λήφθηκε";
+
 "Individual CPF" = "Ατομικό CPF";
 
 "Invalid document" = "Μη έγκυρο έγγραφο";
@@ -85,6 +89,8 @@
 "Loading" = "Φόρτωση";
 
 "Make sure you're in a well lit space." = "Βεβαιωθείτε ότι βρίσκεστε σε έναν καλά φωτισμένο χώρο.";
+
+"Manual" = "Μη αυτόματα";
 
 "Move closer" = "Μετακινήστε πιο κοντά";
 

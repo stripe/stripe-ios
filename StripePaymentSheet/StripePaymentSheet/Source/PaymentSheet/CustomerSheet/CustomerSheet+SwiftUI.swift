@@ -98,12 +98,16 @@ extension CustomerSheet {
             func presentSheet(on controller: UIViewController) {
                 let presenter = findViewControllerPresenter(from: controller)
 
-                parent.customerSheet?.present(from: presenter) { (result: CustomerSheet.CustomerSheetResult) in
+                parent.customerSheet?.present(from: presenter, completion: { result in
                     Task { @MainActor in
                         self.parent.presented = false
                         self.parent.onCompletion(result)
                     }
-                }
+                }, onDismiss: {
+                    Task { @MainActor in
+                        self.parent.presented = false
+                    }
+                })
             }
 
             func forciblyDismissSheet(from controller: UIViewController) {

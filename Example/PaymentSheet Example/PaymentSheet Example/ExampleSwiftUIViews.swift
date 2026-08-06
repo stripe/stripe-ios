@@ -25,11 +25,7 @@ struct ExamplePaymentButtonView: View {
 
 struct ExampleLoadingView: View {
     var body: some View {
-        if #available(iOS 14.0, *) {
-            ProgressView()
-        } else {
-            Text("Preparing payment…")
-        }
+        ProgressView()
     }
 }
 

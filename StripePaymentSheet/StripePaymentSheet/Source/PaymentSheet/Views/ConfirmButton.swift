@@ -46,21 +46,13 @@ class ConfirmButton: UIControl {
                 case .setup:
                     return .setup
                 }
-            case .checkoutSession(let checkoutSession):
-                switch checkoutSession.mode {
-                case .payment:
-                    if let amount = checkoutSession.total?.total.minorUnitsAmount,
-                       let currency = checkoutSession.currency {
-                        return .pay(amount: amount, currency: currency, withLock: withLock)
-                    }
-                    stpAssertionFailure("Missing amount and currency in checkout session for .payment mode")
-                    return .setup
-                case .setup:
-                    return .setup
-                case .subscription, .unknown:
-                    stpAssertionFailure("Unknown and subscription modes not yet supported in checkout sessions")
+            case .checkout(let session):
+                guard !session.noPaymentRequired else { return .setup }
+                guard let amount = session.expectedAmount(), let currency = session.currency else {
+                    stpAssertionFailure("Checkout session is missing amount or currency")
                     return .setup
                 }
+                return .pay(amount: amount, currency: currency, withLock: withLock)
             }
         }
     }

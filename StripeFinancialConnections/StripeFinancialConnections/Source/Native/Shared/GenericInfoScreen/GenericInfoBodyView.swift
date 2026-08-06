@@ -214,7 +214,6 @@ private func SingleBulletPointView(
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 private struct GenericInfoBodyViewUIViewRepresentable: UIViewRepresentable {
 
     let body: FinancialConnectionsGenericInfoScreen.Body
@@ -233,7 +232,6 @@ private struct GenericInfoBodyViewUIViewRepresentable: UIViewRepresentable {
     }
 }
 
-@available(iOS 14.0, *)
 struct GenericInfoBodyView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

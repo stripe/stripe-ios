@@ -6,7 +6,7 @@
 //
 
 @testable@_spi(STP) import StripeCore
-import StripeCoreTestUtils
+@_spi(STP) import StripeCoreTestUtils
 @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
@@ -654,6 +654,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
     func testChangeButtonStateRespectsCardBrandChoice() async throws {
         // Given an EmbeddedPaymentElement w/ CBC enabled...
+        await AddressSpecProvider.shared.loadAddressSpecs()
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(cardBrandChoice: ._testValue())
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
@@ -662,6 +663,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
             elementsSession: elementsSession,
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         let sut = EmbeddedPaymentElement(
@@ -672,8 +674,6 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
-        await AddressSpecProvider.shared.loadAddressSpecs()
-        await FormSpecProvider.shared.load()
         // ...with card selected...
         let cardRowButton = sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
         sut.embeddedPaymentMethodsView.didTap(rowButton: cardRowButton)
@@ -687,14 +687,67 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // ...the change button state label (the label that appears on the selected row) should read ****1001 w/o a network (b/c no network was selected)...
         sut.updateChangeButtonAndSublabelState(for: .new(paymentMethodType: .stripe(.card)))
         XCTAssertEqual(sut.embeddedPaymentMethodsView.selectedRowChangeButtonState?.sublabel, "•••• 1001")
-        // ...and setting a preferred network (ie what happens if you select a brand from the dropdown)...
-        // Hack: Since the dropdown field isn't properly hooked up to the Element hierarchy, we can't access it via `cardForm.getDropdownFieldElement`
-        // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-3088): Make the CBC dropdown field participate in the Element hierarchy correctly!
-        let cardBrandChoiceElement = (cardForm.getTextFieldElement("Card number").configuration as! TextFieldElement.PANConfiguration).cardBrandChoiceElement
+        // ...and setting a preferred network (ie what happens if you select a brand from the selector)...
+        let cardBrandChoiceElement: CardBrandChoiceElement? = cardForm.getElement()
         cardBrandChoiceElement?.select(.cartesBancaires)
         // ...the label should read "Cartes Bancaire ****1001"
         sut.updateChangeButtonAndSublabelState(for: .new(paymentMethodType: .stripe(.card)))
         XCTAssertEqual(sut.embeddedPaymentMethodsView.selectedRowChangeButtonState?.sublabel, "Cartes Bancaires •••• 1001")
+    }
+
+    func testPMMExperimentExposureLogged() async throws {
+        let analyticsClientV2 = MockAnalyticsClientV2()
+        let arbId = "arb_pmm_embedded_789"
+        let experimentsData = ExperimentsData(
+            arbId: arbId,
+            experimentAssignments: [
+                PaymentMethodMessagingPromotionsExperiment.experimentName: .treatment,
+            ],
+            allResponseFields: [:]
+        )
+        let analyticsHelper = PaymentSheetAnalyticsHelper(
+            integrationShape: .embedded,
+            configuration: EmbeddedPaymentElement.Configuration(),
+            analyticsClient: STPTestingAnalyticsClient(),
+            analyticsClientV2: analyticsClientV2
+        )
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let elementsSession = STPElementsSession._testValue(experimentsData: experimentsData)
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let promotionsHelper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: configuration,
+            paymentMethodTypes: [.stripe(.card)],
+            analyticsHelper: analyticsHelper
+        ))
+        promotionsHelper.fetchData()
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: promotionsHelper,
+            paymentMethodOrientation: .vertical
+        )
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        let sut = EmbeddedPaymentElement(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
+        )
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Verify PMM experiment exposure was logged exactly once with correct params
+        let exposurePayloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName)
+        XCTAssertEqual(exposurePayloads.count, 1)
+        if let payload = exposurePayloads.first {
+            XCTAssertEqual(payload["arb_id"] as? String, arbId)
+            XCTAssertEqual(payload["experiment_retrieved"] as? String, PaymentMethodMessagingPromotionsExperiment.experimentName)
+            XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
+        }
     }
 
     func testDelegatePaymentOptionUpdate() async throws {
@@ -824,12 +877,52 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertNil(sut.paymentOption, "Payment option should be nil after filling out the card form, but hitting cancel.")
     }
 
+    func testCancelingEditedFormRestoresAcceptedForm() async throws {
+        // Given an EmbeddedPaymentElement with a selected card
+        let sut = try await EmbeddedPaymentElement.create(
+            intentConfiguration: paymentIntentConfig,
+            configuration: configuration
+        )
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.embeddedPaymentMethodsView.didTap(
+            rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
+        )
+        var cardForm = sut.formCache[.stripe(.card)]!
+        cardForm.getTextFieldElement("Card number").setText("4242424242424242")
+        cardForm.getTextFieldElement("MM / YY").setText("1240")
+        cardForm.getTextFieldElement("CVC").setText("123")
+        cardForm.getTextFieldElement("ZIP").setText("12345")
+        sut.selectedFormViewController?.didTapPrimaryButton()
+        XCTAssertEqual(sut.paymentOption?.label, "•••• 4242")
+
+        // When the element is updated and the same card row is reopened
+        let updateResult = await sut.update(intentConfiguration: paymentIntentConfig)
+        XCTAssertEqual(updateResult, .succeeded)
+        sut.embeddedPaymentMethodsView.didTap(
+            rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
+        )
+        cardForm = sut.formCache[.stripe(.card)]!
+
+        // ...and its CVC is edited before the form is canceled
+        cardForm.getTextFieldElement("CVC").setText("999")
+        sut.selectedFormViewController?.didTapOrSwipeToDismiss()
+
+        // Then the selected card and its CVC are restored even though its display data did not change
+        XCTAssertEqual(sut.paymentOption?.label, "•••• 4242")
+        cardForm = sut.formCache[.stripe(.card)]!
+        XCTAssertEqual(cardForm.getTextFieldElement("Card number").text, "4242424242424242")
+        XCTAssertEqual(cardForm.getTextFieldElement("CVC").text, "123")
+    }
+
     // MARK: - Checkout Session update tests
 
     func testUpdateCheckoutSession() async throws {
-        let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
+        let response = try await STPTestingAPIClient.shared.createCheckoutSession()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        checkoutConfiguration.apiClient = apiClient
+        let checkout = try await Checkout(configuration: checkoutConfiguration)
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient
@@ -845,9 +938,11 @@ class EmbeddedPaymentElementTest: XCTestCase {
     }
 
     func testUpdateCheckoutSessionCancelsInFlight() async throws {
-        let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
+        let response = try await STPTestingAPIClient.shared.createCheckoutSession()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        checkoutConfiguration.apiClient = apiClient
+        let checkout = try await Checkout(configuration: checkoutConfiguration)
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient
@@ -866,10 +961,12 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertEqual(updateResult2, .succeeded)
     }
 
-    func testUpdateCheckoutSessionWithCompletionBlock() async throws {
-        let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
+    func testUpdateCheckoutSessionNoOpsForCompleteSession() async throws {
+        let response = try await STPTestingAPIClient.shared.createCheckoutSession()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        checkoutConfiguration.apiClient = apiClient
+        let checkout = try await Checkout(configuration: checkoutConfiguration)
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient
@@ -879,12 +976,47 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.delegate = self
         sut.presentingViewController = UIViewController()
 
-        let updateExpectation = expectation(description: "Update completes")
-        sut.update(checkout: checkout) { result in
-            XCTAssertEqual(result, .succeeded)
-            updateExpectation.fulfill()
-        }
-        await fulfillment(of: [updateExpectation], timeout: STPTestingNetworkRequestTimeout)
+        // Simulate the session completing
+        let completedSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: {
+            var json = CheckoutTestHelpers.openSessionJSON
+            json["status"] = "complete"
+            json["payment_status"] = "paid"
+            return json
+        }())!
+        try await checkout.commitSession(completedSession)
+        XCTAssertFalse(checkout.sessionIsOpen)
+
+        // Should no-op
+        let result = await sut.update(checkout: checkout)
+        XCTAssertEqual(result, .succeeded)
+        XCTAssertEqual(checkout.session.status?.type, .complete)
+    }
+
+    func testUpdateCheckoutSessionNoOpsForExpiredSession() async throws {
+        let response = try await STPTestingAPIClient.shared.createCheckoutSession()
+        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        checkoutConfiguration.apiClient = apiClient
+        let checkout = try await Checkout(configuration: checkoutConfiguration)
+
+        var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        config.apiClient = apiClient
+        config.defaultBillingDetails.email = "test@example.com"
+
+        let sut = try await EmbeddedPaymentElement.create(checkout: checkout, configuration: config)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+
+        let expiredSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: {
+            var json = CheckoutTestHelpers.openSessionJSON
+            json["status"] = "expired"
+            return json
+        }())!
+        try await checkout.commitSession(expiredSession)
+        XCTAssertFalse(checkout.sessionIsOpen)
+
+        let result = await sut.update(checkout: checkout)
+        XCTAssertEqual(result, .succeeded)
     }
 
     // MARK: Immediate action tests

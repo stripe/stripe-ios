@@ -9,18 +9,14 @@
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 struct CheckoutCartContentView: View {
     @ObservedObject var checkout: Checkout
+    var showsShippingAddressSection: Bool
     @Binding var isLoading: Bool
     @Binding var errorMessage: String?
 
-    @State private var promoCodeInput = ""
     @State private var showShippingAddressSheet = false
-    @State private var showBillingAddressSheet = false
-    @State private var lastSelectedShippingOptionId: String?
     @State private var shippingAddressDetails: AddressElement.AddressDetails?
-    @State private var billingAddressDetails: AddressElement.AddressDetails?
 
     var body: some View {
         ScrollView {
@@ -35,13 +31,12 @@ struct CheckoutCartContentView: View {
 
                 currencySelectorSection
                 lineItemsSection
-                shippingOptionsSection
-                shippingAddressSection
-                billingAddressSection
-                promotionCodeSection
+                if showsShippingAddressSection {
+                    shippingAddressSection
+                }
                 orderSummarySection
 
-                Spacer().frame(height: 100)
+                Spacer().frame(height: 160)
             }
             .padding(.top, 20)
         }
@@ -56,7 +51,7 @@ struct CheckoutCartContentView: View {
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            let items = checkout.state.session.lineItems
+            let items = checkout.session.lineItems
             if items.isEmpty {
                 Text("No items")
                     .foregroundColor(.secondary)
@@ -83,37 +78,13 @@ struct CheckoutCartContentView: View {
 
                                 Spacer()
 
-                                // Custom Stepper
-                                HStack {
-                                    Button(action: {
-                                        if item.quantity > 0 {
-                                            updateQuantity(for: item.id, to: item.quantity - 1)
-                                        }
-                                    }) {
-                                        Image(systemName: "minus.circle.fill")
-                                            .foregroundColor(item.quantity > 0 ? .primary : .gray.opacity(0.5))
-                                            .font(.system(size: 24))
-                                    }
-                                    .buttonStyle(PlainButtonStyle())
-
-                                    Text("\(item.quantity)")
-                                        .font(.body).bold()
-                                        .frame(minWidth: 24, alignment: .center)
-
-                                    Button(action: {
-                                        updateQuantity(for: item.id, to: item.quantity + 1)
-                                    }) {
-                                        Image(systemName: "plus.circle.fill")
-                                            .foregroundColor(.primary)
-                                            .font(.system(size: 24))
-                                    }
-                                    .buttonStyle(PlainButtonStyle())
-                                }
+                                Text("Qty: \(item.quantity)")
+                                    .font(.body).bold()
                             }
                             Spacer()
                             Text(formatCartCurrency(
                                 amount: (item.unitAmount?.minorUnitsAmount ?? 0) * item.quantity,
-                                currency: checkout.state.session.currency
+                                currency: checkout.session.currency
                             ))
                                 .font(.headline)
                         }
@@ -133,70 +104,13 @@ struct CheckoutCartContentView: View {
     }
 
     @ViewBuilder
-    private var shippingOptionsSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Shipping Options")
-                .font(.title2).bold()
-                .padding(.horizontal)
-
-            let options = checkout.state.session.shippingOptions
-            if options.isEmpty {
-                Text("No shipping options available")
-                    .foregroundColor(.secondary)
-                    .padding(.horizontal)
-            } else {
-                let selectedId = selectedShippingOptionId ?? ""
-                VStack(spacing: 0) {
-                    ForEach(options) { option in
-                        Button(action: {
-                            selectShippingOption(option.id)
-                        }) {
-                            HStack {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(option.displayName ?? "Shipping")
-                                        .font(.body)
-                                        .foregroundColor(.primary)
-                                    Text(option.amount.amount)
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondary)
-                                }
-                                Spacer()
-                                if option.id == selectedId {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundColor(.blue)
-                                        .font(.system(size: 24))
-                                } else {
-                                    Image(systemName: "circle")
-                                        .foregroundColor(.gray.opacity(0.5))
-                                        .font(.system(size: 24))
-                                }
-                            }
-                            .padding()
-                            .contentShape(Rectangle())
-                        }
-                        .buttonStyle(PlainButtonStyle())
-
-                        if option.id != options.last?.id {
-                            Divider().padding(.leading, 16)
-                        }
-                    }
-                }
-                .background(Color(UIColor.systemBackground))
-                .cornerRadius(16)
-                .padding(.horizontal)
-                .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
-            }
-        }
-    }
-
-    @ViewBuilder
     private var shippingAddressSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Shipping Address")
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            if let override = checkout.state.session.shippingAddress {
+            if let override = checkout.session.shippingAddress {
                 addressCard(
                     name: override.name,
                     address: override.address,
@@ -211,35 +125,7 @@ struct CheckoutCartContentView: View {
                 address: shippingAddressBinding,
                 configuration: makeAddressConfiguration(
                     title: "Shipping Address",
-                    override: checkout.state.session.shippingAddress
-                )
-            )
-        }
-    }
-
-    @ViewBuilder
-    private var billingAddressSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Billing Address")
-                .font(.title2).bold()
-                .padding(.horizontal)
-
-            if let override = checkout.state.session.billingAddress {
-                addressCard(
-                    name: override.name,
-                    address: override.address,
-                    onEdit: { showBillingAddressSheet = true }
-                )
-            } else {
-                emptyAddressCard(label: "Add billing address", onAdd: { showBillingAddressSheet = true })
-            }
-        }
-        .sheet(isPresented: $showBillingAddressSheet) {
-            AddressElement(
-                address: billingAddressBinding,
-                configuration: makeAddressConfiguration(
-                    title: "Billing Address",
-                    override: checkout.state.session.billingAddress
+                    override: checkout.session.shippingAddress
                 )
             )
         }
@@ -323,7 +209,7 @@ struct CheckoutCartContentView: View {
 
     private func makeAddressConfiguration(
         title: String,
-        override: Checkout.ContactAddress?
+        override: Checkout.Session.ShippingAddress?
     ) -> AddressElement.Configuration {
         var config = AddressElement.Configuration()
         config.title = title
@@ -338,111 +224,24 @@ struct CheckoutCartContentView: View {
                     postalCode: override.address.postalCode,
                     state: override.address.state
                 ),
-                name: override.name,
-                phone: override.phone
+                name: override.name
             )
         }
         return config
     }
 
     @ViewBuilder
-    private var promotionCodeSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Promotion Code")
-                .font(.title2).bold()
+    private var currencySelectorSection: some View {
+        if let currencySelectorElement = checkout.getCurrencySelectorElement() {
+            currencySelectorElement.view
                 .padding(.horizontal)
-
-            VStack {
-                if let appliedCode = appliedPromotionCode {
-                    HStack {
-                        Image(systemName: "tag.fill")
-                            .foregroundColor(.green)
-                        Text(appliedCode)
-                            .font(.headline)
-                            .foregroundColor(.green)
-                        Spacer()
-                        Button("Remove") {
-                            removePromotionCode()
-                        }
-                        .foregroundColor(.red)
-                        .font(.subheadline)
-                    }
-                    .padding()
-                    .background(Color.green.opacity(0.1))
-                    .cornerRadius(12)
-                } else {
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            Image(systemName: "tag")
-                                .foregroundColor(.secondary)
-                            TextField("Enter code", text: $promoCodeInput)
-                                .autocapitalization(.allCharacters)
-                                .font(.body)
-                            Spacer()
-                            Button("Apply") {
-                                applyPromotionCode(promoCodeInput)
-                            }
-                            .foregroundColor(.blue)
-                            .font(.headline)
-                            .disabled(promoCodeInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                        }
-                        .padding()
-                        .background(Color(UIColor.systemBackground))
-                        .cornerRadius(16)
-                        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
-
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                Button(action: { applyPromotionCode("IOSVIP25") }) {
-                                    Text("25% off")
-                                        .font(.caption).bold()
-                                        .padding(.horizontal, 12)
-                                        .padding(.vertical, 6)
-                                        .background(Color.blue.opacity(0.1))
-                                        .foregroundColor(.blue)
-                                        .cornerRadius(12)
-                                }
-                                Button(action: { applyPromotionCode("IOSWELCOME10") }) {
-                                    Text("10% off")
-                                        .font(.caption).bold()
-                                        .padding(.horizontal, 12)
-                                        .padding(.vertical, 6)
-                                        .background(Color.blue.opacity(0.1))
-                                        .foregroundColor(.blue)
-                                        .cornerRadius(12)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            .padding(.horizontal)
         }
     }
 
     @ViewBuilder
-    private var currencySelectorSection: some View {
-        let appearance: Checkout.CurrencySelectorView.Appearance = {
-            var customAppearance = Checkout.CurrencySelectorView.Appearance()
-            customAppearance.cornerRadius = 12
-            customAppearance.backgroundColor = UIColor.systemBackground
-            customAppearance.selectedColor = UIColor.tintColor
-            customAppearance.selectedTextColor = .white
-            customAppearance.unselectedTextColor = UIColor.secondaryLabel
-            customAppearance.borderColor = UIColor.separator.withAlphaComponent(0.3)
-            customAppearance.captionColor = UIColor.secondaryLabel
-            customAppearance.titleFont = .systemFont(ofSize: 15, weight: .semibold)
-            customAppearance.subtitleFont = .systemFont(ofSize: 11, weight: .regular)
-            return customAppearance
-        }()
-        Checkout.CurrencySelectorElement(checkout: checkout, appearance: appearance)
-            .padding(.horizontal)
-    }
-
-    @ViewBuilder
     private var orderSummarySection: some View {
-        if let total = checkout.state.session.total {
-            let currency = checkout.state.session.currency
+        if let total = checkout.session.total {
+            let currency = checkout.session.currency
             let taxAmount = total.taxExclusive.minorUnitsAmount + total.taxInclusive.minorUnitsAmount
             VStack(alignment: .leading, spacing: 16) {
                 Text("Order Summary")
@@ -507,69 +306,6 @@ struct CheckoutCartContentView: View {
         }
     }
 
-    private var selectedShippingOptionId: String? {
-        let options = checkout.state.session.shippingOptions
-        guard !options.isEmpty else {
-            return nil
-        }
-        guard let shippingAmount = checkout.state.session.total?.shippingRate.minorUnitsAmount else {
-            return lastSelectedShippingOptionId
-        }
-        let matchingOptions = options.filter { $0.amount.minorUnitsAmount == shippingAmount }
-        if matchingOptions.count == 1 {
-            return matchingOptions[0].id
-        }
-        return lastSelectedShippingOptionId
-    }
-
-    private var appliedPromotionCode: String? {
-        checkout.state.session.discountAmounts.first(where: { $0.promotionCode != nil })?.promotionCode
-    }
-
-    // MARK: - Actions
-
-    private func updateQuantity(for lineItemId: String, to quantity: Int) {
-        Task {
-            isLoading = true
-            errorMessage = nil
-            do {
-                try await checkout.updateQuantity(lineItemId: lineItemId, quantity: quantity)
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-            isLoading = false
-        }
-    }
-
-    private func selectShippingOption(_ optionId: String) {
-        guard !optionId.isEmpty else { return }
-        Task {
-            isLoading = true
-            errorMessage = nil
-            do {
-                try await checkout.selectShippingOption(optionId)
-                lastSelectedShippingOptionId = optionId
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-            isLoading = false
-        }
-    }
-
-    private func applyPromotionCode(_ code: String) {
-        Task {
-            isLoading = true
-            errorMessage = nil
-            do {
-                try await checkout.applyPromotionCode(code)
-                promoCodeInput = ""
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-            isLoading = false
-        }
-    }
-
     private func checkoutAddress(from details: AddressElement.AddressDetails.Address) -> Checkout.Address {
         let line1 = details.line1.isEmpty ? nil : details.line1
         return Checkout.Address(
@@ -593,17 +329,6 @@ struct CheckoutCartContentView: View {
         )
     }
 
-    private var billingAddressBinding: Binding<AddressElement.AddressDetails?> {
-        Binding(
-            get: { billingAddressDetails },
-            set: { newValue in
-                billingAddressDetails = newValue
-                guard let details = newValue else { return }
-                updateBillingAddress(details)
-            }
-        )
-    }
-
     private func updateShippingAddress(_ details: AddressElement.AddressDetails) {
         Task {
             isLoading = true
@@ -611,7 +336,6 @@ struct CheckoutCartContentView: View {
             do {
                 try await checkout.updateShippingAddress(
                     name: details.name,
-                    phone: details.phone,
                     address: checkoutAddress(from: details.address)
                 )
             } catch {
@@ -621,38 +345,8 @@ struct CheckoutCartContentView: View {
         }
     }
 
-    private func updateBillingAddress(_ details: AddressElement.AddressDetails) {
-        Task {
-            isLoading = true
-            errorMessage = nil
-            do {
-                try await checkout.updateBillingAddress(
-                    name: details.name,
-                    phone: details.phone,
-                    address: checkoutAddress(from: details.address)
-                )
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-            isLoading = false
-        }
-    }
-
-    private func removePromotionCode() {
-        Task {
-            isLoading = true
-            errorMessage = nil
-            do {
-                try await checkout.removePromotionCode()
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-            isLoading = false
-        }
-    }
 }
 
-@available(iOS 15.0, *)
 struct CheckoutCartSheet: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var checkout: Checkout
@@ -667,6 +361,7 @@ struct CheckoutCartSheet: View {
 
                 CheckoutCartContentView(
                     checkout: checkout,
+                    showsShippingAddressSection: true,
                     isLoading: $isLoading,
                     errorMessage: $errorMessage
                 )

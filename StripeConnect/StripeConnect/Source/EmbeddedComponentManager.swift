@@ -11,7 +11,6 @@ import UIKit
 
 /// Manages Connect embedded components
 /// - Seealso: [Step by step integration guide](  https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios)
-@available(iOS 15, *)
 public final class EmbeddedComponentManager {
     let apiClient: STPAPIClient
 
@@ -149,7 +148,6 @@ public final class EmbeddedComponentManager {
 
     /// Creates a `PayoutsViewController`
     /// - Seealso: [Payouts component documentation](https://docs.stripe.com/connect/supported-embedded-components/payouts?platform=ios)
-    @_spi(PreviewConnect)
     @_documentation(visibility: public)
     public func createPayoutsViewController() -> PayoutsViewController {
         .init(componentManager: self,
@@ -161,7 +159,6 @@ public final class EmbeddedComponentManager {
     /// - Seealso: [Payments component documentation](https://docs.stripe.com/connect/supported-embedded-components/payments?platform=ios)
     /// - Parameters:
     ///   - defaultFilters: The default filters to apply to the payments list
-    @_spi(PreviewConnect)
     @_documentation(visibility: public)
     public func createPaymentsViewController(
         defaultFilters: EmbeddedComponentManager.PaymentsListDefaultFiltersOptions = .init()

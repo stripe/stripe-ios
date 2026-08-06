@@ -14,6 +14,9 @@ import UIKit
 protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     func embeddedPaymentMethodsViewDidUpdateHeight()
 
+    /// Called before the view changes its selected row.
+    func embeddedPaymentMethodsViewWillSelect(_ rowButtonType: RowButtonType)
+
     /// Called whenever a payment method row is tapped, after `didUpdateSelection`.
     func embeddedPaymentMethodsViewDidTapPaymentMethodRow()
 
@@ -22,10 +25,10 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
 
     func embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?)
 
-    /// Determines if the button for a given `PaymentSheet.PaymentMethodType` should animate when tapped
-    /// - Parameter paymentMethodType: A `PaymentSheet.PaymentMethodType`
-    /// - Returns: True if the button for this payment method type should animate when tapped
-    func shouldAnimateOnPress(_ paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool
+    /// Determines if selecting the given row button type will cause a form to be displayed.
+    /// - Parameter rowButtonType: The type of row button being evaluated.
+    /// - Returns: True if selecting this row button type will display a form.
+    func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool
 }
 
 /// The view for an embedded payment element
@@ -38,7 +41,6 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     private let appearance: PaymentSheet.Appearance
-    private let customer: PaymentSheet.CustomerConfiguration?
     private let currency: String?
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     private(set) var previousSelectedRowButton: RowButton? {
@@ -46,7 +48,7 @@ class EmbeddedPaymentMethodsView: UIView {
             guard let previousSelectedRowButton, selectedRowButton?.type != previousSelectedRowButton.type else {
                 return
             }
-            previousSelectedRowButton.isSelected = false
+            previousSelectedRowButton.updateSelectedState(false, willDisplayForm: delegate?.willDisplayForm(for: selectedRowButton?.type) == true)
             // Clear out the 'Change >' button and any sublabel (eg 4242) we set for new PM rows
             switch previousSelectedRowButton.type {
             case .new(paymentMethodType: let paymentMethodType):
@@ -67,7 +69,7 @@ class EmbeddedPaymentMethodsView: UIView {
                 delegate?.embeddedPaymentMethodsViewDidUpdateSelection()
             }
             if let selectedRowButton {
-                selectedRowButton.isSelected = true
+                selectedRowButton.updateSelectedState(true, willDisplayForm: delegate?.willDisplayForm(for: selectedRowButton.type) == true)
             }
         }
     }
@@ -79,7 +81,8 @@ class EmbeddedPaymentMethodsView: UIView {
     private let shouldShowMandate: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let incentive: PaymentMethodIncentive?
-    private let linkBrand: LinkBrand
+    private var linkBrand: LinkBrand
+    private let linkBrandProvider: () -> LinkBrand
     /// A bit hacky; this is the mandate text for the given payment method, *regardless* of whether it is shown in the view.
     /// It'd be better if the source of truth of mandate text was not the view and instead an independent `func mandateText(...) -> NSAttributedString` function, but this is hard b/c US Bank Account doesn't show mandate in certain states.
     var mandateText: NSAttributedString? {
@@ -100,6 +103,16 @@ class EmbeddedPaymentMethodsView: UIView {
         mandateView.directionalLayoutMargins.top = 12
         return mandateView
     }()
+    lazy var errorLabel = ElementsUI.makeErrorLabel(theme: appearance.asElementsTheme)
+    private lazy var errorContainerView: UIView = {
+        let view = UIView()
+        view.addAndPinSubview(
+            errorLabel,
+            directionalLayoutMargins: .init(top: 12, leading: 0, bottom: 0, trailing: 0)
+        )
+        view.setHiddenIfNecessary(true)
+        return view
+    }()
     private var savedPaymentMethodButton: RowButton?
     private(set) var rowButtons: [RowButton]
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?
@@ -116,11 +129,11 @@ class EmbeddedPaymentMethodsView: UIView {
         shouldShowApplePay: Bool,
         shouldShowLink: Bool,
         linkBrand: LinkBrand = .link,
+        linkBrandProvider: (() -> LinkBrand)? = nil,
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
         mandateProvider: MandateTextProvider,
         shouldShowMandate: Bool = true,
         savedPaymentMethods: [STPPaymentMethod] = [],
-        customer: PaymentSheet.CustomerConfiguration? = nil,
         currency: String? = nil,
         incentive: PaymentMethodIncentive? = nil,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
@@ -130,12 +143,12 @@ class EmbeddedPaymentMethodsView: UIView {
         self.appearance = appearance
         self.mandateProvider = mandateProvider
         self.shouldShowMandate = shouldShowMandate
-        self.customer = customer
         self.currency = currency
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
         self.linkBrand = linkBrand
+        self.linkBrandProvider = linkBrandProvider ?? { linkBrand }
         self.delegate = delegate
         self.rowButtons = []
         super.init(frame: .zero)
@@ -162,7 +175,6 @@ class EmbeddedPaymentMethodsView: UIView {
             let applePayRowButton = RowButton.makeForApplePay(appearance: appearance,
                                                               isEmbedded: true,
                                                               didTap: { [weak self] rowButton in
-                CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: customer?.id)
                 self?.didTap(rowButton: rowButton)
             })
             rowButtons.append(applePayRowButton)
@@ -170,7 +182,6 @@ class EmbeddedPaymentMethodsView: UIView {
 
         if shouldShowLink {
             let linkRowButton = RowButton.makeForLink(appearance: appearance, linkBrand: linkBrand, isEmbedded: true) { [weak self] rowButton in
-                CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customer?.id)
                 self?.didTap(rowButton: rowButton)
             }
             rowButtons.append(linkRowButton)
@@ -200,7 +211,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
         // If we have a row button that matches the initial selection, make it selected
         if let initialSelectedRowType, let rowButtonMatchingInitialSelection = rowButtons.filter({ $0.type == initialSelectedRowType }).first {
-            rowButtonMatchingInitialSelection.isSelected = true
+            rowButtonMatchingInitialSelection.updateSelectedState(true, willDisplayForm: delegate?.willDisplayForm(for: rowButtonMatchingInitialSelection.type) == true)
             if let initialSelectedRowChangeButtonState {
                 selectedRowChangeButtonState = initialSelectedRowChangeButtonState
                 if initialSelectedRowChangeButtonState.shouldShowChangeButton {
@@ -214,6 +225,7 @@ class EmbeddedPaymentMethodsView: UIView {
         // Set up mandate
         stackView.addArrangedSubview(mandateView)
         updateMandate(animated: false)
+        stackView.addArrangedSubview(errorContainerView)
 
         // Our content should respect `directionalLayoutMargins`. The default margins is `.zero`.
         addAndPinSubview(stackView, directionalLayoutMargins: .zero)
@@ -236,6 +248,7 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     private var previousHeight: CGFloat?
+    var notifiesDelegateOnInitialHeight = false
     private var didLogRenderLPMs: Bool = false
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -249,9 +262,12 @@ class EmbeddedPaymentMethodsView: UIView {
         // Calculate our natural height
         let desiredHeight = systemLayoutSizeFitting(CGSize(width: frame.width, height: UIView.layoutFittingExpandedSize.height)).height
 
-        // If we never recorded a height, this is our first layout; don't notify the delegate.
+        // If we never recorded a height, this is our first layout.
         guard let previousHeight else {
-            previousHeight = frame.height
+            previousHeight = desiredHeight
+            if notifiesDelegateOnInitialHeight {
+                delegate?.embeddedPaymentMethodsViewDidUpdateHeight()
+            }
             return
         }
 
@@ -293,6 +309,35 @@ class EmbeddedPaymentMethodsView: UIView {
         selectedRowButton = nil
     }
 
+    /// Displays an error below the payment method rows, or clears it when `error` is nil.
+    func setError(_ error: Error?, animated: Bool = true) {
+        let message = error?.nonGenericDescription
+        guard message != errorLabel.text else { return }
+        errorLabel.text = message
+        let updates = {
+            self.errorContainerView.setHiddenIfNecessary(message == nil)
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
+        if animated {
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration, animations: updates)
+        } else {
+            updates()
+        }
+        if message != nil {
+            UIAccessibility.post(notification: .layoutChanged, argument: errorLabel)
+        }
+    }
+
+    /// Selects the saved payment method if it is still displayed.
+    func selectSavedPaymentMethod(withStripeId stripeId: String) -> Bool {
+        guard let rowButton = rowButtons.first(where: {
+            $0.type.savedPaymentMethod?.stripeId == stripeId
+        }) else { return false }
+        selectedRowButton = rowButton
+        return true
+    }
+
     @objc
     func onLinkAccountChange(_ notification: Notification) {
         DispatchQueue.main.async { [weak self] in
@@ -303,6 +348,8 @@ class EmbeddedPaymentMethodsView: UIView {
 
     // MARK: Tap handling
     func didTap(rowButton: RowButton) {
+        setError(nil)
+        delegate?.embeddedPaymentMethodsViewWillSelect(rowButton.type)
         self.selectedRowButton = rowButton
         delegate?.embeddedPaymentMethodsViewDidTapPaymentMethodRow()
         analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: rowButton.type.analyticsIdentifier)
@@ -310,12 +357,22 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     func didTapViewMoreSavedPaymentMethods() {
+        setError(nil)
         delegate?.embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: selectedRowButton?.type.savedPaymentMethod)
     }
 
     func updateLinkRow(for linkAccount: PaymentSheetLinkAccount?, animated: Bool = true) {
         guard let linkRowButton else {
             return
+        }
+
+        let resolvedBrand = linkBrandProvider()
+        if resolvedBrand != linkBrand {
+            linkBrand = resolvedBrand
+            linkRowButton.setLabel(text: resolvedBrand.displayName)
+            linkRowButton.setPrimaryAccessibilityLabel(
+                resolvedBrand.accessibilityText(from: String.Localized.pay_with_link(brand: resolvedBrand))
+            )
         }
 
         var sublabel = String.Localized.link_subtitle_text
@@ -345,9 +402,11 @@ class EmbeddedPaymentMethodsView: UIView {
                                                                                savedPaymentMethodAccessoryType: accessoryType)
             if isSelected {
                 self.stackView.arrangedSubviews.forEach { view in
-                    (view as? RowButton)?.isSelected = false
+                    if let rowButton = view as? RowButton {
+                        rowButton.updateSelectedState(false, willDisplayForm: delegate?.willDisplayForm(for: rowButton.type) == true)
+                    }
                 }
-                updatedSavedPaymentMethodButton.isSelected = true
+                updatedSavedPaymentMethodButton.updateSelectedState(true, willDisplayForm: delegate?.willDisplayForm(for: updatedSavedPaymentMethodButton.type) == true)
                 self.selectedRowButton = updatedSavedPaymentMethodButton
             }
             // Remove old button & insert new button
@@ -487,10 +546,6 @@ class EmbeddedPaymentMethodsView: UIView {
             isEmbedded: true,
             linkBrand: linkBrand,
             didTap: { [weak self] rowButton in
-                CustomerPaymentOption.setDefaultPaymentMethod(
-                    .stripeId(savedPaymentMethod.stripeId),
-                    forCustomer: self?.customer?.id
-                )
                 self?.didTap(rowButton: rowButton)
             }
         )
@@ -514,9 +569,10 @@ class EmbeddedPaymentMethodsView: UIView {
             hasSavedCard: savedPaymentMethods.hasSavedCard,
             accessoryView: accessoryButton,
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
+            promotionsHelper: paymentMethodMessagingPromotionsHelper,
             appearance: appearance,
             originalCornerRadius: appearance.cornerRadius,
-            shouldAnimateOnPress: delegate?.shouldAnimateOnPress(paymentMethodType) == true,
+            shouldAnimateOnPress: delegate?.willDisplayForm(for: .new(paymentMethodType: paymentMethodType)) == true,
             isEmbedded: true,
             didTap: { [weak self] rowButton in
                 self?.didTap(rowButton: rowButton)

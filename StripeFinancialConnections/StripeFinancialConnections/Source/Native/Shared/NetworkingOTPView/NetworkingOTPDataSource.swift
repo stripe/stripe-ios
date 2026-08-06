@@ -19,8 +19,8 @@ protocol NetworkingOTPDataSource: AnyObject {
     var appearance: FinancialConnectionsAppearance { get }
     var pane: FinancialConnectionsSessionManifest.NextPane { get }
 
-    func startVerificationSession() -> Future<ConsumerSessionResponse>
-    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
+    func startVerificationSession() -> Future<ConsumerSessionStartVerificationResponse>
+    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionConfirmVerificationResponse>
 }
 
 final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
@@ -30,7 +30,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     let analyticsClient: FinancialConnectionsAnalyticsClient
     private let customEmailType: String?
     private let connectionsMerchantName: String?
-    private let apiClient: any FinancialConnectionsAPI
+    private var apiClient: any FinancialConnectionsAPI
     private let manifest: FinancialConnectionsSessionManifest
     weak var delegate: NetworkingOTPDataSourceDelegate?
 
@@ -68,7 +68,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         self.analyticsClient = analyticsClient
     }
 
-    func startVerificationSession() -> Future<ConsumerSessionResponse> {
+    func startVerificationSession() -> Future<ConsumerSessionStartVerificationResponse> {
         return apiClient.consumerSessionStartVerification(
             otpType: otpType,
             customEmailType: customEmailType,
@@ -80,13 +80,14 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         }
     }
 
-    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse> {
+    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionConfirmVerificationResponse> {
         return apiClient.consumerSessionConfirmVerification(
             otpCode: otpCode,
             otpType: otpType,
             consumerSessionClientSecret: consumerSession.clientSecret
         ).chained { [weak self] consumerSessionResponse in
             self?.consumerSession = consumerSessionResponse.consumerSession
+            self?.apiClient.authenticatedLinkBrand = consumerSessionResponse.linkBrand
             return Promise(value: consumerSessionResponse)
         }
     }

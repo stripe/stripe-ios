@@ -14,7 +14,6 @@ import UIKit
 
 /// Internal UIViewControllerRepresentable wrapper for AddressViewController.
 /// Use AddressElement instead of using this directly.
-@available(iOS 15.0, *)
 struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
 
     // MARK: Properties
@@ -114,7 +113,6 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
 /// A SwiftUI view that presents an address collection interface with full localization and autocomplete.
 /// - Note: This view automatically handles keyboard presentation and dismissal.
 /// - Seealso: https://stripe.com/docs/elements/address-element?platform=ios
-@available(iOS 15.0, *)
 public struct AddressElement: View {
 
     // MARK: - Types
@@ -162,7 +160,6 @@ public struct AddressElement: View {
 
 // MARK: - Analytics Integration
 
-@available(iOS 15.0, *)
 @_spi(STP) extension AddressElement: STPAnalyticsProtocol {
     public static let stp_analyticsIdentifier = "AddressElement"
 }

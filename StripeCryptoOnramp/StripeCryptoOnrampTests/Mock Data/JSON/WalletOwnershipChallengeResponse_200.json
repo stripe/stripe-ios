@@ -1,0 +1,7 @@
+{
+  "challenge_id": "woc_test_123",
+  "wallet_address": "11111111111111111111111111111111",
+  "network": "solana",
+  "message": "test message",
+  "expires_at": "2026-06-17T13:00:00Z"
+}

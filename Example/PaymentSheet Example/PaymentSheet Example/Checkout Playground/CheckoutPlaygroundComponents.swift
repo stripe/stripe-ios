@@ -6,7 +6,6 @@
 
 import SwiftUI
 
-@available(iOS 15.0, *)
 extension CheckoutPlayground {
     struct SectionHeader: View {
         let title: String
@@ -32,7 +31,7 @@ extension CheckoutPlayground {
 
     struct PickerRow<T: Hashable & RawRepresentable & CaseIterable>: View where T.RawValue == String, T: Identifiable {
         let title: String
-        let icon: String
+        var icon: String?
         @Binding var selection: T
         var tooltip: String?
         var displayText: ((T) -> String)?
@@ -40,10 +39,12 @@ extension CheckoutPlayground {
         var body: some View {
             HStack {
                 HStack(spacing: 12) {
-                    Image(systemName: icon)
-                        .font(.system(size: 18))
-                        .frame(width: 24)
-                        .foregroundColor(.blue)
+                    if let icon {
+                        Image(systemName: icon)
+                            .font(.system(size: 18))
+                            .frame(width: 24)
+                            .foregroundColor(.blue)
+                    }
 
                     Text(title)
                         .font(.body)

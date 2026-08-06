@@ -1,6 +1,7 @@
 {
   "alternatives": [],
+  "carf_tin_required": false,
+  "completed": true,
   "identifiers": [],
-  "invalid_identifiers": [],
-  "valid": true
+  "invalid_identifiers": []
 }

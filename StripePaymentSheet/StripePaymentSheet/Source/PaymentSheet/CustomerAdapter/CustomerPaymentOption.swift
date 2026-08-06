@@ -91,3 +91,52 @@ public enum CustomerPaymentOption: Equatable {
         return nil
     }
 }
+
+extension CustomerPaymentOption {
+    /// Captures the locally persisted selected payment option and the saved payment methods
+    /// available immediately before a payment surface is presented.
+    ///
+    /// On cancellation, use this snapshot to revert the persisted selection. A method that was
+    /// available before presentation but is missing at cancellation was deleted and is not restored.
+    /// A method missing at both points may be hidden or temporarily unavailable, so its selection is
+    /// restored.
+    struct PersistedSelectionSnapshot {
+        private let customerID: String?
+        private let selectedPaymentOptionBeforePresentation: CustomerPaymentOption?
+        private let availableSavedPaymentMethodIDsBeforePresentation: Set<String>
+
+        init(customerID: String?, availableSavedPaymentMethods: [STPPaymentMethod]) {
+            self.customerID = customerID
+            self.selectedPaymentOptionBeforePresentation = CustomerPaymentOption.localDefaultPaymentMethod(for: customerID)
+            self.availableSavedPaymentMethodIDsBeforePresentation = Set(availableSavedPaymentMethods.map(\.stripeId))
+        }
+
+        /// Reverts to the captured selection unless its saved payment method was deleted.
+        func revertPersistedSelection(using currentlyAvailableSavedPaymentMethods: [STPPaymentMethod]) {
+            if selectedPaymentMethodWasDeleted(from: currentlyAvailableSavedPaymentMethods) {
+                clearDeletedSelectionIfNeeded()
+            } else {
+                CustomerPaymentOption.setDefaultPaymentMethod(selectedPaymentOptionBeforePresentation, forCustomer: customerID)
+            }
+        }
+
+        private func selectedPaymentMethodWasDeleted(
+            from currentlyAvailableSavedPaymentMethods: [STPPaymentMethod]
+        ) -> Bool {
+            if case .stripeId(let selectedPaymentMethodID) = selectedPaymentOptionBeforePresentation,
+               availableSavedPaymentMethodIDsBeforePresentation.contains(selectedPaymentMethodID),
+               !currentlyAvailableSavedPaymentMethods.contains(where: { $0.stripeId == selectedPaymentMethodID }) {
+                return true
+            }
+            return false
+        }
+
+        private func clearDeletedSelectionIfNeeded() {
+            // Deletion may persist a fallback selection. Keep it, or clear the deleted selection
+            // if no fallback was persisted.
+            if CustomerPaymentOption.localDefaultPaymentMethod(for: customerID) == selectedPaymentOptionBeforePresentation {
+                CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
+            }
+        }
+    }
+}

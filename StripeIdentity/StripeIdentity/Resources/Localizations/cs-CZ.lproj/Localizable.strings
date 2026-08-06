@@ -6,6 +6,8 @@
 
 "App Settings" = "Nastavení aplikace";
 
+"Auto" = "Automatické";
+
 "Back %@ photo successfully uploaded" = "Zadní strana fotografie %@ byla úspěšně nahrána";
 
 "Back identity document photo successfully uploaded" = "Zadní strana fotografie dokladu totožnosti byla úspěšně nahrána";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Snímek je rozmazaný. Držte telefon pevně a zkuste to znovu.";
 
+"Image taken" = "Snímek pořízen";
+
 "Individual CPF" = "Individuální CPF";
 
 "Invalid document" = "Neplatný dokument";
@@ -85,6 +89,8 @@
 "Loading" = "Načítání";
 
 "Make sure you're in a well lit space." = "Ujistěte se, že jste v řádně  osvětleném prostoru.";
+
+"Manual" = "Ruční";
 
 "Move closer" = "Posuňte blíže";
 

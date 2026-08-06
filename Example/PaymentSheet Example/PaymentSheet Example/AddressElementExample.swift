@@ -10,7 +10,6 @@
 import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 public struct AddressElementExampleView: View {
     @State private var showingAddressSheet = false
     @State private var collectedAddress: AddressElement.AddressDetails?
@@ -19,7 +18,7 @@ public struct AddressElementExampleView: View {
         STPAPIClient.shared.publishableKey = "pk_test"
 
         var config = AddressElement.Configuration()
-        config.allowedCountries = ["US", "CA", "GB", "AU"]
+        config.allowedCountries = ["US", "CA", "GB", "AU", "JP"]
         config.buttonTitle = "Save Address"
 
         // Pre-populate with existing address if available
@@ -93,7 +92,6 @@ public struct AddressElementExampleView: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct AddressCollectionExampleView_Previews: PreviewProvider {
     static var previews: some View {
         AddressElementExampleView()

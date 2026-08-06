@@ -135,16 +135,13 @@ class IntegrationTesterUITests: XCTestCase {
 
         app.handleiOSKeyboardTipIfNeeded()
 
-        let doneButton = app.buttons["Done"]
-        XCTAssertTrue(doneButton.waitForExistence(timeout: 10.0))
-        doneButton.forceTapElement()
-
-        let submitCodeButton = app.buttons["Submit"]
-        XCTAssertTrue(submitCodeButton.waitForExistence(timeout: 10.0))
-        submitCodeButton.forceTapElement()
+        // On iOS 26, the WKWebView form accessory "Done" button isn't reachable
+        // via standard XCTest queries. Type Return to dismiss the keyboard and
+        // submit the form.
+        enterCodeText.typeText("\n")
 
         let statusView = app.staticTexts["Payment status view"]
-        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(statusView.waitForExistence(timeout: 30.0))
         XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
     }
 
@@ -187,7 +184,7 @@ class IntegrationTesterUITests: XCTestCase {
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.forceTapElement()
 
-        let challengeScreenPredicate = NSPredicate(format: "label CONTAINS[c] 'This is a test 3D Secure 2 authentication, showing a sample one-time-password (OTP) flow. In live mode, customers may be asked to verify their identify by entering a code sent by their bank to their mobile phone. For this test, enter 424242 to complete authentication, or any other value to fail authentication'")
+        let challengeScreenPredicate = NSPredicate(format: "label CONTAINS[c] 'This is a test 3D Secure 2 authentication, showing a sample one-time-password (OTP) flow. In live mode, customers may be asked to verify their identity by entering a code sent by their bank to their mobile phone. For this test, enter 424242 to complete authentication, or any other value to fail authentication'")
         let challengeText = app.staticTexts.matching(challengeScreenPredicate).element
         XCTAssertTrue(challengeText.waitForExistence(timeout: 10))
 

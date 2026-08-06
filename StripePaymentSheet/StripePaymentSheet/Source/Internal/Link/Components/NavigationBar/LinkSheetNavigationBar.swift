@@ -22,7 +22,7 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         imageView.tintColor = .linkIconBrand
         imageView.isAccessibilityElement = true
         imageView.accessibilityTraits = .header
-        imageView.accessibilityLabel = brand.displayName
+        imageView.accessibilityLabel = brand.accessibilityDisplayName
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

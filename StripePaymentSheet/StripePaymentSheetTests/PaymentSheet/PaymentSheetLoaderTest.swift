@@ -23,6 +23,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         super.setUp()
         self.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         LinkAccountContext.shared.account = nil
+        StubbedBackend.stubLookup()
     }
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration()
@@ -679,7 +680,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
         // ...and looks up link
         XCTAssertNotNil(LinkAccountContext.shared.account)
-        XCTAssertEqual(LinkAccountContext.shared.account?.email, "yuki@stripe.com")
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, "foo@bar.com")
     }
 
     func test_loader_doesnt_fetch_Customer_when_default_billing_email() async throws {
@@ -708,9 +709,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
             integrationShape: .flowController
         )
-        // ...and looks up link, preferring the default email provided
+        // ...and looks up link. The resulting Link account email comes from the consumer session returned by lookup.
         XCTAssertNotNil(LinkAccountContext.shared.account)
-        XCTAssertEqual(LinkAccountContext.shared.account?.email, configuration.defaultBillingDetails.email)
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, "foo@bar.com")
     }
 
     func testLoaderLooksUpLink_CustomerSession() async throws {
@@ -737,7 +738,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(loadResult.elementsSession.customer?.email, "yuki@stripe.com")
         // ...and looks up link
         XCTAssertNotNil(LinkAccountContext.shared.account)
-        XCTAssertEqual(LinkAccountContext.shared.account?.email, "yuki@stripe.com")
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, "foo@bar.com")
     }
 
     func testLoadPerformance() {
@@ -771,19 +772,19 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     @MainActor
     func testPaymentSheetLoadWithDirectCheckoutSessionPayment() async throws {
         let expectation = XCTestExpectation(description: "Load w/ direct CheckoutSession")
-        // Fetch a fresh checkout session from the test backend
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
+        // Create a fresh checkout session with the test backend
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
         let checkoutSessionId = checkoutSessionResponse.id
         let customApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        // Fetch the full STPCheckoutSession object (with allResponseFields containing elements_session)
-        let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
-
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        checkoutConfiguration.apiClient = customApiClient
+        let checkout = try await Checkout(configuration: checkoutConfiguration)
         PaymentSheetLoader.load(
-            mode: .checkoutSession(checkoutSession),
+            mode: .checkout(checkout),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
             integrationShape: .paymentSheet
@@ -791,16 +792,12 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             expectation.fulfill()
             switch result {
             case .success(let (loadResult, _)):
-                // Verify the intent is a checkoutSession
-                guard case let .checkoutSession(loadedSession) = loadResult.intent else {
-                    XCTFail("Expected checkoutSession intent type")
+                guard case let .checkout(loadedSession) = loadResult.intent else {
+                    XCTFail("Expected checkout intent type")
                     return
                 }
-                // Verify CheckoutSession properties
                 XCTAssertEqual(loadedSession.id, checkoutSessionId)
-                // Verify elements session is loaded
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
-                // Verify payment methods are loaded
                 XCTAssertTrue(loadResult.elementsSession.orderedPaymentMethodTypes.contains(.card))
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
@@ -809,22 +806,27 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
+    // TODO(porter): Setup mode is out of scope for unified-mode private preview.
+    // Rename back to `test...` once unified mode supports setup mode — but note
+    // `createCheckoutSession()` below creates a real payment-shaped modeless session, not
+    // a setup-style one, so the `.noPaymentRequired` assertion below will need reshaping
+    // too, not just the rename.
     @MainActor
-    func testPaymentSheetLoadWithCheckoutSessionSetup() async throws {
+    func disabled_testPaymentSheetLoadWithCheckoutSessionSetup() async throws {
         let expectation = XCTestExpectation(description: "Load w/ CheckoutSession setup mode")
-        // Fetch a fresh checkout session in setup mode from the test backend
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionSetupMode()
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
         let checkoutSessionId = checkoutSessionResponse.id
         let customApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        // Fetch the full STPCheckoutSession object (with allResponseFields containing elements_session)
-        let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
+        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        checkoutConfiguration.apiClient = customApiClient
+        let checkout = try await Checkout(configuration: checkoutConfiguration)
 
         PaymentSheetLoader.load(
-            mode: .checkoutSession(checkoutSession),
+            mode: .checkout(checkout),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
             integrationShape: .paymentSheet
@@ -832,65 +834,25 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             expectation.fulfill()
             switch result {
             case .success(let (loadResult, _)):
-                // Verify the intent is a checkoutSession
-                guard case let .checkoutSession(checkoutSession) = loadResult.intent else {
-                    XCTFail("Expected checkoutSession intent type")
+                guard case let .checkout(loadedSession) = loadResult.intent else {
+                    XCTFail("Expected checkout intent type")
                     return
                 }
-                // Verify CheckoutSession properties
-                XCTAssertEqual(checkoutSession.id, checkoutSessionId)
-                XCTAssertEqual(checkoutSession.mode, .setup)
-                XCTAssertEqual(checkoutSession.status?.type, .open)
-                XCTAssertEqual(checkoutSession.status?.paymentStatus, .noPaymentRequired)
-                // Verify elements session is loaded
+                XCTAssertEqual(loadedSession.id, checkoutSessionId)
+                XCTAssertEqual(loadedSession.status?.type, .open)
+                XCTAssertEqual(loadedSession.status?.paymentStatus, .noPaymentRequired)
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
-                // Verify payment methods are loaded
                 XCTAssertTrue(loadResult.elementsSession.orderedPaymentMethodTypes.contains(.card))
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
-            }
-        }
-        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
-    }
-
-    @MainActor
-    func testPaymentSheetLoadWithDirectCheckoutSessionMissingElementsSession() async throws {
-        let expectation = XCTestExpectation(description: "Load w/ direct CheckoutSession missing elements_session")
-        // Create a minimal STPCheckoutSession without elements_session in allResponseFields
-        let mockJSON: [AnyHashable: Any] = [
-            "session_id": "cs_test_fake",
-            "livemode": false,
-            "mode": "payment",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-        ]
-        guard let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: mockJSON) else {
-            XCTFail("Failed to create mock STPCheckoutSession")
-            return
-        }
-        var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        configuration.defaultBillingDetails.email = "test@example.com"
-
-        PaymentSheetLoader.load(
-            mode: .checkoutSession(checkoutSession),
-            configuration: configuration,
-            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
-            integrationShape: .paymentSheet
-        ) { result in
-            expectation.fulfill()
-            switch result {
-            case .success:
-                XCTFail("Expected failure when elements_session is missing")
-            case .failure:
-                // Expected: should fail because elements_session is not in allResponseFields
-                break
             }
         }
         await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     // MARK: - PMO SFU
+
+    @MainActor
     func testDeferredIntentWithPaymentMethodOptions() async throws {
         let loadExpectation = XCTestExpectation(description: "Load deferred intent with PMO SFU")
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _ in

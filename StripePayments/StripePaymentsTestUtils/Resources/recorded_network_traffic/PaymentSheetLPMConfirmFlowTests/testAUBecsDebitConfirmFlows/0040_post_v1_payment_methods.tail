@@ -3,33 +3,34 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=8G6lP5jtAv2yxaa-x0Vd0bD5_GhYSMcjPYMdBvngTOI59cRpxxDA001QjKdczKrDa0qRoETVn7vlkAyg
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=d34yPTeY-M-sEiesQVpwPfRG3K8L_YrdkmdUt98j7zdRL36WAwlCMPNT9SEJV2BDizc50bzqDk9Ki53W; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=8G6lP5jtAv2yxaa-x0Vd0bD5_GhYSMcjPYMdBvngTOI59cRpxxDA001QjKdczKrDa0qRoETVn7vlkAyg&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=d34yPTeY-M-sEiesQVpwPfRG3K8L_YrdkmdUt98j7zdRL36WAwlCMPNT9SEJV2BDizc50bzqDk9Ki53W&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-06-24.dahlia. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=8G6lP5jtAv2yxaa-x0Vd0bD5_GhYSMcjPYMdBvngTOI59cRpxxDA001QjKdczKrDa0qRoETVn7vlkAyg&t=1"}],"include_subdomains":true}
-request-id: req_VKxdoJiQKYDXw7
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=d34yPTeY-M-sEiesQVpwPfRG3K8L_YrdkmdUt98j7zdRL36WAwlCMPNT9SEJV2BDizc50bzqDk9Ki53W&t=1"}],"include_subdomains":true}
+request-id: req_tsO86wleR8aYUv
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 671
 Vary: Origin
-Date: Tue, 05 May 2026 03:10:23 GMT
-original-request: req_VKxdoJiQKYDXw7
+Date: Wed, 01 Jul 2026 12:05:07 GMT
+original-request: req_tsO86wleR8aYUv
 stripe-version: 2020-08-27
-idempotency-key: 480dce40-a9fc-4c8e-a6dd-e06e44a36ad0
+idempotency-key: 576ed947-6b9e-494d-885d-d2ab2af85b54
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&au_becs_debit%5Baccount_number%5D=000123456&au_becs_debit%5Bbsb_number%5D=000000&billing_details\[email]=test%40example\.com&billing_details%5Bemail%5D=example%40link\.com&billing_details%5Bname%5D=Tester%20McTesterface&client_attribution_metadata\[checkout_session_id]=cs_test_a1bbdBjOUEs9KWx64QdF2vYrHMLYnpArYnLYovVxjmiJDj0AziRoZoehmT&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=au_becs_debit
+X-Stripe-Mock-Request: allow_redisplay=unspecified&au_becs_debit%5Baccount_number%5D=000123456&au_becs_debit%5Bbsb_number%5D=000000&billing_details\[email]=test%40example\.com&billing_details%5Bemail%5D=example%40link\.com&billing_details%5Bname%5D=Tester%20McTesterface&client_attribution_metadata\[checkout_session_id]=cs_test_a15KLWIy3c4j4ai5zQUckjK34Fv7vDQPEzjK6qLi2uOaxhlOsOTSq4xWUZ&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=au_becs_debit
 
 {
   "object" : "payment_method",
-  "id" : "pm_1TTZNLF7QokQdxByPm6BW4z1",
+  "id" : "pm_1ToMt5F7QokQdxByJdqX365z",
   "billing_details" : {
     "email" : "example@link.com",
     "phone" : null,
@@ -50,7 +51,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&au_becs_debit%5Baccount_numbe
     "last4" : "3456"
   },
   "livemode" : false,
-  "created" : 1777950623,
+  "created" : 1782907507,
   "allow_redisplay" : "unspecified",
   "shared_payment_granted_token" : null,
   "customer" : null,

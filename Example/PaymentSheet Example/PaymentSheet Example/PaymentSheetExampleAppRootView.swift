@@ -6,7 +6,6 @@
 import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 struct PaymentSheetExampleAppRootView: View {
     private var destinationsBySection: [Section: [NavigationDestination]] {
         NavigationDestination.destinationsBySection
@@ -84,8 +83,9 @@ struct PaymentSheetExampleAppRootView: View {
         case paymentSheet_flowController_swiftUI
 
         case customerSheet_swiftUI
-        case linkPaymentController
+        case instantBankPaymentsController
         case linkController
+        case linkControllerPreviewDemo
         case linkStandaloneDemo
         case linkPayoutsDemo
         case embeddedPaymentElement
@@ -93,11 +93,10 @@ struct PaymentSheetExampleAppRootView: View {
         case walletButtonsView_swiftUI
         case addressCollection_swiftUI
 
-        case checkout_playground
-
         case paymentSheet_playground
         case customerSheet_playground
         case pmme_playground
+        case checkout_playground
 
         static var destinationsBySection: [Section: [NavigationDestination]] {
             var result: [Section: [NavigationDestination]] = [:]
@@ -115,19 +114,20 @@ struct PaymentSheetExampleAppRootView: View {
                      .paymentSheet_swiftUI,
                      .paymentSheet_flowController_swiftUI,
                      .customerSheet_swiftUI,
-                     .linkPaymentController,
+                     .instantBankPaymentsController,
                      .linkController,
+                     .linkControllerPreviewDemo,
                      .linkStandaloneDemo,
                      .linkPayoutsDemo,
                      .embeddedPaymentElement,
                      .embeddedPaymentElement_swiftUI,
                      .walletButtonsView_swiftUI,
-                     .addressCollection_swiftUI,
-                     .checkout_playground:
+                     .addressCollection_swiftUI:
                     result[.examples]?.append(destination)
                 case .paymentSheet_playground,
                      .customerSheet_playground,
-                     .pmme_playground:
+                     .pmme_playground,
+                     .checkout_playground:
                     result[.testPlaygrounds]?.append(destination)
                 }
             }
@@ -152,10 +152,12 @@ struct PaymentSheetExampleAppRootView: View {
 
             case .customerSheet_swiftUI:
                 return "CustomerSheet (SwiftUI)"
-            case .linkPaymentController:
-                return "LinkPaymentController"
+            case .instantBankPaymentsController:
+                return "InstantBankPaymentsController"
             case .linkController:
                 return "LinkController (SwiftUI)"
+            case .linkControllerPreviewDemo:
+                return "LinkControllerPreview Demo"
             case .linkStandaloneDemo:
                 return "Link Standalone Demo"
             case .linkPayoutsDemo:
@@ -169,7 +171,7 @@ struct PaymentSheetExampleAppRootView: View {
             case .addressCollection_swiftUI:
                 return "AddressElement (SwiftUI)"
             case .checkout_playground:
-                return "Checkout SDK"
+                return "Checkout Elements"
             case .customerSheet_playground:
                 return "Customer Sheet (test playground)"
             case .paymentSheet_playground:
@@ -226,11 +228,18 @@ struct PaymentSheetExampleAppRootView: View {
         case .customerSheet_swiftUI:
             ExampleSwiftUICustomerSheet()
 
-        case .linkPaymentController:
+        case .instantBankPaymentsController:
             StoryboardSceneView<ExampleLinkPaymentCheckoutViewController>(sceneIdentifier: "ExampleLinkPaymentCheckoutViewController")
         case .linkController:
             if #available(iOS 16.0, *) {
                 ExampleLinkControllerView()
+            } else {
+                Text("Sorry, only available on >= iOS 16.0")
+                    .font(.title2)
+            }
+        case .linkControllerPreviewDemo:
+            if #available(iOS 16.0, *) {
+                ExampleLinkControllerPreviewView()
             } else {
                 Text("Sorry, only available on >= iOS 16.0")
                     .font(.title2)
@@ -272,7 +281,6 @@ struct PaymentSheetExampleAppRootView: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct PaymentSheetExampleAppRootView_Previews: PreviewProvider {
     static var previews: some View {
         PaymentSheetExampleAppRootView()

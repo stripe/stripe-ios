@@ -23,11 +23,7 @@ extension VNBarcodeSymbology {
         case "aztec":
             self = .aztec
         case "codabar":
-            if #available(iOS 15.0, *) {
-                self = .codabar
-            } else {
-                return nil
-            }
+            self = .codabar
         case "code39":
             self = .code39
         case "code39checksum":
@@ -49,23 +45,11 @@ extension VNBarcodeSymbology {
         case "ean13":
             self = .ean13
         case "gs1databar":
-            if #available(iOS 15.0, *) {
-                self = .gs1DataBar
-            } else {
-                return nil
-            }
+            self = .gs1DataBar
         case "gs1databarexpanded":
-            if #available(iOS 15.0, *) {
-                self = .gs1DataBarExpanded
-            } else {
-                return nil
-            }
+            self = .gs1DataBarExpanded
         case "gs1databarlimited":
-            if #available(iOS 15.0, *) {
-                self = .gs1DataBarLimited
-            } else {
-                return nil
-            }
+            self = .gs1DataBarLimited
         case "i2of5":
             self = .i2of5
         case "i2of5checksum":
@@ -73,17 +57,9 @@ extension VNBarcodeSymbology {
         case "itf14":
             self = .itf14
         case "micropdf417":
-            if #available(iOS 15.0, *) {
-                self = .microPDF417
-            } else {
-                return nil
-            }
+            self = .microPDF417
         case "microqr":
-            if #available(iOS 15.0, *) {
-                self = .microQR
-            } else {
-                return nil
-            }
+            self = .microQR
         case "pdf417":
             self = .pdf417
         case "qr":
@@ -97,26 +73,19 @@ extension VNBarcodeSymbology {
 
     /// Returns string representation of the symbology
     var stringValue: String {
-        if #available(iOS 15, *) {
-            switch self {
-            case .codabar:
-                return "codabar"
-            case .gs1DataBar:
-                return "gs1DataBar"
-            case .gs1DataBarExpanded:
-                return "gs1DataBarExpanded"
-            case .gs1DataBarLimited:
-                return "gs1DataBarLimited"
-            case .microPDF417:
-                return "microPDF417"
-            case .microQR:
-                return "microQR"
-            default:
-                break
-            }
-        }
-
         switch self {
+        case .codabar:
+            return "codabar"
+        case .gs1DataBar:
+            return "gs1DataBar"
+        case .gs1DataBarExpanded:
+            return "gs1DataBarExpanded"
+        case .gs1DataBarLimited:
+            return "gs1DataBarLimited"
+        case .microPDF417:
+            return "microPDF417"
+        case .microQR:
+            return "microQR"
         case .aztec:
             return "aztec"
         case .code39:

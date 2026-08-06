@@ -39,7 +39,9 @@ import XCTest
         disableMocking = ProcessInfo.processInfo.environment["STP_NO_NETWORK_MOCKS"] != nil
 
         if disableMocking {
-            // Don't set this up
+            // Clear any stubs left behind by other test cases (e.g. APIStubbedTestCase) that
+            // share this process, so we actually hit the live network as intended.
+            HTTPStubs.removeAllStubs()
             return
         }
 
@@ -118,6 +120,7 @@ import XCTest
                         "\\[locale]", // Nested locale param varies by machine
                         "\\[mobile_app_id]", // App bundle ID varies by test target
                         "\\[mobile_session_id]", // Session ID varies by run
+                        "session_token", // Autocomplete session token, random UUID
                     ]
                     return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)
                 }

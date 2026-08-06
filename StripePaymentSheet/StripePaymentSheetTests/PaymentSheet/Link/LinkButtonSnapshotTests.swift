@@ -110,7 +110,7 @@ class LinkButtonSnapshotTests: STPSnapshotTestCase {
 
 #if DEBUG
 enum Stubs {
-    static let consumerSession: ConsumerSession = .init(
+    static let consumerSession: ConsumerSession = .make(
         clientSecret: "cs_123",
         emailAddress: "jane.diaz@example.com",
         redactedFormattedPhoneNumber: "(•••) ••• ••70",

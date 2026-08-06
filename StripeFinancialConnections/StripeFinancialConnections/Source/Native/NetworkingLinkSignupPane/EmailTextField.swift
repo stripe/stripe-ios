@@ -169,49 +169,47 @@ private struct EmailTextFieldUIViewRepresentable: UIViewRepresentable {
 
 struct EmailTextField_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOS 14.0, *) {
-            VStack(spacing: 16) {
-                EmailTextFieldUIViewRepresentable(
-                    text: "",
-                    isLoading: false,
-                    appearance: .stripe
-                ).frame(height: 56)
+        VStack(spacing: 16) {
+            EmailTextFieldUIViewRepresentable(
+                text: "",
+                isLoading: false,
+                appearance: .stripe
+            ).frame(height: 56)
 
-                EmailTextFieldUIViewRepresentable(
-                    text: "test@test.com",
-                    isLoading: false,
-                    appearance: .stripe
-                ).frame(height: 56)
+            EmailTextFieldUIViewRepresentable(
+                text: "test@test.com",
+                isLoading: false,
+                appearance: .stripe
+            ).frame(height: 56)
 
-                EmailTextFieldUIViewRepresentable(
-                    text: "test@test-very-long-name-thats-very-long.com",
-                    isLoading: true,
-                    appearance: .stripe
-                ).frame(height: 56)
+            EmailTextFieldUIViewRepresentable(
+                text: "test@test-very-long-name-thats-very-long.com",
+                isLoading: true,
+                appearance: .stripe
+            ).frame(height: 56)
 
-                EmailTextFieldUIViewRepresentable(
-                    text: "wrongemail@wronger",
-                    isLoading: false,
-                    appearance: .stripe
-                ).frame(height: 90)
+            EmailTextFieldUIViewRepresentable(
+                text: "wrongemail@wronger",
+                isLoading: false,
+                appearance: .stripe
+            ).frame(height: 90)
 
-                EmailTextFieldUIViewRepresentable(
-                    text: "light@theme.com",
-                    isLoading: true,
-                    appearance: .stripe
-                ).frame(height: 56)
+            EmailTextFieldUIViewRepresentable(
+                text: "light@theme.com",
+                isLoading: true,
+                appearance: .stripe
+            ).frame(height: 56)
 
-                EmailTextFieldUIViewRepresentable(
-                    text: "linklight@theme.com",
-                    isLoading: true,
-                    appearance: .link
-                ).frame(height: 56)
+            EmailTextFieldUIViewRepresentable(
+                text: "linklight@theme.com",
+                isLoading: true,
+                appearance: .link
+            ).frame(height: 56)
 
-                Spacer()
-            }
-            .padding()
-            .background(Color(FinancialConnectionsAppearance.Colors.background))
+            Spacer()
         }
+        .padding()
+        .background(Color(FinancialConnectionsAppearance.Colors.background))
     }
 }
 

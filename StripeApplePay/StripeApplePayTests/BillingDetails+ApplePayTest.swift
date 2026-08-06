@@ -7,7 +7,7 @@
 
 import Contacts
 import PassKit
-@testable import StripeApplePay
+@_spi(STP) @testable import StripeApplePay
 @_spi(STP) import StripeCore
 import XCTest
 
@@ -134,6 +134,85 @@ final class BillingDetailsApplePayTest: XCTestCase {
         XCTAssertNil(billingDetails?.email) // No email provided
         XCTAssertEqual(billingDetails?.phone, "1234567890") // From shipping
         XCTAssertNil(billingDetails?.address)
+    }
+
+    // MARK: - Memberwise Init
+
+    func testBillingDetailsInitWithEmailOnly() {
+        let billingDetails = StripeAPI.BillingDetails(email: "test@example.com")
+        XCTAssertEqual(billingDetails.email, "test@example.com")
+        XCTAssertNil(billingDetails.name)
+        XCTAssertNil(billingDetails.phone)
+        XCTAssertNil(billingDetails.address)
+    }
+
+    func testBillingDetailsInitWithAllFields() {
+        let billingDetails = StripeAPI.BillingDetails(
+            address: StripeAPI.BillingDetails.Address(),
+            email: "shipping@example.com",
+            name: "Jane Smith",
+            phone: "+14155551234"
+        )
+        XCTAssertEqual(billingDetails.email, "shipping@example.com")
+        XCTAssertEqual(billingDetails.name, "Jane Smith")
+        XCTAssertEqual(billingDetails.phone, "+14155551234")
+        XCTAssertNotNil(billingDetails.address)
+    }
+
+    func testPaymentMethodBillingDetailsUsesFallbackWhenApplePayContactIsMissing() {
+        let payment = createMockPKPayment(billingContact: nil, shippingContact: nil)
+        let fallbackAddress = StripeAPI.BillingDetails.Address(
+            city: "San Francisco",
+            country: "US",
+            line1: "510 Townsend St",
+            line2: "Apt 2",
+            postalCode: "94103",
+            state: "CA"
+        )
+        let fallbackBillingDetails = StripeAPI.BillingDetails(
+            address: fallbackAddress,
+            email: "fallback@example.com",
+            name: "Fallback Customer",
+            phone: "+14155551234"
+        )
+
+        let billingDetails = StripeAPI.BillingDetails(
+            from: payment,
+            fallbackBillingDetails: fallbackBillingDetails
+        )
+
+        XCTAssertEqual(billingDetails.email, "fallback@example.com")
+        XCTAssertEqual(billingDetails.name, "Fallback Customer")
+        XCTAssertEqual(billingDetails.phone, "+14155551234")
+        XCTAssertEqual(billingDetails.address?.line1, "510 Townsend St")
+        XCTAssertEqual(billingDetails.address?.line2, "Apt 2")
+        XCTAssertEqual(billingDetails.address?.city, "San Francisco")
+        XCTAssertEqual(billingDetails.address?.state, "CA")
+        XCTAssertEqual(billingDetails.address?.postalCode, "94103")
+        XCTAssertEqual(billingDetails.address?.country, "US")
+    }
+
+    func testPaymentMethodBillingDetailsDoesNotOverwriteApplePayContactWithFallback() {
+        let billingContact = PKContact()
+        var name = PersonNameComponents()
+        name.givenName = "Apple"
+        name.familyName = "Pay"
+        billingContact.name = name
+        billingContact.emailAddress = "applepay@example.com"
+
+        let payment = createMockPKPayment(billingContact: billingContact, shippingContact: nil)
+        let fallbackBillingDetails = StripeAPI.BillingDetails(
+            email: "fallback@example.com",
+            name: "Fallback Customer"
+        )
+
+        let billingDetails = StripeAPI.BillingDetails(
+            from: payment,
+            fallbackBillingDetails: fallbackBillingDetails
+        )
+
+        XCTAssertEqual(billingDetails.email, "applepay@example.com")
+        XCTAssertEqual(billingDetails.name, "Apple Pay")
     }
 
     // MARK: - Helper Methods

@@ -31,18 +31,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 // This was not a stripe url, do whatever url handling your app
                 // normally does, if any.
 
-                if #available(iOS 15.0, *) {
-                    // In this case, we'll pass it to the playground for test configuration.
-                    if url.scheme == "stp-paymentsheet-playground" {
-                        launchWith(base64String: url.query!, windowScene: windowScene)
-                    }
+                // In this case, we'll pass it to the playground for test configuration.
+                if url.scheme == "stp-paymentsheet-playground" {
+                    launchWith(base64String: url.query!, windowScene: windowScene)
                 }
             }
 
         }
     }
 
-    @available(iOS 15.0, *)
     func launchWith(base64String: String, windowScene: UIWindowScene) {
         let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: base64String, className: PaymentSheetTestPlaygroundSettings.self)!
         let paymentSheetPlayground = PaymentSheetTestPlayground(settings: settings, appearance: .default)
@@ -51,7 +48,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         windowScene.windows.first!.rootViewController = navController
     }
 
-    @available(iOS 15.0, *)
     func launchCustomerSheetWith(base64String: String, windowScene: UIWindowScene) {
         let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: base64String, className: CustomerSheetTestPlaygroundSettings.self)!
         let customerSheetPlayground = CustomerSheetTestPlayground(settings: settings)
@@ -84,17 +80,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         if let playgroundData = ProcessInfo.processInfo.environment["STP_PLAYGROUND_DATA"] {
-            if #available(iOS 15.0, *) {
-                launchWith(base64String: playgroundData, windowScene: windowScene)
-            } else {
-                assertionFailure("Not supported on < iOS 15")
-            }
+            launchWith(base64String: playgroundData, windowScene: windowScene)
         } else if let playgroundData = ProcessInfo.processInfo.environment["STP_CUSTOMERSHEET_PLAYGROUND_DATA"] {
-            if #available(iOS 15.0, *) {
-                launchCustomerSheetWith(base64String: playgroundData, windowScene: windowScene)
-            } else {
-                assertionFailure("Not supported on < iOS 15")
-            }
+            launchCustomerSheetWith(base64String: playgroundData, windowScene: windowScene)
         }
     }
 

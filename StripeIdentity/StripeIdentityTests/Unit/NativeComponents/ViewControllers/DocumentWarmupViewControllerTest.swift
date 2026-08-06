@@ -17,25 +17,23 @@ final class DocumentWarmupViewControllerTest: XCTestCase {
 
     override func setUp() {
         super.setUp()
-
         vc = try! DocumentWarmupViewController(
             sheetController: mockSheetController,
             staticContent:
-                    .init(
-                        body: "unused body",
-                        buttonText: "continue",
-                        idDocumentTypeAllowlist: [
-                            "passport": "Passport",
-                            "driving_license": "Driver's license",
-                            "id_card": "Identity card",
-                        ],
-                        title: "unused title"
-                    )
+                .init(
+                    body: "unused body",
+                    buttonText: "continue",
+                    idDocumentTypeAllowlist: [
+                        "passport": "Passport",
+                        "driving_license": "Driver's license",
+                        "id_card": "Identity card",
+                    ],
+                    title: "unused title"
+                )
         )
     }
 
     func testTapContinue() {
-        // Tap continue button
         vc.flowViewModel.buttons.first?.didTap()
 
         // Verify transitioned to selfie capture

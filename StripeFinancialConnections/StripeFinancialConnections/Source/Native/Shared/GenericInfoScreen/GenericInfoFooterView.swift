@@ -71,7 +71,6 @@ func GenericInfoFooterViewAndPrimaryButton(
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 private struct GenericInfoFooterViewUIViewRepresentable: UIViewRepresentable {
 
     let footer: FinancialConnectionsGenericInfoScreen.Footer
@@ -91,7 +90,6 @@ private struct GenericInfoFooterViewUIViewRepresentable: UIViewRepresentable {
     }
 }
 
-@available(iOS 14.0, *)
 struct GenericInfoFooterView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

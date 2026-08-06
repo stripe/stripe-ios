@@ -9,7 +9,6 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOS 15, *)
 extension EmbeddedComponentManager {
     /// Describes the appearance of embedded components.
     /// - seealso: [Appearance option documentation](https://docs.stripe.com/connect/embedded-appearance-options)

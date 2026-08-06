@@ -46,6 +46,7 @@ struct UpdateAddressView: View {
                             "Enter your street address",
                             text: $addressLine1,
                             field: .addressLine1,
+                            nextField: .addressLine2,
                             autocapitalization: .words
                         )
                     }
@@ -55,6 +56,7 @@ struct UpdateAddressView: View {
                             "Apartment, suite, etc.",
                             text: $addressLine2,
                             field: .addressLine2,
+                            nextField: .city,
                             autocapitalization: .words
                         )
                     }
@@ -64,6 +66,7 @@ struct UpdateAddressView: View {
                             "Enter your city",
                             text: $city,
                             field: .city,
+                            nextField: .state,
                             autocapitalization: .words
                         )
                     }
@@ -73,6 +76,7 @@ struct UpdateAddressView: View {
                             "Enter your state or province",
                             text: $state,
                             field: .state,
+                            nextField: .postalCode,
                             autocapitalization: .words
                         )
                     }
@@ -81,7 +85,8 @@ struct UpdateAddressView: View {
                         makeTextField(
                             "Enter your postal code",
                             text: $postalCode,
-                            field: .postalCode
+                            field: .postalCode,
+                            nextField: .country
                         )
                     }
 
@@ -144,12 +149,17 @@ struct UpdateAddressView: View {
         _ titleKey: LocalizedStringKey,
         text: Binding<String>,
         field: Field,
+        nextField: Field? = nil,
         autocapitalization: UITextAutocapitalizationType = .none
     ) -> some View {
         TextField(titleKey, text: text)
             .textFieldStyle(RoundedBorderTextFieldStyle())
             .autocapitalization(autocapitalization)
             .focused($focusedField, equals: field)
+            .submitLabel(nextField == nil ? .done : .next)
+            .onSubmit {
+                focusedField = nextField
+            }
     }
 }
 

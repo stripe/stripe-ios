@@ -660,15 +660,6 @@ enum CarType: CaseIterable {
     }
 }
 
-private func findViewController() -> UIViewController? {
-    let keyWindow = UIApplication.shared.windows.filter { $0.isKeyWindow }.first
-    var topController = keyWindow?.rootViewController
-    while let presentedViewController = topController?.presentedViewController {
-        topController = presentedViewController
-    }
-    return topController
-}
-
 struct ExampleLinkStandaloneComponent_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 16.0, *) {

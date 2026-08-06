@@ -24,30 +24,24 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     // MARK: - Images
-    func testMakeImage_with_client_asset_and_form_spec() {
-        let e = expectation(description: "Load specs")
-        FormSpecProvider.shared.load { _ in
-            e.fulfill()
-        }
-        DownloadManager.sharedManager.resetCache()
-        waitForExpectations(timeout: 10)
-        // A Payment methods with a client-side asset and a form spec image URL...
-        let loadExpectation = expectation(description: "Load form spec image")
+    func testMakeImage_with_client_asset() {
+        // A payment method with a client-side asset...
+        let loadExpectation = expectation(description: "No image download")
+        loadExpectation.isInverted = true
         let clientImage = STPPaymentMethodType.cashApp.makeImage()!
         let image = PaymentSheet.PaymentMethodType.stripe(.cashApp).makeImage(forDarkBackground: false) { image in
-            // ...should update to the form spec image
-            XCTAssertNotEqual(image, clientImage)
-            XCTAssertTrue(image.size.width > 1) // Sanity check
+            XCTFail("Unexpected downloaded image: \(image)")
             loadExpectation.fulfill()
         }
-        // ...should default to the client-side asset
+
+        // ...should return that asset without downloading an override.
         XCTAssertEqual(image, clientImage)
-        waitForExpectations(timeout: 10)
+        waitForExpectations(timeout: 0.1)
     }
 
-    func testMakeImage_with_client_asset_but_no_form_spec() {
-        // A Payment methods with a client-side asset but without a form spec image URL...
-        let e = expectation(description: "Load form spec image")
+    func testMakeImage_with_another_client_asset() {
+        // Another payment method with a client-side asset...
+        let e = expectation(description: "No image download")
         e.isInverted = true
         let usBankAccountImage = PaymentSheet.PaymentMethodType.stripe(.USBankAccount).makeImage(forDarkBackground: false) { _ in
             // This shouldn't be called
@@ -57,6 +51,12 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         // ...should default to the client-side asset
         XCTAssertEqual(usBankAccountImage, STPPaymentMethodType.USBankAccount.makeImage())
         waitForExpectations(timeout: 0.1)
+    }
+
+    func testAllSupportedPaymentMethodsHaveClientAssets() {
+        for paymentMethod in PaymentSheet.supportedPaymentMethods {
+            XCTAssertNotNil(paymentMethod.makeImage(), "Missing client asset for \(paymentMethod)")
+        }
     }
 
     // MARK: - Cards

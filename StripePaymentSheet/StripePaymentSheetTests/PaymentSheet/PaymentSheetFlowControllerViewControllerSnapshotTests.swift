@@ -20,6 +20,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: false),
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .horizontal
         )
     }
@@ -79,11 +80,9 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
     }
 
     func testNewScreen_customCTA() {
-        let expectation = expectation(description: "Load specs")
+        let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load { _ in
-                expectation.fulfill()
-            }
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
 
@@ -99,11 +98,9 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
     }
 
     func testDirectToCardScan() {
-        let expectation = expectation(description: "Load specs")
+        let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load { _ in
-                expectation.fulfill()
-            }
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
 
@@ -120,6 +117,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             ),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .horizontal
         )
 

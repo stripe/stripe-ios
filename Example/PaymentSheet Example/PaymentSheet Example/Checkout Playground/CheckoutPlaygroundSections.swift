@@ -6,24 +6,30 @@
 
 import SwiftUI
 
-@available(iOS 15.0, *)
 struct CheckoutPlaygroundConfigurationSection: View {
-    @Binding var mode: CheckoutPlayground.SessionMode
+    @Binding var integrationType: CheckoutPlayground.IntegrationType
     @Binding var currency: CheckoutPlayground.Currency
     @Binding var customerType: CheckoutPlayground.CustomerType
     @Binding var checkoutEndpointOption: CheckoutPlayground.EndpointOption
     @Binding var checkoutEndpoint: String
+    @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
             VStack(spacing: 1) {
                 CheckoutPlayground.PickerRow(
-                    title: "Mode",
-                    icon: "arrow.triangle.2.circlepath",
-                    selection: $mode,
-                    tooltip: "Determines the type of checkout session.\n\n• Payment: One-time payment.\n• Subscription: Recurring payment.\n• Setup: Save payment details for future use.",
-                    displayText: { $0.rawValue.capitalized }
+                    title: "PaymentElement",
+                    icon: "square.stack.3d.up.fill",
+                    selection: $integrationType,
+                    tooltip: "Choose the PaymentElement presentation.\n\n• sheet: Presents PaymentElement as a payment method selector.\n• view: Displays PaymentElement in the checkout flow.\n• none: Hides PaymentElement.",
+                    displayText: { $0.displayName }
+                )
+                CheckoutPlayground.PickerRow(
+                    title: "ExpressCheckoutElement",
+                    icon: "bolt.fill",
+                    selection: $expressCheckoutElementOption,
+                    displayText: { $0.displayName }
                 )
                 CheckoutPlayground.PickerRow(
                     title: "Currency",
@@ -76,7 +82,6 @@ struct CheckoutPlaygroundConfigurationSection: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct CheckoutPlaygroundLineItemsSection: View {
     let lineItems: [CheckoutPlayground.LineItemConfig]
     let currency: CheckoutPlayground.Currency
@@ -97,7 +102,6 @@ struct CheckoutPlaygroundLineItemsSection: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct CheckoutPlaygroundLineItemCard: View {
     let item: CheckoutPlayground.LineItemConfig
     let currency: CheckoutPlayground.Currency
@@ -150,27 +154,18 @@ struct CheckoutPlaygroundLineItemCard: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct CheckoutPlaygroundFeaturesSection: View {
-    let mode: CheckoutPlayground.SessionMode
     let customerType: CheckoutPlayground.CustomerType
-    @Binding var enableShipping: Bool
     @Binding var shippingAddressCollection: Bool
-    @Binding var billingAddressCollection: Bool
-    @Binding var phoneNumberCollection: Bool
-    @Binding var allowPromotionCodes: Bool
+    @Binding var billingAddressCollection: CheckoutPlayground.BillingAddressCollection
     @Binding var automaticTax: Bool
-    @Binding var adaptivePricing: Bool
     @Binding var checkoutSessionPaymentMethodSave: Bool
     @Binding var checkoutSessionPaymentMethodRemove: Bool
     @Binding var adaptivePricingCountry: CheckoutPlayground.AdaptivePricingCountry
-
-    private var supportsSetupRestrictedFeatures: Bool {
-        return mode != .setup
-    }
+    @Binding var automaticPaymentMethods: Bool
 
     private var shouldShowAutomaticTax: Bool {
-        return supportsSetupRestrictedFeatures && customerType != .new
+        return customerType != .new
     }
 
     var body: some View {
@@ -178,63 +173,45 @@ struct CheckoutPlaygroundFeaturesSection: View {
             CheckoutPlayground.SectionHeader(title: "Features", icon: "slider.horizontal.3")
             VStack(spacing: 1) {
                 CheckoutPlayground.ToggleRow(
-                    title: "Shipping Options",
-                    isOn: $enableShipping,
-                    tooltip: "Populates `shipping_options` with sample rates (e.g., $5.99 Standard). Requires `shipping_address_collection`."
-                )
-                CheckoutPlayground.ToggleRow(
                     title: "Collect Shipping Address",
                     isOn: $shippingAddressCollection,
                     tooltip: "Sets `shipping_address_collection` to allow specific countries (US, CA, GB, AU). Necessary for physical goods."
                 )
-                CheckoutPlayground.ToggleRow(
-                    title: "Collect Billing Address",
-                    isOn: $billingAddressCollection,
-                    tooltip: "Sets `billing_address_collection: 'required'`. If off, defaults to 'auto' (only collected if the payment method needs it)."
+                CheckoutPlayground.PickerRow(
+                    title: "Billing Address",
+                    selection: $billingAddressCollection,
+                    tooltip: "Sets `billing_address_collection` to `auto` or `required`.",
+                    displayText: { $0.displayName }
                 )
-                if supportsSetupRestrictedFeatures {
+                CheckoutPlayground.ToggleRow(
+                    title: "Automatic Payment Methods",
+                    isOn: $automaticPaymentMethods,
+                    tooltip: "Sends `automatic_payment_methods: true` instead of an explicit `payment_method_types` array. Stripe selects the best payment methods for the session."
+                )
+                if shouldShowAutomaticTax {
                     CheckoutPlayground.ToggleRow(
-                        title: "Collect Phone Number",
-                        isOn: $phoneNumberCollection,
-                        tooltip: "Sets `phone_number_collection: { enabled: true }`. Useful for SMS notifications or 3DS authentication fallback."
+                        title: "Automatic Tax",
+                        isOn: $automaticTax,
+                        tooltip: "Sets `automatic_tax: { enabled: true }`. Enables Stripe Tax for automatic tax calculation based on shipping/billing address. Prices must use `tax_behavior: 'exclusive'` or `'inclusive'`."
                     )
-                    CheckoutPlayground.ToggleRow(
-                        title: "Allow Promo Codes",
-                        isOn: $allowPromotionCodes,
-                        tooltip: "Sets `allow_promotion_codes: true`. Adds a coupon code input field to the checkout page."
-                    )
-                    if shouldShowAutomaticTax {
-                        CheckoutPlayground.ToggleRow(
-                            title: "Automatic Tax",
-                            isOn: $automaticTax,
-                            tooltip: "Sets `automatic_tax: { enabled: true }`. Enables Stripe Tax for automatic tax calculation based on shipping/billing address. Prices must use `tax_behavior: 'exclusive'` or `'inclusive'`."
-                        )
-                    }
-                    CheckoutPlayground.ToggleRow(
-                        title: "Adaptive Pricing",
-                        isOn: $adaptivePricing,
-                        tooltip: "Sets `adaptive_pricing: { enabled: true }`. Displays prices in the customer's local currency."
-                    )
-                    CheckoutPlayground.ToggleRow(
-                        title: "Payment Method Offer Save",
-                        isOn: $checkoutSessionPaymentMethodSave,
-                        tooltip: "Sets `saved_payment_method_options.payment_method_save` to `enabled`. When on, Checkout can offer to save the payment method for future use."
-                    )
-                    CheckoutPlayground.ToggleRow(
-                        title: "Payment Method Remove",
-                        isOn: $checkoutSessionPaymentMethodRemove,
-                        tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
-                    )
-                    if adaptivePricing {
-                        CheckoutPlayground.PickerRow(
-                            title: "Country",
-                            icon: "globe",
-                            selection: $adaptivePricingCountry,
-                            tooltip: "Simulates the customer's country for adaptive pricing by sending a location-formatted customer_email. 'None' skips the email override.",
-                            displayText: { $0.displayName }
-                        )
-                    }
                 }
+                CheckoutPlayground.ToggleRow(
+                    title: "Payment Method Offer Save",
+                    isOn: $checkoutSessionPaymentMethodSave,
+                    tooltip: "Sets `saved_payment_method_options.payment_method_save` to `enabled`. When on, Checkout can offer to save the payment method for future use."
+                )
+                CheckoutPlayground.ToggleRow(
+                    title: "Payment Method Remove",
+                    isOn: $checkoutSessionPaymentMethodRemove,
+                    tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
+                )
+                CheckoutPlayground.PickerRow(
+                    title: "Country",
+                    icon: "globe",
+                    selection: $adaptivePricingCountry,
+                    tooltip: "Simulates the customer's country for adaptive pricing by sending a location-formatted customer_email. 'None' skips the email override.",
+                    displayText: { $0.displayName }
+                )
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -242,7 +219,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct CheckoutPlaygroundPaymentMethodSection: View {
     @Binding var selectedMethods: Set<String>
     let availableMethods: [String]
@@ -317,7 +293,6 @@ struct CheckoutPlaygroundPaymentMethodSection: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
     @Binding var selectedMethods: Set<String>
     let availableMethods: [String]

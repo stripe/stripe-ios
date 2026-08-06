@@ -1,0 +1,129 @@
+//
+//  APIErrorContext.swift
+//  StripeCryptoOnramp
+//
+//  Created by Michael Liberatore on 5/28/26.
+//
+
+import Foundation
+@_spi(STP) import StripeCore
+
+/// A type that stores shared API error context.
+///
+/// Used to keep `StripeCryptoOnrampAPIError` conformers from needing to duplicate all property declarations, and instead use a concrete type, `APIErrorContext`, to store properties common to all API errors.
+@_spi(CryptoOnrampAlpha)
+public protocol APIErrorContextProviding {
+
+    /// Shared API error context used to expose diagnostics and build developer-facing messages.
+    var apiErrorContext: APIErrorContext { get }
+}
+
+@_spi(CryptoOnrampAlpha)
+public extension APIErrorContextProviding {
+
+    /// A URL to documentation for this error, if one is available.
+    var docURL: URL? {
+        return apiErrorContext.docURL
+    }
+
+    /// The original error that was mapped to this error, if one is available.
+    var underlyingError: Swift.Error? {
+        return apiErrorContext.underlyingError
+    }
+
+    /// The backend `reason` value associated with this error, if one is available.
+    var reason: String? {
+        return apiErrorContext.reason
+    }
+
+    /// The backend API error type associated with this error, if one is available.
+    var type: String? {
+        return apiErrorContext.apiErrorType
+    }
+
+    /// The Stripe API request ID associated with this error, if one is available.
+    var requestID: String? {
+        return apiErrorContext.requestID
+    }
+
+    /// The backend developer-facing API error message associated with this error, if one is available.
+    var apiMessage: String? {
+        return apiErrorContext.apiErrorMessage
+    }
+
+    /// The backend user-facing API error message associated with this error, if one is available.
+    var apiUserMessage: String? {
+        return apiErrorContext.apiUserMessage
+    }
+
+}
+
+/// Contains the common properties of all API error types.
+@_spi(CryptoOnrampAlpha)
+public struct APIErrorContext {
+
+    /// The backend `reason` value associated with this error, if one is available.
+    public var reason: String?
+
+    /// The backend API error code associated with this error, if one is available.
+    public var apiErrorCode: String?
+
+    /// The backend API error type associated with this error, if one is available.
+    public var apiErrorType: String?
+
+    /// The backend developer-facing API error message associated with this error, if one is available.
+    public var apiErrorMessage: String?
+
+    /// The backend user-facing API error message associated with this error, if one is available.
+    public var apiUserMessage: String?
+
+    /// A URL to documentation for this error, if one is available.
+    public var docURL: URL?
+
+    /// The original error that was mapped to this error.
+    public var underlyingError: Swift.Error
+
+    /// Creates shared API error context.
+    ///
+    /// - Parameters:
+    ///   - reason: The backend `reason` value associated with this error, if one is available.
+    ///   - apiErrorCode: The backend API error code associated with this error, if one is available.
+    ///   - apiErrorType: The backend API error type associated with this error, if one is available.
+    ///   - apiErrorMessage: The backend developer-facing API error message associated with this error, if one is available.
+    ///   - apiUserMessage: The backend user-facing API error message associated with this error, if one is available.
+    ///   - docURL: A URL to documentation for this error, if one is available.
+    ///   - underlyingError: The original error that was mapped to this error.
+    public init(
+        reason: String?,
+        apiErrorCode: String?,
+        apiErrorType: String?,
+        apiErrorMessage: String?,
+        apiUserMessage: String?,
+        docURL: URL?,
+        underlyingError: Swift.Error
+    ) {
+        self.reason = reason
+        self.apiErrorCode = apiErrorCode
+        self.apiErrorType = apiErrorType
+        self.apiErrorMessage = apiErrorMessage
+        self.apiUserMessage = apiUserMessage
+        self.docURL = docURL
+        self.underlyingError = underlyingError
+    }
+
+    /// The Stripe API request ID associated with this error, if one is available.
+    public var requestID: String? {
+        guard let stripeError = underlyingError as? StripeError,
+              case let .apiError(apiError) = stripeError else {
+            return nil
+        }
+        return apiError.requestID
+    }
+
+    /// Returns the backend API error code, or a fallback code if the backend code is unavailable.
+    ///
+    /// - Parameter fallback: The SDK-defined error code to use if the backend API error code is unavailable.
+    func code(fallback: String) -> String {
+        return apiErrorCode ?? fallback
+    }
+}

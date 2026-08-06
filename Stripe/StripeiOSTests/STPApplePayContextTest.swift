@@ -32,7 +32,6 @@ class STPApplePayTestDelegateiOS11: NSObject, STPApplePayContextDelegate {
         completion(PKPaymentRequestShippingMethodUpdate())
     }
 
-    @available(iOS 15.0, *)
     func applePayContext(
         _ context: STPApplePayContext,
         didChangeCouponCode couponCode: String,
@@ -40,6 +39,16 @@ class STPApplePayTestDelegateiOS11: NSObject, STPApplePayContextDelegate {
     ) {
         didChangeCouponCodeCalled = true
         completion(.init(errors: nil, paymentSummaryItems: [], shippingMethods: []))
+    }
+
+    var didSelectPaymentMethodCalled: Bool = false
+    func applePayContext(
+        _ context: STPApplePayContext,
+        didSelectPaymentMethod paymentMethod: PKPaymentMethod,
+        handler completion: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
+    ) {
+        didSelectPaymentMethodCalled = true
+        completion(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
     }
 
     func applePayContext(
@@ -136,17 +145,32 @@ class STPApplePayContextTest: XCTestCase {
         )
 
         // 3) ..didChangeCouponCode.. delegate method
-        if #available(iOS 15.0, *) {
-            XCTAssertFalse(delegate.didChangeCouponCodeCalled)
-            let couponCodeExpectation = expectation(description: "didChangeCouponCode forwarded")
-            context.paymentAuthorizationController(vc, didChangeCouponCode: "coupon_123") { _ in
-                couponCodeExpectation.fulfill()
-            }
-            wait(for: [couponCodeExpectation], timeout: 1)
-            XCTAssertTrue(delegate.didChangeCouponCodeCalled)
-        } else {
-            // Fallback on earlier versions
+        XCTAssertFalse(delegate.didChangeCouponCodeCalled)
+        let couponCodeExpectation = expectation(description: "didChangeCouponCode forwarded")
+        context.paymentAuthorizationController(vc, didChangeCouponCode: "coupon_123") { _ in
+            couponCodeExpectation.fulfill()
         }
+        wait(for: [couponCodeExpectation], timeout: 1)
+        XCTAssertTrue(delegate.didChangeCouponCodeCalled)
+
+        // 4) ..didSelectPaymentMethod.. delegate method
+        XCTAssertTrue(
+            context.responds(
+                to: #selector(
+                    PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(
+                        _:
+                        didSelectPaymentMethod:
+                        handler:
+                    ))
+            )
+        )
+        XCTAssertFalse(delegate.didSelectPaymentMethodCalled)
+        let paymentMethodExpectation = expectation(description: "didSelectPaymentMethod forwarded")
+        context.paymentAuthorizationController(vc, didSelectPaymentMethod: PKPaymentMethod()) { _ in
+            paymentMethodExpectation.fulfill()
+        }
+        wait(for: [paymentMethodExpectation], timeout: 1)
+        XCTAssertTrue(delegate.didSelectPaymentMethodCalled)
 
         waitForExpectations(timeout: 2, handler: nil)
     }

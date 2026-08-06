@@ -95,7 +95,10 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             options: walletOptions,
             appearance: configuration.appearance,
             applePayButtonType: configuration.applePay?.buttonType ?? .plain,
-            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
+            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
+            linkBrandProvider: { [configuration, elementsSession] in
+                configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)
+            },
             isPaymentIntent: intent.isPaymentIntent,
             delegate: self
         )
@@ -162,7 +165,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 customerID: configuration.customer?.id,
                 showApplePay: false,
                 showLink: false,
-                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
+                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: isCVCRecollectionEnabled,
@@ -170,14 +173,17 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
                 allowsRemovalOfPaymentMethods: intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                allowsUpdatePaymentMethod: elementsSession.paymentMethodUpdateForPaymentSheet
+                allowsUpdatePaymentMethod: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession)
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,
             appearance: configuration.appearance,
             elementsSession: elementsSession,
             cbcEligible: elementsSession.isCardBrandChoiceEligible,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            linkBrandProvider: { [configuration, elementsSession] in
+                configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)
+            }
         )
 
         // Restore the customer's previous payment method.
@@ -431,6 +437,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                     stpAssertionFailure("Tapped buy button while adding without paymentOption")
                     return
                 }
+                addPaymentMethodViewController.logBillingAddressCompletionIfNeeded()
                 paymentOption = newPaymentOption
             }
         case .selectingSaved:
@@ -569,7 +576,8 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
 
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
-        paymentMethodSelection: SavedPaymentOptionsViewController.Selection
+        paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
+        previousSelection: SavedPaymentOptionsViewController.SelectionSnapshot
     ) {
         analyticsHelper.logSavedPMScreenOptionSelected(option: paymentMethodSelection)
         if case .add = paymentMethodSelection {

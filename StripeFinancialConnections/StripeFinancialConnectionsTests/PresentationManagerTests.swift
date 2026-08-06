@@ -13,6 +13,7 @@ class PresentationManagerTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
         PresentationManager.shared.configuration = .init()
+        PresentationManager.shared.setAuthenticatedLinkBrand(nil)
     }
 
     func testConfigurationIsApplied() {
@@ -32,33 +33,23 @@ class PresentationManagerTests: XCTestCase {
         XCTAssertEqual(toViewController.traitCollection.userInterfaceStyle, .dark)
     }
 
-    func testLinkBrandOverrideIsAvailableToAppearanceResolution() {
-        var configuration = FinancialConnectionsSheet.Configuration()
-        configuration.linkBrand = .onelink
-        PresentationManager.shared.configuration = configuration
-
-        let appearance = FinancialConnectionsAppearance(theme: .light, brand: nil)
-
-        XCTAssertEqual(appearance.logo, .onelink_logo)
-    }
-
     func testOnelinkBrandUsesSameTintAsLinkForLightTheme() {
-        let onelinkAppearance = FinancialConnectionsAppearance(theme: .light, brand: .onelink)
-        let linkAppearance = FinancialConnectionsAppearance(theme: .light, brand: .link)
+        let onelinkAppearance = FinancialConnectionsAppearance(theme: .light, linkBrand: .onelink)
+        let linkAppearance = FinancialConnectionsAppearance(theme: .light, linkBrand: .link)
 
         XCTAssertTrue(onelinkAppearance.logoTintColor.isEqual(linkAppearance.logoTintColor))
     }
 
     func testOnelinkBrandUsesSameTintAsLinkForLinkTheme() {
-        let onelinkAppearance = FinancialConnectionsAppearance(theme: .linkLight, brand: .onelink)
-        let linkAppearance = FinancialConnectionsAppearance(theme: .linkLight, brand: .link)
+        let onelinkAppearance = FinancialConnectionsAppearance(theme: .linkLight, linkBrand: .onelink)
+        let linkAppearance = FinancialConnectionsAppearance(theme: .linkLight, linkBrand: .link)
 
         XCTAssertTrue(onelinkAppearance.logoTintColor.isEqual(linkAppearance.logoTintColor))
     }
 
     func testLinkBrandStillUsesThemeTinting() {
-        let linkAppearance = FinancialConnectionsAppearance(theme: .light, brand: .link)
-        let stripeAppearance = FinancialConnectionsAppearance(theme: .light, brand: nil)
+        let linkAppearance = FinancialConnectionsAppearance(theme: .light, linkBrand: .link)
+        let stripeAppearance = FinancialConnectionsAppearance(theme: .light, linkBrand: nil)
 
         XCTAssertFalse(linkAppearance.logoTintColor.isEqual(UIColor.clear))
         XCTAssertFalse(stripeAppearance.logoTintColor.isEqual(UIColor.clear))

@@ -11,7 +11,6 @@ import UIKit
  Show details of a given payment and allow users to manage disputes and perform refunds.
  */
 @_spi(DashboardOnly)
-@available(iOS 15, *)
 public class AccountManagementViewController: UIViewController {
 
     struct Props: Encodable {
@@ -52,7 +51,6 @@ public class AccountManagementViewController: UIViewController {
 }
 
 @_spi(DashboardOnly)
-@available(iOS 15, *)
 public protocol AccountManagementViewControllerDelegate: AnyObject {
     /**
      Triggered when an error occurs loading the account management component
@@ -64,7 +62,6 @@ public protocol AccountManagementViewControllerDelegate: AnyObject {
                            didFailLoadWithError error: Error)
 }
 
-@available(iOS 15, *)
 public extension AccountManagementViewControllerDelegate {
     // Default implementation to make optional
     func accountManagement(_ accountManagement: AccountManagementViewController,

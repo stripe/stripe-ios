@@ -1340,6 +1340,7 @@ extension NativeFlowController: LinkLoginViewControllerDelegate {
     ) {
         dataManager.consumerPublishableKey = linkSignUpResponse.publishableKey
         dataManager.consumerSession = linkSignUpResponse.consumerSession
+        dataManager.authenticatedLinkBrand = linkSignUpResponse.linkBrand
     }
 
     func linkLoginViewController(

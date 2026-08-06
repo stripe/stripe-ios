@@ -54,25 +54,19 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.textFields["Card number"].typeText("1")
         XCTAssertFalse(continueButton.isEnabled)
         app.tapCoordinate(at: .init(x: 200, y: 100))
-        // Tap out of FlowController and expect empty payment method
+        // Tap out of FlowController and expect the previous payment method
         app.tapCoordinate(at: .init(x: 200, y: 100))
-        XCTAssertEqual(paymentMethodButton.label, "None")
+        XCTAssertEqual(paymentMethodButton.label, "Cash App Pay, cashapp")
 
         // Go back in
         paymentMethodButton.tap()
-        XCTAssertFalse(continueButton.isEnabled)
-        // Back out of card form
-        app.buttons["Back"].tap()
-        // Cash App Pay (the previous selection) should be selected
+        // Cash App Pay (the previous selection) should be restored and the canceled Card edit discarded
         XCTAssertTrue(app.buttons["Cash App Pay"].isSelected)
         XCTAssertTrue(continueButton.isEnabled)
 
-        // Go back to card
+        // Go back to Card and finish the payment
         app.buttons["Card"].waitForExistenceAndTap()
-        // Make sure the card form retained previously entered details
-        XCTAssertEqual(app.textFields["Card number"].value as? String, "1, Your card number is invalid.")
-        app.textFields["Card number"].clearText()
-        // Finish the card payment
+        XCTAssertFalse(continueButton.isEnabled)
         try! fillCardData(app, cardNumber: "4242424242424242", tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
         continueButton.tap()
         sleep(1) // wait for 1 second for the sheet to dismiss
@@ -98,8 +92,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Confirm"].waitForExistenceAndTap(timeout: 3.0)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
         XCTAssertEqual(
-            analyticsLog.map({ $0[string: "event"]! }).filter({ $0.starts(with: "mc") }),
-            ["mc_load_started", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_initial_displayed_payment_methods", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"]
+            analyticsLog.map({ $0[string: "event"]! }).filter({ $0.starts(with: "mc") && !$0.starts(with: "mc_address_autocomplete") }), // there could be a variable number of address autocomplete logs fired, so we'll just filter them out
+            ["mc_load_started", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_initial_displayed_payment_methods", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_billing_address_completed", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"]
         )
 
         let initialDisplayedPaymentMethodsEvent = analyticsLog.first(where: { $0[string: "event"] == "mc_initial_displayed_payment_methods" })
@@ -159,25 +153,25 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
     }
 
     func testPayingWithNoFormPMs_verticalmode() {
-        // We choose Alipay as a representative PM that does not require form details
+        // We choose Cash App Pay as a representative PM that does not require form details
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .payment
         settings.layout = .vertical
         loadPlayground(app, settings)
 
-        // Try Alipay
+        // Try Cash App Pay
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        app.buttons["Alipay"].waitForExistenceAndTap()
+        app.buttons["Cash App Pay"].waitForExistenceAndTap()
         app.buttons["Pay $50.99"].tap()
         // Cancel
-        XCTAssertTrue(app.webViews.staticTexts["Alipay test payment page"].waitForExistence(timeout: 30))
+        XCTAssertTrue(app.otherElements["TopBrowserBar"].waitForExistence(timeout: 30))
         app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 1))
         // Fail payment
         app.buttons["Pay $50.99"].tap()
         let failPaymentText = app.firstDescendant(withLabel: "FAIL TEST PAYMENT")
         failPaymentText.waitForExistenceAndTap(timeout: 30.0)
-        let errorMessage = app.staticTexts["We are unable to authenticate your payment method. Please choose a different payment method and try again."]
+        let errorMessage = app.staticTexts["The customer declined this payment."]
         XCTAssertTrue(errorMessage.waitForExistence(timeout: 30))
 
         // Try Cash App Pay
@@ -433,6 +427,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         _testVerticalPreservesFormDetails()
 
         // PaymentSheet.FlowController + Vertical
+        app.swipeUp(velocity: 100)
         app.buttons["flowController"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Payment method"].waitForExistenceAndTap(timeout: 10))
@@ -453,7 +448,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Payment method"].waitForExistenceAndTap()
         app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
-        app.buttons["Done"].tap() // Tap done on keyboard, not sure why it doesn't auto dismiss
+        app.stp_dismissKeyboard() // Dismiss keyboard
         app.buttons["Continue"].waitForExistenceAndTap()
         // ...and *updating* to a SetupIntent...
         app.buttons["Setup"].waitForExistenceAndTap()

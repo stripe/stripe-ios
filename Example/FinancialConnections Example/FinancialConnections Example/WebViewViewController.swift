@@ -59,7 +59,6 @@ private let websiteURL = URL(string: "https://connections-webview-example.stripe
 // Here is example code using `express` of listening
 private let redirectURL = URL(string: "zzz-custom://open/customtab_return")!
 
-@available(iOS 14.0, *)
 final class WebViewViewController: UIViewController {
 
     private var webAuthenticationSession: ASWebAuthenticationSession?
@@ -94,7 +93,6 @@ final class WebViewViewController: UIViewController {
     }
 }
 
-@available(iOS 14.0, *)
 extension WebViewViewController: WKUIDelegate {
     func webView(
         _ webView: WKWebView,
@@ -161,7 +159,6 @@ extension WebViewViewController: WKUIDelegate {
 
 // MARK: - ASWebAuthenticationPresentationContextProviding
 
-@available(iOS 14.0, *)
 extension WebViewViewController: ASWebAuthenticationPresentationContextProviding {
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {

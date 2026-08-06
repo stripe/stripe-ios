@@ -61,4 +61,36 @@ final class CustomerSheetAnalyticsTest: XCTestCase {
         XCTAssertEqual(analyticsClient._testLogHistory.last!["payment_method_type"] as? String, "apple_pay")
         XCTAssertNil(analyticsClient._testLogHistory.last!["has_card_art"])
     }
+
+    // MARK: - logCustomerSheetBillingAddressCompleted
+
+    func testLogCustomerSheetBillingAddressCompleted_withAutocomplete() {
+        analyticsClient.logCustomerSheetBillingAddressCompleted(
+            addressCountryCode: "US",
+            autoCompleteResultedSelected: true,
+            editDistance: 2,
+            apiClient: .init(publishableKey: "pk_test_123")
+        )
+        let last = analyticsClient._testLogHistory.last!
+        XCTAssertEqual(last["event"] as? String, "cs_billing_address_completed")
+        let blob = last["address_data_blob"] as? [String: Any?]
+        XCTAssertEqual(blob?["address_country_code"] as? String, "US")
+        XCTAssertEqual(blob?["auto_complete_result_selected"] as? Bool, true)
+        XCTAssertEqual(blob?["edit_distance"] as? Int, 2)
+    }
+
+    func testLogCustomerSheetBillingAddressCompleted_withoutAutocomplete() {
+        analyticsClient.logCustomerSheetBillingAddressCompleted(
+            addressCountryCode: "GB",
+            autoCompleteResultedSelected: false,
+            editDistance: nil,
+            apiClient: .init(publishableKey: "pk_test_123")
+        )
+        let last = analyticsClient._testLogHistory.last!
+        XCTAssertEqual(last["event"] as? String, "cs_billing_address_completed")
+        let blob = last["address_data_blob"] as? [String: Any?]
+        XCTAssertEqual(blob?["address_country_code"] as? String, "GB")
+        XCTAssertEqual(blob?["auto_complete_result_selected"] as? Bool, false)
+        XCTAssertNil(blob?["edit_distance"] as? Int)
+    }
 }

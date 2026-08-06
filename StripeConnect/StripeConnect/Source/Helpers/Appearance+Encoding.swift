@@ -8,10 +8,8 @@
 @_spi(STP) import StripeCore
 import UIKit
 
-@available(iOS 15, *)
 typealias Appearance = EmbeddedComponentManager.Appearance
 
-@available(iOS 15, *)
 extension Appearance {
     func asDictionary(traitCollection: UITraitCollection) -> [String: String] {
         var dict: [String: String] = [:]
@@ -49,7 +47,6 @@ extension Appearance {
     }
 }
 
-@available(iOS 15, *)
 extension Appearance.CornerRadius {
     private var mappings: [String: KeyPath<Self, CGFloat?>] {
         [
@@ -66,7 +63,6 @@ extension Appearance.CornerRadius {
     }
 }
 
-@available(iOS 15, *)
 extension Appearance.Badge {
     private func mappings(keyPrefix: String) -> [String: KeyPath<Self, UIColor?>] {
         [
@@ -81,7 +77,6 @@ extension Appearance.Badge {
     }
 }
 
-@available(iOS 15, *)
 extension Appearance.Button {
 
     private func mappings(keyPrefix: String) -> [String: KeyPath<Self, UIColor?>] {
@@ -97,7 +92,6 @@ extension Appearance.Button {
     }
 }
 
-@available(iOS 15, *)
 extension Appearance.Colors {
     var mappings: [String: KeyPath<Self, UIColor?>] {
         [
@@ -121,7 +115,6 @@ extension Appearance.Colors {
     }
 }
 
-@available(iOS 15, *)
 extension Appearance.Typography {
     var mappings: [String: KeyPath<Self, Style>] {
         [
@@ -158,7 +151,6 @@ extension Appearance.Typography {
     }
 }
 
-@available(iOS 15, *)
 extension Appearance.Typography.Style {
     func asDictionary(
         keyPrefix: String,
@@ -175,7 +167,6 @@ extension Appearance.Typography.Style {
     }
 }
 
-@available(iOS 15, *)
 extension Appearance.Form {
     func asDictionary(traitCollection: UITraitCollection) -> [String: String] {
         var dict: [String: String] = [:]
@@ -186,7 +177,6 @@ extension Appearance.Form {
     }
 }
 
-@available(iOS 15, *)
 extension Appearance.Action {
     func asDictionary(keyPrefix: String) -> [String: String] {
         var dict: [String: String] = [:]

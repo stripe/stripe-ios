@@ -14,11 +14,9 @@ import XCTest
 final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase {
     override func setUp() {
         super.setUp()
-        let expectation = expectation(description: "Load specs")
+        let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load { _ in
-                expectation.fulfill()
-            }
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
     }
@@ -53,6 +51,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         verify(makeSUT(loadResult: loadResult1, isApplePayEnabled: false, isFlowController: false), identifier: "saved_pms")
@@ -63,6 +62,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["sepa_debit"]),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.SEPADebit)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         verify(makeSUT(loadResult: loadResult2, isApplePayEnabled: false, isFlowController: false), identifier: "one_non_card_pm")
@@ -73,6 +73,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["sepa_debit"]),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.SEPADebit)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         verify(makeSUT(loadResult: loadResult3, isApplePayEnabled: true, isFlowController: false), identifier: "one_non_card_pm_apple_pay_enabled")
@@ -83,6 +84,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["cashapp"]),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.cashApp)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         verify(makeSUT(loadResult: loadResult4, isApplePayEnabled: false, isFlowController: false), identifier: "one_non_card_pm_no_input")
@@ -93,6 +95,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["cashapp"]),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.cashApp)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         verify(makeSUT(loadResult: loadResult5, isApplePayEnabled: true, isFlowController: false), identifier: "one_non_card_pm_no_input_apple_pay_enabled")
@@ -103,6 +106,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["cashapp"]),
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.cashApp)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         verify(makeSUT(loadResult: loadResult6, isApplePayEnabled: true, isFlowController: false), identifier: "one_non_card_pm_no_input_saved_pm")
@@ -113,6 +117,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.klarna)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         verify(makeSUT(loadResult: loadResult7, isApplePayEnabled: true, isFlowController: false), identifier: "one_non_card_pm_saved_pm")
@@ -123,6 +128,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["card", "sepa_debit"]),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card), .stripe(.SEPADebit)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         verify(makeSUT(loadResult: loadResult8, isApplePayEnabled: false, isFlowController: false), identifier: "multiple_pms")
@@ -133,6 +139,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         verify(makeSUT(loadResult: loadResult9, isApplePayEnabled: true, isFlowController: true), identifier: "card_link_applepay_flowcontroller")
@@ -143,6 +150,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testCardValue(),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         verify(makeSUT(loadResult: loadResult10, isApplePayEnabled: true, isFlowController: true), identifier: "card_applepay_flowcontroller")
@@ -162,6 +170,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
                 elementsSession: elementsSession,
                 savedPaymentMethods: [],
                 paymentMethodTypes: [.stripe(.card)],
+                paymentMethodMessagingPromotionsHelper: ._testValue(),
                 paymentMethodOrientation: .vertical
             )
             return PaymentSheetVerticalViewController(configuration: config, loadResult: loadResult, isFlowController: isFlowController, analyticsHelper: ._testValue(), previousPaymentOption: nil)
@@ -189,6 +198,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp"]),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         // ...and previous customer input is card...
@@ -206,6 +216,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: false),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         // ...and previous customer input is card...
@@ -222,6 +233,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp"], isLinkPassthroughModeEnabled: false),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         // ...and previous customer input is cash app - a PM without a form
@@ -240,6 +252,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp"]),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         // ...and previous customer input is SEPA - a PM that is not in the list
@@ -256,6 +269,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp"], isLinkPassthroughModeEnabled: false),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         // ...and previous customer input is cash app - a PM without a form...
@@ -272,6 +286,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["card", "sepa_debit"], isLinkPassthroughModeEnabled: false),
             savedPaymentMethods: [._testSEPA()],
             paymentMethodTypes: [.stripe(.card), .stripe(.SEPADebit)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(isApplePayEnabled: false), loadResult: loadResult, isFlowController: true, analyticsHelper: ._testValue(), previousPaymentOption: nil)
@@ -286,6 +301,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["card", "us_bank_account"], isLinkPassthroughModeEnabled: false),
             savedPaymentMethods: [._testUSBankAccount()],
             paymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(isApplePayEnabled: false), loadResult: loadResult, isFlowController: true, analyticsHelper: ._testValue(), previousPaymentOption: nil)
@@ -305,6 +321,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["us_bank_account", "cashapp"], isLinkPassthroughModeEnabled: false),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.USBankAccount), .stripe(.cashApp)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(isApplePayEnabled: false), loadResult: loadResult, isFlowController: true, analyticsHelper: ._testValue(), previousPaymentOption: nil)
@@ -332,6 +349,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: false, analyticsHelper: ._testValue(), previousPaymentOption: nil)
@@ -351,6 +369,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: elementsSession,
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card), .linkCardBrand],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: false, analyticsHelper: ._testValue(), previousPaymentOption: nil)
@@ -370,6 +389,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: elementsSession,
             savedPaymentMethods: [savedCard],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(isApplePayEnabled: false), loadResult: loadResult, isFlowController: false, analyticsHelper: ._testValue(), previousPaymentOption: nil)
@@ -415,6 +435,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp", "afterpay_clearpay"]),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.afterpayClearpay)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
 
@@ -436,6 +457,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp", "afterpay_clearpay"]),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.afterpayClearpay)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
 

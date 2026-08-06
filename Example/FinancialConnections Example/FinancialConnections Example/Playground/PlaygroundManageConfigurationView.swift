@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct PlaygroundManageConfigurationView: View {
 
     @ObservedObject var viewModel: PlaygroundManageConfigurationViewModel
@@ -46,7 +45,6 @@ struct PlaygroundManageConfigurationView: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct PlaygroundManageConfigurationView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {

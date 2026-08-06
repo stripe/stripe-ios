@@ -23,11 +23,21 @@ extension String {
             value: isSubtitle ? appearance.colors.textSecondary : appearance.colors.text,
             range: (self as NSString).range(of: self))
 
+        let fullRange = NSRange(location: 0, length: (self as NSString).length)
         for highlightRange in highlightRanges {
+            let range = highlightRange.rangeValue
+            // Validate range is within bounds to prevent NSRangeException crashes
+            // See https://jira.corp.stripe.com/browse/RUN_MOBILESDK-5400
+            guard range.location != NSNotFound,
+                  NSIntersectionRange(fullRange, range).length > 0
+            else {
+                continue
+            }
+            let clampedRange = NSIntersectionRange(fullRange, range)
             attributedString.addAttribute(
                 NSAttributedString.Key.font,
                 value: appearance.scaledFont(for: appearance.font.base.bold, style: textStyle, maximumPointSize: 25),
-                range: highlightRange.rangeValue)
+                range: clampedRange)
         }
 
         return attributedString

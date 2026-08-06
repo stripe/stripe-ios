@@ -4,32 +4,43 @@
 //
 //  Created by Nick Porter on 2/24/26.
 
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 extension CheckoutPlayground {
     @MainActor
     final class ViewModel: ObservableObject {
+        // Unified mode currently supports card and Link.
         static let availablePaymentMethods = [
-            "card", "us_bank_account", "cashapp", "affirm", "klarna",
+            "card", "link",
         ]
 
-        @Published var mode: SessionMode = .payment
+        @Published var integrationType: IntegrationType = .flowController {
+            didSet {
+                if integrationType == .eceOnly && expressCheckoutElementOption == .hide {
+                    expressCheckoutElementOption = .show
+                }
+            }
+        }
+        @Published var expressCheckoutElementOption: ExpressCheckoutElementOption = .show {
+            didSet {
+                if expressCheckoutElementOption == .hide && integrationType == .eceOnly {
+                    integrationType = .flowController
+                }
+            }
+        }
         @Published var currency: Currency = .usd
         @Published var customerType: CustomerType = .guest
         @Published var lineItems: [LineItemConfig] = LineItemConfig.defaults
-        @Published var enableShipping = true
-        @Published var allowPromotionCodes = true
-        @Published var phoneNumberCollection = false
         @Published var shippingAddressCollection = true
-        @Published var billingAddressCollection = false
+        @Published var billingAddressCollection: BillingAddressCollection = .automatic
         @Published var automaticTax = true
-        @Published var adaptivePricing = false
         @Published var checkoutSessionPaymentMethodSave = true
         @Published var checkoutSessionPaymentMethodRemove = true
         @Published var adaptivePricingCountry: AdaptivePricingCountry = .none
+        @Published var automaticPaymentMethods = false
         @Published var paymentMethodTypes: Set<String> = ["card"]
+        @Published var currencySelectorAppearance = CurrencySelectorElement.Appearance()
         @Published var checkoutEndpointOption: EndpointOption = .hosted
         @Published var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
 
@@ -39,7 +50,7 @@ extension CheckoutPlayground {
         @Published var navigateToCheckout = false
 
         var isButtonDisabled: Bool {
-            isCreating || paymentMethodTypes.isEmpty || (mode != .setup && lineItems.isEmpty)
+            isCreating || (!automaticPaymentMethods && paymentMethodTypes.isEmpty) || lineItems.isEmpty
         }
 
         func createSession() async {
@@ -85,30 +96,23 @@ extension CheckoutPlayground {
         }
 
         private func buildRequestBody() -> [String: Any] {
-            // The backend currently applies setup-mode restrictions for these fields.
-            // Send explicit safe values so setup mode never requests unsupported options.
-            let supportsAdvancedCollection = mode != .setup
-            let allowPromotionCodesForRequest = supportsAdvancedCollection ? allowPromotionCodes : false
-            let phoneNumberCollectionForRequest = supportsAdvancedCollection ? phoneNumberCollection : false
-            let automaticTaxForRequest = supportsAdvancedCollection ? automaticTax : false
-
             var body: [String: Any] = [
                 "merchant_country_code": "us_tax",
-                "mode": mode.rawValue,
+                "mode": "unified",
                 "currency": currency.rawValue,
                 "customer": customerType.rawValue,
-                "allow_promotion_codes": allowPromotionCodesForRequest,
-                "phone_number_collection": phoneNumberCollectionForRequest,
                 "shipping_address_collection": shippingAddressCollection,
-                "billing_address_collection": billingAddressCollection,
-                "include_shipping_options": enableShipping,
-                "automatic_tax": automaticTaxForRequest,
-                "payment_method_types": Array(paymentMethodTypes),
-                "adaptive_pricing": adaptivePricing,
+                "billing_address_collection": billingAddressCollection == .required,
+                "automatic_tax": automaticTax,
                 "checkout_session_payment_method_save": checkoutSessionPaymentMethodSave ? "enabled" : "disabled",
                 "checkout_session_payment_method_remove": checkoutSessionPaymentMethodRemove ? "enabled" : "disabled",
             ]
-            if adaptivePricing, adaptivePricingCountry != .none {
+            if automaticPaymentMethods {
+                body["automatic_payment_methods"] = true
+            } else {
+                body["payment_method_types"] = Array(paymentMethodTypes)
+            }
+            if adaptivePricingCountry != .none {
                 let countryCode = adaptivePricingCountry.rawValue.uppercased()
                 body["customer_email"] = "test+location_\(countryCode)@example.com"
             }

@@ -53,6 +53,7 @@ struct LinkSignUpResponse: Decodable {
     let accountId: String
     let publishableKey: String
     let consumerSession: ConsumerSessionData
+    let linkBrand: LinkBrand
 }
 
 struct AttachLinkConsumerToLinkAccountSessionResponse: Decodable {
@@ -60,6 +61,11 @@ struct AttachLinkConsumerToLinkAccountSessionResponse: Decodable {
     let clientSecret: String
 }
 
-struct ConsumerSessionResponse: Decodable {
+struct ConsumerSessionStartVerificationResponse: Decodable {
     let consumerSession: ConsumerSessionData
+}
+
+struct ConsumerSessionConfirmVerificationResponse: Decodable {
+    let consumerSession: ConsumerSessionData
+    let linkBrand: LinkBrand
 }

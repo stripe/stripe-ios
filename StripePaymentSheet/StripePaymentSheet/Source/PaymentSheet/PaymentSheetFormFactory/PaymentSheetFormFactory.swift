@@ -19,8 +19,7 @@ import UIKit
  */
 class PaymentSheetFormFactory {
     enum Error: Swift.Error {
-        case missingFormSpec
-        case missingV1FromSelectorSpec
+        case unexpectedPaymentMethodType
     }
 
     let paymentMethod: PaymentSheet.PaymentMethodType
@@ -34,6 +33,7 @@ class PaymentSheetFormFactory {
     let previousCustomerInput: IntentConfirmParams?
 
     let isPaymentIntent: Bool
+    let collectsTaxFromBillingAddress: Bool
     let isSettingUp: Bool
     let countryCode: String?
     let currency: String?
@@ -128,7 +128,7 @@ class PaymentSheetFormFactory {
         let linkBrand: LinkBrand = {
             switch configuration {
             case .paymentElement(let configuration, _):
-                return configuration.resolvedLinkBrand(elementsSession: elementsSession)
+                return configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount)
             case .customerSheet:
                 return .link
             }
@@ -143,6 +143,7 @@ class PaymentSheetFormFactory {
                   accountService: accountService,
                   cardBrandChoiceEligible: elementsSession.isCardBrandChoiceEligible,
                   isPaymentIntent: intent.isPaymentIntent,
+                  collectsTaxFromBillingAddress: intent.collectsTaxFromBillingAddress,
                   isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType),
                   countryCode: elementsSession.countryCode,
                   currency: intent.currency,
@@ -175,6 +176,7 @@ class PaymentSheetFormFactory {
         accountService: LinkAccountServiceProtocol?,
         cardBrandChoiceEligible: Bool = false,
         isPaymentIntent: Bool,
+        collectsTaxFromBillingAddress: Bool,
         isSettingUp: Bool,
         countryCode: String?,
         currency: String? = nil,
@@ -208,6 +210,7 @@ class PaymentSheetFormFactory {
             self.previousCustomerInput = nil
         }
         self.isPaymentIntent = isPaymentIntent
+        self.collectsTaxFromBillingAddress = collectsTaxFromBillingAddress
         self.isSettingUp = isSettingUp
         self.countryCode = countryCode
         self.currency = currency
@@ -230,76 +233,106 @@ class PaymentSheetFormFactory {
     }
 
     func make() -> PaymentMethodElement {
+        let form = makePaymentMethodForm()
+        return appendingAutomaticTaxAddressIfNecessary(to: form)
+    }
+
+    private func makePaymentMethodForm() -> PaymentMethodElement {
         switch paymentMethod {
         case .instantDebits, .linkCardBrand:
             return makeInstantDebits()
         case .external(let externalPaymentOption):
-            return makeExternalPaymentMethodForm(subtitle: externalPaymentOption.displaySubtext,
-                                                 disableBillingDetailCollection: externalPaymentOption.disableBillingDetailCollection)
+            return makeExternalPaymentMethodForm(
+                subtitle: externalPaymentOption.displaySubtext,
+                disableBillingDetailCollection: externalPaymentOption.disableBillingDetailCollection
+            )
         case .stripe(let paymentMethod):
-            var additionalElements = [Element]()
-
-            // We have two ways to create the form for a payment method
-            // 1. Custom, one-off forms
-            if paymentMethod == .card {
+            switch paymentMethod {
+            case .card:
                 return makeCard(linkAppearance: linkAppearance)
-            } else if paymentMethod == .USBankAccount {
+            case .USBankAccount:
                 return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
-            } else if paymentMethod == .cashApp && isSettingUp {
-                // special case, display mandate for Cash App when setting up or pi+sfu
-                additionalElements = [makeCashAppMandate()]
-            } else if paymentMethod == .payPal && isSettingUp {
-                // Paypal requires mandate when setting up
-                additionalElements = [makePaypalMandate()]
-            } else if paymentMethod == .revolutPay && isSettingUp {
-                // special case, display mandate for revolutPay when setting up or pi+sfu
-                additionalElements = [makeRevolutPayMandate()]
-            } else if paymentMethod == .amazonPay && isSettingUp {
-                // special case, display mandate for Amazon Pay when setting up or pi+sfu
-                additionalElements = [makeAmazonPayMandate()]
-            } else if paymentMethod == .satispay && isSettingUp {
-                // special case, display mandate for Satispay when setting up or pi+sfu
-                additionalElements = [makeSatispayMandate()]
-            } else if paymentMethod == .twint && isSettingUp {
-                // special case, display mandate for Twint when setting up or pi+sfu
-                additionalElements = [makeTwintMandate()]
-            } else if paymentMethod == .bancontact {
+            case .bancontact:
                 return makeBancontact()
-            } else if paymentMethod == .bacsDebit {
+            case .bacsDebit:
                 return makeBacsDebit()
-            } else if paymentMethod == .blik {
+            case .blik:
                 return makeBLIK()
-            } else if paymentMethod == .OXXO {
-                return  makeOXXO()
-            } else if paymentMethod == .konbini {
+            case .OXXO:
+                return makeOXXO()
+            case .konbini:
                 return makeKonbini()
-            } else if paymentMethod == .boleto {
+            case .boleto:
                 return makeBoleto()
-            } else if paymentMethod == .swish {
+            case .swish:
                 return makeSwish()
-            } else if paymentMethod == .afterpayClearpay {
+            case .afterpayClearpay:
                 return makeAfterpayClearpay()
-            } else if paymentMethod == .affirm {
+            case .affirm:
                 return makeAffirm()
-            } else if paymentMethod == .klarna {
+            case .klarna:
                 return makeKlarna()
-            } else if paymentMethod == .iDEAL {
+            case .iDEAL:
                 return makeiDEAL()
-            } else if paymentMethod == .wero {
+            case .wero:
                 return makeWero()
-            }
-
-            guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
-                analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
-                return FormElement(elements: [], theme: theme)
-            }
-            if paymentMethod == .SEPADebit {
+            case .SEPADebit:
                 return makeSepaDebit()
+            case .grabPay, .alipay, .paynow, .payPay, .mobilePay, .zip, .crypto,
+                 .billie, .sunbit, .alma, .payByBank:
+                return makeContactInformationAndBillingAddressForm()
+            case .promptPay, .multibanco:
+                return makeContactInformationAndBillingAddressForm(
+                    emailRequired: true,
+                    emailAPIPath: "billing_details[email]"
+                )
+            case .cashApp, .payPal, .revolutPay, .amazonPay, .satispay, .twint:
+                return makeContactInformationAndBillingAddressForm(
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
+                )
+            case .EPS:
+                return makeEPS()
+            case .przelewy24:
+                return makePrzelewy24()
+            case .AUBECSDebit:
+                return makeAUBECSDebit()
+            case .FPX:
+                return makeFPX()
+            case .netBanking, .weChatPay, .link, .cardPresent, .unknown:
+                return makeUnexpectedEmptyForm(for: paymentMethod)
+            @unknown default:
+                return makeUnexpectedEmptyForm(for: paymentMethod)
             }
+        }
+    }
 
-            // 2. Element-based forms defined in JSON
-            return makeFormElementFromSpec(spec: spec, additionalElements: additionalElements)
+    private func makeUnexpectedEmptyForm(for paymentMethod: STPPaymentMethodType) -> PaymentMethodElement {
+        let errorAnalytic = ErrorAnalytic(
+            event: .unexpectedPaymentSheetFormFactoryError,
+            error: Error.unexpectedPaymentMethodType,
+            additionalNonPIIParams: ["payment_method": paymentMethod.identifier]
+        )
+        analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
+        return FormElement(elements: [], theme: theme)
+    }
+
+    private func makeSetupMandateElements(for paymentMethod: STPPaymentMethodType) -> [Element] {
+        guard isSettingUp else { return [] }
+        switch paymentMethod {
+        case .cashApp:
+            return [makeCashAppMandate()]
+        case .payPal:
+            return [makePaypalMandate()]
+        case .revolutPay:
+            return [makeRevolutPayMandate()]
+        case .amazonPay:
+            return [makeAmazonPayMandate()]
+        case .satispay:
+            return [makeSatispayMandate()]
+        case .twint:
+            return [makeTwintMandate()]
+        default:
+            return []
         }
     }
 }
@@ -327,7 +360,7 @@ extension PaymentSheetFormFactory {
         return details
     }
 
-    /// Fields generated from form specs i.e. LUXE can write their values to arbitrary keys (`apiPath`)  in `additionalAPIParameters`.
+    /// Some fields write their values to arbitrary keys (`apiPath`) in `additionalAPIParameters`.
     func getPreviousCustomerInput(for apiPath: String?) -> String? {
         guard let apiPath = apiPath else {
             return nil
@@ -482,7 +515,8 @@ extension PaymentSheetFormFactory {
     }
 
     func makeBillingAddressSection(
-        collectionMode: AddressSectionElement.CollectionMode = .autoCompletable,
+        defaultFieldsToCollect: AddressSectionElement.FieldsToCollect = .all,
+        minimumFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect] = [:],
         countries: [String]? = nil,
         countryAPIPath: String? = nil,
         includeEmail: Bool = false,
@@ -509,29 +543,23 @@ extension PaymentSheetFormFactory {
             defaultAddress.email = defaultBillingDetails().email
         }
 
-        // Determine the collection mode based on whether we have default values
-        let finalCollectionMode: AddressSectionElement.CollectionMode = {
-            // If we have default address values (either from billing defaults or shipping details) and the requested mode would show all fields, use allWithAutocomplete
-            let hasDefaultAddressValues = defaultBillingDetails().address != .init() || (configuration.shippingDetails() != nil && displayBillingSameAsShippingCheckbox)
-            if hasDefaultAddressValues {
-                switch collectionMode {
-                case .autoCompletable:
-                    return .allWithAutocomplete
-                default:
-                    return collectionMode
-                }
-            } else {
-                return collectionMode
-            }
-        }()
+        let effectiveMinimumFieldsToCollectByCountry = minimumFieldsIncludingAutomaticTax(
+            minimumFieldsToCollectByCountry
+        )
+        let availableCountries = countries ?? addressSpecProvider.countries
+        let collectsOnlyCountry = defaultFieldsToCollect == .country
+            && effectiveMinimumFieldsToCollectByCountry
+                .filter { availableCountries.caseInsensitiveContains($0.key) }
+                .allSatisfy { $0.value == .country }
 
         let section = AddressSectionElement(
-            // TODO: Switch between "billing address" and "billing details" strings once the localizations have landed
-            title: (includePhone || includeEmail) ? String.Localized.billing_address_lowercase : String.Localized.billing_address_lowercase,
+            // A lone country dropdown doesn't need a "Billing address" header
+            title: collectsOnlyCountry ? nil : String.Localized.billing_address_lowercase,
             countries: countries,
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
-            collectionMode: finalCollectionMode,
+            defaultFieldsToCollect: defaultFieldsToCollect,
+            minimumFieldsToCollectByCountry: effectiveMinimumFieldsToCollectByCountry,
             additionalFields: .init(
                 phone: includePhone ? .enabled(isOptional: false) : .disabled,
                 email: includeEmail ? .enabled(isOptional: false) : .disabled,
@@ -697,11 +725,9 @@ extension PaymentSheetFormFactory {
             ? (configuration.savePaymentMethodOptInBehavior.isSelectedByDefault || isSettingUp) : isSettingUp
 
         let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
-        let addressElement = configuration.billingDetailsCollectionConfiguration.address == .full
-        ? makeBillingAddressSection(collectionMode: .autoCompletable, countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
-            : nil
+        let addressElement = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+            as? PaymentMethodElementWrapper<AddressSectionElement>
         connectBillingDetailsFields(
-            countryElement: nil,
             addressElement: addressElement,
             phoneElement: phoneElement)
 
@@ -768,15 +794,56 @@ extension PaymentSheetFormFactory {
         return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
     }
 
+    /// Creates a form that collects configured contact information and billing address details.
+    func makeContactInformationAndBillingAddressForm(
+        emailRequired: Bool = false,
+        emailAPIPath: String? = nil,
+        additionalElements: [Element] = []
+    ) -> PaymentMethodElement {
+        let contactInfoSection = makeContactInformationSection(
+            nameRequiredByPaymentMethod: false,
+            emailRequiredByPaymentMethod: emailRequired,
+            phoneRequiredByPaymentMethod: false,
+            emailAPIPath: emailAPIPath
+        )
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let elements = [contactInfoSection, billingDetails].compactMap { $0 } + additionalElements
+        return makeDefaultsApplierWrapper(
+            for: FormElement(autoSectioningElements: elements, theme: theme)
+        )
+    }
+
     func makeWero() -> PaymentMethodElement {
-        let country = makeCountry(countryCodes: ["DE", "BE", "FR"])
+        // Wero requires a country; collect the full address only if the config requires it
+        let addressElement = makeCountryOrAddressSection(countries: ["DE", "BE", "FR"])
         let contactInfoSection = makeContactInformationSection(
             nameRequiredByPaymentMethod: false,
             emailRequiredByPaymentMethod: false,
             phoneRequiredByPaymentMethod: false
         )
-        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
-        return FormElement(autoSectioningElements: [country, contactInfoSection, billingDetails].compactMap { $0 }, theme: theme)
+        let phoneElement = contactInfoSection?.elements.compactMap {
+            $0 as? PaymentMethodElementWrapper<PhoneNumberElement>
+        }.first
+        connectBillingDetailsFields(
+            addressElement: addressElement,
+            phoneElement: phoneElement
+        )
+        let allElements: [Element?] = [addressElement, contactInfoSection]
+        return FormElement(autoSectioningElements: allElements.compactMap { $0 }, theme: theme)
+    }
+
+    /// Country dropdown, or a full address section when billing address collection is `.full`.
+    /// - Parameter countryAPIPath: Optional form-spec API path that also receives the selected country
+    ///   (in addition to `billing_details[address][country]`).
+    func makeCountryOrAddressSection(
+        countries: [String]?,
+        countryAPIPath: String? = nil
+    ) -> PaymentMethodElementWrapper<AddressSectionElement> {
+        makeBillingAddressSection(
+            defaultFieldsToCollect: configuration.billingDetailsCollectionConfiguration.address == .full ? .all : .country,
+            countries: countries,
+            countryAPIPath: countryAPIPath
+        )
     }
 
     // Only show checkbox for PI+SFU & Setup Intent
@@ -796,30 +863,6 @@ extension PaymentSheetFormFactory {
         return shouldDisplaySaveCheckbox && isSettingUp ? saveCheckbox : nil
     }
 
-    func makeCountry(countryCodes: [String]?, apiPath: String? = nil) -> PaymentMethodElement {
-        let locale = Locale.current
-        let resolvedCountryCodes = countryCodes ?? addressSpecProvider.countries
-        let country = PaymentMethodElementWrapper(
-            DropdownFieldElement.Address.makeCountry(
-                label: String.Localized.country,
-                countryCodes: resolvedCountryCodes,
-                theme: theme,
-                defaultCountry: defaultBillingDetails(countryAPIPath: apiPath).address.country,
-                locale: locale
-            )
-        ) { dropdown, params in
-            if let apiPath = apiPath {
-                params.paymentMethodParams.additionalAPIParameters[apiPath] =
-                    resolvedCountryCodes[dropdown.selectedIndex]
-            } else {
-                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.country =
-                    resolvedCountryCodes[dropdown.selectedIndex]
-            }
-            return params
-        }
-        return country
-    }
-
     func makeIban(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
         let defaultValue = getPreviousCustomerInput(for: apiPath) ?? previousCustomerInput?.paymentMethodParams.sepaDebit?.iban
         return PaymentMethodElementWrapper(TextFieldElement.makeIBAN(defaultValue: defaultValue, theme: theme)) { iban, params in
@@ -834,74 +877,35 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    /// Creates a country dropdown for Klarna form specs with API path support
-    func makeKlarnaCountry(apiPath: String?) -> PaymentMethodElement? {
-        let countryCodes = Locale.current.sortedByTheirLocalizedNames(addressSpecProvider.countries)
-        let defaultValue = getPreviousCustomerInput(for: apiPath) ?? defaultBillingDetails(countryAPIPath: apiPath).address.country
-        let country = PaymentMethodElementWrapper(
-            DropdownFieldElement.Address.makeCountry(
-                label: String.Localized.country,
-                countryCodes: countryCodes,
-                theme: theme,
-                defaultCountry: defaultValue,
-                locale: Locale.current
-            )
-        ) { dropdown, params in
-            let countryCode = countryCodes[dropdown.selectedIndex]
-            if let apiPath = apiPath {
-                params.paymentMethodParams.additionalAPIParameters[apiPath] = countryCode
-            } else {
-                let address = STPPaymentMethodAddress()
-                address.country = countryCode
-                params.paymentMethodParams.nonnil_billingDetails.address = address
-            }
-            return params
-        }
-        return country
-    }
-
-    private var bnplHeaderStyle: PaymentSheet.UserInterfaceStyle {
-        guard case .paymentElement(let configuration, _) = configuration else {
-            stpAssertionFailure("BNPL headers are only supported for PaymentSheet/FlowController/EmbeddedPaymentElement and not CustomerSheet.")
-            return .automatic
-        }
-        return configuration.style
-    }
-
     func makeKlarnaHeader() -> SubtitleElement {
-        if let header = makeBNPLHeader() {
-            // Use the shared BNPL header when header content is available.
-            return header
-        } else {
-            // Fall back to the legacy Klarna copy label.
-            return makeCopyLabel(text: .Localized.buy_now_or_pay_later_with_klarna)
-        }
+        let legacyAffirmHeader = makeCopyLabel(text: .Localized.buy_now_or_pay_later_with_klarna)
+        return makeBNPLHeader(fallback: legacyAffirmHeader)
     }
 
     func makeAffirmHeader() -> SubtitleElement {
-        if let header = makeBNPLHeader() {
-            // Use the shared BNPL header when header content is available.
-            return header
-        } else {
-            // Fall back to the legacy Affirm-specific header UI.
-            return SubtitleElement(
-                view: AffirmCopyLabel(theme: theme),
-                isHorizontalMode: paymentMethodOrientation == .horizontal
-            )
-        }
+        let legacyAffirmHeader = SubtitleElement(
+            view: AffirmCopyLabel(theme: theme),
+            isHorizontalMode: paymentMethodOrientation == .horizontal
+        )
+        return makeBNPLHeader(fallback: legacyAffirmHeader)
     }
 
-    func makeBNPLHeader() -> SubtitleElement? {
-        // This will be hooked up to promotion content data in a future PR.
-        return nil
-//        let headerView = BNPLFormHeaderView(
-//            appearance: configuration.appearance,
-//            style: bnplHeaderStyle,
-//            promotion: "TODO: fill in with real promotion content",
-//            learnMoreText: "TODO: fill in with real learn more text",
-//            infoUrl: URL(string: "https://stripe.com")!
-//        )
-//        return SubtitleElement(view: headerView, isHorizontalMode: paymentMethodOrientation == .horizontal)
+    func makeBNPLHeader(fallback: SubtitleElement) -> SubtitleElement {
+        // If we have a promotions helper, use it to construct the BNPL header.
+        // If not (we are not the PMM in MPE experiment or an unsupported case) we use the fallback header.
+        // We still pass the fallback through in case promotion content is not available.
+        // In that case it is important to still use the BNPLFormHeaderView for the purpose of experiment analytics logging.
+        if let paymentMethodMessagingPromotionsHelper {
+            let headerView = BNPLFormHeaderView(
+                appearance: configuration.appearance,
+                paymentMethod: paymentMethod,
+                promotionsHelper: paymentMethodMessagingPromotionsHelper,
+                fallback: fallback
+            )
+            return SubtitleElement(view: headerView, isHorizontalMode: paymentMethodOrientation == .horizontal)
+        } else {
+            return fallback
+        }
     }
 
     func makeCopyLabel(text: String) -> SubtitleElement {
@@ -924,10 +928,8 @@ extension PaymentSheetFormFactory {
         let nameElement = billingConfiguration.name == .always ? makeName() : nil
         let phoneElement = billingConfiguration.phone == .always ? makePhone() : nil
 
-        let countries = configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
-        let addressElement = billingConfiguration.address == .full
-            ? makeBillingAddressSection(collectionMode: .autoCompletable, countries: countries)
-            : nil
+        let addressElement = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+            as? PaymentMethodElementWrapper<AddressSectionElement>
 
         // An email is required, so only hide the email field iff:
         // The configuration specifies never collecting email, and a default (non-empty) email is provided.
@@ -988,12 +990,18 @@ extension PaymentSheetFormFactory {
     /// - Parameter nameRequiredByPaymentMethod: Whether your payment method requires the name field.
     /// - Parameter emailRequiredByPaymentMethod: Whether your payment method requires the email field.
     /// - Parameter phoneRequiredByPaymentMethod: Whether your payment method requires the phone field.
-    func makeContactInformationSection(nameRequiredByPaymentMethod: Bool, emailRequiredByPaymentMethod: Bool, phoneRequiredByPaymentMethod: Bool) -> SectionElement? {
+    func makeContactInformationSection(
+        nameRequiredByPaymentMethod: Bool,
+        emailRequiredByPaymentMethod: Bool,
+        phoneRequiredByPaymentMethod: Bool,
+        emailAPIPath: String? = nil
+    ) -> SectionElement? {
         let config = configuration.billingDetailsCollectionConfiguration
         let nameElement = config.name == .always
             || (config.name == .automatic && nameRequiredByPaymentMethod) ? makeName() : nil
         let emailElement = config.email == .always
-            || (config.email == .automatic && emailRequiredByPaymentMethod) ? makeEmail() : nil
+            || (config.email == .automatic && emailRequiredByPaymentMethod)
+            ? makeEmail(apiPath: emailAPIPath) : nil
         let phoneElement = config.phone == .always
             || (config.phone == .automatic && phoneRequiredByPaymentMethod) ? makePhone() : nil
         let elements = ([nameElement, emailElement, phoneElement] as [Element?]).compactMap { $0 }
@@ -1005,21 +1013,33 @@ extension PaymentSheetFormFactory {
             theme: theme)
     }
 
-    func makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: Bool) -> Element? {
-        if configuration.billingDetailsCollectionConfiguration.address == .full
-            || (configuration.billingDetailsCollectionConfiguration.address == .automatic && requiredByPaymentMethod) {
-            let countries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty
-                ? nil
-                : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
-           return makeBillingAddressSection(countries: countries)
-        } else {
-            return nil
-        }
+    func makeBillingAddressSectionIfNecessary(
+        requiredByPaymentMethod: Bool
+    ) -> Element? {
+        let defaultFieldsToCollect: AddressSectionElement.FieldsToCollect? = {
+            switch (configuration.billingDetailsCollectionConfiguration.address, requiredByPaymentMethod) {
+            case (.automatic, true):
+                return .all
+            case (.automatic, false) where collectsTaxFromBillingAddress:
+                // Tax always needs the country; country overrides collect any additional fields required for that country.
+                return .country
+            case (.full, _):
+                return .all
+            case (.automatic, false), (.never, _):
+                return nil
+            }
+        }()
+        guard let defaultFieldsToCollect else { return nil }
+
+        return makeBillingAddressSection(
+            defaultFieldsToCollect: defaultFieldsToCollect,
+            countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
+        )
     }
 
     func makeDefaultsApplierWrapper<T: PaymentMethodElement>(for element: T) -> PaymentMethodElementWrapper<T> {
         return PaymentMethodElementWrapper(
-            element,
+            updatingParamsFrom: element,
             defaultsApplier: { [configuration] _, params in
                 // Only apply defaults when the flag is on.
                 guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
@@ -1041,13 +1061,12 @@ extension PaymentSheetFormFactory {
                 }
                 return params
             },
-            paramsUpdater: { element, params in
-                return element.updateParams(params: params)
+            paramsUpdater: { _, params in
+                return params
             })
     }
 
     func connectBillingDetailsFields(
-        countryElement: PaymentMethodElementWrapper<DropdownFieldElement>?,
         addressElement: PaymentMethodElementWrapper<AddressSectionElement>?,
         phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?
     ) {
@@ -1069,24 +1088,6 @@ extension PaymentSheetFormFactory {
             phoneElement.setSelectedCountryCode(countryCode, shouldUpdateDefaultNumber: true)
         }
 
-        if let countryElement = countryElement {
-            countryElement.element.didUpdate = { [updatePhone] _ in
-                let countryCode = countryElement.element.selectedItem.rawData
-                if let phoneElement = phoneElement {
-                    updatePhone(phoneElement.element, countryCode)
-                }
-                if let addressElement = addressElement {
-                    addressElement.element.selectedCountryCode = countryCode
-                }
-            }
-
-            if let addressElement = addressElement,
-               addressElement.element.selectedCountryCode != countryElement.element.selectedItem.rawData
-            {
-                addressElement.element.selectedCountryCode = countryElement.element.selectedItem.rawData
-            }
-        }
-
         if let addressElement = addressElement {
             addressElement.element.didUpdate = { [updatePhone] addressDetails in
                 if let countryCode = addressDetails.address.country,
@@ -1098,6 +1099,7 @@ extension PaymentSheetFormFactory {
         }
     }
 }
+
 extension PaymentSheetFormFactory {
     enum SavePaymentMethodConsentBehavior: Equatable {
         case legacy
@@ -1112,12 +1114,12 @@ extension PaymentSheetFormFactory {
         intent: Intent,
         elementsSession: STPElementsSession
     ) -> SavePaymentMethodConsentBehavior {
-        guard case .checkoutSession(let checkoutSession) = intent else {
+        guard case .checkout(let session) = intent else {
             return elementsSession.savePaymentMethodConsentBehavior
         }
 
-        guard checkoutSession.customerId != nil,
-              let offerSave = checkoutSession.savedPaymentMethodsOfferSave,
+        guard session.customerId != nil,
+              let offerSave = session.savedPaymentMethodsOfferSave,
               offerSave.enabled
         else {
             return .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled

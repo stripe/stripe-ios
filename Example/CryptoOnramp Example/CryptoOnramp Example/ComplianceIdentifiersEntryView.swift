@@ -22,13 +22,52 @@ struct ComplianceIdentifiersEntryView: View {
         }
     }
 
+    private struct CARFIdentifierInputState: Identifiable {
+        let id = UUID()
+        var selectedType: ComplianceIdentifierType
+        var value: String
+    }
+
     let coordinator: CryptoOnrampCoordinator
     let onCompleted: () -> Void
 
     @Environment(\.isLoading) private var isLoading
     @State private var identifierInputs: [IdentifierInputState]
     @State private var alternatives: [ComplianceIdentifierAlternativeGroup]
+    @State private var isCARFTINRequired: Bool
+    @State private var carfIdentifierInputs: [CARFIdentifierInputState]
     @State private var alert: Alert?
+
+    private static let carfIdentifierTypeOptions: [ComplianceIdentifierType] = [
+        .atSTN,
+        .beNRN,
+        .bgUCN,
+        .cyTIC,
+        .czRC,
+        .deSTN,
+        .dkCPR,
+        .eeIK,
+        .esNIF,
+        .fiHETU,
+        .frNIR,
+        .frSPI,
+        .grAFM,
+        .hrOIB,
+        .huAD,
+        .iePPSN,
+        .itCF,
+        .ltAK,
+        .luNIF,
+        .lvPK,
+        .mtNIC,
+        .nlBSN,
+        .plPESEL,
+        .ptNIF,
+        .roCNP,
+        .sePIN,
+        .siPIN,
+        .skRC,
+    ]
 
     private var isPresentingAlert: Binding<Bool> {
         Binding(get: {
@@ -53,11 +92,25 @@ struct ComplianceIdentifiersEntryView: View {
             }
         )
         _alternatives = State(initialValue: requirements.alternatives)
+        _isCARFTINRequired = State(initialValue: requirements.carfTinRequired)
+        _carfIdentifierInputs = State(
+            initialValue: requirements.carfTinRequired ? [Self.makeEmptyCARFIdentifierInput()] : []
+        )
     }
 
     private var isSubmitButtonDisabled: Bool {
         isLoading.wrappedValue
-            || identifierInputs.contains { $0.value.isEmpty }
+            || micaInputsNeedingCollection.contains { $0.value.isEmpty }
+            || (isCARFTINRequired && carfIdentifierInputs.isEmpty)
+            || (isCARFTINRequired && carfIdentifierInputs.contains { $0.value.isEmpty })
+    }
+
+    private var carfIdentifierTypesWithValues: Set<ComplianceIdentifierType> {
+        Set(carfIdentifierInputs.filter { !$0.value.isEmpty }.map(\.selectedType))
+    }
+
+    private var micaInputsNeedingCollection: [IdentifierInputState] {
+        identifierInputs.filter { !isMiCARequirementSatisfiedByCARF($0.requirement) }
     }
 
     var body: some View {
@@ -83,9 +136,16 @@ struct ComplianceIdentifiersEntryView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                ForEach($identifierInputs) { $input in
-                    identifierField(input: $input)
+                VStack(alignment: .leading, spacing: 32) {
+                    if isCARFTINRequired {
+                        carfSection
+                    }
+
+                    if !identifierInputs.isEmpty {
+                        micaSection
+                    }
                 }
+                .animation(.default, value: carfIdentifierInputs.count)
             }
             .padding()
         }
@@ -96,6 +156,10 @@ struct ComplianceIdentifiersEntryView: View {
             .buttonStyle(PrimaryButtonStyle())
             .disabled(isSubmitButtonDisabled)
             .opacity(isSubmitButtonDisabled ? 0.5 : 1)
+            .background {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color(.systemBackground))
+            }
             .padding()
         }
         .navigationTitle("Identifiers")
@@ -113,6 +177,54 @@ struct ComplianceIdentifiersEntryView: View {
     }
 
     @ViewBuilder
+    private var micaSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("MiCA Identifiers")
+                    .font(.headline)
+
+                Text("Enter the required national identifier for each MiCA requirement.")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+
+            ForEach($identifierInputs) { $input in
+                if isMiCARequirementSatisfiedByCARF(input.requirement) {
+                    satisfiedIdentifierField(input: $input)
+                } else {
+                    identifierField(input: $input)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var carfSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("CRS/CARF Tax Identifiers")
+                    .font(.headline)
+
+                Text("Add each EU country where you are tax-resident, then enter the corresponding tax identification number.")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+
+            ForEach($carfIdentifierInputs) { $input in
+                carfIdentifierField(input: $input)
+            }
+
+            Button {
+                carfIdentifierInputs.append(Self.makeEmptyCARFIdentifierInput())
+            } label: {
+                Label("Add tax identifier", systemImage: "plus.circle")
+            }
+            .disabled(isLoading.wrappedValue)
+            .padding(.top, 4)
+        }
+    }
+
+    @ViewBuilder
     private func identifierField(input: Binding<IdentifierInputState>) -> some View {
         let requirement = input.wrappedValue.requirement
         let identifierTypeOptions = identifierTypeOptions(for: requirement)
@@ -124,7 +236,7 @@ struct ComplianceIdentifiersEntryView: View {
                 Picker(
                     selection: input.selectedType
                 ) {
-                    ForEach(identifierTypeOptions, id: \.self) { type in
+                    ForEach(identifierTypeOptions, id: \.rawValue) { type in
                         Text(type.displayName).tag(type)
                     }
                 } label: {
@@ -132,6 +244,7 @@ struct ComplianceIdentifiersEntryView: View {
                         .font(.headline)
                 }
                 .pickerStyle(.menu)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
                 TextField(placeholder, text: input.value)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -146,6 +259,52 @@ struct ComplianceIdentifiersEntryView: View {
         }
     }
 
+    private func satisfiedIdentifierField(input: Binding<IdentifierInputState>) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(input.wrappedValue.selectedType.displayName)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+
+            Text("Already satisfied by a tax identifier entered on this screen.")
+                .font(.footnote)
+                .foregroundColor(.secondary)
+        }
+    }
+
+    private func carfIdentifierField(input: Binding<CARFIdentifierInputState>) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .center, spacing: 8) {
+                Picker(
+                    selection: input.selectedType
+                ) {
+                    ForEach(Self.carfIdentifierTypeOptions, id: \.rawValue) { type in
+                        Text(type.carfDisplayName).tag(type)
+                    }
+                } label: {
+                    Text(input.wrappedValue.selectedType.carfDisplayName)
+                        .font(.headline)
+                }
+                .pickerStyle(.menu)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Spacer()
+
+                if carfIdentifierInputs.count > 1 {
+                    Button(role: .destructive) {
+                        carfIdentifierInputs.removeAll { $0.id == input.wrappedValue.id }
+                    } label: {
+                        Image(systemName: "trash")
+                    }
+                    .disabled(isLoading.wrappedValue)
+                }
+            }
+
+            TextField("Enter tax identifier for \(input.wrappedValue.selectedType.carfDisplayName)", text: input.value)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .autocapitalization(.allCharacters)
+        }
+    }
+
     private func identifierTypeOptions(for requirement: ComplianceIdentifierRequirement) -> [ComplianceIdentifierType] {
         let alternativeIdentifiers = alternatives
             .first { $0.originalMissingIdentifiers.contains(requirement.type) }?
@@ -154,23 +313,37 @@ struct ComplianceIdentifiersEntryView: View {
         return ([requirement.type] + alternativeIdentifiers).uniqued()
     }
 
+    private func isMiCARequirementSatisfiedByCARF(_ requirement: ComplianceIdentifierRequirement) -> Bool {
+        !carfIdentifierTypesWithValues.isDisjoint(with: Set(identifierTypeOptions(for: requirement)))
+    }
+
     private func submitIdentifiers() {
         isLoading.wrappedValue = true
         alert = nil
 
-        let identifiers = identifierInputs.map { input in
+        let carfIdentifiers = isCARFTINRequired ? carfIdentifierInputs.map { input in
             ComplianceIdentifier(
                 type: input.selectedType,
                 value: input.value
             )
+        } : []
+        let micaIdentifiers = identifierInputs.compactMap { input -> ComplianceIdentifier? in
+            guard !isMiCARequirementSatisfiedByCARF(input.requirement) else {
+                return nil
+            }
+            return ComplianceIdentifier(
+                type: input.selectedType,
+                value: input.value
+            )
         }
+        let identifiers = carfIdentifiers + micaIdentifiers
 
         Task {
             do {
                 let result = try await coordinator.submitIdentifiers(identifiers)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    if result.valid {
+                    if result.completed {
                         onCompleted()
                     } else {
                         updateRequirements(from: result)
@@ -188,6 +361,12 @@ struct ComplianceIdentifiersEntryView: View {
 
     private func updateRequirements(from result: SubmitIdentifiersResult) {
         alternatives = result.alternatives
+        isCARFTINRequired = result.carfTinRequired
+        if isCARFTINRequired && carfIdentifierInputs.isEmpty {
+            carfIdentifierInputs.append(Self.makeEmptyCARFIdentifierInput())
+        } else if !isCARFTINRequired {
+            carfIdentifierInputs = []
+        }
         identifierInputs = result.identifiers.map { requirement in
             let existingInput = identifierInputs.first { $0.requirement.type == requirement.type }
             return IdentifierInputState(
@@ -201,12 +380,23 @@ struct ComplianceIdentifiersEntryView: View {
     private func errorMessage(for result: SubmitIdentifiersResult) -> String {
         let identifiers = result.identifiers.map { "\($0.type.displayName) (\($0.regulation.displayName))" }
         let invalidIdentifiers = result.invalidIdentifiers.map(\.displayName)
+        var messages = ["Some identifiers need to be corrected."]
 
-        return """
-        Some identifiers need to be corrected.
-        Missing identifiers: \(identifiers)
-        Invalid identifiers: \(invalidIdentifiers)
-        """
+        if result.carfTinRequired {
+            messages.append("A CRS/CARF tax identifier is still required.")
+        }
+        if !identifiers.isEmpty {
+            messages.append("Missing identifiers: \(identifiers)")
+        }
+        if !invalidIdentifiers.isEmpty {
+            messages.append("Invalid identifiers: \(invalidIdentifiers)")
+        }
+
+        return messages.joined(separator: "\n")
+    }
+
+    private static func makeEmptyCARFIdentifierInput() -> CARFIdentifierInputState {
+        CARFIdentifierInputState(selectedType: carfIdentifierTypeOptions[0], value: "")
     }
 }
 
@@ -223,7 +413,6 @@ private extension Array where Element: Hashable {
             coordinator: coordinator,
             requirements: ComplianceIdentifierRequirements(
                 identifiers: [
-                    .init(type: .deSTN, regulation: .euCARF),
                     .init(type: .mtNIC, regulation: .euMiCA),
                 ],
                 alternatives: [
@@ -231,7 +420,8 @@ private extension Array where Element: Hashable {
                         originalMissingIdentifiers: [.mtNIC],
                         alternativeMissingIdentifiers: [.mtPP]
                     ),
-                ]
+                ],
+                carfTinRequired: true
             ),
             onCompleted: {}
         )

@@ -190,6 +190,26 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
         XCTAssertEqual(sut.supportedPaymentMethodTypes, [ParsedEnum(.bankAccount)])
     }
 
+    func test_supportedPaymentMethodTypes_whenFilterIsEmpty_usesAllCasesAtIntersection() throws {
+        let sut = try makeSUT(
+            supportedPaymentDetailsTypes: [ParsedEnum(.bankAccount)],
+            supportedPaymentMethodTypes: [],
+            linkFundingSources: ["BANK_ACCOUNT"]
+        )
+
+        XCTAssertEqual(sut.supportedPaymentMethodTypes, [ParsedEnum(.bankAccount)])
+    }
+
+    func test_supportedPaymentMethodTypes_whenFilterIsCard_returnsCardOnly() throws {
+        let sut = try makeSUT(
+            supportedPaymentDetailsTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
+            supportedPaymentMethodTypes: [.card],
+            linkFundingSources: ["CARD", "BANK_ACCOUNT"]
+        )
+
+        XCTAssertEqual(sut.supportedPaymentMethodTypes, [ParsedEnum(.card)])
+    }
+
     func test_cardBrandFiltering_passThroughEnabled() throws {
         let sut = try makeSUT(supportedPaymentDetailsTypes: [ParsedEnum(.card)],
                               linkFundingSources: ["CARD"],
@@ -363,12 +383,12 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
     }
 
     func testShouldShowSecondaryButtonEnabled() throws {
-        let sut = try makeSUT(shouldShowSecondaryCta: true)
+        let sut = try makeSUT(canContinueWithoutLink: true)
         XCTAssertNotNil(sut.cancelButtonConfiguration)
     }
 
     func testShouldShowSecondaryButtonDisabled() throws {
-        let sut = try makeSUT(shouldShowSecondaryCta: false)
+        let sut = try makeSUT(canContinueWithoutLink: false)
         XCTAssertNil(sut.cancelButtonConfiguration)
     }
 }
@@ -385,7 +405,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
         linkPassthroughModeEnabled: Bool? = nil,
         isSettingUp: Bool = false,
         linkPMOSFU: Bool? = nil,
-        shouldShowSecondaryCta: Bool = true
+        canContinueWithoutLink: Bool = true
     ) throws -> PayWithLinkViewController.WalletViewModel {
         // Enable card funding filtering when allowedCardFundingTypes is not .all
         let cardFundingFilteringEnabled = allowedCardFundingTypes != .all
@@ -424,7 +444,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 linkBrand: .link,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
-                shouldShowSecondaryCta: shouldShowSecondaryCta,
+                canContinueWithoutLink: canContinueWithoutLink,
                 initiallySelectedPaymentDetailsID: nil,
                 callToAction: nil,
                 supportedPaymentMethodTypes: supportedPaymentMethodTypes,

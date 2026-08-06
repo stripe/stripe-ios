@@ -74,10 +74,6 @@ class EmbeddedFormViewController: UIViewController {
         return paymentMethodFormViewController.form
     }
 
-    var collectsUserInput: Bool {
-        return form.collectsUserInput
-    }
-
     enum Error: Swift.Error {
         case noPaymentOptionOnBuyButtonTap
     }
@@ -93,10 +89,11 @@ class EmbeddedFormViewController: UIViewController {
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+    private weak var checkout: Checkout?
     private var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
-    /// Previous customer input - in the `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
-    private(set) var previousPaymentOption: PaymentOption?
+    /// The payment option to restore if the customer cancels this form.
+    private(set) var paymentOptionToRestoreOnCancellation: PaymentOption?
 
     // MARK: - UI properties
 
@@ -127,13 +124,7 @@ class EmbeddedFormViewController: UIViewController {
     }()
 
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
-        let previousCustomerInput: IntentConfirmParams? = {
-            if case let .new(confirmParams: confirmParams) = previousPaymentOption {
-                return confirmParams
-            } else {
-                return nil
-            }
-        }()
+        let previousCustomerInput = paymentOptionToRestoreOnCancellation?.formConfirmParamsForCancellationRestoration
 
         let headerView = FormHeaderView(
             paymentMethodType: paymentMethodType,
@@ -174,6 +165,7 @@ class EmbeddedFormViewController: UIViewController {
          previousPaymentOption: PaymentOption? = nil,
          analyticsHelper: PaymentSheetAnalyticsHelper,
          paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+         checkout: Checkout? = nil,
          formCache: PaymentMethodFormCache = .init(),
          delegate: EmbeddedFormViewControllerDelegate
     ) {
@@ -181,9 +173,10 @@ class EmbeddedFormViewController: UIViewController {
         self.elementsSession = elementsSession
         self.shouldUseNewCardNewCardHeader = shouldUseNewCardNewCardHeader
         self.configuration = configuration
-        self.previousPaymentOption = previousPaymentOption
+        self.paymentOptionToRestoreOnCancellation = previousPaymentOption
         self.analyticsHelper = analyticsHelper
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+        self.checkout = checkout
         self.paymentMethodType = paymentMethodType
         self.formCache = formCache
         self.delegate = delegate
@@ -269,6 +262,11 @@ class EmbeddedFormViewController: UIViewController {
             stpAssertionFailure()
             dismiss(animated: true)
         }
+    }
+
+    /// Captures the valid form state accepted by Continue so later canceled edits can restore it.
+    func capturePaymentOptionForCancellationRestoration() {
+        paymentOptionToRestoreOnCancellation = selectedPaymentOption
     }
 
     required init?(coder: NSCoder) {
@@ -381,13 +379,47 @@ class EmbeddedFormViewController: UIViewController {
         // Send analytic when primary button is tapped
         analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
 
-        // If we defer confirmation, simply close the sheet
+        // If we defer confirmation, sync billing then close the sheet
         if shouldDeferConfirmation {
-            self.delegate?.embeddedFormViewControllerDidContinue(self)
+            syncCheckoutBillingThenContinue()
             return
         }
 
         pay(with: selectedPaymentOption)
+    }
+
+    /// Syncs billing address to the checkout session, then tells the delegate to continue.
+    /// If the sync fails, stays on the sheet and shows the error instead.
+    private func syncCheckoutBillingThenContinue() {
+        guard let checkout,
+              let paymentOption = selectedPaymentOption else {
+            delegate?.embeddedFormViewControllerDidContinue(self)
+            return
+        }
+
+        view.endEditing(true)
+        error = nil
+        isPaymentInFlight = true
+        updateError()
+        updatePrimaryButton()
+        isUserInteractionEnabled = false
+
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                try await checkout.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
+            } catch {
+                self.error = error
+            }
+            self.isPaymentInFlight = false
+            self.isUserInteractionEnabled = true
+            self.updateError()
+            self.updatePrimaryButton()
+
+            if self.error == nil {
+                self.delegate?.embeddedFormViewControllerDidContinue(self)
+            }
+        }
     }
 
     @objc func didTapPrimaryButtonWhenDisabled() {

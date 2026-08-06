@@ -6,6 +6,8 @@
 
 "App Settings" = "Setările aplicației";
 
+"Auto" = "Automat";
+
 "Back %@ photo successfully uploaded" = "Fotografia cu spatele %@ a fost încărcată cu succes";
 
 "Back identity document photo successfully uploaded" = "Fotografia cu spatele documentului de identitate a fost încărcată cu succes";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Imaginea este neclară. Țineți telefonul nemișcat și încercați din nou.";
 
+"Image taken" = "Imagine realizată";
+
 "Individual CPF" = "CPF persoană fizică";
 
 "Invalid document" = "Document nevalid";
@@ -85,6 +89,8 @@
 "Loading" = "Se încarcă";
 
 "Make sure you're in a well lit space." = "Asigurați-vă că vă aflați într-un spațiu bine luminat.";
+
+"Manual" = "Manual";
 
 "Move closer" = "Apropiați";
 

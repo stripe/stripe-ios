@@ -181,28 +181,26 @@ private struct PhoneCountryCodeSelectorViewUIViewRepresentable: UIViewRepresenta
 
 struct PhoneCountryCodeSelectorView_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOS 14.0, *) {
-            VStack(spacing: 16) {
-                PhoneCountryCodeSelectorViewUIViewRepresentable(
-                    defaultCountryCode: ""
-                )
-                .frame(width: 85, height: 48)
+        VStack(spacing: 16) {
+            PhoneCountryCodeSelectorViewUIViewRepresentable(
+                defaultCountryCode: ""
+            )
+            .frame(width: 85, height: 48)
 
-                PhoneCountryCodeSelectorViewUIViewRepresentable(
-                    defaultCountryCode: "US"
-                )
-                .frame(width: 72, height: 48)
+            PhoneCountryCodeSelectorViewUIViewRepresentable(
+                defaultCountryCode: "US"
+            )
+            .frame(width: 72, height: 48)
 
-                PhoneCountryCodeSelectorViewUIViewRepresentable(
-                    defaultCountryCode: "GB"
-                )
-                .frame(width: 85, height: 48)
+            PhoneCountryCodeSelectorViewUIViewRepresentable(
+                defaultCountryCode: "GB"
+            )
+            .frame(width: 85, height: 48)
 
-                Spacer()
-            }
-            .padding()
-            .background(Color(FinancialConnectionsAppearance.Colors.background))
+            Spacer()
         }
+        .padding()
+        .background(Color(FinancialConnectionsAppearance.Colors.background))
     }
 }
 

@@ -17,7 +17,8 @@ protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: SavedPaymentOptionsViewController)
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
-        paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
+        paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
+        previousSelection: SavedPaymentOptionsViewController.SelectionSnapshot)
     func didSelectRemove(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
@@ -94,6 +95,12 @@ class SavedPaymentOptionsViewController: UIViewController {
                 return "link"
             }
         }
+    }
+
+    /// The visible and persisted selection state immediately before a customer selection.
+    struct SelectionSnapshot {
+        fileprivate let selectedIndex: Int?
+        fileprivate let persistedPaymentOption: CustomerPaymentOption?
     }
 
     struct Configuration {
@@ -175,6 +182,8 @@ class SavedPaymentOptionsViewController: UIViewController {
     private let intent: Intent
     private let paymentSheetConfiguration: PaymentSheet.Configuration
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private let linkBrandProvider: () -> LinkBrand
+    private var currentLinkBrand: LinkBrand
 
     var selectedPaymentOption: PaymentOption? {
         guard let index = selectedViewModelIndex, viewModels.indices.contains(index) else {
@@ -187,7 +196,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         case .applePay:
             return .applePay
         case .link:
-            return .link(option: .wallet(brand: configuration.linkBrand))
+            return .link(option: .wallet(brand: currentLinkBrand))
         case let .saved(paymentMethod):
             return .saved(paymentMethod: paymentMethod, confirmParams: selectedPaymentOptionIntentConfirmParams)
         }
@@ -243,6 +252,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     private var selectedViewModelIndex: Int?
     private var viewModels: [Selection] = []
     private let cbcEligible: Bool
+    private var linkAccountObserver: LinkAccountContextObserver?
 
     private var selectedIndexPath: IndexPath? {
         guard
@@ -254,6 +264,15 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
 
         return IndexPath(item: index, section: 0)
+    }
+
+    private var selectionSnapshot: SelectionSnapshot {
+        return SelectionSnapshot(
+            selectedIndex: selectedViewModelIndex,
+            persistedPaymentOption: CustomerPaymentOption.localDefaultPaymentMethod(
+                for: configuration.customerID
+            )
+        )
     }
     private lazy var cvcFormElement: PaymentMethodElement = {
         return makeElement()
@@ -286,7 +305,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
 
     // MARK: - Views
-    private lazy var collectionView: SavedPaymentMethodCollectionView = {
+    lazy var collectionView: SavedPaymentMethodCollectionView = {
         let collectionView = SavedPaymentMethodCollectionView(appearance: appearance, needsVerticalPaddingForBadge: hasDefault)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -336,6 +355,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         elementsSession: STPElementsSession,
         cbcEligible: Bool = false,
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        linkBrandProvider: (() -> LinkBrand)? = nil,
         delegate: SavedPaymentOptionsViewControllerDelegate? = nil
     ) {
         self.savedPaymentMethods = savedPaymentMethods
@@ -348,6 +368,8 @@ class SavedPaymentOptionsViewController: UIViewController {
         self.cbcEligible = cbcEligible
         self.delegate = delegate
         self.analyticsHelper = analyticsHelper
+        self.currentLinkBrand = configuration.linkBrand
+        self.linkBrandProvider = linkBrandProvider ?? { configuration.linkBrand }
         super.init(nibName: nil, bundle: nil)
         updateUI()
     }
@@ -359,6 +381,14 @@ class SavedPaymentOptionsViewController: UIViewController {
     // MARK: - UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
+        if configuration.showLink {
+            linkAccountObserver = LinkAccountContextObserver { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.syncLinkBrand()
+                }
+            }
+            _ = linkAccountObserver
+        }
         view.addAndPinSubview(stackView)
     }
 
@@ -401,6 +431,17 @@ class SavedPaymentOptionsViewController: UIViewController {
         if isViewLoaded {
             updateFormElement()
         }
+    }
+
+    private func syncLinkBrand() {
+        let resolvedLinkBrand = linkBrandProvider()
+        guard resolvedLinkBrand != currentLinkBrand else {
+            return
+        }
+        currentLinkBrand = resolvedLinkBrand
+        collectionView.reloadData()
+        collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
+        delegate?.didUpdate(self)
     }
 
     private func updateMandateView() {
@@ -459,6 +500,61 @@ class SavedPaymentOptionsViewController: UIViewController {
         selectedViewModelIndex = nil
         collectionView.deselectItem(at: selectedIndexPath, animated: true)
         collectionView.reloadItems(at: [selectedIndexPath])
+    }
+
+    func setSelectedCellLoading(_ loading: Bool) {
+        guard let selectedIndexPath else {
+            return
+        }
+        let cell = collectionView.cellForItem(at: selectedIndexPath)
+            as? SavedPaymentMethodCollectionView.PaymentOptionCell
+        cell?.setLoading(loading)
+    }
+
+    func restoreSelection(_ snapshot: SelectionSnapshot) {
+        if let selectedIndexPath {
+            collectionView.deselectItem(at: selectedIndexPath, animated: true)
+        }
+        CustomerPaymentOption.setDefaultPaymentMethod(
+            snapshot.persistedPaymentOption,
+            forCustomer: configuration.customerID
+        )
+        if let index = snapshot.selectedIndex, viewModels.indices.contains(index) {
+            selectedViewModelIndex = index
+            collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
+        } else {
+            selectedViewModelIndex = nil
+        }
+        updateMandateView()
+        updateFormElement()
+    }
+
+    /// Selects a carousel option while rebuilding canceled FlowController state, without
+    /// persisting the selection or treating it as new customer input.
+    func setSelectionForCancellationRestoration(to paymentOption: PaymentOption) {
+        let customerPaymentOption: CustomerPaymentOption? = {
+            switch paymentOption {
+            case .applePay:
+                return .applePay
+            case .link:
+                return .link
+            case .saved(let paymentMethod, _):
+                return .stripeId(paymentMethod.stripeId)
+            case .new, .external:
+                return nil
+            }
+        }()
+        guard let customerPaymentOption,
+              let index = viewModels.firstIndex(where: { $0 == customerPaymentOption }) else {
+            return
+        }
+
+        selectedViewModelIndex = index
+        collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
+        updateMandateView()
+        if isViewLoaded {
+            updateFormElement()
+        }
     }
 
     private func isDefaultPaymentMethod(savedPaymentMethodId: String?) -> Bool {
@@ -536,7 +632,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
                           allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
                           needsVerticalPaddingForBadge: hasDefault,
                           showDefaultPMBadge: isDefaultPaymentMethod(savedPaymentMethodId: viewModel.savedPaymentMethod?.stripeId),
-                          linkBrand: configuration.linkBrand)
+                          linkBrand: currentLinkBrand)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
@@ -555,13 +651,18 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         }
         let viewModel = viewModels[indexPath.item]
         if case .add = viewModel {
-            delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
+            delegate?.didUpdateSelection(
+                viewController: self,
+                paymentMethodSelection: viewModel,
+                previousSelection: selectionSnapshot
+            )
             return false
         }
         return true
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let previousSelection = selectionSnapshot
         selectedViewModelIndex = indexPath.item
         let viewModel = viewModels[indexPath.item]
 
@@ -584,7 +685,11 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         updateMandateView()
         cvcFormElement.clearTextFields()
         updateFormElement()
-        delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
+        delegate?.didUpdateSelection(
+            viewController: self,
+            paymentMethodSelection: viewModel,
+            previousSelection: previousSelection
+        )
     }
 }
 
@@ -607,7 +712,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                                                            hostedSurface: .paymentSheet,
                                                                            cardBrandFilter: paymentSheetConfiguration.cardBrandFilter,
                                                                            canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
-                                                                           canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
+                                                                           canUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible,
                                                                            allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
                                                                            isDefault: isDefaultPaymentMethod(savedPaymentMethodId: paymentMethod.stripeId))

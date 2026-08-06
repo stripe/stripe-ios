@@ -24,34 +24,18 @@ import Foundation
     private init() { }
 
     @_spi(STP) public var isSupported: Bool {
-        if #available(iOS 14.0, *) {
-            return DCAppAttestService.shared.isSupported
-        } else {
-            return false
-        }
+        return DCAppAttestService.shared.isSupported
     }
 
     @_spi(STP) public func generateKey() async throws -> String {
-        guard #available(iOS 14.0, *) else {
-            stpAssertionFailure()
-            throw StripeAttest.AttestationError.attestationNotSupported
-        }
         return try await DCAppAttestService.shared.generateKey()
     }
 
     @_spi(STP) public func generateAssertion(_ keyId: String, clientDataHash: Data) async throws -> Data {
-        guard #available(iOS 14.0, *) else {
-            stpAssertionFailure()
-            throw StripeAttest.AttestationError.attestationNotSupported
-        }
         return try await DCAppAttestService.shared.generateAssertion(keyId, clientDataHash: clientDataHash)
     }
 
     @_spi(STP) public func attestKey(_ keyId: String, clientDataHash: Data) async throws -> Data {
-        guard #available(iOS 14.0, *) else {
-            stpAssertionFailure()
-            throw StripeAttest.AttestationError.attestationNotSupported
-        }
         return try await DCAppAttestService.shared.attestKey(keyId, clientDataHash: clientDataHash)
     }
 

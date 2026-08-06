@@ -18,7 +18,7 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
         )
         let configuration = PaymentSheet.Configuration()
 
-        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession), .onelink)
+        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: nil), .onelink)
     }
 
     func testResolvedLinkBrand_prefersConfigurationOverride() {
@@ -28,14 +28,55 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.link = .init(brand: .onelink)
 
-        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession), .onelink)
+        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: nil), .onelink)
     }
 
     func testResolvedLinkBrand_defaultsToLinkWhenElementsSessionHasNoBrand() {
         let elementsSession = STPElementsSession._testValue()
         let configuration = PaymentSheet.Configuration()
 
-        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession), .link)
+        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: nil), .link)
+    }
+
+    func testResolvedLinkBrand_withSignedOutLinkAccount_fallsBackToElementsSessionBrand() {
+        let elementsSession = STPElementsSession._testValue(
+            linkSettings: ._testValue(brand: .link)
+        )
+        let configuration = PaymentSheet.Configuration()
+        let linkAccount = PaymentSheetLinkAccount(
+            email: "test@example.com",
+            session: nil,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+
+        XCTAssertEqual(
+            configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
+            .link
+        )
+    }
+
+    func testResolvedLinkBrand_withLinkAccount_stillPrefersConfigurationOverride() {
+        let elementsSession = STPElementsSession._testValue(
+            linkSettings: ._testValue(brand: .link)
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(brand: .link)
+        let linkAccount = PaymentSheetLinkAccount(
+            email: "test@example.com",
+            session: nil,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+
+        XCTAssertEqual(
+            configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
+            .link
+        )
     }
 
     func testIsLinkEnabled_supportsLinkFalse_linkNotPresent() {
@@ -142,6 +183,29 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
 
         XCTAssertFalse(isLinkEnabled, "Link should be disabled when display is set to .never")
+    }
+
+    func testIsLinkEnabled_automaticTaxBilling_linkDisabled() {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card", "link"],
+            isLinkPassthroughModeEnabled: true
+        )
+        elementsSession.disableLinkForAutomaticTaxBilling = true
+        let configuration = PaymentSheet.Configuration()
+
+        XCTAssertFalse(PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration))
+        XCTAssertTrue(PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).contains(.automaticTaxBillingAddress))
+    }
+
+    func testIsLinkEnabled_automaticTaxBillingFalse_linkEnabled() {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card", "link"],
+            isLinkPassthroughModeEnabled: true
+        )
+        elementsSession.disableLinkForAutomaticTaxBilling = false
+        let configuration = PaymentSheet.Configuration()
+
+        XCTAssertTrue(PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration))
     }
 
     func testIsLinkSignupEnabled_enabled_for_linkSignupOptInFeatureEnabled_if_general_signup_disabled() {
@@ -269,7 +333,7 @@ private extension PaymentMethodAvailabilityTests {
     }
 
     func makeLinkAccountRequiringVerification() -> PaymentSheetLinkAccount {
-        let consumerSession = ConsumerSession(
+        let consumerSession = ConsumerSession.make(
             clientSecret: "client_secret",
             emailAddress: "test@example.com",
             redactedFormattedPhoneNumber: "+1********55",

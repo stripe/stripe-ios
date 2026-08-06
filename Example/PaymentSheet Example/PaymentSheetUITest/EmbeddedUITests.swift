@@ -22,17 +22,17 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(cardButton.waitForExistence(timeout: 10))
         // filter out async passive captcha and attestation logs
         let startupLog = analyticsLog.compactMap({ $0[string: "event"] })
-            .filter({ !$0.starts(with: "luxe") }).filter({ !$0.starts(with: "elements.captcha.passive") && !($0.contains("attest")) })
+            .filter({ !$0.starts(with: "elements.captcha.passive") && !($0.contains("attest")) })
         XCTAssertEqual(
             startupLog,
-            ["mc_load_started", "mc_load_succeeded", "mc_embedded_init", "mc_initial_displayed_payment_methods"]
+            ["mc_load_started", "payment_method_messaging_fetch_begin", "mc_load_succeeded", "mc_embedded_init", "mc_initial_displayed_payment_methods"]
         )
 
         // Entering a card w/ deferred PaymentIntent...
         cardButton.tap()
         XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 10))
         try! fillCardData(app, postalEnabled: true)
-        app.toolbars.buttons["Done"].waitForExistenceAndTap()
+        app.stp_dismissKeyboard()
         XCTAssertTrue(app.buttons["Continue"].isEnabled)
         app.buttons["Continue"].waitForExistenceAndTap()
         sleep(1) // wait for 1 second for the sheet to dismiss
@@ -83,10 +83,10 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
             .filter({ !$0.starts(with: "elements.captcha.passive") && !($0.contains("attest")) })
-            .prefix(7)
+            .suffix(1)
         XCTAssertEqual(
             aliPayAnalytics,
-            ["mc_embedded_update_started", "mc_load_started", "mc_load_succeeded", "mc_initial_displayed_payment_methods", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown"]
+            ["mc_carousel_payment_method_tapped"]
         )
 
         // ...and *updating* to a SetupIntent...
@@ -405,7 +405,6 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertFalse(bank6789Button.waitForExistence(timeout: 3.0))
         XCTAssertFalse(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 3.0))
         let events = analyticsLog.compactMap({ $0[string: "event"] })
-            .filter({ !$0.starts(with: "luxe") })
             .suffix(6)
 
         // The analytics events can vary depending on the initial payment method order.
@@ -684,15 +683,16 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         cardNumberField.tap()
         app.typeText(XCUIKeyboardKey.delete.rawValue)
         app.buttons["Close"].waitForExistenceAndTap()
-        // ...should de-select the row and clear the payment option
-        XCTAssertFalse(app.staticTexts["Payment method"].waitForExistence(timeout: 1))
-        XCTAssertFalse(app.buttons["New card"].isSelected)
-        XCTAssertFalse(app.buttons["Checkout"].isEnabled)
+        // ...should restore the last accepted card
+        XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 1))
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4444")
+        XCTAssertTrue(app.buttons["New card"].isSelected)
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
-        // Tapping back into card form should preserve previous form details
+        // Tapping back into card form should restore the last accepted form details
         app.buttons["New card"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Add new card"].waitForExistence(timeout: 2))
-        XCTAssertEqual(cardNumberField.value as? String, "555555555555444, Your card number is incomplete.")
+        XCTAssertEqual(cardNumberField.value as? String, "5555555555554444")
     }
 
     func testApplePay() {
@@ -981,7 +981,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Card number from https://docs.stripe.com/testing#regulatory-cards
         try! fillCardData(app, cardNumber: "4000002760003184")
-        app.toolbars.buttons["Done"].waitForExistenceAndTap()
+        app.stp_dismissKeyboard()
         app.buttons["Continue"].waitForExistenceAndTap()
         app.swipeUp() // scroll to see the checkout button
         app.buttons["Checkout"].waitForExistenceAndTap()

@@ -33,6 +33,7 @@ protocol NativeFlowDataManager: AnyObject {
     var accountNumberLast4: String? { get set }
     var consumerSession: ConsumerSessionData? { get set }
     var consumerPublishableKey: String? { get set }
+    var authenticatedLinkBrand: LinkBrand? { get set }
     var saveToLinkWithStripeSucceeded: Bool? { get set }
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane? { get set }
     var customSuccessPaneCaption: String? { get set }
@@ -65,15 +66,11 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     }
     var merchantLogo: [String]? {
         let merchantLogo = visualUpdate.merchantLogo
-        if merchantLogo.isEmpty || merchantLogo.count == 2 || merchantLogo.count == 3 {
+        if merchantLogo.isEmpty || (1...3).contains(merchantLogo.count) {
             // show merchant logo inside of consent pane
             return visualUpdate.merchantLogo
         } else {
             // if `merchantLogo.count > 3`, that is an invalid case
-            //
-            // we want to log experiment exposure regardless because
-            // if experiment is not working fine (ex. returns 1 or 4 logos)
-            // then the "cost" of those bugs should show up in the `treatment` data
             return nil
         }
     }
@@ -123,6 +120,11 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
             apiClient.consumerPublishableKey = consumerPublishableKey
         }
     }
+    var authenticatedLinkBrand: LinkBrand? {
+        didSet {
+            apiClient.authenticatedLinkBrand = authenticatedLinkBrand
+        }
+    }
 
     init(
         manifest: FinancialConnectionsSessionManifest,
@@ -153,6 +155,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         // Use consumer properties from the API client, if available.
         self.consumerSession = apiClient.consumerSession
         self.consumerPublishableKey = apiClient.consumerPublishableKey
+        self.authenticatedLinkBrand = apiClient.authenticatedLinkBrand
         didUpdateManifest()
     }
 

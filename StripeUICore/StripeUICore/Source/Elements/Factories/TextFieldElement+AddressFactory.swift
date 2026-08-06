@@ -190,6 +190,15 @@ import UIKit
                 return .valid
             }
 
+            func makeDisplayText(for text: String) -> NSAttributedString {
+                if countryCode == "GB", text.count > 3 {
+                    let splitIndex = text.index(text.endIndex, offsetBy: -3)
+                    return NSAttributedString(string: "\(text[..<splitIndex]) \(text[splitIndex...])")
+                }
+
+                return NSAttributedString(string: text)
+            }
+
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 // CA and GB use alphanmeric. US uses numeric only
                 return .init(type: countryCode == "US" ? .numberPad : .default, textContentType: .postalCode, autocapitalization: .allCharacters)

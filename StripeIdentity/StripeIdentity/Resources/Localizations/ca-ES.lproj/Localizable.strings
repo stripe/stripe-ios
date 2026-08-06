@@ -6,6 +6,8 @@
 
 "App Settings" = "Configuració de l'aplicació";
 
+"Auto" = "Automàtic";
+
 "Back %@ photo successfully uploaded" = "La foto de la cara posterior de %@ s'ha carregat correctament";
 
 "Back identity document photo successfully uploaded" = "La foto de la cara posterior del document d'identitat s'ha carregat correctament";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "La imatge és borrosa. Mantingueu el telèfon ferm i torneu-ho a provar.";
 
+"Image taken" = "Imatge capturada";
+
 "Individual CPF" = "CPF particular";
 
 "Invalid document" = "Document no vàlid";
@@ -85,6 +89,8 @@
 "Loading" = "S'està carregant";
 
 "Make sure you're in a well lit space." = "Assegureu-vos que esteu en un espai ben il·luminat.";
+
+"Manual" = "Manual";
 
 "Move closer" = "Apropa'l";
 

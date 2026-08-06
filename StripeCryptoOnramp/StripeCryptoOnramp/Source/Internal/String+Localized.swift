@@ -12,6 +12,55 @@ import Foundation
 @_spi(STP) import StripeUICore
 
 extension String.Localized {
+    static var cryptoOnrampErrorAppAttestationUnavailable: String {
+        return STPLocalizedString(
+            "This app couldn't be verified. Contact the app developer for help.",
+            "Error message shown when app attestation is not configured for crypto onramp"
+        )
+    }
+
+    static var cryptoOnrampErrorAppAttestationFailed: String {
+        return STPLocalizedString(
+            "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists.",
+            "Error message shown when app attestation fails"
+        )
+    }
+
+    static var cryptoOnrampErrorInvalidWalletOwnershipSignature: String {
+        return STPLocalizedString(
+            "We couldn't verify ownership of this wallet. Please try again.",
+            "Error message shown when the submitted wallet ownership signature is invalid"
+        )
+    }
+
+    static var cryptoOnrampErrorWalletOwnershipChallengeExpired: String {
+        return STPLocalizedString(
+            "This wallet verification request expired. Please try again.",
+            "Error message shown when the wallet ownership challenge has expired"
+        )
+    }
+
+    static var cryptoOnrampErrorInvalidWalletOwnershipChallenge: String {
+        return STPLocalizedString(
+            "This wallet verification request is invalid. Please try again.",
+            "Error message shown when the wallet ownership challenge is invalid"
+        )
+    }
+
+    static var cryptoOnrampErrorWalletNotFound: String {
+        return STPLocalizedString(
+            "This wallet couldn't be found. Please choose or add a wallet and try again.",
+            "Error message shown when the wallet is not registered for crypto onramp"
+        )
+    }
+
+    static var cryptoOnrampErrorUnsupportedNetwork: String {
+        return STPLocalizedString(
+            "This wallet network isn't supported. Please choose a different network.",
+            "Error message shown when the wallet network is not supported for crypto onramp"
+        )
+    }
+
     static var debitIsMostLikelyToBeAccepted: String {
         return STPLocalizedString(
             "Debit cards are most likely to be accepted.",

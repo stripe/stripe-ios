@@ -47,9 +47,6 @@ import Foundation
     /// Link to the merchant's logo asset.
     let merchantLogoUrl: URL?
 
-    /// A map describing payment method types form specs.
-    let paymentMethodSpecs: [[AnyHashable: Any]]?
-
     /// Card brand choice settings for the merchant.
     let cardBrandChoice: STPCardBrandChoice?
 
@@ -67,8 +64,9 @@ import Foundation
     /// Customer details, returned when v1/elements/sessions is called with CustomerSession info
     let customer: ElementsCustomer?
 
-    /// A flag that indicates that this instance was created as a best-effort
-    let isBackupInstance: Bool
+    // TODO(joyceqin) Re-enable as part of the ECE workstream
+    // Link doesn't support automatic tax from billing address
+    var disableLinkForAutomaticTaxBilling: Bool = false
 
     public let allResponseFields: [AnyHashable: Any]
 
@@ -85,14 +83,12 @@ import Foundation
         linkSettings: LinkSettings?,
         experimentsData: ExperimentsData?,
         flags: [String: Bool],
-        paymentMethodSpecs: [[AnyHashable: Any]]?,
         cardBrandChoice: STPCardBrandChoice?,
         isApplePayEnabled: Bool,
         externalPaymentMethods: [ExternalPaymentMethod],
         customPaymentMethods: [CustomPaymentMethod],
         passiveCaptchaData: PassiveCaptchaData?,
-        customer: ElementsCustomer?,
-        isBackupInstance: Bool = false
+        customer: ElementsCustomer?
     ) {
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
@@ -106,14 +102,12 @@ import Foundation
         self.linkSettings = linkSettings
         self.experimentsData = experimentsData
         self.flags = flags
-        self.paymentMethodSpecs = paymentMethodSpecs
         self.cardBrandChoice = cardBrandChoice
         self.isApplePayEnabled = isApplePayEnabled
         self.externalPaymentMethods = externalPaymentMethods
         self.customPaymentMethods = customPaymentMethods
         self.passiveCaptchaData = passiveCaptchaData
         self.customer = customer
-        self.isBackupInstance = isBackupInstance
         super.init()
     }
 
@@ -152,14 +146,12 @@ import Foundation
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
-            paymentMethodSpecs: nil,
             cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: [:]),
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
             passiveCaptchaData: nil,
-            customer: nil,
-            isBackupInstance: true
+            customer: nil
         )
     }
 }
@@ -188,13 +180,6 @@ extension STPElementsSession: STPAPIResponseDecodable {
             fromAPIResponse: response["experiments_data"] as? [AnyHashable: Any]
         )
 
-        let cardArtExperimentInTreatment: Bool = {
-            guard let group = experimentsData?.experimentAssignments[CardArtExperiment.experimentName] else {
-                return false
-            }
-            return group == .treatment
-        }()
-
         let customer: ElementsCustomer? = {
             let customerDataKey = "customer"
             guard response[customerDataKey] != nil, !(response[customerDataKey] is NSNull) else {
@@ -202,7 +187,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             }
             let enableLinkInSPM = flags["elements_enable_link_spm"] ?? false
             guard let customerJSON = response[customerDataKey] as? [AnyHashable: Any],
-                  let decoded = ElementsCustomer.decoded(fromAPIResponse: customerJSON, enableLinkInSPM: enableLinkInSPM, includeCardArt: cardArtExperimentInTreatment) else {
+                  let decoded = ElementsCustomer.decoded(fromAPIResponse: customerJSON, enableLinkInSPM: enableLinkInSPM) else {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionCustomerDeserializeFailed)
                 return nil
             }
@@ -270,7 +255,6 @@ extension STPElementsSession: STPAPIResponseDecodable {
             ),
             experimentsData: experimentsData,
             flags: flags,
-            paymentMethodSpecs: response["payment_method_specs"] as? [[AnyHashable: Any]],
             cardBrandChoice: cardBrandChoice,
             isApplePayEnabled: isApplePayEnabled,
             externalPaymentMethods: externalPaymentMethods,
@@ -407,6 +391,10 @@ extension STPElementsSession {
 
     var forceVerticalPaymentMethodLayout: Bool {
         flags["elements_mobile_force_vertical_payment_method_layout"] == true
+    }
+
+    var shouldUseAutocompleteProxyEndpoints: Bool {
+        flags["ocs_mobile_should_use_autocomplete_proxy_endpoints"] == true
     }
 }
 

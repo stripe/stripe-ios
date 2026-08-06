@@ -23,6 +23,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
 
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let cbcEligible: Bool
+    let useAutocompleteEndpoints: Bool
     let savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior
 
     // MARK: - Read-only Properties
@@ -48,6 +49,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
 
     /// Reference to the AddressSectionElement in the form, if present
     private var addressSectionElement: AddressSectionElement?
+    private var selectedAutoCompleteAddress: PaymentSheet.Address?
     var overrideActionButtonBehavior: OverrideableBuyButtonBehavior? {
         if selectedPaymentMethodType == .stripe(.USBankAccount) {
             if let paymentOption = paymentOption,
@@ -133,6 +135,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         configuration: CustomerSheet.Configuration,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         cbcEligible: Bool,
+        useAutocompleteEndpoints: Bool,
         savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior,
         delegate: CustomerAddPaymentMethodViewControllerDelegate
     ) {
@@ -146,6 +149,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         self.paymentMethodTypes = paymentMethodTypes
         self.cbcEligible = cbcEligible
+        self.useAutocompleteEndpoints = useAutocompleteEndpoints
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = configuration.appearance.colors.background
@@ -251,6 +255,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             accountService: nil,
             cardBrandChoiceEligible: cbcEligible,
             isPaymentIntent: false,
+            collectsTaxFromBillingAddress: false,
             isSettingUp: true,
             countryCode: nil,
             savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior,
@@ -288,13 +293,16 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         }
 
         // Create a basic AddressViewController.Configuration for the autocomplete
-        let addressConfiguration = AddressViewController.Configuration(
+        var addressConfiguration = AddressViewController.Configuration(
             appearance: configuration.appearance
         )
+        addressConfiguration.apiClient = configuration.apiClient
+        addressConfiguration.useAutocompleteEndpoints = useAutocompleteEndpoints
 
         let autoCompleteViewController = AutoCompleteViewController(
             configuration: addressConfiguration,
             initialLine1Text: addressSectionElement.line1?.text,
+            selectedCountry: addressSectionElement.selectedCountryCode,
             addressSpecProvider: AddressSpecProvider.shared,
             verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance)
         )
@@ -421,9 +429,7 @@ extension CustomerAddPaymentMethodViewController: AutoCompleteViewControllerDele
 
         // Dismiss the autocomplete view controller
         presentedViewController?.dismiss(animated: true) {
-            // Switch to manual entry mode and set the line1 text
-            addressSectionElement.collectionMode = .allWithAutocomplete
-            addressSectionElement.line1?.setText(line1)
+            addressSectionElement.beginManualEntry(with: line1)
             addressSectionElement.line1?.beginEditing()
         }
     }
@@ -433,25 +439,36 @@ extension CustomerAddPaymentMethodViewController: AutoCompleteViewControllerDele
 
         // Dismiss the autocomplete view controller
         presentedViewController?.dismiss(animated: true) {
-            // Switch to manual entry mode after address selection
-            addressSectionElement.collectionMode = .allWithAutocomplete
-
             guard let address = address else {
                 return
             }
 
-            // Set the country if it's supported
-            let autocompleteCountryIndex = addressSectionElement.countryCodes.firstIndex(where: { $0 == address.country })
-            if let autocompleteCountryIndex = autocompleteCountryIndex {
-                addressSectionElement.country.select(index: autocompleteCountryIndex, shouldAutoAdvance: false)
-            }
+            addressSectionElement.setAddress(address.addressSectionAddress)
 
-            // Populate the address fields
-            addressSectionElement.line1?.setText(address.line1 ?? "")
-            addressSectionElement.line2?.setText(address.line2 ?? "")
-            addressSectionElement.city?.setText(address.city ?? "")
-            addressSectionElement.postalCode?.setText(address.postalCode ?? "")
-            addressSectionElement.state?.setRawData(address.state ?? "", shouldAutoAdvance: false)
+            // Read back from the element so field processing (e.g. postal code truncation) is reflected
+            let normalized = addressSectionElement.addressDetails.address
+            self.selectedAutoCompleteAddress = PaymentSheet.Address(
+                city: normalized.city, country: normalized.country, line1: normalized.line1,
+                line2: normalized.line2, postalCode: normalized.postalCode, state: normalized.state
+            )
         }
+    }
+
+    func logBillingAddressCompletionIfNeeded() {
+        guard let addressSectionElement = addressSectionElement else { return }
+        let details = addressSectionElement.addressDetails.address
+        let submittedAddress = PaymentSheet.Address(
+            city: details.city,
+            country: details.country,
+            line1: details.line1,
+            line2: details.line2,
+            postalCode: details.postalCode,
+            state: details.state
+        )
+        var editDistance: Int?
+        if let autoCompleteAddress = selectedAutoCompleteAddress {
+            editDistance = submittedAddress.editDistance(from: autoCompleteAddress)
+        }
+        STPAnalyticsClient.sharedClient.logCustomerSheetBillingAddressCompleted(addressCountryCode: addressSectionElement.selectedCountryCode, autoCompleteResultedSelected: selectedAutoCompleteAddress != nil, editDistance: editDistance, apiClient: configuration.apiClient)
     }
 }

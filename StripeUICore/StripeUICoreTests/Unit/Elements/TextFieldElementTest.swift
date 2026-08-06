@@ -7,6 +7,7 @@
 //
 
 @testable @_spi(STP) import StripeUICore
+import UIKit
 import XCTest
 
 class TextFieldElementTest: XCTestCase {
@@ -14,6 +15,26 @@ class TextFieldElementTest: XCTestCase {
         var defaultValue: String?
         var label: String = "label"
         func maxLength(for text: String) -> Int { "default value".count }
+    }
+
+    private final class TestElement: Element {
+        weak var delegate: ElementDelegate?
+        let view = UIView()
+        let collectsUserInput = true
+
+        func notifyDelegate() {
+            delegate?.didUpdate(element: self)
+        }
+    }
+
+    private final class TestElementDelegate: ElementDelegate {
+        var updatedElement: Element?
+
+        func didUpdate(element: Element) {
+            updatedElement = element
+        }
+
+        func continueToNextField(element: Element) {}
     }
 
     func testNoDefaultValue() {
@@ -108,5 +129,58 @@ class TextFieldElementTest: XCTestCase {
     func testDefaultValueWithEmojisIsSanitized() {
         let element = TextFieldElement(configuration: Configuration(defaultValue: "Hello 🌍 World Test Test"))
         XCTAssertEqual(element.text, "Hello  World ") // Truncated to maxLength
+    }
+
+    func testAccessoryElementParticipatesInElementHierarchy() {
+        // Given
+        let accessoryElement = TestElement()
+
+        // When
+        let element = TextFieldElement(
+            configuration: Configuration(),
+            accessory: .init(element: accessoryElement) { _ in true }
+        )
+
+        // Then
+        XCTAssertEqual(element.elements.count, 1)
+        XCTAssertTrue(element.elements.first === accessoryElement)
+        XCTAssertTrue(accessoryElement.delegate === element)
+        XCTAssertTrue(element.debugDescription.contains("TestElement"))
+    }
+
+    func testAccessoryElementUpdatePropagatesThroughTextFieldElement() {
+        // Given
+        let accessoryElement = TestElement()
+        let element = TextFieldElement(
+            configuration: Configuration(),
+            accessory: .init(element: accessoryElement) { _ in true }
+        )
+        let delegate = TestElementDelegate()
+        element.delegate = delegate
+
+        // When
+        accessoryElement.notifyDelegate()
+
+        // Then
+        XCTAssertTrue(delegate.updatedElement === element)
+    }
+
+    func testAccessoryElementAddedAfterDisablingRemainsNonInteractive() {
+        // Given
+        let accessoryElement = TestElement()
+        let element = TextFieldElement(
+            configuration: Configuration(),
+            accessory: .init(element: accessoryElement) { text in text == "show" }
+        )
+        XCTAssertNil(accessoryElement.view.superview)
+        sendEventToSubviews(.shouldDisableUserInteraction, from: element.view)
+
+        // When
+        element.setText("show")
+
+        // Then
+        XCTAssertNotNil(accessoryElement.view.superview)
+        XCTAssertFalse(element.view.isUserInteractionEnabled)
+        XCTAssertNil(element.view.hitTest(.zero, with: nil))
     }
 }

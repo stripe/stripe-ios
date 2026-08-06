@@ -19,7 +19,22 @@ final class SuccessViewController: UIViewController {
     private let dataSource: SuccessDataSource
     weak var delegate: SuccessViewControllerDelegate?
     private var linkBrand: LinkBrand {
-        PresentationManager.shared.configuration.linkBrand ?? dataSource.manifest.brand ?? .link
+        PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: dataSource.manifest.linkBrand) ?? .link
+    }
+    private var showSaveToLinkFailedNotice: Bool {
+        dataSource.saveToLinkWithStripeSucceeded == false
+    }
+    private var successSubtitle: PaneLayoutView.AccessibleText? {
+        let text = dataSource.customSuccessPaneSubCaption ?? CreateSubtitleText(
+            // manual entry has "0" linked accounts count
+            isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
+            showSaveToLinkFailedNotice: showSaveToLinkFailedNotice,
+            linkBrand: linkBrand
+        )
+        return .init(
+            text,
+            accessibilityText: linkBrand.accessibilityText(from: text)
+        )
     }
 
     init(dataSource: SuccessDataSource) {
@@ -36,8 +51,6 @@ final class SuccessViewController: UIViewController {
         view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         navigationItem.hidesBackButton = true
 
-        let showSaveToLinkFailedNotice = (dataSource.saveToLinkWithStripeSucceeded == false)
-
         let contentView = UIView()
         view.addSubview(contentView)
 
@@ -46,12 +59,7 @@ final class SuccessViewController: UIViewController {
                 "Success",
                 "The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."
             ),
-            subtitle: dataSource.customSuccessPaneSubCaption ?? CreateSubtitleText(
-                // manual entry has "0" linked accounts count
-                isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
-                showSaveToLinkFailedNotice: showSaveToLinkFailedNotice,
-                brand: linkBrand
-            ),
+            subtitle: successSubtitle,
             appearance: dataSource.manifest.appearance
         )
         contentView.addSubview(bodyView)
@@ -123,7 +131,7 @@ final class SuccessViewController: UIViewController {
 
 private func CreateBodyView(
     title: String,
-    subtitle: String?,
+    subtitle: PaneLayoutView.AccessibleText?,
     appearance: FinancialConnectionsAppearance
 ) -> UIView {
     let titleLabel = AttributedLabel(
@@ -146,7 +154,8 @@ private func CreateBodyView(
             textColor: FinancialConnectionsAppearance.Colors.textDefault,
             alignment: .center
         )
-        subtitleLabel.setText(subtitle)
+        subtitleLabel.setText(subtitle.text)
+        subtitleLabel.accessibilityLabel = subtitle.accessibilityText
         labelVerticalStackView.addArrangedSubview(subtitleLabel)
     }
 
@@ -216,13 +225,13 @@ private func CreateIconView(appearance: FinancialConnectionsAppearance) -> UIVie
 private func CreateSubtitleText(
     isLinkingOneAccount: Bool,
     showSaveToLinkFailedNotice: Bool,
-    brand: LinkBrand
+    linkBrand: LinkBrand
 ) -> String {
     if showSaveToLinkFailedNotice {
         if isLinkingOneAccount {
-            return String.Localized.your_account_was_connected_but_could_not_be_saved_to_brand(brand: brand)
+            return String.Localized.your_account_was_connected_but_could_not_be_saved_to_brand(brand: linkBrand)
         } else { // multiple bank accounts
-            return String.Localized.your_accounts_were_connected_but_could_not_be_saved_to_brand(brand: brand)
+            return String.Localized.your_accounts_were_connected_but_could_not_be_saved_to_brand(brand: linkBrand)
         }
     } else if isLinkingOneAccount {
         return STPLocalizedString(

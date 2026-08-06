@@ -14,43 +14,18 @@ import UIKit
 import XCTest
 
 // ☠️ WARNING: These snapshots do not have capsule corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
-@available(iOS 15.0, *)
 @MainActor
 // @iOS26
 final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
 
-    func testDefaultAppearance_localCurrencySelected() {
-        let view = makeCurrencySelectorElement(selectedCurrency: "gbp")
+    func testDefaultAppearance() async throws {
+        let view = try await makeCurrencySelectorElement(selectedCurrency: "gbp")
         verify(view)
     }
 
-    func testDefaultAppearance_integrationCurrencySelected() {
-        let view = makeCurrencySelectorElement(selectedCurrency: "usd")
-        verify(view)
-    }
-
-    func testDarkMode() {
-        let view = makeCurrencySelectorElement(selectedCurrency: "gbp")
+    func testDarkMode() async throws {
+        let view = try await makeCurrencySelectorElement(selectedCurrency: "gbp")
         verify(view, darkMode: true)
-    }
-
-    func testCustomAppearance() {
-        var appearance = Checkout.CurrencySelectorView.Appearance()
-        appearance.cornerRadius = 16.0
-        appearance.backgroundColor = .systemBlue.withAlphaComponent(0.1)
-        appearance.selectedColor = .systemBlue
-        appearance.selectedTextColor = .white
-        appearance.unselectedTextColor = .systemBlue
-        appearance.borderColor = .systemBlue
-        appearance.captionColor = .systemBlue.withAlphaComponent(0.6)
-
-        let view = makeCurrencySelectorElement(selectedCurrency: "gbp", appearance: appearance)
-        verify(view)
-    }
-
-    func testDisabledState() {
-        let view = makeCurrencySelectorElement(selectedCurrency: "gbp", disabled: true)
-        verify(view)
     }
 
     // MARK: - Helpers
@@ -58,13 +33,20 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
     @MainActor
     private func makeCurrencySelectorElement(
         selectedCurrency: String = "usd",
-        appearance: Checkout.CurrencySelectorView.Appearance = .init(),
+        appearance: CurrencySelectorElement.Appearance = .init(),
         disabled: Bool = false
-    ) -> some View {
+    ) async throws -> some View {
         let session = CheckoutTestHelpers.makeAdaptivePricingSession(currency: selectedCurrency)
-        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
+        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        configuration.currencySelectorElement.appearance = appearance
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(
+                apiResponse: session,
+                configuration: configuration
+            )
+        )
 
-        return Checkout.CurrencySelectorElement(checkout: checkout, appearance: appearance)
+        return try XCTUnwrap(checkout.getCurrencySelectorElement()).view
             .disabled(disabled)
             .frame(width: 320)
             .ignoresSafeArea()

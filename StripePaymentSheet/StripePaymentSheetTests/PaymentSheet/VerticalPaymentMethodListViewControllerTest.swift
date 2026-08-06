@@ -11,7 +11,7 @@ import StripeCoreTestUtils
 import XCTest
 
 final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
-    var shouldSelectPaymentMethodReturnValue: Bool = false
+    var willDisplayFormReturnValue: Bool = true
 
     func testCurrentSelection() {
         let savedPaymentMethod = STPPaymentMethod._testCard()
@@ -38,7 +38,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
         XCTAssertTrue(savedPMButton.isSelected)
 
         // Selecting Apple Pay...
-        shouldSelectPaymentMethodReturnValue = true // (and mocking `didTapPaymentMethod` to return true)
+        willDisplayFormReturnValue = false // (and mocking `willDisplayForm` to return false, meaning it should select)
         let applePayRowButton = sut.getRowButton(accessibilityIdentifier: "Apple Pay")
         sut.didTap(rowButton: applePayRowButton, selection: .applePay)
         // ...should change the current selection from the saved PM...
@@ -48,7 +48,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
         XCTAssertTrue(applePayRowButton.isSelected)
 
         // Selecting card...
-        shouldSelectPaymentMethodReturnValue = false // (and mocking `didTapPaymentMethod` to return false)
+        willDisplayFormReturnValue = true // (and mocking `willDisplayForm` to return true, meaning it will show a form)
         let cardButton = sut.getRowButton(accessibilityIdentifier: "New card")
         sut.didTap(rowButton: cardButton, selection: .new(paymentMethodType: .stripe(.card)))
         // ...should not change the current selection...
@@ -170,8 +170,8 @@ extension VerticalPaymentMethodListViewControllerTest: VerticalPaymentMethodList
         // no-op
     }
 
-    func shouldSelectPaymentMethod(_ selection: StripePaymentSheet.RowButtonType) -> Bool {
-        return shouldSelectPaymentMethodReturnValue
+    func willDisplayForm(_ rowButtonType: StripePaymentSheet.RowButtonType) -> Bool {
+        return willDisplayFormReturnValue
     }
 
     func didTapPaymentMethod(_ selection: StripePaymentSheet.RowButtonType) {

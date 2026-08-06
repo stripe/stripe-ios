@@ -6,6 +6,8 @@
 
 "App Settings" = "Pengaturan Aplikasi";
 
+"Auto" = "Otomatis";
+
 "Back %@ photo successfully uploaded" = "Bagian belakang %@ foto berhasil diunggah";
 
 "Back identity document photo successfully uploaded" = "Foto dokumen identitas belakang berhasil diunggah";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Gambar buram. Stabilkan ponsel Anda dan coba lagi.";
 
+"Image taken" = "Gambar diambil";
+
 "Individual CPF" = "CPF perorangan";
 
 "Invalid document" = "Dokumen tidak valid";
@@ -85,6 +89,8 @@
 "Loading" = "Memuat";
 
 "Make sure you're in a well lit space." = "Pastikan Anda berada di ruang yang cukup terang.";
+
+"Manual" = "Manual";
 
 "Move closer" = "Mendekat";
 

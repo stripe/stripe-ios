@@ -5,7 +5,7 @@ let package = Package(
     name: "Stripe",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v13)
+        .iOS(.v15)
     ],
     products: [
         .library(
@@ -159,7 +159,6 @@ let package = Package(
             exclude: ["Info.plist"],
             resources: [
                 .process("Resources/StripePaymentSheet.xcassets"),
-                .process("Resources/JSON"),
                 .process("PrivacyInfo.xcprivacy")
             ]
         ),

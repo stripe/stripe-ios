@@ -25,11 +25,6 @@ class MainViewController: UIViewController {
 
         setupBuildVersionLabel()
 
-        // The IdentityVerificationSheet is only available on iOS 14.3 or higher
-        if #available(iOS 14.3, *) {
-            verificationSheetButton.isEnabled = true
-        } else {
-            verificationSheetButton.isEnabled = false
-        }
+        verificationSheetButton.isEnabled = true
     }
 }

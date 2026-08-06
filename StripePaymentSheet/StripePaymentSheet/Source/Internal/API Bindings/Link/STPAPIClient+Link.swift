@@ -341,6 +341,10 @@ extension STPAPIClient {
             resource: endpoint,
             parameters: parameters
         ) { (result: Result<SessionResponse, Error>) in
+            if case .success(let sessionResponse) = result,
+               let linkBrand = sessionResponse.linkBrand {
+                sessionResponse.consumerSession.linkBrand = linkBrand
+            }
             completion(result.map { $0.consumerSession })
         }
     }
@@ -726,7 +730,9 @@ extension STPAPIClient {
             resource: endpoint,
             parameters: parameters,
             consumerPublishableKey: consumerPublishableKey,
-            completion: completion
+            completion: { (result: Result<EmptyResponse, Error>) in
+                completion(result)
+            }
         )
     }
 }
@@ -794,6 +800,12 @@ private extension STPAPIClient {
 
     struct SessionResponse: Decodable {
         let consumerSession: ConsumerSession
+        let linkBrand: LinkBrand?
+
+        private enum CodingKeys: String, CodingKey {
+            case consumerSession
+            case linkBrand
+        }
     }
 
     struct UpdatePhoneNumberResponse: Decodable {

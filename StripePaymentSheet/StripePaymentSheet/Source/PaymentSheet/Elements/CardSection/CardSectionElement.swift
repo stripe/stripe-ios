@@ -25,7 +25,7 @@ final class CardSectionElement: ContainerElement {
     weak var delegate: ElementDelegate?
     lazy var view: UIView = {
         #if !os(visionOS)
-        if #available(iOS 13.0, macCatalyst 14, *), STPCardScanner.cardScanningAvailable {
+        if STPCardScanner.cardScanningAvailable {
             return CardSectionWithScannerView(
                 cardSectionView: cardSection.view,
                 opensCardScannerAutomatically: opensCardScannerAutomatically,
@@ -119,13 +119,19 @@ final class CardSectionElement: ContainerElement {
                 return params
             }
         }
-        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(
+        let panConfiguration = TextFieldElement.PANConfiguration(
             defaultValue: defaultValues.pan,
-            cardBrandChoiceElement: cardBrandSelector?.element,
+            cardBrandChoiceDataSource: cardBrandSelector?.element,
             cardBrandFilter: cardBrandFilter,
             cardFundingFilter: cardFundingFilter,
             fundingBinController: fundingBinController
-        ), theme: theme) { field, params in
+        )
+        let panTextField = TextFieldElement(
+            configuration: panConfiguration,
+            theme: theme,
+            accessory: cardBrandSelector?.textFieldAccessory
+        )
+        let panElement = PaymentMethodElementWrapper(updatingParamsFrom: panTextField) { field, params in
             cardParams(for: params).number = field.text
             return params
         }
@@ -146,17 +152,11 @@ final class CardSectionElement: ContainerElement {
             return params
         }
 
-        let sectionTitle: String? = {
-            if #available(iOS 13.0, macCatalyst 14, *) {
-                return nil
-            } else {
-                return String.Localized.card_information
-            }
-        }()
+        let sectionTitle: String? = nil
 
         let allSubElements: [Element?] = [
             nameElement,
-            panElement, SectionElement.HiddenElement(cardBrandSelector),
+            panElement,
             SectionElement.MultiElementRow([expiryElement, cvcElement], theme: theme),
         ]
         let subElements = allSubElements.compactMap { $0 }

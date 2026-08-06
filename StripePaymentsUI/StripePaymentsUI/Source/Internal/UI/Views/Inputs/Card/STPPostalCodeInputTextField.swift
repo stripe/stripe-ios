@@ -79,6 +79,11 @@ import UIKit
         } else {
             keyboardType = .numbersAndPunctuation
         }
+        if #available(iOS 26.0, *) {
+            // Opt out of the iOS 26 floating number-pad popover, which on iPad can misposition
+            // itself over the form. Mirrors the Element-based form fix (#6615). (RUN_MOBILESDK-5453)
+            allowsNumberPadPopover = false
+        }
     }
 
     private func clearIfInvalid() {

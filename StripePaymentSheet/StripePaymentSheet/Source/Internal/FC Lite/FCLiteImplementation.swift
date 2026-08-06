@@ -19,7 +19,7 @@ import UIKit
         existingConsumer: FinancialConnectionsConsumer?,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
-        brand: LinkBrand?,
+        linkBrand: LinkBrand?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void

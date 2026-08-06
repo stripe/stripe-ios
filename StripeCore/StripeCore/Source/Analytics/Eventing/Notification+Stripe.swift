@@ -87,7 +87,7 @@ public struct MobilePaymentElementAnalyticEvent {
 
     /// Details of the .tappedExpressButton event
     public struct TappedExpressButton: Equatable {
-        /// The express checkout button type (apple_pay, link, shop_pay)
+        /// The express checkout button type (apple_pay, link)
         public let expressButtonType: String
     }
 }

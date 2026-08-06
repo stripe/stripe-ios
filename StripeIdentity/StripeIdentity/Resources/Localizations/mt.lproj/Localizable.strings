@@ -6,6 +6,8 @@
 
 "App Settings" = "Għażliet tal-App";
 
+"Auto" = "Awto";
+
 "Back %@ photo successfully uploaded" = "Ir-ritratt ta' wara ta’ %@ ġie mtella' b'suċċess";
 
 "Back identity document photo successfully uploaded" = "Ir-ritratt ta' wara tad-dokument tal-identità ġie mtella' b'suċċess";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "L-immaġni hija mċajpra. Iċċaqlaqx it-telefon u erġa' pprova.";
 
+"Image taken" = "Immaġni meħuda";
+
 "Individual CPF" = "CPF personali";
 
 "Invalid document" = "Dokument invalidu";
@@ -85,6 +89,8 @@
 "Loading" = "Tielgħa";
 
 "Make sure you're in a well lit space." = "Ara li tinsab f'post imdawwal sew.";
+
+"Manual" = "Manwal";
 
 "Move closer" = "Mexxih eqreb";
 

@@ -31,6 +31,7 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
             elementsSession: ._testValue(paymentMethodTypes: [paymentMethodType.identifier]),
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: [.stripe(paymentMethodType)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
 

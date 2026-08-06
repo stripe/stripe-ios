@@ -9,7 +9,6 @@
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 struct CheckoutCartView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var checkout: Checkout?
@@ -18,27 +17,51 @@ struct CheckoutCartView: View {
     @State private var errorMessage: String?
 
     let clientSecret: String
+    let shippingAddressCollection: Bool
     let adaptivePricing: Bool
+    let integrationType: CheckoutPlayground.IntegrationType
+    var showExpressCheckoutElement: Bool = false
+    var currencySelectorAppearance = CurrencySelectorElement.Appearance()
 
     var body: some View {
         NavigationView {
             ZStack {
-                Color(UIColor.systemGroupedBackground)
+                Color(UIColor.systemBackground)
                     .ignoresSafeArea()
 
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
+                        showsShippingAddressSection: shippingAddressCollection,
                         isLoading: $isLoading,
                         errorMessage: $errorMessage
                     )
                     .overlay(alignment: .bottom) {
-                        if checkout.state.session.total != nil {
-                            CheckoutCartPaymentButton(
-                                checkout: checkout,
-                                onDismiss: { dismiss() }
-                            )
+                        VStack(spacing: 0) {
+                            if checkout.session.total != nil {
+                                if showExpressCheckoutElement,
+                                   let ece = checkout.getExpressCheckoutElement() {
+                                    ece.view
+                                        .padding(.horizontal)
+                                        .padding(.top, 16)
+                                }
+                                switch integrationType {
+                                case .flowController:
+                                    CheckoutCartPaymentButton(checkout: checkout)
+                                        .clipped()
+                                case .embedded:
+                                    CheckoutCartEmbeddedPaymentView(checkout: checkout)
+                                        .clipped()
+                                case .eceOnly:
+                                    EmptyView()
+                                }
+                            }
                         }
+                        .background(
+                            Color(UIColor.systemBackground)
+                                .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
+                                .ignoresSafeArea()
+                        )
                     }
                 } else if isLoading {
                     ProgressView("Loading Cart...")
@@ -78,9 +101,13 @@ struct CheckoutCartView: View {
         isLoading = true
         errorMessage = nil
         do {
-            var config = Checkout.Configuration()
+            var config = Checkout.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
             config.adaptivePricing.allowed = adaptivePricing
-            checkout = try await Checkout(clientSecret: clientSecret, configuration: config)
+            config.applePayConfiguration = Checkout.ApplePayConfiguration(
+                merchantId: "merchant.com.stripe.paymentsheet.example"
+            )
+            config.currencySelectorElement.appearance = currencySelectorAppearance
+            checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription
         }

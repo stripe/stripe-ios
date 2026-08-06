@@ -16,7 +16,7 @@ PaymentSheet is a prebuilt UI that combines all the steps required to pay - coll
 
 ## Requirements
 
-The StripePaymentSheet module is compatible with apps targeting iOS 13.0 or above.
+The StripePaymentSheet module is compatible with apps targeting iOS 15.0 or above.
 
 ## Getting started
 

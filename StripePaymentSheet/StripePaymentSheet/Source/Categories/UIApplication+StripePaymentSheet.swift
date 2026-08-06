@@ -12,15 +12,10 @@ import UIKit
 extension UIApplication {
     func stp_hackilyFumbleAroundUntilYouFindAKeyWindow() -> UIWindow? {
         // We really shouldn't do this: Try to find a way to get the user to pass us a window instead.
-        #if os(visionOS)
-        let windows = connectedScenes
-            .compactMap { ($0 as? UIWindowScene)?.windows }
-            .flatMap { $0 }
-            .sorted { firstWindow, _ in firstWindow.isKeyWindow }
-        return windows.first
-        #else
-        return activeOrFirstScene?.windows.first { $0.isKeyWindow }
-        #endif
+        return connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }
     }
 
     /// Returns a `UIWindowScene` suitable for reading traits or finding key windows.

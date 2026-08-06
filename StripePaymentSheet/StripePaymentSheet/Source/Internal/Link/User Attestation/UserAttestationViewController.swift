@@ -1,0 +1,65 @@
+//
+//  UserAttestationViewController.swift
+//  StripePaymentSheet
+//
+//  Created by Michael Liberatore on 4/23/26.
+//
+
+@_spi(STP) import StripeCore
+import UIKit
+
+/// Container view controller that displays the user attestation HTML in a Link-styled bottom sheet.
+final class UserAttestationViewController: BottomSheetViewController {
+    private weak var contentViewController: UserAttestationContentViewController?
+
+    /// Closure called when a user takes action on the attestation.
+    var onResult: ((LinkController.UserAttestationResult) -> Void)? {
+        didSet {
+            contentViewController?.onResult = onResult
+        }
+    }
+
+    override var sheetCornerRadius: CGFloat? {
+        LinkUI.largeCornerRadius
+    }
+
+    /// Creates a new instance of `UserAttestationViewController`.
+    /// - Parameters:
+    ///   - html: The attestation HTML to display.
+    ///   - appearance: Determines the colors, corner radius, and height of the confirmation button and the user interface style.
+    init(html: String, appearance: LinkAppearance, brand: LinkBrand) {
+        let contentViewController = UserAttestationContentViewController(html: html, appearance: appearance, brand: brand)
+        self.contentViewController = contentViewController
+
+        super.init(
+            contentViewController: contentViewController,
+            appearance: LinkUI.appearance,
+            isTestMode: false,
+            didCancelNative3DS2: {}
+        )
+
+        appearance.style.configure(self)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    required init(contentViewController: any BottomSheetContentViewController, appearance: PaymentSheet.Appearance, isTestMode: Bool, didCancelNative3DS2: @escaping () -> Void) {
+        fatalError("init(contentViewController:appearance:isTestMode:didCancelNative3DS2:) has not been implemented")
+    }
+
+    override func didTapOrSwipeToDismiss() {
+        contentViewController?.didTapOrSwipeToDismiss()
+    }
+}
+
+extension UserAttestationContentViewController: SheetNavigationBarDelegate {
+    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
+        onResult?(.canceled)
+    }
+
+    func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
+        // All content is displayed on a single content view controller with no navigation.
+    }
+}

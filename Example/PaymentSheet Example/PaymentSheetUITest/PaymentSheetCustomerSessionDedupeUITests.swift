@@ -358,7 +358,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         }
     }
 
-    func test_updatePaymentMethod() throws {
+    func test_updatePaymentMethod() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.mode = .paymentWithSetup
@@ -399,10 +399,10 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         app.textFields["Country or region"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
-        app.toolbars.buttons["Done"].tap()
+        app.stp_dismissKeyboard()
 
         let zipField = app.textFields["ZIP"]
-        XCTAssertTrue(expField.waitForExistence(timeout: 3.0))
+        XCTAssertTrue(expField.waitForExistence(timeout: 10.0))
         zipField.tap()
         zipField.typeText("55555")
         XCTAssertTrue(app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0))
@@ -448,11 +448,11 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         app.textFields["Country or region"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
-        app.toolbars.buttons["Done"].tap()
+        app.stp_dismissKeyboard()
 
         app.textFields["State"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Alabama")
-        app.toolbars.buttons["Done"].tap()
+        app.stp_dismissKeyboard()
 
         let line1Field = app.textFields["Address line 1"]
         XCTAssertTrue(line1Field.waitForExistence(timeout: 3.0))

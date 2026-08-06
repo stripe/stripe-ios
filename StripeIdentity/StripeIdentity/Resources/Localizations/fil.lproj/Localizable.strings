@@ -6,6 +6,8 @@
 
 "App Settings" = "Mga Setting ng App";
 
+"Auto" = "Auto";
+
 "Back %@ photo successfully uploaded" = "Matagumpay na na-upload ang likod ng %@ larawan";
 
 "Back identity document photo successfully uploaded" = "Matagumpay na na-upload ang larawan sa likod ng dokumento ng pagkakakilanlan";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Malabo ang larawan. Hawakan nang maayos at huwag igalaw ang iyong telepono at subukang muli.";
 
+"Image taken" = "Larawan na kinuha";
+
 "Individual CPF" = "Indibidwal na CPF";
 
 "Invalid document" = "Invalid na dokumento";
@@ -85,6 +89,8 @@
 "Loading" = "Niloload";
 
 "Make sure you're in a well lit space." = "Siguraduhing ikaw ay nasa maliwanag na lugar.";
+
+"Manual" = "Manual";
 
 "Move closer" = "Ilapit";
 

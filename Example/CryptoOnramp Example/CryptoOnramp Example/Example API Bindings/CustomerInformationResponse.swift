@@ -109,7 +109,7 @@ extension CustomerInformationResponse {
         providedFields.contains("identifiers")
     }
 
-    var hasAcceptedCRSCARFDeclaration: Bool {
+    var hasAcceptedUserAttestation: Bool {
         providedFields.contains("attestation")
     }
 

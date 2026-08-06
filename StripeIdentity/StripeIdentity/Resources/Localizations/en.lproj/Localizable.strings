@@ -10,6 +10,9 @@
 /* Opens the app's settings in the Settings app */
 "App Settings" = "App Settings";
 
+/* Segmented control option for automatic identity document capture */
+"Auto" = "Auto";
+
 /* Accessibility label when back driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Back %@ photo successfully uploaded" = "Back %@ photo successfully uploaded";
 
@@ -121,6 +124,9 @@
 /* Instructional text when the document is too blurry */
 "Image is blurry. Hold your phone steady and try again." = "Image is blurry. Hold your phone steady and try again.";
 
+/* State when a manual identity document image has been captured */
+"Image taken" = "Image taken";
+
 /* Label for the ID field to collect individual CPF for Brazilian ID */
 "Individual CPF" = "Individual CPF";
 
@@ -139,6 +145,9 @@
 
 /* Body for selfie warmup page */
 "Make sure you're in a well lit space." = "Make sure you're in a well lit space.";
+
+/* Segmented control option for manual identity document upload */
+"Manual" = "Manual";
 
 /* Instructional text when camera is too far from a document */
 "Move closer" = "Move closer";
@@ -243,7 +252,8 @@
 /* Status text when selfie images have been captured */
 "Selfie captures are complete" = "Selfie captures are complete";
 
-/* When selected in an action sheet, opens the device's camera interface */
+/* Button text for taking or retaking a manual identity document capture
+   When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Take Photo";
 
 /* Text for message of warning alert */

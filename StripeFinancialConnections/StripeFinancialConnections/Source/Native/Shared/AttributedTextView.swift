@@ -30,6 +30,15 @@ final class AttributedTextView: HitTestView {
     private let textView: IncreasedHitTestTextView
     private var linkURLStringToAction: [String: (URL) -> Void] = [:]
 
+    override var accessibilityLabel: String? {
+        get {
+            textView.accessibilityLabel
+        }
+        set {
+            textView.accessibilityLabel = newValue
+        }
+    }
+
     init(
         font: FinancialConnectionsFont,
         boldFont: FinancialConnectionsFont,

@@ -17,10 +17,13 @@ enum CryptoOnrampOperation: String {
     case attachKycInfo = "attach_kyc_info"
     case retrieveMissingIdentifiers = "retrieve_missing_identifiers"
     case submitIdentifiers = "submit_identifiers"
-    case presentCRSCARFDeclaration = "prompt_for_crs_carf_declaration"
+    case presentUserAttestation = "present_user_attestation"
     case verifyKycInfo = "verify_kyc_info"
     case verifyIdentity = "verify_identity"
     case registerWalletAddress = "register_wallet_address"
+    case deleteWalletAddress = "delete_wallet_address"
+    case getWalletOwnershipChallenge = "get_wallet_ownership_challenge"
+    case submitWalletOwnershipSignature = "submit_wallet_ownership_signature"
     case collectPaymentMethod = "collect_payment_method"
     case createCryptoPaymentToken = "create_crypto_payment_token"
     case performCheckout = "perform_checkout"
@@ -39,19 +42,22 @@ enum CryptoOnrampAnalyticsEvent {
     case identityVerificationCompleted
     case kycInfoSubmitted
     case identifierRequirementsRetrieved
-    case identifiersSubmitted(valid: Bool)
-    case crsCarfDeclarationStarted
-    case crsCarfDeclarationCompleted
+    case identifiersSubmitted(completed: Bool)
+    case userAttestationStarted
+    case userAttestationCompleted
     case kycInfoVerificationStarted
     case kycInfoVerificationCompleted
     case walletRegistered(network: String)
+    case walletDeleted
+    case walletOwnershipChallengeRetrieved(network: String)
+    case walletOwnershipVerified(network: String)
     case collectPaymentMethodStarted(paymentMethodType: String)
     case collectPaymentMethodCompleted(paymentMethodType: String)
     case cryptoPaymentTokenCreated(paymentMethodType: String)
     case checkoutStarted(onrampSessionId: String)
     case checkoutCompleted(onrampSessionId: String, requiredAction: Bool)
     case userLoggedOut
-    case errorOccurred(during: CryptoOnrampOperation, errorMessage: String)
+    case errorOccurred(during: CryptoOnrampOperation, errorMessage: String, requestID: String? = nil)
 
     var eventName: String {
         switch self {
@@ -79,16 +85,22 @@ enum CryptoOnrampAnalyticsEvent {
             return "onramp.identifier_requirements_retrieved"
         case .identifiersSubmitted:
             return "onramp.identifiers_submitted"
-        case .crsCarfDeclarationStarted:
-            return "onramp.crs_carf_declaration_started"
-        case .crsCarfDeclarationCompleted:
-            return "onramp.crs_carf_declaration_completed"
+        case .userAttestationStarted:
+            return "onramp.user_attestation_started"
+        case .userAttestationCompleted:
+            return "onramp.user_attestation_completed"
         case .kycInfoVerificationStarted:
             return "onramp.kyc_info_verification_started"
         case .kycInfoVerificationCompleted:
             return "onramp.kyc_info_verification_completed"
         case .walletRegistered:
             return "onramp.wallet_registered"
+        case .walletDeleted:
+            return "onramp.wallet_deleted"
+        case .walletOwnershipChallengeRetrieved:
+            return "onramp.wallet_ownership_challenge_retrieved"
+        case .walletOwnershipVerified:
+            return "onramp.wallet_ownership_verified"
         case .collectPaymentMethodStarted:
             return "onramp.collect_payment_method_started"
         case .collectPaymentMethodCompleted:
@@ -116,20 +128,25 @@ enum CryptoOnrampAnalyticsEvent {
              .identityVerificationStarted,
              .identityVerificationCompleted,
              .kycInfoSubmitted,
-             .crsCarfDeclarationCompleted,
+             .userAttestationCompleted,
              .identifierRequirementsRetrieved,
-             .crsCarfDeclarationStarted,
+             .userAttestationStarted,
              .kycInfoVerificationStarted,
              .kycInfoVerificationCompleted,
+             .walletDeleted,
              .userLoggedOut:
             return [:]
-        case let .identifiersSubmitted(valid):
-            return ["valid": valid]
+        case let .identifiersSubmitted(completed):
+            return ["completed": completed]
         case let .linkAccountLookupCompleted(hasLinkAccount):
             return ["has_link_account": hasLinkAccount]
         case let .linkAuthorizationCompleted(consented):
             return ["consented": consented]
         case let .walletRegistered(network):
+            return ["network": network]
+        case let .walletOwnershipChallengeRetrieved(network):
+            return ["network": network]
+        case let .walletOwnershipVerified(network):
             return ["network": network]
         case let .collectPaymentMethodStarted(paymentMethodType):
             return ["payment_method_type": paymentMethodType]
@@ -144,11 +161,17 @@ enum CryptoOnrampAnalyticsEvent {
                 "onramp_session_id": onrampSessionId,
                 "required_action": requiredAction,
             ]
-        case let .errorOccurred(operationName, errorMessage):
-            return [
+        case let .errorOccurred(operationName, errorMessage, requestID):
+            var parameters: [String: Any] = [
                 "operation_name": operationName.rawValue,
                 "error_message": errorMessage,
             ]
+
+            if let requestID {
+                parameters["request_id"] = requestID
+            }
+
+            return parameters
         }
     }
 }

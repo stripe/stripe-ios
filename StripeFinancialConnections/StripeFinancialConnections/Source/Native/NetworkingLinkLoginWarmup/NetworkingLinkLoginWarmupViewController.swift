@@ -43,7 +43,15 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
     private let dataSource: NetworkingLinkLoginWarmupDataSource
     weak var delegate: NetworkingLinkLoginWarmupViewControllerDelegate?
     private var linkBrand: LinkBrand {
-        PresentationManager.shared.configuration.linkBrand ?? dataSource.manifest.brand ?? .link
+        PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: dataSource.manifest.linkBrand) ?? .link
+    }
+    private var continueText: PaneLayoutView.AccessibleText {
+        let text = String.Localized.continue_with_link(brand: linkBrand)
+        return .init(text, accessibilityText: linkBrand.accessibilityText(from: text))
+    }
+    private var savedInfoSubtitle: PaneLayoutView.AccessibleText {
+        let text = String.Localized.use_information_you_previously_saved_with_your_brand_account(brand: linkBrand)
+        return .init(text, accessibilityText: linkBrand.accessibilityText(from: text))
     }
 
     private lazy var warmupFooterView: NetworkingLinkLoginWarmupFooterView = {
@@ -58,7 +66,7 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
         }
         return PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                title: String.Localized.continue_with_link(brand: linkBrand),
+                title: continueText,
                 accessibilityIdentifier: "link_continue_button",
                 action: { [weak self] in
                     self?.didSelectContinue()
@@ -95,8 +103,8 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
                     style: .circle,
                     appearance: dataSource.manifest.appearance
                 ),
-                title: String.Localized.continue_with_link(brand: linkBrand),
-                subtitle: String.Localized.use_information_you_previously_saved_with_your_brand_account(brand: linkBrand),
+                accessibleTitle: continueText,
+                accessibleSubtitle: savedInfoSubtitle,
                 contentView: NetworkingLinkLoginWarmupBodyView(
                     // `email` should always be non-null, and since the email is only used as a visual, it's not worth to throw an error if it is null
                     email: dataSource.email ?? "you"

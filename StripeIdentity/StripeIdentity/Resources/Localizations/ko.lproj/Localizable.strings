@@ -6,6 +6,8 @@
 
 "App Settings" = "앱 설정";
 
+"Auto" = "자동";
+
 "Back %@ photo successfully uploaded" = "%@ 뒷면 사진 업로드 성공";
 
 "Back identity document photo successfully uploaded" = "신분증 뒷면 사진 업로드 성공";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "이미지가 흐릿합니다. 휴대폰을 안정적으로 잡고 다시 시도해 보십시오.";
 
+"Image taken" = "이미지 촬영";
+
 "Individual CPF" = "개별 CPF";
 
 "Invalid document" = "유효하지 않은 문서";
@@ -85,6 +89,8 @@
 "Loading" = "로드 중";
 
 "Make sure you're in a well lit space." = "공간의 조명이 밝은지 확인하십시오.";
+
+"Manual" = "수동";
 
 "Move closer" = "더 가까이";
 

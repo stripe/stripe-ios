@@ -63,13 +63,41 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        let expectation = expectation(description: "Load specs")
+        let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load { _ in
-                expectation.fulfill()
-            }
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
+    }
+
+    @MainActor
+    func testHorizontalFlowControllerDefaultsToLinkWalletButtonWhenLinkIsCustomerDefault() {
+        // Given Link is the customer's default payment option
+        let customerID = "cus_test_horizontal_link_default"
+        defer {
+            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
+        }
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customerID)
+
+        // When horizontal FlowController is initialized with Link shown in the wallet header
+        let sut = makeHorizontalFlowController(customerID: customerID)
+
+        // Then Link is selected as the payment option
+        XCTAssertEqual(sut.paymentOption?.label, "Link")
+        XCTAssertEqual(sut.paymentOption?.paymentMethodType, "link")
+    }
+
+    @MainActor
+    func testHorizontalFlowControllerDoesNotDefaultToLinkWalletButtonWithoutLinkCustomerDefault() {
+        // Given Link is not the customer's default payment option
+        let customerID = "cus_test_horizontal_no_link_default"
+        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
+
+        // When horizontal FlowController is initialized with Link shown in the wallet header
+        let sut = makeHorizontalFlowController(customerID: customerID)
+
+        // Then there is no selected payment option
+        XCTAssertNil(sut.paymentOption)
     }
 
     // MARK: - PaymentOptionDisplayData Labels Tests
@@ -325,7 +353,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
     func testPaymentOptionDisplayData_SavedLinkPassthroughUsesOnelinkLabel() {
         let paymentMethod = STPPaymentMethod._testCard()
-        paymentMethod.isLinkPassthroughMode = true
+        paymentMethod.isLinkOrigin = true
 
         let paymentOption = PaymentSheet.PaymentOption.saved(paymentMethod: paymentMethod, confirmParams: nil)
         let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
@@ -391,7 +419,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         // Test labels for Link with bank account payment details - should show "Link" as label and formatted details as sublabel
         XCTAssertEqual(displayData.labels.label, "Link")
         // The sublabel should show the bank account details
-        XCTAssertEqual(displayData.labels.sublabel, "My Checking")
+        XCTAssertEqual(displayData.labels.sublabel, "My Checking •••• 6789")
     }
 
     // MARK: - Enhanced Completion Block Tests
@@ -401,7 +429,8 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
         let elementsSession = STPElementsSession._testCardValue()
-        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card)], paymentMethodOrientation: .vertical)
+        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card)], paymentMethodMessagingPromotionsHelper: ._testValue(),
+ paymentMethodOrientation: .vertical)
 
         let flowController = PaymentSheet.FlowController(
             configuration: configuration,
@@ -436,5 +465,93 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
         // Wait for legacy callback
         wait(for: [legacyExpectation], timeout: 2.0)
+    }
+
+    // MARK: - Checkout terminal session
+
+    @MainActor
+    func testUpdateCheckoutNoOpsForTerminalSession() async throws {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        let elementsSession = STPElementsSession._testCardValue()
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .vertical
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let fc = PaymentSheet.FlowController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+
+        // Move session to complete
+        let completedSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: {
+            var json = CheckoutTestHelpers.openSessionJSON
+            json["status"] = "complete"
+            json["payment_status"] = "paid"
+            return json
+        }())!
+        try await checkout.commitSession(completedSession)
+        XCTAssertFalse(checkout.sessionIsOpen)
+
+        // FC update should bail immediately
+        let exp = expectation(description: "update completes")
+        fc.update(checkout: checkout) { error in
+            XCTAssertNil(error)
+            exp.fulfill()
+        }
+        await fulfillment(of: [exp], timeout: 2.0)
+    }
+
+    // MARK: - PaymentOption.checkoutBillingDetails
+
+    func testSavedPaymentOptionCheckoutBillingDetails_fallsBackToSavedPaymentMethod() {
+        // Given a saved PM that carries its own billing address and no confirmParams (the usual saved case)...
+        let savedCard = STPPaymentMethod._testCard(line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105", countryCode: "US")
+        let option = PaymentSheet.PaymentOption.saved(paymentMethod: savedCard, confirmParams: nil)
+
+        // ...checkoutBillingDetails falls back to the saved PM's billing details (rather than returning nil).
+        XCTAssertEqual(option.checkoutBillingDetails?.address?.country, "US")
+        XCTAssertEqual(option.checkoutBillingDetails?.address?.line1, "123 Main St")
+        XCTAssertEqual(option.checkoutBillingDetails?.address?.postalCode, "94105")
+    }
+
+    func testSavedPaymentOptionCheckoutBillingDetails_prefersConfirmParams() {
+        // Given a saved PM plus confirmParams (e.g. CVC recollection) that carry their own billing...
+        let savedCard = STPPaymentMethod._testCard(line1: "123 Main St", postalCode: "94105", countryCode: "US")
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        confirmParams.paymentMethodParams.nonnil_billingDetails.address = STPPaymentMethodAddress()
+        confirmParams.paymentMethodParams.nonnil_billingDetails.address?.country = "CA"
+        let option = PaymentSheet.PaymentOption.saved(paymentMethod: savedCard, confirmParams: confirmParams)
+
+        // ...confirmParams billing wins over the saved PM's billing.
+        XCTAssertEqual(option.checkoutBillingDetails?.address?.country, "CA")
+    }
+
+    @MainActor
+    private func makeHorizontalFlowController(customerID: String) -> PaymentSheet.FlowController {
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .horizontal
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: customerID, ephemeralKeySecret: "")
+        configuration.applePay = nil
+        return PaymentSheet.FlowController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
     }
 }

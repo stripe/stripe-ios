@@ -14,6 +14,7 @@ struct CustomerWalletsResponse: Decodable, Hashable {
         let livemode: Bool
         let network: String
         let walletAddress: String
+        let verifiedOwnership: Bool
     }
 
     let object: String

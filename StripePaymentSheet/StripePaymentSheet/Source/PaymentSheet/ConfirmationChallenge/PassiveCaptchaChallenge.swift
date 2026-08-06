@@ -72,7 +72,7 @@ actor PassiveCaptchaChallenge {
     init(passiveCaptchaData: PassiveCaptchaData, hcaptchaFactory: HCaptchaFactory) {
         self.passiveCaptchaData = passiveCaptchaData
         self.hcaptchaFactory = hcaptchaFactory
-        Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
+        _ = Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
     }
 
     public func fetchToken() async throws -> String {

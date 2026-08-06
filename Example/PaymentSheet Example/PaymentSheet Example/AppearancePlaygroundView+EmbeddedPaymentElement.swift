@@ -8,7 +8,6 @@
 @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct AppearancePlaygroundView_EmbeddedPaymentElement: View {
     @Binding var appearance: PaymentSheet.Appearance
 

@@ -16,14 +16,79 @@ import StripeCoreTestUtils
 import SwiftUI
 import XCTest
 
-/// These tests exercise 9 different confirm flows based on the combination of:
-/// - The Stripe Intent: PaymentIntent or PaymentIntent+SFU or SetupIntent
-/// - The confirmation type: "Normal" intent-first client-side confirmation or "Deferred" client-side confirmation or "Deferred" server-side confirmation
+/// These tests exercise confirm flows based on the combination of:
+/// - The Stripe Intent: PaymentIntent, PaymentIntent+SFU, PaymentIntent+PMO-SFU, or SetupIntent
+/// - The confirmation type: intent-first, deferred, or Checkout Session
 /// They can also test the presence/absence of particular fields for a payment method form e.g. the SEPA test asserts that there's a mandate element.
-/// 👀  See `testIdealConfirmFlows` for an example with comments.
+/// 👀  See `testiDEALConfirmFlows` for an example with comments.
 @MainActor
 final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
+    // MARK: Select which confirm flows to record
+
+    // All entries should remain enabled in committed code so CI exercises the full matrix.
+    // To record a smaller slice, temporarily comment out entries in either list. For example:
+    // - Leave only `.checkoutSession` to record Checkout Session flows.
+    // - Leave only `.deferredIntent` to record all deferred flows (client-side, server-side,
+    //   and confirmation-token variants).
+    // - Combine either of those with only `.setupIntent` to record just that intent-kind slice.
+    //
+    // Restore every entry before committing.
+    static let intentKindsToTest: Set<IntentKind> = [
+        .paymentIntent,
+        .paymentIntentWithSetupFutureUsage,
+        .paymentIntentWithPMOSetupFutureUsage,
+        .setupIntent,
+    ]
+
+    static let confirmationTypesToTest: Set<ConfirmationType> = [
+        .intentFirst,
+        .deferredIntent,
+        .checkoutSession,
+    ]
+
     let window: UIWindow = UIWindow(frame: .init(x: 0, y: 0, width: 428, height: 926))
+
+    enum ConfirmationType: Hashable {
+        case intentFirst
+        case deferredIntent
+        case checkoutSession
+    }
+
+    struct TestIntent {
+        let description: String
+        let intent: Intent
+        let checkout: CheckoutSessionBillingAddressUpdater?
+
+        init(_ description: String, _ intent: Intent, checkout: CheckoutSessionBillingAddressUpdater? = nil) {
+            self.description = description
+            self.intent = intent
+            self.checkout = checkout
+        }
+    }
+
+    /// Mock stand-in for a full `Checkout` object.
+    final class TestCheckoutSessionUpdater: CheckoutSessionBillingAddressUpdater {
+        private(set) var session: Checkout.Session
+
+        init(session: Checkout.Session) {
+            self.session = session
+        }
+
+        func commitSession(
+            _ apiResponse: PaymentPagesAPIResponse?,
+            applying localMutation: (@MainActor @Sendable (Checkout.Session) -> Checkout.Session)?
+        ) async throws {
+            let updatedSession = apiResponse?.makePublicSession() ?? session
+            session = localMutation?(updatedSession) ?? updatedSession
+        }
+
+        func updateBillingTaxRegionIfNecessaryForPaymentSheet(
+            address: Checkout.Address,
+            canUpdateWhileSheetPresented: Bool
+        ) async throws -> Checkout.Session {
+            return session
+        }
+    }
 
     enum MerchantCountry: String {
         case US = "us"
@@ -184,7 +249,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
-    func _testAmazonPayConfirmFlows() async throws {
+    func testAmazonPayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
                                paymentMethodType: .amazonPay,
@@ -241,6 +306,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                currency: "EUR",
                                paymentMethodType: .wero,
                                merchantCountry: .DE,
+                               defaultCountry: "DE",
                                expectedHierarchy: ExpectedFormHierarchy.Wero.paymentIntent) { _ in }
     }
 
@@ -399,13 +465,18 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testSavedSEPA() async throws {
+        let intentKinds = selectedIntentKinds(from: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent])
+        guard !intentKinds.isEmpty, !Self.confirmationTypesToTest.isEmpty else {
+            return
+        }
+
         // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: MerchantCountry.US.publishableKey)
 
         // Confirm saved SEPA with every confirm variation
         // Use a fresh customer per intent kind to avoid lock contention on the Customer object
         // from async server-side processing (mandate creation, PM attachment) across iterations.
-        for intentKind in [IntentKind.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent] {
+        for intentKind in intentKinds {
             // Create customer session for confirmation token support
             let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
                 customerID: nil,
@@ -447,7 +518,9 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 return config
             }()
 
-            for (description, intent) in try await makeTestIntents(intentKind: intentKind, currency: "eur", paymentMethod: .SEPADebit, merchantCountry: .US, customer: customer, apiClient: apiClient) {
+            for testIntent in try await makeTestIntents(intentKind: intentKind, currency: "eur", paymentMethod: .SEPADebit, merchantCountry: .US, customer: customer, apiClient: apiClient) {
+                let description = testIntent.description
+                let intent = testIntent.intent
 
                 // Create elements session with customer configuration for proper ephemeral keys
                 let elementsSession: STPElementsSession
@@ -462,17 +535,16 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                         clientDefaultPaymentMethod: nil,
                         configuration: configuration
                     )
-                case .checkoutSession:
+                case .checkout:
                     elementsSession = ._testValue(intent: intent)
                 }
 
                 let e = expectation(description: "")
                 // Confirm the intent with the form details
                 let paymentHandler = STPPaymentHandler(apiClient: apiClient)
-                PaymentSheet.confirm(
+                confirm(
+                    testIntent: testIntent,
                     configuration: configuration,
-                    authenticationContext: self,
-                    intent: intent,
                     elementsSession: elementsSession,
                     paymentOption: .saved(paymentMethod: savedSepaPM, confirmParams: nil),
                     paymentHandler: paymentHandler,
@@ -565,6 +637,11 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testCardConfirmFlowsSetAsDefault() async throws {
+        let intentKinds = selectedIntentKinds(from: [.paymentIntentWithSetupFutureUsage, .setupIntent])
+        guard !intentKinds.isEmpty, !Self.confirmationTypesToTest.isEmpty else {
+            return
+        }
+
         // Create a new customer with customer session
         let merchantCountry = MerchantCountry.US
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
@@ -590,7 +667,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret
         )
         try await _testConfirm(
-            intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+            intentKinds: intentKinds,
             currency: "USD",
             paymentMethodType: .card,
             merchantCountry: merchantCountry,
@@ -683,6 +760,11 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testApplePayConfirmFlows() async throws {
+        let intentKinds = selectedIntentKinds(from: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent])
+        guard !intentKinds.isEmpty, !Self.confirmationTypesToTest.isEmpty else {
+            return
+        }
+
         // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
         let intentConfiguration = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _ in return "" })
         _ = PaymentSheet(mode: .deferredIntent(intentConfiguration), configuration: PaymentSheet.Configuration())
@@ -695,7 +777,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         configuration.allowsDelayedPaymentMethods = true
         configuration.apiClient = apiClient
 
-        let intentKinds: [IntentKind] = [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent]
         for intentKind in intentKinds {
             let intents = try await makeTestIntents(
                 intentKind: intentKind,
@@ -704,7 +785,9 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 merchantCountry: merchantCountry,
                 apiClient: apiClient
             )
-            for (description, intent) in intents {
+            for testIntent in intents {
+                let description = testIntent.description
+                let intent = testIntent.intent
                 let e = expectation(description: "Confirm Apple Pay (\(description))")
                 let elementsSession = STPElementsSession._testValue(intent: intent)
                 let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
@@ -717,6 +800,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     elementsSession: elementsSession,
                     configuration: configuration,
                     clientAttributionMetadata: clientAttributionMetadata,
+                    checkout: testIntent.checkout,
                     completion: { result, _ in
                     switch result {
                     case .failed(error: let error):
@@ -837,65 +921,23 @@ extension PaymentSheetLPMConfirmFlowTests {
 
 // MARK: - Helper methods
 extension PaymentSheetLPMConfirmFlowTests {
-    struct SetupFutureUsageSupport {
-        let paymentIntentSetupFutureUsage: Bool
-        let paymentIntentPaymentMethodOptionsSetupFutureUsage: Bool
-        let checkoutSessionSetupFutureUsage: Bool
-        let checkoutSessionPaymentMethodOptionsSetupFutureUsage: Bool
+    /// Payment methods that Checkout supports in modeless mode. Last verified against
+    /// `/create_checkout_session_unified` on July 31, 2026.
+    static let paymentMethodsSupportedByModeless: Set<STPPaymentMethodType> = [.card]
 
-        static let fullySupported = SetupFutureUsageSupport(
-            paymentIntentSetupFutureUsage: true,
-            paymentIntentPaymentMethodOptionsSetupFutureUsage: true,
-            checkoutSessionSetupFutureUsage: true,
-            checkoutSessionPaymentMethodOptionsSetupFutureUsage: true
-        )
-    }
-
-    enum IntentKind: CaseIterable {
+    enum IntentKind: CaseIterable, Hashable {
         case paymentIntent
         case paymentIntentWithSetupFutureUsage
         case paymentIntentWithPMOSetupFutureUsage
         case setupIntent
     }
 
-    static let setupFutureUsageSupportByPaymentMethod: [STPPaymentMethodType: SetupFutureUsageSupport] = [
-        // Payment+SFU and PMO SFU are not always available on payment methods that support them for intents.
-        // Verified against `/create_checkout_session` on April 18, 2026 for payment methods
-        // that already support PaymentIntent top-level SFU and/or PMO SFU in these tests.
-        .AUBECSDebit: SetupFutureUsageSupport(
-            paymentIntentSetupFutureUsage: true,
-            paymentIntentPaymentMethodOptionsSetupFutureUsage: true,
-            checkoutSessionSetupFutureUsage: true,
-            checkoutSessionPaymentMethodOptionsSetupFutureUsage: false
-        ),
-        .bancontact: SetupFutureUsageSupport(
-            paymentIntentSetupFutureUsage: true,
-            paymentIntentPaymentMethodOptionsSetupFutureUsage: true,
-            checkoutSessionSetupFutureUsage: false,
-            checkoutSessionPaymentMethodOptionsSetupFutureUsage: false
-        ),
-        .klarna: SetupFutureUsageSupport(
-            paymentIntentSetupFutureUsage: true,
-            paymentIntentPaymentMethodOptionsSetupFutureUsage: true,
-            checkoutSessionSetupFutureUsage: true,
-            checkoutSessionPaymentMethodOptionsSetupFutureUsage: false
-        ),
-        .satispay: SetupFutureUsageSupport(
-            paymentIntentSetupFutureUsage: true,
-            paymentIntentPaymentMethodOptionsSetupFutureUsage: true,
-            checkoutSessionSetupFutureUsage: true,
-            checkoutSessionPaymentMethodOptionsSetupFutureUsage: false
-        ),
-        .iDEAL: SetupFutureUsageSupport(
-            paymentIntentSetupFutureUsage: true,
-            paymentIntentPaymentMethodOptionsSetupFutureUsage: true,
-            checkoutSessionSetupFutureUsage: true,
-            checkoutSessionPaymentMethodOptionsSetupFutureUsage: false
-        ),
-    ]
+    func selectedIntentKinds(from intentKinds: [IntentKind]) -> [IntentKind] {
+        intentKinds.filter(Self.intentKindsToTest.contains)
+    }
 
-    func setupFutureUsageSupport(for paymentMethod: STPPaymentMethodType) -> SetupFutureUsageSupport {
-        Self.setupFutureUsageSupportByPaymentMethod[paymentMethod] ?? .fullySupported
+    func shouldTest(_ confirmationType: ConfirmationType) -> Bool {
+        Self.confirmationTypesToTest.contains(confirmationType)
     }
 
     func _testConfirm(
@@ -910,7 +952,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         expectedHierarchy: FormHierarchyNode? = nil,
         formCompleter: (PaymentMethodElement) -> Void
     ) async throws {
-        for intentKind in intentKinds {
+        for intentKind in selectedIntentKinds(from: intentKinds) {
             try await _testConfirm(
                 intentKind: intentKind,
                 currency: currency,
@@ -974,7 +1016,9 @@ extension PaymentSheetLPMConfirmFlowTests {
         // Check that the form respects billingDetailsCollection
         verifyFormRespectsBillingDetailsCollectionConfiguration(paymentMethodType: paymentMethodType, defaultCountry: defaultCountry)
 
-        for (description, intent) in intents {
+        for testIntent in intents {
+            let description = testIntent.description
+            let intent = testIntent.intent
 
             func makeFormVC(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
                 return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent, allowsSetAsDefaultPM: allowsSetAsDefaultPM), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
@@ -1018,7 +1062,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             XCTAssertEqual(regeneratedIntentConfirmParams, intentConfirmParams)
 
             // Checkout sessions require a billing email on the payment method
-            if case .checkoutSession = intent {
+            if case .checkout = intent {
                 intentConfirmParams.paymentMethodParams.nonnil_billingDetails.email = "test@example.com"
             }
 
@@ -1046,10 +1090,9 @@ extension PaymentSheetLPMConfirmFlowTests {
             }
 
             // Confirm the intent with the form details
-            PaymentSheet.confirm(
+            confirm(
+                testIntent: testIntent,
                 configuration: configuration,
-                authenticationContext: self,
-                intent: intent,
                 elementsSession: ._testValue(intent: intent),
                 paymentOption: .new(confirmParams: intentConfirmParams),
                 paymentHandler: paymentHandler,
@@ -1077,7 +1120,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         merchantCountry: MerchantCountry,
         customer: String? = nil,
         apiClient: STPAPIClient
-    ) async throws -> [(String, Intent)] {
+    ) async throws -> [TestIntent] {
         let paramsForServerSideConfirmation: [String: Any] = [ // We require merchants to set some extra parameters themselves for server-side confirmation
             "return_url": "foo://bar",
             "mandate_data": [
@@ -1094,12 +1137,17 @@ extension PaymentSheetLPMConfirmFlowTests {
             return .deferredIntent(intentConfig: intentConfig)
         }
 
-        var intents: [(String, Intent)] = []
+        var intents: [TestIntent] = []
         let paymentMethodTypes = [paymentMethod.identifier].compactMap { $0 }
-        let setupFutureUsageSupport = setupFutureUsageSupport(for: paymentMethod)
+        guard !Self.confirmationTypesToTest.isEmpty else {
+            return []
+        }
         switch intentKind {
         case .paymentIntent:
-            let paymentIntent: STPPaymentIntent = try await {
+            let paymentIntent: STPPaymentIntent? = try await {
+                guard shouldTest(.intentFirst) else {
+                    return nil
+                }
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -1120,25 +1168,29 @@ extension PaymentSheetLPMConfirmFlowTests {
                 )
             }
 
-            // CheckoutSession
-            let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
-                types: paymentMethodTypes,
-                currency: currency,
-                amount: amount,
-                merchantCountry: merchantCountry.rawValue,
-                customerID: customer
-            )
-            let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            let checkoutSession = try await csApiClient.initCheckoutSession(
-                checkoutSessionId: checkoutSessionResponse.id,
-                adaptivePricingAllowed: true
-            )
-
-            intents = [
-                ("PaymentIntent", .paymentIntent(paymentIntent)),
-                ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
-                ("CheckoutSession", .checkoutSession(checkoutSession)),
-            ]
+            if let paymentIntent {
+                intents.append(TestIntent("PaymentIntent", .paymentIntent(paymentIntent)))
+            }
+            if shouldTest(.deferredIntent) {
+                intents.append(TestIntent("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)))
+            }
+            if shouldTest(.checkoutSession), Self.paymentMethodsSupportedByModeless.contains(paymentMethod) {
+                let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customer,
+                    returnURL: "https://foo.com"
+                )
+                let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+                let checkoutSession = try await csApiClient.initCheckoutSession(
+                    checkoutSessionId: checkoutSessionResponse.id,
+                    adaptivePricingAllowed: true
+                )
+                let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession())
+                intents.append(TestIntent("CheckoutSession", .checkout(checkout.session), checkout: checkout))
+            }
             guard paymentMethod != .blik else {
                 // Blik doesn't support server-side confirmation
                 return intents
@@ -1156,9 +1208,11 @@ extension PaymentSheetLPMConfirmFlowTests {
                 )
             }
 
-            intents += [
-                ("Deferred PaymentIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
-            ]
+            guard shouldTest(.deferredIntent) else {
+                return intents
+            }
+
+            intents.append(TestIntent("Deferred PaymentIntent - server side confirmation", makeDeferredIntent(deferredSSC)))
 
             // Confirmation token variations
             let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { _ in
@@ -1184,16 +1238,16 @@ extension PaymentSheetLPMConfirmFlowTests {
             })
 
             intents += [
-                ("Deferred PaymentIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
-                ("Deferred PaymentIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+                TestIntent("Deferred PaymentIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                TestIntent("Deferred PaymentIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
             ]
 
             return intents
         case .paymentIntentWithSetupFutureUsage:
-            guard setupFutureUsageSupport.paymentIntentSetupFutureUsage else {
-                return []
-            }
-            let paymentIntent: STPPaymentIntent = try await {
+            let paymentIntent: STPPaymentIntent? = try await {
+                guard shouldTest(.intentFirst) else {
+                    return nil
+                }
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -1254,40 +1308,46 @@ extension PaymentSheetLPMConfirmFlowTests {
                 )
             })
 
-            var intents: [(String, Intent)] = [
-                ("PaymentIntent", .paymentIntent(paymentIntent)),
-                ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with payment method flow", makeDeferredIntent(deferredCSC)),
-                ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with payment method flow", makeDeferredIntent(deferredSSC)),
-                ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
-                ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
-            ]
-
-            // Payment+SFU and PMO SFU are not always available on payment methods that support them for intents.
-            // We conditionally add testing for them accordingly.
-            if setupFutureUsageSupport.checkoutSessionSetupFutureUsage {
-                let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
-                    types: paymentMethodTypes,
-                    currency: currency,
-                    amount: amount,
-                    merchantCountry: merchantCountry.rawValue,
-                    customerID: customer,
-                    setupFutureUsage: "off_session"
-                )
-                let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-                let checkoutSession = try await csApiClient.initCheckoutSession(
-                    checkoutSessionId: checkoutSessionResponse.id,
-                    adaptivePricingAllowed: true
-                )
-                intents.append(("CheckoutSession w/ setup_future_usage", .checkoutSession(checkoutSession)))
+            var intents: [TestIntent] = []
+            if let paymentIntent {
+                intents.append(TestIntent("PaymentIntent", .paymentIntent(paymentIntent)))
             }
+            if shouldTest(.deferredIntent) {
+                intents += [
+                    TestIntent("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with payment method flow", makeDeferredIntent(deferredCSC)),
+                    TestIntent("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with payment method flow", makeDeferredIntent(deferredSSC)),
+                    TestIntent("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                    TestIntent("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+                ]
+            }
+
+            // TODO(porter): Checkout rejects `payment_intent_data` (and thus `setup_future_usage`)
+            // in modeless sessions. Re-enable once unified mode supports saving payment methods.
+            // if shouldTest(.checkoutSession) {
+            //     let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+            //         types: paymentMethodTypes,
+            //         currency: currency,
+            //         amount: amount,
+            //         merchantCountry: merchantCountry.rawValue,
+            //         customerID: customer,
+            //         additionalParameters: ["payment_intent_data": ["setup_future_usage": "off_session"]]
+            //     )
+            //     let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+            //     let checkoutSession = try await csApiClient.initCheckoutSession(
+            //         checkoutSessionId: checkoutSessionResponse.id,
+            //         adaptivePricingAllowed: true
+            //     )
+            //     let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession())
+            //     intents.append(TestIntent("CheckoutSession w/ setup_future_usage", .checkout(checkout.session), checkout: checkout))
+            // }
 
             return intents
         case .paymentIntentWithPMOSetupFutureUsage:
-            guard setupFutureUsageSupport.paymentIntentPaymentMethodOptionsSetupFutureUsage else {
-                return []
-            }
             // This tests the scenario where IntentConfiguration has PMO setup_future_usage.
-            let paymentIntent: STPPaymentIntent = try await {
+            let paymentIntent: STPPaymentIntent? = try await {
+                guard shouldTest(.intentFirst) else {
+                    return nil
+                }
                 // Regular PI: Backend DOES have PMO SFU set
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
@@ -1367,35 +1427,45 @@ extension PaymentSheetLPMConfirmFlowTests {
                 }
             )
 
-            var intents: [(String, Intent)] = [
-                ("PaymentIntent", .paymentIntent(paymentIntent)),
-                ("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
-                ("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
-                ("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
-                ("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
-            ]
-            if setupFutureUsageSupport.checkoutSessionPaymentMethodOptionsSetupFutureUsage {
-                let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
-                    types: paymentMethodTypes,
-                    currency: currency,
-                    amount: amount,
-                    merchantCountry: merchantCountry.rawValue,
-                    customerID: customer,
-                    paymentMethodOptionsSetupFutureUsage: [
-                        paymentMethod.identifier: "off_session",
-                    ]
-                )
-                let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-                let checkoutSession = try await csApiClient.initCheckoutSession(
-                    checkoutSessionId: checkoutSessionResponse.id,
-                    adaptivePricingAllowed: true
-                )
-                intents.append(("CheckoutSession w/ PMO setup_future_usage", .checkoutSession(checkoutSession)))
+            var intents: [TestIntent] = []
+            if let paymentIntent {
+                intents.append(TestIntent("PaymentIntent", .paymentIntent(paymentIntent)))
             }
+            if shouldTest(.deferredIntent) {
+                intents += [
+                    TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
+                    TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
+                    TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                    TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+                ]
+            }
+            // TODO(porter): Checkout rejects `payment_intent_data`/`payment_method_options`
+            // setup_future_usage in modeless sessions. Re-enable once unified mode supports
+            // saving payment methods.
+            // if shouldTest(.checkoutSession) {
+            //     let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+            //         types: paymentMethodTypes,
+            //         currency: currency,
+            //         amount: amount,
+            //         merchantCountry: merchantCountry.rawValue,
+            //         customerID: customer,
+            //         additionalParameters: ["payment_method_options": [paymentMethod.identifier: ["setup_future_usage": "off_session"]]]
+            //     )
+            //     let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+            //     let checkoutSession = try await csApiClient.initCheckoutSession(
+            //         checkoutSessionId: checkoutSessionResponse.id,
+            //         adaptivePricingAllowed: true
+            //     )
+            //     let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession())
+            //     intents.append(TestIntent("CheckoutSession w/ PMO setup_future_usage", .checkout(checkout.session), checkout: checkout))
+            // }
 
             return intents
         case .setupIntent:
-            let setupIntent: STPSetupIntent = try await {
+            let setupIntent: STPSetupIntent? = try await {
+                guard shouldTest(.intentFirst) else {
+                    return nil
+                }
                 let clientSecret = try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer)
                 return try await apiClient.retrieveSetupIntent(clientSecret: clientSecret)
             }()
@@ -1414,24 +1484,33 @@ extension PaymentSheetLPMConfirmFlowTests {
                 return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer, confirm: true, otherParams: ["confirmation_token": confirmationToken.stripeId])
             })
 
-            // CheckoutSession
-            let checkoutSessionResponse = try await STPTestingAPIClient.shared().fetchCheckoutSessionSetupMode(
-                types: paymentMethodTypes,
-                currency: currency,
-                merchantCountry: merchantCountry.rawValue,
-                customerID: customer
-            )
-            let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            let checkoutSession = try await csApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionResponse.id, adaptivePricingAllowed: true)
-
-            return [
-                ("SetupIntent", .setupIntent(setupIntent)),
-                ("Deferred SetupIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
-                ("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
-                ("Deferred SetupIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
-                ("Deferred SetupIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
-                ("CheckoutSession", .checkoutSession(checkoutSession)),
-            ]
+            var intents: [TestIntent] = []
+            if let setupIntent {
+                intents.append(TestIntent("SetupIntent", .setupIntent(setupIntent)))
+            }
+            if shouldTest(.deferredIntent) {
+                intents += [
+                    TestIntent("Deferred SetupIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
+                    TestIntent("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
+                    TestIntent("Deferred SetupIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                    TestIntent("Deferred SetupIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+                ]
+            }
+            // TODO(porter): Setup mode is out of scope for unified-mode private preview.
+            // Re-enable once unified mode supports setup mode.
+            // if shouldTest(.checkoutSession) {
+            //     let checkoutSessionResponse = try await STPTestingAPIClient.shared().createCheckoutSession(
+            //         types: paymentMethodTypes,
+            //         currency: currency,
+            //         merchantCountry: merchantCountry.rawValue,
+            //         customerID: customer
+            //     )
+            //     let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+            //     let checkoutSession = try await csApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionResponse.id, adaptivePricingAllowed: true)
+            //     let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession())
+            //     intents.append(TestIntent("CheckoutSession", .checkout(checkout.session), checkout: checkout))
+            // }
+            return intents
         }
     }
 
@@ -1445,6 +1524,11 @@ extension PaymentSheetLPMConfirmFlowTests {
         linkFundingSources: Set<ParsedEnum<LinkSettings.FundingSource>>,
         makeLinkPaymentMethod: (STPAPIClient) async throws -> STPPaymentMethod
     ) async throws {
+        let intentKinds = selectedIntentKinds(from: intentKinds)
+        guard !intentKinds.isEmpty, !Self.confirmationTypesToTest.isEmpty else {
+            return
+        }
+
         // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
         let intentConfiguration = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _ in return "" })
         _ = PaymentSheet(mode: .deferredIntent(intentConfiguration), configuration: PaymentSheet.Configuration())
@@ -1477,7 +1561,9 @@ extension PaymentSheetLPMConfirmFlowTests {
                 apiClient: apiClient
             )
 
-            for (description, intent) in intents {
+            for testIntent in intents {
+                let description = testIntent.description
+                let intent = testIntent.intent
                 let linkPaymentMethod = try await makeLinkPaymentMethod(apiClient)
 
                 let e = expectation(description: "Confirm Link (\(description))")
@@ -1493,10 +1579,9 @@ extension PaymentSheetLPMConfirmFlowTests {
                     redirectShimCalled = true
                 }
 
-                PaymentSheet.confirm(
+                confirm(
+                    testIntent: testIntent,
                     configuration: configuration,
-                    authenticationContext: self,
-                    intent: intent,
                     elementsSession: ._testValue(intent: intent, linkFundingSources: linkFundingSources),
                     paymentOption: .link(
                         option: .withPaymentMethod(
@@ -1593,6 +1678,47 @@ extension PaymentSheetLPMConfirmFlowTests {
         }
         XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
         XCTAssertNotNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))
+    }
+
+    func confirm(
+        testIntent: TestIntent,
+        configuration: PaymentElementConfiguration,
+        elementsSession: STPElementsSession,
+        paymentOption: PaymentOption,
+        paymentHandler: STPPaymentHandler,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
+        guard case .checkout(let checkoutSession) = testIntent.intent else {
+            PaymentSheet.confirm(
+                configuration: configuration,
+                authenticationContext: self,
+                intent: testIntent.intent,
+                elementsSession: elementsSession,
+                paymentOption: paymentOption,
+                paymentHandler: paymentHandler,
+                analyticsHelper: analyticsHelper,
+                completion: completion
+            )
+            return
+        }
+
+        Task { @MainActor in
+            let confirmationContext = Checkout.ConfirmationContext(
+                paymentOption: paymentOption,
+                configuration: configuration,
+                integrationShape: .complete,
+                confirmationChallenge: nil,
+                analyticsHelper: analyticsHelper
+            )
+            let result = await Checkout.confirm(
+                checkoutSession: checkoutSession,
+                confirmationContext: confirmationContext,
+                authenticationContext: self,
+                paymentHandler: paymentHandler
+            )
+            completion(result.paymentSheetResult, nil)
+        }
     }
 }
 

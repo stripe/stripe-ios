@@ -22,16 +22,16 @@
     // Cancel button
     STDSButtonCustomization *cancelButtonCustomization = [customization buttonCustomizationForButtonType:STDSUICustomizationButtonTypeCancel];
     UIButton *cancelButton = [UIButton _stds_buttonWithTitle:navigationBarCustomization.buttonText customization:cancelButtonCustomization];
-    // The cancel button's frame has a size of 0 in iOS 8
-    cancelButton.frame = CGRectMake(0, 0, cancelButton.intrinsicContentSize.width, cancelButton.intrinsicContentSize.height);
+    cancelButton.titleLabel.numberOfLines = 1;
+    cancelButton.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     cancelButton.accessibilityIdentifier = @"Cancel";
     [cancelButton addTarget:self action:cancelButtonSelector forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *cancelBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancelButton];
 #if defined(__IPHONE_26_0) && !STP_TARGET_VISION
     if (@available(iOS 26, *)) {
         cancelButton.configuration = UIButtonConfiguration.glassButtonConfiguration;
     }
 #endif
+    UIBarButtonItem *cancelBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancelButton];
     self.navigationItem.rightBarButtonItem = cancelBarButtonItem;
     // Title
     self.title = navigationBarCustomization.headerText;

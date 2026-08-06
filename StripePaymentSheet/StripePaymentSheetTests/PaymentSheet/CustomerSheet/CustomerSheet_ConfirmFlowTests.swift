@@ -31,9 +31,7 @@ final class CustomerSheet_ConfirmFlowTests: STPNetworkStubbingTestCase {
         await withCheckedContinuation { continuation in
             Task {
                 AddressSpecProvider.shared.loadAddressSpecs {
-                    FormSpecProvider.shared.load { _ in
-                        continuation.resume()
-                    }
+                    continuation.resume()
                 }
             }
         }
@@ -361,6 +359,7 @@ extension CustomerSheet_ConfirmFlowTests {
                                                   accountService: LinkAccountService._testValue(),
                                                   cardBrandChoiceEligible: false,
                                                   isPaymentIntent: false,
+                                                  collectsTaxFromBillingAddress: false,
                                                   isSettingUp: true,
                                                   countryCode: nil,
                                                   savePaymentMethodConsentBehavior: .legacy,

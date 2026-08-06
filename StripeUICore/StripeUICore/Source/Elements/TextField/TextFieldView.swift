@@ -69,6 +69,11 @@ class TextFieldView: UIView {
         textField.spellCheckingType = .no
         textField.adjustsFontForContentSizeCategory = true
         textField.font = viewModel.theme.fonts.subheadline
+        if #available(iOS 26.0, *) {
+            // Opt-out of iOS 26 behavior which shows a floating numpad popover on iPad that
+            // may misposition it self or lead to showing two keyboards.
+            textField.allowsNumberPadPopover = false
+        }
         return textField
     }()
     private lazy var textFieldView: FloatingPlaceholderTextFieldView = {

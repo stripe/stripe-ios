@@ -6,7 +6,6 @@
 
 import Foundation
 
-@available(iOS 15.0, *)
 enum CheckoutPlayground {
     enum EndpointOption: String, CaseIterable, Identifiable {
         case hosted
@@ -46,14 +45,6 @@ enum CheckoutPlayground {
             }
             return .manual
         }
-    }
-
-    enum SessionMode: String, CaseIterable, Identifiable {
-        case payment
-        case subscription
-        case setup
-
-        var id: String { rawValue }
     }
 
     enum Currency: String, CaseIterable, Identifiable {
@@ -112,6 +103,50 @@ enum CheckoutPlayground {
             case .jp: return "JP"
             case .gb: return "GB"
             case .br: return "BR"
+            }
+        }
+    }
+
+    enum BillingAddressCollection: String, CaseIterable, Identifiable {
+        case automatic
+        case required
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .automatic: return "Auto"
+            case .required: return "Required"
+            }
+        }
+    }
+
+    enum IntegrationType: String, CaseIterable, Identifiable {
+        case flowController
+        case embedded
+        case eceOnly
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .flowController: return "sheet"
+            case .embedded: return "view"
+            case .eceOnly: return "ece only"
+            }
+        }
+    }
+
+    enum ExpressCheckoutElementOption: String, CaseIterable, Identifiable {
+        case show
+        case hide
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .show: return "show"
+            case .hide: return "hide"
             }
         }
     }

@@ -6,6 +6,8 @@
 
 "App Settings" = "App-instellingen";
 
+"Auto" = "Automatisch";
+
 "Back %@ photo successfully uploaded" = "Terug %@ foto succesvol geüpload";
 
 "Back identity document photo successfully uploaded" = "Foto van identiteitsbewijs succesvol geüpload";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Het beeld is wazig. Houd je telefoon stil en probeer het opnieuw.";
 
+"Image taken" = "Afbeelding gemaakt";
+
 "Individual CPF" = "CPF natuurlijk persoon";
 
 "Invalid document" = "Ongeldig document";
@@ -85,6 +89,8 @@
 "Loading" = "Bezig met laden";
 
 "Make sure you're in a well lit space." = "Zorg dat er voldoende belichting is.";
+
+"Manual" = "Handmatig";
 
 "Move closer" = "Dichterbij houden";
 

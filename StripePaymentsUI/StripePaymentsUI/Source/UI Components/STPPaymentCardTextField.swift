@@ -903,10 +903,8 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     }
 
     func setupBrandTapGestureRecognizers() {
-        if #available(iOS 14.0, *) {
-            self.showsMenuAsPrimaryAction = true
-            self.isContextMenuInteractionEnabled = true
-        }
+        self.showsMenuAsPrimaryAction = true
+        self.isContextMenuInteractionEnabled = true
         brandImageView.addGestureRecognizer(
             UITapGestureRecognizer(
                 target: self,
@@ -1578,6 +1576,12 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         textField.adjustsFontForContentSizeCategory = true
         // setCountryCode: updates the postalCodeField keyboardType, this is safe
         textField.keyboardType = .asciiCapableNumberPad
+        if #available(iOS 26.0, *) {
+            // Opt out of the iOS 26 floating number-pad popover, which on iPad can misposition
+            // itself over the form or lead to showing two keyboards. Mirrors the Element-based
+            // form fix (#6615). (RUN_MOBILESDK-5453)
+            textField.allowsNumberPadPopover = false
+        }
         textField.textAlignment = .left
         textField.font = font
         textField.defaultColor = textColor

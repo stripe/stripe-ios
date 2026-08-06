@@ -34,7 +34,7 @@ extension STPClientAttributionMetadata {
             return .init(elementsSessionConfigId: elementsSessionConfigId,
                          paymentIntentCreationFlow: .deferred,
                          paymentMethodSelectionFlow: isAutomaticPaymentMethodsEnabled ? .automatic : .merchantSpecified)
-        case .checkoutSession(let session):
+        case .checkout(let session):
             // CheckoutSession: Stripe owns the intent lifecycle, so omit `paymentIntentCreationFlow`
             // to match web's hosted Checkout behavior.
             return .init(elementsSessionConfigId: elementsSessionConfigId,

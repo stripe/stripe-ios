@@ -8,7 +8,6 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct PlaygroundView: View {
 
     @StateObject var viewModel = PlaygroundViewModel()
@@ -131,9 +130,9 @@ struct PlaygroundView: View {
                         if !(viewModel.integrationType.wrappedValue == .standalone
                             && viewModel.experience.wrappedValue == .financialConnections) {
                             HStack {
-                                Text("Link brand")
+                                Text("Force Onelink")
                                     .font(.subheadline)
-                                Picker("Link brand", selection: viewModel.linkBrand) {
+                                Picker("Force Onelink", selection: viewModel.linkBrand) {
                                     ForEach(PlaygroundConfiguration.LinkBrand.allCases) {
                                         Text($0.displayName)
                                             .tag($0)
@@ -261,7 +260,6 @@ struct PlaygroundView: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct PlaygroundView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {

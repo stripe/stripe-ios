@@ -39,6 +39,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let paymentMethodSyncDefault: Bool
     let allowsRemovalOfLastSavedPaymentMethod: Bool
     let cbcEligible: Bool
+    let useAutocompleteEndpoints: Bool
     let confirmationChallenge: ConfirmationChallenge?
     let elementsSessionConfigId: String?
 
@@ -63,6 +64,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             configuration: configuration,
             paymentMethodTypes: paymentMethodTypes,
             cbcEligible: cbcEligible,
+            useAutocompleteEndpoints: useAutocompleteEndpoints,
             savePaymentMethodConsentBehavior: customerSheetDataSource.savePaymentMethodConsentBehavior(),
             delegate: self)
     }()
@@ -163,6 +165,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         paymentMethodSyncDefault: Bool,
         allowsRemovalOfLastSavedPaymentMethod: Bool,
         cbcEligible: Bool,
+        useAutocompleteEndpoints: Bool,
         confirmationChallenge: ConfirmationChallenge?,
         elementsSessionConfigId: String?,
         csCompletion: CustomerSheet.CustomerSheetCompletion?,
@@ -180,6 +183,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.paymentMethodSyncDefault = paymentMethodSyncDefault
         self.allowsRemovalOfLastSavedPaymentMethod = allowsRemovalOfLastSavedPaymentMethod
         self.cbcEligible = cbcEligible
+        self.useAutocompleteEndpoints = useAutocompleteEndpoints
         self.confirmationChallenge = confirmationChallenge
         self.elementsSessionConfigId = elementsSessionConfigId
         self.csCompletion = csCompletion
@@ -408,6 +412,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     stpAssertionFailure()
                     return
                 }
+                addPaymentMethodViewController.logBillingAddressCompletionIfNeeded()
                 addPaymentOption(paymentOption: newPaymentOption)
             }
         case .addingNewPaymentMethodAttachToCustomer:
@@ -418,6 +423,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 stpAssertionFailure()
                 return
             }
+            addPaymentMethodViewController.logBillingAddressCompletionIfNeeded()
             if case .new(let confirmParams) = newPaymentOption {
                 confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataForCustomerSheet(elementsSessionConfigId: elementsSessionConfigId)
             }
@@ -674,6 +680,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             configuration: configuration,
             paymentMethodTypes: paymentMethodTypes,
             cbcEligible: cbcEligible,
+            useAutocompleteEndpoints: useAutocompleteEndpoints,
             savePaymentMethodConsentBehavior: customerSheetDataSource.savePaymentMethodConsentBehavior(),
             delegate: self)
         cachedClientSecret = nil
@@ -972,7 +979,9 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
         else {
             throw CustomerSheetError.unknown(debugDescription: "Failed to read payment method")
         }
-        return try await customerSheetDataSource.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId, paymentMethodUpdateParams: updateParams)
+        let updatedPaymentMethod = try await customerSheetDataSource.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId, paymentMethodUpdateParams: updateParams)
+        updatedPaymentMethod.updateLocalFields(from: paymentMethod)
+        return updatedPaymentMethod
     }
 
     func shouldCloseSheet(viewController: CustomerSavedPaymentMethodsCollectionViewController) {

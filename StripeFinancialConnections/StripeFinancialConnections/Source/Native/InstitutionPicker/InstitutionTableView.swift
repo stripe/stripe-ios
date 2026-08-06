@@ -138,11 +138,9 @@ final class InstitutionTableView: UIView {
             right: 0
         )
         tableView.keyboardDismissMode = .onDrag
-        if #available(iOS 15.0, *) {
-            // do not set this because it can cause unexpected
-            // scrolling behavior
-            tableView.sectionHeaderTopPadding = 0
-        }
+        // do not set this because it can cause unexpected
+        // scrolling behavior
+        tableView.sectionHeaderTopPadding = 0
         tableView.register(InstitutionTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.delegate = self
         addAndPinSubview(tableView)

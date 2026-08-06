@@ -26,11 +26,13 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter apiClient: The `STPAPIClient` instance for this coordinator. Defaults to `.shared`.
     /// - Parameter appearance: Customizable appearance-related configuration for any Stripe-provided UI.
     /// - Parameter cryptoCustomerID: The crypto customer's ID, if available.
+    /// - Parameter additionalSDKVersions: Additional wrapper SDK versions to include in developer diagnostics, such as the Stripe React Native SDK version. Do not include Stripe iOS; it is always included automatically.
     /// - Returns: A configured `CryptoOnrampCoordinator`.
     static func create(
         apiClient: STPAPIClient,
         appearance: LinkAppearance,
-        cryptoCustomerID: String?
+        cryptoCustomerID: String?,
+        additionalSDKVersions: [SDKVersion]
     ) async throws -> Self
 
     /// Whether or not the provided email is associated with an existing Link consumer.
@@ -92,18 +94,18 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Requires an authenticated Link user.
     ///
     /// - Parameter identifiers: The compliance identifiers to submit.
-    /// - Returns: A result describing whether the identifiers were accepted, and what remains missing or invalid if not.
+    /// - Returns: A result describing whether identifier collection is complete, and what remains missing or invalid if not.
     /// Throws if an authenticated Link user is not available, or an API error occurs.
     func submitIdentifiers(_ identifiers: [ComplianceIdentifier]) async throws -> SubmitIdentifiersResult
 
-    /// Presents the CRS/CARF declaration for review and records acceptance if the user confirms.
+    /// Presents the user attestation for review and records acceptance if the user confirms.
     /// Requires an authenticated Link user.
     ///
-    /// - Parameter viewController: The view controller from which to present the declaration.
-    /// - Returns: A `CRSCARFDeclarationResult` indicating whether the user confirmed or canceled.
+    /// - Parameter viewController: The view controller from which to present the attestation.
+    /// - Returns: A `UserAttestationResult` indicating whether the user confirmed or canceled.
     /// Throws if an authenticated Link user is not available, EU identifiers have not been submitted, or an API error occurs.
     @MainActor
-    func presentCRSCARFDeclaration(from viewController: UIViewController) async throws -> CRSCARFDeclarationResult
+    func presentUserAttestation(from viewController: UIViewController) async throws -> UserAttestationResult
 
     /// Initiates the KYC verification flow, which displays the user’s currently collected KYC information with the ability to confirm or update the displayed address.
     ///
@@ -132,6 +134,31 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter network: The crypto network for the wallet address.
     /// Throws if an authenticated Link user is not available, or an API error occurs.
     func registerWalletAddress(walletAddress: String, network: CryptoNetwork) async throws
+
+    /// Deletes the given crypto wallet from the current Link account.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter walletId: The ID of the crypto wallet to delete.
+    /// Throws if an authenticated Link user is not available, or an API error occurs.
+    func deleteWalletAddress(walletId: String) async throws
+
+    /// Creates a short-lived server-issued challenge for a registered wallet.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter walletAddress: The crypto wallet address to verify.
+    /// - Parameter network: The crypto network for the wallet address.
+    /// - Returns: A server-issued wallet ownership challenge.
+    /// Throws if an authenticated Link user is not available, the wallet is not registered, the network is unsupported, or an API error occurs.
+    func getWalletOwnershipChallenge(walletAddress: String, network: CryptoNetwork) async throws -> WalletOwnershipChallenge
+
+    /// Verifies a signature over a previously issued wallet ownership challenge.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter challengeId: Opaque identifier returned by `getWalletOwnershipChallenge(walletAddress:network:)`.
+    /// - Parameter signature: Signature produced by the merchant's wallet stack over the exact challenge message.
+    /// - Returns: The updated consumer wallet.
+    /// Throws if an authenticated Link user is not available, the challenge is invalid or expired, the signature is invalid, or an API error occurs.
+    func submitWalletOwnershipSignature(challengeId: String, signature: String) async throws -> CryptoConsumerWallet
 
     /// Presents UI to collect/select a payment method of the given type.
     ///
@@ -197,6 +224,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let apiClient: STPAPIClient
     private let appearance: LinkAppearance
     private let analyticsClient: CryptoOnrampAnalyticsClient
+    private let additionalSDKVersions: [SDKVersion]
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
 
     /// Apple Pay payment source created by `didCreatePaymentMethod` but not yet committed.
@@ -231,12 +259,14 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         cryptoCustomerID: String?,
         apiClient: STPAPIClient = .shared,
         appearance: LinkAppearance,
-        analyticsClient: CryptoOnrampAnalyticsClient
+        analyticsClient: CryptoOnrampAnalyticsClient,
+        additionalSDKVersions: [SDKVersion]
     ) {
         self.linkController = linkController
         self.apiClient = apiClient
         self.appearance = appearance
         self.analyticsClient = analyticsClient
+        self.additionalSDKVersions = additionalSDKVersions
         self.cryptoCustomerState = CryptoCustomerState(cryptoCustomerID)
         super.init()
     }
@@ -246,7 +276,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     public static func create(
         apiClient: STPAPIClient = .shared,
         appearance: LinkAppearance = .init(),
-        cryptoCustomerID: String? = nil
+        cryptoCustomerID: String? = nil,
+        additionalSDKVersions: [SDKVersion] = []
     ) async throws -> CryptoOnrampCoordinator {
         let analyticsClient = CryptoOnrampAnalyticsClient()
 
@@ -264,15 +295,21 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 cryptoCustomerID: cryptoCustomerID,
                 apiClient: apiClient,
                 appearance: appearance,
-                analyticsClient: analyticsClient
+                analyticsClient: analyticsClient,
+                additionalSDKVersions: additionalSDKVersions
             )
 
             analyticsClient.elementsSessionId = await linkController.elementsSessionID
             analyticsClient.log(.sessionCreated)
             return coordinator
         } catch {
-            analyticsClient.log(.errorOccurred(during: .createSession, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(
+                error,
+                during: .createSession,
+                apiClient: apiClient,
+                analyticsClient: analyticsClient,
+                additionalSDKVersions: additionalSDKVersions
+            )
         }
     }
 
@@ -282,8 +319,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.linkAccountLookupCompleted(hasLinkAccount: hasAccount))
             return hasAccount
         } catch {
-            analyticsClient.log(.errorOccurred(during: .hasLinkAccount, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .hasLinkAccount)
         }
     }
 
@@ -309,8 +345,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     throw Error.linkAccountAlreadyExists
                 }
             } catch {
-                analyticsClient.log(.errorOccurred(during: .registerLinkUser, errorMessage: error.localizedDescription))
-                throw error
+                try logAndThrow(error, during: .registerLinkUser)
             }
         }
 
@@ -330,8 +365,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.linkRegistrationCompleted)
             return customerId
         } catch {
-            analyticsClient.log(.errorOccurred(during: .registerLinkUser, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .registerLinkUser)
         }
     }
 
@@ -354,11 +388,14 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             if let stripeError = error as? StripeError,
                case let .apiError(stripeAPIError) = stripeError,
                stripeAPIError.code == "link_auth_token_invalid" || stripeAPIError.code == "resource_missing" {
-                analyticsClient.log(.errorOccurred(during: .authenticateUserWithAuthToken, errorMessage: stripeAPIError.message ?? error.localizedDescription))
+                analyticsClient.log(.errorOccurred(
+                    during: .authenticateUserWithAuthToken,
+                    errorMessage: stripeAPIError.message ?? error.localizedDescription,
+                    requestID: stripeAPIError.requestID
+                ))
                 throw CryptoOnrampCoordinator.Error.seamlessSignInTokenInvalid(reason: stripeAPIError.message)
             } else {
-                analyticsClient.log(.errorOccurred(during: .authenticateUserWithAuthToken, errorMessage: error.localizedDescription))
-                throw error
+                try logAndThrow(error, during: .authenticateUserWithAuthToken)
             }
         }
     }
@@ -375,8 +412,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     analyticsClient.log(.linkAuthorizationCompleted(consented: true))
                     return .consented(customerId: customerId)
                 } catch {
-                    analyticsClient.log(.errorOccurred(during: .authorize, errorMessage: error.localizedDescription))
-                    throw error
+                    try logAndThrow(error, during: .authorize)
                 }
             case .denied:
                 analyticsClient.log(.linkAuthorizationCompleted(consented: false))
@@ -385,8 +421,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 return .canceled
             }
         } catch {
-            analyticsClient.log(.errorOccurred(during: .authorize, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .authorize)
         }
     }
 
@@ -395,8 +430,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             try await apiClient.collectKycInfo(info: info, linkAccountInfo: linkAccountInfo)
             analyticsClient.log(.kycInfoSubmitted)
         } catch {
-            analyticsClient.log(.errorOccurred(during: .attachKycInfo, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .attachKycInfo)
         }
     }
 
@@ -406,47 +440,44 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.identifierRequirementsRetrieved)
             return identifiers
         } catch {
-            analyticsClient.log(.errorOccurred(during: .retrieveMissingIdentifiers, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .retrieveMissingIdentifiers)
         }
     }
 
     public func submitIdentifiers(_ identifiers: [ComplianceIdentifier]) async throws -> SubmitIdentifiersResult {
         do {
             let result = try await apiClient.submitIdentifiers(identifiers: identifiers, linkAccountInfo: linkAccountInfo)
-            analyticsClient.log(.identifiersSubmitted(valid: result.valid))
+            analyticsClient.log(.identifiersSubmitted(completed: result.completed))
             return result
         } catch {
-            analyticsClient.log(.errorOccurred(during: .submitIdentifiers, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .submitIdentifiers)
         }
     }
 
     @MainActor
-    public func presentCRSCARFDeclaration(from viewController: UIViewController) async throws -> CRSCARFDeclarationResult {
-        analyticsClient.log(.crsCarfDeclarationStarted)
+    public func presentUserAttestation(from viewController: UIViewController) async throws -> UserAttestationResult {
+        analyticsClient.log(.userAttestationStarted)
         do {
             let linkAccountInfo = try await self.linkAccountInfo
-            let declaration = try await apiClient.retrieveCRSCARFDeclaration(linkAccountInfo: linkAccountInfo)
-            let result = try await linkController.presentCRSCARFDeclaration(
-                text: declaration.text,
+            let attestation = try await apiClient.retrieveUserAttestation(linkAccountInfo: linkAccountInfo)
+            let result = try await linkController.presentUserAttestation(
+                html: attestation.html,
                 appearance: appearance,
                 from: viewController,
                 onConfirm: { [apiClient] in
-                    try await apiClient.confirmCRSCARFDeclaration(linkAccountInfo: linkAccountInfo)
+                    try await apiClient.confirmUserAttestation(linkAccountInfo: linkAccountInfo)
                 }
             )
 
             switch result {
             case .confirmed:
-                analyticsClient.log(.crsCarfDeclarationCompleted)
+                analyticsClient.log(.userAttestationCompleted)
                 return .confirmed
             case .canceled:
                 return .canceled
             }
         } catch {
-            analyticsClient.log(.errorOccurred(during: .presentCRSCARFDeclaration, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .presentUserAttestation)
         }
     }
 
@@ -477,8 +508,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 }
             )
         } catch {
-            analyticsClient.log(.errorOccurred(during: .verifyKycInfo, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .verifyKycInfo)
         }
     }
 
@@ -517,8 +547,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 }
             }
         } catch {
-            analyticsClient.log(.errorOccurred(during: .verifyIdentity, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .verifyIdentity)
         }
     }
 
@@ -531,8 +560,47 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             )
             analyticsClient.log(.walletRegistered(network: network.rawValue))
         } catch {
-            analyticsClient.log(.errorOccurred(during: .registerWalletAddress, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .registerWalletAddress)
+        }
+    }
+
+    public func deleteWalletAddress(walletId: String) async throws {
+        do {
+            try await apiClient.deleteWalletAddress(
+                walletId: walletId,
+                linkAccountInfo: linkAccountInfo
+            )
+            analyticsClient.log(.walletDeleted)
+        } catch {
+            try logAndThrow(error, during: .deleteWalletAddress)
+        }
+    }
+
+    public func getWalletOwnershipChallenge(walletAddress: String, network: CryptoNetwork) async throws -> WalletOwnershipChallenge {
+        do {
+            let challenge = try await apiClient.getWalletOwnershipChallenge(
+                walletAddress: walletAddress,
+                network: network,
+                linkAccountInfo: linkAccountInfo
+            )
+            analyticsClient.log(.walletOwnershipChallengeRetrieved(network: network.rawValue))
+            return challenge
+        } catch {
+            try logAndThrow(error, during: .getWalletOwnershipChallenge)
+        }
+    }
+
+    public func submitWalletOwnershipSignature(challengeId: String, signature: String) async throws -> CryptoConsumerWallet {
+        do {
+            let wallet = try await apiClient.submitWalletOwnershipSignature(
+                challengeId: challengeId,
+                signature: signature,
+                linkAccountInfo: linkAccountInfo
+            )
+            analyticsClient.log(.walletOwnershipVerified(network: wallet.network.rawValue))
+            return wallet
+        } catch {
+            try logAndThrow(error, during: .submitWalletOwnershipSignature)
         }
     }
 
@@ -575,6 +643,9 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         case .applePay(let paymentRequest):
             // This presents Apple Pay and promotes the pending payment source on success.
             pendingApplePayPaymentSource = nil
+            if #available(iOS 18.0, *) {
+                paymentRequest.merchantCategoryCode = PKPaymentRequest.MerchantCategoryCode(rawValue: 6051)
+            }
             do {
                 let status = try await presentApplePay(using: paymentRequest, from: viewController)
                 switch status {
@@ -610,8 +681,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 }
             } catch {
                 pendingApplePayPaymentSource = nil
-                analyticsClient.log(.errorOccurred(during: .collectPaymentMethod, errorMessage: error.localizedDescription))
-                throw error
+                try logAndThrow(error, during: .collectPaymentMethod)
             }
         }
     }
@@ -643,8 +713,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.cryptoPaymentTokenCreated(paymentMethodType: selectedPaymentSource.analyticsValue))
             return token.id
         } catch {
-            analyticsClient.log(.errorOccurred(during: .createCryptoPaymentToken, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .createCryptoPaymentToken)
         }
     }
 
@@ -656,56 +725,60 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         analyticsClient.log(.checkoutStarted(
             onrampSessionId: onrampSessionId
         ))
-        // First, attempt to check out and get the PaymentIntent
-        let paymentIntent = try await performCheckoutAndRetrievePaymentIntent(
-            onrampSessionId: onrampSessionId,
-            onrampSessionClientSecretProvider: onrampSessionClientSecretProvider
-        )
+        do {
+            // First, attempt to check out and get the PaymentIntent
+            let paymentIntent = try await performCheckoutAndRetrievePaymentIntent(
+                onrampSessionId: onrampSessionId,
+                onrampSessionClientSecretProvider: onrampSessionClientSecretProvider
+            )
 
-        // Check if the intent is already complete
-        if let result = try mapIntentToCheckoutResult(paymentIntent) {
-            if case .completed = result {
-                analyticsClient.log(.checkoutCompleted(
-                    onrampSessionId: onrampSessionId,
-                    requiredAction: false
-                ))
+            // Check if the intent is already complete
+            if let result = try mapIntentToCheckoutResult(paymentIntent) {
+                if case .completed = result {
+                    analyticsClient.log(.checkoutCompleted(
+                        onrampSessionId: onrampSessionId,
+                        requiredAction: false
+                    ))
+                }
+                return result
             }
-            return result
-        }
 
-        // Handle any required next action (e.g., 3DS authentication)
-        let handledIntentResult = try await handleNextAction(
-            for: paymentIntent,
-            with: authenticationContext
-        )
+            // Handle any required next action (e.g., 3DS authentication)
+            let handledIntentResult = try await handleNextAction(
+                for: paymentIntent,
+                with: authenticationContext
+            )
 
-        switch handledIntentResult {
-        case .paymentIntent(let finalIntent):
-            if finalIntent.checkoutResult?.success == true {
-                // After successful next_action handling, attempt checkout again to complete the payment
-                let finalPaymentIntent = try await performCheckoutAndRetrievePaymentIntent(
-                    onrampSessionId: onrampSessionId,
-                    onrampSessionClientSecretProvider: onrampSessionClientSecretProvider
-                )
+            switch handledIntentResult {
+            case .paymentIntent(let finalIntent):
+                if finalIntent.checkoutResult?.success == true {
+                    // After successful next_action handling, attempt checkout again to complete the payment
+                    let finalPaymentIntent = try await performCheckoutAndRetrievePaymentIntent(
+                        onrampSessionId: onrampSessionId,
+                        onrampSessionClientSecretProvider: onrampSessionClientSecretProvider
+                    )
 
-                // Map the final PaymentIntent status to a checkout result
-                if let checkoutResult = try mapIntentToCheckoutResult(finalPaymentIntent) {
-                    if case .completed = checkoutResult {
-                        analyticsClient.log(.checkoutCompleted(
-                            onrampSessionId: onrampSessionId,
-                            requiredAction: true
-                        ))
+                    // Map the final PaymentIntent status to a checkout result
+                    if let checkoutResult = try mapIntentToCheckoutResult(finalPaymentIntent) {
+                        if case .completed = checkoutResult {
+                            analyticsClient.log(.checkoutCompleted(
+                                onrampSessionId: onrampSessionId,
+                                requiredAction: true
+                            ))
+                        }
+                        return checkoutResult
+                    } else {
+                        throw CheckoutError.paymentFailed
                     }
-                    return checkoutResult
                 } else {
+                    analyticsClient.log(.errorOccurred(during: .performCheckout, errorMessage: "Payment failed"))
                     throw CheckoutError.paymentFailed
                 }
-            } else {
-                analyticsClient.log(.errorOccurred(during: .performCheckout, errorMessage: "Payment failed"))
-                throw CheckoutError.paymentFailed
+            case .canceled:
+                return .canceled
             }
-        case .canceled:
-            return .canceled
+        } catch {
+            try logAndThrow(error, during: .performCheckout)
         }
     }
 
@@ -716,8 +789,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             try await linkController.logOut()
             analyticsClient.log(.userLoggedOut)
         } catch {
-            analyticsClient.log(.errorOccurred(during: .logOut, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .logOut)
         }
     }
 }
@@ -882,17 +954,58 @@ private extension CryptoOnrampCoordinator {
         return try intent.checkoutResult?.get()
     }
 
+    func logAndThrow(_ error: Swift.Error, during operation: CryptoOnrampOperation) throws -> Never {
+        try Self.logAndThrow(
+            error,
+            during: operation,
+            apiClient: apiClient,
+            analyticsClient: analyticsClient,
+            additionalSDKVersions: additionalSDKVersions
+        )
+    }
+
+    static func logAndThrow(
+        _ error: Swift.Error,
+        during operation: CryptoOnrampOperation,
+        apiClient: STPAPIClient,
+        analyticsClient: CryptoOnrampAnalyticsClient,
+        additionalSDKVersions: [SDKVersion] = []
+    ) throws -> Never {
+        let mappedError = mappedError(
+            error,
+            during: operation,
+            apiClient: apiClient,
+            additionalSDKVersions: additionalSDKVersions
+        )
+        let errorMessage = (mappedError as? StripeCryptoOnrampError)?.developerMessage ?? mappedError.localizedDescription
+        let requestID = (mappedError as? StripeCryptoOnrampAPIError)?.requestID
+        analyticsClient.log(.errorOccurred(
+            during: operation,
+            errorMessage: errorMessage,
+            requestID: requestID
+        ))
+
+        #if DEBUG
+        print("[Stripe SDK] CryptoOnrampCoordinator error: \(errorMessage)")
+        #endif
+
+        throw mappedError
+    }
+
     func handlePhoneFormatError(_ error: Swift.Error, during operation: CryptoOnrampOperation) throws {
         if let stripeError = (error as? StripeError),
            case let .apiError(stripeAPIError) = stripeError,
            stripeAPIError.type == .invalidRequestError,
            let message = stripeAPIError.message,
            message.hasPrefix("There was an issue parsing the phone number") {
-            analyticsClient.log(.errorOccurred(during: operation, errorMessage: "Invalid phone number format"))
+            analyticsClient.log(.errorOccurred(
+                during: operation,
+                errorMessage: "Invalid phone number format",
+                requestID: stripeAPIError.requestID
+            ))
             throw Error.invalidPhoneFormat
         } else {
-            analyticsClient.log(.errorOccurred(during: operation, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: operation)
         }
     }
 }

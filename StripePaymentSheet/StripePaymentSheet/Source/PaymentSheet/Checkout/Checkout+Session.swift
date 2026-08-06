@@ -6,88 +6,112 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+import UIKit
 
-// MARK: - Session Protocol
+// MARK: - Session
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
 extension Checkout {
     /// A read-only representation of a Stripe Checkout Session.
-    public protocol Session {
-        /// The ID of the Checkout Session.
-        var id: String { get }
+    public struct Session {
+        // MARK: - Public Properties
 
-        /// Billing details of the customer.
-        var billingAddress: Checkout.ContactAddress? { get }
+        /// The ID of the Checkout Session.
+        public let id: String
 
         /// The business name as configured in the Business Public Details settings of
         /// your Stripe account.
-        var businessName: String? { get }
+        public let businessName: String?
 
         /// Three-letter ISO 4217 currency code in lowercase (e.g. `"usd"`).
-        var currency: String? { get }
+        public let currency: String?
 
         /// The currency options available on the Checkout Session when adaptive pricing is active.
         /// Empty when adaptive pricing is not active.
-        var currencyOptions: [Checkout.CurrencyOption] { get }
+        public let currencyOptions: [Checkout.CurrencyOption]
 
         /// The aggregate amounts calculated per discount for all line items.
-        var discountAmounts: [Checkout.DiscountAmount] { get }
+        public let discountAmounts: [Checkout.DiscountAmount]
 
         /// The customer's email address.
-        var email: String? { get }
+        public let email: String?
 
         /// The line items the customer is purchasing.
-        var lineItems: [Checkout.LineItem] { get }
+        public let lineItems: [Checkout.LineItem]
 
         /// `true` if this object exists in live mode, `false` for test mode.
-        var livemode: Bool { get }
+        public let livemode: Bool
 
         /// The factor used to convert between minor and major currency units. For USD this
         /// is `100`; for JPY this is `1`. `nil` when the session has no currency (e.g. setup mode).
-        var minorUnitsAmountDivisor: Int? { get }
+        public let minorUnitsAmountDivisor: Int?
+
+        /// The currently selected payment option.
+        public let paymentOption: PaymentOptionDisplayData?
 
         /// Payment methods attached to the customer.
-        var savedPaymentMethods: [STPPaymentMethod] { get }
+        public let savedPaymentMethods: [STPPaymentMethod]
 
         /// The selected shipping option, if any.
-        var shipping: Checkout.SelectedShipping? { get }
+        public let shipping: Checkout.SelectedShipping?
 
         /// Shipping address of the customer.
-        var shippingAddress: Checkout.ContactAddress? { get }
+        public let shippingAddress: ShippingAddress?
 
         /// The list of shipping options that can be selected.
-        var shippingOptions: [Checkout.ShippingOption] { get }
+        public let shippingOptions: [Checkout.ShippingOption]
 
         /// Status of the Checkout Session.
         ///
         /// `nil` if the server did not return a status. When non-nil, ``Status.paymentStatus``
         /// is populated from the top-level payment status.
-        var status: Checkout.Status? { get }
+        public let status: Checkout.Status?
 
         /// Details about the tax computation status and aggregated tax amounts.
-        var tax: Checkout.Tax { get }
+        public let tax: Checkout.Tax
 
         /// Tax and discount details for the computed total amount.
-        var total: Checkout.Total? { get }
+        public let total: Checkout.Total?
+
+        // MARK: - Internal Properties
+
+        let paymentStatus: Checkout.PaymentStatus
+        let paymentMethodOptions: STPPaymentMethodOptions?
+        let customer: STPCheckoutSessionCustomer?
+        let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
+        let setupFutureUsage: String?
+        let setupFutureUsageForPaymentMethodType: [String: String]
+        let allowedShippingCountries: [String]?
+        let localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
+        let exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
+        let adaptivePricingActive: Bool
+        let billingAddressCollection: BillingAddressCollection
+        let automaticTaxEnabled: Bool
+        let automaticTaxAddressSource: String?
+        let elementsSession: STPElementsSession
+
+        enum BillingAddressCollection: String {
+            case automatic = "auto"
+            case required
+        }
     }
 }
 
-// MARK: - Mode
-
-@_spi(STP)
-@_spi(ReactNativeSDK)
-extension Checkout {
-    /// The mode of a checkout session.
-    public enum Mode: Sendable {
-        /// A mode not recognized by this version of the SDK.
-        case unknown
-        /// Accept one-time payments for cards, iDEAL, and more.
-        case payment
-        /// Save payment details to charge your customers later.
-        case setup
-        /// Use Stripe Billing to set up fixed-price subscriptions.
-        case subscription
+extension Checkout.Session {
+    /// Display data for the currently selected payment option.
+    public struct PaymentOptionDisplayData: Equatable {
+        /// An image representing a payment method, such as the Apple Pay logo or a card brand.
+        public let image: UIImage
+        /// A customer-facing label representing the payment option.
+        public let label: String
+        /// The billing details associated with the selected payment option.
+        public let billingDetails: PaymentSheet.BillingDetails?
+        /// A string representation of the selected payment method type.
+        public let paymentMethodType: String
+        /// Mandate text that must be displayed when the PaymentElement is configured not to display it.
+        public let mandateText: NSAttributedString?
     }
 }

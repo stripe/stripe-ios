@@ -112,10 +112,10 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
-    /// Retrieves compliance identifiers still required for MiCA and CRS/CARF compliance.
+    /// Retrieves compliance identifiers still required for MiCA and whether CRS/CARF tax identification numbers are still required.
     /// - Parameters:
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
-    /// - Returns: An instance of `ComplianceIdentifierRequirements` containing missing identifier requirements.
+    /// - Returns: An instance of `ComplianceIdentifierRequirements` containing missing MiCA identifier requirements and CRS/CARF TIN status.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     func retrieveMissingIdentifiers(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> ComplianceIdentifierRequirements {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
@@ -135,7 +135,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - identifiers: Compliance identifiers collected for MiCA and CRS/CARF compliance.
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
-    /// - Returns: An instance of `SubmitIdentifiersResult` describing whether the identifiers were accepted.
+    /// - Returns: An instance of `SubmitIdentifiersResult` describing whether identifier collection is complete.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     @discardableResult
     func submitIdentifiers(
@@ -157,12 +157,12 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
-    /// Retrieves the CRS/CARF declaration text for the current Link user.
+    /// Retrieves the user attestation HTML for the current Link user.
     /// - Parameters:
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
-    /// - Returns: An instance of `CRSCARFDeclaration` containing the declaration text and version.
+    /// - Returns: An instance of `UserAttestation` containing the attestation HTML and version.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
-    func retrieveCRSCARFDeclaration(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> CRSCARFDeclaration {
+    func retrieveUserAttestation(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> UserAttestation {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
@@ -176,13 +176,13 @@ extension STPAPIClient {
         )
     }
 
-    /// Confirms the current Link user accepted the CRS/CARF declaration.
+    /// Confirms the current Link user accepted the user attestation.
     /// - Parameters:
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
     /// - Returns: An empty response.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     @discardableResult
-    func confirmCRSCARFDeclaration(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> EmptyResponse {
+    func confirmUserAttestation(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> EmptyResponse {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
@@ -239,6 +239,85 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
+    /// Deletes the given crypto wallet from the current Link account.
+    /// - Parameters:
+    ///   - walletId: The ID of the crypto wallet to delete.
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: An empty response.
+    /// Throws if `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
+    @discardableResult
+    func deleteWalletAddress(
+        walletId: String,
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> EmptyResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/wallet"
+        let requestObject = DeleteWalletRequest(
+            walletId: walletId,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+        return try await delete(resource: endpoint, object: requestObject)
+    }
+
+    /// Creates a short-lived server-issued challenge for a registered wallet.
+    /// - Parameters:
+    ///   - walletAddress: The registered wallet address to verify.
+    ///   - network: The crypto network for the wallet address.
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: A server-issued wallet ownership challenge.
+    func getWalletOwnershipChallenge(
+        walletAddress: String,
+        network: CryptoNetwork,
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> WalletOwnershipChallenge {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/wallet_ownership_challenge"
+        let requestObject = WalletOwnershipChallengeRequest(
+            walletAddress: walletAddress,
+            network: network,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+
+        return try await post(resource: endpoint, object: requestObject)
+    }
+
+    /// Verifies a signature over a previously issued wallet ownership challenge.
+    /// - Parameters:
+    ///   - challengeId: Opaque identifier returned by `getWalletOwnershipChallenge`.
+    ///   - signature: Signature produced by the merchant's wallet stack over the exact challenge message.
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: The updated consumer wallet.
+    func submitWalletOwnershipSignature(
+        challengeId: String,
+        signature: String,
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> CryptoConsumerWallet {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/wallet_ownership_verification"
+        let requestObject = WalletOwnershipSignatureRequest(
+            challengeId: challengeId,
+            signature: signature,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+
+        return try await post(resource: endpoint, object: requestObject)
+    }
+
     /// Retrieves an onramp session.
     /// - Parameters:
     ///   - sessionId: The onramp session identifier.
@@ -281,7 +360,8 @@ extension STPAPIClient {
         let endpoint = "crypto/internal/platform_settings"
 
         let parameters: [String: Any] = [
-            "crypto_customer_id": cryptoCustomerId
+            "crypto_customer_id": cryptoCustomerId,
+            "ui_mode": "headless",
         ]
         return try await get(resource: endpoint, parameters: parameters)
     }
@@ -303,7 +383,25 @@ private extension STPAPIClient {
     /// Helper method to wrap the closure-based post method for Swift concurrency.
     func post<T: Decodable>(resource: String, object: Encodable) async throws -> T {
         return try await withCheckedThrowingContinuation { continuation in
-            post(resource: resource, object: object) { (result: Result<T, Error>) in
+            post(
+                resource: resource,
+                object: object,
+                apiVersionOverride: CryptoOnrampAPI.stripeAPIVersion
+            ) { (result: Result<T, Error>) in
+                continuation.resume(with: result)
+            }
+        }
+    }
+
+    /// Helper method to wrap the closure-based delete method for Swift concurrency.
+    func delete<T: Decodable>(resource: String, object: Encodable) async throws -> T {
+        let parameters = try object.encodeJSONDictionary()
+        return try await withCheckedThrowingContinuation { continuation in
+            delete(
+                resource: resource,
+                parameters: parameters,
+                apiVersionOverride: CryptoOnrampAPI.stripeAPIVersion
+            ) { (result: Result<T, Error>) in
                 continuation.resume(with: result)
             }
         }
@@ -312,9 +410,19 @@ private extension STPAPIClient {
     /// Helper method to wrap the closure-based get method for Swift concurrency.
     func get<T: Decodable>(resource: String, parameters: [String: Any] = [:]) async throws -> T {
         return try await withCheckedThrowingContinuation { continuation in
-            get(resource: resource, parameters: parameters) { (result: Result<T, Error>) in
+            get(
+                resource: resource,
+                parameters: parameters,
+                apiVersionOverride: CryptoOnrampAPI.stripeAPIVersion
+            ) { (result: Result<T, Error>) in
                 continuation.resume(with: result)
             }
         }
     }
+}
+
+private enum CryptoOnrampAPI {
+    // Use a preview API version for networks and parameters behind preview API features.
+    // Bump this when new onramp features require a newer API version.
+    static let stripeAPIVersion = "2026-03-25.preview"
 }

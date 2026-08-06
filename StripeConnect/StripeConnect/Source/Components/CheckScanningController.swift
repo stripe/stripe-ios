@@ -3,7 +3,6 @@ import UIKit
 /// A view controller representing a check-scanning component
 /// - Seealso: [Check scanning component documentation](https://docs.stripe.com/connect/supported-embedded-components/check-scanning?platform=ios)
 @_spi(PrivatePreviewConnect)
-@available(iOS 15, *)
 public final class CheckScanningController {
     typealias HandleCheckScanSubmittedFn = (CheckScanDetails) async throws -> Void
 
@@ -124,7 +123,6 @@ public final class CheckScanningController {
 }
 
 @_spi(PrivatePreviewConnect)
-@available(iOS 15, *)
 @preconcurrency @MainActor
 public protocol CheckScanningControllerDelegate: AnyObject {
     /// Called when the component fails to load (e.g., network issue during initial fetch). To try again, initialize a new CheckScanningController.
@@ -140,7 +138,6 @@ public protocol CheckScanningControllerDelegate: AnyObject {
                        didSubmitCheckScan: CheckScanningController.CheckScanDetails) async throws
 }
 
-@available(iOS 15, *)
 public extension CheckScanningControllerDelegate {
     func checkScanning(_ checkScanning: CheckScanningController,
                        didFailLoadWithError error: Error) { }

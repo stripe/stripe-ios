@@ -6,6 +6,8 @@
 
 "App Settings" = "应用设置";
 
+"Auto" = "自动";
+
 "Back %@ photo successfully uploaded" = "%@ 背面照片已成功上传";
 
 "Back identity document photo successfully uploaded" = "身份证件背面照片已成功上传";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "画面模糊。请稳住手机并重新尝试。";
 
+"Image taken" = "拍摄的图片";
+
 "Individual CPF" = "个人 CPF";
 
 "Invalid document" = "证件无效";
@@ -85,6 +89,8 @@
 "Loading" = "正在加载";
 
 "Make sure you're in a well lit space." = "确保光线充足。";
+
+"Manual" = "手动";
 
 "Move closer" = "请靠近一点";
 

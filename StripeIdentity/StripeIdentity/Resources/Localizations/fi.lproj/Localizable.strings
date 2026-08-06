@@ -6,6 +6,8 @@
 
 "App Settings" = "Sovelluksen asetukset";
 
+"Auto" = "Automaattinen";
+
 "Back %@ photo successfully uploaded" = "Kohteen %@ taustapuolen kuvan lataus onnistui";
 
 "Back identity document photo successfully uploaded" = "Henkilöllisyystodistuksen taustapuolen kuvan lataus onnistui";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Kuva on sumea. Pidä puhelimesi paikoillaan ja yritä uudelleen.";
 
+"Image taken" = "Kuva otettu";
+
 "Individual CPF" = "Yksityishenkilön CPF";
 
 "Invalid document" = "Virheellinen asiakirja";
@@ -85,6 +89,8 @@
 "Loading" = "Ladataan";
 
 "Make sure you're in a well lit space." = "Varmista, että olet hyvin valaistussa tilassa.";
+
+"Manual" = "Manuaalinen";
 
 "Move closer" = "Siirry lähemmäs";
 

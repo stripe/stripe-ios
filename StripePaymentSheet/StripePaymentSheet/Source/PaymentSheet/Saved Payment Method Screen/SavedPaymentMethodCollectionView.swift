@@ -116,6 +116,12 @@ extension SavedPaymentMethodCollectionView {
              paymentMethodLogo.heightAnchor.constraint(equalToConstant: paymentMethodLogoSize.height)
         }()
 
+        private lazy var spinner: ActivityIndicator = {
+            let spinner = ActivityIndicator(size: .medium)
+            spinner.translatesAutoresizingMaskIntoConstraints = false
+            return spinner
+        }()
+
         fileprivate var viewModel: SavedPaymentOptionsViewController.Selection?
 
         var isRemovingPaymentMethods: Bool = false {
@@ -227,7 +233,12 @@ extension SavedPaymentMethodCollectionView {
                     equalTo: contentView.trailingAnchor, constant: 0),
                 accessoryButton.topAnchor.constraint(
                     equalTo: contentView.topAnchor, constant: 0),
+            ])
 
+            selectedIcon.addSubview(spinner)
+            NSLayoutConstraint.activate([
+                spinner.centerXAnchor.constraint(equalTo: selectedIcon.centerXAnchor),
+                spinner.centerYAnchor.constraint(equalTo: selectedIcon.centerYAnchor),
             ])
         }
 
@@ -266,6 +277,7 @@ extension SavedPaymentMethodCollectionView {
 
         // MARK: - Internal Methods
         func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsPaymentMethodUpdate: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false, linkBrand: LinkBrand = .link) {
+            setLoading(false)
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             selectableRectangle.isHidden = false
@@ -278,6 +290,22 @@ extension SavedPaymentMethodCollectionView {
             self.showDefaultPMBadge = showDefaultPMBadge
             self.linkBrand = linkBrand
             update()
+        }
+
+        /// Replaces the selected checkmark with a spinner while loading.
+        func setLoading(_ loading: Bool) {
+            guard loading != spinner.isAnimating else {
+                return
+            }
+
+            selectedIcon.setHiddenIfNecessary(!loading && !isSelected)
+            selectedIcon.imageView.setHiddenIfNecessary(loading)
+            if loading {
+                spinner.tintColor = appearance.colors.primary.contrastingColor
+                spinner.startAnimating()
+            } else {
+                spinner.stopAnimating()
+            }
         }
 
         func handleEvent(_ event: STPEvent) {
@@ -357,10 +385,10 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
+                            .map { linkBrand.accessibilityText(from: $0) }
                         let paymentMethodCellImage = paymentMethod.makeSavedPaymentMethodCellImage(
                             overrideUserInterfaceStyle: overrideUserInterfaceStyle,
-                            iconStyle: appearance.iconStyle,
-                            brand: linkBrand
+                            iconStyle: appearance.iconStyle
                         )
                         if let cardArtURL = paymentMethod.cardArtCDNURL() {
                             if paymentMethodLogo.tag != cardArtURL.hashValue {
@@ -382,6 +410,7 @@ extension SavedPaymentMethodCollectionView {
                                 }
                             }
                         } else {
+                            paymentMethodLogo.removeShimmer()
                             paymentMethodLogo.image = paymentMethodCellImage
                             paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                         }
@@ -392,6 +421,7 @@ extension SavedPaymentMethodCollectionView {
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
                         let paymentMethodLogoImage = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        paymentMethodLogo.removeShimmer()
                         paymentMethodLogo.image = paymentMethodLogoImage
                         paymentMethodLogo.tag = paymentMethodLogoImage.hashValue
                         paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
@@ -399,8 +429,9 @@ extension SavedPaymentMethodCollectionView {
                         label.text = linkBrand.displayName
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
-                        selectableRectangle.accessibilityLabel = label.text
-                        let paymentMethodLogoImage = PaymentOption.link(option: .wallet(brand: linkBrand)).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        selectableRectangle.accessibilityLabel = linkBrand.accessibilityText(from: linkBrand.displayName)
+                        let paymentMethodLogoImage = Image.paymentSheetLinkLogoImage
+                        paymentMethodLogo.removeShimmer()
                         paymentMethodLogo.image = paymentMethodLogoImage
                         paymentMethodLogo.tag = paymentMethodLogoImage.hashValue
                         paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
@@ -414,6 +445,7 @@ extension SavedPaymentMethodCollectionView {
                         )
                         selectableRectangle.accessibilityLabel = String.Localized.add_new_payment_method
                         selectableRectangle.accessibilityIdentifier = "+ Add"
+                        paymentMethodLogo.removeShimmer()
                         paymentMethodLogo.isHidden = true
                         paymentMethodLogo.tag = 0
                         plus.isHidden = false

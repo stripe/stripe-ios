@@ -105,8 +105,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var crypto: STPPaymentMethodCryptoParams?
     /// If this is a Multibanco PaymentMethod, this contains additional details.
     @objc public var multibanco: STPPaymentMethodMultibancoParams?
-    /// If this is a ShopPay PaymentMethod, this contains additional details.
-    @objc @_spi(STP) public var shopPay: STPPaymentMethodShopPayParams?
     /// If this is a PayPay PaymentMethod, this contains additional details.
     @objc public var payPay: STPPaymentMethodPayPayParams?
     /// If this is a TWINT PaymentMethod, this contains additional details.
@@ -699,24 +697,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
-    /// Creates params for an ShopPay PaymentMethod.
-    /// - Parameters:
-    ///   - shopPay:          An object containing additional ShopPay details.
-    ///   - billingDetails:      An object containing the user's billing details.
-    ///   - metadata:            Additional information to attach to the PaymentMethod.
-    @objc
-    @_spi(STP) public convenience init(
-        shopPay: STPPaymentMethodShopPayParams,
-        billingDetails: STPPaymentMethodBillingDetails?,
-        metadata: [String: String]?
-    ) {
-        self.init()
-        self.type = .shopPay
-        self.shopPay = shopPay
-        self.billingDetails = billingDetails
-        self.metadata = metadata
-    }
-
     /// Creates params for a PayPay PaymentMethod. :nodoc:
     /// - Parameters:
     ///   - payPay:   An object containing additional PayPay details.
@@ -818,7 +798,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: usBankAccount)): "us_bank_account",
             NSStringFromSelector(#selector(getter: cashApp)): "cashapp",
             NSStringFromSelector(#selector(getter: revolutPay)): "revolut_pay",
-            NSStringFromSelector(#selector(getter: shopPay)): "shop_pay",
             NSStringFromSelector(#selector(getter: swish)): "swish",
             NSStringFromSelector(#selector(getter: mobilePay)): "mobilepay",
             NSStringFromSelector(#selector(getter: amazonPay)): "amazon_pay",
@@ -1271,8 +1250,6 @@ extension STPPaymentMethodParams {
             crypto = STPPaymentMethodCryptoParams()
         case .multibanco:
             multibanco = STPPaymentMethodMultibancoParams()
-        case .shopPay:
-            shopPay = STPPaymentMethodShopPayParams()
         case .payPay:
             payPay = STPPaymentMethodPayPayParams()
         case .twint:

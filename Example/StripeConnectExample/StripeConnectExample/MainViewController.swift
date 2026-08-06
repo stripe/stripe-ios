@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 4/30/24.
 //
 
-@_spi(PrivatePreviewConnect) @_spi(PreviewConnect) import StripeConnect
+@_spi(DashboardOnly) @_spi(PrivatePreviewConnect) import StripeConnect
 import SwiftUI
 import UIKit
 
@@ -30,6 +30,7 @@ class MainViewController: UITableViewController {
         case payouts = "Payouts"
         case payments = "Payments"
         case checkScanning = "Check scanning"
+        case notificationBanner = "Notification banner"
 
         var label: String { rawValue }
 
@@ -54,14 +55,12 @@ class MainViewController: UITableViewController {
 
         var stageQualifier: String? {
             switch self {
-            case .onboarding:
-                return nil  // GA
-            case .payouts:
-                return "Beta"
-            case .payments:
-                return "Beta"
+            case .onboarding, .payouts, .payments:
+                return nil
             case .checkScanning:
                 return "Private Preview"
+            case .notificationBanner:
+                return "Experimental"
             }
         }
 
@@ -75,6 +74,8 @@ class MainViewController: UITableViewController {
                 return "Show payments and allow your users to view payment details and manage disputes."
             case .checkScanning:
                 return "Show a form to allow users to scan paper checks."
+            case .notificationBanner:
+                return "Show a banner of required actions, rendered inline."
             }
         }
     }
@@ -162,6 +163,12 @@ class MainViewController: UITableViewController {
             checkScanning.delegate = self
             checkScanning.title = row.label
             checkScanning.present(from: self, animated: true)
+            return
+        case .notificationBanner:
+            let bannerVC = NotificationBannerExampleViewController(componentManager: embeddedComponentManager)
+            bannerVC.title = row.label
+            addChangeAppearanceButtonNavigationItem(to: bannerVC)
+            navigationController?.pushViewController(bannerVC, animated: true)
             return
         }
 

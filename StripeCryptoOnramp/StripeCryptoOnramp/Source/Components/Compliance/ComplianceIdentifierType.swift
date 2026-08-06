@@ -66,11 +66,17 @@ public extension ComplianceIdentifierType {
     /// Isikukood (PIC) - Estonia.
     static let eeIK = Self(rawValue: "ee_ik")
 
+    /// Número de Identificación Fiscal (NIF) - Spain.
+    static let esNIF = Self(rawValue: "es_nif")
+
     /// Henkilötunnus (HETU) - Finland.
     static let fiHETU = Self(rawValue: "fi_hetu")
 
     /// Numéro fiscal de référence (SPI) - France.
     static let frSPI = Self(rawValue: "fr_spi")
+
+    /// Social security number (NIR) - France.
+    static let frNIR = Self(rawValue: "fr_nir")
 
     /// Tax Identification Number (Steuer-ID) - Germany.
     static let deSTN = Self(rawValue: "de_stn")

@@ -149,7 +149,6 @@ private struct NetworkingLinkSignupFooterViewUIViewRepresentable: UIViewRepresen
     }
 }
 
-@available(iOS 14.0, *)
 struct NetworkingLinkSignupFooterView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

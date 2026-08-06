@@ -28,21 +28,8 @@ final class HTMLTextView: UIView {
     }
 
     private lazy var textView: UITextView = {
-        let textView: UITextView
-
-        // iOS 13 requires that the TextView be editable for links to open but
-        // iOS 14 does not.
-        if #available(iOS 14, *) {
-            textView = UITextView()
-            textView.isEditable = false
-        } else {
-            // Remove the spelling rotor so the voice over doesn't say,
-            // "use the rotor to access misspelled words"
-            textView = TextViewWithoutSpellingRotor()
-            // Tell the voice over engine that this is static text so it doesn't
-            // say, "double tap to edit"
-            textView.accessibilityTraits = .staticText
-        }
+        let textView = UITextView()
+        textView.isEditable = false
 
         textView.isScrollEnabled = false
         textView.backgroundColor = nil
@@ -163,18 +150,5 @@ extension HTMLTextView: UITextViewDelegate {
         // textView.isEditable must be true for links to be able to be opened on
         // iOS 13, so always return false to disable edit-ability
         return false
-    }
-}
-
-/// A UITextView without the misspelled words rotor
-private class TextViewWithoutSpellingRotor: UITextView {
-    override var accessibilityCustomRotors: [UIAccessibilityCustomRotor]? {
-        get {
-            // Removes the misspelled word rotor from the accessibility rotors
-            return super.accessibilityCustomRotors?.filter { $0.systemRotorType != .misspelledWord }
-        }
-        set {
-            super.accessibilityCustomRotors = newValue
-        }
     }
 }

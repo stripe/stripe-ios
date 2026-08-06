@@ -1,0 +1,7 @@
+{
+  "id": "ccw_12345",
+  "object": "crypto.consumer_wallet",
+  "wallet_address": "11111111111111111111111111111111",
+  "network": "solana",
+  "verified_ownership": true
+}

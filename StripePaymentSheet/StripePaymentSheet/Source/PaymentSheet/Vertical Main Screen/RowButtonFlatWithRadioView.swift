@@ -20,8 +20,8 @@ final class RowButtonFlatWithRadioView: RowButton {
         return radioButton
     }()
 
-    override func updateSelectedState() {
-        super.updateSelectedState()
+    override func updateSelectedState(_ isSelected: Bool, willDisplayForm: Bool) {
+        super.updateSelectedState(isSelected, willDisplayForm: willDisplayForm)
         radioButton.isOn = isSelected
     }
 

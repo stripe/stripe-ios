@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SafariServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
@@ -126,15 +125,8 @@ class PMMEUIView: UIView {
     }
 
     @objc private func didTap() {
-        openInfoModal()
-    }
-
-    private func openInfoModal() {
         analyticsHelper.logTapped()
-
-        let infoController = PMMEInfoModal(infoUrl: infoUrl, style: appearance.style)
-        infoController.modalPresentationStyle = .formSheet
-        window?.findTopMostPresentedViewController()?.present(infoController, animated: true)
+        UIApplication.shared.open(infoUrl)
     }
 }
 
@@ -151,7 +143,8 @@ extension PMMEUIView: UITextViewDelegate {
             return false
         }
 
-        openInfoModal()
+        analyticsHelper.logTapped()
+        UIApplication.shared.open(infoUrl)
         return false
     }
     #endif

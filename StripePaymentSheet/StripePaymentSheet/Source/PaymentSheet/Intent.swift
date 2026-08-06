@@ -16,19 +16,19 @@ import UIKit
 
 // MARK: - Intent
 
-/// An internal type representing either a PaymentIntent, SetupIntent, a "deferred Intent", or a CheckoutSession
+/// An internal type representing either a PaymentIntent, SetupIntent, a "deferred Intent", or a Checkout Session
 enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
-    case checkoutSession(STPCheckoutSession)
+    case checkout(Checkout.Session)
 
     var stripeId: String? {
         switch self {
         case .paymentIntent(let intent): intent.stripeId
         case .setupIntent(let intent): intent.stripeID
         case .deferredIntent: nil
-        case .checkoutSession(let session): session.id
+        case .checkout(let session): session.id
         }
     }
 
@@ -45,8 +45,8 @@ enum Intent {
             case .setup:
                 return false
             }
-        case .checkoutSession(let session):
-            return session.mode == .payment || session.mode == .subscription
+        case .checkout(let session):
+            return !session.noPaymentRequired
         }
     }
 
@@ -58,16 +58,23 @@ enum Intent {
             return false
         case .deferredIntent:
             return true
-        case .checkoutSession:
+        case .checkout:
             return false
         }
+    }
+
+    var collectsTaxFromBillingAddress: Bool {
+        guard case .checkout(let checkout) = self else {
+            return false
+        }
+        return checkout.collectsTaxFromBillingAddress
     }
 
     var intentConfig: PaymentSheet.IntentConfiguration? {
         switch self {
         case .deferredIntent(let intentConfig):
             return intentConfig
-        case .paymentIntent, .setupIntent, .checkoutSession:
+        case .paymentIntent, .setupIntent, .checkout:
             return nil
         }
     }
@@ -78,7 +85,7 @@ enum Intent {
             return intentConfig.requireCVCRecollection
         case .paymentIntent(let paymentIntent):
             return paymentIntent.paymentMethodOptions?.card?.requireCvcRecollection ?? false
-        case .setupIntent, .checkoutSession:
+        case .setupIntent, .checkout:
             // CheckoutSession does not yet support CVC recollection
             return false
         }
@@ -97,7 +104,7 @@ enum Intent {
             case .setup(let currency, _):
                 return currency
             }
-        case .checkoutSession(let session):
+        case .checkout(let session):
             return session.currency
         }
     }
@@ -115,18 +122,8 @@ enum Intent {
             case .setup:
                 return nil
             }
-        case .checkoutSession(let session):
-            switch session.mode {
-            case .unknown:
-                stpAssertionFailure("Received CheckoutSession in unknown mode")
-                return nil
-            case .payment:
-                return session.total?.total.minorUnitsAmount
-            case .setup:
-                return nil
-            case .subscription:
-                fatalError("Subscriptoins not yet implemented for CheckoutSessions")
-            }
+        case .checkout(let session):
+            return session.expectedAmount()
         }
     }
 
@@ -139,16 +136,8 @@ enum Intent {
                 return setupFutureUsage?.rawValue
             }
             return nil
-        case .checkoutSession(let checkoutSession):
-            switch checkoutSession.mode {
-            case .payment:
-                return checkoutSession.setupFutureUsage
-            case .setup:
-                return nil
-            case .subscription, .unknown:
-                stpAssertionFailure("subscription and unknown not implemented")
-                return nil
-            }
+        case .checkout(let session):
+            return session.noPaymentRequired ? nil : session.setupFutureUsage
         case .setupIntent:
             return nil
         }
@@ -166,8 +155,8 @@ enum Intent {
                 return !setupFutureUsageValues.isEmpty
             }
             return nil
-        case .checkoutSession(let checkoutSession):
-            return checkoutSession.isPaymentMethodOptionsSetupFutureUsageSet
+        case .checkout(let session):
+            return session.isPaymentMethodOptionsSetupFutureUsageSet
         case .setupIntent:
             return nil
         }
@@ -191,28 +180,31 @@ enum Intent {
             case .setup:
                 return true
             }
-        case .checkoutSession(let checkoutSession):
-            switch checkoutSession.mode {
-            case .payment:
-                guard let setupFutureUsage = checkoutSession.setupFutureUsage(for: paymentMethodType) else {
-                    return false
-                }
-                return setupFutureUsage != "none"
-            case .setup:
-                return true
-            case .subscription, .unknown:
-                stpAssertionFailure("subscription and unknown not implemented")
+        case .checkout(let session):
+            guard !session.noPaymentRequired else { return true }
+            guard let setupFutureUsage = session.setupFutureUsage(for: paymentMethodType) else {
                 return false
             }
+            return setupFutureUsage != "none"
         }
     }
 
     func allowsPaymentMethodRemoval(elementsSession: STPElementsSession) -> Bool {
         switch self {
-        case .checkoutSession(let checkoutSession):
-            return checkoutSession.customer?.canDetachPaymentMethod ?? false
+        case .checkout(let session):
+            return session.customer?.canDetachPaymentMethod ?? false
         case .paymentIntent, .setupIntent, .deferredIntent:
             return elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+        }
+    }
+
+    func allowsPaymentMethodUpdate(elementsSession: STPElementsSession) -> Bool {
+        switch self {
+        case .checkout:
+            // Checkout sessions always support PM updates
+            return true
+        case .paymentIntent, .setupIntent, .deferredIntent:
+            return elementsSession.paymentMethodUpdateForPaymentSheet
         }
     }
 }

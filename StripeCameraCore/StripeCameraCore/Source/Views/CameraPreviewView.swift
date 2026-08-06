@@ -64,10 +64,9 @@ import UIKit
         // Get reference to videoPreviewLayer on main queue then dispatch to
         // worker queue to set session so it doesn't block main.
 
-        let mainWorkItem = DispatchWorkItem { [weak self] in
+        let mainWorkItem = DispatchWorkItem { [weak self, weak captureSession] in
             guard let self = self else { return }
-            cameraSessionQueue.async {
-                [weak captureSession, weak videoPreviewLayer = self.videoPreviewLayer] in
+            cameraSessionQueue.async { [weak videoPreviewLayer = self.videoPreviewLayer] in
                 videoPreviewLayer?.session = captureSession
             }
         }

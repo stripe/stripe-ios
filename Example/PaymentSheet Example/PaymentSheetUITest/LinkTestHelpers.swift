@@ -66,7 +66,7 @@ extension XCTestCase {
         if includingBillingDetails {
             fillOutBillingDetails(app)
         } else {
-            XCTAssertTrue(app.toolbars.buttons["Done"].waitForExistenceAndTap(timeout: 10))
+            app.stp_dismissKeyboard()
         }
     }
 
@@ -97,7 +97,7 @@ extension XCTestCase {
             if stateField.exists {
                 stateField.tap()
                 app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
-                app.toolbars.buttons["Done"].tap()
+                app.stp_dismissKeyboard()
             }
 
             let zipField = app.textFields["ZIP"]
@@ -106,7 +106,7 @@ extension XCTestCase {
                 zipField.typeText("94080")
             }
 
-            XCTAssertTrue(app.toolbars.buttons["Done"].waitForExistenceAndTap(timeout: 10))
+            app.stp_dismissKeyboard()
         }
     }
 

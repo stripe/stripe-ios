@@ -45,3 +45,22 @@ final class LinkAccountContext {
     }
 
 }
+
+final class LinkAccountContextObserver: NSObject {
+    private let onChange: (PaymentSheetLinkAccount?) -> Void
+
+    init(onChange: @escaping (PaymentSheetLinkAccount?) -> Void) {
+        self.onChange = onChange
+        super.init()
+        LinkAccountContext.shared.addObserver(self, selector: #selector(handleAccountChange(_:)))
+    }
+
+    deinit {
+        LinkAccountContext.shared.removeObserver(self)
+    }
+
+    @objc
+    private func handleAccountChange(_ notification: Notification) {
+        onChange(notification.object as? PaymentSheetLinkAccount)
+    }
+}

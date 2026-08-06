@@ -8,7 +8,6 @@
 import UIKit
 
 /// Delegate of an `AccountOnboardingController`
-@available(iOS 15, *)
 public protocol AccountOnboardingControllerDelegate: AnyObject {
     /**
      The connected account has exited the onboarding process. When this triggers, retrieve account details to check the status of
@@ -30,7 +29,6 @@ public protocol AccountOnboardingControllerDelegate: AnyObject {
 
 }
 
-@available(iOS 15, *)
 public extension AccountOnboardingControllerDelegate {
     // Add default implementation of delegate methods to make them optional
     func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingController) { }
@@ -41,7 +39,6 @@ public extension AccountOnboardingControllerDelegate {
 
 /// A view controller representing an account-onboarding component
 /// - Seealso: [Account onboarding component documentation](https://docs.stripe.com/connect/supported-embedded-components/account-onboarding?platform=ios)
-@available(iOS 15, *)
 public final class AccountOnboardingController {
     struct Props: Encodable {
         let fullTermsOfServiceUrl: URL?
@@ -65,6 +62,10 @@ public final class AccountOnboardingController {
     // Delegate callbacks remove the need for the implementor to hold onto the controller
     // so we set retainedSelf on present, and unset it when the VC is dismissed.
     var retainedSelf: AccountOnboardingController?
+
+    // Ensures the exit callback is delivered exactly once, whether the exit
+    // originates from the component (JS onExit) or the UIKit dismissal lifecycle.
+    private var didNotifyExit = false
 
     /// Delegate that receives callbacks for this component
     public weak var delegate: AccountOnboardingControllerDelegate?
@@ -100,6 +101,7 @@ public final class AccountOnboardingController {
 
         webVC.addMessageHandler(OnExitMessageHandler(didReceiveMessage: { [weak self] in
             guard let self else { return }
+            self.notifyDidExit()
             self.dismiss()
         }))
     }
@@ -127,8 +129,7 @@ public final class AccountOnboardingController {
         retainedSelf = self
         webVC.onDismiss = { [weak self] in
             guard let self else { return }
-            self.delegate?.accountOnboardingDidExit(self)
-            self.retainedSelf = nil
+            self.notifyDidExit()
         }
     }
 
@@ -136,6 +137,16 @@ public final class AccountOnboardingController {
     /// No-Ops if not presented.
     func dismiss(animated: Bool = true) {
         webVC.dismiss(animated: animated)
+    }
+
+    /// Notifies the delegate that onboarding has exited — exactly once — and releases
+    /// the retained reference. Safe to call from both the component exit (JS onExit)
+    /// path and the UIKit dismissal lifecycle.
+    private func notifyDidExit() {
+        guard !didNotifyExit else { return }
+        didNotifyExit = true
+        delegate?.accountOnboardingDidExit(self)
+        retainedSelf = nil
     }
 
     @objc

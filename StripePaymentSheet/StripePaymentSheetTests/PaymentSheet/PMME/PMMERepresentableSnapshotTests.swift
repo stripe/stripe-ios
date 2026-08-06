@@ -12,7 +12,6 @@
 import SwiftUI
 import XCTest
 
-@available(iOS 15.0, *)
 @MainActor
 class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
 

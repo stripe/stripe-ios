@@ -94,7 +94,6 @@ extension InstitutionTableViewCell {
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 private struct InstitutionTableViewCellUIViewRepresentable: UIViewRepresentable {
 
     let showLoadingView: Bool
@@ -122,7 +121,6 @@ private struct InstitutionTableViewCellUIViewRepresentable: UIViewRepresentable 
     }
 }
 
-@available(iOS 14.0, *)
 struct InstitutionTableViewCell_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {

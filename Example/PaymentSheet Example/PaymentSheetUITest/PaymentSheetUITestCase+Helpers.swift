@@ -315,7 +315,7 @@ extension PaymentSheetUITestCase {
                 .matching(NSPredicate(format: "label CONTAINS 'Email address'"))
                 .firstMatch
                 .waitForExistenceAndTap(timeout: 10)
-            let email = "linkpaymentcontrolleruitest-\(UUID().uuidString)@example.com"
+            let email = "instantbankpaymentscontrolleruitest-\(UUID().uuidString)@example.com"
             app.typeText(email + XCUIKeyboardKey.return.rawValue)
         }
 
@@ -326,7 +326,7 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(countryCodeSelector.waitForExistence(timeout: 10.0), "Failed to find phone text field")
         countryCodeSelector.tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States (+1)")
-        app.toolbars.buttons["Done"].tap()
+        app.stp_dismissKeyboard()
 
         sleep(1) // Wait for keyboard to dismiss
         phoneTextField.tap()

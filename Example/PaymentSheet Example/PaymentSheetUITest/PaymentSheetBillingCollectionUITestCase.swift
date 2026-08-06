@@ -7,18 +7,7 @@
 
 import XCTest
 
-class PaymentSheetBillingCollectionUITestCase: XCTestCase {
-    var app: XCUIApplication!
-
-    override func setUpWithError() throws {
-        try super.setUpWithError()
-
-        continueAfterFailure = false
-
-        app = XCUIApplication()
-        app.launchEnvironment = ["UITesting": "true"]
-    }
-
+class PaymentSheetBillingCollectionUITestCase: PaymentSheetUITestCase {
     var cardInfoField: XCUIElement { app.staticTexts["Card information"] }
     var contactInfoField: XCUIElement { app.staticTexts["Contact information"] }
     var fullNameField: XCUIElement { app.textFields["Full name"] }

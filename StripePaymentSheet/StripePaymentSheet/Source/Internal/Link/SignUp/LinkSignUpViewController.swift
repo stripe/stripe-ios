@@ -34,11 +34,19 @@ final class LinkSignUpViewController: UIViewController {
     private let viewModel: LinkSignUpViewModel
     private let defaultBillingDetails: PaymentSheet.BillingDetails?
     private let brand: LinkBrand
-    private let theme = LinkUI.appearance.asElementsTheme
+    private let appearance: LinkAppearance?
+    private let theme: ElementsAppearance
 
     private lazy var selectionBehavior: SelectionBehavior = {
         // This is lazily computed so that the iOS 26 style can be applied to LinkUI.
-        SelectionBehavior.highlightBorder(configuration: LinkUI.highlightBorderConfiguration)
+        let borderColor = appearance?.colors?.selectedBorder ?? .linkBorderSelected
+        let config = HighlightBorderConfiguration(
+            width: LinkUI.highlightBorderConfiguration.width,
+            cornerRadius: LinkUI.highlightBorderConfiguration.cornerRadius,
+            color: borderColor,
+            animator: LinkUI.highlightBorderConfiguration.animator
+        )
+        return SelectionBehavior.highlightBorder(configuration: config)
     }()
 
     private let titleLabel: UILabel = {
@@ -63,12 +71,13 @@ final class LinkSignUpViewController: UIViewController {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.text = String.Localized.pay_faster_everywhere_brand_is_accepted(brand: brand)
+        label.accessibilityLabel = brand.accessibilityText(from: label.text ?? "")
         return label
     }()
 
     private lazy var emailElement = {
-        let element = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: false, theme: theme, brand: .link)
-        element.indicatorTintColor = .linkIconBrand
+        let element = LinkEmailElement(defaultValue: viewModel.emailAddress, theme: theme)
+        element.indicatorTintColor = appearance?.colors?.primary ?? .linkIconBrand
         return element
     }()
 
@@ -106,7 +115,7 @@ final class LinkSignUpViewController: UIViewController {
 
     private lazy var legalTermsView: LinkLegalTermsView = {
         let legalTermsView = LinkLegalTermsView(textAlignment: .center, brand: brand, isStandalone: true)
-        legalTermsView.tintColor = .linkTextBrand
+        legalTermsView.tintColor = appearance?.colors?.primary ?? .linkTextBrand
         legalTermsView.delegate = self
         return legalTermsView
     }()
@@ -129,10 +138,18 @@ final class LinkSignUpViewController: UIViewController {
     }()
 
     private lazy var signUpButton: Button = {
-        let button = Button(
-            configuration: .linkPrimary(),
-            title: viewModel.signUpButtonTitle
-        )
+        var configuration = Button.Configuration.linkPrimary()
+        if let primary = appearance?.colors?.primary {
+            configuration.backgroundColor = primary
+            configuration.disabledBackgroundColor = primary
+        }
+        if let contentOnPrimary = appearance?.colors?.contentOnPrimary {
+            configuration.foregroundColor = contentOnPrimary
+        }
+        if let cornerRadius = appearance?.primaryButton.cornerRadius {
+            configuration.cornerRadius = cornerRadius
+        }
+        let button = Button(configuration: configuration, title: viewModel.signUpButtonTitle)
         button.addTarget(self, action: #selector(didTapSignUpButton(_:)), for: .touchUpInside)
         button.adjustsFontForContentSizeCategory = true
         button.isEnabled = false
@@ -171,7 +188,8 @@ final class LinkSignUpViewController: UIViewController {
         linkAccount: PaymentSheetLinkAccount?,
         brand: LinkBrand = .link,
         country: String? = nil,
-        defaultBillingDetails: PaymentSheet.BillingDetails?
+        defaultBillingDetails: PaymentSheet.BillingDetails?,
+        appearance: LinkAppearance? = nil
     ) {
         self.viewModel = LinkSignUpViewModel(
             accountService: accountService,
@@ -181,6 +199,12 @@ final class LinkSignUpViewController: UIViewController {
         )
         self.defaultBillingDetails = defaultBillingDetails
         self.brand = brand
+        self.appearance = appearance
+        var elementTheme = LinkUI.appearance.asElementsTheme
+        if let primary = appearance?.colors?.primary {
+            elementTheme.colors.primary = primary
+        }
+        self.theme = elementTheme
         super.init(nibName: nil, bundle: nil)
     }
 

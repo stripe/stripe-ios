@@ -14,11 +14,7 @@ import UIKit
     @_spi(STP) public static var shared = MockAppAttestService()
 
     @_spi(STP) public nonisolated var isSupported: Bool {
-        if #available(iOS 14.0, *) {
-            return true
-        } else {
-            return false
-        }
+        return true
     }
 
     var shouldFailKeygenWithError: Error?

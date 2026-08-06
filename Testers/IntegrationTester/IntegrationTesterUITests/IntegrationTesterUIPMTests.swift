@@ -41,17 +41,36 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 
-        let amexButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"]
-        XCTAssertTrue(amexButton.waitForExistence(timeout: 10.0))
-        amexButton.forceTapElement()
+        if ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 {
+            // iOS 26: The Apple Pay sheet shows the selected card and a
+            // "Change Payment Method" button. Tap it to switch cards.
+            let changeButton = applePay.buttons["Change Payment Method"]
+            XCTAssertTrue(changeButton.waitForExistence(timeout: 10.0))
+            changeButton.tap()
 
-        let mastercardButton = applePay.buttons["Simulated Card - MasterCard, ‪•••• 1234‬"].firstMatch
-        XCTAssertTrue(mastercardButton.waitForExistence(timeout: 10.0))
-        mastercardButton.forceTapElement()
+            let mastercardPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - MasterCard'")
+            let mastercardButton = applePay.buttons.containing(mastercardPredicate).firstMatch
+            XCTAssertTrue(mastercardButton.waitForExistence(timeout: 10.0))
+            mastercardButton.forceTapElement()
 
-        let payButton = applePay.buttons["Pay with Passcode"]
-        XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
-        payButton.forceTapElement()
+            let payButton = applePay.buttons["Pay with Passcode"]
+            XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+            payButton.forceTapElement()
+        } else {
+            let amexPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
+            let amexButton = applePay.buttons.containing(amexPredicate).firstMatch
+            XCTAssertTrue(amexButton.waitForExistence(timeout: 10.0))
+            amexButton.forceTapElement()
+
+            let mastercardPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - MasterCard, ‪•••• 1234‬'")
+            let mastercardButton = applePay.buttons.containing(mastercardPredicate).firstMatch
+            XCTAssertTrue(mastercardButton.waitForExistence(timeout: 10.0))
+            mastercardButton.forceTapElement()
+
+            let payButton = applePay.buttons["Pay with Passcode"]
+            XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+            payButton.forceTapElement()
+        }
 
         let statusView = app.staticTexts["Payment status view"]
         XCTAssertTrue(statusView.waitForExistence(timeout: 20.0))
@@ -145,12 +164,26 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
         buyButton.forceTapElement()
 
-        // Klarna uses ASWebAuthenticationSession, tap continue to allow the web view to open:
+        // Klarna uses ASWebAuthenticationSession, tap continue to allow the web view to open.
+        // Confirming the PaymentIntent requires a network round-trip to fetch the redirect URL
+        // before iOS presents the consent sheet, so give it a generous timeout to avoid racing
+        // ahead before the "Continue" button appears.
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        springboard.buttons["Continue"].waitForExistenceAndTap(timeout: 3)
+        XCTAssertTrue(
+            springboard.buttons["Continue"].waitForExistenceAndTap(timeout: 30),
+            "ASWebAuthenticationSession consent (\"Continue\") button never appeared"
+        )
 
-        // This is where we'd fill out Klarna's forms, but we'll just cancel for now
-        app.buttons["Cancel"].waitForExistenceAndTap(timeout: 3)
+        // This is where we'd fill out Klarna's forms, but we'll just cancel for now.
+        // The ASWebAuthenticationSession browser animates in after tapping Continue. Wait for
+        // its Cancel button to become hittable before tapping — tapping mid-animation throws
+        // "Activation point invalid" because the element's hit region isn't settled yet.
+        let cancelButton = app.buttons["Cancel"]
+        XCTAssertTrue(
+            cancelButton.waitForExistence(timeout: 30),
+            "Klarna web view \"Cancel\" button never appeared"
+        )
+        cancelButton.forceTapWhenHittableInTestCase(self)
 
         let statusView = app.staticTexts["Payment status view"]
         XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))

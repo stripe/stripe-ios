@@ -178,8 +178,11 @@ enum ExpectedFormHierarchy {
     enum Wero {
         static var paymentIntent: FormHierarchyNode {
             FormHierarchyNode(type: "FormElement", children: [
-                FormHierarchyNode(type: "SectionElement", children: [
-                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "3", "label": "Country or region"])
+                FormHierarchyNode(type: "AddressSectionElement", children: [
+                    FormHierarchyNode(type: "SectionElement", children: [
+                        FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "3", "label": "Country or region"])
+                    ]),
+                    FormHierarchyNode(type: "CheckboxElement", properties: ["label": "Billing address is same as shipping"]),
                 ]),
             ])
         }
@@ -312,8 +315,11 @@ enum ExpectedFormHierarchy {
                 FormHierarchyNode(type: "SectionElement", children: [
                     FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"])
                 ]),
-                FormHierarchyNode(type: "SectionElement", children: [
-                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "235", "label": "Country or region"])
+                FormHierarchyNode(type: "AddressSectionElement", children: [
+                    FormHierarchyNode(type: "SectionElement", children: [
+                        FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "235", "label": "Country or region"])
+                    ]),
+                    FormHierarchyNode(type: "CheckboxElement", properties: ["label": "Billing address is same as shipping"]),
                 ]),
             ])
         }
@@ -324,8 +330,11 @@ enum ExpectedFormHierarchy {
                 FormHierarchyNode(type: "SectionElement", children: [
                     FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"])
                 ]),
-                FormHierarchyNode(type: "SectionElement", children: [
-                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "235", "label": "Country or region"])
+                FormHierarchyNode(type: "AddressSectionElement", children: [
+                    FormHierarchyNode(type: "SectionElement", children: [
+                        FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "235", "label": "Country or region"])
+                    ]),
+                    FormHierarchyNode(type: "CheckboxElement", properties: ["label": "Billing address is same as shipping"]),
                 ]),
                 FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By continuing to Klarna, you allow StripePaymentSh..."]),
             ])

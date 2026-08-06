@@ -10,6 +10,7 @@ import StripeCoreTestUtils
 @testable @_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
 import XCTest
 
+@MainActor
 class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
 
     var paymentMethods: [STPPaymentMethod]!
@@ -216,23 +217,14 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
     }
 
     private func makeCheckoutSessionIntent(canDetachPaymentMethod: Bool) -> Intent {
-        let json: [String: Any] = [
-            "session_id": "cs_test_123",
-            "livemode": false,
-            "mode": "payment",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
+        let session = CheckoutTestHelpers.makeSession([
             "customer": [
                 "id": "cus_test_123",
                 "payment_methods": [],
                 "can_detach_payment_method": canDetachPaymentMethod,
             ],
-        ]
-
-        guard let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json) else {
-            fatalError("Failed to create checkout session test fixture")
-        }
-        return .checkoutSession(checkoutSession)
+        ])
+        return .checkout(session.makePublicSession())
     }
 
 }

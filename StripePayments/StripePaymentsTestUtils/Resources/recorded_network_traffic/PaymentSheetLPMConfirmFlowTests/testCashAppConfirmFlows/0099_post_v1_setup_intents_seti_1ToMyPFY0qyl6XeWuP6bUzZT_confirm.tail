@@ -1,0 +1,89 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1ToMyPFY0qyl6XeWuP6bUzZT\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=8WtnAYWojbNU2de6WOx1Msm9Aqp-MK-S476CTvRPSgOAiW2sEUgJ73_fYWWdre7nyKV99TFGp8TO54Lw; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=8WtnAYWojbNU2de6WOx1Msm9Aqp-MK-S476CTvRPSgOAiW2sEUgJ73_fYWWdre7nyKV99TFGp8TO54Lw&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-06-24.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=8WtnAYWojbNU2de6WOx1Msm9Aqp-MK-S476CTvRPSgOAiW2sEUgJ73_fYWWdre7nyKV99TFGp8TO54Lw&t=1"}],"include_subdomains":true}
+request-id: req_i1cK7DFjs0br2J
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 2005
+Vary: Origin
+Date: Wed, 01 Jul 2026 12:10:39 GMT
+original-request: req_i1cK7DFjs0br2J
+stripe-version: 2020-08-27
+idempotency-key: a64179d8-7f4c-4f7e-836f-fb6f0168b272
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=seti_1ToMyPFY0qyl6XeWuP6bUzZT_secret_Unyw4EGrJEq3X0AZZtGVllazFVHnofm&confirmation_token=ctoken_1ToMyPFY0qyl6XeWsJQ1CuJa&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "id" : "seti_1ToMyPFY0qyl6XeWuP6bUzZT",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : {
+    "type" : "cashapp_handle_redirect_or_display_qr_code",
+    "cashapp_handle_redirect_or_display_qr_code" : {
+      "qr_code" : {
+        "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9Vbnl3R3ZFeDNYZ1BFS213NzYyOTdIejNBd2lmbW5l0100lZeKPkql.png",
+        "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9Vbnl3R3ZFeDNYZ1BFS213NzYyOTdIejNBd2lmbW5l0100lZeKPkql.svg",
+        "expires_at" : 1782907859
+      },
+      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/qr\/instructions\/CDQaFwoVYWNjdF8xRzZtMXBGWTBxeWw2WGVXKL-HlNIGMga_htdRAig6MJVnCuqwCCoScuwlZJU6NelPwuqT4OeVUP8CG7IzEoJMjUnG-cniNrvc4XGDjTpf1A",
+      "mobile_auth_url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/sa_nonce_UnywtJ3oDaTy3MgWwHXKmmw7IaGYMqq"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "type" : "cashapp",
+    "id" : "pm_1ToMyPFY0qyl6XeWJRFmX8LQ",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1782907837,
+    "allow_redisplay" : "unspecified",
+    "shared_payment_granted_token" : null,
+    "customer" : null,
+    "cashapp" : {
+      "cashtag" : null,
+      "buyer_id" : null
+    },
+    "customer_account" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "cashapp"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1782907837,
+  "client_secret" : "seti_1ToMyPFY0qyl6XeWuP6bUzZT_secret_Unyw4EGrJEq3X0AZZtGVllazFVHnofm",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}

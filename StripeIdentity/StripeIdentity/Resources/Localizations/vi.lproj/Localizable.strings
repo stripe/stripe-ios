@@ -6,6 +6,8 @@
 
 "App Settings" = "Cài đặt Ứng dụng";
 
+"Auto" = "Tự động";
+
 "Back %@ photo successfully uploaded" = "Tải lên ảnh mặt sau %@ thành công";
 
 "Back identity document photo successfully uploaded" = "Tải lên ảnh mặt sau giấy tờ tùy thân thành công";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Hình ảnh bị mờ. Giữ chắc điện thoại và thử lại.";
 
+"Image taken" = "Ảnh được chụp";
+
 "Individual CPF" = "CPF cá nhân";
 
 "Invalid document" = "Tài liệu không hợp lệ";
@@ -85,6 +89,8 @@
 "Loading" = "Đang tải";
 
 "Make sure you're in a well lit space." = "Hãy đảm bảo bạn đang ở trong không gian đủ ánh sáng.";
+
+"Manual" = "Thủ công";
 
 "Move closer" = "Đến gần hơn";
 

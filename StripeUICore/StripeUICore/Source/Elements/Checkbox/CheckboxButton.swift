@@ -245,15 +245,11 @@ import UIKit
         let linkRotors = textView.accessibilityCustomRotors?.filter({ $0.systemRotorType == .link }) ?? []
         accessibilityCustomRotors = linkRotors
 
-        // iOS 13 automatically includes a hint if there is a link rotor, but
-        // iOS 14+ do not so we must add one ourselves.
-        if #available(iOS 14, *) {
-            var hints = [descriptionLabel.text]
-            if !linkRotors.isEmpty {
-                hints.append(.Localized.useRotorToAccessLinks)
-            }
-            accessibilityHint = hints.compactMap { $0 }.joined(separator: ", ")
+        var hints = [descriptionLabel.text]
+        if !linkRotors.isEmpty {
+            hints.append(.Localized.useRotorToAccessLinks)
         }
+        accessibilityHint = hints.compactMap { $0 }.joined(separator: ", ")
     }
 
     func setUserInteraction(isUserInteractionEnabled: Bool) {

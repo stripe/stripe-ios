@@ -6,6 +6,8 @@
 
 "App Settings" = "Programos nustatymai";
 
+"Auto" = "Automatiškai";
+
 "Back %@ photo successfully uploaded" = "%@ galinės dalies nuotrauka sėkmingai įkelta";
 
 "Back identity document photo successfully uploaded" = "Asmens dokumento galinės dalies nuotrauka sėkmingai įkelta";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Vaizdas neryškus. Stabiliai laikykite telefoną ir pabandykite dar kartą.";
 
+"Image taken" = "Nuotrauka užfiksuota";
+
 "Individual CPF" = "Asmens CPF";
 
 "Invalid document" = "Neleistinas dokumentas";
@@ -85,6 +89,8 @@
 "Loading" = "Įkeliama";
 
 "Make sure you're in a well lit space." = "Įsitikinkite, kad esate gerai apšviestoje erdvėje.";
+
+"Manual" = "Rankiniu būdu";
 
 "Move closer" = "Pastumkite arčiau";
 

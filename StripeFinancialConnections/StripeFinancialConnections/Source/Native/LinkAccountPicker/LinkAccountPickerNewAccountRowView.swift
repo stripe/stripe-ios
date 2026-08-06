@@ -117,32 +117,30 @@ private struct LinkAccountPickerNewAccountRowViewUIViewRepresentable: UIViewRepr
 
 struct LinkAccountPickerNewAccountRowView_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOS 14.0, *) {
-            ScrollView {
-                VStack(spacing: 10) {
-                    LinkAccountPickerNewAccountRowViewUIViewRepresentable(
-                        title: "New bank account",
-                        imageUrl: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--add-purple-3x.png",
-                        appearance: .stripe
-                    )
-                        .frame(height: 88)
+        ScrollView {
+            VStack(spacing: 10) {
+                LinkAccountPickerNewAccountRowViewUIViewRepresentable(
+                    title: "New bank account",
+                    imageUrl: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--add-purple-3x.png",
+                    appearance: .stripe
+                )
+                    .frame(height: 88)
 
-                    LinkAccountPickerNewAccountRowViewUIViewRepresentable(
-                        title: "New bank account",
-                        imageUrl: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--add-purple-3x.png",
-                        appearance: .link
-                    )
-                        .frame(height: 88)
+                LinkAccountPickerNewAccountRowViewUIViewRepresentable(
+                    title: "New bank account",
+                    imageUrl: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--add-purple-3x.png",
+                    appearance: .link
+                )
+                    .frame(height: 88)
 
-                    LinkAccountPickerNewAccountRowViewUIViewRepresentable(
-                        title: "New bank account",
-                        imageUrl: nil,
-                        appearance: .stripe
-                    )
-                        .frame(height: 88)
-                }
-                .padding()
+                LinkAccountPickerNewAccountRowViewUIViewRepresentable(
+                    title: "New bank account",
+                    imageUrl: nil,
+                    appearance: .stripe
+                )
+                    .frame(height: 88)
             }
+            .padding()
         }
     }
 }

@@ -25,7 +25,7 @@ extension LinkVerificationView {
             logoView.translatesAutoresizingMaskIntoConstraints = false
             logoView.isAccessibilityElement = true
             logoView.accessibilityTraits = .header
-            logoView.accessibilityLabel = brand.displayName
+            logoView.accessibilityLabel = brand.accessibilityDisplayName
             return logoView
         }()
 

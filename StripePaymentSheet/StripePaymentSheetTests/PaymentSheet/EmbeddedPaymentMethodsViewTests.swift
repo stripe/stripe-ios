@@ -152,6 +152,28 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
         XCTAssertEqual(embeddedView.mandateText?.string, expectedPayPal)
     }
 
+    func testTappingPaymentMethodClearsError() {
+        let embeddedView = EmbeddedPaymentMethodsView(
+            paymentMethodTypes: [.stripe(.card)],
+            shouldShowApplePay: false,
+            shouldShowLink: false
+        )
+        embeddedView.autosizeHeight(width: 300)
+        let initialHeight = embeddedView.bounds.height
+
+        embeddedView.setError(
+            NSError(domain: "test", code: 1, userInfo: [NSLocalizedDescriptionKey: "Error"]),
+            animated: false
+        )
+        embeddedView.autosizeHeight(width: 300)
+        XCTAssertNotNil(embeddedView.errorLabel.text)
+        XCTAssertGreaterThan(embeddedView.bounds.height, initialHeight)
+
+        embeddedView.didTap(rowButton: embeddedView.getRowButton(accessibilityIdentifier: "Card"))
+        embeddedView.autosizeHeight(width: 300)
+        XCTAssertNil(embeddedView.errorLabel.text)
+        XCTAssertEqual(embeddedView.bounds.height, initialHeight)
+    }
 }
 
 private class MockEmbeddedPaymentMethodsViewDelegate: EmbeddedPaymentMethodsViewDelegate {
@@ -169,6 +191,8 @@ private class MockEmbeddedPaymentMethodsViewDelegate: EmbeddedPaymentMethodsView
         calls.append(.didUpdateHeight)
     }
 
+    func embeddedPaymentMethodsViewWillSelect(_ rowButtonType: RowButtonType) {}
+
     func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
         calls.append(.didTapPaymentMethodRow)
     }
@@ -180,7 +204,7 @@ private class MockEmbeddedPaymentMethodsViewDelegate: EmbeddedPaymentMethodsView
     func embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
     }
 
-    func shouldAnimateOnPress(_ paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool {
+    func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool {
         return false
     }
 }

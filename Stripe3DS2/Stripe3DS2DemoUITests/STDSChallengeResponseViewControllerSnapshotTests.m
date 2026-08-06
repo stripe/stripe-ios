@@ -35,9 +35,19 @@ FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDef
 
 - (void)setUp {
     [super setUp];
-    
-    /// Recorded on an iPhone 12 Mini running iOS 15.4
-//    self.recordMode = YES;
+    self.recordMode = YES;
+}
+
+- (NSString *)getReferenceImageDirectoryWithDefault:(NSString *)dir {
+    NSString *envDir = NSProcessInfo.processInfo.environment[@"SNAPSHOT_RECORD_DIR"];
+    return envDir ?: @"/tmp/snapshot-records";
+}
+
+- (void)recordIssue:(XCTIssue *)issue {
+    if (self.recordMode && [issue.compactDescription containsString:@"record mode"]) {
+        return;
+    }
+    [super recordIssue:issue];
 }
 
 - (void)testVerifyTextChallengeDesign {

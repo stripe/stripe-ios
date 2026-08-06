@@ -94,11 +94,9 @@ class FCLiteSecureAuthFlowViewController: UIViewController {
         authSession?.presentationContextProvider = self
         authSession?.prefersEphemeralWebBrowserSession = true
 
-        if #available(iOS 13.4, *) {
-            if authSession?.canStart == false {
-                completion(.failure(FCLiteError.authSessionCannotStart))
-                return
-            }
+        if authSession?.canStart == false {
+            completion(.failure(FCLiteError.authSessionCannotStart))
+            return
         }
 
         // Disable animations to control the presentation of ASWebAuthenticationSession.

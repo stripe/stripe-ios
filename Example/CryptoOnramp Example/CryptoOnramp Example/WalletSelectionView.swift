@@ -22,11 +22,22 @@ struct WalletSelectionView: View {
     let onCompleted: (Wallet) -> Void
 
     @State private var wallets: [Wallet] = []
-    @State private var errorMessage: String?
     @State private var showAttachWalletSheet = false
     @State private var selectedWallet: Wallet?
+    @State private var alert: Alert?
+    @State private var walletOwnershipVerificationSession: WalletOwnershipVerificationSession?
 
     @Environment(\.isLoading) private var isLoading
+
+    private var isPresentingAlert: Binding<Bool> {
+        Binding(get: {
+            alert != nil
+        }, set: { newValue in
+            if !newValue {
+                alert = nil
+            }
+        })
+    }
 
     private var title: LocalizedStringKey {
         wallets.isEmpty ?  "Add a crypto wallet" : "Select a wallet"
@@ -69,14 +80,20 @@ struct WalletSelectionView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                if let errorMessage {
-                    ErrorMessageView(message: errorMessage)
-                }
-
                 if !wallets.isEmpty {
                     VStack(spacing: 8) {
                         ForEach(wallets) { wallet in
-                            makeWalletButton(for: wallet)
+                            WalletSelectionRowView(
+                                wallet: wallet,
+                                isSelected: selectedWallet == wallet,
+                                isLoading: isLoading.wrappedValue,
+                                onSelect: {
+                                    selectedWallet = wallet
+                                },
+                                onVerifyWalletOwnership: {
+                                    startWalletOwnershipVerification(for: wallet)
+                                }
+                            )
                         }
                     }
 
@@ -113,51 +130,52 @@ struct WalletSelectionView: View {
                 }
             )
         }
+        .sheet(item: $walletOwnershipVerificationSession) { session in
+            WalletOwnershipVerificationSheet(
+                session: session,
+                coordinator: coordinator
+            ) {
+                refreshWallets(
+                    selectingWalletWithAddress: session.challenge.walletAddress,
+                    network: session.challenge.network
+                )
+            }
+        }
         .onAppear {
             refreshWallets()
         }
+        .alert(
+            alert?.title ?? "Error",
+            isPresented: isPresentingAlert,
+            presenting: alert,
+            actions: { _ in
+                Button("OK") {}
+            }, message: { alert in
+                Text(alert.message)
+            }
+        )
     }
 
     // MARK: - WalletSelectionView
 
-    @ViewBuilder
-    private func makeWalletButton(for wallet: Wallet) -> some View {
-        Button {
-            selectedWallet = wallet
-        } label: {
-            HStack(alignment: .center) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(wallet.network.localizedCapitalized)
-                        .font(.body)
-                        .foregroundColor(.primary)
-
-                    Text(wallet.walletAddress)
-                        .font(.caption2.monospaced())
-                        .foregroundColor(.secondary)
-                }
-
-                Spacer()
-
-                if selectedWallet == wallet {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(.tint)
-                } else {
-                    Image(systemName: "circle")
-                        .foregroundColor(.secondary)
-                }
-            }
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(selectedWallet == wallet ? Color.accentColor.opacity(0.12) : Color(.systemGroupedBackground))
-            )
+    private func startWalletOwnershipVerification(for wallet: Wallet) {
+        guard let context = WalletOwnershipVerificationContext(wallet: wallet) else {
+            alert = WalletOwnershipVerification.unavailableAlert
+            return
         }
-        .buttonStyle(.plain)
+
+        WalletOwnershipVerification.requestChallenge(
+            context: context,
+            coordinator: coordinator,
+            isLoading: isLoading,
+            alert: $alert
+        ) { session in
+            walletOwnershipVerificationSession = session
+        }
     }
 
     private func refreshWallets(selectingWalletWithAddress address: String? = nil, network: CryptoNetwork? = nil) {
         isLoading.wrappedValue = true
-        errorMessage = nil
         Task {
             do {
                 let response = try await APIClient.shared.fetchCustomerWallets()
@@ -178,7 +196,7 @@ struct WalletSelectionView: View {
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    errorMessage = "Failed to fetch wallets: \(error.localizedDescription)"
+                    alert = Alert(title: "Failed to fetch wallets", message: error.localizedDescription)
                 }
             }
         }

@@ -1,7 +1,107 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+
+### CryptoOnramp (Alpha)
+* [Added] Added `CryptoOnrampCoordinator.deleteWalletAddress(walletId:)` to delete a registered wallet address.
+
+## 26.5.0 2026-08-03
+### CryptoOnramp (Alpha)
+* [Added] Added support for registering wallet addresses on the Tempo network.
+
+### PaymentSheet
+* [Added] Added `billingDetailsCollectionConfiguration` to `LinkConfiguration`, allowing `LinkControllerPreview` consumers to configure billing details collection in the Link sheet (private preview).
+* [Added] `LinkController` now supports appearance customization via `LinkAppearance` (private preview).
+
+## 26.4.1 2026-07-23
+### Payments
+* [Fixed] Fixed an issue where some Alipay payments incorrectly reported failure after succeeding.
+
+### PaymentSheet
+* [Fixed] Fixed SwiftUI `EmbeddedPaymentElement` presentation in multi-scene apps.
+* [Fixed] FlowController now defaults to Link when it was the last selected payment option even when it is displayed as a wallet button instead of in the list of payment methods.
+
+## 26.4.0 2026-07-20
+### StripeCore
+* [Added] `STPAPIClient.betas` is now public, allowing merchants to opt in to beta features that require a preview flag on the `Stripe-Version` header.
+
+### StripeConnect
+* [Fixed] Fixed `AccountOnboardingControllerDelegate.accountOnboardingDidExit(_:)` not being called on the first automatic dismissal after onboarding completion.
+### PaymentSheet
+* [Changed] Refactored `LinkController` SetupIntent confirmation into a separate `confirmSetupIntent` step (private preview).
+
+## 26.3.0 2026-07-13
+### CryptoOnramp (Alpha)
+* [Added] Added wallet ownership verification APIs to `CryptoOnrampCoordinator`: `getWalletOwnershipChallenge(walletAddress:network:)` and `submitWalletOwnershipSignature(challengeId:signature:)`.
+* [Added] Added `WalletOwnershipChallenge` and `CryptoConsumerWallet`, including `CryptoConsumerWallet.verifiedOwnership`, for wallet ownership verification responses.
+* [Added] Added rich Crypto Onramp API error mapping types: `WalletOwnershipChallengeExpiredError`, `InvalidWalletOwnershipChallengeError`, `InvalidWalletOwnershipSignatureError`, `WalletNotFoundError`, and `UnsupportedNetworkError`.
+* [Changed] Renamed `AppAttestationAPIError` to `AppAttestationError` and `UncategorizedAPIError` to `UncategorizedError`.
+* [Fixed] Automatically set `PKPaymentRequest.merchantCategoryCode` so unsupported payment methods are hidden from Apple Pay.
+
+### PaymentSheet
+* [Added] Added standalone Link wallet APIs in private preview via `LinkController`.
+
+### StripeConnect
+* [Changed] `PaymentsViewController`, `PaymentsViewControllerDelegate`, `PayoutsViewController`, `PayoutsViewControllerDelegate`, and `EmbeddedComponentManager.PaymentsListDefaultFiltersOptions` are now part of the public API and no longer require `@_spi(PreviewConnect)` to access.
+
+## 26.2.0 2026-07-06
+### CryptoOnramp (Alpha)
+* [Added] Added `AppAttestationUnavailableError`, a rich `StripeCryptoOnrampError` surfaced when configuration fails because app attestation is missing or native Link is unavailable.
+* [Removed] Removed public diagnostic-only properties from rich Crypto Onramp errors: `sdkVersions` from `StripeCryptoOnrampError` and concrete error types; `operation`, `appIdentifier`, and `mode` from `StripeCryptoOnrampAPIError`, `AppAttestationAPIError`, and `UncategorizedAPIError`; and `operation`, `appIdentifier`, `mode`, and `sdkVersions` from `APIErrorContext`. These diagnostics are still included in `developerMessage`.
+* [Changed] Renamed the public API-backed error context property from `context` to `apiErrorContext`.
+* [Changed] Removed public initializers from `AppAttestationAPIError` and `UncategorizedAPIError`, and updated the public `APIErrorContext` initializer to match its remaining API-backed fields.
+
+## 26.1.0 2026-06-29
+### PaymentSheet
+* [Changed] Disables `allowsNumberPadPopover` on text fields to opt-out of the number pad popover for iOS26+
+* [Fixed] Fixes dyld crash with LinkOpeningTextView when integrating via Swift Package Manager
+
+### CustomerSheet
+* [Fixed] Fixed an issue where a nil payment option was returned if the sheet was dismissed while loading.
+
+### CryptoOnramp (Alpha)
+* [Changed] Renamed `CryptoOnrampCoordinator.presentCRSCARFDeclaration(from:)` to `presentUserAttestation(from:)`, and renamed `CRSCARFDeclarationResult` to `UserAttestationResult`.
+
+## 26.0.0 2026-06-12
+### All
+* [Changed] The minimum iOS version is now 15.0, as Xcode 27 no longer supports building for iOS 13 or iOS 14. If you'd like to deploy for iOS versions below iOS 15, please use Stripe SDK 25.17.0.
+
+### AddressElement
+* [Changed] Added IN, JP, MY, NZ, PH, SG to `AddressViewController.Configuration.autocompleteCountries` list. 
+
+## 25.17.0 2026-06-08
+
+### Identity
+* [Added] Added a manual capture mode for identity document verification, allowing users to tap "Take Photo" instead of relying on automatic capture. ([#6379](https://github.com/stripe/stripe-ios/pull/6379))
+
+### PaymentSheet
+* [Fixed] Fixed an NSRangeException crash in address autocomplete search results.
+* [Changed] Renamed `LinkPaymentController` to `InstantBankPaymentsController`.
+* [Changed] Link bank account display strings now include the last 4 digits in `LinkController.PaymentMethodPreview.sublabel` and `PaymentSheet.FlowController.PaymentOptionDisplayData.labels.sublabel`, matching the existing card behavior.
+* [Fixed] The Link verification flow no longer shows an indefinite loading state when encountering rate limit errors.
+* [Fixed] Fixed removal of shimmering effect for horizontal view cells
+
+### CryptoOnramp (Alpha)
+* [Added] Added `StripeCryptoOnrampError` for rich Crypto Onramp errors and `StripeCryptoOnrampAPIError` for API-backed Crypto Onramp errors, with separate user-facing and developer-facing messages, stable error codes, documentation URLs, and underlying errors.
+* [Added] Added `AppAttestationAPIError`, `UncategorizedAPIError`, and `APIErrorContext` to expose inspectable backend error details such as reason, operation, mode, request ID, API type, API message, and SDK version.
+* [Changed] `CryptoOnrampCoordinator` APIs now map Stripe API failures to the new API-backed error types, including a specific `AppAttestationAPIError` for app attestation failures, while preserving existing local `CryptoOnrampCoordinator.Error` behavior for now, with plans to migrate these existing errors to the new protocol-based format.
+* [Changed] Updated EU compliance identifier APIs to match the latest backend contract, including CRS/CARF TIN requirements and `SubmitIdentifiersResult.completed`.
+* [Added] Added known compliance identifier types for Spain NIF (`es_nif`) and France NIR (`fr_nir`).
+
+
+## 25.16.0 2026-05-26
+### PaymentSheet
+* [Fixed] Fixed `LinkAppearance.PrimaryButtonConfiguration` styling so unspecified custom height and corner radius values use Link defaults.
+* [Fixed] Fixed Japan address form missing the city field. ([#6506](https://github.com/stripe/stripe-ios/issues/6506))
+* [Added] Added support for Card Art for saved payment methods when using CustomerSessions
+* [Added] `PaymentSheet.FlowController.PaymentOptionDisplayData.image` and `EmbeddedPaymentElement.PaymentOptionDisplayData` may now return card art for saved card. Integrators displaying this image in very compact layouts may wish to revisit sizing to best accommodate richer payment method visuals.
+
+### Address Element
+* [Fixed] Fixed Japan address form missing the city field. ([#6506](https://github.com/stripe/stripe-ios/issues/6506))
+
+## 25.15.0 2026-05-18
+* Added support for [Onelink](https://support.stripe.com/questions/what-is-onelink).
 
 ## 25.14.0 2026-05-11
 ### PaymentSheet

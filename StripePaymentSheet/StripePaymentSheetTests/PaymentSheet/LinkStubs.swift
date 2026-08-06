@@ -99,7 +99,7 @@ extension LinkStubs {
     }
 
     static func consumerSession(supportedPaymentDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> = [ParsedEnum(.card), ParsedEnum(.bankAccount), ParsedEnum(rawValue: "CRYPTO")]) -> ConsumerSession {
-        return ConsumerSession(
+        return ConsumerSession.make(
             clientSecret: "client_secret",
             emailAddress: "user@example.com",
             redactedFormattedPhoneNumber: "(***) *** **55",

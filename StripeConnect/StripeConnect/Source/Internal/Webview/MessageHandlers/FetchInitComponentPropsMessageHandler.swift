@@ -8,7 +8,6 @@
 import Foundation
 
 // Fetches initial property values specific to this component.
-@available(iOS 15, *)
 class FetchInitComponentPropsMessageHandler<Props: Encodable>: ScriptMessageHandlerWithReply<VoidPayload, Props> {
     init(_ fetchInitProps: @escaping () async throws -> Props,
          registerSupplementalFunctions: @escaping (SupplementalFunctions) -> Void

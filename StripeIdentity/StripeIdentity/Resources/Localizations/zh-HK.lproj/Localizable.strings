@@ -6,6 +6,8 @@
 
 "App Settings" = "應用設定";
 
+"Auto" = "自動";
+
 "Back %@ photo successfully uploaded" = "%@背面照片已成功上載";
 
 "Back identity document photo successfully uploaded" = "身份證明文件背面照片上載成功";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "影像模糊。請拿穩手機並重試。";
 
+"Image taken" = "相片已拍攝";
+
 "Individual CPF" = "個人 CPF";
 
 "Invalid document" = "文件無效";
@@ -85,6 +89,8 @@
 "Loading" = "正在載入";
 
 "Make sure you're in a well lit space." = "確保光線充足。";
+
+"Manual" = "手動";
 
 "Move closer" = "請靠近一點";
 

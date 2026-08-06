@@ -43,8 +43,8 @@ final class RowButtonFloating: RowButton {
         return 16
     }
 
-    override func updateSelectedState() {
-        super.updateSelectedState()
+    override func updateSelectedState(_ isSelected: Bool, willDisplayForm: Bool) {
+        super.updateSelectedState(isSelected, willDisplayForm: willDisplayForm)
         selectableRectangle.isSelected = isSelected
     }
 
