@@ -39,7 +39,6 @@ pipelines:
       ui-tests-paymentsheet:
         parallel: 4
       ui-tests-connect: {}
-      ui-tests-crypto: {}
       integration-all: {}
       lokalise-upload: {}
 
@@ -57,7 +56,6 @@ pipelines:
       ui-tests-paymentsheet:
         parallel: 4
       ui-tests-connect: {}
-      ui-tests-crypto: {}
       legacy-tests-15: {}
       legacy-tests-16: {}
       pod-lint-tests: {}
