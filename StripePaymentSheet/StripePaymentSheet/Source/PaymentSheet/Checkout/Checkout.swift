@@ -167,20 +167,20 @@ public final class Checkout: ObservableObject {
             )
 
             // PE
-            async let paymentElement = PaymentElement(checkout: self)
+            let peTask = Task { try await PaymentElement(checkout: self) }
 
             // CSE
-            async let currencySelectorElement = configuration.adaptivePricing.allowed ?
-                CurrencySelectorElement(
+            let cseTask = Task {
+                configuration.adaptivePricing.allowed ? await CurrencySelectorElement(
                     sessionSource: sessionSource,
                     configuration: configuration.currencySelectorElement,
                     delegate: self
-                )
-            : nil
+                ) : nil
+            }
 
             // Wait for all of the initializations to finish.
-            self.paymentElement = try await paymentElement
-            self.currencySelectorElement = await currencySelectorElement
+            self.paymentElement = try await peTask.value
+            self.currencySelectorElement = await cseTask.value
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
