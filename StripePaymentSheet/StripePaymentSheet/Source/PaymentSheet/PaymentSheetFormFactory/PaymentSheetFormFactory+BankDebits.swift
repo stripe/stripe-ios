@@ -207,5 +207,6 @@ private enum BankDropdown {
             }
             return (name, value)
         }
-        .sorted { $0.value < $1.value }
+        // FPX requires banks to be displayed in ascending alphabetical order by name.
+        .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
 }

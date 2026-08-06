@@ -200,7 +200,7 @@ enum ExpectedFormHierarchy {
         static var paymentIntent: FormHierarchyNode {
             FormHierarchyNode(type: "FormElement", children: [
                 FormHierarchyNode(type: "SectionElement", children: [
-                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "18", "label": "FPX Bank"])
+                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "25", "label": "FPX Bank"])
                 ]),
             ])
         }
