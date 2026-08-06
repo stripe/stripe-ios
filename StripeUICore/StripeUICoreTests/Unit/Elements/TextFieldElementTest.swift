@@ -52,7 +52,7 @@ class TextFieldElementTest: XCTestCase {
 
     func testTextAlignmentFollowsInterfaceDirectionWithoutChangingValue() {
         // Given
-        let element = TextFieldElement(configuration: Configuration(defaultValue: "user@example.com"))
+        let element = TextFieldElement(configuration: Configuration(defaultValue: "a@example.com"))
 
         // When
         element.view.semanticContentAttribute = .forceRightToLeft
@@ -61,7 +61,7 @@ class TextFieldElementTest: XCTestCase {
 
         // Then
         XCTAssertEqual(element.textFieldView.textField.textAlignment, .right)
-        XCTAssertEqual(element.textFieldView.text, "user@example.com")
+        XCTAssertEqual(element.textFieldView.text, "a@example.com")
 
         // When
         element.view.semanticContentAttribute = .forceLeftToRight
@@ -70,7 +70,7 @@ class TextFieldElementTest: XCTestCase {
 
         // Then
         XCTAssertEqual(element.textFieldView.textField.textAlignment, .left)
-        XCTAssertEqual(element.textFieldView.text, "user@example.com")
+        XCTAssertEqual(element.textFieldView.text, "a@example.com")
     }
 
     func testOneTimeCodePreservesLeftToRightDigitOrderInRightToLeftInterface() throws {
