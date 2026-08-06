@@ -60,6 +60,8 @@ import UIKit
     }()
 
     var cbcIndicatorSizeConstraint: NSLayoutConstraint?
+    private var imageLeadingConstraint: NSLayoutConstraint?
+    private var cbcIndicatorTrailingConstraint: NSLayoutConstraint?
 
     /// Card brand to display.
     var cardBrandState: STPCBCController.BrandState = .unknown {
@@ -89,6 +91,13 @@ import UIKit
 
     @_spi(STP) public override var intrinsicContentSize: CGSize {
         return size(for: Self.targetIconSize)
+    }
+
+    @_spi(STP) public override func layoutSubviews() {
+        let isRightToLeft = effectiveUserInterfaceLayoutDirection == .rightToLeft
+        imageLeadingConstraint?.constant = isRightToLeft ? centeringPadding.right : centeringPadding.left
+        cbcIndicatorTrailingConstraint?.constant = isRightToLeft ? -centeringPadding.left : -centeringPadding.right
+        super.layoutSubviews()
     }
 
     @_spi(STP) public func size(for targetSize: CGSize) -> CGSize {
@@ -144,6 +153,8 @@ import UIKit
         cbcIndicatorView.isHidden = true
         let cbcIndicatorSizeConstraint = cbcIndicatorView.widthAnchor.constraint(equalToConstant: 0)
         cbcIndicatorSizeConstraint.priority = .required
+        let imageLeadingConstraint = imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor)
+        let cbcIndicatorTrailingConstraint = cbcIndicatorView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
 
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: centeringPadding.top),
@@ -151,18 +162,12 @@ import UIKit
                 equalTo: imageView.bottomAnchor,
                 constant: centeringPadding.bottom
             ),
-            imageView.leftAnchor.constraint(
-                equalTo: self.leftAnchor,
-                constant: centeringPadding.left
-            ),
-            imageView.rightAnchor.constraint(
-                equalTo: cbcIndicatorView.leftAnchor,
+            imageLeadingConstraint,
+            imageView.trailingAnchor.constraint(
+                equalTo: cbcIndicatorView.leadingAnchor,
                 constant: centeringPadding.right
             ),
-            cbcIndicatorView.rightAnchor.constraint(
-                equalTo: self.rightAnchor,
-                constant: centeringPadding.right
-            ),
+            cbcIndicatorTrailingConstraint,
             cbcIndicatorView.centerYAnchor.constraint(
                 equalTo: self.centerYAnchor
             ),
@@ -173,6 +178,8 @@ import UIKit
         ])
 
         self.cbcIndicatorSizeConstraint = cbcIndicatorSizeConstraint
+        self.imageLeadingConstraint = imageLeadingConstraint
+        self.cbcIndicatorTrailingConstraint = cbcIndicatorTrailingConstraint
         updateIcon()
     }
 

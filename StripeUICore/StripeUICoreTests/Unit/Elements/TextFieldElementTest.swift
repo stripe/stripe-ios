@@ -6,6 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import StripeCoreTestUtils
 @testable @_spi(STP) import StripeUICore
 import UIKit
 import XCTest
@@ -47,6 +48,45 @@ class TextFieldElementTest: XCTestCase {
         let element = TextFieldElement(configuration: Configuration(defaultValue: "default value"))
         XCTAssertEqual(element.textFieldView.text, "default value")
         XCTAssertEqual(element.text, "default value")
+    }
+
+    func testTextAlignmentFollowsInterfaceDirectionWithoutChangingValue() {
+        // Given
+        let element = TextFieldElement(configuration: Configuration(defaultValue: "user@example.com"))
+
+        // When
+        element.view.semanticContentAttribute = .forceRightToLeft
+        element.view.setNeedsLayout()
+        element.view.layoutIfNeeded()
+
+        // Then
+        XCTAssertEqual(element.textFieldView.textField.textAlignment, .right)
+        XCTAssertEqual(element.textFieldView.text, "user@example.com")
+
+        // When
+        element.view.semanticContentAttribute = .forceLeftToRight
+        element.view.setNeedsLayout()
+        element.view.layoutIfNeeded()
+
+        // Then
+        XCTAssertEqual(element.textFieldView.textField.textAlignment, .left)
+        XCTAssertEqual(element.textFieldView.text, "user@example.com")
+    }
+
+    func testOneTimeCodePreservesLeftToRightDigitOrderInRightToLeftInterface() throws {
+        // Given
+        let field = OneTimeCodeTextField()
+
+        // When
+        field.forceRightToLeftLayout()
+        field.setNeedsLayout()
+        field.layoutIfNeeded()
+
+        // Then
+        let digitStack = try XCTUnwrap(field.subviews.compactMap { $0 as? UIStackView }.first)
+        XCTAssertEqual(field.effectiveUserInterfaceLayoutDirection, .rightToLeft)
+        XCTAssertEqual(digitStack.semanticContentAttribute, .forceLeftToRight)
+        XCTAssertEqual(digitStack.effectiveUserInterfaceLayoutDirection, .leftToRight)
     }
 
     func testInvalidDefaultValueIsSanitized() {

@@ -56,4 +56,18 @@ class STPPaymentCardTextFieldSnapshotTests: STPSnapshotTestCase {
         STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
     }
 
+    func testCardBrandViewRightToLeftCBCIndicatorFollowsLogo() throws {
+        let sut = CardBrandView(centerHorizontally: true)
+        sut.setCardBrand(.visa)
+        sut.isShowingCBCIndicator = true
+        sut.forceRightToLeftLayout()
+        sut.frame = CGRect(origin: .zero, size: sut.intrinsicContentSize)
+        sut.layoutIfNeeded()
+
+        let logo = try XCTUnwrap(sut.subviews.compactMap { $0 as? UIImageView }.first { $0 !== sut.cbcIndicatorView })
+        XCTAssertLessThan(sut.cbcIndicatorView.frame.midX, logo.frame.midX)
+        XCTAssertEqual(sut.cbcIndicatorView.frame.minX, 3, accuracy: 0.5)
+        STPSnapshotVerifyView(sut)
+    }
+
 }

@@ -119,4 +119,11 @@ import UIKit
         let viewFrameInWindow = convert(bounds, to: window)
         return window.bounds.contains(viewFrameInWindow)
     }
+
+    /// `.right`/`.left` equivalent of `.natural` for the view's effective layout direction.
+    /// Use this instead of `.natural` when a text field's value (e.g. an email or card number) must stay
+    /// left-to-right while still aligning to the leading edge of a right-to-left interface.
+    var leadingTextAlignment: NSTextAlignment {
+        effectiveUserInterfaceLayoutDirection == .rightToLeft ? .right : .left
+    }
 }

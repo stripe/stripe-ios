@@ -147,6 +147,11 @@ class TextFieldView: UIView {
 
     // MARK: - Overrides
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateTextAlignment()
+    }
+
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {
             return nil
@@ -163,6 +168,12 @@ class TextFieldView: UIView {
     }
 
     // MARK: - Private methods
+
+    private func updateTextAlignment() {
+        // Align short form values with the interface while leaving their writing direction intact.
+        // This keeps values such as emails and card numbers readable from left to right in RTL UI.
+        textField.textAlignment = leadingTextAlignment
+    }
 
     fileprivate func installConstraints() {
         if viewModel.editConfiguration == .readOnly {

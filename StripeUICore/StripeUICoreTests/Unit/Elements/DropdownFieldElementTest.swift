@@ -23,6 +23,27 @@ final class DropdownFieldElementTest: XCTestCase {
         XCTAssertEqual(element.selectedIndex, 3)
     }
 
+    func testTextAlignmentFollowsInterfaceDirection() {
+        // Given
+        let element = DropdownFieldElement(items: items, defaultIndex: 0, label: "Label")
+
+        // When
+        element.view.semanticContentAttribute = .forceRightToLeft
+        element.view.setNeedsLayout()
+        element.view.layoutIfNeeded()
+
+        // Then
+        XCTAssertEqual(element.pickerFieldView.textField.textAlignment, .right)
+
+        // When
+        element.view.semanticContentAttribute = .forceLeftToRight
+        element.view.setNeedsLayout()
+        element.view.layoutIfNeeded()
+
+        // Then
+        XCTAssertEqual(element.pickerFieldView.textField.textAlignment, .left)
+    }
+
     func testDefaultExceedsMax() {
         let element = DropdownFieldElement(items: items, defaultIndex: items.count, label: "")
         XCTAssertEqual(element.selectedIndex, 0)

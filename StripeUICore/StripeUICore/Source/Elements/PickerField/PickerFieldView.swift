@@ -26,7 +26,7 @@ final class PickerFieldView: UIView {
 
     // MARK: - Views
     private lazy var toolbar = DoneButtonToolbar(delegate: self, showCancelButton: true, theme: theme)
-    private lazy var textField: PickerTextField = {
+    private(set) lazy var textField: PickerTextField = {
         let textField = PickerTextField()
         // Input views are not supported on Catalyst (and are non-optimal on visionOS)
 #if !targetEnvironment(macCatalyst) && !canImport(visionOS)
@@ -154,7 +154,12 @@ final class PickerFieldView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        updateTextAlignment()
         floatingPlaceholderTextFieldView?.updatePlaceholder(animated: false)
+    }
+
+    private func updateTextAlignment() {
+        textField.textAlignment = leadingTextAlignment
     }
 
     override var isUserInteractionEnabled: Bool {
