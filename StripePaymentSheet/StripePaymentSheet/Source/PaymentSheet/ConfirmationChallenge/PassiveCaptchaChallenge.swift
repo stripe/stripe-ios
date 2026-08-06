@@ -54,8 +54,6 @@ actor PassiveCaptchaChallenge {
     let passiveCaptchaData: PassiveCaptchaData
     private let hcaptchaFactory: HCaptchaFactory
     private var tokenTask: Task<String, Error>?
-    /// Stored so it can be cancelled when this actor is deallocated.
-    private var prefetchTask: Task<Void, Never>?
     var isTokenReady: Bool { // used for the attach analytic to indicate whether it's blocking checkout
         return hasFetchedToken && !hasSessionExpired
     }
@@ -73,18 +71,17 @@ actor PassiveCaptchaChallenge {
     init(passiveCaptchaData: PassiveCaptchaData, hcaptchaFactory: HCaptchaFactory) {
         self.passiveCaptchaData = passiveCaptchaData
         self.hcaptchaFactory = hcaptchaFactory
-        // Use weak self so this task does not prevent the actor from being deallocated.
-        // Store the task so it can be cancelled in deinit if needed.
-        let task = Task { [weak self] in
+        // Use [weak self] so this task does not prevent the actor from being deallocated.
+        // When the actor is deallocated, deinit cancels tokenTask, which causes this task
+        // to stop (fetchToken throws CancellationError, absorbed by try?).
+        Task { [weak self] in
             _ = try? await self?.fetchToken()
         }
-        self.prefetchTask = task
     }
 
     deinit {
-        // Cancel outstanding tasks so that lingering HCaptcha WebViews do not
-        // continue running (and logging analytics) after this challenge is released.
-        prefetchTask?.cancel()
+        // Cancel the in-flight token task so any lingering HCaptcha WebView is stopped
+        // and does not log analytics after this challenge is released.
         tokenTask?.cancel()
     }
 
