@@ -70,8 +70,8 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, false)
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_complete_payment_newpm_success" }.last?["set_as_default"] as? Bool, true)
 
-        // Reload the sheet
-        app.buttons["Reload"].waitForExistenceAndTap()
+        // Reload, retrying until the backend has propagated the new default PM
+        reloadAndWaitForDefaultPaymentMethod(app, settings: settings, analyticsLog: { self.analyticsLog })
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         // Check that the card ending in 4242 is selected

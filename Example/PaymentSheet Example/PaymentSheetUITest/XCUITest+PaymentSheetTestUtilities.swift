@@ -54,6 +54,28 @@ extension XCTestCase {
         )
         waitForExpectations(timeout: 10, handler: nil)
     }
+    /// Reloads the playground repeatedly until the latest `mc_load_succeeded` analytics event
+    /// reports `has_default_payment_method == true`. Fails the test if this is not achieved
+    /// within `maxAttempts`. This is useful when the backend sets a default payment method
+    /// asynchronously after a payment, and the test needs to wait for that to propagate.
+    func reloadAndWaitForDefaultPaymentMethod(
+        _ app: XCUIApplication,
+        settings: PaymentSheetTestPlaygroundSettings,
+        analyticsLog: () -> [[String: Any]],
+        maxAttempts: Int = 10
+    ) {
+        for _ in 1...maxAttempts {
+            reload(app, settings: settings)
+            let hasDefault = analyticsLog()
+                .filter { $0["event"] as? String == "mc_load_succeeded" }
+                .last?["has_default_payment_method"] as? Bool == true
+            if hasDefault {
+                return
+            }
+        }
+        XCTFail("Default payment method was not reflected in analytics after \(maxAttempts) reload attempts")
+    }
+
     func loadPlayground(_ app: XCUIApplication, _ settings: CustomerSheetTestPlaygroundSettings) {
         app.launchEnvironment = app.launchEnvironment.merging(["STP_CUSTOMERSHEET_PLAYGROUND_DATA": settings.base64Data]) { (_, new) in new }
         app.launch()
