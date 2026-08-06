@@ -30,5 +30,7 @@ extension ShippingAddressElement: AddressViewControllerDelegate {
     public func addressViewControllerDidFinish(
         _ addressViewController: AddressViewController,
         with address: AddressViewController.AddressDetails?
-    ) {}
+    ) {
+        // TODO(gbirch): populate when implementing presentation
+    }
 }
