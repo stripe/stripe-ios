@@ -172,4 +172,23 @@ class FinancialConnectionsSheetTests: XCTestCase {
         )
         XCTAssertEqual(mockAnalyticsClient.productUsage, ["FinancialConnectionsSheet"])
     }
+
+    func testPresentUsesNonCachingURLSession() {
+        let sheet = FinancialConnectionsSheet(
+            financialConnectionsSessionClientSecret: mockClientSecret,
+            returnURL: nil,
+            configuration: .init(),
+            analyticsClient: mockAnalyticsClient
+        )
+        let originalSession = sheet.apiClient.urlSession
+
+        sheet.present(from: mockViewController) { (_: FinancialConnectionsSheet.Result) in }
+
+        XCTAssertFalse(sheet.apiClient.urlSession === originalSession)
+        XCTAssertEqual(
+            sheet.apiClient.urlSession.configuration.requestCachePolicy,
+            .reloadIgnoringLocalCacheData
+        )
+        XCTAssertNil(sheet.apiClient.urlSession.configuration.urlCache)
+    }
 }

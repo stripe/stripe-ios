@@ -5,6 +5,7 @@
 //  Created by Vardges Avetisyan on 11/12/21.
 //
 
+@_spi(STP) import StripeCore
 import StripeFinancialConnections
 import UIKit
 
@@ -37,11 +38,12 @@ class ConnectAccountViewController: UIViewController {
         updateButtonState(isLoading: true)
 
         // Make request to our verification endpoint
-        let session = URLSession.shared
+        let session = STPAPIClient.nonCachingURLSession(from: .shared)
         let url = URL(string: baseURL + financialConnectionsEndpoint)!
 
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
+        urlRequest.cachePolicy = .reloadIgnoringLocalCacheData
 
         let task = session.dataTask(with: urlRequest) { [weak self] data, _, error in
             DispatchQueue.main.async { [weak self] in

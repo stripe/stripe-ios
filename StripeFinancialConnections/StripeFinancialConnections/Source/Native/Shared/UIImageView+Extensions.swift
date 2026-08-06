@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 import UIKit
 
 extension UIImageView {
@@ -63,7 +64,7 @@ private func DownloadImage(
         completionHandler(nil)
         return
     }
-    URLSession.shared.dataTask(with: url) { data, response, _ in
+    STPAPIClient.nonCachingURLSession(from: .shared).dataTask(with: url) { data, response, _ in
         guard let response = response as? HTTPURLResponse else {
             assertionFailure("we always expect to get back `HTTPURLResponse`")
             completionHandler(nil)
