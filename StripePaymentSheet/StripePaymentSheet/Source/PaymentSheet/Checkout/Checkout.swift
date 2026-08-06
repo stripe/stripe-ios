@@ -154,22 +154,33 @@ public final class Checkout: ObservableObject {
 
             try await applyDefaults()
 
-            // Load remaining elements
-            self.paymentElement = try await PaymentElement(checkout: self)
+            // Load the remaining elements in parallel. Calling `async let` spins up the initializations concurrently.
+
+            // Generate a session source that can be used to initialize elements. This is a value type safe to share across parallel initializations.
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
+
+            // ECE (synchronous initializer)
             self.expressCheckoutElement = ExpressCheckoutElement(
                 sessionSource: sessionSource,
                 configuration: configuration,
                 delegate: self
             )
-            if configuration.adaptivePricing.allowed {
-                self.currencySelectorElement = await CurrencySelectorElement(
+
+            // PE
+            async let paymentElement = PaymentElement(checkout: self)
+
+            // CSE
+            async let currencySelectorElement = configuration.adaptivePricing.allowed ?
+                CurrencySelectorElement(
                     sessionSource: sessionSource,
                     configuration: configuration.currencySelectorElement,
                     delegate: self
                 )
-            }
+            : nil
 
+            // Wait for all of the initializations to finish.
+            self.paymentElement = try await paymentElement
+            self.currencySelectorElement = await currencySelectorElement
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
