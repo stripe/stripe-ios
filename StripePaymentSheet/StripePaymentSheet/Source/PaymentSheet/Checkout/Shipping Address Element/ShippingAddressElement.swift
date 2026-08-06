@@ -4,6 +4,8 @@
 //
 //  Created by George Birch on 8/4/26.
 
+@_spi(STP) import StripeCore
+
 /// A shipping address form backed by a Checkout Session.
 @MainActor
 @_spi(STP)
@@ -12,15 +14,21 @@ public final class ShippingAddressElement {
 
     private(set) var addressViewController: AddressViewController!
 
-    init(checkout: Checkout) {
-        let configuration = checkout.configuration.shippingAddressElement.makeAddressViewControllerConfiguration(
-            shippingAddress: checkout.session.shippingAddress,
-            allowedCountries: checkout.session.allowedShippingCountries,
-            apiClient: checkout.apiClient,
-            useAutocompleteEndpoints: checkout.session.elementsSession.shouldUseAutocompleteProxyEndpoints
+    init(
+        configuration: Configuration,
+        initialShippingAddress: Checkout.Session.ShippingAddress?,
+        allowedCountries: [String]?,
+        apiClient: STPAPIClient,
+        useAutocompleteEndpoints: Bool
+    ) {
+        let addressViewControllerConfiguration = configuration.makeAddressViewControllerConfiguration(
+            shippingAddress: initialShippingAddress,
+            allowedCountries: allowedCountries,
+            apiClient: apiClient,
+            useAutocompleteEndpoints: useAutocompleteEndpoints
         )
         addressViewController = AddressViewController(
-            configuration: configuration,
+            configuration: addressViewControllerConfiguration,
             delegate: self
         )
     }

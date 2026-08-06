@@ -60,7 +60,7 @@ public final class Checkout: ObservableObject {
     private var currencySelectorElement: CurrencySelectorElement?
 
     /// The ShippingAddressElement for this Checkout instance.
-    private var shippingAddressElement: ShippingAddressElement!
+    private let shippingAddressElement: ShippingAddressElement
 
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
@@ -131,12 +131,30 @@ public final class Checkout: ObservableObject {
             )
             let loadedSession = apiResponse.makePublicSession()
             self.session = loadedSession
-            self.nonisolatedSession = session // temporary hack
+            self.nonisolatedSession = loadedSession // temporary hack
+
+            let defaultShippingAddress: Session.ShippingAddress?
+            if let shippingDetails = configuration.defaults.shippingDetails,
+               let address = shippingDetails.address {
+                defaultShippingAddress = Session.ShippingAddress(
+                    name: shippingDetails.name,
+                    address: address
+                )
+            } else {
+                defaultShippingAddress = nil
+            }
+
+            self.shippingAddressElement = ShippingAddressElement(
+                configuration: configuration.shippingAddressElement,
+                initialShippingAddress: defaultShippingAddress ?? loadedSession.shippingAddress,
+                allowedCountries: loadedSession.allowedShippingCountries,
+                apiClient: configuration.apiClient,
+                useAutocompleteEndpoints: loadedSession.elementsSession.shouldUseAutocompleteProxyEndpoints
+            )
 
             try await applyDefaults()
 
-            // Load elements
-            self.shippingAddressElement = ShippingAddressElement(checkout: self)
+            // Load remaining elements
             self.paymentElement = try await PaymentElement(checkout: self)
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
             self.expressCheckoutElement = ExpressCheckoutElement(
