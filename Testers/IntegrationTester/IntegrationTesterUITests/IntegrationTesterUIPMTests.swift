@@ -42,15 +42,19 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 
         if ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 {
-            // iOS 26: The Apple Pay sheet shows the selected card and a
-            // "Change Payment Method" button. Tap it to switch cards.
-            let changeButton = applePay.buttons["Change Payment Method"]
-            XCTAssertTrue(changeButton.waitForExistence(timeout: 10.0))
-            changeButton.tap()
-
+            // iOS 26: The Apple Pay sheet may show a "Change Payment Method"
+            // button, or may display the payment list directly. Handle both.
             let mastercardPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - MasterCard'")
             let mastercardButton = applePay.buttons.containing(mastercardPredicate).firstMatch
-            XCTAssertTrue(mastercardButton.waitForExistence(timeout: 10.0))
+
+            if !mastercardButton.waitForExistence(timeout: 5.0) {
+                // Payment list not shown directly — tap "Change Payment Method"
+                // to reveal card options.
+                let changeButton = applePay.buttons["Change Payment Method"]
+                XCTAssertTrue(changeButton.waitForExistence(timeout: 20.0))
+                changeButton.tap()
+                XCTAssertTrue(mastercardButton.waitForExistence(timeout: 10.0))
+            }
             mastercardButton.forceTapElement()
 
             let payButton = applePay.buttons["Pay with Passcode"]
