@@ -112,15 +112,21 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     /// Override return result for testMode
     func overrideTestModeReturnValue(result: IdentityVerificationSheet.VerificationFlowResult)
 
-    /// Transition to DocumentCaptureViewController without any API request
-    func transitionToSelfieCapture()
+    /// Transition to SelfieCaptureViewController without any API request
+    func transitionToSelfieCapture(
+        trainingConsent: Bool?
+    )
 
     /// Transition to DocumentCaptureViewController without any API request
     func transitionToDocumentCapture()
+
+    /// Transition to the web fallback without any API request
+    func transitionToFallbackUrl()
 }
 
 private enum VerificationSheetControllerError: String, AnalyticLoggableStringErrorV2 {
     case missingVerificationPageResponseForFallbackUpdate
+    case missingVerificationPageResponseForFallbackUrlTransition
     case missingVerificationPageResponseForCountryNotListedTransition
     case missingVerificationPageResponseForIndividualTransition
     case missingVerificationPageResponseForSelfieCaptureTransition
@@ -229,8 +235,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             from: verificationPage.documentCapture,
             with: self
         )
-        if let selfiePageConfig = verificationPage.selfie {
-            mlModelLoader.startLoadingFaceModels(from: selfiePageConfig)
+        if verificationPage.selfie != nil {
+            mlModelLoader.startLoadingFaceModels(from: verificationPage)
         }
     }
 
@@ -267,7 +273,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         guard case .success(let updateData) = updateDataResult
         else {
             // Transition to generic error screen
-            transitionWithVerificaionPageDataResult(
+            transitionWithVerificationPageDataResult(
                 updateDataResult,
                 completion: completion
             )
@@ -284,7 +290,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 guard case .success(let resultData) = submittedData
                 else {
                     self.isVerificationPageSubmitted = false
-                    self.transitionWithVerificaionPageDataResult(submittedData, completion: completion)
+                    self.transitionWithVerificationPageDataResult(submittedData, completion: completion)
                     return
                 }
 
@@ -303,13 +309,13 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                     self.collectedData = StripeAPI.VerificationPageCollectedData()
 
                 }
-                self.transitionWithVerificaionPageDataResult(
+                self.transitionWithVerificationPageDataResult(
                     submittedData,
                     completion: completion
                 )
             }
         } else {
-            transitionWithVerificaionPageDataResult(updateDataResult, completion: completion)
+            transitionWithVerificationPageDataResult(updateDataResult, completion: completion)
         }
     }
 
@@ -399,7 +405,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }.observe(on: .main) { result in
             self.handleVerificationPageDataResult(collectedData: optionalCollectedData, updateDataResult: result) { successData in
                 guard successData.requirements.errors.isEmpty else {
-                    self.transitionWithVerificaionPageDataResult(result)
+                    self.transitionWithVerificationPageDataResult(result)
                     return
                 }
                 if successData.requirements.missing.contains(.idDocumentBack) {
@@ -451,7 +457,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             simulateDelay: simulateDelay
         ).observe(on: .main) { [weak self] result in
             self?.overrideTestModeReturnValue(result: .flowCompleted)
-            self?.transitionWithVerificaionPageDataResult(result)
+            self?.transitionWithVerificationPageDataResult(result)
             completion()
         }
     }
@@ -464,7 +470,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             simulateDelay: simulateDelay
         ).observe(on: .main) { [weak self] result in
             self?.overrideTestModeReturnValue(result: .flowCompleted)
-            self?.transitionWithVerificaionPageDataResult(result)
+            self?.transitionWithVerificationPageDataResult(result)
             completion()
         }
     }
@@ -521,7 +527,9 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         )
     }
 
-    func transitionToSelfieCapture() {
+    func transitionToSelfieCapture(
+        trainingConsent: Bool?
+    ) {
         guard let verificationPageResponse = verificationPageResponseOrLogMissing(
             .missingVerificationPageResponseForSelfieCaptureTransition,
             assertionMessage: "verificationPageResponse is nil"
@@ -531,7 +539,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
         flowController.transitionToSelfieCaptureScreen(
             staticContentResult: verificationPageResponse,
-            sheetController: self
+            sheetController: self,
+            trainingConsent: trainingConsent
         )
     }
 
@@ -549,8 +558,22 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         )
     }
 
+    func transitionToFallbackUrl() {
+        guard let verificationPageResponse = verificationPageResponseOrLogMissing(
+            .missingVerificationPageResponseForFallbackUrlTransition,
+            assertionMessage: "verificationPageResponse is nil"
+        ) else {
+            return
+        }
+
+        flowController.transitionToFallbackUrlScreen(
+            staticContentResult: verificationPageResponse,
+            sheetController: self
+        )
+    }
+
     /// * Assert verificationPageResponse to be correct, then transition with the PageDataResult.
-    private func transitionWithVerificaionPageDataResult(
+    private func transitionWithVerificationPageDataResult(
         _ result: Result<StripeAPI.VerificationPageData, Error>?,
         completion: @escaping () -> Void = {}
     ) {
@@ -580,6 +603,12 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         completion: @escaping () -> Void
     ) {
         analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
+        let shouldSubmit3DFaceCaptureData: Bool
+        if case .success(let verificationPage)? = verificationPageResponse {
+            shouldSubmit3DFaceCaptureData = verificationPage.shouldSubmit3DFaceCaptureData
+        } else {
+            shouldSubmit3DFaceCaptureData = false
+        }
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
         selfieUploader.uploadFuture?.chained {
             [weak self, apiClient] uploadedFiles -> Future<StripeAPI.VerificationPageData> in
@@ -588,7 +617,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                     uploadedFiles: uploadedFiles,
                     capturedImages: capturedImages,
                     bestFrameExifMetadata: capturedImages.bestMiddle.cameraExifMetadata,
-                    trainingConsent: trainingConsent
+                    trainingConsent: trainingConsent,
+                    shouldSubmit3DFaceCaptureData: shouldSubmit3DFaceCaptureData
                 )
             )
             optionalCollectedData = collectedData
@@ -648,7 +678,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     ) {
         guard case .success(let resultData) = updateDataResult
         else {
-            self.transitionWithVerificaionPageDataResult(updateDataResult, completion: completion)
+            self.transitionWithVerificationPageDataResult(updateDataResult, completion: completion)
             return
         }
 

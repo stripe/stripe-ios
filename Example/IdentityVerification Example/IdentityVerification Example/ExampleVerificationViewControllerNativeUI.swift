@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 3/3/21.
 //
 
-import StripeIdentity
+@_spi(STP) import StripeIdentity
 import UIKit
 
 /**
@@ -22,18 +22,23 @@ class ExampleVerificationViewControllerNativeUI: UIViewController {
     // View and fork the backend code here: https://codesandbox.io/p/devbox/dsx4vq
     let baseURL = "https://stripe-mobile-identity-verification-playground.stripedemos.com"
     let verifyEndpoint = "/verification-sessions"
+    private var is3DFaceCaptureEnabled: Bool {
+        return faceCaptureEnabledSwitch.isOn
+    }
 
     // Outlets
     @IBOutlet weak var verifyButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
     var verificationSheet: IdentityVerificationSheet?
+    private let faceCaptureEnabledSwitch = UISwitch()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         activityIndicator.hidesWhenStopped = true
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
+        add3DFaceCaptureSwitch()
 
         mockDocumentCameraForSimulator()
     }
@@ -46,6 +51,7 @@ class ExampleVerificationViewControllerNativeUI: UIViewController {
     func requestVerificationSession() {
         // Disable the button while we make the request
         updateButtonState(isLoading: true)
+        setLocal3DFaceCaptureOverride()
 
         // Make request to our verification endpoint
         let session = URLSession.shared
@@ -53,6 +59,7 @@ class ExampleVerificationViewControllerNativeUI: UIViewController {
         let requestJson = try? JSONSerialization.data(
             withJSONObject: [
                 "type": "document",
+                "3d_face_capture_enabled": is3DFaceCaptureEnabled,
             ],
             options: []
         )
@@ -95,7 +102,8 @@ class ExampleVerificationViewControllerNativeUI: UIViewController {
             verificationSessionId: verificationSessionId,
             ephemeralKeySecret: ephemeralKeySecret,
             configuration: IdentityVerificationSheet.Configuration(
-                brandLogo: UIImage(named: "BrandLogo")!
+                brandLogo: UIImage(named: "BrandLogo")!,
+                brandColor: UIColor(named: "BrandColor")
             )
         )
         self.verificationSheet?.present(
@@ -121,6 +129,34 @@ class ExampleVerificationViewControllerNativeUI: UIViewController {
         } else {
             activityIndicator.stopAnimating()
         }
+    }
+
+    private func setLocal3DFaceCaptureOverride() {
+        IdentityVerificationSheet.local3DFaceCaptureOverride = is3DFaceCaptureEnabled
+    }
+
+    private func add3DFaceCaptureSwitch() {
+        let label = UILabel()
+        label.text = "3D face capture enabled"
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 17)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
+        faceCaptureEnabledSwitch.isOn = true
+        faceCaptureEnabledSwitch.setContentHuggingPriority(.required, for: .horizontal)
+
+        let containerView = UIStackView(arrangedSubviews: [label, faceCaptureEnabledSwitch])
+        containerView.axis = .horizontal
+        containerView.alignment = .center
+        containerView.spacing = 8
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(containerView)
+
+        NSLayoutConstraint.activate([
+            containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            containerView.bottomAnchor.constraint(equalTo: verifyButton.topAnchor, constant: -24),
+        ])
     }
 
     func displayAlert(_ message: String) {

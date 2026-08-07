@@ -23,6 +23,20 @@ extension SelfieCaptureViewController {
         )
     }
 
+    static var lookLeftInstructionText: String {
+        return STPLocalizedString(
+            "Turn your head left.",
+            "Instructional text for scanning the left side of a selfie"
+        )
+    }
+
+    static var lookRightInstructionText: String {
+        return STPLocalizedString(
+            "Turn your head right.",
+            "Instructional text for scanning the right side of a selfie"
+        )
+    }
+
     static var scannedInstructionText: String {
         return STPLocalizedString(
             "Selfie captures are complete",
