@@ -286,7 +286,7 @@ class PaymentSheetFormFactory {
                     emailRequired: true,
                     emailAPIPath: "billing_details[email]"
                 )
-            case .mbWay:
+            case .mbWay, .bizum:
                 return makeContactInformationAndBillingAddressForm(phoneRequired: true)
             case .cashApp, .payPal, .revolutPay, .amazonPay, .satispay, .twint:
                 return makeContactInformationAndBillingAddressForm(

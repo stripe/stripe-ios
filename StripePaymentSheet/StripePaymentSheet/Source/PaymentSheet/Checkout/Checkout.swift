@@ -394,11 +394,19 @@ extension Checkout {
            let address = billingDetails.address {
             try await updateBillingTaxRegionIfNecessary(address: address)
         }
-        if let shippingAddress {
-            try await updateShippingAddress(
-                name: shippingAddress.name,
-                address: shippingAddress.address
-            )
+
+        if let shippingDetails,
+           let address = shippingDetails.address {
+            do {
+                try await updateShippingAddress(
+                    name: shippingDetails.name,
+                    address: address
+                )
+            } catch CheckoutError.invalidShippingCountry {
+                // Treat a default address with a disallowed country as nil.
+            } catch {
+                throw error
+            }
         }
     }
 }
