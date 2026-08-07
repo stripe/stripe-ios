@@ -277,59 +277,6 @@ US
         app.textFields["Full name"].tap()
         app.typeText("Jane Doe")
 
-        fillAutocompleteAddress(name: "", searchTerm: "354 Oyster Point", expectedResult: "354 Oyster Point Blvd")
-
-        // Verify autocomplete populated the address fields
-        verifyAddressFields(
-            line1: "354 Oyster Point Blvd",
-            line2: "",
-            city: "South San Francisco",
-            state: "California",
-            zip: "94080"
-        )
-
-        // Add phone number to complete the form
-        app.textFields["Phone number"].tap()
-        app.textFields["Phone number"].typeText("5555555555")
-
-        // Save address
-        saveAddress()
-        if let completedEvent = analyticsLog.first(where: { $0[string: "event"] == "mc_address_completed" }),
-           let blob = completedEvent["address_data_blob"] as? [String: Any] {
-            XCTAssertEqual(blob["auto_complete_result_selected"] as? Bool, true)
-            XCTAssertEqual(blob["edit_distance"] as? Int, 0)
-        } else {
-            XCTFail("mc_address_completed event not found")
-        }
-
-        // Verify the merchant app gets the expected address
-        let shippingButton = app.buttons["Address"]
-        let expectedAddress = """
-Jane Doe
-354 Oyster Point Blvd
-South San Francisco CA 94080
-US
-+15555555555
-"""
-        XCTAssertEqual(shippingButton.label, expectedAddress)
-    }
-
-    func testAddressAutoComplete_UnitedStates_endpoint() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.uiStyle = .flowController
-        settings.useAutocompleteEndpoints = .on
-        loadPlayground(app, settings)
-
-        navigateToShippingAddress()
-
-        // The Save address button should be disabled initially
-        saveAddress(shouldBeEnabled: false)
-
-        // Fill address using autocomplete (name first, then address)
-        app.textFields["Full name"].tap()
-        app.typeText("Jane Doe")
-
         fillAutocompleteAddress(name: "", searchTerm: "354 Oyster Point", expectedResult: "354 Oyster Point Boulevard")
 
         // Verify autocomplete populated the address fields

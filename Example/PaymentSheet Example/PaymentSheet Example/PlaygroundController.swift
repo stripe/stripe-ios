@@ -266,7 +266,6 @@ import UIKit
         }
 
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
-        configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
         configuration.termsDisplay = cardTermsDisplay
         return configuration
     }
@@ -408,7 +407,6 @@ import UIKit
             )
         }
         configuration.additionalFields.checkboxLabel = "Save this address for future orders"
-        configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
         return configuration
     }
 
