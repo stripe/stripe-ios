@@ -45,8 +45,9 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testGetCurrencySelectorElementReturnsStableInstanceWhenAdaptivePricingIsAllowed() async throws {
+        let session = CheckoutTestHelpers.makeAdaptivePricingSession()
         let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
         )
 
         let firstElement = try XCTUnwrap(checkout.getCurrencySelectorElement())
@@ -60,8 +61,9 @@ final class CheckoutUnitTests: XCTestCase {
         analyticsClient._testLogHistory = []
         defer { analyticsClient._testLogHistory = previousLogHistory }
 
+        let session = CheckoutTestHelpers.makeAdaptivePricingSession()
         let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
         )
 
         XCTAssertEqual(currencySelectorInitEvents(in: analyticsClient).count, 1)
