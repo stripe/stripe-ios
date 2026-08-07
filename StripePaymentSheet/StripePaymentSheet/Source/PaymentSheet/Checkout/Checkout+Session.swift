@@ -52,9 +52,6 @@ extension Checkout {
         /// The currently selected payment option.
         public let paymentOption: PaymentOptionDisplayData?
 
-        /// Payment methods attached to the customer.
-        public let savedPaymentMethods: [STPPaymentMethod]
-
         /// Shipping address of the customer.
         public let shippingAddress: ShippingAddress?
 

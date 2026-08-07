@@ -28,7 +28,6 @@ extension PaymentPagesAPIResponse {
             livemode: livemode,
             minorUnitsAmountDivisor: minorUnitsAmountDivisor,
             paymentOption: nil,
-            savedPaymentMethods: savedPaymentMethods,
             shippingAddress: nil,
             status: status,
             tax: tax,

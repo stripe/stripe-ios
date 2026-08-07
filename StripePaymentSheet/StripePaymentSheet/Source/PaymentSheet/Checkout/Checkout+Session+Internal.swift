@@ -131,7 +131,6 @@ extension Checkout.Session {
             livemode: livemode,
             minorUnitsAmountDivisor: minorUnitsAmountDivisor,
             paymentOption: paymentOption.resolved(currentValue: self.paymentOption),
-            savedPaymentMethods: savedPaymentMethods,
             shippingAddress: shippingAddress.resolved(currentValue: self.shippingAddress),
             status: status,
             tax: tax,
