@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### PaymentSheet
+* [Added] Added Vipps support to PaymentSheet beta. To opt in, set `vipps_preview=v1` on the `STPAPIClient` instance that you pass into PaymentSheet or Checkout, for example `["vipps_preview=v1"]`.
 
 ### CryptoOnramp (Alpha)
 * [Added] Added `CryptoOnrampCoordinator.deleteWalletAddress(walletId:)` to delete a registered wallet address.
