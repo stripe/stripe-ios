@@ -371,7 +371,7 @@ extension AutoCompleteViewController: ElementDelegate {
 // MARK: MKLocalSearchCompleterDelegate
 extension AutoCompleteViewController: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        var latency = Date().timeIntervalSince(mapKitQueryStartTime)
+        let latency = Date().timeIntervalSince(mapKitQueryStartTime)
         setResults(completer.results, source: "apple", requestLatency: latency)
     }
 
