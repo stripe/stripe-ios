@@ -46,7 +46,7 @@ class AutoCompleteViewController: UIViewController {
     private var lastFetchedQuery: String = ""
     var currentSource: String?
     private var autocompleteStartTime: Date = Date()
-    private var mapKitQueryStartTime: Date?
+    private var mapKitQueryStartTime: Date = Date()
 
     weak var delegate: AutoCompleteViewControllerDelegate?
 
@@ -371,10 +371,7 @@ extension AutoCompleteViewController: ElementDelegate {
 // MARK: MKLocalSearchCompleterDelegate
 extension AutoCompleteViewController: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        var latency: TimeInterval?
-        if let mapKitQueryStartTime {
-            latency = Date().timeIntervalSince(mapKitQueryStartTime)
-        }
+        var latency = Date().timeIntervalSince(mapKitQueryStartTime)
         setResults(completer.results, source: "apple", requestLatency: latency)
     }
 
