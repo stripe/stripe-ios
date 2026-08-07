@@ -1258,7 +1258,7 @@ extension STPPaymentMethodParams {
             wero = STPPaymentMethodWeroParams()
         case .payByBank:
             payByBank = STPPaymentMethodPayByBankParams()
-        case .cardPresent, .paynow, .zip, .konbini, .promptPay:
+        case .cardPresent, .paynow, .zip, .konbini, .promptPay, .mbWay, .bizum:
             // These payment methods don't have any params
             break
         case .unknown:
