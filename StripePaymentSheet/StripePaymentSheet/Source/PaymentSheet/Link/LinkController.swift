@@ -537,29 +537,34 @@ import UIKit
     /// wallet display, and payment method creation in a single call.
     ///
     /// Under the hood, this method:
-    /// 1. Looks up the consumer by email, unless an authenticated session for that email already exists.
+    /// 1. If `email` is provided, looks up the consumer by email (unless an authenticated session for
+    ///    that email already exists). If `email` is omitted, this step is skipped.
     /// 2. Presents the Link sheet, routing to signup, OTP verification, or the wallet based on account state.
     ///    If `phoneNumber` is provided, it is prefilled in the signup form.
     /// 3. Once the user selects a payment method, creates and returns an `STPPaymentMethod`.
     ///
-    /// - Parameter email: The email address to look up and associate with the Link account.
+    /// - Parameter email: The email address to look up and associate with the Link account. When omitted,
+    ///   the signup flow is shown directly.
     /// - Parameter phoneNumber: Optional phone number in E.164 format to prefill during signup.
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter completion: A closure called with `.success(.completed(paymentMethod))` on selection,
     ///   `.success(.canceled)` if the user dismisses the flow, or `.failure(error)` on API or network errors.
     @_spi(STP) @_spi(LinkControllerPreview) public func present(
-        email: String,
+        email: String?,
         phoneNumber: String? = nil,
         from presentingViewController: UIViewController,
         completion: @escaping (Result<PaymentMethodResult, Error>) -> Void
     ) {
-        let alreadyAuthenticated = linkAccount?.sessionState == .verified
-            && linkAccount?.email.lowercased() == email.lowercased()
+        let alreadyAuthenticated = email != nil
+            && linkAccount?.sessionState == .verified
+            && linkAccount?.email.lowercased() == email?.lowercased()
 
         let presentWallet = { [weak self] in
             guard let self else { return }
             var paymentElementConfiguration = self.paymentElementConfiguration
-            paymentElementConfiguration.defaultBillingDetails.email = email
+            if let email {
+                paymentElementConfiguration.defaultBillingDetails.email = email
+            }
             if let phoneNumber {
                 paymentElementConfiguration.defaultBillingDetails.phone = phoneNumber
             }
@@ -597,16 +602,17 @@ import UIKit
             }
         }
 
-        if alreadyAuthenticated {
+        guard let email, !alreadyAuthenticated else {
             presentWallet()
-        } else {
-            lookupConsumer(with: email) { result in
-                switch result {
-                case .failure(let error):
-                    completion(.failure(error))
-                case .success:
-                    presentWallet()
-                }
+            return
+        }
+
+        lookupConsumer(with: email) { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+            case .success:
+                presentWallet()
             }
         }
     }
@@ -1472,18 +1478,20 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     /// wallet display, and payment method creation in a single call.
     ///
     /// Under the hood, this method:
-    /// 1. Looks up the consumer by email.
+    /// 1. If `email` is provided, looks up the consumer by email (unless an authenticated session for
+    ///    that email already exists). If `email` is omitted, this step is skipped.
     /// 2. Presents the Link sheet, routing to signup, OTP verification, or the wallet based on account state.
     ///    If `phoneNumber` is provided, it is prefilled in the signup form.
     /// 3. Once the user selects a payment method, creates and returns an `STPPaymentMethod`.
     ///
-    /// - Parameter email: The email address to look up and associate with the Link account.
+    /// - Parameter email: The email address to look up and associate with the Link account. When omitted,
+    ///   the signup flow is shown directly.
     /// - Parameter phoneNumber: Optional phone number in E.164 format to prefill during signup.
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Returns: `.completed(paymentMethod)` on selection, or `.canceled` if the user dismisses the flow.
     /// - Throws: An error if the lookup fails or payment method creation fails.
     func present(
-        email: String,
+        email: String?,
         phoneNumber: String? = nil,
         from presentingViewController: UIViewController
     ) async throws -> PaymentMethodResult {

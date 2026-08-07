@@ -41,11 +41,17 @@ final class LinkControllerPreviewAPITests: XCTestCase {
                     _ = result
                 }
 
+                controller.present(email: nil, from: UIViewController()) { result in
+                    _ = result
+                }
+
                 _ = try await controller.present(
                     email: "jenny.rosen@example.com",
                     phoneNumber: "+14155551234",
                     from: UIViewController()
                 )
+
+                _ = try await controller.present(email: nil, from: UIViewController())
 
                 controller.confirmSetupIntent(
                     clientSecret: "seti_secret_123",

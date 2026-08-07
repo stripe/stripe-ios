@@ -64,7 +64,7 @@ struct LinkControllerDemoView: View {
             VStack(alignment: .leading, spacing: 24) {
                 DemoSection(title: "Setup") {
                     VStack(alignment: .leading, spacing: 12) {
-                        PreviewInfoRow(label: "Customer", value: customerId ?? "Creating...")
+                        PreviewInfoRow(label: "Customer", value: customerId ?? (configuration.email.isEmpty ? "N/A" : "Creating..."))
                         PreviewInfoRow(label: "Intent Mode", value: configuration.intentMode.rawValue)
                         if configuration.intentMode == .serverSetupIntent {
                             PreviewInfoRow(
@@ -187,8 +187,11 @@ struct LinkControllerDemoView: View {
             let config = try await LinkControllerDemoBackendClient.fetchConfig()
             STPAPIClient.shared.publishableKey = config.publishableKey
 
-            let cid = try await LinkControllerDemoBackendClient.fetchOrCreateCustomer(email: configuration.email)
-            customerId = cid
+            if !configuration.email.isEmpty {
+                let cid = try await LinkControllerDemoBackendClient.fetchOrCreateCustomer(email: configuration.email)
+                customerId = cid
+                savedPaymentMethods = try await LinkControllerDemoBackendClient.listPaymentMethods(for: cid)
+            }
 
             linkController = try await LinkController.create(
                 appearance: configuration.appearance,
@@ -198,8 +201,6 @@ struct LinkControllerDemoView: View {
                     merchantDisplayName: "Example, Inc."
                 )
             )
-
-            savedPaymentMethods = try await LinkControllerDemoBackendClient.listPaymentMethods(for: cid)
 
             phase = .ready
             statusTint = .secondary
@@ -213,7 +214,7 @@ struct LinkControllerDemoView: View {
 
     @MainActor
     private func presentLinkFlow() async {
-        guard isReady, let customerId else {
+        guard isReady else {
             errorMessage = "LinkController not ready"
             return
         }
@@ -235,7 +236,7 @@ struct LinkControllerDemoView: View {
             }
 
             let result = try await activeController.present(
-                email: configuration.email,
+                email: configuration.email.isEmpty ? nil : configuration.email,
                 phoneNumber: configuration.phone.isEmpty ? nil : configuration.phone,
                 from: rootViewController
             )
@@ -249,19 +250,24 @@ struct LinkControllerDemoView: View {
                     statusMessage = "Payment method selected. Tap \"Confirm & Save\" to attach it."
                     phase = .awaitingConfirmation(paymentMethod)
                 case .sdkManaged:
-                    statusMessage = "Saving payment method..."
-                    do {
-                        try await LinkControllerDemoBackendClient.attachPaymentMethod(
-                            paymentMethod.stripeId,
-                            toCustomer: customerId
-                        )
-                        print("**** Payment method created (ID: \(paymentMethod.stripeId), type: \(paymentMethod.type))")
-                    } catch {
-                        errorMessage = "Payment method created (ID: \(paymentMethod.stripeId)) but failed to save: \(error.localizedDescription)"
+                    if let customerId {
+                        statusMessage = "Saving payment method..."
+                        do {
+                            try await LinkControllerDemoBackendClient.attachPaymentMethod(
+                                paymentMethod.stripeId,
+                                toCustomer: customerId
+                            )
+                            print("**** Payment method created (ID: \(paymentMethod.stripeId), type: \(paymentMethod.type))")
+                        } catch {
+                            errorMessage = "Payment method created (ID: \(paymentMethod.stripeId)) but failed to save: \(error.localizedDescription)"
+                        }
+                        try? await refreshSavedPaymentMethods()
+                        statusTint = .green
+                        statusMessage = "Payment method saved!"
+                    } else {
+                        statusTint = .green
+                        statusMessage = "Payment method created (ID: \(paymentMethod.stripeId))"
                     }
-                    try? await refreshSavedPaymentMethods()
-                    statusTint = .green
-                    statusMessage = "Payment method saved!"
                     phase = .completed(paymentMethod)
                 }
             case .canceled:
@@ -276,7 +282,11 @@ struct LinkControllerDemoView: View {
 
     @MainActor
     private func confirmFlow() async {
-        guard case .awaitingConfirmation = phase, let customerId else { return }
+        guard case .awaitingConfirmation = phase else { return }
+        guard let customerId else {
+            errorMessage = "Server Setup Intent mode requires a customer — provide an email"
+            return
+        }
 
         guard let rootViewController = findViewController() else {
             errorMessage = "Could not find root view controller"
