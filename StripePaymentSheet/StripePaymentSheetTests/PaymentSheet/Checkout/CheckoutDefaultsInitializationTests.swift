@@ -71,6 +71,33 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         XCTAssertEqual(checkout.session.shippingAddress?.name, "Shipping Name")
     }
 
+    func testInitIgnoresShippingDefaultWithDisallowedCountry() async throws {
+        // Given a Checkout Session that does not allow the default shipping address's country
+        stubCheckoutSessionRequests(automaticTaxAddressSource: "shipping")
+
+        var configuration = Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
+        shippingDetails.name = "Shipping Name"
+        shippingDetails.address = .init(
+            country: "GB",
+            line1: "123 Shipping St",
+            city: "London",
+            postalCode: "SW1A 1AA"
+        )
+        configuration.defaults.shippingDetails = shippingDetails
+
+        // When Checkout initializes
+        let checkout = try await Checkout(configuration: configuration)
+        let paymentElement = checkout.getPaymentElement()
+
+        // Then the shipping default is treated as nil
+        XCTAssertEqual(requestRecorder.requests.map(\.kind), [.initSession])
+        XCTAssertNil(checkout.session.shippingAddress)
+        XCTAssertNil(paymentElement.paymentSheetFlowController.configuration.shippingDetails())
+        XCTAssertNil(paymentElement.embeddedPaymentElement.configuration.shippingDetails())
+    }
+
     // MARK: - Stubs
 
     private func stubCheckoutSessionRequests(

@@ -6,6 +6,10 @@ MINOR
 ### CryptoOnramp (Alpha)
 * [Added] Added `CryptoOnrampCoordinator.deleteWalletAddress(walletId:)` to delete a registered wallet address.
 
+### PaymentSheet
+* [Added] Added support for MB WAY payments.
+* [Added] Added support for Bizum payments.
+
 ## 26.5.0 2026-08-03
 ### CryptoOnramp (Alpha)
 * [Added] Added support for registering wallet addresses on the Tempo network.
