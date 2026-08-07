@@ -8,6 +8,7 @@ MINOR
 
 ### PaymentSheet
 * [Added] Added support for MB WAY payments.
+* [Added] Added support for Bizum payments.
 
 ## 26.5.0 2026-08-03
 ### CryptoOnramp (Alpha)

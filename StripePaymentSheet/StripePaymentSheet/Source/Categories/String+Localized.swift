@@ -357,6 +357,11 @@ extension String.Localized {
                            "Instructions shown while waiting for an MB WAY payment authorization")
     }
 
+    static var bizum_confirm_payment: String {
+        STPLocalizedString("Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase.",
+                           "Instructions shown while waiting for a Bizum payment authorization")
+    }
+
     static var cpf_cpnj: String {
         STPLocalizedString("CPF/CPNJ", "Label for CPF/CPNJ (Brazil tax ID) field")
     }
