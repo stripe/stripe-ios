@@ -1,4 +1,7 @@
 ## Migration Guides
+### Migrating from versions < 26.5.0
+* StripePaymentSheet now depends on `StripeFinancialConnectionsLite`. If you manually link StripePaymentSheet or use Carthage, you must also embed `StripeFinancialConnectionsLite.xcframework` in your app. No action is required for CocoaPods or Swift Package Manager users.
+
 ### Migrating from versions < 26.0.0
 * [Changed] The minimum iOS version is now 15.0, as Xcode 27 no longer supports building for iOS 13 or iOS 14. If you'd like to deploy for iOS versions below iOS 15, please use Stripe SDK 25.17.0.
 
