@@ -113,17 +113,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.lineItems[1].quantity, 1)
         XCTAssertEqual(session.lineItems[1].unitAmount?.minorUnitsAmount, 500)
 
-        // Shipping options
-        XCTAssertEqual(session.shippingOptions.count, 2)
-        XCTAssertEqual(session.shippingOptions[0].id, "shr_standard")
-        XCTAssertEqual(session.shippingOptions[0].displayName, "Standard Shipping")
-        XCTAssertEqual(session.shippingOptions[0].amount.minorUnitsAmount, 500)
-        XCTAssertEqual(session.shippingOptions[0].currency, "usd")
-        XCTAssertEqual(session.shippingOptions[1].id, "shr_express")
-        XCTAssertEqual(session.shippingOptions[1].displayName, "Express Shipping")
-        XCTAssertEqual(session.shippingOptions[1].amount.minorUnitsAmount, 1500)
-        XCTAssertEqual(session.shippingOptions[1].currency, "usd")
-
         // Totals — discount and tax
         XCTAssertEqual(session.total?.discount.minorUnitsAmount, 0)
         XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 186)
@@ -143,12 +132,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertTrue(session.makePublicSession().requiresShippingAddress)
 
         XCTAssertEqual(session.total?.shippingRate.minorUnitsAmount, 500)
-
-        // Selected shipping
-        XCTAssertNotNil(session.shipping)
-        XCTAssertEqual(session.shipping?.shippingOption.id, "shr_standard")
-        XCTAssertEqual(session.shipping?.shippingOption.amount.minorUnitsAmount, 500)
-        XCTAssertEqual(session.shipping?.shippingOption.displayName, "Standard Shipping")
 
         // Adaptive pricing
         XCTAssertTrue(session.adaptivePricingActive)

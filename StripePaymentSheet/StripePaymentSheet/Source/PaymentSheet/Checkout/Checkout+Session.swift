@@ -55,14 +55,8 @@ extension Checkout {
         /// Payment methods attached to the customer.
         public let savedPaymentMethods: [STPPaymentMethod]
 
-        /// The selected shipping option, if any.
-        public let shipping: Checkout.SelectedShipping?
-
         /// Shipping address of the customer.
         public let shippingAddress: ShippingAddress?
-
-        /// The list of shipping options that can be selected.
-        public let shippingOptions: [Checkout.ShippingOption]
 
         /// Status of the Checkout Session.
         ///
