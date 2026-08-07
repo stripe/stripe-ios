@@ -45,7 +45,7 @@ class AutoCompleteViewController: UIViewController {
     private var debounceTask: Task<Void, Never>?
     private var lastFetchedQuery: String = ""
     var currentSource: String?
-    private var autocompleteStartTime: Date?
+    private var autocompleteStartTime: Date = Date()
     private var mapKitQueryStartTime: Date?
 
     weak var delegate: AutoCompleteViewControllerDelegate?
@@ -293,15 +293,14 @@ class AutoCompleteViewController: UIViewController {
                 sessionToken: sessionToken,
                 source: source,
                 sessionElapsed: elapsedTimeSinceAutocompleteStart,
-                timeToFetch: requestLatency,
+                msToFetch: requestLatency,
                 apiClient: configuration.apiClient
             )
         }
     }
 
     private var elapsedTimeSinceAutocompleteStart: TimeInterval {
-        guard let startTime = autocompleteStartTime else { return 0 }
-        return Date().timeIntervalSince(startTime)
+        return Date().timeIntervalSince(autocompleteStartTime)
     }
 
     @objc private func manualEntryButtonTapped() {
@@ -453,7 +452,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                     source: source,
                     sessionElapsed: elapsedTimeSinceAutocompleteStart,
                     placeId: suggestion.placeId,
-                    timeToFetch: nil,
+                    msToFetch: nil,
                     apiClient: configuration.apiClient
                 )
                 delegate?.didSelectAddress(address)
@@ -479,7 +478,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                             source: source,
                             sessionElapsed: elapsedTimeSinceAutocompleteStart,
                             placeId: placeId,
-                            timeToFetch: latency,
+                            msToFetch: latency,
                             apiClient: configuration.apiClient
                         )
                         delegate?.didSelectAddress(details.address)
@@ -504,7 +503,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                         source: source,
                         sessionElapsed: self.elapsedTimeSinceAutocompleteStart,
                         placeId: nil,
-                        timeToFetch: nil,
+                        msToFetch: nil,
                         apiClient: self.configuration.apiClient
                     )
                     self.delegate?.didSelectAddress(address)

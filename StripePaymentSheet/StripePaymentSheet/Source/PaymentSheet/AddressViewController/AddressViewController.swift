@@ -55,7 +55,7 @@ public class AddressViewController: UIViewController {
     public weak var delegate: AddressViewControllerDelegate?
     private var selectedAutoCompleteResult: PaymentSheet.Address?
     private var didLogAddressShow = false
-    private var addressShowStart: Date?
+    private var addressShowStart: Date = Date()
 
     // MARK: - Internal properties
 
@@ -507,16 +507,13 @@ extension AddressViewController {
         if let selectedAddress = addressDetails?.address, let autoCompleteAddress = selectedAutoCompleteResult {
             editDistance = PaymentSheet.Address(from: selectedAddress).editDistance(from: autoCompleteAddress)
         }
-        let timeToComplete: TimeInterval? = {
-            guard let addressShowStart else { return nil }
-            return Date().timeIntervalSince(addressShowStart)
-        }()
+        let msToComplete = Date().timeIntervalSince(addressShowStart)
 
         STPAnalyticsClient.sharedClient.logAddressCompleted(
             addressCountyCode: addressSection?.selectedCountryCode ?? "",
             autoCompleteResultedSelected: selectedAutoCompleteResult != nil,
             editDistance: editDistance,
-            timeToComplete: timeToComplete,
+            msToComplete: msToComplete,
             apiClient: configuration.apiClient
         )
     }

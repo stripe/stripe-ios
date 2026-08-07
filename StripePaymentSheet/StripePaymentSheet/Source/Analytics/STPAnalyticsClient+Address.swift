@@ -36,13 +36,13 @@ extension STPAnalyticsClient {
         self.logAddressControllerEvent(event: .addressShow, addressAnalyticData: analyticData, apiClient: apiClient)
     }
 
-    func logAddressCompleted(addressCountyCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, timeToComplete: TimeInterval?, apiClient: STPAPIClient) {
+    func logAddressCompleted(addressCountyCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, msToComplete: TimeInterval, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountyCode,
                                                autoCompleteResultedSelected: autoCompleteResultedSelected,
                                                editDistance: editDistance)
         var additionalParams: [String: Any] = ["address_data_blob": analyticData.analyticsPayload]
-        if let timeToComplete { additionalParams["time_to_complete"] = timeToComplete }
+        additionalParams["ms_to_complete"] = msToComplete
         log(analytic: AddressAnalytic(event: .addressCompleted, params: additionalParams), apiClient: apiClient)
     }
 
@@ -73,28 +73,28 @@ extension STPAnalyticsClient {
         ]), apiClient: apiClient)
     }
 
-    func logAddressAutocompleteSuggestions(resultCount: Int, sessionToken: String, source: String, sessionElapsed: TimeInterval, timeToFetch: TimeInterval?, apiClient: STPAPIClient) {
+    func logAddressAutocompleteSuggestions(resultCount: Int, sessionToken: String, source: String, sessionElapsed: TimeInterval, msToFetch: TimeInterval?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         var params: [String: Any] = [
             "result_count": resultCount,
             "autocomplete_session_token": sessionToken,
             "source": source,
-            "session_elapsed": sessionElapsed,
+            "ms_session_elapsed": sessionElapsed,
         ]
-        if let timeToFetch { params["time_to_fetch"] = timeToFetch }
+        if let msToFetch { params["ms_to_fetch"] = msToFetch }
         log(analytic: AddressAnalytic(event: .addressAutocompleteSuggestions, params: params), apiClient: apiClient)
     }
 
-    func logAddressAutocompleteSelected(queryLength: Int, sessionToken: String, source: String, sessionElapsed: TimeInterval, placeId: String?, timeToFetch: TimeInterval?, apiClient: STPAPIClient) {
+    func logAddressAutocompleteSelected(queryLength: Int, sessionToken: String, source: String, sessionElapsed: TimeInterval, placeId: String?, msToFetch: TimeInterval?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         var params: [String: Any] = [
             "query_length": queryLength,
             "autocomplete_session_token": sessionToken,
             "source": source,
-            "session_elapsed": sessionElapsed,
+            "ms_session_elapsed": sessionElapsed,
         ]
         if let placeId { params["place_id"] = placeId }
-        if let timeToFetch { params["time_to_fetch"] = timeToFetch }
+        if let msToFetch { params["ms_to_fetch"] = msToFetch }
         log(analytic: AddressAnalytic(event: .addressAutocompleteSelected, params: params), apiClient: apiClient)
     }
 
@@ -102,7 +102,7 @@ extension STPAnalyticsClient {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         var params = error.serializeForV1Analytics()
         params["autocomplete_session_token"] = sessionToken
-        params["session_elapsed"] = sessionElapsed
+        params["ms_session_elapsed"] = sessionElapsed
         log(analytic: AddressAnalytic(event: .addressAutocompleteError, params: params), apiClient: apiClient)
     }
 }
