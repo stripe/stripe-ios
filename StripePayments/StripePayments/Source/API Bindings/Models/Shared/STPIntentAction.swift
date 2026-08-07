@@ -73,6 +73,9 @@ import Foundation
     /// The action type for MB WAY. The customer must authorize the payment in the MB WAY app.
     case mbWayAwaitAuthorization
 
+    /// The customer must authorize the payment out of band, such as in their mobile banking app.
+    case awaitAuthorization
+
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
     /// - Parameter string: the NSString with the `next_action.type`
@@ -110,6 +113,8 @@ import Foundation
             self = .multibancoDisplayDetails
         case "mb_way_await_authorization":
             self = .mbWayAwaitAuthorization
+        case "await_authorization":
+            self = .awaitAuthorization
         default:
             self = .unknown
         }
@@ -150,6 +155,8 @@ import Foundation
             return "multibanco_display_details"
         case .mbWayAwaitAuthorization:
             return "mb_way_await_authorization"
+        case .awaitAuthorization:
+            return "await_authorization"
         case .unknown:
             break
         }
@@ -249,6 +256,8 @@ public class STPIntentAction: NSObject {
         case .BLIKAuthorize:
             break  // no additional details
         case .mbWayAwaitAuthorization:
+            break  // no additional details
+        case .awaitAuthorization:
             break  // no additional details
         case .verifyWithMicrodeposits:
             if let verifyWithMicrodeposits = verifyWithMicrodeposits {
@@ -399,6 +408,8 @@ extension STPIntentAction: STPAPIResponseDecodable {
         case .BLIKAuthorize:
             break  // no additional details
         case .mbWayAwaitAuthorization:
+            break  // no additional details
+        case .awaitAuthorization:
             break  // no additional details
         case .verifyWithMicrodeposits:
             verifyWithMicrodeposits = STPIntentActionVerifyWithMicrodeposits.decodedObject(
