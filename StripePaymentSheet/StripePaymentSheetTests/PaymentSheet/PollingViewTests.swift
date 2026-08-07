@@ -21,4 +21,20 @@ class PollingViewTests: XCTestCase {
         XCTAssertTrue(deadlineInterval > 60 - 0.5 && deadlineInterval <= 60, "The deadline is not within the specified range")
         XCTAssertEqual(pollingViewModel.CTA, .Localized.blik_confirm_payment)
     }
+
+    func testPollingViewModelMBWay() {
+        let pollingViewModel = PollingViewModel(paymentMethodType: .mbWay)
+
+        XCTAssertEqual(pollingViewModel.CTA, .Localized.mb_way_confirm_payment)
+        XCTAssertEqual(pollingViewModel.retryInterval, 1)
+        XCTAssertEqual(pollingViewModel.deadline.timeIntervalSinceNow, 60 * 4, accuracy: 0.5)
+    }
+
+    func testPollingViewModelBizum() {
+        let pollingViewModel = PollingViewModel(paymentMethodType: .bizum)
+
+        XCTAssertEqual(pollingViewModel.CTA, .Localized.bizum_confirm_payment)
+        XCTAssertEqual(pollingViewModel.retryInterval, 1)
+        XCTAssertEqual(pollingViewModel.deadline.timeIntervalSinceNow, 70 * 60, accuracy: 0.5)
+    }
 }

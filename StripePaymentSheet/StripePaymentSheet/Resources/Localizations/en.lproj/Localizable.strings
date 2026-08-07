@@ -168,11 +168,17 @@
 with the transaction. */
 "Confirm payment details" = "Confirm payment details";
 
+/* Instructions shown while waiting for a Bizum payment authorization */
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase.";
+
 /* Text for alert message when user needs to confirm payment in their banking app */
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirm the payment in your bank or payment app within %@ to complete the purchase.";
 
 /* Text for alert message when user needs to confirm payment in their banking app */
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirm the payment in your bank's app within %@ to complete the purchase.";
+
+/* Instructions shown while waiting for an MB WAY payment authorization */
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Confirm the payment in your MB WAY app within %@ to complete the purchase.";
 
 /* Title for prompting for a card's CVC on confirming the payment */
 "Confirm your CVC" = "Confirm your CVC";
