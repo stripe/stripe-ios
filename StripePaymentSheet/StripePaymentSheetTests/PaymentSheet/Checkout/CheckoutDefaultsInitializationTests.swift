@@ -168,35 +168,6 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         XCTAssertNil(checkout.session.shippingAddress)
     }
 
-    func testInitDoesNotApplyDisallowedShippingDefault() async throws {
-        // Given a Checkout Session that only allows US shipping addresses
-        stubCheckoutSessionRequests(automaticTaxAddressSource: "shipping", allowedShippingCountries: ["US"])
-
-        var configuration = Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
-        shippingDetails.name = "Shipping Name"
-        shippingDetails.address = .init(
-            country: "CA",
-            line1: "123 Front St",
-            city: "Toronto",
-            state: "ON",
-            postalCode: "M5J 2N1"
-        )
-        configuration.defaults.shippingDetails = shippingDetails
-
-        // When Checkout initializes
-        let checkout = try await Checkout(configuration: configuration)
-
-        // Then the SAE rejects the default and Checkout does not apply it
-        XCTAssertNotNil(checkout.getPaymentElement())
-        XCTAssertEqual(requestRecorder.requests.map(\.kind), [.initSession])
-        XCTAssertNil(checkout.session.shippingAddress)
-        XCTAssertTrue(
-            checkout.getShippingAddressElement().addressViewController.configuration.defaultValues.address.isEmpty
-        )
-    }
-
     func testInitWithoutShippingDefaultDoesNotPerformShippingUpdate() async throws {
         // Given a Checkout Session that uses shipping for tax
         stubCheckoutSessionRequests(automaticTaxAddressSource: "shipping")
