@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### Payments
+* [Added] Added support for the following FPX banks: Agrobank, Bank of China, Deutsche Bank, Public Bank Enterprise, MBSB Bank, BNP Paribas, and Citibank.
 
 ### CryptoOnramp (Alpha)
 * [Added] Added `CryptoOnrampCoordinator.deleteWalletAddress(walletId:)` to delete a registered wallet address.

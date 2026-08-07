@@ -124,6 +124,8 @@ extension STPFPXBankBrand: CustomStringConvertible {
             return "UOB"
         case .affinBank:
             return "affinBank"
+        case .agrobank:
+            return "agrobank"
         case .allianceBank:
             return "allianceBank"
         case .ambank:
@@ -132,18 +134,30 @@ extension STPFPXBankBrand: CustomStringConvertible {
             return "bankIslam"
         case .bankMuamalat:
             return "bankMuamalat"
+        case .bankOfChina:
+            return "bankOfChina"
         case .bankRakyat:
             return "bankRakyat"
+        case .bnp_paribas:
+            return "bnp_paribas"
+        case .citibank:
+            return "citibank"
+        case .deutscheBank:
+            return "deutscheBank"
         case .hongLeongBank:
             return "hongLeongBank"
         case .maybank2E:
             return "maybank2E"
         case .maybank2U:
             return "maybank2U"
+        case .mbsb_bank:
+            return "mbsb_bank"
         case .ocbc:
             return "ocbc"
         case .publicBank:
             return "publicBank"
+        case .publicBankEnterprise:
+            return "publicBankEnterprise"
         case .standardChartered:
             return "standardChartered"
         case .unknown:
