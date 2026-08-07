@@ -93,8 +93,8 @@ import Foundation
         fromAPIResponse response: [AnyHashable: Any]?
     ) -> Self? {
         guard
-            let response = response,
-            let fundingSourcesStrings = response["link_funding_sources"] as? [String]
+            let response = response
+//            let fundingSourcesStrings = response["link_funding_sources"] as? [String]
         else {
             return nil
         }
@@ -102,7 +102,7 @@ import Foundation
         let brandString = response["link_brand"] as? String
         let brand = brandString.flatMap(LinkBrand.init(rawValue:)) ?? .link
 
-        let validFundingSources = Set(fundingSourcesStrings.map { ParsedEnum<FundingSource>(rawValue: $0) })
+//        let validFundingSources = Set(fundingSourcesStrings.map { ParsedEnum<FundingSource>(rawValue: $0) })
 
         let webviewOption = PopupWebviewOption(rawValue: response["link_popup_webview_option"] as? String ?? "")
         let passthroughModeEnabled = response["link_passthrough_mode_enabled"] as? Bool ?? false
@@ -136,7 +136,7 @@ import Foundation
 
         return LinkSettings(
             brand: brand,
-            fundingSources: validFundingSources,
+            fundingSources: [ParsedEnum<FundingSource>(rawValue: "BANK_ACCOUNT")],// validFundingSources,
             popupWebviewOption: webviewOption,
             passthroughModeEnabled: passthroughModeEnabled,
             disableSignup: disableSignup,
