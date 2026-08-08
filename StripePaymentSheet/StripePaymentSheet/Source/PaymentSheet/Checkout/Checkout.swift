@@ -62,6 +62,9 @@ public final class Checkout: ObservableObject {
     /// The ShippingAddressElement for this Checkout instance.
     private let shippingAddressElement: ShippingAddressElement
 
+    /// The current Payment Pages response, including explicitly labeled local-only state.
+    private var apiResponse: PaymentPagesAPIResponse
+
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
     /// A snapshot of the current ``session`` accessible from non-MainActor contexts.
@@ -130,6 +133,7 @@ public final class Checkout: ObservableObject {
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
             )
             let loadedSession = apiResponse.makePublicSession()
+            self.apiResponse = apiResponse
             self.session = loadedSession
             self.nonisolatedSession = loadedSession // temporary hack
 
@@ -242,12 +246,12 @@ public final class Checkout: ObservableObject {
         let shippingAddress = Session.ShippingAddress(name: name, address: address)
         guard session.shippingAddress != shippingAddress else { return }
         if session.shouldSendTaxRegion(for: "shipping") {
-            try await performUpdate(.setTaxRegion(address), applying: { session in
-                session.makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
+            try await performUpdate(.setTaxRegion(address), applying: { apiResponse in
+                apiResponse.local_shippingAddress = shippingAddress
             })
         } else {
-            try await performUpdate(applying: { session in
-                session.makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
+            try await performUpdate(applying: { apiResponse in
+                apiResponse.local_shippingAddress = shippingAddress
             })
         }
     }
@@ -406,34 +410,31 @@ extension Checkout {
 // These exist here because `session` is private(set) to enforce that session can only be mutated through these sanctioned paths.
 // Setting the session should generally only be done via `commitSession` to avoid putting us into an inconsistent state e.g. without using commitSession, MPE is not aware of the updated session.
 extension Checkout {
-    /// Replaces the current session from an API response, applies client-side mutations, and updates Checkout elements.
+    /// Replaces the current response, applies client-side mutations, and updates Checkout elements.
     ///
-    /// Client-side address overrides are copied from the current session to the new one
-    /// automatically. To update an address, pass a `localMutation` closure.
+    /// Local-only response state is copied to replacement responses automatically.
     func commitSession(
         _ apiResponse: PaymentPagesAPIResponse? = nil,
-        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
+        applying localMutation: (@MainActor @Sendable (PaymentPagesAPIResponse) -> Void)? = nil,
     ) async throws {
-        // === Update the session ===
-        // Generate a new session from the API response, or fall back to the current session.
-        let newSession = apiResponse?.makePublicSession() ?? session
-
-        // Preserve client-side address overrides on the new session.
-        let sessionWithLocalAddress = newSession.makeCopyOverriding(
-            shippingAddress: .newValue(session.shippingAddress),
-            paymentOption: .newValue(session.paymentOption)
-        )
-
-        // Apply any additional local mutations to the session.
-        let finalSession = localMutation?(sessionWithLocalAddress) ?? sessionWithLocalAddress
-        session = finalSession
+        let nextAPIResponse = apiResponse ?? self.apiResponse
+        if apiResponse != nil {
+            nextAPIResponse.local_shippingAddress = self.apiResponse.local_shippingAddress
+            nextAPIResponse.local_paymentOption = self.apiResponse.local_paymentOption
+        }
+        localMutation?(nextAPIResponse)
+        self.apiResponse = nextAPIResponse
+        session = nextAPIResponse.makePublicSession()
 
         // === Update Payment Element and all other asynchronously updated elements ==
         try await paymentElement?.update(checkout: self)
     }
 
-    /// - Warning: See `commitSession` for what this method *doesn't* do. That includes updating Checkout elements.
-    func dangerouslySetSessionDirectly(_ session: Session) {
-        self.session = session
+    /// Publishes a local-only response mutation without updating Checkout elements.
+    func dangerouslyMutateAPIResponseDirectly(
+        _ mutation: (PaymentPagesAPIResponse) -> Void
+    ) {
+        mutation(apiResponse)
+        session = apiResponse.makePublicSession()
     }
 }

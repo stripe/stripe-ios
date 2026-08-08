@@ -17,7 +17,7 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
     // MARK: - Line Item Tests
 
     func testDecodedObjectWithNoLineItems() {
-        let session = CheckoutTestHelpers.makeSession()
+        let session = CheckoutTestHelpers.makeSession().makePublicSession()
 
         XCTAssertEqual(session.lineItems.count, 0)
     }
@@ -26,7 +26,7 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
 
     func testDecodedObjectShippingOptionsParsing() {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!.makePublicSession()
 
         XCTAssertEqual(session.shippingOptions.count, 2)
 
@@ -44,7 +44,7 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
     }
 
     func testDecodedObjectWithNoShippingOptions() {
-        let session = CheckoutTestHelpers.makeSession()
+        let session = CheckoutTestHelpers.makeSession().makePublicSession()
 
         XCTAssertEqual(session.shippingOptions.count, 0)
     }

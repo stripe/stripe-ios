@@ -76,10 +76,11 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
 
         func commitSession(
             _ apiResponse: PaymentPagesAPIResponse?,
-            applying localMutation: (@MainActor @Sendable (Checkout.Session) -> Checkout.Session)?
+            applying localMutation: (@MainActor @Sendable (PaymentPagesAPIResponse) -> Void)?
         ) async throws {
-            let updatedSession = apiResponse?.makePublicSession() ?? session
-            session = localMutation?(updatedSession) ?? updatedSession
+            guard let apiResponse else { return }
+            localMutation?(apiResponse)
+            session = apiResponse.makePublicSession()
         }
 
         func updateBillingTaxRegionIfNecessaryForPaymentSheet(
