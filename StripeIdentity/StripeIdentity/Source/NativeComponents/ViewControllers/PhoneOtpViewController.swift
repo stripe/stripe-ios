@@ -65,9 +65,11 @@ class PhoneOtpViewController: IdentityFlowViewController {
                     }(),
                     isPrimary: false,
                     didTap: { [weak self] in
-                        self?.phoneOtpView.configure(with: .RequestingCannotVerify)
-                        self?.sheetController?.sendCannotVerifyPhoneOtpAndTransition { [weak self] in
-                            self?.phoneOtpView.reset()
+                        guard let self else { return }
+                        self.phoneOtpView.configure(with: .RequestingCannotVerify)
+                        Task {
+                            await self.sheetController?.sendCannotVerifyPhoneOtpAndTransition()
+                            self.phoneOtpView.reset()
                         }
                     }
                 ),
@@ -129,10 +131,26 @@ extension PhoneOtpViewController: PhoneOtpViewDelegate {
     func didInputFullOtp(newOtp: String) {
         phoneOtpView.configure(with: .SubmittingOTP(newOtp))
 
-        sheetController?.saveOtpAndMaybeTransition(from: .phoneOtp, otp: newOtp, completion: { [weak self] in
-            self?.phoneOtpView.reset()
-        }) { [weak self] in
-            self?.phoneOtpView.configure(with: .ErrorOTP)
+        Task { [weak self] in
+            guard let sheetController = self?.sheetController else {
+                return
+            }
+
+            let result = await sheetController.saveOtpAndMaybeTransition(
+                from: .phoneOtp,
+                otp: newOtp
+            )
+
+            guard let self else {
+                return
+            }
+
+            switch result {
+            case .invalidOtp:
+                phoneOtpView.configure(with: .ErrorOTP)
+            case .transitioned:
+                phoneOtpView.reset()
+            }
         }
     }
 
@@ -145,8 +163,11 @@ extension PhoneOtpViewController {
     /// Generate OTP, when sucess, trnasition to InputtingOTP
     func generateOtp() {
         phoneOtpView.configure(with: .RequestingOTP)
-        sheetController?.generatePhoneOtp { [weak self] _ in
-            self?.phoneOtpView.configure(with: .InputtingOTP)
+        Task {
+            guard await sheetController?.generatePhoneOtp() != nil else {
+                return
+            }
+            phoneOtpView.configure(with: .InputtingOTP)
         }
     }
 }

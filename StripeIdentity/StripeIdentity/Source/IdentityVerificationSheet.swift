@@ -51,7 +51,15 @@ final public class IdentityVerificationSheet {
     // TODO(mludowise|IDPROD-2542): Make non-optional when native component
     // experience is ready for release.
     // This is required to be non-null for native experience.
-    let verificationSheetController: VerificationSheetControllerProtocol?
+    private let makeVerificationSheetController:
+        @MainActor () -> VerificationSheetControllerProtocol?
+
+    @MainActor
+    private(set) lazy var verificationSheetController: VerificationSheetControllerProtocol? = {
+        let verificationSheetController = makeVerificationSheetController()
+        verificationSheetController?.delegate = self
+        return verificationSheetController
+    }()
 
     /// Initializes a web-based `IdentityVerificationSheet`.
     ///
@@ -62,7 +70,7 @@ final public class IdentityVerificationSheet {
     ) {
         self.init(
             verificationSessionClientSecret: verificationSessionClientSecret,
-            verificationSheetController: nil,
+            makeVerificationSheetController: { nil },
             analyticsClient: STPAnalyticsClient.sharedClient
         )
     }
@@ -85,35 +93,37 @@ final public class IdentityVerificationSheet {
     ) {
         self.init(
             verificationSessionClientSecret: "",
-            verificationSheetController: VerificationSheetController(
-                apiClient: IdentityAPIClientImpl(
-                    verificationSessionId: verificationSessionId,
-                    ephemeralKeySecret: ephemeralKeySecret
-                ),
-                flowController: VerificationSheetFlowController(
-                    brandLogo: configuration.brandLogo
-                ),
-                mlModelLoader: IdentityMLModelLoader(),
-                analyticsClient: IdentityAnalyticsClient(
-                    verificationSessionId: verificationSessionId
+            makeVerificationSheetController: {
+                VerificationSheetController(
+                    apiClient: IdentityAPIClientImpl(
+                        verificationSessionId: verificationSessionId,
+                        ephemeralKeySecret: ephemeralKeySecret
+                    ),
+                    flowController: VerificationSheetFlowController(
+                        brandLogo: configuration.brandLogo
+                    ),
+                    mlModelLoader: IdentityMLModelLoader(),
+                    analyticsClient: IdentityAnalyticsClient(
+                        verificationSessionId: verificationSessionId
+                    )
                 )
-            ),
+            },
             analyticsClient: STPAnalyticsClient.sharedClient
         )
     }
 
     init(
         verificationSessionClientSecret: String,
-        verificationSheetController: VerificationSheetControllerProtocol?,
+        makeVerificationSheetController:
+            @escaping @MainActor () -> VerificationSheetControllerProtocol?,
         analyticsClient: STPAnalyticsClientProtocol
     ) {
         self.verificationSessionClientSecret = verificationSessionClientSecret
         self.clientSecret = VerificationClientSecret(string: verificationSessionClientSecret)
-        self.verificationSheetController = verificationSheetController
+        self.makeVerificationSheetController = makeVerificationSheetController
         self.analyticsClient = analyticsClient
 
         analyticsClient.addClass(toProductUsageIfNecessary: IdentityVerificationSheet.self)
-        verificationSheetController?.delegate = self
     }
 
     /// Presents a sheet for a customer to verify their identity.
@@ -121,6 +131,21 @@ final public class IdentityVerificationSheet {
     ///   - presentingViewController: The view controller to present the identity verification sheet.
     ///   - completion: Called with the result of the verification session after the identity verification sheet is dismissed.
     public func present(
+        from presentingViewController: UIViewController,
+        completion: @escaping (VerificationFlowResult) -> Void
+    ) {
+        // Keep this API nonisolated for source compatibility. UIKit presentation was already
+        // required to run on the main thread, so preserve its synchronous behavior without an actor hop.
+        MainActor.assumeIsolated {
+            presentOnMainActor(
+                from: presentingViewController,
+                completion: completion
+            )
+        }
+    }
+
+    @MainActor
+    private func presentOnMainActor(
         from presentingViewController: UIViewController,
         completion: @escaping (VerificationFlowResult) -> Void
     ) {
@@ -199,6 +224,19 @@ final public class IdentityVerificationSheet {
         presentingViewController.present(navigationController, animated: true)
     }
 
+    /// Presents a sheet for a customer to verify their identity.
+    /// - Parameters:
+    ///   - presentingViewController: The view controller to present the identity verification sheet.
+    @MainActor public func present(
+        from presentingViewController: UIViewController
+    ) async -> VerificationFlowResult {
+        await withCheckedContinuation { continuation in
+            self.presentOnMainActor(from: presentingViewController) { result in
+                continuation.resume(returning: result)
+            }
+        }
+    }
+
     // MARK: - Private
 
     /// Analytics client to use for logging analytics
@@ -206,7 +244,7 @@ final public class IdentityVerificationSheet {
     private let analyticsClient: STPAnalyticsClientProtocol
 
     /// Completion block called when the sheet is closed or fails to open
-    private var completion: ((VerificationFlowResult) -> Void)?
+    @MainActor private var completion: ((VerificationFlowResult) -> Void)?
 
     /// Parsed client secret string
     private let clientSecret: VerificationClientSecret?
@@ -226,7 +264,8 @@ final public class IdentityVerificationSheet {
 
 // MARK: - VerificationFlowWebViewControllerDelegate
 
-extension IdentityVerificationSheet: VerificationFlowWebViewControllerDelegate {
+extension IdentityVerificationSheet: @MainActor VerificationFlowWebViewControllerDelegate {
+    @MainActor
     func verificationFlowWebViewController(
         _ viewController: VerificationFlowWebViewController,
         didFinish result: VerificationFlowResult
@@ -237,7 +276,8 @@ extension IdentityVerificationSheet: VerificationFlowWebViewControllerDelegate {
 
 // MARK: - VerificationSheetControllerDelegate
 
-extension IdentityVerificationSheet: VerificationSheetControllerDelegate {
+extension IdentityVerificationSheet: @MainActor VerificationSheetControllerDelegate {
+    @MainActor
     func verificationSheetController(
         _ controller: VerificationSheetControllerProtocol,
         didFinish result: VerificationFlowResult

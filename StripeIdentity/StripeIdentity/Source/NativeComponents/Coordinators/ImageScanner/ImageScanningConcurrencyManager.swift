@@ -6,10 +6,10 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import CoreMedia
+import CoreVideo
 import Foundation
 @_spi(STP) import StripeCameraCore
-@_spi(STP) import StripeCore
-import Vision
 
 let kConcurrentImageScannerDefaultMaxConcurrentScans: Int = 2
 
@@ -26,9 +26,9 @@ protocol ImageScanningConcurrencyManagerProtocol {
 
     func reset()
 
-    func getPerformanceMetrics(
-        completeOn queue: DispatchQueue,
-        completion: @escaping (_ averageFPS: Double?, _ numFramesScanned: Int) -> Void
+    func getPerformanceMetrics() async -> (
+        averageFPS: Double?,
+        numFramesScanned: Int
     )
 }
 
@@ -36,17 +36,61 @@ protocol ImageScanningConcurrencyManagerProtocol {
 /// maximum number of concurrent image scans.
 final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProtocol {
 
-    /// Manages stateful properties used to track performance metrics
-    private let perfQueue = DispatchQueue(
-        label: "com.stripe.identity.concurrent-image-scanner.perf",
-        target: .global(qos: .userInitiated)
-    )
+    /// Owns and serializes all mutable performance metrics state.
+    private final class PerformanceMetricsTracker: @unchecked Sendable {
+        private let queue = DispatchQueue(
+            label: "com.stripe.identity.concurrent-image-scanner.perf",
+            target: .global(qos: .userInitiated)
+        )
+        private var firstScanStartTime: Date?
+        private var lastScanEndTime: Date?
+        private var numFramesScanned = 0
 
-    // Properties used to track performance metrics.
-    // These should only be modified from the perfQueue
-    private var perfFirstScanStartTime: Date?
-    private var perfLastScanEndTime: Date?
-    private var perfNumFramesScanned = 0
+        func trackScanStarted(at startTime: Date) {
+            queue.async {
+                self.firstScanStartTime = self.firstScanStartTime ?? startTime
+            }
+        }
+
+        func trackScanEnded(at endTime: Date) {
+            queue.async {
+                self.lastScanEndTime = endTime
+                self.numFramesScanned += 1
+            }
+        }
+
+        func reset() {
+            queue.async {
+                self.firstScanStartTime = nil
+                self.lastScanEndTime = nil
+                self.numFramesScanned = 0
+            }
+        }
+
+        func getPerformanceMetrics() async -> (
+            averageFPS: Double?,
+            numFramesScanned: Int
+        ) {
+            await withCheckedContinuation { continuation in
+                queue.async {
+                    var averageFPS: Double?
+                    if let firstScanStartTime = self.firstScanStartTime,
+                        let lastScanEndTime = self.lastScanEndTime
+                    {
+                        averageFPS =
+                            Double(self.numFramesScanned)
+                            / lastScanEndTime.timeIntervalSince(firstScanStartTime)
+                    }
+
+                    continuation.resume(
+                        returning: (averageFPS, self.numFramesScanned)
+                    )
+                }
+            }
+        }
+    }
+
+    private let performanceMetricsTracker = PerformanceMetricsTracker()
 
     /// Detectors will perform scans concurrently to optimize CPU and GPU overlap.
     /// No more than `maxConcurrentScans` tasks will run on this queue.
@@ -54,11 +98,9 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
         label: "com.stripe.identity.concurrent-image-scanner",
         attributes: .concurrent
     )
+
     /// Semaphore used to block the current thread until detectors have completed
     private let semaphore: DispatchSemaphore
-
-    private var amountOfFutures = 0
-    private var futureQueue: DispatchQueue = DispatchQueue(label: "com.stripe.identity.concurrent-image-scanner.futures")
 
     private let analyticsClient: IdentityAnalyticsClient
     private let scannerName: IdentityAnalyticsClient.ScannerName
@@ -76,14 +118,6 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
         self.screenName = screenName
         self.sheetController = sheetController
         self.semaphore = DispatchSemaphore(value: maxConcurrentScans)
-    }
-
-    deinit {
-        futureQueue.sync {
-            for _ in 0..<amountOfFutures {
-                self.semaphore.signal()
-            }
-        }
     }
 
     /// Scans a camera frame and calls a completion block with the scanned output
@@ -128,26 +162,20 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
 
         // Track when the scan started
         let scanStartTime = Date()
-        perfQueue.async { [weak self] in
-            self?.perfFirstScanStartTime = self?.perfFirstScanStartTime ?? scanStartTime
-        }
+        performanceMetricsTracker.trackScanStarted(at: scanStartTime)
 
         semaphore.wait()
-        let future = scanner.scanImage(
-            pixelBuffer: pixelBuffer,
-            sampleBuffer: sampleBuffer,
-            cameraProperties: cameraProperties
-        )
+        concurrentQueue.async {
+            defer { self.semaphore.signal() }
 
-        futureQueue.sync {
-            self.amountOfFutures += 1
-        }
-
-        future.observe(on: concurrentQueue) { result in
-            switch result {
-            case .success(let scannerOutput):
+            do {
+                let scannerOutput = try scanner.scanImage(
+                    pixelBuffer: pixelBuffer,
+                    sampleBuffer: sampleBuffer,
+                    cameraProperties: cameraProperties
+                )
                 wrappedCompletion(scannerOutput)
-            case .failure(let error):
+            } catch {
                 self.analyticsClient.logGenericError(
                     error: error,
                     additionalMetadata: [
@@ -161,50 +189,18 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
 
             // Track when the scan ended
             let scanEndTime = Date()
-
-            // Update stateful properties on perfQueue
-            self.perfQueue.async {
-                self.perfLastScanEndTime = scanEndTime
-                self.perfNumFramesScanned += 1
-            }
-
-            self.futureQueue.sync {
-                self.amountOfFutures -= 1
-                self.semaphore.signal()
-            }
-
+            self.performanceMetricsTracker.trackScanEnded(at: scanEndTime)
         }
     }
 
     func reset() {
-        perfQueue.async { [weak self] in
-            self?.perfFirstScanStartTime = nil
-            self?.perfLastScanEndTime = nil
-            self?.perfNumFramesScanned = 0
-        }
+        performanceMetricsTracker.reset()
     }
 
-    func getPerformanceMetrics(
-        completeOn completeOnQueue: DispatchQueue,
-        completion: @escaping (_ averageFPS: Double?, _ numFramesScanned: Int) -> Void
+    func getPerformanceMetrics() async -> (
+        averageFPS: Double?,
+        numFramesScanned: Int
     ) {
-        perfQueue.async {
-            var averageFPS: Double?
-            if let perfFirstScanStartTime = self.perfFirstScanStartTime,
-                let perfLastScanEndTime = self.perfLastScanEndTime
-            {
-                averageFPS =
-                    Double(self.perfNumFramesScanned)
-                    / perfLastScanEndTime.timeIntervalSince(perfFirstScanStartTime)
-            }
-            let perfNumFramesScanned = self.perfNumFramesScanned
-
-            completeOnQueue.async {
-                completion(
-                    averageFPS,
-                    perfNumFramesScanned
-                )
-            }
-        }
+        await performanceMetricsTracker.getPerformanceMetrics()
     }
 }

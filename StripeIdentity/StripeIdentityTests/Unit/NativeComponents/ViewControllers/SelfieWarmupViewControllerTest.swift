@@ -16,6 +16,7 @@ import XCTest
 
 @testable import StripeIdentity
 
+@MainActor
 final class SelfieWarmupViewControllerTest: XCTestCase {
     static let mockVerificationPage = try! VerificationPageMock.response200.make()
 
@@ -40,6 +41,7 @@ final class SelfieWarmupViewControllerTest: XCTestCase {
 
 }
 
+@MainActor
 final class SelfieCaptureViewControllerTest: XCTestCase {
     private let mockCameraSession = MockTestCameraSession()
     private let mockConcurrencyManager = ImageScanningConcurrencyManagerMock()
@@ -66,12 +68,12 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
         mockSelfieUploader = SelfieUploaderMock()
     }
 
-    func testRequestCameraAccessDeniedLogsAnalytics() {
+    func testRequestCameraAccessDeniedLogsAnalytics() async {
         let vc = makeViewController()
 
         vc.viewWillAppear(false)
         mockCameraPermissionsManager.respondToRequest(granted: false)
-        wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
+        await fulfillment(of: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
 
         let analytic = mockAnalyticsClient.loggedAnalyticPayloads(
             withEventName: "camera_permission_denied"
@@ -101,12 +103,12 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
         XCTAssertEqual(error?["file"] as? String, "SelfieCaptureViewController.swift")
     }
 
-    func testRequestCameraAccessGrantedLogsExistingAnalytic() {
+    func testRequestCameraAccessGrantedLogsExistingAnalytic() async {
         let vc = makeViewController()
 
         vc.viewWillAppear(false)
         mockCameraPermissionsManager.respondToRequest(granted: true)
-        wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
+        await fulfillment(of: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
 
         XCTAssertEqual(
             mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_granted")
@@ -124,15 +126,15 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
         )
     }
 
-    func testCameraSessionFailedConfigureLogsAnalytics() {
+    func testCameraSessionFailedConfigureLogsAnalytics() async {
         let vc = makeViewController()
 
         vc.viewWillAppear(false)
         mockCameraPermissionsManager.respondToRequest(granted: true)
-        wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
+        await fulfillment(of: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
 
         mockCameraSession.respondToConfigureSession(setupResult: .failed(error: mockError))
-        wait(for: [mockCameraSession.configureSessionCompletionExp], timeout: 1)
+        await fulfillment(of: [mockCameraSession.configureSessionCompletionExp], timeout: 1)
 
         let analytic = mockAnalyticsClient.loggedAnalyticPayloads(
             withEventName: "camera_error"
@@ -173,13 +175,17 @@ private extension SelfieCaptureViewControllerTest {
 }
 
 private final class SelfieUploaderMock: SelfieUploaderProtocol {
-    var uploadFuture: Future<SelfieUploader.FileData>?
+    var uploadResultValue: Result<SelfieUploader.FileData, Error>?
+
+    func uploadResult() async -> Result<SelfieUploader.FileData, Error>? {
+        uploadResultValue
+    }
 
     func uploadImages(_ capturedImages: FaceCaptureData) {
         // no-op
     }
 
     func reset() {
-        uploadFuture = nil
+        uploadResultValue = nil
     }
 }

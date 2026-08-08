@@ -13,6 +13,7 @@ import XCTest
 // swift-format-ignore
 @_spi(STP) @testable import StripeIdentity
 
+@MainActor
 final class IdentityVerificationSheetTest: XCTestCase {
     private let mockViewController = UIViewController()
     private let mockSecret = "vi_123_secret_456"
@@ -216,7 +217,7 @@ final class IdentityVerificationSheetTest: XCTestCase {
         XCTAssertEqual(mockAnalyticsClientV1.loggedAnalytics.count, 0)
     }
 
-    func testWebDelegateCallsCompletion() {
+    func testWebDelegateCallsCompletion() async {
         let exp = expectation(description: "completion block called")
         let mockPresentingViewController = UIViewController(nibName: nil, bundle: nil)
         let mockWebViewController = VerificationFlowWebViewController(
@@ -229,10 +230,10 @@ final class IdentityVerificationSheetTest: XCTestCase {
             exp.fulfill()
         }
         sheet.verificationFlowWebViewController(mockWebViewController, didFinish: .flowCanceled)
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
-    func testNativeDelegateCallsCompletion() {
+    func testNativeDelegateCallsCompletion() async {
         let exp = expectation(description: "completion block called")
         let mockPresentingViewController = UIViewController(nibName: nil, bundle: nil)
         let sheet = sheetWithNativeUI()
@@ -241,7 +242,7 @@ final class IdentityVerificationSheetTest: XCTestCase {
             exp.fulfill()
         }
         sheet.verificationSheetController(mockVerificationSheetController, didFinish: .flowCanceled)
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 }
 
@@ -251,7 +252,7 @@ extension IdentityVerificationSheetTest {
     fileprivate func sheetWithNativeUI() -> IdentityVerificationSheet {
         return IdentityVerificationSheet(
             verificationSessionClientSecret: "",
-            verificationSheetController: mockVerificationSheetController,
+            makeVerificationSheetController: { self.mockVerificationSheetController },
             analyticsClient: mockAnalyticsClientV1
         )
     }
@@ -259,7 +260,7 @@ extension IdentityVerificationSheetTest {
     fileprivate func sheetWithWebUI(clientSecret: String? = nil) -> IdentityVerificationSheet {
         return IdentityVerificationSheet(
             verificationSessionClientSecret: clientSecret ?? mockSecret,
-            verificationSheetController: nil,
+            makeVerificationSheetController: { nil },
             analyticsClient: mockAnalyticsClientV1
         )
     }

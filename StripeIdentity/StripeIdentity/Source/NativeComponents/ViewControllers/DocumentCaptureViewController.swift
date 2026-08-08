@@ -603,35 +603,38 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     private func saveFrontAndDecideBack(
         frontImage: UIImage
     ) {
+        guard let sheetController else { return }
         isDecidingBack = true
-        sheetController?.saveDocumentFrontAndDecideBack(
-            from: analyticsScreenName,
-            documentUploader: documentUploader,
-            onCompletion: { [weak self] isBackRequired in
-                self?.isDecidingBack = false
-                if isBackRequired {
-                    self?.imageScanningSession.startScanning(
-                        expectedClassification: DocumentSide.back
-                    )
-                    self?.updateUI()
-                } else {
-                    self?.imageScanningSession.setStateScanned(
-                        expectedClassification: .front,
-                        capturedData: frontImage
-                    )
-                }
+
+        Task {
+            let isBackRequired = await sheetController.saveDocumentFrontAndDecideBack(
+                from: analyticsScreenName,
+                documentUploader: documentUploader
+            )
+            isDecidingBack = false
+            if isBackRequired {
+                imageScanningSession.startScanning(
+                    expectedClassification: DocumentSide.back
+                )
+                updateUI()
+            } else {
+                imageScanningSession.setStateScanned(
+                    expectedClassification: .front,
+                    capturedData: frontImage
+                )
             }
-        )
+        }
     }
 
     private func saveBackAndTransitionToNextScreen(
         backImage: UIImage
     ) {
-        sheetController?.saveDocumentBackAndTransition(
-            from: analyticsScreenName,
-            documentUploader: documentUploader
-        ) { [weak self] in
-            self?.imageScanningSession.setStateScanned(
+        Task {
+            await sheetController?.saveDocumentBackAndTransition(
+                from: analyticsScreenName,
+                documentUploader: documentUploader
+            )
+            imageScanningSession.setStateScanned(
                 expectedClassification: .back,
                 capturedData: backImage
             )
@@ -720,21 +723,28 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
     }
 
     func imageScanningSessionWillStopScanning(_ scanningSession: DocumentImageScanningSession) {
-        scanningSession.concurrencyManager.getPerformanceMetrics(completeOn: .main) {
-            [weak sheetController] averageFPS, numFramesScanned in
-            guard let averageFPS = averageFPS else { return }
-            if let sheetController {
-                sheetController.analyticsClient.logAverageFramesPerSecond(
-                    averageFPS: averageFPS,
-                    numFrames: numFramesScanned,
-                    scannerName: .document,
-                    sheetController: sheetController
-                )
+        let concurrencyManager = scanningSession.concurrencyManager
+        Task { @MainActor [weak sheetController] in
+            let metrics = await concurrencyManager.getPerformanceMetrics()
+            guard let averageFPS = metrics.averageFPS, let sheetController else {
+                return
             }
+
+            sheetController.analyticsClient.logAverageFramesPerSecond(
+                averageFPS: averageFPS,
+                numFrames: metrics.numFramesScanned,
+                scannerName: .document,
+                sheetController: sheetController
+            )
         }
-        if let sheetController {
-            sheetController.analyticsClient.logModelPerformance(
-                mlModelMetricsTrackers: scanningSession.scanner.mlModelMetricsTrackers,
+        let metricsTrackers = scanningSession.scanner.mlModelMetricsTrackers
+        Task { @MainActor [weak sheetController] in
+            guard let sheetController else {
+                return
+            }
+
+            await sheetController.analyticsClient.logModelPerformance(
+                mlModelMetricsTrackers: metricsTrackers,
                 sheetController: sheetController
             )
         }

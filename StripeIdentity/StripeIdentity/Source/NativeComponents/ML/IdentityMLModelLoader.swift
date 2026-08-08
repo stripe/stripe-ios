@@ -33,8 +33,8 @@ enum IdentityMLModelLoaderError: Error, AnalyticLoggableErrorV2 {
 }
 
 protocol IdentityMLModelLoaderProtocol {
-    var documentModelsFuture: Future<AnyDocumentScanner> { get }
-    var faceModelsFuture: Future<AnyFaceScanner> { get }
+    func documentModels() async -> Result<AnyDocumentScanner, Error>
+    func faceModels() async -> Result<AnyFaceScanner, Error>
 
     func startLoadingDocumentModels(
         from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
@@ -55,21 +55,21 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
     // MARK: Instance Properties
 
     let mlModelLoader: MLModelLoader
-    private let documentMLModelsPromise = Promise<AnyDocumentScanner>(
-        error: IdentityMLModelLoaderError.mlModelNeverLoaded
-    )
-    private let faceMLModelsPromise = Promise<AnyFaceScanner>(
-        error: IdentityMLModelLoaderError.mlModelNeverLoaded
-    )
+    private var documentModelsTask: Task<AnyDocumentScanner, Error>?
+    private var faceModelsTask: Task<AnyFaceScanner, Error>?
 
-    /// Resolves to the ML models needed for document scanning
-    var documentModelsFuture: Future<AnyDocumentScanner> {
-        return documentMLModelsPromise
+    func documentModels() async -> Result<AnyDocumentScanner, Error> {
+        guard let documentModelsTask else {
+            return .failure(IdentityMLModelLoaderError.mlModelNeverLoaded)
+        }
+        return await documentModelsTask.result
     }
 
-    /// Resolves to the ML models needed for face scanning
-    var faceModelsFuture: Future<AnyFaceScanner> {
-        return faceMLModelsPromise
+    func faceModels() async -> Result<AnyFaceScanner, Error> {
+        guard let faceModelsTask else {
+            return .failure(IdentityMLModelLoaderError.mlModelNeverLoaded)
+        }
+        return await faceModelsTask.result
     }
 
     // MARK: Init
@@ -120,8 +120,7 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
 
     // MARK: Load models
 
-    /// Starts loading the ML models needed for document scanning. When the models
-    /// are done loading, they can be retrieved by observing `documentModelsFuture`.
+    /// Starts loading the ML models needed for document scanning.
     ///
     /// - Parameters:
     ///   - documentModelURLs: The URLs of all the ML models required to scan documents
@@ -138,38 +137,34 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
                 modelType: "document",
                 stage: "url_validation"
             )
-            documentMLModelsPromise.reject(
-                with: error
-            )
+            documentModelsTask = Task { throw error }
             return
         }
 
-        mlModelLoader.loadVisionModel(
-            fromRemote: idDetectorURL
-        ).chained { idDetectorModel in
-            return Promise<AnyDocumentScanner>(
-                value: AnyDocumentScanner(
+        documentModelsTask = Task { [mlModelLoader] in
+            do {
+                let idDetectorModel = try await mlModelLoader.loadVisionModel(
+                    fromRemote: idDetectorURL
+                )
+                return AnyDocumentScanner(
                     DocumentScanner(
                         idDetectorModel: idDetectorModel,
                         configuration: .init(from: capturePageConfig),
                         sheetController: sheetController
                     )
                 )
-            )
-        }.observe { [weak self] result in
-            if case .failure(let error) = result {
+            } catch {
                 Self.logModelLoadingError(
                     error,
                     modelType: "document",
                     stage: "load"
                 )
+                throw error
             }
-            self?.documentMLModelsPromise.fullfill(with: result)
         }
     }
 
-    /// Starts loading the ML models needed for face scanning. When the models
-    /// are done loading, they can be retrieved by observing `faceModelsFuture`.
+    /// Starts loading the ML models needed for face scanning.
     func startLoadingFaceModels(
         from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage
     ) {
@@ -182,32 +177,29 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
                 modelType: "face",
                 stage: "url_validation"
             )
-            faceMLModelsPromise.reject(
-                with: error
-            )
+            faceModelsTask = Task { throw error }
             return
         }
 
-        mlModelLoader.loadVisionModel(
-            fromRemote: faceDetectorURL
-        ).chained { faceDetectorModel in
-            return Promise<AnyFaceScanner>(
-                value: AnyFaceScanner(
+        faceModelsTask = Task { [mlModelLoader] in
+            do {
+                let faceDetectorModel = try await mlModelLoader.loadVisionModel(
+                    fromRemote: faceDetectorURL
+                )
+                return AnyFaceScanner(
                     FaceScanner(
                         faceDetectorModel: faceDetectorModel,
                         configuration: .init(from: selfiePageConfig)
                     )
                 )
-            )
-        }.observe { [weak self] result in
-            if case .failure(let error) = result {
+            } catch {
                 Self.logModelLoadingError(
                     error,
                     modelType: "face",
                     stage: "load"
                 )
+                throw error
             }
-            self?.faceMLModelsPromise.fullfill(with: result)
         }
     }
 }

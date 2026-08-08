@@ -11,6 +11,7 @@ import XCTest
 
 @testable import StripeIdentity
 
+@MainActor
 final class BiometricConsentViewControllerTest: XCTestCase {
 
     static let mockVerificationPage = try! VerificationPageMock.response200.make()
@@ -30,18 +31,30 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         )
     }
 
-    func testAccept() {
+    func testAccept() async {
+        let saveExp = expectation(description: "Consent saved")
+        mockSheetController.saveAndTransitionCallback = {
+            saveExp.fulfill()
+        }
         vc.scrolledToBottom = true
         // Tap accept button
         vc.flowViewModel.buttons.first?.didTap()
+
+        await fulfillment(of: [saveExp], timeout: 1)
 
         // Verify biometricConsent is saved
         XCTAssertEqual(mockSheetController.savedData?.biometricConsent, true)
     }
 
-    func testDeny() {
-        // Tap accept button
+    func testDeny() async {
+        let saveExp = expectation(description: "Consent saved")
+        mockSheetController.saveAndTransitionCallback = {
+            saveExp.fulfill()
+        }
+        // Tap deny button
         vc.flowViewModel.buttons.last?.didTap()
+
+        await fulfillment(of: [saveExp], timeout: 1)
 
         // Verify biometricConsent is saved
         XCTAssertEqual(mockSheetController.savedData?.biometricConsent, false)
