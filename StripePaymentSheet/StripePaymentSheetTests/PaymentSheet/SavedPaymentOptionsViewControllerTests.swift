@@ -3,6 +3,7 @@
 //  StripePaymentSheetTests
 //
 
+import StripeCoreTestUtils
 @_spi(STP) import StripePayments
 @testable import StripePaymentSheet
 import XCTest
@@ -210,6 +211,26 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
 
         XCTAssertEqual(cell.label.text, "Onelink")
         XCTAssertEqual(cell.selectableRectangle.accessibilityLabel, "One-link")
+    }
+
+    func testPaymentOptionCell_rightToLeftVoiceOverTraversalReadsPaymentMethodBeforeEdit() throws {
+        let cell = SavedPaymentMethodCollectionView.PaymentOptionCell(
+            frame: CGRect(x: 0, y: 0, width: 106, height: 112)
+        )
+        cell.setViewModel(
+            .saved(paymentMethod: STPPaymentMethod._testCard()),
+            cbcEligible: false,
+            allowsPaymentMethodRemoval: true,
+            allowsPaymentMethodUpdate: true
+        )
+        cell.isRemovingPaymentMethods = true
+        cell.semanticContentAttribute = .forceRightToLeft
+        cell.layoutIfNeeded()
+
+        let accessibilityElements = try XCTUnwrap(cell.accessibilityElements as? [UIView])
+        XCTAssertTrue(accessibilityElements[0] === cell.selectableRectangle)
+        XCTAssertTrue(accessibilityElements[1] === cell.accessoryButton)
+        XCTAssertLessThan(cell.accessoryButton.frame.midX, cell.selectableRectangle.frame.midX)
     }
 
     // MARK: Helpers
