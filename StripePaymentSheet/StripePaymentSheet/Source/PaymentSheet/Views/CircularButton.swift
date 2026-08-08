@@ -97,6 +97,7 @@ class CircularButton: UIControl {
         switch style {
         case .back:
             imageView.image = Image.icon_chevron_left.makeImage(template: true)
+                .imageFlippedForRightToLeftLayoutDirection()
             accessibilityLabel = String.Localized.back
             accessibilityIdentifier = "CircularButton.Back"
         case .close:

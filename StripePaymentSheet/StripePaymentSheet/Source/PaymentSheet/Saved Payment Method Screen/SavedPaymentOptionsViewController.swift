@@ -426,7 +426,10 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.updateLayout()
         collectionView.reloadData()
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
-        collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
+        let leadingScrollPosition: UICollectionView.ScrollPosition = collectionView.effectiveUserInterfaceLayoutDirection == .rightToLeft
+            ? .right
+            : .left
+        collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: leadingScrollPosition, animated: false)
         updateMandateView()
         if isViewLoaded {
             updateFormElement()
