@@ -193,7 +193,7 @@ private final class MockCheckoutSessionBillingAddressUpdater: CheckoutSessionBil
 
     func commitSession(
         _ apiResponse: PaymentPagesAPIResponse?,
-        applying localMutation: (@MainActor @Sendable (Checkout.Session) -> Checkout.Session)?
+        applying localMutation: (@MainActor @Sendable (PaymentPagesAPIResponse) -> Void)?
     ) async throws {
         XCTFail("Unexpected call to commitSession")
     }

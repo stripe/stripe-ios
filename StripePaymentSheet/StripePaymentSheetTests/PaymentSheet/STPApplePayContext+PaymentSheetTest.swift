@@ -853,9 +853,11 @@ private final class TestCheckoutSessionBillingAddressUpdater: CheckoutSessionBil
 
     func commitSession(
         _ apiResponse: PaymentPagesAPIResponse?,
-        applying localMutation: (@MainActor @Sendable (Checkout.Session) -> Checkout.Session)?
+        applying localMutation: (@MainActor @Sendable (PaymentPagesAPIResponse) -> Void)?
     ) async throws {
-        session = localMutation?(apiResponse?.makePublicSession() ?? session) ?? apiResponse?.makePublicSession() ?? session
+        guard let apiResponse else { return }
+        localMutation?(apiResponse)
+        session = apiResponse.makePublicSession()
     }
 
     func updateBillingTaxRegionIfNecessaryForPaymentSheet(

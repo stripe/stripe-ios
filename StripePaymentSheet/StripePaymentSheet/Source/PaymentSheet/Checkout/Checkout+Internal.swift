@@ -26,7 +26,9 @@ extension Checkout {
     // MARK: - Payment Option
 
     func setPaymentOption(_ paymentOption: Session.PaymentOptionDisplayData?) {
-        dangerouslySetSessionDirectly(session.makeCopyOverriding(paymentOption: .newValue(paymentOption)))
+        dangerouslyMutateAPIResponseDirectly { apiResponse in
+            apiResponse.local_paymentOption = paymentOption
+        }
     }
 
     // MARK: - Session Updates
@@ -120,11 +122,11 @@ extension Checkout {
     ///
     /// - Parameters:
     ///   - update: The API mutation to perform, or nil for a local-only update.
-    ///   - localMutation: A local change to the session to apply after the API call (or on its own).
+    ///   - localMutation: A local change to the response to apply after the API call (or on its own).
     ///   - canUpdateWhileSheetPresented: Bypasses the sheet-presented guard (e.g. billing sync on dismiss).
     func performUpdate(
         _ update: SessionUpdate? = nil,
-        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
+        applying localMutation: (@MainActor @Sendable (PaymentPagesAPIResponse) -> Void)? = nil,
         canUpdateWhileSheetPresented: Bool = false
     ) async throws {
         try await enqueueSessionUpdate {

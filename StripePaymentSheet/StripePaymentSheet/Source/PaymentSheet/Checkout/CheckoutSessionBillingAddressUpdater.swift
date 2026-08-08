@@ -15,7 +15,7 @@ protocol CheckoutSessionBillingAddressUpdater: AnyObject {
     // TODO: Delete this when CheckoutSession confirmation no longer uses `PaymentSheet.confirm`.
     func commitSession(
         _ apiResponse: PaymentPagesAPIResponse?,
-        applying localMutation: (@MainActor @Sendable (Checkout.Session) -> Checkout.Session)?
+        applying localMutation: (@MainActor @Sendable (PaymentPagesAPIResponse) -> Void)?
     ) async throws
 
     func updateBillingTaxRegionIfNecessaryForPaymentSheet(
