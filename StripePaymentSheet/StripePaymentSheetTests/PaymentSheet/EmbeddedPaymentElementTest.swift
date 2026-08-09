@@ -989,7 +989,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // Should no-op
         let result = await sut.update(checkout: checkout)
         XCTAssertEqual(result, .succeeded)
-        XCTAssertEqual(checkout.session.status?.type, .complete)
+        XCTAssertEqual(checkout.session.status, .complete(.paid))
     }
 
     func testUpdateCheckoutSessionNoOpsForExpiredSession() async throws {
