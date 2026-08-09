@@ -168,7 +168,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.elementsSession.sessionID, "elements_session_test123")
         XCTAssertEqual(session.email, "test@example.com")
         XCTAssertEqual(apiResponse.url, "https://checkout.stripe.com/c/pay/cs_test_a1b2c3d4e5f6g7h8i9j0")
-        XCTAssertEqual(apiResponse.returnUrl, "https://example.com/return")
 
         // Verify saved payment methods offer save
         XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
@@ -253,7 +252,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNil(session.customer)
         XCTAssertNil(session.email)
         XCTAssertNil(apiResponse.url)
-        XCTAssertNil(apiResponse.returnUrl)
         XCTAssertNil(session.savedPaymentMethodsOfferSave)
         XCTAssertNil(session.setupFutureUsage)
     }

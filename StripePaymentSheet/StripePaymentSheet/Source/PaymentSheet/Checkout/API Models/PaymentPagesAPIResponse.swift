@@ -30,7 +30,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let paymentStatus: String
     let customerEmail: String?
     let url: String?
-    let returnUrl: String?
     let savedPaymentMethodsOfferSave: SavedPaymentMethodsOfferSave?
     let setupFutureUsage: String?
     let setupFutureUsageForPaymentMethodType: [String: String]?
@@ -75,7 +74,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
             "customerId = \(String(describing: customer?.id))",
             "customerEmail = \(String(describing: customerEmail))",
             "url = \(String(describing: url))",
-            "returnUrl = \(String(describing: returnUrl))",
             "savedPaymentMethodsOfferSave = \(String(describing: savedPaymentMethodsOfferSave))",
         ]
         return "<\(props.joined(separator: "; "))>"
@@ -95,7 +93,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case paymentMethodTypes
         case customerEmail
         case url
-        case returnUrl
         case savedPaymentMethodsOfferSave = "customer_managed_saved_payment_methods_offer_save"
         case setupFutureUsage
         case setupFutureUsageForPaymentMethodType
@@ -164,7 +161,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
 
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
         url = try container.decodeIfPresent(String.self, forKey: .url)
-        returnUrl = try container.decodeIfPresent(String.self, forKey: .returnUrl)
         savedPaymentMethodsOfferSave = try container.decodeIfPresent(
             SavedPaymentMethodsOfferSave.self,
             forKey: .savedPaymentMethodsOfferSave
