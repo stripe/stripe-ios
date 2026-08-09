@@ -56,10 +56,7 @@ extension Checkout {
         public let shippingAddress: ShippingAddress?
 
         /// Status of the Checkout Session.
-        ///
-        /// `nil` if the server did not return a status. When non-nil, ``Status.paymentStatus``
-        /// is populated from the top-level payment status.
-        public let status: Checkout.Status?
+        public let status: Status
 
         /// Details about the tax computation status and aggregated tax amounts.
         public let tax: Checkout.Tax
@@ -69,7 +66,7 @@ extension Checkout {
 
         // MARK: - Internal Properties
 
-        let paymentStatus: Checkout.PaymentStatus
+        let paymentStatus: Status.PaymentStatus
         let paymentMethodOptions: STPPaymentMethodOptions?
         let customer: PaymentPagesAPIResponse.Customer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
