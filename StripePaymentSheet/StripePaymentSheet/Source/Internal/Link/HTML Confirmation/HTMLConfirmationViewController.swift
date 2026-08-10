@@ -20,10 +20,6 @@ final class HTMLConfirmationViewController: PaymentSheetContainerViewController 
         }
     }
 
-    override var sheetCornerRadius: CGFloat? {
-        LinkUI.largeCornerRadius
-    }
-
     /// Creates a new HTML confirmation view controller.
     /// - Parameters:
     ///   - heading: The heading displayed above the HTML.

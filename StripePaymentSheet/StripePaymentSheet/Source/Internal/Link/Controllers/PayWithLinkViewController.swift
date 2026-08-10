@@ -201,10 +201,6 @@ final class PayWithLinkViewController: PaymentSheetContainerViewController {
         } ?? shippingAddressResponse?.shippingAddresses.first
     }
 
-    override var sheetCornerRadius: CGFloat? {
-        LinkUI.largeCornerRadius
-    }
-
     override var navigationBarHeight: CGFloat {
         LinkUI.navigationBarHeight
     }

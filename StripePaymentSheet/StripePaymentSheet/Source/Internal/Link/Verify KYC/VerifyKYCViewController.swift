@@ -18,12 +18,6 @@ final class VerifyKYCViewController: PaymentSheetContainerViewController {
         }
     }
 
-    // MARK: - PaymentSheetContainerViewController
-
-    override var sheetCornerRadius: CGFloat? {
-        LinkUI.largeCornerRadius
-    }
-
     // MARK: - VerifyKYCViewController
 
     /// Creates a new instance of `VerifyKYCViewController`.

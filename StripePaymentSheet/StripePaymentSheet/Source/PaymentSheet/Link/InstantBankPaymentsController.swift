@@ -165,7 +165,7 @@ import UIKit
 
     @MainActor
     private func presentWebFlow(from presentingViewController: UIViewController) async throws {
-        presentingViewController.presentAsSheet(bottomSheetViewController, appearance: PaymentSheet.Appearance.default)
+        presentingViewController.presentAsSheet(bottomSheetViewController)
         defer {
             bottomSheetViewController.dismiss(animated: true)
         }

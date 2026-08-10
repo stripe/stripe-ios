@@ -176,7 +176,6 @@ final class PayWithNativeLinkController {
             payWithLinkVC.payWithLinkDelegate = self
             presentingController.presentAsSheet(
                 payWithLinkVC,
-                appearance: self.configuration.appearance,
                 completion: {}
             )
 
@@ -189,7 +188,7 @@ final class PayWithNativeLinkController {
                     }
                     // Handle representing the previous bottom sheet
                     if let targetBottomSheet, let targetPresentationController, hidingUnderlyingBottomSheet {
-                        targetPresentationController.presentAsSheet(targetBottomSheet, appearance: self.configuration.appearance)
+                        targetPresentationController.presentAsSheet(targetBottomSheet)
                     }
                 }
             }

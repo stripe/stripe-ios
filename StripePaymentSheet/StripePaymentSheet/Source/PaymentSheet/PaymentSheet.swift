@@ -190,7 +190,7 @@ public class PaymentSheet {
                 }
             }
             self.bottomSheetViewController.setViewControllers([self.loadingViewController])
-            presentingViewController.presentAsSheet(bottomSheetViewController, appearance: configuration.appearance)
+            presentingViewController.presentAsSheet(bottomSheetViewController)
         }
     }
 
@@ -397,8 +397,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                     } else {
                         // We dismissed the Payment Sheet to show the Apple Pay sheet
                         // Bring it back if it didn't succeed
-                        presentingViewController?.presentAsSheet(self.bottomSheetViewController,
-                                                                       appearance: self.configuration.appearance)
+                        presentingViewController?.presentAsSheet(self.bottomSheetViewController)
                     }
                     completion(result, deferredIntentConfirmationType)
                 }
