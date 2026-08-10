@@ -30,10 +30,6 @@ class PaymentSheetContainerViewController: UIViewController {
         static let keyboardAvoidanceEdgePadding: CGFloat = 16
     }
 
-    var sheetCornerRadius: CGFloat? {
-        appearance.sheetCornerRadius
-    }
-
     static let contentDetentIdentifier = UISheetPresentationController.Detent.Identifier(
         "com.stripe.paymentsheet.content"
     )

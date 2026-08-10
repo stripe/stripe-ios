@@ -845,7 +845,7 @@ import UIKit
                     }
                 }
 
-                viewController.presentAsSheet(verifyKYCViewController, appearance: .init())
+                viewController.presentAsSheet(verifyKYCViewController)
             }
         }
     }
@@ -899,7 +899,7 @@ import UIKit
                     }
                 }
 
-                viewController.presentAsSheet(attestationViewController, appearance: .init())
+                viewController.presentAsSheet(attestationViewController)
             }
         }
     }
@@ -1186,10 +1186,7 @@ import UIKit
         // Store completion handler for use in delegate method
         self.fullConsentCompletion = completion
 
-        viewController.presentAsSheet(
-            bottomSheetViewController,
-            appearance: paymentElementConfiguration.appearance
-        )
+        viewController.presentAsSheet(bottomSheetViewController)
     }
 }
 

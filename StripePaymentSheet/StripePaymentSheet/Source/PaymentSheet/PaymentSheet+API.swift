@@ -172,7 +172,7 @@ extension PaymentSheet {
                         paymentHandler.cancel3DS2ChallengeFlow()
                     }
                 )
-                presentingViewController.presentAsSheet(bottomSheetVC, appearance: configuration.appearance)
+                presentingViewController.presentAsSheet(bottomSheetVC)
             }
         } else {
             // MARK: - No local actions

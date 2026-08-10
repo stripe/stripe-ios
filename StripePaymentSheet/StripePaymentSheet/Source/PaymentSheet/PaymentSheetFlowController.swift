@@ -579,7 +579,7 @@ extension PaymentSheet {
                 )
 
                 self.isPresented = true
-                presentingViewController.presentAsSheet(bottomSheetVC, appearance: self.configuration.appearance)
+                presentingViewController.presentAsSheet(bottomSheetVC)
             }
 
             if canPresentLinkInPlaceOfFlowController {
@@ -615,7 +615,7 @@ extension PaymentSheet {
                     self?.paymentHandler.cancel3DS2ChallengeFlow()
                 }
             )
-            presentingViewController.presentAsSheet(bottomSheetVC, appearance: configuration.appearance)
+            presentingViewController.presentAsSheet(bottomSheetVC)
 
             pendingPresentTask = Task { @MainActor [weak self] in
                 guard let self else { return }
@@ -737,7 +737,7 @@ extension PaymentSheet {
                     }
                 }
                 let bottomSheet = Self.makePaymentSheetContainerViewController(sepaMandateVC, configuration: configuration)
-                presentingViewController.presentAsSheet(bottomSheet, appearance: configuration.appearance)
+                presentingViewController.presentAsSheet(bottomSheet)
             }
 
             func confirm() {

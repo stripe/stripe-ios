@@ -12,7 +12,6 @@ extension UIViewController {
     /// Presents a PaymentSheet container using UIKit's native sheet presentation.
     func presentAsSheet(
         _ viewControllerToPresent: PaymentSheetContainerViewController,
-        appearance: PaymentSheet.Appearance,
         completion: (() -> Void)? = nil
     ) {
         viewControllerToPresent.modalPresentationStyle = .pageSheet
@@ -20,12 +19,9 @@ extension UIViewController {
         viewControllerToPresent.prepareForPresentation(in: view.bounds.width)
 
         if let sheetPresentationController = viewControllerToPresent.sheetPresentationController {
-            sheetPresentationController.detents = [viewControllerToPresent.contentSizedDetent]
+            sheetPresentationController.detents = [viewControllerToPresent.contentSizedDetent, .large()]
             sheetPresentationController.selectedDetentIdentifier = PaymentSheetContainerViewController.contentDetentIdentifier
-            sheetPresentationController.preferredCornerRadius = viewControllerToPresent.sheetCornerRadius ?? appearance.sheetCornerRadius
-            sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge = false
-            sheetPresentationController.prefersEdgeAttachedInCompactHeight = true
-            sheetPresentationController.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+            sheetPresentationController.prefersGrabberVisible = true
         }
         viewControllerToPresent.presentationController?.delegate = viewControllerToPresent
 

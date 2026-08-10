@@ -199,7 +199,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         let presentingViewController = resolvedPresentingViewController
         assert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
         stpAssert(selectedFormViewController.delegate != nil)
-        presentingViewController?.presentAsSheet(bottomSheet, appearance: configuration.appearance)
+        presentingViewController?.presentAsSheet(bottomSheet)
     }
 
     private func handleSelectionWithoutForm() {
@@ -326,7 +326,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                          configuration: updateConfig)
             updateViewController.delegate = self
             let bottomSheetVC = bottomSheetController(with: updateViewController)
-            resolvedPresentingViewController?.presentAsSheet(bottomSheetVC, appearance: configuration.appearance)
+            resolvedPresentingViewController?.presentAsSheet(bottomSheetVC)
             return
         }
 
@@ -342,7 +342,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         )
         verticalSavedPaymentMethodsViewController.delegate = self
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
-        resolvedPresentingViewController?.presentAsSheet(bottomSheetVC, appearance: configuration.appearance)
+        resolvedPresentingViewController?.presentAsSheet(bottomSheetVC)
     }
 
     func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool {

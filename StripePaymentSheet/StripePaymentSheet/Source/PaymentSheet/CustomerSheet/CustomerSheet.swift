@@ -221,8 +221,7 @@ public class CustomerSheet {
                 }
             }
         }
-        presentingViewController.presentAsSheet(bottomSheetViewController,
-                                                      appearance: configuration.appearance)
+        presentingViewController.presentAsSheet(bottomSheetViewController)
     }
 
     func present(from presentingViewController: UIViewController,

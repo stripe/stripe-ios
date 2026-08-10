@@ -19,10 +19,6 @@ final class UserAttestationViewController: PaymentSheetContainerViewController {
         }
     }
 
-    override var sheetCornerRadius: CGFloat? {
-        LinkUI.largeCornerRadius
-    }
-
     /// Creates a new instance of `UserAttestationViewController`.
     /// - Parameters:
     ///   - html: The attestation HTML to display.
