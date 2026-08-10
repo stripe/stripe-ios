@@ -17,7 +17,6 @@ final class SelfieCaptureFeedbackGenerator: SelfieCaptureFeedbackGeneratorProtoc
     private enum Constants {
         static let confirmationSoundName = "selfie_capture_confirmed"
         static let confirmationSoundExtension = "wav"
-        static let confirmationSoundSubdirectory = "Audio"
     }
 
     private let notificationFeedbackGenerator = UINotificationFeedbackGenerator()
@@ -50,10 +49,6 @@ final class SelfieCaptureFeedbackGenerator: SelfieCaptureFeedbackGeneratorProtoc
         let bundle = StripeIdentityBundleLocator.resourcesBundle
 
         return bundle.url(
-            forResource: Constants.confirmationSoundName,
-            withExtension: Constants.confirmationSoundExtension,
-            subdirectory: Constants.confirmationSoundSubdirectory
-        ) ?? bundle.url(
             forResource: Constants.confirmationSoundName,
             withExtension: Constants.confirmationSoundExtension
         )
