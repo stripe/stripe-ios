@@ -6,6 +6,7 @@
 //
 
 @testable import StripePaymentSheet
+@_spi(STP) import StripeUICore
 import UIKit
 import XCTest
 
@@ -78,6 +79,33 @@ final class PaymentSheetPresentationTests: XCTestCase {
     }
 
     @MainActor
+    func testSwitchingNestedContentInvalidatesContentDetent() {
+        // Given
+        let contentViewController = NativeSheetStubContentViewController()
+        let sheetViewController = DetentInvalidationSpyViewController(
+            contentViewController: contentViewController,
+            appearance: .default,
+            isTestMode: true,
+            didCancelNative3DS2: {}
+        )
+        let containerView = DynamicHeightContainerView()
+        contentViewController.view.addSubview(containerView)
+        contentViewController.add(
+            childViewController: UIViewController(),
+            containerView: containerView
+        )
+
+        // When
+        contentViewController.switchContentIfNecessary(
+            to: UIViewController(),
+            containerView: containerView
+        )
+
+        // Then
+        XCTAssertEqual(sheetViewController.invalidationCount, 1)
+    }
+
+    @MainActor
     func testScrollViewAvoidsOnlyVisibleKeyboardArea() throws {
         // Given
         let sheetViewController = PaymentSheetContainerViewController(
@@ -132,5 +160,14 @@ private final class NativeSheetStubContentViewController: UIViewController, Bott
 
     func didTapOrSwipeToDismiss() {
         dismissalAttemptCount += 1
+    }
+}
+
+private final class DetentInvalidationSpyViewController: PaymentSheetContainerViewController {
+
+    private(set) var invalidationCount = 0
+
+    override func invalidateContentDetent() {
+        invalidationCount += 1
     }
 }

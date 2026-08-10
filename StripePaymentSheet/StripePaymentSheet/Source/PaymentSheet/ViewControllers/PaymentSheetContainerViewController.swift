@@ -243,9 +243,7 @@ class PaymentSheetContainerViewController: UIViewController {
         navigationBarContainerView.layoutIfNeeded()
         newContentViewController.view.alpha = 0
 
-        sheetPresentationController?.animateChanges {
-            self.sheetPresentationController?.invalidateDetents()
-        }
+        invalidateContentDetent()
         UIView.animate(withDuration: 0.2, animations: {
             oldViewImage.alpha = 0
             self.contentViewController.view.alpha = 1
@@ -324,6 +322,12 @@ class PaymentSheetContainerViewController: UIViewController {
         view.setNeedsLayout()
         view.layoutIfNeeded()
         lastFittedContentHeight = fittedContentHeight
+    }
+
+    func invalidateContentDetent() {
+        sheetPresentationController?.animateChanges {
+            self.sheetPresentationController?.invalidateDetents()
+        }
     }
 
     /// :nodoc:
@@ -414,9 +418,7 @@ class PaymentSheetContainerViewController: UIViewController {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.hasScheduledDetentInvalidation = false
-            self.sheetPresentationController?.animateChanges {
-                self.sheetPresentationController?.invalidateDetents()
-            }
+            self.invalidateContentDetent()
         }
     }
     #if compiler(>=6.2)
