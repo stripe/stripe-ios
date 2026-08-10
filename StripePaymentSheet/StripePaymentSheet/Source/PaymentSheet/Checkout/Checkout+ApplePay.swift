@@ -187,13 +187,22 @@ extension Checkout {
             guard let ap = self.applePaySession else { return }
             do {
                 // 1. Create PaymentMethod (PaymentState still .notStarted here — failure is recoverable)
-                let paymentMethod = try await self.createApplePayPaymentMethod(from: payment, session: ap)
+                let paymentMethodId = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
+                    StripeAPI.PaymentMethod.create(
+                        apiClient: self.apiClient,
+                        payment: payment,
+                        fallbackBillingDetails: ap.fallbackBillingDetails,
+                        clientAttributionMetadata: ap.clientAttributionMetadata
+                    ) { result in
+                        continuation.resume(with: result.map { $0.id })
+                    }
+                }
 
                 // 2. Confirm — set .pending first, cannot cancel after this
                 self.applePaySession?.paymentState = .pending
                 let response = try await self.apiClient.confirmCheckoutSession(
                     sessionId: ap.sessionSnapshot.id,
-                    paymentMethod: paymentMethod.stripeId,
+                    paymentMethod: paymentMethodId,
                     expectedAmount: ap.sessionSnapshot.expectedAmount(),
                     expectedPaymentMethodType: STPPaymentMethodType.card.identifier,
                     returnURL: ap.returnURL,
@@ -246,7 +255,7 @@ extension Checkout {
         case .success, .error:
             controller.dismiss {
                 DispatchQueue.main.async {
-                    self.resumeApplePayContinuation(with: ap.result ?? .init(paymentSheetResult: .canceled))
+                    self.resumeApplePayContinuation(with: self.applePaySession?.result ?? .init(paymentSheetResult: .canceled))
                 }
             }
         }
@@ -335,28 +344,9 @@ extension Checkout {
         guard let ap = applePaySession else { return }
         ap.controller.dismiss {
             DispatchQueue.main.async {
-                let result = ap.result ?? .init(paymentSheetResult: .canceled)
-                self.resumeApplePayContinuation(with: result)
+                self.resumeApplePayContinuation(with: self.applePaySession?.result ?? .init(paymentSheetResult: .canceled))
             }
         }
-    }
-
-    /// Creates a PaymentMethod from a PKPayment.
-    /// Flow: PKPayment → Stripe Token → PaymentMethod.
-    private func createApplePayPaymentMethod(
-        from payment: PKPayment,
-        session: CheckoutApplePaySession
-    ) async throws -> STPPaymentMethod {
-        let params = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<STPPaymentMethodParams, Error>) in
-            STPPaymentMethodParams.create(
-                apiClient: apiClient,
-                payment: payment,
-                fallbackBillingDetails: session.fallbackBillingDetails
-            ) { result in
-                continuation.resume(with: result)
-            }
-        }
-        return try await apiClient.createPaymentMethod(with: params)
     }
 
     @MainActor
