@@ -29,5 +29,14 @@ extension Checkout {
             self.merchantId = merchantId
             self.buttonType = buttonType
         }
+
+        func makePaymentSheetConfiguration(merchantCountryCode: String?) -> PaymentSheet.ApplePayConfiguration? {
+            guard let merchantCountryCode else { return nil }
+            return PaymentSheet.ApplePayConfiguration(
+                merchantId: merchantId,
+                merchantCountryCode: merchantCountryCode,
+                buttonType: buttonType ?? .plain
+            )
+        }
     }
 }

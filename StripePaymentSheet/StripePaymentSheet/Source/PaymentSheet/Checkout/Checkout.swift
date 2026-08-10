@@ -337,35 +337,26 @@ public final class Checkout: ObservableObject {
         )
 
         do {
-            let confirmResult: InternalConfirmResult
-            if case .applePay = confirmationContext.paymentOption {
-                confirmResult = try await enqueueSessionUpdate {
-                    let result = await self.presentApplePay(
-                        checkoutSession: self.session,
-                        authenticationContext: authenticationContext
-                    )
-                    if let response = result.checkoutSessionResponse {
-                        try await self.commitSession(response)
-                    }
-                    return result
+            let confirmResult = try await enqueueSessionUpdate {
+                let result = await Self.confirm(
+                    checkout: self,
+                    confirmationContext: confirmationContext,
+                    authenticationContext: authenticationContext,
+                    paymentHandler: self.paymentHandler
+                )
+                if let checkoutSessionResponse = result.checkoutSessionResponse {
+                    try await self.commitSession(checkoutSessionResponse)
                 }
-            } else {
-                confirmResult = try await enqueueSessionUpdate {
-                    let result = await Self.confirm(
-                        checkoutSession: self.session,
-                        confirmationContext: confirmationContext,
-                        authenticationContext: authenticationContext,
-                        paymentHandler: self.paymentHandler
-                    )
-                    if let checkoutSessionResponse = result.checkoutSessionResponse {
-                        try await self.commitSession(checkoutSessionResponse)
-                    }
-                    return result
-                }
+                return result
             }
-            _ = confirmResult
-            // TODO: Map the internal confirm result into `ConfirmResult`.
-            return .canceled
+            switch confirmResult.paymentSheetResult {
+            case .completed:
+                return .succeeded(paymentStatus: session.status?.paymentStatus ?? .unknown)
+            case .canceled:
+                return .canceled
+            case .failed(let error):
+                return .failed(error)
+            }
         } catch {
             return .failed(error)
         }

@@ -1,5 +1,5 @@
 //
-//  STPApplePayContext+Checkout.swift
+//  STPApplePayContext+CheckoutSessionLineItems.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 5/5/26.
@@ -14,7 +14,6 @@ import PassKit
 @_spi(STP) import StripePayments
 
 extension STPApplePayContext {
-
     /// Builds Apple Pay summary items from a checkout session's current state.
     /// Falls back to a single total row (or .pending) when line items aren't available.
     static func makePaymentSummaryItems(
@@ -109,7 +108,7 @@ extension STPApplePayContext {
         return summaryItems
     }
 
-    // Partial billing/shipping address from the Apple Pay sheet (no street until authorization).
+    // Partial billing address from the Apple Pay sheet (no street until authorization).
     // Returns nil if there's no country to key tax on.
     static func makeCheckoutAddress(from postalAddress: CNPostalAddress) -> Checkout.Address? {
         guard let country = postalAddress.isoCountryCode.nonEmpty else {

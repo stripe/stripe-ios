@@ -12,27 +12,20 @@ import UIKit
 
 extension Checkout: ExpressCheckoutElementDelegate {
     /// Called by ExpressCheckoutElement when the user taps the Apple Pay button.
-    func confirmApplePay() {
+    func confirmApplePay() async -> InternalConfirmResult {
         guard let presentingViewController = UIWindow.visibleViewController else {
             stpAssertionFailure(CheckoutError.applePayNotSupportedOrMisconfigured.localizedDescription)
-            return
+            return .init(paymentSheetResult: .failed(error: CheckoutError.applePayNotSupportedOrMisconfigured))
         }
-        let authContext = AuthenticationContext(
+        let authenticationContext = AuthenticationContext(
             presentingViewController: presentingViewController,
             appearance: .default
         )
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            try? await enqueueSessionUpdate {
-                let result = await self.presentApplePay(
-                    checkoutSession: self.session,
-                    authenticationContext: authContext
-                )
-                if let response = result.checkoutSessionResponse {
-                    try await self.commitSession(response)
-                }
-            }
-        }
+        return await Self.confirmApplePay(
+            checkout: self,
+            checkoutSession: self.session,
+            authenticationContext: authenticationContext
+        )
     }
 }
 extension Checkout: CurrencySelectorElementDelegate {}

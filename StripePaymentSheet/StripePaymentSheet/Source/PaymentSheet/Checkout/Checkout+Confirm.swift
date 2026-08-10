@@ -53,7 +53,7 @@ extension Checkout {
     }
 
     static func confirm(
-        checkoutSession: Session,
+        checkout: Checkout,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler
@@ -62,7 +62,7 @@ extension Checkout {
         let preconfirmActionsResult = await PaymentSheet.handlePreconfirmActionsIfNecessary(
             configuration: confirmationContext.configuration,
             authenticationContext: authenticationContext,
-            intent: .checkout(checkoutSession),
+            intent: .checkout(checkout.session),
             paymentOption: confirmationContext.paymentOption,
             paymentHandler: paymentHandler,
             integrationShape: confirmationContext.integrationShape
@@ -80,7 +80,7 @@ extension Checkout {
 
         // 2. Confirm the Checkout Session using the selected payment option.
         return await confirmPaymentOption(
-            checkoutSession: checkoutSession,
+            checkout: checkout,
             confirmationContext: confirmationContext,
             authenticationContext: authenticationContext,
             intentConfirmParamsForDeferredIntent: intentConfirmParams,
@@ -89,12 +89,13 @@ extension Checkout {
     }
 
     static func confirmPaymentOption(
-        checkoutSession: Session,
+        checkout: Checkout,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
         intentConfirmParamsForDeferredIntent: IntentConfirmParams?,
         paymentHandler: STPPaymentHandler
     ) async -> InternalConfirmResult {
+        let checkoutSession = checkout.session
         let paymentOption = confirmationContext.paymentOption
         let elementsSession = checkoutSession.elementsSession
         let configuration = confirmationContext.configuration
@@ -106,10 +107,11 @@ extension Checkout {
 
         switch paymentOption {
         case .applePay:
-            // Apple Pay is confirmed via presentApplePay before reaching this method.
-            stpAssertionFailure("Apple Pay should be confirmed via presentApplePay, not through confirmPaymentOption")
-            return .init(paymentSheetResult: .canceled)
-
+            return await confirmApplePay(
+                checkout: checkout,
+                checkoutSession: checkoutSession,
+                authenticationContext: authenticationContext
+            )
         case .new(let confirmParams):
             // MARK: - New PM
             let paymentMethodType: STPPaymentMethodType = {
@@ -169,7 +171,7 @@ extension Checkout {
         case .link:
             // MARK: - Link
             return await confirmLink(
-                checkoutSession: checkoutSession,
+                checkout: checkout,
                 confirmationContext: confirmationContext,
                 authenticationContext: authenticationContext,
                 clientAttributionMetadata: clientAttributionMetadata,
