@@ -26,10 +26,6 @@ protocol BottomSheetContentViewController: UIViewController {
 @objc(STP_Internal_PaymentSheetContainerViewController)
 class PaymentSheetContainerViewController: UIViewController {
 
-    struct Constants {
-        static let keyboardAvoidanceEdgePadding: CGFloat = 16
-    }
-
     static let contentDetentIdentifier = UISheetPresentationController.Detent.Identifier(
         "com.stripe.paymentsheet.content"
     )
@@ -306,8 +302,6 @@ class PaymentSheetContainerViewController: UIViewController {
     // MARK: -
     private var scrollViewHeightConstraint: NSLayoutConstraint?
 
-    private var bottomAnchor: NSLayoutConstraint?
-
     private var lastFittedContentHeight: CGFloat = 0
     private var hasScheduledDetentInvalidation = false
 
@@ -336,7 +330,6 @@ class PaymentSheetContainerViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
 
-        registerForKeyboardNotifications()
         [scrollView, navigationBarContainerView].forEach({  // Note: Order important here, navigation bar should be on top
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -345,9 +338,8 @@ class PaymentSheetContainerViewController: UIViewController {
         // Our content VCs constrain against safeAreaLayoutGuide, we don't want the scroll view to adjust its content inset too. If `contentInsetAdjustmentBehavior` is left as the default (automatic),
         // it causes an infinite layout loop under certain conditions when the content exceeds the height of the screen.
         scrollView.contentInsetAdjustmentBehavior = .never
-        let bottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        let bottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
         bottomAnchor.priority = .defaultLow
-        self.bottomAnchor = bottomAnchor
 
         NSLayoutConstraint.activate([
             navigationBarContainerView.topAnchor.constraint(equalTo: view.topAnchor),  // For unknown reasons, safeAreaLayoutGuide can have incorrect padding; we'll rely on our superview instead
@@ -439,95 +431,6 @@ class PaymentSheetContainerViewController: UIViewController {
         navigationBarContainerView.addInteraction(navigationBarBlur)
     }
     #endif
-    private func registerForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(
-            self, selector: #selector(keyboardDidHide),
-            name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(
-            self, selector: #selector(keyboardDidShow),
-            name: UIResponder.keyboardWillShowNotification, object: nil)
-    }
-
-    @objc
-    private func keyboardDidShow(notification: Notification) {
-        adjustForKeyboard(notification: notification) {
-            if let firstResponder = self.view.firstResponder() {
-                let firstResponderFrame = self.scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
-                    dx: -Constants.keyboardAvoidanceEdgePadding,
-                    dy: -Constants.keyboardAvoidanceEdgePadding
-                )
-                self.scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
-            }
-        }
-    }
-
-    @objc
-    private func keyboardDidHide(notification: Notification) {
-        adjustForKeyboard(notification: notification) {
-            if let firstResponder = self.view.firstResponder() {
-                let firstResponderFrame = self.scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
-                    dx: -Constants.keyboardAvoidanceEdgePadding,
-                    dy: -Constants.keyboardAvoidanceEdgePadding
-                )
-                self.scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
-            }
-        }
-    }
-
-    @objc
-    private func adjustForKeyboard(notification: Notification, animations: @escaping () -> Void) {
-        guard presentedViewController == nil else {
-            // The presentedVC handles the keyboard, not us.
-            return
-        }
-        let adjustForKeyboard = {
-            self.view.superview?.setNeedsLayout()
-            UIView.animateAlongsideKeyboard(notification) {
-                guard
-                    let keyboardScreenEndFrame =
-                        (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?
-                        .cgRectValue,
-                    let bottomAnchor = self.bottomAnchor
-                else {
-                    return
-                }
-
-                let keyboardViewEndFrame = self.view.convert(keyboardScreenEndFrame, from: self.view.window)
-                var keyboardInViewHeight = self.view.bounds.intersection(keyboardViewEndFrame).height
-                // Account for edge case where keyboard is taller than our view
-                if keyboardViewEndFrame.origin.y < 0 {
-                    // If keyboard frame is negative relative to our own, keyboardInViewHeight (the intersection of keyboard and our view) won't include it and we need to add the extra height:
-                    keyboardInViewHeight += -keyboardViewEndFrame.origin.y
-                }
-                if notification.name == UIResponder.keyboardWillHideNotification {
-                    bottomAnchor.constant = 0
-                } else {
-                    #if !os(visionOS)
-                    if #available(iOS 26.0, visionOS 26.0, *), let inputAccessoryView = self.view.firstResponder()?.inputAccessoryView {
-                        // On iOS 26, the input accessory view is transparent, so we don't want shift the content above it.
-                       keyboardInViewHeight -= inputAccessoryView.frame.height
-                    }
-                    #endif
-                    bottomAnchor.constant = -keyboardInViewHeight
-                }
-
-                self.view.superview?.layoutIfNeeded()
-                animations()
-            }
-        }
-        if self.modalPresentationStyle == .formSheet {
-            // If we're presenting as a form sheet (on an iPad etc), the form sheet presenter might move us around to center us on the screen.
-            // Then we can't calculate the keyboard's location correctly, because we'll be estimating based on the keyboard's size
-            // in our *old* location instead of the new one.
-            // To work around this, wait for a turn of the runloop, then add the keyboard padding.
-            DispatchQueue.main.async {
-                adjustForKeyboard()
-            }
-        } else {
-            // But usually we can do this immediately, as we control the presentation and know we'll always be pinned to the bottom of the screen.
-            adjustForKeyboard()
-        }
-    }
 
     func didTapOrSwipeToDismiss() {
         contentViewController.didTapOrSwipeToDismiss()

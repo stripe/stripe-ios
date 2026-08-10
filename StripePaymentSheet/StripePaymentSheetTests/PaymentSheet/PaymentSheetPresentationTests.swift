@@ -76,6 +76,29 @@ final class PaymentSheetPresentationTests: XCTestCase {
         // Then
         XCTAssertEqual(contentViewController.dismissalAttemptCount, 1)
     }
+
+    @MainActor
+    func testScrollViewAvoidsOnlyVisibleKeyboardArea() throws {
+        // Given
+        let sheetViewController = PaymentSheetContainerViewController(
+            contentViewController: NativeSheetStubContentViewController(),
+            appearance: .default,
+            isTestMode: true,
+            didCancelNative3DS2: {}
+        )
+
+        // When
+        sheetViewController.loadViewIfNeeded()
+
+        // Then
+        let keyboardAvoidanceConstraint = try XCTUnwrap(sheetViewController.view.constraints.first {
+            $0.firstItem === sheetViewController.scrollView
+                && $0.firstAttribute == .bottom
+                && $0.secondItem === sheetViewController.view.keyboardLayoutGuide
+                && $0.secondAttribute == .top
+        })
+        XCTAssertEqual(keyboardAvoidanceConstraint.priority, .defaultLow)
+    }
 }
 
 private final class PresentationCapturingViewController: UIViewController {
