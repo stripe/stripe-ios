@@ -262,6 +262,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
             // Select new row
             rowButton.updateSelectedState(shouldSelect, willDisplayForm: delegate.willDisplayForm(rowButton.type))
             currentSelection = selection
+            bottomSheetController?.invalidateContentDetent()
         }
         delegate.didTapPaymentMethod(selection)
         return

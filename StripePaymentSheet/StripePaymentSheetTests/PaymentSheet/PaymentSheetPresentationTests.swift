@@ -105,6 +105,42 @@ final class PaymentSheetPresentationTests: XCTestCase {
     }
 
     @MainActor
+    func testSelectingVerticalPaymentMethodInvalidatesContentDetent() throws {
+        // Given
+        let contentViewController = NativeSheetStubContentViewController()
+        let sheetViewController = DetentInvalidationSpyViewController(
+            contentViewController: contentViewController,
+            appearance: .default,
+            isTestMode: true,
+            didCancelNative3DS2: {}
+        )
+        let delegate = VerticalPaymentMethodListDelegateStub()
+        let paymentMethodListViewController = VerticalPaymentMethodListViewController(
+            initialSelection: nil,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.affirm)],
+            shouldShowApplePay: false,
+            shouldShowLink: false,
+            savedPaymentMethodAccessoryType: nil,
+            overrideHeaderView: nil,
+            appearance: .default,
+            currency: "usd",
+            amount: 1_000,
+            incentive: nil,
+            delegate: delegate
+        )
+        contentViewController.addChild(paymentMethodListViewController)
+        paymentMethodListViewController.didMove(toParent: contentViewController)
+        let affirmRow = try XCTUnwrap(paymentMethodListViewController.rowButtons.first)
+
+        // When
+        paymentMethodListViewController.didTap(rowButton: affirmRow, selection: affirmRow.type)
+
+        // Then
+        XCTAssertEqual(sheetViewController.invalidationCount, 1)
+    }
+
+    @MainActor
     func testScrollViewAvoidsOnlyVisibleKeyboardArea() throws {
         // Given
         let sheetViewController = PaymentSheetContainerViewController(
@@ -169,4 +205,15 @@ private final class DetentInvalidationSpyViewController: PaymentSheetContainerVi
     override func invalidateContentDetent() {
         invalidationCount += 1
     }
+}
+
+private final class VerticalPaymentMethodListDelegateStub: VerticalPaymentMethodListViewControllerDelegate {
+
+    func willDisplayForm(_ rowButtonType: RowButtonType) -> Bool {
+        return false
+    }
+
+    func didTapPaymentMethod(_ selection: RowButtonType) {}
+
+    func didTapSavedPaymentMethodAccessoryButton() {}
 }
