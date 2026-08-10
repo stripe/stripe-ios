@@ -191,6 +191,7 @@ extension CryptoOnrampExampleUITests {
         XCTAssertTrue(element.waitForExistence(timeout: .animationTimeout), "Text field should exist", file: file, line: line)
         element.tap()
 
+        // Password and OTP elements also use this helper, but their accessibility values aren't suitable for plaintext comparison.
         let shouldVerifyValue = element.elementType == .textField
         let maximumAttempts = shouldVerifyValue ? 2 : 1
         var valueMatches = !shouldVerifyValue
