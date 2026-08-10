@@ -872,7 +872,6 @@ final class CaptureTickMarksView: UIView {
         context.restoreGState()
     }
 }
-
 private final class CaptureSuccessCheckmarkView: UIView {
     override func draw(_ rect: CGRect) {
         guard let context = UIGraphicsGetCurrentContext(),
@@ -896,4 +895,3 @@ private final class CaptureSuccessCheckmarkView: UIView {
         checkmarkPath.stroke()
     }
 }
-
