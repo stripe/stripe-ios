@@ -33,7 +33,7 @@ extension Checkout: ExpressCheckoutElementDelegate {
         )
         switch result.paymentSheetResult {
         case .completed:
-            return .succeeded(paymentStatus: result.checkoutSessionResponse?.paymentStatus ?? .unknown)
+            return .succeeded(paymentStatus: Checkout.PaymentStatus.paymentStatus(from: result.checkoutSessionResponse?.paymentStatus ?? ""))
         case .canceled:
             return .canceled
         case .failed(let error):
