@@ -65,6 +65,13 @@ class PaymentSheetContainerViewController: UIViewController {
         return UIStackView()
     }()
 
+    private lazy var outsideSheetTapGestureRecognizer: UITapGestureRecognizer = {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideSheet))
+        tapGestureRecognizer.cancelsTouchesInView = false
+        tapGestureRecognizer.delegate = self
+        return tapGestureRecognizer
+    }()
+
     #if compiler(>=6.2)
     private lazy var navigationBarBlur: UIInteraction? = {
         guard appearance.navigationBarStyle.isGlass, #available(iOS 26.0, visionOS 26.0, *) else {
@@ -393,6 +400,15 @@ class PaymentSheetContainerViewController: UIViewController {
         view.addGestureRecognizer(hideKeyboardGesture)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        guard outsideSheetTapGestureRecognizer.view == nil else {
+            return
+        }
+        presentationController?.containerView?.addGestureRecognizer(outsideSheetTapGestureRecognizer)
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
@@ -596,8 +612,17 @@ extension PaymentSheetContainerViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch)
         -> Bool
     {
+        if gestureRecognizer === outsideSheetTapGestureRecognizer {
+            let location = touch.location(in: view)
+            return !view.point(inside: location, with: nil)
+        }
+
         // I can't find another way to allow custom UIControl subclasses to receive touches
         return !(touch.view is UIControl)
+    }
+
+    @objc private func didTapOutsideSheet() {
+        didTapOrSwipeToDismiss()
     }
 
     @objc func didTapAnywhere() {
