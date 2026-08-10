@@ -519,7 +519,7 @@ import UIKit
             linkAppearance: appearance,
             linkConfiguration: configuration,
             canContinueWithoutLink: false
-        ) { [weak self] confirmOption, shouldClearSelection in
+        ) { [weak self] confirmOption, shouldClearSelection, _ in
             guard let confirmOption else {
                 if shouldClearSelection {
                     self?.internalPaymentOption = nil
@@ -577,8 +577,12 @@ import UIKit
                 linkAppearance: self.appearance,
                 linkConfiguration: self.configuration,
                 canContinueWithoutLink: false
-            ) { [weak self] confirmOption, _ in
+            ) { [weak self] confirmOption, _, error in
                 guard let self else { return }
+                if let error {
+                    completion(.failure(error))
+                    return
+                }
                 guard let confirmOption else {
                     completion(.success(.canceled))
                     return

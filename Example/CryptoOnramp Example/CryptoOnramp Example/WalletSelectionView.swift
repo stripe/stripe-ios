@@ -25,6 +25,7 @@ struct WalletSelectionView: View {
     @State private var showAttachWalletSheet = false
     @State private var selectedWallet: Wallet?
     @State private var alert: Alert?
+    @State private var walletOwnershipVerificationSession: WalletOwnershipVerificationSession?
 
     @Environment(\.isLoading) private var isLoading
 
@@ -91,8 +92,12 @@ struct WalletSelectionView: View {
                                 },
                                 onVerifyWalletOwnership: {
                                     startWalletOwnershipVerification(for: wallet)
+                                },
+                                onDelete: {
+                                    deleteWallet(wallet)
                                 }
                             )
+                            .transition(.move(edge: .trailing).combined(with: .opacity))
                         }
                     }
 
@@ -129,6 +134,17 @@ struct WalletSelectionView: View {
                 }
             )
         }
+        .sheet(item: $walletOwnershipVerificationSession) { session in
+            WalletOwnershipVerificationSheet(
+                session: session,
+                coordinator: coordinator
+            ) {
+                refreshWallets(
+                    selectingWalletWithAddress: session.challenge.walletAddress,
+                    network: session.challenge.network
+                )
+            }
+        }
         .onAppear {
             refreshWallets()
         }
@@ -152,13 +168,38 @@ struct WalletSelectionView: View {
             return
         }
 
-        WalletOwnershipVerification.startVerification(
+        WalletOwnershipVerification.requestChallenge(
             context: context,
             coordinator: coordinator,
             isLoading: isLoading,
             alert: $alert
-        ) {
-            refreshWallets(selectingWalletWithAddress: context.walletAddress, network: context.network)
+        ) { session in
+            walletOwnershipVerificationSession = session
+        }
+    }
+
+    private func deleteWallet(_ wallet: Wallet) {
+        isLoading.wrappedValue = true
+
+        Task {
+            do {
+                try await coordinator.deleteWalletAddress(walletId: wallet.id)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+
+                    withAnimation {
+                        wallets.removeAll { $0.id == wallet.id }
+                        if selectedWallet == wallet {
+                            selectedWallet = wallets.first
+                        }
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    alert = Alert(title: "Failed to delete wallet", message: error.localizedDescription)
+                }
+            }
         }
     }
 

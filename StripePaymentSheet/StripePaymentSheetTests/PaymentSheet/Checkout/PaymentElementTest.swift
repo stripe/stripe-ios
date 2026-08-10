@@ -19,11 +19,9 @@ final class PaymentElementTest: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        let expectation = expectation(description: "Load specs")
+        let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load { _ in
-                expectation.fulfill()
-            }
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
         CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)

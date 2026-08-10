@@ -50,6 +50,8 @@ import Foundation
     case unknown
 }
 
+@_spi(STP) extension STPFPXBankBrand: CaseIterable {}
+
 /// Convenience methods for using FPX bank brands.
 public class STPFPXBank: NSObject {
     /// Returns a string representation for the provided bank brand;

@@ -31,9 +31,7 @@ final class CustomerSheet_ConfirmFlowTests: STPNetworkStubbingTestCase {
         await withCheckedContinuation { continuation in
             Task {
                 AddressSpecProvider.shared.loadAddressSpecs {
-                    FormSpecProvider.shared.load { _ in
-                        continuation.resume()
-                    }
+                    continuation.resume()
                 }
             }
         }

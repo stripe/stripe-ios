@@ -96,6 +96,10 @@ import Foundation
     case wero
     /// A Pay by Bank payment method
     case payByBank
+    /// An MB WAY payment method
+    case mbWay
+    /// A Bizum payment method
+    case bizum
     /// An unknown type.
     case unknown
 
@@ -190,6 +194,10 @@ import Foundation
             return "Wero"
         case .payByBank:
             return "Pay by Bank"
+        case .mbWay:
+            return "MB WAY"
+        case .bizum:
+            return "Bizum"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -287,6 +295,10 @@ import Foundation
             return "wero"
         case .payByBank:
             return "pay_by_bank"
+        case .mbWay:
+            return "mb_way"
+        case .bizum:
+            return "bizum"
         }
     }
 

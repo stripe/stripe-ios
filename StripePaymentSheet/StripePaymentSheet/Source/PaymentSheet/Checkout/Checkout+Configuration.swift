@@ -59,6 +59,14 @@ extension Checkout {
         /// Configuration for ExpressCheckoutElement.
         public var expressCheckoutElement: ExpressCheckoutElement.Configuration = .init()
 
+        /// Configuration for the Adaptive Pricing currency selector returned by
+        /// ``Checkout.getCurrencySelectorElement()``.
+        public var currencySelectorElement: CurrencySelectorElement.Configuration = .init()
+
+        /// Configuration for the shipping address form returned by
+        /// ``Checkout.getShippingAddressElement()``.
+        public var shippingAddressElement: ShippingAddressElement.Configuration = .init()
+
         /// Apple Pay configuration.
         public var applePayConfiguration: ApplePayConfiguration?
 
@@ -67,10 +75,6 @@ extension Checkout {
 
         /// The color styling to use for Checkout UI.
         public var userInterfaceStyle: UserInterfaceStyle = .automatic
-
-        /// Configuration for the Adaptive Pricing currency selector returned by
-        /// ``Checkout.getCurrencySelectorElement()``.
-        public var currencySelectorElement: CurrencySelectorElement.Configuration = .init()
 
         /// Creates a configuration.
         /// - Parameter clientSecret: The client secret for your Checkout Session.
