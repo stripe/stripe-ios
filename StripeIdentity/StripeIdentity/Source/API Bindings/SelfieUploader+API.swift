@@ -249,8 +249,7 @@ extension StripeAPI.VerificationPageDataFaceFrameData {
         let compactPayload: [String: Any] = [
             "categories": compactCategories,
         ]
-        guard JSONSerialization.isValidJSONObject(compactPayload),
-            let compactData = try? JSONSerialization.data(withJSONObject: compactPayload)
+        guard let compactData = try? JSONSerialization.data(withJSONObject: compactPayload)
         else {
             return nil
         }
