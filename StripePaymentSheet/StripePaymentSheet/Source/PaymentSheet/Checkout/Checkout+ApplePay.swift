@@ -284,7 +284,7 @@ extension Checkout {
         handler: @escaping (PKPaymentRequestShippingContactUpdate) -> Void
     ) {
         guard let ap = applePaySession,
-              (ap.sessionSnapshot.requiresShippingAddress || ap.sessionSnapshot.shouldSendTaxRegion(for: "shipping")) else {
+              ap.sessionSnapshot.requiresShippingAddress || ap.sessionSnapshot.shouldSendTaxRegion(for: "shipping") else {
             handler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: applePaySummaryItems()))
             return
         }
