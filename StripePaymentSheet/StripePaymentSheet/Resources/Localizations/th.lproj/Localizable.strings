@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "ยืนยันรายละเอียดการชำระเงิน";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "ยืนยันการชำระเงินผ่าน Bizum ในแอปพลิเคชันโมบายแบงก์กิ้งของคุณภายใน %@ เพื่อให้การซื้อเสร็จสมบูรณ์";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "ยืนยันการชำระเงินในแอป MB WAY ของคุณภายใน %@ เพื่อให้การซื้อเสร็จสมบูรณ์";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "ยืนยันการชำระเงินในแอปของธนาคารหรือแอปชำระเงินภายใน %@ เพื่อชำระเงินให้เสร็จสิ้น";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "ยืนยันการชำระเงินในแอปของธนาคารภายใน %@ เพื่อชำระเงินให้เสร็จสิ้น";
@@ -139,6 +143,8 @@
 "Discount" = "ส่วนลด";
 
 "EPS Bank" = "EPS Bank";
+
+"Edit address" = "แก้ไขที่อยู่";
 
 "Enter address manually" = "ป้อนที่อยู่ด้วยตนเอง";
 
