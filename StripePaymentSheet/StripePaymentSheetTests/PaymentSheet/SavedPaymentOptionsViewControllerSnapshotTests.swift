@@ -75,24 +75,18 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
         if darkMode {
             testWindow.overrideUserInterfaceStyle = .dark
         }
-        let rootViewController: UIViewController
+        let rootViewController = UIViewController()
+        rootViewController.addChild(sut)
         if rightToLeft {
-            let hostViewController = UIViewController()
-            hostViewController.addChild(sut)
-            hostViewController.setOverrideTraitCollection(
+            rootViewController.setOverrideTraitCollection(
                 UITraitCollection(layoutDirection: .rightToLeft),
                 forChild: sut
             )
-            rootViewController = hostViewController
-        } else {
-            rootViewController = sut
         }
         testWindow.rootViewController = rootViewController
         // Adding sut.view as the subview should be implied by the above line, but Autolayout can't lay out the view correctly on this pass of the runloop unless we explicitly addSubview. Maybe there are side effects that happen one turn of the runloop after setting the rootViewController.
         rootViewController.view.addSubview(sut.view)
-        if rightToLeft {
-            sut.didMove(toParent: rootViewController)
-        }
+        sut.didMove(toParent: rootViewController)
         sut.view.autosizeHeight(width: 1000)
         if showDefaultPMBadge {
             sut.isRemovingPaymentMethods = true
