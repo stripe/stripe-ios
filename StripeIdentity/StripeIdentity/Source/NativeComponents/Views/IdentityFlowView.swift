@@ -485,7 +485,16 @@ extension Button.Configuration {
     static func identityPrimary(backgroundColor: UIColor? = nil) -> Self {
         var configuration: Button.Configuration = .primary()
         if let backgroundColor {
-            configuration.backgroundColor = backgroundColor
+            let resolvedBackgroundColor = backgroundColor.resolvedColor(
+                with: UITraitCollection.current
+            )
+            let blackContrastRatio = resolvedBackgroundColor.contrastRatio(to: .black)
+            let whiteContrastRatio = resolvedBackgroundColor.contrastRatio(to: .white)
+
+            configuration.backgroundColor = resolvedBackgroundColor
+            configuration.foregroundColor = blackContrastRatio > whiteContrastRatio
+                ? .black
+                : .white
         }
         configuration.font = buttonFont
         configuration.disabledForegroundColor = .systemGray
