@@ -779,4 +779,25 @@ extension String.Localized {
             quantity
         )
     }
+
+    static var something_went_wrong: String {
+        STPLocalizedString(
+            "Something went wrong",
+            "Title displayed on an error screen shown when something unexpected occurred."
+        )
+    }
+
+    static var no_compatible_payment_methods: String {
+        STPLocalizedString(
+            "No compatible payment methods",
+            "Subtitle on an error screen indicating that the user's saved payment methods cannot be used for this purchase."
+        )
+    }
+
+    static var use_another_account: String {
+        STPLocalizedString(
+            "Use another account",
+            "Label of a button that lets the user sign out and sign in with a different account."
+        )
+    }
 }

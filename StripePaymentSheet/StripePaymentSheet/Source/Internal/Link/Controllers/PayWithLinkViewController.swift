@@ -359,7 +359,13 @@ final class PayWithLinkViewController: BottomSheetViewController {
         case .requiresVerification:
             return VerifyAccountViewController(linkAccount: linkAccount, context: context)
         case .verified:
-            return LoaderViewController(context: context)
+            // If there are no compatible funding sources, start directly on the error screen
+            // to avoid a LoaderVC→ErrorVC transition that fires during init (before presentation),
+            // which on iOS 26+ conflicts with the custom presentation style.
+            let types = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
+            return types.isEmpty
+                ? ErrorViewController(context: context)
+                : LoaderViewController(context: context)
         }
     }
 
@@ -400,10 +406,6 @@ final class PayWithLinkViewController: BottomSheetViewController {
 private extension PayWithLinkViewController {
 
     func loadAndPresentWallet() {
-        if rootViewController as? LoaderViewController == nil {
-            setViewControllers([LoaderViewController(context: context)])
-        }
-
         guard let linkAccount else {
             stpAssertionFailure(LinkAccountError.noLinkAccount.localizedDescription)
             return
@@ -412,8 +414,14 @@ private extension PayWithLinkViewController {
         let supportedPaymentDetailsTypesSet = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
 
         guard !supportedPaymentDetailsTypesSet.isEmpty else {
-            finish(withResult: .failed(error: LinkAccountError.noFundingSources), deferredIntentConfirmationType: nil)
+            if !(rootViewController is ErrorViewController) {
+                setViewControllers([ErrorViewController(context: context)])
+            }
             return
+        }
+
+        if rootViewController as? LoaderViewController == nil {
+            setViewControllers([LoaderViewController(context: context)])
         }
 
         let supportedPaymentDetailsTypes = supportedPaymentDetailsTypesSet.toSortedArray()
