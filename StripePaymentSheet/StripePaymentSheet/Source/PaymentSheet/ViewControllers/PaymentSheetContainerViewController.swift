@@ -1,5 +1,5 @@
 //
-//  BottomSheetViewController.swift
+//  PaymentSheetContainerViewController.swift
 //  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 9/2/20.
@@ -23,14 +23,31 @@ protocol BottomSheetContentViewController: UIViewController {
 
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
 /// For internal SDK use only
-@objc(STP_Internal_BottomSheetViewController)
-class BottomSheetViewController: UIViewController, BottomSheetPresentable {
+@objc(STP_Internal_PaymentSheetContainerViewController)
+class PaymentSheetContainerViewController: UIViewController {
+
     struct Constants {
         static let keyboardAvoidanceEdgePadding: CGFloat = 16
     }
 
     var sheetCornerRadius: CGFloat? {
-        BottomSheetTransitioningDelegate.appearance.sheetCornerRadius
+        appearance.sheetCornerRadius
+    }
+
+    static let contentDetentIdentifier = UISheetPresentationController.Detent.Identifier(
+        "com.stripe.paymentsheet.content"
+    )
+
+    lazy var contentSizedDetent = UISheetPresentationController.Detent.custom(
+        identifier: Self.contentDetentIdentifier
+    ) { [weak self] context in
+        guard let self else {
+            return context.maximumDetentValue
+        }
+        guard !self.contentRequiresFullScreen else {
+            return context.maximumDetentValue
+        }
+        return min(self.fittedContentHeight, context.maximumDetentValue)
     }
 
     // MARK: - Views
@@ -82,9 +99,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             scrollView.setContentOffset(CGPoint(x: 0, y: newContentOffset), animated: false)
         }
     }
-
-    /// If `setContent..` is called while `BottomSheetPresentationAnimator` is mid-transition, we complete the transition before setting content.
-    var completeBottomSheetPresentationTransition: ((Bool) -> Void)?
 
     func setViewControllers(_ viewControllers: [BottomSheetContentViewController]) {
         contentStack = viewControllers
@@ -205,20 +219,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         }
         let oldContentViewController = contentViewController
         contentViewController = newContentViewController
-        // Handle edge case where BottomSheetPresentationAnimator is mid-presentation
-        // We need to finish *that* transition before starting this one.
-        completeBottomSheetPresentationTransition?(true)
-
-        // This is a hack to get the animation right.
-        // Instead of allowing the height change to implicitly occur within
-        // the animation block's layoutIfNeeded, we force a layout pass,
-        // calculate the old and new heights, and then only animate the height
-        // constraint change.
-        // Without this, the inner ScrollView tends to animate from the center
-        // instead of remaining pinned to the top.
-
-        // First, get the old height of the content + navigation bar + safe area.
-        manualHeightConstraint.constant = oldContentViewController.view.frame.size.height + navigationBarContainerView.bounds.size.height
 
         // Take a snapshot of the old content and add it to our container - we'll fade it out
         let oldView = oldContentViewController.view!
@@ -235,9 +235,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         // When your custom container calls the addChild(_:) method, it automatically calls the willMove(toParent:) method of the view controller to be added as a child before adding it.
         addChild(newContentViewController)
         contentContainerView.addArrangedSubview(self.contentViewController.view)
-        if let presentationController = rootParent.presentationController as? BottomSheetPresentationController {
-            presentationController.forceFullHeight = newContentViewController.requiresFullScreen
-        }
 
         contentContainerView.layoutIfNeeded()
         scrollView.layoutIfNeeded()
@@ -245,24 +242,14 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         oldContentViewController.navigationBar.removeFromSuperview()
         navigationBarContainerView.addArrangedSubview(newContentViewController.navigationBar)
         navigationBarContainerView.layoutIfNeeded()
-        // Layout is mostly completed at this point. The new height is the navigation bar + content
-        let newHeight = newContentViewController.view.bounds.size.height + navigationBarContainerView.bounds.size.height
-
-        // Force the old height, then force a layout pass
-        if modalPresentationStyle == .custom { // Only if we're using the custom presentation style (e.g. pinned to the bottom)
-            manualHeightConstraint.isActive = true
-        }
-        rootParent.presentationController?.containerView?.layoutIfNeeded()
         newContentViewController.view.alpha = 0
-        // Now animate to the correct height.
-        UIView.animate(withDuration: 0.2) {
-            // Fade old content snapshot out
-            oldViewImage.alpha = 0
+
+        sheetPresentationController?.animateChanges {
+            self.sheetPresentationController?.invalidateDetents()
         }
-        animateHeightChange(forceAnimation: true, {
-            // Fade new content in
+        UIView.animate(withDuration: 0.2, animations: {
+            oldViewImage.alpha = 0
             self.contentViewController.view.alpha = 1
-            self.manualHeightConstraint.constant = newHeight
         }, completion: {_ in
             // If you are implementing your own container view controller, it must call the didMove(toParent:) method of the child view controller after the transition to the new controller is complete or, if there is no transition, immediately after calling the addChild(_:) method.
             self.contentViewController.didMove(toParent: self)
@@ -273,9 +260,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
             // Inform accessibility
             UIAccessibility.post(notification: .screenChanged, argument: self.contentViewController.view)
-
-            // We shouldn't need this constraint anymore.
-            self.manualHeightConstraint.isActive = false
 
             completion?()
         })
@@ -321,11 +305,29 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     private var bottomAnchor: NSLayoutConstraint?
 
-    private lazy var manualHeightConstraint: NSLayoutConstraint = {
-        let manualHeightConstraint: NSLayoutConstraint = self.view.heightAnchor.constraint(equalToConstant: 0)
-        manualHeightConstraint.priority = .defaultHigh
-        return manualHeightConstraint
-    }()
+    private var lastFittedContentHeight: CGFloat = 0
+    private var hasScheduledDetentInvalidation = false
+
+    private var fittedContentHeight: CGFloat {
+        let width = max(contentContainerView.bounds.width, view.bounds.width)
+        guard width > 0 else {
+            return navigationBarHeight
+        }
+        let contentHeight = contentContainerView.systemLayoutSizeFitting(
+            CGSize(width: width, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        ).height
+        return navigationBarHeight + contentHeight
+    }
+
+    func prepareForPresentation(in availableWidth: CGFloat) {
+        loadViewIfNeeded()
+        view.bounds.size.width = availableWidth
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+        lastFittedContentHeight = fittedContentHeight
+    }
 
     /// :nodoc:
     public override func viewDidLoad() {
@@ -393,6 +395,25 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         hideKeyboardGesture.cancelsTouchesInView = false
         hideKeyboardGesture.delegate = self
         view.addGestureRecognizer(hideKeyboardGesture)
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        let fittedContentHeight = fittedContentHeight
+        guard abs(fittedContentHeight - lastFittedContentHeight) > 0.5,
+              !hasScheduledDetentInvalidation else {
+            return
+        }
+        lastFittedContentHeight = fittedContentHeight
+        hasScheduledDetentInvalidation = true
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.hasScheduledDetentInvalidation = false
+            self.sheetPresentationController?.animateChanges {
+                self.sheetPresentationController?.invalidateDetents()
+            }
+        }
     }
     #if compiler(>=6.2)
     func enableNavigationBarBlurInteraction() {
@@ -496,29 +517,24 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         }
     }
 
-    // MARK: - BottomSheetPresentable
-
-    var panScrollable: UIScrollView? {
-        // Returning the scroll view causes contentInset issues; I'm not sure why.
-        return nil
-    }
-
     func didTapOrSwipeToDismiss() {
         contentViewController.didTapOrSwipeToDismiss()
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
     }
 }
 
-extension BottomSheetViewController: UIAdaptivePresentationControllerDelegate {
+extension PaymentSheetContainerViewController: UIAdaptivePresentationControllerDelegate {
     func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
-        // On iPad, tapping outside the sheet dismisses it without informing us - so we override this method to be informed.
-        didTapOrSwipeToDismiss()
         return false
+    }
+
+    func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
+        didTapOrSwipeToDismiss()
     }
 }
 
 // MARK: - UIScrollViewDelegate
-extension BottomSheetViewController: UIScrollViewDelegate {
+extension PaymentSheetContainerViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y > 0 {
             contentViewController.navigationBar.setShadowHidden(false)
@@ -529,7 +545,7 @@ extension BottomSheetViewController: UIScrollViewDelegate {
 }
 
 // MARK: - PaymentSheetAuthenticationContext
-extension BottomSheetViewController: PaymentSheetAuthenticationContext {
+extension PaymentSheetContainerViewController: PaymentSheetAuthenticationContext {
 
     func authenticationPresentingViewController() -> UIViewController {
         return findTopMostPresentedViewController()
@@ -571,11 +587,8 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
     }
 }
 
-// MARK: - UIViewControllerTransitioningDelegate
-extension BottomSheetViewController: UIViewControllerTransitioningDelegate {}
-
 // MARK: - UIGestureRecognizerDelegate
-extension BottomSheetViewController: UIGestureRecognizerDelegate {
+extension PaymentSheetContainerViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
@@ -596,7 +609,7 @@ extension BottomSheetViewController: UIGestureRecognizerDelegate {
 }
 
 // MARK: - BottomSheet3DS2ViewControllerDelegate
-extension BottomSheetViewController: BottomSheet3DS2ViewControllerDelegate {
+extension PaymentSheetContainerViewController: BottomSheet3DS2ViewControllerDelegate {
     func bottomSheet3DS2ViewControllerDidCancel(
         _ bottomSheet3DS2ViewController: BottomSheet3DS2ViewController
     ) {

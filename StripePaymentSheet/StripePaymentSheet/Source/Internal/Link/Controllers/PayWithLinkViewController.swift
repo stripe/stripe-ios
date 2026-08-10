@@ -68,7 +68,7 @@ protocol PayWithLinkCoordinating: AnyObject {
 /// Instantiate and present this controller when the user chooses to pay with Link.
 /// For internal SDK use only
 @objc(STP_Internal_PayWithLinkViewController)
-final class PayWithLinkViewController: BottomSheetViewController {
+final class PayWithLinkViewController: PaymentSheetContainerViewController {
 
     enum LinkAccountError: LocalizedError {
         case noLinkAccount

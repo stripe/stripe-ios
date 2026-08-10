@@ -39,7 +39,8 @@ class AddressSpecProviderTest: XCTestCase {
         XCTAssertEqual(gb.cityNameType, .post_town)
 
         // Sanity check countries all exist
-        let unknownCountries = sut.countries.filter { !Locale.isoRegionCodes.contains($0) }
+        let knownCountries = Set(Locale.Region.isoRegions.map(\.identifier))
+        let unknownCountries = sut.countries.filter { !knownCountries.contains($0) }
         XCTAssertTrue(unknownCountries.count == 0)
 
         // Require that all countries collect at least line1 and line2

@@ -8,38 +8,22 @@
 import Foundation
 
 @_spi(STP) public extension Locale {
-    /// Returns the regionCode, for visionOS compatibility
-    /// We can remove this once we drop iOS 16
+    /// Returns the region code using the modern cross-platform Locale API.
+    /// This keeps callers independent of Foundation's typed locale components.
     var stp_regionCode: String? {
-#if os(visionOS)
         return self.region?.identifier
-        #else
-        return self.regionCode
-        #endif
     }
 
     var stp_currencyCode: String? {
-        #if os(visionOS)
         return self.currency?.identifier
-        #else
-        return self.currencyCode
-        #endif
     }
 
     var stp_languageCode: String? {
-#if os(visionOS)
         return self.language.languageCode?.identifier
-        #else
-        return self.languageCode
-        #endif
     }
 
     static var stp_isoRegionCodes: [String] {
-#if os(visionOS)
         return self.Region.isoRegions.map { $0.identifier }
-#else
-        return self.isoRegionCodes
-#endif
     }
 
     /// Returns the BCP 47(-ish) language tag representing the locale.

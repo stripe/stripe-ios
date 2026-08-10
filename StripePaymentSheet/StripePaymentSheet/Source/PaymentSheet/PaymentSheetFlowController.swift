@@ -569,7 +569,7 @@ extension PaymentSheet {
                 guard let self = self else { return }
 
                 // Set the PaymentSheetViewController as the content of our bottom sheet
-                let bottomSheetVC = Self.makeBottomSheetViewController(
+                let bottomSheetVC = Self.makePaymentSheetContainerViewController(
                     self.viewController,
                     configuration: self.configuration,
                     // TODO(MOBILESDK-864): didCancelNative3DS2 is not used in FlowController
@@ -579,7 +579,7 @@ extension PaymentSheet {
                 )
 
                 self.isPresented = true
-                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
+                presentingViewController.presentAsSheet(bottomSheetVC, appearance: self.configuration.appearance)
             }
 
             if canPresentLinkInPlaceOfFlowController {
@@ -607,7 +607,7 @@ extension PaymentSheet {
                 appearance: configuration.appearance,
                 isTestMode: configuration.apiClient.isTestmode
             )
-            let bottomSheetVC = Self.makeBottomSheetViewController(
+            let bottomSheetVC = Self.makePaymentSheetContainerViewController(
                 loadingVC,
                 configuration: configuration,
                 // TODO(MOBILESDK-864): didCancelNative3DS2 is not used in FlowController
@@ -615,7 +615,7 @@ extension PaymentSheet {
                     self?.paymentHandler.cancel3DS2ChallengeFlow()
                 }
             )
-            presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+            presentingViewController.presentAsSheet(bottomSheetVC, appearance: configuration.appearance)
 
             pendingPresentTask = Task { @MainActor [weak self] in
                 guard let self else { return }
@@ -736,8 +736,8 @@ extension PaymentSheet {
                         }
                     }
                 }
-                let bottomSheet = Self.makeBottomSheetViewController(sepaMandateVC, configuration: configuration)
-                presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
+                let bottomSheet = Self.makePaymentSheetContainerViewController(sepaMandateVC, configuration: configuration)
+                presentingViewController.presentAsSheet(bottomSheet, appearance: configuration.appearance)
             }
 
             func confirm() {
@@ -968,12 +968,12 @@ extension PaymentSheet {
         }
 
         // MARK: Internal helper methods
-        static func makeBottomSheetViewController(
+        static func makePaymentSheetContainerViewController(
             _ contentViewController: BottomSheetContentViewController,
             configuration: PaymentElementConfiguration,
             didCancelNative3DS2: (() -> Void)? = nil
-        ) -> BottomSheetViewController {
-            let sheet = BottomSheetViewController(
+        ) -> PaymentSheetContainerViewController {
+            let sheet = PaymentSheetContainerViewController(
                 contentViewController: contentViewController,
                 appearance: configuration.appearance,
                 isTestMode: configuration.apiClient.isTestmode,

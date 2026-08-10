@@ -192,7 +192,7 @@ public final class EmbeddedPaymentElement {
 
         // If we currently have a sheet presented, fail the update (unless it's a checkout session update, which may occur during billing sync)
         if !mode.isCheckout,
-           presentingViewController?.presentedViewController is BottomSheetViewController {
+           presentingViewController?.presentedViewController is PaymentSheetContainerViewController {
             let result: EmbeddedPaymentElement.UpdateResult = .failed(error: PaymentSheetError.embeddedPaymentElementUpdateWithFormPresented)
             analyticsHelper.logEmbeddedUpdateFinished(result: result, duration: Date().timeIntervalSince(startTime))
             return result
@@ -489,7 +489,7 @@ public final class EmbeddedPaymentElement {
 
 extension EmbeddedPaymentElement {
     var isPresentingPaymentUI: Bool {
-        return presentingViewController?.presentedViewController is BottomSheetViewController
+        return presentingViewController?.presentedViewController is PaymentSheetContainerViewController
     }
 
     /// Returns the explicitly configured presenting view controller or tries to find one if nil.
@@ -507,8 +507,8 @@ extension EmbeddedPaymentElement {
             return nil
         }
 
-        guard !(visibleViewController is BottomSheetViewController) else {
-            assert(false, "Cannot use a BottomSheetViewController to present EmbeddedPaymentElement.")
+        guard !(visibleViewController is PaymentSheetContainerViewController) else {
+            assert(false, "Cannot use a PaymentSheetContainerViewController to present EmbeddedPaymentElement.")
             return nil
         }
 

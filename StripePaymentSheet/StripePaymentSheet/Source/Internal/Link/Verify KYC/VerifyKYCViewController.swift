@@ -8,7 +8,7 @@
 import UIKit
 
 /// Container view controller that displays a list of KYC fields with the optional ability to initiate editing of the address.
-final class VerifyKYCViewController: BottomSheetViewController {
+final class VerifyKYCViewController: PaymentSheetContainerViewController {
     private weak var contentViewController: VerifyKYCContentViewController?
 
     /// Closure called when a user takes action (confirm, cancel, or initiate editing of the address).
@@ -18,7 +18,7 @@ final class VerifyKYCViewController: BottomSheetViewController {
         }
     }
 
-    // MARK: - BottomSheetViewController
+    // MARK: - PaymentSheetContainerViewController
 
     override var sheetCornerRadius: CGFloat? {
         LinkUI.largeCornerRadius
@@ -52,7 +52,7 @@ final class VerifyKYCViewController: BottomSheetViewController {
         fatalError("init(contentViewController:appearance:isTestMode:didCancelNative3DS2:) has not been implemented")
     }
 
-    // MARK: - BottomSheetViewController
+    // MARK: - PaymentSheetContainerViewController
 
     override func didTapOrSwipeToDismiss() {
         contentViewController?.didTapOrSwipeToDismiss()

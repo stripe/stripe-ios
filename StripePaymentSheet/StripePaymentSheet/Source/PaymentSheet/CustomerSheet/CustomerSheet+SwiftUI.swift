@@ -111,7 +111,7 @@ extension CustomerSheet {
             }
 
             func forciblyDismissSheet(from controller: UIViewController) {
-                if let bsvc = controller.presentedViewController as? BottomSheetViewController {
+                if let bsvc = controller.presentedViewController as? PaymentSheetContainerViewController {
                     bsvc.didTapOrSwipeToDismiss()
                 }
             }

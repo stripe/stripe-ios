@@ -219,7 +219,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
             configuration: updateConfig
         )
         let stubViewController = StubBottomSheetContentViewController()
-        let bottomSheet = BottomSheetViewController(contentViewController: stubViewController, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
+        let bottomSheet = PaymentSheetContainerViewController(contentViewController: stubViewController, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
         bottomSheet.pushContentViewController(sut)
         bottomSheet.view.autosizeHeight(width: 375)
 

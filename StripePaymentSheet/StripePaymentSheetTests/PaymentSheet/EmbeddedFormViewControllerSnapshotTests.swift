@@ -47,8 +47,8 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
         )
     }
 
-    func makeBottomSheetAndLayout(_ sut: EmbeddedFormViewController) -> BottomSheetViewController {
-        let bottomSheet = BottomSheetViewController(
+    func makeBottomSheetAndLayout(_ sut: EmbeddedFormViewController) -> PaymentSheetContainerViewController {
+        let bottomSheet = PaymentSheetContainerViewController(
             contentViewController: sut,
             appearance: .default,
             isTestMode: false,

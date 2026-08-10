@@ -199,7 +199,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         let presentingViewController = resolvedPresentingViewController
         assert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
         stpAssert(selectedFormViewController.delegate != nil)
-        presentingViewController?.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
+        presentingViewController?.presentAsSheet(bottomSheet, appearance: configuration.appearance)
     }
 
     private func handleSelectionWithoutForm() {
@@ -326,7 +326,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                          configuration: updateConfig)
             updateViewController.delegate = self
             let bottomSheetVC = bottomSheetController(with: updateViewController)
-            resolvedPresentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+            resolvedPresentingViewController?.presentAsSheet(bottomSheetVC, appearance: configuration.appearance)
             return
         }
 
@@ -342,7 +342,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         )
         verticalSavedPaymentMethodsViewController.delegate = self
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
-        resolvedPresentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+        resolvedPresentingViewController?.presentAsSheet(bottomSheetVC, appearance: configuration.appearance)
     }
 
     func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool {
@@ -742,8 +742,8 @@ extension EmbeddedPaymentElement {
         return (result, deferredIntentConfirmationType)
     }
 
-    func bottomSheetController(with viewController: BottomSheetContentViewController) -> BottomSheetViewController {
-        return BottomSheetViewController(contentViewController: viewController,
+    func bottomSheetController(with viewController: BottomSheetContentViewController) -> PaymentSheetContainerViewController {
+        return PaymentSheetContainerViewController(contentViewController: viewController,
                                          appearance: configuration.appearance,
                                          isTestMode: configuration.apiClient.isTestmode,
                                          didCancelNative3DS2: {

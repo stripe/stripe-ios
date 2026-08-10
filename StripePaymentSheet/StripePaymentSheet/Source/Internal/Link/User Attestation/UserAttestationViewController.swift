@@ -9,7 +9,7 @@
 import UIKit
 
 /// Container view controller that displays the user attestation HTML in a Link-styled bottom sheet.
-final class UserAttestationViewController: BottomSheetViewController {
+final class UserAttestationViewController: PaymentSheetContainerViewController {
     private weak var contentViewController: UserAttestationContentViewController?
 
     /// Closure called when a user takes action on the attestation.

@@ -21,8 +21,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         waitForExpectations(timeout: 1)
     }
 
-    func makeBottomSheetAndLayout(_ sut: PaymentSheetVerticalViewController) -> BottomSheetViewController {
-        let bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: .default, isTestMode: false, didCancelNative3DS2: {})
+    func makeBottomSheetAndLayout(_ sut: PaymentSheetVerticalViewController) -> PaymentSheetContainerViewController {
+        let bottomSheet = PaymentSheetContainerViewController(contentViewController: sut, appearance: .default, isTestMode: false, didCancelNative3DS2: {})
         bottomSheet.view.setNeedsLayout()
         bottomSheet.view.layoutIfNeeded()
         let height = bottomSheet.view.systemLayoutSizeFitting(.init(width: 375, height: UIView.noIntrinsicMetric)).height

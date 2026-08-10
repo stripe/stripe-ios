@@ -59,15 +59,15 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
                                                             analyticsHelper: ._testValue(),
                                                             defaultPaymentMethod: showDefaultPMBadge ? paymentMethods.first : nil
         )
-        let bottomSheet: BottomSheetViewController
+        let bottomSheet: PaymentSheetContainerViewController
         if isEmbedded {
             // In embedded, VerticalSavedPaymentMethodsViewController is the only contentViewController
-            bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
+            bottomSheet = PaymentSheetContainerViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
         } else {
             // In vertical mode, VerticalSavedPaymentMethodsViewController pushed onto the contentStack after PaymentSheetVerticalViewController
             // Use StubBottomSheetContentViewController as a convenience to rather than instantiating PaymentSheetVerticalViewController
             let stubViewController = StubBottomSheetContentViewController()
-            bottomSheet = BottomSheetViewController(contentViewController: stubViewController, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
+            bottomSheet = PaymentSheetContainerViewController(contentViewController: stubViewController, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
             bottomSheet.pushContentViewController(sut)
         }
         bottomSheet.view.autosizeHeight(width: 375)

@@ -190,7 +190,7 @@ public class PaymentSheet {
                 }
             }
             self.bottomSheetViewController.setViewControllers([self.loadingViewController])
-            presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
+            presentingViewController.presentAsSheet(bottomSheetViewController, appearance: configuration.appearance)
         }
     }
 
@@ -285,10 +285,10 @@ public class PaymentSheet {
     lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
 
     /// The parent view controller to present
-    lazy var bottomSheetViewController: BottomSheetViewController = {
+    lazy var bottomSheetViewController: PaymentSheetContainerViewController = {
         let isTestMode = configuration.apiClient.isTestmode
 
-        let vc = BottomSheetViewController(
+        let vc = PaymentSheetContainerViewController(
             contentViewController: loadingViewController,
             appearance: configuration.appearance,
             isTestMode: isTestMode,
@@ -397,7 +397,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                     } else {
                         // We dismissed the Payment Sheet to show the Apple Pay sheet
                         // Bring it back if it didn't succeed
-                        presentingViewController?.presentAsBottomSheet(self.bottomSheetViewController,
+                        presentingViewController?.presentAsSheet(self.bottomSheetViewController,
                                                                        appearance: self.configuration.appearance)
                     }
                     completion(result, deferredIntentConfirmationType)
