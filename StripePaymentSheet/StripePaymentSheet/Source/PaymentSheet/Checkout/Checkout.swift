@@ -144,6 +144,7 @@ public final class Checkout: ObservableObject {
                 defaultShippingAddress = nil
             }
 
+            // Initialize the SAE with the raw default so its form can normalize the address.
             self.shippingAddressElement = ShippingAddressElement(
                 configuration: configuration.shippingAddressElement,
                 initialShippingAddress: defaultShippingAddress ?? loadedSession.shippingAddress,
@@ -151,8 +152,15 @@ public final class Checkout: ObservableObject {
                 apiClient: configuration.apiClient,
                 useAutocompleteEndpoints: loadedSession.elementsSession.shouldUseAutocompleteProxyEndpoints
             )
+            let normalizedDefaultShippingAddress: Session.ShippingAddress?
+            if defaultShippingAddress != nil {
+                normalizedDefaultShippingAddress = await shippingAddressElement.normalizedInitialShippingAddress()
+            } else {
+                normalizedDefaultShippingAddress = nil
+            }
 
-            try await applyDefaults()
+            // Apply the normalized address before initializing elements that read from the session.
+            try await applyDefaults(shippingAddress: normalizedDefaultShippingAddress)
 
             // Load remaining elements
             self.paymentElement = try await PaymentElement(checkout: self)
@@ -379,7 +387,7 @@ public final class Checkout: ObservableObject {
 // MARK: - Defaults
 
 extension Checkout {
-    func applyDefaults() async throws {
+    func applyDefaults(shippingAddress: Session.ShippingAddress?) async throws {
         let defaults = configuration.defaults
 
         if let billingDetails = defaults.billingDetails,
@@ -387,12 +395,11 @@ extension Checkout {
             try await updateBillingTaxRegionIfNecessary(address: address)
         }
 
-        if let shippingDetails = defaults.shippingDetails,
-           let address = shippingDetails.address {
+        if let shippingAddress {
             do {
                 try await updateShippingAddress(
-                    name: shippingDetails.name,
-                    address: address
+                    name: shippingAddress.name,
+                    address: shippingAddress.address
                 )
             } catch CheckoutError.invalidShippingCountry {
                 // Treat a default address with a disallowed country as nil.
