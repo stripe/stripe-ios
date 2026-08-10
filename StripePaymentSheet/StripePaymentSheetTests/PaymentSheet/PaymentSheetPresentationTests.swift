@@ -49,6 +49,33 @@ final class PaymentSheetPresentationTests: XCTestCase {
         XCTAssertTrue(sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge)
         XCTAssertFalse(sheetPresentationController.prefersEdgeAttachedInCompactHeight)
     }
+
+    @MainActor
+    func testInteractiveDismissalWaitsForDismissalAttemptToFinish() throws {
+        // Given
+        let contentViewController = NativeSheetStubContentViewController()
+        let sheetViewController = PaymentSheetContainerViewController(
+            contentViewController: contentViewController,
+            appearance: .default,
+            isTestMode: true,
+            didCancelNative3DS2: {}
+        )
+        sheetViewController.modalPresentationStyle = .pageSheet
+        let presentationController = try XCTUnwrap(sheetViewController.sheetPresentationController)
+
+        // When
+        let shouldDismiss = sheetViewController.presentationControllerShouldDismiss(presentationController)
+
+        // Then
+        XCTAssertFalse(shouldDismiss)
+        XCTAssertEqual(contentViewController.dismissalAttemptCount, 0)
+
+        // When
+        sheetViewController.presentationControllerDidAttemptToDismiss(presentationController)
+
+        // Then
+        XCTAssertEqual(contentViewController.dismissalAttemptCount, 1)
+    }
 }
 
 private final class PresentationCapturingViewController: UIViewController {
@@ -78,6 +105,9 @@ private final class NativeSheetStubContentViewController: UIViewController, Bott
 
     lazy var navigationBar = SheetNavigationBar(isTestMode: true, appearance: .default)
     let requiresFullScreen = false
+    private(set) var dismissalAttemptCount = 0
 
-    func didTapOrSwipeToDismiss() {}
+    func didTapOrSwipeToDismiss() {
+        dismissalAttemptCount += 1
+    }
 }
