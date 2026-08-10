@@ -77,7 +77,9 @@ final class SelfieWarmupViewController: IdentityFlowViewController {
             buttonTopContentViewModel: buttonTopContentViewModel
         )
         super.init(sheetController: sheetController, analyticsScreenName: .selfieWarmup)
-        didOpenURLHandler = self.openInSafariViewController
+        didOpenURLHandler = { [weak self] url in
+            self?.openInSafariViewController(url)
+        }
         configure(
             backButtonTitle: nil,
             viewModel: flowViewModel
