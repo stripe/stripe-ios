@@ -164,10 +164,8 @@ final class CheckoutUnitTests: XCTestCase {
 
 // MARK: - Address Override Tests
 
-    func testUpdateShippingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
+    func testUpdateShippingAddress_noTax_setsLocallyAndEmitsUpdates() async throws {
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        let delegate = MockCheckoutDelegate()
-        checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
 
         try await checkout.updateShippingAddress(
@@ -178,9 +176,6 @@ final class CheckoutUnitTests: XCTestCase {
         let stored = checkout.session.shippingAddress
         XCTAssertEqual(stored?.name, "John Smith")
         XCTAssertEqual(stored?.address.country, "US")
-        XCTAssertEqual(delegate.updateSessionCallCount, 2)
-        XCTAssertEqual(delegate.beginLoadingCallCount, 1)
-        XCTAssertEqual(delegate.finishLoadingCallCount, 1)
         XCTAssertEqual(recorder.sessions.count, 2)
         XCTAssertEqual(recorder.loading, [true, false])
     }
@@ -453,11 +448,9 @@ final class CheckoutUnitTests: XCTestCase {
 
     // MARK: - commitSession Tests
 
-    func testUpdateSessionNotifiesDelegate() async throws {
-        // Given a Checkout with a delegate and session recorder
+    func testUpdateSessionEmitsSessionUpdates() async throws {
+        // Given a Checkout with a session recorder
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        let delegate = MockCheckoutDelegate()
-        checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
 
         var updatedJSON = CheckoutTestHelpers.openSessionJSON
@@ -472,7 +465,6 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.status?.type, .complete)
         XCTAssertEqual(checkout.session.status?.paymentStatus, .paid)
         // There are two emissions: one for the committed session, one for PaymentElement re-syncing the payment option.
-        XCTAssertEqual(delegate.updateSessionCallCount, 2)
         XCTAssertEqual(recorder.sessions.count, 2)
     }
 
@@ -501,8 +493,6 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testUpdateSessionCanBeCalledMultipleTimes() async throws {
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        let delegate = MockCheckoutDelegate()
-        checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
 
         var firstResponse = CheckoutTestHelpers.openSessionJSON
@@ -519,7 +509,6 @@ final class CheckoutUnitTests: XCTestCase {
 
         try await checkout.commitSession(secondSession)
         XCTAssertEqual(checkout.session.status?.type, .open)
-        XCTAssertEqual(delegate.updateSessionCallCount, 4)
         XCTAssertEqual(recorder.sessions.count, 4)
     }
 
@@ -535,30 +524,6 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertFalse(checkout.isLoading)
     }
 
-    func testCommitSessionNotifiesRegularDelegate() async throws {
-        // Given a Checkout with a regular delegate
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        var callOrder: [String] = []
-
-        let delegate = MockCheckoutDelegate()
-        delegate.onUpdateSession = { callOrder.append("regular") }
-        checkout.delegate = delegate
-        let recorder = CheckoutEmissionRecorder(checkout)
-
-        var updatedJSON = CheckoutTestHelpers.openSessionJSON
-        updatedJSON["status"] = "complete"
-        updatedJSON["payment_status"] = "paid"
-        let updatedSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: updatedJSON)!
-
-        // When the updated session is committed
-        try await checkout.commitSession(updatedSession)
-
-        // Then the delegate is notified for both session emissions
-        XCTAssertEqual(callOrder, ["regular", "regular"])
-        // There are two emissions: one for the committed session, one for PaymentElement re-syncing the payment option.
-        XCTAssertEqual(delegate.updateSessionCallCount, 2)
-        XCTAssertEqual(recorder.sessions.count, 2)
-    }
     // MARK: - updatePaymentMethod Parameter Encoding Tests
 
     func testUpdatePaymentMethodParameters_expiryOnly() {

@@ -104,18 +104,6 @@ final class PaymentSheetLoader {
             let elementsSessionAndIntent = try await elementsSessionAndIntentTask.value
             let intent = elementsSessionAndIntent.intent
             let elementsSession = elementsSessionAndIntent.elementsSession
-            // Overwrite the form specs that were already loaded from disk
-            loadTimings.logStart("loadFormSpecs")
-            switch intent {
-            case .paymentIntent, .deferredIntent, .checkout:
-                if !elementsSession.isBackupInstance {
-                    _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
-                }
-            case .setupIntent:
-                break // Not supported
-            }
-            loadTimings.logEnd("loadFormSpecs")
-
             let (isLinkEnabled, didLinkLookupTimeOut) = await loadLink(
                 elementsSession: elementsSession,
                 configuration: configuration,
@@ -237,12 +225,8 @@ final class PaymentSheetLoader {
     static func loadMiscellaneousSingletons() async {
         await withCheckedContinuation { continuation in
             AddressSpecProvider.shared.loadAddressSpecs {
-                // Load form specs
-                FormSpecProvider.shared.load { _ in
-                    // Load BSB data
-                    BSBNumberProvider.shared.loadBSBData {
-                        continuation.resume()
-                    }
+                BSBNumberProvider.shared.loadBSBData {
+                    continuation.resume()
                 }
             }
         }

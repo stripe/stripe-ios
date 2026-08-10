@@ -712,11 +712,6 @@ extension PaymentSheetLinkAccount {
             }
         }
 
-        if supportedPaymentMethodTypes.isEmpty {
-            // Card is the default payment method type when no other type is available.
-            supportedPaymentMethodTypes.append(.card)
-        }
-
         return supportedPaymentMethodTypes
     }
 }

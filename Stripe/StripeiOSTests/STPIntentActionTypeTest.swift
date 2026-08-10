@@ -36,6 +36,15 @@ class STPIntentActionTypeTest: XCTestCase {
         )
 
         XCTAssertEqual(
+            STPIntentActionType(string: "mb_way_await_authorization"),
+            STPIntentActionType.mbWayAwaitAuthorization
+        )
+        XCTAssertEqual(
+            STPIntentActionType(string: "await_authorization"),
+            STPIntentActionType.awaitAuthorization
+        )
+
+        XCTAssertEqual(
             STPIntentActionType(string: "garbage"),
             STPIntentActionType.unknown
         )
@@ -43,6 +52,24 @@ class STPIntentActionTypeTest: XCTestCase {
             STPIntentActionType(string: "GARBAGE"),
             STPIntentActionType.unknown
         )
+    }
+
+    func testMBAwaitAuthorizationDecoding() {
+        let action = STPIntentAction.decodedObject(fromAPIResponse: [
+            "type": "mb_way_await_authorization",
+            "mb_way_await_authorization": [:],
+        ])
+
+        XCTAssertEqual(action?.type, .mbWayAwaitAuthorization)
+    }
+
+    func testAwaitAuthorizationDecoding() {
+        let action = STPIntentAction.decodedObject(fromAPIResponse: [
+            "type": "await_authorization",
+            "await_authorization": [:],
+        ])
+
+        XCTAssertEqual(action?.type, .awaitAuthorization)
     }
 
 }

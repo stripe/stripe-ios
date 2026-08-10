@@ -79,7 +79,8 @@ public final class PaymentElement {
             defaults: checkout.configuration.defaults,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             returnURL: checkout.configuration.returnURL,
-            applePay: applePay
+            applePay: applePay,
+            userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
         self.paymentSheetFlowController = try await PaymentSheet.FlowController.create(
             checkout: checkout,
@@ -91,7 +92,8 @@ public final class PaymentElement {
             defaults: checkout.configuration.defaults,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             returnURL: checkout.configuration.returnURL,
-            applePay: applePay
+            applePay: applePay,
+            userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
         self.embeddedPaymentElement = try await EmbeddedPaymentElement.create(
             checkout: checkout,
@@ -148,14 +150,16 @@ extension PaymentElement {
             defaults: checkout.configuration.defaults,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             returnURL: checkout.configuration.returnURL,
-            applePay: applePay
+            applePay: applePay,
+            userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
         embeddedPaymentElement.configuration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             returnURL: checkout.configuration.returnURL,
-            applePay: applePay
+            applePay: applePay,
+            userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
 
         // Update FlowController

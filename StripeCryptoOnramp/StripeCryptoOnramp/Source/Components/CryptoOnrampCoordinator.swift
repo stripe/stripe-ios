@@ -135,6 +135,13 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws if an authenticated Link user is not available, or an API error occurs.
     func registerWalletAddress(walletAddress: String, network: CryptoNetwork) async throws
 
+    /// Deletes the given crypto wallet from the current Link account.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter walletId: The ID of the crypto wallet to delete.
+    /// Throws if an authenticated Link user is not available, or an API error occurs.
+    func deleteWalletAddress(walletId: String) async throws
+
     /// Creates a short-lived server-issued challenge for a registered wallet.
     /// Requires an authenticated Link user.
     ///
@@ -381,7 +388,11 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             if let stripeError = error as? StripeError,
                case let .apiError(stripeAPIError) = stripeError,
                stripeAPIError.code == "link_auth_token_invalid" || stripeAPIError.code == "resource_missing" {
-                analyticsClient.log(.errorOccurred(during: .authenticateUserWithAuthToken, errorMessage: stripeAPIError.message ?? error.localizedDescription))
+                analyticsClient.log(.errorOccurred(
+                    during: .authenticateUserWithAuthToken,
+                    errorMessage: stripeAPIError.message ?? error.localizedDescription,
+                    requestID: stripeAPIError.requestID
+                ))
                 throw CryptoOnrampCoordinator.Error.seamlessSignInTokenInvalid(reason: stripeAPIError.message)
             } else {
                 try logAndThrow(error, during: .authenticateUserWithAuthToken)
@@ -550,6 +561,18 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.walletRegistered(network: network.rawValue))
         } catch {
             try logAndThrow(error, during: .registerWalletAddress)
+        }
+    }
+
+    public func deleteWalletAddress(walletId: String) async throws {
+        do {
+            try await apiClient.deleteWalletAddress(
+                walletId: walletId,
+                linkAccountInfo: linkAccountInfo
+            )
+            analyticsClient.log(.walletDeleted)
+        } catch {
+            try logAndThrow(error, during: .deleteWalletAddress)
         }
     }
 
@@ -955,7 +978,12 @@ private extension CryptoOnrampCoordinator {
             additionalSDKVersions: additionalSDKVersions
         )
         let errorMessage = (mappedError as? StripeCryptoOnrampError)?.developerMessage ?? mappedError.localizedDescription
-        analyticsClient.log(.errorOccurred(during: operation, errorMessage: errorMessage))
+        let requestID = (mappedError as? StripeCryptoOnrampAPIError)?.requestID
+        analyticsClient.log(.errorOccurred(
+            during: operation,
+            errorMessage: errorMessage,
+            requestID: requestID
+        ))
 
         #if DEBUG
         print("[Stripe SDK] CryptoOnrampCoordinator error: \(errorMessage)")
@@ -970,7 +998,11 @@ private extension CryptoOnrampCoordinator {
            stripeAPIError.type == .invalidRequestError,
            let message = stripeAPIError.message,
            message.hasPrefix("There was an issue parsing the phone number") {
-            analyticsClient.log(.errorOccurred(during: operation, errorMessage: "Invalid phone number format"))
+            analyticsClient.log(.errorOccurred(
+                during: operation,
+                errorMessage: "Invalid phone number format",
+                requestID: stripeAPIError.requestID
+            ))
             throw Error.invalidPhoneFormat
         } else {
             try logAndThrow(error, during: operation)

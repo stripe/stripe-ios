@@ -655,7 +655,6 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testChangeButtonStateRespectsCardBrandChoice() async throws {
         // Given an EmbeddedPaymentElement w/ CBC enabled...
         await AddressSpecProvider.shared.loadAddressSpecs()
-        await FormSpecProvider.shared.load()
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(cardBrandChoice: ._testValue())
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
@@ -732,7 +731,6 @@ class EmbeddedPaymentElementTest: XCTestCase {
             paymentMethodOrientation: .vertical
         )
         await AddressSpecProvider.shared.loadAddressSpecs()
-        await FormSpecProvider.shared.load()
         let sut = EmbeddedPaymentElement(
             configuration: configuration,
             loadResult: loadResult,

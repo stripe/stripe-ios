@@ -373,6 +373,26 @@ extension STPAPIClient {
         )
     }
 
+    /// Make a DELETE request using the passed parameters.
+    @_spi(STP) public func delete<T: Decodable>(
+        resource: String,
+        parameters: [String: Any],
+        ephemeralKeySecret: String? = nil,
+        consumerPublishableKey: String? = nil,
+        apiVersionOverride: String? = nil,
+        completion: @escaping (Result<T, Error>) -> Void
+    ) {
+        request(
+            method: .delete,
+            parameters: parameters,
+            ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
+            apiVersionOverride: apiVersionOverride,
+            resource: resource,
+            completion: completion
+        )
+    }
+
     func request<T: Decodable>(
         method: HTTPMethod,
         parameters: [String: Any],
@@ -429,7 +449,7 @@ extension STPAPIClient {
         switch method {
         case .get:
             request.stp_addParameters(toURL: parameters)
-        case .post:
+        case .post, .delete:
             let formData = URLEncoder.queryString(from: parameters).data(using: .utf8)
             request.httpBody = formData
             request.setValue(
@@ -616,5 +636,6 @@ extension STPAPIClient {
     enum HTTPMethod: String {
         case get = "GET"
         case post = "POST"
+        case delete = "DELETE"
     }
 }

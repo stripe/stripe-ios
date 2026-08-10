@@ -39,14 +39,9 @@ class CustomerSheetDataSource {
                 let fetchSessionsTask = Task { try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret() }
                 defer { fetchSessionsTask.cancel() }
 
-                // Ensure local specs are loaded prior to the ones from elementSession
-                await loadFormSpecs()
                 let (elementSession, customerSessionClientSecret) = try await fetchSessionsTask.value
                 let customerId = customerSessionClientSecret.customerId
                 let paymentOption = customerSessionAdapter.fetchSelectedPaymentOption(for: customerId, elementsSession: elementSession)
-
-                // Override with specs from elementSession
-                _ = FormSpecProvider.shared.loadFrom(elementSession.paymentMethodSpecs as Any)
 
                 let savedPaymentMethods = elementSession.customer?.paymentMethods.filter({ paymentMethod in
                     guard let card = paymentMethod.card else { return true }
@@ -78,9 +73,6 @@ class CustomerSheetDataSource {
                     elementsSessionTask.cancel()
                 }
 
-                // Ensure local specs are loaded prior to the ones from elementSession
-                await loadFormSpecs()
-
                 let paymentMethods = try await paymentMethodsTask.value.filter({ paymentMethod in
                     guard let card = paymentMethod.card else { return true }
                     return configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand)
@@ -88,22 +80,9 @@ class CustomerSheetDataSource {
                 let selectedPaymentMethod = try await selectedPaymentMethodTask.value
                 let elementSession = try await elementsSessionTask.value
 
-                // Override with specs from elementSession
-                _ = FormSpecProvider.shared.loadFrom(elementSession.paymentMethodSpecs as Any)
-
                 completion(.success((paymentMethods, selectedPaymentMethod, elementSession)))
             } catch {
                 completion(.failure(error))
-            }
-        }
-    }
-
-    func loadFormSpecs() async {
-        await withCheckedContinuation { continuation in
-            Task {
-                FormSpecProvider.shared.load { _ in
-                    continuation.resume()
-                }
             }
         }
     }

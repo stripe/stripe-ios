@@ -245,8 +245,6 @@ final class CheckoutPendingOperationsTests: XCTestCase {
 
     func testLoadingStatePersistsAcrossConsecutiveQueuedOperations() async throws {
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        let delegate = MockCheckoutDelegate()
-        checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
 
         // Gates let us pause each operation mid-flight so we can assert state at precise moments
@@ -286,9 +284,6 @@ final class CheckoutPendingOperationsTests: XCTestCase {
             XCTAssertTrue(checkout.isLoading)
             XCTAssertEqual(recorder.loading, [true])
             XCTAssertEqual(recorder.sessions.count, 0)
-            XCTAssertEqual(delegate.beginLoadingCallCount, 1)
-            XCTAssertEqual(delegate.finishLoadingCallCount, 0)
-            XCTAssertEqual(delegate.updateSessionCallCount, 0)
         }
 
         firstGate.open()
@@ -300,9 +295,6 @@ final class CheckoutPendingOperationsTests: XCTestCase {
             XCTAssertEqual(recorder.loading, [true])
             XCTAssertEqual(recorder.sessions.count, 2)
             XCTAssertEqual(recorder.sessions.last?.currency, "eur")
-            XCTAssertEqual(delegate.beginLoadingCallCount, 1)
-            XCTAssertEqual(delegate.finishLoadingCallCount, 0)
-            XCTAssertEqual(delegate.updateSessionCallCount, 2)
         }
 
         secondGate.open()
@@ -315,16 +307,11 @@ final class CheckoutPendingOperationsTests: XCTestCase {
             XCTAssertEqual(recorder.loading, [true, false])
             XCTAssertEqual(recorder.sessions.count, 4)
             XCTAssertEqual(recorder.sessions.last?.currency, "gbp")
-            XCTAssertEqual(delegate.beginLoadingCallCount, 1)
-            XCTAssertEqual(delegate.finishLoadingCallCount, 1)
-            XCTAssertEqual(delegate.updateSessionCallCount, 4)
         }
     }
 
     func testThrowingOperationEmitsLoadingButNoSessionUpdate() async throws {
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        let delegate = MockCheckoutDelegate()
-        checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
 
         do {
@@ -339,15 +326,10 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         XCTAssertFalse(checkout.isLoading)
         XCTAssertEqual(recorder.loading, [true, false])
         XCTAssertEqual(recorder.sessions.count, 0)
-        XCTAssertEqual(delegate.beginLoadingCallCount, 1)
-        XCTAssertEqual(delegate.finishLoadingCallCount, 1)
-        XCTAssertEqual(delegate.updateSessionCallCount, 0)
     }
 
     func testNoOpOperationStillEmitsSessionUpdate() async throws {
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        let delegate = MockCheckoutDelegate()
-        checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
 
         // Enqueue an operation that commits the same session (no actual mutation)
@@ -356,7 +338,6 @@ final class CheckoutPendingOperationsTests: XCTestCase {
             try await checkout.commitSession(existingSession)
         }
 
-        XCTAssertEqual(delegate.updateSessionCallCount, 2)
         XCTAssertEqual(recorder.sessions.count, 2)
     }
 

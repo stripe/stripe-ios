@@ -131,13 +131,15 @@ extension PaymentElement {
             defaults: Checkout.Configuration.Defaults,
             merchantDisplayName: String,
             returnURL: String,
-            applePay: PaymentSheet.ApplePayConfiguration?
+            applePay: PaymentSheet.ApplePayConfiguration?,
+            userInterfaceStyle: Checkout.UserInterfaceStyle
         ) -> EmbeddedPaymentElement.Configuration {
             var configuration = embeddedConfiguration
             configuration.apiClient = apiClient
             configuration.merchantDisplayName = merchantDisplayName
             configuration.returnURL = returnURL
             configuration.applePay = applePay
+            configuration.style = userInterfaceStyle
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
@@ -150,13 +152,15 @@ extension PaymentElement {
             defaults: Checkout.Configuration.Defaults,
             merchantDisplayName: String,
             returnURL: String,
-            applePay: PaymentSheet.ApplePayConfiguration?
+            applePay: PaymentSheet.ApplePayConfiguration?,
+            userInterfaceStyle: Checkout.UserInterfaceStyle
         ) -> PaymentSheet.Configuration {
             var configuration = paymentSheetConfiguration
             configuration.apiClient = apiClient
             configuration.merchantDisplayName = merchantDisplayName
             configuration.returnURL = returnURL
             configuration.applePay = applePay
+            configuration.style = userInterfaceStyle
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
