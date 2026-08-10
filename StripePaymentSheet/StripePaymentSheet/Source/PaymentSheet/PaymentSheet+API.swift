@@ -188,14 +188,14 @@ extension PaymentSheet {
                 )
 
                 // Present CVC VC
-                let bottomSheetVC = FlowController.makeBottomSheetViewController(
+                let bottomSheetVC = FlowController.makePaymentSheetContainerViewController(
                     preConfirmationViewController,
                     configuration: configuration,
                     didCancelNative3DS2: {
                         paymentHandler.cancel3DS2ChallengeFlow()
                     }
                 )
-                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+                presentingViewController.presentAsSheet(bottomSheetVC, appearance: configuration.appearance)
             }
         } else {
             // MARK: - No local actions
@@ -747,7 +747,7 @@ extension PaymentSheet {
                     confirmationChallenge: confirmationChallenge,
                     confirmHandler: confirmHandler
                 )
-                linkController.presentAsBottomSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
+                linkController.presentAsSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
                     completion(result, confirmationType)
                 })
             } else {

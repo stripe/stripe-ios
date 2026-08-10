@@ -5,7 +5,6 @@
 //  Created by Jaime Park on 4/15/21.
 //
 
-import CoreTelephony
 import Foundation
 import UIKit
 
@@ -22,7 +21,7 @@ struct DeviceUtils {
     static let build: String = getBuildVersion()
     static let bootCount: Int? = nil
     static let locale: String? = getDeviceLocale()
-    static let carrier: String? = getCarrier()
+    static let carrier: String? = nil
     static let networkOperator: String? = nil
     static let phoneType: Int? = nil
     static let phoneCount: Int? = nil
@@ -59,19 +58,6 @@ struct DeviceUtils {
 
     static func getVendorId() -> String {
         return UIDevice.current.identifierForVendor?.uuidString ?? ""
-    }
-
-    static internal func getCarrier() -> String? {
-        let networkInfo = CTTelephonyNetworkInfo()
-        guard
-            let firstNamedCarrier = networkInfo.serviceSubscriberCellularProviders?.first(where: {
-                $0.value.carrierName != nil
-            })?.value
-        else {
-            return nil
-        }
-
-        return firstNamedCarrier.carrierName
     }
 
     static internal func getOsVersion() -> String {

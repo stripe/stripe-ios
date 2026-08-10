@@ -91,14 +91,14 @@ final class PayWithNativeLinkController {
         self.confirmHandler = confirmHandler
     }
 
-    func presentAsBottomSheet(
+    func presentAsSheet(
         from presentingController: UIViewController,
         shouldOfferApplePay: Bool,
         hidingUnderlyingBottomSheet: Bool = true,
         shouldFinishOnClose: Bool,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?, _ didFinish: Bool) -> Void
     ) {
-        presentAsBottomSheetInternal(
+        presentAsSheetInternal(
             from: presentingController,
             shouldOfferApplePay: shouldOfferApplePay,
             hidingUnderlyingBottomSheet: hidingUnderlyingBottomSheet,
@@ -118,7 +118,7 @@ final class PayWithNativeLinkController {
         canContinueWithoutLink: Bool = true,
         completion: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool, _ error: Error?) -> Void
     ) {
-        presentAsBottomSheetInternal(
+        presentAsSheetInternal(
             from: presentingController,
             shouldOfferApplePay: false,
             hidingUnderlyingBottomSheet: true,
@@ -139,7 +139,7 @@ final class PayWithNativeLinkController {
         }
     }
 
-    private func presentAsBottomSheetInternal(
+    private func presentAsSheetInternal(
         from presentingController: UIViewController,
         shouldOfferApplePay: Bool,
         hidingUnderlyingBottomSheet: Bool = true,
@@ -152,7 +152,7 @@ final class PayWithNativeLinkController {
     ) {
         self.selfRetainer = self
 
-        let targetBottomSheet = presentingController as? BottomSheetViewController ?? presentingController.bottomSheetController
+        let targetBottomSheet = presentingController as? PaymentSheetContainerViewController ?? presentingController.bottomSheetController
         let targetPresentationController = targetBottomSheet?.presentingViewController
 
         let presentBottomSheet: (UIViewController) -> Void = { presentingController in
@@ -174,7 +174,7 @@ final class PayWithNativeLinkController {
             )
 
             payWithLinkVC.payWithLinkDelegate = self
-            presentingController.presentAsBottomSheet(
+            presentingController.presentAsSheet(
                 payWithLinkVC,
                 appearance: self.configuration.appearance,
                 completion: {}
@@ -189,7 +189,7 @@ final class PayWithNativeLinkController {
                     }
                     // Handle representing the previous bottom sheet
                     if let targetBottomSheet, let targetPresentationController, hidingUnderlyingBottomSheet {
-                        targetPresentationController.presentAsBottomSheet(targetBottomSheet, appearance: self.configuration.appearance)
+                        targetPresentationController.presentAsSheet(targetBottomSheet, appearance: self.configuration.appearance)
                     }
                 }
             }

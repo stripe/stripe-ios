@@ -9,7 +9,8 @@
 import UIKit
 
 /// Displays an HTML confirmation screen in a Link-styled bottom sheet.
-final class HTMLConfirmationViewController: BottomSheetViewController {
+final class HTMLConfirmationViewController: PaymentSheetContainerViewController {
+
     private weak var contentViewController: HTMLConfirmationContentViewController?
 
     /// Closure called when the customer takes action on the confirmation screen.

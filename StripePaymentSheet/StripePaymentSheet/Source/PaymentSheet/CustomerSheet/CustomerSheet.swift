@@ -46,9 +46,9 @@ public class CustomerSheet {
     }()
 
     /// The parent view controller to present
-    lazy var bottomSheetViewController: BottomSheetViewController = {
+    lazy var bottomSheetViewController: PaymentSheetContainerViewController = {
         let isTestMode = configuration.apiClient.isTestmode
-        let vc = BottomSheetViewController(
+        let vc = PaymentSheetContainerViewController(
             contentViewController: loadingViewController,
             appearance: configuration.appearance,
             isTestMode: isTestMode,
@@ -221,7 +221,7 @@ public class CustomerSheet {
                 }
             }
         }
-        presentingViewController.presentAsBottomSheet(bottomSheetViewController,
+        presentingViewController.presentAsSheet(bottomSheetViewController,
                                                       appearance: configuration.appearance)
     }
 

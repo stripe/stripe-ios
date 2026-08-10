@@ -53,7 +53,7 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
             return
         }
 
-        if !(visibleVC is StripePaymentSheet.BottomSheetViewController) {
+        if !(visibleVC is StripePaymentSheet.PaymentSheetContainerViewController) {
             viewModel.embeddedPaymentElement?.presentingViewController = visibleVC
         }
     }
