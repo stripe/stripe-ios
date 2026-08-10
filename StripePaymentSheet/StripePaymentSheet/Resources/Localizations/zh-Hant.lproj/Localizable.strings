@@ -78,6 +78,10 @@
 
 "Confirm payment details" = "確認支付詳情";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "請在 %@ 內於您的行動銀行應用程式中確認 Bizum 支付，以完成購買。";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "請在 %@ 內於您的 MB WAY 應用程式中確認支付，以完成購買。";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "在您的銀行或支付應用程式中確認向 %@ 的付款，以完成購物。";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@内在您的銀行應用中確認付款，完成購物。";
@@ -97,6 +101,8 @@
 "Default payment method" = "預設支付方式";
 
 "EPS Bank" = "EPS 銀行";
+
+"Edit address" = "編輯地址";
 
 "Enter address manually" = "手動輸入地址";
 
