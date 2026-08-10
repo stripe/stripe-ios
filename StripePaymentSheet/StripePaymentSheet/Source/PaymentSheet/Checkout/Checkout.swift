@@ -8,7 +8,6 @@
 
 import Combine
 import Foundation
-import PassKit
 @_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
@@ -68,8 +67,8 @@ public final class Checkout: ObservableObject {
     /// The CurrencySelectorElement for this Checkout instance, when Adaptive Pricing is available.
     private var currencySelectorElement: CurrencySelectorElement?
 
-    /// The active Apple Pay session, non-nil while the Apple Pay sheet is presented.
-    var applePaySession: CheckoutApplePaySession?
+    /// The active Apple Pay context, non-nil while the Apple Pay sheet is presented.
+    var applePayContext: CheckoutApplePayContext?
 
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
