@@ -40,6 +40,19 @@ class HeaderView: UIView {
         let backgroundColor: UIColor
         let headerType: HeaderType
         let titleText: String?
+        let subtitleText: String?
+
+        init(
+            backgroundColor: UIColor,
+            headerType: HeaderType,
+            titleText: String?,
+            subtitleText: String? = nil
+        ) {
+            self.backgroundColor = backgroundColor
+            self.headerType = headerType
+            self.titleText = titleText
+            self.subtitleText = subtitleText
+        }
     }
 
     private let iconView = HeaderIconView()
@@ -60,6 +73,25 @@ class HeaderView: UIView {
         label.adjustsFontForContentSizeCategory = true
         label.font = IdentityUI.titleFont
         return label
+    }()
+
+    private let subtitleLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.adjustsFontForContentSizeCategory = true
+        label.font = IdentityUI.preferredFont(forTextStyle: .body)
+        label.textColor = IdentityUI.secondaryLabelColor
+        label.textAlignment = .center
+        return label
+    }()
+
+    private let textStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        return stackView
     }()
 
     private lazy var topAnchorConstraint: NSLayoutConstraint = stackView.topAnchor.constraint(
@@ -101,6 +133,13 @@ extension HeaderView {
         } else {
             titleLabel.isHidden = true
         }
+
+        if let subtitleText = viewModel.subtitleText {
+            subtitleLabel.isHidden = false
+            subtitleLabel.text = subtitleText
+        } else {
+            subtitleLabel.isHidden = true
+        }
     }
 
     // Reconfigure subviews and reset constraint constants
@@ -121,7 +160,9 @@ extension HeaderView {
     // Call on init to set stack view in view
     fileprivate func installStackView() {
         stackView.addArrangedSubview(iconView)
-        stackView.addArrangedSubview(titleLabel)
+        textStackView.addArrangedSubview(titleLabel)
+        textStackView.addArrangedSubview(subtitleLabel)
+        stackView.addArrangedSubview(textStackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(stackView)

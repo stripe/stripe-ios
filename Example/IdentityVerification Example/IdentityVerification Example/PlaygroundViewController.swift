@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 3/3/21.
 //
 
-import StripeIdentity
+@_spi(STP) import StripeIdentity
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -45,6 +45,7 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet weak var phoneOtpContainerView: UIStackView!
 
     @IBOutlet weak var fallbackToDocumentSwitch: UISwitch!
+    private let useBiometricConsentHeaderCustomizationSwitch = UISwitch()
     private let phoneElement: PhoneNumberElement
 
     private let phoneView: UIView
@@ -140,6 +141,7 @@ class PlaygroundViewController: UIViewController {
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
         // TODO(ccen) enable phoneOtpContainerView when backend adds support to PII
         phoneOtpContainerView.isHidden = true
+        addBiometricConsentHeaderCustomizationSwitch()
         didChangeNewOrReuse(self)
     }
 
@@ -359,12 +361,21 @@ class PlaygroundViewController: UIViewController {
             assertionFailure("Did not receive a valid ephemeral key secret.")
             return
         }
+        var configuration = IdentityVerificationSheet.Configuration(
+            brandLogo: UIImage(named: "BrandLogo")!
+        )
+        if useBiometricConsentHeaderCustomizationSwitch.isOn {
+            configuration.biometricConsent = .init(
+                icon: nil,
+                title: "Enable withdrawals",
+                subtitle: "Complete a one-time identity check to enable withdrawals."
+            )
+        }
+
         self.verificationSheet = IdentityVerificationSheet(
             verificationSessionId: verificationSessionId,
             ephemeralKeySecret: ephemeralKeySecret,
-            configuration: IdentityVerificationSheet.Configuration(
-                brandLogo: UIImage(named: "BrandLogo")!
-            )
+            configuration: configuration
         )
     }
 
@@ -419,6 +430,24 @@ class PlaygroundViewController: UIViewController {
             IdentityVerificationSheet.simulatorSelfieCameraImages = [selfieImage]
         }
         #endif
+    }
+
+    private func addBiometricConsentHeaderCustomizationSwitch() {
+        let label = UILabel()
+        label.text = "Customize biometric consent header"
+        label.adjustsFontForContentSizeCategory = true
+
+        useBiometricConsentHeaderCustomizationSwitch.isOn = false
+        useBiometricConsentHeaderCustomizationSwitch.setContentHuggingPriority(.required, for: .horizontal)
+
+        let stackView = UIStackView(arrangedSubviews: [
+            label,
+            useBiometricConsentHeaderCustomizationSwitch,
+        ])
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.spacing = 8
+        nativeComponentsOptionsContainerView.addArrangedSubview(stackView)
     }
 
     @IBAction func didChangeVerificationType(_ sender: Any) {
