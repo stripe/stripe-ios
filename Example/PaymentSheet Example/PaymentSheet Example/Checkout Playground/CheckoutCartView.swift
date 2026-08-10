@@ -15,6 +15,7 @@ struct CheckoutCartView: View {
 
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var eceConfirmResult: Checkout.ConfirmResult?
 
     let clientSecret: String
     let shippingAddressCollection: Bool
@@ -94,6 +95,30 @@ struct CheckoutCartView: View {
             .task {
                 await loadCheckout()
             }
+            .alert(
+                eceConfirmResultAlertTitle,
+                isPresented: Binding(get: { eceConfirmResult != nil }, set: { if !$0 { eceConfirmResult = nil } }),
+                actions: { Button("OK") { eceConfirmResult = nil } },
+                message: { Text(eceConfirmResultAlertMessage) }
+            )
+        }
+    }
+
+    private var eceConfirmResultAlertTitle: String {
+        switch eceConfirmResult {
+        case .succeeded: return "Success"
+        case .canceled: return "Canceled"
+        case .failed: return "Failed"
+        case nil: return ""
+        }
+    }
+
+    private var eceConfirmResultAlertMessage: String {
+        switch eceConfirmResult {
+        case .succeeded(let paymentStatus): return "Payment status: \(paymentStatus)"
+        case .canceled: return "The payment was canceled."
+        case .failed(let error): return error.localizedDescription
+        case nil: return ""
         }
     }
 
@@ -107,6 +132,9 @@ struct CheckoutCartView: View {
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             config.currencySelectorElement.appearance = currencySelectorAppearance
+            config.expressCheckoutElement.confirmHandler = { [self] result in
+                eceConfirmResult = result
+            }
             checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription

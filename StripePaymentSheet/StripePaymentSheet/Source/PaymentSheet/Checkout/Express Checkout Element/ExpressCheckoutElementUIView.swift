@@ -106,7 +106,8 @@ public final class ExpressCheckoutElementUIView: UIView {
     @objc private func handleApplePayTapped() {
         Task { @MainActor [weak self] in
             guard let self else { return }
-            _ = await self.delegate?.confirmApplePay()
+            guard let result = await self.delegate?.confirmApplePay() else { return }
+            self.configuration.expressCheckoutElement.confirmHandler?(result)
         }
     }
 
