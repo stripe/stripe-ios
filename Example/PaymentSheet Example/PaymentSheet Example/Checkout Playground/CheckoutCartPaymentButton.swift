@@ -13,8 +13,7 @@ struct CheckoutCartPaymentButton: View {
 
     private var session: Checkout.Session { checkout.session }
 
-    @State private var isConfirming = false
-    @State private var confirmResult: Checkout.ConfirmResult?
+    @State private var showConfirmStub = false
 
     var body: some View {
         VStack(spacing: 12) {
@@ -37,15 +36,10 @@ struct CheckoutCartPaymentButton: View {
             .padding(.horizontal)
 
             Button {
-                confirm()
+                showConfirmStub = true
             } label: {
                 HStack {
-                    if isConfirming {
-                        ProgressView()
-                            .tint(.white)
-                    } else {
-                        Text("Checkout")
-                    }
+                    Text("Checkout")
                     Spacer()
                     if let total = session.total, let currency = session.currency {
                         Text(formatCartCurrency(amount: total.total.minorUnitsAmount, currency: currency))
@@ -57,17 +51,13 @@ struct CheckoutCartPaymentButton: View {
                 .background(Color.blue)
                 .cornerRadius(14)
             }
-            .disabled(isConfirming || session.paymentOption == nil)
             .padding(.horizontal)
-            .alert(item: $confirmResult) { result in
-                switch result {
-                case .succeeded(let paymentStatus):
-                    return Alert(title: Text("Payment succeeded"), message: Text("Payment status: \(String(describing: paymentStatus))"))
-                case .canceled:
-                    return Alert(title: Text("Canceled"))
-                case .failed(let error):
-                    return Alert(title: Text("Payment failed"), message: Text(error.localizedDescription))
-                }
+            .alert(isPresented: $showConfirmStub) {
+                Alert(
+                    title: Text("Confirm stubbed"),
+                    message: Text("Checkout confirm is not implemented yet."),
+                    dismissButton: .default(Text("OK"))
+                )
             }
         }
         .padding(.bottom, 16)
@@ -102,24 +92,6 @@ struct CheckoutCartPaymentButton: View {
     private func presentPaymentElement() {
         Task { @MainActor in
             await checkout.getPaymentElement().present()
-        }
-    }
-
-    private func confirm() {
-        Task { @MainActor in
-            isConfirming = true
-            confirmResult = await checkout.confirm()
-            isConfirming = false
-        }
-    }
-}
-
-extension Checkout.ConfirmResult: Identifiable {
-    public var id: String {
-        switch self {
-        case .succeeded: return "succeeded"
-        case .canceled: return "canceled"
-        case .failed: return "failed"
         }
     }
 }

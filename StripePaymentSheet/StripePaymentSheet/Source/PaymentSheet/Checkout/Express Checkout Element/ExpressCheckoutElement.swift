@@ -9,7 +9,7 @@
 @MainActor
 protocol ExpressCheckoutElementDelegate: AnyObject {
     /// Called when the user taps the Apple Pay button.
-    func confirmApplePay() async -> Checkout.InternalConfirmResult
+    func confirmApplePay() async -> Checkout.ConfirmResult
 }
 
 /// An express checkout element backed by a Checkout Session.

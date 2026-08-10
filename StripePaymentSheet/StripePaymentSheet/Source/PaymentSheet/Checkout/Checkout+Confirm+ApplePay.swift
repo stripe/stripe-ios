@@ -13,12 +13,10 @@ import Foundation
 extension Checkout {
     static func confirmApplePay(
         checkout: Checkout,
-        checkoutSession: Session,
         authenticationContext: STPAuthenticationContext
     ) async -> InternalConfirmResult {
         guard let context = CheckoutApplePayContext.create(
             checkout: checkout,
-            checkoutSession: checkoutSession,
             authenticationContext: authenticationContext
         ) else {
             return .init(paymentSheetResult: .failed(error: CheckoutError.applePayNotSupportedOrMisconfigured))

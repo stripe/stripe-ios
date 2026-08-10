@@ -109,7 +109,6 @@ extension Checkout {
         case .applePay:
             return await confirmApplePay(
                 checkout: checkout,
-                checkoutSession: checkoutSession,
                 authenticationContext: authenticationContext
             )
         case .new(let confirmParams):

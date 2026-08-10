@@ -72,14 +72,10 @@ public final class PaymentElement {
         let configuration = checkout.configuration.paymentElement
 
         // Create FlowController
-        let merchantCountryCode = checkout.session.elementsSession.merchantCountryCode
-        let applePay = checkout.configuration.applePayConfiguration?.makePaymentSheetConfiguration(merchantCountryCode: merchantCountryCode)
         let paymentSheetConfiguration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
-            returnURL: checkout.configuration.returnURL,
-            applePay: applePay,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
         self.paymentSheetFlowController = try await PaymentSheet.FlowController.create(
@@ -91,8 +87,6 @@ public final class PaymentElement {
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
-            returnURL: checkout.configuration.returnURL,
-            applePay: applePay,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
         self.embeddedPaymentElement = try await EmbeddedPaymentElement.create(
@@ -143,22 +137,16 @@ extension PaymentElement {
 
         // TODO: This should not be async or throws; we should not make any network requests or re-fetch things, just update the v1/e/s response.
         let configuration = checkout.configuration.paymentElement
-        let merchantCountryCode = checkout.session.elementsSession.merchantCountryCode
-        let applePay = checkout.configuration.applePayConfiguration?.makePaymentSheetConfiguration(merchantCountryCode: merchantCountryCode)
         paymentSheetFlowController.configuration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
-            returnURL: checkout.configuration.returnURL,
-            applePay: applePay,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
         embeddedPaymentElement.configuration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
-            returnURL: checkout.configuration.returnURL,
-            applePay: applePay,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
 

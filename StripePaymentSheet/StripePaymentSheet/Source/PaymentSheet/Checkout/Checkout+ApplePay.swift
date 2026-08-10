@@ -230,13 +230,13 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
     static func create(
         checkout: Checkout,
-        checkoutSession: Checkout.Session,
         authenticationContext: STPAuthenticationContext
     ) -> CheckoutApplePayContext? {
         guard let applePayConfig = checkout.configuration.applePayConfiguration else {
             return nil
         }
 
+        let checkoutSession = checkout.session
         let countryCode = checkoutSession.elementsSession.merchantCountryCode ?? "US"
         let paymentRequest = StripeAPI.paymentRequest(
             withMerchantIdentifier: applePayConfig.merchantId,

@@ -367,14 +367,9 @@ public final class Checkout: ObservableObject {
                 }
                 return result
             }
-            switch confirmResult.paymentSheetResult {
-            case .completed:
-                return .succeeded(paymentStatus: session.status?.paymentStatus ?? .unknown)
-            case .canceled:
-                return .canceled
-            case .failed(let error):
-                return .failed(error)
-            }
+            _ = confirmResult
+            // TODO: Map the internal confirm result into `ConfirmResult`.
+            return .canceled
         } catch {
             return .failed(error)
         }
