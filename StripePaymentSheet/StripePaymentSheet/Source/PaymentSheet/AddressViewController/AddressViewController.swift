@@ -369,7 +369,7 @@ extension AddressViewController {
         // presented again, and each save sends the form back to the merchant, so the next open
         // should compare against what was saved here — not the state captured at first init.
         captureInitialSnapshot()
-        
+
         Task { @MainActor in
             do {
                 try await self.integrationDelegate?.save(

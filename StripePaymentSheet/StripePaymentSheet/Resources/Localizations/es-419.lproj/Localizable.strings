@@ -140,6 +140,10 @@
 
 "Did you mean %@? %@." = "¿Quisiste decir %1$@? %2$@.";
 
+"Discard Changes" = "Descartar cambios";
+
+"Discard changes?" = "¿Descartar cambios?";
+
 "Discount" = "Descuento";
 
 "EPS Bank" = "Banco que opera con EPS";
@@ -163,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entiendo que Stripe cobrará débitos directos en nombre de %@ y confirmo que soy el titular de la cuenta y la única persona que se requiere que autorice los débitos a esta cuenta.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Seguir editando";
 
 "Last 4 digits of SSN" = "Últimos 4 dígitos del número de seguridad social (SSN)";
 
@@ -345,3 +351,7 @@
 "Yes, update" = "Sí, actualizar";
 
 "Your IBAN should start with a two-letter country code." = "El IBAN debe empezar con un código de país de dos letras.";
+
+"Your address changes won't be saved." = "No se guardarán los cambios en tu dirección.";
+
+"iDEAL Bank" = "Banco iDEAL";
