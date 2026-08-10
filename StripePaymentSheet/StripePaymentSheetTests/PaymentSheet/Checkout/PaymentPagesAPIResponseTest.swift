@@ -29,7 +29,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let requiredFields = [
             "session_id",
             "livemode",
-            "mode",
             "payment_status",
             "payment_method_types",
             "elements_session",
@@ -63,7 +62,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.total?.subtotal.minorUnitsAmount, 2000)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertEqual(session.minorUnitsAmountDivisor, 100)
-        XCTAssertEqual(session.mode, .payment)
+        XCTAssertEqual(session.paymentStatus, .unpaid)
         XCTAssertEqual(session.status?.type, .open)  // status is nullable but present in JSON
         XCTAssertEqual(session.status?.paymentStatus, .unpaid)
         XCTAssertEqual(session.paymentIntentId, "pi_test123456789")
@@ -114,17 +113,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.lineItems[1].quantity, 1)
         XCTAssertEqual(session.lineItems[1].unitAmount?.minorUnitsAmount, 500)
 
-        // Shipping options
-        XCTAssertEqual(session.shippingOptions.count, 2)
-        XCTAssertEqual(session.shippingOptions[0].id, "shr_standard")
-        XCTAssertEqual(session.shippingOptions[0].displayName, "Standard Shipping")
-        XCTAssertEqual(session.shippingOptions[0].amount.minorUnitsAmount, 500)
-        XCTAssertEqual(session.shippingOptions[0].currency, "usd")
-        XCTAssertEqual(session.shippingOptions[1].id, "shr_express")
-        XCTAssertEqual(session.shippingOptions[1].displayName, "Express Shipping")
-        XCTAssertEqual(session.shippingOptions[1].amount.minorUnitsAmount, 1500)
-        XCTAssertEqual(session.shippingOptions[1].currency, "usd")
-
         // Totals — discount and tax
         XCTAssertEqual(session.total?.discount.minorUnitsAmount, 0)
         XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 186)
@@ -144,12 +132,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertTrue(session.makePublicSession().requiresShippingAddress)
 
         XCTAssertEqual(session.total?.shippingRate.minorUnitsAmount, 500)
-
-        // Selected shipping
-        XCTAssertNotNil(session.shipping)
-        XCTAssertEqual(session.shipping?.shippingOption.id, "shr_standard")
-        XCTAssertEqual(session.shipping?.shippingOption.amount.minorUnitsAmount, 500)
-        XCTAssertEqual(session.shipping?.shippingOption.displayName, "Standard Shipping")
 
         // Adaptive pricing
         XCTAssertTrue(session.adaptivePricingActive)
@@ -189,7 +171,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         XCTAssertEqual(session.id, "cs_test_minimal")
         XCTAssertNil(session.status)
-        XCTAssertEqual(session.mode, .payment)
         XCTAssertTrue(session.livemode)
 
         // Optional fields should be nil
@@ -215,11 +196,32 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "setup_intent": "seti_test123456",
         ])
 
-        XCTAssertEqual(session.mode, .setup)
         XCTAssertEqual(session.status?.type, .open)
         XCTAssertEqual(session.status?.paymentStatus, .noPaymentRequired)
         XCTAssertEqual(session.setupIntentId, "seti_test123456")
         XCTAssertNil(session.paymentIntentId)
+    }
+
+    func testModelessPaymentUsesSessionTotal() {
+        let session = CheckoutTestHelpers.makeSession([
+            "mode": "modeless",
+            "payment_status": "unpaid",
+            "total_summary": ["subtotal": 2345, "total": 2345, "due": 2345],
+        ]).makePublicSession()
+
+        XCTAssertFalse(session.noPaymentRequired)
+        XCTAssertEqual(session.expectedAmount(), 2345)
+    }
+
+    func testModelessNoPaymentRequiredSessionHasNoExpectedAmount() {
+        let session = CheckoutTestHelpers.makeSession([
+            "mode": "modeless",
+            "payment_status": "no_payment_required",
+            "total_summary": ["subtotal": 0, "total": 0, "due": 0],
+        ]).makePublicSession()
+
+        XCTAssertTrue(session.noPaymentRequired)
+        XCTAssertNil(session.expectedAmount())
     }
 
     func testDecodedObjectParsesTopLevelSetupFutureUsage() {
@@ -285,9 +287,10 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testTotalsWithTaxFromTaxAmounts() {
         let session = CheckoutTestHelpers.makeSession([
+            "mode": "modeless",
             "total_summary": ["due": 2186, "subtotal": 2000, "total": 2186],
-            "line_item_group": [
-                "tax_amounts": [
+            "recurring_details": [
+                "total_tax_amounts": [
                     ["amount": 186, "inclusive": false, "taxable_amount": 2000,
                      "tax_rate": ["percentage": 7.45, "display_name": "Sales Tax"], ],
                 ],
@@ -303,6 +306,96 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.tax.taxAmounts?[0].amount.minorUnitsAmount, 186)
         XCTAssertFalse(session.tax.taxAmounts?[0].inclusive ?? true)
         XCTAssertEqual(session.tax.taxAmounts?[0].displayName, "Sales Tax")
+    }
+
+    func testUnifiedModeSessionParsesCheckoutItemsTaxAndDiscounts() {
+        let session = CheckoutTestHelpers.makeSession([
+            "mode": "modeless",
+            "total_summary": ["due": 1816, "subtotal": 2000, "total": 1816],
+            "recurring_details": [
+                "total_tax_amounts": [
+                    [
+                        "amount": 148,
+                        "inclusive": false,
+                        "taxable_amount": 2000,
+                        "tax_rate": ["percentage": 7.4, "display_name": "Sales Tax"],
+                    ],
+                ],
+                "total_discount_amounts": [
+                    ["amount": 332, "coupon": ["id": "co_test", "name": "Welcome"]],
+                ],
+            ],
+            "checkout_items": [
+                [
+                    "key": "checkout_item_abc123",
+                    "type": "one_time_price_item",
+                    "one_time_price_item": [
+                        "quantity": 2,
+                        "price": [
+                            "id": "price_test123",
+                            "currency": "usd",
+                            "unit_amount": 1000,
+                            "unit_amount_decimal": "1000",
+                            "product": [
+                                "name": "Classic T-Shirt",
+                                "description": "A comfy shirt",
+                                "images": ["https://example.com/shirt.png"],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ])
+
+        XCTAssertEqual(session.lineItems.count, 1)
+        let item = session.lineItems[0]
+        XCTAssertEqual(item.id, "checkout_item_abc123")
+        XCTAssertEqual(item.name, "Classic T-Shirt")
+        XCTAssertEqual(item.description, "A comfy shirt")
+        XCTAssertEqual(item.images, ["https://example.com/shirt.png"])
+        XCTAssertEqual(item.quantity, 2)
+        XCTAssertEqual(item.unitAmount?.minorUnitsAmount, 1000)
+
+        XCTAssertEqual(session.tax.taxAmounts?.count, 1)
+        XCTAssertEqual(session.tax.taxAmounts?[0].amount.minorUnitsAmount, 148)
+        XCTAssertEqual(session.tax.taxAmounts?[0].displayName, "Sales Tax")
+
+        XCTAssertEqual(session.discountAmounts.count, 1)
+        XCTAssertEqual(session.discountAmounts[0].amount.minorUnitsAmount, 332)
+        XCTAssertEqual(session.discountAmounts[0].displayName, "Welcome")
+
+        XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 148)
+        XCTAssertEqual(session.total?.discount.minorUnitsAmount, 332)
+        XCTAssertEqual(session.total?.total.minorUnitsAmount, 1816)
+    }
+
+    func testUnifiedModeSessionSkipsUnsupportedCheckoutItemTypes() {
+        let session = CheckoutTestHelpers.makeSession([
+            "mode": "modeless",
+            "checkout_items": [
+                ["key": "checkout_item_abc123", "type": "rate_card_subscription_item"],
+            ],
+        ])
+
+        XCTAssertTrue(session.lineItems.isEmpty)
+    }
+
+    func testUnifiedModeSessionSkipsMalformedOneTimePriceItems() {
+        let session = CheckoutTestHelpers.makeSession([
+            "mode": "modeless",
+            "checkout_items": [
+                [
+                    "key": "checkout_item_abc123",
+                    "type": "one_time_price_item",
+                    "one_time_price_item": [
+                        "quantity": 1,
+                        "price": ["id": "price_test123", "currency": "usd", "unit_amount": 1000],
+                    ],
+                ],
+            ],
+        ])
+
+        XCTAssertTrue(session.lineItems.isEmpty)
     }
 
     func testMerchantWillSavePaymentMethod_paymentModeWithoutSetupFutureUsage() {

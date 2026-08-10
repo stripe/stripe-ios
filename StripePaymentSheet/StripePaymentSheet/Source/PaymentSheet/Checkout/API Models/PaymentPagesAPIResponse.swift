@@ -48,12 +48,6 @@ class PaymentPagesAPIResponse: NSObject {
     /// Payment methods attached to the customer.
     let savedPaymentMethods: [STPPaymentMethod]
 
-    /// The selected shipping option, if any.
-    let shipping: Checkout.SelectedShipping?
-
-    /// Available shipping options for this session.
-    let shippingOptions: [Checkout.ShippingOption]
-
     /// Status of the session (status type + payment status).
     let status: Checkout.Status?
 
@@ -65,8 +59,8 @@ class PaymentPagesAPIResponse: NSObject {
 
     // MARK: - Internal SDK-only fields
 
-    /// The mode of the Checkout Session (payment, setup, or subscription).
-    let mode: Checkout.Mode
+    /// The top-level payment status.
+    let paymentStatus: Checkout.PaymentStatus
 
     /// The ID of the PaymentIntent for Checkout Sessions in payment mode.
     let paymentIntentId: String?
@@ -130,24 +124,16 @@ class PaymentPagesAPIResponse: NSObject {
     /// The raw API response used to create this object.
     let allResponseFields: [AnyHashable: Any]
 
-    /// Extracts the client secret from the expanded PaymentIntent or SetupIntent based on mode.
+    /// Extracts the client secret from whichever expanded intent is present in the response.
     func intentClientSecret() throws -> String {
-        switch mode {
-        case .setup:
-            guard let setupIntent = setupIntent else {
-                throw PaymentSheetError.unknown(debugDescription: "Missing setup intent in confirm response")
-            }
+        if let setupIntent {
             return setupIntent.clientSecret
-        case .payment:
-            guard let paymentIntent = paymentIntent else {
-                throw PaymentSheetError.unknown(debugDescription: "Missing payment intent in confirm response")
-            }
+        } else if let paymentIntent {
             return paymentIntent.clientSecret
-        case .subscription:
-            throw PaymentSheetError.unknown(debugDescription: "Subscriptions are not yet supported with checkout sessions")
-        case .unknown:
-            throw PaymentSheetError.unknown(debugDescription: "Unknown checkout session mode")
         }
+        throw PaymentSheetError.unknown(
+            debugDescription: "No intent found in checkout session response"
+        )
     }
 
     /// :nodoc:
@@ -188,12 +174,10 @@ class PaymentPagesAPIResponse: NSObject {
         lineItems: [Checkout.LineItem],
         livemode: Bool,
         savedPaymentMethods: [STPPaymentMethod],
-        shipping: Checkout.SelectedShipping?,
-        shippingOptions: [Checkout.ShippingOption],
         status: Checkout.Status?,
         tax: Checkout.Tax,
         total: Checkout.Total?,
-        mode: Checkout.Mode,
+        paymentStatus: Checkout.PaymentStatus,
         paymentIntentId: String?,
         setupIntentId: String?,
         paymentIntent: STPPaymentIntent?,
@@ -225,12 +209,10 @@ class PaymentPagesAPIResponse: NSObject {
         self.lineItems = lineItems
         self.livemode = livemode
         self.savedPaymentMethods = savedPaymentMethods
-        self.shipping = shipping
-        self.shippingOptions = shippingOptions
         self.status = status
         self.tax = tax
         self.total = total
-        self.mode = mode
+        self.paymentStatus = paymentStatus
         self.paymentIntentId = paymentIntentId
         self.setupIntentId = setupIntentId
         self.paymentIntent = paymentIntent
@@ -264,7 +246,6 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
         guard let dict = response,
               let id = dict["session_id"] as? String,
               let livemode = dict["livemode"] as? Bool,
-              let rawMode = dict["mode"] as? String,
               let rawPaymentStatus = dict["payment_status"] as? String,
               (dict["payment_method_types"] as? [String]) != nil
         else {
@@ -299,7 +280,6 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
 
         let discountAmounts = Self.parseDiscountAmounts(from: dict, currency: currency)
         let lineItems = Self.parseLineItems(from: dict, defaultCurrency: currency)
-        let shippingOptions = Self.parseShippingOptions(from: dict, defaultCurrency: currency)
 
         // Total
         let total: Checkout.Total? = {
@@ -310,7 +290,7 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
             }
             let taxInclusiveValue = publicTaxAmounts.filter { $0.inclusive }.reduce(0) { $0 + $1.amount.minorUnitsAmount }
             let taxExclusiveValue = publicTaxAmounts.filter { !$0.inclusive }.reduce(0) { $0 + $1.amount.minorUnitsAmount }
-            let shippingValue = Self.parseSelectedShippingAmount(from: dict)
+            let shippingValue = Self.parseShippingRateAmount(from: dict)
             let discountValue = discountAmounts.reduce(0) { $0 + $1.amount.minorUnitsAmount }
             let appliedBalanceValue = (summary["applied_balance"] as? Int) ?? 0
             let balanceAppliedToNextInvoice = (summary["balance_applied_to_next_invoice"] as? Bool) ?? false
@@ -417,13 +397,6 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
             setupIntentId = dict["setup_intent"] as? String
         }
 
-        // Selected shipping
-        let shipping = Self.parseSelectedShipping(
-            from: dict,
-            shippingOptions: shippingOptions,
-            currency: currency
-        )
-
         let savedPaymentMethods: [STPPaymentMethod] = customer?.paymentMethods ?? []
 
         let businessName = (dict["elements_session"] as? [String: Any])?["business_name"] as? String
@@ -448,12 +421,10 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
             lineItems: lineItems,
             livemode: livemode,
             savedPaymentMethods: savedPaymentMethods,
-            shipping: shipping,
-            shippingOptions: shippingOptions,
             status: status,
             tax: tax,
             total: total,
-            mode: Checkout.Mode.mode(from: rawMode),
+            paymentStatus: paymentStatus,
             paymentIntentId: paymentIntentId,
             setupIntentId: setupIntentId,
             paymentIntent: paymentIntent,
@@ -500,60 +471,54 @@ extension PaymentPagesAPIResponse {
     // MARK: Line Items
 
     static func parseLineItems(from dict: [AnyHashable: Any], defaultCurrency: String?) -> [Checkout.LineItem] {
-        guard let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any],
-              let lineItems = lineItemGroup["line_items"] as? [[AnyHashable: Any]] else {
+        guard let checkoutItems = dict["checkout_items"] as? [[AnyHashable: Any]] else {
             return []
         }
-        return lineItems.compactMap { parseLineItem(from: $0, defaultCurrency: defaultCurrency) }
+        return checkoutItems.compactMap {
+            parseLineItem(from: $0, defaultCurrency: defaultCurrency)
+        }
     }
 
-    private static func parseLineItem(from dict: [AnyHashable: Any], defaultCurrency: String?) -> Checkout.LineItem? {
-        guard let id = dict["id"] as? String,
-              let quantity = dict["quantity"] as? Int,
-              let name = dict["name"] as? String else {
+    /// Parses the one-time price item shape used by `checkout_items`.
+    private static func parseLineItem(
+        from dict: [AnyHashable: Any],
+        defaultCurrency: String?
+    ) -> Checkout.LineItem? {
+        guard dict["type"] as? String == "one_time_price_item",
+              let key = dict["key"] as? String,
+              let oneTimePriceItem = dict["one_time_price_item"] as? [AnyHashable: Any],
+              let quantity = oneTimePriceItem["quantity"] as? Int,
+              let price = oneTimePriceItem["price"] as? [AnyHashable: Any],
+              let product = price["product"] as? [AnyHashable: Any],
+              let name = product["name"] as? String else {
             return nil
         }
-        let price = dict["price"] as? [AnyHashable: Any]
-        let currency = (price?["currency"] as? String) ?? defaultCurrency
 
-        let unitAmount: Checkout.Amount? = (price?["unit_amount"] as? Int).map {
+        let currency = (price["currency"] as? String) ?? defaultCurrency
+        let unitAmount = (price["unit_amount"] as? Int).map {
             makeAmount($0, currency: currency)
         }
         let unitAmountDecimal = parseDecimalAmount(
-            price?["unit_amount_decimal"] as? String,
+            price["unit_amount_decimal"] as? String,
             currency: currency
         )
-        let subtotal = makeOptionalAmount(dict["subtotal"], currency: currency)
-        let discount = makeOptionalAmount(dict["discount"], currency: currency)
-        let taxExclusive = makeOptionalAmount(dict["tax_exclusive"], currency: currency)
-        let taxInclusive = makeOptionalAmount(dict["tax_inclusive"], currency: currency)
-        let total = makeOptionalAmount(dict["total"], currency: currency)
-        let lineDiscountAmounts = parseLineDiscountAmounts(
-            from: dict["discount_amounts"] as? [[AnyHashable: Any]] ?? [],
-            currency: currency
-        )
-        let lineTaxAmounts = parseLineTaxAmounts(
-            from: dict["tax_amounts"] as? [[AnyHashable: Any]] ?? [],
-            currency: currency
-        )
-        let adjustableQuantity = parseAdjustableQuantity(from: dict["adjustable_quantity"] as? [AnyHashable: Any])
 
         return Checkout.LineItem(
-            id: id,
+            id: key,
             name: name,
-            description: dict["description"] as? String,
-            images: dict["images"] as? [String] ?? [],
+            description: product["description"] as? String,
+            images: product["images"] as? [String] ?? [],
             quantity: quantity,
             unitAmount: unitAmount,
             unitAmountDecimal: unitAmountDecimal,
-            subtotal: subtotal,
-            discount: discount,
-            taxExclusive: taxExclusive,
-            taxInclusive: taxInclusive,
-            total: total,
-            discountAmounts: lineDiscountAmounts,
-            taxAmounts: lineTaxAmounts,
-            adjustableQuantity: adjustableQuantity
+            subtotal: nil,
+            discount: nil,
+            taxExclusive: nil,
+            taxInclusive: nil,
+            total: nil,
+            discountAmounts: [],
+            taxAmounts: [],
+            adjustableQuantity: nil
         )
     }
 
@@ -566,106 +531,27 @@ extension PaymentPagesAPIResponse {
         )
     }
 
-    private static func makeOptionalAmount(_ value: Any?, currency: String?) -> Checkout.Amount? {
-        guard let amount = value as? Int else { return nil }
-        return makeAmount(amount, currency: currency)
-    }
-
-    private static func parseAdjustableQuantity(from dict: [AnyHashable: Any]?) -> Checkout.AdjustableQuantity? {
-        guard let dict,
-              let minimum = dict["minimum"] as? Int,
-              let maximum = dict["maximum"] as? Int else { return nil }
-        return Checkout.AdjustableQuantity(minimum: minimum, maximum: maximum)
-    }
-
-    // MARK: Shipping Options / Selected Shipping
-
-    static func parseShippingOptions(from dict: [AnyHashable: Any], defaultCurrency: String?) -> [Checkout.ShippingOption] {
-        guard let options = dict["shipping_options"] as? [[AnyHashable: Any]] else {
-            return []
-        }
-        return options.compactMap { parseShippingOption(from: $0, defaultCurrency: defaultCurrency) }
-    }
-
-    static func parseSelectedShippingAmount(from dict: [AnyHashable: Any]) -> Int {
-        if let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any],
-           let shippingRate = lineItemGroup["shipping_rate"] as? [AnyHashable: Any],
+    static func parseShippingRateAmount(from dict: [AnyHashable: Any]) -> Int {
+        if let shippingRate = dict["shipping_rate"] as? [AnyHashable: Any],
            let amount = shippingRate["amount"] as? Int {
             return amount
         }
         return 0
     }
 
-    static func parseSelectedShipping(
+    /// Reads an aggregate array from `recurring_details`. Despite its name, `recurring_details`
+    /// also contains one-time order totals.
+    private static func aggregateArray(
         from dict: [AnyHashable: Any],
-        shippingOptions: [Checkout.ShippingOption],
-        currency: String?
-    ) -> Checkout.SelectedShipping? {
-        guard let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any],
-              let shippingRate = lineItemGroup["shipping_rate"] as? [AnyHashable: Any],
-              let id = shippingRate["id"] as? String else {
-            return nil
-        }
-        let resolvedOption = shippingOptions.first(where: { $0.id == id })
-            ?? parseShippingOption(from: ["shipping_rate": shippingRate], defaultCurrency: currency)
-        guard let option = resolvedOption else { return nil }
-
-        let taxAmounts = parseLineTaxAmounts(
-            from: lineItemGroup["shipping_tax_amounts"] as? [[AnyHashable: Any]] ?? [],
-            currency: currency
-        )
-        return Checkout.SelectedShipping(shippingOption: option, taxAmounts: taxAmounts)
-    }
-
-    private static func parseShippingOption(from dict: [AnyHashable: Any], defaultCurrency: String?) -> Checkout.ShippingOption? {
-        if let shippingRate = dict["shipping_rate"] as? [AnyHashable: Any] {
-            guard let id = shippingRate["id"] as? String,
-                  let amountInt = shippingRate["amount"] as? Int else {
-                return nil
-            }
-            let currency = (shippingRate["currency"] as? String) ?? defaultCurrency ?? "usd"
-            let displayName = shippingRate["display_name"] as? String
-            let deliveryEstimate = parseDeliveryEstimate(shippingRate["delivery_estimate"] as? [AnyHashable: Any])
-            return Checkout.ShippingOption(
-                id: id,
-                displayName: displayName,
-                amount: makeAmount(amountInt, currency: currency),
-                currency: currency,
-                deliveryEstimate: deliveryEstimate
-            )
-        }
-        return nil
-    }
-
-    private static func parseDeliveryEstimate(_ dict: [AnyHashable: Any]?) -> Checkout.DeliveryEstimate? {
-        guard let dict else { return nil }
-        let minimum = parseDeliveryBound(dict["minimum"] as? [AnyHashable: Any])
-        let maximum = parseDeliveryBound(dict["maximum"] as? [AnyHashable: Any])
-        // If neither bound parsed, there's nothing useful to show — don't hand back an empty estimate.
-        guard minimum != nil || maximum != nil else { return nil }
-        return Checkout.DeliveryEstimate(minimum: minimum, maximum: maximum)
-    }
-
-    private static func parseDeliveryBound(_ dict: [AnyHashable: Any]?) -> Checkout.DeliveryEstimate.Bound? {
-        guard let dict,
-              let value = dict["value"] as? Int else { return nil }
-        let unit: Checkout.DeliveryEstimate.Bound.Unit
-        switch (dict["unit"] as? String)?.lowercased() {
-        case "hour": unit = .hour
-        case "day": unit = .day
-        case "business_day": unit = .businessDay
-        case "week": unit = .week
-        case "month": unit = .month
-        default: unit = .unknown
-        }
-        return Checkout.DeliveryEstimate.Bound(unit: unit, value: value)
+        recurringDetailsKey: String
+    ) -> [[AnyHashable: Any]] {
+        (dict["recurring_details"] as? [AnyHashable: Any])?[recurringDetailsKey] as? [[AnyHashable: Any]] ?? []
     }
 
     // MARK: Discounts
 
     static func parseDiscountAmounts(from dict: [AnyHashable: Any], currency: String?) -> [Checkout.DiscountAmount] {
-        let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any]
-        let discountAmounts = lineItemGroup?["discount_amounts"] as? [[AnyHashable: Any]] ?? []
+        let discountAmounts = aggregateArray(from: dict, recurringDetailsKey: "total_discount_amounts")
         return discountAmounts.compactMap { discount in
             parseDiscountAmount(from: discount, currency: currency)
         }
@@ -690,26 +576,14 @@ extension PaymentPagesAPIResponse {
         )
     }
 
-    private static func parseLineDiscountAmounts(
-        from array: [[AnyHashable: Any]],
-        currency: String?
-    ) -> [Checkout.DiscountAmount] {
-        return array.compactMap { parseDiscountAmount(from: $0, currency: currency) }
-    }
-
     // MARK: Tax Amounts
 
     private static func parseSessionTaxAmounts(
         from dict: [AnyHashable: Any],
         currency: String?
     ) -> [Checkout.TaxAmount] {
-        guard let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any] else {
-            return []
-        }
-        return parseLineTaxAmounts(
-            from: lineItemGroup["tax_amounts"] as? [[AnyHashable: Any]] ?? [],
-            currency: currency
-        )
+        let taxAmounts = aggregateArray(from: dict, recurringDetailsKey: "total_tax_amounts")
+        return parseLineTaxAmounts(from: taxAmounts, currency: currency)
     }
 
     private static func parseLineTaxAmounts(

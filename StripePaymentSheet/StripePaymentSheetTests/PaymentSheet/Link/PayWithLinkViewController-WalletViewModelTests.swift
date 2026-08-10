@@ -210,6 +210,28 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
         XCTAssertEqual(sut.supportedPaymentMethodTypes, [ParsedEnum(.card)])
     }
 
+    func test_supportedPaymentMethodTypes_whenSessionFundingSourcesEmpty_returnsEmpty() throws {
+        // Given a session with no funding sources
+        let sut = try makeSUT(
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+            linkFundingSources: []
+        )
+
+        // When no funding sources are available at the session level, the result should be empty
+        XCTAssertTrue(sut.supportedPaymentMethodTypes.isEmpty)
+    }
+
+    func test_supportedPaymentMethodTypes_whenIntersectionIsEmpty_returnsEmpty() throws {
+        // Given a session that only allows bank accounts, but the consumer only supports cards
+        let sut = try makeSUT(
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+            linkFundingSources: ["BANK_ACCOUNT"]
+        )
+
+        // When the intersection of session-level and consumer-level funding sources is empty, the result should be empty
+        XCTAssertTrue(sut.supportedPaymentMethodTypes.isEmpty)
+    }
+
     func test_cardBrandFiltering_passThroughEnabled() throws {
         let sut = try makeSUT(supportedPaymentDetailsTypes: [ParsedEnum(.card)],
                               linkFundingSources: ["CARD"],

@@ -15,11 +15,9 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
     override func setUp() {
         super.setUp()
 //        recordMode = true
-        let expectation = expectation(description: "Specs loaded")
+        let expectation = expectation(description: "Address specs loaded")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load { _ in
-                expectation.fulfill()
-            }
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
     }

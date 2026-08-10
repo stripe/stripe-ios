@@ -30,7 +30,8 @@ struct CheckoutPlaygroundView: View {
                             currency: $viewModel.currency,
                             customerType: $viewModel.customerType,
                             checkoutEndpointOption: $viewModel.checkoutEndpointOption,
-                            checkoutEndpoint: $viewModel.checkoutEndpoint
+                            checkoutEndpoint: $viewModel.checkoutEndpoint,
+                            expressCheckoutElementOption: $viewModel.expressCheckoutElementOption
                         )
 
                         CheckoutPlaygroundLineItemsSection(
@@ -42,18 +43,14 @@ struct CheckoutPlaygroundView: View {
                             customerType: viewModel.customerType,
                             shippingAddressCollection: $viewModel.shippingAddressCollection,
                             billingAddressCollection: $viewModel.billingAddressCollection,
-                            allowPromotionCodes: $viewModel.allowPromotionCodes,
                             automaticTax: $viewModel.automaticTax,
-                            adaptivePricing: $viewModel.adaptivePricing,
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
                             adaptivePricingCountry: $viewModel.adaptivePricingCountry,
                             automaticPaymentMethods: $viewModel.automaticPaymentMethods
                         )
 
-                        if viewModel.adaptivePricing {
-                            currencySelectorAppearanceSection
-                        }
+                        currencySelectorAppearanceSection
 
                         if !viewModel.automaticPaymentMethods {
                             CheckoutPlaygroundPaymentMethodSection(
@@ -84,8 +81,9 @@ struct CheckoutPlaygroundView: View {
                     CheckoutCartView(
                         clientSecret: clientSecret,
                         shippingAddressCollection: viewModel.shippingAddressCollection,
-                        adaptivePricing: viewModel.adaptivePricing,
+                        adaptivePricing: true,
                         integrationType: viewModel.integrationType,
+                        showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
                         currencySelectorAppearance: viewModel.currencySelectorAppearance
                     )
                 }

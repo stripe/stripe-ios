@@ -864,7 +864,9 @@ public class STPPaymentHandler: NSObject {
             .multibanco,
             .payPay,
             .wero,
-            .payByBank:
+            .payByBank,
+            .mbWay,
+            .bizum:
             return false
 
         case .unknown:
@@ -1403,6 +1405,28 @@ public class STPPaymentHandler: NSObject {
                 // The merchant integration should spin and poll their backend or Stripe to determine success
                 currentAction.complete(with: .succeeded, error: nil)
             }
+        case .mbWayAwaitAuthorization:
+            guard let presentingVC = currentAction.authenticationContext as? PaymentSheetAuthenticationContext else {
+                assertionFailure("MB WAY is not supported outside of PaymentSheet.")
+                currentAction.complete(with: .failed, error: _error(for: .unsupportedAuthenticationErrorCode, loggingSafeErrorMessage: "MB WAY is not supported outside of PaymentSheet."))
+                return
+            }
+            guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams else {
+                currentAction.complete(with: .failed, error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Handling mbWayAwaitAuthorization next action with SetupIntent is not supported"))
+                return
+            }
+            presentingVC.presentPollingVCForAction(action: currentAction, type: .mbWay, safariViewController: nil)
+        case .awaitAuthorization:
+            guard let presentingVC = currentAction.authenticationContext as? PaymentSheetAuthenticationContext else {
+                assertionFailure("Bizum is not supported outside of PaymentSheet.")
+                currentAction.complete(with: .failed, error: _error(for: .unsupportedAuthenticationErrorCode, loggingSafeErrorMessage: "Bizum is not supported outside of PaymentSheet."))
+                return
+            }
+            guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams else {
+                currentAction.complete(with: .failed, error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Handling awaitAuthorization next action with SetupIntent is not supported"))
+                return
+            }
+            presentingVC.presentPollingVCForAction(action: currentAction, type: .bizum, safariViewController: nil)
         case .verifyWithMicrodeposits:
             // The customer must authorize after the microdeposits appear in their bank account
             // which may take 1-2 business days
@@ -2076,6 +2100,8 @@ public class STPPaymentHandler: NSObject {
                 .konbiniDisplayDetails,
                 .verifyWithMicrodeposits,
                 .BLIKAuthorize,
+                .mbWayAwaitAuthorization,
+                .awaitAuthorization,
                 .multibancoDisplayDetails:
                 return true
             }
@@ -2102,7 +2128,8 @@ public class STPPaymentHandler: NSObject {
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
             .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits,
             .cashAppRedirectToApp, .konbiniDisplayDetails, .payNowDisplayQrCode,
-            .promptpayDisplayQrCode, .swishHandleRedirect, .multibancoDisplayDetails:
+            .promptpayDisplayQrCode, .swishHandleRedirect, .multibancoDisplayDetails,
+            .mbWayAwaitAuthorization, .awaitAuthorization:
             break
         }
 

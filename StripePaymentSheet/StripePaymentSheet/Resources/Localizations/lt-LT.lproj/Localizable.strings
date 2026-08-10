@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Patvirtinti mokėjimo duomenis";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Per %@ naudodamiesi mobiliosios bankininkystės programėle patvirtinkite „Bizum“ mokėjimą, kad užbaigtumėte pirkimą.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Per %@ naudodamiesi „MB WAY“ programėle patvirtinkite mokėjimą, kad užbaigtumėte pirkimą.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Patvirtinkite mokėjimą banke ar programėlėje per %@ ir užbaikite pirkimą.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Patvirtinkite mokėjimą savo banko programėlėje per %@ ir užbaikite pirkimą.";
@@ -139,6 +143,8 @@
 "Discount" = "Nuolaida";
 
 "EPS Bank" = "EPS bankas";
+
+"Edit address" = "Keisti adresą";
 
 "Enter address manually" = "Įvesti adresą rankiniu būdu";
 
@@ -339,5 +345,3 @@
 "Yes, update" = "Taip, atnaujinti";
 
 "Your IBAN should start with a two-letter country code." = "Jūsų IBAN turėtų prasidėti šalies kodu iš dviejų raidžių.";
-
-"iDEAL Bank" = "iDEAL bankas";

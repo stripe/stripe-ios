@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Konfirmasikan detail pembayaran";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Konfirmasikan pembayaran Bizum di aplikasi perbankan seluler Anda dalam %@ untuk menyelesaikan pembelian.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Konfirmasikan pembayaran di aplikasi MB WAY Anda dalam %@ untuk menyelesaikan pembelian.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Konfirmasikan pembayaran di aplikasi pembayaran atau bank Anda dalam %@ untuk menyelesaikan pembelian.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Konfirmasikan pembayaran di aplikasi bank Anda dalam %@ untuk menyelesaikan pembelian.";
@@ -139,6 +143,8 @@
 "Discount" = "Diskon";
 
 "EPS Bank" = "Bank EPS";
+
+"Edit address" = "Edit alamat";
 
 "Enter address manually" = "Masukkan alamat secara manual";
 
@@ -339,5 +345,3 @@
 "Yes, update" = "Ya, perbarui";
 
 "Your IBAN should start with a two-letter country code." = "IBAN Anda harus diawali dengan kode negara dua-huruf.";
-
-"iDEAL Bank" = "iDEAL Bank";
