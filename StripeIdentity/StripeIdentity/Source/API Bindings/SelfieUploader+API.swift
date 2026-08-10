@@ -277,8 +277,7 @@ extension StripeAPI.VerificationPageDataFaceFrameData {
         let payload: [String: Any] = [
             "cameraLabel": cameraLabel,
         ]
-        guard JSONSerialization.isValidJSONObject(payload),
-            let data = try? JSONSerialization.data(withJSONObject: payload)
+        guard let data = try? JSONSerialization.data(withJSONObject: payload)
         else {
             return nil
         }
