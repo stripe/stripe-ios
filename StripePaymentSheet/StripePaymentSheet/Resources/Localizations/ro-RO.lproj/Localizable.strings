@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Confirmare detalii de plată";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Confirmați plata Bizum în aplicația de servicii bancare pentru dispozitive mobile în %@ pentru a finaliza achiziția.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Confirmați plata în aplicația MB WAY în %@ pentru a finaliza achiziția.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirmați plata în aplicația băncii dvs. sau în aplicația de plăți în termen de %@ pentru a finaliza achiziția.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirmați plata în aplicația băncii dvs. în termen de %@ pentru a finaliza achiziția.";
@@ -139,6 +143,8 @@
 "Discount" = "Reducere";
 
 "EPS Bank" = "Banca EPS";
+
+"Edit address" = "Editare adresă";
 
 "Enter address manually" = "Introduceți adresa manual";
 

@@ -1,7 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
+
+## 26.6.0 2026-08-10
 ### PaymentSheet
 * [Fixed] LinkController (private preview) now returns an error when no funding sources are available for a Link session, rather than silently falling back to card.
 
