@@ -64,10 +64,6 @@ extension String.Localized {
         )
     }
 
-    static var ideal_bank: String {
-        STPLocalizedString("iDEAL Bank", "iDEAL bank section title for iDEAL form entry.")
-    }
-
     static var bank_account_sentence_case: String {
         STPLocalizedString("Bank account", "Title for collected bank account information")
     }
@@ -354,6 +350,16 @@ extension String.Localized {
     static var paynow_confirm_payment: String {
         STPLocalizedString("Confirm the payment in your bank or payment app within %@ to complete the purchase.",
                            "Text for alert message when user needs to confirm payment in their banking app")
+    }
+
+    static var mb_way_confirm_payment: String {
+        STPLocalizedString("Confirm the payment in your MB WAY app within %@ to complete the purchase.",
+                           "Instructions shown while waiting for an MB WAY payment authorization")
+    }
+
+    static var bizum_confirm_payment: String {
+        STPLocalizedString("Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase.",
+                           "Instructions shown while waiting for a Bizum payment authorization")
     }
 
     static var cpf_cpnj: String {
@@ -692,6 +698,10 @@ extension String.Localized {
 
     static var confirm_your_information: String {
         STPLocalizedString("Confirm your information", "Title label for a know-your-customer (KYC) verification screen")
+    }
+
+    static var edit_address: String {
+        STPLocalizedString("Edit address", "Accessibility label for a button that lets the user update their address")
     }
 
     static var user_attestation: String {

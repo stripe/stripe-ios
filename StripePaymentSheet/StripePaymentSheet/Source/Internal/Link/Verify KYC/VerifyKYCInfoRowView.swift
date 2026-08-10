@@ -7,6 +7,7 @@
 
 import UIKit
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 /// Displays an individual KYC detail (e.g. name) with an optional edit button.
@@ -54,6 +55,7 @@ final class VerifyKYCInfoRowView: UIView {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(Image.iconEditOutline.makeImage(), for: .normal)
+        button.accessibilityLabel = String.Localized.edit_address
         button.tintColor = .linkIconPrimary
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

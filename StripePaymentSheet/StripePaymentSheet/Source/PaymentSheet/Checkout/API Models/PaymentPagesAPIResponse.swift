@@ -48,12 +48,6 @@ class PaymentPagesAPIResponse: NSObject {
     /// Payment methods attached to the customer.
     let savedPaymentMethods: [STPPaymentMethod]
 
-    /// The selected shipping option, if any.
-    let shipping: Checkout.SelectedShipping?
-
-    /// Available shipping options for this session.
-    let shippingOptions: [Checkout.ShippingOption]
-
     /// Status of the session (status type + payment status).
     let status: Checkout.Status?
 
@@ -180,8 +174,6 @@ class PaymentPagesAPIResponse: NSObject {
         lineItems: [Checkout.LineItem],
         livemode: Bool,
         savedPaymentMethods: [STPPaymentMethod],
-        shipping: Checkout.SelectedShipping?,
-        shippingOptions: [Checkout.ShippingOption],
         status: Checkout.Status?,
         tax: Checkout.Tax,
         total: Checkout.Total?,
@@ -217,8 +209,6 @@ class PaymentPagesAPIResponse: NSObject {
         self.lineItems = lineItems
         self.livemode = livemode
         self.savedPaymentMethods = savedPaymentMethods
-        self.shipping = shipping
-        self.shippingOptions = shippingOptions
         self.status = status
         self.tax = tax
         self.total = total
@@ -290,7 +280,6 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
 
         let discountAmounts = Self.parseDiscountAmounts(from: dict, currency: currency)
         let lineItems = Self.parseLineItems(from: dict, defaultCurrency: currency)
-        let shippingOptions = Self.parseShippingOptions(from: dict, defaultCurrency: currency)
 
         // Total
         let total: Checkout.Total? = {
@@ -301,7 +290,7 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
             }
             let taxInclusiveValue = publicTaxAmounts.filter { $0.inclusive }.reduce(0) { $0 + $1.amount.minorUnitsAmount }
             let taxExclusiveValue = publicTaxAmounts.filter { !$0.inclusive }.reduce(0) { $0 + $1.amount.minorUnitsAmount }
-            let shippingValue = Self.parseSelectedShippingAmount(from: dict)
+            let shippingValue = Self.parseShippingRateAmount(from: dict)
             let discountValue = discountAmounts.reduce(0) { $0 + $1.amount.minorUnitsAmount }
             let appliedBalanceValue = (summary["applied_balance"] as? Int) ?? 0
             let balanceAppliedToNextInvoice = (summary["balance_applied_to_next_invoice"] as? Bool) ?? false
@@ -408,13 +397,6 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
             setupIntentId = dict["setup_intent"] as? String
         }
 
-        // Selected shipping
-        let shipping = Self.parseSelectedShipping(
-            from: dict,
-            shippingOptions: shippingOptions,
-            currency: currency
-        )
-
         let savedPaymentMethods: [STPPaymentMethod] = customer?.paymentMethods ?? []
 
         let businessName = (dict["elements_session"] as? [String: Any])?["business_name"] as? String
@@ -439,8 +421,6 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
             lineItems: lineItems,
             livemode: livemode,
             savedPaymentMethods: savedPaymentMethods,
-            shipping: shipping,
-            shippingOptions: shippingOptions,
             status: status,
             tax: tax,
             total: total,
@@ -551,85 +531,12 @@ extension PaymentPagesAPIResponse {
         )
     }
 
-    // MARK: Shipping Options / Selected Shipping
-
-    static func parseShippingOptions(from dict: [AnyHashable: Any], defaultCurrency: String?) -> [Checkout.ShippingOption] {
-        guard let options = dict["shipping_options"] as? [[AnyHashable: Any]] else {
-            return []
-        }
-        return options.compactMap { parseShippingOption(from: $0, defaultCurrency: defaultCurrency) }
-    }
-
-    static func parseSelectedShippingAmount(from dict: [AnyHashable: Any]) -> Int {
+    static func parseShippingRateAmount(from dict: [AnyHashable: Any]) -> Int {
         if let shippingRate = dict["shipping_rate"] as? [AnyHashable: Any],
            let amount = shippingRate["amount"] as? Int {
             return amount
         }
         return 0
-    }
-
-    static func parseSelectedShipping(
-        from dict: [AnyHashable: Any],
-        shippingOptions: [Checkout.ShippingOption],
-        currency: String?
-    ) -> Checkout.SelectedShipping? {
-        guard let shippingRate = dict["shipping_rate"] as? [AnyHashable: Any],
-              let id = shippingRate["id"] as? String else {
-            return nil
-        }
-        let resolvedOption = shippingOptions.first(where: { $0.id == id })
-            ?? parseShippingOption(from: ["shipping_rate": shippingRate], defaultCurrency: currency)
-        guard let option = resolvedOption else { return nil }
-
-        let taxAmounts = parseLineTaxAmounts(
-            from: dict["shipping_tax_amounts"] as? [[AnyHashable: Any]] ?? [],
-            currency: currency
-        )
-        return Checkout.SelectedShipping(shippingOption: option, taxAmounts: taxAmounts)
-    }
-
-    private static func parseShippingOption(from dict: [AnyHashable: Any], defaultCurrency: String?) -> Checkout.ShippingOption? {
-        if let shippingRate = dict["shipping_rate"] as? [AnyHashable: Any] {
-            guard let id = shippingRate["id"] as? String,
-                  let amountInt = shippingRate["amount"] as? Int else {
-                return nil
-            }
-            let currency = (shippingRate["currency"] as? String) ?? defaultCurrency ?? "usd"
-            let displayName = shippingRate["display_name"] as? String
-            let deliveryEstimate = parseDeliveryEstimate(shippingRate["delivery_estimate"] as? [AnyHashable: Any])
-            return Checkout.ShippingOption(
-                id: id,
-                displayName: displayName,
-                amount: makeAmount(amountInt, currency: currency),
-                currency: currency,
-                deliveryEstimate: deliveryEstimate
-            )
-        }
-        return nil
-    }
-
-    private static func parseDeliveryEstimate(_ dict: [AnyHashable: Any]?) -> Checkout.DeliveryEstimate? {
-        guard let dict else { return nil }
-        let minimum = parseDeliveryBound(dict["minimum"] as? [AnyHashable: Any])
-        let maximum = parseDeliveryBound(dict["maximum"] as? [AnyHashable: Any])
-        // If neither bound parsed, there's nothing useful to show — don't hand back an empty estimate.
-        guard minimum != nil || maximum != nil else { return nil }
-        return Checkout.DeliveryEstimate(minimum: minimum, maximum: maximum)
-    }
-
-    private static func parseDeliveryBound(_ dict: [AnyHashable: Any]?) -> Checkout.DeliveryEstimate.Bound? {
-        guard let dict,
-              let value = dict["value"] as? Int else { return nil }
-        let unit: Checkout.DeliveryEstimate.Bound.Unit
-        switch (dict["unit"] as? String)?.lowercased() {
-        case "hour": unit = .hour
-        case "day": unit = .day
-        case "business_day": unit = .businessDay
-        case "week": unit = .week
-        case "month": unit = .month
-        default: unit = .unknown
-        }
-        return Checkout.DeliveryEstimate.Bound(unit: unit, value: value)
     }
 
     /// Reads an aggregate array from `recurring_details`. Despite its name, `recurring_details`
