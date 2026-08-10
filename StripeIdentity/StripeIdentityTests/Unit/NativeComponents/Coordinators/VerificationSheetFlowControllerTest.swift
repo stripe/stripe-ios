@@ -77,7 +77,7 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
         XCTAssertEqual(configuration.disabledForegroundColor, .systemGray)
     }
 
-    func testDynamicBrandColorResolvesForCurrentAppearance() {
+    func testDynamicBrandColorResolvesForCurrentAppearance() throws {
         let lightBrandColor = UIColor(red: 1, green: 0.85, blue: 0, alpha: 1)
         let darkBrandColor = UIColor(red: 0.05, green: 0.12, blue: 0.20, alpha: 1)
         let dynamicBrandColor = UIColor { traitCollection in
@@ -86,14 +86,17 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
                 : lightBrandColor
         }
 
-        let lightConfiguration = UITraitCollection(userInterfaceStyle: .light)
-            .performAsCurrent {
-                Button.Configuration.identityPrimary(backgroundColor: dynamicBrandColor)
-            }
-        let darkConfiguration = UITraitCollection(userInterfaceStyle: .dark)
-            .performAsCurrent {
-                Button.Configuration.identityPrimary(backgroundColor: dynamicBrandColor)
-            }
+        var lightConfigurationResult: Button.Configuration?
+        UITraitCollection(userInterfaceStyle: .light).performAsCurrent {
+            lightConfigurationResult = .identityPrimary(backgroundColor: dynamicBrandColor)
+        }
+        var darkConfigurationResult: Button.Configuration?
+        UITraitCollection(userInterfaceStyle: .dark).performAsCurrent {
+            darkConfigurationResult = .identityPrimary(backgroundColor: dynamicBrandColor)
+        }
+
+        let lightConfiguration = try XCTUnwrap(lightConfigurationResult)
+        let darkConfiguration = try XCTUnwrap(darkConfigurationResult)
 
         XCTAssertEqual(lightConfiguration.backgroundColor, lightBrandColor)
         XCTAssertEqual(lightConfiguration.foregroundColor, .black)
