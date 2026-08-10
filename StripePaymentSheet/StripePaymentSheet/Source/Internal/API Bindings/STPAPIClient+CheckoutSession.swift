@@ -141,60 +141,6 @@ extension STPAPIClient {
         return params
     }
 
-    /// Confirms a CheckoutSession with the provided confirmation token (created from an Apple Pay token).
-    /// - Parameters:
-    ///   - sessionId: The ID of the checkout session (e.g., "cs_test_xxx")
-    ///   - confirmationToken: The ID of the confirmation token to use for confirmation
-    ///   - expectedAmount: The expected amount for validation. `nil` for setup-style sessions.
-    ///   - expectedPaymentMethodType: The expected payment method type (e.g., "card")
-    ///   - returnURL: Optional return URL for redirect-based payment methods
-    ///   - shipping: Optional shipping details
-    ///   - clientAttributionMetadata: Optional client attribution metadata for analytics
-    /// - Returns: Payment Pages API response containing the full confirmed session with expanded intents.
-    func confirmCheckoutSession(
-        sessionId: String,
-        confirmationToken: String,
-        expectedAmount: Int?,
-        expectedPaymentMethodType: String,
-        returnURL: String? = nil,
-        shipping: STPPaymentIntentShippingDetailsParams? = nil,
-        clientAttributionMetadata: STPClientAttributionMetadata? = nil
-    ) async throws -> PaymentPagesAPIResponse {
-        var parameters: [String: Any] = [
-            "confirmation_token": confirmationToken,
-            "expected_payment_method_type": expectedPaymentMethodType,
-            "elements_session_client": ["is_aggregation_expected": true],
-            "expand": [
-                "payment_intent",
-                "payment_intent.payment_method",
-                "setup_intent",
-                "setup_intent.payment_method",
-            ],
-        ]
-
-        if let expectedAmount {
-            parameters["expected_amount"] = expectedAmount
-        }
-
-        if let returnURL {
-            parameters["return_url"] = returnURL
-        }
-
-        if let shipping {
-            parameters["shipping"] = STPFormEncoder.dictionary(forObject: shipping)
-        }
-
-        if let clientAttributionMetadata {
-            parameters["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
-        }
-
-        return try await APIRequest<PaymentPagesAPIResponse>.post(
-            with: self,
-            endpoint: "payment_pages/\(sessionId)/confirm",
-            parameters: parameters
-        )
-    }
-
     /// Confirms a CheckoutSession with the provided payment method and parameters.
     /// - Parameters:
     ///   - sessionId: The ID of the checkout session (e.g., "cs_test_xxx")

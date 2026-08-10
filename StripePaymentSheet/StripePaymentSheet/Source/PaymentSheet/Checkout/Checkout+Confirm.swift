@@ -1,4 +1,3 @@
-@_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
@@ -57,8 +56,7 @@ extension Checkout {
         checkoutSession: Session,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
-        paymentHandler: STPPaymentHandler,
-        applePayContext: CheckoutApplePayContext? = nil
+        paymentHandler: STPPaymentHandler
     ) async -> InternalConfirmResult {
         // 1. Handle pre-confirm actions, such as Bacs mandate acceptance or saved-card CVC recollection.
         let preconfirmActionsResult = await PaymentSheet.handlePreconfirmActionsIfNecessary(
@@ -86,8 +84,7 @@ extension Checkout {
             confirmationContext: confirmationContext,
             authenticationContext: authenticationContext,
             intentConfirmParamsForDeferredIntent: intentConfirmParams,
-            paymentHandler: paymentHandler,
-            applePayContext: applePayContext
+            paymentHandler: paymentHandler
         )
     }
 
@@ -96,8 +93,7 @@ extension Checkout {
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
         intentConfirmParamsForDeferredIntent: IntentConfirmParams?,
-        paymentHandler: STPPaymentHandler,
-        applePayContext: CheckoutApplePayContext? = nil
+        paymentHandler: STPPaymentHandler
     ) async -> InternalConfirmResult {
         let paymentOption = confirmationContext.paymentOption
         let elementsSession = checkoutSession.elementsSession
@@ -110,12 +106,9 @@ extension Checkout {
 
         switch paymentOption {
         case .applePay:
-            // MARK: - Apple Pay
-            guard let applePayContext else {
-                stpAssertionFailure("CheckoutApplePayContext must be provided for Apple Pay confirmation")
-                return .init(paymentSheetResult: .canceled)
-            }
-            return await applePayContext.present()
+            // Apple Pay is confirmed via presentApplePay before reaching this method.
+            stpAssertionFailure("Apple Pay should be confirmed via presentApplePay, not through confirmPaymentOption")
+            return .init(paymentSheetResult: .canceled)
 
         case .new(let confirmParams):
             // MARK: - New PM

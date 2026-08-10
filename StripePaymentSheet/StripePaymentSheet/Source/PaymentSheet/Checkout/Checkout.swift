@@ -8,6 +8,7 @@
 
 import Combine
 import Foundation
+import PassKit
 @_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
@@ -66,6 +67,9 @@ public final class Checkout: ObservableObject {
 
     /// The CurrencySelectorElement for this Checkout instance, when Adaptive Pricing is available.
     private var currencySelectorElement: CurrencySelectorElement?
+
+    /// The active Apple Pay session, non-nil while the Apple Pay sheet is presented.
+    var applePaySession: CheckoutApplePaySession?
 
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
@@ -204,6 +208,16 @@ public final class Checkout: ObservableObject {
         try await performUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
     }
 
+    func updateShippingTaxRegionIfNecessary(
+        address: Address,
+        canUpdateWhileSheetPresented: Bool = false
+    ) async throws {
+        guard session.shouldSendTaxRegion(for: "shipping") else {
+            return
+        }
+        try await performUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
+    }
+
     /// Sets the shipping address for this checkout.
     ///
     /// The address is stored locally and merged into PaymentSheet configuration
@@ -323,30 +337,32 @@ public final class Checkout: ObservableObject {
             appearance: confirmationContext.configuration.appearance
         )
 
-        let applePayContext: CheckoutApplePayContext?
-        if case .applePay = confirmationContext.paymentOption {
-            applePayContext = CheckoutApplePayContext.create(
-                checkout: self,
-                authenticationContext: authenticationContext,
-                paymentHandler: paymentHandler
-            )
-        } else {
-            applePayContext = nil
-        }
-
         do {
-            let confirmResult = try await enqueueSessionUpdate {
-                let result = await Self.confirm(
-                    checkoutSession: self.session,
-                    confirmationContext: confirmationContext,
-                    authenticationContext: authenticationContext,
-                    paymentHandler: self.paymentHandler,
-                    applePayContext: applePayContext
-                )
-                if let checkoutSessionResponse = result.checkoutSessionResponse {
-                    try await self.commitSession(checkoutSessionResponse)
+            let confirmResult: InternalConfirmResult
+            if case .applePay = confirmationContext.paymentOption {
+                confirmResult = try await enqueueSessionUpdate {
+                    let result = await self.presentApplePay(
+                        checkoutSession: self.session,
+                        authenticationContext: authenticationContext
+                    )
+                    if let response = result.checkoutSessionResponse {
+                        try await self.commitSession(response)
+                    }
+                    return result
                 }
-                return result
+            } else {
+                confirmResult = try await enqueueSessionUpdate {
+                    let result = await Self.confirm(
+                        checkoutSession: self.session,
+                        confirmationContext: confirmationContext,
+                        authenticationContext: authenticationContext,
+                        paymentHandler: self.paymentHandler
+                    )
+                    if let checkoutSessionResponse = result.checkoutSessionResponse {
+                        try await self.commitSession(checkoutSessionResponse)
+                    }
+                    return result
+                }
             }
             _ = confirmResult
             // TODO: Map the internal confirm result into `ConfirmResult`.

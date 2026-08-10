@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 import UIKit
@@ -22,18 +21,13 @@ extension Checkout: ExpressCheckoutElementDelegate {
             presentingViewController: presentingViewController,
             appearance: .default
         )
-        guard let context = CheckoutApplePayContext.create(
-            checkout: self,
-            authenticationContext: authContext,
-            paymentHandler: paymentHandler
-        ) else {
-            stpAssertionFailure(CheckoutError.applePayNotSupportedOrMisconfigured.localizedDescription)
-            return
-        }
         Task { @MainActor [weak self] in
             guard let self else { return }
             try? await enqueueSessionUpdate {
-                let result = await context.present()
+                let result = await self.presentApplePay(
+                    checkoutSession: self.session,
+                    authenticationContext: authContext
+                )
                 if let response = result.checkoutSessionResponse {
                     try await self.commitSession(response)
                 }
