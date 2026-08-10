@@ -339,6 +339,12 @@ extension AddressViewController {
 // MARK: - Internal methods
 extension AddressViewController {
 
+    func initialAddressDetails() async -> AddressDetails? {
+        await addressSpecProvider.loadAddressSpecs()
+        loadViewIfNeeded()
+        return addressDetails
+    }
+
     func didContinue() {
         Task { @MainActor in
             do {
