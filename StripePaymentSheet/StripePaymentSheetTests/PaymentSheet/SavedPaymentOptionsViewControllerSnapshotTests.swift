@@ -75,25 +75,34 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
         if darkMode {
             testWindow.overrideUserInterfaceStyle = .dark
         }
-        let rootViewController = UIViewController()
-        rootViewController.addChild(sut)
+        let rootViewController: UIViewController
+        let containerView: UIView
         if rightToLeft {
-            rootViewController.setOverrideTraitCollection(
+            let hostViewController = UIViewController()
+            hostViewController.addChild(sut)
+            hostViewController.setOverrideTraitCollection(
                 UITraitCollection(layoutDirection: .rightToLeft),
                 forChild: sut
             )
+            rootViewController = hostViewController
+            containerView = hostViewController.view
+        } else {
+            rootViewController = sut
+            containerView = testWindow
         }
         testWindow.rootViewController = rootViewController
         // Adding sut.view as the subview should be implied by the above line, but Autolayout can't lay out the view correctly on this pass of the runloop unless we explicitly addSubview. Maybe there are side effects that happen one turn of the runloop after setting the rootViewController.
-        rootViewController.view.addSubview(sut.view)
-        sut.didMove(toParent: rootViewController)
+        containerView.addSubview(sut.view)
+        if rightToLeft {
+            sut.didMove(toParent: rootViewController)
+        }
         sut.view.autosizeHeight(width: 1000)
         if showDefaultPMBadge {
             sut.isRemovingPaymentMethods = true
         }
         NSLayoutConstraint.activate([
-            sut.view.topAnchor.constraint(equalTo: rootViewController.view.topAnchor),
-            sut.view.leftAnchor.constraint(equalTo: rootViewController.view.leftAnchor),
+            sut.view.topAnchor.constraint(equalTo: containerView.topAnchor),
+            sut.view.leftAnchor.constraint(equalTo: containerView.leftAnchor),
         ])
         XCTAssertEqual(
             sut.view.effectiveUserInterfaceLayoutDirection,
