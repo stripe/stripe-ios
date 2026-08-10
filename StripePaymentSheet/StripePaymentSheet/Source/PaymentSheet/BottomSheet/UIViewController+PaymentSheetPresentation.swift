@@ -17,7 +17,6 @@ extension UIViewController {
     ) {
         viewControllerToPresent.modalPresentationStyle = .pageSheet
         viewControllerToPresent.modalPresentationCapturesStatusBarAppearance = true
-        viewControllerToPresent.isModalInPresentation = true
         viewControllerToPresent.prepareForPresentation(in: view.bounds.width)
 
         if let sheetPresentationController = viewControllerToPresent.sheetPresentationController {

@@ -525,11 +525,9 @@ class PaymentSheetContainerViewController: UIViewController {
 
 extension PaymentSheetContainerViewController: UIAdaptivePresentationControllerDelegate {
     func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
-        return false
-    }
-
-    func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
+        // On iPad, tapping outside the sheet dismisses it without informing us - so we override this method to be informed.
         didTapOrSwipeToDismiss()
+        return false
     }
 }
 
