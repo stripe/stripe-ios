@@ -11,6 +11,8 @@ struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
     enum ErrorCode: String {
         case paymentElementPresentingViewControllerUnavailable =
             "payment_element_presenting_view_controller_unavailable"
+        case expressCheckoutElementPresentingViewControllerUnavailable =
+            "express_checkout_element_presenting_view_controller_unavailable"
     }
 
     let errorCode: ErrorCode

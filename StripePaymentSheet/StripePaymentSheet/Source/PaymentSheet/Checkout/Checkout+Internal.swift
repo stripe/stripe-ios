@@ -14,8 +14,14 @@ extension Checkout: ExpressCheckoutElementDelegate {
     /// Called by ExpressCheckoutElement when the user taps the Apple Pay button.
     func confirmApplePay() async -> ConfirmResult {
         guard let presentingViewController = UIWindow.visibleViewController else {
-            stpAssertionFailure(CheckoutError.applePayNotSupportedOrMisconfigured.localizedDescription)
-            return .failed(CheckoutError.applePayNotSupportedOrMisconfigured)
+            let errorMessage = "ExpressCheckoutElement could not find a presenting view controller."
+            assertionFailure(errorMessage)
+            let analytic = UnexpectedCheckoutElementsErrorAnalytic(
+                errorCode: .expressCheckoutElementPresentingViewControllerUnavailable,
+                errorMessage: errorMessage
+            )
+            STPAnalyticsClient.sharedClient.log(analytic: analytic)
+            return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
         let authenticationContext = AuthenticationContext(
             presentingViewController: presentingViewController,
