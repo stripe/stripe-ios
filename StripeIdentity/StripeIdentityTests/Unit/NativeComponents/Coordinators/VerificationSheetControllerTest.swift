@@ -310,14 +310,17 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertEqual(controller.collectedData.face?.trainingConsent, true)
     }
 
-    func testSaveSelfieDataIncludes3DFieldsWhenLocalOverrideIsEnabled() throws {
-        let previousOverride = IdentityVerificationSheet.local3DFaceCaptureOverride
-        IdentityVerificationSheet.local3DFaceCaptureOverride = true
-        defer {
-            IdentityVerificationSheet.local3DFaceCaptureOverride = previousOverride
-        }
-
-        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+    func testSaveSelfieDataIncludes3DFieldsWhenExperimentIsEnabled() throws {
+        let verificationPage = try VerificationPageMock.response200.make().withExperiments([
+            .init(
+                experimentName: "idprod_3d_face_capture_mobile",
+                eventName: "screen_presented",
+                eventMetadata: [
+                    "screen_name": "selfie",
+                ]
+            ),
+        ])
+        controller.verificationPageResponse = .success(verificationPage)
 
         let mockResponse = try VerificationPageDataMock.noErrors.make()
         let selfieUploader = SelfieUploaderMock()
