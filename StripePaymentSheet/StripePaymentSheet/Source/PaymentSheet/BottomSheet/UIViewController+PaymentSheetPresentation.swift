@@ -19,9 +19,10 @@ extension UIViewController {
         viewControllerToPresent.prepareForPresentation(in: view.bounds.width)
 
         if let sheetPresentationController = viewControllerToPresent.sheetPresentationController {
-            sheetPresentationController.detents = [viewControllerToPresent.contentSizedDetent, .large()]
+            sheetPresentationController.detents = [viewControllerToPresent.contentSizedDetent]
             sheetPresentationController.selectedDetentIdentifier = PaymentSheetContainerViewController.contentDetentIdentifier
             sheetPresentationController.prefersGrabberVisible = true
+            sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge = false
         }
         viewControllerToPresent.presentationController?.delegate = viewControllerToPresent
 
