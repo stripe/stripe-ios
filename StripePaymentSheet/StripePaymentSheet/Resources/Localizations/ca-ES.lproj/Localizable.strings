@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Confirmació de les dades de pagament";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Confirmeu el pagament de Bizum a la vostra aplicació de banca mòbil en %@ per completar la compra.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Confirmeu el pagament a la vostra aplicació MB WAY en %@ per completar la compra.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirmeu el pagament al vostre banc o a l'aplicació de pagament en un termini de %@ per completar la compra.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirmeu el pagament a l'aplicació del vostre banc en un termini de %@ per completar la compra.";
@@ -139,6 +143,8 @@
 "Discount" = "Descompte";
 
 "EPS Bank" = "Banc EPS";
+
+"Edit address" = "Edita l'adreça";
 
 "Enter address manually" = "Introduir l'adreça manualment";
 
