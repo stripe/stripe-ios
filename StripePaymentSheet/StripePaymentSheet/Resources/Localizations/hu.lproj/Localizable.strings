@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Fizetési adatok megerősítése";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "A vásárlás befejezéséhez erősítse meg a Bizum fizetést a mobil banki alkalmazásában %@ belül.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "A vásárlás befejezéséhez erősítse meg a fizetést az MB WAY alkalmazásában %@ belül.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "A vásárlás befejezéséhez %@ percen belül erősítse meg a fizetést a bankjánál vagy a fizetést biztosító alkalmazásban.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "A vásárlás befejezéséhez %@ percen belül erősítse meg a fizetést bankja alkalmazásában.";
@@ -139,6 +143,8 @@
 "Discount" = "Engedmény";
 
 "EPS Bank" = "EPS Bank";
+
+"Edit address" = "Cím szerkesztése";
 
 "Enter address manually" = "Cím megadása kézzel";
 
