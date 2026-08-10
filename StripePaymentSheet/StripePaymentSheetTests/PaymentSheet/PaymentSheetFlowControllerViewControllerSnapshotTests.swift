@@ -33,7 +33,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
 
     func testSavedScreen_cardRightToLeft() {
         let sut = makeSavedCardSUT()
-        sut.view.semanticContentAttribute = .forceRightToLeft
+        sut.view.forceRightToLeftLayout()
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }
@@ -105,7 +105,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
 
     func testDirectToCardScanRightToLeft() {
         let sut = makeDirectToCardScanSUT()
-        sut.view.semanticContentAttribute = .forceRightToLeft
+        sut.view.forceRightToLeftLayout()
         sut.view.autosizeHeight(width: 375)
 
         STPSnapshotVerifyView(sut.view)

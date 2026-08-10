@@ -81,7 +81,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         prepareCS(configuration: configuration())
         presentCS(darkMode: false)
         let view = cs.bottomSheetViewController.view!
-        view.semanticContentAttribute = .forceRightToLeft
+        view.forceRightToLeftLayout()
         view.layoutIfNeeded()
         verify(view)
     }
@@ -502,7 +502,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         prepareCS(configuration: configuration(applePayEnabled: true), customerAdapter: customerAdapter)
         presentCS(darkMode: false)
         let view = cs.bottomSheetViewController.view!
-        view.semanticContentAttribute = .forceRightToLeft
+        view.forceRightToLeftLayout()
         view.layoutIfNeeded()
         verify(view)
     }

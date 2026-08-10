@@ -95,6 +95,7 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
         containerView.addSubview(sut.view)
         if rightToLeft {
             sut.didMove(toParent: rootViewController)
+            sut.view.forceRightToLeftLayout()
         }
         sut.view.autosizeHeight(width: 1000)
         if showDefaultPMBadge {

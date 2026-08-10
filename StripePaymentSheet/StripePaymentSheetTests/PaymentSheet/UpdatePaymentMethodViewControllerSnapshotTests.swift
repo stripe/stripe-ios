@@ -234,7 +234,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         let bottomSheet = BottomSheetViewController(contentViewController: stubViewController, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
         bottomSheet.pushContentViewController(sut)
         if rightToLeft {
-            bottomSheet.view.semanticContentAttribute = .forceRightToLeft
+            bottomSheet.view.forceRightToLeftLayout()
         }
         bottomSheet.view.autosizeHeight(width: 375)
 
