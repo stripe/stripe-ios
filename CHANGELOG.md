@@ -4,6 +4,7 @@ MINOR
 ## X.Y.Z - changes pending release
 ### PaymentSheet
 * [Fixed] LinkController (private preview) now returns an error when no funding sources are available for a Link session, rather than silently falling back to card.
+* [Added] Added public `STPAPIClient.betas` support for merchant-supplied beta headers. To use Vipps in PaymentSheet beta, set `vipps_preview=v1` on the `STPAPIClient` instance that you pass into PaymentSheet or Checkout, for example `Set(["vipps_preview=v1"])`.
 
 ### CryptoOnramp (Alpha)
 * [Added] Added `CryptoOnrampCoordinator.deleteWalletAddress(walletId:)` to delete a registered wallet address.
