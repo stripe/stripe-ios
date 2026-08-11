@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Vahvista maksutiedot";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Vahvista Bizum-maksu mobiilipankkisovelluksessasi %@ sisällä viedäksesi ostoksen loppuun.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Vahvista maksu MB WAY -sovelluksessasi %@ sisällä viedäksesi ostoksen loppuun.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Suorita osto vahvistamalla maksu pankkisi kanssa tai maksusovelluksessa %@.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Suorita osto vahvistamalla maksu pankkisi sovelluksessa %@.";
@@ -139,6 +143,8 @@
 "Discount" = "Alennus";
 
 "EPS Bank" = "EPS-pankki";
+
+"Edit address" = "Muokkaa osoitetta";
 
 "Enter address manually" = "Syötä osoite manuaalisesti";
 

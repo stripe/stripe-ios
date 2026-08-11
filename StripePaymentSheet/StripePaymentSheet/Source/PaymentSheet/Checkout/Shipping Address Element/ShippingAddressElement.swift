@@ -84,6 +84,24 @@ public final class ShippingAddressElement {
         isDismissingPresentation = false
         completion?()
     }
+
+    func normalizedInitialShippingAddress() async -> Checkout.Session.ShippingAddress? {
+        // Read the address back from the form to include its validation and normalization.
+        guard let addressDetails = await addressViewController.initialAddressDetails() else {
+            return nil
+        }
+        return Checkout.Session.ShippingAddress(
+            name: addressDetails.name,
+            address: Checkout.Address(
+                country: addressDetails.address.country,
+                line1: addressDetails.address.line1,
+                line2: addressDetails.address.line2,
+                city: addressDetails.address.city,
+                state: addressDetails.address.state,
+                postalCode: addressDetails.address.postalCode
+            )
+        )
+    }
 }
 
 extension ShippingAddressElement: AddressViewControllerDelegate {

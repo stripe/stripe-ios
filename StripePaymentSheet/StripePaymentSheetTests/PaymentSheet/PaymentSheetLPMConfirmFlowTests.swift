@@ -74,12 +74,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             self.session = session
         }
 
-        func commitSession(
-            _ apiResponse: PaymentPagesAPIResponse?,
-            applying localMutation: (@MainActor @Sendable (Checkout.Session) -> Checkout.Session)?
-        ) async throws {
-            let updatedSession = apiResponse?.makePublicSession() ?? session
-            session = localMutation?(updatedSession) ?? updatedSession
+        func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
+            session = apiResponse.makePublicSession()
         }
 
         func updateBillingTaxRegionIfNecessaryForPaymentSheet(
@@ -600,6 +596,17 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.MBWay.paymentIntent) { form in
             form.getPhoneNumberElement().setSelectedCountryCode("PT")
             form.getPhoneNumberElement().setPhoneNumber("911111112")
+        }
+    }
+
+    func testBizumConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .bizum,
+                               merchantCountry: .FR,
+                               expectedHierarchy: ExpectedFormHierarchy.Bizum.paymentIntent) { form in
+            form.getPhoneNumberElement().setSelectedCountryCode("ES")
+            form.getPhoneNumberElement().setPhoneNumber("600000001")
         }
     }
 
