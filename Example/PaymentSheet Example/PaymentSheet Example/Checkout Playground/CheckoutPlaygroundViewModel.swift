@@ -45,6 +45,11 @@ extension CheckoutPlayground {
         @Published var checkoutEndpointOption: EndpointOption = .hosted
         @Published var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
 
+        @Published var applePayVisibility: WalletVisibilityOption = .auto
+        @Published var applePayButtonTypeOption: ApplePayButtonTypeOption = .plain
+        @Published var linkVisibility: WalletVisibilityOption = .auto
+        @Published var linkDisplayOption: LinkDisplayOption = .automatic
+
         @Published var isCreating = false
         @Published var errorMessage: String?
         @Published var clientSecret: String?

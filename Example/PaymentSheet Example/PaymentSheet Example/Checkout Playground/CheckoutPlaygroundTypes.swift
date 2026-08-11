@@ -5,6 +5,8 @@
 //  Created by Nick Porter on 2/24/26.
 
 import Foundation
+import PassKit
+@_spi(STP) import StripePaymentSheet
 
 enum CheckoutPlayground {
     enum UIFramework: String, CaseIterable, Identifiable {
@@ -162,6 +164,70 @@ enum CheckoutPlayground {
             switch self {
             case .show: return "show"
             case .hide: return "hide"
+            }
+        }
+    }
+
+    enum WalletVisibilityOption: String, CaseIterable, Identifiable {
+        case auto
+        case always
+        case never
+
+        var id: String { rawValue }
+
+        var displayName: String { rawValue }
+
+        var applePayVisibility: ExpressCheckoutElement.Configuration.PaymentMethods.ApplePayVisibility {
+            switch self {
+            case .auto: return .auto
+            case .always: return .always
+            case .never: return .never
+            }
+        }
+
+        var linkVisibility: ExpressCheckoutElement.Configuration.PaymentMethods.LinkVisibility {
+            switch self {
+            case .auto: return .auto
+            case .always: return .always
+            case .never: return .never
+            }
+        }
+    }
+
+    enum LinkDisplayOption: String, CaseIterable, Identifiable {
+        case automatic
+        case never
+
+        var id: String { rawValue }
+
+        var displayName: String { rawValue }
+
+        var linkDisplay: Checkout.LinkConfiguration.Display {
+            switch self {
+            case .automatic: return .automatic
+            case .never: return .never
+            }
+        }
+    }
+
+    enum ApplePayButtonTypeOption: String, CaseIterable, Identifiable {
+        case plain
+        case buy
+        case checkout
+        case subscribe
+        case donate
+
+        var id: String { rawValue }
+
+        var displayName: String { rawValue }
+
+        var pkButtonType: PKPaymentButtonType {
+            switch self {
+            case .plain: return .plain
+            case .buy: return .buy
+            case .checkout: return .checkout
+            case .subscribe: return .subscribe
+            case .donate: return .donate
             }
         }
     }

@@ -51,6 +51,18 @@ struct CheckoutPlaygroundView: View {
                             automaticPaymentMethods: $viewModel.automaticPaymentMethods
                         )
 
+                        if viewModel.expressCheckoutElementOption == .show {
+                            CheckoutPlaygroundExpressCheckoutSettingsSection(
+                                applePayVisibility: $viewModel.applePayVisibility,
+                                linkVisibility: $viewModel.linkVisibility
+                            )
+                        }
+
+                        CheckoutPlaygroundWalletSettingsSection(
+                            applePayButtonTypeOption: $viewModel.applePayButtonTypeOption,
+                            linkDisplayOption: $viewModel.linkDisplayOption
+                        )
+
                         currencySelectorAppearanceSection
 
                         if !viewModel.automaticPaymentMethods {
@@ -87,6 +99,10 @@ struct CheckoutPlaygroundView: View {
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
+                            applePayVisibility: viewModel.applePayVisibility,
+                            applePayButtonTypeOption: viewModel.applePayButtonTypeOption,
+                            linkVisibility: viewModel.linkVisibility,
+                            linkDisplayOption: viewModel.linkDisplayOption,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance
                         )
                     case .uiKit:
@@ -96,6 +112,10 @@ struct CheckoutPlaygroundView: View {
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
+                            applePayVisibility: viewModel.applePayVisibility,
+                            applePayButtonTypeOption: viewModel.applePayButtonTypeOption,
+                            linkVisibility: viewModel.linkVisibility,
+                            linkDisplayOption: viewModel.linkDisplayOption,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance
                         )
                     }

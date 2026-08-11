@@ -21,6 +21,10 @@ struct CheckoutCartView: View {
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     var showExpressCheckoutElement: Bool = false
+    var applePayVisibility: CheckoutPlayground.WalletVisibilityOption = .auto
+    var applePayButtonTypeOption: CheckoutPlayground.ApplePayButtonTypeOption = .plain
+    var linkVisibility: CheckoutPlayground.WalletVisibilityOption = .auto
+    var linkDisplayOption: CheckoutPlayground.LinkDisplayOption = .automatic
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
 
     var body: some View {
@@ -104,8 +108,14 @@ struct CheckoutCartView: View {
             var config = Checkout.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
             config.adaptivePricing.allowed = adaptivePricing
             config.applePayConfiguration = Checkout.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.paymentsheet.example"
+                merchantId: "merchant.com.stripe.paymentsheet.example",
+                buttonType: applePayButtonTypeOption.pkButtonType
             )
+            config.linkConfiguration = Checkout.LinkConfiguration(display: linkDisplayOption.linkDisplay)
+            if showExpressCheckoutElement {
+                config.expressCheckoutElement.paymentMethods.applePay = applePayVisibility.applePayVisibility
+                config.expressCheckoutElement.paymentMethods.link = linkVisibility.linkVisibility
+            }
             config.currencySelectorElement.appearance = currencySelectorAppearance
             checkout = try await Checkout(configuration: config)
         } catch {

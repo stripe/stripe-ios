@@ -89,6 +89,63 @@ struct CheckoutPlaygroundConfigurationSection: View {
     }
 }
 
+struct CheckoutPlaygroundExpressCheckoutSettingsSection: View {
+    @Binding var applePayVisibility: CheckoutPlayground.WalletVisibilityOption
+    @Binding var linkVisibility: CheckoutPlayground.WalletVisibilityOption
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            CheckoutPlayground.SectionHeader(title: "Express Checkout Settings", icon: "bolt.fill")
+            VStack(spacing: 1) {
+                CheckoutPlayground.PickerRow(
+                    title: "Apple Pay",
+                    icon: "apple.logo",
+                    selection: $applePayVisibility,
+                    tooltip: "Controls Apple Pay visibility in ExpressCheckoutElement.\n\n• automatic: Defer to Wallet Settings.\n• always: Show in ECE regardless of Wallet Settings.\n• never: Hide in ECE regardless of Wallet Settings.",
+                    displayText: { $0.displayName }
+                )
+                CheckoutPlayground.PickerRow(
+                    title: "Link",
+                    icon: "link",
+                    selection: $linkVisibility,
+                    tooltip: "Controls Link visibility in ExpressCheckoutElement.\n\n• automatic: Defer to Wallet Settings.\n• always: Show in ECE regardless of Wallet Settings.\n• never: Hide in ECE regardless of Wallet Settings.",
+                    displayText: { $0.displayName }
+                )
+            }
+            .background(Color(uiColor: .secondarySystemGroupedBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+}
+
+struct CheckoutPlaygroundWalletSettingsSection: View {
+    @Binding var applePayButtonTypeOption: CheckoutPlayground.ApplePayButtonTypeOption
+    @Binding var linkDisplayOption: CheckoutPlayground.LinkDisplayOption
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            CheckoutPlayground.SectionHeader(title: "Wallet Settings", icon: "wallet.pass.fill")
+            VStack(spacing: 1) {
+                CheckoutPlayground.PickerRow(
+                    title: "Apple Pay Button Type",
+                    icon: "apple.logo",
+                    selection: $applePayButtonTypeOption,
+                    displayText: { $0.displayName }
+                )
+                CheckoutPlayground.PickerRow(
+                    title: "Link",
+                    icon: "link",
+                    selection: $linkDisplayOption,
+                    tooltip: "Controls Link visibility across Checkout elements.\n\n• automatic: Show Link when available.\n• never: Always hide Link.",
+                    displayText: { $0.displayName }
+                )
+            }
+            .background(Color(uiColor: .secondarySystemGroupedBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+}
+
 struct CheckoutPlaygroundLineItemsSection: View {
     let lineItems: [CheckoutPlayground.LineItemConfig]
     let currency: CheckoutPlayground.Currency
