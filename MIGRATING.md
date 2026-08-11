@@ -1,5 +1,5 @@
 ## Migration Guides
-### Migrating from versions < 26.5.0
+### Migrating from versions < 26.7.0
 * StripePaymentSheet now depends on `StripeFinancialConnectionsLite`. If you manually link StripePaymentSheet or use Carthage, you must also embed `StripeFinancialConnectionsLite.xcframework` in your app. No action is required for CocoaPods or Swift Package Manager users.
 
 ### Migrating from versions < 26.0.0
