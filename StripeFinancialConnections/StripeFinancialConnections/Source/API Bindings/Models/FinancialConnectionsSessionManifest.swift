@@ -114,7 +114,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let theme: Theme?
 
     var appearance: FinancialConnectionsAppearance {
-        FinancialConnectionsAppearance(theme: theme, linkBrand: linkBrand)
+        FinancialConnectionsAppearance(theme: .linkLight, linkBrand: linkBrand)
     }
 
     var shouldAttachLinkedPaymentMethod: Bool {
