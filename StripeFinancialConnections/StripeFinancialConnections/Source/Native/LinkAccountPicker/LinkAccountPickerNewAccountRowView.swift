@@ -11,6 +11,7 @@ import UIKit
 
 final class LinkAccountPickerNewAccountRowView: UIView {
 
+    private let appearance: FinancialConnectionsAppearance
     private let didSelect: () -> Void
 
     init(
@@ -19,6 +20,7 @@ final class LinkAccountPickerNewAccountRowView: UIView {
         appearance: FinancialConnectionsAppearance,
         didSelect: @escaping () -> Void
     ) {
+        self.appearance = appearance
         self.didSelect = didSelect
         super.init(frame: .zero)
 
@@ -38,9 +40,11 @@ final class LinkAccountPickerNewAccountRowView: UIView {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         addGestureRecognizer(tapGestureRecognizer)
 
-        layer.cornerRadius = 12
-        layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
-        layer.borderWidth = 1
+        if appearance.colors != .link {
+            layer.cornerRadius = 12
+            layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
+            layer.borderWidth = 1
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -56,7 +60,9 @@ final class LinkAccountPickerNewAccountRowView: UIView {
         super.traitCollectionDidChange(previousTraitCollection)
         guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
 
-        layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
+        if appearance.colors != .link {
+            layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
+        }
     }
 }
 

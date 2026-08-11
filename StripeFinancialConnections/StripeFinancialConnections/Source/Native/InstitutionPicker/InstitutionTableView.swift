@@ -125,9 +125,18 @@ final class InstitutionTableView: UIView {
         }
         dataSource.defaultRowAnimation = .fade
         super.init(frame: frame)
-        tableView.backgroundColor = FinancialConnectionsAppearance.Colors.background
-        tableView.separatorInset = .zero
-        tableView.separatorStyle = .none
+        if appearance.colors == .link {
+            tableView.backgroundColor = appearance.colors.iconBackground
+            tableView.layer.cornerRadius = 12
+            tableView.layer.masksToBounds = true
+            tableView.separatorStyle = .singleLine
+            tableView.separatorColor = FinancialConnectionsAppearance.Colors.borderNeutral
+            tableView.separatorInset = .zero
+        } else {
+            tableView.backgroundColor = FinancialConnectionsAppearance.Colors.background
+            tableView.separatorInset = .zero
+            tableView.separatorStyle = .none
+        }
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 72
         tableView.contentInset = UIEdgeInsets(
