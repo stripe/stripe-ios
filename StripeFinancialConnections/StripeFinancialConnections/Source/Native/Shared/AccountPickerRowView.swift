@@ -126,12 +126,10 @@ final class AccountPickerRowView: UIView {
 
     private func updateLayer() {
         if isInsideGroup {
-            // Selected rows use cornerRadius = 12 so the border arcs match
-            // the group container's corners and aren't clipped as a rectangle.
-            layer.cornerRadius = isSelected ? 12 : 0
+            layer.cornerRadius = 0
             backgroundColor = .clear
-            layer.borderWidth = isSelected ? 2 : 0
-            layer.borderColor = isSelected ? appearance.colors.border.cgColor : UIColor.clear.cgColor
+            layer.borderWidth = 0
+            layer.borderColor = UIColor.clear.cgColor
             layer.shadowOpacity = 0
         } else {
             layer.cornerRadius = 12

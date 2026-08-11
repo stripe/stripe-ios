@@ -56,11 +56,12 @@ class InstitutionPickerViewController: UIViewController {
         )
         verticalStackView.axis = .vertical
         verticalStackView.isLayoutMarginsRelativeArrangement = true
+        let isLinkTheme = dataSource.manifest.appearance.colors == .link
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 16,
-            leading: Constants.Layout.defaultHorizontalMargin,
+            leading: isLinkTheme ? 0 : Constants.Layout.defaultHorizontalMargin,
             bottom: Self.headerAndSearchBarSpacing,
-            trailing: Constants.Layout.defaultHorizontalMargin
+            trailing: isLinkTheme ? 0 : Constants.Layout.defaultHorizontalMargin
         )
         verticalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         return verticalStackView
@@ -73,11 +74,12 @@ class InstitutionPickerViewController: UIViewController {
         )
         verticalStackView.axis = .vertical
         verticalStackView.isLayoutMarginsRelativeArrangement = true
+        let isLinkTheme = dataSource.manifest.appearance.colors == .link
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 0, // the `headerView` has bottom padding
-            leading: Constants.Layout.defaultHorizontalMargin,
+            leading: isLinkTheme ? 0 : Constants.Layout.defaultHorizontalMargin,
             bottom: 16,
-            trailing: Constants.Layout.defaultHorizontalMargin
+            trailing: isLinkTheme ? 0 : Constants.Layout.defaultHorizontalMargin
         )
         verticalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         // the "shadow" fixes an issue where the "search bar sticky header"
@@ -148,7 +150,19 @@ class InstitutionPickerViewController: UIViewController {
     private func setupView() {
         view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
-        view.addAndPinSubview(institutionTableView)
+        if dataSource.manifest.appearance.colors == .link {
+            view.addAndPinSubview(
+                institutionTableView,
+                insets: NSDirectionalEdgeInsets(
+                    top: 0,
+                    leading: Constants.Layout.defaultHorizontalMargin,
+                    bottom: 0,
+                    trailing: Constants.Layout.defaultHorizontalMargin
+                )
+            )
+        } else {
+            view.addAndPinSubview(institutionTableView)
+        }
         institutionTableView.setTableHeaderView(headerView)
         if !dataSource.manifest.institutionSearchDisabled {
             institutionTableView.searchBarContainerView = searchBarContainerView

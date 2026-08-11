@@ -11,22 +11,42 @@ import UIKit
 
 final class LinkAccountPickerLoadingView: ShimmeringView {
 
-    init() {
+    init(appearance: FinancialConnectionsAppearance = .stripe) {
         super.init(frame: .zero)
-        let verticalStackView = UIStackView()
-        verticalStackView.axis = .vertical
-        verticalStackView.spacing = 16
-        for _ in 0..<3 {
-            let linkAccountRowView = UIView()
-            linkAccountRowView.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
-            linkAccountRowView.layer.cornerRadius = 12
-            linkAccountRowView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                linkAccountRowView.heightAnchor.constraint(equalToConstant: 88)
-            ])
-            verticalStackView.addArrangedSubview(linkAccountRowView)
+        if appearance.colors == .link {
+            let rowsStack = UIStackView()
+            rowsStack.axis = .vertical
+            rowsStack.spacing = 0
+            for _ in 0..<3 {
+                let row = UIView()
+                row.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    row.heightAnchor.constraint(equalToConstant: 88)
+                ])
+                rowsStack.addArrangedSubview(row)
+            }
+            let container = UIView()
+            container.backgroundColor = appearance.colors.iconBackground
+            container.layer.cornerRadius = 12
+            container.layer.masksToBounds = true
+            container.addAndPinSubview(rowsStack)
+            addAndPinSubview(container)
+        } else {
+            let verticalStackView = UIStackView()
+            verticalStackView.axis = .vertical
+            verticalStackView.spacing = 16
+            for _ in 0..<3 {
+                let linkAccountRowView = UIView()
+                linkAccountRowView.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+                linkAccountRowView.layer.cornerRadius = 12
+                linkAccountRowView.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    linkAccountRowView.heightAnchor.constraint(equalToConstant: 88)
+                ])
+                verticalStackView.addArrangedSubview(linkAccountRowView)
+            }
+            addAndPinSubview(verticalStackView)
         }
-        addAndPinSubview(verticalStackView)
     }
 
     required init?(coder: NSCoder) {
