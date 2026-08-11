@@ -226,25 +226,6 @@ public final class Checkout: ObservableObject {
         try await performUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
     }
 
-    /// Updates the shipping tax region for this checkout, if shipping is the session's tax address source.
-    ///
-    /// If automatic tax is enabled and the tax address source is "shipping",
-    /// the address is sent to the server to compute updated tax amounts.
-    ///
-    /// - Parameter address: The shipping address to use for tax calculation. To reset tax computation
-    ///   to a country-only region, pass a ``Checkout.Address`` with just the country.
-    /// - Throws: ``CheckoutError`` if the session is not open, or if
-    ///   the server request fails.
-    func updateShippingTaxRegionIfNecessary(
-        address: Address,
-        canUpdateWhileSheetPresented: Bool = false
-    ) async throws {
-        guard session.shouldSendTaxRegion(for: "shipping") else {
-            return
-        }
-        try await performUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
-    }
-
     /// Sets the shipping address for this checkout.
     ///
     /// The address is stored locally and merged into PaymentSheet configuration
