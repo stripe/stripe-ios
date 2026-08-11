@@ -12,13 +12,17 @@ import UIKit
 extension StripeUICore.Button {
     static func primary(appearance: FinancialConnectionsAppearance) -> StripeUICore.Button {
         let button = Button(configuration: .financialConnectionsPrimary(appearance: appearance))
-        button.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
-        button.layer.shadowRadius = 5 / UIScreen.main.nativeScale
-        button.layer.shadowOpacity = 0.25
-        button.layer.shadowOffset = CGSize(
-            width: 0,
-            height: 2 / UIScreen.main.nativeScale
-        )
+        if appearance.colors == .link {
+            button.layer.shadowColor = UIColor(red: 48 / 255, green: 49 / 255, blue: 61 / 255, alpha: 1).cgColor
+            button.layer.shadowRadius = 2.5
+            button.layer.shadowOpacity = 0.12
+            button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        } else {
+            button.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
+            button.layer.shadowRadius = 5 / UIScreen.main.nativeScale
+            button.layer.shadowOpacity = 0.25
+            button.layer.shadowOffset = CGSize(width: 0, height: 2 / UIScreen.main.nativeScale)
+        }
         ButtonFeedbackGeneratorHandler.attach(toButton: button)
         return button
     }
@@ -35,7 +39,7 @@ extension StripeUICore.Button.Configuration {
     fileprivate static func financialConnectionsPrimary(appearance: FinancialConnectionsAppearance) -> StripeUICore.Button.Configuration {
         var primaryButtonConfiguration = Button.Configuration.primary()
         primaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
-        primaryButtonConfiguration.cornerRadius = 12.0
+        primaryButtonConfiguration.cornerRadius = appearance.colors == .link ? appearance.buttonHeight / 2 : 12
         // default
         primaryButtonConfiguration.backgroundColor = appearance.colors.primary
         primaryButtonConfiguration.foregroundColor = appearance.colors.primaryAccent
