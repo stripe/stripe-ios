@@ -39,12 +39,20 @@ class IdentityFlowViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         if shouldShowCancelButton {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(
-                title: String.Localized.cancel,
-                style: .plain,
-                target: self,
-                action: #selector(didTapCancelButton)
-            )
+            if LiquidGlassDetector.isEnabledInMerchantApp {
+                let closeButton = UIButton(type: .system)
+                closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+                closeButton.addTarget(self, action: #selector(didTapCancelButton), for: .touchUpInside)
+                closeButton.accessibilityLabel = String.Localized.cancel
+                navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
+            } else {
+                navigationItem.rightBarButtonItem = UIBarButtonItem(
+                    title: String.Localized.cancel,
+                    style: .plain,
+                    target: self,
+                    action: #selector(didTapCancelButton)
+                )
+            }
         }
     }
 
