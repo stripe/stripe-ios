@@ -32,6 +32,9 @@ struct FinancialConnectionsAppearance: Equatable {
         static let warningLight: UIColor = .dynamic(light: .attention50, dark: .attention100Dark)
         static let warning: UIColor = .attention300
         static let shadow: UIColor = .black
+        static let linkGreen200: UIColor = .linkGreen200
+        static let linkBrand50: UIColor = .linkBrand50
+        static let linkBrand900: UIColor = .linkBrand900
 
         // These colors change based on the manifest's theme.
         let primary: UIColor
@@ -262,6 +265,14 @@ private extension UIColor {
 
     static var linkBrand600: UIColor {
         return UIColor(red: 0 / 255.0, green: 102 / 255.0, blue: 53 / 255.0, alpha: 1)  // #006635
+    }
+
+    static var linkBrand50: UIColor {
+        return UIColor(red: 230 / 255.0, green: 255 / 255.0, blue: 237 / 255.0, alpha: 1)  // #E6FFED
+    }
+
+    static var linkBrand900: UIColor {
+        return UIColor(red: 1 / 255.0, green: 30 / 255.0, blue: 15 / 255.0, alpha: 1)  // #011E0F
     }
 
     // MARK: Helpers
