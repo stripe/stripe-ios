@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "결제 세부사항 확인";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "구매를 완료하려면 %@ 내에 모바일 뱅킹 앱에서 Bizum 결제를 확인하십시오.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "구매를 완료하려면 %@ 내에 MB WAY 앱에서 결제를 확인하십시오.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ 이내에 은행 또는 결제 앱에서 결제를 확인하여 구매를 완료하십시오.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@ 이내에 은행 앱에서 결제를 확인하여 구매를 완료하십시오.";
@@ -143,6 +147,8 @@
 "Discount" = "할인";
 
 "EPS Bank" = "EPS 은행";
+
+"Edit address" = "주소 편집";
 
 "Enter address manually" = "주소 직접 입력";
 
@@ -347,5 +353,3 @@
 "Your IBAN should start with a two-letter country code." = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
 
 "Your address changes won't be saved." = "주소 변경 사항이 저장되지 않습니다.";
-
-"iDEAL Bank" = "iDEAL 은행";

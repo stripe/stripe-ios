@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Confirmar detalhes de pagamento";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Confirme o pagamento Bizum na sua aplicação bancária para dispositivos móveis num prazo de %@ para concluir a compra.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Confirme o pagamento na sua aplicação MB WAY num prazo de %@ para concluir a compra.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirme o pagamento na aplicação do seu banco ou de pagamento dentro de %@ para concluir a compra.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirme o pagamento na aplicação do seu banco dentro de %@ para concluir a compra.";
@@ -143,6 +147,8 @@
 "Discount" = "Desconto";
 
 "EPS Bank" = "Banco EPS";
+
+"Edit address" = "Editar endereço";
 
 "Enter address manually" = "Introduzir endereço manualmente";
 
@@ -347,5 +353,3 @@
 "Your IBAN should start with a two-letter country code." = "O seu IBAN deve começar por um código de duas letras correspondente ao país.";
 
 "Your address changes won't be saved." = "As suas alterações de morada não serão guardadas.";
-
-"iDEAL Bank" = "Banco iDEAL";

@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Apstiprināt maksājuma informāciju";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Apstipriniet Bizum maksājumu savā mobilās ierīces bankas pieteikumā %@ laikā, lai pabeigtu pirkumu.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Apstipriniet maksājumu savā MB WAY lietotnē %@ laikā, lai pabeigtu pirkumu.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Apstipriniet maksājumu jūsu bankas vai maksājumu lietotnē %@, lai pabeigtu maksājumu.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Apstipriniet maksājumu jūsu bankas lietotnē %@, lai pabeigtu maksājumu.";
@@ -143,6 +147,8 @@
 "Discount" = "Atlaide";
 
 "EPS Bank" = "EPS Bank";
+
+"Edit address" = "Rediģēt adresi";
 
 "Enter address manually" = "Ievadīt adresi manuāli";
 
@@ -347,5 +353,3 @@
 "Your IBAN should start with a two-letter country code." = "IBAN sākumā jābūt divu burtu valsts kodam.";
 
 "Your address changes won't be saved." = "Jūsu adreses izmaiņas netiks saglabātas.";
-
-"iDEAL Bank" = "iDEAL banka";

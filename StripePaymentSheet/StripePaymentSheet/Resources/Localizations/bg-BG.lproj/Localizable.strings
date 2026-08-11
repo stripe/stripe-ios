@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Потвърждаване на данните за плащане";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Потвърдете плащането с Bizum във вашето приложение за мобилно банкиране в рамките на %@, за да завършите покупката.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Потвърдете плащането в приложението си MB WAY в рамките на %@, за да завършите покупката.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Потвърдете плащането във Вашата банка или приложение за плащане в рамките на %@, за да завършите покупката.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Потвърдете плащането в приложението на Вашата банка в рамките на %@, за да завършите покупката.";
@@ -143,6 +147,8 @@
 "Discount" = "Отстъпка";
 
 "EPS Bank" = "Банка EPS";
+
+"Edit address" = "Редактиране на адрес";
 
 "Enter address manually" = "Ръчно въвеждане на адрес";
 
@@ -347,5 +353,3 @@
 "Your IBAN should start with a two-letter country code." = "Вашият IBAN трябва да започва с двубуквен код на държава.";
 
 "Your address changes won't be saved." = "Промените във вашия адрес няма да бъдат запазени.";
-
-"iDEAL Bank" = "iDEAL Bank";

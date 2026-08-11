@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Xác nhận thông tin thanh toán";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Xác nhận thanh toán Bizum trong biểu mẫu ngân hàng di động của bạn trong vòng %@ để hoàn tất giao dịch mua.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Xác nhận thanh toán trong ứng dụng MB WAY của bạn trong vòng %@ để hoàn tất giao dịch mua.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng hoặc ứng dụng thanh toán của bạn trong vòng %@ để hoàn tất giao dịch mua.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng của quý vị trong vòng %@ để hoàn tất giao dịch mua.";
@@ -143,6 +147,8 @@
 "Discount" = "Giảm giá";
 
 "EPS Bank" = "Ngân hàng EPS";
+
+"Edit address" = "Chỉnh sửa địa chỉ";
 
 "Enter address manually" = "Nhập địa chỉ thủ công";
 
@@ -347,5 +353,3 @@
 "Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
 
 "Your address changes won't be saved." = "Các thay đổi địa chỉ của bạn sẽ không được lưu.";
-
-"iDEAL Bank" = "Ngân hàng iDEAL";

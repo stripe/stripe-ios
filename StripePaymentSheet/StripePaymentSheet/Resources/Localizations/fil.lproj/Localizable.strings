@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Kumpirmahin ang mga detalye ng pagbabayad";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa Bizum sa iyong mobile banking application sa loob ng %@ para makumpleto ang pagbili.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa iyong MB WAY app sa loob ng %@ para makumpleto ang pagbili.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa iyong bangko o app ng pagbabayad sa loob ng %@ para kumpletuhin ang pagbili.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa app ng iyong bangko sa loob ng %@ para kumpletuhin ang pagbili.";
@@ -143,6 +147,8 @@
 "Discount" = "Diskwento";
 
 "EPS Bank" = "EPS Bank";
+
+"Edit address" = "I-edit ang address";
 
 "Enter address manually" = "Manwal na ilagay ang address";
 
@@ -347,5 +353,3 @@
 "Your IBAN should start with a two-letter country code." = "Ang iyong IBAN ay dapat magsimula sa dalawang letra na code ng bansa.";
 
 "Your address changes won't be saved." = "Hindi mase-save ang mga pagbabago sa iyong address.";
-
-"iDEAL Bank" = "iDEAL Bank";
