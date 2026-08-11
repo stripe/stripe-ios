@@ -15,7 +15,6 @@ public final class ShippingAddressElement {
 
     private(set) var addressViewController: AddressViewController!
     private var presentationCompletion: (() -> Void)?
-    private var isDismissingPresentation = false
 
     init(
         configuration: Configuration,
@@ -94,14 +93,6 @@ public final class ShippingAddressElement {
         presentationCompletion = completion
         presentingViewController.present(navigationController, animated: true)
     }
-
-    private func finishPresentation(for navigationController: UINavigationController) {
-        let completion = presentationCompletion
-        navigationController.setViewControllers([], animated: false)
-        presentationCompletion = nil
-        isDismissingPresentation = false
-        completion?()
-    }
 }
 
 extension ShippingAddressElement: AddressViewControllerDelegate {
@@ -109,37 +100,9 @@ extension ShippingAddressElement: AddressViewControllerDelegate {
         _ addressViewController: AddressViewController,
         with address: AddressViewController.AddressDetails?
     ) {
-        guard let navigationController = addressViewController.navigationController,
-              !isDismissingPresentation else {
-            return
-        }
-
-        isDismissingPresentation = true
-
-        if navigationController.isBeingDismissed,
-           let transitionCoordinator = navigationController.transitionCoordinator {
-            transitionCoordinator.animate(alongsideTransition: nil) { [weak self, weak navigationController] context in
-                guard let self, let navigationController else {
-                    return
-                }
-                if context.isCancelled {
-                    isDismissingPresentation = false
-                } else {
-                    finishPresentation(for: navigationController)
-                }
-            }
-            return
-        }
-
-        if navigationController.isBeingDismissed {
-            finishPresentation(for: navigationController)
-        } else {
-            navigationController.dismiss(animated: true) { [weak self, weak navigationController] in
-                guard let self, let navigationController else {
-                    return
-                }
-                finishPresentation(for: navigationController)
-            }
+        addressViewController.dismiss(animated: true) {
+            self.presentationCompletion?()
+            self.presentationCompletion = nil
         }
     }
 }

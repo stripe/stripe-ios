@@ -49,7 +49,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         let shippingAddressElement = makeShippingAddressElement()
         let completionExpectation = expectation(description: "Presentation completion called")
         var presentedViewControllerAtCompletion: UIViewController?
-        let navigationController = try XCTUnwrap(present(shippingAddressElement) {
+        _ = try XCTUnwrap(present(shippingAddressElement) {
             presentedViewControllerAtCompletion = self.presentingViewController.presentedViewController
             completionExpectation.fulfill()
         })
@@ -63,7 +63,6 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
 
         // Then
         XCTAssertNil(presentedViewControllerAtCompletion)
-        XCTAssertTrue(navigationController.viewControllers.isEmpty)
     }
 
     func testAsyncPresentReturnsAfterDismissal() async throws {
