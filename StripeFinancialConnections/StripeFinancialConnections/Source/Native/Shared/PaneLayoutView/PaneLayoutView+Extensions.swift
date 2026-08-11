@@ -285,7 +285,7 @@ extension PaneLayoutView {
 
         var secondaryButtonReference: StripeUICore.Button?
         if let secondaryButtonConfiguration = secondaryButtonConfiguration {
-            let secondaryButton = Button.secondary()
+            let secondaryButton = Button.secondary(appearance: appearance)
             secondaryButtonReference = secondaryButton
             secondaryButton.title = secondaryButtonConfiguration.title.text
             secondaryButton.accessibilityLabel = secondaryButtonConfiguration.title.accessibilityText
@@ -296,9 +296,11 @@ extension PaneLayoutView {
                 for: .touchUpInside
             )
             secondaryButton.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                secondaryButton.heightAnchor.constraint(equalToConstant: 56)
-            ])
+            if appearance.colors != .link {
+                NSLayoutConstraint.activate([
+                    secondaryButton.heightAnchor.constraint(equalToConstant: 56)
+                ])
+            }
             footerStackView.addArrangedSubview(secondaryButton)
         }
 
