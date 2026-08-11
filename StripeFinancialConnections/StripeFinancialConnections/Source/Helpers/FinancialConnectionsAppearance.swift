@@ -42,6 +42,8 @@ struct FinancialConnectionsAppearance: Equatable {
         let iconBackground: UIColor
         let spinner: UIColor
         let border: UIColor
+        let successIconBackground: UIColor
+        let successIconForeground: UIColor
     }
 
     let colors: Colors
@@ -125,7 +127,9 @@ extension FinancialConnectionsAppearance.Colors {
         iconTint: .brand500,
         iconBackground: .dynamic(light: .brand25, dark: .brand25Dark),
         spinner: .brand500,
-        border: .brand600
+        border: .brand600,
+        successIconBackground: .brand500,
+        successIconForeground: .neutral0
     )
 
     static let link: FinancialConnectionsAppearance.Colors = .init(
@@ -135,8 +139,10 @@ extension FinancialConnectionsAppearance.Colors {
         textFieldFocused: .dynamic(light: .linkNeutral900, dark: .linkNeutral0),
         iconTint: .dynamic(light: .linkNeutral900, dark: .linkNeutral0),
         iconBackground: .dynamic(light: .linkNeutral100, dark: .linkNeutral800),
-        spinner: .linkGreen200,
-        border: .dynamic(light: .linkNeutral900, dark: .linkNeutral0)
+        spinner: .dynamic(light: .linkNeutral900, dark: .linkNeutral0),
+        border: .dynamic(light: .linkNeutral900, dark: .linkNeutral0),
+        successIconBackground: .linkGreen200,
+        successIconForeground: .linkNeutral900
     )
 }
 
