@@ -36,14 +36,18 @@ final class PaymentSheetPresentationTests: XCTestCase {
 
         let sheetPresentationController = try XCTUnwrap(sheetViewController.sheetPresentationController)
         XCTAssertEqual(sheetPresentationController.detents.count, 1)
-        XCTAssertEqual(
-            sheetPresentationController.detents.first?.identifier,
-            PaymentSheetContainerViewController.contentDetentIdentifier
-        )
-        XCTAssertEqual(
-            sheetPresentationController.selectedDetentIdentifier,
-            PaymentSheetContainerViewController.contentDetentIdentifier
-        )
+        if #available(iOS 17.0, *) {
+            XCTAssertEqual(
+                sheetPresentationController.detents.first?.identifier,
+                PaymentSheetContainerViewController.contentDetentIdentifier
+            )
+            XCTAssertEqual(
+                sheetPresentationController.selectedDetentIdentifier,
+                PaymentSheetContainerViewController.contentDetentIdentifier
+            )
+        } else {
+            XCTAssertEqual(sheetPresentationController.selectedDetentIdentifier, .large)
+        }
         XCTAssertTrue(sheetPresentationController.prefersGrabberVisible)
         XCTAssertNil(sheetPresentationController.preferredCornerRadius)
         XCTAssertFalse(sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge)

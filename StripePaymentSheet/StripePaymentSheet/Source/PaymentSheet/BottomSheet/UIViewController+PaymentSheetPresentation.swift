@@ -16,11 +16,16 @@ extension UIViewController {
     ) {
         viewControllerToPresent.modalPresentationStyle = .pageSheet
         viewControllerToPresent.modalPresentationCapturesStatusBarAppearance = true
-        viewControllerToPresent.prepareForPresentation(in: view.bounds.width)
 
         if let sheetPresentationController = viewControllerToPresent.sheetPresentationController {
-            sheetPresentationController.detents = [viewControllerToPresent.contentSizedDetent]
-            sheetPresentationController.selectedDetentIdentifier = PaymentSheetContainerViewController.contentDetentIdentifier
+            if #available(iOS 17.0, *) {
+                viewControllerToPresent.prepareForPresentation(in: view.bounds.width)
+                sheetPresentationController.detents = [viewControllerToPresent.contentSizedDetent]
+                sheetPresentationController.selectedDetentIdentifier = PaymentSheetContainerViewController.contentDetentIdentifier
+            } else {
+                sheetPresentationController.detents = [.large()]
+                sheetPresentationController.selectedDetentIdentifier = .large
+            }
             sheetPresentationController.prefersGrabberVisible = true
             sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge = false
         }

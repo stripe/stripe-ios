@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.requires_arc                   = true
   s.platform                       = :ios
   s.swift_version = '5.0'
-  s.ios.deployment_target          = '16.0'
+  s.ios.deployment_target          = '15.0'
   s.source_files                   = 'StripeConnect/StripeConnect/**/*.swift'
   s.dependency                       'StripeCore', s.version.to_s
   s.dependency                       'StripeUICore', s.version.to_s

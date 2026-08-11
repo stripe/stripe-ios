@@ -30,17 +30,20 @@ class PaymentSheetContainerViewController: UIViewController {
         "com.stripe.paymentsheet.content"
     )
 
-    lazy var contentSizedDetent = UISheetPresentationController.Detent.custom(
-        identifier: Self.contentDetentIdentifier
-    ) { [weak self] context in
-        guard let self else {
-            return context.maximumDetentValue
+    lazy var contentSizedDetent: UISheetPresentationController.Detent = {
+        guard #available(iOS 17.0, *) else {
+            return .large()
         }
-        guard !self.contentRequiresFullScreen else {
-            return context.maximumDetentValue
+        return .custom(identifier: Self.contentDetentIdentifier) { [weak self] context in
+            guard let self else {
+                return context.maximumDetentValue
+            }
+            guard !self.contentRequiresFullScreen else {
+                return context.maximumDetentValue
+            }
+            return min(self.fittedContentHeight, context.maximumDetentValue)
         }
-        return min(self.fittedContentHeight, context.maximumDetentValue)
-    }
+    }()
 
     // MARK: - Views
     lazy var scrollView: UIScrollView = {
@@ -325,6 +328,9 @@ class PaymentSheetContainerViewController: UIViewController {
     }
 
     func invalidateContentDetent() {
+        guard #available(iOS 17.0, *) else {
+            return
+        }
         sheetPresentationController?.animateChanges {
             self.sheetPresentationController?.invalidateDetents()
         }
