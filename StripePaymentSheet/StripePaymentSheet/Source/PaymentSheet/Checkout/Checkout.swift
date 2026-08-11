@@ -250,13 +250,12 @@ public final class Checkout: ObservableObject {
         let shippingAddress = Session.ShippingAddress(name: name, address: address)
         guard session.shippingAddress != shippingAddress else { return }
         if session.shouldSendTaxRegion(for: "shipping") {
-            try await performUpdate(.setTaxRegion(address), applying: { session in
-                session.makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
-            })
+            try await performUpdate(
+                .setTaxRegion(address),
+                shippingAddress: .newValue(shippingAddress)
+            )
         } else {
-            try await performUpdate(applying: { session in
-                session.makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
-            })
+            try await performUpdate(shippingAddress: .newValue(shippingAddress))
         }
     }
 
@@ -413,27 +412,23 @@ extension Checkout {
 // These exist here because `session` is private(set) to enforce that session can only be mutated through these sanctioned paths.
 // Setting the session should generally only be done via `commitSession` to avoid putting us into an inconsistent state e.g. without using commitSession, MPE is not aware of the updated session.
 extension Checkout {
-    /// Replaces the current session from an API response, applies client-side mutations, and updates Checkout elements.
+    /// Replaces the current session from an API response, applies local state, and updates Checkout elements.
     ///
-    /// Client-side address overrides are copied from the current session to the new one
-    /// automatically. To update an address, pass a `localMutation` closure.
+    /// Existing local state is preserved unless explicitly replaced.
     func commitSession(
         _ apiResponse: PaymentPagesAPIResponse? = nil,
-        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
+        shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
+        paymentOption: SessionFieldUpdate<Session.PaymentOptionDisplayData> = .keepOldValue
     ) async throws {
-        // === Update the session ===
-        // Generate a new session from the API response, or fall back to the current session.
         let newSession = apiResponse?.makePublicSession() ?? session
-
-        // Preserve client-side address overrides on the new session.
-        let sessionWithLocalAddress = newSession.makeCopyOverriding(
-            shippingAddress: .newValue(session.shippingAddress),
-            paymentOption: .newValue(session.paymentOption)
+        session = newSession.makeCopyOverriding(
+            shippingAddress: .newValue(
+                shippingAddress.resolved(currentValue: session.shippingAddress)
+            ),
+            paymentOption: .newValue(
+                paymentOption.resolved(currentValue: session.paymentOption)
+            )
         )
-
-        // Apply any additional local mutations to the session.
-        let finalSession = localMutation?(sessionWithLocalAddress) ?? sessionWithLocalAddress
-        session = finalSession
 
         // === Update Payment Element and all other asynchronously updated elements ==
         try await paymentElement?.update(checkout: self)
