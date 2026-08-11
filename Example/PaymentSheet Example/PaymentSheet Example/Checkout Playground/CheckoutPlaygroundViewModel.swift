@@ -15,6 +15,7 @@ extension CheckoutPlayground {
             "card", "link",
         ]
 
+        @Published var uiFramework: UIFramework = .swiftUI
         @Published var integrationType: IntegrationType = .flowController {
             didSet {
                 if integrationType == .eceOnly && expressCheckoutElementOption == .hide {

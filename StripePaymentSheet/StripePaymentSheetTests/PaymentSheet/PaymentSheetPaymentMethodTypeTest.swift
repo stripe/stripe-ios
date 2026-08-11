@@ -335,7 +335,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testPaymentIntentFilteredPaymentMethodTypes_withSetupFutureUsage() {
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .cashApp, .mobilePay, .amazonPay, .klarna], setupFutureUsage: .onSession)
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .cashApp, .mobilePay, .vipps, .amazonPay, .klarna], setupFutureUsage: .onSession)
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
         configuration.allowsDelayedPaymentMethods = true
@@ -346,6 +346,19 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
 
         XCTAssertEqual(types, [.stripe(.card), .stripe(.cashApp), .stripe(.amazonPay), .stripe(.klarna)])
+    }
+
+    func testPaymentIntentFilteredPaymentMethodTypes_includesVipps() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .vipps])
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "http://return-to-url"
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: ._testValue(intent: intent),
+            configuration: configuration
+        )
+
+        XCTAssertEqual(types, [.stripe(.card), .stripe(.vipps)])
     }
 
     func testSetupIntentFilteredPaymentMethodTypes() {

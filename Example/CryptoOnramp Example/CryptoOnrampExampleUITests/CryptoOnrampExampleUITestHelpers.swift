@@ -198,10 +198,11 @@ extension CryptoOnrampExampleUITests {
 
         for attempt in 0..<maximumAttempts {
             if replacingExistingText || attempt > 0 {
-                clearText(in: element)
+                replaceExistingText(with: text, in: element)
+            } else {
+                element.typeText(text)
             }
 
-            element.typeText(text)
             valueMatches = !shouldVerifyValue || textFieldValueMatches(element, expectedText: text)
             if valueMatches {
                 break
@@ -222,19 +223,23 @@ extension CryptoOnrampExampleUITests {
         }
     }
 
-    private func clearText(in element: XCUIElement) {
-        for _ in 0..<2 {
-            guard
-                let value = element.value as? String,
-                !value.isEmpty,
-                value != element.placeholderValue
-            else {
-                return
-            }
+    private func replaceExistingText(with text: String, in element: XCUIElement) {
+        let existingText = element.value as? String ?? ""
 
-            let deleteText = String(repeating: XCUIKeyboardKey.delete.rawValue, count: value.count)
-            element.typeText(deleteText)
+        // A double-tap selects an entire alphanumeric token.
+        // Values with separators (e.g. @, ., -, and other punctuation) expose Select All after a long press.
+        if existingText.rangeOfCharacter(from: CharacterSet.alphanumerics.inverted) == nil {
+            element.doubleTap()
+        } else {
+            element.press(forDuration: 1)
         }
+
+        let selectAll = app.descendants(matching: .any).matching(identifier: "Select All").firstMatch
+        if selectAll.waitForExistence(timeout: 1) {
+            selectAll.tap()
+        }
+
+        element.typeText(text)
     }
 
     private func textFieldValueMatches(_ element: XCUIElement, expectedText: String) -> Bool {
