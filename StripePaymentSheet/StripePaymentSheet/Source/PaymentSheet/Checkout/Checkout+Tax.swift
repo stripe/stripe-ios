@@ -39,14 +39,14 @@ extension Checkout {
     /// A tax amount calculated for a line item, shipping option, or aggregate session total.
     public struct TaxAmount: Sendable, Hashable {
         /// The tax amount.
-        public let amount: Amount
+        public let amount: Session.Amount
         /// Whether this tax amount is inclusive (already included in the subtotal) or
         /// exclusive (collected in addition to the subtotal).
         public let inclusive: Bool
         /// A user-facing description of the tax (e.g. `"Sales Tax"` or `"VAT 20%"`).
         public let displayName: String
 
-        public init(amount: Amount, inclusive: Bool, displayName: String) {
+        public init(amount: Session.Amount, inclusive: Bool, displayName: String) {
             self.amount = amount
             self.inclusive = inclusive
             self.displayName = displayName

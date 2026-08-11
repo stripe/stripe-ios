@@ -290,8 +290,6 @@
 
 "Set up" = "Seadista";
 
-"Shipping" = "Tarnimine";
-
 "Shipping to %@ is not supported." = "Kohaletoimetamist %@ ei ole toetatud.";
 
 "Show details" = "Kuva üksikasjad";

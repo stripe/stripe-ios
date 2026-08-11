@@ -30,13 +30,7 @@ extension PaymentPagesAPIResponse {
             defaultCurrency: currency,
             locale: .autoupdatingCurrent
         )
-        let publicTotal = Self.makeTotal(
-            from: totalSummary,
-            currency: currency,
-            taxAmounts: publicTaxAmounts,
-            discountAmounts: publicDiscountAmounts,
-            shippingRate: shippingRate
-        )
+        let publicTotals = Self.makeTotals(from: checkoutItems, currency: currency)
         let publicTax = Checkout.Tax(
             status: Self.makeTaxStatus(taxMeta: taxMeta, taxContext: taxContext),
             taxAmounts: publicTaxAmounts.isEmpty ? nil : publicTaxAmounts
@@ -68,7 +62,7 @@ extension PaymentPagesAPIResponse {
             shippingAddress: nil,
             status: publicStatus,
             tax: publicTax,
-            total: publicTotal,
+            totals: publicTotals,
             paymentStatus: publicPaymentStatus,
             paymentMethodOptions: paymentMethodOptions,
             customer: customer,
@@ -90,14 +84,13 @@ extension PaymentPagesAPIResponse {
 // MARK: - Public model conversion
 
 extension PaymentPagesAPIResponse {
-    static func makeAmount(_ minorUnitsAmount: Int, currency: String) -> Checkout.Amount {
-        let formatted = String.localizedAmountDisplayString(for: minorUnitsAmount, currency: currency)
-        return Checkout.Amount(amount: formatted, minorUnitsAmount: minorUnitsAmount)
+    static func makeAmount(_ minorUnitsAmount: Int, currency: String) -> Checkout.Session.Amount {
+        return makeAmount(Double(minorUnitsAmount), currency: currency, locale: .autoupdatingCurrent)
     }
 
     // TODO: Have Payment Pages return Session.Amount-shaped values so clients don't duplicate
     // minor-to-major conversion and locale-aware currency formatting.
-    private static func makeSessionAmount(
+    private static func makeAmount(
         _ minorUnitsAmount: Double,
         currency: String,
         locale: Locale,
@@ -160,13 +153,13 @@ extension PaymentPagesAPIResponse {
                         key: price.id,
                         displayName: product.name,
                         images: product.images,
-                        unitAmount: makeSessionAmount(
+                        unitAmount: makeAmount(
                             Double(unitAmount),
                             currency: currency,
                             locale: locale
                         ),
                         unitAmountDecimal: item.unitAmountDecimal.map {
-                            makeSessionAmount(
+                            makeAmount(
                                 $0,
                                 currency: currency,
                                 locale: locale,
@@ -185,20 +178,20 @@ extension PaymentPagesAPIResponse {
             let taxInclusive = oneTimePrice.items.reduce(0) { $0 + $1.taxInclusive }
             let taxExclusive = oneTimePrice.items.reduce(0) { $0 + $1.taxExclusive }
             let amountDetails = Checkout.Session.OrderSummaryItem.OneTimePrice.AmountDetails(
-                total: makeSessionAmount(Double(oneTimePrice.total), currency: defaultCurrency, locale: locale),
-                subtotal: makeSessionAmount(
+                total: makeAmount(Double(oneTimePrice.total), currency: defaultCurrency, locale: locale),
+                subtotal: makeAmount(
                     Double(oneTimePrice.subtotal),
                     currency: defaultCurrency,
                     locale: locale
                 ),
                 taxAmounts: taxAmounts.isEmpty ? nil : taxAmounts,
-                discount: makeSessionAmount(0, currency: defaultCurrency, locale: locale),
-                taxInclusive: makeSessionAmount(
+                discount: makeAmount(0, currency: defaultCurrency, locale: locale),
+                taxInclusive: makeAmount(
                     Double(taxInclusive),
                     currency: defaultCurrency,
                     locale: locale
                 ),
-                taxExclusive: makeSessionAmount(
+                taxExclusive: makeAmount(
                     Double(taxExclusive),
                     currency: defaultCurrency,
                     locale: locale
@@ -220,7 +213,7 @@ extension PaymentPagesAPIResponse {
         currency: String,
         locale: Locale
     ) -> Checkout.Session.TaxAmount {
-        let publicAmount = makeSessionAmount(Double(taxAmount.amount), currency: currency, locale: locale)
+        let publicAmount = makeAmount(Double(taxAmount.amount), currency: currency, locale: locale)
         return Checkout.Session.TaxAmount(
             amount: publicAmount.amount,
             minorUnitsAmount: publicAmount.minorUnitsAmount,
@@ -262,28 +255,28 @@ extension PaymentPagesAPIResponse {
         }
     }
 
-    private static func makeTotal(
-        from totalSummary: TotalSummary?,
-        currency: String,
-        taxAmounts: [Checkout.TaxAmount],
-        discountAmounts: [Checkout.DiscountAmount],
-        shippingRate: ShippingRate?
-    ) -> Checkout.Total? {
-        guard let totalSummary,
-              let subtotal = totalSummary.subtotal,
-              let total = totalSummary.total else { return nil }
-        let taxInclusive = taxAmounts.filter(\.inclusive).reduce(0) { $0 + $1.amount.minorUnitsAmount }
-        let taxExclusive = taxAmounts.filter { !$0.inclusive }.reduce(0) { $0 + $1.amount.minorUnitsAmount }
-        let discount = discountAmounts.reduce(0) { $0 + $1.amount.minorUnitsAmount }
-        return Checkout.Total(
+    private static func makeTotals(
+        from checkoutItems: [CheckoutItem],
+        currency: String
+    ) -> Checkout.Session.Totals {
+        var subtotal = 0
+        var taxExclusive = 0
+        var taxInclusive = 0
+        var total = 0
+        for checkoutItem in checkoutItems {
+            let oneTimePrice = checkoutItem.oneTimePrice
+            subtotal += oneTimePrice.subtotal
+            taxExclusive += oneTimePrice.items.reduce(0) { $0 + $1.taxExclusive }
+            taxInclusive += oneTimePrice.items.reduce(0) { $0 + $1.taxInclusive }
+            total += oneTimePrice.total
+        }
+        return Checkout.Session.Totals(
             subtotal: makeAmount(subtotal, currency: currency),
             taxExclusive: makeAmount(taxExclusive, currency: currency),
             taxInclusive: makeAmount(taxInclusive, currency: currency),
-            shippingRate: makeAmount(shippingRate?.amount ?? 0, currency: currency),
-            discount: makeAmount(discount, currency: currency),
-            total: makeAmount(total, currency: currency),
-            appliedBalance: makeAmount(totalSummary.appliedBalance ?? 0, currency: currency),
-            balanceAppliedToNextInvoice: totalSummary.balanceAppliedToNextInvoice ?? false
+            // Discounts are not currently supported in unified mode.
+            discount: makeAmount(0, currency: currency),
+            total: makeAmount(total, currency: currency)
         )
     }
 

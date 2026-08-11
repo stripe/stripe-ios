@@ -129,8 +129,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(apiResponse.sessionId, "cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(apiResponse.status, "open")
         XCTAssertEqual(apiResponse.paymentStatus, "unpaid")
-        XCTAssertEqual(apiResponse.totalSummary?.subtotal, 2000)
-        XCTAssertEqual(apiResponse.totalSummary?.total, 2686)
         XCTAssertEqual(apiResponse.checkoutItems.first?.key, "ci_1abc")
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.activePresentmentCurrency, "eur")
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.integrationAmount, 12000)
@@ -142,8 +140,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         XCTAssertEqual(session.id, "cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(apiResponse.clientSecret, "cs_test_a1b2c3d4e5f6g7h8i9j0_secret_xyz123abc456")
-        XCTAssertEqual(session.total?.total.minorUnitsAmount, 2686)
-        XCTAssertEqual(session.total?.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 2186)
+        XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 2000)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertEqual(session.minorUnitsAmountDivisor, 100)
         XCTAssertEqual(session.paymentStatus, .unpaid)
@@ -183,9 +181,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         }
         XCTAssertEqual(oneTimePrice.items.count, 2)
 
-        // Totals — discount and tax
-        XCTAssertEqual(session.total?.discount.minorUnitsAmount, 0)
-        XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 186)
+        XCTAssertEqual(session.totals.discount.minorUnitsAmount, 0)
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 186)
 
         // Tax amounts
         XCTAssertEqual(session.tax.taxAmounts?.count, 1)
@@ -200,8 +197,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         // Shipping address collection
         XCTAssertEqual(session.allowedShippingCountries, ["US", "CA"])
         XCTAssertTrue(session.requiresShippingAddress)
-
-        XCTAssertEqual(session.total?.shippingRate.minorUnitsAmount, 500)
 
         // Adaptive pricing
         XCTAssertTrue(session.adaptivePricingActive)
@@ -243,8 +238,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.status?.type, .open)
         XCTAssertTrue(session.livemode)
 
-        // Optional fields should be nil
-        XCTAssertNil(session.total)
+        XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 1000)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 1000)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertNil(apiResponse.clientSecret)
         XCTAssertNil(apiResponse.paymentIntentId)
@@ -309,7 +304,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
             "payment_status": "unpaid",
-            "total_summary": ["subtotal": 2345, "total": 2345, "due": 2345],
         ]).makePublicSession()
 
         XCTAssertFalse(session.noPaymentRequired)
@@ -320,7 +314,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
             "payment_status": "no_payment_required",
-            "total_summary": ["subtotal": 0, "total": 0, "due": 0],
         ]).makePublicSession()
 
         XCTAssertTrue(session.noPaymentRequired)
@@ -388,10 +381,9 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertFalse(session.customer?.canDetachPaymentMethod ?? true)
     }
 
-    func testTotalsWithTaxFromTaxAmounts() {
+    func testAggregateTaxAmountsRemainSeparateFromTotals() {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
-            "total_summary": ["due": 2186, "subtotal": 2000, "total": 2186],
             "recurring_details": [
                 "total_tax_amounts": [
                     ["amount": 186, "inclusive": false, "taxable_amount": 2000,
@@ -400,11 +392,10 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             ],
         ]).makePublicSession()
 
-        XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 186)
-        XCTAssertEqual(session.total?.subtotal.minorUnitsAmount, 2000)
-        XCTAssertEqual(session.total?.total.minorUnitsAmount, 2186)
-        XCTAssertEqual(session.total?.discount.minorUnitsAmount, 0)
-        XCTAssertEqual(session.total?.shippingRate.minorUnitsAmount, 0)
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 0)
+        XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 1000)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 1000)
+        XCTAssertEqual(session.totals.discount.minorUnitsAmount, 0)
         XCTAssertEqual(session.tax.taxAmounts?.count, 1)
         XCTAssertEqual(session.tax.taxAmounts?[0].amount.minorUnitsAmount, 186)
         XCTAssertFalse(session.tax.taxAmounts?[0].inclusive ?? true)
@@ -414,7 +405,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
     func testUnifiedModeSessionParsesCheckoutItemsTaxAndDiscounts() {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
-            "total_summary": ["due": 1816, "subtotal": 2000, "total": 1816],
             "recurring_details": [
                 "total_tax_amounts": [
                     [
@@ -487,9 +477,40 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.discountAmounts[0].amount.minorUnitsAmount, 332)
         XCTAssertEqual(session.discountAmounts[0].displayName, "Welcome")
 
-        XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 148)
-        XCTAssertEqual(session.total?.discount.minorUnitsAmount, 332)
-        XCTAssertEqual(session.total?.total.minorUnitsAmount, 1816)
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 148)
+        XCTAssertEqual(session.totals.discount.minorUnitsAmount, 0)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 2148)
+    }
+
+    func testTotalsSumOneTimePrices() {
+        let session = CheckoutTestHelpers.makeSession([
+            "checkout_items": [
+                makeOneTimePriceCheckoutItem(
+                    key: "one_time_price_1",
+                    subtotal: 1000,
+                    taxExclusive: 100,
+                    taxInclusive: 0,
+                    total: 1100
+                ),
+                makeOneTimePriceCheckoutItem(
+                    key: "one_time_price_2",
+                    subtotal: 500,
+                    taxExclusive: 0,
+                    taxInclusive: 40,
+                    total: 500
+                ),
+            ],
+        ]).makePublicSession()
+
+        XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 1500)
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 100)
+        XCTAssertEqual(session.totals.taxInclusive.minorUnitsAmount, 40)
+        XCTAssertEqual(session.totals.discount.minorUnitsAmount, 0)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 1600)
+        XCTAssertEqual(
+            session.totals.total.amount,
+            String.localizedAmountDisplayString(for: 1600, currency: "usd")
+        )
     }
 
     func testUnifiedModeSessionRejectsUnsupportedCheckoutItemTypes() {
@@ -929,6 +950,35 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             mutation(&product)
             price["product"] = product
         }
+    }
+
+    private func makeOneTimePriceCheckoutItem(
+        key: String,
+        subtotal: Int,
+        taxExclusive: Int,
+        taxInclusive: Int,
+        total: Int
+    ) -> [String: Any] {
+        var checkoutItem = CheckoutTestHelpers.makeOneTimePriceCheckoutItems()[0]
+        checkoutItem["key"] = key
+        var oneTimePrice = checkoutItem["one_time_price"] as! [String: Any]
+        var item = (oneTimePrice["items"] as! [[String: Any]])[0]
+        var price = item["price"] as! [String: Any]
+        item["inner_item_key"] = "\(key)_inner"
+        item["subtotal"] = subtotal
+        item["total"] = total
+        item["unit_amount"] = subtotal
+        item["unit_amount_decimal"] = String(subtotal)
+        item["tax_exclusive"] = taxExclusive
+        item["tax_inclusive"] = taxInclusive
+        price["id"] = "\(key)_price"
+        price["unit_amount"] = subtotal
+        item["price"] = price
+        oneTimePrice["items"] = [item]
+        oneTimePrice["subtotal"] = subtotal
+        oneTimePrice["total"] = total
+        checkoutItem["one_time_price"] = oneTimePrice
+        return checkoutItem
     }
 
 }

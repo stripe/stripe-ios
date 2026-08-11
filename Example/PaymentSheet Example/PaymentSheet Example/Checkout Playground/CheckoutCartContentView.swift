@@ -207,10 +207,10 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var orderSummarySection: some View {
-        if let total = checkout.session.total {
-            let currency = checkout.session.currency
-            let taxAmount = total.taxExclusive.minorUnitsAmount + total.taxInclusive.minorUnitsAmount
-            VStack(alignment: .leading, spacing: 16) {
+        let totals = checkout.session.totals
+        let currency = checkout.session.currency
+        let taxAmount = totals.taxExclusive.minorUnitsAmount + totals.taxInclusive.minorUnitsAmount
+        VStack(alignment: .leading, spacing: 16) {
                 Text("Order Summary")
                     .font(.title2).bold()
                     .padding(.horizontal)
@@ -220,26 +220,16 @@ struct CheckoutCartContentView: View {
                         Text("Subtotal")
                             .foregroundColor(.secondary)
                         Spacer()
-                        Text(formatCartCurrency(amount: total.subtotal.minorUnitsAmount, currency: currency))
+                        Text(totals.subtotal.amount)
                             .foregroundColor(.primary)
                     }
-                    if total.discount.minorUnitsAmount > 0 {
+                    if totals.discount.minorUnitsAmount > 0 {
                         HStack {
                             Text("Discount")
                                 .foregroundColor(.green)
                             Spacer()
-                            Text("-" + formatCartCurrency(amount: total.discount.minorUnitsAmount, currency: currency))
+                            Text("-" + totals.discount.amount)
                                 .foregroundColor(.green)
-                        }
-                    }
-
-                    if total.shippingRate.minorUnitsAmount > 0 {
-                        HStack {
-                            Text("Shipping")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text(formatCartCurrency(amount: total.shippingRate.minorUnitsAmount, currency: currency))
-                                .foregroundColor(.primary)
                         }
                     }
 
@@ -260,7 +250,7 @@ struct CheckoutCartContentView: View {
                         Text("Total")
                             .font(.title3).bold()
                         Spacer()
-                        Text(formatCartCurrency(amount: total.total.minorUnitsAmount, currency: currency))
+                        Text(totals.total.amount)
                             .font(.title3).bold()
                     }
                 }
@@ -269,7 +259,6 @@ struct CheckoutCartContentView: View {
                 .cornerRadius(16)
                 .padding(.horizontal)
                 .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
-            }
         }
     }
 

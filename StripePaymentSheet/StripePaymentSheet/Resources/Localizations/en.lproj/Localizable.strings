@@ -451,9 +451,6 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 "Set up" = "Set up";
 
-/* Label for the shipping cost row in an order summary. */
-"Shipping" = "Shipping";
-
 /* Text for an error that is shown when a user selects a shipping address that
 is not supported by the merchant */
 "Shipping to %@ is not supported." = "Shipping to %@ is not supported.";
