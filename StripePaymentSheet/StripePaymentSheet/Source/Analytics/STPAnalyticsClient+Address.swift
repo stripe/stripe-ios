@@ -14,15 +14,12 @@ extension STPAnalyticsClient {
     func logAddressControllerEvent(
         event: STPAnalyticEvent,
         addressAnalyticData: AddressAnalyticData?,
+        additionalParams: [String: Any] = [:],
         apiClient: STPAPIClient
     ) {
-        var additionalParams = [:] as [String: Any]
-        additionalParams["address_data_blob"] = addressAnalyticData?.analyticsPayload
-
-        let analytic = AddressAnalytic(event: event,
-                                       params: additionalParams)
-
-        log(analytic: analytic, apiClient: apiClient)
+        var params = additionalParams
+        params["address_data_blob"] = addressAnalyticData?.analyticsPayload
+        log(analytic: AddressAnalytic(event: event, params: params), apiClient: apiClient)
     }
 
     // MARK: - Address
@@ -41,9 +38,10 @@ extension STPAnalyticsClient {
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountyCode,
                                                autoCompleteResultedSelected: autoCompleteResultedSelected,
                                                editDistance: editDistance)
-        var additionalParams: [String: Any] = ["address_data_blob": analyticData.analyticsPayload]
-        additionalParams["ms_to_complete"] = msToComplete
-        log(analytic: AddressAnalytic(event: .addressCompleted, params: additionalParams), apiClient: apiClient)
+        logAddressControllerEvent(event: .addressCompleted,
+                                  addressAnalyticData: analyticData,
+                                  additionalParams: ["ms_to_complete": msToComplete],
+                                  apiClient: apiClient)
     }
 
     func logBillingAddressCompleted(addressCountryCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, apiClient: STPAPIClient) {
