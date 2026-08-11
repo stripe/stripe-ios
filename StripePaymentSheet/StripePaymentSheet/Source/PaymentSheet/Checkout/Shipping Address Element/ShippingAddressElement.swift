@@ -102,7 +102,7 @@ public final class ShippingAddressElement {
             )
         )
     }
-        
+
         /// Presents a sheet that collects the customer's shipping address.
     /// - Parameter from: The view controller that presents the sheet. If you're using SwiftUI, you may pass nil and it will use the topmost UIViewController from the key window.
     /// Returns when the sheet is dismissed.
