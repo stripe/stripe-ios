@@ -50,11 +50,11 @@ private struct CurrencySelectorElementUIViewRepresentable: UIViewRepresentable {
     let viewModel: CurrencySelectorElementViewModel
 
     func makeUIView(context: Context) -> CurrencySelectorElementUIView {
-        viewModel.uiView.isEnabled = context.environment.isEnabled
+        viewModel.uiView.setEnabled(context.environment.isEnabled)
         return viewModel.uiView
     }
 
     func updateUIView(_ uiView: CurrencySelectorElementUIView, context: Context) {
-        uiView.isEnabled = context.environment.isEnabled
+        uiView.setEnabled(context.environment.isEnabled)
     }
 }

@@ -16,11 +16,10 @@ import UIKit
 @MainActor
 public final class CurrencySelectorElementUIView: UIView {
 
-    /// Whether the selector is enabled for user interaction.
-    var isEnabled: Bool = true {
-        didSet {
-            selectorView?.setEnabled(isEnabled)
-        }
+    /// Updates interaction and disabled styling while retaining UIKit's native state as the source of truth.
+    func setEnabled(_ enabled: Bool) {
+        isUserInteractionEnabled = enabled
+        selectorView?.setEnabled(enabled)
     }
 
     private weak var delegate: CurrencySelectorElementDelegate?
@@ -151,7 +150,7 @@ public final class CurrencySelectorElementUIView: UIView {
         containerStackView.insertArrangedSubview(newSelector, at: 0)
 
         selectorView = newSelector
-        newSelector.setEnabled(isEnabled)
+        newSelector.setEnabled(isUserInteractionEnabled)
         invalidateIntrinsicContentSize()
     }
 
@@ -213,7 +212,7 @@ extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
                 )
                 showError(error.localizedDescription)
             }
-            selectorView?.setEnabled(isEnabled)
+            selectorView?.setEnabled(isUserInteractionEnabled)
         }
     }
 }
