@@ -173,7 +173,8 @@
 /* Segmented control option for manual identity document upload */
 "Manual" = "Manual";
 
-/* Instructional text when camera is too far from a document */
+/* Instructional text when camera is too far from a document
+   Status text displayed over the selfie viewfinder when a face is too far away */
 "Move closer" = "Move closer";
 
 /* Instructional text when camera is too close to a document */
@@ -270,10 +271,10 @@
 "Select front identity document photo" = "Select front identity document photo";
 
 /* Accessibility label of captured selfie images
-   Back button title for returning to the selfie screen */
+   Back button title for returning to the selfie screen
+   Title of selfie capture screen */
 "Selfie" = "Selfie";
 
-/* Title of selfie capture screen */
 /* Status text when selfie images have been captured */
 "Selfie captures are complete" = "Selfie captures are complete";
 
@@ -354,3 +355,4 @@
 
 /* Text for message of warning alert */
 "Your selfie images have not been saved. Do you want to leave?" = "Your selfie images have not been saved. Do you want to leave?";
+
