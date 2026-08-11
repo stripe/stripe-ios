@@ -119,14 +119,10 @@ protocol VerificationSheetControllerProtocol: AnyObject {
 
     /// Transition to DocumentCaptureViewController without any API request
     func transitionToDocumentCapture()
-
-    /// Transition to the web fallback without any API request
-    func transitionToFallbackUrl()
 }
 
 private enum VerificationSheetControllerError: String, AnalyticLoggableStringErrorV2 {
     case missingVerificationPageResponseForFallbackUpdate
-    case missingVerificationPageResponseForFallbackUrlTransition
     case missingVerificationPageResponseForCountryNotListedTransition
     case missingVerificationPageResponseForIndividualTransition
     case missingVerificationPageResponseForSelfieCaptureTransition
@@ -553,20 +549,6 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
 
         flowController.transitionToDocumentCaptureScreen(
-            staticContentResult: verificationPageResponse,
-            sheetController: self
-        )
-    }
-
-    func transitionToFallbackUrl() {
-        guard let verificationPageResponse = verificationPageResponseOrLogMissing(
-            .missingVerificationPageResponseForFallbackUrlTransition,
-            assertionMessage: "verificationPageResponse is nil"
-        ) else {
-            return
-        }
-
-        flowController.transitionToFallbackUrlScreen(
             staticContentResult: verificationPageResponse,
             sheetController: self
         )

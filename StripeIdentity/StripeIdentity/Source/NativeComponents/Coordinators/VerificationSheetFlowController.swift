@@ -61,11 +61,6 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
         sheetController: VerificationSheetControllerProtocol
     )
 
-    func transitionToFallbackUrlScreen(
-        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
-        sheetController: VerificationSheetControllerProtocol
-    )
-
     func transitionToErrorScreen(
         sheetController: VerificationSheetControllerProtocol,
         error: Error,
@@ -299,33 +294,6 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     completion: {}
                 )
             }
-        }
-    }
-
-    func transitionToFallbackUrlScreen(
-        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
-        sheetController: VerificationSheetControllerProtocol
-    ) {
-        do {
-            let staticContent = try staticContentResult.get()
-            isUsingWebView = true
-            transition(
-                to: makeWebViewController(
-                    staticContent: staticContent,
-                    sheetController: sheetController
-                ),
-                shouldAnimate: true,
-                completion: {}
-            )
-        } catch {
-            transition(
-                to: ErrorViewController(
-                    sheetController: sheetController,
-                    error: .error(error)
-                ),
-                shouldAnimate: true,
-                completion: {}
-            )
         }
     }
 
