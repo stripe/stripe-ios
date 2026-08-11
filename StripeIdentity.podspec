@@ -13,6 +13,8 @@ Pod::Spec.new do |s|
   s.source                         = { :git => 'https://github.com/stripe/stripe-ios.git', :tag => "#{s.version}" }
   s.frameworks                     = 'Foundation', 'WebKit', 'UIKit'
   s.requires_arc                   = true
+  # MediaPipeTasksVision is distributed as a statically linked binary.
+  s.static_framework               = true
   s.platform                       = :ios
   s.ios.deployment_target          = '15.0'
   s.swift_version		               = '5.0'
