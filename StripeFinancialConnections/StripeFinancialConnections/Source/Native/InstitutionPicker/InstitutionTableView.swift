@@ -139,11 +139,12 @@ final class InstitutionTableView: UIView {
         }
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 72
+        let hairline = 1.0 / UIScreen.main.nativeScale
         tableView.contentInset = UIEdgeInsets(
             // add extra inset at the top/bottom to show the cell-selected-state separators
-            top: 1.0 / UIScreen.main.nativeScale,
+            top: hairline,
             left: 0,
-            bottom: 1.0 / UIScreen.main.nativeScale,
+            bottom: appearance.colors == .link ? 12 : hairline,
             right: 0
         )
         tableView.keyboardDismissMode = .onDrag
