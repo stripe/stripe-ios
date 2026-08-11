@@ -27,8 +27,8 @@ extension StripeUICore.Button {
         return button
     }
 
-    static func secondary() -> StripeUICore.Button {
-        let button = Button(configuration: .financialConnectionsSecondary)
+    static func secondary(appearance: FinancialConnectionsAppearance) -> StripeUICore.Button {
+        let button = Button(configuration: .financialConnectionsSecondary(appearance: appearance))
         ButtonFeedbackGeneratorHandler.attach(toButton: button)
         return button
     }
@@ -52,18 +52,24 @@ extension StripeUICore.Button.Configuration {
         return primaryButtonConfiguration
     }
 
-    fileprivate static var financialConnectionsSecondary: StripeUICore.Button.Configuration {
+    fileprivate static func financialConnectionsSecondary(appearance: FinancialConnectionsAppearance) -> StripeUICore.Button.Configuration {
         var secondaryButtonConfiguration = Button.Configuration.secondary()
         secondaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
         secondaryButtonConfiguration.cornerRadius = 12.0
         // default
         secondaryButtonConfiguration.foregroundColor = FinancialConnectionsAppearance.Colors.textDefault
-        secondaryButtonConfiguration.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+        if appearance.colors == .link {
+            secondaryButtonConfiguration.backgroundColor = .clear
+            secondaryButtonConfiguration.disabledBackgroundColor = .clear
+            secondaryButtonConfiguration.colorTransforms.highlightedBackground = nil
+        } else {
+            secondaryButtonConfiguration.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+            secondaryButtonConfiguration.disabledBackgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+            secondaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.04)
+        }
         // disabled
         secondaryButtonConfiguration.disabledForegroundColor = FinancialConnectionsAppearance.Colors.textDefault.withAlphaComponent(0.4)
-        secondaryButtonConfiguration.disabledBackgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
         // pressed
-        secondaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.04)  // this tries to simulate `neutral100`
         secondaryButtonConfiguration.colorTransforms.highlightedForeground = nil
         return secondaryButtonConfiguration
     }
@@ -117,11 +123,12 @@ private struct PrimaryButtonViewRepresentable: UIViewRepresentable {
 }
 
 private struct SecondaryButtonViewRepresentable: UIViewRepresentable {
+    let appearance: FinancialConnectionsAppearance
     let enabled: Bool
 
     func makeUIView(context: Context) -> StripeUICore.Button {
-        let button = StripeUICore.Button.secondary()
-        button.title = "secondary | \(enabled ? "enabled" : "disabled")"
+        let button = StripeUICore.Button.secondary(appearance: appearance)
+        button.title = "secondary | \(appearance == .stripe ? "stripe" : "link") | \(enabled ? "enabled" : "disabled")"
         return button
     }
 
@@ -145,11 +152,17 @@ struct ButtonViewRepresentable_Previews: PreviewProvider {
             PrimaryButtonViewRepresentable(appearance: .link, enabled: false)
                 .frame(height: 64)
                 .padding()
-            SecondaryButtonViewRepresentable(enabled: true)
+            SecondaryButtonViewRepresentable(appearance: .stripe, enabled: true)
                 .frame(height: 64)
                 .padding()
-            SecondaryButtonViewRepresentable(enabled: false)
+            SecondaryButtonViewRepresentable(appearance: .stripe, enabled: false)
                 .frame(height: 64)
+                .padding()
+            SecondaryButtonViewRepresentable(appearance: .link, enabled: true)
+                .frame(height: 44)
+                .padding()
+            SecondaryButtonViewRepresentable(appearance: .link, enabled: false)
+                .frame(height: 44)
                 .padding()
         }
     }
