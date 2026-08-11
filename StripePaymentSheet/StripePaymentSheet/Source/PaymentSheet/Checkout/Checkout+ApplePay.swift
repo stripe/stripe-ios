@@ -6,7 +6,6 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-import Contacts
 import Foundation
 import PassKit
 @_spi(STP) import StripeApplePay
@@ -43,9 +42,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let fallbackBillingDetails: StripeAPI.BillingDetails?
     private let returnURL: String?
     private let authenticationContext: STPAuthenticationContext
-    /// Captured at init time so nonisolated delegate methods can read them without actor hops.
-    private let shouldUpdateBillingTaxRegion: Bool
-    private let shouldUpdateShipping: Bool
     /// Captured at init time so `presentationWindow(for:)` can be called nonisolated.
     private let presentationWindow: UIWindow?
 
@@ -70,9 +66,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         self.fallbackBillingDetails = fallbackBillingDetails
         self.returnURL = returnURL
         self.authenticationContext = authenticationContext
-        self.shouldUpdateBillingTaxRegion = checkout.session.shouldSendTaxRegion(for: "billing")
-        self.shouldUpdateShipping = checkout.session.requiresShippingAddress
-            || checkout.session.shouldSendTaxRegion(for: "shipping")
         self.presentationWindow = authenticationContext.authenticationPresentingViewController().view.window
         super.init()
     }
@@ -182,21 +175,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         didSelectPaymentMethod paymentMethod: PKPaymentMethod,
         handler: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
     ) {
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            if let postalAddress = paymentMethod.billingAddress?.postalAddresses.first?.value,
-               let address = Self.makeCheckoutAddress(from: postalAddress) {
-                do {
-                    try await self.checkout?.updateBillingTaxRegionIfNecessary(
-                        address: address,
-                        canUpdateWhileSheetPresented: true
-                    )
-                } catch {
-                    // Best effort — return current session state on failure.
-                }
-            }
-            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: self.summaryItems()))
-        }
+        // TODO: Update billing tax region when the user switches cards.
+        handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
     }
 
     func paymentAuthorizationController(
@@ -204,22 +184,17 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         didSelectShippingContact contact: PKContact,
         handler: @escaping (PKPaymentRequestShippingContactUpdate) -> Void
     ) {
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            if let postalAddress = contact.postalAddress,
-               let address = Self.makeCheckoutAddress(from: postalAddress) {
-                do {
-                    // TODO: Validate address.country against session.allowedShippingCountries.
-                    try await self.checkout?.updateShippingTaxRegionIfNecessary(
-                        address: address,
-                        canUpdateWhileSheetPresented: true
-                    )
-                } catch {
-                    // Best effort — return current session state on failure.
-                }
-            }
-            handler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: self.summaryItems()))
-        }
+        // TODO: Collect shipping address, update shipping/billing tax region, validate against allowedShippingCountries.
+        handler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: summaryItems()))
+    }
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didSelectShippingMethod shippingMethod: PKShippingMethod,
+        handler: @escaping (PKPaymentRequestShippingMethodUpdate) -> Void
+    ) {
+        // TODO: Handle multiple shipping rates from the session.
+        handler(PKPaymentRequestShippingMethodUpdate(paymentSummaryItems: summaryItems()))
     }
 
     func paymentAuthorizationController(
@@ -228,23 +203,26 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         handler: @escaping (PKPaymentRequestCouponCodeUpdate) -> Void
     ) {
         // TODO: Wire up coupon code handling.
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            handler(PKPaymentRequestCouponCodeUpdate(paymentSummaryItems: self.summaryItems()))
-        }
+        handler(PKPaymentRequestCouponCodeUpdate(paymentSummaryItems: summaryItems()))
     }
 
     override func responds(to aSelector: Selector!) -> Bool {
         if aSelector == #selector(paymentAuthorizationController(_:didSelectPaymentMethod:handler:)) {
-            return shouldUpdateBillingTaxRegion
-        }
-        if aSelector == #selector(paymentAuthorizationController(_:didSelectShippingContact:handler:)) {
-            return shouldUpdateShipping
-        }
-        if aSelector == #selector(paymentAuthorizationController(_:didChangeCouponCode:handler:)) {
+            // TODO: Update billing tax region when the user switches cards.
             return false
         }
-        // TODO: Implement didSelectShippingMethod to handle multiple shipping rates from the session.
+        if aSelector == #selector(paymentAuthorizationController(_:didSelectShippingContact:handler:)) {
+            // TODO: Collect shipping address and update shipping tax region.
+            return false
+        }
+        if aSelector == #selector(paymentAuthorizationController(_:didChangeCouponCode:handler:)) {
+            // TODO: Wire up coupon code handling.
+            return false
+        }
+        if aSelector == #selector(paymentAuthorizationController(_:didSelectShippingMethod:handler:)) {
+            // TODO: Handle multiple shipping rates from the session.
+            return false
+        }
         return super.responds(to: aSelector)
     }
 
@@ -276,13 +254,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `Checkout.ApplePayConfiguration`.")
 
         let merchantLabel = checkout.configuration.merchantDisplayName ?? checkoutSession.businessName ?? ""
-        paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makePaymentSummaryItems(
-            for: checkoutSession,
-            label: merchantLabel,
-            currency: checkoutSession.currency
-        )
+        paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
 
-        // TODO: require shipping contact when requires shipping address
+        // TODO: Set requiredShippingContactFields when shipping address collection is implemented.
 
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
             intent: .checkout(checkoutSession),
@@ -324,8 +298,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             self.continuation = continuation
             authorizationController.present { [weak self] presented in
                 guard let self, !presented else { return }
-                // Use resume(with:) so applePayContext is cleared on the parent Checkout —
-                // otherwise the double-presentation guard permanently blocks Apple Pay.
                 Task { @MainActor [weak self] in
                     self?.resume(with: .init(paymentSheetResult: .failed(error: CheckoutError.applePayUnavailable)))
                 }
@@ -337,14 +309,21 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
     private func summaryItems() -> [PKPaymentSummaryItem] {
         let session = checkout?.session ?? self.session
-        return Self.makePaymentSummaryItems(for: session, label: merchantLabel, currency: session.currency)
+        return Self.makeSummaryItems(for: session, label: merchantLabel)
+    }
+
+    // TODO: Build summary items from session line items, tax, shipping, and discounts.
+    static func makeSummaryItems(for session: Checkout.Session, label: String) -> [PKPaymentSummaryItem] {
+        if let amount = session.expectedAmount() {
+            return [PKPaymentSummaryItem(label: label, amount: NSDecimalNumber.stp_decimalNumber(withAmount: amount, currency: session.currency), type: .final)]
+        }
+        return [PKPaymentSummaryItem(label: label, amount: .zero, type: .pending)]
     }
 
     private func resume(with result: Checkout.InternalConfirmResult) {
         guard let c = continuation else { return }
         continuation = nil
         c.resume(returning: result)
-        checkout?.applePayContext = nil
     }
 
     /// Called when Apple Pay timed out or was canceled while a confirm was in flight.
@@ -357,116 +336,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     }
 
     // MARK: - Static Helpers
-
-    /// Builds Apple Pay summary items from a checkout session's current state.
-    /// Falls back to a single total row (or .pending) when line items aren't available.
-    static func makePaymentSummaryItems(
-        for session: Checkout.Session,
-        label: String,
-        currency: String?
-    ) -> [PKPaymentSummaryItem] {
-        guard !session.lineItems.isEmpty, let total = session.total else {
-            if let amount = session.expectedAmount() {
-                let decimalAmount = NSDecimalNumber.stp_decimalNumber(withAmount: amount, currency: currency)
-                return [PKPaymentSummaryItem(label: label, amount: decimalAmount, type: .final)]
-            } else {
-                return [PKPaymentSummaryItem(label: label, amount: .zero, type: .pending)]
-            }
-        }
-
-        var summaryItems: [PKPaymentSummaryItem] = []
-
-        for lineItem in session.lineItems {
-            let itemLabel = lineItem.quantity > 1
-                ? String.Localized.lineItemLabel(name: lineItem.name, quantity: lineItem.quantity)
-                : lineItem.name
-            let unitMinorUnits = lineItem.unitAmount?.minorUnitsAmount ?? 0
-            let amount = NSDecimalNumber.stp_decimalNumber(
-                withAmount: unitMinorUnits * lineItem.quantity,
-                currency: currency
-            )
-            summaryItems.append(PKPaymentSummaryItem(label: itemLabel, amount: amount, type: .final))
-        }
-
-        let shipping = total.shippingRate.minorUnitsAmount
-        let tax = total.taxExclusive.minorUnitsAmount
-        let discount = total.discount.minorUnitsAmount
-
-        // Skip the breakdown rows when there's nothing to break down — line items already sum to the total.
-        let hasModifiers = shipping != 0 || tax != 0 || discount != 0
-        if hasModifiers {
-            summaryItems.append(
-                PKPaymentSummaryItem(
-                    label: String.Localized.subtotal,
-                    amount: NSDecimalNumber.stp_decimalNumber(
-                        withAmount: total.subtotal.minorUnitsAmount,
-                        currency: currency
-                    ),
-                    type: .final
-                )
-            )
-            if shipping != 0 {
-                summaryItems.append(
-                    PKPaymentSummaryItem(
-                        label: String.Localized.shipping,
-                        amount: NSDecimalNumber.stp_decimalNumber(withAmount: shipping, currency: currency),
-                        type: .final
-                    )
-                )
-            }
-            if tax != 0 {
-                summaryItems.append(
-                    PKPaymentSummaryItem(
-                        label: String.Localized.tax,
-                        amount: NSDecimalNumber.stp_decimalNumber(withAmount: tax, currency: currency),
-                        type: .final
-                    )
-                )
-            }
-            if discount != 0 {
-                // `discount` is non-negative; flip the sign so Apple Pay shows it as a deduction.
-                let amount = NSDecimalNumber.stp_decimalNumber(withAmount: discount, currency: currency)
-                let negativeAmount = NSDecimalNumber(decimal: -amount.decimalValue)
-                summaryItems.append(
-                    PKPaymentSummaryItem(
-                        label: String.Localized.discount,
-                        amount: negativeAmount,
-                        type: .final
-                    )
-                )
-            }
-        }
-
-        // Apple Pay convention: the last item is the grand total.
-        summaryItems.append(
-            PKPaymentSummaryItem(
-                label: label,
-                amount: NSDecimalNumber.stp_decimalNumber(
-                    withAmount: total.total.minorUnitsAmount,
-                    currency: currency
-                ),
-                type: .final
-            )
-        )
-
-        return summaryItems
-    }
-
-    // Partial billing address from the Apple Pay sheet (no street until authorization).
-    // Returns nil if there's no country to key tax on.
-    static func makeCheckoutAddress(from postalAddress: CNPostalAddress) -> Checkout.Address? {
-        guard let country = postalAddress.isoCountryCode.nonEmpty else {
-            return nil
-        }
-        return Checkout.Address(
-            country: country,
-            line1: nil,
-            line2: nil,
-            city: postalAddress.city.nonEmpty,
-            state: postalAddress.state.nonEmpty,
-            postalCode: postalAddress.postalCode.nonEmpty
-        )
-    }
 
     private func makeShippingDetailsParams(from payment: PKPayment) -> STPPaymentIntentShippingDetailsParams? {
         guard let shippingContact = payment.shippingContact,

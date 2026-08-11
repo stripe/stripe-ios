@@ -59,9 +59,7 @@ public final class Checkout: ObservableObject {
     /// The CurrencySelectorElement for this Checkout instance, when Adaptive Pricing is available.
     private var currencySelectorElement: CurrencySelectorElement?
 
-    /// The active Apple Pay context, non-nil while the Apple Pay sheet is presented.
-    var applePayContext: CheckoutApplePayContext?
-    /// The ShippingAddressElement for this Checkout instance.
+/// The ShippingAddressElement for this Checkout instance.
     private let shippingAddressElement: ShippingAddressElement
 
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
