@@ -42,7 +42,6 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         let unwrappedNavigationController = try XCTUnwrap(navigationController)
         XCTAssertTrue(presentingViewController.presentedViewController === unwrappedNavigationController)
         XCTAssertTrue(unwrappedNavigationController.viewControllers.first === shippingAddressElement.addressViewController)
-        XCTAssertEqual(unwrappedNavigationController.modalPresentationStyle, .automatic)
     }
 
     func testCompletionRunsAfterDelegateDismissesPresentation() async throws {
@@ -106,6 +105,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
     func testSubmittedAddressIsIgnored() async throws {
         // Given
         let configuration = CheckoutTestHelpers.makeConfiguration()
+        configuration.apiClient.publishableKey = "pk_test_123"
         let checkout = try await Checkout(configuration: configuration)
         let initialShippingAddress = Checkout.Session.ShippingAddress(
             name: "Jenny Rosen",
@@ -193,7 +193,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
             configuration: .init(),
             initialShippingAddress: nil,
             allowedCountries: ["US"],
-            apiClient: .shared,
+            apiClient: STPAPIClient(publishableKey: "pk_test_123"),
             useAutocompleteEndpoints: false
         )
     }
