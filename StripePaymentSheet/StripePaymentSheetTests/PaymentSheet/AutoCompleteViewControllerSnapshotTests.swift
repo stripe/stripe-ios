@@ -65,7 +65,7 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
         let vc = AutoCompleteViewController(
             configuration: configuration,
             initialLine1Text: nil,
-            selectedCountry: "US",
+            selectedCountry: nil,
             addressSpecProvider: addressSpecProvider
         )
         vc.results = mockSearchResults
@@ -88,7 +88,7 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
         let vc = AutoCompleteViewController(
             configuration: configuration,
             initialLine1Text: nil,
-            selectedCountry: "US",
+            selectedCountry: nil,
             addressSpecProvider: addressSpecProvider
         )
 
@@ -124,7 +124,7 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
         let vc = AutoCompleteViewController(
             configuration: config,
             initialLine1Text: nil,
-            selectedCountry: "US",
+            selectedCountry: nil,
             addressSpecProvider: addressSpecProvider
         )
         vc.results = mockSearchResults
@@ -146,7 +146,7 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
         let vc = AutoCompleteViewController(
             configuration: configuration,
             initialLine1Text: nil,
-            selectedCountry: "US",
+            selectedCountry: nil,
             addressSpecProvider: addressSpecProvider
         )
         testWindow.rootViewController = vc
@@ -170,7 +170,7 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
         let vc = AutoCompleteViewController(
             configuration: configuration,
             initialLine1Text: nil,
-            selectedCountry: "US",
+            selectedCountry: nil,
             addressSpecProvider: addressSpecProvider
         )
         testWindow.rootViewController = vc
@@ -193,7 +193,7 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
         let vc = AutoCompleteViewController(
             configuration: configuration,
             initialLine1Text: nil,
-            selectedCountry: "US",
+            selectedCountry: nil,
             addressSpecProvider: addressSpecProvider
         )
         vc.results = [
