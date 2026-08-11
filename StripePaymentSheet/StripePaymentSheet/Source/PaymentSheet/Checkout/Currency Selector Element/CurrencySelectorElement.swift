@@ -32,16 +32,18 @@ public final class CurrencySelectorElement {
 
     // MARK: - Internal Methods
 
-    init(
+    init?(
         sessionSource: CheckoutSessionSource,
         configuration: Configuration,
         delegate: CurrencySelectorElementDelegate
     ) async {
-        let uiView = await CurrencySelectorElementUIView(
+        guard let uiView = await CurrencySelectorElementUIView(
             session: sessionSource.initialSession,
             delegate: delegate,
             appearance: configuration.appearance
-        )
+        ) else {
+            return nil
+        }
         let viewModel = CurrencySelectorElementViewModel(
             sessionSource: sessionSource,
             uiView: uiView,
