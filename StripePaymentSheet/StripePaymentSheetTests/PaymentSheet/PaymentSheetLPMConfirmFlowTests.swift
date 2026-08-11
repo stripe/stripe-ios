@@ -1187,6 +1187,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     returnURL: "https://foo.com"
                 )
                 checkoutConfig.apiClient = csApiClient
+                checkoutConfig.adaptivePricing.allowed = true
                 checkoutConfig.applePayConfiguration = Checkout.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example"
                 )
@@ -1335,15 +1336,11 @@ extension PaymentSheetLPMConfirmFlowTests {
             //         additionalParameters: ["payment_intent_data": ["setup_future_usage": "off_session"]]
             //     )
             //     let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            //     let checkoutSession = try await csApiClient.initCheckoutSession(
-            //         checkoutSessionId: checkoutSessionResponse.id,
-            //         adaptivePricingAllowed: true
-            //     )
-            //     let session = checkoutSession.makePublicSession()
             //     var checkoutConfig = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "https://foo.com")
             //     checkoutConfig.apiClient = csApiClient
-            //     let checkout = Checkout(preloadedSession: session, configuration: checkoutConfig)
-            //     intents.append(TestIntent("CheckoutSession w/ setup_future_usage", .checkout(session), checkout: checkout))
+            //     checkoutConfig.adaptivePricing.allowed = true
+            //     let checkout = try await Checkout(configuration: checkoutConfig)
+            //     intents.append(TestIntent("CheckoutSession w/ setup_future_usage", .checkout(checkout.session), checkout: checkout))
             // }
 
             return intents
@@ -1457,15 +1454,11 @@ extension PaymentSheetLPMConfirmFlowTests {
             //         additionalParameters: ["payment_method_options": [paymentMethod.identifier: ["setup_future_usage": "off_session"]]]
             //     )
             //     let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            //     let checkoutSession = try await csApiClient.initCheckoutSession(
-            //         checkoutSessionId: checkoutSessionResponse.id,
-            //         adaptivePricingAllowed: true
-            //     )
-            //     let session = checkoutSession.makePublicSession()
             //     var checkoutConfig = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "https://foo.com")
             //     checkoutConfig.apiClient = csApiClient
-            //     let checkout = Checkout(preloadedSession: session, configuration: checkoutConfig)
-            //     intents.append(TestIntent("CheckoutSession w/ PMO setup_future_usage", .checkout(session), checkout: checkout))
+            //     checkoutConfig.adaptivePricing.allowed = true
+            //     let checkout = try await Checkout(configuration: checkoutConfig)
+            //     intents.append(TestIntent("CheckoutSession w/ PMO setup_future_usage", .checkout(checkout.session), checkout: checkout))
             // }
 
             return intents
@@ -1514,12 +1507,11 @@ extension PaymentSheetLPMConfirmFlowTests {
             //         customerID: customer
             //     )
             //     let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            //     let checkoutSession = try await csApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionResponse.id, adaptivePricingAllowed: true)
-            //     let session = checkoutSession.makePublicSession()
             //     var checkoutConfig = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "https://foo.com")
             //     checkoutConfig.apiClient = csApiClient
-            //     let checkout = Checkout(preloadedSession: session, configuration: checkoutConfig)
-            //     intents.append(TestIntent("CheckoutSession", .checkout(session), checkout: checkout))
+            //     checkoutConfig.adaptivePricing.allowed = true
+            //     let checkout = try await Checkout(configuration: checkoutConfig)
+            //     intents.append(TestIntent("CheckoutSession", .checkout(checkout.session), checkout: checkout))
             // }
             return intents
         }
