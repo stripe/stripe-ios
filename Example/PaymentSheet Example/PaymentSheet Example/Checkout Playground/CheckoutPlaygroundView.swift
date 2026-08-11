@@ -26,6 +26,7 @@ struct CheckoutPlaygroundView: View {
                         }
 
                         CheckoutPlaygroundConfigurationSection(
+                            uiFramework: $viewModel.uiFramework,
                             integrationType: $viewModel.integrationType,
                             currency: $viewModel.currency,
                             customerType: $viewModel.customerType,
@@ -78,14 +79,26 @@ struct CheckoutPlaygroundView: View {
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $viewModel.navigateToCheckout) {
                 if let clientSecret = viewModel.clientSecret {
-                    CheckoutCartView(
-                        clientSecret: clientSecret,
-                        shippingAddressCollection: viewModel.shippingAddressCollection,
-                        adaptivePricing: true,
-                        integrationType: viewModel.integrationType,
-                        showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
-                        currencySelectorAppearance: viewModel.currencySelectorAppearance
-                    )
+                    switch viewModel.uiFramework {
+                    case .swiftUI:
+                        CheckoutCartView(
+                            clientSecret: clientSecret,
+                            shippingAddressCollection: viewModel.shippingAddressCollection,
+                            adaptivePricing: true,
+                            integrationType: viewModel.integrationType,
+                            showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
+                            currencySelectorAppearance: viewModel.currencySelectorAppearance
+                        )
+                    case .uiKit:
+                        CheckoutCartUIKitView(
+                            clientSecret: clientSecret,
+                            shippingAddressCollection: viewModel.shippingAddressCollection,
+                            adaptivePricing: true,
+                            integrationType: viewModel.integrationType,
+                            showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
+                            currencySelectorAppearance: viewModel.currencySelectorAppearance
+                        )
+                    }
                 }
             }
             .sheet(isPresented: $showCurrencySelectorAppearance) {

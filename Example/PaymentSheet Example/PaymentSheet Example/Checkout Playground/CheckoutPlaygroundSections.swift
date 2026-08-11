@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct CheckoutPlaygroundConfigurationSection: View {
+    @Binding var uiFramework: CheckoutPlayground.UIFramework
     @Binding var integrationType: CheckoutPlayground.IntegrationType
     @Binding var currency: CheckoutPlayground.Currency
     @Binding var customerType: CheckoutPlayground.CustomerType
@@ -18,6 +19,12 @@ struct CheckoutPlaygroundConfigurationSection: View {
         VStack(alignment: .leading, spacing: 12) {
             CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
             VStack(spacing: 1) {
+                CheckoutPlayground.PickerRow(
+                    title: "UI Framework",
+                    icon: "rectangle.3.group.fill",
+                    selection: $uiFramework,
+                    displayText: { $0.displayName }
+                )
                 CheckoutPlayground.PickerRow(
                     title: "PaymentElement",
                     icon: "square.stack.3d.up.fill",
