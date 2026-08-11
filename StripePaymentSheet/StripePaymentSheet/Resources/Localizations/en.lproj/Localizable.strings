@@ -255,9 +255,6 @@ with the transaction. */
 /* Label for an IBAN field */
 "IBAN" = "IBAN";
 
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL Bank";
-
 /* Button title in a confirmation alert that dismisses the alert and returns the customer to editing their address. */
 "Keep Editing" = "Keep Editing";
 

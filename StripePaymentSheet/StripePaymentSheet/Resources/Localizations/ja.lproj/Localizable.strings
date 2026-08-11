@@ -353,5 +353,3 @@
 "Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
 
 "Your address changes won't be saved." = "住所の変更内容は保存されません。";
-
-"iDEAL Bank" = "iDEAL銀行";
