@@ -57,32 +57,12 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     struct TestIntent {
         let description: String
         let intent: Intent
-        let checkout: CheckoutSessionBillingAddressUpdater?
+        let checkout: Checkout?
 
-        init(_ description: String, _ intent: Intent, checkout: CheckoutSessionBillingAddressUpdater? = nil) {
+        init(_ description: String, _ intent: Intent, checkout: Checkout? = nil) {
             self.description = description
             self.intent = intent
             self.checkout = checkout
-        }
-    }
-
-    /// Mock stand-in for a full `Checkout` object.
-    final class TestCheckoutSessionUpdater: CheckoutSessionBillingAddressUpdater {
-        private(set) var session: Checkout.Session
-
-        init(session: Checkout.Session) {
-            self.session = session
-        }
-
-        func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
-            session = apiResponse.makePublicSession()
-        }
-
-        func updateBillingTaxRegionIfNecessaryForPaymentSheet(
-            address: Checkout.Address,
-            canUpdateWhileSheetPresented: Bool
-        ) async throws -> Checkout.Session {
-            return session
         }
     }
 
@@ -1202,11 +1182,15 @@ extension PaymentSheetLPMConfirmFlowTests {
                     returnURL: "https://foo.com"
                 )
                 let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-                let checkoutSession = try await csApiClient.initCheckoutSession(
-                    checkoutSessionId: checkoutSessionResponse.id,
-                    adaptivePricingAllowed: true
+                var checkoutConfig = Checkout.Configuration(
+                    clientSecret: checkoutSessionResponse.clientSecret,
+                    returnURL: "https://foo.com"
                 )
-                let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession())
+                checkoutConfig.apiClient = csApiClient
+                checkoutConfig.applePayConfiguration = Checkout.ApplePayConfiguration(
+                    merchantId: "merchant.com.stripe.paymentsheet.example"
+                )
+                let checkout = try await Checkout(configuration: checkoutConfig)
                 intents.append(TestIntent("CheckoutSession", .checkout(checkout.session), checkout: checkout))
             }
             guard paymentMethod != .blik else {
@@ -1355,8 +1339,11 @@ extension PaymentSheetLPMConfirmFlowTests {
             //         checkoutSessionId: checkoutSessionResponse.id,
             //         adaptivePricingAllowed: true
             //     )
-            //     let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession())
-            //     intents.append(TestIntent("CheckoutSession w/ setup_future_usage", .checkout(checkout.session), checkout: checkout))
+            //     let session = checkoutSession.makePublicSession()
+            //     var checkoutConfig = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "https://foo.com")
+            //     checkoutConfig.apiClient = csApiClient
+            //     let checkout = Checkout(preloadedSession: session, configuration: checkoutConfig)
+            //     intents.append(TestIntent("CheckoutSession w/ setup_future_usage", .checkout(session), checkout: checkout))
             // }
 
             return intents
@@ -1474,8 +1461,11 @@ extension PaymentSheetLPMConfirmFlowTests {
             //         checkoutSessionId: checkoutSessionResponse.id,
             //         adaptivePricingAllowed: true
             //     )
-            //     let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession())
-            //     intents.append(TestIntent("CheckoutSession w/ PMO setup_future_usage", .checkout(checkout.session), checkout: checkout))
+            //     let session = checkoutSession.makePublicSession()
+            //     var checkoutConfig = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "https://foo.com")
+            //     checkoutConfig.apiClient = csApiClient
+            //     let checkout = Checkout(preloadedSession: session, configuration: checkoutConfig)
+            //     intents.append(TestIntent("CheckoutSession w/ PMO setup_future_usage", .checkout(session), checkout: checkout))
             // }
 
             return intents
@@ -1525,8 +1515,11 @@ extension PaymentSheetLPMConfirmFlowTests {
             //     )
             //     let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
             //     let checkoutSession = try await csApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionResponse.id, adaptivePricingAllowed: true)
-            //     let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession())
-            //     intents.append(TestIntent("CheckoutSession", .checkout(checkout.session), checkout: checkout))
+            //     let session = checkoutSession.makePublicSession()
+            //     var checkoutConfig = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "https://foo.com")
+            //     checkoutConfig.apiClient = csApiClient
+            //     let checkout = Checkout(preloadedSession: session, configuration: checkoutConfig)
+            //     intents.append(TestIntent("CheckoutSession", .checkout(session), checkout: checkout))
             // }
             return intents
         }
@@ -1707,7 +1700,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        guard case .checkout(let checkoutSession) = testIntent.intent else {
+        guard case .checkout = testIntent.intent, let checkout = testIntent.checkout else {
             PaymentSheet.confirm(
                 configuration: configuration,
                 authenticationContext: self,
@@ -1730,7 +1723,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 analyticsHelper: analyticsHelper
             )
             let result = await Checkout.confirm(
-                checkoutSession: checkoutSession,
+                checkout: checkout,
                 confirmationContext: confirmationContext,
                 authenticationContext: self,
                 paymentHandler: paymentHandler
