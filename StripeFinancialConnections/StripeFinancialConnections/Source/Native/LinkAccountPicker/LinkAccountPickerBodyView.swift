@@ -73,33 +73,6 @@ final class LinkAccountPickerBodyView: UIView {
             accountRowViews.append(accountRowView)
         }
 
-        if isLinkTheme {
-            // wrap account rows in a grey grouped container
-            let accountRowsStack = UIStackView()
-            accountRowsStack.axis = .vertical
-            accountRowsStack.spacing = 0
-            for (index, rowView) in accountRowViews.enumerated() {
-                if index > 0 {
-                    let separator = UIView()
-                    separator.backgroundColor = FinancialConnectionsAppearance.Colors.borderNeutral
-                    separator.translatesAutoresizingMaskIntoConstraints = false
-                    NSLayoutConstraint.activate([
-                        separator.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
-                    ])
-                    accountRowsStack.addArrangedSubview(separator)
-                }
-                accountRowsStack.addArrangedSubview(rowView)
-            }
-            let groupContainer = UIView()
-            groupContainer.backgroundColor = appearance.colors.iconBackground
-            groupContainer.layer.cornerRadius = 12
-            groupContainer.layer.masksToBounds = true
-            groupContainer.addAndPinSubview(accountRowsStack)
-            outerStackView.addArrangedSubview(groupContainer)
-        } else {
-            accountRowViews.forEach { outerStackView.addArrangedSubview($0) }
-        }
-
         // add a 'new bank account' button row
         let newAccountRowView = LinkAccountPickerNewAccountRowView(
             title: addNewAccount.body,
@@ -111,13 +84,48 @@ final class LinkAccountPickerBodyView: UIView {
             }
         )
         newAccountRowView.accessibilityIdentifier = "add_bank_account"
-        outerStackView.addArrangedSubview(newAccountRowView)
+
+        if isLinkTheme {
+            // wrap account rows + new account row in a single grey grouped container
+            let accountRowsStack = UIStackView()
+            accountRowsStack.axis = .vertical
+            accountRowsStack.spacing = 0
+            for (index, rowView) in accountRowViews.enumerated() {
+                if index > 0 {
+                    accountRowsStack.addArrangedSubview(makeSeparator())
+                }
+                accountRowsStack.addArrangedSubview(rowView)
+            }
+            // new account row goes inside the container as the last row
+            accountRowsStack.addArrangedSubview(makeSeparator())
+            accountRowsStack.addArrangedSubview(newAccountRowView)
+
+            let groupContainer = UIView()
+            groupContainer.backgroundColor = appearance.colors.iconBackground
+            groupContainer.layer.cornerRadius = 12
+            groupContainer.layer.masksToBounds = true
+            groupContainer.addAndPinSubview(accountRowsStack)
+            outerStackView.addArrangedSubview(groupContainer)
+        } else {
+            accountRowViews.forEach { outerStackView.addArrangedSubview($0) }
+            outerStackView.addArrangedSubview(newAccountRowView)
+        }
 
         addAndPinSubview(outerStackView)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    private func makeSeparator() -> UIView {
+        let separator = UIView()
+        separator.backgroundColor = FinancialConnectionsAppearance.Colors.borderNeutral
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            separator.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
+        ])
+        return separator
     }
 
     func selectAccounts(_ selectedAccounts: [FinancialConnectionsAccountTuple]) {
