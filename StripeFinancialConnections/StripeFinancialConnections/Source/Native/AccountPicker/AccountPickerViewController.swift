@@ -145,7 +145,8 @@ final class AccountPickerViewController: UIViewController {
 
     private func pollAuthSessionAccounts() {
         let retreivingAccountsLoadingView = RetrieveAccountsLoadingView(
-            institutionIconUrl: dataSource.institution.icon?.default
+            institutionIconUrl: dataSource.institution.icon?.default,
+            appearance: dataSource.manifest.appearance
         )
         view.addAndPinSubviewToSafeArea(retreivingAccountsLoadingView)
 
