@@ -228,6 +228,15 @@ public final class Checkout: ObservableObject {
         try await performUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
     }
 
+    /// Updates the shipping tax region for this checkout, if shipping is the session's tax address source.
+    ///
+    /// If automatic tax is enabled and the tax address source is "shipping",
+    /// the address is sent to the server to compute updated tax amounts.
+    ///
+    /// - Parameter address: The shipping address to use for tax calculation. To reset tax computation
+    ///   to a country-only region, pass a ``Checkout.Address`` with just the country.
+    /// - Throws: ``CheckoutError`` if the session is not open, or if
+    ///   the server request fails.
     func updateShippingTaxRegionIfNecessary(
         address: Address,
         canUpdateWhileSheetPresented: Bool = false
@@ -361,6 +370,14 @@ public final class Checkout: ObservableObject {
             appearance: confirmationContext.configuration.appearance
         )
 
+        // WARNING: Do NOT route Apple Pay through this enqueueSessionUpdate block.
+        // Apple Pay's PKPaymentAuthorizationControllerDelegate callbacks (didSelectPaymentMethod,
+        // didSelectShippingContact) call enqueueSessionUpdate themselves. If presentApplePay()
+        // is awaited inside an outer enqueueSessionUpdate, those callbacks will wait for the
+        // outer task to finish — which is itself waiting for the sheet — causing a deadlock.
+        // Apple Pay is currently only reachable via ECE (confirmApplePay()), which does not use
+        // this enqueueSessionUpdate path. If Apple Pay is ever surfaced through PaymentElement,
+        // the .applePay case in confirmPaymentOption must be extracted before this block.
         do {
             let confirmResult = try await enqueueSessionUpdate {
                 let result = await Self.confirm(

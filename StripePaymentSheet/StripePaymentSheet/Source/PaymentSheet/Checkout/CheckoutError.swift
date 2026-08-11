@@ -21,13 +21,20 @@ public enum CheckoutError: Error, LocalizedError, Sendable {
     /// A pending Checkout operation did not complete before the timeout elapsed.
     case timedOut
 
+    /// The provided shipping country is not in the session's list of allowed shipping countries.
     case invalidShippingCountry(countryCode: String)
 
-    /// Apple Pay is not supported on this device or is misconfigured.
-    case applePayNotSupportedOrMisconfigured
+    /// The Apple Pay configuration is missing from ``Checkout/Configuration``.
+    case applePayNotConfigured
+
+    /// Apple Pay could not be presented. The device may not support Apple Pay or no payment cards are set up in Wallet.
+    case applePayUnavailable
 
     /// The Stripe API returned an error with the given message.
     case apiError(message: String)
+
+    /// An unexpected error occurred in the Checkout SDK.
+    case unknown(debugDescription: String)
 
     // MARK: - LocalizedError
 
@@ -41,10 +48,14 @@ public enum CheckoutError: Error, LocalizedError, Sendable {
             return "Timed out waiting for a Checkout operation to complete."
         case .invalidShippingCountry(let countryCode):
             return "Country code '\(countryCode)' is not in allowedShippingCountries"
-        case .applePayNotSupportedOrMisconfigured:
-            return "Apple Pay is not supported on this device or the Apple Pay configuration is missing or invalid."
+        case .applePayNotConfigured:
+            return "Apple Pay configuration is missing. Set applePayConfiguration on Checkout.Configuration."
+        case .applePayUnavailable:
+            return "Apple Pay could not be presented. The device may not support Apple Pay or no payment cards are set up in Wallet."
         case .apiError(let message):
             return message
+        case .unknown(let debugDescription):
+            return debugDescription
         }
     }
 }

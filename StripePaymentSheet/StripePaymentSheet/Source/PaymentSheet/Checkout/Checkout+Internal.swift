@@ -13,6 +13,9 @@ import UIKit
 extension Checkout: ExpressCheckoutElementDelegate {
     /// Called by ExpressCheckoutElement when the user taps the Apple Pay button.
     func confirmApplePay() async -> ConfirmResult {
+        guard sessionIsOpen else {
+            return .failed(CheckoutError.unknown(debugDescription: "Checkout.confirmApplePay() cannot confirm a Checkout Session that is no longer open."))
+        }
         guard let presentingViewController = UIWindow.visibleViewController else {
             let errorMessage = "ExpressCheckoutElement could not find a presenting view controller."
             assertionFailure(errorMessage)
@@ -21,11 +24,11 @@ extension Checkout: ExpressCheckoutElementDelegate {
                 errorMessage: errorMessage
             )
             STPAnalyticsClient.sharedClient.log(analytic: analytic)
-            return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
+            return .failed(CheckoutError.unknown(debugDescription: errorMessage))
         }
         let authenticationContext = AuthenticationContext(
             presentingViewController: presentingViewController,
-            appearance: .default
+            appearance: configuration.paymentElement.appearance
         )
         let result = await Checkout.confirmApplePay(
             checkout: self,
@@ -41,6 +44,7 @@ extension Checkout: ExpressCheckoutElementDelegate {
         }
     }
 }
+
 extension Checkout: CurrencySelectorElementDelegate {}
 
 extension Checkout {
