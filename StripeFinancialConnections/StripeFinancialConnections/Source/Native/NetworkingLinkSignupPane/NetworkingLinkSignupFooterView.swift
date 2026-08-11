@@ -67,7 +67,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
         saveToLinkButton.addTarget(self, action: #selector(didSelectSaveToLinkButton), for: .touchUpInside)
         saveToLinkButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            saveToLinkButton.heightAnchor.constraint(equalToConstant: 56)
+            saveToLinkButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight)
         ])
         return saveToLinkButton
     }()

@@ -23,7 +23,7 @@ final class LinkAccountPickerFooterView: UIView {
         connectAccountButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
         connectAccountButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            connectAccountButton.heightAnchor.constraint(equalToConstant: 56)
+            connectAccountButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight)
         ])
         connectAccountButton.accessibilityIdentifier = "connect_accounts_button"
         return connectAccountButton

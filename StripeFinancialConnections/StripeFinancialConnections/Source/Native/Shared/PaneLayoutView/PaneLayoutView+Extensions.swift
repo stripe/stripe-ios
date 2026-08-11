@@ -278,7 +278,7 @@ extension PaneLayoutView {
             )
             primaryButton.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                primaryButton.heightAnchor.constraint(equalToConstant: 56)
+                primaryButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight)
             ])
             footerStackView.addArrangedSubview(primaryButton)
         }
