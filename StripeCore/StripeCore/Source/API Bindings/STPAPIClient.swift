@@ -243,6 +243,18 @@ import UIKit
         return publishableKey.lowercased().hasPrefix("pk_test") || (publishableKeyIsUserKey && !userKeyLiveMode)
     }
 
+    /// Creates a session that never persists responses to the URL cache.
+    @_spi(STP) public static func nonCachingURLSession(from session: URLSession) -> URLSession {
+        let configuration = session.configuration
+        configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
+        configuration.urlCache = nil
+        return URLSession(
+            configuration: configuration,
+            delegate: session.delegate,
+            delegateQueue: session.delegateQueue
+        )
+    }
+
     /**
      Copies the api client.
      - Note: This should be used in cases where you need to make a request

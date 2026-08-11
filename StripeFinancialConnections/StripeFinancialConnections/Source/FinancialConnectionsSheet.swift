@@ -103,7 +103,7 @@ final public class FinancialConnectionsSheet {
     public var onEvent: ((FinancialConnectionsEvent) -> Void)?
 
     /// The APIClient instance used to make requests to Stripe
-    public var apiClient: STPAPIClient = STPAPIClient.shared {
+    public var apiClient: STPAPIClient = STPAPIClient.shared.makeCopy() {
         didSet {
             APIVersion.configureFinancialConnectionsAPIVersion(apiClient: apiClient)
         }
@@ -316,6 +316,7 @@ final public class FinancialConnectionsSheet {
             }
         }
 
+        apiClient.urlSession = STPAPIClient.nonCachingURLSession(from: apiClient.urlSession)
         var financialConnectionsApiClient: any FinancialConnectionsAPI = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
 
         if let existingConsumer {

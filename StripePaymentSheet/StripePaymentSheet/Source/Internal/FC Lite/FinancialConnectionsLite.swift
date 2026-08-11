@@ -53,7 +53,9 @@ import UIKit
         Self.activeInstance = self
         self.completionHandler = completion
 
-        var apiClient: FCLiteAPIClient = FCLiteAPIClient(backingAPIClient: .shared)
+        let stripeAPIClient = STPAPIClient.shared.makeCopy()
+        stripeAPIClient.urlSession = STPAPIClient.nonCachingURLSession(from: stripeAPIClient.urlSession)
+        var apiClient: FCLiteAPIClient = FCLiteAPIClient(backingAPIClient: stripeAPIClient)
         apiClient.consumerPublishableKey = existingConsumer?.publishableKey
 
         let containerVC = FCLiteContainerViewController(
