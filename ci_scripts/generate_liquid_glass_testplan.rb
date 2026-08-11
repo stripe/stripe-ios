@@ -3,24 +3,27 @@
 require 'json'
 require 'find'
 
-class IOS26TestPlanGeneratorV2
+class LiquidGlassTestPlanGenerator
+  ANNOTATION_PATTERN = /\/\/\s*@(LiquidGlass|iOS26)/
+
   def initialize
-    @test_plan_file = File.join(File.dirname(__dir__), 'Stripe', 'AllStripeFrameworks-iOS26.xctestplan')
+    @test_plan_file = File.join(File.dirname(__dir__), 'Stripe', 'AllStripeFrameworks-LiquidGlass.xctestplan')
     @tests_by_target = {}
   end
 
   def generate
-    log_info "Starting iOS 26 test plan generation..."
+    log_info "Starting Liquid Glass test plan generation..."
     
-    # Find all files containing @iOS26
+    # Find all files containing @LiquidGlass annotations.
+    # Keep accepting @iOS26 while snapshot files migrate to the new name.
     annotated_files = find_annotated_files
     
     if annotated_files.empty?
-      log_info "No files with @iOS26 annotations found"
+      log_info "No files with @LiquidGlass or @iOS26 annotations found"
       return
     end
     
-    log_info "Found #{annotated_files.length} files with @iOS26 annotations"
+    log_info "Found #{annotated_files.length} files with @LiquidGlass or @iOS26 annotations"
     
     annotated_files.each { |file| process_annotated_file(file) }
     
@@ -36,8 +39,8 @@ class IOS26TestPlanGeneratorV2
       next unless path.end_with?('.swift')
       next unless path.include?('/Test') || path.include?('Test.swift') || path.include?('Tests.swift')
       
-      # Check if file contains @iOS26 annotation
-      if File.read(path, encoding: 'UTF-8').include?('// @iOS26')
+      # Check if file contains a Liquid Glass snapshot annotation
+      if File.read(path, encoding: 'UTF-8').match?(ANNOTATION_PATTERN)
         files << path
       end
     rescue => e
@@ -64,11 +67,11 @@ class IOS26TestPlanGeneratorV2
     # Initialize target array if needed
     @tests_by_target[target_name] ||= []
     
-    # Process each @iOS26 annotation
+    # Process each @LiquidGlass annotation
     lines.each_with_index do |line, index|
-      if line.match?(/\/\/\s*@iOS26/)
-        log_info "  ↳ Found @iOS26 annotation at line #{index + 1}"
-        process_ios26_annotation(lines, index, target_name, file_path)
+      if line.match?(ANNOTATION_PATTERN)
+        log_info "  ↳ Found Liquid Glass annotation at line #{index + 1}"
+        process_liquid_glass_annotation(lines, index, target_name, file_path)
       end
     end
 
@@ -77,8 +80,8 @@ class IOS26TestPlanGeneratorV2
       exit 1
     end
 
-  def process_ios26_annotation(lines, annotation_index, target_name, file_path)
-    # Look ahead from the @iOS26 comment to find what it annotates
+  def process_liquid_glass_annotation(lines, annotation_index, target_name, file_path)
+    # Look ahead from the @LiquidGlass comment to find what it annotates
     (annotation_index + 1...lines.length).each do |i|
       line = lines[i].strip
       
@@ -109,7 +112,7 @@ class IOS26TestPlanGeneratorV2
       
       # If we hit something else that's not a comment or empty line, stop looking
       else
-        log_error "    ↳ @iOS26 not followed by class or test method: #{line}"
+        log_error "    ↳ Liquid Glass annotation not followed by class or test method: #{line}"
         exit 1
         break
       end
@@ -216,7 +219,7 @@ class IOS26TestPlanGeneratorV2
           end
         end
       else
-        log_info "No @iOS26 tests found."
+        log_info "No @LiquidGlass or @iOS26 tests found."
       end
     else
       log_error "Failed to write test plan file"
@@ -244,6 +247,6 @@ end
 
 # Run the generator
 if __FILE__ == $0
-  generator = IOS26TestPlanGeneratorV2.new
+  generator = LiquidGlassTestPlanGenerator.new
   generator.generate
 end
