@@ -83,7 +83,7 @@ final class LinkAccountPickerViewController: UIViewController {
                 // around the loading view
                 PaneLayoutView.createBodyView(
                     text: nil,
-                    contentView: LinkAccountPickerLoadingView()
+                    contentView: LinkAccountPickerLoadingView(appearance: dataSource.manifest.appearance)
                 ),
             ]
         )
