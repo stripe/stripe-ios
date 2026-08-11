@@ -82,7 +82,7 @@ extension PaymentSheet {
             guard let remoteURL = source.remoteURL else {
                 return source.fallback
             }
-            return downloadManager.cachedImage(for: remoteURL) ?? source.fallback
+            return downloadManager.promoteCachedImage(for: remoteURL) ?? source.fallback
         }
 
         /// Returns the preferred image, downloading and caching it when necessary.
