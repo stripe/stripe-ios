@@ -110,6 +110,12 @@ struct FinancialConnectionsAppearance: Equatable {
     }
 }
 
+extension FinancialConnectionsAppearance {
+    var buttonHeight: CGFloat {
+        colors == .link ? 52 : 56
+    }
+}
+
 extension FinancialConnectionsAppearance.Colors {
     static let stripe: FinancialConnectionsAppearance.Colors = .init(
         primary: .brand500,

@@ -22,7 +22,7 @@ class ConsentFooterView: HitTestView {
         agreeButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
         agreeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            agreeButton.heightAnchor.constraint(equalToConstant: 56)
+            agreeButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight)
         ])
         agreeButton.accessibilityIdentifier = "consent_agree_button"
         return agreeButton
