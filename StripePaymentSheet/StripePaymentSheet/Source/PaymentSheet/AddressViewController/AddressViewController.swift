@@ -345,6 +345,7 @@ extension AddressViewController {
                     // TODO(gbirch) fill in loading UI behavior
                     setLoading: { _ in }
                 )
+                delegate?.addressViewControllerDidFinish(self, with: addressDetails)
             } catch {
                 self.latestError = error
             }
@@ -520,7 +521,6 @@ extension AddressViewController {
 extension AddressViewController: AddressViewController.IntegrationDelegate {
     func save(addressDetails: AddressDetails?, setLoading: (Bool) -> Void) async throws {
         logAddressCompleted()
-        delegate?.addressViewControllerDidFinish(self, with: addressDetails)
     }
 }
 
