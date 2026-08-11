@@ -17,7 +17,7 @@ import UIKit
 public final class CurrencySelectorElementUIView: UIView {
 
     /// Whether the selector is enabled for user interaction.
-    public var isEnabled: Bool = true {
+    var isEnabled: Bool = true {
         didSet {
             selectorView?.setEnabled(isEnabled)
         }
