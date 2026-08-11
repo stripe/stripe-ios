@@ -55,32 +55,78 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
     }
 
     private lazy var warmupFooterView: NetworkingLinkLoginWarmupFooterView = {
-        let secondaryButtonTitle: String
-        if dataSource.manifest.isProductInstantDebits {
-            secondaryButtonTitle = String.Localized.cancel
-        } else {
-            secondaryButtonTitle = STPLocalizedString(
-                "Not now",
-                "A button title. This button, when pressed, will skip logging in the user with their e-mail to Link (one-click checkout provider)."
+        let appearance = dataSource.manifest.appearance
+        guard appearance.colors == .link else {
+            let secondaryButtonTitle: String
+            if dataSource.manifest.isProductInstantDebits {
+                secondaryButtonTitle = String.Localized.cancel
+            } else {
+                secondaryButtonTitle = STPLocalizedString(
+                    "Not now",
+                    "A button title. This button, when pressed, will skip logging in the user with their e-mail to Link (one-click checkout provider)."
+                )
+            }
+            return PaneLayoutView.createFooterView(
+                primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
+                    title: continueText,
+                    accessibilityIdentifier: "link_continue_button",
+                    action: { [weak self] in
+                        self?.didSelectContinue()
+                    }
+                ),
+                secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
+                    title: secondaryButtonTitle,
+                    action: { [weak self] in
+                        self?.didSelectSkip()
+                    }
+                ),
+                appearance: appearance
             )
         }
-        return PaneLayoutView.createFooterView(
-            primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                title: continueText,
-                accessibilityIdentifier: "link_continue_button",
-                action: { [weak self] in
-                    self?.didSelectContinue()
-                }
-            ),
-            secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                title: secondaryButtonTitle,
-                action: { [weak self] in
-                    self?.didSelectSkip()
-                }
-            ),
-            appearance: dataSource.manifest.appearance
-        )
+
+        // Link theme: horizontal Cancel / Continue buttons
+        let cancelButton = Button.secondary(appearance: appearance)
+        cancelButton.title = String.Localized.cancel
+        cancelButton.layer.borderWidth = 0.5
+        cancelButton.layer.borderColor = appearance.colors.border.cgColor
+        cancelButton.layer.cornerRadius = appearance.buttonHeight / 2
+        cancelButton.clipsToBounds = true
+        cancelButton.addTarget(self, action: #selector(didTapCancel), for: .touchUpInside)
+
+        let continueButton = Button.primary(appearance: appearance)
+        continueButton.title = STPLocalizedString("Continue", "A button title that continues a flow.")
+        continueButton.accessibilityIdentifier = "link_continue_button"
+        continueButton.addTarget(self, action: #selector(didTapContinue), for: .touchUpInside)
+
+        let buttonStack = UIStackView(arrangedSubviews: [cancelButton, continueButton])
+        buttonStack.axis = .horizontal
+        buttonStack.spacing = 8
+        buttonStack.distribution = .fillEqually
+        buttonStack.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cancelButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight),
+            continueButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight),
+        ])
+
+        let paddingView = UIView()
+        paddingView.addSubview(buttonStack)
+        NSLayoutConstraint.activate([
+            buttonStack.topAnchor.constraint(equalTo: paddingView.topAnchor, constant: Constants.Layout.defaultVerticalPadding),
+            buttonStack.leadingAnchor.constraint(equalTo: paddingView.leadingAnchor, constant: Constants.Layout.defaultHorizontalMargin),
+            buttonStack.trailingAnchor.constraint(equalTo: paddingView.trailingAnchor, constant: -Constants.Layout.defaultHorizontalMargin),
+            buttonStack.bottomAnchor.constraint(equalTo: paddingView.bottomAnchor, constant: -Constants.Layout.defaultVerticalPadding),
+        ])
+
+        return (paddingView, continueButton, cancelButton)
     }()
+
+    @objc private func didTapContinue() {
+        didSelectContinue()
+    }
+
+    @objc private func didTapCancel() {
+        didSelectSkip()
+    }
 
     init(
         dataSource: NetworkingLinkLoginWarmupDataSource,
@@ -96,19 +142,25 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let appearance = dataSource.manifest.appearance
+        let isLink = appearance.colors == .link
+        let title: PaneLayoutView.AccessibleText = isLink
+            ? .init(STPLocalizedString("Welcome back", "Title for a returning user on the Link login warmup screen."))
+            : continueText
         setup(
             withContentView: PaneLayoutView.createContentView(
-                iconView: RoundedIconView(
+                iconView: isLink ? nil : RoundedIconView(
                     image: .image(.person),
                     style: .circle,
-                    appearance: dataSource.manifest.appearance
+                    appearance: appearance
                 ),
-                accessibleTitle: continueText,
+                accessibleTitle: title,
                 accessibleSubtitle: savedInfoSubtitle,
                 contentView: NetworkingLinkLoginWarmupBodyView(
                     // `email` should always be non-null, and since the email is only used as a visual, it's not worth to throw an error if it is null
                     email: dataSource.email ?? "you"
-                )
+                ),
+                isSheet: true
             ),
             footerView: warmupFooterView.footerView
         )
