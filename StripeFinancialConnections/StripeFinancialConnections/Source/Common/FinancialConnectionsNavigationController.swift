@@ -127,15 +127,10 @@ extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
 extension FinancialConnectionsNavigationController {
 
     func configureAppearanceForNative(appearance: FinancialConnectionsAppearance = .stripe) {
-        let backButtonImage: UIImage
-        if appearance.colors == .link {
-            backButtonImage = makeLinkPillBackButtonImage(appearance: appearance)
-        } else {
-            backButtonImage = Image
-                .back_arrow
-                .makeImage(template: false)
-                .applyFinancialConnectionsBackButtonEdgeInsets()
-        }
+        let backButtonImage = Image
+            .back_arrow
+            .makeImage(template: false)
+            .applyFinancialConnectionsBackButtonEdgeInsets()
 
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
@@ -148,23 +143,6 @@ extension FinancialConnectionsNavigationController {
         // change the back button color
         navigationBar.tintColor = FinancialConnectionsAppearance.Colors.icon
         navigationBar.isTranslucent = false
-    }
-
-    private func makeLinkPillBackButtonImage(appearance: FinancialConnectionsAppearance) -> UIImage {
-        let pillSize = CGSize(width: 36, height: 36)
-        let arrowImage = Image.back_arrow.makeImage(template: true)
-        let renderer = UIGraphicsImageRenderer(size: pillSize)
-        let image = renderer.image { _ in
-            appearance.colors.iconBackground.setFill()
-            UIBezierPath(ovalIn: CGRect(origin: .zero, size: pillSize)).fill()
-            let tintedArrow = arrowImage.withTintColor(FinancialConnectionsAppearance.Colors.icon)
-            let arrowOrigin = CGPoint(
-                x: (pillSize.width - tintedArrow.size.width) / 2,
-                y: (pillSize.height - tintedArrow.size.height) / 2
-            )
-            tintedArrow.draw(in: CGRect(origin: arrowOrigin, size: tintedArrow.size))
-        }
-        return image.withRenderingMode(.alwaysOriginal).applyFinancialConnectionsBackButtonEdgeInsets()
     }
 
     static func configureNavigationItemForNative(
