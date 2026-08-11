@@ -57,12 +57,38 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     struct TestIntent {
         let description: String
         let intent: Intent
-        let checkout: Checkout?
+        let checkout: (any CheckoutConfirmDataSource)?
 
-        init(_ description: String, _ intent: Intent, checkout: Checkout? = nil) {
+        init(_ description: String, _ intent: Intent, checkout: (any CheckoutConfirmDataSource)? = nil) {
             self.description = description
             self.intent = intent
             self.checkout = checkout
+        }
+    }
+
+    /// Mock stand-in for a full `Checkout` object.
+    final class TestCheckoutSessionUpdater: CheckoutConfirmDataSource, CheckoutSessionBillingAddressUpdater {
+        private(set) var session: Checkout.Session
+        // Apple Pay is not exercised in these LPM confirm flow tests.
+        var applePayConfiguration: Checkout.ApplePayConfiguration? { nil }
+        var apiClient: STPAPIClient { STPAPIClient.shared }
+        var paymentHandler: STPPaymentHandler { STPPaymentHandler(apiClient: STPAPIClient.shared) }
+        var returnURL: String? { nil }
+        var merchantDisplayName: String? { nil }
+
+        init(session: Checkout.Session) {
+            self.session = session
+        }
+
+        func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
+            session = apiResponse.makePublicSession()
+        }
+
+        func updateBillingTaxRegionIfNecessaryForPaymentSheet(
+            address: Checkout.Address,
+            canUpdateWhileSheetPresented: Bool
+        ) async throws -> Checkout.Session {
+            return session
         }
     }
 
@@ -77,6 +103,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         case JP = "jp"
         case BR = "br"
         case FR = "fr"
+        case NO = "no"
         case TH = "th"
         case DE = "de"
         case IT = "it"
@@ -102,6 +129,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             case .BR:
                 return STPTestingBRPublishableKey
             case .FR:
+                return STPTestingFRPublishableKey
+            case .NO:
                 return STPTestingFRPublishableKey
             case .TH:
                 return STPTestingTHPublishableKey
@@ -424,6 +453,16 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             paymentMethodType: .mobilePay,
             merchantCountry: .FR,
             expectedHierarchy: ExpectedFormHierarchy.MobilePay.paymentIntent
+        ) { _ in }
+    }
+
+    func testVippsConfirmFlows() async throws {
+        try await _testConfirm(
+            intentKinds: [.paymentIntent],
+            currency: "NOK",
+            paymentMethodType: .vipps,
+            merchantCountry: .NO,
+            expectedHierarchy: ExpectedFormHierarchy.Vipps.paymentIntent
         ) { _ in }
     }
 
@@ -798,7 +837,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     elementsSession: elementsSession,
                     configuration: configuration,
                     clientAttributionMetadata: clientAttributionMetadata,
-                    checkout: testIntent.checkout,
+                    checkout: testIntent.checkout as? (any CheckoutSessionBillingAddressUpdater),
                     completion: { result, _ in
                     switch result {
                     case .failed(error: let error):
@@ -1182,16 +1221,11 @@ extension PaymentSheetLPMConfirmFlowTests {
                     returnURL: "https://foo.com"
                 )
                 let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-                var checkoutConfig = Checkout.Configuration(
-                    clientSecret: checkoutSessionResponse.clientSecret,
-                    returnURL: "https://foo.com"
+                let checkoutSession = try await csApiClient.initCheckoutSession(
+                    checkoutSessionId: checkoutSessionResponse.id,
+                    adaptivePricingAllowed: true
                 )
-                checkoutConfig.apiClient = csApiClient
-                checkoutConfig.adaptivePricing.allowed = true
-                checkoutConfig.applePayConfiguration = Checkout.ApplePayConfiguration(
-                    merchantId: "merchant.com.stripe.paymentsheet.example"
-                )
-                let checkout = try await Checkout(configuration: checkoutConfig)
+                let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession())
                 intents.append(TestIntent("CheckoutSession", .checkout(checkout.session), checkout: checkout))
             }
             guard paymentMethod != .blik else {
@@ -1336,10 +1370,11 @@ extension PaymentSheetLPMConfirmFlowTests {
             //         additionalParameters: ["payment_intent_data": ["setup_future_usage": "off_session"]]
             //     )
             //     let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            //     var checkoutConfig = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "https://foo.com")
-            //     checkoutConfig.apiClient = csApiClient
-            //     checkoutConfig.adaptivePricing.allowed = true
-            //     let checkout = try await Checkout(configuration: checkoutConfig)
+            //     let checkoutSession = try await csApiClient.initCheckoutSession(
+            //         checkoutSessionId: checkoutSessionResponse.id,
+            //         adaptivePricingAllowed: true
+            //     )
+            //     let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession())
             //     intents.append(TestIntent("CheckoutSession w/ setup_future_usage", .checkout(checkout.session), checkout: checkout))
             // }
 
@@ -1454,10 +1489,11 @@ extension PaymentSheetLPMConfirmFlowTests {
             //         additionalParameters: ["payment_method_options": [paymentMethod.identifier: ["setup_future_usage": "off_session"]]]
             //     )
             //     let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            //     var checkoutConfig = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "https://foo.com")
-            //     checkoutConfig.apiClient = csApiClient
-            //     checkoutConfig.adaptivePricing.allowed = true
-            //     let checkout = try await Checkout(configuration: checkoutConfig)
+            //     let checkoutSession = try await csApiClient.initCheckoutSession(
+            //         checkoutSessionId: checkoutSessionResponse.id,
+            //         adaptivePricingAllowed: true
+            //     )
+            //     let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession())
             //     intents.append(TestIntent("CheckoutSession w/ PMO setup_future_usage", .checkout(checkout.session), checkout: checkout))
             // }
 
@@ -1507,10 +1543,8 @@ extension PaymentSheetLPMConfirmFlowTests {
             //         customerID: customer
             //     )
             //     let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            //     var checkoutConfig = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "https://foo.com")
-            //     checkoutConfig.apiClient = csApiClient
-            //     checkoutConfig.adaptivePricing.allowed = true
-            //     let checkout = try await Checkout(configuration: checkoutConfig)
+            //     let checkoutSession = try await csApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionResponse.id, adaptivePricingAllowed: true)
+            //     let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession())
             //     intents.append(TestIntent("CheckoutSession", .checkout(checkout.session), checkout: checkout))
             // }
             return intents

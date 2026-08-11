@@ -12,7 +12,7 @@ import Foundation
 
 extension Checkout {
     static func confirmApplePay(
-        checkout: Checkout,
+        checkout: CheckoutConfirmDataSource,
         authenticationContext: STPAuthenticationContext
     ) async -> InternalConfirmResult {
         do {

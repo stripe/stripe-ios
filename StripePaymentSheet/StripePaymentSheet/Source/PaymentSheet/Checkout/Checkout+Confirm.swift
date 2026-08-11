@@ -1,6 +1,28 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
+// MARK: - CheckoutConfirmDataSource
+
+/// The data the confirm flow needs from `Checkout`.
+/// Using this protocol instead of `Checkout` directly keeps the static confirm
+/// functions decoupled from the full `Checkout` object and testable in isolation.
+@MainActor
+protocol CheckoutConfirmDataSource: AnyObject {
+    var applePayConfiguration: Checkout.ApplePayConfiguration? { get }
+    var session: Checkout.Session { get }
+    var apiClient: STPAPIClient { get }
+    var paymentHandler: STPPaymentHandler { get }
+    var returnURL: String? { get }
+    var merchantDisplayName: String { get }
+    func commitSession(_ response: PaymentPagesAPIResponse) async throws
+}
+
+extension Checkout: CheckoutConfirmDataSource {
+    var applePayConfiguration: ApplePayConfiguration? { configuration.applePayConfiguration }
+    var returnURL: String? { configuration.returnURL }
+    var merchantDisplayName: String { effectiveMerchantDisplayName }
+}
+
 // MARK: - Confirm
 
 extension Checkout {
@@ -53,7 +75,7 @@ extension Checkout {
     }
 
     static func confirm(
-        checkout: Checkout,
+        checkout: CheckoutConfirmDataSource,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler
@@ -89,7 +111,7 @@ extension Checkout {
     }
 
     static func confirmPaymentOption(
-        checkout: Checkout,
+        checkout: CheckoutConfirmDataSource,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
         intentConfirmParamsForDeferredIntent: IntentConfirmParams?,

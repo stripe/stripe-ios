@@ -1,5 +1,5 @@
 //
-//  Checkout+ApplePay.swift
+//  CheckoutApplePayContext.swift
 //  StripePaymentSheet
 //
 //  Created by Joyce Qin on 8/3/26.
@@ -13,8 +13,6 @@ import PassKit
 @_spi(STP) import StripePayments
 import UIKit
 
-// MARK: - CheckoutApplePayContext
-
 /// Manages an active Apple Pay session.
 /// Owns the `PKPaymentAuthorizationController` and acts as its delegate directly.
 @MainActor
@@ -22,40 +20,42 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
     enum PaymentState {
         case notStarted
-        case pending    // confirm is in flight — cannot cancel
-        case success
+        case pending
         case error
+        case success
     }
-    private weak var checkout: Checkout?
+
+    private weak var checkout: CheckoutConfirmDataSource?
+    private let session: Checkout.Session
+    private let merchantLabel: String
     private let apiClient: STPAPIClient
     private let paymentHandler: STPPaymentHandler
+    private let returnURL: String?
     private let authorizationController: PKPaymentAuthorizationController
+    private let authenticationContext: STPAuthenticationContext
+    private let presentationWindow: UIWindow?
+
+    // Internal state
     private var continuation: CheckedContinuation<Checkout.InternalConfirmResult, Never>?
     private var result: Checkout.InternalConfirmResult?
     private var paymentState: PaymentState = .notStarted
-    /// Set when Apple Pay times out or the user cancels while a confirm call is in flight.
-    /// Dismissal is deferred until the in-flight confirm finishes.
+    /// YES if the flow cancelled or timed out.  This toggles which delegate method (didFinish or didAuthorize) resumes our continuation
     private var didCancelOrTimeoutWhilePending = false
-    private let session: Checkout.Session
-    private let returnURL: String?
-    private let authenticationContext: STPAuthenticationContext
-    /// Captured at init time so `presentationWindow(for:)` can be called nonisolated.
-    private let presentationWindow: UIWindow?
+    /// Whether or not we fully completed the flow - if didFinish is `true`, that means `_end()` was called and this class is unusable.
+    private var didFinish = false
 
     private init(
-        checkout: Checkout,
-        apiClient: STPAPIClient,
-        paymentHandler: STPPaymentHandler,
+        checkout: CheckoutConfirmDataSource,
         authorizationController: PKPaymentAuthorizationController,
-        returnURL: String?,
         authenticationContext: STPAuthenticationContext
     ) {
         self.checkout = checkout
         self.session = checkout.session
-        self.apiClient = apiClient
-        self.paymentHandler = paymentHandler
+        self.merchantLabel = checkout.merchantDisplayName
+        self.apiClient = checkout.apiClient
+        self.paymentHandler = checkout.paymentHandler
+        self.returnURL = checkout.returnURL
         self.authorizationController = authorizationController
-        self.returnURL = returnURL
         self.authenticationContext = authenticationContext
         self.presentationWindow = authenticationContext.authenticationPresentingViewController().view.window
         super.init()
@@ -68,9 +68,42 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         didAuthorizePayment payment: PKPayment,
         handler completion: @escaping (PKPaymentAuthorizationResult) -> Void
     ) {
+        // Some observations (on iOS 12 simulator):
+        // - The docs say localizedDescription can be shown in the Apple Pay sheet, but I haven't seen this.
+        // - If you call the completion block w/ a status of .failure and an error, the user is prompted to try again.
+
         Task { @MainActor in
+            // Helpers to handle annoying logic around "Do I call completion block or dismiss + call delegate?"
+            // Helper 1: Handle failure
+            @MainActor func handleFailure(error: Error) {
+                self.paymentState = .error
+                self.result = .init(paymentSheetResult: .failed(error: error))
+                if self.didCancelOrTimeoutWhilePending {
+                    self.finishAndDismiss()
+                } else {
+                    let pkError = STPAPIClient.pkPaymentError(forStripeError: error)
+                    completion(PKPaymentAuthorizationResult(status: .failure, errors: [pkError].compactMap { $0 }))
+                }
+            }
+            // Helper 2: Handle success
+            @MainActor func handleSuccess(paymentSheetResult: PaymentSheetResult, response: PaymentPagesAPIResponse) {
+                self.paymentState = .success
+                self.result = .init(paymentSheetResult: paymentSheetResult, checkoutSessionResponse: response)
+                if self.didCancelOrTimeoutWhilePending {
+                    self.finishAndDismiss()
+                } else {
+                    // TODO: Add a willCompleteWithResult hook so callers can attach PKPaymentOrderDetails.
+                    switch paymentSheetResult {
+                    case .completed:
+                        completion(PKPaymentAuthorizationResult(status: .success, errors: nil))
+                    case .canceled, .failed:
+                        completion(PKPaymentAuthorizationResult(status: .failure, errors: nil))
+                    }
+                }
+            }
+
             do {
-                // 1. Create PaymentMethod (PaymentState still .notStarted here — failure is recoverable)
+                // 1. Create PaymentMethod
                 let currentSession = self.checkout?.session ?? self.session
                 let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
                     intent: .checkout(currentSession),
@@ -92,16 +125,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                         continuation.resume(with: result)
                     }
                 }
-
-                // 2. Confirm — set .pending first, cannot cancel after this.
-                // Guard: if continuation is already nil, paymentAuthorizationControllerDidFinish
-                // fired (timeout or cancel) while PM creation was in flight. Proceeding would
-                // charge the customer while the app already reported .canceled.
-                guard self.continuation != nil else {
-                    completion(PKPaymentAuthorizationResult(status: .failure, errors: nil))
-                    return
+                guard !self.didFinish else {
+                    return // The user canceled mid-payment - just abort
                 }
-                self.paymentState = .pending
+                self.paymentState = .pending  // After this point, we can't cancel
                 let savePaymentMethod: Bool? = currentSession.noPaymentRequired ? nil
                     : currentSession.merchantWillSavePaymentMethod(STPPaymentMethodType.card) ? true : nil
                 let response = try await self.apiClient.confirmCheckoutSession(
@@ -126,51 +153,38 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 // 4. Commit the confirmed session back to Checkout so its state stays current.
                 try await self.checkout?.commitSession(response)
 
-                self.paymentState = .success
-                self.result = .init(
-                    paymentSheetResult: paymentSheetResult,
-                    checkoutSessionResponse: response
-                )
-
-                if self.didCancelOrTimeoutWhilePending {
-                    self.finishAndDismiss()
-                } else {
-                    // TODO: Add a willCompleteWithResult hook so callers can attach PKPaymentOrderDetails.
-                    switch paymentSheetResult {
-                    case .completed:
-                        completion(PKPaymentAuthorizationResult(status: .success, errors: nil))
-                    case .canceled, .failed:
-                        completion(PKPaymentAuthorizationResult(status: .failure, errors: nil))
-                    }
-                }
+                handleSuccess(paymentSheetResult: paymentSheetResult, response: response)
             } catch {
-                self.paymentState = .error
-                self.result = .init(paymentSheetResult: .failed(error: error))
-                let pkError = STPAPIClient.pkPaymentError(forStripeError: error)
-                if self.didCancelOrTimeoutWhilePending {
-                    self.finishAndDismiss()
-                } else {
-                    completion(PKPaymentAuthorizationResult(status: .failure, errors: [pkError].compactMap { $0 }))
-                }
+                handleFailure(error: error)
             }
         }
     }
 
     func paymentAuthorizationControllerDidFinish(_ controller: PKPaymentAuthorizationController) {
-        Task { @MainActor in
-            switch self.paymentState {
-            case .notStarted:
+        // Note: If you don't dismiss the VC, the UI disappears, the VC blocks interaction, and this method gets called again.
+        // Note: This method is called if the user cancels (taps outside the sheet) or Apple Pay times out (empirically ~30 seconds)
+        switch paymentState {
+        case .notStarted:
+            Task { @MainActor in
                 await controller.dismiss()
                 self.resume(with: .init(paymentSheetResult: .canceled))
-            case .pending:
-                // A confirm call is in flight — defer dismissal until it completes.
-                self.didCancelOrTimeoutWhilePending = true
-            case .success:
-                await controller.dismiss()
-                self.resume(with: self.result ?? .init(paymentSheetResult: .canceled))
-            case .error:
+                self._end()
+            }
+        case .pending:
+            // We can't cancel a pending payment. If we dismiss the VC now, the customer might interact with the app and miss seeing the result of the payment - risking a double charge, chargeback, etc.
+            // Instead, we'll dismiss and notify our delegate when the payment finishes.
+            didCancelOrTimeoutWhilePending = true
+        case .error:
+            Task { @MainActor in
                 await controller.dismiss()
                 self.resume(with: self.result ?? .init(paymentSheetResult: .failed(error: CheckoutError.unknown(debugDescription: "Apple Pay finished in error state without a result."))))
+                self._end()
+            }
+        case .success:
+            Task { @MainActor in
+                await controller.dismiss()
+                self.resume(with: self.result ?? .init(paymentSheetResult: .canceled))
+                self._end()
             }
         }
     }
@@ -238,13 +252,12 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     // MARK: - Factory
 
     static func create(
-        checkout: Checkout,
+        checkout: CheckoutConfirmDataSource,
         authenticationContext: STPAuthenticationContext
     ) throws -> CheckoutApplePayContext {
-        guard checkout.configuration.applePayConfiguration != nil else {
+        guard let applePayConfig = checkout.applePayConfiguration else {
             throw CheckoutError.applePayNotConfigured
         }
-        let applePayConfig = checkout.configuration.applePayConfiguration!
 
         guard PKPaymentAuthorizationController.canMakePayments() else {
             throw CheckoutError.applePayUnavailable
@@ -262,7 +275,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
         assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `Checkout.ApplePayConfiguration`.")
 
-        let merchantLabel = checkout.configuration.merchantDisplayName ?? checkoutSession.businessName ?? ""
+        let merchantLabel = checkout.merchantDisplayName
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
 
         // TODO: Set requiredShippingContactFields when shipping address collection is implemented.
@@ -276,10 +289,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         let authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
         return CheckoutApplePayContext(
             checkout: checkout,
-            apiClient: checkout.apiClient,
-            paymentHandler: checkout.paymentHandler,
             authorizationController: authorizationController,
-            returnURL: checkout.configuration.returnURL,
             authenticationContext: authenticationContext
         )
     }
@@ -299,12 +309,11 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         }
     }
 
-    // MARK: - Private Helpers
+    // MARK: - Helpers
 
     private func summaryItems() -> [PKPaymentSummaryItem] {
         let session = checkout?.session ?? self.session
-        let label = checkout?.configuration.merchantDisplayName ?? session.businessName ?? ""
-        return Self.makeSummaryItems(for: session, label: label)
+        return Self.makeSummaryItems(for: session, label: merchantLabel)
     }
 
     // TODO: Build summary items from session line items, tax, shipping, and discounts.
@@ -315,22 +324,24 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         return [PKPaymentSummaryItem(label: label, amount: .zero, type: .pending)]
     }
 
+    private func _end() {
+        authorizationController.delegate = nil
+        didFinish = true
+    }
+
     private func resume(with result: Checkout.InternalConfirmResult) {
         guard let c = continuation else { return }
         continuation = nil
         c.resume(returning: result)
     }
 
-    /// Called when Apple Pay timed out or was canceled while a confirm was in flight.
-    /// The completion block from `didAuthorizePayment` is not called — instead we dismiss directly.
     private func finishAndDismiss() {
         Task { @MainActor in
             await self.authorizationController.dismiss()
             self.resume(with: self.result ?? .init(paymentSheetResult: .canceled))
+            self._end()
         }
     }
-
-    // MARK: - Static Helpers
 
     private func makeShippingDetailsParams(from payment: PKPayment) -> STPPaymentIntentShippingDetailsParams? {
         guard let shippingContact = payment.shippingContact,
