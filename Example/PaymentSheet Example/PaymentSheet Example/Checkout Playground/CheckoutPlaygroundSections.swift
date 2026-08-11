@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct CheckoutPlaygroundConfigurationSection: View {
+    @Binding var uiFramework: CheckoutPlayground.UIFramework
     @Binding var integrationType: CheckoutPlayground.IntegrationType
     @Binding var currency: CheckoutPlayground.Currency
     @Binding var customerType: CheckoutPlayground.CustomerType
@@ -18,6 +19,12 @@ struct CheckoutPlaygroundConfigurationSection: View {
         VStack(alignment: .leading, spacing: 12) {
             CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
             VStack(spacing: 1) {
+                CheckoutPlayground.PickerRow(
+                    title: "UI Framework",
+                    icon: "rectangle.3.group.fill",
+                    selection: $uiFramework,
+                    displayText: { $0.displayName }
+                )
                 CheckoutPlayground.PickerRow(
                     title: "PaymentElement",
                     icon: "square.stack.3d.up.fill",
@@ -215,9 +222,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
     let customerType: CheckoutPlayground.CustomerType
     @Binding var shippingAddressCollection: Bool
     @Binding var billingAddressCollection: CheckoutPlayground.BillingAddressCollection
-    @Binding var allowPromotionCodes: Bool
     @Binding var automaticTax: Bool
-    @Binding var adaptivePricing: Bool
     @Binding var checkoutSessionPaymentMethodSave: Bool
     @Binding var checkoutSessionPaymentMethodRemove: Bool
     @Binding var adaptivePricingCountry: CheckoutPlayground.AdaptivePricingCountry
@@ -247,11 +252,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $automaticPaymentMethods,
                     tooltip: "Sends `automatic_payment_methods: true` instead of an explicit `payment_method_types` array. Stripe selects the best payment methods for the session."
                 )
-                CheckoutPlayground.ToggleRow(
-                    title: "Allow Promo Codes",
-                    isOn: $allowPromotionCodes,
-                    tooltip: "Sets `allow_promotion_codes: true`. Adds a coupon code input field to the checkout page."
-                )
                 if shouldShowAutomaticTax {
                     CheckoutPlayground.ToggleRow(
                         title: "Automatic Tax",
@@ -259,11 +259,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
                         tooltip: "Sets `automatic_tax: { enabled: true }`. Enables Stripe Tax for automatic tax calculation based on shipping/billing address. Prices must use `tax_behavior: 'exclusive'` or `'inclusive'`."
                     )
                 }
-                CheckoutPlayground.ToggleRow(
-                    title: "Adaptive Pricing",
-                    isOn: $adaptivePricing,
-                    tooltip: "Sets `adaptive_pricing: { enabled: true }`. Displays prices in the customer's local currency."
-                )
                 CheckoutPlayground.ToggleRow(
                     title: "Payment Method Offer Save",
                     isOn: $checkoutSessionPaymentMethodSave,
@@ -274,15 +269,13 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $checkoutSessionPaymentMethodRemove,
                     tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
                 )
-                if adaptivePricing {
-                    CheckoutPlayground.PickerRow(
-                        title: "Country",
-                        icon: "globe",
-                        selection: $adaptivePricingCountry,
-                        tooltip: "Simulates the customer's country for adaptive pricing by sending a location-formatted customer_email. 'None' skips the email override.",
-                        displayText: { $0.displayName }
-                    )
-                }
+                CheckoutPlayground.PickerRow(
+                    title: "Country",
+                    icon: "globe",
+                    selection: $adaptivePricingCountry,
+                    tooltip: "Simulates the customer's country for adaptive pricing by sending a location-formatted customer_email. 'None' skips the email override.",
+                    displayText: { $0.displayName }
+                )
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))

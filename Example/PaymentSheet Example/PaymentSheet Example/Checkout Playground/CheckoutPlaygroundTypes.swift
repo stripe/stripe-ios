@@ -9,6 +9,21 @@ import PassKit
 @_spi(STP) import StripePaymentSheet
 
 enum CheckoutPlayground {
+    enum UIFramework: String, CaseIterable, Identifiable {
+
+        case swiftUI
+        case uiKit
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .swiftUI: return "SwiftUI"
+            case .uiKit: return "UIKit"
+            }
+        }
+    }
+
     enum EndpointOption: String, CaseIterable, Identifiable {
         case hosted
         case localhost

@@ -92,6 +92,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var multibanco: STPPaymentMethodMultibanco?
     /// If this is a MobilePay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeMobilePay`), this contains additional details.
     @objc private(set) public var mobilePay: STPPaymentMethodMobilePay?
+    /// If this is a Vipps PaymentMethod (i.e. `self.type == STPPaymentMethodTypeVipps`), this contains additional details.
+    @objc private(set) public var vipps: STPPaymentMethodVipps?
     /// If this is a PayPay PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayPay`), this contains additional details.
     @objc private(set) public var payPay: STPPaymentMethodPayPay?
     /// If this is a TWINT PaymentMethod (i.e. `self.type == STPPaymentMethodTypeTwint`), this contains additional details.
@@ -171,6 +173,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "crypto = \(String(describing: crypto))",
             "multibanco = \(String(describing: multibanco))",
             "mobilePay = \(String(describing: mobilePay))",
+            "vipps = \(String(describing: vipps))",
             "twint = \(String(describing: twint))",
             "wero = \(String(describing: wero))",
             "payByBank = \(String(describing: payByBank))",
@@ -362,6 +365,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.mobilePay = STPPaymentMethodMobilePay.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "mobilepay")
+        )
+        paymentMethod.vipps = STPPaymentMethodVipps.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "vipps")
         )
         paymentMethod.payPay = STPPaymentMethodPayPay.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "paypay")

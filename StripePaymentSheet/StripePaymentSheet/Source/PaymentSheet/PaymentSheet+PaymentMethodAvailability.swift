@@ -30,7 +30,7 @@ extension PaymentSheet {
         .FPX,
         .bacsDebit,
         .alipay,
-        .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .paynow, .promptPay,
+        .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .vipps, .konbini, .paynow, .promptPay,
         .sunbit,
         .billie,
         .satispay,
@@ -42,6 +42,8 @@ extension PaymentSheet {
         .payPay,
         .wero,
         .payByBank,
+        .mbWay,
+        .bizum,
     ]
 
     /// A list of `STPPaymentMethodType` that can be saved in PaymentSheet

@@ -19,11 +19,9 @@ final class PaymentElementTest: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        let expectation = expectation(description: "Load specs")
+        let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load { _ in
-                expectation.fulfill()
-            }
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
         CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
@@ -75,6 +73,7 @@ final class PaymentElementTest: XCTestCase {
         // Given Checkout merchant display name
         var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.merchantDisplayName = "Configured Merchant"
+        checkoutConfiguration.userInterfaceStyle = .alwaysDark
 
         // When Checkout creates PaymentElement
         let checkout = try await Checkout(
@@ -90,6 +89,8 @@ final class PaymentElementTest: XCTestCase {
         // Then both configurations use the configured merchant display name
         XCTAssertEqual(paymentSheetConfiguration.merchantDisplayName, "Configured Merchant")
         XCTAssertEqual(embeddedConfiguration.merchantDisplayName, "Configured Merchant")
+        XCTAssertEqual(paymentSheetConfiguration.style, .alwaysDark)
+        XCTAssertEqual(embeddedConfiguration.style, .alwaysDark)
     }
 
     func testConfigurationDefaultsMerchantDisplayNameToCheckoutSessionBusinessName() async throws {
@@ -368,7 +369,7 @@ final class PaymentElementTest: XCTestCase {
         let requestRecorder = CheckoutSessionRequestRecorder()
         let configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: session)
         CheckoutTestHelpers.stubCheckoutSessionRequests(
-            sessionId: session.id,
+            sessionId: session.sessionId,
             requestRecorder: requestRecorder,
             sessionJSON: { sessionJSON }
         )

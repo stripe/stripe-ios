@@ -26,6 +26,7 @@ struct CheckoutPlaygroundView: View {
                         }
 
                         CheckoutPlaygroundConfigurationSection(
+                            uiFramework: $viewModel.uiFramework,
                             integrationType: $viewModel.integrationType,
                             currency: $viewModel.currency,
                             customerType: $viewModel.customerType,
@@ -43,9 +44,7 @@ struct CheckoutPlaygroundView: View {
                             customerType: viewModel.customerType,
                             shippingAddressCollection: $viewModel.shippingAddressCollection,
                             billingAddressCollection: $viewModel.billingAddressCollection,
-                            allowPromotionCodes: $viewModel.allowPromotionCodes,
                             automaticTax: $viewModel.automaticTax,
-                            adaptivePricing: $viewModel.adaptivePricing,
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
                             adaptivePricingCountry: $viewModel.adaptivePricingCountry,
@@ -64,9 +63,7 @@ struct CheckoutPlaygroundView: View {
                             linkDisplayOption: $viewModel.linkDisplayOption
                         )
 
-                        if viewModel.adaptivePricing {
-                            currencySelectorAppearanceSection
-                        }
+                        currencySelectorAppearanceSection
 
                         if !viewModel.automaticPaymentMethods {
                             CheckoutPlaygroundPaymentMethodSection(
@@ -94,18 +91,34 @@ struct CheckoutPlaygroundView: View {
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $viewModel.navigateToCheckout) {
                 if let clientSecret = viewModel.clientSecret {
-                    CheckoutCartView(
-                        clientSecret: clientSecret,
-                        shippingAddressCollection: viewModel.shippingAddressCollection,
-                        adaptivePricing: viewModel.adaptivePricing,
-                        integrationType: viewModel.integrationType,
-                        showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
-                        applePayVisibility: viewModel.applePayVisibility,
-                        applePayButtonTypeOption: viewModel.applePayButtonTypeOption,
-                        linkVisibility: viewModel.linkVisibility,
-                        linkDisplayOption: viewModel.linkDisplayOption,
-                        currencySelectorAppearance: viewModel.currencySelectorAppearance
-                    )
+                    switch viewModel.uiFramework {
+                    case .swiftUI:
+                        CheckoutCartView(
+                            clientSecret: clientSecret,
+                            shippingAddressCollection: viewModel.shippingAddressCollection,
+                            adaptivePricing: true,
+                            integrationType: viewModel.integrationType,
+                            showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
+                            applePayVisibility: viewModel.applePayVisibility,
+                            applePayButtonTypeOption: viewModel.applePayButtonTypeOption,
+                            linkVisibility: viewModel.linkVisibility,
+                            linkDisplayOption: viewModel.linkDisplayOption,
+                            currencySelectorAppearance: viewModel.currencySelectorAppearance
+                        )
+                    case .uiKit:
+                        CheckoutCartUIKitView(
+                            clientSecret: clientSecret,
+                            shippingAddressCollection: viewModel.shippingAddressCollection,
+                            adaptivePricing: true,
+                            integrationType: viewModel.integrationType,
+                            showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
+                            applePayVisibility: viewModel.applePayVisibility,
+                            applePayButtonTypeOption: viewModel.applePayButtonTypeOption,
+                            linkVisibility: viewModel.linkVisibility,
+                            linkDisplayOption: viewModel.linkDisplayOption,
+                            currencySelectorAppearance: viewModel.currencySelectorAppearance
+                        )
+                    }
                 }
             }
             .sheet(isPresented: $showCurrencySelectorAppearance) {
