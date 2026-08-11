@@ -193,10 +193,17 @@ final class RoundedTextField: UIView {
         if errorText != nil && !highlighted {
             containerHorizontalStackView.layer.borderColor = FinancialConnectionsAppearance.Colors.textCritical.cgColor
             containerHorizontalStackView.layer.borderWidth = 2.0
+        } else if highlighted {
+            containerHorizontalStackView.layer.borderColor = appearance.colors.textFieldFocused.cgColor
+            containerHorizontalStackView.layer.borderWidth = 2.0
+            if appearance.colors == .link {
+                containerHorizontalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
+            }
         } else {
-            if highlighted {
-                containerHorizontalStackView.layer.borderColor = appearance.colors.textFieldFocused.cgColor
-                containerHorizontalStackView.layer.borderWidth = 2.0
+            if appearance.colors == .link {
+                containerHorizontalStackView.layer.borderWidth = 0
+                containerHorizontalStackView.layer.borderColor = UIColor.clear.cgColor
+                containerHorizontalStackView.backgroundColor = appearance.colors.iconBackground
             } else {
                 containerHorizontalStackView.layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
                 containerHorizontalStackView.layer.borderWidth = 1.0
