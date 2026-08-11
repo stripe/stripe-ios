@@ -91,11 +91,6 @@ import UIKit
 
     private let textStorage: TextStorage
 
-    #if !os(visionOS) && !targetEnvironment(macCatalyst)
-    private lazy var editMenuInteraction = UIEditMenuInteraction(delegate: self)
-    private var isEditMenuVisible = false
-    #endif
-
     private var shouldGroupDigits: Bool {
         guard configuration.enableDigitGrouping else {
             return false
@@ -204,7 +199,7 @@ import UIKit
         let result = super.resignFirstResponder()
 
         if result {
-            #if !os(visionOS) && !targetEnvironment(macCatalyst)
+            #if !os(visionOS)
             hideMenu()
             #endif
             update()
@@ -222,7 +217,7 @@ import UIKit
         }
 
         if isFirstResponder {
-            #if !os(visionOS) && !targetEnvironment(macCatalyst)
+            #if !os(visionOS)
             toggleMenu()
             #endif
         } else {
@@ -243,10 +238,6 @@ private extension OneTimeCodeTextField {
         stackView.distribution = .fillEqually
         stackView.semanticContentAttribute = .forceLeftToRight
         addAndPinSubview(stackView)
-
-        #if !os(visionOS) && !targetEnvironment(macCatalyst)
-        addInteraction(editMenuInteraction)
-        #endif
     }
 
     func arrangedDigitViews() -> [UIView] {
@@ -296,11 +287,9 @@ private extension OneTimeCodeTextField {
             : STPLocalizedString("Double tap to edit", "Accessibility hint for a text field")
     }
 
-    // UIEditMenuInteraction is unavailable on visionOS and doesn't support
-    // programmatic presentation on Mac Catalyst.
-    #if !os(visionOS) && !targetEnvironment(macCatalyst)
+    #if !os(visionOS) // Don't mess with the UIMenuController on visionOS
     func toggleMenu() {
-        if isEditMenuVisible {
+        if UIMenuController.shared.isMenuVisible {
             hideMenu()
         } else {
             showMenu()
@@ -316,15 +305,11 @@ private extension OneTimeCodeTextField {
             return activeDigitView.convert(activeDigitView.bounds, to: self)
         }()
 
-        let configuration = UIEditMenuConfiguration(
-            identifier: nil,
-            sourcePoint: CGPoint(x: menuRect.midX, y: menuRect.midY)
-        )
-        editMenuInteraction.presentEditMenu(with: configuration)
+        UIMenuController.shared.showMenu(from: self, rect: menuRect)
     }
 
     func hideMenu() {
-        editMenuInteraction.dismissMenu()
+        UIMenuController.shared.hideMenu()
     }
     #endif
 
@@ -336,27 +321,6 @@ private extension OneTimeCodeTextField {
         update()
     }
 }
-
-#if !os(visionOS) && !targetEnvironment(macCatalyst)
-extension OneTimeCodeTextField: UIEditMenuInteractionDelegate {
-
-    public func editMenuInteraction(
-        _ interaction: UIEditMenuInteraction,
-        willPresentMenuFor configuration: UIEditMenuConfiguration,
-        animator: UIEditMenuInteractionAnimating
-    ) {
-        isEditMenuVisible = true
-    }
-
-    public func editMenuInteraction(
-        _ interaction: UIEditMenuInteraction,
-        willDismissMenuFor configuration: UIEditMenuConfiguration,
-        animator: UIEditMenuInteractionAnimating
-    ) {
-        isEditMenuVisible = false
-    }
-}
-#endif
 
 // MARK: - UIResponder
 
@@ -450,7 +414,7 @@ extension OneTimeCodeTextField: UIKeyInput {
         inputDelegate?.textDidChange(self)
 
         sendActions(for: [.editingChanged, .valueChanged])
-        #if !os(visionOS) && !targetEnvironment(macCatalyst)
+        #if !os(visionOS)
         hideMenu()
         #endif
         update()
@@ -466,7 +430,7 @@ extension OneTimeCodeTextField: UIKeyInput {
         inputDelegate?.textDidChange(self)
 
         sendActions(for: [.editingChanged, .valueChanged])
-        #if !os(visionOS) && !targetEnvironment(macCatalyst)
+        #if !os(visionOS)
         hideMenu()
         #endif
         update()
