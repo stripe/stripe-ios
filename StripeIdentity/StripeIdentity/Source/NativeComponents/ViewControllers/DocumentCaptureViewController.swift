@@ -77,19 +77,11 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     // MARK: Computed Properties
 
-    private var isManualCaptureAllowed: Bool {
-        !apiConfig.requireLiveCapture
-    }
-
     private var isManualCaptureMode: Bool {
-        isManualCaptureAllowed && captureMode == .manual
+        captureMode == .manual
     }
 
     private var shouldShowCaptureModeControl: Bool {
-        guard isManualCaptureAllowed else {
-            return false
-        }
-
         switch imageScanningSession.state {
         case .initial, .scanning, .scanned, .saving:
             return true
@@ -546,11 +538,6 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     }
 
     private func setCaptureMode(_ captureMode: CaptureMode) {
-        guard isManualCaptureAllowed || captureMode == .live else {
-            self.captureMode = .live
-            updateUI()
-            return
-        }
         guard self.captureMode != captureMode else {
             updateUI()
             return

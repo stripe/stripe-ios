@@ -19,7 +19,6 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         try await super.setUp()
         CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
         await AddressSpecProvider.shared.loadAddressSpecs()
-        await FormSpecProvider.shared.load()
     }
 
     override func tearDown() {

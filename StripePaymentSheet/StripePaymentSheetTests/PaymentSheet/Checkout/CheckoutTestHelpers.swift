@@ -22,31 +22,6 @@ extension Checkout.Amount {
     }
 }
 
-// MARK: - Shared Mock Delegates
-
-@MainActor
-class MockCheckoutDelegate: CheckoutDelegate {
-    var lastSession: Checkout.Session?
-    var updateSessionCallCount = 0
-    var beginLoadingCallCount = 0
-    var finishLoadingCallCount = 0
-    var onUpdateSession: (() -> Void)?
-
-    func checkoutDidBeginLoading(_ checkout: Checkout) {
-        beginLoadingCallCount += 1
-    }
-
-    func checkoutDidFinishLoading(_ checkout: Checkout) {
-        finishLoadingCallCount += 1
-    }
-
-    func checkoutDidUpdateSession(_ checkout: Checkout, session: Checkout.Session) {
-        updateSessionCallCount += 1
-        lastSession = session
-        onUpdateSession?()
-    }
-}
-
 // MARK: - Emission Recorder
 
 @MainActor
@@ -239,7 +214,7 @@ enum CheckoutTestHelpers {
         requestRecorder: CheckoutSessionRequestRecorder,
         sessionJSON: @escaping () -> [AnyHashable: Any],
         initStatusCode: Int32 = 200,
-        updateStatusCode: Int32 = 200
+        updateStatusCode: @escaping (_ requestNumber: Int) -> Int32 = { _ in 200 }
     ) {
         stub { request in
             request.url?.path == "/v1/payment_pages/\(sessionId)/init"
@@ -262,7 +237,12 @@ enum CheckoutTestHelpers {
                     params: RequestBodyTestHelpers.formEncodedBodyParams(from: request)
                 )
             )
-            return HTTPStubsResponse(jsonObject: sessionJSON(), statusCode: updateStatusCode, headers: nil)
+            let updateRequestNumber = requestRecorder.requests.filter { $0.kind == .updateSession }.count
+            return HTTPStubsResponse(
+                jsonObject: sessionJSON(),
+                statusCode: updateStatusCode(updateRequestNumber),
+                headers: nil
+            )
         }
     }
 

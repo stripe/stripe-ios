@@ -584,8 +584,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
-            checkout: checkout,
-            callback: { [weak self] confirmOption, _ in
+            callback: { [weak self] confirmOption, _, _ in
                 guard let self else { return }
                 self.linkConfirmOption = confirmOption
                 self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)

@@ -14,11 +14,9 @@ import XCTest
 final class PaymentMethodFormViewControllerTest: XCTestCase {
     var didUpdateDelegateMethodCalled: Bool = false
     override func setUp() {
-        let expectation = expectation(description: "Load specs")
+        let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load { _ in
-                expectation.fulfill()
-            }
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
     }

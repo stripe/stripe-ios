@@ -80,6 +80,21 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         XCTAssert(Set(alert.actions.map { $0.title }).isSuperset(of: ["Photo Library", "Choose File", "Cancel"]))
     }
 
+    func testAlertRequireLiveCaptureOnlyShowsManualCaptureSources() {
+        let vc = makeViewController(requireLiveCapture: true)
+        vc.didTapSelect(for: .front, from: UIButton())
+        guard let alert = vc.test_presentedViewController as? UIAlertController else {
+            return XCTFail("Expected UIAlertController")
+        }
+
+        let actionTitles = Set(alert.actions.map { $0.title })
+        XCTAssertFalse(actionTitles.contains("Photo Library"))
+        XCTAssertFalse(actionTitles.contains("Choose File"))
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            XCTAssertTrue(actionTitles.contains("Take Photo"))
+        }
+    }
+
     func testSelectPhotoFromLibrary() {
         let vc = makeViewController()
         // Mock that user selected to upload front of document

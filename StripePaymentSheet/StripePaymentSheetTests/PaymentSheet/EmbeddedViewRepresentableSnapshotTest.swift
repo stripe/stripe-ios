@@ -5,6 +5,7 @@
 //  Created by Nick Porter on 1/31/25.
 //
 
+import OHHTTPStubs
 import StripeCoreTestUtils
 @testable import StripePayments
 @testable import StripePaymentSheet
@@ -25,9 +26,15 @@ class EmbeddedViewRepresentableSnapshotTest: STPSnapshotTestCase {
             return ""
         }
 
+        let paymentMethodTypes = try XCTUnwrap(intentConfig.paymentMethodTypes)
+            .map { "\"\($0)\"" }
+            .joined(separator: ", ")
+        StubbedBackend.stubSessions(paymentMethods: paymentMethodTypes)
+        defer { HTTPStubs.removeAllStubs() }
+
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.paymentMethodOrder = intentConfig.paymentMethodTypes
-        config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        config.apiClient = APIStubbedTestCase.stubbedAPIClient()
 
         // Create our SwiftUI view
         let viewModel = EmbeddedPaymentElementViewModel()

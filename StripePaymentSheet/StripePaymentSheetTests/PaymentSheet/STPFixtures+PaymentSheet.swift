@@ -76,14 +76,12 @@ extension STPElementsSession {
         linkSettings: LinkSettings? = nil,
         experimentsData: ExperimentsData? = nil,
         flags: [String: Bool] = [:],
-        paymentMethodSpecs: [[AnyHashable: Any]]? = nil,
         cardBrandChoice: STPCardBrandChoice? = nil,
         isApplePayEnabled: Bool = true,
         externalPaymentMethods: [ExternalPaymentMethod] = [],
         customPaymentMethods: [CustomPaymentMethod] = [],
         passiveCaptchaData: PassiveCaptchaData? = nil,
-        customer: ElementsCustomer? = nil,
-        isBackupInstance: Bool = false
+        customer: ElementsCustomer? = nil
     ) -> STPElementsSession {
         return .init(
             allResponseFields: [:],
@@ -98,7 +96,6 @@ extension STPElementsSession {
             linkSettings: linkSettings,
             experimentsData: experimentsData,
             flags: flags,
-            paymentMethodSpecs: paymentMethodSpecs,
             cardBrandChoice: cardBrandChoice,
             isApplePayEnabled: isApplePayEnabled,
             externalPaymentMethods: externalPaymentMethods,
@@ -298,7 +295,7 @@ extension Intent {
     }
 
     @MainActor static func _testCheckoutSession(
-        mode: Checkout.Mode = .payment,
+        hasPaymentDue: Bool = true,
         amount: Int? = 2345,
         currency: String = "USD",
         email: String? = nil,
@@ -310,22 +307,9 @@ extension Intent {
         automaticTaxAddressSource: String? = nil,
         discountAmount: Int = 0
     ) -> Intent {
-        let modeParam = switch mode {
-        case .payment: "payment"
-        case .setup: "setup"
-        default: fatalError("TODO: implement for subscription/unknown mode")
-        }
-        guard let paymentStatus = switch mode {
-        case .payment: "unpaid"
-        case .setup: "no_payment_required"
-        case .subscription, .unknown: nil
-        } else {
-            fatalError("TODO: add subscription/unknown support")
-        }
         var json = CheckoutTestHelpers.makeSessionJSON([
-            "mode": modeParam,
             "status": "open",
-            "payment_status": paymentStatus,
+            "payment_status": hasPaymentDue ? "unpaid" : "no_payment_required",
             "currency": currency.lowercased(),
         ])
         if let email {
@@ -349,45 +333,49 @@ extension Intent {
             json["tax_context"] = taxContext
         }
 
-        var lineItemGroup: [String: Any] = [:]
         if !lineItems.isEmpty {
-            lineItemGroup["line_items"] = lineItems.map { item -> [String: Any] in
+            json["checkout_items"] = lineItems.map { item -> [String: Any] in
                 return [
-                    "id": item.id,
-                    "name": item.name,
-                    "quantity": item.quantity,
-                    "price": [
-                        "unit_amount": item.unitAmount?.minorUnitsAmount ?? 0,
-                        "currency": currency.lowercased(),
+                    "key": item.id,
+                    "type": "one_time_price_item",
+                    "one_time_price_item": [
+                        "quantity": item.quantity,
+                        "price": [
+                            "id": "price_\(item.id)",
+                            "currency": currency.lowercased(),
+                            "unit_amount": item.unitAmount?.minorUnitsAmount ?? 0,
+                            "product": ["name": item.name],
+                        ],
                     ],
                 ]
             }
         }
         if shippingAmount != 0 {
-            lineItemGroup["shipping_rate"] = [
+            json["shipping_rate"] = [
                 "id": "shr_test",
                 "display_name": "Standard",
                 "amount": shippingAmount,
                 "currency": currency.lowercased(),
             ]
         }
+        var recurringDetails: [String: Any] = [:]
         if taxAmount != 0 {
-            lineItemGroup["tax_amounts"] = [[
+            recurringDetails["total_tax_amounts"] = [[
                 "amount": taxAmount,
                 "inclusive": false,
                 "taxable_amount": (subtotal ?? amount ?? 0),
             ], ]
         }
         if discountAmount != 0 {
-            lineItemGroup["discount_amounts"] = [[
+            recurringDetails["total_discount_amounts"] = [[
                 "amount": discountAmount,
                 "coupon": [
                     "id": "coupon_test",
                 ],
             ], ]
         }
-        if !lineItemGroup.isEmpty {
-            json["line_item_group"] = lineItemGroup
+        if !recurringDetails.isEmpty {
+            json["recurring_details"] = recurringDetails
         }
 
         let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!

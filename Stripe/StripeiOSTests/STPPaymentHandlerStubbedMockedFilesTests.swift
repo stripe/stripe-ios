@@ -65,7 +65,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
                 "type": "afterpay_clearpay"
               }
             """
-        let paymentHandler = stubbedPaymentHandler(formSpecProvider: formSpecProvider())
+        let paymentHandler = stubbedPaymentHandler()
         stubConfirm(
             fileMock: .paymentIntentResponse,
             responseCallback: { data in
@@ -165,7 +165,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
                 "type": "afterpay_clearpay"
               }
             """
-        let paymentHandler = stubbedPaymentHandler(formSpecProvider: formSpecProvider())
+        let paymentHandler = stubbedPaymentHandler()
         stubConfirm(
             fileMock: .paymentIntentResponse,
             responseCallback: { data in
@@ -207,28 +207,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
     }
 
     func testCallConfirmAfterpay_Redirect() {
-        let formSpecProvider = formSpecProvider()
-        let paymentHandler = stubbedPaymentHandler(formSpecProvider: formSpecProvider)
-
-        // Override it with a spec that doesn't define a next action so that we force the SDK to default behavior
-        let updatedSpecJson =
-            Data("""
-            [{
-                "type": "affirm",
-                "async": false,
-                "fields": [
-                    {
-                        "type": "name"
-                    }
-                ]
-            }]
-            """.utf8)
-        let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson) as! [NSDictionary]
-        XCTAssert(formSpecProvider.loadFrom(formSpec))
-        guard formSpecProvider.formSpec(for: "affirm") != nil else {
-            XCTFail()
-            return
-        }
+        let paymentHandler = stubbedPaymentHandler()
 
         let nextActionData = """
               {
@@ -333,7 +312,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
                 "type": "blik"
               }
             """
-        let paymentHandler = stubbedPaymentHandler(formSpecProvider: formSpecProvider())
+        let paymentHandler = stubbedPaymentHandler()
         let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.returnURL = "payments-example://stripe-redirect"
         paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
@@ -406,7 +385,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
                 "type": "card"
               }
             """
-        let paymentHandler = stubbedPaymentHandler(formSpecProvider: formSpecProvider())
+        let paymentHandler = stubbedPaymentHandler()
         stubConfirm(
             fileMock: .paymentIntentResponse,
             responseCallback: { data in
@@ -670,17 +649,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         wait(for: [expectConfirmSucceeded], timeout: 2.0)
     }
 
-    private func formSpecProvider() -> FormSpecProvider {
-        let expectation = expectation(description: "Load Specs")
-        let formSpecProvider = FormSpecProvider()
-        formSpecProvider.load { _ in
-            expectation.fulfill()
-        }
-        wait(for: [expectation], timeout: 5.0)
-        return formSpecProvider
-    }
-
-    private func stubbedPaymentHandler(formSpecProvider: FormSpecProvider) -> STPPaymentHandler {
+    private func stubbedPaymentHandler() -> STPPaymentHandler {
         return STPPaymentHandler(apiClient: stubbedAPIClient())
     }
 

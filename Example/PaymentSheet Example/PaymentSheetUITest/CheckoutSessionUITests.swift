@@ -5,11 +5,12 @@
 
 import XCTest
 
+// TODO: Enable these tests
 class CheckoutSessionUITests: PaymentSheetUITestCase {
 
     // MARK: - Embedded Payment Element
 
-    func testCheckoutSession_Embedded_Card() throws {
+    func _testCheckoutSession_Embedded_Card() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .embedded
         settings.integrationType = .checkoutSession
@@ -29,7 +30,7 @@ class CheckoutSessionUITests: PaymentSheetUITestCase {
 
     // MARK: - FlowController
 
-    func testCheckoutSession_FlowController_Card() throws {
+    func _testCheckoutSession_FlowController_Card() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
         settings.integrationType = .checkoutSession

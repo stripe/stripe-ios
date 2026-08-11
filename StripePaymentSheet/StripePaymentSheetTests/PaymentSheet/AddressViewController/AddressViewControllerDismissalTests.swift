@@ -49,12 +49,15 @@ final class AddressViewControllerDismissalTests: XCTestCase {
     private final class MockDelegate: AddressViewControllerDelegate {
         private(set) var didFinishCallCount = 0
         private(set) var lastAddress: AddressViewController.AddressDetails?
+        var completionExpectation: XCTestExpectation?
+
         func addressViewControllerDidFinish(
             _ addressViewController: AddressViewController,
             with address: AddressViewController.AddressDetails?
         ) {
             didFinishCallCount += 1
             lastAddress = address
+            completionExpectation?.fulfill()
         }
     }
 
@@ -208,9 +211,12 @@ final class AddressViewControllerDismissalTests: XCTestCase {
         XCTAssertTrue(alert.actions.contains { $0.style == .cancel })
     }
 
-    func test_didContinue_savesEnteredAddressAndLogsCompletion() {
+    @MainActor
+    func test_didContinue_savesEnteredAddressAndLogsCompletion() async {
         // Given a seeded form the customer edits
         let delegate = MockDelegate()
+        let completionExpectation = expectation(description: "Address saved")
+        delegate.completionExpectation = completionExpectation
         let vc = makeLoadedAddressViewController(
             configuration: makeConfiguration(defaultValues: validDefaultValues),
             delegate: delegate
@@ -222,6 +228,7 @@ final class AddressViewControllerDismissalTests: XCTestCase {
         vc.didContinue()
 
         // Then the delegate receives the ENTERED address
+        await fulfillment(of: [completionExpectation])
         XCTAssertEqual(delegate.didFinishCallCount, 1)
         XCTAssertEqual(delegate.lastAddress?.address.line1, "999 New St")
         // ...and a completion analytic is logged
@@ -254,9 +261,12 @@ final class AddressViewControllerDismissalTests: XCTestCase {
         XCTAssertEqual(delegate.lastAddress?.address.line1, "999 New St")
     }
 
-    func test_save_clearsAutocompleteResultForNextSave() {
+    @MainActor
+    func test_save_clearsAutocompleteResultForNextSave() async {
         // Given a valid autocomplete result
         let delegate = MockDelegate()
+        let firstSaveExpectation = expectation(description: "First address saved")
+        delegate.completionExpectation = firstSaveExpectation
         let vc = makeLoadedAddressViewController(
             configuration: makeConfiguration(defaultValues: validDefaultValues),
             delegate: delegate
@@ -276,6 +286,7 @@ final class AddressViewControllerDismissalTests: XCTestCase {
         vc.didContinue()
 
         // Then the save is attributed to autocomplete
+        await fulfillment(of: [firstSaveExpectation])
         let firstSave = STPAnalyticsClient.sharedClient._testLogHistory.last {
             $0["event"] as? String == "mc_address_completed"
         }
@@ -284,14 +295,66 @@ final class AddressViewControllerDismissalTests: XCTestCase {
 
         // When the reused controller saves again without another autocomplete selection
         STPAnalyticsClient.sharedClient._testLogHistory = []
+        let secondSaveExpectation = expectation(description: "Second address saved")
+        delegate.completionExpectation = secondSaveExpectation
         vc.didContinue()
 
         // Then the previous autocomplete result is not attributed to the new save
+        await fulfillment(of: [secondSaveExpectation])
         let secondSave = STPAnalyticsClient.sharedClient._testLogHistory.last {
             $0["event"] as? String == "mc_address_completed"
         }
         let secondSaveData = secondSave?["address_data_blob"] as? [String: Any?]
         XCTAssertEqual(secondSaveData?["auto_complete_result_selected"] as? Bool, false)
+    }
+
+    @MainActor
+    func test_discardChanges_restoresAutocompleteResultFromSavedBaseline() async {
+        // Given an autocomplete result that has been saved as the current baseline
+        let delegate = MockDelegate()
+        let initialSaveExpectation = expectation(description: "Initial address saved")
+        delegate.completionExpectation = initialSaveExpectation
+        let vc = makeLoadedAddressViewController(
+            configuration: makeConfiguration(defaultValues: validDefaultValues),
+            delegate: delegate
+        )
+        vc.didSelectAddress(
+            PaymentSheet.Address(
+                city: "San Francisco",
+                country: "US",
+                line1: "1 Market St.",
+                postalCode: "94105",
+                state: "California"
+            )
+        )
+        vc.didContinue()
+        await fulfillment(of: [initialSaveExpectation])
+        delegate.completionExpectation = nil
+
+        // When another autocomplete result is selected and then discarded
+        vc.didSelectAddress(
+            PaymentSheet.Address(
+                city: "San Francisco",
+                country: "US",
+                line1: "2 Market St.",
+                postalCode: "94105",
+                state: "California"
+            )
+        )
+        vc.discardChanges()
+        XCTAssertEqual(vc.addressSection?.addressDetails.address.line1, "1 Market St.")
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+
+        // Then saving the restored address retains its original autocomplete attribution
+        let restoredSaveExpectation = expectation(description: "Restored address saved")
+        delegate.completionExpectation = restoredSaveExpectation
+        vc.didContinue()
+        await fulfillment(of: [restoredSaveExpectation])
+        let saveEvent = STPAnalyticsClient.sharedClient._testLogHistory.last {
+            $0["event"] as? String == "mc_address_completed"
+        }
+        let saveData = saveEvent?["address_data_blob"] as? [String: Any?]
+        XCTAssertEqual(saveData?["auto_complete_result_selected"] as? Bool, true)
     }
 
     func test_discardChanges_revertsFormToAsOpenedState() {
