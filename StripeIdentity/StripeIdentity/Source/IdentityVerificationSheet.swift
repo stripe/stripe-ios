@@ -38,10 +38,19 @@ final public class IdentityVerificationSheet {
         ///   - brandLogo: An image of your customer-facing business logo.
         ///     The recommended image size is 32 x 32 points. The image will be
         ///     displayed in both light and dark modes, if the app supports it.
+        public init(brandLogo: UIImage) {
+            self.init(brandLogo: brandLogo, brandColor: nil)
+        }
+
+        /// Initializes a Configuration with a primary action button color.
+        /// - Parameters:
+        ///   - brandLogo: An image of your customer-facing business logo.
+        ///     The recommended image size is 32 x 32 points. The image will be
+        ///     displayed in both light and dark modes, if the app supports it.
         ///   - brandColor: Optional background color for the native flow's primary action buttons.
         public init(
             brandLogo: UIImage,
-            brandColor: UIColor? = nil
+            brandColor: UIColor?
         ) {
             self.brandLogo = brandLogo
             self.brandColor = brandColor
