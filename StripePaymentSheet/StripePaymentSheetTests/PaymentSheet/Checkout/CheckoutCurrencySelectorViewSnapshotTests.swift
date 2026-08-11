@@ -87,7 +87,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
 
     func testDisabledState() async throws {
         let view = try await makeCurrencySelectorView(selectedCurrency: "gbp")
-        view.isEnabled = false
+        view.setEnabled(false)
         verify(view)
     }
 

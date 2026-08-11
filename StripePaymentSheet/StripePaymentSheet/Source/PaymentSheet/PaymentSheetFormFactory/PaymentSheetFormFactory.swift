@@ -278,7 +278,7 @@ class PaymentSheetFormFactory {
                 return makeWero()
             case .SEPADebit:
                 return makeSepaDebit()
-            case .grabPay, .alipay, .paynow, .payPay, .mobilePay, .zip, .crypto,
+            case .grabPay, .alipay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank:
                 return makeContactInformationAndBillingAddressForm()
             case .promptPay, .multibanco:

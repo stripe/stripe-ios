@@ -16,11 +16,10 @@ import UIKit
 @MainActor
 public final class CurrencySelectorElementUIView: UIView {
 
-    /// Whether the selector is enabled for user interaction.
-    public var isEnabled: Bool = true {
-        didSet {
-            selectorView?.setEnabled(isEnabled)
-        }
+    /// Updates interaction and disabled styling while retaining UIKit's native state as the source of truth.
+    func setEnabled(_ enabled: Bool) {
+        isUserInteractionEnabled = enabled
+        selectorView?.setEnabled(enabled)
     }
 
     private weak var delegate: CurrencySelectorElementDelegate?
@@ -39,11 +38,14 @@ public final class CurrencySelectorElementUIView: UIView {
         return label
     }()
 
-    init(
+    init?(
         session: Checkout.Session,
         delegate: CurrencySelectorElementDelegate,
         appearance: CurrencySelectorElement.Appearance
     ) async {
+        guard let (_, exchangeRateMeta, rawCurrency) = CurrencySelectorUtilities.adaptivePricingData(from: session) else {
+            return nil
+        }
         self.delegate = delegate
         self.appearance = appearance
         self.checkoutSessionId = session.id
@@ -51,7 +53,10 @@ public final class CurrencySelectorElementUIView: UIView {
 
         await flagImageManager.prefetchFlagImages(for: session)
         setupContainerStackView()
-        update(with: session)
+        let currency = CurrencySelectorUtilities.CurrencyCode(rawCurrency)
+        buildSelectorView(session: session, exchangeRateMeta: exchangeRateMeta, currency: currency)
+        lastSelectedCurrency = currency.apiValue
+        updateCaption(currency: currency, exchangeRateMeta: exchangeRateMeta)
     }
 
     @available(*, unavailable)
@@ -60,9 +65,6 @@ public final class CurrencySelectorElementUIView: UIView {
     }
 
     override public var intrinsicContentSize: CGSize {
-        guard !isHidden, selectorView != nil else {
-            return .zero
-        }
         return containerStackView.systemLayoutSizeFitting(
             CGSize(width: bounds.width, height: UIView.layoutFittingCompressedSize.height),
             withHorizontalFittingPriority: .required,
@@ -88,19 +90,13 @@ public final class CurrencySelectorElementUIView: UIView {
         guard let (_, exchangeRateMeta, rawCurrency) =
                 CurrencySelectorUtilities.adaptivePricingData(from: session)
         else {
-            tearDown()
+            assertionFailure("Adaptive Pricing data unexpectedly became unavailable")
             return
         }
 
         let currency = CurrencySelectorUtilities.CurrencyCode(rawCurrency)
         clearError()
-
-        if selectorView == nil {
-            buildSelectorView(session: session, exchangeRateMeta: exchangeRateMeta, currency: currency)
-        } else {
-            updateSelectorItems(session: session, exchangeRateMeta: exchangeRateMeta)
-        }
-
+        updateSelectorItems(session: session, exchangeRateMeta: exchangeRateMeta)
         lastSelectedCurrency = currency.apiValue
         updateCaption(currency: currency, exchangeRateMeta: exchangeRateMeta)
     }
@@ -154,8 +150,7 @@ public final class CurrencySelectorElementUIView: UIView {
         containerStackView.insertArrangedSubview(newSelector, at: 0)
 
         selectorView = newSelector
-        newSelector.setEnabled(isEnabled)
-        isHidden = false
+        newSelector.setEnabled(isUserInteractionEnabled)
         invalidateIntrinsicContentSize()
     }
 
@@ -169,14 +164,6 @@ public final class CurrencySelectorElementUIView: UIView {
         )
         let detailText = CurrencySelectorUtilities.detailText(exchangeRateMeta: exchangeRateMeta)
         selectorView?.updateCaption(caption, detailText: detailText)
-    }
-
-    private func tearDown() {
-        selectorView?.removeFromSuperview()
-        selectorView = nil
-        clearError()
-        isHidden = true
-        invalidateIntrinsicContentSize()
     }
 
     func showError(_ message: String) {
@@ -225,7 +212,7 @@ extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
                 )
                 showError(error.localizedDescription)
             }
-            selectorView?.setEnabled(isEnabled)
+            selectorView?.setEnabled(isUserInteractionEnabled)
         }
     }
 }
