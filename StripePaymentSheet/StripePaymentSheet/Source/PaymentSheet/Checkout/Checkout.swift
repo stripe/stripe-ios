@@ -59,7 +59,7 @@ public final class Checkout: ObservableObject {
     /// The CurrencySelectorElement for this Checkout instance, when Adaptive Pricing is available.
     private var currencySelectorElement: CurrencySelectorElement?
 
-/// The ShippingAddressElement for this Checkout instance.
+    /// The ShippingAddressElement for this Checkout instance.
     private let shippingAddressElement: ShippingAddressElement
 
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
@@ -349,14 +349,6 @@ public final class Checkout: ObservableObject {
             appearance: confirmationContext.configuration.appearance
         )
 
-        // WARNING: Do NOT route Apple Pay through this enqueueSessionUpdate block.
-        // Apple Pay's PKPaymentAuthorizationControllerDelegate callbacks (didSelectPaymentMethod,
-        // didSelectShippingContact) call enqueueSessionUpdate themselves. If presentApplePay()
-        // is awaited inside an outer enqueueSessionUpdate, those callbacks will wait for the
-        // outer task to finish — which is itself waiting for the sheet — causing a deadlock.
-        // Apple Pay is currently only reachable via ECE (confirmApplePay()), which does not use
-        // this enqueueSessionUpdate path. If Apple Pay is ever surfaced through PaymentElement,
-        // the .applePay case in confirmPaymentOption must be extracted before this block.
         do {
             let confirmResult = try await enqueueSessionUpdate {
                 let result = await Self.confirm(

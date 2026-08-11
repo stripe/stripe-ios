@@ -97,7 +97,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 // Guard: if continuation is already nil, paymentAuthorizationControllerDidFinish
                 // fired (timeout or cancel) while PM creation was in flight. Proceeding would
                 // charge the customer while the app already reported .canceled.
-                guard self.continuation != nil else { return }
+                guard self.continuation != nil else {
+                    completion(PKPaymentAuthorizationResult(status: .failure, errors: nil))
+                    return
+                }
                 self.paymentState = .pending
                 let savePaymentMethod: Bool? = currentSession.noPaymentRequired ? nil
                     : currentSession.merchantWillSavePaymentMethod(STPPaymentMethodType.card) ? true : nil
@@ -133,7 +136,12 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     self.finishAndDismiss()
                 } else {
                     // TODO: Add a willCompleteWithResult hook so callers can attach PKPaymentOrderDetails.
-                    completion(PKPaymentAuthorizationResult(status: .success, errors: nil))
+                    switch paymentSheetResult {
+                    case .completed:
+                        completion(PKPaymentAuthorizationResult(status: .success, errors: nil))
+                    case .canceled, .failed:
+                        completion(PKPaymentAuthorizationResult(status: .failure, errors: nil))
+                    }
                 }
             } catch {
                 self.paymentState = .error
@@ -232,14 +240,14 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     static func create(
         checkout: Checkout,
         authenticationContext: STPAuthenticationContext
-    ) -> CheckoutApplePayContext? {
-        guard let applePayConfig = checkout.configuration.applePayConfiguration else {
-            return nil
+    ) throws -> CheckoutApplePayContext {
+        guard checkout.configuration.applePayConfiguration != nil else {
+            throw CheckoutError.applePayNotConfigured
         }
+        let applePayConfig = checkout.configuration.applePayConfiguration!
 
-        let canMakePayments = PKPaymentAuthorizationController.canMakePayments()
-        guard canMakePayments else {
-            return nil
+        guard PKPaymentAuthorizationController.canMakePayments() else {
+            throw CheckoutError.applePayUnavailable
         }
 
         // TODO: Product Usage
@@ -263,7 +271,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         // Use PKPaymentAuthorizationViewController.init as a proxy — it IS nullable and
         // returns nil when the request can't be presented (e.g. bad merchant ID, unsupported network).
         guard PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) != nil else {
-            return nil
+            throw CheckoutError.applePayUnavailable
         }
         let authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
         return CheckoutApplePayContext(
@@ -316,9 +324,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     /// Called when Apple Pay timed out or was canceled while a confirm was in flight.
     /// The completion block from `didAuthorizePayment` is not called — instead we dismiss directly.
     private func finishAndDismiss() {
-        Task {
-            await authorizationController.dismiss()
-            resume(with: result ?? .init(paymentSheetResult: .canceled))
+        Task { @MainActor in
+            await self.authorizationController.dismiss()
+            self.resume(with: self.result ?? .init(paymentSheetResult: .canceled))
         }
     }
 

@@ -277,7 +277,7 @@ extension Checkout {
                 paymentHandler: paymentHandler
             )
         } else {
-            throw PaymentSheetError.unknown(
+            throw CheckoutError.unknown(
                 debugDescription: "Checkout session confirm response contained neither a PaymentIntent nor a SetupIntent"
             )
         }

@@ -15,12 +15,14 @@ extension Checkout {
         checkout: Checkout,
         authenticationContext: STPAuthenticationContext
     ) async -> InternalConfirmResult {
-        guard let context = CheckoutApplePayContext.create(
-            checkout: checkout,
-            authenticationContext: authenticationContext
-        ) else {
-            return .init(paymentSheetResult: .failed(error: CheckoutError.applePayNotConfigured))
+        do {
+            let context = try CheckoutApplePayContext.create(
+                checkout: checkout,
+                authenticationContext: authenticationContext
+            )
+            return await context.presentApplePay()
+        } catch {
+            return .init(paymentSheetResult: .failed(error: error))
         }
-        return await context.presentApplePay()
     }
 }
