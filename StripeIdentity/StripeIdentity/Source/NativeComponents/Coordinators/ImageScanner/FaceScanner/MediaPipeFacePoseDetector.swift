@@ -18,6 +18,12 @@ internal import MediaPipeSPMRuntime
 internal import MediaPipeTasksVision
 #endif
 
+#if canImport(MediaPipeTasksVision) && !canImport(MediaPipeSPMRuntime)
+// Retains MediaPipe's static graph registrations when CocoaPods links the archives into StripeIdentity.
+@_silgen_name("MediaPipeSPMKeepFaceLandmarkerGraphRegistrations")
+private func prepareMediaPipeCocoaPodsFaceLandmarkerGraph()
+#endif
+
 #if canImport(MediaPipeSPMRuntime) || canImport(MediaPipeTasksVision)
 final class MediaPipeFacePoseDetector: FaceGeometryDetector {
     private enum Configuration {
@@ -30,6 +36,8 @@ final class MediaPipeFacePoseDetector: FaceGeometryDetector {
     init(modelPath: String) throws {
         #if canImport(MediaPipeSPMRuntime)
         prepareMediaPipeSPMFaceLandmarkerGraph()
+        #elseif canImport(MediaPipeTasksVision)
+        prepareMediaPipeCocoaPodsFaceLandmarkerGraph()
         #endif
 
         let options = FaceLandmarkerOptions()
