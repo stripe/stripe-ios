@@ -7,6 +7,8 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
+@testable@_spi(STP) import StripePayments
+
 class STPConfirmPaymentMethodOptionsTest: XCTestCase {
     func testCardOptions() {
         let paymentMethodOptions = STPConfirmPaymentMethodOptions()
