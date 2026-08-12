@@ -1,11 +1,14 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+### PaymentSheet
+* [Added] StripePaymentSheet now depends on `StripeFinancialConnectionsLite` to support lightweight bank payment flows. If you use StripePaymentSheet with Carthage or by manually embedding the .xcframeworks, [you must also embed StripeFinancialConnectionsLite.xcframework](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2670) in your app. No action is required for CocoaPods or Swift Package Manager users.
 
 ## 26.6.0 2026-08-10
 ### PaymentSheet
 * [Fixed] LinkController (private preview) now returns an error when no funding sources are available for a Link session, rather than silently falling back to card.
+* [Added] Added public `STPAPIClient.betas` support for merchant-supplied beta headers. To use Vipps in PaymentSheet beta, set `vipps_preview=v1` on the `STPAPIClient` instance that you pass into PaymentSheet or Checkout, for example `Set(["vipps_preview=v1"])`.
 
 ### CryptoOnramp (Alpha)
 * [Added] Added `CryptoOnrampCoordinator.deleteWalletAddress(walletId:)` to delete a registered wallet address.

@@ -851,6 +851,7 @@ public class STPPaymentHandler: NSObject {
             .zip,
             .revolutPay,
             .mobilePay,
+            .vipps,
             .amazonPay,
             .alma,
             .sunbit,
