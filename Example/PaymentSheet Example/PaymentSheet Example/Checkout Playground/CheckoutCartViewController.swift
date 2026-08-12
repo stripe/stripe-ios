@@ -48,6 +48,7 @@ final class CheckoutCartViewController: UIViewController {
     private let showExpressCheckoutElement: Bool
     private let currencySelectorAppearance: CurrencySelectorElement.Appearance
     private let closeAction: () -> Void
+    private let diagnostics = CheckoutSessionDiagnostics()
 
     private var checkout: Checkout?
     private var cancellables = Set<AnyCancellable>()
@@ -200,15 +201,24 @@ final class CheckoutCartViewController: UIViewController {
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             configuration.currencySelectorElement.appearance = currencySelectorAppearance
+            configuration.apiClient = diagnostics.makeAPIClient()
 
             let checkout = try await Checkout(configuration: configuration)
             self.checkout = checkout
+            navigationItem.rightBarButtonItem = UIBarButtonItem(
+                image: UIImage(systemName: "ladybug"),
+                style: .plain,
+                target: self,
+                action: #selector(checkoutDetailsButtonTapped)
+            )
+            navigationItem.rightBarButtonItem?.accessibilityLabel = "Session diagnostics"
             observeCheckout(checkout)
             statusContainerView.isHidden = true
             scrollView.isHidden = false
             renderCheckout()
         } catch {
             checkout = nil
+            navigationItem.rightBarButtonItem = nil
             errorMessage = error.localizedDescription
             showFailureStatus()
         }
@@ -710,6 +720,20 @@ final class CheckoutCartViewController: UIViewController {
 
     @objc private func closeButtonTapped() {
         closeAction()
+    }
+
+    @objc private func checkoutDetailsButtonTapped() {
+        guard let checkout else { return }
+        let detailsView = CheckoutSessionDetailsView(
+            diagnostics: diagnostics,
+            sessionID: checkout.session.id
+        )
+        let viewController = UIHostingController(rootView: detailsView)
+        if let sheetPresentationController = viewController.sheetPresentationController {
+            sheetPresentationController.detents = [.medium(), .large()]
+            sheetPresentationController.prefersGrabberVisible = true
+        }
+        present(viewController, animated: true)
     }
 
     @objc private func retryButtonTapped() {
