@@ -222,10 +222,12 @@ class PaymentSheetContainerViewController: UIViewController {
         let oldContentViewController = contentViewController
         contentViewController = newContentViewController
 
-        // Take a snapshot of the old content and add it to our container - we'll fade it out
+        // Take a snapshot and add it to the main view at the same visual position
         let oldView = oldContentViewController.view!
         let oldViewImage = oldView.snapshotView(afterScreenUpdates: false) ?? UIView()
-        contentContainerView.addSubview(oldViewImage)
+        let snapshotFrame = oldView.convert(oldView.bounds, to: view)
+        oldViewImage.frame = snapshotFrame
+        view.addSubview(oldViewImage)
 
         // Remove the old VC
         oldContentViewController.beginAppearanceTransition(false, animated: true)
@@ -234,7 +236,6 @@ class PaymentSheetContainerViewController: UIViewController {
 
         // Add the new VC
         newContentViewController.beginAppearanceTransition(true, animated: true)
-        // When your custom container calls the addChild(_:) method, it automatically calls the willMove(toParent:) method of the view controller to be added as a child before adding it.
         addChild(newContentViewController)
         contentContainerView.addArrangedSubview(self.contentViewController.view)
 
@@ -244,25 +245,23 @@ class PaymentSheetContainerViewController: UIViewController {
         oldContentViewController.navigationBar.removeFromSuperview()
         navigationBarContainerView.addArrangedSubview(newContentViewController.navigationBar)
         navigationBarContainerView.layoutIfNeeded()
+
+        // New content starts transparent
         newContentViewController.view.alpha = 0
 
-        invalidateContentDetent()
-        UIView.animate(withDuration: 0.2, animations: {
+        let animator = UIViewPropertyAnimator(duration: 0.25, curve: .easeInOut) {
             oldViewImage.alpha = 0
             self.contentViewController.view.alpha = 1
-        }, completion: {_ in
-            // If you are implementing your own container view controller, it must call the didMove(toParent:) method of the child view controller after the transition to the new controller is complete or, if there is no transition, immediately after calling the addChild(_:) method.
+        }
+        animator.addCompletion { _ in
             self.contentViewController.didMove(toParent: self)
             self.contentViewController.endAppearanceTransition()
-
-            // Remove the old content snapshot
             oldViewImage.removeFromSuperview()
-
-            // Inform accessibility
             UIAccessibility.post(notification: .screenChanged, argument: self.contentViewController.view)
-
             completion?()
-        })
+        }
+        animator.startAnimation()
+        invalidateContentDetent()
     }
 
     func startSpinner() {
@@ -353,8 +352,8 @@ class PaymentSheetContainerViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             navigationBarContainerView.topAnchor.constraint(equalTo: view.topAnchor),  // For unknown reasons, safeAreaLayoutGuide can have incorrect padding; we'll rely on our superview instead
-            navigationBarContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            navigationBarContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            navigationBarContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
+            navigationBarContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -2),
 
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),

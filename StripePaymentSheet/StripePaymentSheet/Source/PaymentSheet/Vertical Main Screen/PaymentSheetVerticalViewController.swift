@@ -346,7 +346,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             let hasLabelInStackView = newMandateText != nil || self.errorLabel.text != nil
             if self.isViewLoaded, hadLabelInStackView != hasLabelInStackView {
                 self.primaryButtonTopAnchorConstraint.isActive = false
-                self.primaryButtonTopAnchorConstraint = self.stackView.bottomAnchor.constraint(equalTo: self.primaryButton.topAnchor, constant: hasLabelInStackView ? -20 : -32)
+                self.primaryButtonTopAnchorConstraint = self.stackView.bottomAnchor.constraint(equalTo: self.primaryButton.topAnchor, constant: hasLabelInStackView ? -16 : -24)
                 self.primaryButtonTopAnchorConstraint.isActive = true
             }
         }
@@ -545,7 +545,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
-        primaryButtonTopAnchorConstraint = stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: mandateView.attributedText == nil && errorLabel.text == nil ? -32 : -20)
+        primaryButtonTopAnchorConstraint = stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: mandateView.attributedText == nil && errorLabel.text == nil ? -24 : -16)
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -554,7 +554,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
             primaryButtonTopAnchorConstraint,
-            primaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
+            primaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
         ])
     }
 

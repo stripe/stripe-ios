@@ -227,13 +227,6 @@ extension PaymentSheetViewController {
             return button
         }
 
-        override func didMoveToWindow() {
-            super.didMoveToWindow()
-            guard window != nil, supportsApplePay else { return }
-            // Recreate the currently visible button to fix iOS 26.2 rendering bug where the Apple Pay button, despite its frame width being correct, renders less wide than it should, *only* reproducible when the Link modal is shown first :|
-            regenerateApplePayButton()
-        }
-
         private func updateSeparatorLabel() {
             separatorLabel.textColor = appearance.colors.textSecondary
             separatorLabel.separatorColor = appearance.colors.background.contrastingColor.withAlphaComponent(0.2)
