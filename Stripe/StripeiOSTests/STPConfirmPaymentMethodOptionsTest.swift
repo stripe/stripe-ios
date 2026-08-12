@@ -18,6 +18,37 @@ class STPConfirmPaymentMethodOptionsTest: XCTestCase {
         XCTAssertEqual(paymentMethodOptions.cardOptions, cardOptions, "Should hold reference to set cardOptions.")
     }
 
+    func testKlarnaOptions() {
+        let klarnaOptions = STPConfirmKlarnaOptions(
+            interoperabilityToken: "interoperability_token",
+            partnerConfirmationToken: "partner_confirmation_token"
+        )
+
+        let paymentMethodOptions = STPConfirmPaymentMethodOptions(klarnaOptions: klarnaOptions)
+
+        XCTAssertEqual(paymentMethodOptions.klarnaOptions, klarnaOptions)
+    }
+
+    func testKlarnaOptionsFormEncoding() {
+        let klarnaOptions = STPConfirmKlarnaOptions(
+            interoperabilityToken: "interoperability_token",
+            partnerConfirmationToken: "partner_confirmation_token"
+        )
+        let paymentMethodOptions = STPConfirmPaymentMethodOptions(klarnaOptions: klarnaOptions)
+
+        let encoded = STPFormEncoder.dictionary(forObject: paymentMethodOptions)
+        let expected = [
+            "payment_method_options": [
+                "klarna": [
+                    "interoperability_token": "interoperability_token",
+                    "partner_confirmation_token": "partner_confirmation_token",
+                ],
+            ],
+        ]
+
+        XCTAssertEqual(encoded as NSDictionary, expected as NSDictionary)
+    }
+
     func testFormEncoding() {
         let propertyToFieldMap = STPConfirmPaymentMethodOptions.propertyNamesToFormFieldNamesMapping()
         let expected = [
@@ -27,6 +58,7 @@ class STPConfirmPaymentMethodOptionsTest: XCTestCase {
             "weChatPayOptions": "wechat_pay",
             "usBankAccountOptions": "us_bank_account",
             "konbiniOptions": "konbini",
+            "klarnaOptions": "klarna",
             "linkOptions": "link",
         ]
 

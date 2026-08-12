@@ -5,6 +5,9 @@ MINOR
 ### CryptoOnramp (Alpha)
 * [Added] Added support for registering wallet addresses on the Tempo network.
 
+### Payments
+* [Added] Added Klarna confirmation options for passing SDK-generated interoperability and partner confirmation tokens (private preview).
+
 ### PaymentSheet
 * [Added] Added `billingDetailsCollectionConfiguration` to `LinkConfiguration`, allowing `LinkControllerPreview` consumers to configure billing details collection in the Link sheet (private preview).
 * [Added] `LinkController` now supports appearance customization via `LinkAppearance` (private preview).
