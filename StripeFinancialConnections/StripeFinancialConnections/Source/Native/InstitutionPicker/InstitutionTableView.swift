@@ -128,13 +128,15 @@ final class InstitutionTableView: UIView {
         super.init(frame: frame)
         if appearance.colors == .link {
             tableView.backgroundColor = .clear
-            tableView.layer.cornerRadius = 12
-            // Only round the bottom corners — the card's top corners are provided by
-            // cardBackgroundView. Rounding the top of the tableView would clip the
-            // section header and let cells peek through the corner gaps.
-            tableView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-            tableView.layer.masksToBounds = true
-            tableView.verticalScrollIndicatorInsets = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+            // No cornerRadius/masksToBounds on the tableView itself — cardBackgroundView provides
+            // the visual card rounding. Keeping masksToBounds=false lets the scroll indicator
+            // escape the card inset and render at the screen edge.
+            tableView.verticalScrollIndicatorInsets = UIEdgeInsets(
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: -Constants.Layout.defaultHorizontalMargin
+            )
             tableView.separatorStyle = .singleLine
             tableView.separatorColor = FinancialConnectionsAppearance.Colors.borderNeutral
             tableView.separatorInset = UIEdgeInsets(top: 0, left: 92, bottom: 0, right: 0)
@@ -147,8 +149,9 @@ final class InstitutionTableView: UIView {
         tableView.estimatedRowHeight = 72
         let hairline = 1.0 / UIScreen.main.nativeScale
         tableView.contentInset = UIEdgeInsets(
-            // add extra inset at the top/bottom to show the cell-selected-state separators
-            top: hairline,
+            // Link theme: no top inset — a hairline gap lets cell content peek above the sticky
+            // search bar header when scrolled. Stripe theme keeps the hairline to show separators.
+            top: appearance.colors == .link ? 0 : hairline,
             left: 0,
             bottom: hairline,
             right: 0

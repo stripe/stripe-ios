@@ -17,6 +17,17 @@ extension StripeUICore.Button {
             button.layer.shadowRadius = 2.5
             button.layer.shadowOpacity = 0.12
             button.layer.shadowOffset = CGSize(width: 0, height: 2)
+            // Figma: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 100%)
+            // overlaid on the primary button color (#171717).
+            let gradientOverlay = LinkPrimaryButtonGradientView(cornerRadius: appearance.buttonHeight / 2)
+            gradientOverlay.translatesAutoresizingMaskIntoConstraints = false
+            button.insertSubview(gradientOverlay, at: 0)
+            NSLayoutConstraint.activate([
+                gradientOverlay.topAnchor.constraint(equalTo: button.topAnchor),
+                gradientOverlay.leadingAnchor.constraint(equalTo: button.leadingAnchor),
+                gradientOverlay.trailingAnchor.constraint(equalTo: button.trailingAnchor),
+                gradientOverlay.bottomAnchor.constraint(equalTo: button.bottomAnchor),
+            ])
         } else {
             button.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
             button.layer.shadowRadius = 5 / UIScreen.main.nativeScale
@@ -101,6 +112,28 @@ private final class ButtonFeedbackGeneratorHandler: NSObject {
             for: .touchUpInside
         )
     }
+}
+
+// Renders the Figma gradient sheen (rgba(255,255,255,0.08)→0) over the Link primary button.
+// Inserted as subview at index 0 so it sits above the button background but below the title.
+private final class LinkPrimaryButtonGradientView: UIView {
+    override class var layerClass: AnyClass { CAGradientLayer.self }  // swiftlint:disable:this static_over_final_class
+
+    init(cornerRadius: CGFloat) {
+        super.init(frame: .zero)
+        guard let gradientLayer = layer as? CAGradientLayer else { return }
+        gradientLayer.colors = [
+            UIColor(white: 1, alpha: 0.08).cgColor,
+            UIColor(white: 1, alpha: 0).cgColor,
+        ]
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        layer.cornerRadius = cornerRadius
+        layer.masksToBounds = true
+        isUserInteractionEnabled = false
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }
 
 #if DEBUG
