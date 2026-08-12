@@ -16,9 +16,11 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
         with:
-            fetch-depth: 0
+          # The pull_request ref is a merge commit. We only need it and its
+          # base parent to determine which strings the PR adds.
+          fetch-depth: 2
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -28,6 +30,7 @@ jobs:
       - name: Run translation check script
         env:
           LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY_READONLY }}
+          TRANSLATION_DIFF_BASE: HEAD^1
         run: ruby ci_scripts/check_for_untranslated_strings.rb
       - name: Read missing translations
         id: missing

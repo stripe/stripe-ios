@@ -33,7 +33,20 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_all_saved_pms_and_apple_pay_and_link(darkMode: false, showDefaultPMBadge: true)
     }
 
-    func _test_all_saved_pms_and_apple_pay_and_link(darkMode: Bool, appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible(), showDefaultPMBadge: Bool = false) {
+    func test_all_saved_pms_editing_right_to_left() {
+        _test_all_saved_pms_and_apple_pay_and_link(
+            darkMode: false,
+            showDefaultPMBadge: true,
+            rightToLeft: true
+        )
+    }
+
+    func _test_all_saved_pms_and_apple_pay_and_link(
+        darkMode: Bool,
+        appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible(),
+        showDefaultPMBadge: Bool = false,
+        rightToLeft: Bool = false
+    ) {
         let paymentMethods = [
             STPPaymentMethod._testCard(),
             STPPaymentMethod._testUSBankAccount(),
@@ -62,17 +75,40 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
         if darkMode {
             testWindow.overrideUserInterfaceStyle = .dark
         }
-        testWindow.rootViewController = sut
+        let rootViewController: UIViewController
+        let containerView: UIView
+        if rightToLeft {
+            let hostViewController = UIViewController()
+            hostViewController.addChild(sut)
+            hostViewController.setOverrideTraitCollection(
+                UITraitCollection(layoutDirection: .rightToLeft),
+                forChild: sut
+            )
+            rootViewController = hostViewController
+            containerView = hostViewController.view
+        } else {
+            rootViewController = sut
+            containerView = testWindow
+        }
+        testWindow.rootViewController = rootViewController
         // Adding sut.view as the subview should be implied by the above line, but Autolayout can't lay out the view correctly on this pass of the runloop unless we explicitly addSubview. Maybe there are side effects that happen one turn of the runloop after setting the rootViewController.
-        testWindow.addSubview(sut.view)
+        containerView.addSubview(sut.view)
+        if rightToLeft {
+            sut.didMove(toParent: rootViewController)
+            sut.view.forceRightToLeftLayout()
+        }
         sut.view.autosizeHeight(width: 1000)
         if showDefaultPMBadge {
             sut.isRemovingPaymentMethods = true
         }
         NSLayoutConstraint.activate([
-            sut.view.topAnchor.constraint(equalTo: testWindow.topAnchor),
-            sut.view.leftAnchor.constraint(equalTo: testWindow.leftAnchor),
+            sut.view.topAnchor.constraint(equalTo: containerView.topAnchor),
+            sut.view.leftAnchor.constraint(equalTo: containerView.leftAnchor),
         ])
+        XCTAssertEqual(
+            sut.view.effectiveUserInterfaceLayoutDirection,
+            rightToLeft ? .rightToLeft : .leftToRight
+        )
         STPSnapshotVerifyView(sut.view)
     }
 
