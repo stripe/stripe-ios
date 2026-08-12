@@ -235,9 +235,12 @@ final class AddressViewControllerDismissalTests: XCTestCase {
         XCTAssertTrue(addressCompletedWasLogged())
     }
 
-    func test_save_reBaselinesChangeTrackingForReusedInstance() {
+    @MainActor
+    func test_save_reBaselinesChangeTrackingForReusedInstance() async {
         // Given a seeded form the customer has edited
         let delegate = MockDelegate()
+        let completionExpectation = expectation(description: "Address saved")
+        delegate.completionExpectation = completionExpectation
         let vc = makeLoadedAddressViewController(
             configuration: makeConfiguration(defaultValues: validDefaultValues),
             delegate: delegate
@@ -251,6 +254,8 @@ final class AddressViewControllerDismissalTests: XCTestCase {
         // Then the saved values become the new baseline: the same instance can be presented
         // again showing these values, and there are now no unsaved changes to detect.
         // (Before the fix the baseline stayed at first-init, so this remained true.)
+        await fulfillment(of: [completionExpectation])
+        delegate.completionExpectation = nil
         XCTAssertFalse(vc.hasChanges)
 
         // ...and tapping 'X' (as if reopened with no edits) finishes without a discard alert,
