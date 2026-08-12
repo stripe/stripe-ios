@@ -67,11 +67,15 @@ final class LinkAccountPickerNewAccountRowView: UIView {
 }
 
 private func CreateIconView(imageUrl: String, appearance: FinancialConnectionsAppearance) -> UIView {
-    RoundedIconView(
+    let iconView = RoundedIconView(
         image: .imageUrl(imageUrl, placeholder: Image.add),
         style: .rounded,
         appearance: appearance
     )
+    if appearance.colors == .link {
+        iconView.backgroundColor = FinancialConnectionsAppearance.Colors.iconBackgroundOnCard
+    }
+    return iconView
 }
 
 private func CreateTitleLabelView(title: String) -> UIView {
