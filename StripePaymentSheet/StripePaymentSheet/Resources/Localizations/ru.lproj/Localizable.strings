@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Подтвердить реквизиты платежа";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Чтобы завершить покупку, подтвердите оплату через Bizum в мобильном банковском приложении в течение %@.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Чтобы завершить покупку, подтвердите оплату в приложении MB WAY в течение %@.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Чтобы завершить оформление покупки, подтвердите платеж в своем банковском или платежном приложении в течение %@.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Подтвердите платеж в вашем банковском приложении в течение %@ для оформления покупки.";
@@ -139,6 +143,8 @@
 "Discount" = "Скидка";
 
 "EPS Bank" = "Банк EPS";
+
+"Edit address" = "Изменить адрес";
 
 "Enter address manually" = "Введите адрес вручную";
 
@@ -339,5 +345,3 @@
 "Yes, update" = "Да, обновить";
 
 "Your IBAN should start with a two-letter country code." = "Код IBAN должен начинаться с двухбуквенного кода страны.";
-
-"iDEAL Bank" = "Банк в системе iDEAL";

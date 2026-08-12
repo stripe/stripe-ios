@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Kinnitage makseandmed";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Kinnitage Bizumi makse oma mobiilipanga rakenduses %@ jooksul, et ost lõpule viia.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Kinnitage makse oma MB WAY rakenduses %@ jooksul, et ost lõpule viia.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Ostu sooritamiseks kinnitage makse oma panga- või makserakenduses %@ jooksul.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Ostu sooritamiseks kinnitage makse oma pangarakenduses %@ jooksul.";
@@ -139,6 +143,8 @@
 "Discount" = "Allahindlus";
 
 "EPS Bank" = "EPS pank";
+
+"Edit address" = "Muuda aadressi";
 
 "Enter address manually" = "Sisestage aadress käsitsi";
 
@@ -339,5 +345,3 @@
 "Yes, update" = "Jah, uuenda";
 
 "Your IBAN should start with a two-letter country code." = "Teie IBAN peab algama kahetähelise riigikoodiga.";
-
-"iDEAL Bank" = "iDEALi pank";

@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Potvrdite podatke o plaćanju";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Potvrdite plaćanje Bizum u svojoj aplikaciji mobilnog bankarstva unutar %@ da biste dovršili kupnju.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Potvrdite plaćanje u svojoj aplikaciji MB WAY unutar %@ da biste dovršili kupnju.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Potvrdite plaćanje u aplikaciji svoje banke ili aplikaciji za plaćanje unutar %@ da biste dovršili kupnju.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Potvrdite plaćanje u aplikaciji svoje banke unutar %@ da biste dovršili kupnju.";
@@ -139,6 +143,8 @@
 "Discount" = "S popustom";
 
 "EPS Bank" = "Banka EPS";
+
+"Edit address" = "Uredi adresu";
 
 "Enter address manually" = "Unesite adresu ručno";
 
@@ -339,5 +345,3 @@
 "Yes, update" = "Da, ažuriraj";
 
 "Your IBAN should start with a two-letter country code." = "Vaš bi IBAN trebao započeti s kodom države od dva slova.";
-
-"iDEAL Bank" = "iDEAL Bank";
