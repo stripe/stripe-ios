@@ -101,6 +101,29 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         XCTAssertNil(observingViewController.presentedViewController)
     }
 
+    func testCanPresentAgainFromCompletion() async throws {
+        // Given
+        let shippingAddressElement = makeShippingAddressElement()
+        let secondPresentationExpectation = expectation(description: "Second sheet presented")
+        _ = try XCTUnwrap(present(shippingAddressElement) {
+            XCTAssertNotNil(self.present(shippingAddressElement))
+            secondPresentationExpectation.fulfill()
+        })
+
+        // When
+        shippingAddressElement.addressViewControllerDidFinish(
+            shippingAddressElement.addressViewController,
+            with: nil
+        )
+        await fulfillment(of: [secondPresentationExpectation], timeout: 2)
+
+        // Then
+        let navigationController = try XCTUnwrap(
+            presentingViewController.presentedViewController as? UINavigationController
+        )
+        XCTAssertTrue(navigationController.viewControllers.first === shippingAddressElement.addressViewController)
+    }
+
     private func makeShippingAddressElement() -> ShippingAddressElement {
         return ShippingAddressElement(
             configuration: .init(),

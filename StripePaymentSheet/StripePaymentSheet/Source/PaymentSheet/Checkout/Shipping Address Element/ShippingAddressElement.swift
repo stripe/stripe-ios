@@ -14,6 +14,7 @@ import UIKit
 public final class ShippingAddressElement {
 
     private(set) var addressViewController: AddressViewController!
+    private var isPresenting = false
     private var presentationCompletion: (() -> Void)?
 
     init(
@@ -71,6 +72,12 @@ public final class ShippingAddressElement {
         from presentingViewController: UIViewController? = nil,
         completion: (() -> Void)? = nil
     ) {
+        guard !isPresenting else {
+            assertionFailure("ShippingAddressElement is already presenting")
+            completion?()
+            return
+        }
+
         guard let presentingViewController = presentingViewController ?? UIWindow.visibleViewController else {
             let errorMessage = "ShippingAddressElement.present(from:) could not find a presenting view controller."
             assertionFailure(errorMessage)
@@ -90,6 +97,7 @@ public final class ShippingAddressElement {
         }
 
         let navigationController = UINavigationController(rootViewController: addressViewController)
+        isPresenting = true
         presentationCompletion = completion
         presentingViewController.present(navigationController, animated: true)
     }
@@ -101,8 +109,10 @@ extension ShippingAddressElement: AddressViewControllerDelegate {
         with address: AddressViewController.AddressDetails?
     ) {
         addressViewController.dismiss(animated: true) {
-            self.presentationCompletion?()
+            let completion = self.presentationCompletion
             self.presentationCompletion = nil
+            self.isPresenting = false
+            completion?()
         }
     }
 }
