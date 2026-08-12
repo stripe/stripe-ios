@@ -108,7 +108,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
 }
 
 // MARK: - Test doubles
-class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
+private class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
     override func present(completion: ((Bool) -> Void)? = nil) {
         completion?(true)
     }
