@@ -181,7 +181,7 @@ private func PreviewGenericErrorPane(
     ]
     extraFields["generic_error_pane_icon_url"] = iconUrl
     extraFields["generic_error_pane_primary_cta_action"] = primaryCtaAction
-    extraFields["generic_error_pane_image"] = imageUrl
+    extraFields["generic_error_pane_image_url"] = imageUrl
     // swiftlint:disable:next force_unwrapping
     return FinancialConnectionsGenericErrorPane(extraFields: extraFields)!
 }

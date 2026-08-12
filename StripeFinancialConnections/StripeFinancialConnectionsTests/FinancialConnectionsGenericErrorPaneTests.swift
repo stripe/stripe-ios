@@ -27,7 +27,7 @@ class FinancialConnectionsGenericErrorPaneTests: XCTestCase {
             "generic_error_pane_primary_cta": "Try again",
             "generic_error_pane_primary_cta_action": "restart_auth_flow",
             "generic_error_pane_icon_url": "https://b.stripecdn.com/icon.png",
-            "generic_error_pane_image": "https://b.stripecdn.com/image.png",
+            "generic_error_pane_image_url": "https://b.stripecdn.com/image.png",
         ]
         for (key, value) in overrides {
             if let value {
@@ -139,7 +139,7 @@ class FinancialConnectionsGenericErrorPaneTests: XCTestCase {
             statusCode: 400,
             extraFields: extraFields(overrides: [
                 "generic_error_pane_icon_url": nil,
-                "generic_error_pane_image": nil,
+                "generic_error_pane_image_url": nil,
             ])
         )
 

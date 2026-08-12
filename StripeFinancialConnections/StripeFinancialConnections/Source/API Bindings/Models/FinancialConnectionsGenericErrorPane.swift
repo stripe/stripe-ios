@@ -45,7 +45,7 @@ struct FinancialConnectionsGenericErrorPane: Equatable {
         self.primaryCtaAction = (extraFields["generic_error_pane_primary_cta_action"] as? String)
             .flatMap(PrimaryCtaAction.init(rawValue:))
         self.iconUrl = extraFields["generic_error_pane_icon_url"] as? String
-        self.imageUrl = extraFields["generic_error_pane_image"] as? String
+        self.imageUrl = extraFields["generic_error_pane_image_url"] as? String
     }
 
     /// Extracts a generic error pane from an API error, or returns `nil` if the error
