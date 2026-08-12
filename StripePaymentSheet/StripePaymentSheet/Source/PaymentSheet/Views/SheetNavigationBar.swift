@@ -192,6 +192,7 @@ class SheetNavigationBar: UIView {
     func createPlainBackButton() -> UIButton {
         let button = SheetNavigationButton(type: .custom)
         let image = Image.icon_chevron_left_standalone.makeImage(template: true)
+            .imageFlippedForRightToLeftLayoutDirection()
         button.setImage(image, for: .normal)
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.back
@@ -206,7 +207,8 @@ class SheetNavigationBar: UIView {
         button.heightAnchor.constraint(equalToConstant: size).isActive = true
 
         let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
-        let image = UIImage(systemName: "chevron.left", withConfiguration: config)
+        let image = UIImage(systemName: "chevron.left", withConfiguration: config)?
+            .imageFlippedForRightToLeftLayoutDirection()
 
         button.setImage(image, for: .normal)
         button.tintColor = appearance.colors.icon

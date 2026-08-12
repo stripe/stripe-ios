@@ -231,7 +231,7 @@ class CardScanningView: UIView {
                     equalTo: cardOutlineView.rightAnchor, constant: -Self.errorLabelInset),
                 errorLabel.centerYAnchor.constraint(equalTo: cardOutlineView.centerYAnchor),
 
-                closeButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -closeButtonInset),
+                closeButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -closeButtonInset),
                 closeButton.topAnchor.constraint(equalTo: self.topAnchor, constant: closeButtonInset),
 
                 cardOutlineView.heightAnchor.constraint(
