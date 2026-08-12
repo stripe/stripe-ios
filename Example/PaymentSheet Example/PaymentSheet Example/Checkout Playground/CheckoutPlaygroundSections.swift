@@ -168,7 +168,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var automaticTax: Bool
     @Binding var checkoutSessionPaymentMethodSave: Bool
     @Binding var checkoutSessionPaymentMethodRemove: Bool
-    @Binding var adaptivePricingCountry: CheckoutPlayground.AdaptivePricingCountry
     @Binding var automaticPaymentMethods: Bool
 
     private var shouldShowAutomaticTax: Bool {
@@ -211,13 +210,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     title: "Payment Method Remove",
                     isOn: $checkoutSessionPaymentMethodRemove,
                     tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
-                )
-                CheckoutPlayground.PickerRow(
-                    title: "Country",
-                    icon: "globe",
-                    selection: $adaptivePricingCountry,
-                    tooltip: "Simulates the customer's country for adaptive pricing by sending a location-formatted customer_email. 'None' skips the email override.",
-                    displayText: { $0.displayName }
                 )
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
