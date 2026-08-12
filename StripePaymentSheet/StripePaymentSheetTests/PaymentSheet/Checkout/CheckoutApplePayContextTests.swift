@@ -179,6 +179,10 @@ private class MockPKPaymentAuthorizationController: PKPaymentAuthorizationContro
     override func dismiss(completion: (() -> Void)? = nil) {
         completion?()
     }
+
+    override func present(completion: (@Sendable (Bool) -> Void)? = nil) {
+        completion?(true)
+    }
 }
 
 private class MockAuthenticationContext: NSObject, STPAuthenticationContext {
