@@ -35,6 +35,7 @@ struct FinancialConnectionsAppearance: Equatable {
         static let linkGreen200: UIColor = .linkGreen200
         static let linkBrand50: UIColor = .linkBrand50
         static let linkBrand900: UIColor = .linkBrand900
+        static let iconBackgroundOnCard: UIColor = .dynamic(light: .linkNeutral200, dark: .linkNeutral700)
 
         // These colors change based on the manifest's theme.
         let primary: UIColor
@@ -249,6 +250,14 @@ private extension UIColor {
 
     static var linkNeutral100: UIColor {
         return UIColor(red: 245 / 255.0, green: 245 / 255.0, blue: 245 / 255.0, alpha: 1)  // #F5F5F5
+    }
+
+    static var linkNeutral200: UIColor {
+        return UIColor(red: 229 / 255.0, green: 229 / 255.0, blue: 229 / 255.0, alpha: 1)  // #E5E5E5
+    }
+
+    static var linkNeutral700: UIColor {
+        return UIColor(red: 64 / 255.0, green: 64 / 255.0, blue: 64 / 255.0, alpha: 1)  // #404040
     }
 
     static var linkNeutral800: UIColor {

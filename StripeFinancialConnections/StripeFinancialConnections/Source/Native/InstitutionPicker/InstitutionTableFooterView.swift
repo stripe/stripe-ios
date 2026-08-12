@@ -24,12 +24,16 @@ final class InstitutionTableFooterView: UIView {
         super.init(frame: .zero)
 
         let institutionCellView = InstitutionCellView(appearance: appearance)
+        let iconView = RoundedIconView(
+            image: .image(image),
+            style: .rounded,
+            appearance: appearance
+        )
+        if appearance.colors == .link {
+            iconView.backgroundColor = FinancialConnectionsAppearance.Colors.iconBackgroundOnCard
+        }
         institutionCellView.customize(
-            iconView: RoundedIconView(
-                image: .image(image),
-                style: .rounded,
-                appearance: appearance
-            ),
+            iconView: iconView,
             title: title,
             subtitle: subtitle
         )
