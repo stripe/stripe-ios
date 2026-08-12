@@ -81,8 +81,8 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         )
         let context = CheckoutApplePayContext(
             checkout: dataSource,
-            authorizationController: CheckoutApplePayContextSTPTestPKPaymentAuthorizationController(),
-            authenticationContext: CheckoutApplePayContextFunctionalTestAuthContext()
+            authorizationController: MockPKPaymentAuthorizationController(),
+            authenticationContext: MockAuthContext()
         )
         return (context, apiClient)
     }
@@ -108,7 +108,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
 }
 
 // MARK: - Test doubles
-class CheckoutApplePayContextSTPTestPKPaymentAuthorizationController: PKPaymentAuthorizationController {
+class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
     override func present(completion: ((Bool) -> Void)? = nil) {
         completion?(true)
     }
@@ -137,7 +137,7 @@ private class CheckoutApplePayContextFunctionalTestDataSource: CheckoutConfirmDa
     func commitSession(_ response: PaymentPagesAPIResponse) async throws {}
 }
 
-private class CheckoutApplePayContextFunctionalTestAuthContext: NSObject, STPAuthenticationContext {
+private class MockAuthContext: NSObject, STPAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         UIViewController()
     }
