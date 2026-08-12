@@ -12,9 +12,11 @@ import SwiftUI
 struct CheckoutCartView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var checkout: Checkout?
+    @StateObject private var diagnostics = CheckoutSessionDiagnostics()
 
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var showsCheckoutDetails = false
 
     let clientSecret: String
     let shippingAddressCollection: Bool
@@ -90,6 +92,24 @@ struct CheckoutCartView: View {
                             .foregroundColor(.primary)
                     }
                 }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showsCheckoutDetails = true
+                    } label: {
+                        Image(systemName: "ladybug")
+                    }
+                    .disabled(checkout == nil)
+                    .opacity(checkout == nil ? 0 : 1)
+                    .accessibilityLabel("Session diagnostics")
+                }
+            }
+            .sheet(isPresented: $showsCheckoutDetails) {
+                if let checkout {
+                    CheckoutSessionDetailsView(
+                        diagnostics: diagnostics,
+                        sessionID: checkout.session.id
+                    )
+                }
             }
             .task {
                 await loadCheckout()
@@ -102,6 +122,7 @@ struct CheckoutCartView: View {
         errorMessage = nil
         do {
             var config = Checkout.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
+            config.apiClient = diagnostics.makeAPIClient()
             config.adaptivePricing.allowed = adaptivePricing
             config.applePayConfiguration = Checkout.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
