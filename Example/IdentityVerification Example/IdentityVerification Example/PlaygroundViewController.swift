@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 3/3/21.
 //
 
-import StripeIdentity
+@_spi(VerifyWithWallet) import StripeIdentity
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -29,6 +29,7 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet private weak var requireLiveCaptureSwitch: UISwitch!
     @IBOutlet private weak var requireSelfieSwitch: UISwitch!
     @IBOutlet private weak var enableVerifyViaWalletSwitch: UISwitch!
+    private let useLocalWalletFlowSwitch = UISwitch()
     @IBOutlet private weak var verificationTypeContainerView: UIStackView!
     @IBOutlet private weak var documentOptionsContainerView: UIStackView!
     @IBOutlet private weak var nativeComponentsOptionsContainerView: UIStackView!
@@ -137,6 +138,13 @@ class PlaygroundViewController: UIViewController {
         phoneView.isHidden = true
         phoneOtpContainerView.addArrangedSubview(phoneView)
 
+        let useLocalWalletFlowLabel = UILabel()
+        useLocalWalletFlowLabel.text = "Use local verify via wallet flow"
+        useLocalWalletFlowSwitch.accessibilityLabel = useLocalWalletFlowLabel.text
+        let useLocalWalletFlowRow = UIStackView(arrangedSubviews: [useLocalWalletFlowLabel, useLocalWalletFlowSwitch])
+        useLocalWalletFlowRow.spacing = 8
+        documentOptionsContainerView.addArrangedSubview(useLocalWalletFlowRow)
+
         activityIndicator.hidesWhenStopped = true
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
         // TODO(ccen) enable phoneOtpContainerView when backend adds support to PII
@@ -146,7 +154,72 @@ class PlaygroundViewController: UIViewController {
 
     @objc
     func didTapVerifyButton() {
+        if invocationType == .native,
+            creationMethod == .new,
+            verificationType == .document,
+            useLocalWalletFlowSwitch.isOn
+        {
+            requestLocalWalletDocument()
+            return
+        }
         requestVerificationSession()
+    }
+
+    func requestLocalWalletDocument() {
+        updateButtonState(isLoading: true)
+        let manager = VerifyDocumentViaWalletManager(
+            idDocumentTypeAllowlistKeys: documentAllowedTypes.map(\.rawValue)
+        )
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            defer { updateButtonState(isLoading: false) }
+
+            do {
+                let document = try await manager.requestLocalDocumentData()
+                let payload = try JSONSerialization.data(
+                    withJSONObject: [
+                        "nonce": document.nonce.base64EncodedString()
+                            .replacingOccurrences(of: "+", with: "-")
+                            .replacingOccurrences(of: "/", with: "_")
+                            .replacingOccurrences(of: "=", with: ""),
+                        "merchant_identifier": document.merchantIdentifier,
+                        "encrypted_data": document.encryptedData.base64EncodedString(),
+                    ],
+                    options: [.prettyPrinted, .sortedKeys]
+                )
+                presentWalletPayload(String(bytes: payload, encoding: .utf8)!)
+            } catch {
+                displayAlert("Verify via Wallet failed", String(describing: error))
+            }
+        }
+    }
+
+    func presentWalletPayload(_ payload: String) {
+        let textView = UITextView()
+        textView.text = payload
+        textView.font = .monospacedSystemFont(ofSize: 12, weight: .regular)
+        textView.isEditable = false
+        textView.translatesAutoresizingMaskIntoConstraints = false
+
+        let viewController = UIViewController()
+        viewController.title = "Wallet payload"
+        viewController.view.backgroundColor = .systemBackground
+        viewController.view.addSubview(textView)
+        NSLayoutConstraint.activate([
+            textView.leadingAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            textView.trailingAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            textView.topAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            textView.bottomAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+        ])
+        viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(
+            systemItem: .close,
+            primaryAction: UIAction { [weak viewController] _ in viewController?.dismiss(animated: true) }
+        )
+        viewController.navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Copy",
+            primaryAction: UIAction { _ in UIPasteboard.general.string = payload }
+        )
+        present(UINavigationController(rootViewController: viewController), animated: true)
     }
 
     @IBAction func fallbackToDocumentValueChanged(_ uiSwitch: UISwitch) {
