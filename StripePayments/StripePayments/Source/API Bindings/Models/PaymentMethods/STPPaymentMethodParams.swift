@@ -91,6 +91,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var swish: STPPaymentMethodSwishParams?
     /// If this is a MobilePay PaymentMethod, this contains additional details.
     @objc public var mobilePay: STPPaymentMethodMobilePayParams?
+    /// If this is a Vipps PaymentMethod, this contains additional details.
+    @objc public var vipps: STPPaymentMethodVippsParams?
     /// If this is a AmazonPay PaymentMethod, this contains additional details.
     @objc public var amazonPay: STPPaymentMethodAmazonPayParams?
     /// If this is a Alma PaymentMethod, this contains additional details.
@@ -571,6 +573,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a Vipps PaymentMethod.
+    /// - Parameters:
+    ///   - vipps:               An object containing additional Vipps details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        vipps: STPPaymentMethodVippsParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .vipps
+        self.vipps = vipps
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     /// Creates params for a AmazonPay PaymentMethod.
     /// - Parameters:
     ///   - amazonPay:           An object containing additional AmazonPay details.
@@ -800,6 +820,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: revolutPay)): "revolut_pay",
             NSStringFromSelector(#selector(getter: swish)): "swish",
             NSStringFromSelector(#selector(getter: mobilePay)): "mobilepay",
+            NSStringFromSelector(#selector(getter: vipps)): "vipps",
             NSStringFromSelector(#selector(getter: amazonPay)): "amazon_pay",
             NSStringFromSelector(#selector(getter: alma)): "alma",
             NSStringFromSelector(#selector(getter: sunbit)): "sunbit",
@@ -1236,6 +1257,8 @@ extension STPPaymentMethodParams {
             swish = STPPaymentMethodSwishParams()
         case .mobilePay:
             mobilePay = STPPaymentMethodMobilePayParams()
+        case .vipps:
+            vipps = STPPaymentMethodVippsParams()
         case .amazonPay:
             amazonPay = STPPaymentMethodAmazonPayParams()
         case .alma:

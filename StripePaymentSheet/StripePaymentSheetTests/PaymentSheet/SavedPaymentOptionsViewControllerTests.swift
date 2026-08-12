@@ -3,6 +3,7 @@
 //  StripePaymentSheetTests
 //
 
+import StripeCoreTestUtils
 @_spi(STP) import StripePayments
 @testable import StripePaymentSheet
 import XCTest
@@ -210,6 +211,99 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
 
         XCTAssertEqual(cell.label.text, "Onelink")
         XCTAssertEqual(cell.selectableRectangle.accessibilityLabel, "One-link")
+    }
+
+    func testPaymentOptionCell_rightToLeftVoiceOverTraversalReadsPaymentMethodBeforeEdit() throws {
+        let cell = SavedPaymentMethodCollectionView.PaymentOptionCell(
+            frame: CGRect(x: 0, y: 0, width: 106, height: 112)
+        )
+        cell.setViewModel(
+            .saved(paymentMethod: STPPaymentMethod._testCard()),
+            cbcEligible: false,
+            allowsPaymentMethodRemoval: true,
+            allowsPaymentMethodUpdate: true
+        )
+        cell.isRemovingPaymentMethods = true
+        cell.semanticContentAttribute = .forceRightToLeft
+        cell.layoutIfNeeded()
+
+        let accessibilityElements = try XCTUnwrap(cell.accessibilityElements as? [UIView])
+        XCTAssertTrue(accessibilityElements[0] === cell.selectableRectangle)
+        XCTAssertTrue(accessibilityElements[1] === cell.accessoryButton)
+        XCTAssertLessThan(cell.accessoryButton.frame.midX, cell.selectableRectangle.frame.midX)
+    }
+
+    func testSavedPaymentMethods_rightToLeftOverflowRendersFirstItemAtLeadingEdge() throws {
+        // Given an overflowing saved payment method carousel in a right-to-left interface
+        let configuration = SavedPaymentOptionsViewController.Configuration(
+            customerID: "cus_123",
+            showApplePay: true,
+            showLink: true,
+            linkBrand: .link,
+            removeSavedPaymentMethodMessage: nil,
+            merchantDisplayName: "Test Merchant",
+            isCVCRecollectionEnabled: false,
+            isTestMode: false,
+            allowsRemovalOfLastSavedPaymentMethod: false,
+            allowsRemovalOfPaymentMethods: true,
+            allowsSetAsDefaultPM: false,
+            allowsUpdatePaymentMethod: false
+        )
+        let sut = SavedPaymentOptionsViewController(
+            savedPaymentMethods: [
+                STPPaymentMethod._testCard(),
+                STPPaymentMethod._testUSBankAccount(),
+                STPPaymentMethod._testSEPA(),
+            ],
+            configuration: configuration,
+            paymentSheetConfiguration: paymentSheetConfiguration,
+            intent: Intent._testValue(),
+            appearance: .default,
+            elementsSession: .emptyElementsSession,
+            analyticsHelper: ._testValue()
+        )
+        let hostViewController = UIViewController()
+        hostViewController.addChild(sut)
+        hostViewController.setOverrideTraitCollection(
+            UITraitCollection(layoutDirection: .rightToLeft),
+            forChild: sut
+        )
+        hostViewController.view.addSubview(sut.view)
+        sut.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            sut.view.topAnchor.constraint(equalTo: hostViewController.view.topAnchor),
+            sut.view.leadingAnchor.constraint(equalTo: hostViewController.view.leadingAnchor),
+            sut.view.trailingAnchor.constraint(equalTo: hostViewController.view.trailingAnchor),
+            sut.view.bottomAnchor.constraint(equalTo: hostViewController.view.bottomAnchor),
+        ])
+        sut.didMove(toParent: hostViewController)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 100))
+        window.rootViewController = hostViewController
+        window.isHidden = false
+
+        // When the carousel is laid out
+        hostViewController.view.layoutIfNeeded()
+        sut.collectionView.layoutIfNeeded()
+
+        // Then item zero is first in reading order and visible at the physical right edge
+        let firstItem = try XCTUnwrap(
+            sut.collectionView.cellForItem(at: IndexPath(item: 0, section: 0))
+        )
+        let secondItem = try XCTUnwrap(
+            sut.collectionView.cellForItem(at: IndexPath(item: 1, section: 0))
+        )
+        let firstItemFrame = firstItem.convert(firstItem.bounds, to: window)
+        let secondItemFrame = secondItem.convert(secondItem.bounds, to: window)
+        let visibleCollectionFrame = sut.collectionView.convert(sut.collectionView.bounds, to: window)
+        XCTAssertEqual(sut.collectionView.effectiveUserInterfaceLayoutDirection, .rightToLeft)
+        XCTAssertGreaterThan(firstItemFrame.midX, secondItemFrame.midX)
+        XCTAssertTrue(visibleCollectionFrame.contains(firstItemFrame))
+        XCTAssertEqual(
+            visibleCollectionFrame.maxX - firstItemFrame.maxX,
+            PaymentSheet.Appearance.default.formInsets.leading,
+            accuracy: 1
+        )
+        withExtendedLifetime(window) {}
     }
 
     // MARK: Helpers
