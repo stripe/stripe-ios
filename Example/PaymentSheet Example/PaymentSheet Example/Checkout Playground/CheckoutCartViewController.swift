@@ -21,6 +21,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     let integrationType: CheckoutPlayground.IntegrationType
     let showExpressCheckoutElement: Bool
     let currencySelectorAppearance: CurrencySelectorElement.Appearance
+    var expressCheckoutElementBillingDetailsCollectionConfiguration = ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration()
 
     func makeUIViewController(context: Context) -> UINavigationController {
         let viewController = CheckoutCartViewController(
@@ -30,6 +31,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
             integrationType: integrationType,
             showExpressCheckoutElement: showExpressCheckoutElement,
             currencySelectorAppearance: currencySelectorAppearance,
+            expressCheckoutElementBillingDetailsCollectionConfiguration: expressCheckoutElementBillingDetailsCollectionConfiguration,
             closeAction: { dismiss() }
         )
         return UINavigationController(rootViewController: viewController)
@@ -47,6 +49,7 @@ final class CheckoutCartViewController: UIViewController {
     private let integrationType: CheckoutPlayground.IntegrationType
     private let showExpressCheckoutElement: Bool
     private let currencySelectorAppearance: CurrencySelectorElement.Appearance
+    private let expressCheckoutElementBillingDetailsCollectionConfiguration: ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration
     private let closeAction: () -> Void
     private let diagnostics = CheckoutSessionDiagnostics()
 
@@ -76,6 +79,7 @@ final class CheckoutCartViewController: UIViewController {
         integrationType: CheckoutPlayground.IntegrationType,
         showExpressCheckoutElement: Bool,
         currencySelectorAppearance: CurrencySelectorElement.Appearance,
+        expressCheckoutElementBillingDetailsCollectionConfiguration: ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration = .init(),
         closeAction: @escaping () -> Void
     ) {
         self.clientSecret = clientSecret
@@ -84,6 +88,7 @@ final class CheckoutCartViewController: UIViewController {
         self.integrationType = integrationType
         self.showExpressCheckoutElement = showExpressCheckoutElement
         self.currencySelectorAppearance = currencySelectorAppearance
+        self.expressCheckoutElementBillingDetailsCollectionConfiguration = expressCheckoutElementBillingDetailsCollectionConfiguration
         self.closeAction = closeAction
         super.init(nibName: nil, bundle: nil)
     }
@@ -201,6 +206,7 @@ final class CheckoutCartViewController: UIViewController {
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             configuration.currencySelectorElement.appearance = currencySelectorAppearance
+            configuration.expressCheckoutElement.billingDetailsCollectionConfiguration = expressCheckoutElementBillingDetailsCollectionConfiguration
             configuration.apiClient = diagnostics.makeAPIClient()
 
             let checkout = try await Checkout(configuration: configuration)

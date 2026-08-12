@@ -14,6 +14,7 @@ protocol CheckoutConfirmDataSource: AnyObject {
     var paymentHandler: STPPaymentHandler { get }
     var returnURL: String? { get }
     var merchantDisplayName: String { get }
+    var expressCheckoutElementBillingDetailsCollectionConfiguration: ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration { get }
     func commitSession(_ response: PaymentPagesAPIResponse) async throws
 }
 
@@ -21,6 +22,9 @@ extension Checkout: CheckoutConfirmDataSource {
     var applePayConfiguration: ApplePayConfiguration? { configuration.applePayConfiguration }
     var returnURL: String? { configuration.returnURL }
     var merchantDisplayName: String { effectiveMerchantDisplayName }
+    var expressCheckoutElementBillingDetailsCollectionConfiguration: ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration {
+        configuration.expressCheckoutElement.billingDetailsCollectionConfiguration
+    }
 }
 
 // MARK: - Confirm

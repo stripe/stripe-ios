@@ -109,12 +109,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     intent: .checkout(currentSession),
                     elementsSession: currentSession.elementsSession
                 )
-                var fallbackBillingDetails: StripeAPI.BillingDetails?
-                if let email = currentSession.email {
-                    var details = StripeAPI.BillingDetails()
-                    details.email = email
-                    fallbackBillingDetails = details
-                }
+                var details = StripeAPI.BillingDetails()
+                details.email = currentSession.email
+                let fallbackBillingDetails: StripeAPI.BillingDetails? = details
                 let paymentMethod = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<StripeAPI.PaymentMethod, Error>) in
                     StripeAPI.PaymentMethod.create(
                         apiClient: self.apiClient,
@@ -277,8 +274,14 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
         let merchantLabel = checkout.merchantDisplayName
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
-
-        // TODO: Set requiredShippingContactFields when shipping address collection is implemented.
+        let billingDetailsCollectionConfiguration = checkout.expressCheckoutElementBillingDetailsCollectionConfiguration
+        paymentRequest.requiredBillingContactFields = CheckoutApplePayContext.makeRequiredBillingContactFields(
+            from: billingDetailsCollectionConfiguration
+        )
+        paymentRequest.requiredShippingContactFields = CheckoutApplePayContext.makeRequiredShippingContactFieldsForBilling(
+            from: billingDetailsCollectionConfiguration
+        )
+        // TODO: Union in shipping address fields when shipping address collection is implemented.
 
         // PKPaymentAuthorizationController.init is non-nullable even for invalid requests.
         // Use PKPaymentAuthorizationViewController.init as a proxy — it IS nullable and
@@ -314,6 +317,32 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private func summaryItems() -> [PKPaymentSummaryItem] {
         let session = checkout?.session ?? self.session
         return Self.makeSummaryItems(for: session, label: merchantLabel)
+    }
+
+    /// - Note: There's no `.never` case for `address`, since suppressing billing address collection isn't supported with a Checkout Session.
+    static func makeRequiredBillingContactFields(
+        from configuration: ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration
+    ) -> Set<PKContactField> {
+        var requiredFields = Set<PKContactField>()
+        requiredFields.insert(.postalAddress)
+        if configuration.name == .always {
+            requiredFields.insert(.name)
+        }
+        return requiredFields
+    }
+
+    /// Apple Pay collects phone and email through the shipping contact, even when they're used as billing details.
+    static func makeRequiredShippingContactFieldsForBilling(
+        from configuration: ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration
+    ) -> Set<PKContactField> {
+        var requiredFields = Set<PKContactField>()
+        if configuration.email == .always {
+            requiredFields.insert(.emailAddress)
+        }
+        if configuration.phone == .always {
+            requiredFields.insert(.phoneNumber)
+        }
+        return requiredFields
     }
 
     // TODO: Build summary items from session line items, tax, shipping, and discounts.

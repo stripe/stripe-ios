@@ -25,6 +25,7 @@ struct CheckoutCartView: View {
     let integrationType: CheckoutPlayground.IntegrationType
     var showExpressCheckoutElement: Bool = false
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
+    var expressCheckoutElementBillingDetailsCollectionConfiguration = ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration()
 
     var body: some View {
         NavigationView {
@@ -153,6 +154,7 @@ struct CheckoutCartView: View {
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             config.currencySelectorElement.appearance = currencySelectorAppearance
+            config.expressCheckoutElement.billingDetailsCollectionConfiguration = expressCheckoutElementBillingDetailsCollectionConfiguration
             config.expressCheckoutElement.confirmHandler = { [self] result in
                 eceConfirmResult = result
             }

@@ -53,6 +53,12 @@ struct CheckoutPlaygroundView: View {
 
                         currencySelectorAppearanceSection
 
+                        if viewModel.expressCheckoutElementOption == .show {
+                            CheckoutPlaygroundExpressCheckoutElementConfigurationSection(
+                                configuration: $viewModel.expressCheckoutElementBillingDetailsCollectionConfiguration
+                            )
+                        }
+
                         if !viewModel.automaticPaymentMethods {
                             CheckoutPlaygroundPaymentMethodSection(
                                 selectedMethods: $viewModel.paymentMethodTypes,
@@ -87,7 +93,8 @@ struct CheckoutPlaygroundView: View {
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
-                            currencySelectorAppearance: viewModel.currencySelectorAppearance
+                            currencySelectorAppearance: viewModel.currencySelectorAppearance,
+                            expressCheckoutElementBillingDetailsCollectionConfiguration: viewModel.expressCheckoutElementBillingDetailsCollectionConfiguration
                         )
                     case .uiKit:
                         CheckoutCartUIKitView(
@@ -96,7 +103,8 @@ struct CheckoutPlaygroundView: View {
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
-                            currencySelectorAppearance: viewModel.currencySelectorAppearance
+                            currencySelectorAppearance: viewModel.currencySelectorAppearance,
+                            expressCheckoutElementBillingDetailsCollectionConfiguration: viewModel.expressCheckoutElementBillingDetailsCollectionConfiguration
                         )
                     }
                 }

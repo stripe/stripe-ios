@@ -75,6 +75,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         var paymentHandler: STPPaymentHandler { STPPaymentHandler(apiClient: STPAPIClient.shared) }
         var returnURL: String? { nil }
         var merchantDisplayName: String { "" }
+        var expressCheckoutElementBillingDetailsCollectionConfiguration = ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration()
 
         init(session: Checkout.Session) {
             self.session = session

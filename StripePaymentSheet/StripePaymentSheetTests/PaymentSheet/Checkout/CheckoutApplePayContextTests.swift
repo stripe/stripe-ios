@@ -198,6 +198,7 @@ private class MockCheckoutConfirmDataSource: CheckoutConfirmDataSource {
     let paymentHandler: STPPaymentHandler
     var returnURL: String?
     let merchantDisplayName: String
+    var expressCheckoutElementBillingDetailsCollectionConfiguration = ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration()
 
     init(session: Checkout.Session, apiClient: STPAPIClient) {
         self.session = session

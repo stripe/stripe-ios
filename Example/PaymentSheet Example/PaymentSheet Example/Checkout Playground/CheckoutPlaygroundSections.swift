@@ -5,6 +5,15 @@
 //  Created by Nick Porter on 2/24/26.
 
 import SwiftUI
+@_spi(STP) import StripePaymentSheet
+
+extension ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration.CollectionMode: Identifiable {
+    public var id: String { rawValue }
+}
+
+extension ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration.AddressCollectionMode: Identifiable {
+    public var id: String { rawValue }
+}
 
 struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var uiFramework: CheckoutPlayground.UIFramework
@@ -218,6 +227,44 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     selection: $adaptivePricingCountry,
                     tooltip: "Simulates the customer's country for adaptive pricing by sending a location-formatted customer_email. 'None' skips the email override.",
                     displayText: { $0.displayName }
+                )
+            }
+            .background(Color(uiColor: .secondarySystemGroupedBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+}
+
+struct CheckoutPlaygroundExpressCheckoutElementConfigurationSection: View {
+    @Binding var configuration: ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            CheckoutPlayground.SectionHeader(title: "ExpressCheckoutElement", icon: "bolt.fill")
+            VStack(spacing: 1) {
+                CheckoutPlayground.PickerRow(
+                    title: "Name",
+                    selection: $configuration.name,
+                    tooltip: "How ExpressCheckoutElement should collect the customer's billing name.",
+                    displayText: { $0.rawValue.capitalized }
+                )
+                CheckoutPlayground.PickerRow(
+                    title: "Phone",
+                    selection: $configuration.phone,
+                    tooltip: "How ExpressCheckoutElement should collect the customer's billing phone number.",
+                    displayText: { $0.rawValue.capitalized }
+                )
+                CheckoutPlayground.PickerRow(
+                    title: "Email",
+                    selection: $configuration.email,
+                    tooltip: "How ExpressCheckoutElement should collect the customer's billing email.",
+                    displayText: { $0.rawValue.capitalized }
+                )
+                CheckoutPlayground.PickerRow(
+                    title: "Address",
+                    selection: $configuration.address,
+                    tooltip: "How ExpressCheckoutElement should collect the customer's billing address. Suppressing address collection isn't supported with a Checkout Session.",
+                    displayText: { $0.rawValue.capitalized }
                 )
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))

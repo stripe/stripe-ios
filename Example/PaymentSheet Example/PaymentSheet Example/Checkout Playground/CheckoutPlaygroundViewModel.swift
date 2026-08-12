@@ -42,6 +42,7 @@ extension CheckoutPlayground {
         @Published var automaticPaymentMethods = false
         @Published var paymentMethodTypes: Set<String> = ["card"]
         @Published var currencySelectorAppearance = CurrencySelectorElement.Appearance()
+        @Published var expressCheckoutElementBillingDetailsCollectionConfiguration = ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration()
         @Published var checkoutEndpointOption: EndpointOption = .hosted
         @Published var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
 

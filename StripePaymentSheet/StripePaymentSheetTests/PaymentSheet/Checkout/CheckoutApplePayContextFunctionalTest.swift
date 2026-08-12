@@ -126,6 +126,7 @@ private class CheckoutApplePayContextFunctionalTestDataSource: CheckoutConfirmDa
     let paymentHandler: STPPaymentHandler
     var returnURL: String?
     let merchantDisplayName = "Functional Test Merchant"
+    var expressCheckoutElementBillingDetailsCollectionConfiguration = ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration()
 
     init(session: Checkout.Session, apiClient: STPAPIClient, returnURL: String? = nil) {
         self.session = session
