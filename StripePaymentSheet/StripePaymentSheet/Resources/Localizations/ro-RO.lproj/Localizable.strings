@@ -140,10 +140,6 @@
 
 "Did you mean %@? %@." = "Ați vrut să spuneți %1$@? %2$@.";
 
-"Discard Changes" = "Renunțare la modificări";
-
-"Discard changes?" = "Renunțați la modificări?";
-
 "Discount" = "Reducere";
 
 "EPS Bank" = "Banca EPS";
@@ -167,8 +163,6 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Înțeleg că Stripe va colecta debite directe în numele %@ și confirm că sunt titularul contului și singura persoană necesară pentru a autoriza debite din acest cont.";
 
 "IBAN" = "IBAN";
-
-"Keep Editing" = "Continuare editare";
 
 "Last 4 digits of SSN" = "Ultimele 4 cifre de la SSN";
 
@@ -351,5 +345,3 @@
 "Yes, update" = "Da, actualizare";
 
 "Your IBAN should start with a two-letter country code." = "Codul dvs. IBAN trebuie să înceapă cu un cod de țară format din două litere.";
-
-"Your address changes won't be saved." = "Modificările aplicate adresei nu vor fi salvate.";

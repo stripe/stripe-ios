@@ -140,10 +140,6 @@
 
 "Did you mean %@? %@." = "คุณหมายถึง %1$@ ใช่หรือไม่ %2$@";
 
-"Discard Changes" = "ยกเลิกการเปลี่ยนแปลง";
-
-"Discard changes?" = "ยกเลิกการเปลี่ยนแปลงหรือไม่";
-
 "Discount" = "ส่วนลด";
 
 "EPS Bank" = "EPS Bank";
@@ -167,8 +163,6 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "ฉันเข้าใจว่า Stripe จะดำเนินการหักบัญชีอัตโนมัติในนามของ %@ และยืนยันว่าฉันเป็นเจ้าของบัญชีและเป็นบุคคลเดียวเท่านั้นที่อนุญาตให้หักเงินจากบัญชีนี้ได้";
 
 "IBAN" = "IBAN";
-
-"Keep Editing" = "แก้ไขต่อ";
 
 "Last 4 digits of SSN" = "ตัวเลข 4 หลักสุดท้ายของ SSN";
 
@@ -351,5 +345,3 @@
 "Yes, update" = "ใช่ อัปเดต";
 
 "Your IBAN should start with a two-letter country code." = "IBAN ควรเริ่มต้นด้วยรหัสประเทศ 2 ตัวอักษร";
-
-"Your address changes won't be saved." = "การเปลี่ยนแปลงที่อยู่ของคุณจะไม่ได้รับการบันทึก";
