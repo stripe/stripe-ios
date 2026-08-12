@@ -148,14 +148,16 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
     func testFailedSaveLogsStartedAndFailedEvents() async {
         // Given
         let shippingAddressElement = makeShippingAddressElement()
-        let delegate = ShippingAddressElementDelegateMock(error: ShippingAddressElementTestError.saveFailed)
+        let delegate = ShippingAddressElementDelegateMock(
+            error: CheckoutError.apiError(message: "Sensitive error details")
+        )
         shippingAddressElement.delegate = delegate
 
         // When
         do {
             try await shippingAddressElement.save(addressDetails: makeAddressDetails()) { _ in }
             XCTFail("Expected save to fail")
-        } catch ShippingAddressElementTestError.saveFailed {
+        } catch CheckoutError.apiError {
             // Expected
         } catch {
             XCTFail("Unexpected error: \(error)")
@@ -168,6 +170,11 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
             ["elements.shipping_address.save_started", "elements.shipping_address.save_failed"]
         )
         events.forEach { assertCommonAnalyticsParameters($0) }
+        XCTAssertNil(events[0]["error_type"])
+        XCTAssertNil(events[0]["error_code"])
+        XCTAssertEqual(events[1]["error_type"] as? String, "StripePaymentSheet.CheckoutError")
+        XCTAssertEqual(events[1]["error_code"] as? String, "apiError")
+        XCTAssertFalse(events[1].values.contains { ($0 as? String) == "Sensitive error details" })
     }
 
     private func makeShippingAddressElement() -> ShippingAddressElement {
@@ -266,8 +273,4 @@ private final class ShippingAddressElementDelegateMock: ShippingAddressElementDe
             throw error
         }
     }
-}
-
-private enum ShippingAddressElementTestError: Error {
-    case saveFailed
 }

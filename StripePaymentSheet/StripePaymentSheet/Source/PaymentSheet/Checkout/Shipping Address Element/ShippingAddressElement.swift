@@ -152,16 +152,25 @@ extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
             )
             log(event: .shippingAddressElementSaveCompleted, addressAnalyticData: addressAnalyticData)
         } catch {
-            log(event: .shippingAddressElementSaveFailed, addressAnalyticData: addressAnalyticData)
+            log(
+                event: .shippingAddressElementSaveFailed,
+                addressAnalyticData: addressAnalyticData,
+                error: error
+            )
             throw error
         }
     }
 
-    private func log(event: STPAnalyticEvent, addressAnalyticData: AddressAnalyticData) {
+    private func log(
+        event: STPAnalyticEvent,
+        addressAnalyticData: AddressAnalyticData,
+        error: Error? = nil
+    ) {
         STPAnalyticsClient.sharedClient.logShippingAddressElementEvent(
             event: event,
             addressAnalyticData: addressAnalyticData,
             checkoutSessionId: checkoutSessionId,
+            error: error,
             apiClient: addressViewController.configuration.apiClient
         )
     }

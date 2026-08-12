@@ -68,13 +68,18 @@ extension STPAnalyticsClient {
         event: STPAnalyticEvent,
         addressAnalyticData: AddressAnalyticData,
         checkoutSessionId: String,
+        error: Error? = nil,
         apiClient: STPAPIClient
     ) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
+        var additionalParams: [String: Any] = ["checkout_session_id": checkoutSessionId]
+        if let error {
+            additionalParams.mergeAssertingOnOverwrites(error.serializeForV1Analytics())
+        }
         logAddressControllerEvent(
             event: event,
             addressAnalyticData: addressAnalyticData,
-            additionalParams: ["checkout_session_id": checkoutSessionId],
+            additionalParams: additionalParams,
             apiClient: apiClient
         )
     }
