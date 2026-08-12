@@ -118,7 +118,6 @@ class CheckoutApplePayContextSTPTestPKPaymentAuthorizationController: PKPaymentA
     }
 }
 
-
 @MainActor
 private class CheckoutApplePayContextFunctionalTestDataSource: CheckoutConfirmDataSource {
     var applePayConfiguration: Checkout.ApplePayConfiguration? = Checkout.ApplePayConfiguration(merchantId: "merchant.com.test")
