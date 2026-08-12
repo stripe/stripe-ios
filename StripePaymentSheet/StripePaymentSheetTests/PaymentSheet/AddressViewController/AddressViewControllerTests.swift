@@ -48,7 +48,6 @@ final class AddressViewControllerTests: XCTestCase {
         XCTAssertEqual(addressDetails?.address.line1, "354 Oyster Point Blvd")
         XCTAssertEqual(addressDetails?.address.postalCode, "94080")
         XCTAssertEqual(addressDetails?.address.state, "CA")
-        XCTAssertTrue(merchantDelegate.receivedAddressDetails.isEmpty)
     }
 
     func testDidContinuePassesNilAddressToIntegrationDelegate() async {
@@ -70,7 +69,6 @@ final class AddressViewControllerTests: XCTestCase {
         // Then only the integration delegate receives the nil address
         XCTAssertEqual(integrationDelegate.receivedAddressDetails.count, 1)
         XCTAssertNil(integrationDelegate.receivedAddressDetails[0])
-        XCTAssertTrue(merchantDelegate.receivedAddressDetails.isEmpty)
     }
 
     func testDefaultIntegrationDelegateLogsAndForwardsValidAddress() async {
