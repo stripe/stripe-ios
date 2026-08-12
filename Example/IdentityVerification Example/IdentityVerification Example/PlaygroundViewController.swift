@@ -233,6 +233,7 @@ class PlaygroundViewController: UIViewController {
     func requestVerificationSession() {
         // Disable the button while we make the request
         updateButtonState(isLoading: true)
+        VerifyDocumentViaWalletManager.shouldEnableVerifyDocumentViaWallet = enableVerifyViaWalletSwitch.isOn
         var endpoint: String
         var requestDict: [String: Any]
 
@@ -264,7 +265,6 @@ class PlaygroundViewController: UIViewController {
                         "require_live_capture": requireLiveCaptureSwitch.isOn,
                         "require_matching_selfie": requireSelfieSwitch.isOn,
                         "require_address": requireAddressSwitch.isOn,
-                        "enable_verify_via_wallet": enableVerifyViaWalletSwitch.isOn,
                     ],
                 ]
                 if requirePhoneNumberSwitch.isOn {
@@ -298,7 +298,6 @@ class PlaygroundViewController: UIViewController {
                         "require_live_capture": requireLiveCaptureSwitch.isOn,
                         "require_matching_selfie": requireSelfieSwitch.isOn,
                         "require_address": requireAddressSwitch.isOn,
-                        "enable_verify_via_wallet": enableVerifyViaWalletSwitch.isOn,
                     ]
                     options["phone_records"] = [
                         "fallback": "document",

@@ -37,7 +37,9 @@ enum VerifyDocumentViaWalletManagerError: Error {
         idDocumentTypeAllowlistKeys: [String],
         apiClient: IdentityAPIClient?
     ) {
-        self.shouldEnableVerifyDocumentViaWallet = shouldEnableVerifyDocumentViaWallet ?? VerifyDocumentViaWalletManager.shouldEnableVerifyDocumentViaWallet
+        self.shouldEnableVerifyDocumentViaWallet =
+            VerifyDocumentViaWalletManager.shouldEnableVerifyDocumentViaWallet
+            || (shouldEnableVerifyDocumentViaWallet ?? false)
         self.idDocumentTypeAllowlistKeys = idDocumentTypeAllowlistKeys
         self.apiClient = apiClient
     }
