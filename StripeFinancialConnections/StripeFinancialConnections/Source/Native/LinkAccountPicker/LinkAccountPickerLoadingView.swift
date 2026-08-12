@@ -17,7 +17,7 @@ final class LinkAccountPickerLoadingView: ShimmeringView {
             let rowsStack = UIStackView()
             rowsStack.axis = .vertical
             rowsStack.spacing = 0
-            for _ in 0..<3 {
+            for _ in 0..<2 {
                 let row = UIView()
                 row.translatesAutoresizingMaskIntoConstraints = false
                 NSLayoutConstraint.activate([
