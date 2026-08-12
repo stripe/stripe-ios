@@ -31,20 +31,20 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let apiClient: STPAPIClient
     private let paymentHandler: STPPaymentHandler
     private let returnURL: String?
-    private let authorizationController: PKPaymentAuthorizationController
+    var authorizationController: PKPaymentAuthorizationController
     private let authenticationContext: STPAuthenticationContext
     private let presentationWindow: UIWindow?
 
     // Internal state
     private var continuation: CheckedContinuation<Checkout.InternalConfirmResult, Never>?
-    private var result: Checkout.InternalConfirmResult?
-    private var paymentState: PaymentState = .notStarted
+    var result: Checkout.InternalConfirmResult?
+    var paymentState: PaymentState = .notStarted
     /// YES if the flow cancelled or timed out.  This toggles which delegate method (didFinish or didAuthorize) resumes our continuation
-    private var didCancelOrTimeoutWhilePending = false
+    var didCancelOrTimeoutWhilePending = false
     /// Whether or not we fully completed the flow - if didFinish is `true`, that means `_end()` was called and this class is unusable.
     private var didFinish = false
 
-    private init(
+    init(
         checkout: CheckoutConfirmDataSource,
         authorizationController: PKPaymentAuthorizationController,
         authenticationContext: STPAuthenticationContext
@@ -72,10 +72,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         // - The docs say localizedDescription can be shown in the Apple Pay sheet, but I haven't seen this.
         // - If you call the completion block w/ a status of .failure and an error, the user is prompted to try again.
 
-        Task { @MainActor in
+        Task {
             // Helpers to handle annoying logic around "Do I call completion block or dismiss + call delegate?"
             // Helper 1: Handle failure
-            @MainActor func handleFailure(error: Error) {
+            let handleFailure = { (error: Error) in
                 self.paymentState = .error
                 self.result = .init(paymentSheetResult: .failed(error: error))
                 if self.didCancelOrTimeoutWhilePending {
@@ -86,7 +86,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 }
             }
             // Helper 2: Handle success
-            @MainActor func handleSuccess(paymentSheetResult: PaymentSheetResult, response: PaymentPagesAPIResponse) {
+            let handleSuccess = { (paymentSheetResult: PaymentSheetResult, response: PaymentPagesAPIResponse) in
                 self.paymentState = .success
                 self.result = .init(paymentSheetResult: paymentSheetResult, checkoutSessionResponse: response)
                 if self.didCancelOrTimeoutWhilePending {
@@ -153,9 +153,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 // 4. Commit the confirmed session back to Checkout so its state stays current.
                 try await self.checkout?.commitSession(response)
 
-                handleSuccess(paymentSheetResult: paymentSheetResult, response: response)
+                handleSuccess(paymentSheetResult, response)
             } catch {
-                handleFailure(error: error)
+                handleFailure(error)
             }
         }
     }
@@ -165,7 +165,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         // Note: This method is called if the user cancels (taps outside the sheet) or Apple Pay times out (empirically ~30 seconds)
         switch paymentState {
         case .notStarted:
-            Task { @MainActor in
+            Task {
                 await controller.dismiss()
                 self.resume(with: .init(paymentSheetResult: .canceled))
                 self._end()
@@ -175,13 +175,13 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             // Instead, we'll dismiss and notify our delegate when the payment finishes.
             didCancelOrTimeoutWhilePending = true
         case .error:
-            Task { @MainActor in
+            Task {
                 await controller.dismiss()
                 self.resume(with: self.result ?? .init(paymentSheetResult: .failed(error: CheckoutError.unknown(debugDescription: "Apple Pay finished in error state without a result."))))
                 self._end()
             }
         case .success:
-            Task { @MainActor in
+            Task {
                 await controller.dismiss()
                 self.resume(with: self.result ?? .init(paymentSheetResult: .canceled))
                 self._end()
@@ -352,7 +352,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         let name = PersonNameComponentsFormatter.localizedString(from: nameComponents, style: .default)
         let shippingAddress = STPAddress(pkContact: shippingContact)
 
-        guard let line1 = shippingAddress.line1 else {
+        // country is required by the API; skip shipping if it's absent (e.g. simulator fixtures).
+        guard let line1 = shippingAddress.line1,
+              let country = shippingAddress.country else {
             return nil
         }
 
@@ -361,7 +363,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         addressParams.city = shippingAddress.city
         addressParams.state = shippingAddress.state
         addressParams.postalCode = shippingAddress.postalCode
-        addressParams.country = shippingAddress.country
+        addressParams.country = country
 
         let shippingDetailsParams = STPPaymentIntentShippingDetailsParams(address: addressParams, name: name)
         shippingDetailsParams.phone = shippingAddress.phone
