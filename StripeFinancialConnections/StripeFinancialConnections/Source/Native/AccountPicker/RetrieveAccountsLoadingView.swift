@@ -31,7 +31,7 @@ final class RetrieveAccountsLoadingView: UIView {
                 subtitle: nil,
                 contentView: {
                     if appearance.colors == .link {
-                        let rows = (0..<1).map { _ in ShimmeringAccountPickerRow(grouped: true) }
+                        let rows = (0..<2).map { _ in ShimmeringAccountPickerRow(grouped: true) }
                         let rowsStack = UIStackView(arrangedSubviews: rows)
                         rowsStack.axis = .vertical
                         rowsStack.spacing = 0
