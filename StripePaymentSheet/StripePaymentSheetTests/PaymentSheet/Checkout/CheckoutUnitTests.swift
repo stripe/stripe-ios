@@ -11,6 +11,8 @@ import OHHTTPStubsSwift
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripeUICore
+import UIKit
 import XCTest
 
 @MainActor
@@ -180,6 +182,105 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(stored?.address.country, "US")
         XCTAssertEqual(recorder.sessions.count, 2)
         XCTAssertEqual(recorder.loading, [true, false])
+    }
+
+    func testShippingAddressElementSaveUpdatesCheckoutSession() async throws {
+        // Given a ShippingAddressElement connected to its Checkout
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let shippingAddressElement = checkout.getShippingAddressElement()
+        var loadingStates: [Bool] = []
+
+        // When the element saves a collected address
+        try await shippingAddressElement.save(
+            addressDetails: .init(
+                address: .init(
+                    city: "Seattle",
+                    country: "US",
+                    line1: "123 Main St.",
+                    line2: "Apt. 4",
+                    postalCode: "98101",
+                    state: "WA"
+                ),
+                name: "Jane Doe"
+            ),
+            setLoading: { loadingStates.append($0) }
+        )
+
+        // Then the Checkout Session is the source of truth and loading spans the update
+        XCTAssertEqual(loadingStates, [true, false])
+        XCTAssertEqual(checkout.session.shippingAddress?.name, "Jane Doe")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.line1, "123 Main St.")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.line2, "Apt. 4")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.city, "Seattle")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.state, "WA")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.postalCode, "98101")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.country, "US")
+    }
+
+    func testShippingAddressElementDisplaysCheckoutUpdateError() async throws {
+        // Given a Checkout Session that updates tax from the shipping address
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["shipping_address_collection"] = ["allowed_countries": ["US"]]
+        json["tax_context"] = [
+            "automatic_tax_enabled": true,
+            "automatic_tax_address_source": "session.shipping",
+        ]
+        let session = try XCTUnwrap(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+        var configuration = Checkout.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
+        shippingDetails.name = "Jane Doe"
+        shippingDetails.address = .init(
+            country: "US",
+            line1: "123 Main St.",
+            city: "Seattle",
+            state: "WA",
+            postalCode: "98101"
+        )
+        configuration.defaults.shippingDetails = shippingDetails
+        configuration = CheckoutTestHelpers.makeConfiguration(
+            apiResponse: session,
+            configuration: configuration
+        )
+        let checkout = try await Checkout(configuration: configuration)
+        let addressViewController = try XCTUnwrap(
+            checkout.getShippingAddressElement().addressViewController
+        )
+        addressViewController.addressSection?.line1?.setText("456 Oak Ave.")
+
+        // ...and the Checkout update API request fails
+        stub(condition: { request in
+            request.httpMethod == "POST"
+                && request.url?.path == "/v1/payment_pages/cs_test_123"
+        }) { _ in
+            HTTPStubsResponse(
+                jsonObject: [
+                    "error": [
+                        "type": "api_error",
+                        "message": "Tax update failed",
+                    ],
+                ],
+                statusCode: 500,
+                headers: nil
+            )
+        }
+        let errorDisplayedExpectation = XCTNSPredicateExpectation(
+            predicate: NSPredicate { object, _ in
+                guard let label = object as? UILabel else { return false }
+                return !label.isHidden
+            },
+            object: addressViewController.errorLabel
+        )
+
+        // When the customer saves the shipping address
+        addressViewController.didContinue()
+        await fulfillment(of: [errorDisplayedExpectation], timeout: 2)
+
+        // Then the SAE form displays the user-facing API error
+        XCTAssertFalse(addressViewController.errorLabel.isHidden)
+        XCTAssertEqual(addressViewController.errorLabel.text, NSError.stp_unexpectedErrorMessage())
     }
 
     func testUpdateShippingAddress_disallowedCountry_throws() async throws {
