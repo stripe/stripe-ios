@@ -140,10 +140,6 @@
 
 "Did you mean %@? %@." = "Вы имели в виду %1$@? %2$@.";
 
-"Discard Changes" = "Отменить изменения";
-
-"Discard changes?" = "Отменить изменения?";
-
 "Discount" = "Скидка";
 
 "EPS Bank" = "Банк EPS";
@@ -167,8 +163,6 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Я понимаю, что Stripe будет принимать прямые дебетования от имени %@, и подтверждаю, что являюсь владельцем счета и единственным лицом, согласие которого требуется для проведения дебетований с этого счета.";
 
 "IBAN" = "IBAN";
-
-"Keep Editing" = "Продолжить изменение";
 
 "Last 4 digits of SSN" = "Последние 4 цифры SSN";
 
@@ -351,5 +345,3 @@
 "Yes, update" = "Да, обновить";
 
 "Your IBAN should start with a two-letter country code." = "Код IBAN должен начинаться с двухбуквенного кода страны.";
-
-"Your address changes won't be saved." = "Изменения адреса не будут сохранены.";
