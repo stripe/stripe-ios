@@ -112,10 +112,6 @@
 
 "Confirm payment details" = "Sahkan butiran pembayaran";
 
-"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Sahkan pembayaran Bizum dalam aplikasi perbankan mudah alih anda dalam masa %@ untuk melengkapkan pembelian.";
-
-"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi MB WAY anda dalam masa %@ untuk melengkapkan pembelian.";
-
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank atau aplikasi pembayaran anda dalam %@ untuk menyelesaikan pembelian.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank anda dalam %@ untuk menyelesaikan pembelian.";
@@ -140,15 +136,9 @@
 
 "Did you mean %@? %@." = "Adakah anda maksudkan %1$@? %2$@.";
 
-"Discard Changes" = "Abaikan Perubahan";
-
-"Discard changes?" = "Abaikan perubahan?";
-
 "Discount" = "Diskaun";
 
 "EPS Bank" = "Bank EPS";
-
-"Edit address" = "Edit alamat";
 
 "Enter address manually" = "Masukkan alamat secara manual";
 
@@ -167,8 +157,6 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Saya faham bahawa Stripe akan mengutip Debit Terus bagi pihak %@ dan mengesahkan sayalah pemegang akaun dan satu-satunya individu yang diperlukan untuk mengizinkan debit daripada akaun ini.";
 
 "IBAN" = "IBAN";
-
-"Keep Editing" = "Teruskan Mengedit";
 
 "Last 4 digits of SSN" = "4 digit terakhir SSN";
 
@@ -352,4 +340,4 @@
 
 "Your IBAN should start with a two-letter country code." = "IBAN anda harus bermula dengan kod negara dua huruf.";
 
-"Your address changes won't be saved." = "Perubahan alamat anda tidak akan disimpan.";
+"iDEAL Bank" = "Bank iDEAL";

@@ -112,10 +112,6 @@
 
 "Confirm payment details" = "Confirmare detalii de plată";
 
-"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Confirmați plata Bizum în aplicația de servicii bancare pentru dispozitive mobile în %@ pentru a finaliza achiziția.";
-
-"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Confirmați plata în aplicația MB WAY în %@ pentru a finaliza achiziția.";
-
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirmați plata în aplicația băncii dvs. sau în aplicația de plăți în termen de %@ pentru a finaliza achiziția.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirmați plata în aplicația băncii dvs. în termen de %@ pentru a finaliza achiziția.";
@@ -140,15 +136,9 @@
 
 "Did you mean %@? %@." = "Ați vrut să spuneți %1$@? %2$@.";
 
-"Discard Changes" = "Renunțare la modificări";
-
-"Discard changes?" = "Renunțați la modificări?";
-
 "Discount" = "Reducere";
 
 "EPS Bank" = "Banca EPS";
-
-"Edit address" = "Editare adresă";
 
 "Enter address manually" = "Introduceți adresa manual";
 
@@ -167,8 +157,6 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Înțeleg că Stripe va colecta debite directe în numele %@ și confirm că sunt titularul contului și singura persoană necesară pentru a autoriza debite din acest cont.";
 
 "IBAN" = "IBAN";
-
-"Keep Editing" = "Continuare editare";
 
 "Last 4 digits of SSN" = "Ultimele 4 cifre de la SSN";
 
@@ -352,4 +340,4 @@
 
 "Your IBAN should start with a two-letter country code." = "Codul dvs. IBAN trebuie să înceapă cu un cod de țară format din două litere.";
 
-"Your address changes won't be saved." = "Modificările aplicate adresei nu vor fi salvate.";
+"iDEAL Bank" = "iDEAL Bank";

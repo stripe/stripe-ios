@@ -112,10 +112,6 @@
 
 "Confirm payment details" = "Apstiprināt maksājuma informāciju";
 
-"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Apstipriniet Bizum maksājumu savā mobilās ierīces bankas pieteikumā %@ laikā, lai pabeigtu pirkumu.";
-
-"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Apstipriniet maksājumu savā MB WAY lietotnē %@ laikā, lai pabeigtu pirkumu.";
-
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Apstipriniet maksājumu jūsu bankas vai maksājumu lietotnē %@, lai pabeigtu maksājumu.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Apstipriniet maksājumu jūsu bankas lietotnē %@, lai pabeigtu maksājumu.";
@@ -140,15 +136,9 @@
 
 "Did you mean %@? %@." = "Vai jūs domājāt %1$@? %2$@.";
 
-"Discard Changes" = "Izmaiņu atmešana";
-
-"Discard changes?" = "Vai atmest izmaiņas?";
-
 "Discount" = "Atlaide";
 
 "EPS Bank" = "EPS Bank";
-
-"Edit address" = "Rediģēt adresi";
 
 "Enter address manually" = "Ievadīt adresi manuāli";
 
@@ -167,8 +157,6 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Es saprotu, ka Stripe iekasēs tiešā debeta maksājumus %@ vārdā, un apstiprinu, ka esmu konta turētājs un vienīgā persona, kurai ir jāautorizē debeti no šī konta.";
 
 "IBAN" = "IBAN";
-
-"Keep Editing" = "Rediģēšanas turpināšana";
 
 "Last 4 digits of SSN" = "SSN pēdējie 4 cipari";
 
@@ -352,4 +340,4 @@
 
 "Your IBAN should start with a two-letter country code." = "IBAN sākumā jābūt divu burtu valsts kodam.";
 
-"Your address changes won't be saved." = "Jūsu adreses izmaiņas netiks saglabātas.";
+"iDEAL Bank" = "iDEAL banka";

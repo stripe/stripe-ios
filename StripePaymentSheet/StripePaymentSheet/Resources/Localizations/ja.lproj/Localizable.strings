@@ -112,10 +112,6 @@
 
 "Confirm payment details" = "支払い情報を確定する";
 
-"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "購入を完了するには、%@ 以内にモバイルバンキングアプリで Bizum 決済を確認してください。";
-
-"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "購入を完了するには、%@ 以内に MB WAY アプリで決済を確認してください。";
-
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ 内で銀行または決済アプリで支払いを確定して、購入を完了します。";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "購入を完了するには、%@ 以内に銀行のアプリで支払いを確定してください。";
@@ -140,15 +136,9 @@
 
 "Did you mean %@? %@." = "%1$@ のことですか？ %2$@。";
 
-"Discard Changes" = "変更を破棄";
-
-"Discard changes?" = "変更を破棄しますか？";
-
 "Discount" = "割引";
 
 "EPS Bank" = "EPS 銀行";
-
-"Edit address" = "住所を編集";
 
 "Enter address manually" = "住所を手動で入力";
 
@@ -167,8 +157,6 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "私は、Stripe が %@ の代理として口座引き落としによる回収を行うことを理解しています。また、私が当該口座を保有しており、この口座からの引き落としを承認すべき唯一の人間であることを認めます。";
 
 "IBAN" = "IBAN";
-
-"Keep Editing" = "編集を続ける";
 
 "Last 4 digits of SSN" = "SSN の末尾 4 桁";
 
@@ -352,4 +340,4 @@
 
 "Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
 
-"Your address changes won't be saved." = "住所の変更内容は保存されません。";
+"iDEAL Bank" = "iDEAL銀行";

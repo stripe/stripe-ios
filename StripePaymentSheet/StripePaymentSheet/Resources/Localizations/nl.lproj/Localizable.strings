@@ -112,10 +112,6 @@
 
 "Confirm payment details" = "Betaalgegevens bevestigen";
 
-"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Bevestig de Bizum-betaling binnen %@ in je mobiele bankapp om de aankoop te voltooien.";
-
-"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Bevestig de betaling binnen %@ in je MB WAY-app om de aankoop te voltooien.";
-
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bevestig de betaling via je bank of betaal-app binnen %@ om de aankoop af te ronden.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Bevestig de betaling in de app van je bank binnen %@ om de aankoop af te ronden.";
@@ -140,15 +136,9 @@
 
 "Did you mean %@? %@." = "Bedoelde je %1$@? %2$@.";
 
-"Discard Changes" = "Wijzigingen verwijderen";
-
-"Discard changes?" = "Wijzigingen verwijderen?";
-
 "Discount" = "Korting";
 
 "EPS Bank" = "EPS Bank";
-
-"Edit address" = "Adres bewerken";
 
 "Enter address manually" = "Adres handmatig invoeren";
 
@@ -167,8 +157,6 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ik begrijp dat Stripe namens %@ bedragen via automatische incasso gaat afschrijven en ik bevestig dat ik als rekeninghouder de enige vereiste persoon ben om afschrijvingen van deze rekening te autoriseren.";
 
 "IBAN" = "IBAN";
-
-"Keep Editing" = "Doorgaan met bewerken";
 
 "Last 4 digits of SSN" = "Laatste 4 cijfers van BSN";
 
@@ -352,4 +340,4 @@
 
 "Your IBAN should start with a two-letter country code." = "Het IBAN-nummer moet beginnen met een landcode van twee letters.";
 
-"Your address changes won't be saved." = "Jouw adreswijzigingen worden niet opgeslagen.";
+"iDEAL Bank" = "iDEAL-bank";

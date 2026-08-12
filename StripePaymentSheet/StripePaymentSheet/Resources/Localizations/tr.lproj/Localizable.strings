@@ -112,10 +112,6 @@
 
 "Confirm payment details" = "Ödeme bilgilerini onayla";
 
-"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Satın alma işlemini tamamlamak için %@ içinde mobil bankacılık uygulamanızdaki Bizum ödemesini onaylayın.";
-
-"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Satın alma işlemini tamamlamak için %@ içinde MB WAY uygulamanızdaki ödemeyi onaylayın.";
-
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ içinde banka veya ödeme uygulamanızla ödemeyi onaylayarak satın almayı tamamlayın.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@ içinde banka uygulamanızda ödemeyi onaylayarak satın almayı tamamlayın.";
@@ -140,15 +136,9 @@
 
 "Did you mean %@? %@." = "%1$@ mi demek istediniz? %2$@.";
 
-"Discard Changes" = "Değişiklikleri İptal Et";
-
-"Discard changes?" = "Değişiklikler iptal edilsin mi?";
-
 "Discount" = "İndirim";
 
 "EPS Bank" = "EPS Bank";
-
-"Edit address" = "Adresi düzenle";
 
 "Enter address manually" = "Adresi manuel olarak girin";
 
@@ -167,8 +157,6 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Stripe'ın %@ adına Otomatik Ödeme alacağını anlıyorum. Hesap sahibi ve bu hesaptan ödemeleri yetkilendirmek için gereken tek kişi olduğumu onaylıyorum.";
 
 "IBAN" = "IBAN";
-
-"Keep Editing" = "Düzenlemeye Devam Et";
 
 "Last 4 digits of SSN" = "SSN'nin son 4 hanesi";
 
@@ -352,4 +340,4 @@
 
 "Your IBAN should start with a two-letter country code." = "IBAN numaranız iki harfli bir ülke koduyla başlamalıdır.";
 
-"Your address changes won't be saved." = "Adres değişiklikleriniz kaydedilmeyecek.";
+"iDEAL Bank" = "iDEAL Bank";

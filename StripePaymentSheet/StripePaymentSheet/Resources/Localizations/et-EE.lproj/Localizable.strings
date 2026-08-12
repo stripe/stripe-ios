@@ -112,10 +112,6 @@
 
 "Confirm payment details" = "Kinnitage makseandmed";
 
-"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Kinnitage Bizumi makse oma mobiilipanga rakenduses %@ jooksul, et ost lõpule viia.";
-
-"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Kinnitage makse oma MB WAY rakenduses %@ jooksul, et ost lõpule viia.";
-
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Ostu sooritamiseks kinnitage makse oma panga- või makserakenduses %@ jooksul.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Ostu sooritamiseks kinnitage makse oma pangarakenduses %@ jooksul.";
@@ -140,15 +136,9 @@
 
 "Did you mean %@? %@." = "Kas te pidasite silmas %1$@? %2$@.";
 
-"Discard Changes" = "Loobu muudatustest";
-
-"Discard changes?" = "Loobuda muudatustest?";
-
 "Discount" = "Allahindlus";
 
 "EPS Bank" = "EPS pank";
-
-"Edit address" = "Muuda aadressi";
 
 "Enter address manually" = "Sisestage aadress käsitsi";
 
@@ -167,8 +157,6 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Mõistan, et Stripe kogub ettevõtte %@ nimel otsekorraldusi, ja kinnitan, et olen kontoomanik ja ainus isik, kes peab selle konto debiteerimist autoriseerima.";
 
 "IBAN" = "IBAN";
-
-"Keep Editing" = "Jätka muutmist";
 
 "Last 4 digits of SSN" = "SSN-i 4 viimast numbrit";
 
@@ -352,4 +340,4 @@
 
 "Your IBAN should start with a two-letter country code." = "Teie IBAN peab algama kahetähelise riigikoodiga.";
 
-"Your address changes won't be saved." = "Teie aadressi muudatusi ei salvestata.";
+"iDEAL Bank" = "iDEALi pank";

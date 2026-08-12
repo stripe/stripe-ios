@@ -112,10 +112,6 @@
 
 "Confirm payment details" = "Confirmació de les dades de pagament";
 
-"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Confirmeu el pagament de Bizum a la vostra aplicació de banca mòbil en %@ per completar la compra.";
-
-"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Confirmeu el pagament a la vostra aplicació MB WAY en %@ per completar la compra.";
-
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirmeu el pagament al vostre banc o a l'aplicació de pagament en un termini de %@ per completar la compra.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirmeu el pagament a l'aplicació del vostre banc en un termini de %@ per completar la compra.";
@@ -140,15 +136,9 @@
 
 "Did you mean %@? %@." = "Volíeu dir %1$@? %2$@.";
 
-"Discard Changes" = "Descarta els canvis";
-
-"Discard changes?" = "Voleu descarteu els canvis?";
-
 "Discount" = "Descompte";
 
 "EPS Bank" = "Banc EPS";
-
-"Edit address" = "Edita l'adreça";
 
 "Enter address manually" = "Introduir l'adreça manualment";
 
@@ -167,8 +157,6 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entenc que Stripe cobrarà els dèbits directes de part de %@ i confirmo que soc el titular del compte i l'única persona requerida per autoritzar dèbits des d'aquest compte.";
 
 "IBAN" = "IBAN";
-
-"Keep Editing" = "Continua editant";
 
 "Last 4 digits of SSN" = "Últims 4 dígits del número de la seguretat social (SSN)";
 
@@ -352,4 +340,4 @@
 
 "Your IBAN should start with a two-letter country code." = "El teu IBAN ha de començar amb un codi de país de dues lletres.";
 
-"Your address changes won't be saved." = "Els canvis de la vostra adreça no es desaran.";
+"iDEAL Bank" = "Bank iDeal";

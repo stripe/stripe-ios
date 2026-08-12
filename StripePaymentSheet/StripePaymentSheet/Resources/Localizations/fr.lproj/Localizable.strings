@@ -112,10 +112,6 @@
 
 "Confirm payment details" = "Confirmer les informations de paiement";
 
-"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Pour finaliser l’achat, confirmez le paiement Bizum dans votre application de services bancaires en ligne dans un délai de %@.";
-
-"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Pour finaliser l’achat, confirmez le paiement dans votre application MB WAY dans un délai de %@.";
-
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Veuillez confirmer le paiement dans votre application bancaire ou de paiement sous %@ pour finaliser l'achat.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Veuillez confirmer le paiement dans votre application bancaire sous %@ pour effectuer l'achat.";
@@ -140,15 +136,9 @@
 
 "Did you mean %@? %@." = "Vouliez-vous dire [ %1$s] ? [ %2$s].";
 
-"Discard Changes" = "Ignorer les modifications";
-
-"Discard changes?" = "Ignorer les modifications ?";
-
 "Discount" = "Réduction";
 
 "EPS Bank" = "Banque EPS";
-
-"Edit address" = "Modifier l’adresse";
 
 "Enter address manually" = "Saisir l'adresse manuellement";
 
@@ -167,8 +157,6 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Je comprends que Stripe effectuera des prélèvements automatiques pour le compte de %@, et je confirme que je suis le/la titulaire du compte et la seule personne habilitée à autoriser les prélèvements sur ce compte.";
 
 "IBAN" = "IBAN";
-
-"Keep Editing" = "Poursuivre la modification";
 
 "Last 4 digits of SSN" = "4 derniers chiffres du numéro de sécurité sociale";
 
@@ -352,4 +340,4 @@
 
 "Your IBAN should start with a two-letter country code." = "Votre IBAN doit commencer par un code pays à deux lettres.";
 
-"Your address changes won't be saved." = "Les modifications apportées à votre adresse ne seront pas enregistrées.";
+"iDEAL Bank" = "Banque iDEAL";
