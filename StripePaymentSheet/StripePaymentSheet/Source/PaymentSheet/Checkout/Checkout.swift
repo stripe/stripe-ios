@@ -152,6 +152,7 @@ public final class Checkout: ObservableObject {
                 apiClient: configuration.apiClient,
                 useAutocompleteEndpoints: loadedSession.elementsSession.shouldUseAutocompleteProxyEndpoints
             )
+            self.shippingAddressElement.delegate = self
             let normalizedDefaultShippingAddress: Session.ShippingAddress?
             if defaultShippingAddress != nil {
                 normalizedDefaultShippingAddress = await shippingAddressElement.normalizedInitialShippingAddress()
