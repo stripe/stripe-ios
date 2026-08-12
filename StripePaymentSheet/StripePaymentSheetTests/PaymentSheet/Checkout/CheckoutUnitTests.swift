@@ -11,6 +11,8 @@ import OHHTTPStubsSwift
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripeUICore
+import UIKit
 import XCTest
 
 @MainActor
@@ -164,10 +166,8 @@ final class CheckoutUnitTests: XCTestCase {
 
 // MARK: - Address Override Tests
 
-    func testUpdateShippingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
+    func testUpdateShippingAddress_noTax_setsLocallyAndEmitsUpdates() async throws {
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        let delegate = MockCheckoutDelegate()
-        checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
 
         try await checkout.updateShippingAddress(
@@ -178,11 +178,107 @@ final class CheckoutUnitTests: XCTestCase {
         let stored = checkout.session.shippingAddress
         XCTAssertEqual(stored?.name, "John Smith")
         XCTAssertEqual(stored?.address.country, "US")
-        XCTAssertEqual(delegate.updateSessionCallCount, 2)
-        XCTAssertEqual(delegate.beginLoadingCallCount, 1)
-        XCTAssertEqual(delegate.finishLoadingCallCount, 1)
         XCTAssertEqual(recorder.sessions.count, 2)
         XCTAssertEqual(recorder.loading, [true, false])
+    }
+
+    func testShippingAddressElementSaveUpdatesCheckoutSession() async throws {
+        // Given a ShippingAddressElement connected to its Checkout
+        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let shippingAddressElement = checkout.getShippingAddressElement()
+        var loadingStates: [Bool] = []
+
+        // When the element saves a collected address
+        try await shippingAddressElement.save(
+            addressDetails: .init(
+                address: .init(
+                    city: "Seattle",
+                    country: "US",
+                    line1: "123 Main St.",
+                    line2: "Apt. 4",
+                    postalCode: "98101",
+                    state: "WA"
+                ),
+                name: "Jane Doe"
+            ),
+            setLoading: { loadingStates.append($0) }
+        )
+
+        // Then the Checkout Session is the source of truth and loading spans the update
+        XCTAssertEqual(loadingStates, [true, false])
+        XCTAssertEqual(checkout.session.shippingAddress?.name, "Jane Doe")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.line1, "123 Main St.")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.line2, "Apt. 4")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.city, "Seattle")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.state, "WA")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.postalCode, "98101")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.country, "US")
+    }
+
+    func testShippingAddressElementDisplaysCheckoutUpdateError() async throws {
+        // Given a Checkout Session that updates tax from the shipping address
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["shipping_address_collection"] = ["allowed_countries": ["US"]]
+        json["tax_context"] = [
+            "automatic_tax_enabled": true,
+            "automatic_tax_address_source": "session.shipping",
+        ]
+        let session = try XCTUnwrap(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+        var configuration = Checkout.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
+        shippingDetails.name = "Jane Doe"
+        shippingDetails.address = .init(
+            country: "US",
+            line1: "123 Main St.",
+            city: "Seattle",
+            state: "WA",
+            postalCode: "98101"
+        )
+        configuration.defaults.shippingDetails = shippingDetails
+        configuration = CheckoutTestHelpers.makeConfiguration(
+            apiResponse: session,
+            configuration: configuration
+        )
+        let checkout = try await Checkout(configuration: configuration)
+        let addressViewController = try XCTUnwrap(
+            checkout.getShippingAddressElement().addressViewController
+        )
+        addressViewController.addressSection?.line1?.setText("456 Oak Ave.")
+
+        // ...and the Checkout update API request fails
+        stub(condition: { request in
+            request.httpMethod == "POST"
+                && request.url?.path == "/v1/payment_pages/cs_test_123"
+        }) { _ in
+            HTTPStubsResponse(
+                jsonObject: [
+                    "error": [
+                        "type": "api_error",
+                        "message": "Tax update failed",
+                    ],
+                ],
+                statusCode: 500,
+                headers: nil
+            )
+        }
+        let errorDisplayedExpectation = XCTNSPredicateExpectation(
+            predicate: NSPredicate { object, _ in
+                guard let label = object as? UILabel else { return false }
+                return !label.isHidden
+            },
+            object: addressViewController.errorLabel
+        )
+
+        // When the customer saves the shipping address
+        addressViewController.didContinue()
+        await fulfillment(of: [errorDisplayedExpectation], timeout: 2)
+
+        // Then the SAE form displays the user-facing API error
+        XCTAssertFalse(addressViewController.errorLabel.isHidden)
+        XCTAssertEqual(addressViewController.errorLabel.text, NSError.stp_unexpectedErrorMessage())
     }
 
     func testUpdateShippingAddress_disallowedCountry_throws() async throws {
@@ -453,11 +549,9 @@ final class CheckoutUnitTests: XCTestCase {
 
     // MARK: - commitSession Tests
 
-    func testUpdateSessionNotifiesDelegate() async throws {
-        // Given a Checkout with a delegate and session recorder
+    func testUpdateSessionEmitsSessionUpdates() async throws {
+        // Given a Checkout with a session recorder
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        let delegate = MockCheckoutDelegate()
-        checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
 
         var updatedJSON = CheckoutTestHelpers.openSessionJSON
@@ -472,7 +566,6 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.status?.type, .complete)
         XCTAssertEqual(checkout.session.status?.paymentStatus, .paid)
         // There are two emissions: one for the committed session, one for PaymentElement re-syncing the payment option.
-        XCTAssertEqual(delegate.updateSessionCallCount, 2)
         XCTAssertEqual(recorder.sessions.count, 2)
     }
 
@@ -501,8 +594,6 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testUpdateSessionCanBeCalledMultipleTimes() async throws {
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        let delegate = MockCheckoutDelegate()
-        checkout.delegate = delegate
         let recorder = CheckoutEmissionRecorder(checkout)
 
         var firstResponse = CheckoutTestHelpers.openSessionJSON
@@ -519,7 +610,6 @@ final class CheckoutUnitTests: XCTestCase {
 
         try await checkout.commitSession(secondSession)
         XCTAssertEqual(checkout.session.status?.type, .open)
-        XCTAssertEqual(delegate.updateSessionCallCount, 4)
         XCTAssertEqual(recorder.sessions.count, 4)
     }
 
@@ -535,30 +625,6 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertFalse(checkout.isLoading)
     }
 
-    func testCommitSessionNotifiesRegularDelegate() async throws {
-        // Given a Checkout with a regular delegate
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        var callOrder: [String] = []
-
-        let delegate = MockCheckoutDelegate()
-        delegate.onUpdateSession = { callOrder.append("regular") }
-        checkout.delegate = delegate
-        let recorder = CheckoutEmissionRecorder(checkout)
-
-        var updatedJSON = CheckoutTestHelpers.openSessionJSON
-        updatedJSON["status"] = "complete"
-        updatedJSON["payment_status"] = "paid"
-        let updatedSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: updatedJSON)!
-
-        // When the updated session is committed
-        try await checkout.commitSession(updatedSession)
-
-        // Then the delegate is notified for both session emissions
-        XCTAssertEqual(callOrder, ["regular", "regular"])
-        // There are two emissions: one for the committed session, one for PaymentElement re-syncing the payment option.
-        XCTAssertEqual(delegate.updateSessionCallCount, 2)
-        XCTAssertEqual(recorder.sessions.count, 2)
-    }
     // MARK: - updatePaymentMethod Parameter Encoding Tests
 
     func testUpdatePaymentMethodParameters_expiryOnly() {

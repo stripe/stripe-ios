@@ -64,10 +64,6 @@ extension String.Localized {
         )
     }
 
-    static var ideal_bank: String {
-        STPLocalizedString("iDEAL Bank", "iDEAL bank section title for iDEAL form entry.")
-    }
-
     static var bank_account_sentence_case: String {
         STPLocalizedString("Bank account", "Title for collected bank account information")
     }
@@ -354,6 +350,16 @@ extension String.Localized {
     static var paynow_confirm_payment: String {
         STPLocalizedString("Confirm the payment in your bank or payment app within %@ to complete the purchase.",
                            "Text for alert message when user needs to confirm payment in their banking app")
+    }
+
+    static var mb_way_confirm_payment: String {
+        STPLocalizedString("Confirm the payment in your MB WAY app within %@ to complete the purchase.",
+                           "Instructions shown while waiting for an MB WAY payment authorization")
+    }
+
+    static var bizum_confirm_payment: String {
+        STPLocalizedString("Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase.",
+                           "Instructions shown while waiting for a Bizum payment authorization")
     }
 
     static var cpf_cpnj: String {
@@ -690,8 +696,40 @@ extension String.Localized {
         STPLocalizedString("Use billing address for shipping", "Label for checkbox in address form allowing user to use billing address")
     }
 
+    static var discard_changes_title: String {
+        STPLocalizedString(
+            "Discard changes?",
+            "Title of a confirmation alert shown when the customer tries to close the address form after making changes."
+        )
+    }
+
+    static var discard_changes_message: String {
+        STPLocalizedString(
+            "Your address changes won't be saved.",
+            "Message of a confirmation alert warning the customer that closing the address form will discard their unsaved changes."
+        )
+    }
+
+    static var discard_changes: String {
+        STPLocalizedString(
+            "Discard Changes",
+            "Button title in a confirmation alert that discards the customer's unsaved address changes and closes the form."
+        )
+    }
+
+    static var keep_editing: String {
+        STPLocalizedString(
+            "Keep Editing",
+            "Button title in a confirmation alert that dismisses the alert and returns the customer to editing their address."
+        )
+    }
+
     static var confirm_your_information: String {
         STPLocalizedString("Confirm your information", "Title label for a know-your-customer (KYC) verification screen")
+    }
+
+    static var edit_address: String {
+        STPLocalizedString("Edit address", "Accessibility label for a button that lets the user update their address")
     }
 
     static var user_attestation: String {

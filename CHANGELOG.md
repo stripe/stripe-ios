@@ -3,6 +3,17 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+## 26.6.0 2026-08-10
+### PaymentSheet
+* [Fixed] LinkController (private preview) now returns an error when no funding sources are available for a Link session, rather than silently falling back to card.
+
+### CryptoOnramp (Alpha)
+* [Added] Added `CryptoOnrampCoordinator.deleteWalletAddress(walletId:)` to delete a registered wallet address.
+
+### PaymentSheet
+* [Added] Added support for MB WAY payments.
+* [Added] Added support for Bizum payments.
+
 ## 26.5.0 2026-08-03
 ### CryptoOnramp (Alpha)
 * [Added] Added support for registering wallet addresses on the Tempo network.
@@ -10,6 +21,11 @@ PATCH
 ### PaymentSheet
 * [Added] Added `billingDetailsCollectionConfiguration` to `LinkConfiguration`, allowing `LinkControllerPreview` consumers to configure billing details collection in the Link sheet (private preview).
 * [Added] `LinkController` now supports appearance customization via `LinkAppearance` (private preview).
+
+### AddressElement
+* [Changed] No longer supports swipe-to-dismiss.
+* [Changed] Now treats the 'X' button as a true cancel button that discards changes.
+* [Changed] If a customer taps the 'X' button with unsaved changes, now presents a dialog to confirm the cancellation.
 
 ## 26.4.1 2026-07-23
 ### Payments

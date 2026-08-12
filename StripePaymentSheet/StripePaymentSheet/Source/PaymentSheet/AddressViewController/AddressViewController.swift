@@ -19,24 +19,6 @@ public protocol AddressViewControllerDelegate: AnyObject {
     func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?)
 }
 
-@MainActor
-protocol AddressViewControllerSaveHandler: AnyObject {
-    /// Saves an address. Implementations that show loading are responsible for hiding it before returning.
-    func save(
-        address: AddressViewController.AddressDetails,
-        setLoading: (Bool) -> Void
-    ) async throws
-}
-
-final class DefaultAddressViewControllerSaveHandler: AddressViewControllerSaveHandler {
-    nonisolated init() {}
-
-    func save(
-        address: AddressViewController.AddressDetails,
-        setLoading: (Bool) -> Void
-    ) async throws {}
-}
-
 /// A view controller that collects a name and an address, with full localization and autocomplete.
 /// - Note: It uses `navigationItem` and can push a view controller, so it must be shown inside a `UINavigationController`.
 /// - Seealso: https://stripe.com/docs/elements/address-element?platform=ios
@@ -71,12 +53,41 @@ public class AddressViewController: UIViewController {
     }
     /// The delegate, notified when the customer completes or cancels.
     public weak var delegate: AddressViewControllerDelegate?
-    private let saveHandler: AddressViewControllerSaveHandler
     private var selectedAutoCompleteResult: PaymentSheet.Address?
     private var didLogAddressShow = false
-    private var isSaving = false
+
+    /// The address as of the last open or save. Returned to the delegate when the customer
+    /// cancels (taps 'X' with no changes, or discards changes) so we never hand back
+    /// edited-but-abandoned data.
+    private var initialAddressDetails: AddressDetails?
+    /// A snapshot of the form's raw values as of the last open or save, used to detect unsaved changes.
+    private var initialFormSnapshot: AddressSectionElement.AddressDetails?
+    /// The autocomplete result associated with the address as of the last open or save.
+    private var initialSelectedAutoCompleteResult: PaymentSheet.Address?
+    /// The phone field's country as of the last open or save.
+    private var initialPhoneCountryCode: String?
+    /// The additional-fields checkbox state as of the last open or save.
+    private var initialCheckboxSelected: Bool?
+
+    /// Whether the customer has changed any form value since the sheet was presented.
+    var hasChanges: Bool {
+        guard let addressSection = addressSection else { return false }
+        if addressSection.addressDetails != initialFormSnapshot { return true }
+        if addressSection.phone?.selectedCountryCode != initialPhoneCountryCode { return true }
+        if checkboxElement?.checkboxButton.isSelected != initialCheckboxSelected { return true }
+        return false
+    }
 
     // MARK: - Internal properties
+
+    /// Delegate provided by the integration entry point (legacy Address Element or Checkout Sessions Shipping Address Element) that handles address saving and analytics
+    @MainActor
+    protocol IntegrationDelegate: AnyObject {
+        /// Handles completion with the customer's collected address details.
+        func save(addressDetails: AddressDetails, setLoading: (Bool) -> Void) async throws
+    }
+
+    weak var integrationDelegate: IntegrationDelegate?
     let addressSpecProvider: AddressSpecProvider
     private var latestError: Error? {
         didSet {
@@ -95,7 +106,7 @@ public class AddressViewController: UIViewController {
             callToAction: .custom(title: configuration.buttonTitle),
             appearance: configuration.appearance
         ) { [weak self] in
-            self?.didTapSaveButton()
+            self?.didContinue()
         }
         return button
     }()
@@ -238,24 +249,31 @@ public class AddressViewController: UIViewController {
         configuration: Configuration,
         delegate: AddressViewControllerDelegate
     ) {
-        self.init(addressSpecProvider: .shared, configuration: configuration, delegate: delegate)
+        self.init(
+            addressSpecProvider: .shared,
+            configuration: configuration,
+            delegate: delegate,
+            integrationDelegate: nil
+        )
     }
 
     init(
         addressSpecProvider: AddressSpecProvider,
         configuration: Configuration,
         delegate: AddressViewControllerDelegate,
-        saveHandler: AddressViewControllerSaveHandler = DefaultAddressViewControllerSaveHandler()
+        integrationDelegate: IntegrationDelegate? = nil
     ) {
         self.addressSpecProvider = addressSpecProvider
         self.configuration = configuration
         self.delegate = delegate
-        self.saveHandler = saveHandler
         super.init(nibName: nil, bundle: nil)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
         if configuration.useNavigationBarTitle {
             title = configuration.title
         }
+
+        // Set the integration delegate if provided. Otherwise use the default legacy one
+        self.integrationDelegate = integrationDelegate ?? self
     }
 
     required init?(coder: NSCoder) {
@@ -341,50 +359,58 @@ extension AddressViewController {
 // MARK: - Internal methods
 extension AddressViewController {
 
-    func didTapSaveButton() {
-        guard !isSaving else { return }
-        guard let addressDetails else {
-            assertionFailure("Save was attempted with an invalid address")
-            return
-        }
+    func initialAddressDetails() async -> AddressDetails? {
+        await addressSpecProvider.loadAddressSpecs()
+        loadViewIfNeeded()
+        return addressDetails
+    }
 
-        isSaving = true
-        view.endEditing(true)
-        latestError = nil
-        Task { [weak self] in
-            guard let self else { return }
+    func didContinue() {
+        Task { @MainActor in
+            guard let addressDetails else {
+                stpAssertionFailure("AddressViewController attempted to continue with an invalid address.")
+                return
+            }
             do {
-                try await saveHandler.save(address: addressDetails) { [weak self] isLoading in
-                    self?.setLoading(isLoading)
-                }
-                guard isSaving else { return }
-                isSaving = false
-                finish(with: addressDetails)
+                try await self.integrationDelegate?.save(
+                    addressDetails: addressDetails,
+                    setLoading: { [weak self] isLoading in
+                        self?.setLoading(isLoading)
+                    }
+                )
+                // Re-baseline change tracking only after the save succeeds. If it fails, the
+                // customer can still retry or discard the unsaved values.
+                captureInitialSnapshot()
+                delegate?.addressViewControllerDidFinish(self, with: addressDetails)
+                selectedAutoCompleteResult = nil
             } catch {
-                guard isSaving else { return }
-                isSaving = false
-                latestError = error
+                self.latestError = error
             }
         }
     }
 
-    func didContinue() {
-        isSaving = false
-        finish(with: addressDetails)
-    }
-
-    private func finish(with addressDetails: AddressDetails?) {
-        logAddressCompleted(addressDetails: addressDetails)
-        delegate?.addressViewControllerDidFinish(self, with: addressDetails)
-    }
-
     private func setLoading(_ isLoading: Bool) {
-        view.isUserInteractionEnabled = !isLoading
-        closeButton.isEnabled = !isLoading
-        button.update(
-            status: isLoading ? .spinnerWithInteractionDisabled : (addressDetails == nil ? .disabled : .enabled),
-            animated: true
+        if isLoading {
+            view.endEditing(true)
+            latestError = nil
+        }
+
+        let isUserInteractionEnabled = !isLoading
+        sendEventToSubviews(
+            isUserInteractionEnabled ? .shouldEnableUserInteraction : .shouldDisableUserInteraction,
+            from: view
         )
+        view.isUserInteractionEnabled = isUserInteractionEnabled
+        navigationController?.navigationBar.isUserInteractionEnabled = isUserInteractionEnabled
+        closeButton.isEnabled = isUserInteractionEnabled
+
+        let buttonStatus: ConfirmButton.Status
+        if isLoading {
+            buttonStatus = .processing
+        } else {
+            buttonStatus = addressSection?.validationState.isValid == true ? .enabled : .disabled
+        }
+        button.update(status: buttonStatus, animated: true)
     }
 
     @objc func didTapBackground() {
@@ -400,7 +426,53 @@ extension AddressViewController {
     }
 
     @objc func didTapCloseButton() {
-        didContinue()
+        // Tapping 'X' is a cancel: if the customer changed nothing, dismiss and return the
+        // as-presented address; otherwise confirm before discarding their changes.
+        if hasChanges {
+            presentDiscardChangesAlert()
+        } else {
+            delegate?.addressViewControllerDidFinish(self, with: initialAddressDetails)
+        }
+    }
+
+    private func presentDiscardChangesAlert() {
+        let alertController = UIAlertController(
+            title: String.Localized.discard_changes_title,
+            message: String.Localized.discard_changes_message,
+            preferredStyle: .alert
+        )
+        alertController.addAction(UIAlertAction(title: String.Localized.keep_editing, style: .cancel))
+        alertController.addAction(
+            UIAlertAction(title: String.Localized.discard_changes, style: .destructive) { [weak self] _ in
+                self?.discardChanges()
+            }
+        )
+        present(alertController, animated: true)
+    }
+
+    func discardChanges() {
+        // Revert the form to its as-opened state so a reused instance doesn't keep the discarded
+        // edits, then finish with the as-opened address (never the edited-but-abandoned values).
+        resetFormToInitialSnapshot()
+        delegate?.addressViewControllerDidFinish(self, with: initialAddressDetails)
+    }
+
+    private func resetFormToInitialSnapshot() {
+        guard let initialFormSnapshot else { return }
+        // clear-then-populate (as in handleShippingEqualsBillingToggle) restores the as-opened
+        // values AND clears fields like phone that populate alone would leave stale when the
+        // baseline had none. setAddress rebuilds every address subfield, so line1/city/state/
+        // postal/line2 revert too, and the (always-present) snapshot country is reselected.
+        clearAddressSection()
+        populateAddressSection(with: initialFormSnapshot)
+        if let phoneCountryCode = initialPhoneCountryCode {
+            addressSection?.phone?.setSelectedCountryCode(phoneCountryCode)
+        }
+        // Additional-fields checkbox — set after repopulation (CheckboxElement.isSelected has no
+        // side effects, so this won't retrigger form population).
+        checkboxElement?.isSelected = initialCheckboxSelected ?? false
+        // Drop autocomplete analytics captured during the discarded edits.
+        selectedAutoCompleteResult = initialSelectedAutoCompleteResult
     }
 
     func handleShippingEqualsBillingToggle(isSelected: Bool) {
@@ -484,8 +556,20 @@ extension AddressViewController {
         )
     }
 
+    private func captureInitialSnapshot() {
+        // The baseline for change detection: the form as of the last open or save. Also the
+        // value returned to the delegate if the customer cancels, so we never hand back
+        // edited-but-abandoned data.
+        self.initialAddressDetails = addressDetails
+        self.initialFormSnapshot = addressSection?.addressDetails
+        self.initialSelectedAutoCompleteResult = selectedAutoCompleteResult
+        self.initialPhoneCountryCode = addressSection?.phone?.selectedCountryCode
+        self.initialCheckboxSelected = checkboxElement?.checkboxButton.isSelected
+    }
+
     private func loadUI() {
         self.addressSection = makeDefaultAddressSection()
+        captureInitialSnapshot()
 
         let stackView = UIStackView(arrangedSubviews: [headerLabel, formElement.view, errorLabel])
         stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
@@ -536,7 +620,7 @@ extension AddressViewController {
         }
     }
 
-    private func logAddressCompleted(addressDetails: AddressDetails?) {
+    private func logAddressCompleted() {
         var editDistance: Int?
         if let selectedAddress = addressDetails?.address, let autoCompleteAddress = selectedAutoCompleteResult {
             editDistance = PaymentSheet.Address(from: selectedAddress).editDistance(from: autoCompleteAddress)
@@ -548,6 +632,14 @@ extension AddressViewController {
             editDistance: editDistance,
             apiClient: configuration.apiClient
         )
+    }
+}
+
+// MARK: - IntegrationDelegate
+// Default implementation that logs completion and forwards address details to the merchant delegate
+extension AddressViewController: AddressViewController.IntegrationDelegate {
+    func save(addressDetails: AddressDetails, setLoading: (Bool) -> Void) async throws {
+        logAddressCompleted()
     }
 }
 
@@ -698,7 +790,15 @@ extension PaymentSheet.Address {
 
 // MARK: - UIAdaptivePresentationControllerDelegate
 extension AddressViewController: UIAdaptivePresentationControllerDelegate {
+
     public func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
-        didContinue()
+        // no-op. This isn't actually reachable since we always return false for ShouldDismiss,
+        //  but we don't want to make public API changes by removing this function.
+    }
+
+    public func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        // Disallow swipe-to-dismiss so an accidental gesture can't discard entered address data.
+        // Customers exit via the 'X' button (which confirms if there are unsaved changes) or Continue.
+        return false
     }
 }

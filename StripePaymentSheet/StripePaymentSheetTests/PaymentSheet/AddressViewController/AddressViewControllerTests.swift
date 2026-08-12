@@ -2,20 +2,199 @@
 //  AddressViewControllerTests.swift
 //  StripePaymentSheetTests
 //
-//  Copyright © 2026 Stripe, Inc. All rights reserved.
+//  Created by George Birch on 8/4/26.
 //
 
 @_spi(STP) @testable import StripeCore
-import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripeUICore
 import XCTest
 
 @MainActor
 final class AddressViewControllerTests: XCTestCase {
-    private let addressSpecProvider: AddressSpecProvider = {
-        let specProvider = AddressSpecProvider()
-        specProvider.addressSpecs = [
+    override func setUp() {
+        super.setUp()
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+    }
+
+    func testDidContinuePassesValidAddressToIntegrationDelegate() async {
+        // Given an AddressViewController with a valid address and a custom integration delegate
+        let merchantDelegate = MerchantDelegate()
+        let integrationDelegate = IntegrationDelegate()
+        integrationDelegate.saveExpectation = expectation(description: "Save address")
+        let viewController = makeViewController(
+            configuration: makeConfiguration(defaultAddress: .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                postalCode: "94080",
+                state: "CA"
+            )),
+            merchantDelegate: merchantDelegate,
+            integrationDelegate: integrationDelegate
+        )
+        viewController.loadViewIfNeeded()
+
+        // When address collection completes
+        viewController.didContinue()
+        await fulfillment(of: [integrationDelegate.saveExpectation!])
+
+        // Then only the integration delegate receives the valid address
+        XCTAssertEqual(integrationDelegate.receivedAddressDetails.count, 1)
+        let addressDetails = integrationDelegate.receivedAddressDetails[0]
+        XCTAssertEqual(addressDetails.name, "Jane Doe")
+        XCTAssertEqual(addressDetails.address.city, "San Francisco")
+        XCTAssertEqual(addressDetails.address.country, "US")
+        XCTAssertEqual(addressDetails.address.line1, "354 Oyster Point Blvd")
+        XCTAssertEqual(addressDetails.address.postalCode, "94080")
+        XCTAssertEqual(addressDetails.address.state, "CA")
+    }
+
+    func testDefaultIntegrationDelegateLogsAndForwardsValidAddress() async {
+        // Given an AddressViewController using the default integration delegate
+        let merchantDelegate = MerchantDelegate()
+        merchantDelegate.completionExpectation = expectation(description: "Merchant completion")
+        let viewController = makeViewController(
+            configuration: makeConfiguration(defaultAddress: .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                postalCode: "94080",
+                state: "CA"
+            )),
+            merchantDelegate: merchantDelegate
+        )
+        viewController.loadViewIfNeeded()
+
+        // When address collection completes
+        viewController.didContinue()
+        await fulfillment(of: [merchantDelegate.completionExpectation!])
+
+        // Then the merchant receives the address and completion is logged
+        XCTAssertEqual(merchantDelegate.receivedAddressDetails.count, 1)
+        XCTAssertEqual(merchantDelegate.receivedAddressDetails[0]?.name, "Jane Doe")
+        XCTAssertEqual(merchantDelegate.receivedAddressDetails[0]?.address.line1, "354 Oyster Point Blvd")
+        XCTAssertNotNil(addressCompletionEvent)
+    }
+
+    func testDidContinueDisplaysIntegrationDelegateError() async {
+        // Given an AddressViewController whose integration delegate fails to save
+        let expectedError = NSError(
+            domain: "AddressViewControllerTests",
+            code: 1,
+            userInfo: [NSLocalizedDescriptionKey: "Unable to save the address."]
+        )
+        let merchantDelegate = MerchantDelegate()
+        let integrationDelegate = IntegrationDelegate(error: expectedError)
+        integrationDelegate.saveExpectation = expectation(description: "Save address")
+        let viewController = makeViewController(
+            configuration: makeConfiguration(defaultAddress: .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                postalCode: "94080",
+                state: "CA"
+            )),
+            merchantDelegate: merchantDelegate,
+            integrationDelegate: integrationDelegate
+        )
+        viewController.loadViewIfNeeded()
+
+        // When address collection completes
+        viewController.didContinue()
+        await fulfillment(of: [integrationDelegate.saveExpectation!])
+
+        // Then the error is displayed without notifying the merchant
+        XCTAssertEqual(viewController.errorLabel.text, expectedError.localizedDescription)
+        XCTAssertFalse(viewController.errorLabel.isHidden)
+        XCTAssertTrue(merchantDelegate.receivedAddressDetails.isEmpty)
+    }
+
+    func testDidContinueShowsLoadingAndBlocksInteractionWhileSaving() async {
+        // Given an AddressViewController whose integration delegate performs an asynchronous save
+        let merchantDelegate = MerchantDelegate()
+        merchantDelegate.completionExpectation = expectation(description: "Merchant completion")
+        let integrationDelegate = IntegrationDelegate()
+        integrationDelegate.waitsForCompletion = true
+        integrationDelegate.loadingExpectation = expectation(description: "Loading started")
+        let viewController = makeViewController(
+            configuration: makeConfiguration(defaultAddress: .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                postalCode: "94080",
+                state: "CA"
+            )),
+            merchantDelegate: merchantDelegate,
+            integrationDelegate: integrationDelegate
+        )
+        let navigationController = UINavigationController(rootViewController: viewController)
+        viewController.loadViewIfNeeded()
+
+        // When address collection completes and the save begins
+        viewController.didContinue()
+        await fulfillment(of: [integrationDelegate.loadingExpectation!])
+
+        // Then the form, navigation, and save button are disabled while the button shows loading
+        XCTAssertFalse(viewController.view.isUserInteractionEnabled)
+        XCTAssertFalse(navigationController.navigationBar.isUserInteractionEnabled)
+        XCTAssertFalse((viewController.navigationItem.leftBarButtonItem?.customView as? UIButton)?.isEnabled ?? true)
+        if case .processing = viewController.button.status {
+            // Expected
+        } else {
+            XCTFail("Expected the save button to be processing")
+        }
+        XCTAssertTrue(merchantDelegate.receivedAddressDetails.isEmpty)
+
+        // When the save succeeds
+        integrationDelegate.completeSave()
+        await fulfillment(of: [merchantDelegate.completionExpectation!])
+
+        // Then interaction is restored before the integration is notified of completion
+        XCTAssertTrue(viewController.view.isUserInteractionEnabled)
+        XCTAssertTrue(navigationController.navigationBar.isUserInteractionEnabled)
+        XCTAssertTrue((viewController.navigationItem.leftBarButtonItem?.customView as? UIButton)?.isEnabled ?? false)
+        if case .enabled = viewController.button.status {
+            // Expected
+        } else {
+            XCTFail("Expected the save button to be enabled")
+        }
+    }
+
+    private var addressCompletionEvent: [String: Any]? {
+        STPAnalyticsClient.sharedClient._testLogHistory.first {
+            $0["event"] as? String == "mc_address_completed"
+        }
+    }
+
+    private func makeConfiguration(
+        defaultAddress: PaymentSheet.Address? = nil
+    ) -> AddressViewController.Configuration {
+        var configuration = AddressViewController.Configuration()
+        configuration.allowedCountries = ["US"]
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        if let defaultAddress {
+            configuration.defaultValues = .init(address: defaultAddress, name: "Jane Doe")
+        }
+        return configuration
+    }
+
+    private func makeViewController(
+        configuration: AddressViewController.Configuration,
+        merchantDelegate: AddressViewControllerDelegate,
+        integrationDelegate: AddressViewController.IntegrationDelegate? = nil
+    ) -> AddressViewController {
+        AddressViewController(
+            addressSpecProvider: makeAddressSpecProvider(),
+            configuration: configuration,
+            delegate: merchantDelegate,
+            integrationDelegate: integrationDelegate
+        )
+    }
+
+    private func makeAddressSpecProvider() -> AddressSpecProvider {
+        let addressSpecProvider = AddressSpecProvider()
+        addressSpecProvider.addressSpecs = [
             "US": AddressSpec(
                 format: "NOACSZ",
                 require: "ACSZ",
@@ -25,243 +204,58 @@ final class AddressViewControllerTests: XCTestCase {
                 zipNameType: .zip
             ),
         ]
-        return specProvider
-    }()
-
-    func testDefaultSaveHandlerFinishesWithoutLoading() async {
-        // Given a valid address and the default save handler
-        let delegateCalled = expectation(description: "Delegate called")
-        let delegate = TestAddressViewControllerDelegate()
-        delegate.onFinish = { delegateCalled.fulfill() }
-        let viewController = makeViewController(delegate: delegate)
-
-        // When the customer saves
-        viewController.didTapSaveButton()
-        await fulfillment(of: [delegateCalled], timeout: 1)
-
-        // Then the delegate is notified with the address without showing loading
-        XCTAssertEqual(delegate.addresses.count, 1)
-        XCTAssertEqual(delegate.addresses.first.flatMap { $0 }?.address.line1, "510 Townsend St.")
-        XCTAssertEqual(viewController.button.status, .enabled)
-        XCTAssertTrue(viewController.view.isUserInteractionEnabled)
-        XCTAssertTrue(closeButton(in: viewController)?.isEnabled ?? false)
-    }
-
-    func testSaveHandlerControlsLoadingAndFinishesAfterSuccess() async {
-        // Given a save handler that shows loading while its work is in flight
-        let saveStarted = expectation(description: "Save started")
-        let delegateCalled = expectation(description: "Delegate called")
-        let saveHandler = TestAddressViewControllerSaveHandler()
-        saveHandler.shouldSuspend = true
-        saveHandler.showsLoading = true
-        saveHandler.onSave = { saveStarted.fulfill() }
-        let delegate = TestAddressViewControllerDelegate()
-        delegate.onFinish = { delegateCalled.fulfill() }
-        let viewController = makeViewController(delegate: delegate, saveHandler: saveHandler)
-
-        // When the customer saves
-        viewController.didTapSaveButton()
-        await fulfillment(of: [saveStarted], timeout: 1)
-
-        // Then the UI is locked and the delegate has not been notified
-        XCTAssertEqual(saveHandler.addresses.count, 1)
-        XCTAssertEqual(saveHandler.addresses.first?.address.line1, "510 Townsend St.")
-        XCTAssertTrue(delegate.addresses.isEmpty)
-        XCTAssertEqual(viewController.button.status, .spinnerWithInteractionDisabled)
-        XCTAssertFalse(viewController.view.isUserInteractionEnabled)
-        XCTAssertFalse(closeButton(in: viewController)?.isEnabled ?? true)
-
-        // When Save is tapped again and the original save completes
-        viewController.didTapSaveButton()
-        XCTAssertEqual(saveHandler.addresses.count, 1)
-        saveHandler.resume()
-        await fulfillment(of: [delegateCalled], timeout: 1)
-
-        // Then the delegate is notified once and interaction is restored
-        XCTAssertEqual(delegate.addresses.count, 1)
-        XCTAssertEqual(viewController.button.status, .enabled)
-        XCTAssertTrue(viewController.view.isUserInteractionEnabled)
-        XCTAssertTrue(closeButton(in: viewController)?.isEnabled ?? false)
-    }
-
-    func testSaveHandlerCanOptOutOfLoading() async {
-        // Given a save handler whose work is in flight without showing loading
-        let saveStarted = expectation(description: "Save started")
-        let delegateCalled = expectation(description: "Delegate called")
-        let saveHandler = TestAddressViewControllerSaveHandler()
-        saveHandler.shouldSuspend = true
-        saveHandler.onSave = { saveStarted.fulfill() }
-        let delegate = TestAddressViewControllerDelegate()
-        delegate.onFinish = { delegateCalled.fulfill() }
-        let viewController = makeViewController(delegate: delegate, saveHandler: saveHandler)
-
-        // When the customer saves
-        viewController.didTapSaveButton()
-        await fulfillment(of: [saveStarted], timeout: 1)
-
-        // Then the UI remains unchanged while duplicate saves are still ignored
-        XCTAssertEqual(viewController.button.status, .enabled)
-        XCTAssertTrue(viewController.view.isUserInteractionEnabled)
-        XCTAssertTrue(closeButton(in: viewController)?.isEnabled ?? false)
-        viewController.didTapSaveButton()
-        XCTAssertEqual(saveHandler.addresses.count, 1)
-
-        // When the save completes
-        saveHandler.resume()
-        await fulfillment(of: [delegateCalled], timeout: 1)
-
-        // Then the delegate is notified
-        XCTAssertEqual(delegate.addresses.count, 1)
-    }
-
-    func testFailedSaveShowsErrorAndCanRetry() async {
-        // Given a handler that shows loading and fails its first save
-        let saveStarted = expectation(description: "Save started")
-        let saveFinished = expectation(description: "Save finished")
-        let saveHandler = TestAddressViewControllerSaveHandler()
-        saveHandler.error = AddressSaveTestError.saveFailed
-        saveHandler.shouldSuspend = true
-        saveHandler.showsLoading = true
-        saveHandler.onSave = { saveStarted.fulfill() }
-        saveHandler.onSaveFinished = { saveFinished.fulfill() }
-        let delegate = TestAddressViewControllerDelegate()
-        let viewController = makeViewController(delegate: delegate, saveHandler: saveHandler)
-
-        // When the customer saves
-        viewController.didTapSaveButton()
-        await fulfillment(of: [saveStarted], timeout: 1)
-        saveHandler.resume()
-        await fulfillment(of: [saveFinished], timeout: 1)
-
-        // Then the error is displayed without completing or locking the form
-        XCTAssertTrue(delegate.addresses.isEmpty)
-        XCTAssertEqual(viewController.errorLabel.text, AddressSaveTestError.saveFailed.localizedDescription)
-        XCTAssertEqual(viewController.button.status, .enabled)
-        XCTAssertTrue(viewController.view.isUserInteractionEnabled)
-        XCTAssertTrue(closeButton(in: viewController)?.isEnabled ?? false)
-
-        // When the customer retries and the save succeeds
-        let delegateCalled = expectation(description: "Delegate called")
-        delegate.onFinish = { delegateCalled.fulfill() }
-        saveHandler.error = nil
-        saveHandler.shouldSuspend = false
-        saveHandler.onSave = nil
-        saveHandler.onSaveFinished = nil
-        viewController.didTapSaveButton()
-        await fulfillment(of: [delegateCalled], timeout: 1)
-
-        // Then the retry completes and clears the error
-        XCTAssertEqual(saveHandler.addresses.count, 2)
-        XCTAssertEqual(delegate.addresses.count, 1)
-        XCTAssertTrue(viewController.errorLabel.isHidden)
-    }
-
-    func testCloseBypassesSaveHandler() {
-        // Given a custom save handler
-        let saveHandler = TestAddressViewControllerSaveHandler()
-        let delegate = TestAddressViewControllerDelegate()
-        let viewController = makeViewController(delegate: delegate, saveHandler: saveHandler)
-
-        // When the customer closes the address view
-        viewController.didTapCloseButton()
-
-        // Then existing cancellation behavior is preserved without saving
-        XCTAssertTrue(saveHandler.addresses.isEmpty)
-        XCTAssertEqual(delegate.addresses.count, 1)
-        XCTAssertEqual(delegate.addresses.first.flatMap { $0 }?.address.line1, "510 Townsend St.")
-    }
-
-    private func makeViewController(
-        delegate: AddressViewControllerDelegate,
-        saveHandler: AddressViewControllerSaveHandler = DefaultAddressViewControllerSaveHandler()
-    ) -> AddressViewController {
-        var configuration = AddressViewController.Configuration()
-        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_1234")
-        configuration.defaultValues = .init(
-            address: .init(
-                city: "San Francisco",
-                country: "US",
-                line1: "510 Townsend St.",
-                postalCode: "94103",
-                state: "CA"
-            ),
-            name: "Jane Doe",
-            phone: nil
-        )
-        let viewController = AddressViewController(
-            addressSpecProvider: addressSpecProvider,
-            configuration: configuration,
-            delegate: delegate,
-            saveHandler: saveHandler
-        )
-        viewController.loadViewIfNeeded()
-        return viewController
-    }
-
-    private func closeButton(in viewController: AddressViewController) -> UIButton? {
-        viewController.navigationItem.leftBarButtonItem?.customView as? UIButton
+        return addressSpecProvider
     }
 }
 
 @MainActor
-private final class TestAddressViewControllerDelegate: AddressViewControllerDelegate {
-    var addresses: [AddressViewController.AddressDetails?] = []
-    var onFinish: (() -> Void)?
+private final class MerchantDelegate: AddressViewControllerDelegate {
+    var completionExpectation: XCTestExpectation?
+    var receivedAddressDetails: [AddressViewController.AddressDetails?] = []
 
     func addressViewControllerDidFinish(
         _ addressViewController: AddressViewController,
         with address: AddressViewController.AddressDetails?
     ) {
-        addresses.append(address)
-        onFinish?()
+        receivedAddressDetails.append(address)
+        completionExpectation?.fulfill()
     }
 }
 
 @MainActor
-private final class TestAddressViewControllerSaveHandler: AddressViewControllerSaveHandler {
-    var addresses: [AddressViewController.AddressDetails] = []
-    var error: Error?
-    var shouldSuspend = false
-    var showsLoading = false
-    var onSave: (() -> Void)?
-    var onSaveFinished: (() -> Void)?
-    private var continuation: CheckedContinuation<Void, Never>?
+private final class IntegrationDelegate: AddressViewController.IntegrationDelegate {
+    var saveExpectation: XCTestExpectation?
+    var loadingExpectation: XCTestExpectation?
+    var receivedAddressDetails: [AddressViewController.AddressDetails] = []
+    var waitsForCompletion = false
+    private let error: Error?
+    private var saveContinuation: CheckedContinuation<Void, Never>?
+
+    init(error: Error? = nil) {
+        self.error = error
+    }
 
     func save(
-        address: AddressViewController.AddressDetails,
+        addressDetails: AddressViewController.AddressDetails,
         setLoading: (Bool) -> Void
     ) async throws {
-        addresses.append(address)
-        if showsLoading {
+        receivedAddressDetails.append(addressDetails)
+        saveExpectation?.fulfill()
+        if waitsForCompletion {
             setLoading(true)
-        }
-        if shouldSuspend {
+            loadingExpectation?.fulfill()
             await withCheckedContinuation { continuation in
-                self.continuation = continuation
-                onSave?()
+                saveContinuation = continuation
             }
-        } else {
-            onSave?()
-        }
-        if showsLoading {
             setLoading(false)
         }
-        onSaveFinished?()
         if let error {
             throw error
         }
     }
 
-    func resume() {
-        continuation?.resume()
-        continuation = nil
-    }
-}
-
-private enum AddressSaveTestError: LocalizedError {
-    case saveFailed
-
-    var errorDescription: String? {
-        "The address could not be saved."
+    func completeSave() {
+        saveContinuation?.resume()
+        saveContinuation = nil
     }
 }

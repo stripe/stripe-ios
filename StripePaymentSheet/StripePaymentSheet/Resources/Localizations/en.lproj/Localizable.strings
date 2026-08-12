@@ -168,11 +168,17 @@
 with the transaction. */
 "Confirm payment details" = "Confirm payment details";
 
+/* Instructions shown while waiting for a Bizum payment authorization */
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase.";
+
 /* Text for alert message when user needs to confirm payment in their banking app */
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirm the payment in your bank or payment app within %@ to complete the purchase.";
 
 /* Text for alert message when user needs to confirm payment in their banking app */
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirm the payment in your bank's app within %@ to complete the purchase.";
+
+/* Instructions shown while waiting for an MB WAY payment authorization */
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Confirm the payment in your MB WAY app within %@ to complete the purchase.";
 
 /* Title for prompting for a card's CVC on confirming the payment */
 "Confirm your CVC" = "Confirm your CVC";
@@ -207,8 +213,17 @@ with the transaction. */
 /* Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link. */
 "Did you mean %@? %@." = "Did you mean %1$@? %2$@.";
 
+/* Button title in a confirmation alert that discards the customer's unsaved address changes and closes the form. */
+"Discard Changes" = "Discard Changes";
+
+/* Title of a confirmation alert shown when the customer tries to close the address form after making changes. */
+"Discard changes?" = "Discard changes?";
+
 /* Label for the discount row in an order summary, applied as a negative amount. */
 "Discount" = "Discount";
+
+/* Accessibility label for a button that lets the user update their address */
+"Edit address" = "Edit address";
 
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
@@ -240,8 +255,8 @@ with the transaction. */
 /* Label for an IBAN field */
 "IBAN" = "IBAN";
 
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL Bank";
+/* Button title in a confirmation alert that dismisses the alert and returns the customer to editing their address. */
+"Keep Editing" = "Keep Editing";
 
 /* Label for displaying the last 4 digits of the user's social security number */
 "Last 4 digits of SSN" = "Last 4 digits of SSN";
@@ -518,6 +533,9 @@ the heading the screen itself. */
 
 /* Text for a tappable link that will update the email field with a suggested email address. */
 "Yes, update" = "Yes, update";
+
+/* Message of a confirmation alert warning the customer that closing the address form will discard their unsaved changes. */
+"Your address changes won't be saved." = "Your address changes won't be saved.";
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";

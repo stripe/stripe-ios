@@ -22,8 +22,8 @@ import UIKit
 ///
 /// The async initializer loads the session from Stripe before returning.
 ///
-/// Observe loading state and session changes with SwiftUI by using ``isLoading`` and ``session``
-/// (published via `ObservableObject`), or in UIKit by setting a ``delegate``.
+/// Observe loading state and session changes with ``isLoading`` and ``session``
+/// (published via `ObservableObject`).
 @_spi(STP)
 @_spi(ReactNativeSDK)
 @MainActor
@@ -34,27 +34,19 @@ public final class Checkout: ObservableObject {
     ///
     /// After initialization this is always ``false``. It transitions to ``true``
     /// while a mutation is in flight.
-    @Published public internal(set) var isLoading: Bool = false {
-        didSet {
-            isLoading ? delegate?.checkoutDidBeginLoading(self) : delegate?.checkoutDidFinishLoading(self)
-        }
-    }
+    @Published public internal(set) var isLoading: Bool = false
 
     /// The Checkout Session, updated from Stripe after every mutation.
     @Published public private(set) var session: Session {
         didSet {
             nonisolatedSession = session
-            // Just some notes: Setting session causes publisher+delegate to fire even when it didn't change.
+            // Just some notes: Setting session causes the publisher to fire even when it didn't change.
             // AFAICT that's okay, deduping sees like a minor optimization to slightly reduce the amount of UI updates.
-            delegate?.checkoutDidUpdateSession(self, session: session)
         }
     }
 
     /// The configuration supplied at initialization.
     public let configuration: Configuration
-
-    /// A delegate notified when session data changes.
-    public weak var delegate: CheckoutDelegate?
 
     // MARK: - Internal Properties
 
@@ -66,6 +58,9 @@ public final class Checkout: ObservableObject {
 
     /// The CurrencySelectorElement for this Checkout instance, when Adaptive Pricing is available.
     private var currencySelectorElement: CurrencySelectorElement?
+
+    /// The ShippingAddressElement for this Checkout instance.
+    private let shippingAddressElement: ShippingAddressElement
 
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
@@ -89,7 +84,7 @@ public final class Checkout: ObservableObject {
         didSet {
             // If the queue has gone from empty to non-empty, we set
             //  isLoading to true. We avoid setting it if the queue
-            //  was already non-empty to prevent duplicate delegate calls
+            //  was already non-empty to prevent duplicate loading emissions.
             if !pendingOperations.isEmpty && !isLoading {
                 isLoading = true
             }
@@ -136,11 +131,39 @@ public final class Checkout: ObservableObject {
             )
             let loadedSession = apiResponse.makePublicSession()
             self.session = loadedSession
-            self.nonisolatedSession = session // temporary hack
+            self.nonisolatedSession = loadedSession // temporary hack
 
-            try await applyDefaults()
+            let defaultShippingAddress: Session.ShippingAddress?
+            if let shippingDetails = configuration.defaults.shippingDetails,
+               let address = shippingDetails.address {
+                defaultShippingAddress = Session.ShippingAddress(
+                    name: shippingDetails.name,
+                    address: address
+                )
+            } else {
+                defaultShippingAddress = nil
+            }
 
-            // Load elements
+            // Initialize the SAE with the raw default so its form can normalize the address.
+            self.shippingAddressElement = ShippingAddressElement(
+                configuration: configuration.shippingAddressElement,
+                initialShippingAddress: defaultShippingAddress ?? loadedSession.shippingAddress,
+                allowedCountries: loadedSession.allowedShippingCountries,
+                apiClient: configuration.apiClient,
+                useAutocompleteEndpoints: loadedSession.elementsSession.shouldUseAutocompleteProxyEndpoints
+            )
+            self.shippingAddressElement.delegate = self
+            let normalizedDefaultShippingAddress: Session.ShippingAddress?
+            if defaultShippingAddress != nil {
+                normalizedDefaultShippingAddress = await shippingAddressElement.normalizedInitialShippingAddress()
+            } else {
+                normalizedDefaultShippingAddress = nil
+            }
+
+            // Apply the normalized address before initializing elements that read from the session.
+            try await applyDefaults(shippingAddress: normalizedDefaultShippingAddress)
+
+            // Load remaining elements
             self.paymentElement = try await PaymentElement(checkout: self)
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
             self.expressCheckoutElement = ExpressCheckoutElement(
@@ -295,6 +318,11 @@ public final class Checkout: ObservableObject {
         return currencySelectorElement
     }
 
+    /// Returns the ShippingAddressElement for this Checkout instance.
+    public func getShippingAddressElement() -> ShippingAddressElement {
+        return shippingAddressElement
+    }
+
     // MARK: - Confirm
 
     /// Use this method to confirm the Checkout Session.
@@ -360,19 +388,25 @@ public final class Checkout: ObservableObject {
 // MARK: - Defaults
 
 extension Checkout {
-    func applyDefaults() async throws {
+    func applyDefaults(shippingAddress: Session.ShippingAddress?) async throws {
         let defaults = configuration.defaults
 
         if let billingDetails = defaults.billingDetails,
            let address = billingDetails.address {
             try await updateBillingTaxRegionIfNecessary(address: address)
         }
-        if let shippingDetails = defaults.shippingDetails,
-           let address = shippingDetails.address {
-            try await updateShippingAddress(
-                name: shippingDetails.name,
-                address: address
-            )
+
+        if let shippingAddress {
+            do {
+                try await updateShippingAddress(
+                    name: shippingAddress.name,
+                    address: shippingAddress.address
+                )
+            } catch CheckoutError.invalidShippingCountry {
+                // Treat a default address with a disallowed country as nil.
+            } catch {
+                throw error
+            }
         }
     }
 }

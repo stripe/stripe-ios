@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Bekreft betalingsopplysninger";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Bekreft Bizum-betalingen i mobilbank-appen din innen %@ for å fullføre kjøpet.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Bekreft betalingen i MB WAY-appen din innen %@ for å fullføre kjøpet.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bekreft betalingen i bankens app eller i betalingsapp innen %@ for å fullføre kjøpet.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Bekreft betalingen i bankens app innen %@ for å fullføre kjøpet.";
@@ -136,9 +140,15 @@
 
 "Did you mean %@? %@." = "Mente du %1$@? %2$@.";
 
+"Discard Changes" = "Forkast endringer";
+
+"Discard changes?" = "Forkaste endringer?";
+
 "Discount" = "Rabatt";
 
 "EPS Bank" = "EPS Bank";
+
+"Edit address" = "Rediger adresse";
 
 "Enter address manually" = "Skriv inn adresse manuelt";
 
@@ -157,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jeg forstår at Stripe vil direktedebitere på vegne av %@ og bekrefter at jeg er kontoinnehaver og den eneste personen som må godkjenne debiteringer fra denne kontoen.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Fortsett å redigere";
 
 "Last 4 digits of SSN" = "De siste 4 sifrene i personnummeret ditt";
 
@@ -340,4 +352,4 @@
 
 "Your IBAN should start with a two-letter country code." = "IBAN-nummeret skal starte med en tosifret landskode.";
 
-"iDEAL Bank" = "iDEAL Bank";
+"Your address changes won't be saved." = "Adresseendringene dine vil ikke bli lagret.";

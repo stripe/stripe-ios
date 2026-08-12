@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Vahvista maksutiedot";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Vahvista Bizum-maksu mobiilipankkisovelluksessasi %@ sisällä viedäksesi ostoksen loppuun.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Vahvista maksu MB WAY -sovelluksessasi %@ sisällä viedäksesi ostoksen loppuun.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Suorita osto vahvistamalla maksu pankkisi kanssa tai maksusovelluksessa %@.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Suorita osto vahvistamalla maksu pankkisi sovelluksessa %@.";
@@ -136,9 +140,15 @@
 
 "Did you mean %@? %@." = "Tarkoititko %1$@? %2$@.";
 
+"Discard Changes" = "Hylkää muutokset";
+
+"Discard changes?" = "Hylätäänkö muutokset?";
+
 "Discount" = "Alennus";
 
 "EPS Bank" = "EPS-pankki";
+
+"Edit address" = "Muokkaa osoitetta";
 
 "Enter address manually" = "Syötä osoite manuaalisesti";
 
@@ -157,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ymmärrän, että Stripe kerää suoraveloituksia yrityksen %@ puolesta sekä vahvistan, että olen tilinhaltija ja ainoa henkilö, jota tarvitaan tämän tilin veloitusten varmentamiseen.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Jatka muokkaamista";
 
 "Last 4 digits of SSN" = "SSN:n 4 viimeistä numeroa";
 
@@ -340,4 +352,4 @@
 
 "Your IBAN should start with a two-letter country code." = "IBAN-tilinumero alkaa kaksikirjaimisella maakoodilla.";
 
-"iDEAL Bank" = "iDEAL-pankki";
+"Your address changes won't be saved." = "Osoitteesi muutoksia ei tallenneta.";

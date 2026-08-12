@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Zahlungsdetails bestätigen";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Bestätigen Sie die Bizum-Zahlung in Ihrer Mobile-Banking-Anwendung innerhalb von %@, um den Kauf abzuschließen.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Bestätigen Sie die Zahlung in Ihrer MB WAY-App innerhalb von %@, um den Kauf abzuschließen.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bestätigen Sie die Zahlung in Ihrer Bank- oder Zahlungs-App innerhalb von %@, um den Kauf abzuschließen.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Bestätigen Sie die Zahlung in Ihrer Bank-App innerhalb von %@, um den Kauf abzuschließen.";
@@ -136,9 +140,15 @@
 
 "Did you mean %@? %@." = "Meinten Sie %1$@? %2$@.";
 
+"Discard Changes" = "Änderungen verwerfen";
+
+"Discard changes?" = "Änderungen verwerfen?";
+
 "Discount" = "Rabatt";
 
 "EPS Bank" = "EPS-Bank";
+
+"Edit address" = "Adresse bearbeiten";
 
 "Enter address manually" = "Adresse manuell eingeben";
 
@@ -157,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ich verstehe, dass Stripe im Namen von %@ Lastschriften einzieht und bestätige, dass ich der Kontoinhaber/die Kontoinhaberin und die einzige Person bin, die zur Autorisierung von Lastschriften von diesem Konto erforderlich ist.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Weiter bearbeiten";
 
 "Last 4 digits of SSN" = "Letzte 4 Ziffern der IdNr.";
 
@@ -340,4 +352,4 @@
 
 "Your IBAN should start with a two-letter country code." = "Ihre IBAN sollte mit einem zweistelligen Ländercode beginnen.";
 
-"iDEAL Bank" = "iDEAL-Bank";
+"Your address changes won't be saved." = "Ihre Adressänderungen werden nicht gespeichert.";

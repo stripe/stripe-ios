@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Kumpirmahin ang mga detalye ng pagbabayad";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa Bizum sa iyong mobile banking application sa loob ng %@ para makumpleto ang pagbili.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa iyong MB WAY app sa loob ng %@ para makumpleto ang pagbili.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa iyong bangko o app ng pagbabayad sa loob ng %@ para kumpletuhin ang pagbili.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa app ng iyong bangko sa loob ng %@ para kumpletuhin ang pagbili.";
@@ -136,9 +140,15 @@
 
 "Did you mean %@? %@." = "Ang ibig mong sabihin ay %1$@? %2$@.";
 
+"Discard Changes" = "I-discard ang Mga Pagbabago";
+
+"Discard changes?" = "I-discard ang mga pagbabago?";
+
 "Discount" = "Diskwento";
 
 "EPS Bank" = "EPS Bank";
+
+"Edit address" = "I-edit ang address";
 
 "Enter address manually" = "Manwal na ilagay ang address";
 
@@ -157,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Nauunawaan ko na mangongolekta ang Stripe ng Direct Debits sa ngalan ng  %@ at kinukumpirma ko na ako ang may-ari ng account at tanging taong kinakailangan na magpahintulot sa mga debit mula sa account na ito..";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Ipagpatuloy ang Pag-edit";
 
 "Last 4 digits of SSN" = "Huling 4 na digit ng SSN";
 
@@ -340,4 +352,4 @@
 
 "Your IBAN should start with a two-letter country code." = "Ang iyong IBAN ay dapat magsimula sa dalawang letra na code ng bansa.";
 
-"iDEAL Bank" = "iDEAL Bank";
+"Your address changes won't be saved." = "Hindi mase-save ang mga pagbabago sa iyong address.";

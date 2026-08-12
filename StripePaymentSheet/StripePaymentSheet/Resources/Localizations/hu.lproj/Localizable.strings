@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Fizetési adatok megerősítése";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "A vásárlás befejezéséhez erősítse meg a Bizum fizetést a mobil banki alkalmazásában %@ belül.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "A vásárlás befejezéséhez erősítse meg a fizetést az MB WAY alkalmazásában %@ belül.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "A vásárlás befejezéséhez %@ percen belül erősítse meg a fizetést a bankjánál vagy a fizetést biztosító alkalmazásban.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "A vásárlás befejezéséhez %@ percen belül erősítse meg a fizetést bankja alkalmazásában.";
@@ -136,9 +140,15 @@
 
 "Did you mean %@? %@." = "Erre gondolt: %1$@? %2$@.";
 
+"Discard Changes" = "Módosítások elvetése";
+
+"Discard changes?" = "Módosítások elvetése?";
+
 "Discount" = "Engedmény";
 
 "EPS Bank" = "EPS Bank";
+
+"Edit address" = "Cím szerkesztése";
 
 "Enter address manually" = "Cím megadása kézzel";
 
@@ -157,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tudomásul veszem, hogy a Stripe beszedéseket végez a(z) %@ nevében, és megerősítem, hogy én vagyok a számla tulajdonosa és az egyetlen személy, aki a terheléseket engedélyezheti erről a számláról.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Szerkesztés folytatása";
 
 "Last 4 digits of SSN" = "Az SSN utolsó 4 számjegye";
 
@@ -340,4 +352,4 @@
 
 "Your IBAN should start with a two-letter country code." = "Az IBAN-számának egy kétbetűs országkóddal kell kezdődnie.";
 
-"iDEAL Bank" = "iDEAL bank";
+"Your address changes won't be saved." = "A cím módosításai nem lesznek mentve.";
