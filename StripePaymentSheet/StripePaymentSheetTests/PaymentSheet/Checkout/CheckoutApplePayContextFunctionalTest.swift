@@ -55,12 +55,6 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
 
     // MARK: - Helpers
 
-    /// Creates a real Checkout session and a context backed by it.
-    /// Cassette sequence per test:
-    ///   0000 – POST create_checkout_session_unified (test backend)
-    ///   0001 – POST /v1/payment_pages/{id}/init
-    ///   0002 – POST /v1/payment_methods  (Apple Pay PM creation)
-    ///   0003 – POST /v1/payment_pages/{id}/confirm
     private func makeContext() async throws -> (CheckoutApplePayContext, CheckoutApplePayContextFunctionalTestAPIClient) {
         let returnURL = "stripe-ios-test://checkout-return"
         let sessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
