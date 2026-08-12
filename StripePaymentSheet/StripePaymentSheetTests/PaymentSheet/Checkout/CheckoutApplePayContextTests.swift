@@ -185,18 +185,15 @@ final class CheckoutApplePayContextTests: XCTestCase {
         stubConfirmSession(sessionId: sessionId, succeeded: false)
         let (context, mockController) = makeContext(sessionId: sessionId, apiClient: apiClient)
 
-        // ...and a side-effect-only stub that fires paymentAuthorizationControllerDidFinish
-        // as soon as the confirm request is intercepted, then returns false so the failure
-        // stub above still handles the actual response.
-        stub(condition: { $0.url?.path == "/v1/payment_pages/\(sessionId)/confirm" }) { _ in
-            DispatchQueue.main.async {
-                context.paymentAuthorizationControllerDidFinish(mockController)
+        stub { urlRequest in
+            if urlRequest.url?.path == "/v1/payment_pages/\(sessionId)/confirm" {
+                DispatchQueue.main.async {
+                    context.paymentAuthorizationControllerDidFinish(mockController)
+                }
             }
             return false
         } response: { _ in HTTPStubsResponse() }
 
-        // When the user taps Pay (the PKPaymentAuthorizationResult handler is never called
-        // because handleFailure takes the finishAndDismiss path, not the completion path)
         let resultTask = Task { await context.presentApplePay() }
         await Task.yield()
         context.paymentAuthorizationController(
