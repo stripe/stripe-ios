@@ -83,6 +83,10 @@ public class AddressViewController: UIViewController {
     /// Delegate provided by the integration entry point (legacy Address Element or Checkout Sessions Shipping Address Element) that handles address saving and analytics
     @MainActor
     protocol IntegrationDelegate: AnyObject {
+        /// Handles the address form being shown.
+        func didShow()
+        /// Handles cancellation without saving the address.
+        func didCancel()
         /// Handles completion with the customer's collected address details.
         func save(addressDetails: AddressDetails, setLoading: (Bool) -> Void) async throws
     }
@@ -311,7 +315,7 @@ public class AddressViewController: UIViewController {
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         if !didLogAddressShow {
-            STPAnalyticsClient.sharedClient.logAddressShow(defaultCountryCode: addressSection?.selectedCountryCode ?? "", apiClient: configuration.apiClient)
+            integrationDelegate?.didShow()
             didLogAddressShow = true
         }
         // Ensure we receive dismissal callbacks even when presented modally inside a UINavigationController
@@ -358,6 +362,10 @@ extension AddressViewController {
 
 // MARK: - Internal methods
 extension AddressViewController {
+
+    func prepareForPresentation() {
+        didLogAddressShow = false
+    }
 
     func initialAddressDetails() async -> AddressDetails? {
         await addressSpecProvider.loadAddressSpecs()
@@ -431,6 +439,7 @@ extension AddressViewController {
         if hasChanges {
             presentDiscardChangesAlert()
         } else {
+            integrationDelegate?.didCancel()
             delegate?.addressViewControllerDidFinish(self, with: initialAddressDetails)
         }
     }
@@ -454,6 +463,7 @@ extension AddressViewController {
         // Revert the form to its as-opened state so a reused instance doesn't keep the discarded
         // edits, then finish with the as-opened address (never the edited-but-abandoned values).
         resetFormToInitialSnapshot()
+        integrationDelegate?.didCancel()
         delegate?.addressViewControllerDidFinish(self, with: initialAddressDetails)
     }
 
@@ -620,17 +630,37 @@ extension AddressViewController {
         }
     }
 
-    private func logAddressCompleted() {
+    var addressShowAnalyticData: AddressAnalyticData {
+        return AddressAnalyticData(
+            addressCountryCode: addressSection?.selectedCountryCode.nonEmpty
+                ?? configuration.defaultValues.address.country?.nonEmpty
+                ?? "",
+            autoCompleteResultedSelected: nil,
+            editDistance: nil
+        )
+    }
+
+    var currentAddressAnalyticData: AddressAnalyticData {
+        return makeAddressAnalyticData(address: addressDetails?.address)
+    }
+
+    func addressAnalyticData(for addressDetails: AddressDetails) -> AddressAnalyticData {
+        return makeAddressAnalyticData(address: addressDetails.address)
+    }
+
+    private func makeAddressAnalyticData(address: AddressDetails.Address?) -> AddressAnalyticData {
         var editDistance: Int?
-        if let selectedAddress = addressDetails?.address, let autoCompleteAddress = selectedAutoCompleteResult {
-            editDistance = PaymentSheet.Address(from: selectedAddress).editDistance(from: autoCompleteAddress)
+        if let address, let autoCompleteAddress = selectedAutoCompleteResult {
+            editDistance = PaymentSheet.Address(from: address).editDistance(from: autoCompleteAddress)
         }
 
-        STPAnalyticsClient.sharedClient.logAddressCompleted(
-            addressCountyCode: addressSection?.selectedCountryCode ?? "",
+        return AddressAnalyticData(
+            addressCountryCode: address?.country.nonEmpty
+                ?? addressSection?.selectedCountryCode.nonEmpty
+                ?? configuration.defaultValues.address.country?.nonEmpty
+                ?? "",
             autoCompleteResultedSelected: selectedAutoCompleteResult != nil,
-            editDistance: editDistance,
-            apiClient: configuration.apiClient
+            editDistance: editDistance
         )
     }
 }
@@ -638,9 +668,35 @@ extension AddressViewController {
 // MARK: - IntegrationDelegate
 // Default implementation that logs completion and forwards address details to the merchant delegate
 extension AddressViewController: AddressViewController.IntegrationDelegate {
+    func didShow() {
+        STPAnalyticsClient.sharedClient.logAddressShow(
+            defaultCountryCode: addressShowAnalyticData.addressCountryCode,
+            apiClient: configuration.apiClient
+        )
+    }
+
+    func didCancel() {
+        logAddressCompleted()
+    }
+
     func save(addressDetails: AddressDetails, setLoading: (Bool) -> Void) async throws {
         logAddressCompleted()
     }
+
+    private func logAddressCompleted() {
+        let analyticData = currentAddressAnalyticData
+        STPAnalyticsClient.sharedClient.logAddressCompleted(
+            addressCountyCode: analyticData.addressCountryCode,
+            autoCompleteResultedSelected: analyticData.autoCompleteResultedSelected ?? false,
+            editDistance: analyticData.editDistance,
+            apiClient: configuration.apiClient
+        )
+    }
+}
+
+extension AddressViewController.IntegrationDelegate {
+    func didShow() {}
+    func didCancel() {}
 }
 
 // MARK: - ElementDelegate

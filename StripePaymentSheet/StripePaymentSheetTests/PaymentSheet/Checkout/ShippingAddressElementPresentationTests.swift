@@ -14,9 +14,12 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
 
     private var window: UIWindow!
     private var presentingViewController: UIViewController!
+    private var previousAnalyticsHistory: [[String: Any]]!
 
     override func setUp() {
         super.setUp()
+        previousAnalyticsHistory = STPAnalyticsClient.sharedClient._testLogHistory
+        STPAnalyticsClient.sharedClient._testLogHistory = []
         presentingViewController = UIViewController()
         window = UIWindow(frame: UIScreen.main.bounds)
         window.rootViewController = presentingViewController
@@ -28,6 +31,8 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         window.isHidden = true
         presentingViewController = nil
         window = nil
+        STPAnalyticsClient.sharedClient._testLogHistory = previousAnalyticsHistory
+        previousAnalyticsHistory = nil
         super.tearDown()
     }
 
@@ -101,11 +106,85 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         XCTAssertNil(observingViewController.presentedViewController)
     }
 
+    func testPresentationAndCancellationLogShippingAddressEvents() throws {
+        // Given
+        let shippingAddressElement = makeShippingAddressElement()
+
+        // When
+        _ = try XCTUnwrap(present(shippingAddressElement))
+        shippingAddressElement.addressViewController.viewDidAppear(false)
+        shippingAddressElement.addressViewController.didTapCloseButton()
+
+        // Then
+        let events = shippingAddressEvents
+        XCTAssertEqual(
+            events.compactMap { $0["event"] as? String },
+            ["elements.shipping_address.shown", "elements.shipping_address.canceled"]
+        )
+        events.forEach { assertCommonAnalyticsParameters($0) }
+        XCTAssertFalse(STPAnalyticsClient.sharedClient._testLogHistory.contains {
+            ["mc_address_show", "mc_address_completed"].contains($0["event"] as? String)
+        })
+    }
+
+    func testSuccessfulSaveLogsStartedAndCompletedEvents() async throws {
+        // Given
+        let shippingAddressElement = makeShippingAddressElement()
+        let delegate = ShippingAddressElementDelegateMock()
+        shippingAddressElement.delegate = delegate
+
+        // When
+        try await shippingAddressElement.save(addressDetails: makeAddressDetails()) { _ in }
+
+        // Then
+        let events = shippingAddressEvents
+        XCTAssertEqual(
+            events.compactMap { $0["event"] as? String },
+            ["elements.shipping_address.save_started", "elements.shipping_address.save_completed"]
+        )
+        events.forEach { assertCommonAnalyticsParameters($0) }
+    }
+
+    func testFailedSaveLogsStartedAndFailedEvents() async {
+        // Given
+        let shippingAddressElement = makeShippingAddressElement()
+        let delegate = ShippingAddressElementDelegateMock(error: ShippingAddressElementTestError.saveFailed)
+        shippingAddressElement.delegate = delegate
+
+        // When
+        do {
+            try await shippingAddressElement.save(addressDetails: makeAddressDetails()) { _ in }
+            XCTFail("Expected save to fail")
+        } catch ShippingAddressElementTestError.saveFailed {
+            // Expected
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+
+        // Then
+        let events = shippingAddressEvents
+        XCTAssertEqual(
+            events.compactMap { $0["event"] as? String },
+            ["elements.shipping_address.save_started", "elements.shipping_address.save_failed"]
+        )
+        events.forEach { assertCommonAnalyticsParameters($0) }
+    }
+
     private func makeShippingAddressElement() -> ShippingAddressElement {
         return ShippingAddressElement(
             configuration: .init(),
-            initialShippingAddress: nil,
+            initialShippingAddress: .init(
+                name: "Jane Doe",
+                address: .init(
+                    country: "US",
+                    line1: "123 Main St.",
+                    city: "Seattle",
+                    state: "WA",
+                    postalCode: "98101"
+                )
+            ),
             allowedCountries: ["US"],
+            checkoutSessionId: "cs_test_123",
             apiClient: STPAPIClient(publishableKey: "pk_test_123"),
             useAutocompleteEndpoints: false
         )
@@ -139,6 +218,24 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
             name: "Jane Doe"
         )
     }
+
+    private var shippingAddressEvents: [[String: Any]] {
+        STPAnalyticsClient.sharedClient._testLogHistory.filter {
+            ($0["event"] as? String)?.hasPrefix("elements.shipping_address.") == true
+        }
+    }
+
+    private func assertCommonAnalyticsParameters(
+        _ event: [String: Any],
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertEqual(event["checkout_session_id"] as? String, "cs_test_123", file: file, line: line)
+        let addressData = event["address_data_blob"] as? [String: Any?]
+        XCTAssertEqual(addressData?["address_country_code"] as? String, "US", file: file, line: line)
+        XCTAssertEqual(addressData?.keys.contains("auto_complete_result_selected"), true, file: file, line: line)
+        XCTAssertEqual(addressData?.keys.contains("edit_distance"), true, file: file, line: line)
+    }
 }
 
 private final class PresentationObservingViewController: UIViewController {
@@ -153,4 +250,24 @@ private final class PresentationObservingViewController: UIViewController {
         super.present(viewControllerToPresent, animated: flag, completion: completion)
         onPresent?(viewControllerToPresent)
     }
+}
+
+@MainActor
+private final class ShippingAddressElementDelegateMock: ShippingAddressElementDelegate {
+
+    private let error: Error?
+
+    init(error: Error? = nil) {
+        self.error = error
+    }
+
+    func updateShippingAddress(name: String?, address: Checkout.Address) async throws {
+        if let error {
+            throw error
+        }
+    }
+}
+
+private enum ShippingAddressElementTestError: Error {
+    case saveFailed
 }

@@ -14,13 +14,14 @@ extension STPAnalyticsClient {
     func logAddressControllerEvent(
         event: STPAnalyticEvent,
         addressAnalyticData: AddressAnalyticData?,
+        additionalParams: [String: Any] = [:],
         apiClient: STPAPIClient
     ) {
-        var additionalParams = [:] as [String: Any]
-        additionalParams["address_data_blob"] = addressAnalyticData?.analyticsPayload
+        var params = additionalParams
+        params["address_data_blob"] = addressAnalyticData?.analyticsPayload
 
         let analytic = AddressAnalytic(event: event,
-                                       params: additionalParams)
+                                       params: params)
 
         log(analytic: analytic, apiClient: apiClient)
     }
@@ -61,6 +62,21 @@ extension STPAnalyticsClient {
                                                editDistance: editDistance)
 
         self.logAddressControllerEvent(event: .csbillingAddressCompleted, addressAnalyticData: analyticData, apiClient: apiClient)
+    }
+
+    func logShippingAddressElementEvent(
+        event: STPAnalyticEvent,
+        addressAnalyticData: AddressAnalyticData,
+        checkoutSessionId: String,
+        apiClient: STPAPIClient
+    ) {
+        assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
+        logAddressControllerEvent(
+            event: event,
+            addressAnalyticData: addressAnalyticData,
+            additionalParams: ["checkout_session_id": checkoutSessionId],
+            apiClient: apiClient
+        )
     }
 
     // MARK: - Autocomplete

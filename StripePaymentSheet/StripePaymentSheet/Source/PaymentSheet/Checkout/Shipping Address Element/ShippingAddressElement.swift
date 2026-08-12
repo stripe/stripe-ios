@@ -22,6 +22,7 @@ protocol ShippingAddressElementDelegate: AnyObject {
 public final class ShippingAddressElement {
 
     private(set) var addressViewController: AddressViewController!
+    private let checkoutSessionId: String
     private var presentationCompletion: (() -> Void)?
     weak var delegate: ShippingAddressElementDelegate?
 
@@ -29,9 +30,11 @@ public final class ShippingAddressElement {
         configuration: Configuration,
         initialShippingAddress: Checkout.Session.ShippingAddress?,
         allowedCountries: [String]?,
+        checkoutSessionId: String,
         apiClient: STPAPIClient,
         useAutocompleteEndpoints: Bool
     ) {
+        self.checkoutSessionId = checkoutSessionId
         let addressViewControllerConfiguration = configuration.makeAddressViewControllerConfiguration(
             shippingAddress: initialShippingAddress,
             allowedCountries: allowedCountries,
@@ -102,11 +105,26 @@ public final class ShippingAddressElement {
 
         let navigationController = UINavigationController(rootViewController: addressViewController)
         presentationCompletion = completion
+        addressViewController.prepareForPresentation()
         presentingViewController.present(navigationController, animated: true)
     }
 }
 
 extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
+    func didShow() {
+        log(
+            event: .shippingAddressElementShown,
+            addressAnalyticData: addressViewController.addressShowAnalyticData
+        )
+    }
+
+    func didCancel() {
+        log(
+            event: .shippingAddressElementCanceled,
+            addressAnalyticData: addressViewController.currentAddressAnalyticData
+        )
+    }
+
     func save(
         addressDetails: AddressViewController.AddressDetails,
         setLoading: (Bool) -> Void
@@ -116,18 +134,35 @@ extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
             return
         }
 
+        let addressAnalyticData = addressViewController.addressAnalyticData(for: addressDetails)
+        log(event: .shippingAddressElementSaveStarted, addressAnalyticData: addressAnalyticData)
         setLoading(true)
         defer { setLoading(false) }
-        try await delegate.updateShippingAddress(
-            name: addressDetails.name,
-            address: Checkout.Address(
-                country: addressDetails.address.country,
-                line1: addressDetails.address.line1.nonEmpty,
-                line2: addressDetails.address.line2,
-                city: addressDetails.address.city,
-                state: addressDetails.address.state,
-                postalCode: addressDetails.address.postalCode
+        do {
+            try await delegate.updateShippingAddress(
+                name: addressDetails.name,
+                address: Checkout.Address(
+                    country: addressDetails.address.country,
+                    line1: addressDetails.address.line1.nonEmpty,
+                    line2: addressDetails.address.line2,
+                    city: addressDetails.address.city,
+                    state: addressDetails.address.state,
+                    postalCode: addressDetails.address.postalCode
+                )
             )
+            log(event: .shippingAddressElementSaveCompleted, addressAnalyticData: addressAnalyticData)
+        } catch {
+            log(event: .shippingAddressElementSaveFailed, addressAnalyticData: addressAnalyticData)
+            throw error
+        }
+    }
+
+    private func log(event: STPAnalyticEvent, addressAnalyticData: AddressAnalyticData) {
+        STPAnalyticsClient.sharedClient.logShippingAddressElementEvent(
+            event: event,
+            addressAnalyticData: addressAnalyticData,
+            checkoutSessionId: checkoutSessionId,
+            apiClient: addressViewController.configuration.apiClient
         )
     }
 }

@@ -149,6 +149,7 @@ public final class Checkout: ObservableObject {
                 configuration: configuration.shippingAddressElement,
                 initialShippingAddress: defaultShippingAddress ?? loadedSession.shippingAddress,
                 allowedCountries: loadedSession.allowedShippingCountries,
+                checkoutSessionId: loadedSession.id,
                 apiClient: configuration.apiClient,
                 useAutocompleteEndpoints: loadedSession.elementsSession.shouldUseAutocompleteProxyEndpoints
             )
