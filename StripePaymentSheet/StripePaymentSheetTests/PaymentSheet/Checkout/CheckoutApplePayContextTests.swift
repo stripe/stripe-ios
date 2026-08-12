@@ -27,7 +27,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     // MARK: - makeSummaryItems
 
     func testMakeSummaryItemsWithAmount() {
-        // Given a session with a known total (2500 = $25.00 in USD)
+        // Given a session with a known total
         let session = CheckoutTestHelpers.makeSession([
             "total_summary": ["subtotal": 2500, "total": 2500, "due": 2500],
             "currency": "usd",

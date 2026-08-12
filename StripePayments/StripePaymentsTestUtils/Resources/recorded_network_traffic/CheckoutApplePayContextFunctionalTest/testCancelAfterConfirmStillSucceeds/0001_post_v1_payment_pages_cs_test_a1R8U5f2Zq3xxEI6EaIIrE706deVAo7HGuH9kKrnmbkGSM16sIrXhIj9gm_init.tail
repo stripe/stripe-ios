@@ -1,27 +1,27 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a1vZXROQ3hOwbGKVNGMuojz7O3c8cpwdG3tzU1J3qYR4Wv7tbAIc6aD1Oy\/init$
+https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a1R8U5f2Zq3xxEI6EaIIrE706deVAo7HGuH9kKrnmbkGSM16sIrXhIj9gm\/init$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=2Tizvj3qln98_hudOQkbn6V4qakzfWmer3bxpp2h-q_AFHW7MJ6lcga1ks9n5OImefY4mYMtUVQHFm6O; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=K31KAPTDstUndfc-XJKr4fubblU8Fvgjy02z9FWsM_68nf-iNWDUEefi9LyKIOnWWuwh1O2q1tIHzJHW; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=2Tizvj3qln98_hudOQkbn6V4qakzfWmer3bxpp2h-q_AFHW7MJ6lcga1ks9n5OImefY4mYMtUVQHFm6O&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=K31KAPTDstUndfc-XJKr4fubblU8Fvgjy02z9FWsM_68nf-iNWDUEefi9LyKIOnWWuwh1O2q1tIHzJHW&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-07-29.dahlia. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=2Tizvj3qln98_hudOQkbn6V4qakzfWmer3bxpp2h-q_AFHW7MJ6lcga1ks9n5OImefY4mYMtUVQHFm6O&t=1"}],"include_subdomains":true}
-request-id: req_Ls1eSxEXD25MCg
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=K31KAPTDstUndfc-XJKr4fubblU8Fvgjy02z9FWsM_68nf-iNWDUEefi9LyKIOnWWuwh1O2q1tIHzJHW&t=1"}],"include_subdomains":true}
+request-id: req_dLi9r8dH4kjc2Z
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 38551
+Content-Length: 38437
 Vary: Origin
-Date: Wed, 12 Aug 2026 14:51:40 GMT
-original-request: req_Ls1eSxEXD25MCg
+Date: Wed, 12 Aug 2026 19:37:44 GMT
+original-request: req_dLi9r8dH4kjc2Z
 stripe-version: 2020-08-27
-idempotency-key: 6fd2b07d-16e1-4a38-9111-4a76084c5755
+idempotency-key: 293e5b6b-370a-4dab-97ec-007d22f346e5
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -56,19 +56,19 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
     {
       "variant" : "control",
       "name" : "guacamole_resend_otp",
-      "event_id" : "74a27a38-6dfc-4b78-9523-fc80dcd30403",
+      "event_id" : "c7b78b78-66ef-4dba-af10-b47049e0e411",
       "exposure_event_name" : "experiment_exposure"
     },
     {
       "variant" : "control",
       "name" : "link_global_holdback_ewcs_aa",
-      "event_id" : "8695c40a-4974-4bde-a099-90629b3a133a",
+      "event_id" : "fb86fd78-b294-43ec-976a-6d014cf7566c",
       "exposure_event_name" : ""
     },
     {
       "variant" : "control",
       "name" : "link_global_holdback_ewcs",
-      "event_id" : "07ef9f81-e554-482f-9ddc-adee8d70db9f",
+      "event_id" : "46489091-e276-496c-9917-54177bfe0cae",
       "exposure_event_name" : ""
     }
   ],
@@ -77,7 +77,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
   "blocked_billing_address_countries" : [
 
   ],
-  "id" : "ppage_1U3dVIFY0qyl6XeWRCbHEPSu",
+  "id" : "ppage_1U3hy7FY0qyl6XeW029A4hcE",
   "subscription_settings" : null,
   "consent" : null,
   "does_not_collect_postal_code_for_non_us_card_transactions" : false,
@@ -90,14 +90,14 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
     {
       "one_time_price_item" : {
         "price" : {
-          "id" : "price_1U3dVIFY0qyl6XeWuXuP45mE",
+          "id" : "price_1U3hy7FY0qyl6XeWocIJ2CRH",
           "livemode" : false,
           "active" : true,
           "product" : {
             "object" : "product",
             "active" : true,
             "addons" : null,
-            "id" : "prod_V3l104eWa9wMMz",
+            "id" : "prod_V3pdzmgmz7ywVM",
             "images" : [
 
             ],
@@ -128,7 +128,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
       "sub_mode_subscription_v1" : null,
       "metronome_commit" : null,
       "subscription" : null,
-      "key" : "checkout_item_V3l1YsFO",
+      "key" : "checkout_item_V3pdknJZ",
       "type" : "one_time_price_item",
       "rate_card_subscription_item" : null,
       "one_time_price" : null
@@ -142,7 +142,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
   },
   "capture_method" : null,
   "statement_descriptor" : "mobile",
-  "session_id" : "cs_test_a1vZXROQ3hOwbGKVNGMuojz7O3c8cpwdG3tzU1J3qYR4Wv7tbAIc6aD1Oy",
+  "session_id" : "cs_test_a1R8U5f2Zq3xxEI6EaIIrE706deVAo7HGuH9kKrnmbkGSM16sIrXhIj9gm",
   "shipping_address_collection" : null,
   "konbini_confirmation_number" : null,
   "setup_future_usage" : null,
@@ -239,7 +239,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
     "payment_method_configuration_details" : null
   },
   "token_notification_url" : "https:\/\/pm-hooks.stripe.com\/apple_pay\/merchant_token\/pDq7tf9uieoQWMVJixFwuOve\/acct_1G6m1pFY0qyl6XeW\/",
-  "init_checksum" : "ygD30vH83ncPA7k0GRglqon0GTppyzlo",
+  "init_checksum" : "wOdJObvQBcDANpf9bYpZKfbiPUUVJDH2",
   "tax_exclusion_from_total_is_allowed" : false,
   "bnpl_link_experiment_payment_method_type" : null,
   "tax_meta" : {
@@ -414,7 +414,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
     "expand" : [
 
     ],
-    "checkout_session_id" : "cs_test_a1vZXROQ3hOwbGKVNGMuojz7O3c8cpwdG3tzU1J3qYR4Wv7tbAIc6aD1Oy",
+    "checkout_session_id" : "cs_test_a1R8U5f2Zq3xxEI6EaIIrE706deVAo7HGuH9kKrnmbkGSM16sIrXhIj9gm",
     "locale" : "en-US",
     "country_override" : "US",
     "mobile_app_id" : "com.stripe.StripeiOSTestHostApp",
@@ -433,27 +433,27 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
   "shipping_tax_amounts" : null,
   "elements_options" : {
     "amount" : 2000,
-    "__checkout_config_id" : "af0ba1b9-15fe-4759-9352-e9ff6ec09905",
+    "__checkout_config_id" : "7ddfbb3b-dc8d-4a2c-b53c-f43ef1b75025",
     "__checkout_country_override" : "US",
-    "__checkout_session_id" : "cs_test_a1vZXROQ3hOwbGKVNGMuojz7O3c8cpwdG3tzU1J3qYR4Wv7tbAIc6aD1Oy",
+    "__checkout_session_id" : "cs_test_a1R8U5f2Zq3xxEI6EaIIrE706deVAo7HGuH9kKrnmbkGSM16sIrXhIj9gm",
     "__checkout_automatic_payment_method_types" : false,
     "__payment_pages_experiments" : [
       {
         "variant" : "control",
         "name" : "guacamole_resend_otp",
-        "event_id" : "74a27a38-6dfc-4b78-9523-fc80dcd30403",
+        "event_id" : "c7b78b78-66ef-4dba-af10-b47049e0e411",
         "exposure_event_name" : "experiment_exposure"
       },
       {
         "variant" : "control",
         "name" : "link_global_holdback_ewcs_aa",
-        "event_id" : "8695c40a-4974-4bde-a099-90629b3a133a",
+        "event_id" : "fb86fd78-b294-43ec-976a-6d014cf7566c",
         "exposure_event_name" : ""
       },
       {
         "variant" : "control",
         "name" : "link_global_holdback_ewcs",
-        "event_id" : "07ef9f81-e554-482f-9ddc-adee8d70db9f",
+        "event_id" : "46489091-e276-496c-9917-54177bfe0cae",
         "exposure_event_name" : ""
       }
     ],
@@ -469,7 +469,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
     ]
   },
   "experiments_data" : {
-    "event_id" : "74d5683a-b88e-4fef-b93e-94486e4ab7c8",
+    "event_id" : "78ff8874-f2ce-43aa-9bab-36125689dec3",
     "experiment_metadata" : {
       "ocs_buyer_xp_cpl_lpm_holdback" : {
         "heldback_special_wallets" : [
@@ -653,7 +653,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
       "distinctly_link_payment_element_opt_out_merchant_blocklist" : false,
       "link_enable_non_blocking_doi_signup" : false,
       "elements_enable_new_google_places_api" : true,
-      "checkout_form_automatic_tax_address_collection_precision" : false,
+      "checkout_form_automatic_tax_address_collection_precision" : true,
       "elements_enable_express_checkout_button_demo_pay" : false,
       "disable_cbc_in_link_popup" : false,
       "elements_enable_installments_on_deferred_intents" : true,
@@ -737,10 +737,10 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
     },
     "merchant_logo_url" : null,
     "merchant_of_record_country" : "US",
-    "session_id" : "elements_session_1O6Xp7c8ciL",
+    "session_id" : "elements_session_19E5kAudaVS",
     "card_installments_enabled" : false,
     "account_id" : "acct_1G6m1pFY0qyl6XeW",
-    "config_id" : "f39b2248-2e38-4238-8fd0-a4650d4c3a37",
+    "config_id" : "354e401e-d231-44e7-a163-bbc9a7b313bc",
     "merchant_currency" : "usd",
     "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
     "card_brand_choice" : {
@@ -764,7 +764,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
     "google_pay_preference" : "enabled",
     "merchant_country" : "US",
     "experiments_data" : {
-      "arb_id" : "690e0040-8eb7-4e93-a103-23959610a9be",
+      "arb_id" : "284b7ee5-bb23-4243-baa6-35ae874943a7",
       "experiment_metadata" : {
         "seed" : "0bd2891268b03eedceae259301f9faca1b7958dabaad352e03029d2828fa239f",
         "semi_dominant_payment_methods" : [
@@ -794,7 +794,6 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
         "link_lpm_elements_klarna_powered_by_link" : "control",
         "link_pe_row_prominent_signup" : "control",
         "ocs_mobile_horizontal_mode" : "control",
-        "ff_elements_address_name_never_eff" : "treatment",
         "link_growth_ncdv_exp_pipeline" : "control",
         "link_sign_up_form_container_aa" : "control",
         "elements_instant_debits_returning_user_bank_add_incentive_steerage_ui_phase_2" : "control",
@@ -804,7 +803,6 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
         "elements_ae_postal_cjk_normalization_aa" : "control",
         "link_ulm_in_ece" : "control",
         "paypal_payment_handler" : "control",
-        "ff_elements_ae_update_country" : "treatment",
         "link_pe_signup_ui_variant_comparison" : "control",
         "link_sign_up_form_container" : "control",
         "link_pe_signup_green_logo_aa" : "control",
@@ -993,7 +991,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
     ],
     "customer_error" : null
   },
-  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a1vZXROQ3hOwbGKVNGMuojz7O3c8cpwdG3tzU1J3qYR4Wv7tbAIc6aD1Oy#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
+  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a1R8U5f2Zq3xxEI6EaIIrE706deVAo7HGuH9kKrnmbkGSM16sIrXhIj9gm#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
   "prefilled" : null,
   "redirect_on_completion" : null,
   "blob" : null,
@@ -1029,7 +1027,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
   },
   "shipping" : null,
   "crypto_in_link_ui_enabled" : false,
-  "rqdata" : "ZRaCcJlUYc1F34tOJ3MkEqQMGwNbTqr\/mrHtnQ9QR1WqR7Qs\/7uF9W1ruab5p5jRqOev6e3EJ7BtGetiNtcuYOCV+yhN+mjygrNKngsZcljAhK9ukD3gC+IoxEp+NpC+R+pjH8MMEQDkQ+VP59qy62zoX3BqWbaLOuuBeFwJsj3ph6U+CDi3NwM\/J5V3gxXrQ4PKzHDdcKj7JheRjq4PfwpoMAhKJgt3nqolhXSUTn2PyTNQQL2D0m2QDFcQfhOuRlNtPtHmpeQTIAR5RCbwn3uWCX+strfaEuOVPgb2hOBxL8bTfvp2f+K1QA==FFXc+qnEIT\/XmE0g",
+  "rqdata" : "IcuS3xEXmTnGkldFzhg4aO945ofR5f86mIIxZhRzVLDFg6ZHA6itO5CCPXW0d3Swuh5KRw0FHVdRgXjC9MK8Iwrtq9PgWPf5p2r3JKv2OqNQymhTAATB7u\/p0yglpz9k1plDNFvtIgSTGx\/Q5tcnWEtgoTGXzLWZqeAySI\/RQNfnyLBFmnE6odi+iv92O7eBpN568egP3kFqusc+EVqzAXri6IEItmVgt7uuiond9EoWxM63kUVrmWv6aMQOpJMZE9ng1RLdkRB7RfE1Pe05k+U5LI\/MC\/A1yvxaSyyYNe+GaeQIyc47CcLImg==oofqZKIKKQlyNGZ+",
   "total_summary" : {
     "total_discount_amounts" : [
 
@@ -1049,11 +1047,11 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&browser_locale=.*&browse
   "cross_sell_group" : null,
   "site_key" : "20000000-ffff-ffff-ffff-000000000002",
   "checkout_multistep_ui" : false,
-  "eid" : "28F368FA-AFA0-4DEB-9147-9BE0B576F55E",
+  "eid" : "52E5A95C-DC5F-4E69-B383-F393A6EADDAF",
   "line_item_group" : null,
   "managed_payments" : null,
   "name_collection" : null,
   "payment_intent" : null,
-  "config_id" : "af0ba1b9-15fe-4759-9352-e9ff6ec09905",
+  "config_id" : "7ddfbb3b-dc8d-4a2c-b53c-f43ef1b75025",
   "is_sandbox_merchant" : false
 }

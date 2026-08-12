@@ -34,8 +34,16 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
 
     func testCancelAfterConfirmStillSucceeds() async throws {
         // Given a cancel fires while the confirm is in-flight
-        let (context, apiClient) = try await makeContext()
-        apiClient.shouldSimulateCancelAfterConfirmBegins = true
+        let (context, _) = try await makeContext()
+        stub { urlRequest in
+            guard let path = urlRequest.url?.path,
+                  path.contains("/payment_pages/"),
+                  path.hasSuffix("/confirm") else { return false }
+            DispatchQueue.main.async {
+                context.paymentAuthorizationControllerDidFinish(context.authorizationController)
+            }
+            return false
+        } response: { _ in HTTPStubsResponse() }
 
         let didComplete = expectation(description: "Apple Pay completes despite cancel")
         Task {
@@ -55,13 +63,13 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
 
     // MARK: - Helpers
 
-    private func makeContext() async throws -> (CheckoutApplePayContext, CheckoutApplePayContextFunctionalTestAPIClient) {
+    private func makeContext() async throws -> (CheckoutApplePayContext, STPAPIClient) {
         let returnURL = "stripe-ios-test://checkout-return"
         let sessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             customerEmailLocation: "test",
             returnURL: returnURL
         )
-        let apiClient = CheckoutApplePayContextFunctionalTestAPIClient(publishableKey: sessionResponse.publishableKey)
+        let apiClient = STPAPIClient(publishableKey: sessionResponse.publishableKey)
         let initResponse = try await apiClient.initCheckoutSession(
             checkoutSessionId: sessionResponse.id,
             adaptivePricingAllowed: false
@@ -76,7 +84,6 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             authorizationController: CheckoutApplePayContextSTPTestPKPaymentAuthorizationController(),
             authenticationContext: CheckoutApplePayContextFunctionalTestAuthContext()
         )
-        apiClient.setupStubs(for: context)
         return (context, apiClient)
     }
 
@@ -101,7 +108,6 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
 }
 
 // MARK: - Test doubles
-
 class CheckoutApplePayContextSTPTestPKPaymentAuthorizationController: PKPaymentAuthorizationController {
     override func present(completion: ((Bool) -> Void)? = nil) {
         completion?(true)
@@ -112,29 +118,6 @@ class CheckoutApplePayContextSTPTestPKPaymentAuthorizationController: PKPaymentA
     }
 }
 
-class CheckoutApplePayContextFunctionalTestAPIClient: STPAPIClient {
-    weak var checkoutContext: CheckoutApplePayContext?
-    var shouldSimulateCancelAfterConfirmBegins = false
-
-    func setupStubs(for context: CheckoutApplePayContext) {
-        self.checkoutContext = context
-        stub { urlRequest in
-            if let path = urlRequest.url?.path,
-               path.contains("/payment_pages/"),
-               path.hasSuffix("/confirm"),
-               self.shouldSimulateCancelAfterConfirmBegins
-            {
-                DispatchQueue.main.async { [weak self] in
-                    guard let ctx = self?.checkoutContext else { return }
-                    ctx.paymentAuthorizationControllerDidFinish(ctx.authorizationController)
-                }
-            }
-            return false
-        } response: { _ in
-            HTTPStubsResponse()
-        }
-    }
-}
 
 @MainActor
 private class CheckoutApplePayContextFunctionalTestDataSource: CheckoutConfirmDataSource {
