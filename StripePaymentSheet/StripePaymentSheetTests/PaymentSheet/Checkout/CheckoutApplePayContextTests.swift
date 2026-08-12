@@ -43,6 +43,57 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(items[0].amount, NSDecimalNumber.stp_decimalNumber(withAmount: 2500, currency: "usd"))
     }
 
+    func testMakeSummaryItemsWithLineItemsAndBreakdown() {
+        // Given a session with line items, shipping, tax, and a discount
+        let session = CheckoutTestHelpers.makeSession([
+            "currency": "usd",
+            "total_summary": ["subtotal": 3000, "total": 3600, "due": 3600],
+            "checkout_items": [
+                [
+                    "key": "li_1",
+                    "type": "one_time_price_item",
+                    "one_time_price_item": [
+                        "quantity": 1,
+                        "price": ["id": "price_li_1", "currency": "usd", "unit_amount": 2000, "product": ["name": "Widget"]],
+                    ],
+                ],
+                [
+                    "key": "li_2",
+                    "type": "one_time_price_item",
+                    "one_time_price_item": [
+                        "quantity": 2,
+                        "price": ["id": "price_li_2", "currency": "usd", "unit_amount": 500, "product": ["name": "Gadget"]],
+                    ],
+                ],
+            ],
+            "shipping_rate": ["id": "shr_test", "display_name": "Standard", "amount": 500, "currency": "usd"],
+            "recurring_details": [
+                "total_tax_amounts": [["amount": 200, "inclusive": false, "taxable_amount": 3000]],
+                "total_discount_amounts": [["amount": 100, "coupon": ["id": "coupon_test"]]],
+            ],
+        ]).makePublicSession()
+
+        // When
+        let items = CheckoutApplePayContext.makeSummaryItems(for: session, label: "Test Store")
+
+        // Then it returns line items, subtotal, shipping, tax, discount, and a grand total
+        XCTAssertEqual(items.count, 7)
+        XCTAssertEqual(items[0].label, "Widget")
+        XCTAssertEqual(items[0].amount, NSDecimalNumber.stp_decimalNumber(withAmount: 2000, currency: "usd"))
+        XCTAssertEqual(items[1].label, "Gadget ×2")
+        XCTAssertEqual(items[1].amount, NSDecimalNumber.stp_decimalNumber(withAmount: 1000, currency: "usd"))
+        XCTAssertEqual(items[2].label, String.Localized.subtotal)
+        XCTAssertEqual(items[2].amount, NSDecimalNumber.stp_decimalNumber(withAmount: 3000, currency: "usd"))
+        XCTAssertEqual(items[3].label, String.Localized.shipping)
+        XCTAssertEqual(items[3].amount, NSDecimalNumber.stp_decimalNumber(withAmount: 500, currency: "usd"))
+        XCTAssertEqual(items[4].label, String.Localized.tax)
+        XCTAssertEqual(items[4].amount, NSDecimalNumber.stp_decimalNumber(withAmount: 200, currency: "usd"))
+        XCTAssertEqual(items[5].label, String.Localized.discount)
+        XCTAssertEqual(items[5].amount, NSDecimalNumber.stp_decimalNumber(withAmount: -100, currency: "usd"))
+        XCTAssertEqual(items[6].label, "Test Store")
+        XCTAssertEqual(items[6].amount, NSDecimalNumber.stp_decimalNumber(withAmount: 3600, currency: "usd"))
+    }
+
     func testMakeSummaryItemsWithNoAmount() {
         // Given a no-payment-required session (e.g. free order)
         let session = CheckoutTestHelpers.makeSession(["payment_status": "no_payment_required"]).makePublicSession()
