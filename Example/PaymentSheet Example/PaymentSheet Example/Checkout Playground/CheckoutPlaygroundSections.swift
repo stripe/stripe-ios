@@ -4,8 +4,8 @@
 //
 //  Created by Nick Porter on 2/24/26.
 
-import SwiftUI
 @_spi(STP) import StripePaymentSheet
+import SwiftUI
 
 extension ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration.CollectionMode: Identifiable {
     public var id: String { rawValue }
