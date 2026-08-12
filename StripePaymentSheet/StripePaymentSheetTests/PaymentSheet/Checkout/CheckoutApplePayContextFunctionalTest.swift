@@ -10,10 +10,10 @@ import OHHTTPStubs
 import OHHTTPStubsSwift
 import PassKit
 @testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePayments
-import StripePaymentsObjcTestUtils
-@testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripeCoreTestUtils
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import StripePaymentSheet
+import StripePaymentsObjcTestUtils
 @testable @_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
