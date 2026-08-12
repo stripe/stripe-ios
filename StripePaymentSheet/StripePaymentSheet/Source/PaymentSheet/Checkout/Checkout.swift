@@ -133,43 +133,35 @@ public final class Checkout: ObservableObject {
             self.session = loadedSession
             self.nonisolatedSession = loadedSession // temporary hack
 
-            let defaultShippingAddress: Session.ShippingAddress?
-            if let shippingDetails = configuration.defaults.shippingDetails,
-               let address = shippingDetails.address {
-                defaultShippingAddress = Session.ShippingAddress(
-                    name: shippingDetails.name,
-                    address: address
-                )
-            } else {
-                defaultShippingAddress = nil
-            }
+            // Element initialization is intentionally sequential:
 
-            // Initialize the SAE with the raw default so its form can normalize the address.
-            self.shippingAddressElement = ShippingAddressElement(
-                configuration: configuration.shippingAddressElement,
-                initialShippingAddress: defaultShippingAddress ?? loadedSession.shippingAddress,
-                allowedCountries: loadedSession.allowedShippingCountries,
-                apiClient: configuration.apiClient,
-                useAutocompleteEndpoints: loadedSession.elementsSession.shouldUseAutocompleteProxyEndpoints
+            // 1. Initialize SAE so that its form can normalize the raw default shipping address before it is applied to the session
+            let (shippingAddressElement, normalizedDefaultShippingAddress) = await Self.makeShippingAddressElement(
+                configuration: configuration,
+                session: loadedSession
             )
-            let normalizedDefaultShippingAddress: Session.ShippingAddress?
-            if defaultShippingAddress != nil {
-                normalizedDefaultShippingAddress = await shippingAddressElement.normalizedInitialShippingAddress()
-            } else {
-                normalizedDefaultShippingAddress = nil
-            }
-
-            // Apply the normalized address before initializing elements that read from the session.
+            self.shippingAddressElement = shippingAddressElement
             try await applyDefaults(shippingAddress: normalizedDefaultShippingAddress)
 
-            // Load remaining elements
+            // 2.
+            // PaymentElement reads from the session during initialization, then updates it with the
+            // initial payment option and may sync its billing address to recalculate tax. It must finish
+            // before creating the session source so the remaining elements receive the resulting session
+            // as their initial value.
             self.paymentElement = try await PaymentElement(checkout: self)
+
+            // Create the session source that we can pass to the reaminign elements, which do not need to mutate the session.
+            // Elements past this point can be initialized in any order since they do not mutate the session.
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
+
+            // 3. ECE
             self.expressCheckoutElement = ExpressCheckoutElement(
                 sessionSource: sessionSource,
                 configuration: configuration,
                 delegate: self
             )
+
+            // 4. CSE
             if configuration.adaptivePricing.allowed {
                 self.currencySelectorElement = await CurrencySelectorElement(
                     sessionSource: sessionSource,
@@ -177,10 +169,42 @@ public final class Checkout: ObservableObject {
                     delegate: self
                 )
             }
-
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
+    }
+
+    private static func makeShippingAddressElement(
+        configuration: Configuration,
+        session: Session
+    ) async -> (ShippingAddressElement, Session.ShippingAddress?) {
+        let defaultShippingAddress: Session.ShippingAddress?
+        if let shippingDetails = configuration.defaults.shippingDetails,
+           let address = shippingDetails.address {
+            defaultShippingAddress = Session.ShippingAddress(
+                name: shippingDetails.name,
+                address: address
+            )
+        } else {
+            defaultShippingAddress = nil
+        }
+
+        // Initialize the SAE with the raw default so its form can normalize the address.
+        let shippingAddressElement = ShippingAddressElement(
+            configuration: configuration.shippingAddressElement,
+            initialShippingAddress: defaultShippingAddress ?? session.shippingAddress,
+            allowedCountries: session.allowedShippingCountries,
+            apiClient: configuration.apiClient,
+            useAutocompleteEndpoints: session.elementsSession.shouldUseAutocompleteProxyEndpoints
+        )
+        let normalizedDefaultShippingAddress: Session.ShippingAddress?
+        if defaultShippingAddress != nil {
+            normalizedDefaultShippingAddress = await shippingAddressElement.normalizedInitialShippingAddress()
+        } else {
+            normalizedDefaultShippingAddress = nil
+        }
+
+        return (shippingAddressElement, normalizedDefaultShippingAddress)
     }
 
     // MARK: - Promotion Codes
