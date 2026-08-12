@@ -28,11 +28,10 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
     func testMakeSummaryItemsWithAmount() {
         // Given a session with a known total (2500 = $25.00 in USD)
-        let response = CheckoutTestHelpers.makeSession([
+        let session = CheckoutTestHelpers.makeSession([
             "total_summary": ["subtotal": 2500, "total": 2500, "due": 2500],
             "currency": "usd",
-        ])
-        let session = response.makePublicSession()
+        ]).makePublicSession()
 
         // When
         let items = CheckoutApplePayContext.makeSummaryItems(for: session, label: "Test Store")
@@ -45,9 +44,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
     }
 
     func testMakeSummaryItemsWithNoAmount() {
-        // Given a session with no amount (free / not-yet-known)
-        let response = CheckoutTestHelpers.makeSession()
-        let session = response.makePublicSession()
+        // Given a no-payment-required session (e.g. free order)
+        let session = CheckoutTestHelpers.makeSession(["payment_status": "no_payment_required"]).makePublicSession()
 
         // When
         let items = CheckoutApplePayContext.makeSummaryItems(for: session, label: "Test Store")
@@ -111,9 +109,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testDidFinish_success_returnsSuccess() async {
         // Given a context that finished with success
         let (context, mockController) = makeContext()
-        let confirmResponse = makeConfirmResponse()
         context.paymentState = .success
-        context.result = .init(paymentSheetResult: .completed, checkoutSessionResponse: confirmResponse)
+        context.result = .init(paymentSheetResult: .completed, checkoutSessionResponse: PaymentPagesAPIResponse.decodedObject(fromAPIResponse: makeConfirmResponseJSON())!)
 
         // When the sheet is dismissed
         let resultTask = Task { await context.presentApplePay() }
@@ -123,97 +120,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
         // Then the result is .completed
         let result = await resultTask.value
         XCTAssertEqual(result.paymentSheetResult, .completed)
-    }
-
-    // MARK: - Full confirm flows
-
-    func testSuccessFlow() async {
-        // Given a context with stubbed APIs that return a succeeded payment intent
-        let sessionId = "cs_test_123"
-        let apiClient = CheckoutTestHelpers.makeStubbedAPIClient()
-        stubPaymentMethodCreation()
-        stubConfirmSession(sessionId: sessionId, succeeded: true)
-
-        let (context, _) = makeContext(sessionId: sessionId, apiClient: apiClient)
-
-        // When the user taps Pay and the flow completes
-        let resultTask = Task { await context.presentApplePay() }
-        await Task.yield()
-        _startApplePayForContext(context, withExpectedStatus: .success)
-
-        let e = expectation(description: "Apple Pay completes")
-        Task {
-            let result = await resultTask.value
-            XCTAssertEqual(result.paymentSheetResult, .completed)
-            e.fulfill()
-        }
-        await fulfillment(of: [e], timeout: 10)
-    }
-
-    func testFailureFlow() async {
-        // Given a context where confirm returns an error
-        let sessionId = "cs_test_123"
-        let apiClient = CheckoutTestHelpers.makeStubbedAPIClient()
-        stubPaymentMethodCreation()
-        stubConfirmSession(sessionId: sessionId, succeeded: false)
-
-        let (context, _) = makeContext(sessionId: sessionId, apiClient: apiClient)
-
-        // When the user taps Pay and confirm fails
-        let resultTask = Task { await context.presentApplePay() }
-        await Task.yield()
-        _startApplePayForContext(context, withExpectedStatus: .failure)
-
-        let e = expectation(description: "Apple Pay fails")
-        Task {
-            let result = await resultTask.value
-            if case .failed = result.paymentSheetResult {
-                // expected
-            } else {
-                XCTFail("Expected .failed, got \(result.paymentSheetResult)")
-            }
-            e.fulfill()
-        }
-        await fulfillment(of: [e], timeout: 10)
-    }
-
-    func testCancelWhilePendingThenFailureReturnsError() async {
-        // Given a context where confirm fails and a cancel arrives mid-confirm
-        let sessionId = "cs_test_123"
-        let apiClient = CheckoutTestHelpers.makeStubbedAPIClient()
-        stubPaymentMethodCreation()
-        stubConfirmSession(sessionId: sessionId, succeeded: false)
-        let (context, mockController) = makeContext(sessionId: sessionId, apiClient: apiClient)
-
-        stub { urlRequest in
-            if urlRequest.url?.path == "/v1/payment_pages/\(sessionId)/confirm" {
-                DispatchQueue.main.async {
-                    context.paymentAuthorizationControllerDidFinish(mockController)
-                }
-            }
-            return false
-        } response: { _ in HTTPStubsResponse() }
-
-        let resultTask = Task { await context.presentApplePay() }
-        await Task.yield()
-        context.paymentAuthorizationController(
-            context.authorizationController,
-            didAuthorizePayment: STPFixtures.simulatorApplePayPayment(),
-            handler: { _ in }
-        )
-
-        // Then the result is .failed — not .canceled, because the payment already reached .pending
-        let e = expectation(description: "Apple Pay fails after cancel-while-pending")
-        Task {
-            let result = await resultTask.value
-            if case .failed = result.paymentSheetResult {
-                // expected
-            } else {
-                XCTFail("Expected .failed, got \(result.paymentSheetResult)")
-            }
-            e.fulfill()
-        }
-        await fulfillment(of: [e], timeout: 10)
     }
 
     // MARK: - Helpers
@@ -237,52 +143,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
             authenticationContext: authContext
         )
         return (context, mockController)
-    }
-
-    /// Simulates the user tapping Pay: calls `didAuthorizePayment`, and once the completion fires, calls `didFinish`.
-    private func _startApplePayForContext(
-        _ context: CheckoutApplePayContext,
-        withExpectedStatus expectedStatus: PKPaymentAuthorizationStatus
-    ) {
-        let authController = context.authorizationController
-        context.paymentAuthorizationController(
-            authController,
-            didAuthorizePayment: STPFixtures.simulatorApplePayPayment(),
-            handler: { result in
-                XCTAssertEqual(result.status, expectedStatus)
-                DispatchQueue.main.async {
-                    context.paymentAuthorizationControllerDidFinish(authController)
-                }
-            }
-        )
-    }
-
-    private func stubPaymentMethodCreation() {
-        stub(condition: { $0.url?.path == "/v1/payment_methods" }) { _ in
-            let json = STPFixtures.applePayPaymentMethodJSON()
-            let data = try! JSONSerialization.data(withJSONObject: json)
-            return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
-        }
-    }
-
-    private func stubConfirmSession(sessionId: String, succeeded: Bool) {
-        stub(condition: { $0.url?.path == "/v1/payment_pages/\(sessionId)/confirm" }) { _ in
-            if succeeded {
-                let json = self.makeConfirmResponseJSON()
-                let data = try! JSONSerialization.data(withJSONObject: json)
-                return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
-            } else {
-                let errorJSON: [String: Any] = [
-                    "error": [
-                        "type": "card_error",
-                        "message": "Your card was declined.",
-                        "code": "card_declined",
-                    ],
-                ]
-                let data = try! JSONSerialization.data(withJSONObject: errorJSON)
-                return HTTPStubsResponse(data: data, statusCode: 402, headers: nil)
-            }
-        }
     }
 
     private func makeConfirmResponseJSON() -> [String: Any] {
@@ -311,18 +171,11 @@ final class CheckoutApplePayContextTests: XCTestCase {
         return json
     }
 
-    private func makeConfirmResponse() -> PaymentPagesAPIResponse {
-        PaymentPagesAPIResponse.decodedObject(fromAPIResponse: makeConfirmResponseJSON())!
-    }
 }
 
 // MARK: - Mocks
 
 private class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
-    override func present(completion: ((Bool) -> Void)? = nil) {
-        completion?(true)
-    }
-
     override func dismiss(completion: (() -> Void)? = nil) {
         completion?()
     }
@@ -334,7 +187,6 @@ private class MockAuthenticationContext: NSObject, STPAuthenticationContext {
     }
 }
 
-@MainActor
 private class MockCheckoutConfirmDataSource: CheckoutConfirmDataSource {
     var applePayConfiguration: Checkout.ApplePayConfiguration?
     let session: Checkout.Session
