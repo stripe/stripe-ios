@@ -28,6 +28,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         // Required fields per API spec (non-nullable)
         let requiredFields = [
             "session_id",
+            "currency",
             "livemode",
             "payment_status",
             "payment_method_types",
@@ -43,6 +44,13 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                 "should fail to decode without \(field)"
             )
         }
+
+        var emptyCurrencyJson = fullJson
+        emptyCurrencyJson?["currency"] = ""
+        XCTAssertNil(
+            PaymentPagesAPIResponse.decodedObject(fromAPIResponse: emptyCurrencyJson),
+            "should fail to decode with an empty currency"
+        )
     }
 
     func testDecodedObjectFromAPIResponseMalformedElementsSession() {

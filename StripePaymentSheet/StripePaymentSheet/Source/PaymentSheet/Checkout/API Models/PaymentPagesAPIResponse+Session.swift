@@ -26,16 +26,11 @@ extension PaymentPagesAPIResponse {
             from: recurringDetails?.totalTaxAmounts ?? [],
             currency: currency
         )
-        let publicOrderSummaryItems: [Checkout.Session.OrderSummaryItem]
-        if let currency, !currency.isEmpty {
-            publicOrderSummaryItems = Self.makeOrderSummaryItems(
-                from: checkoutItems,
-                defaultCurrency: currency,
-                locale: .autoupdatingCurrent
-            )
-        } else {
-            publicOrderSummaryItems = []
-        }
+        let publicOrderSummaryItems = Self.makeOrderSummaryItems(
+            from: checkoutItems,
+            defaultCurrency: currency,
+            locale: .autoupdatingCurrent
+        )
         let publicTotal = Self.makeTotal(
             from: totalSummary,
             currency: currency,
@@ -97,13 +92,8 @@ extension PaymentPagesAPIResponse {
 // MARK: - Public model conversion
 
 extension PaymentPagesAPIResponse {
-    static func makeAmount(_ minorUnitsAmount: Int, currency: String?) -> Checkout.Amount {
-        let formatted: String
-        if let currency, !currency.isEmpty {
-            formatted = String.localizedAmountDisplayString(for: minorUnitsAmount, currency: currency)
-        } else {
-            formatted = "\(minorUnitsAmount)"
-        }
+    static func makeAmount(_ minorUnitsAmount: Int, currency: String) -> Checkout.Amount {
+        let formatted = String.localizedAmountDisplayString(for: minorUnitsAmount, currency: currency)
         return Checkout.Amount(amount: formatted, minorUnitsAmount: minorUnitsAmount)
     }
 
@@ -112,8 +102,8 @@ extension PaymentPagesAPIResponse {
         currency: String,
         locale: Locale
     ) -> Checkout.Session.Amount {
-        let minorUnit = NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency)
-        let decimalizedAmount = NSDecimalNumber(value: minorUnitsAmount).multiplying(by: minorUnit)
+        let minorUnitValueInMajorUnits = NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency) // e.g. USD: 0.01
+        let decimalizedAmount = NSDecimalNumber(value: minorUnitsAmount).multiplying(by: minorUnitValueInMajorUnits) // e.g. 49,900 × 0.01 = 499.00
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.usesGroupingSeparator = true
@@ -127,8 +117,7 @@ extension PaymentPagesAPIResponse {
         )
     }
 
-    private static func makeMinorUnitsAmountDivisor(currency: String?) -> Int? {
-        guard let currency else { return nil }
+    private static func makeMinorUnitsAmountDivisor(currency: String) -> Int {
         let oneMinorUnitInMajor = NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency)
         return Int(truncating: NSDecimalNumber(value: 1).dividing(by: oneMinorUnitInMajor))
     }
@@ -249,7 +238,7 @@ extension PaymentPagesAPIResponse {
 
     private static func makeDiscountAmounts(
         from discountAmounts: [DiscountAmount],
-        currency: String?
+        currency: String
     ) -> [Checkout.DiscountAmount] {
         discountAmounts.compactMap { discount in
             guard let amount = discount.amount, amount > 0 else { return nil }
@@ -266,7 +255,7 @@ extension PaymentPagesAPIResponse {
 
     private static func makeTaxAmounts(
         from taxAmounts: [TaxAmount],
-        currency: String?
+        currency: String
     ) -> [Checkout.TaxAmount] {
         taxAmounts.compactMap { taxAmount in
             guard let amount = taxAmount.amount,
@@ -281,7 +270,7 @@ extension PaymentPagesAPIResponse {
 
     private static func makeTotal(
         from totalSummary: TotalSummary?,
-        currency: String?,
+        currency: String,
         taxAmounts: [Checkout.TaxAmount],
         discountAmounts: [Checkout.DiscountAmount],
         shippingRate: ShippingRate?

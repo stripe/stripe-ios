@@ -17,7 +17,7 @@ import Foundation
 class PaymentPagesAPIResponse: NSObject {
     let sessionId: String
     let clientSecret: String?
-    let currency: String?
+    let currency: String
     let checkoutItems: [CheckoutItem]
     let livemode: Bool
     let status: String?
@@ -87,7 +87,7 @@ class PaymentPagesAPIResponse: NSObject {
     private init(
         sessionId: String,
         clientSecret: String?,
-        currency: String?,
+        currency: String,
         checkoutItems: [CheckoutItem],
         livemode: Bool,
         status: String?,
@@ -424,6 +424,8 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
     class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
               let sessionId = dict["session_id"] as? String,
+              let currency = dict["currency"] as? String,
+              !currency.isEmpty,
               let livemode = dict["livemode"] as? Bool,
               let paymentStatus = dict["payment_status"] as? String,
               (dict["payment_method_types"] as? [String]) != nil,
@@ -460,7 +462,7 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
         return PaymentPagesAPIResponse(
             sessionId: sessionId,
             clientSecret: dict["client_secret"] as? String,
-            currency: dict["currency"] as? String,
+            currency: currency,
             checkoutItems: (dict["checkout_items"] as? [[AnyHashable: Any]])?.map(CheckoutItem.init) ?? [],
             livemode: livemode,
             status: dict["status"] as? String,
