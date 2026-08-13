@@ -6,10 +6,10 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import CoreMedia
+import CoreVideo
 import Foundation
 @_spi(STP) import StripeCameraCore
-@_spi(STP) import StripeCore
-import Vision
 
 let kConcurrentImageScannerDefaultMaxConcurrentScans: Int = 2
 
@@ -54,11 +54,9 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
         label: "com.stripe.identity.concurrent-image-scanner",
         attributes: .concurrent
     )
+
     /// Semaphore used to block the current thread until detectors have completed
     private let semaphore: DispatchSemaphore
-
-    private var amountOfFutures = 0
-    private var futureQueue: DispatchQueue = DispatchQueue(label: "com.stripe.identity.concurrent-image-scanner.futures")
 
     private let analyticsClient: IdentityAnalyticsClient
     private let scannerName: IdentityAnalyticsClient.ScannerName
@@ -76,14 +74,6 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
         self.screenName = screenName
         self.sheetController = sheetController
         self.semaphore = DispatchSemaphore(value: maxConcurrentScans)
-    }
-
-    deinit {
-        futureQueue.sync {
-            for _ in 0..<amountOfFutures {
-                self.semaphore.signal()
-            }
-        }
     }
 
     /// Scans a camera frame and calls a completion block with the scanned output
@@ -133,21 +123,17 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
         }
 
         semaphore.wait()
-        let future = scanner.scanImage(
-            pixelBuffer: pixelBuffer,
-            sampleBuffer: sampleBuffer,
-            cameraProperties: cameraProperties
-        )
+        concurrentQueue.async {
+            defer { self.semaphore.signal() }
 
-        futureQueue.sync {
-            self.amountOfFutures += 1
-        }
-
-        future.observe(on: concurrentQueue) { result in
-            switch result {
-            case .success(let scannerOutput):
+            do {
+                let scannerOutput = try scanner.scanImage(
+                    pixelBuffer: pixelBuffer,
+                    sampleBuffer: sampleBuffer,
+                    cameraProperties: cameraProperties
+                )
                 wrappedCompletion(scannerOutput)
-            case .failure(let error):
+            } catch {
                 self.analyticsClient.logGenericError(
                     error: error,
                     additionalMetadata: [
@@ -167,12 +153,6 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
                 self.perfLastScanEndTime = scanEndTime
                 self.perfNumFramesScanned += 1
             }
-
-            self.futureQueue.sync {
-                self.amountOfFutures -= 1
-                self.semaphore.signal()
-            }
-
         }
     }
 

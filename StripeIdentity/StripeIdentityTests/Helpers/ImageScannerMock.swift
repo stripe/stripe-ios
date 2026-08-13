@@ -9,7 +9,6 @@
 import CoreVideo
 import Foundation
 @_spi(STP) import StripeCameraCore
-@_spi(STP) import StripeCore
 import XCTest
 
 import CoreMedia
@@ -32,12 +31,8 @@ final class ImageScannerMock<Output>: ImageScanner {
         pixelBuffer: CVPixelBuffer,
         sampleBuffer: CMSampleBuffer,
         cameraProperties: StripeCameraCore.CameraSession.DeviceProperties?
-    ) -> StripeCore.Future<Output> {
-        do {
-            return Promise(value: try scanResult.get())
-        } catch {
-            return Promise(error: error)
-        }
+    ) throws -> Output {
+        try scanResult.get()
     }
 
     func reset() {

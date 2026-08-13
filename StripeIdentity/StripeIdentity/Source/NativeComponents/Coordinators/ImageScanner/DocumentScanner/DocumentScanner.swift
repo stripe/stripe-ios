@@ -8,7 +8,6 @@
 
 import CoreVideo
 @_spi(STP) import StripeCameraCore
-@_spi(STP) import StripeCore
 import Vision
 
 typealias AnyDocumentScanner = AnyImageScanner<DocumentScannerOutput?>
@@ -93,18 +92,14 @@ extension DocumentScanner: ImageScanner {
         pixelBuffer: CVPixelBuffer,
         sampleBuffer: CMSampleBuffer,
         cameraProperties: CameraSession.DeviceProperties?
-    ) -> Future<DocumentScannerOutput?> {
-        do {
-            // Scan for ID Document Classification
-            guard let idDetectorOutput = try self.idDetector.scanImage(pixelBuffer: pixelBuffer) else {
-                return Promise(value: nil)
-            }
-
-            // MBDetector not avaialbe, fallback to legacy
-                return scanImageLegacy(pixelBuffer: pixelBuffer, idDetectorOutput: idDetectorOutput, cameraProperties: cameraProperties)
-        } catch {
-            return Promise(error: error)
+    ) throws -> DocumentScannerOutput? {
+        // Scan for ID Document Classification
+        guard let idDetectorOutput = try self.idDetector.scanImage(pixelBuffer: pixelBuffer) else {
+            return nil
         }
+
+        // MBDetector not avaialbe, fallback to legacy
+        return try scanImageLegacy(pixelBuffer: pixelBuffer, idDetectorOutput: idDetectorOutput, cameraProperties: cameraProperties)
     }
 
     fileprivate func processCommonResults(
@@ -149,19 +144,15 @@ extension DocumentScanner: ImageScanner {
         pixelBuffer: CVPixelBuffer,
         idDetectorOutput: IDDetectorOutput,
         cameraProperties: CameraSession.DeviceProperties?
-    ) -> Future<DocumentScannerOutput?> {
-        do {
-            let commonOutputs = try processCommonResults(pixelBuffer: pixelBuffer, idDetectorOutput: idDetectorOutput, cameraProperties: cameraProperties)
-            return Promise(value: DocumentScannerOutput.legacy(
-                idDetectorOutput,
-                commonOutputs.barcodeOutput,
-                commonOutputs.motionBlurOutput,
-                cameraProperties,
-                commonOutputs.blurResult
-            ))
-        } catch {
-            return Promise(error: error)
-        }
+    ) throws -> DocumentScannerOutput? {
+        let commonOutputs = try processCommonResults(pixelBuffer: pixelBuffer, idDetectorOutput: idDetectorOutput, cameraProperties: cameraProperties)
+        return DocumentScannerOutput.legacy(
+            idDetectorOutput,
+            commonOutputs.barcodeOutput,
+            commonOutputs.motionBlurOutput,
+            cameraProperties,
+            commonOutputs.blurResult
+        )
     }
 
     func reset() {
