@@ -191,15 +191,6 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             merchantCountry: "us_tax",
             additionalParameters: [
-                "checkout_items": [
-                    [
-                        "type": "one_time_price_item",
-                        "one_time_price_item": [
-                            "price": "price_1TxraFK8p6Sx2i8aHUda5nwK",
-                            "quantity": 1,
-                        ],
-                    ],
-                ],
                 "automatic_tax": ["enabled": true],
                 "shipping_address_collection": ["allowed_countries": ["US"]],
             ]

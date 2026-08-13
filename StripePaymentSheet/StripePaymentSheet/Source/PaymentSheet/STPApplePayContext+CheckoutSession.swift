@@ -15,19 +15,14 @@ import PassKit
 
 extension STPApplePayContext {
     /// Builds Apple Pay summary items from a checkout session's current state.
-    /// Falls back to a single total row (or .pending) when line items aren't available.
+    /// Returns a pending total row when no payment is required or the total is unavailable.
     static func makePaymentSummaryItems(
         for session: Checkout.Session,
         label: String,
         currency: String?
     ) -> [PKPaymentSummaryItem] {
-        guard !session.orderSummaryItems.isEmpty, let total = session.total else {
-            if let amount = session.expectedAmount() {
-                let decimalAmount = NSDecimalNumber.stp_decimalNumber(withAmount: amount, currency: currency)
-                return [PKPaymentSummaryItem(label: label, amount: decimalAmount, type: .final)]
-            } else {
-                return [PKPaymentSummaryItem(label: label, amount: .zero, type: .pending)]
-            }
+        guard !session.noPaymentRequired, let total = session.total else {
+            return [PKPaymentSummaryItem(label: label, amount: .zero, type: .pending)]
         }
 
         var summaryItems: [PKPaymentSummaryItem] = []
@@ -52,7 +47,7 @@ extension STPApplePayContext {
         let tax = total.taxExclusive.minorUnitsAmount
         let discount = total.discount.minorUnitsAmount
 
-        // Skip the breakdown rows when there's nothing to break down — line items already sum to the total.
+        // Skip the breakdown rows when there's nothing to break down — the product rows already sum to the total.
         let hasModifiers = shipping != 0 || tax != 0 || discount != 0
         if hasModifiers {
             summaryItems.append(

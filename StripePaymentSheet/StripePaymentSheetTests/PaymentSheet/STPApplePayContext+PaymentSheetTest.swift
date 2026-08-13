@@ -488,7 +488,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 #endif
     }
 
-    // MARK: - CheckoutSession Line Items Tests
+    // MARK: - CheckoutSession Order Summary Tests
 
     private func makeApplePayContext(
         for intent: Intent,
@@ -530,14 +530,14 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         return config
     }
 
-    func testCreatePaymentRequest_CheckoutSession_SingleLineItem() {
-        let lineItems: [Checkout.LineItem] = [
-            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: .testValue(2345)),
+    func testCreatePaymentRequest_CheckoutSession_SingleOrderSummaryItem() {
+        let oneTimePriceItems: [Intent.CheckoutOneTimePriceItemFixture] = [
+            .init(key: "li_1", displayName: "Widget", quantity: 1, unitAmount: 2345),
         ]
         let intent = Intent._testCheckoutSession(
             amount: 2345,
             currency: "USD",
-            lineItems: lineItems
+            oneTimePriceItems: oneTimePriceItems
         )
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: makeMerchantConfiguration(), applePay: applePayConfiguration)
 
@@ -550,15 +550,15 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.paymentSummaryItems[1].type, .final)
     }
 
-    func testCreatePaymentRequest_CheckoutSession_MultipleLineItemsWithQuantity() {
-        let lineItems: [Checkout.LineItem] = [
-            .init(id: "li_1", name: "Widget", quantity: 3, unitAmount: .testValue(1000)),
-            .init(id: "li_2", name: "Gadget", quantity: 1, unitAmount: .testValue(500)),
+    func testCreatePaymentRequest_CheckoutSession_MultipleOrderSummaryItemsWithQuantity() {
+        let oneTimePriceItems: [Intent.CheckoutOneTimePriceItemFixture] = [
+            .init(key: "li_1", displayName: "Widget", quantity: 3, unitAmount: 1000),
+            .init(key: "li_2", displayName: "Gadget", quantity: 1, unitAmount: 500),
         ]
         let intent = Intent._testCheckoutSession(
             amount: 3500,
             currency: "USD",
-            lineItems: lineItems
+            oneTimePriceItems: oneTimePriceItems
         )
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: makeMerchantConfiguration(), applePay: applePayConfiguration)
 
@@ -573,15 +573,15 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     }
 
     func testCreatePaymentRequest_CheckoutSession_WithBreakdownRows() {
-        let lineItems: [Checkout.LineItem] = [
-            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: .testValue(2000)),
-            .init(id: "li_2", name: "Gadget", quantity: 2, unitAmount: .testValue(500)),
+        let oneTimePriceItems: [Intent.CheckoutOneTimePriceItemFixture] = [
+            .init(key: "li_1", displayName: "Widget", quantity: 1, unitAmount: 2000),
+            .init(key: "li_2", displayName: "Gadget", quantity: 2, unitAmount: 500),
         ]
         // subtotal = 3000, shipping = 500, tax = 200, discount = 100 -> total = 3600
         let intent = Intent._testCheckoutSession(
             amount: 3600,
             currency: "USD",
-            lineItems: lineItems,
+            oneTimePriceItems: oneTimePriceItems,
             subtotal: 3000,
             shippingAmount: 500,
             taxAmount: 200,
@@ -608,13 +608,13 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     }
 
     func testCreatePaymentRequest_CheckoutSession_OmitsBreakdownWhenZero() {
-        let lineItems: [Checkout.LineItem] = [
-            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: .testValue(2345)),
+        let oneTimePriceItems: [Intent.CheckoutOneTimePriceItemFixture] = [
+            .init(key: "li_1", displayName: "Widget", quantity: 1, unitAmount: 2345),
         ]
         let intent = Intent._testCheckoutSession(
             amount: 2345,
             currency: "USD",
-            lineItems: lineItems,
+            oneTimePriceItems: oneTimePriceItems,
             subtotal: 2345,
             shippingAmount: 0,
             taxAmount: 0,
@@ -625,14 +625,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.paymentSummaryItems.count, 2)
         XCTAssertEqual(sut.paymentSummaryItems[0].label, "Widget")
         XCTAssertEqual(sut.paymentSummaryItems[1].label, "Acme")
-    }
-
-    func testCreatePaymentRequest_CheckoutSession_FallsBackWhenLineItemsEmpty() {
-        let intent = Intent._testCheckoutSession(amount: 2345, currency: "USD")
-        let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
-        XCTAssertEqual(sut.paymentSummaryItems.count, 1)
-        XCTAssertEqual(sut.paymentSummaryItems[0].amount, NSDecimalNumber(string: "23.45"))
-        XCTAssertEqual(sut.paymentSummaryItems[0].type, .final)
     }
 
     // MARK: - CheckoutSession Billing Contact Tests
@@ -811,13 +803,13 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
         config.applePay = applePay
 
-        let lineItems: [Checkout.LineItem] = [
-            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: .testValue(2345)),
+        let oneTimePriceItems: [Intent.CheckoutOneTimePriceItemFixture] = [
+            .init(key: "li_1", displayName: "Widget", quantity: 1, unitAmount: 2345),
         ]
         let intent = Intent._testCheckoutSession(
             amount: 2345,
             currency: "USD",
-            lineItems: lineItems
+            oneTimePriceItems: oneTimePriceItems
         )
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: config, applePay: applePay)
 

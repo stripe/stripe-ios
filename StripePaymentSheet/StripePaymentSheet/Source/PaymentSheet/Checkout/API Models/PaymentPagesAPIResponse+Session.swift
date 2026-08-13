@@ -127,29 +127,17 @@ extension PaymentPagesAPIResponse {
         defaultCurrency: String,
         locale: Locale
     ) -> [Checkout.Session.OrderSummaryItem] {
-        checkoutItems.compactMap { item in
-            guard item.type == "one_time_price",
-                  let key = item.key,
-                  let oneTimePrice = item.oneTimePrice,
-                  let subtotal = oneTimePrice.subtotal,
-                  let total = oneTimePrice.total else {
-                return nil
-            }
-
+        checkoutItems.map { item in
+            let oneTimePrice = item.oneTimePrice
             let publicItems: [Checkout.Session.OrderSummaryItem.OneTimePrice.Item] =
-                oneTimePrice.items.enumerated().compactMap { index, item in
-                    guard let quantity = item.quantity,
-                          let price = item.price,
-                          let product = price.product,
-                          let displayName = product.name else {
-                        return nil
-                    }
-                    let currency = price.currency ?? defaultCurrency
+                oneTimePrice.items.map { item in
+                    let price = item.price
+                    let product = price.product
+                    let currency = price.currency
                     let unitAmount = item.unitAmount ?? price.unitAmount ?? 0
-                    let unitAmountDecimal = item.unitAmountDecimal.flatMap(Double.init)
                     let adjustableQuantity: Checkout.Session.AdjustableQuantity?
                     if let rawAdjustableQuantity = item.adjustableQuantity,
-                       rawAdjustableQuantity.enabled == true {
+                       rawAdjustableQuantity.enabled {
                         // TODO: The server should guarantee minimum and maximum when adjustable quantity is enabled.
                         adjustableQuantity = Checkout.Session.AdjustableQuantity(
                             enabled: true,
@@ -160,32 +148,32 @@ extension PaymentPagesAPIResponse {
                         adjustableQuantity = nil
                     }
                     return Checkout.Session.OrderSummaryItem.OneTimePrice.Item(
-                        key: price.id ?? "one_time_price_item_\(index)",
-                        displayName: displayName,
-                        images: product.images ?? [],
+                        key: price.id,
+                        displayName: product.name,
+                        images: product.images,
                         unitAmount: makeSessionAmount(
                             Double(unitAmount),
                             currency: currency,
                             locale: locale
                         ),
-                        unitAmountDecimal: unitAmountDecimal.map {
+                        unitAmountDecimal: item.unitAmountDecimal.map {
                             makeSessionAmount($0, currency: currency, locale: locale)
                         },
-                        unitLabel: item.unitLabel ?? product.unitLabel,
-                        quantity: quantity,
+                        unitLabel: item.unitLabel,
+                        quantity: item.quantity,
                         adjustableQuantity: adjustableQuantity
                     )
                 }
 
-            let taxAmounts = oneTimePrice.items.flatMap { $0.taxAmounts ?? [] }.compactMap {
+            let taxAmounts = oneTimePrice.items.flatMap(\.taxAmounts).map {
                 makeSessionTaxAmount(from: $0, currency: defaultCurrency, locale: locale)
             }
-            let taxInclusive = oneTimePrice.items.reduce(0) { $0 + ($1.taxInclusive ?? 0) }
-            let taxExclusive = oneTimePrice.items.reduce(0) { $0 + ($1.taxExclusive ?? 0) }
+            let taxInclusive = oneTimePrice.items.reduce(0) { $0 + $1.taxInclusive }
+            let taxExclusive = oneTimePrice.items.reduce(0) { $0 + $1.taxExclusive }
             let amountDetails = Checkout.Session.OrderSummaryItem.OneTimePrice.AmountDetails(
-                total: makeSessionAmount(Double(total), currency: defaultCurrency, locale: locale),
+                total: makeSessionAmount(Double(oneTimePrice.total), currency: defaultCurrency, locale: locale),
                 subtotal: makeSessionAmount(
-                    Double(subtotal),
+                    Double(oneTimePrice.subtotal),
                     currency: defaultCurrency,
                     locale: locale
                 ),
@@ -204,7 +192,7 @@ extension PaymentPagesAPIResponse {
             )
             return .oneTimePrice(
                 Checkout.Session.OrderSummaryItem.OneTimePrice(
-                    key: key,
+                    key: item.key,
                     description: nil,
                     items: publicItems,
                     amountDetails: amountDetails
@@ -217,22 +205,16 @@ extension PaymentPagesAPIResponse {
         from taxAmount: TaxAmount,
         currency: String,
         locale: Locale
-    ) -> Checkout.Session.TaxAmount? {
-        guard let amount = taxAmount.amount,
-              let inclusive = taxAmount.inclusive,
-              let taxRate = taxAmount.taxRate,
-              let displayName = taxRate.displayName else {
-            return nil
-        }
-        let publicAmount = makeSessionAmount(Double(amount), currency: currency, locale: locale)
+    ) -> Checkout.Session.TaxAmount {
+        let publicAmount = makeSessionAmount(Double(taxAmount.amount), currency: currency, locale: locale)
         return Checkout.Session.TaxAmount(
             amount: publicAmount.amount,
             minorUnitsAmount: publicAmount.minorUnitsAmount,
-            inclusive: inclusive,
-            displayName: displayName,
-            percentage: taxRate.rateType == "flat_amount"
+            inclusive: taxAmount.inclusive,
+            displayName: taxAmount.taxRate.displayName,
+            percentage: taxAmount.taxRate.rateType == "flat_amount"
                 ? nil
-                : taxRate.percentage
+                : taxAmount.taxRate.percentage
         )
     }
 
@@ -257,13 +239,11 @@ extension PaymentPagesAPIResponse {
         from taxAmounts: [TaxAmount],
         currency: String
     ) -> [Checkout.TaxAmount] {
-        taxAmounts.compactMap { taxAmount in
-            guard let amount = taxAmount.amount,
-                  let inclusive = taxAmount.inclusive else { return nil }
+        taxAmounts.map { taxAmount in
             return Checkout.TaxAmount(
-                amount: makeAmount(amount, currency: currency),
-                inclusive: inclusive,
-                displayName: taxAmount.displayName ?? taxAmount.taxRate?.displayName ?? String.Localized.tax
+                amount: makeAmount(taxAmount.amount, currency: currency),
+                inclusive: taxAmount.inclusive,
+                displayName: taxAmount.taxRate.displayName
             )
         }
     }

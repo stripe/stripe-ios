@@ -209,7 +209,7 @@ extension STPTestingAPIClient {
         automaticTax: Bool = false,
         customerEmailLocation: String? = nil,
         returnURL: String? = nil,
-        useOneTimePrice: Bool = false,
+        useOneTimePrice: Bool = true,
         additionalParameters: [String: Any] = [:]
     ) async throws -> CreateCheckoutSessionResponse {
         var mergedParameters: [String: Any] = [:]
