@@ -69,7 +69,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     var completeOption: CompleteOptionView.CompleteOption?
 
     var phoneOtpSuccessResult: StripeCore.StripeAPI.VerificationPageData?
-    var generatePhoneOtpHandler: (() async -> StripeCore.StripeAPI.VerificationPageData)?
+    var generatePhoneOtpHandler: (() async -> StripeCore.StripeAPI.VerificationPageData?)?
     var cannotVerifyPhoneOtpHandler: (() async -> Void)?
     var cannotVerifyPhoneOtpCalled: Bool = false
 
@@ -184,8 +184,8 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         testModeTransitionCallback?()
     }
 
-    func generatePhoneOtp() async -> StripeCore.StripeAPI.VerificationPageData {
-        let mockResult: StripeCore.StripeAPI.VerificationPageData
+    func generatePhoneOtp() async -> StripeCore.StripeAPI.VerificationPageData? {
+        let mockResult: StripeCore.StripeAPI.VerificationPageData?
         if let generatePhoneOtpHandler {
             mockResult = await generatePhoneOtpHandler()
         } else {
