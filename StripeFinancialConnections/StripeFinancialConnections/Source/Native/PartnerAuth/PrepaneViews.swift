@@ -91,7 +91,8 @@ final class PrepaneViews {
                     )
                 }
             }(),
-            appearance: appearance
+            appearance: appearance,
+            preferHorizontalButtonsForLink: panePresentationStyle == .sheet
         )
         self.footerView = footerViewTuple.footerView
         self.primaryButton = footerViewTuple.primaryButton

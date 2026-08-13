@@ -74,7 +74,8 @@ final class CloseConfirmationViewController: SheetViewController {
                         )
                     }
                 ),
-                appearance: appearance
+                appearance: appearance,
+                preferHorizontalButtonsForLink: true
             ).footerView
         )
     }
