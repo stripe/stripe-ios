@@ -1468,6 +1468,45 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
+    // MARK: - Klarna
+
+    func testConfirmKlarnaPaymentIntentWithInteroperabilityToken() async throws {
+        // Given a Klarna SDK interoperability token...
+        let interoperabilityToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        let options = STPConfirmKlarnaOptions(interoperabilityToken: interoperabilityToken)
+
+        // When confirming a Klarna PaymentIntent with the token...
+        let paymentIntent = try await confirmKlarnaPaymentIntent(options: options)
+
+        // Then the API accepts the token and starts the Klarna authorization flow.
+        XCTAssertEqual(paymentIntent.status, .requiresAction)
+        XCTAssertEqual(paymentIntent.nextAction?.type, .redirectToURL)
+    }
+
+    func testConfirmKlarnaPaymentIntentWithPartnerConfirmationToken() async throws {
+        // Given an invalid Klarna SDK partner confirmation token...
+        let options = STPConfirmKlarnaOptions(
+            partnerConfirmationToken: "test"
+        )
+
+        // When confirming a Klarna PaymentIntent with the token...
+        do {
+            _ = try await confirmKlarnaPaymentIntent(options: options)
+            XCTFail("Expected confirmation to reject the invalid partner confirmation token")
+        } catch {
+            // Then the Klarna-specific error proves the API accepted and processed the option.
+            let error = error as NSError
+            XCTAssertEqual(
+                error.userInfo[STPError.stripeErrorCodeKey] as? String,
+                "payment_intent_invalid_parameter"
+            )
+            XCTAssertEqual(
+                error.userInfo[STPError.errorMessageKey] as? String,
+                "The parameter provided in payment_method_options[partner_confirmation_token] is invalid or expired."
+            )
+        }
+    }
+
     // MARK: - US Bank Account
     func createAndConfirmPaymentIntentWithUSBankAccount(
         paymentMethodOptions: STPConfirmUSBankAccountOptions? = nil
@@ -1628,6 +1667,53 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
     }
 
     // MARK: - Helpers
+
+    private func confirmKlarnaPaymentIntent(
+        options: STPConfirmKlarnaOptions
+    ) async throws -> STPPaymentIntent {
+        let playgroundCheckoutURL = try XCTUnwrap(
+            URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")
+        )
+        var request = URLRequest(url: playgroundCheckoutURL)
+        request.httpMethod = "POST"
+        request.httpBody = try JSONSerialization.data(withJSONObject: [
+            "customer": "guest",
+            "currency": "usd",
+            "amount": 1000,
+            "merchant_country_code": "US",
+            "mode": "payment",
+            "automatic_payment_methods": false,
+            "supported_payment_methods": ["klarna"],
+        ])
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let session = URLSession(configuration: STPTestingAPIClient.shared.sessionConfig)
+        let (data, response) = try await session.data(for: request)
+        XCTAssertEqual((response as? HTTPURLResponse)?.statusCode, 200)
+
+        let playgroundResponse = try JSONDecoder().decode([String: String].self, from: data)
+        let clientSecret = try XCTUnwrap(playgroundResponse["intentClientSecret"])
+        let publishableKey = try XCTUnwrap(playgroundResponse["publishableKey"])
+
+        let address = STPPaymentMethodAddress()
+        address.country = "US"
+        let billingDetails = STPPaymentMethodBillingDetails()
+        billingDetails.email = "test@stripe.com"
+        billingDetails.address = address
+
+        let paymentMethodParams = STPPaymentMethodParams(
+            klarna: STPPaymentMethodKlarnaParams(),
+            billingDetails: billingDetails,
+            metadata: nil
+        )
+        let confirmParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
+        confirmParams.paymentMethodParams = paymentMethodParams
+        confirmParams.paymentMethodOptions = STPConfirmPaymentMethodOptions(klarnaOptions: options)
+        confirmParams.returnURL = "example-app-scheme://authorized"
+
+        let client = STPAPIClient(publishableKey: publishableKey)
+        return try await client.confirmPaymentIntent(with: confirmParams)
+    }
 
     func cardSourceParams() -> STPSourceParams {
         let card = STPCardParams()
