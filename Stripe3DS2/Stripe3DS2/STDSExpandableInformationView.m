@@ -59,6 +59,7 @@ static const CGFloat kTitleImageViewRotationAnimationDuration = (CGFloat)0.2;
     self.textLabel.numberOfLines = 0;
     
     UIImage *chevronImage = [[UIImage imageNamed:@"Chevron" inBundle:[STDSBundleLocator stdsResourcesBundle] compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    chevronImage = [chevronImage imageFlippedForRightToLeftLayoutDirection];
     self.titleImageView = [[UIImageView alloc] initWithImage:chevronImage];
     self.titleImageView.contentMode = UIViewContentModeScaleAspectFit;
 
