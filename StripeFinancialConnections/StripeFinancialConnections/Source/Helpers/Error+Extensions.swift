@@ -23,9 +23,10 @@ extension Error {
         return apiError.allResponseFields["extra_fields"] as? [String: Any]
     }
 
-    /// Whether this is a Stripe API error with a `4xx` status code.
+    /// Whether this is a Stripe API error with a `4xx` status code, excluding ones that are
+    /// transient by design (408 Request Timeout, 429 Too Many Requests) and can succeed on retry.
     ///
-    /// These are terminal: retrying the same request will fail the same way.
+    /// The rest are terminal: retrying the same request will fail the same way.
     var isClientError: Bool {
         guard
             let error = self as? StripeError,
@@ -34,6 +35,7 @@ extension Error {
         else {
             return false
         }
-        return (400...499).contains(statusCode)
+        let transientStatusCodes = [408, 429]
+        return (400...499).contains(statusCode) && !transientStatusCodes.contains(statusCode)
     }
 }

@@ -305,6 +305,38 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
         }
     }
 
+    func testPollRetriesOnTransientClientError() async throws {
+        // Given a 4xx that's transient by design and may well succeed on retry
+        let maxRetries = 3
+        for statusCode in [408, 429] {
+            tracker = CallTracker()
+            let transientError = try MakeStripeAPIError(statusCode: statusCode)
+
+            do {
+                // When we poll
+                _ = try await apiClient.poll(
+                    initialPollDelay: 0.01,
+                    maxNumberOfRetries: maxRetries,
+                    retryInterval: 0.01,
+                    sleepAction: { _ in
+                        self.tracker.sleepCallCount += 1
+                    },
+                    apiCall: {
+                        self.tracker.apiCallCount += 1
+                        throw transientError
+                    }
+                )
+                XCTFail("Should throw an error")
+            } catch let error as FinancialConnectionsAsyncAPIClient.PollingError {
+                // Then we retry as usual, rather than aborting after one attempt
+                XCTAssertEqual(error, .maxRetriesReached, "Status code \(statusCode)")
+                XCTAssertEqual(self.tracker.apiCallCount, maxRetries, "Status code \(statusCode)")
+            } catch {
+                XCTFail("Wrong error type for status code \(statusCode): \(error)")
+            }
+        }
+    }
+
     func testDefaultParameters() async throws {
         var callCount = 0
 
