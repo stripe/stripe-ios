@@ -26,7 +26,16 @@ extension PaymentPagesAPIResponse {
             from: recurringDetails?.totalTaxAmounts ?? [],
             currency: currency
         )
-        let publicLineItems = Self.makeLineItems(from: checkoutItems, defaultCurrency: currency)
+        let publicOrderSummaryItems: [Checkout.Session.OrderSummaryItem]
+        if let currency, !currency.isEmpty {
+            publicOrderSummaryItems = Self.makeOrderSummaryItems(
+                from: checkoutItems,
+                defaultCurrency: currency,
+                locale: .autoupdatingCurrent
+            )
+        } else {
+            publicOrderSummaryItems = []
+        }
         let publicTotal = Self.makeTotal(
             from: totalSummary,
             currency: currency,
@@ -59,7 +68,7 @@ extension PaymentPagesAPIResponse {
             ),
             discountAmounts: publicDiscountAmounts,
             email: customerEmail ?? customer?.email,
-            lineItems: publicLineItems,
+            orderSummaryItems: publicOrderSummaryItems,
             livemode: livemode,
             minorUnitsAmountDivisor: Self.makeMinorUnitsAmountDivisor(currency: currency),
             paymentOption: nil,
@@ -98,54 +107,144 @@ extension PaymentPagesAPIResponse {
         return Checkout.Amount(amount: formatted, minorUnitsAmount: minorUnitsAmount)
     }
 
+    private static func makeSessionAmount(
+        _ minorUnitsAmount: Double,
+        currency: String,
+        locale: Locale
+    ) -> Checkout.Session.Amount {
+        let minorUnit = NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency)
+        let decimalizedAmount = NSDecimalNumber(value: minorUnitsAmount).multiplying(by: minorUnit)
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.usesGroupingSeparator = true
+        formatter.locale = locale
+        formatter.currencyCode = currency
+        let formatted = formatter.string(from: decimalizedAmount)
+            ?? "\(formatter.currencySymbol ?? "")\(decimalizedAmount)"
+        return Checkout.Session.Amount(
+            amount: formatted,
+            minorUnitsAmount: minorUnitsAmount
+        )
+    }
+
     private static func makeMinorUnitsAmountDivisor(currency: String?) -> Int? {
         guard let currency else { return nil }
         let oneMinorUnitInMajor = NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency)
         return Int(truncating: NSDecimalNumber(value: 1).dividing(by: oneMinorUnitInMajor))
     }
 
-    private static func makeLineItems(
+    private static func makeOrderSummaryItems(
         from checkoutItems: [CheckoutItem],
-        defaultCurrency: String?
-    ) -> [Checkout.LineItem] {
+        defaultCurrency: String,
+        locale: Locale
+    ) -> [Checkout.Session.OrderSummaryItem] {
         checkoutItems.compactMap { item in
-            guard item.type == "one_time_price_item",
-                  let id = item.key,
-                  let oneTimePriceItem = item.oneTimePriceItem,
-                  let quantity = oneTimePriceItem.quantity,
-                  let price = oneTimePriceItem.price,
-                  let product = price.product,
-                  let name = product.name else {
+            guard item.type == "one_time_price",
+                  let key = item.key,
+                  let oneTimePrice = item.oneTimePrice,
+                  let subtotal = oneTimePrice.subtotal,
+                  let total = oneTimePrice.total else {
                 return nil
             }
-            let currency = price.currency ?? defaultCurrency
-            let unitAmount = price.unitAmount.map { makeAmount($0, currency: currency) }
-            let unitAmountDecimal: Checkout.DecimalAmount? = price.unitAmountDecimal.flatMap { value in
-                guard let decimal = Decimal(string: value) else { return nil }
-                let intValue = NSDecimalNumber(decimal: decimal).intValue
-                return Checkout.DecimalAmount(
-                    amount: makeAmount(intValue, currency: currency).amount,
-                    minorUnitsAmount: decimal
-                )
+
+            let publicItems: [Checkout.Session.OrderSummaryItem.OneTimePrice.Item] =
+                oneTimePrice.items.enumerated().compactMap { index, item in
+                    guard let quantity = item.quantity,
+                          let price = item.price,
+                          let product = price.product,
+                          let displayName = product.name else {
+                        return nil
+                    }
+                    let currency = price.currency ?? defaultCurrency
+                    let unitAmount = item.unitAmount ?? price.unitAmount ?? 0
+                    let unitAmountDecimal = item.unitAmountDecimal.flatMap(Double.init)
+                    let adjustableQuantity: Checkout.Session.AdjustableQuantity?
+                    if let rawAdjustableQuantity = item.adjustableQuantity,
+                       rawAdjustableQuantity.enabled == true {
+                        // TODO: The server should guarantee minimum and maximum when adjustable quantity is enabled.
+                        adjustableQuantity = Checkout.Session.AdjustableQuantity(
+                            enabled: true,
+                            maximum: rawAdjustableQuantity.maximum ?? 99,
+                            minimum: rawAdjustableQuantity.minimum ?? 0
+                        )
+                    } else {
+                        adjustableQuantity = nil
+                    }
+                    return Checkout.Session.OrderSummaryItem.OneTimePrice.Item(
+                        key: price.id ?? "one_time_price_item_\(index)",
+                        displayName: displayName,
+                        images: product.images ?? [],
+                        unitAmount: makeSessionAmount(
+                            Double(unitAmount),
+                            currency: currency,
+                            locale: locale
+                        ),
+                        unitAmountDecimal: unitAmountDecimal.map {
+                            makeSessionAmount($0, currency: currency, locale: locale)
+                        },
+                        unitLabel: item.unitLabel ?? product.unitLabel,
+                        quantity: quantity,
+                        adjustableQuantity: adjustableQuantity
+                    )
+                }
+
+            let taxAmounts = oneTimePrice.items.flatMap { $0.taxAmounts ?? [] }.compactMap {
+                makeSessionTaxAmount(from: $0, currency: defaultCurrency, locale: locale)
             }
-            return Checkout.LineItem(
-                id: id,
-                name: name,
-                description: product.description,
-                images: product.images ?? [],
-                quantity: quantity,
-                unitAmount: unitAmount,
-                unitAmountDecimal: unitAmountDecimal,
-                subtotal: nil,
-                discount: nil,
-                taxExclusive: nil,
-                taxInclusive: nil,
-                total: nil,
-                discountAmounts: [],
-                taxAmounts: [],
-                adjustableQuantity: nil
+            let taxInclusive = oneTimePrice.items.reduce(0) { $0 + ($1.taxInclusive ?? 0) }
+            let taxExclusive = oneTimePrice.items.reduce(0) { $0 + ($1.taxExclusive ?? 0) }
+            let amountDetails = Checkout.Session.OrderSummaryItem.OneTimePrice.AmountDetails(
+                total: makeSessionAmount(Double(total), currency: defaultCurrency, locale: locale),
+                subtotal: makeSessionAmount(
+                    Double(subtotal),
+                    currency: defaultCurrency,
+                    locale: locale
+                ),
+                taxAmounts: taxAmounts.isEmpty ? nil : taxAmounts,
+                discount: makeSessionAmount(0, currency: defaultCurrency, locale: locale),
+                taxInclusive: makeSessionAmount(
+                    Double(taxInclusive),
+                    currency: defaultCurrency,
+                    locale: locale
+                ),
+                taxExclusive: makeSessionAmount(
+                    Double(taxExclusive),
+                    currency: defaultCurrency,
+                    locale: locale
+                )
+            )
+            return .oneTimePrice(
+                Checkout.Session.OrderSummaryItem.OneTimePrice(
+                    key: key,
+                    description: nil,
+                    items: publicItems,
+                    amountDetails: amountDetails
+                )
             )
         }
+    }
+
+    private static func makeSessionTaxAmount(
+        from taxAmount: TaxAmount,
+        currency: String,
+        locale: Locale
+    ) -> Checkout.Session.TaxAmount? {
+        guard let amount = taxAmount.amount,
+              let inclusive = taxAmount.inclusive,
+              let taxRate = taxAmount.taxRate,
+              let displayName = taxRate.displayName else {
+            return nil
+        }
+        let publicAmount = makeSessionAmount(Double(amount), currency: currency, locale: locale)
+        return Checkout.Session.TaxAmount(
+            amount: publicAmount.amount,
+            minorUnitsAmount: publicAmount.minorUnitsAmount,
+            inclusive: inclusive,
+            displayName: displayName,
+            percentage: taxRate.rateType == "flat_amount"
+                ? nil
+                : taxRate.percentage
+        )
     }
 
     private static func makeDiscountAmounts(

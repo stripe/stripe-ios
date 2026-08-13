@@ -156,48 +156,74 @@ extension PaymentPagesAPIResponse {
     struct CheckoutItem {
         let key: String?
         let type: String?
-        let oneTimePriceItem: OneTimePriceItem?
+        let oneTimePrice: OneTimePrice?
 
         init(_ dict: [AnyHashable: Any]) {
             key = dict["key"] as? String
             type = dict["type"] as? String
-            oneTimePriceItem = (dict["one_time_price_item"] as? [AnyHashable: Any]).map(OneTimePriceItem.init)
+            oneTimePrice = (dict["one_time_price"] as? [AnyHashable: Any]).map(OneTimePrice.init)
+        }
+    }
+
+    struct OneTimePrice {
+        let items: [OneTimePriceItem]
+        let subtotal: Int?
+        let total: Int?
+
+        init(_ dict: [AnyHashable: Any]) {
+            items = (dict["items"] as? [[AnyHashable: Any]])?.map(OneTimePriceItem.init) ?? []
+            subtotal = dict["subtotal"] as? Int
+            total = dict["total"] as? Int
         }
     }
 
     struct OneTimePriceItem {
-        let quantity: Int?
         let price: Price?
+        let quantity: Int?
+        let unitAmount: Int?
+        let unitAmountDecimal: String?
+        let unitLabel: String?
+        let taxAmounts: [TaxAmount]?
+        let taxInclusive: Int?
+        let taxExclusive: Int?
+        let adjustableQuantity: AdjustableQuantity?
 
         init(_ dict: [AnyHashable: Any]) {
-            quantity = dict["quantity"] as? Int
             price = (dict["price"] as? [AnyHashable: Any]).map(Price.init)
+            quantity = dict["quantity"] as? Int
+            unitAmount = dict["unit_amount"] as? Int
+            unitAmountDecimal = dict["unit_amount_decimal"] as? String
+            unitLabel = dict["unit_label"] as? String
+            taxAmounts = (dict["tax_amounts"] as? [[AnyHashable: Any]])?.map(TaxAmount.init)
+            taxInclusive = dict["tax_inclusive"] as? Int
+            taxExclusive = dict["tax_exclusive"] as? Int
+            adjustableQuantity = (dict["adjustable_quantity"] as? [AnyHashable: Any]).map(AdjustableQuantity.init)
         }
     }
 
     struct Price {
+        let id: String?
         let currency: String?
         let unitAmount: Int?
-        let unitAmountDecimal: String?
         let product: Product?
 
         init(_ dict: [AnyHashable: Any]) {
+            id = dict["id"] as? String
             currency = dict["currency"] as? String
             unitAmount = dict["unit_amount"] as? Int
-            unitAmountDecimal = dict["unit_amount_decimal"] as? String
             product = (dict["product"] as? [AnyHashable: Any]).map(Product.init)
         }
     }
 
     struct Product {
         let name: String?
-        let description: String?
         let images: [String]?
+        let unitLabel: String?
 
         init(_ dict: [AnyHashable: Any]) {
             name = dict["name"] as? String
-            description = dict["description"] as? String
             images = dict["images"] as? [String]
+            unitLabel = dict["unit_label"] as? String
         }
     }
 
@@ -273,9 +299,25 @@ extension PaymentPagesAPIResponse {
 
     struct TaxRate {
         let displayName: String?
+        let percentage: Double?
+        let rateType: String?
 
         init(_ dict: [AnyHashable: Any]) {
             displayName = dict["display_name"] as? String
+            percentage = dict["percentage"] as? Double
+            rateType = dict["rate_type"] as? String
+        }
+    }
+
+    struct AdjustableQuantity {
+        let enabled: Bool?
+        let maximum: Int?
+        let minimum: Int?
+
+        init(_ dict: [AnyHashable: Any]) {
+            enabled = dict["enabled"] as? Bool
+            maximum = dict["maximum"] as? Int
+            minimum = dict["minimum"] as? Int
         }
     }
 

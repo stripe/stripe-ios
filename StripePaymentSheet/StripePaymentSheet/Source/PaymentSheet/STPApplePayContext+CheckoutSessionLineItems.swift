@@ -21,7 +21,7 @@ extension STPApplePayContext {
         label: String,
         currency: String?
     ) -> [PKPaymentSummaryItem] {
-        guard !session.lineItems.isEmpty, let total = session.total else {
+        guard !session.orderSummaryItems.isEmpty, let total = session.total else {
             if let amount = session.expectedAmount() {
                 let decimalAmount = NSDecimalNumber.stp_decimalNumber(withAmount: amount, currency: currency)
                 return [PKPaymentSummaryItem(label: label, amount: decimalAmount, type: .final)]
@@ -32,16 +32,20 @@ extension STPApplePayContext {
 
         var summaryItems: [PKPaymentSummaryItem] = []
 
-        for lineItem in session.lineItems {
-            let itemLabel = lineItem.quantity > 1
-                ? String.Localized.lineItemLabel(name: lineItem.name, quantity: lineItem.quantity)
-                : lineItem.name
-            let unitMinorUnits = lineItem.unitAmount?.minorUnitsAmount ?? 0
-            let amount = NSDecimalNumber.stp_decimalNumber(
-                withAmount: unitMinorUnits * lineItem.quantity,
-                currency: currency
-            )
-            summaryItems.append(PKPaymentSummaryItem(label: itemLabel, amount: amount, type: .final))
+        for orderSummaryItem in session.orderSummaryItems {
+            switch orderSummaryItem {
+            case .oneTimePrice(let oneTimePrice):
+                for item in oneTimePrice.items {
+                    let itemLabel = item.quantity > 1
+                        ? String.Localized.lineItemLabel(name: item.displayName, quantity: item.quantity)
+                        : item.displayName
+                    let amount = NSDecimalNumber(value: item.unitAmount.minorUnitsAmount * Double(item.quantity))
+                        .multiplying(by: NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency))
+                    summaryItems.append(
+                        PKPaymentSummaryItem(label: itemLabel, amount: amount, type: .final)
+                    )
+                }
+            }
         }
 
         let shipping = total.shippingRate.minorUnitsAmount
