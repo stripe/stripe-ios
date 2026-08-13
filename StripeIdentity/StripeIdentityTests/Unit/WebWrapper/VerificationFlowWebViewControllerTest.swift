@@ -10,15 +10,14 @@ import XCTest
 
 @testable import StripeIdentity
 
+@MainActor
 final class VerificationFlowWebViewControllerTest: XCTestCase {
     let mockSecret = VerificationClientSecret(verificationSessionId: "", urlToken: "123")
 
     private var viewController: VerificationFlowWebViewController!
     private var result: IdentityVerificationSheet.VerificationFlowResult?
 
-    override func setUp() {
-        super.setUp()
-
+    override func setUp() async throws {
         // Reset result
         result = nil
 
@@ -38,6 +37,7 @@ final class VerificationFlowWebViewControllerTest: XCTestCase {
         // Mock lifecycle
         viewController.viewDidLoad()
         viewController.viewWillAppear(false)
+        await viewController.webViewSetupTask?.value
         viewController.viewDidAppear(false)
     }
 
