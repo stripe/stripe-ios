@@ -30,11 +30,11 @@ protocol IdentityAPIClient: AnyObject {
 
     func verifyTestVerificationSession(
         simulateDelay: Bool
-    ) -> Promise<StripeAPI.VerificationPageData>
+    ) async throws -> StripeAPI.VerificationPageData
 
     func unverifyTestVerificationSession(
         simulateDelay: Bool
-    ) -> Promise<StripeAPI.VerificationPageData>
+    ) async throws -> StripeAPI.VerificationPageData
 
     func generatePhoneOtp() async throws -> StripeAPI.VerificationPageData
 
@@ -122,15 +122,15 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         )
     }
 
-    func verifyTestVerificationSession(simulateDelay: Bool) -> Promise<StripeAPI.VerificationPageData> {
-        return apiClient.post(
+    func verifyTestVerificationSession(simulateDelay: Bool) async throws -> StripeAPI.VerificationPageData {
+        try await apiClient.post(
             resource: APIEndpointVerificationPageTestingVerify(id: verificationSessionId),
             parameters: ["simulate_delay": simulateDelay]
         )
     }
 
-    func unverifyTestVerificationSession(simulateDelay: Bool) -> Promise<StripeAPI.VerificationPageData> {
-        return apiClient.post(
+    func unverifyTestVerificationSession(simulateDelay: Bool) async throws -> StripeAPI.VerificationPageData {
+        try await apiClient.post(
             resource: APIEndpointVerificationPageTestingUnverify(id: verificationSessionId),
             parameters: ["simulate_delay": simulateDelay]
         )
