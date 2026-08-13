@@ -7,8 +7,8 @@
 
 import Foundation
 
-/// Adds request-ID observation to a single URL session without changing the configuration used
-/// to perform its requests.
+/// Adds request-ID observation and an optional request delay to a single URL session without
+/// changing the configuration used to perform its requests.
 final class CheckoutRequestCapture {
     /// Metadata for a completed Stripe API request.
     struct Response: Sendable {
@@ -23,6 +23,7 @@ final class CheckoutRequestCapture {
 
     init(
         forwardingConfiguration: URLSessionConfiguration,
+        paymentPagesRequestDelay: TimeInterval,
         didReceiveResponse: @escaping @Sendable (Response) -> Void
     ) {
         guard let sessionConfiguration = forwardingConfiguration.copy() as? URLSessionConfiguration else {
@@ -32,6 +33,7 @@ final class CheckoutRequestCapture {
         CheckoutRequestCaptureRegistry.register(
             captureID: captureID,
             forwardingConfiguration: forwardingConfiguration,
+            paymentPagesRequestDelay: paymentPagesRequestDelay,
             didReceiveResponse: didReceiveResponse
         )
 
@@ -49,9 +51,40 @@ final class CheckoutRequestCapture {
 }
 
 private enum CheckoutRequestCaptureRegistry {
-    struct Context {
+    final class Context {
+
         let forwardingConfiguration: URLSessionConfiguration
         let didReceiveResponse: @Sendable (CheckoutRequestCapture.Response) -> Void
+
+        private let paymentPagesRequestDelay: TimeInterval
+        private let lock = NSLock()
+        private var skippedInitialInitRequest = false
+
+        init(
+            forwardingConfiguration: URLSessionConfiguration,
+            paymentPagesRequestDelay: TimeInterval,
+            didReceiveResponse: @escaping @Sendable (CheckoutRequestCapture.Response) -> Void
+        ) {
+            self.forwardingConfiguration = forwardingConfiguration
+            self.paymentPagesRequestDelay = paymentPagesRequestDelay
+            self.didReceiveResponse = didReceiveResponse
+        }
+
+        func delay(for request: URLRequest) -> TimeInterval {
+            guard paymentPagesRequestDelay > 0,
+                  let path = request.url?.path,
+                  path.contains("/payment_pages/") else {
+                return 0
+            }
+
+            lock.lock()
+            defer { lock.unlock() }
+            if !skippedInitialInitRequest, path.hasSuffix("/init") {
+                skippedInitialInitRequest = true
+                return 0
+            }
+            return paymentPagesRequestDelay
+        }
     }
 
     private static let lock = NSLock()
@@ -60,11 +93,13 @@ private enum CheckoutRequestCaptureRegistry {
     static func register(
         captureID: String,
         forwardingConfiguration: URLSessionConfiguration,
+        paymentPagesRequestDelay: TimeInterval,
         didReceiveResponse: @escaping @Sendable (CheckoutRequestCapture.Response) -> Void
     ) {
         lock.lock()
         contexts[captureID] = Context(
             forwardingConfiguration: forwardingConfiguration,
+            paymentPagesRequestDelay: paymentPagesRequestDelay,
             didReceiveResponse: didReceiveResponse
         )
         lock.unlock()
@@ -99,6 +134,7 @@ private class CheckoutRequestCaptureURLProtocol: URLProtocol {
     private var state = State.loading
     private var dataTask: URLSessionDataTask?
     private var forwardingSession: URLSession?
+    private var delayedStartWorkItem: DispatchWorkItem?
 
     override class func canInit(with request: URLRequest) -> Bool {
         return request.value(forHTTPHeaderField: captureIDHeader) != nil
@@ -152,11 +188,25 @@ private class CheckoutRequestCaptureURLProtocol: URLProtocol {
                 client?.urlProtocolDidFinishLoading(self)
             }
         }
-        dataTask?.resume()
+        let requestDelay = context.delay(for: forwardedRequest as URLRequest)
+        if requestDelay > 0 {
+            let delayedStartWorkItem = DispatchWorkItem { [weak self] in
+                guard let self, isLoading else { return }
+                dataTask?.resume()
+            }
+            self.delayedStartWorkItem = delayedStartWorkItem
+            DispatchQueue.global().asyncAfter(
+                deadline: .now() + requestDelay,
+                execute: delayedStartWorkItem
+            )
+        } else {
+            dataTask?.resume()
+        }
     }
 
     override func stopLoading() {
         guard stopIfLoading() else { return }
+        delayedStartWorkItem?.cancel()
         dataTask?.cancel()
         forwardingSession?.invalidateAndCancel()
     }
@@ -175,5 +225,11 @@ private class CheckoutRequestCaptureURLProtocol: URLProtocol {
         guard state == .loading else { return false }
         state = .stopped
         return true
+    }
+
+    private var isLoading: Bool {
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        return state == .loading
     }
 }
