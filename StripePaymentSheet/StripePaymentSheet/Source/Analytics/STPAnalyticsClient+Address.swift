@@ -13,12 +13,12 @@ extension STPAnalyticsClient {
 
     func logAddressControllerEvent(
         event: STPAnalyticEvent,
-        addressAnalyticData: AddressAnalyticData?,
+        addressAnalyticData: AddressAnalyticData,
         additionalParams: [String: Any] = [:],
         apiClient: STPAPIClient
     ) {
         var params = additionalParams
-        params["address_data_blob"] = addressAnalyticData?.analyticsPayload
+        params["address_data_blob"] = addressAnalyticData.analyticsPayload
         log(analytic: AddressAnalytic(event: event, params: params), apiClient: apiClient)
     }
 
