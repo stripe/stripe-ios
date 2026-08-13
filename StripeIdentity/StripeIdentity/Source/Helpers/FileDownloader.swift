@@ -22,40 +22,38 @@ final class FileDownloader {
         self.urlSession = urlSession
     }
 
-    /// Downloads a file from the specified URL and returns a promise that will
-    /// resolve to the temporary local file location where the file was downloaded to.
+    /// Downloads a file from the specified URL and returns the temporary local file location
+    /// where the file was downloaded to.
     ///
     /// - Parameter remoteURL: The URL to download the file from.
-    func downloadFileTemporarily(from remoteURL: URL) -> Future<URL> {
-        let promise = Promise<URL>()
-
+    func downloadFileTemporarily(from remoteURL: URL) async throws -> URL {
         let request = URLRequest(url: remoteURL)
 
-        let downloadTask = urlSession.downloadTask(with: request) { url, _, error in
+        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<URL, Error>) in
+            let downloadTask = urlSession.downloadTask(with: request) { url, _, error in
 
-            if let error = error {
-                return promise.reject(with: error)
+                if let error = error {
+                    return continuation.resume(throwing: error)
+                }
+
+                guard let url = url else {
+                    return continuation.resume(throwing: NSError.stp_genericConnectionError())
+                }
+
+                // Move the file to a temporary cache directory after generating a unique name to avoid conflicts.
+                let fileManager = FileManager.default
+                let uniqueFileName = "\(UUID().uuidString)_" + remoteURL.lastPathComponent
+                let temporaryFileURL = fileManager.temporaryDirectory.appendingPathComponent(uniqueFileName)
+
+                do {
+                    try fileManager.moveItem(at: url, to: temporaryFileURL)
+                } catch {
+                    return continuation.resume(throwing: error)
+                }
+
+                continuation.resume(returning: temporaryFileURL)
             }
-
-            guard let url = url else {
-                return promise.reject(with: NSError.stp_genericConnectionError())
-            }
-
-            // Move the file to a temporary cache directory after generating a unique name to avoid conflicts.
-            let fileManager = FileManager.default
-            let uniqueFileName = "\(UUID().uuidString)_" + remoteURL.lastPathComponent
-            let temporaryFileURL = fileManager.temporaryDirectory.appendingPathComponent(uniqueFileName)
-
-            do {
-                try fileManager.moveItem(at: url, to: temporaryFileURL)
-            } catch {
-                return promise.reject(with: error)
-            }
-
-            promise.resolve(with: temporaryFileURL)
+            downloadTask.resume()
         }
-        downloadTask.resume()
-
-        return promise
     }
 }
