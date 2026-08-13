@@ -106,7 +106,6 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         XCTAssertNil(observingViewController.presentedViewController)
     }
 
-<<<<<<< HEAD
     func testPresentationAndCancellationLogShippingAddressEvents() throws {
         // Given
         let shippingAddressElement = makeShippingAddressElement()
@@ -154,7 +153,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
             error: CheckoutError.apiError(message: "Sensitive error details")
         )
         shippingAddressElement.delegate = delegate
-        
+
         // When
         do {
             try await shippingAddressElement.save(addressDetails: makeAddressDetails()) { _ in }
@@ -164,7 +163,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         } catch {
             XCTFail("Unexpected error: \(error)")
         }
-        
+
         // Then
         let events = shippingAddressEvents
         XCTAssertEqual(
@@ -178,7 +177,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         XCTAssertEqual(events[1]["error_code"] as? String, "apiError")
         XCTAssertFalse(events[1].values.contains { ($0 as? String) == "Sensitive error details" })
     }
-    
+
     func testCanPresentAgainFromCompletion() async throws {
         // Given
         let shippingAddressElement = makeShippingAddressElement()
