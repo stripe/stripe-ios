@@ -334,21 +334,37 @@ extension Intent {
         }
 
         if !lineItems.isEmpty {
-            json["checkout_items"] = lineItems.map { item -> [String: Any] in
+            let oneTimePriceItems = lineItems.map { item -> [String: Any] in
+                let unitAmount = item.unitAmount?.minorUnitsAmount ?? 0
                 return [
-                    "key": item.id,
-                    "type": "one_time_price_item",
-                    "one_time_price_item": [
-                        "quantity": item.quantity,
-                        "price": [
-                            "id": "price_\(item.id)",
-                            "currency": currency.lowercased(),
-                            "unit_amount": item.unitAmount?.minorUnitsAmount ?? 0,
-                            "product": ["name": item.name],
-                        ],
+                    "quantity": item.quantity,
+                    "subtotal": unitAmount * item.quantity,
+                    "total": unitAmount * item.quantity,
+                    "tax_amounts": [],
+                    "tax_inclusive": 0,
+                    "tax_exclusive": 0,
+                    "price": [
+                        "id": "price_\(item.id)",
+                        "currency": currency.lowercased(),
+                        "unit_amount": unitAmount,
+                        "product": ["name": item.name],
                     ],
                 ]
             }
+            let oneTimePriceSubtotal = oneTimePriceItems.reduce(0) {
+                $0 + ($1["subtotal"] as? Int ?? 0)
+            }
+            json["checkout_items"] = [
+                [
+                    "key": "checkout_item_test",
+                    "type": "one_time_price",
+                    "one_time_price": [
+                        "items": oneTimePriceItems,
+                        "subtotal": oneTimePriceSubtotal,
+                        "total": oneTimePriceSubtotal,
+                    ],
+                ],
+            ]
         }
         if shippingAmount != 0 {
             json["shipping_rate"] = [

@@ -110,16 +110,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         XCTAssertNotNil(session.paymentMethodOptions)
 
-        // Line items
-        XCTAssertEqual(session.lineItems.count, 2)
-        XCTAssertEqual(session.lineItems[0].id, "li_1abc")
-        XCTAssertEqual(session.lineItems[0].name, "Widget")
-        XCTAssertEqual(session.lineItems[0].quantity, 2)
-        XCTAssertEqual(session.lineItems[0].unitAmount?.minorUnitsAmount, 750)
-        XCTAssertEqual(session.lineItems[1].id, "li_2def")
-        XCTAssertEqual(session.lineItems[1].name, "Gadget")
-        XCTAssertEqual(session.lineItems[1].quantity, 1)
-        XCTAssertEqual(session.lineItems[1].unitAmount?.minorUnitsAmount, 500)
+        // The fixture still contains legacy one_time_price_item objects.
+        XCTAssertTrue(session.orderSummaryItems.isEmpty)
 
         // Totals — discount and tax
         XCTAssertEqual(session.total?.discount.minorUnitsAmount, 0)
@@ -338,18 +330,28 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "checkout_items": [
                 [
                     "key": "checkout_item_abc123",
-                    "type": "one_time_price_item",
-                    "one_time_price_item": [
-                        "quantity": 2,
-                        "price": [
-                            "id": "price_test123",
-                            "currency": "usd",
-                            "unit_amount": 1000,
-                            "unit_amount_decimal": "1000",
-                            "product": [
-                                "name": "Classic T-Shirt",
-                                "description": "A comfy shirt",
-                                "images": ["https://example.com/shirt.png"],
+                    "type": "one_time_price",
+                    "one_time_price": [
+                        "subtotal": 2000,
+                        "total": 2148,
+                        "items": [
+                            [
+                                "quantity": 2,
+                                "unit_amount": 1000,
+                                "unit_amount_decimal": "1000",
+                                "tax_amounts": [],
+                                "tax_inclusive": 0,
+                                "tax_exclusive": 148,
+                                "price": [
+                                    "id": "price_test123",
+                                    "currency": "usd",
+                                    "unit_amount": 1000,
+                                    "product": [
+                                        "name": "Classic T-Shirt",
+                                        "description": "A comfy shirt",
+                                        "images": ["https://example.com/shirt.png"],
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -357,14 +359,21 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             ],
         ]).makePublicSession()
 
-        XCTAssertEqual(session.lineItems.count, 1)
-        let item = session.lineItems[0]
-        XCTAssertEqual(item.id, "checkout_item_abc123")
-        XCTAssertEqual(item.name, "Classic T-Shirt")
-        XCTAssertEqual(item.description, "A comfy shirt")
-        XCTAssertEqual(item.images, ["https://example.com/shirt.png"])
-        XCTAssertEqual(item.quantity, 2)
-        XCTAssertEqual(item.unitAmount?.minorUnitsAmount, 1000)
+        XCTAssertEqual(session.orderSummaryItems.count, 1)
+        guard case .oneTimePrice(let oneTimePrice) = session.orderSummaryItems[0] else {
+            return XCTFail("Expected one-time price order summary item")
+        }
+        XCTAssertEqual(oneTimePrice.key, "checkout_item_abc123")
+        XCTAssertNil(oneTimePrice.description)
+        XCTAssertEqual(oneTimePrice.items.count, 1)
+        XCTAssertEqual(oneTimePrice.items[0].key, "price_test123")
+        XCTAssertEqual(oneTimePrice.items[0].displayName, "Classic T-Shirt")
+        XCTAssertEqual(oneTimePrice.items[0].images, ["https://example.com/shirt.png"])
+        XCTAssertEqual(oneTimePrice.items[0].quantity, 2)
+        XCTAssertEqual(oneTimePrice.items[0].unitAmount.minorUnitsAmount, 1000)
+        XCTAssertEqual(oneTimePrice.amountDetails.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(oneTimePrice.amountDetails.total.minorUnitsAmount, 2148)
+        XCTAssertEqual(oneTimePrice.amountDetails.taxExclusive.minorUnitsAmount, 148)
 
         XCTAssertEqual(session.tax.taxAmounts?.count, 1)
         XCTAssertEqual(session.tax.taxAmounts?[0].amount.minorUnitsAmount, 148)
@@ -387,7 +396,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             ],
         ]).makePublicSession()
 
-        XCTAssertTrue(session.lineItems.isEmpty)
+        XCTAssertTrue(session.orderSummaryItems.isEmpty)
     }
 
     func testUnifiedModeSessionSkipsMalformedOneTimePriceItems() {
@@ -396,16 +405,25 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "checkout_items": [
                 [
                     "key": "checkout_item_abc123",
-                    "type": "one_time_price_item",
-                    "one_time_price_item": [
-                        "quantity": 1,
-                        "price": ["id": "price_test123", "currency": "usd", "unit_amount": 1000],
+                    "type": "one_time_price",
+                    "one_time_price": [
+                        "subtotal": 1000,
+                        "total": 1000,
+                        "items": [
+                            [
+                                "quantity": 1,
+                                "price": ["id": "price_test123", "currency": "usd", "unit_amount": 1000],
+                            ],
+                        ],
                     ],
                 ],
             ],
         ]).makePublicSession()
 
-        XCTAssertTrue(session.lineItems.isEmpty)
+        guard case .oneTimePrice(let oneTimePrice) = session.orderSummaryItems.first else {
+            return XCTFail("Expected one-time price order summary item")
+        }
+        XCTAssertTrue(oneTimePrice.items.isEmpty)
     }
 
     func testMerchantWillSavePaymentMethod_paymentModeWithoutSetupFutureUsage() {

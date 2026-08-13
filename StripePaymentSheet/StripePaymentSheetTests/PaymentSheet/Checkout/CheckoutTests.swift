@@ -15,7 +15,6 @@ import XCTest
 
 @MainActor
 final class CheckoutTests: STPNetworkStubbingTestCase {
-
     func testLoadCheckoutSession() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
         var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
@@ -152,7 +151,8 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
     func testLoadUnifiedModeCheckoutSession() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
-            merchantCountry: "us_tax"
+            merchantCountry: "us_tax",
+            useOneTimePrice: true
         )
         var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -163,9 +163,28 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(session.status?.type, .open)
         XCTAssertEqual(session.total?.total.minorUnitsAmount, 2000)
         XCTAssertEqual(session.expectedAmount(), 2000)
-        XCTAssertEqual(session.lineItems.count, 1)
-        XCTAssertEqual(session.lineItems.first?.quantity, 1)
-        XCTAssertEqual(session.lineItems.first?.unitAmount?.minorUnitsAmount, 2000)
+        XCTAssertEqual(session.orderSummaryItems.count, 1)
+        guard case .oneTimePrice(let oneTimePrice) = session.orderSummaryItems.first else {
+            return XCTFail("Expected one-time price order summary item")
+        }
+        XCTAssertFalse(oneTimePrice.key.isEmpty)
+        XCTAssertNil(oneTimePrice.description)
+        XCTAssertEqual(oneTimePrice.items.count, 1)
+        let item = try XCTUnwrap(oneTimePrice.items.first)
+        XCTAssertFalse(item.key.isEmpty)
+        XCTAssertEqual(item.displayName, "Test")
+        XCTAssertEqual(item.images, [])
+        XCTAssertEqual(item.unitAmount.minorUnitsAmount, 2000)
+        XCTAssertEqual(item.unitAmountDecimal?.minorUnitsAmount, 2000)
+        XCTAssertNil(item.unitLabel)
+        XCTAssertEqual(item.quantity, 1)
+        XCTAssertNil(item.adjustableQuantity)
+        XCTAssertEqual(oneTimePrice.amountDetails.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(oneTimePrice.amountDetails.total.minorUnitsAmount, 2000)
+        XCTAssertNil(oneTimePrice.amountDetails.taxAmounts)
+        XCTAssertEqual(oneTimePrice.amountDetails.discount.minorUnitsAmount, 0)
+        XCTAssertEqual(oneTimePrice.amountDetails.taxInclusive.minorUnitsAmount, 0)
+        XCTAssertEqual(oneTimePrice.amountDetails.taxExclusive.minorUnitsAmount, 0)
     }
 
     func testUpdateShippingAddress() async throws {
