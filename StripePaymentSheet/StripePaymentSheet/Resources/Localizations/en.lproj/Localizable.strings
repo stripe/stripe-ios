@@ -213,6 +213,12 @@ with the transaction. */
 /* Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link. */
 "Did you mean %@? %@." = "Did you mean %1$@? %2$@.";
 
+/* Button title in a confirmation alert that discards the customer's unsaved address changes and closes the form. */
+"Discard Changes" = "Discard Changes";
+
+/* Title of a confirmation alert shown when the customer tries to close the address form after making changes. */
+"Discard changes?" = "Discard changes?";
+
 /* Label for the discount row in an order summary, applied as a negative amount. */
 "Discount" = "Discount";
 
@@ -248,6 +254,9 @@ with the transaction. */
 
 /* Label for an IBAN field */
 "IBAN" = "IBAN";
+
+/* Button title in a confirmation alert that dismisses the alert and returns the customer to editing their address. */
+"Keep Editing" = "Keep Editing";
 
 /* Label for displaying the last 4 digits of the user's social security number */
 "Last 4 digits of SSN" = "Last 4 digits of SSN";
@@ -524,6 +533,9 @@ the heading the screen itself. */
 
 /* Text for a tappable link that will update the email field with a suggested email address. */
 "Yes, update" = "Yes, update";
+
+/* Message of a confirmation alert warning the customer that closing the address form will discard their unsaved changes. */
+"Your address changes won't be saved." = "Your address changes won't be saved.";
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";

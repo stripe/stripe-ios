@@ -217,9 +217,12 @@ US
         // Should disable the save address button
         saveAddress(shouldBeEnabled: false)
 
-        // If we dismiss the sheet while invalid, merchant app should get back nil
+        // If we discard invalid changes, the merchant app should get back the last saved address
         app.buttons["Close"].tap()
-        XCTAssertEqual(shippingButton.label, "Address")
+        let discardChangesAlert = app.alerts["Discard changes?"]
+        XCTAssertTrue(discardChangesAlert.waitForExistence(timeout: 4.0))
+        discardChangesAlert.buttons["Discard Changes"].tap()
+        XCTAssertEqual(shippingButton.label, expectedAddress)
 
         // Checkbox should NOT be shown when no defaults provided
         XCTAssertFalse(app.buttons["Use billing address for shipping"].exists)
