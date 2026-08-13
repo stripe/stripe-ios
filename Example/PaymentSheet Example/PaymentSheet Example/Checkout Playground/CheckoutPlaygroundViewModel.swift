@@ -44,6 +44,7 @@ extension CheckoutPlayground {
         @Published var currencySelectorAppearance = CurrencySelectorElement.Appearance()
         @Published var checkoutEndpointOption: EndpointOption = .hosted
         @Published var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
+        @Published var delayPaymentPagesRequests = false
 
         @Published var isCreating = false
         @Published var errorMessage: String?

@@ -14,6 +14,7 @@ struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var checkoutEndpointOption: CheckoutPlayground.EndpointOption
     @Binding var checkoutEndpoint: String
     @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
+    @Binding var delayPaymentPagesRequests: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -82,6 +83,11 @@ struct CheckoutPlaygroundConfigurationSection: View {
                 .padding(.vertical, 12)
                 .padding(.horizontal, 16)
                 .background(Color(uiColor: .secondarySystemGroupedBackground))
+                CheckoutPlayground.ToggleRow(
+                    title: "Delay Payment Pages Requests",
+                    isOn: $delayPaymentPagesRequests,
+                    tooltip: "Adds a 1-second delay before Payment Pages API requests except the initial /init request so loading states are easier to inspect."
+                )
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
