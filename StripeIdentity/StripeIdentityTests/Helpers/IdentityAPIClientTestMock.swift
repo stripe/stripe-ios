@@ -31,9 +31,9 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
     let verifyUnverifyRequest = MockAPIRequests<
         [String: Bool], StripeAPI.VerificationPageData
     >()
-    let verificationSessionSubmit = MockAPIRequests<Void, StripeAPI.VerificationPageData>()
-    let verificationPageGeneratePhoneOtp = MockAPIRequests<Void, StripeAPI.VerificationPageData>()
-    let verificationPageCannotVerifyPhoneOtp = MockAPIRequests<Void, StripeAPI.VerificationPageData>()
+    let verificationSessionSubmit = AsyncMockAPIRequests<Void, StripeAPI.VerificationPageData>()
+    let verificationPageGeneratePhoneOtp = AsyncMockAPIRequests<Void, StripeAPI.VerificationPageData>()
+    let verificationPageCannotVerifyPhoneOtp = AsyncMockAPIRequests<Void, StripeAPI.VerificationPageData>()
     let imageUpload = AsyncMockAPIRequests<ImageUploadRequestParams, STPAPIClient.FileAndUploadMetrics>()
 
     var verificationSessionId: String
@@ -57,8 +57,8 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
         try await verificationPageData.makeRequest(with: verificationData)
     }
 
-    func submitIdentityVerificationPage() -> Promise<StripeAPI.VerificationPageData> {
-        return verificationSessionSubmit.makeRequest(with: ())
+    func submitIdentityVerificationPage() async throws -> StripeAPI.VerificationPageData {
+        try await verificationSessionSubmit.makeRequest(with: ())
     }
 
     func uploadImage(
@@ -84,12 +84,12 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
         return verifyUnverifyRequest.makeRequest(with: ["simulateDelay": simulateDelay])
     }
 
-    func generatePhoneOtp() -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
-        return verificationPageGeneratePhoneOtp.makeRequest(with: ())
+    func generatePhoneOtp() async throws -> StripeCore.StripeAPI.VerificationPageData {
+        try await verificationPageGeneratePhoneOtp.makeRequest(with: ())
     }
 
-    func cannotPhoneVerifyOtp() -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
-        return verificationPageCannotVerifyPhoneOtp.makeRequest(with: ())
+    func cannotPhoneVerifyOtp() async throws -> StripeCore.StripeAPI.VerificationPageData {
+        try await verificationPageCannotVerifyPhoneOtp.makeRequest(with: ())
     }
 
     // Ensures `count` number of files are uploaded

@@ -29,6 +29,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     let mockConcurrencyManager = ImageScanningConcurrencyManagerMock()
     let mockCameraPermissionsManager = MockCameraPermissionsManager()
     let mockAppSettingsHelper = MockAppSettingsHelper()
+    var imageScanningSessionDelegateSpy: DocumentCaptureViewControllerImageScanningSessionDelegateSpy?
 
     let mockVideoOutput = AVCaptureVideoDataOutput()
     lazy var mockCaptureConnection = AVCaptureConnection(inputPorts: [], output: mockVideoOutput)
@@ -390,6 +391,11 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Mock that file has been captured and upload has begun
         let vc = makeViewController(documentType: .drivingLicense)
 
+        let updatedStateExp = expect(
+            vc,
+            toUpdateTo: .scanning(.back, nil),
+            description: "Updated document front state"
+        )
         mockDocumentUploader.frontUploadResultValue = .success(frontFileData)
         let saveExp = expectation(description: "Saved document front")
         mockSheetController.saveDocumentFrontAndDecideBackCallback = {
@@ -398,7 +404,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
         // Request to save data
         vc.saveOrFlipDocument(scannedImage: mockFrontImage, documentSide: .front)
-        await fulfillment(of: [saveExp], timeout: 1)
+        await fulfillment(of: [saveExp, updatedStateExp], timeout: 1)
         guard case .success = self.mockSheetController.frontUploadedDocumentsResult else {
             return XCTFail("Expected success result")
         }
@@ -420,6 +426,11 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Mock that file has been captured and upload has begun
         let vc = makeViewController(documentType: .drivingLicense)
 
+        let updatedStateExp = expect(
+            vc,
+            toUpdateTo: .scanned(.back, mockBackImage),
+            description: "Updated document back state"
+        )
         mockDocumentUploader.backUploadResultValue = .success(backFileData)
         let saveExp = expectation(description: "Saved document back")
         mockSheetController.saveDocumentBackAndTransitionCallback = {
@@ -429,7 +440,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Request to save data
         vc.saveOrFlipDocument(scannedImage: mockBackImage, documentSide: .back)
 
-        await fulfillment(of: [saveExp], timeout: 1)
+        await fulfillment(of: [saveExp, updatedStateExp], timeout: 1)
         guard case .success = self.mockSheetController.backUploadedDocumentsResult else {
             return XCTFail("Expected success result")
         }
@@ -1068,6 +1079,23 @@ extension DocumentCaptureViewControllerTest {
         await fulfillment(of: [mockCameraSession.stopSessionCompletionExp], timeout: 1)
     }
 
+    fileprivate func expect(
+        _ vc: DocumentCaptureViewController,
+        toUpdateTo expectedState: DocumentCaptureViewController.State,
+        description: String
+    ) -> XCTestExpectation {
+        let exp = expectation(description: description)
+        let delegateSpy = DocumentCaptureViewControllerImageScanningSessionDelegateSpy(
+            wrappedDelegate: vc,
+            expectedState: expectedState
+        ) {
+            exp.fulfill()
+        }
+        imageScanningSessionDelegateSpy = delegateSpy
+        vc.imageScanningSession.setDelegate(delegate: delegateSpy)
+        return exp
+    }
+
     fileprivate func mockTimeoutTimer(_ vc: DocumentCaptureViewController) {
         vc.imageScanningSession.startTimeoutTimer(expectedClassification: .front)
     }
@@ -1234,5 +1262,95 @@ extension DocumentCaptureViewControllerTest {
 
         guard !isEqual else { return }
         XCTAssertEqual(lhs, rhs, message, file: file, line: line)
+    }
+}
+
+final class DocumentCaptureViewControllerImageScanningSessionDelegateSpy: ImageScanningSessionDelegate {
+    typealias ExpectedClassificationType = DocumentSide
+    typealias ScanningStateType = DocumentScannerOutput?
+    typealias CapturedDataType = UIImage
+    typealias ScannerOutput = DocumentScannerOutput?
+
+    private weak var wrappedDelegate: DocumentCaptureViewController?
+    private let expectedState: DocumentCaptureViewController.State
+    private var didObserveExpectedState: (() -> Void)?
+
+    init(
+        wrappedDelegate: DocumentCaptureViewController,
+        expectedState: DocumentCaptureViewController.State,
+        didObserveExpectedState: @escaping () -> Void
+    ) {
+        self.wrappedDelegate = wrappedDelegate
+        self.expectedState = expectedState
+        self.didObserveExpectedState = didObserveExpectedState
+    }
+
+    func imageScanningSession(
+        _ scanningSession: ScanningSession,
+        cameraDidError error: Error
+    ) {
+        wrappedDelegate?.imageScanningSession(scanningSession, cameraDidError: error)
+    }
+
+    func imageScanningSession(
+        _ scanningSession: ScanningSession,
+        didRequestCameraAccess isGranted: Bool?
+    ) {
+        wrappedDelegate?.imageScanningSession(scanningSession, didRequestCameraAccess: isGranted)
+    }
+
+    func imageScanningSessionShouldScanCameraOutput(_ scanningSession: ScanningSession) -> Bool {
+        return wrappedDelegate?.imageScanningSessionShouldScanCameraOutput(scanningSession) ?? true
+    }
+
+    func imageScanningSessionDidUpdate(_ scanningSession: ScanningSession) {
+        wrappedDelegate?.imageScanningSessionDidUpdate(scanningSession)
+        guard scanningSession.state == expectedState else {
+            return
+        }
+        didObserveExpectedState?()
+        didObserveExpectedState = nil
+    }
+
+    func imageScanningSessionDidReset(_ scanningSession: ScanningSession) {
+        wrappedDelegate?.imageScanningSessionDidReset(scanningSession)
+    }
+
+    func imageScanningSession(
+        _ scanningSession: ScanningSession,
+        didTimeoutForClassification classification: ExpectedClassificationType
+    ) {
+        wrappedDelegate?.imageScanningSession(scanningSession, didTimeoutForClassification: classification)
+    }
+
+    func imageScanningSession(
+        _ scanningSession: ScanningSession,
+        willStartScanningForClassification classification: ExpectedClassificationType
+    ) {
+        wrappedDelegate?.imageScanningSession(scanningSession, willStartScanningForClassification: classification)
+    }
+
+    func imageScanningSessionWillStopScanning(_ scanningSession: ScanningSession) {
+        wrappedDelegate?.imageScanningSessionWillStopScanning(scanningSession)
+    }
+
+    func imageScanningSessionDidStopScanning(_ scanningSession: ScanningSession) {
+        wrappedDelegate?.imageScanningSessionDidStopScanning(scanningSession)
+    }
+
+    func imageScanningSessionDidScanImage(
+        _ scanningSession: ScanningSession,
+        image: CGImage,
+        scannerOutput: ScannerOutput,
+        exifMetadata: CameraExifMetadata?,
+        expectedClassification: ExpectedClassificationType
+    ) {
+        wrappedDelegate?.imageScanningSessionDidScanImage(
+            scanningSession,
+            image: image,
+            scannerOutput: scannerOutput,
+            exifMetadata: exifMetadata,
+            expectedClassification: expectedClassification
+        )
     }
 }
