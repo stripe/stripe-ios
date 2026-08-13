@@ -671,7 +671,6 @@ extension AddressViewController: AddressViewController.IntegrationDelegate {
     }
 
     func didCancel() {
-        logAddressCompleted()
     }
 
     func save(addressDetails: AddressDetails, setLoading: (Bool) -> Void) async throws {
