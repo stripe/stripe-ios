@@ -60,6 +60,21 @@ final class PhoneOtpViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.phoneOtpView.viewModel, .InputtingOTP)
     }
 
+    func testRemainsRequestingWhenGenerateFails() async {
+        let finished = expectation(description: "Generate OTP finished")
+        let pausedGenerateOtp = pauseGeneratePhoneOtp {
+            finished.fulfill()
+        }
+
+        vc.viewDidAppear(false)
+        await fulfillment(of: [pausedGenerateOtp.started], timeout: 1)
+
+        pausedGenerateOtp.finish(nil)
+        await fulfillment(of: [finished], timeout: 1)
+
+        XCTAssertEqual(vc.phoneOtpView.viewModel, .RequestingOTP)
+    }
+
     func testInvalidFullOtp() async throws {
         try await mockViewDidAppear()
 
@@ -149,20 +164,23 @@ final class PhoneOtpViewControllerTest: XCTestCase {
     }
 
     private func pauseGeneratePhoneOtp(
+        onFinish: (() -> Void)? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> (
         started: XCTestExpectation,
-        finish: (StripeAPI.VerificationPageData) -> Void
+        finish: (StripeAPI.VerificationPageData?) -> Void
     ) {
         let started = expectation(description: "Generate OTP started")
-        var continuation: CheckedContinuation<StripeAPI.VerificationPageData, Never>?
+        var continuation: CheckedContinuation<StripeAPI.VerificationPageData?, Never>?
 
         mockSheetController.generatePhoneOtpHandler = {
-            await withCheckedContinuation { checkedContinuation in
+            let result = await withCheckedContinuation { checkedContinuation in
                 continuation = checkedContinuation
                 started.fulfill()
             }
+            onFinish?()
+            return result
         }
 
         return (started, { response in
