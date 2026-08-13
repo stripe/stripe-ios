@@ -11,10 +11,11 @@ import XCTest
 class STPPaymentMethodVippsTests: STPNetworkStubbingTestCase {
 
     static let vippsPaymentIntentClientSecret =
-        "pi_3VippsKG6vc7r7YC1Xs7oiWw_secret_5cqzEtQ059azmV1GmkLRA7Lvt"
+        "pi_3U434fKG6vc7r7YC1UIzHbsV_secret_HATDeUfLrlwd7tflltM4lm9SS"
 
     func _retrieveVippsJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
         let client = STPAPIClient(publishableKey: STPTestingFRPublishableKey)
+        client.betas = ["vipps_preview=v1"]
         client.retrievePaymentIntent(
             withClientSecret: Self.vippsPaymentIntentClientSecret,
             expand: ["payment_method"]

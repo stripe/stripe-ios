@@ -1025,6 +1025,9 @@ extension PaymentSheetLPMConfirmFlowTests {
 
         // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
+        if paymentMethodType == .vipps {
+            apiClient.betas = ["vipps_preview=v1"]
+        }
 
         var configuration: PaymentSheet.Configuration = {
             // Use argument if non-nil, otherwise create a default
