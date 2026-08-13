@@ -76,7 +76,7 @@ class PaymentSheet_AddressTests: PaymentSheetUITestCase {
         if verifyAnalytics {
             let autocompleteSuggestionsAnalytic = analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_suggestions" }
             XCTAssertNotNil(autocompleteSuggestionsAnalytic)
-            XCTAssertEqual(autocompleteSuggestionsAnalytic?["character_count"] as? Int, 16)
+            XCTAssertNotNil(autocompleteSuggestionsAnalytic?["result_count"])
             XCTAssertNotNil(autocompleteSuggestionsAnalytic?["source"])
         }
         searchedCell.tap()
@@ -98,10 +98,10 @@ class PaymentSheet_AddressTests: PaymentSheetUITestCase {
         XCTAssertEqual(app.textFields["State"].value as! String, state)
         XCTAssertEqual(app.textFields["ZIP"].value as! String, zip)
         if verifyAnalytics {
-            let autocompleteCompleteAnalytic = analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_complete" }
-            XCTAssertNotNil(autocompleteCompleteAnalytic)
-            XCTAssertEqual(autocompleteCompleteAnalytic?["character_count"] as? Int, 16)
-            XCTAssertNotNil(autocompleteCompleteAnalytic?["source"])
+            let autocompleteSelectedAnalytic = analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_selected" }
+            XCTAssertNotNil(autocompleteSelectedAnalytic)
+            XCTAssertEqual(autocompleteSelectedAnalytic?["query_length"] as? Int, 16)
+            XCTAssertNotNil(autocompleteSelectedAnalytic?["source"])
         }
     }
 
@@ -217,9 +217,12 @@ US
         // Should disable the save address button
         saveAddress(shouldBeEnabled: false)
 
-        // If we dismiss the sheet while invalid, merchant app should get back nil
+        // If we discard invalid changes, the merchant app should get back the last saved address
         app.buttons["Close"].tap()
-        XCTAssertEqual(shippingButton.label, "Address")
+        let discardChangesAlert = app.alerts["Discard changes?"]
+        XCTAssertTrue(discardChangesAlert.waitForExistence(timeout: 4.0))
+        discardChangesAlert.buttons["Discard Changes"].tap()
+        XCTAssertEqual(shippingButton.label, expectedAddress)
 
         // Checkbox should NOT be shown when no defaults provided
         XCTAssertFalse(app.buttons["Use billing address for shipping"].exists)

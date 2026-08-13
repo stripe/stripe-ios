@@ -369,7 +369,7 @@ final class PaymentElementTest: XCTestCase {
         let requestRecorder = CheckoutSessionRequestRecorder()
         let configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: session)
         CheckoutTestHelpers.stubCheckoutSessionRequests(
-            sessionId: session.id,
+            sessionId: session.sessionId,
             requestRecorder: requestRecorder,
             sessionJSON: { sessionJSON }
         )

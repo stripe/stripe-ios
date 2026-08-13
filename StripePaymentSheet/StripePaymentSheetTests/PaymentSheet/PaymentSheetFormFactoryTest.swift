@@ -1364,6 +1364,21 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
     }
 
+    func testMBWayRequiresPhone() {
+        // Given automatic billing detail collection
+        // When building an MB WAY form
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.mbWay]),
+            elementsSession: ._testValue(paymentMethodTypes: [STPPaymentMethodType.mbWay.identifier]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.mbWay)
+        ).make()
+
+        // Then phone is required
+        XCTAssertNotNil(form.getPhoneNumberElement())
+        XCTAssertNil(form.updateParams(params: .init(type: .stripe(.mbWay))))
+    }
+
     func testBankDebitForms() {
         // Given billing detail collection disabled
         var configuration = PaymentSheet.Configuration()
@@ -1429,6 +1444,21 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             auBecsForm.getAllUnwrappedSubElements().compactMap { $0 as? TextFieldElement }.count,
             2
         )
+    }
+
+    func testBizumRequiresPhone() {
+        // Given automatic billing detail collection
+        // When building a Bizum form
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.bizum]),
+            elementsSession: ._testValue(paymentMethodTypes: [STPPaymentMethodType.bizum.identifier]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.bizum)
+        ).make()
+
+        // Then phone is required
+        XCTAssertNotNil(form.getPhoneNumberElement())
+        XCTAssertNil(form.updateParams(params: .init(type: .stripe(.bizum))))
     }
 
     func testLinkPMModeCardFormContainsMandateText() {

@@ -1,0 +1,93 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3U0oLUKG6vc7r7YC0xS0FNl1\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=lc1C3Ti-M9lss-mpNOBiRrSWLucql34FjUld55gdtN9DCX1oLufs81O90rU25c9oCv193fNBCRKbj4C7; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=lc1C3Ti-M9lss-mpNOBiRrSWLucql34FjUld55gdtN9DCX1oLufs81O90rU25c9oCv193fNBCRKbj4C7&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-06-24.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=lc1C3Ti-M9lss-mpNOBiRrSWLucql34FjUld55gdtN9DCX1oLufs81O90rU25c9oCv193fNBCRKbj4C7&t=1"}],"include_subdomains":true}
+request-id: req_9utN9RNd4twfHO
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1475
+Vary: Origin
+Date: Tue, 04 Aug 2026 19:49:53 GMT
+original-request: req_9utN9RNd4twfHO
+stripe-version: 2020-08-27
+idempotency-key: 03eca337-48e9-4e33-ab83-abda3bd90d2c
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=pi_3U0oLUKG6vc7r7YC0xS0FNl1_secret_dGkw4M3RNOXH0ZQN9pNUryDs4&confirmation_token=ctoken_1U0oLTKG6vc7r7YC4N3oY1Kh&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "eur",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "await_authorization"
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "bizum" : {
+      "buyer_id" : null
+    },
+    "id" : "pm_1U0oLTKG6vc7r7YCsIoJigXW",
+    "billing_details" : {
+      "email" : null,
+      "phone" : "+34600000001",
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1785872991,
+    "allow_redisplay" : "unspecified",
+    "type" : "bizum",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3U0oLUKG6vc7r7YC0xS0FNl1_secret_dGkw4M3RNOXH0ZQN9pNUryDs4",
+  "id" : "pi_3U0oLUKG6vc7r7YC0xS0FNl1",
+  "allowed_payment_method_types" : null,
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "bizum"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1785872992,
+  "description" : null
+}

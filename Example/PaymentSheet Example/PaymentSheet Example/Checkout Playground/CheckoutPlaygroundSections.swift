@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct CheckoutPlaygroundConfigurationSection: View {
+    @Binding var uiFramework: CheckoutPlayground.UIFramework
     @Binding var integrationType: CheckoutPlayground.IntegrationType
     @Binding var currency: CheckoutPlayground.Currency
     @Binding var customerType: CheckoutPlayground.CustomerType
@@ -18,6 +19,12 @@ struct CheckoutPlaygroundConfigurationSection: View {
         VStack(alignment: .leading, spacing: 12) {
             CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
             VStack(spacing: 1) {
+                CheckoutPlayground.PickerRow(
+                    title: "UI Framework",
+                    icon: "rectangle.3.group.fill",
+                    selection: $uiFramework,
+                    displayText: { $0.displayName }
+                )
                 CheckoutPlayground.PickerRow(
                     title: "PaymentElement",
                     icon: "square.stack.3d.up.fill",
@@ -161,7 +168,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var automaticTax: Bool
     @Binding var checkoutSessionPaymentMethodSave: Bool
     @Binding var checkoutSessionPaymentMethodRemove: Bool
-    @Binding var adaptivePricingCountry: CheckoutPlayground.AdaptivePricingCountry
     @Binding var automaticPaymentMethods: Bool
 
     private var shouldShowAutomaticTax: Bool {
@@ -204,13 +210,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     title: "Payment Method Remove",
                     isOn: $checkoutSessionPaymentMethodRemove,
                     tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
-                )
-                CheckoutPlayground.PickerRow(
-                    title: "Country",
-                    icon: "globe",
-                    selection: $adaptivePricingCountry,
-                    tooltip: "Simulates the customer's country for adaptive pricing by sending a location-formatted customer_email. 'None' skips the email override.",
-                    displayText: { $0.displayName }
                 )
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))

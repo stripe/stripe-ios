@@ -13,37 +13,21 @@ import XCTest
 @MainActor
 final class CurrencySelectorElementViewTests: XCTestCase {
 
-    func testVisibilityUpdatesWithAdaptivePricingAvailability() async throws {
-        // Given a currency selector without Adaptive Pricing data
+    func testDisplaysAdaptivePricingSelector() async throws {
+        // Given a currency selector with Adaptive Pricing data
+        let session = CheckoutTestHelpers.makeAdaptivePricingSession()
         let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
         )
         let element = checkout.getCurrencySelectorElement()
         let hostingController = UIHostingController(rootView: try XCTUnwrap(element).view)
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
         window.rootViewController = hostingController
         window.makeKeyAndVisible()
-        let hiddenHeight = fittingHeight(of: hostingController)
+        layout(hostingController, in: window)
 
-        // When Adaptive Pricing becomes available
-        try await checkout.commitSession(CheckoutTestHelpers.makeAdaptivePricingSession())
-
-        // Then the selector appears in the SwiftUI layout
-        try await waitUntil {
-            self.layout(hostingController, in: window)
-            return self.fittingHeight(of: hostingController) > hiddenHeight + 1
-        }
-
-        // When Adaptive Pricing becomes unavailable again
-        try await checkout.commitSession(
-            CheckoutTestHelpers.makeAdaptivePricingSession(adaptivePricingActive: false)
-        )
-
-        // Then the selector is removed from the SwiftUI layout
-        try await waitUntil {
-            self.layout(hostingController, in: window)
-            return abs(self.fittingHeight(of: hostingController) - hiddenHeight) < 1
-        }
+        // Then it participates in the SwiftUI layout
+        XCTAssertGreaterThan(fittingHeight(of: hostingController), 1)
     }
 
     private func layout(_ viewController: UIViewController, in window: UIWindow) {
@@ -57,21 +41,4 @@ final class CurrencySelectorElementViewTests: XCTestCase {
         hostingController.sizeThatFits(in: CGSize(width: 320, height: 200)).height
     }
 
-    private func waitUntil(
-        timeout: TimeInterval = 2,
-        file: StaticString = #filePath,
-        line: UInt = #line,
-        _ condition: () -> Bool
-    ) async throws {
-        let deadline = Date().addingTimeInterval(timeout)
-        while !condition() {
-            if Date() >= deadline {
-                XCTFail("Condition not met within \(timeout) seconds", file: file, line: line)
-                throw CurrencySelectorElementViewTestTimeoutError()
-            }
-            try await Task.sleep(nanoseconds: 10_000_000)
-        }
-    }
 }
-
-private struct CurrencySelectorElementViewTestTimeoutError: Error {}

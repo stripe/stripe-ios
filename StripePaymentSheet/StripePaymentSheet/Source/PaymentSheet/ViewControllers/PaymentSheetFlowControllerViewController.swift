@@ -350,7 +350,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper
-        ) { [weak self] confirmOption, _ in
+        ) { [weak self] confirmOption, _, _ in
             guard let self else { return }
             self.linkConfirmOption = confirmOption
             self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)

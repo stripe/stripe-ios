@@ -278,7 +278,7 @@ class PaymentSheetFormFactory {
                 return makeWero()
             case .SEPADebit:
                 return makeSepaDebit()
-            case .grabPay, .alipay, .paynow, .payPay, .mobilePay, .zip, .crypto,
+            case .grabPay, .alipay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank:
                 return makeContactInformationAndBillingAddressForm()
             case .promptPay, .multibanco:
@@ -286,6 +286,8 @@ class PaymentSheetFormFactory {
                     emailRequired: true,
                     emailAPIPath: "billing_details[email]"
                 )
+            case .mbWay, .bizum:
+                return makeContactInformationAndBillingAddressForm(phoneRequired: true)
             case .cashApp, .payPal, .revolutPay, .amazonPay, .satispay, .twint:
                 return makeContactInformationAndBillingAddressForm(
                     additionalElements: makeSetupMandateElements(for: paymentMethod)
@@ -798,12 +800,13 @@ extension PaymentSheetFormFactory {
     func makeContactInformationAndBillingAddressForm(
         emailRequired: Bool = false,
         emailAPIPath: String? = nil,
+        phoneRequired: Bool = false,
         additionalElements: [Element] = []
     ) -> PaymentMethodElement {
         let contactInfoSection = makeContactInformationSection(
             nameRequiredByPaymentMethod: false,
             emailRequiredByPaymentMethod: emailRequired,
-            phoneRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: phoneRequired,
             emailAPIPath: emailAPIPath
         )
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)

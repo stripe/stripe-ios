@@ -46,8 +46,8 @@ class AutoCompleteViewController: UIViewController {
     private var debounceTask: Task<Void, Never>?
     private var lastFetchedQuery: String = ""
     var currentSource: String?
-    private var autocompleteStartTime: Date?
-    private var mapKitQueryStartTime: Date?
+    private var autocompleteStartTime: Date = Date()
+    private var mapKitQueryStartTime: Date = Date()
 
     weak var delegate: AutoCompleteViewControllerDelegate?
 
@@ -146,13 +146,13 @@ class AutoCompleteViewController: UIViewController {
     }()
 
     /// The country code selected in the address form's country dropdown, used to narrow autocomplete results.
-    let selectedCountry: String?
+    let selectedCountry: String
 
     // MARK: - Initializers
     required init(
         configuration: AddressViewController.Configuration,
         initialLine1Text: String?,
-        selectedCountry: String?,
+        selectedCountry: String,
         addressSpecProvider: AddressSpecProvider = .shared,
         verticalOffset: CGFloat = 0,
         keyboardAlreadyShowing: Bool = false,
@@ -268,7 +268,7 @@ class AutoCompleteViewController: UIViewController {
         super.viewWillAppear(animated)
         registerForKeyboardNotifications()
         autocompleteStartTime = Date()
-        STPAnalyticsClient.sharedClient.logAddressAutocompleteStart(apiClient: configuration.apiClient)
+        STPAnalyticsClient.sharedClient.logAddressAutocompleteStart(addressCountryCode: selectedCountry, sessionToken: sessionToken, apiClient: configuration.apiClient)
 
         if let transitionCoordinator, !keyboardAlreadyShowing {
             transitionCoordinator.animate(alongsideTransition: nil) { _ in
@@ -292,19 +292,19 @@ class AutoCompleteViewController: UIViewController {
         results = newResults
         if let source {
             STPAnalyticsClient.sharedClient.logAddressAutocompleteSuggestions(
-                characterCount: autoCompleteLine.text.count,
+                addressCountryCode: selectedCountry,
+                resultCount: newResults.count,
                 sessionToken: sessionToken,
                 source: source,
-                duration: elapsedTimeSinceAutocompleteStart,
-                latency: requestLatency,
+                sessionElapsed: elapsedTimeSinceAutocompleteStart,
+                msToFetch: requestLatency,
                 apiClient: configuration.apiClient
             )
         }
     }
 
     private var elapsedTimeSinceAutocompleteStart: TimeInterval {
-        guard let startTime = autocompleteStartTime else { return 0 }
-        return Date().timeIntervalSince(startTime)
+        return Date().timeIntervalSince(autocompleteStartTime)
     }
 
     @objc private func manualEntryButtonTapped() {
@@ -346,7 +346,7 @@ extension AutoCompleteViewController: ElementDelegate {
         fetchTask?.cancel()
         fetchTask = Task { @MainActor in
             do {
-                let countryCodes = selectedCountry.flatMap { $0.isEmpty ? nil : [$0] }
+                let countryCodes = selectedCountry.isEmpty ? nil : [selectedCountry]
                 let requestStart = Date()
                 let response = try await configuration.apiClient.getAddressSuggestions(
                     searchText: query,
@@ -359,9 +359,10 @@ extension AutoCompleteViewController: ElementDelegate {
             } catch {
                 guard !Task.isCancelled else { return }
                 STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
+                    addressCountryCode: selectedCountry,
                     error: error,
                     sessionToken: self.sessionToken,
-                    duration: self.elapsedTimeSinceAutocompleteStart,
+                    sessionElapsed: self.elapsedTimeSinceAutocompleteStart,
                     apiClient: self.configuration.apiClient
                 )
                 // Fall back to MapKit on API failure
@@ -375,10 +376,7 @@ extension AutoCompleteViewController: ElementDelegate {
 // MARK: MKLocalSearchCompleterDelegate
 extension AutoCompleteViewController: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        var latency: TimeInterval?
-        if let mapKitQueryStartTime {
-            latency = Date().timeIntervalSince(mapKitQueryStartTime)
-        }
+        let latency = Date().timeIntervalSince(mapKitQueryStartTime)
         setResults(completer.results, source: "apple", requestLatency: latency)
     }
 
@@ -444,19 +442,20 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
 
         let result = results[indexPath.row]
         let typedText = autoCompleteLine.text
-        let characterCount = typedText.count
+        let queryLength = typedText.count
         let source = currentSource ?? ""
-        let duration = elapsedTimeSinceAutocompleteStart
 
         if let suggestion = result as? AddressSuggestion {
             // If the suggestion returned with a full address, complete with that address
             if let address = suggestion.address {
-                STPAnalyticsClient.sharedClient.logAddressAutocompleteComplete(
-                    characterCount: characterCount,
+                STPAnalyticsClient.sharedClient.logAddressAutocompleteSelected(
+                    addressCountryCode: selectedCountry,
+                    queryLength: queryLength,
                     sessionToken: sessionToken,
                     source: source,
-                    duration: duration,
-                    latency: nil,
+                    sessionElapsed: elapsedTimeSinceAutocompleteStart,
+                    placeId: suggestion.placeId,
+                    msToFetch: nil,
                     apiClient: configuration.apiClient
                 )
                 delegate?.didSelectAddress(address)
@@ -476,20 +475,23 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                             sessionToken: sessionToken
                         )
                         let latency = Date().timeIntervalSince(requestStart)
-                        STPAnalyticsClient.sharedClient.logAddressAutocompleteComplete(
-                            characterCount: characterCount,
+                        STPAnalyticsClient.sharedClient.logAddressAutocompleteSelected(
+                            addressCountryCode: selectedCountry,
+                            queryLength: queryLength,
                             sessionToken: sessionToken,
                             source: source,
-                            duration: duration,
-                            latency: latency,
+                            sessionElapsed: elapsedTimeSinceAutocompleteStart,
+                            placeId: placeId,
+                            msToFetch: latency,
                             apiClient: configuration.apiClient
                         )
                         delegate?.didSelectAddress(details.address)
                     } catch {
                       STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
+                            addressCountryCode: selectedCountry,
                             error: error,
                             sessionToken: sessionToken,
-                            duration: elapsedTimeSinceAutocompleteStart,
+                            sessionElapsed: elapsedTimeSinceAutocompleteStart,
                             apiClient: configuration.apiClient
                         )
                         delegate?.didSelectAddress(nil)
@@ -500,12 +502,14 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
             result.asAddress { [weak self] address in
                 DispatchQueue.main.async {
                     guard let self else { return }
-                    STPAnalyticsClient.sharedClient.logAddressAutocompleteComplete(
-                        characterCount: characterCount,
+                    STPAnalyticsClient.sharedClient.logAddressAutocompleteSelected(
+                        addressCountryCode: self.selectedCountry,
+                        queryLength: queryLength,
                         sessionToken: self.sessionToken,
                         source: source,
-                        duration: duration,
-                        latency: nil,
+                        sessionElapsed: self.elapsedTimeSinceAutocompleteStart,
+                        placeId: nil,
+                        msToFetch: nil,
                         apiClient: self.configuration.apiClient
                     )
                     self.delegate?.didSelectAddress(address)

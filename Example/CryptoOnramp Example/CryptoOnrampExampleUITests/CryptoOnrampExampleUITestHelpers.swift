@@ -23,7 +23,7 @@ extension CryptoOnrampExampleUITests {
     ) {
         let email = "crypto-onramp-ui-tests-\(UUID().uuidString.lowercased())@stripe.com"
         waitForLoadingToFinish(file: file, line: line)
-        enterText(email, in: app.textFields["Enter email address"].firstMatch, file: file, line: line)
+        enterText(email, inTextField: "Enter email address", file: file, line: line)
         enterText("testing1234", in: app.secureTextFields["Enter password"].firstMatch, file: file, line: line)
         app.buttons["Sign Up"].firstMatch.tap()
 
@@ -36,23 +36,12 @@ extension CryptoOnrampExampleUITests {
         )
         waitForLoadingToFinish(file: file, line: line)
         dismissSavePasswordPromptIfPresent()
-        enterText(fullName, in: app.textFields["Enter your full name"].firstMatch, file: file, line: line)
-        enterText(phoneNumber, in: app.textFields["Enter phone number (e.g., +12125551234)"].firstMatch, file: file, line: line)
+        enterText(fullName, inTextField: "Enter your full name", file: file, line: line)
+        enterText(phoneNumber, inTextField: "Enter phone number (e.g., +12125551234)", file: file, line: line)
 
         if countryCode != "US" {
-            let countryField = app.textFields["Country code"].firstMatch
-            XCTAssertTrue(
-                countryField.waitForExistence(timeout: .animationTimeout),
-                "Registration country field should exist",
-                file: file,
-                line: line
-            )
-            countryField.tap()
-
-            // Remove the default "US" value before entering the test country's code.
-            countryField.typeText(
-                String(repeating: XCUIKeyboardKey.delete.rawValue, count: 2) + countryCode
-            )
+            // Replace the default "US" value with the test country's code.
+            enterText(countryCode, inTextField: "Country code", replacingExistingText: true, file: file, line: line)
         }
         dismissKeyboard()
 
@@ -125,27 +114,18 @@ extension CryptoOnrampExampleUITests {
         )
         waitForLoadingToFinish(file: file, line: line)
 
-        let firstNameField = app.textFields["Enter your first name"].firstMatch
-        XCTAssertTrue(
-            firstNameField.waitForExistence(timeout: .animationTimeout),
-            "First name field should exist",
-            file: file,
-            line: line
-        )
-        firstNameField.tap()
-        app.typeText("Crypto" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("Tester" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("000000000")
+        enterText("Crypto", inTextField: "Enter your first name", advancingToNextField: true, file: file, line: line)
+        enterText("Tester", inTextField: "Enter your last name", advancingToNextField: true, file: file, line: line)
+        enterText("000000000", inTextField: "Enter your SSN", file: file, line: line)
 
         setDateOfBirth(file: file, line: line)
 
-        let addressLine1Field = app.textFields["Enter your street address"].firstMatch
         app.typeText(XCUIKeyboardKey.return.rawValue)
-        addressLine1Field.typeText(addressLine1 + XCUIKeyboardKey.return.rawValue)
-        app.typeText(addressLine2 + XCUIKeyboardKey.return.rawValue)
-        app.typeText(city + XCUIKeyboardKey.return.rawValue)
-        app.typeText(state + XCUIKeyboardKey.return.rawValue)
-        app.typeText(postalCode + XCUIKeyboardKey.return.rawValue)
+        enterText(addressLine1, inTextField: "Enter your street address", advancingToNextField: true, file: file, line: line)
+        enterText(addressLine2, inTextField: "Apartment, suite, etc.", advancingToNextField: true, file: file, line: line)
+        enterText(city, inTextField: "Enter your city", advancingToNextField: true, file: file, line: line)
+        enterText(state, inTextField: "Enter your state or province", advancingToNextField: true, file: file, line: line)
+        enterText(postalCode, inTextField: "Enter your postal code", advancingToNextField: true, file: file, line: line)
         app.typeText(XCUIKeyboardKey.return.rawValue)
 
         let submitButton = app.buttons["Submit"].firstMatch
@@ -176,7 +156,7 @@ extension CryptoOnrampExampleUITests {
         )
         addWalletButton.tap()
 
-        enterText(address, in: app.textFields["Enter wallet address"].firstMatch, file: file, line: line)
+        enterText(address, inTextField: "Enter wallet address", file: file, line: line)
         let submitButton = app.buttons["Submit"].firstMatch
         XCTAssertTrue(submitButton.isEnabled, "Wallet Submit button should be enabled", file: file, line: line)
         submitButton.tap()
@@ -191,13 +171,87 @@ extension CryptoOnrampExampleUITests {
 
     func enterText(
         _ text: String,
+        inTextField identifier: String,
+        replacingExistingText: Bool = false,
+        advancingToNextField: Bool = false,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        enterText(text, in: app.textFields[identifier].firstMatch, replacingExistingText: replacingExistingText, advancingToNextField: advancingToNextField, file: file, line: line)
+    }
+
+    func enterText(
+        _ text: String,
         in element: XCUIElement,
+        replacingExistingText: Bool = false,
+        advancingToNextField: Bool = false,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
         XCTAssertTrue(element.waitForExistence(timeout: .animationTimeout), "Text field should exist", file: file, line: line)
         element.tap()
+
+        // Password and OTP elements also use this helper, but their accessibility values aren't suitable for plaintext comparison.
+        let shouldVerifyValue = element.elementType == .textField
+        let maximumAttempts = shouldVerifyValue ? 2 : 1
+        var valueMatches = !shouldVerifyValue
+
+        for attempt in 0..<maximumAttempts {
+            if replacingExistingText || attempt > 0 {
+                replaceExistingText(with: text, in: element)
+            } else {
+                element.typeText(text)
+            }
+
+            valueMatches = !shouldVerifyValue || textFieldValueMatches(element, expectedText: text)
+            if valueMatches {
+                break
+            }
+        }
+
+        if shouldVerifyValue {
+            let actualValue = element.value as? String ?? "nil"
+            XCTAssertTrue(valueMatches, "Text field value should match \(text); found \(actualValue)", file: file, line: line)
+
+            guard valueMatches else {
+                return
+            }
+        }
+
+        if advancingToNextField {
+            element.typeText(XCUIKeyboardKey.return.rawValue)
+        }
+    }
+
+    private func replaceExistingText(with text: String, in element: XCUIElement) {
+        let existingText = element.value as? String ?? ""
+
+        // A double-tap selects an entire alphanumeric token.
+        // Values with separators (e.g. @, ., -, and other punctuation) expose Select All after a long press.
+        if existingText.rangeOfCharacter(from: CharacterSet.alphanumerics.inverted) == nil {
+            element.doubleTap()
+        } else {
+            element.press(forDuration: 1)
+        }
+
+        let selectAll = app.descendants(matching: .any).matching(identifier: "Select All").firstMatch
+        if selectAll.waitForExistence(timeout: 1) {
+            selectAll.tap()
+        }
+
         element.typeText(text)
+    }
+
+    private func textFieldValueMatches(_ element: XCUIElement, expectedText: String) -> Bool {
+        guard let actualText = element.value as? String else {
+            return false
+        }
+
+        return normalizedText(actualText) == normalizedText(expectedText)
+    }
+
+    private func normalizedText(_ text: String) -> String {
+        text.components(separatedBy: CharacterSet.alphanumerics.inverted).joined()
     }
 
     func waitForLoadingToFinish(

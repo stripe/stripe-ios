@@ -12,92 +12,52 @@ import XCTest
 @MainActor
 final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
-    // MARK: - Auto-hide tests
+    // MARK: - Availability tests
 
-    func testHiddenWhenAdaptivePricingIsUnavailableAtInitialization() async throws {
+    func testUnavailableWhenAdaptivePricingDataIsUnavailableAtInitialization() async throws {
         let checkout = try await Checkout(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
         )
-        let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
 
-        XCTAssertTrue(view.isHidden)
+        XCTAssertNil(checkout.getCurrencySelectorElement())
     }
 
-    func testHiddenWhenAdaptivePricingNotActive() async throws {
-        let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
-        )
+    func testUnavailableWhenAdaptivePricingNotActive() async throws {
         let session = makeSession(adaptivePricingActive: false)
-        try await checkout.commitSession(session)
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
+        )
 
-        let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
-
-        XCTAssertTrue(view.isHidden)
+        XCTAssertNil(checkout.getCurrencySelectorElement())
     }
 
-    func testHiddenWhenLocalizedPricesEmpty() async throws {
-        let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
-        )
+    func testUnavailableWhenLocalizedPricesEmpty() async throws {
         let session = makeSession(includeLocalizedPrices: false)
-        try await checkout.commitSession(session)
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
+        )
 
-        let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
-
-        XCTAssertTrue(view.isHidden)
+        XCTAssertNil(checkout.getCurrencySelectorElement())
     }
 
-    func testHiddenWhenExchangeRateMetaNil() async throws {
-        let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
-        )
+    func testUnavailableWhenExchangeRateMetaNil() async throws {
         let session = makeSession(includeExchangeRateFields: false)
-        try await checkout.commitSession(session)
-
-        let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
-
-        XCTAssertTrue(view.isHidden)
-    }
-
-    func testVisibleWhenAdaptivePricingActive() async throws {
         let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
         )
-        let session = makeSession()
-        try await checkout.commitSession(session)
 
-        let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
-
-        XCTAssertFalse(view.isHidden)
+        XCTAssertNil(checkout.getCurrencySelectorElement())
     }
 
-    func testTransitionsFromHiddenToVisibleOnSessionUpdate() async throws {
-        let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
-        )
-        let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
-
-        XCTAssertTrue(view.isHidden)
-
-        let session = makeSession()
-        try await checkout.commitSession(session)
-
-        XCTAssertFalse(view.isHidden)
-    }
-
-    func testTransitionsFromVisibleToHiddenOnSessionUpdate() async throws {
+    func testAvailableWhenAdaptivePricingActive() async throws {
         let session = makeSession()
         let checkout = try await Checkout(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
         )
+
         let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
 
         XCTAssertFalse(view.isHidden)
-
-        let updatedSession = makeSession(adaptivePricingActive: false)
-        try await checkout.commitSession(updatedSession)
-
-        XCTAssertTrue(view.isHidden)
     }
 
     // MARK: - Label update tests
@@ -105,11 +65,13 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     func testLabelsUpdateWhenSessionAmountChanges() async throws {
         var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.currencySelectorElement.appearance.labelContent = .amount
-        let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(configuration: configuration)
-        )
         let session = makeSession(integrationAmount: 1200, localAmount: 1000)
-        try await checkout.commitSession(session)
+        let checkout = try await Checkout(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(
+                apiResponse: session,
+                configuration: configuration
+            )
+        )
 
         let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
 
