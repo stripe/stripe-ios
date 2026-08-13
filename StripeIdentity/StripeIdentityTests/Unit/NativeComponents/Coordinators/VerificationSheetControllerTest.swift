@@ -1277,12 +1277,14 @@ private extension VerificationSheetControllerTest {
         displayNameLength: Int
     ) throws -> String {
         let categories: [[String: Any]] = (0..<categoryCount).map { index in
-            [
+            let indexString = String(index)
+            let category: [String: Any] = [
                 "score": 0.123456789 + (Double(index) / 1000),
                 "index": index,
-                "category_name": String(repeating: "c", count: categoryNameLength - "\(index)".count) + "\(index)",
-                "display_name": String(repeating: "d", count: displayNameLength - "\(index)".count) + "\(index)",
+                "category_name": String(repeating: "c", count: categoryNameLength - indexString.count) + indexString,
+                "display_name": String(repeating: "d", count: displayNameLength - indexString.count) + indexString,
             ]
+            return category
         }
         let payload: [String: Any] = [
             "categories": categories,

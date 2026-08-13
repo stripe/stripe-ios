@@ -62,6 +62,14 @@ framework module ${GRAPH_ARTIFACT_NAME} {
 }
 MODULEMAP
 
+  write_framework_info_plist "${framework_dir}" "${supported_platform}" "${GRAPH_ARTIFACT_NAME}"
+}
+
+write_framework_info_plist() {
+  local framework_dir="$1"
+  local supported_platform="$2"
+  local framework_name="$3"
+
   cat >"${framework_dir}/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -70,13 +78,13 @@ MODULEMAP
   <key>CFBundleDevelopmentRegion</key>
   <string>en</string>
   <key>CFBundleExecutable</key>
-  <string>${GRAPH_ARTIFACT_NAME}</string>
+  <string>${framework_name}</string>
   <key>CFBundleIdentifier</key>
-  <string>com.stripe.${GRAPH_ARTIFACT_NAME}</string>
+  <string>com.stripe.${framework_name}</string>
   <key>CFBundleInfoDictionaryVersion</key>
   <string>6.0</string>
   <key>CFBundleName</key>
-  <string>${GRAPH_ARTIFACT_NAME}</string>
+  <string>${framework_name}</string>
   <key>CFBundlePackageType</key>
   <string>FMWK</string>
   <key>CFBundleShortVersionString</key>

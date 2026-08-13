@@ -30,6 +30,18 @@ stage_mediapipe_pod_artifacts() {
 
   strip_intel_simulator_slice "${ARTIFACTS_DIR}/MediaPipeTasksVision.xcframework" "MediaPipeTasksVision"
   strip_intel_simulator_slice "${ARTIFACTS_DIR}/MediaPipeTasksCommon.xcframework" "MediaPipeTasksCommon"
+
+  local framework_name
+  for framework_name in MediaPipeTasksVision MediaPipeTasksCommon; do
+    write_framework_info_plist \
+      "${ARTIFACTS_DIR}/${framework_name}.xcframework/ios-arm64/${framework_name}.framework" \
+      "iPhoneOS" \
+      "${framework_name}"
+    write_framework_info_plist \
+      "${ARTIFACTS_DIR}/${framework_name}.xcframework/ios-arm64-simulator/${framework_name}.framework" \
+      "iPhoneSimulator" \
+      "${framework_name}"
+  done
 }
 
 stage_mediapipe_license() {
