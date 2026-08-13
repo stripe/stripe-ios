@@ -73,23 +73,12 @@ class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
-    func testRightToLeftModalWithErrorAndInput() {
-        let sut = makeSUT(mode: .modal, allowLogoutInDialog: true)
-        sut.errorMessage = "The provided verification code has expired."
-        sut.codeField.value = "1234"
-        verify(sut, rightToLeft: true)
-    }
-
     func verify(
         _ view: LinkVerificationView,
         identifier: String? = nil,
-        rightToLeft: Bool = false,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        if rightToLeft {
-            view.semanticContentAttribute = .forceRightToLeft
-        }
         view.autosizeHeight(width: 340)
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }

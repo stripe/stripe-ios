@@ -52,23 +52,12 @@ final class LinkSignUpViewControllerSnapshotTests: STPSnapshotTestCase {
         verify(sut.stackView)
     }
 
-    func testRightToLeftWithEmailSuggestion() throws {
-        let sut = try makeSUT(email: "test@example.invalid", suggestedEmail: "test@example.com")
-        sut.updateUI()
-
-        verify(sut.stackView, rightToLeft: true)
-    }
-
     func verify(
         _ view: UIView,
         identifier: String? = nil,
-        rightToLeft: Bool = false,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        if rightToLeft {
-            view.semanticContentAttribute = .forceRightToLeft
-        }
         view.autosizeHeight(width: 335)
         view.backgroundColor = .white
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)

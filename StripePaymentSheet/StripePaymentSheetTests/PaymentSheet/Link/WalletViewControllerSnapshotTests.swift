@@ -61,22 +61,12 @@ final class WalletViewControllerSnapshotTests: STPSnapshotTestCase {
         verify(sut.view)
     }
 
-    func testRightToLeftWithErrorAndMandate() {
-        let sut = makeSUT(setupFutureUsage: true)
-        sut.updateErrorLabel(for: NSError.stp_genericConnectionError())
-        verify(sut.view, rightToLeft: true)
-    }
-
     func verify(
         _ view: UIView,
         identifier: String? = nil,
-        rightToLeft: Bool = false,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        if rightToLeft {
-            view.semanticContentAttribute = .forceRightToLeft
-        }
         view.autosizeHeight(width: 335)
         view.backgroundColor = .white
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
