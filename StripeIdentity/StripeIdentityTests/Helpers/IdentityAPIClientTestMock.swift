@@ -25,7 +25,7 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
     }
 
     let verificationPage = AsyncMockAPIRequests<Void, StripeAPI.VerificationPage>()
-    let verificationPageData = MockAPIRequests<
+    let verificationPageData = AsyncMockAPIRequests<
         StripeAPI.VerificationPageDataUpdate, StripeAPI.VerificationPageData
     >()
     let verifyUnverifyRequest = MockAPIRequests<
@@ -34,7 +34,7 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
     let verificationSessionSubmit = MockAPIRequests<Void, StripeAPI.VerificationPageData>()
     let verificationPageGeneratePhoneOtp = MockAPIRequests<Void, StripeAPI.VerificationPageData>()
     let verificationPageCannotVerifyPhoneOtp = MockAPIRequests<Void, StripeAPI.VerificationPageData>()
-    let imageUpload = MockAPIRequests<ImageUploadRequestParams, STPAPIClient.FileAndUploadMetrics>()
+    let imageUpload = AsyncMockAPIRequests<ImageUploadRequestParams, STPAPIClient.FileAndUploadMetrics>()
 
     var verificationSessionId: String
     var ephemeralKeySecret: String
@@ -53,8 +53,8 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
 
     func updateIdentityVerificationPageData(
         updating verificationData: StripeAPI.VerificationPageDataUpdate
-    ) -> Promise<StripeAPI.VerificationPageData> {
-        return verificationPageData.makeRequest(with: verificationData)
+    ) async throws -> StripeAPI.VerificationPageData {
+        try await verificationPageData.makeRequest(with: verificationData)
     }
 
     func submitIdentityVerificationPage() -> Promise<StripeAPI.VerificationPageData> {
@@ -66,8 +66,8 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
         compressionQuality: CGFloat,
         purpose: String,
         fileName: String
-    ) -> Future<STPAPIClient.FileAndUploadMetrics> {
-        return imageUpload.makeRequest(
+    ) async throws -> STPAPIClient.FileAndUploadMetrics {
+        try await imageUpload.makeRequest(
             with: .init(
                 image: image,
                 compressionQuality: compressionQuality,
@@ -102,21 +102,23 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
         expectations.reserveCapacity(count)
         (1...count).forEach { expectations.append(.init(description: "Uploaded image \($0)")) }
 
+        let lock = NSLock()
         var uploadCount = 0
 
         self.imageUpload.callBackOnRequest {
-            // Increment uploadCount last
-            defer {
-                uploadCount += 1
-            }
-            guard uploadCount < count else {
+            lock.lock()
+            let currentUploadCount = uploadCount
+            uploadCount += 1
+            lock.unlock()
+
+            guard currentUploadCount < count else {
                 return XCTFail(
-                    "Images were uploaded \(uploadCount+1) times. Only expected \(count) times.",
+                    "Images were uploaded \(currentUploadCount + 1) times. Only expected \(count) times.",
                     file: file,
                     line: line
                 )
             }
-            expectations[uploadCount].fulfill()
+            expectations[currentUploadCount].fulfill()
         }
 
         return expectations
@@ -148,26 +150,47 @@ class MockAPIRequests<ParamsType, ResponseType> {
 }
 
 class AsyncMockAPIRequests<ParamsType, ResponseType> {
+    private let lock = NSLock()
     private var requests: [CheckedContinuation<ResponseType, Error>] = []
-    private(set) var requestHistory: [ParamsType] = []
+    private var _requestHistory: [ParamsType] = []
     private var requestCallbacks: [(() -> Void)] = []
+
+    var requestHistory: [ParamsType] {
+        lock.lock()
+        defer {
+            lock.unlock()
+        }
+        return _requestHistory
+    }
 
     fileprivate func makeRequest(with params: ParamsType) async throws -> ResponseType {
         return try await withCheckedThrowingContinuation { continuation in
-            requestHistory.append(params)
+            let callbacks: [() -> Void]
+            lock.lock()
+            _requestHistory.append(params)
             requests.append(continuation)
-            requestCallbacks.forEach { $0() }
+            callbacks = requestCallbacks
+            lock.unlock()
+
+            callbacks.forEach { $0() }
         }
     }
 
     func respondToRequests(with result: Result<ResponseType, Error>) {
-        requests.forEach { continuation in
+        let continuations: [CheckedContinuation<ResponseType, Error>]
+        lock.lock()
+        continuations = requests
+        requests = []
+        lock.unlock()
+
+        continuations.forEach { continuation in
             continuation.resume(with: result)
         }
-        requests = []
     }
 
     func callBackOnRequest(_ block: @escaping () -> Void) {
+        lock.lock()
         requestCallbacks.append(block)
+        lock.unlock()
     }
 }

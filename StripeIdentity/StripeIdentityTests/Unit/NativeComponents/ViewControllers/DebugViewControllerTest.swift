@@ -10,6 +10,7 @@ import XCTest
 
 @testable import StripeIdentity
 
+@MainActor
 final class DebugViewControllerTest: XCTestCase {
 
     static let mockVerificationPage = try! VerificationPageMock.response200.make()
@@ -43,29 +44,53 @@ final class DebugViewControllerTest: XCTestCase {
         XCTAssertEqual(mockSheetController.skipTestMode, true)
     }
 
-    func testClickSubmitWithSuccess() {
+    func testClickSubmitWithSuccess() async {
+        let transitionExp = expectation(description: "Transition completed")
+        mockSheetController.testModeTransitionCallback = {
+            transitionExp.fulfill()
+        }
+
         vc.didTapButton(.submit(completeOption: .success))
+        await fulfillment(of: [transitionExp], timeout: 1)
 
         XCTAssertEqual(mockSheetController.testModeReturnResult, .flowCompleted)
         XCTAssertEqual(mockSheetController.completeOption, .success)
     }
 
-    func testClickSubmitWithSuccessAsync() {
+    func testClickSubmitWithSuccessAsync() async {
+        let transitionExp = expectation(description: "Transition completed")
+        mockSheetController.testModeTransitionCallback = {
+            transitionExp.fulfill()
+        }
+
         vc.didTapButton(.submit(completeOption: .successAsync))
+        await fulfillment(of: [transitionExp], timeout: 1)
 
         XCTAssertEqual(mockSheetController.testModeReturnResult, .flowCompleted)
         XCTAssertEqual(mockSheetController.completeOption, .successAsync)
     }
 
-    func testClickSubmitWithFailure() {
+    func testClickSubmitWithFailure() async {
+        let transitionExp = expectation(description: "Transition completed")
+        mockSheetController.testModeTransitionCallback = {
+            transitionExp.fulfill()
+        }
+
         vc.didTapButton(.submit(completeOption: .failure))
+        await fulfillment(of: [transitionExp], timeout: 1)
 
         XCTAssertEqual(mockSheetController.testModeReturnResult, .flowCompleted)
         XCTAssertEqual(mockSheetController.completeOption, .failure)
     }
 
-    func testClickSubmitWithFailureAsync() {
+    func testClickSubmitWithFailureAsync() async {
+        let transitionExp = expectation(description: "Transition completed")
+        mockSheetController.testModeTransitionCallback = {
+            transitionExp.fulfill()
+        }
+
         vc.didTapButton(.submit(completeOption: .failureAsync))
+        await fulfillment(of: [transitionExp], timeout: 1)
 
         XCTAssertEqual(mockSheetController.testModeReturnResult, .flowCompleted)
         XCTAssertEqual(mockSheetController.completeOption, .failureAsync)
