@@ -745,7 +745,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
     }
 
-    func testTimeoutButtonsWhenLiveCaptureIsRequired() throws {
+    @MainActor
+    func testTimeoutButtonsWhenLiveCaptureIsRequired() async throws {
         let mockResponse = try VerificationPageMock.requireLiveCapture.make()
         let vc = makeViewController(
             state: .timeout(.front),
@@ -758,7 +759,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
         vc.buttonViewModels.first?.didTap()
 
-        waitForCameraSessionToStart()
+        await waitForCameraSessionToStart()
         XCTAssertStateEqual(
             vc.imageScanningSession.state,
             .scanning(.front, nil)
