@@ -20,10 +20,9 @@ protocol MLDetectorMetricsTrackerProtocol {
 
     func reset()
 
-    func getPerformanceMetrics(
-        completeOn queue: DispatchQueue,
-        completion: @escaping (_ averageMetrics: MLDetectorMetricsTracker.Metrics, _ numFrames: Int)
-            -> Void
+    func getPerformanceMetrics() async -> (
+        averageMetrics: MLDetectorMetricsTracker.Metrics,
+        numFrames: Int
     )
 }
 
@@ -37,13 +36,55 @@ final class MLDetectorMetricsTracker: MLDetectorMetricsTrackerProtocol {
         let postProcess: TimeInterval
     }
 
-    /// Manages metrics array
-    private let dispatchQueue = DispatchQueue(
-        label: "com.stripe.identity.metrics-tracker",
-        target: .global(qos: .userInitiated)
-    )
-    /// A metric for each frame scanned by the detector
-    private var scanMetrics: [Metrics] = []
+    /// Owns and serializes all mutable metrics state.
+    private final class State: @unchecked Sendable {
+        private let queue = DispatchQueue(
+            label: "com.stripe.identity.metrics-tracker",
+            target: .global(qos: .userInitiated)
+        )
+        private var scanMetrics: [Metrics] = []
+
+        func trackScan(
+            inferenceStart: Date,
+            inferenceEnd: Date,
+            postProcessEnd: Date
+        ) {
+            queue.async {
+                self.scanMetrics.append(
+                    .init(
+                        inference: inferenceEnd.timeIntervalSince(inferenceStart),
+                        postProcess: postProcessEnd.timeIntervalSince(inferenceEnd)
+                    )
+                )
+            }
+        }
+
+        func reset() {
+            queue.async {
+                self.scanMetrics = []
+            }
+        }
+
+        func getPerformanceMetrics() async -> (
+            averageMetrics: Metrics,
+            numFrames: Int
+        ) {
+            await withCheckedContinuation { continuation in
+                queue.async {
+                    let averageMetrics = Metrics(
+                        inference: self.scanMetrics.average(with: { $0.inference }),
+                        postProcess: self.scanMetrics.average(with: { $0.postProcess })
+                    )
+
+                    continuation.resume(
+                        returning: (averageMetrics, self.scanMetrics.count)
+                    )
+                }
+            }
+        }
+    }
+
+    private let state = State()
 
     /// Name of the model used for logging purposes
     let modelName: String
@@ -59,36 +100,21 @@ final class MLDetectorMetricsTracker: MLDetectorMetricsTrackerProtocol {
         inferenceEnd: Date,
         postProcessEnd: Date
     ) {
-        dispatchQueue.async { [weak self] in
-            self?.scanMetrics.append(
-                .init(
-                    inference: inferenceEnd.timeIntervalSince(inferenceStart),
-                    postProcess: postProcessEnd.timeIntervalSince(inferenceEnd)
-                )
-            )
-        }
+        state.trackScan(
+            inferenceStart: inferenceStart,
+            inferenceEnd: inferenceEnd,
+            postProcessEnd: postProcessEnd
+        )
     }
 
     func reset() {
-        dispatchQueue.async { [weak self] in
-            self?.scanMetrics = []
-        }
+        state.reset()
     }
 
-    func getPerformanceMetrics(
-        completeOn completeOnQueue: DispatchQueue,
-        completion: @escaping (_ averageMetrics: Metrics, _ numFrames: Int) -> Void
+    func getPerformanceMetrics() async -> (
+        averageMetrics: Metrics,
+        numFrames: Int
     ) {
-        dispatchQueue.async {
-            let averageMetrics = Metrics(
-                inference: self.scanMetrics.average(with: { $0.inference }),
-                postProcess: self.scanMetrics.average(with: { $0.postProcess })
-            )
-            let numFrames = self.scanMetrics.count
-
-            completeOnQueue.async {
-                completion(averageMetrics, numFrames)
-            }
-        }
+        await state.getPerformanceMetrics()
     }
 }

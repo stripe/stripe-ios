@@ -18,6 +18,7 @@ final class ImageScanningConcurrencyManagerMock: ImageScanningConcurrencyManager
 
     var mockAverageFPSMetric: Double?
     var mockNumFramesScannedMetric: Int = 0
+    var getPerformanceMetricsCallback: (() -> Void)?
 
     private(set) var didReset = false
     private var completion: ((Any?) -> Void)?
@@ -46,10 +47,11 @@ final class ImageScanningConcurrencyManagerMock: ImageScanningConcurrencyManager
         didReset = true
     }
 
-    func getPerformanceMetrics(
-        completeOn queue: DispatchQueue,
-        completion: @escaping (_ averageFPS: Double?, _ numFramesScanned: Int) -> Void
+    func getPerformanceMetrics() async -> (
+        averageFPS: Double?,
+        numFramesScanned: Int
     ) {
-        completion(mockAverageFPSMetric, mockNumFramesScannedMetric)
+        getPerformanceMetricsCallback?()
+        return (mockAverageFPSMetric, mockNumFramesScannedMetric)
     }
 }
