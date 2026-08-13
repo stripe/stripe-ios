@@ -189,7 +189,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     /// Makes API calls to load the verification sheet. When the API response is complete, transitions to the first screen in the flow.
     func loadAndUpdateUI(skipTestMode: Bool) {
-        load().observe(on: .main) { result in
+        Task { @MainActor in
+            let result = await self.load()
             self.flowController.transitionToNextScreen(
                 skipTestMode: skipTestMode,
                 staticContentResult: result,
@@ -200,30 +201,21 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
     }
 
-    func load() -> Future<StripeAPI.VerificationPage> {
-        let returnedPromise = Promise<StripeAPI.VerificationPage>()
-        // Only update `verificationPageResponse` on main
-        apiClient.getIdentityVerificationPage().observe(on: .main) { [weak self] result in
-            guard let self = self else { return }
-            self.verificationPageResponse = result
-            if case .success(let verificationPage) = result {
-                self.startLoadingMLModels(from: verificationPage)
-                self.isVerificationPageSubmitted = verificationPage.submitted
-                // if result success and requires address, load address spec before continue
-                if verificationPage.requirements.missing.contains(.address) {
-                    AddressSpecProvider.shared.loadAddressSpecs {
-                        returnedPromise.fullfill(with: result)
-                    }
-                } else {
-                    returnedPromise.fullfill(with: result)
-                }
-            } else {
-                // result not success
-                returnedPromise.fullfill(with: result)
+    func load() async -> Result<StripeAPI.VerificationPage, Error> {
+        do {
+            let verificationPage = try await apiClient.getIdentityVerificationPage()
+            self.verificationPageResponse = .success(verificationPage)
+            self.startLoadingMLModels(from: verificationPage)
+            self.isVerificationPageSubmitted = verificationPage.submitted
+            // if result success and requires address, load address spec before continue
+            if verificationPage.requirements.missing.contains(.address) {
+                _ = await AddressSpecProvider.shared.loadAddressSpecs()
             }
-            returnedPromise.fullfill(with: result)
+            return .success(verificationPage)
+        } catch {
+            self.verificationPageResponse = .failure(error)
+            return .failure(error)
         }
-        return returnedPromise
     }
 
     func startLoadingMLModels(from verificationPage: StripeAPI.VerificationPage) {
@@ -808,9 +800,9 @@ extension VerificationSheetController: VerificationSheetFlowControllerDelegate {
     ) {
         // Check the submission status after the user closes the web view to
         // see if they completed the flow or canceled
-        apiClient.getIdentityVerificationPage().observe(on: .main) { [weak self] result in
-            guard let self = self else { return }
-            self.isVerificationPageSubmitted = (try? result.get())?.submitted == true
+        Task { @MainActor in
+            let verificationPage = try? await apiClient.getIdentityVerificationPage()
+            self.isVerificationPageSubmitted = verificationPage?.submitted ?? false
             self.delegate?.verificationSheetController(
                 self,
                 didFinish: self.isVerificationPageSubmitted ? .flowCompleted : .flowCanceled

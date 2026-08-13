@@ -57,13 +57,18 @@ final class VerificationSheetControllerTest: XCTestCase {
         exp = XCTestExpectation(description: "Finished API call")
     }
 
-    func testLoadValidResponse() throws {
+    func testLoadValidResponse() async throws {
         let mockResponse = try VerificationPageMock.response200.make()
+        let requestExp = expectation(description: "Request made")
+        mockAPIClient.verificationPage.callBackOnRequest {
+            requestExp.fulfill()
+        }
 
         // Load
-        controller.load().observe { _ in
-            self.exp.fulfill()
+        let loadTask = Task {
+            await controller.load()
         }
+        await fulfillment(of: [requestExp], timeout: 1)
 
         // Verify 1 request made with secret
         XCTAssertEqual(mockAPIClient.verificationPage.requestHistory.count, 1)
@@ -74,8 +79,9 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Respond to request with success
         mockAPIClient.verificationPage.respondToRequests(with: .success(mockResponse))
 
-        // Verify completion block is called
-        wait(for: [exp], timeout: 1)
+        // Verify load completes
+        let result = await loadTask.value
+        XCTAssertEqual(try? result.get(), mockResponse)
 
         // Verify response updated on controller
         XCTAssertEqual(try? controller.verificationPageResponse?.get(), mockResponse)
@@ -83,13 +89,18 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertTrue(mockMLModelLoader.didStartLoadingFaceModels)
     }
 
-    func testLoadSubmittedValidResponse() throws {
+    func testLoadSubmittedValidResponse() async throws {
         let mockResponse = try VerificationPageMock.response200Submitted.make()
+        let requestExp = expectation(description: "Request made")
+        mockAPIClient.verificationPage.callBackOnRequest {
+            requestExp.fulfill()
+        }
 
         // Load
-        controller.load().observe { _ in
-            self.exp.fulfill()
+        let loadTask = Task {
+            await controller.load()
         }
+        await fulfillment(of: [requestExp], timeout: 1)
 
         // Verify 1 request made with secret
         XCTAssertEqual(mockAPIClient.verificationPage.requestHistory.count, 1)
@@ -100,8 +111,9 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Respond to request with success
         mockAPIClient.verificationPage.respondToRequests(with: .success(mockResponse))
 
-        // Verify completion block is called
-        wait(for: [exp], timeout: 1)
+        // Verify load completes
+        let result = await loadTask.value
+        XCTAssertEqual(try? result.get(), mockResponse)
 
         // Verify response updated on controller
         XCTAssertEqual(try? controller.verificationPageResponse?.get(), mockResponse)
@@ -110,19 +122,27 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertTrue(controller.isVerificationPageSubmitted)
     }
 
-    func testLoadErrorResponse() throws {
+    func testLoadErrorResponse() async {
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
+        let requestExp = expectation(description: "Request made")
+        mockAPIClient.verificationPage.callBackOnRequest {
+            requestExp.fulfill()
+        }
 
         // Load
-        controller.load().observe { _ in
-            self.exp.fulfill()
+        let loadTask = Task {
+            await controller.load()
         }
+        await fulfillment(of: [requestExp], timeout: 1)
 
         // Respond to request with error
         mockAPIClient.verificationPage.respondToRequests(with: .failure(mockError))
 
-        // Verify completion block is called
-        wait(for: [exp], timeout: 1)
+        // Verify load completes with error
+        let result = await loadTask.value
+        guard case .failure = result else {
+            return XCTFail("Expected failure")
+        }
 
         // Verify error updated on controller
         guard case .failure = controller.verificationPageResponse else {
@@ -152,15 +172,21 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertTrue(mockResponse.shouldSubmit3DFaceCaptureData)
     }
 
-    func testLoadAndUpdateUI() throws {
+    func testLoadAndUpdateUI() async throws {
         let mockResponse = try VerificationPageMock.response200.make()
+        let requestExp = expectation(description: "Request made")
+        mockAPIClient.verificationPage.callBackOnRequest {
+            requestExp.fulfill()
+        }
+
         controller.loadAndUpdateUI(skipTestMode: true)
+        await fulfillment(of: [requestExp], timeout: 1)
 
         // Respond to request with success
         mockAPIClient.verificationPage.respondToRequests(with: .success(mockResponse))
 
         // Verify response sent to flowController
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
         XCTAssertEqual(
             try? mockFlowController.transitionedWithStaticContentResult?.get(),
             mockResponse
