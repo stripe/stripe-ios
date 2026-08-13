@@ -131,10 +131,26 @@ extension PhoneOtpViewController: PhoneOtpViewDelegate {
     func didInputFullOtp(newOtp: String) {
         phoneOtpView.configure(with: .SubmittingOTP(newOtp))
 
-        sheetController?.saveOtpAndMaybeTransition(from: .phoneOtp, otp: newOtp, completion: { [weak self] in
-            self?.phoneOtpView.reset()
-        }) { [weak self] in
-            self?.phoneOtpView.configure(with: .ErrorOTP)
+        Task { [weak self] in
+            guard let sheetController = self?.sheetController else {
+                return
+            }
+
+            let result = await sheetController.saveOtpAndMaybeTransition(
+                from: .phoneOtp,
+                otp: newOtp
+            )
+
+            guard let self else {
+                return
+            }
+
+            switch result {
+            case .invalidOtp:
+                phoneOtpView.configure(with: .ErrorOTP)
+            case .transitioned:
+                phoneOtpView.reset()
+            }
         }
     }
 
