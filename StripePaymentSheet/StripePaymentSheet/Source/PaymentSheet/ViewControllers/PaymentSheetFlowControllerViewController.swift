@@ -680,10 +680,22 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
                 updateUI()
                 flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
-        case .applePay, .link:
+        case .applePay:
             error = nil
             updateUI()
             if isDismissable {
+                flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            }
+        case .link:
+            error = nil
+            updateUI()
+            guard isDismissable else { return }
+            if canPresentLinkOnWalletButton {
+                // RUX: present the native Link sheet in place (matches the wallet-header path),
+                // then close the FlowController sheet from presentLink()'s completion.
+                presentLink()
+            } else {
+                // Legacy: report Link (.wallet) as the selection and let the merchant confirm later.
                 flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
