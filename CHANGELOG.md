@@ -2,6 +2,10 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### Identity
+* [Added] Added an async version of `IdentityVerificationSheet.present(from:)`, allowing callers to await the verification result while preserving the existing completion-handler API.
+* [Changed] Migrated StripeIdentity's internal networking, verification flows, image scanning and uploading, and ML model loading from Promise/Future and completion-handler APIs to Swift concurrency.
+
 ### PaymentSheet
 * [Added] The Link auth flow now natively supports email OTP and multi-factor authentication (MFA) enabled accounts.
 * [Added] Added `returnURL` to `LinkConfiguration`, allowing `LinkController` users to let customers authenticate in their banking app and then return to the merchant's app. Without a `returnURL`, bank authentication happens in a secure webview presented in the merchant's app (private preview).
