@@ -55,6 +55,7 @@ public class AddressViewController: UIViewController {
     public weak var delegate: AddressViewControllerDelegate?
     private var selectedAutoCompleteResult: PaymentSheet.Address?
     private var didLogAddressShow = false
+    private var addressShowStart: Date = Date()
 
     /// The address as of the last open or save. Returned to the delegate when the customer
     /// cancels (taps 'X' with no changes, or discards changes) so we never hand back
@@ -421,7 +422,7 @@ extension AddressViewController {
     @objc func presentAutocomplete() {
         assert(navigationController != nil)
         let keyboardShowing = view.firstResponder() != nil
-        let autoCompleteViewController = AutoCompleteViewController(configuration: configuration, initialLine1Text: addressSection?.line1?.text, selectedCountry: addressSection?.selectedCountryCode, addressSpecProvider: addressSpecProvider, keyboardAlreadyShowing: keyboardShowing)
+        let autoCompleteViewController = AutoCompleteViewController(configuration: configuration, initialLine1Text: addressSection?.line1?.text, selectedCountry: addressSection?.selectedCountryCode ?? "", addressSpecProvider: addressSpecProvider, keyboardAlreadyShowing: keyboardShowing)
         autoCompleteViewController.delegate = self
         navigationController?.pushViewController(autoCompleteViewController, animated: true)
     }
@@ -666,6 +667,7 @@ extension AddressViewController: AddressViewController.IntegrationDelegate {
         guard !didLogAddressShow else { return }
         STPAnalyticsClient.sharedClient.logAddressShow(defaultCountryCode: addressSection?.selectedCountryCode ?? "", apiClient: configuration.apiClient)
         didLogAddressShow = true
+        addressShowStart = Date()
     }
 
     func didCancel() {
@@ -678,10 +680,12 @@ extension AddressViewController: AddressViewController.IntegrationDelegate {
 
     private func logAddressCompleted() {
         let analyticData = currentAddressAnalyticData
+        let msToComplete = Date().timeIntervalSince(addressShowStart)
         STPAnalyticsClient.sharedClient.logAddressCompleted(
             addressCountyCode: analyticData.addressCountryCode,
             autoCompleteResultedSelected: analyticData.autoCompleteResultedSelected ?? false,
             editDistance: analyticData.editDistance,
+            msToComplete: msToComplete,
             apiClient: configuration.apiClient
         )
     }

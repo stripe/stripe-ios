@@ -168,7 +168,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var automaticTax: Bool
     @Binding var checkoutSessionPaymentMethodSave: Bool
     @Binding var checkoutSessionPaymentMethodRemove: Bool
-    @Binding var adaptivePricingCountry: CheckoutPlayground.AdaptivePricingCountry
     @Binding var automaticPaymentMethods: Bool
 
     private var shouldShowAutomaticTax: Bool {
@@ -211,13 +210,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     title: "Payment Method Remove",
                     isOn: $checkoutSessionPaymentMethodRemove,
                     tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
-                )
-                CheckoutPlayground.PickerRow(
-                    title: "Country",
-                    icon: "globe",
-                    selection: $adaptivePricingCountry,
-                    tooltip: "Simulates the customer's country for adaptive pricing by sending a location-formatted customer_email. 'None' skips the email override.",
-                    displayText: { $0.displayName }
                 )
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
@@ -304,14 +296,12 @@ struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
     @Binding var selectedMethods: Set<String>
     let availableMethods: [String]
     @Environment(\.dismiss) var dismiss
-    @State private var searchText = ""
     @State private var customMethodType = ""
 
-    var filteredMethods: [String] {
-        if searchText.isEmpty {
-            return availableMethods
-        }
-        return availableMethods.filter { $0.localizedCaseInsensitiveContains(searchText) }
+    private var customMethods: [String] {
+        selectedMethods
+            .subtracting(availableMethods)
+            .sorted()
     }
 
     var body: some View {
@@ -327,15 +317,30 @@ struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
                             guard !trimmed.isEmpty else {
                                 return
                             }
-                            selectedMethods.insert(trimmed)
+                            selectedMethods = selectedMethods.union([trimmed])
                             customMethodType = ""
                         }
                         .disabled(customMethodType.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
+
+                    ForEach(customMethods, id: \.self) { method in
+                        HStack {
+                            Text(method)
+                            Spacer()
+                            Button {
+                                selectedMethods = selectedMethods.subtracting([method])
+                            } label: {
+                                Image(systemName: "minus.circle.fill")
+                                    .foregroundColor(.red)
+                            }
+                            .buttonStyle(.borderless)
+                            .accessibilityLabel("Remove \(method)")
+                        }
+                    }
                 }
 
                 Section("Available") {
-                    ForEach(filteredMethods, id: \.self) { method in
+                    ForEach(availableMethods, id: \.self) { method in
                         Button {
                             withAnimation {
                                 if selectedMethods.contains(method) {
@@ -360,7 +365,6 @@ struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
                     }
                 }
             }
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
             .navigationTitle("Select Payment Methods")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

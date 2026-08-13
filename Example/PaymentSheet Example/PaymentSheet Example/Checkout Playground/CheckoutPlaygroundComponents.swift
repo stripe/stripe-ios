@@ -96,6 +96,70 @@ extension CheckoutPlayground {
         }
     }
 
+    struct AdaptivePricingLocationRow: View {
+        @Binding var selection: AdaptivePricingCountry
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(alignment: .top, spacing: 12) {
+                    Image(systemName: "globe.americas.fill")
+                        .font(.system(size: 18))
+                        .frame(width: 24)
+                        .foregroundColor(.blue)
+
+                    VStack(alignment: .leading, spacing: 3) {
+                        HStack(spacing: 6) {
+                            Text("Adaptive Pricing Location")
+                                .font(.body)
+
+                            InfoButton(
+                                title: "Adaptive Pricing Location",
+                                message: "The playground mocks this location by sending a specially formatted customer email when it creates the Checkout Session. Choose No Override to omit the mock location."
+                            )
+                        }
+
+                        Text("Mocks the customer country Adaptive Pricing uses to localize prices.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+
+                Menu {
+                    ForEach(AdaptivePricingCountry.allCases) { country in
+                        Button {
+                            selection = country
+                        } label: {
+                            if selection == country {
+                                Label(country.displayName, systemImage: "checkmark")
+                            } else {
+                                Text(country.displayName)
+                            }
+                        }
+                    }
+                } label: {
+                    HStack {
+                        Text(selection.displayName)
+                            .foregroundColor(.primary)
+                        Spacer()
+                        Image(systemName: "chevron.up.chevron.down")
+                            .font(.caption.weight(.semibold))
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.horizontal, 12)
+                    .frame(height: 38)
+                    .background(Color(uiColor: .tertiarySystemFill))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+                .buttonStyle(.plain)
+                .padding(.leading, 36)
+            }
+            .padding(.vertical, 12)
+            .padding(.horizontal, 16)
+            .background(Color(uiColor: .secondarySystemGroupedBackground))
+        }
+    }
+
     struct InfoButton: View {
         let title: String
         let message: String
