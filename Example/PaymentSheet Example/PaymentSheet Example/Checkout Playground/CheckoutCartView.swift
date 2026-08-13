@@ -36,8 +36,7 @@ struct CheckoutCartView: View {
                     CheckoutCartContentView(
                         checkout: checkout,
                         showsShippingAddressSection: shippingAddressCollection,
-                        isLoading: $isLoading,
-                        errorMessage: $errorMessage
+                        errorMessage: errorMessage
                     )
                     .overlay(alignment: .bottom) {
                         VStack(spacing: 0) {
@@ -131,6 +130,8 @@ struct CheckoutCartView: View {
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             config.currencySelectorElement.appearance = currencySelectorAppearance
+            config.shippingAddressElement.title = "Shipping Address"
+            config.shippingAddressElement.buttonTitle = "Save Address"
             checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription

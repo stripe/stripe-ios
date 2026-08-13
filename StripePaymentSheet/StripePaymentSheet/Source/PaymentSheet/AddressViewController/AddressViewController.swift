@@ -55,6 +55,7 @@ public class AddressViewController: UIViewController {
     public weak var delegate: AddressViewControllerDelegate?
     private var selectedAutoCompleteResult: PaymentSheet.Address?
     private var didLogAddressShow = false
+    private var addressShowStart: Date = Date()
 
     /// The address as of the last open or save. Returned to the delegate when the customer
     /// cancels (taps 'X' with no changes, or discards changes) so we never hand back
@@ -84,7 +85,7 @@ public class AddressViewController: UIViewController {
     @MainActor
     protocol IntegrationDelegate: AnyObject {
         /// Handles completion with the customer's collected address details.
-        func save(addressDetails: AddressDetails?, setLoading: (Bool) -> Void) async throws
+        func save(addressDetails: AddressDetails, setLoading: (Bool) -> Void) async throws
     }
 
     weak var integrationDelegate: IntegrationDelegate?
@@ -313,6 +314,7 @@ public class AddressViewController: UIViewController {
         if !didLogAddressShow {
             STPAnalyticsClient.sharedClient.logAddressShow(defaultCountryCode: addressSection?.selectedCountryCode ?? "", apiClient: configuration.apiClient)
             didLogAddressShow = true
+            addressShowStart = Date()
         }
         // Ensure we receive dismissal callbacks even when presented modally inside a UINavigationController
         navigationController?.presentationController?.delegate = self
@@ -366,24 +368,51 @@ extension AddressViewController {
     }
 
     func didContinue() {
-        // Re-baseline change tracking to the just-saved values. The same instance can be
-        // presented again, and each save sends the form back to the merchant, so the next open
-        // should compare against what was saved here — not the state captured at first init.
-        captureInitialSnapshot()
-
         Task { @MainActor in
+            guard let addressDetails else {
+                stpAssertionFailure("AddressViewController attempted to continue with an invalid address.")
+                return
+            }
             do {
                 try await self.integrationDelegate?.save(
                     addressDetails: addressDetails,
-                    // TODO(gbirch) fill in loading UI behavior
-                    setLoading: { _ in }
+                    setLoading: { [weak self] isLoading in
+                        self?.setLoading(isLoading)
+                    }
                 )
+                // Re-baseline change tracking only after the save succeeds. If it fails, the
+                // customer can still retry or discard the unsaved values.
+                captureInitialSnapshot()
                 delegate?.addressViewControllerDidFinish(self, with: addressDetails)
                 selectedAutoCompleteResult = nil
             } catch {
                 self.latestError = error
             }
         }
+    }
+
+    private func setLoading(_ isLoading: Bool) {
+        if isLoading {
+            view.endEditing(true)
+            latestError = nil
+        }
+
+        let isUserInteractionEnabled = !isLoading
+        sendEventToSubviews(
+            isUserInteractionEnabled ? .shouldEnableUserInteraction : .shouldDisableUserInteraction,
+            from: view
+        )
+        view.isUserInteractionEnabled = isUserInteractionEnabled
+        navigationController?.navigationBar.isUserInteractionEnabled = isUserInteractionEnabled
+        closeButton.isEnabled = isUserInteractionEnabled
+
+        let buttonStatus: ConfirmButton.Status
+        if isLoading {
+            buttonStatus = .processing
+        } else {
+            buttonStatus = addressSection?.validationState.isValid == true ? .enabled : .disabled
+        }
+        button.update(status: buttonStatus, animated: true)
     }
 
     @objc func didTapBackground() {
@@ -393,7 +422,7 @@ extension AddressViewController {
     @objc func presentAutocomplete() {
         assert(navigationController != nil)
         let keyboardShowing = view.firstResponder() != nil
-        let autoCompleteViewController = AutoCompleteViewController(configuration: configuration, initialLine1Text: addressSection?.line1?.text, selectedCountry: addressSection?.selectedCountryCode, addressSpecProvider: addressSpecProvider, keyboardAlreadyShowing: keyboardShowing)
+        let autoCompleteViewController = AutoCompleteViewController(configuration: configuration, initialLine1Text: addressSection?.line1?.text, selectedCountry: addressSection?.selectedCountryCode ?? "", addressSpecProvider: addressSpecProvider, keyboardAlreadyShowing: keyboardShowing)
         autoCompleteViewController.delegate = self
         navigationController?.pushViewController(autoCompleteViewController, animated: true)
     }
@@ -598,11 +627,13 @@ extension AddressViewController {
         if let selectedAddress = addressDetails?.address, let autoCompleteAddress = selectedAutoCompleteResult {
             editDistance = PaymentSheet.Address(from: selectedAddress).editDistance(from: autoCompleteAddress)
         }
+        let msToComplete = Date().timeIntervalSince(addressShowStart)
 
         STPAnalyticsClient.sharedClient.logAddressCompleted(
             addressCountyCode: addressSection?.selectedCountryCode ?? "",
             autoCompleteResultedSelected: selectedAutoCompleteResult != nil,
             editDistance: editDistance,
+            msToComplete: msToComplete,
             apiClient: configuration.apiClient
         )
     }
@@ -611,7 +642,7 @@ extension AddressViewController {
 // MARK: - IntegrationDelegate
 // Default implementation that logs completion and forwards address details to the merchant delegate
 extension AddressViewController: AddressViewController.IntegrationDelegate {
-    func save(addressDetails: AddressDetails?, setLoading: (Bool) -> Void) async throws {
+    func save(addressDetails: AddressDetails, setLoading: (Bool) -> Void) async throws {
         logAddressCompleted()
     }
 }

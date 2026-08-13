@@ -109,7 +109,7 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
 
         // Wait for address details to populate
         XCTAssertTrue(line1Field.waitForExistence(timeout: 5))
-        XCTAssertNotNil(analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_complete" })
+        XCTAssertNotNil(analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_selected" })
 
         continueButton.tap()
         confirmButton.waitForExistenceAndTap()
@@ -163,7 +163,7 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
 
         // Wait for address details to populate
         XCTAssertTrue(line1Field.waitForExistence(timeout: 5))
-        XCTAssertNotNil(analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_complete" })
+        XCTAssertNotNil(analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_selected" })
 
         continueButton.tap()
         confirmButton.waitForExistenceAndTap()
