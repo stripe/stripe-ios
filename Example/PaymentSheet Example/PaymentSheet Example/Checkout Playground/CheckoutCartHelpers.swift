@@ -7,11 +7,17 @@
 
 import Foundation
 
-func formatCartCurrency(amount: Int, currency: String?) -> String {
+func formatCartCurrency(
+    minorUnitsAmount: Double,
+    currency: String?,
+    minorUnitsAmountDivisor: Int?
+) -> String {
     let formatter = NumberFormatter()
     formatter.numberStyle = .currency
     formatter.currencyCode = currency?.uppercased() ?? "USD"
+    formatter.maximumFractionDigits += 12
 
-    let decimalAmount = Decimal(amount) / 100.0
+    let divisor = minorUnitsAmountDivisor ?? 100
+    let decimalAmount = Decimal(minorUnitsAmount) / Decimal(divisor)
     return formatter.string(from: NSDecimalNumber(decimal: decimalAmount)) ?? "$\(decimalAmount)"
 }

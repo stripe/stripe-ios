@@ -265,11 +265,9 @@ final class CheckoutCartViewController: UIViewController {
             contentStackView.addArrangedSubview(makeShippingAddressSection(checkout: checkout))
         }
 
-        if let total = checkout.session.total {
-            contentStackView.addArrangedSubview(
-                makeOrderSummarySection(total: total, currency: checkout.session.currency)
-            )
-        }
+        contentStackView.addArrangedSubview(
+            makeOrderSummarySection(totals: checkout.session.totals)
+        )
 
         renderPaymentBar(checkout: checkout)
         updateLoadingOverlay()
@@ -277,11 +275,6 @@ final class CheckoutCartViewController: UIViewController {
 
     private func renderPaymentBar(checkout: Checkout) {
         removeAllArrangedSubviews(from: paymentBarStackView)
-
-        guard checkout.session.total != nil else {
-            paymentBarStackView.isHidden = true
-            return
-        }
 
         if showExpressCheckoutElement, let expressCheckoutElement = checkout.getExpressCheckoutElement() {
             paymentBarStackView.addArrangedSubview(expressCheckoutElement.uiView)
@@ -316,7 +309,11 @@ final class CheckoutCartViewController: UIViewController {
         } else {
             for (index, item) in items.enumerated() {
                 itemsStackView.addArrangedSubview(
-                    makeLineItemRow(item: item, currency: checkout.session.currency)
+                    makeLineItemRow(
+                        item: item,
+                        currency: checkout.session.currency,
+                        minorUnitsAmountDivisor: checkout.session.minorUnitsAmountDivisor
+                    )
                 )
                 if index < items.count - 1 {
                     itemsStackView.addArrangedSubview(makeSeparator())
@@ -329,7 +326,8 @@ final class CheckoutCartViewController: UIViewController {
 
     private func makeLineItemRow(
         item: Checkout.Session.OrderSummaryItem.OneTimePrice.Item,
-        currency: String?
+        currency: String?,
+        minorUnitsAmountDivisor: Int?
     ) -> UIView {
         let placeholderView = UIView()
         placeholderView.backgroundColor = .secondarySystemBackground
@@ -362,8 +360,10 @@ final class CheckoutCartViewController: UIViewController {
 
         let totalLabel = UILabel()
         totalLabel.text = formatCartCurrency(
-            amount: Int(item.unitAmount.minorUnitsAmount) * item.quantity,
-            currency: currency
+            minorUnitsAmount: (item.unitAmountDecimal ?? item.unitAmount).minorUnitsAmount
+                * Double(item.quantity),
+            currency: currency,
+            minorUnitsAmountDivisor: minorUnitsAmountDivisor
         )
         totalLabel.font = .preferredFont(forTextStyle: .headline)
         totalLabel.setContentHuggingPriority(.required, for: .horizontal)
@@ -441,42 +441,32 @@ final class CheckoutCartViewController: UIViewController {
         )
     }
 
-    private func makeOrderSummarySection(total: Checkout.Total, currency: String?) -> UIView {
+    private func makeOrderSummarySection(totals: Checkout.Session.Totals) -> UIView {
         let summaryStackView = UIStackView()
         summaryStackView.axis = .vertical
         summaryStackView.spacing = 12
         summaryStackView.addArrangedSubview(
             makeSummaryRow(
                 title: "Subtotal",
-                amount: formatCartCurrency(amount: total.subtotal.minorUnitsAmount, currency: currency)
+                amount: totals.subtotal.amount
             )
         )
 
-        if total.discount.minorUnitsAmount > 0 {
+        if totals.discount.minorUnitsAmount > 0 {
             summaryStackView.addArrangedSubview(
                 makeSummaryRow(
                     title: "Discount",
-                    amount: "-" + formatCartCurrency(amount: total.discount.minorUnitsAmount, currency: currency),
+                    amount: "-" + totals.discount.amount,
                     color: .systemGreen
                 )
             )
         }
 
-        if total.shippingRate.minorUnitsAmount > 0 {
-            summaryStackView.addArrangedSubview(
-                makeSummaryRow(
-                    title: "Shipping",
-                    amount: formatCartCurrency(amount: total.shippingRate.minorUnitsAmount, currency: currency)
-                )
-            )
-        }
-
-        let taxAmount = total.taxExclusive.minorUnitsAmount + total.taxInclusive.minorUnitsAmount
-        if taxAmount > 0 {
+        if totals.taxExclusive.minorUnitsAmount > 0 {
             summaryStackView.addArrangedSubview(
                 makeSummaryRow(
                     title: "Tax",
-                    amount: formatCartCurrency(amount: taxAmount, currency: currency)
+                    amount: totals.taxExclusive.amount
                 )
             )
         }
@@ -485,7 +475,7 @@ final class CheckoutCartViewController: UIViewController {
         summaryStackView.addArrangedSubview(
             makeSummaryRow(
                 title: "Total",
-                amount: formatCartCurrency(amount: total.total.minorUnitsAmount, currency: currency),
+                amount: totals.total.amount,
                 emphasizesText: true
             )
         )
@@ -581,11 +571,9 @@ final class CheckoutCartViewController: UIViewController {
         amountLabel.font = .preferredFont(forTextStyle: .headline)
         amountLabel.setContentHuggingPriority(.required, for: .horizontal)
 
-        if let total = checkout.session.total, let currency = checkout.session.currency {
-            let formattedAmount = formatCartCurrency(amount: total.total.minorUnitsAmount, currency: currency)
-            amountLabel.text = formattedAmount
-            button.accessibilityLabel = "Checkout, \(formattedAmount)"
-        }
+        let formattedAmount = checkout.session.totals.total.amount
+        amountLabel.text = formattedAmount
+        button.accessibilityLabel = "Checkout, \(formattedAmount)"
 
         let stackView = UIStackView(arrangedSubviews: [titleLabel, amountLabel])
         stackView.distribution = .equalSpacing

@@ -84,8 +84,10 @@ struct CheckoutCartContentView: View {
                             }
                             Spacer()
                             Text(formatCartCurrency(
-                                amount: Int(item.unitAmount.minorUnitsAmount) * item.quantity,
-                                currency: checkout.session.currency
+                                minorUnitsAmount: (item.unitAmountDecimal ?? item.unitAmount).minorUnitsAmount
+                                    * Double(item.quantity),
+                                currency: checkout.session.currency,
+                                minorUnitsAmountDivisor: checkout.session.minorUnitsAmountDivisor
                             ))
                                 .font(.headline)
                         }
@@ -208,57 +210,55 @@ struct CheckoutCartContentView: View {
     @ViewBuilder
     private var orderSummarySection: some View {
         let totals = checkout.session.totals
-        let currency = checkout.session.currency
-        let taxAmount = totals.taxExclusive.minorUnitsAmount + totals.taxInclusive.minorUnitsAmount
         VStack(alignment: .leading, spacing: 16) {
-                Text("Order Summary")
-                    .font(.title2).bold()
-                    .padding(.horizontal)
+            Text("Order Summary")
+                .font(.title2).bold()
+                .padding(.horizontal)
 
-                VStack(spacing: 12) {
+            VStack(spacing: 12) {
+                HStack {
+                    Text("Subtotal")
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text(totals.subtotal.amount)
+                        .foregroundColor(.primary)
+                }
+                if totals.discount.minorUnitsAmount > 0 {
                     HStack {
-                        Text("Subtotal")
-                            .foregroundColor(.secondary)
+                        Text("Discount")
+                            .foregroundColor(.green)
                         Spacer()
-                        Text(totals.subtotal.amount)
-                            .foregroundColor(.primary)
-                    }
-                    if totals.discount.minorUnitsAmount > 0 {
-                        HStack {
-                            Text("Discount")
-                                .foregroundColor(.green)
-                            Spacer()
-                            Text("-" + totals.discount.amount)
-                                .foregroundColor(.green)
-                        }
-                    }
-
-                    if taxAmount > 0 {
-                        HStack {
-                            Text("Tax")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text(formatCartCurrency(amount: taxAmount, currency: currency))
-                                .foregroundColor(.primary)
-                        }
-                    }
-
-                    Divider()
-                        .padding(.vertical, 4)
-
-                    HStack {
-                        Text("Total")
-                            .font(.title3).bold()
-                        Spacer()
-                        Text(totals.total.amount)
-                            .font(.title3).bold()
+                        Text("-" + totals.discount.amount)
+                            .foregroundColor(.green)
                     }
                 }
-                .padding()
-                .background(Color(UIColor.systemBackground))
-                .cornerRadius(16)
-                .padding(.horizontal)
-                .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+
+                if totals.taxExclusive.minorUnitsAmount > 0 {
+                    HStack {
+                        Text("Tax")
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Text(totals.taxExclusive.amount)
+                            .foregroundColor(.primary)
+                    }
+                }
+
+                Divider()
+                    .padding(.vertical, 4)
+
+                HStack {
+                    Text("Total")
+                        .font(.title3).bold()
+                    Spacer()
+                    Text(totals.total.amount)
+                        .font(.title3).bold()
+                }
+            }
+            .padding()
+            .background(Color(UIColor.systemBackground))
+            .cornerRadius(16)
+            .padding(.horizontal)
+            .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
         }
     }
 
