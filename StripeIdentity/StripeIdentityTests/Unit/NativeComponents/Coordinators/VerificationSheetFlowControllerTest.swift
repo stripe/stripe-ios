@@ -393,11 +393,11 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
         await fulfillment(of: [exp], timeout: 1)
     }
 
-    func testNextViewControllerBiometricConsentPrecedesSelfie() throws {
+    func testNextViewControllerBiometricConsentPrecedesSelfie() async throws {
         let exp = expectation(
             description: "testNextViewControllerBiometricConsentPrecedesSelfie"
         )
-        try nextViewController(
+        try await nextViewController(
             missingRequirements: [.biometricConsent, .face],
             completion: { nextVC in
                 XCTAssertIs(nextVC, BiometricConsentViewController.self)
@@ -405,7 +405,7 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
             }
         )
 
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
     func testDelegateChain() {
