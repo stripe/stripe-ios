@@ -1,5 +1,5 @@
 //
-//  STPApplePayContext+CheckoutSessionLineItems.swift
+//  STPApplePayContext+CheckoutSession.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 5/5/26.
