@@ -56,77 +56,37 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
 
     private lazy var warmupFooterView: NetworkingLinkLoginWarmupFooterView = {
         let appearance = dataSource.manifest.appearance
-        guard appearance.colors == .link else {
-            let secondaryButtonTitle: String
-            if dataSource.manifest.isProductInstantDebits {
-                secondaryButtonTitle = String.Localized.cancel
-            } else {
-                secondaryButtonTitle = STPLocalizedString(
-                    "Not now",
-                    "A button title. This button, when pressed, will skip logging in the user with their e-mail to Link (one-click checkout provider)."
-                )
-            }
-            return PaneLayoutView.createFooterView(
-                primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                    title: continueText,
-                    accessibilityIdentifier: "link_continue_button",
-                    action: { [weak self] in
-                        self?.didSelectContinue()
-                    }
-                ),
-                secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                    title: secondaryButtonTitle,
-                    action: { [weak self] in
-                        self?.didSelectSkip()
-                    }
-                ),
-                appearance: appearance
+        let isLink = appearance.colors == .link
+        let primaryButtonTitle: PaneLayoutView.AccessibleText = isLink
+            ? .init(STPLocalizedString("Continue", "A button title that continues a flow."))
+            : continueText
+        let secondaryButtonTitle: String
+        if isLink || dataSource.manifest.isProductInstantDebits {
+            secondaryButtonTitle = String.Localized.cancel
+        } else {
+            secondaryButtonTitle = STPLocalizedString(
+                "Not now",
+                "A button title. This button, when pressed, will skip logging in the user with their e-mail to Link (one-click checkout provider)."
             )
         }
-
-        // Link theme: horizontal Cancel / Continue buttons
-        let cancelButton = Button.secondary(appearance: appearance)
-        cancelButton.title = String.Localized.cancel
-        cancelButton.layer.borderWidth = 0.5
-        cancelButton.layer.borderColor = appearance.colors.border.cgColor
-        cancelButton.layer.cornerRadius = appearance.buttonHeight / 2
-        cancelButton.clipsToBounds = true
-        cancelButton.addTarget(self, action: #selector(didTapCancel), for: .touchUpInside)
-
-        let continueButton = Button.primary(appearance: appearance)
-        continueButton.title = STPLocalizedString("Continue", "A button title that continues a flow.")
-        continueButton.accessibilityIdentifier = "link_continue_button"
-        continueButton.addTarget(self, action: #selector(didTapContinue), for: .touchUpInside)
-
-        let buttonStack = UIStackView(arrangedSubviews: [cancelButton, continueButton])
-        buttonStack.axis = .horizontal
-        buttonStack.spacing = 8
-        buttonStack.distribution = .fillEqually
-        buttonStack.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            cancelButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight),
-            continueButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight),
-        ])
-
-        let paddingView = UIView()
-        paddingView.addSubview(buttonStack)
-        NSLayoutConstraint.activate([
-            buttonStack.topAnchor.constraint(equalTo: paddingView.topAnchor, constant: Constants.Layout.defaultVerticalPadding),
-            buttonStack.leadingAnchor.constraint(equalTo: paddingView.leadingAnchor, constant: Constants.Layout.defaultHorizontalMargin),
-            buttonStack.trailingAnchor.constraint(equalTo: paddingView.trailingAnchor, constant: -Constants.Layout.defaultHorizontalMargin),
-            buttonStack.bottomAnchor.constraint(equalTo: paddingView.bottomAnchor, constant: -Constants.Layout.defaultVerticalPadding),
-        ])
-
-        return (paddingView, continueButton, cancelButton)
+        return PaneLayoutView.createFooterView(
+            primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
+                title: primaryButtonTitle,
+                accessibilityIdentifier: "link_continue_button",
+                action: { [weak self] in
+                    self?.didSelectContinue()
+                }
+            ),
+            secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
+                title: secondaryButtonTitle,
+                action: { [weak self] in
+                    self?.didSelectSkip()
+                }
+            ),
+            appearance: appearance,
+            preferHorizontalButtonsForLink: true
+        )
     }()
-
-    @objc private func didTapContinue() {
-        didSelectContinue()
-    }
-
-    @objc private func didTapCancel() {
-        didSelectSkip()
-    }
 
     init(
         dataSource: NetworkingLinkLoginWarmupDataSource,
