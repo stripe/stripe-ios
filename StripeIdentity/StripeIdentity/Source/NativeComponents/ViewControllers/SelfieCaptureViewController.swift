@@ -559,12 +559,14 @@ private extension SelfieCaptureViewController {
             expectedClassification: .empty,
             capturedData: faceCaptureData
         )
-        self.sheetController?.saveSelfieFileDataAndTransition(
-            from: analyticsScreenName,
-            selfieUploader: selfieUploader,
-            capturedImages: faceCaptureData,
-            trainingConsent: consentSelection
-        ) {}
+        Task {
+            await sheetController?.saveSelfieFileDataAndTransition(
+                from: analyticsScreenName,
+                selfieUploader: selfieUploader,
+                capturedImages: faceCaptureData,
+                trainingConsent: consentSelection
+            )
+        }
     }
 
     func uploadAndSave(

@@ -15,6 +15,7 @@ import XCTest
 
 @testable import StripeIdentity
 
+@MainActor
 final class DocumentFileUploadViewControllerTest: XCTestCase {
 
     var mockDocumentUploader: DocumentUploaderMock!
@@ -116,7 +117,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .fileUpload)
     }
 
-    func testTakePhotoCameraPermissions() {
+    func testTakePhotoCameraPermissions() async {
         // NOTE: The `camera` source type is not available on the simulator
         // which means the UIImagePickerController cannot be instantiated
         // for camera use. So this will only test that camera access is
@@ -131,7 +132,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
 
         // Mock that permission is denied
         mockCameraPermissionsManager.respondToRequest(granted: false)
-        wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
+        await fulfillment(of: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
 
         // Verify alert is displayed directing user to App Settings
         guard let alertController = vc.test_presentedViewController as? UIAlertController else {
@@ -159,14 +160,14 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         XCTAssertEqual(error?["file"] as? String, "DocumentFileUploadViewController.swift")
     }
 
-    func testTakePhotoCameraPermissionsGrantedDoesNotLogAnalytics() {
+    func testTakePhotoCameraPermissionsGrantedDoesNotLogAnalytics() async {
         let vc = makeViewController()
         vc.didTapSelect(for: .front, from: UIButton())
         vc.takePhoto()
         XCTAssertTrue(mockCameraPermissionsManager.didRequestCameraAccess)
 
         mockCameraPermissionsManager.respondToRequest(granted: true)
-        wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
+        await fulfillment(of: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
         XCTAssertEqual(
             mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_granted")
                 .count,
@@ -179,7 +180,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         )
     }
 
-    func testSelectFileFromSystem() {
+    func testSelectFileFromSystem() async {
         let vc = makeViewController()
         // Mock that user selected to upload front of document
         vc.didTapSelect(for: .front, from: UIButton())
@@ -192,40 +193,47 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         }
         vc.documentPicker(documentPicker, didPickDocumentsAt: [mockImageURL])
         // Verify front upload is triggered
-        wait(for: [mockDocumentUploader.uploadImagesExp], timeout: 1)
+        await fulfillment(of: [mockDocumentUploader.uploadImagesExp], timeout: 1)
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
         XCTAssertNil(mockDocumentUploader.uploadedDocumentScannerOutput)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .fileUpload)
     }
 
-    func testContinueButton() {
+    @MainActor
+    func testContinueButton() async throws {
         let vc = makeViewController()
 
         let frontFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentFront)!
         let backFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentBack)!
 
         // Mock that files have been uploaded
-        mockDocumentUploader.frontUploadPromise.resolve(with: frontFileData)
-        mockDocumentUploader.backUploadPromise.resolve(with: backFileData)
+        mockDocumentUploader.frontUploadResultValue = .success(frontFileData)
+        mockDocumentUploader.backUploadResultValue = .success(backFileData)
+        let frontSaveExp = expectation(description: "Front saved")
+        mockSheetController.saveDocumentFrontAndDecideBackCallback = {
+            frontSaveExp.fulfill()
+        }
+        let backSaveExp = expectation(description: "Back saved")
+        mockSheetController.saveDocumentBackAndTransitionCallback = {
+            backSaveExp.fulfill()
+        }
 
         // mock front upload delegate
         vc.documentUploaderDidUploadFront(mockDocumentUploader)
+        await fulfillment(of: [frontSaveExp], timeout: 1)
         // click continue button to upload back
         vc.didTapContinueButton()
         // Verify data saved and transitioned to next screen
-        let e = expectation(description: "back upload result")
-        mockDocumentUploader.frontUploadPromise.observe { _ in
-            guard case .success(let front) = self.mockSheetController.frontUploadedDocumentsResult else {
-                return XCTFail("Expected success result")
-            }
-            guard case .success(let back) = self.mockSheetController.backUploadedDocumentsResult else {
-                return XCTFail("Expected success result")
-            }
-            XCTAssertEqual(front, frontFileData)
-            XCTAssertEqual(back, backFileData)
-            e.fulfill()
+        await fulfillment(of: [backSaveExp], timeout: 1)
+
+        guard case .success(let front) = self.mockSheetController.frontUploadedDocumentsResult else {
+            return XCTFail("Expected success result")
         }
-        waitForExpectations(timeout: 1)
+        guard case .success(let back) = self.mockSheetController.backUploadedDocumentsResult else {
+            return XCTFail("Expected success result")
+        }
+        XCTAssertEqual(front, frontFileData)
+        XCTAssertEqual(back, backFileData)
     }
 
     func testWarningAlertViewModelInitiallyNil() {
