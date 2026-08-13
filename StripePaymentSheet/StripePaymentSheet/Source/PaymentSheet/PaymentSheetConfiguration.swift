@@ -512,14 +512,24 @@ extension PaymentSheet {
         public enum Display: String {
             /// Link will be displayed when available.
             case automatic
-            /// Link will never be displayed.
+            /// Link will never be displayed, and will not be enabled.
             case never
+            /// Link remains enabled (e.g. for automatic Link verification, Instant Bank Payments, Link Card Brand, and inline signup)
+            /// but its button/row will not be shown in the payment element UI.
+            @_spi(LinkHiddenWalletButtonPreview) case hidden
         }
 
         var shouldDisplay: Bool {
             switch display {
-            case .automatic: true
+            case .automatic, .hidden: true
             case .never: false
+            }
+        }
+
+        var shouldShowButton: Bool {
+            switch display {
+            case .automatic: true
+            case .hidden, .never: false
             }
         }
 

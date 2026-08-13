@@ -321,6 +321,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case automatic
         case never
+        case hidden
     }
 
     enum ForceOnelink: String, PickerEnum {
