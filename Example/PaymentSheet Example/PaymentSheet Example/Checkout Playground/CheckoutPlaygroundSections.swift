@@ -307,6 +307,12 @@ struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
     @State private var searchText = ""
     @State private var customMethodType = ""
 
+    private var customMethods: [String] {
+        selectedMethods
+            .subtracting(availableMethods)
+            .sorted()
+    }
+
     var filteredMethods: [String] {
         if searchText.isEmpty {
             return availableMethods
@@ -327,10 +333,25 @@ struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
                             guard !trimmed.isEmpty else {
                                 return
                             }
-                            selectedMethods.insert(trimmed)
+                            selectedMethods = selectedMethods.union([trimmed])
                             customMethodType = ""
                         }
                         .disabled(customMethodType.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    }
+
+                    ForEach(customMethods, id: \.self) { method in
+                        HStack {
+                            Text(method)
+                            Spacer()
+                            Button {
+                                selectedMethods = selectedMethods.subtracting([method])
+                            } label: {
+                                Image(systemName: "minus.circle.fill")
+                                    .foregroundColor(.red)
+                            }
+                            .buttonStyle(.borderless)
+                            .accessibilityLabel("Remove \(method)")
+                        }
                     }
                 }
 
