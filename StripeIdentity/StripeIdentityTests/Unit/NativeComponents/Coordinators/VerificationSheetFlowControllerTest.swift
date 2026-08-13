@@ -431,7 +431,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             }
         )
 
-        wait(for: [exp], timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
     func testDelegateChain() {

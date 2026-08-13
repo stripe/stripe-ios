@@ -11,6 +11,7 @@ import AVKit
 import UIKit
 import WebKit
 
+@MainActor
 protocol VerificationFlowWebViewControllerDelegate: AnyObject {
     /// Invoked when the user has closed the `VerificationFlowWebViewController`.
     /// - Parameters:
