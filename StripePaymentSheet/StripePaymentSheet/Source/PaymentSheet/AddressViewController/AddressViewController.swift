@@ -55,6 +55,7 @@ public class AddressViewController: UIViewController {
     public weak var delegate: AddressViewControllerDelegate?
     private var selectedAutoCompleteResult: PaymentSheet.Address?
     private var didLogAddressShow = false
+    private var addressShowStart: Date = Date()
 
     /// The address as of the last open or save. Returned to the delegate when the customer
     /// cancels (taps 'X' with no changes, or discards changes) so we never hand back
@@ -313,6 +314,7 @@ public class AddressViewController: UIViewController {
         if !didLogAddressShow {
             STPAnalyticsClient.sharedClient.logAddressShow(defaultCountryCode: addressSection?.selectedCountryCode ?? "", apiClient: configuration.apiClient)
             didLogAddressShow = true
+            addressShowStart = Date()
         }
         // Ensure we receive dismissal callbacks even when presented modally inside a UINavigationController
         navigationController?.presentationController?.delegate = self
@@ -393,7 +395,7 @@ extension AddressViewController {
     @objc func presentAutocomplete() {
         assert(navigationController != nil)
         let keyboardShowing = view.firstResponder() != nil
-        let autoCompleteViewController = AutoCompleteViewController(configuration: configuration, initialLine1Text: addressSection?.line1?.text, selectedCountry: addressSection?.selectedCountryCode, addressSpecProvider: addressSpecProvider, keyboardAlreadyShowing: keyboardShowing)
+        let autoCompleteViewController = AutoCompleteViewController(configuration: configuration, initialLine1Text: addressSection?.line1?.text, selectedCountry: addressSection?.selectedCountryCode ?? "", addressSpecProvider: addressSpecProvider, keyboardAlreadyShowing: keyboardShowing)
         autoCompleteViewController.delegate = self
         navigationController?.pushViewController(autoCompleteViewController, animated: true)
     }
@@ -598,11 +600,13 @@ extension AddressViewController {
         if let selectedAddress = addressDetails?.address, let autoCompleteAddress = selectedAutoCompleteResult {
             editDistance = PaymentSheet.Address(from: selectedAddress).editDistance(from: autoCompleteAddress)
         }
+        let msToComplete = Date().timeIntervalSince(addressShowStart)
 
         STPAnalyticsClient.sharedClient.logAddressCompleted(
             addressCountyCode: addressSection?.selectedCountryCode ?? "",
             autoCompleteResultedSelected: selectedAutoCompleteResult != nil,
             editDistance: editDistance,
+            msToComplete: msToComplete,
             apiClient: configuration.apiClient
         )
     }
