@@ -23,8 +23,8 @@ final class DocumentUploaderTest: XCTestCase {
     var uploader: DocumentUploader!
     private var mockDelegate: MockDocumentUploaderDelegate!
     var mockAPIClient: IdentityAPIClientTestMock!
-    static var mockStripeFile: StripeFile!
-    static var mockUploadMetrics = STPAPIClient.ImageUploadMetrics(
+    var mockStripeFile: StripeFile!
+    var mockUploadMetrics = STPAPIClient.ImageUploadMetrics(
         timeToUpload: 0,
         fileSizeBytes: 0
     )
@@ -84,14 +84,9 @@ final class DocumentUploaderTest: XCTestCase {
         .init(isBlurry: false, variance: 0.1)
     )
 
-    // swiftlint:disable:next static_over_final_class
-    override class func setUp() {
-        super.setUp()
-        mockStripeFile = try! FileMock.identityDocument.make()
-    }
-
     override func setUp() {
         super.setUp()
+        mockStripeFile = try! FileMock.identityDocument.make()
         mockAPIClient = IdentityAPIClientTestMock(
             verificationSessionId: mockVS,
             ephemeralKeySecret: mockEAK
@@ -101,7 +96,7 @@ final class DocumentUploaderTest: XCTestCase {
         uploader.delegate = mockDelegate
     }
 
-    func testUploadImagesInTestModeUsesPlaceholderImages() throws {
+    func testUploadImagesInTestModeUsesPlaceholderImages() async throws {
         // Given a test mode uploader
         uploader = makeUploader(isTestMode: true)
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 4)
@@ -116,7 +111,7 @@ final class DocumentUploaderTest: XCTestCase {
                 method: .autoCapture
             )
         }
-        wait(for: uploadRequestExpectations, timeout: 1)
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
 
         // Then every request uses the correct bundled placeholder without cropping
         let frontPlaceholder = try TestModeImage.documentFront.makeCGImage()
@@ -154,14 +149,14 @@ final class DocumentUploaderTest: XCTestCase {
         mockAPIClient.imageUpload.respondToRequests(
             with: .success(
                 (
-                    file: DocumentUploaderTest.mockStripeFile,
-                    metrics: DocumentUploaderTest.mockUploadMetrics
+                    file: mockStripeFile,
+                    metrics: mockUploadMetrics
                 )
             )
         )
     }
 
-    func testUploadImagesInTestModeWithoutROIUsesPlaceholderImage() throws {
+    func testUploadImagesInTestModeWithoutROIUsesPlaceholderImage() async throws {
         // Given a test mode uploader and no document scanner output
         uploader = makeUploader(isTestMode: true)
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
@@ -174,7 +169,7 @@ final class DocumentUploaderTest: XCTestCase {
             exifMetadata: nil,
             method: .fileUpload
         )
-        wait(for: uploadRequestExpectations, timeout: 1)
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
 
         // Then only the bundled front placeholder is uploaded at high resolution
         let frontPlaceholder = try TestModeImage.documentFront.makeCGImage()
@@ -191,44 +186,32 @@ final class DocumentUploaderTest: XCTestCase {
         mockAPIClient.imageUpload.respondToRequests(
             with: .success(
                 (
-                    file: DocumentUploaderTest.mockStripeFile,
-                    metrics: DocumentUploaderTest.mockUploadMetrics
+                    file: mockStripeFile,
+                    metrics: mockUploadMetrics
                 )
             )
         )
     }
 
     // Tests the happy path where both images are uploaded successfully
-    func testUploadImagesWithROISuccess() {
+    func testUploadImagesWithROISuccess() async throws {
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 2)
-        let uploadResponseExp = expectation(description: "Upload completed")
         let method = StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod.autoCapture
         let prefix = "img-prefix"
 
         // Upload images
-        uploader.uploadImages(
-            mockImage,
-            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutputLegacy,
-            exifMetadata: mockExifData,
-            method: method,
-            fileNamePrefix: prefix
-        ).observe { result in
-            switch result {
-            case .failure(let error):
-                XCTFail("Failed with \(error)")
-            case .success(let data):
-                DocumentUploaderTest.verifyFileData(
-                    data,
-                    expectedHighResImage: DocumentUploaderTest.mockStripeFile.id,
-                    expectedLowResImage: DocumentUploaderTest.mockStripeFile.id,
-                    expectedUploadMethod: method
-                )
-            }
-            uploadResponseExp.fulfill()
+        let uploadTask = Task {
+            try await uploader.uploadImages(
+                mockImage,
+                documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutputLegacy,
+                exifMetadata: mockExifData,
+                method: method,
+                fileNamePrefix: prefix
+            )
         }
 
         // Verify a request is made for each of the high & low res uploads
-        wait(for: uploadRequestExpectations, timeout: 1)
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
 
         // Sort requests by fileName since order of requests isn't determinate
         let uploadRequests = mockAPIClient.imageUpload.requestHistory.sorted(by: {
@@ -258,49 +241,46 @@ final class DocumentUploaderTest: XCTestCase {
             CGFloat(mockConfig.lowResImageMaxDimension)
         )
 
-        // Verify promise is observed after API responds to request
+        // Verify the upload completes after API responds to request
         mockAPIClient.imageUpload.respondToRequests(
             with: .success(
                 (
-                    file: DocumentUploaderTest.mockStripeFile,
-                    metrics: DocumentUploaderTest.mockUploadMetrics
+                    file: mockStripeFile,
+                    metrics: mockUploadMetrics
                 )
             )
         )
-        wait(for: [uploadResponseExp], timeout: 1)
+
+        let data = try await uploadTask.value
+        DocumentUploaderTest.verifyFileData(
+            data,
+            expectedHighResImage: mockStripeFile.id,
+            expectedLowResImage: mockStripeFile.id,
+            expectedUploadMethod: method
+        )
     }
 
     // Tests the happy path where one uncropped image is uploaded successfully
     // because there is no ROI
-    func testUploadImagesNoROISuccess() {
+    func testUploadImagesNoROISuccess() async throws {
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
 
         // Upload images
 
-        let uploadResponseExp = expectation(description: "Upload completed")
         let method = StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod.fileUpload
         let prefix = "img-prefix"
-
-        uploader.uploadImages(
-            mockImage,
-            documentScannerOutput: nil,
-            exifMetadata: nil,
-            method: method,
-            fileNamePrefix: prefix
-        ).observe { result in
-            switch result {
-            case .failure(let error):
-                XCTFail("Failed with \(error)")
-            case .success(let data):
-                XCTAssertEqual(data.highResImage, DocumentUploaderTest.mockStripeFile.id)
-                XCTAssertNil(data.lowResImage)
-                XCTAssertEqual(data.uploadMethod, method)
-            }
-            uploadResponseExp.fulfill()
+        let uploadTask = Task {
+            try await uploader.uploadImages(
+                mockImage,
+                documentScannerOutput: nil,
+                exifMetadata: nil,
+                method: method,
+                fileNamePrefix: prefix
+            )
         }
 
         // Verify a request is made for the high res upload
-        wait(for: uploadRequestExpectations, timeout: 1)
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
         XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.count, 1)
 
         guard let uploadRequest = mockAPIClient.imageUpload.requestHistory.first else {
@@ -316,101 +296,135 @@ final class DocumentUploaderTest: XCTestCase {
             CGFloat(mockConfig.highResImageMaxDimension)
         )
 
-        // Verify promise is observed after API responds to request
+        // Verify the upload completes after API responds to request
         mockAPIClient.imageUpload.respondToRequests(
             with: .success(
                 (
-                    file: DocumentUploaderTest.mockStripeFile,
-                    metrics: DocumentUploaderTest.mockUploadMetrics
+                    file: mockStripeFile,
+                    metrics: mockUploadMetrics
                 )
             )
         )
-        wait(for: [uploadResponseExp], timeout: 1)
+
+        let data = try await uploadTask.value
+        XCTAssertEqual(data.highResImage, mockStripeFile.id)
+        XCTAssertNil(data.lowResImage)
+        XCTAssertEqual(data.uploadMethod, method)
     }
 
     // Tests when the image upload errors
-    func testUploadImagesError() {
+    func testUploadImagesError() async throws {
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
-        let uploadResponseExp = expectation(description: "Upload completed")
         let method = StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod.fileUpload
         let prefix = "img-prefix"
 
-        uploader.uploadImages(
-            mockImage,
-            documentScannerOutput: nil,
-            exifMetadata: mockExifData,
-            method: method,
-            fileNamePrefix: prefix
-        ).observe { result in
-            switch result {
-            case .failure(let error):
-                XCTAssert((error as NSError) === mockError)
-            case .success:
-                XCTFail("Expected an error")
-            }
-            uploadResponseExp.fulfill()
+        let uploadTask = Task {
+            try await uploader.uploadImages(
+                mockImage,
+                documentScannerOutput: nil,
+                exifMetadata: mockExifData,
+                method: method,
+                fileNamePrefix: prefix
+            )
         }
 
         // Verify a request is made for the high res upload
-        wait(for: uploadRequestExpectations, timeout: 1)
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
 
-        // Verify promise is observed after API responds to request
+        // Verify the upload completes after API responds to request
         mockAPIClient.imageUpload.respondToRequests(with: .failure(mockError))
-        wait(for: [uploadResponseExp], timeout: 1)
+        do {
+            _ = try await uploadTask.value
+            XCTFail("Expected an error")
+        } catch {
+            XCTAssertTrue((error as NSError).isEqual(mockError))
+        }
     }
 
     // Test that both images for the front side of the doc are uploaded
-    func testUploadImagesForFrontSide() {
-        verifyUploadSide(
+    func testUploadImagesForFrontSide() async throws {
+        try await verifyUploadSide(
             .front,
-            getThisSideUploadFuture: { uploader.frontUploadFuture },
-            getOtherSideUploadFuture: { uploader.backUploadFuture },
+            getThisSideUploadResult: { await uploader.frontUploadResult() },
+            getOtherSideUploadResult: { await uploader.backUploadResult() },
             getThisSideUploadStatus: { uploader.frontUploadStatus }
         )
     }
 
     // Test that both images for the back side of the doc are uploaded
-    func testUploadImagesForBackSide() {
-        verifyUploadSide(
+    func testUploadImagesForBackSide() async throws {
+        try await verifyUploadSide(
             .back,
-            getThisSideUploadFuture: { uploader.backUploadFuture },
-            getOtherSideUploadFuture: { uploader.frontUploadFuture },
+            getThisSideUploadResult: { await uploader.backUploadResult() },
+            getOtherSideUploadResult: { await uploader.frontUploadResult() },
             getThisSideUploadStatus: { uploader.backUploadStatus }
         )
     }
 
     // Start to upload some images and reset them before they've completed upload
-    func testResetFromInProgress() {
+    func testResetFromInProgress() async {
         let uploadRequestExpectations = uploadMockFrontAndBack()
 
         // Upload state should be "in progress"
         XCTAssertEqual(uploader.frontUploadStatus, .inProgress)
         XCTAssertEqual(uploader.backUploadStatus, .inProgress)
 
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
+
         // Reset
         uploader.reset()
 
         // Verify status is reset
         XCTAssertEqual(uploader.frontUploadStatus, .notStarted)
         XCTAssertEqual(uploader.backUploadStatus, .notStarted)
-        XCTAssertNil(uploader.frontUploadFuture)
-        XCTAssertNil(uploader.backUploadFuture)
+        let resetFrontResult = await uploader.frontUploadResult()
+        let resetBackResult = await uploader.backUploadResult()
+        XCTAssertNil(resetFrontResult)
+        XCTAssertNil(resetBackResult)
 
         // Ensure status doesn't update when uploads complete
-        wait(for: uploadRequestExpectations, timeout: 1)
+        let staleStatusUpdate = expectation(description: "Stale upload updates status")
+        staleStatusUpdate.isInverted = true
+        mockDelegate.callback = {
+            staleStatusUpdate.fulfill()
+        }
+        mockAPIClient.imageUpload.respondToRequests(
+            with: .success(
+                (
+                    file: mockStripeFile,
+                    metrics: mockUploadMetrics
+                )
+            )
+        )
+        await fulfillment(of: [staleStatusUpdate], timeout: 0.1)
 
         XCTAssertEqual(uploader.frontUploadStatus, .notStarted)
         XCTAssertEqual(uploader.backUploadStatus, .notStarted)
-        XCTAssertNil(uploader.frontUploadFuture)
-        XCTAssertNil(uploader.backUploadFuture)
+        let completedFrontResult = await uploader.frontUploadResult()
+        let completedBackResult = await uploader.backUploadResult()
+        XCTAssertNil(completedFrontResult)
+        XCTAssertNil(completedBackResult)
     }
 
-    func testResetFromComplete() {
+    func testResetFromComplete() async {
         let uploadRequestExpectations = uploadMockFrontAndBack()
 
-        // Wait for uploads to complete
-        wait(for: uploadRequestExpectations, timeout: 1)
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
+
+        mockAPIClient.imageUpload.respondToRequests(
+            with: .success(
+                (
+                    file: mockStripeFile,
+                    metrics: mockUploadMetrics
+                )
+            )
+        )
+        _ = await uploader.frontUploadResult()
+        _ = await uploader.backUploadResult()
+
+        XCTAssertEqual(uploader.frontUploadStatus, .complete)
+        XCTAssertEqual(uploader.backUploadStatus, .complete)
 
         // Reset
         uploader.reset()
@@ -418,8 +432,10 @@ final class DocumentUploaderTest: XCTestCase {
         // Verify status is reset
         XCTAssertEqual(uploader.frontUploadStatus, .notStarted)
         XCTAssertEqual(uploader.backUploadStatus, .notStarted)
-        XCTAssertNil(uploader.frontUploadFuture)
-        XCTAssertNil(uploader.backUploadFuture)
+        let resetFrontResult = await uploader.frontUploadResult()
+        let resetBackResult = await uploader.backUploadResult()
+        XCTAssertNil(resetFrontResult)
+        XCTAssertNil(resetBackResult)
     }
 }
 
@@ -529,12 +545,11 @@ private extension DocumentUploaderTest {
 
     func verifyUploadSide(
         _ side: DocumentSide,
-        getThisSideUploadFuture: () -> Future<StripeAPI.VerificationPageDataDocumentFileData>?,
-        getOtherSideUploadFuture: () -> Future<StripeAPI.VerificationPageDataDocumentFileData>?,
+        getThisSideUploadResult: () async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?,
+        getOtherSideUploadResult: () async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?,
         getThisSideUploadStatus: () -> DocumentUploader.UploadStatus
-    ) {
+    ) async throws {
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 2)
-        let uploadResponseExp = expectation(description: "Upload completed")
         var delegateCallCount = 0
 
         mockDelegate.callback = {
@@ -557,7 +572,7 @@ private extension DocumentUploaderTest {
         XCTAssertEqual(delegateCallCount, 1)
 
         // Verify a request is made for each of the high & low res uploads
-        wait(for: uploadRequestExpectations, timeout: 1)
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
 
         XCTAssertEqual(getThisSideUploadStatus(), .inProgress)
         XCTAssertEqual(delegateCallCount, 1)
@@ -574,38 +589,29 @@ private extension DocumentUploaderTest {
         XCTAssertEqual(highResRequest.fileName, "\(mockVS)_\(side.rawValue)")
         XCTAssertEqual(lowResRequest.fileName, "\(mockVS)_\(side.rawValue)_full_frame")
 
-        // Verify only front is uploading
-        guard let thisSideUploadFuture = getThisSideUploadFuture() else {
-            return XCTFail("Expected non-nil \(side.rawValue)UploadFuture")
-        }
-        XCTAssertNil(getOtherSideUploadFuture())
+        // Verify only this side is uploading
+        let otherSideUploadResult = await getOtherSideUploadResult()
+        XCTAssertNil(otherSideUploadResult)
 
-        // Verify promise is observed after API responds to request
-        thisSideUploadFuture.observe { result in
-            defer {
-                uploadResponseExp.fulfill()
-            }
-
-            guard case .success(let fileData) = result else {
-                return XCTFail("Expected success")
-            }
-
-            DocumentUploaderTest.verifyFileData(
-                fileData,
-                expectedHighResImage: DocumentUploaderTest.mockStripeFile.id,
-                expectedLowResImage: DocumentUploaderTest.mockStripeFile.id,
-                expectedUploadMethod: .autoCapture
-            )
-        }
         mockAPIClient.imageUpload.respondToRequests(
             with: .success(
                 (
-                    file: DocumentUploaderTest.mockStripeFile,
-                    metrics: DocumentUploaderTest.mockUploadMetrics
+                    file: mockStripeFile,
+                    metrics: mockUploadMetrics
                 )
             )
         )
-        wait(for: [uploadResponseExp], timeout: 1)
+
+        guard let result = await getThisSideUploadResult() else {
+            return XCTFail("Expected non-nil \(side.rawValue) upload result")
+        }
+        let fileData = try result.get()
+        DocumentUploaderTest.verifyFileData(
+            fileData,
+            expectedHighResImage: mockStripeFile.id,
+            expectedLowResImage: mockStripeFile.id,
+            expectedUploadMethod: .autoCapture
+        )
 
         XCTAssertEqual(getThisSideUploadStatus(), .complete)
         XCTAssertEqual(delegateCallCount, 2)

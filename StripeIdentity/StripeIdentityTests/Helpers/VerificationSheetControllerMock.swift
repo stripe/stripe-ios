@@ -39,12 +39,14 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     var needBack: Bool = true
 
     var testModeReturnResult: StripeIdentity.IdentityVerificationSheet.VerificationFlowResult?
+    var testModeTransitionCallback: (() -> Void)?
 
     var skipTestMode: Bool?
 
     private(set) var didLoadAndUpdateUI = false
 
     private(set) var savedData: StripeAPI.VerificationPageCollectedData?
+    var saveAndTransitionCallback: (() -> Void)?
     private(set) var uploadedDocumentsResult: Result<DocumentUploaderProtocol.CombinedFileData, Error>?
     private(set) var frontUploadedDocumentsResult: Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
     private(set) var backUploadedDocumentsResult: Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
@@ -53,6 +55,10 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     private(set) var didCheckSubmitAndTransition = false
     private(set) var didSaveDocumentFrontAndDecideBack = false
     private(set) var didSaveDocumentBackAndTransition = false
+    var saveDocumentFrontAndDecideBackCallback: (() -> Void)?
+    var saveDocumentBackAndTransitionCallback: (() -> Void)?
+    var forceDocumentFrontAndDecideBackHandler: (() async -> Bool)?
+    var forceDocumentBackAndTransitionHandler: (() async -> Void)?
 
     var missingType: StripeIdentity.IndividualFormElement.MissingType?
     var transitionedToIndividual: Bool = false
@@ -62,7 +68,9 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     var completeOption: CompleteOptionView.CompleteOption?
 
-    var generatePhonOtpSuccessCallback: ((StripeCore.StripeAPI.VerificationPageData) -> Void)?
+    var phoneOtpSuccessResult: StripeCore.StripeAPI.VerificationPageData?
+    var generatePhoneOtpHandler: (() async -> StripeCore.StripeAPI.VerificationPageData)?
+    var cannotVerifyPhoneOtpHandler: (() async -> Void)?
     var cannotVerifyPhoneOtpCalled: Bool = false
 
     var saveOtpAndMaybeTransitionCompletion: (() -> Void)?
@@ -92,11 +100,10 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     func saveAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
-        collectedData: StripeAPI.VerificationPageCollectedData,
-        completion: @escaping () -> Void
-    ) {
+        collectedData: StripeAPI.VerificationPageCollectedData
+    ) async {
         savedData = collectedData
-        completion()
+        saveAndTransitionCallback?()
     }
 
     func checkSubmitAndTransition(
@@ -108,41 +115,44 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
-        documentUploader: DocumentUploaderProtocol,
-        onCompletion: @escaping (_ isBackRequired: Bool) -> Void
-    ) {
+        documentUploader: DocumentUploaderProtocol
+    ) async -> Bool {
         didSaveDocumentFrontAndDecideBack = true
-        documentUploader.frontUploadFuture?.observe { [self] result in
-            self.frontUploadedDocumentsResult = result
-            if self.needBack {
-                onCompletion(true)
-            } else {
-                onCompletion(false)
-            }
 
+        let result = await documentUploader.frontUploadResult()
+        self.frontUploadedDocumentsResult = result
+        saveDocumentFrontAndDecideBackCallback?()
+        if self.needBack {
+            return true
+        } else {
+            return false
         }
     }
 
     func saveDocumentBackAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
-        documentUploader: DocumentUploaderProtocol,
-        completion: @escaping () -> Void
-    ) {
+        documentUploader: DocumentUploaderProtocol
+    ) async {
         didSaveDocumentBackAndTransition = true
-        documentUploader.backUploadFuture?.observe { [weak self] result in
-            self?.backUploadedDocumentsResult = result
-            completion()
-        }
+        let result = await documentUploader.backUploadResult()
+        backUploadedDocumentsResult = result
+        saveDocumentBackAndTransitionCallback?()
     }
 
-    func forceDocumentFrontAndDecideBack(from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName, onCompletion: @escaping (Bool) -> Void) {
+    func forceDocumentFrontAndDecideBack(from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName) async -> Bool {
+        if let forceDocumentFrontAndDecideBackHandler {
+            return await forceDocumentFrontAndDecideBackHandler()
+        }
         // no-op
+        return false
     }
 
     func forceDocumentBackAndTransition(
-        from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName,
-        completion: @escaping () -> Void
-    ) {
+        from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName
+    ) async {
+        if let forceDocumentBackAndTransitionHandler {
+            await forceDocumentBackAndTransitionHandler()
+        }
         // no-op
     }
 
@@ -150,13 +160,10 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         selfieUploader: SelfieUploaderProtocol,
         capturedImages: FaceCaptureData,
-        trainingConsent: Bool,
-        completion: @escaping () -> Void
-    ) {
-        selfieUploader.uploadFuture?.observe { [weak self] result in
-            self?.uploadedSelfieResult = result
-            completion()
-        }
+        trainingConsent: Bool
+    ) async {
+        let result = await selfieUploader.uploadResult()
+        self.uploadedSelfieResult = result
     }
 
     func saveOtpAndMaybeTransition(from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName, otp otpValue: String, completion: @escaping () -> Void, invalidOtp: @escaping () -> Void) {
@@ -165,22 +172,34 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     }
 
-    func verifyAndTransition(simulateDelay: Bool, completion: @escaping () -> Void) {
+    func verifyAndTransition(simulateDelay: Bool) async {
         testModeReturnResult = .flowCompleted
         completeOption = simulateDelay ? .successAsync : .success
+        testModeTransitionCallback?()
     }
 
-    func unverifyAndTransition(simulateDelay: Bool, completion: @escaping () -> Void) {
+    func unverifyAndTransition(simulateDelay: Bool) async {
         testModeReturnResult = .flowCompleted
         completeOption = simulateDelay ? .failureAsync : .failure
+        testModeTransitionCallback?()
     }
 
-    func generatePhoneOtp(using successCallback: @escaping (StripeCore.StripeAPI.VerificationPageData) -> Void) {
-        generatePhonOtpSuccessCallback = successCallback
+    func generatePhoneOtp() async -> StripeCore.StripeAPI.VerificationPageData {
+        let mockResult: StripeCore.StripeAPI.VerificationPageData
+        if let generatePhoneOtpHandler {
+            mockResult = await generatePhoneOtpHandler()
+        } else {
+            mockResult = try! VerificationPageDataMock.response200.make()
+        }
+        phoneOtpSuccessResult = mockResult
+        return mockResult
     }
 
-    func sendCannotVerifyPhoneOtpAndTransition(completion: @escaping () -> Void) {
+    func sendCannotVerifyPhoneOtpAndTransition() async {
         self.cannotVerifyPhoneOtpCalled = true
+        if let cannotVerifyPhoneOtpHandler {
+            await cannotVerifyPhoneOtpHandler()
+        }
     }
 
     func transitionToCountryNotListed(missingType: StripeIdentity.IndividualFormElement.MissingType) {

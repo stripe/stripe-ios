@@ -17,7 +17,7 @@ protocol IdentityAPIClient: AnyObject {
 
     func updateIdentityVerificationPageData(
         updating verificationData: StripeAPI.VerificationPageDataUpdate
-    ) -> Promise<StripeAPI.VerificationPageData>
+    ) async throws -> StripeAPI.VerificationPageData
 
     func submitIdentityVerificationPage() -> Promise<StripeAPI.VerificationPageData>
 
@@ -26,7 +26,7 @@ protocol IdentityAPIClient: AnyObject {
         compressionQuality: CGFloat,
         purpose: String,
         fileName: String
-    ) -> Future<STPAPIClient.FileAndUploadMetrics>
+    ) async throws -> STPAPIClient.FileAndUploadMetrics
 
     func verifyTestVerificationSession(
         simulateDelay: Bool
@@ -93,8 +93,8 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
 
     func updateIdentityVerificationPageData(
         updating verificationData: StripeAPI.VerificationPageDataUpdate
-    ) -> Promise<StripeAPI.VerificationPageData> {
-        return apiClient.post(
+    ) async throws -> StripeAPI.VerificationPageData {
+        try await apiClient.post(
             resource: APIEndpointVerificationPageData(id: verificationSessionId),
             object: verificationData
         )
@@ -112,8 +112,8 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         compressionQuality: CGFloat,
         purpose: String,
         fileName: String
-    ) -> Future<STPAPIClient.FileAndUploadMetrics> {
-        return apiClient.uploadImageAndGetMetrics(
+    ) async throws -> STPAPIClient.FileAndUploadMetrics {
+        return try await apiClient.uploadImageAndGetMetrics(
             image,
             compressionQuality: compressionQuality,
             purpose: purpose,
