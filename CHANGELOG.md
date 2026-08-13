@@ -21,6 +21,10 @@ MINOR
 ### CryptoOnramp (Alpha)
 * [Added] Added support for registering wallet addresses on the Tempo network.
 
+### Identity
+* [Added] Added an async version of `IdentityVerificationSheet.present(from:)`, allowing callers to await the verification result while preserving the existing completion-handler API.
+* [Changed] Migrated StripeIdentity's internal networking, verification flows, image scanning and uploading, and ML model loading from Promise/Future and completion-handler APIs to Swift concurrency.
+
 ### PaymentSheet
 * [Added] Added `billingDetailsCollectionConfiguration` to `LinkConfiguration`, allowing `LinkControllerPreview` consumers to configure billing details collection in the Link sheet (private preview).
 * [Added] `LinkController` now supports appearance customization via `LinkAppearance` (private preview).
