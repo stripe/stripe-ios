@@ -235,33 +235,31 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         sheetController: VerificationSheetControllerProtocol,
         trainingConsent: Bool?
     ) {
-        return sheetController.mlModelLoader.faceModelsFuture.observe(on: .main) { [weak self] result in
-            guard let self = self else { return }
+        Task { @MainActor [weak self] in
+            guard let self else { return }
 
-            Task {
-                let staticContent: StripeAPI.VerificationPage
-                do {
-                    staticContent = try staticContentResult.get()
-                    self.transition(
-                        to: await self.makeSelfieCaptureViewController(
-                            faceScannerResult: result,
-                            staticContent: staticContent,
-                            sheetController: sheetController,
-                            trainingConsent: trainingConsent
-                        ),
-                        shouldAnimate: true,
-                        completion: {}
-                    )
-                } catch {
-                    self.transition(
-                        to: await ErrorViewController(
-                            sheetController: sheetController,
-                            error: .error(error)
-                        ),
-                        shouldAnimate: true,
-                        completion: {}
-                    )
-                }
+            let faceScannerResult = await sheetController.mlModelLoader.faceModels()
+            do {
+                let staticContent = try staticContentResult.get()
+                self.transition(
+                    to: self.makeSelfieCaptureViewController(
+                        faceScannerResult: faceScannerResult,
+                        staticContent: staticContent,
+                        sheetController: sheetController,
+                        trainingConsent: trainingConsent
+                    ),
+                    shouldAnimate: true,
+                    completion: {}
+                )
+            } catch {
+                self.transition(
+                    to: ErrorViewController(
+                        sheetController: sheetController,
+                        error: .error(error)
+                    ),
+                    shouldAnimate: true,
+                    completion: {}
+                )
             }
         }
     }
@@ -270,32 +268,30 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         sheetController: VerificationSheetControllerProtocol
     ) {
-        return sheetController.mlModelLoader.documentModelsFuture.observe(on: .main) {[weak self] result in
-            guard let self = self else { return }
+        Task { @MainActor [weak self] in
+            guard let self else { return }
 
-            Task {
-                let staticContent: StripeAPI.VerificationPage
-                do {
-                    staticContent = try staticContentResult.get()
-                    self.transition(
-                        to: await self.makeDocumentCaptureViewController(
-                            documentScannerResult: result,
-                            staticContent: staticContent,
-                            sheetController: sheetController
-                        ),
-                        shouldAnimate: true,
-                        completion: {}
-                    )
-                } catch {
-                    self.transition(
-                        to: await ErrorViewController(
-                            sheetController: sheetController,
-                            error: .error(error)
-                        ),
-                        shouldAnimate: true,
-                        completion: {}
-                    )
-                }
+            let documentScannerResult = await sheetController.mlModelLoader.documentModels()
+            do {
+                let staticContent = try staticContentResult.get()
+                self.transition(
+                    to: self.makeDocumentCaptureViewController(
+                        documentScannerResult: documentScannerResult,
+                        staticContent: staticContent,
+                        sheetController: sheetController
+                    ),
+                    shouldAnimate: true,
+                    completion: {}
+                )
+            } catch {
+                self.transition(
+                    to: ErrorViewController(
+                        sheetController: sheetController,
+                        error: .error(error)
+                    ),
+                    shouldAnimate: true,
+                    completion: {}
+                )
             }
         }
     }
@@ -506,17 +502,16 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 )
             )
         case .documentCaptureDestination:
-            return sheetController.mlModelLoader.documentModelsFuture.observe(on: .main) { [weak self] result in
-                guard let self = self else { return }
-                Task {
-                    completion(
-                        await self.makeDocumentCaptureViewController(
-                            documentScannerResult: result,
-                            staticContent: staticContent,
-                            sheetController: sheetController
-                        )
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                let documentScannerResult = await sheetController.mlModelLoader.documentModels()
+                completion(
+                    self.makeDocumentCaptureViewController(
+                        documentScannerResult: documentScannerResult,
+                        staticContent: staticContent,
+                        sheetController: sheetController
                     )
-                }
+                )
             }
         case .selfieCaptureDestination:
             completion(
