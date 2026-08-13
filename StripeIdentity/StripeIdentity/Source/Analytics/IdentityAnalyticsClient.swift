@@ -526,23 +526,25 @@ final class IdentityAnalyticsClient {
     }
 
     /// Logs the average inference and post-processing times for every ML model used for one scan
+    @MainActor
     func logModelPerformance(
         mlModelMetricsTrackers: [MLDetectorMetricsTrackerProtocol],
         sheetController: VerificationSheetControllerProtocol
-    ) {
-        mlModelMetricsTrackers.forEach { metricsTracker in
+    ) async {
+        for metricsTracker in mlModelMetricsTrackers {
             // Cache values to avoid weakly capturing performanceTracker
             let modelName = metricsTracker.modelName
-
-            metricsTracker.getPerformanceMetrics(completeOn: .main) { averageMetrics, numFrames in
-                guard numFrames > 0 else { return }
-                self.logModelPerformance(
-                    modelName: modelName,
-                    averageMetrics: averageMetrics,
-                    numFrames: numFrames,
-                    sheetController: sheetController
-                )
+            let metrics = await metricsTracker.getPerformanceMetrics()
+            guard metrics.numFrames > 0 else {
+                continue
             }
+
+            logModelPerformance(
+                modelName: modelName,
+                averageMetrics: metrics.averageMetrics,
+                numFrames: metrics.numFrames,
+                sheetController: sheetController
+            )
         }
     }
 
@@ -566,6 +568,7 @@ final class IdentityAnalyticsClient {
     }
 
     /// Logs the time it takes to upload an image along with its file size and compression quality
+    @MainActor
     func logImageUpload(
         timeToUpload: TimeInterval,
         compressionQuality: CGFloat,
