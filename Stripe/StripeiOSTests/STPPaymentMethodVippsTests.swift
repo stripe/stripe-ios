@@ -14,7 +14,7 @@ class STPPaymentMethodVippsTests: STPNetworkStubbingTestCase {
         "pi_3VippsKG6vc7r7YC1Xs7oiWw_secret_5cqzEtQ059azmV1GmkLRA7Lvt"
 
     func _retrieveVippsJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
-        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let client = STPAPIClient(publishableKey: STPTestingFRPublishableKey)
         client.retrievePaymentIntent(
             withClientSecret: Self.vippsPaymentIntentClientSecret,
             expand: ["payment_method"]
