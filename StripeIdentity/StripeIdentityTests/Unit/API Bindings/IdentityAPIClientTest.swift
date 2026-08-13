@@ -22,7 +22,6 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
     static let mockEAK = "ephemeral_key_secret"
 
     private var apiClient: IdentityAPIClientImpl!
-    private var exp: XCTestExpectation!
 
     override func setUp() {
         super.setUp()
@@ -32,8 +31,6 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             ephemeralKeySecret: IdentityAPIClientTest.mockEAK
         )
         stubClient()
-
-        exp = expectation(description: "Request completed")
     }
 
     func stubClient() {
@@ -42,39 +39,41 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
         apiClient.apiClient.urlSession = URLSession(configuration: urlSessionConfig)
     }
 
-    func testCreateVerificationPageWithTypeDoc() throws {
-        try testVerificationPage(with: VerificationPageMock.response200)
+    func testCreateVerificationPageWithTypeDoc() async throws {
+        try await testVerificationPage(with: VerificationPageMock.response200)
     }
 
-    func testCreateVerificationPageWithTypeDocRequireLifeCapture() throws {
-        try testVerificationPage(with: VerificationPageMock.requireLiveCapture)
+    func testCreateVerificationPageWithTypeDocRequireLifeCapture() async throws {
+        try await testVerificationPage(with: VerificationPageMock.requireLiveCapture)
     }
 
-    func testCreateVerificationPageWithTypeDocNoSelfie() throws {
-        try testVerificationPage(with: VerificationPageMock.noSelfie)
+    func testCreateVerificationPageWithTypeDocNoSelfie() async throws {
+        try await testVerificationPage(with: VerificationPageMock.noSelfie)
     }
 
-    func testCreateVerificationPageWithTypeDocRequireIdNumber() throws {
-        try testVerificationPage(with: VerificationPageMock.typeDocumentRequireIdNumber)
+    func testCreateVerificationPageWithTypeDocRequireIdNumber() async throws {
+        try await testVerificationPage(with: VerificationPageMock.typeDocumentRequireIdNumber)
     }
 
-    func testCreateVerificationPageWithTypeDocRequireAddress() throws {
-        try testVerificationPage(with: VerificationPageMock.typeDocumentRequireAddress)
+    func testCreateVerificationPageWithTypeDocRequireAddress() async throws {
+        try await testVerificationPage(with: VerificationPageMock.typeDocumentRequireAddress)
     }
 
-    func testCreateVerificationPageWithTypeDocRequireIdNumberAndAddress() throws {
-        try testVerificationPage(with: VerificationPageMock.typeDocumentRequireIdNumberAndAddress)
+    func testCreateVerificationPageWithTypeDocRequireIdNumberAndAddress() async throws {
+        try await testVerificationPage(with: VerificationPageMock.typeDocumentRequireIdNumberAndAddress)
     }
 
-    func testCreateVerificationPageWithTypeIdNumber() throws {
-        try testVerificationPage(with: VerificationPageMock.typeIdNumber)
+    func testCreateVerificationPageWithTypeIdNumber() async throws {
+        try await testVerificationPage(with: VerificationPageMock.typeIdNumber)
     }
 
-    func testCreateVerificationPageWithTypeAddress() throws {
-        try testVerificationPage(with: VerificationPageMock.typeAddress)
+    func testCreateVerificationPageWithTypeAddress() async throws {
+        try await testVerificationPage(with: VerificationPageMock.typeAddress)
     }
 
     func testUpdateVerificationPageData() throws {
+        let exp = expectation(description: "Request completed")
+
         let mockVerificationData = VerificationPageDataUpdateMock.default
         let encodedMockVerificationData = URLEncoder.queryString(
             from: try mockVerificationData.encodeJSONDictionary()
@@ -114,7 +113,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             case .failure(let error):
                 XCTFail("Request returned error \(error)")
             }
-            self.exp.fulfill()
+            exp.fulfill()
         }
 
         wait(for: [exp], timeout: 1)
@@ -139,6 +138,8 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
     }
 
     func testUploadImage() throws {
+        let exp = expectation(description: "Request completed")
+
         let mockPurpose = "purpose"
 
         let mockImage = CapturedImageMock.frontDriversLicense.image
@@ -177,13 +178,13 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             case .failure(let error):
                 XCTFail("Request returned error \(error)")
             }
-            self.exp.fulfill()
+            exp.fulfill()
         }
 
         wait(for: [exp], timeout: 1)
     }
 
-    private func testVerificationPage(with responseMock: VerificationPageMock) throws {
+    private func testVerificationPage(with responseMock: VerificationPageMock) async throws {
         let mockVerificationPage = responseMock
         let mockResponseData = try mockVerificationPage.data()
         let mockResponse = try mockVerificationPage.make()
@@ -203,20 +204,13 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
 
-        apiClient.getIdentityVerificationPage().observe { result in
-            switch result {
-            case .success(let response):
-                XCTAssertEqual(response, mockResponse)
-            case .failure(let error):
-                XCTFail("Request returned error \(error)")
-            }
-            self.exp.fulfill()
-        }
-
-        wait(for: [exp], timeout: 1)
+        let response = try await apiClient.getIdentityVerificationPage()
+        XCTAssertEqual(response, mockResponse)
     }
 
     private func verifyPostWithSuffix(expectedSuffix: String, apiCall: () -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData>) throws {
+        let exp = expectation(description: "Request completed")
+
         let mockVerificationPageData = VerificationPageDataMock.response200
         let mockResponseData = try mockVerificationPageData.data()
         let mockResponse = try mockVerificationPageData.make()
@@ -243,7 +237,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             case .failure(let error):
                 XCTFail("Request returned error \(error)")
             }
-            self.exp.fulfill()
+            exp.fulfill()
         }
 
         wait(for: [exp], timeout: 1)

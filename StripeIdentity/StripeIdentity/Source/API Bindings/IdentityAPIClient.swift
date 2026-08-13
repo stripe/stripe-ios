@@ -13,7 +13,7 @@ import UIKit
 protocol IdentityAPIClient: AnyObject {
     var verificationSessionId: String { get }
 
-    func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage>
+    func getIdentityVerificationPage() async throws -> StripeAPI.VerificationPage
 
     func updateIdentityVerificationPageData(
         updating verificationData: StripeAPI.VerificationPageDataUpdate
@@ -84,8 +84,8 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         apiClient.appInfo = STPAPIClient.shared.appInfo
     }
 
-    func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage> {
-        return apiClient.get(
+    func getIdentityVerificationPage() async throws -> StripeAPI.VerificationPage {
+        try await apiClient.get(
             resource: APIEndpointVerificationPage(id: verificationSessionId),
             parameters: ["app_identifier": Bundle.main.bundleIdentifier ?? ""]
         )
