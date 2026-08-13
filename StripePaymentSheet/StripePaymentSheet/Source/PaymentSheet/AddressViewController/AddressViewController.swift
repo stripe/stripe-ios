@@ -314,10 +314,7 @@ public class AddressViewController: UIViewController {
 
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        if !didLogAddressShow {
-            integrationDelegate?.didShow()
-            didLogAddressShow = true
-        }
+        integrationDelegate?.didShow()
         // Ensure we receive dismissal callbacks even when presented modally inside a UINavigationController
         navigationController?.presentationController?.delegate = self
         addressSection?.beginEditing()
@@ -362,10 +359,6 @@ extension AddressViewController {
 
 // MARK: - Internal methods
 extension AddressViewController {
-
-    func prepareForPresentation() {
-        didLogAddressShow = false
-    }
 
     func initialAddressDetails() async -> AddressDetails? {
         await addressSpecProvider.loadAddressSpecs()
@@ -669,10 +662,9 @@ extension AddressViewController {
 // Default implementation that logs completion and forwards address details to the merchant delegate
 extension AddressViewController: AddressViewController.IntegrationDelegate {
     func didShow() {
-        STPAnalyticsClient.sharedClient.logAddressShow(
-            defaultCountryCode: addressShowAnalyticData.addressCountryCode,
-            apiClient: configuration.apiClient
-        )
+        guard !didLogAddressShow else { return }
+        STPAnalyticsClient.sharedClient.logAddressShow(defaultCountryCode: addressSection?.selectedCountryCode ?? "", apiClient: configuration.apiClient)
+        didLogAddressShow = true
     }
 
     func didCancel() {

@@ -23,6 +23,7 @@ public final class ShippingAddressElement {
 
     private(set) var addressViewController: AddressViewController!
     private let checkoutSessionId: String
+    private var didLogAddressShow = false
     private var presentationCompletion: (() -> Void)?
     weak var delegate: ShippingAddressElementDelegate?
 
@@ -105,13 +106,15 @@ public final class ShippingAddressElement {
 
         let navigationController = UINavigationController(rootViewController: addressViewController)
         presentationCompletion = completion
-        addressViewController.prepareForPresentation()
+        didLogAddressShow = false
         presentingViewController.present(navigationController, animated: true)
     }
 }
 
 extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
     func didShow() {
+        guard !didLogAddressShow else { return }
+        didLogAddressShow = true
         log(
             event: .shippingAddressElementShown,
             addressAnalyticData: addressViewController.addressShowAnalyticData

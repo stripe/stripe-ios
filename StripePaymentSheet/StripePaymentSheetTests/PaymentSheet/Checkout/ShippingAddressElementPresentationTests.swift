@@ -113,6 +113,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         // When
         _ = try XCTUnwrap(present(shippingAddressElement))
         shippingAddressElement.addressViewController.viewDidAppear(false)
+        shippingAddressElement.addressViewController.viewDidAppear(false)
         shippingAddressElement.addressViewController.didTapCloseButton()
 
         // Then
