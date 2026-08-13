@@ -75,17 +75,17 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
 
     func testLogErrorAnalytic() {
         let error = MockError.someErrorCase
-        let errorAnalytic = ErrorAnalytic(event: .luxeSerializeFailure, error: error)
+        let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError, error: error)
         let payload = client.payload(from: errorAnalytic)
 
         // Verify payload event name is correct
-        XCTAssertEqual(payload["event"] as? String, STPAnalyticEvent.luxeSerializeFailure.rawValue)
+        XCTAssertEqual(payload["event"] as? String, STPAnalyticEvent.unexpectedPaymentSheetError.rawValue)
 
         // Verify error details are included
         XCTAssertEqual(payload["error_type"] as? String, "StripeiOS_Tests.STPAnalyticsClientPaymentsTest.MockError")
         XCTAssertEqual(payload["error_code"] as? String, "someErrorCase")
 
-        let errorAnalyticWithAdditionalParams = ErrorAnalytic(event: .luxeSerializeFailure, error: error, additionalNonPIIParams: ["additional_param": "value"])
+        let errorAnalyticWithAdditionalParams = ErrorAnalytic(event: .unexpectedPaymentSheetError, error: error, additionalNonPIIParams: ["additional_param": "value"])
         let payloadWithAdditionalParams = client.payload(from: errorAnalyticWithAdditionalParams)
 
         // Verify additional params in ErrorAnalytic are included

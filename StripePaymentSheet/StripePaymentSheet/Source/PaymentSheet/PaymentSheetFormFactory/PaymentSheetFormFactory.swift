@@ -19,8 +19,7 @@ import UIKit
  */
 class PaymentSheetFormFactory {
     enum Error: Swift.Error {
-        case missingFormSpec
-        case missingV1FromSelectorSpec
+        case unexpectedPaymentMethodType
     }
 
     let paymentMethod: PaymentSheet.PaymentMethodType
@@ -243,72 +242,99 @@ class PaymentSheetFormFactory {
         case .instantDebits, .linkCardBrand:
             return makeInstantDebits()
         case .external(let externalPaymentOption):
-            return makeExternalPaymentMethodForm(subtitle: externalPaymentOption.displaySubtext,
-                                                 disableBillingDetailCollection: externalPaymentOption.disableBillingDetailCollection)
+            return makeExternalPaymentMethodForm(
+                subtitle: externalPaymentOption.displaySubtext,
+                disableBillingDetailCollection: externalPaymentOption.disableBillingDetailCollection
+            )
         case .stripe(let paymentMethod):
-            var additionalElements = [Element]()
-
-            // We have two ways to create the form for a payment method
-            // 1. Custom, one-off forms
-            if paymentMethod == .card {
+            switch paymentMethod {
+            case .card:
                 return makeCard(linkAppearance: linkAppearance)
-            } else if paymentMethod == .USBankAccount {
+            case .USBankAccount:
                 return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
-            } else if paymentMethod == .cashApp && isSettingUp {
-                // special case, display mandate for Cash App when setting up or pi+sfu
-                additionalElements = [makeCashAppMandate()]
-            } else if paymentMethod == .payPal && isSettingUp {
-                // Paypal requires mandate when setting up
-                additionalElements = [makePaypalMandate()]
-            } else if paymentMethod == .revolutPay && isSettingUp {
-                // special case, display mandate for revolutPay when setting up or pi+sfu
-                additionalElements = [makeRevolutPayMandate()]
-            } else if paymentMethod == .amazonPay && isSettingUp {
-                // special case, display mandate for Amazon Pay when setting up or pi+sfu
-                additionalElements = [makeAmazonPayMandate()]
-            } else if paymentMethod == .satispay && isSettingUp {
-                // special case, display mandate for Satispay when setting up or pi+sfu
-                additionalElements = [makeSatispayMandate()]
-            } else if paymentMethod == .twint && isSettingUp {
-                // special case, display mandate for Twint when setting up or pi+sfu
-                additionalElements = [makeTwintMandate()]
-            } else if paymentMethod == .bancontact {
+            case .bancontact:
                 return makeBancontact()
-            } else if paymentMethod == .bacsDebit {
+            case .bacsDebit:
                 return makeBacsDebit()
-            } else if paymentMethod == .blik {
+            case .blik:
                 return makeBLIK()
-            } else if paymentMethod == .OXXO {
-                return  makeOXXO()
-            } else if paymentMethod == .konbini {
+            case .OXXO:
+                return makeOXXO()
+            case .konbini:
                 return makeKonbini()
-            } else if paymentMethod == .boleto {
+            case .boleto:
                 return makeBoleto()
-            } else if paymentMethod == .swish {
+            case .swish:
                 return makeSwish()
-            } else if paymentMethod == .afterpayClearpay {
+            case .afterpayClearpay:
                 return makeAfterpayClearpay()
-            } else if paymentMethod == .affirm {
+            case .affirm:
                 return makeAffirm()
-            } else if paymentMethod == .klarna {
+            case .klarna:
                 return makeKlarna()
-            } else if paymentMethod == .iDEAL {
+            case .iDEAL:
                 return makeiDEAL()
-            } else if paymentMethod == .wero {
+            case .wero:
                 return makeWero()
-            }
-
-            guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
-                analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
-                return FormElement(elements: [], theme: theme)
-            }
-            if paymentMethod == .SEPADebit {
+            case .SEPADebit:
                 return makeSepaDebit()
+            case .grabPay, .alipay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
+                 .billie, .sunbit, .alma, .payByBank:
+                return makeContactInformationAndBillingAddressForm()
+            case .promptPay, .multibanco:
+                return makeContactInformationAndBillingAddressForm(
+                    emailRequired: true,
+                    emailAPIPath: "billing_details[email]"
+                )
+            case .mbWay, .bizum:
+                return makeContactInformationAndBillingAddressForm(phoneRequired: true)
+            case .cashApp, .payPal, .revolutPay, .amazonPay, .satispay, .twint:
+                return makeContactInformationAndBillingAddressForm(
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
+                )
+            case .EPS:
+                return makeEPS()
+            case .przelewy24:
+                return makePrzelewy24()
+            case .AUBECSDebit:
+                return makeAUBECSDebit()
+            case .FPX:
+                return makeFPX()
+            case .netBanking, .weChatPay, .link, .cardPresent, .unknown:
+                return makeUnexpectedEmptyForm(for: paymentMethod)
+            @unknown default:
+                return makeUnexpectedEmptyForm(for: paymentMethod)
             }
+        }
+    }
 
-            // 2. Element-based forms defined in JSON
-            return makeFormElementFromSpec(spec: spec, additionalElements: additionalElements)
+    private func makeUnexpectedEmptyForm(for paymentMethod: STPPaymentMethodType) -> PaymentMethodElement {
+        let errorAnalytic = ErrorAnalytic(
+            event: .unexpectedPaymentSheetFormFactoryError,
+            error: Error.unexpectedPaymentMethodType,
+            additionalNonPIIParams: ["payment_method": paymentMethod.identifier]
+        )
+        analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
+        return FormElement(elements: [], theme: theme)
+    }
+
+    private func makeSetupMandateElements(for paymentMethod: STPPaymentMethodType) -> [Element] {
+        guard isSettingUp else { return [] }
+        switch paymentMethod {
+        case .cashApp:
+            return [makeCashAppMandate()]
+        case .payPal:
+            return [makePaypalMandate()]
+        case .revolutPay:
+            return [makeRevolutPayMandate()]
+        case .amazonPay:
+            return [makeAmazonPayMandate()]
+        case .satispay:
+            return [makeSatispayMandate()]
+        case .twint:
+            return [makeTwintMandate()]
+        default:
+            return []
         }
     }
 }
@@ -336,7 +362,7 @@ extension PaymentSheetFormFactory {
         return details
     }
 
-    /// Fields generated from form specs i.e. LUXE can write their values to arbitrary keys (`apiPath`)  in `additionalAPIParameters`.
+    /// Some fields write their values to arbitrary keys (`apiPath`) in `additionalAPIParameters`.
     func getPreviousCustomerInput(for apiPath: String?) -> String? {
         guard let apiPath = apiPath else {
             return nil
@@ -770,6 +796,26 @@ extension PaymentSheetFormFactory {
         return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
     }
 
+    /// Creates a form that collects configured contact information and billing address details.
+    func makeContactInformationAndBillingAddressForm(
+        emailRequired: Bool = false,
+        emailAPIPath: String? = nil,
+        phoneRequired: Bool = false,
+        additionalElements: [Element] = []
+    ) -> PaymentMethodElement {
+        let contactInfoSection = makeContactInformationSection(
+            nameRequiredByPaymentMethod: false,
+            emailRequiredByPaymentMethod: emailRequired,
+            phoneRequiredByPaymentMethod: phoneRequired,
+            emailAPIPath: emailAPIPath
+        )
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let elements = [contactInfoSection, billingDetails].compactMap { $0 } + additionalElements
+        return makeDefaultsApplierWrapper(
+            for: FormElement(autoSectioningElements: elements, theme: theme)
+        )
+    }
+
     func makeWero() -> PaymentMethodElement {
         // Wero requires a country; collect the full address only if the config requires it
         let addressElement = makeCountryOrAddressSection(countries: ["DE", "BE", "FR"])
@@ -947,12 +993,18 @@ extension PaymentSheetFormFactory {
     /// - Parameter nameRequiredByPaymentMethod: Whether your payment method requires the name field.
     /// - Parameter emailRequiredByPaymentMethod: Whether your payment method requires the email field.
     /// - Parameter phoneRequiredByPaymentMethod: Whether your payment method requires the phone field.
-    func makeContactInformationSection(nameRequiredByPaymentMethod: Bool, emailRequiredByPaymentMethod: Bool, phoneRequiredByPaymentMethod: Bool) -> SectionElement? {
+    func makeContactInformationSection(
+        nameRequiredByPaymentMethod: Bool,
+        emailRequiredByPaymentMethod: Bool,
+        phoneRequiredByPaymentMethod: Bool,
+        emailAPIPath: String? = nil
+    ) -> SectionElement? {
         let config = configuration.billingDetailsCollectionConfiguration
         let nameElement = config.name == .always
             || (config.name == .automatic && nameRequiredByPaymentMethod) ? makeName() : nil
         let emailElement = config.email == .always
-            || (config.email == .automatic && emailRequiredByPaymentMethod) ? makeEmail() : nil
+            || (config.email == .automatic && emailRequiredByPaymentMethod)
+            ? makeEmail(apiPath: emailAPIPath) : nil
         let phoneElement = config.phone == .always
             || (config.phone == .automatic && phoneRequiredByPaymentMethod) ? makePhone() : nil
         let elements = ([nameElement, emailElement, phoneElement] as [Element?]).compactMap { $0 }

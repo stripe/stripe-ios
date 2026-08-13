@@ -55,7 +55,7 @@ extension LinkVerificationView {
 
                 // Button
                 closeButton.topAnchor.constraint(equalTo: topAnchor),
-                closeButton.rightAnchor.constraint(equalTo: rightAnchor),
+                closeButton.trailingAnchor.constraint(equalTo: trailingAnchor),
                 closeButton.bottomAnchor.constraint(equalTo: bottomAnchor),
             ])
 

@@ -19,11 +19,12 @@ end
 
 def get_added_strings(current_dir)
   new_strings = {}
+  diff_base = ENV.fetch('TRANSLATION_DIFF_BASE', 'origin/master...')
 
-  strings_files = `git diff --name-only origin/master...`.split("\n").select { |f| f.end_with?(".strings") }
+  strings_files = `git diff --name-only #{diff_base}`.split("\n").select { |f| f.end_with?(".strings") }
 
   strings_files.each do |file|
-    added_lines = `git diff origin/master... -- #{file}`.split("\n").select do |line|
+    added_lines = `git diff #{diff_base} -- #{file}`.split("\n").select do |line|
       line.start_with?('+') && !line.start_with?('+++') && line.include?('=') && !line.match(/^\/\//)
     end
 

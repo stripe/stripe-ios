@@ -49,7 +49,6 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertNotNil(elementsSession.linkSettings)
         XCTAssertEqual(elementsSession.countryCode, "US")
         XCTAssertEqual(elementsSession.merchantCountryCode, "US")
-        XCTAssertNotNil(elementsSession.paymentMethodSpecs)
         XCTAssertEqual(elementsSession.cardBrandChoice?.eligible, true)
         XCTAssertEqual(elementsSession.flags, ["cbc_in_link_popup": true, "disable_cbc_in_link_popup": false])
         XCTAssertTrue(elementsSession.isApplePayEnabled)
@@ -67,6 +66,22 @@ class STPElementsSessionTest: XCTestCase {
         elementsSessionJson["flags"] = ["elements_mobile_attest_on_intent_confirmation": false]
         elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
         XCTAssertFalse(elementsSession.shouldAttestOnConfirmation)
+    }
+
+    func testDecodedObjectFromAPIResponseMapping_analyticsToR() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["flags"] = ["ocs_mobile_enable_analytics_to_r": true]
+
+        var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertTrue(elementsSession.isAnalyticsToRStripeEnabled)
+
+        elementsSessionJson["flags"] = ["ocs_mobile_enable_analytics_to_r": false]
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertFalse(elementsSession.isAnalyticsToRStripeEnabled)
+
+        elementsSessionJson["flags"] = [:]
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertFalse(elementsSession.isAnalyticsToRStripeEnabled)
     }
 
     func testDecodedObjectFromAPIResponseMapping_linkBrandLink() {

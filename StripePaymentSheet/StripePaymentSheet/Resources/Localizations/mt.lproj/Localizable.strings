@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Ikkonferma d-dettalji tal-pagament";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Ikkonferma l-pagament ta' Bizum fl-applikazzjoni tal-ibbankjar bil-mowbajl tiegħek fi żmien %@ biex tlesti x-xirja.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Ikkonferma l-pagament fl-app tiegħek ta' MB WAY fi żmien %@ biex tlesti x-xirja.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Biex tlesti x-xirja kkonferma l-pagament, fl-app tal-bank jew fl-app tal-pagamenti, fi żmien %@.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Ikkonferma l-pagament fl-app tal-bank fi żmien %@ biex tlesti x-xirja.";
@@ -139,6 +143,8 @@
 "Discount" = "Skont";
 
 "EPS Bank" = "EPS Bank";
+
+"Edit address" = "Editja l-indirizz";
 
 "Enter address manually" = "Ikteb l-indirizz int stess";
 
@@ -339,5 +345,3 @@
 "Yes, update" = "Iva, aġġorna";
 
 "Your IBAN should start with a two-letter country code." = "L-IBAN tiegħek għandu jibda b'kodiċi tal-pajjiż magħmul minn żewġ ittri.";
-
-"iDEAL Bank" = "Il-Bank iDEAL";

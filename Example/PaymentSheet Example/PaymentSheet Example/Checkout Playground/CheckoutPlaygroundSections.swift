@@ -7,17 +7,25 @@
 import SwiftUI
 
 struct CheckoutPlaygroundConfigurationSection: View {
+    @Binding var uiFramework: CheckoutPlayground.UIFramework
     @Binding var integrationType: CheckoutPlayground.IntegrationType
     @Binding var currency: CheckoutPlayground.Currency
     @Binding var customerType: CheckoutPlayground.CustomerType
     @Binding var checkoutEndpointOption: CheckoutPlayground.EndpointOption
     @Binding var checkoutEndpoint: String
     @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
+    @Binding var delayPaymentPagesRequests: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
             VStack(spacing: 1) {
+                CheckoutPlayground.PickerRow(
+                    title: "UI Framework",
+                    icon: "rectangle.3.group.fill",
+                    selection: $uiFramework,
+                    displayText: { $0.displayName }
+                )
                 CheckoutPlayground.PickerRow(
                     title: "PaymentElement",
                     icon: "square.stack.3d.up.fill",
@@ -75,6 +83,11 @@ struct CheckoutPlaygroundConfigurationSection: View {
                 .padding(.vertical, 12)
                 .padding(.horizontal, 16)
                 .background(Color(uiColor: .secondarySystemGroupedBackground))
+                CheckoutPlayground.ToggleRow(
+                    title: "Delay Payment Pages Requests",
+                    isOn: $delayPaymentPagesRequests,
+                    tooltip: "Adds a 1-second delay before Payment Pages API requests except the initial /init request so loading states are easier to inspect."
+                )
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -158,12 +171,9 @@ struct CheckoutPlaygroundFeaturesSection: View {
     let customerType: CheckoutPlayground.CustomerType
     @Binding var shippingAddressCollection: Bool
     @Binding var billingAddressCollection: CheckoutPlayground.BillingAddressCollection
-    @Binding var allowPromotionCodes: Bool
     @Binding var automaticTax: Bool
-    @Binding var adaptivePricing: Bool
     @Binding var checkoutSessionPaymentMethodSave: Bool
     @Binding var checkoutSessionPaymentMethodRemove: Bool
-    @Binding var adaptivePricingCountry: CheckoutPlayground.AdaptivePricingCountry
     @Binding var automaticPaymentMethods: Bool
 
     private var shouldShowAutomaticTax: Bool {
@@ -190,11 +200,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $automaticPaymentMethods,
                     tooltip: "Sends `automatic_payment_methods: true` instead of an explicit `payment_method_types` array. Stripe selects the best payment methods for the session."
                 )
-                CheckoutPlayground.ToggleRow(
-                    title: "Allow Promo Codes",
-                    isOn: $allowPromotionCodes,
-                    tooltip: "Sets `allow_promotion_codes: true`. Adds a coupon code input field to the checkout page."
-                )
                 if shouldShowAutomaticTax {
                     CheckoutPlayground.ToggleRow(
                         title: "Automatic Tax",
@@ -202,11 +207,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
                         tooltip: "Sets `automatic_tax: { enabled: true }`. Enables Stripe Tax for automatic tax calculation based on shipping/billing address. Prices must use `tax_behavior: 'exclusive'` or `'inclusive'`."
                     )
                 }
-                CheckoutPlayground.ToggleRow(
-                    title: "Adaptive Pricing",
-                    isOn: $adaptivePricing,
-                    tooltip: "Sets `adaptive_pricing: { enabled: true }`. Displays prices in the customer's local currency."
-                )
                 CheckoutPlayground.ToggleRow(
                     title: "Payment Method Offer Save",
                     isOn: $checkoutSessionPaymentMethodSave,
@@ -217,15 +217,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $checkoutSessionPaymentMethodRemove,
                     tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
                 )
-                if adaptivePricing {
-                    CheckoutPlayground.PickerRow(
-                        title: "Country",
-                        icon: "globe",
-                        selection: $adaptivePricingCountry,
-                        tooltip: "Simulates the customer's country for adaptive pricing by sending a location-formatted customer_email. 'None' skips the email override.",
-                        displayText: { $0.displayName }
-                    )
-                }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -311,14 +302,12 @@ struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
     @Binding var selectedMethods: Set<String>
     let availableMethods: [String]
     @Environment(\.dismiss) var dismiss
-    @State private var searchText = ""
     @State private var customMethodType = ""
 
-    var filteredMethods: [String] {
-        if searchText.isEmpty {
-            return availableMethods
-        }
-        return availableMethods.filter { $0.localizedCaseInsensitiveContains(searchText) }
+    private var customMethods: [String] {
+        selectedMethods
+            .subtracting(availableMethods)
+            .sorted()
     }
 
     var body: some View {
@@ -334,15 +323,30 @@ struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
                             guard !trimmed.isEmpty else {
                                 return
                             }
-                            selectedMethods.insert(trimmed)
+                            selectedMethods = selectedMethods.union([trimmed])
                             customMethodType = ""
                         }
                         .disabled(customMethodType.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
+
+                    ForEach(customMethods, id: \.self) { method in
+                        HStack {
+                            Text(method)
+                            Spacer()
+                            Button {
+                                selectedMethods = selectedMethods.subtracting([method])
+                            } label: {
+                                Image(systemName: "minus.circle.fill")
+                                    .foregroundColor(.red)
+                            }
+                            .buttonStyle(.borderless)
+                            .accessibilityLabel("Remove \(method)")
+                        }
+                    }
                 }
 
                 Section("Available") {
-                    ForEach(filteredMethods, id: \.self) { method in
+                    ForEach(availableMethods, id: \.self) { method in
                         Button {
                             withAnimation {
                                 if selectedMethods.contains(method) {
@@ -367,7 +371,6 @@ struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
                     }
                 }
             }
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
             .navigationTitle("Select Payment Methods")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

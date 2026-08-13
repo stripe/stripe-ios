@@ -772,8 +772,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     @MainActor
     func testPaymentSheetLoadWithDirectCheckoutSessionPayment() async throws {
         let expectation = XCTestExpectation(description: "Load w/ direct CheckoutSession")
-        // Fetch a fresh checkout session from the test backend
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
+        // Create a fresh checkout session with the test backend
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
         let checkoutSessionId = checkoutSessionResponse.id
         let customApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         var configuration = PaymentSheet.Configuration()
@@ -806,10 +806,15 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
+    // TODO(porter): Setup mode is out of scope for unified-mode private preview.
+    // Rename back to `test...` once unified mode supports setup mode — but note
+    // `createCheckoutSession()` below creates a real payment-shaped modeless session, not
+    // a setup-style one, so the `.noPaymentRequired` assertion below will need reshaping
+    // too, not just the rename.
     @MainActor
-    func testPaymentSheetLoadWithCheckoutSessionSetup() async throws {
+    func disabled_testPaymentSheetLoadWithCheckoutSessionSetup() async throws {
         let expectation = XCTestExpectation(description: "Load w/ CheckoutSession setup mode")
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionSetupMode()
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
         let checkoutSessionId = checkoutSessionResponse.id
         let customApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         var configuration = PaymentSheet.Configuration()
@@ -934,10 +939,12 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         }
 
         let privatePreviewPaymentMethodTypes: [STPPaymentMethodType] = [.wero, .payByBank]
+        // Payment methods whose payment_method_options aren't recognized by /v1/elements/sessions yet
+        let unsupportedPMOPaymentMethodTypes: [STPPaymentMethodType] = [.bizum, .vipps]
         // Test successful load with valid payment method options
         let all_payment_methods_pmo_sfu_values: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = STPPaymentMethodType.allCases.reduce([:]) { partialResult, type in
-            // Skip unknown and payment methods in private preview (not yet recognized by /v1/elements/sessions)
-            guard type != .unknown, !privatePreviewPaymentMethodTypes.contains(type) else { return partialResult }
+            // Skip unknown, payment methods in private preview, and payment methods with unsupported PMO (not yet recognized by /v1/elements/sessions)
+            guard type != .unknown, !privatePreviewPaymentMethodTypes.contains(type), !unsupportedPMOPaymentMethodTypes.contains(type) else { return partialResult }
             return partialResult.merging([type: .offSession]) { a, _ in a }
         }
         let intentConfig = PaymentSheet.IntentConfiguration(

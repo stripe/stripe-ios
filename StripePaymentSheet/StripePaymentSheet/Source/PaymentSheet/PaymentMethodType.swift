@@ -22,9 +22,6 @@ extension PaymentSheet {
         case instantDebits
         case linkCardBrand
 
-        static var analyticLogForIcon: Set<PaymentMethodType> = []
-        static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
-
         var displayName: String {
             switch self {
             case .stripe(let paymentMethodType):
@@ -61,14 +58,6 @@ extension PaymentSheet {
             }
         }
 
-        static func shouldLogAnalytic(paymentMethod: PaymentSheet.PaymentMethodType) -> Bool {
-            analyticLogForIconSemaphore.wait()
-            defer { analyticLogForIconSemaphore.signal() }
-            guard !analyticLogForIcon.contains(paymentMethod) else { return false }
-            analyticLogForIcon.insert(paymentMethod)
-            return true
-        }
-
         /// makeImage will immediately return an UImage that is either the image or a placeholder.
         /// If the image is immediately available, the updateHandler will not be called.
         /// If the image is not immediately available, the updateHandler will be called if we are able
@@ -85,39 +74,11 @@ extension PaymentSheet {
                     updateHandler: updateHandler
                 )
             case .stripe(let paymentMethodType):
-                // Get the client-side asset first
                 let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle)
-                // Next, try to download the image from the spec if possible
-                if
-                    FormSpecProvider.shared.isLoaded,
-                    let spec = FormSpecProvider.shared.formSpec(for: identifier),
-                    let selectorIcon = spec.selectorIcon,
-                    var imageUrl = URL(string: selectorIcon.lightThemePng),
-                    paymentMethodType != .crypto // special case, don't use remote URL for crypto so we can use the local image based on iconStyle
-                {
-                    if forDarkBackground,
-                       let darkImageString = selectorIcon.darkThemePng,
-                       let darkImageUrl = URL(string: darkImageString)
-                    {
-                        imageUrl = darkImageUrl
-                    }
-                    if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
-                        STPAnalyticsClient.sharedClient.logImageSelectorIconDownloadedIfNeeded(paymentMethod: self)
-                    }
-                    // If there's a form spec, download the spec's image, using the local image as a placeholder until it loads
-                    return DownloadManager.sharedManager.downloadImage(url: imageUrl, placeholder: localImage, updateHandler: updateHandler)
-                } else if let localImage {
-                    if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
-                        STPAnalyticsClient.sharedClient.logImageSelectorIconFromBundleIfNeeded(paymentMethod: self)
-                    }
-                    // If there's no form spec, return the local image if it exists
+                if let localImage {
                     return localImage
                 } else {
-                    // If the local image doesn't exist and there's no form spec, fire an analytic and return an empty image
                     assertionFailure()
-                    if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
-                        STPAnalyticsClient.sharedClient.logImageSelectorIconNotFoundIfNeeded(paymentMethod: self)
-                    }
                     return DownloadManager.sharedManager.imagePlaceHolder()
                 }
             case .instantDebits, .linkCardBrand:
@@ -312,8 +273,8 @@ extension PaymentSheet {
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .link, .affirm, .paynow, .zip, .alma,
-                        .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .multibanco,
-                        .sunbit, .billie, .crypto, .payPay, .wero, .payByBank:
+                        .mobilePay, .vipps, .unknown, .alipay, .konbini, .promptPay, .swish, .multibanco,
+                        .sunbit, .billie, .crypto, .payPay, .wero, .payByBank, .mbWay, .bizum:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -322,11 +283,11 @@ extension PaymentSheet {
             } else {
                 requirements = {
                     switch paymentMethod {
-                    case .blik, .card, .cardPresent, .weChatPay, .paynow, .promptPay:
+                    case .blik, .card, .cardPresent, .weChatPay, .paynow, .promptPay, .mbWay, .bizum:
                         return []
                     case .alipay, .EPS, .FPX, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
                             .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma,
-                            .mobilePay, .swish, .twint, .sunbit, .billie, .satispay, .crypto, .afterpayClearpay, .payPay,
+                            .mobilePay, .vipps, .swish, .twint, .sunbit, .billie, .satispay, .crypto, .afterpayClearpay, .payPay,
                             .wero, .payByBank:
                         return [.returnURL]
                     case .USBankAccount:
@@ -581,7 +542,7 @@ extension STPPaymentMethodParams {
             } else {
                 return "FPX"
             }
-        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .crypto, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent, .payPay, .wero, .payByBank:
+        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .vipps, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .crypto, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent, .payPay, .wero, .payByBank, .mbWay, .bizum:
             // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
             return type.displayName
         case .unknown:

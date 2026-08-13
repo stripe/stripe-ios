@@ -68,7 +68,7 @@ extension PaymentSheet {
         shouldFinishOnClose: Bool,
         onClose: (() -> Void)? = nil
     ) {
-        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, checkout: mode.checkout, confirmationChallenge: confirmationChallenge)
+        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
 
         payWithNativeLink.presentAsBottomSheet(from: presentingController, shouldOfferApplePay: shouldOfferApplePay, shouldFinishOnClose: shouldFinishOnClose, completion: { result, _, didFinish in
             if case let .failed(error) = result {
@@ -100,24 +100,6 @@ extension PaymentSheet {
 }
 
 // MARK: - Native Link helpers
-
-/// Check if native Link is available on this device
-func deviceCanUseNativeLink(
-    useAttestationEndpoints: Bool?,
-    apiClient: STPAPIClient
-) -> Bool {
-    let useAttestationEndpoints = useAttestationEndpoints ?? false
-    guard useAttestationEndpoints else {
-        return false
-    }
-
-    // If we're in testmode, we don't need to attest for native Link
-    if apiClient.isTestmode {
-        return true
-    }
-
-    return apiClient.stripeAttest.isSupported
-}
 
 /// Check if native Link is available on this device
 func deviceCanUseNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {

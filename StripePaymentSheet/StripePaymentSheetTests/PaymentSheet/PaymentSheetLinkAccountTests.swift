@@ -366,3 +366,89 @@ final class FundingSourceDetailsTypeMappingTests: XCTestCase {
         XCTAssertEqual(supported.first?.value, .card)
     }
 }
+
+// MARK: - supportedPaymentMethodTypes tests
+
+final class SupportedPaymentMethodTypesTests: XCTestCase {
+
+    func test_supportedPaymentMethodTypes_returnsEmptyWhenSessionFundingSourcesEmpty() throws {
+        // Given a consumer session that supports cards, but the session-level funding sources list is empty
+        let consumerSession = ConsumerSession.make(
+            clientSecret: "client_secret",
+            emailAddress: "user@example.com",
+            redactedFormattedPhoneNumber: "(***) *** **55",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: nil,
+            verificationSessions: [],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+            mobileFallbackWebviewParams: nil
+        )
+        let linkAccount = PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: consumerSession,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+
+        let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(linkFundingSources: [])
+        let result = linkAccount.supportedPaymentMethodTypes(for: elementsSession)
+
+        XCTAssertTrue(result.isEmpty, "Should return empty array when session has no funding sources")
+    }
+
+    func test_supportedPaymentMethodTypes_returnsEmptyWhenIntersectionIsEmpty() throws {
+        // Given a session that allows only bank accounts, but the consumer only supports cards
+        let consumerSession = ConsumerSession.make(
+            clientSecret: "client_secret",
+            emailAddress: "user@example.com",
+            redactedFormattedPhoneNumber: "(***) *** **55",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: nil,
+            verificationSessions: [],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+            mobileFallbackWebviewParams: nil
+        )
+        let linkAccount = PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: consumerSession,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+
+        let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(linkFundingSources: ["BANK_ACCOUNT"])
+        let result = linkAccount.supportedPaymentMethodTypes(for: elementsSession)
+
+        XCTAssertTrue(result.isEmpty, "Should return empty array when intersection of session and consumer funding sources is empty")
+    }
+
+    func test_supportedPaymentMethodTypes_returnsCardWhenBothSidesHaveCard() throws {
+        // Given a session and consumer that both support cards
+        let consumerSession = ConsumerSession.make(
+            clientSecret: "client_secret",
+            emailAddress: "user@example.com",
+            redactedFormattedPhoneNumber: "(***) *** **55",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: nil,
+            verificationSessions: [],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+            mobileFallbackWebviewParams: nil
+        )
+        let linkAccount = PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: consumerSession,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+
+        let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(linkFundingSources: ["CARD"])
+        let result = linkAccount.supportedPaymentMethodTypes(for: elementsSession)
+
+        XCTAssertEqual(result, [.card])
+    }
+}

@@ -7,6 +7,21 @@
 import Foundation
 
 enum CheckoutPlayground {
+    enum UIFramework: String, CaseIterable, Identifiable {
+
+        case swiftUI
+        case uiKit
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .swiftUI: return "SwiftUI"
+            case .uiKit: return "UIKit"
+            }
+        }
+    }
+
     enum EndpointOption: String, CaseIterable, Identifiable {
         case hosted
         case localhost
@@ -96,13 +111,13 @@ enum CheckoutPlayground {
 
         var displayName: String {
             switch self {
-            case .none: return "None"
-            case .us: return "US"
-            case .fr: return "FR"
-            case .de: return "DE"
-            case .jp: return "JP"
-            case .gb: return "GB"
-            case .br: return "BR"
+            case .none: return "No Override"
+            case .us: return "United States (US)"
+            case .fr: return "France (FR)"
+            case .de: return "Germany (DE)"
+            case .jp: return "Japan (JP)"
+            case .gb: return "United Kingdom (GB)"
+            case .br: return "Brazil (BR)"
             }
         }
     }

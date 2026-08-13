@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "确认支付详情";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "请在 %@ 内在您的手机银行应用中确认 Bizum 支付，以完成购买。";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "请在 %@ 内在您的 MB WAY 应用中确认支付，以完成购买。";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "在您的银行或支付应用程序中确认向 %@ 的付款，以完成购物。";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@内在您的银行应用中确认付款，完成购物。";
@@ -139,6 +143,8 @@
 "Discount" = "折扣";
 
 "EPS Bank" = "EPS 银行";
+
+"Edit address" = "编辑地址";
 
 "Enter address manually" = "手动输入地址";
 
@@ -339,5 +345,3 @@
 "Yes, update" = "是的，更新";
 
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 应以两个字母的国家代码开头。";
-
-"iDEAL Bank" = "iDEAL 银行";

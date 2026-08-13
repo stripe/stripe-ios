@@ -26,14 +26,14 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
     }
 
     func testSavedScreen_card() {
-        let paymentMethods = [
-            STPPaymentMethod._testCard(),
-        ]
-        let sut = PaymentSheetFlowControllerViewController(
-            configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
-            loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
-            analyticsHelper: ._testValue()
-        )
+        let sut = makeSavedCardSUT()
+        sut.view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(sut.view)
+    }
+
+    func testSavedScreen_cardRightToLeft() {
+        let sut = makeSavedCardSUT()
+        sut.view.forceRightToLeftLayout()
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }
@@ -80,11 +80,9 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
     }
 
     func testNewScreen_customCTA() {
-        let expectation = expectation(description: "Load specs")
+        let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load { _ in
-                expectation.fulfill()
-            }
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
 
@@ -100,11 +98,23 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
     }
 
     func testDirectToCardScan() {
-        let expectation = expectation(description: "Load specs")
+        let sut = makeDirectToCardScanSUT()
+        sut.view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(sut.view)
+    }
+
+    func testDirectToCardScanRightToLeft() {
+        let sut = makeDirectToCardScanSUT()
+        sut.view.forceRightToLeftLayout()
+        sut.view.autosizeHeight(width: 375)
+
+        STPSnapshotVerifyView(sut.view)
+    }
+
+    private func makeDirectToCardScanSUT() -> PaymentSheetFlowControllerViewController {
+        let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load { _ in
-                expectation.fulfill()
-            }
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
 
@@ -130,7 +140,15 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             loadResult: loadResult,
             analyticsHelper: ._testValue()
         )
-        sut.view.autosizeHeight(width: 375)
-        STPSnapshotVerifyView(sut.view)
+        return sut
     }
+
+    private func makeSavedCardSUT() -> PaymentSheetFlowControllerViewController {
+        return PaymentSheetFlowControllerViewController(
+            configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
+            loadResult: makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod._testCard()]),
+            analyticsHelper: ._testValue()
+        )
+    }
+
 }

@@ -22,7 +22,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(cardButton.waitForExistence(timeout: 10))
         // filter out async passive captcha and attestation logs
         let startupLog = analyticsLog.compactMap({ $0[string: "event"] })
-            .filter({ !$0.starts(with: "luxe") }).filter({ !$0.starts(with: "elements.captcha.passive") && !($0.contains("attest")) })
+            .filter({ !$0.starts(with: "elements.captcha.passive") && !($0.contains("attest")) })
         XCTAssertEqual(
             startupLog,
             ["mc_load_started", "payment_method_messaging_fetch_begin", "mc_load_succeeded", "mc_embedded_init", "mc_initial_displayed_payment_methods"]
@@ -405,7 +405,6 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertFalse(bank6789Button.waitForExistence(timeout: 3.0))
         XCTAssertFalse(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 3.0))
         let events = analyticsLog.compactMap({ $0[string: "event"] })
-            .filter({ !$0.starts(with: "luxe") })
             .suffix(6)
 
         // The analytics events can vary depending on the initial payment method order.

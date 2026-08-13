@@ -11,6 +11,7 @@ import Foundation
 
 extension Checkout: ExpressCheckoutElementDelegate {}
 extension Checkout: CurrencySelectorElementDelegate {}
+extension Checkout: ShippingAddressElementDelegate {}
 
 extension Checkout {
 
@@ -26,7 +27,9 @@ extension Checkout {
     // MARK: - Payment Option
 
     func setPaymentOption(_ paymentOption: Session.PaymentOptionDisplayData?) {
-        dangerouslySetSessionDirectly(session.makeCopyOverriding(paymentOption: .newValue(paymentOption)))
+        dangerouslySetSessionDirectly(
+            session.makeCopyOverriding(paymentOption: .newValue(paymentOption))
+        )
     }
 
     // MARK: - Session Updates
@@ -116,16 +119,15 @@ extension Checkout {
     ///
     /// - If `update` is non-nil, the side effect (if any) is applied first, then the
     ///   API mutation is performed and the session is updated from the response.
-    /// - If `update` is nil, the side effect is applied locally and delegates are
-    ///   notified without making a network request.
+    /// - If `update` is nil, the side effect is applied locally without making a network request.
     ///
     /// - Parameters:
     ///   - update: The API mutation to perform, or nil for a local-only update.
-    ///   - localMutation: A local change to the session to apply after the API call (or on its own).
+    ///   - shippingAddress: A local shipping-address change to apply after the API call (or on its own).
     ///   - canUpdateWhileSheetPresented: Bypasses the sheet-presented guard (e.g. billing sync on dismiss).
     func performUpdate(
         _ update: SessionUpdate? = nil,
-        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
+        shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
         canUpdateWhileSheetPresented: Bool = false
     ) async throws {
         try await enqueueSessionUpdate {
@@ -145,9 +147,12 @@ extension Checkout {
                 }
 
                 // Errors from here should still get wrapped in API errors since the only way
-                //  the integration delegate throws is if the API returned a session state that
+                //  local session application throws is if the API returned a session state that
                 //  the UI can't handle.
-                try await self.commitSession(updatedSessionAPIResponse, applying: localMutation)
+                try await self.commitSession(
+                    updatedSessionAPIResponse,
+                    shippingAddress: shippingAddress
+                )
             } catch {
                 throw CheckoutError.apiError(message: error.nonGenericDescription)
             }

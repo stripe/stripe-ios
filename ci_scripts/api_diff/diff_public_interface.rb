@@ -17,8 +17,8 @@ def normalize_line(line)
 end
 
 def sorted_diff_lines(old_path, new_path)
-  old_lines = File.readlines(old_path).map { |l| normalize_line(l) }.sort
-  new_lines = File.readlines(new_path).map { |l| normalize_line(l) }.sort
+  old_lines = File.exist?(old_path) ? File.readlines(old_path).map { |l| normalize_line(l) }.sort : []
+  new_lines = File.exist?(new_path) ? File.readlines(new_path).map { |l| normalize_line(l) }.sort : []
 
   old_temp = Tempfile.new(['sorted_old', File.extname(old_path)])
   new_temp = Tempfile.new(['sorted_new', File.extname(new_path)])
@@ -82,7 +82,9 @@ GetFrameworks.framework_names('./modules.yaml').each do |framework_name|
 
   master_public_interface_path = "#{framework_name}-master.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.swiftinterface"
   branch_public_interface_path = "#{framework_name}-new.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.swiftinterface"
-  public_diff_lines = sorted_diff_lines(master_public_interface_path, branch_public_interface_path)
+  public_diff_lines = sorted_diff_lines(master_public_interface_path, branch_public_interface_path).reject do |line|
+    line.match?(/^[+-]import\s/)
+  end
 
   master_private_interface_path = "#{framework_name}-master.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.private.swiftinterface"
   branch_private_interface_path = "#{framework_name}-new.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.private.swiftinterface"
