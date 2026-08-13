@@ -60,19 +60,38 @@ final class PhoneOtpViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.phoneOtpView.viewModel, .InputtingOTP)
     }
 
-    func testGetFullOtp() async throws {
+    func testInvalidFullOtp() async throws {
         try await mockViewDidAppear()
 
-        // get full OTP, transition to SubmittingOTP
+        let pausedSaveOtp = pauseSaveOtp()
         let newOtp = "123456"
         vc.didInputFullOtp(newOtp: newOtp)
-        XCTAssertEqual(vc.phoneOtpView.viewModel, .SubmittingOTP(newOtp))
-        XCTAssertNotNil(mockSheetController.saveOtpAndMaybeTransitionCompletion)
-        XCTAssertNotNil(mockSheetController.saveOtpAndMaybeTransitionInvalidOtp)
 
-        // mock invalid OTP, transition to ErrorOTP
-        mockSheetController.saveOtpAndMaybeTransitionInvalidOtp!()
+        await fulfillment(of: [pausedSaveOtp.started], timeout: 1)
+        XCTAssertEqual(vc.phoneOtpView.viewModel, .SubmittingOTP(newOtp))
+
+        let errorOtp = expectViewStateUpdate()
+        pausedSaveOtp.finish(.invalidOtp)
+        await fulfillment(of: [errorOtp], timeout: 1)
+
         XCTAssertEqual(vc.phoneOtpView.viewModel, .ErrorOTP)
+    }
+
+    func testResetFullOtpAfterTransition() async throws {
+        try await mockViewDidAppear()
+
+        let pausedSaveOtp = pauseSaveOtp()
+        let newOtp = "123456"
+        vc.didInputFullOtp(newOtp: newOtp)
+
+        await fulfillment(of: [pausedSaveOtp.started], timeout: 1)
+        XCTAssertEqual(vc.phoneOtpView.viewModel, .SubmittingOTP(newOtp))
+
+        let inputtingOtp = expectViewStateUpdate()
+        pausedSaveOtp.finish(.transitioned)
+        await fulfillment(of: [inputtingOtp], timeout: 1)
+
+        XCTAssertEqual(vc.phoneOtpView.viewModel, .InputtingOTP)
     }
 
     func testClickResend() async throws {
@@ -168,6 +187,32 @@ final class PhoneOtpViewControllerTest: XCTestCase {
         }
 
         return (started, { finish.fulfill() })
+    }
+
+    private func pauseSaveOtp(
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> (
+        started: XCTestExpectation,
+        finish: (OtpSubmissionResult) -> Void
+    ) {
+        let started = expectation(description: "Save OTP started")
+        var continuation: CheckedContinuation<OtpSubmissionResult, Never>?
+
+        mockSheetController.saveOtpAndMaybeTransitionHandler = {
+            await withCheckedContinuation { checkedContinuation in
+                continuation = checkedContinuation
+                started.fulfill()
+            }
+        }
+
+        return (started, { result in
+            guard let continuation else {
+                XCTFail("Save OTP was not started", file: file, line: line)
+                return
+            }
+            continuation.resume(returning: result)
+        })
     }
 
     private func expectViewStateUpdate() -> XCTestExpectation {
