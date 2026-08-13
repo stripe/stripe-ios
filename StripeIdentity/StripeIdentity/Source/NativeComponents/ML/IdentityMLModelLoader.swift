@@ -149,27 +149,30 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
             return
         }
 
-        mlModelLoader.loadVisionModel(
-            fromRemote: idDetectorURL
-        ).chained { idDetectorModel in
-            return Promise<AnyDocumentScanner>(
-                value: AnyDocumentScanner(
-                    DocumentScanner(
-                        idDetectorModel: idDetectorModel,
-                        configuration: .init(from: capturePageConfig),
-                        sheetController: sheetController
+        Task { [weak self] in
+            guard let self else { return }
+
+            do {
+                let idDetectorModel = try await mlModelLoader.loadVisionModel(
+                    fromRemote: idDetectorURL
+                )
+                documentMLModelsPromise.resolve(
+                    with: AnyDocumentScanner(
+                        DocumentScanner(
+                            idDetectorModel: idDetectorModel,
+                            configuration: .init(from: capturePageConfig),
+                            sheetController: sheetController
+                        )
                     )
                 )
-            )
-        }.observe { [weak self] result in
-            if case .failure(let error) = result {
+            } catch {
                 Self.logModelLoadingError(
                     error,
                     modelType: "document",
                     stage: "load"
                 )
+                documentMLModelsPromise.reject(with: error)
             }
-            self?.documentMLModelsPromise.fullfill(with: result)
         }
     }
 
@@ -225,26 +228,29 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
             return
         }
 
-        mlModelLoader.loadVisionModel(
-            fromRemote: faceDetectorURL
-        ).chained { faceDetectorModel in
-            return Promise<AnyFaceScanner>(
-                value: AnyFaceScanner(
-                    FaceScanner(
-                        faceDetectorModel: faceDetectorModel,
-                        configuration: .init(from: selfiePageConfig)
+        Task { [weak self] in
+            guard let self else { return }
+
+            do {
+                let faceDetectorModel = try await mlModelLoader.loadVisionModel(
+                    fromRemote: faceDetectorURL
+                )
+                faceMLModelsPromise.resolve(
+                    with: AnyFaceScanner(
+                        FaceScanner(
+                            faceDetectorModel: faceDetectorModel,
+                            configuration: .init(from: selfiePageConfig)
+                        )
                     )
                 )
-            )
-        }.observe { [weak self] result in
-            if case .failure(let error) = result {
+            } catch {
                 Self.logModelLoadingError(
                     error,
                     modelType: "face",
                     stage: "load"
                 )
+                faceMLModelsPromise.reject(with: error)
             }
-            self?.faceMLModelsPromise.fullfill(with: result)
         }
     }
 }
