@@ -37,6 +37,7 @@ final class VerificationFlowWebViewController: UIViewController {
     weak var delegate: VerificationFlowWebViewControllerDelegate?
 
     private(set) var verificationWebView: VerificationFlowWebView?
+    private(set) var webViewSetupTask: Task<Void, Never>?
 
     private let startUrl: URL
 
@@ -102,15 +103,17 @@ final class VerificationFlowWebViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         // Since `viewWillAppear` can be called multiple times, only setup the webView once.
-        guard self.verificationWebView == nil else {
+        guard verificationWebView == nil, webViewSetupTask == nil else {
             return
         }
 
         // NOTE(mludowise|RUN_IDPROD-1210): Ask for camera permissions prior to
         // instantiating the webView, otherwise the `getUserMedia` returns
         // `undefined` in Javascript on iOS 14.6.
-        requestCameraPermissionsIfNeeded(completion: { [weak self] in
-            guard let self = self else { return }
+        webViewSetupTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+
+            await requestCameraPermissionsIfNeeded()
 
             self.verificationWebView = VerificationFlowWebView(initialURL: self.startUrl)
 
@@ -125,7 +128,7 @@ final class VerificationFlowWebViewController: UIViewController {
 
             // Load webView
             self.verificationWebView?.load()
-        })
+        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -150,26 +153,15 @@ extension VerificationFlowWebViewController {
         )
     }
 
-    fileprivate func requestCameraPermissionsIfNeeded(completion: @escaping () -> Void) {
+    @MainActor
+    fileprivate func requestCameraPermissionsIfNeeded() async {
         // NOTE: We won't do anything different if the user does vs. doesn't
         // grant camera access. The web flow already handles both cases.
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video) { _ in
-                DispatchQueue.main.async {
-                    completion()
-                }
-            }
-
-        case .authorized,
-            .denied,
-            .restricted:
-            completion()
-
-        @unknown default:
-            completion()
+        guard AVCaptureDevice.authorizationStatus(for: .video) == .notDetermined else {
+            return
         }
+
+        _ = await AVCaptureDevice.requestAccess(for: .video)
     }
 
     @objc
