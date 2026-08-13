@@ -304,20 +304,12 @@ struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
     @Binding var selectedMethods: Set<String>
     let availableMethods: [String]
     @Environment(\.dismiss) var dismiss
-    @State private var searchText = ""
     @State private var customMethodType = ""
 
     private var customMethods: [String] {
         selectedMethods
             .subtracting(availableMethods)
             .sorted()
-    }
-
-    var filteredMethods: [String] {
-        if searchText.isEmpty {
-            return availableMethods
-        }
-        return availableMethods.filter { $0.localizedCaseInsensitiveContains(searchText) }
     }
 
     var body: some View {
@@ -356,7 +348,7 @@ struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
                 }
 
                 Section("Available") {
-                    ForEach(filteredMethods, id: \.self) { method in
+                    ForEach(availableMethods, id: \.self) { method in
                         Button {
                             withAnimation {
                                 if selectedMethods.contains(method) {
@@ -381,7 +373,6 @@ struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
                     }
                 }
             }
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
             .navigationTitle("Select Payment Methods")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
