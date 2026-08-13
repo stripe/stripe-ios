@@ -27,7 +27,9 @@ extension Checkout {
     // MARK: - Payment Option
 
     func setPaymentOption(_ paymentOption: Session.PaymentOptionDisplayData?) {
-        dangerouslySetSessionDirectly(session.makeCopyOverriding(paymentOption: .newValue(paymentOption)))
+        dangerouslySetSessionDirectly(
+            session.makeCopyOverriding(paymentOption: .newValue(paymentOption))
+        )
     }
 
     // MARK: - Session Updates
@@ -121,11 +123,11 @@ extension Checkout {
     ///
     /// - Parameters:
     ///   - update: The API mutation to perform, or nil for a local-only update.
-    ///   - localMutation: A local change to the session to apply after the API call (or on its own).
+    ///   - shippingAddress: A local shipping-address change to apply after the API call (or on its own).
     ///   - canUpdateWhileSheetPresented: Bypasses the sheet-presented guard (e.g. billing sync on dismiss).
     func performUpdate(
         _ update: SessionUpdate? = nil,
-        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
+        shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
         canUpdateWhileSheetPresented: Bool = false
     ) async throws {
         try await enqueueSessionUpdate {
@@ -147,7 +149,10 @@ extension Checkout {
                 // Errors from here should still get wrapped in API errors since the only way
                 //  local session application throws is if the API returned a session state that
                 //  the UI can't handle.
-                try await self.commitSession(updatedSessionAPIResponse, applying: localMutation)
+                try await self.commitSession(
+                    updatedSessionAPIResponse,
+                    shippingAddress: shippingAddress
+                )
             } catch {
                 throw CheckoutError.apiError(message: error.nonGenericDescription)
             }

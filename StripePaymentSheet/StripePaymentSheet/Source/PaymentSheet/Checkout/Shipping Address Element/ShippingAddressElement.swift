@@ -24,6 +24,7 @@ public final class ShippingAddressElement {
     private(set) var addressViewController: AddressViewController!
     private let checkoutSessionId: String
     private var didLogAddressShow = false
+    private var isPresenting = false
     private var presentationCompletion: (() -> Void)?
     weak var delegate: ShippingAddressElementDelegate?
 
@@ -86,6 +87,12 @@ public final class ShippingAddressElement {
         from presentingViewController: UIViewController? = nil,
         completion: (() -> Void)? = nil
     ) {
+        guard !isPresenting else {
+            assertionFailure("ShippingAddressElement is already presenting")
+            completion?()
+            return
+        }
+
         guard let presentingViewController = presentingViewController ?? UIWindow.visibleViewController else {
             let errorMessage = "ShippingAddressElement.present(from:) could not find a presenting view controller."
             assertionFailure(errorMessage)
@@ -105,6 +112,7 @@ public final class ShippingAddressElement {
         }
 
         let navigationController = UINavigationController(rootViewController: addressViewController)
+        isPresenting = true
         presentationCompletion = completion
         didLogAddressShow = false
         presentingViewController.present(navigationController, animated: true)
@@ -112,6 +120,7 @@ public final class ShippingAddressElement {
 }
 
 extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
+
     func didShow() {
         guard !didLogAddressShow else { return }
         didLogAddressShow = true
@@ -185,8 +194,10 @@ extension ShippingAddressElement: AddressViewControllerDelegate {
         with address: AddressViewController.AddressDetails?
     ) {
         addressViewController.dismiss(animated: true) {
-            self.presentationCompletion?()
+            let completion = self.presentationCompletion
             self.presentationCompletion = nil
+            self.isPresenting = false
+            completion?()
         }
     }
 }

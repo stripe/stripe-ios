@@ -661,6 +661,7 @@ extension AddressViewController {
 // MARK: - IntegrationDelegate
 // Default implementation that logs completion and forwards address details to the merchant delegate
 extension AddressViewController: AddressViewController.IntegrationDelegate {
+
     func didShow() {
         guard !didLogAddressShow else { return }
         STPAnalyticsClient.sharedClient.logAddressShow(defaultCountryCode: addressSection?.selectedCountryCode ?? "", apiClient: configuration.apiClient)

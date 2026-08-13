@@ -16,7 +16,7 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
                 "enabled": true,
                 "status": "accepted",
             ],
-        ])
+        ]).makePublicSession()
 
         XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
         XCTAssertTrue(session.savedPaymentMethodsOfferSave!.enabled)
@@ -29,7 +29,7 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
                 "enabled": false,
                 "status": "not_accepted",
             ],
-        ])
+        ]).makePublicSession()
 
         XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
         XCTAssertFalse(session.savedPaymentMethodsOfferSave!.enabled)
@@ -42,7 +42,7 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
                 "enabled": true,
                 "status": "some_future_status",
             ],
-        ])
+        ]).makePublicSession()
 
         XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
         XCTAssertTrue(session.savedPaymentMethodsOfferSave!.enabled)
@@ -50,7 +50,7 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
     }
 
     func testDecodedObjectWithoutSaveOffer() {
-        let session = CheckoutTestHelpers.makeSession()
+        let session = CheckoutTestHelpers.makeSession().makePublicSession()
 
         XCTAssertNil(session.savedPaymentMethodsOfferSave)
     }

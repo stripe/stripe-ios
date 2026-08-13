@@ -12,7 +12,7 @@ import SwiftUI
 @_spi(STP)
 @_spi(ReactNativeSDK)
 public struct CurrencySelectorElementView: View {
-    @ObservedObject private var viewModel: CurrencySelectorElementViewModel
+    private let viewModel: CurrencySelectorElementViewModel
 
     @MainActor
     init(viewModel: CurrencySelectorElementViewModel) {
@@ -20,18 +20,15 @@ public struct CurrencySelectorElementView: View {
     }
 
     public var body: some View {
-        if viewModel.isAvailable {
-            CurrencySelectorElementUIViewRepresentable(viewModel: viewModel)
-                .fixedSize(horizontal: false, vertical: true)
-        }
+        CurrencySelectorElementUIViewRepresentable(viewModel: viewModel)
+            .fixedSize(horizontal: false, vertical: true)
     }
 }
 
 /// Bridges CurrencySelectorElement's UIKit state into SwiftUI without retaining Checkout.
 @MainActor
-final class CurrencySelectorElementViewModel: ObservableObject {
+final class CurrencySelectorElementViewModel {
     let uiView: CurrencySelectorElementUIView
-    @Published var isAvailable: Bool
 
     private var sessionCancellable: AnyCancellable?
 
@@ -40,13 +37,11 @@ final class CurrencySelectorElementViewModel: ObservableObject {
         uiView: CurrencySelectorElementUIView
     ) {
         self.uiView = uiView
-        self.isAvailable = CurrencySelectorUtilities.adaptivePricingData(from: sessionSource.initialSession) != nil
         sessionCancellable = sessionSource.sessionPublisher
             .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
                 self?.uiView.update(with: session)
-                self?.isAvailable = CurrencySelectorUtilities.adaptivePricingData(from: session) != nil
             }
     }
 }
@@ -55,11 +50,11 @@ private struct CurrencySelectorElementUIViewRepresentable: UIViewRepresentable {
     let viewModel: CurrencySelectorElementViewModel
 
     func makeUIView(context: Context) -> CurrencySelectorElementUIView {
-        viewModel.uiView.isEnabled = context.environment.isEnabled
+        viewModel.uiView.setEnabled(context.environment.isEnabled)
         return viewModel.uiView
     }
 
     func updateUIView(_ uiView: CurrencySelectorElementUIView, context: Context) {
-        uiView.isEnabled = context.environment.isEnabled
+        uiView.setEnabled(context.environment.isEnabled)
     }
 }

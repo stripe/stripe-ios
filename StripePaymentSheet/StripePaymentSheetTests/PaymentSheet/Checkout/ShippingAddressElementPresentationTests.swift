@@ -106,6 +106,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         XCTAssertNil(observingViewController.presentedViewController)
     }
 
+<<<<<<< HEAD
     func testPresentationAndCancellationLogShippingAddressEvents() throws {
         // Given
         let shippingAddressElement = makeShippingAddressElement()
@@ -153,7 +154,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
             error: CheckoutError.apiError(message: "Sensitive error details")
         )
         shippingAddressElement.delegate = delegate
-
+        
         // When
         do {
             try await shippingAddressElement.save(addressDetails: makeAddressDetails()) { _ in }
@@ -163,7 +164,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         } catch {
             XCTFail("Unexpected error: \(error)")
         }
-
+        
         // Then
         let events = shippingAddressEvents
         XCTAssertEqual(
@@ -176,6 +177,29 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         XCTAssertEqual(events[1]["error_type"] as? String, "StripePaymentSheet.CheckoutError")
         XCTAssertEqual(events[1]["error_code"] as? String, "apiError")
         XCTAssertFalse(events[1].values.contains { ($0 as? String) == "Sensitive error details" })
+    }
+    
+    func testCanPresentAgainFromCompletion() async throws {
+        // Given
+        let shippingAddressElement = makeShippingAddressElement()
+        let secondPresentationExpectation = expectation(description: "Second sheet presented")
+        _ = try XCTUnwrap(present(shippingAddressElement) {
+            XCTAssertNotNil(self.present(shippingAddressElement))
+            secondPresentationExpectation.fulfill()
+        })
+
+        // When
+        shippingAddressElement.addressViewControllerDidFinish(
+            shippingAddressElement.addressViewController,
+            with: nil
+        )
+        await fulfillment(of: [secondPresentationExpectation], timeout: 2)
+
+        // Then
+        let navigationController = try XCTUnwrap(
+            presentingViewController.presentedViewController as? UINavigationController
+        )
+        XCTAssertTrue(navigationController.viewControllers.first === shippingAddressElement.addressViewController)
     }
 
     private func makeShippingAddressElement() -> ShippingAddressElement {

@@ -26,7 +26,7 @@ private let paymentMethodLogoSize: CGSize = CGSize(width: 54, height: 40)
 @objc(STP_Internal_SavedPaymentMethodCollectionView)
 class SavedPaymentMethodCollectionView: UICollectionView {
     init(appearance: PaymentSheet.Appearance, needsVerticalPaddingForBadge: Bool = false) {
-        let layout = UICollectionViewFlowLayout()
+        let layout = RightToLeftCollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
             top: -6, left: appearance.formInsets.leading, bottom: 0,
