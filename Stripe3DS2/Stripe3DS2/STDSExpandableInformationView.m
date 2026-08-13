@@ -121,6 +121,10 @@ static const CGFloat kTitleImageViewRotationAnimationDuration = (CGFloat)0.2;
     self.textContainerView.hidden = !self.textContainerView.hidden;
     
     CGFloat rotationValue = (CGFloat)M_PI_2;
+    // The mirrored chevron needs to rotate the other way to point down in RTL.
+    if (self.effectiveUserInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft) {
+        rotationValue = -rotationValue;
+    }
     if (self.textContainerView.isHidden) {
         rotationValue = (CGFloat)0;
         [self.imageViewStackView removeArrangedSubview:self.imageViewSpacerView];
