@@ -28,7 +28,7 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
     let verificationPageData = AsyncMockAPIRequests<
         StripeAPI.VerificationPageDataUpdate, StripeAPI.VerificationPageData
     >()
-    let verifyUnverifyRequest = MockAPIRequests<
+    let verifyUnverifyRequest = AsyncMockAPIRequests<
         [String: Bool], StripeAPI.VerificationPageData
     >()
     let verificationSessionSubmit = AsyncMockAPIRequests<Void, StripeAPI.VerificationPageData>()
@@ -76,12 +76,12 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
             )
         )
     }
-    func verifyTestVerificationSession(simulateDelay: Bool) -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
-        return verifyUnverifyRequest.makeRequest(with: ["simulateDelay": simulateDelay])
+    func verifyTestVerificationSession(simulateDelay: Bool) async throws -> StripeCore.StripeAPI.VerificationPageData {
+        try await verifyUnverifyRequest.makeRequest(with: ["simulateDelay": simulateDelay])
     }
 
-    func unverifyTestVerificationSession(simulateDelay: Bool) -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
-        return verifyUnverifyRequest.makeRequest(with: ["simulateDelay": simulateDelay])
+    func unverifyTestVerificationSession(simulateDelay: Bool) async throws -> StripeCore.StripeAPI.VerificationPageData {
+        try await verifyUnverifyRequest.makeRequest(with: ["simulateDelay": simulateDelay])
     }
 
     func generatePhoneOtp() async throws -> StripeCore.StripeAPI.VerificationPageData {
@@ -122,30 +122,6 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
         }
 
         return expectations
-    }
-}
-
-class MockAPIRequests<ParamsType, ResponseType> {
-    private var requests: [Promise<ResponseType>] = []
-    private(set) var requestHistory: [ParamsType] = []
-    private var requestCallbacks: [(() -> Void)] = []
-
-    fileprivate func makeRequest(with params: ParamsType) -> Promise<ResponseType> {
-        requestHistory.append(params)
-        let promise = Promise<ResponseType>()
-        requests.append(promise)
-        requestCallbacks.forEach { $0() }
-        return promise
-    }
-
-    func respondToRequests(with result: Result<ResponseType, Error>) {
-        requests.forEach { promise in
-            promise.fullfill(with: result)
-        }
-    }
-
-    func callBackOnRequest(_ block: @escaping () -> Void) {
-        requestCallbacks.append(block)
     }
 }
 
