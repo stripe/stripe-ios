@@ -259,7 +259,7 @@ private extension PaymentElement.Configuration {
     }
 }
 
-private extension PaymentSheet.BillingDetails {
+extension PaymentSheet.BillingDetails {
     mutating func set(_ billingDetails: Checkout.Configuration.Defaults.BillingDetails) {
         name = billingDetails.name
         if let billingAddress = billingDetails.address {
@@ -268,7 +268,7 @@ private extension PaymentSheet.BillingDetails {
     }
 }
 
-private extension PaymentSheet.Address {
+extension PaymentSheet.Address {
     mutating func set(_ address: Checkout.Address) {
         city = address.city
         country = address.country

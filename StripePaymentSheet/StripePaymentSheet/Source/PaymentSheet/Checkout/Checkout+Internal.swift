@@ -43,6 +43,80 @@ extension Checkout: ExpressCheckoutElementDelegate {
             return .failed(error)
         }
     }
+
+    /// Called by ExpressCheckoutElement when the user taps the Link button.
+    func confirmLink() async -> ConfirmResult {
+        guard sessionIsOpen else {
+            return .failed(CheckoutError.unknown(debugDescription: "Checkout.confirmLink() cannot confirm a Checkout Session that is no longer open."))
+        }
+        guard let presentingViewController = UIWindow.visibleViewController else {
+            let errorMessage = "ExpressCheckoutElement could not find a presenting view controller."
+            assertionFailure(errorMessage)
+            let analytic = UnexpectedCheckoutElementsErrorAnalytic(
+                errorCode: .expressCheckoutElementPresentingViewControllerUnavailable,
+                errorMessage: errorMessage
+            )
+            STPAnalyticsClient.sharedClient.log(analytic: analytic)
+            return .failed(CheckoutError.unknown(debugDescription: errorMessage))
+        }
+        // ECE's Link confirmation is a standalone wallet surface, so it builds its own minimal
+        // configuration here rather than borrowing `configuration.paymentElement` (settings the
+        // merchant configured for the separate PaymentElement/card-form surface).
+        var paymentSheetConfiguration = PaymentSheet.Configuration()
+        paymentSheetConfiguration.apiClient = apiClient
+        paymentSheetConfiguration.merchantDisplayName = effectiveMerchantDisplayName
+        paymentSheetConfiguration.returnURL = configuration.returnURL
+        paymentSheetConfiguration.style = configuration.userInterfaceStyle
+        if let display = configuration.linkConfiguration?.display {
+            paymentSheetConfiguration.link.display = PaymentSheet.LinkConfiguration.Display(rawValue: display.rawValue) ?? .automatic
+        }
+        if let billingDetails = configuration.defaults.billingDetails {
+            paymentSheetConfiguration.defaultBillingDetails.set(billingDetails)
+        }
+        let authenticationContext = AuthenticationContext(
+            presentingViewController: presentingViewController,
+            appearance: paymentSheetConfiguration.appearance
+        )
+        // The Link button has no prior payment method selection, so it always starts from a cold
+        // (`.wallet`) Link presentation.
+        let confirmationChallenge = ConfirmationChallenge(
+            elementsSession: session.elementsSession,
+            stripeAttest: apiClient.stripeAttest
+        )
+        let confirmationContext = ConfirmationContext(
+            paymentOption: .link(option: .wallet(brand: session.elementsSession.linkBrand ?? .link)),
+            configuration: paymentSheetConfiguration,
+            integrationShape: .complete,
+            confirmationChallenge: confirmationChallenge,
+            analyticsHelper: PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: paymentSheetConfiguration)
+        )
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
+            intent: .checkout(session),
+            elementsSession: session.elementsSession
+        )
+        let result = await Checkout.confirmLink(
+            checkout: self,
+            confirmationContext: confirmationContext,
+            authenticationContext: authenticationContext,
+            clientAttributionMetadata: clientAttributionMetadata,
+            paymentHandler: paymentHandler
+        )
+        if let checkoutSessionResponse = result.checkoutSessionResponse {
+            do {
+                try await self.commitSession(checkoutSessionResponse)
+            } catch {
+                return .failed(error)
+            }
+        }
+        switch result.paymentSheetResult {
+        case .completed:
+            return .succeeded(paymentStatus: Checkout.PaymentStatus.paymentStatus(from: result.checkoutSessionResponse?.paymentStatus ?? ""))
+        case .canceled:
+            return .canceled
+        case .failed(let error):
+            return .failed(error)
+        }
+    }
 }
 
 extension Checkout: CurrencySelectorElementDelegate {}

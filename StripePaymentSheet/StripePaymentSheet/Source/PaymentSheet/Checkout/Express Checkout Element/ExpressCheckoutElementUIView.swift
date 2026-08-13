@@ -112,6 +112,10 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     @objc private func handleLinkTapped() {
-        // TODO: Handle Link
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            guard let result = await self.delegate?.confirmLink() else { return }
+            self.configuration.expressCheckoutElement.confirmHandler?(result)
+        }
     }
 }
