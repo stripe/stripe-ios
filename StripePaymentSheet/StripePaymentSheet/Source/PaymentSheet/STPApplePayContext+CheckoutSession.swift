@@ -34,7 +34,11 @@ extension STPApplePayContext {
                     let itemLabel = item.quantity > 1
                         ? String.Localized.lineItemLabel(name: item.displayName, quantity: item.quantity)
                         : item.displayName
-                    let amount = NSDecimalNumber(value: item.unitAmount.minorUnitsAmount * Double(item.quantity))
+                    // Prefer unitAmountDecimal for the edge case where the Stripe API doesn't return a `unitAmount`
+                    // (and so becomes 0) for prices with sub-cent precision like $0.1234.
+                    let unitAmount = item.unitAmountDecimal ?? item.unitAmount
+                    let amount = NSDecimalNumber(value: unitAmount.minorUnitsAmount)
+                        .multiplying(by: NSDecimalNumber(value: item.quantity))
                         .multiplying(by: NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency))
                     summaryItems.append(
                         PKPaymentSummaryItem(label: itemLabel, amount: amount, type: .final)

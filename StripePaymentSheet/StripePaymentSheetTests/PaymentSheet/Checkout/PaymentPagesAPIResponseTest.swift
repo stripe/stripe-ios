@@ -575,7 +575,9 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         }
         let item = try XCTUnwrap(oneTimePrice.items.first)
         XCTAssertEqual(item.unitAmount.minorUnitsAmount, 0)
-        XCTAssertEqual(try XCTUnwrap(item.unitAmountDecimal).minorUnitsAmount, 12.345)
+        let unitAmountDecimal = try XCTUnwrap(item.unitAmountDecimal)
+        XCTAssertEqual(unitAmountDecimal.minorUnitsAmount, 12.345)
+        XCTAssertEqual(unitAmountDecimal.amount, "$0.12345")
     }
 
     func testUnifiedModeSessionMapsAdjustableQuantity() throws {

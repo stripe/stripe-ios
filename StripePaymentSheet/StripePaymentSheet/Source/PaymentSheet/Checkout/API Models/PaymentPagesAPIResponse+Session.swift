@@ -97,10 +97,13 @@ extension PaymentPagesAPIResponse {
         return Checkout.Amount(amount: formatted, minorUnitsAmount: minorUnitsAmount)
     }
 
+    // TODO: Have Payment Pages return Session.Amount-shaped values so clients don't duplicate
+    // minor-to-major conversion and locale-aware currency formatting.
     private static func makeSessionAmount(
         _ minorUnitsAmount: Double,
         currency: String,
-        locale: Locale
+        locale: Locale,
+        supportsSubcentPrecision: Bool = false
     ) -> Checkout.Session.Amount {
         let minorUnitValueInMajorUnits = NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency) // e.g. USD: 0.01
         let decimalizedAmount = NSDecimalNumber(value: minorUnitsAmount).multiplying(by: minorUnitValueInMajorUnits) // e.g. 49,900 × 0.01 = 499.00
@@ -109,6 +112,11 @@ extension PaymentPagesAPIResponse {
         formatter.usesGroupingSeparator = true
         formatter.locale = locale
         formatter.currencyCode = currency
+        if supportsSubcentPrecision {
+            // Match EwCS and preserve the API's supported 12 decimal places beyond the
+            // currency's normal precision (e.g. up to 14 fraction digits for USD).
+            formatter.maximumFractionDigits += 12
+        }
         let formatted = formatter.string(from: decimalizedAmount)
             ?? "\(formatter.currencySymbol ?? "")\(decimalizedAmount)"
         return Checkout.Session.Amount(
@@ -138,7 +146,10 @@ extension PaymentPagesAPIResponse {
                     let adjustableQuantity: Checkout.Session.AdjustableQuantity?
                     if let rawAdjustableQuantity = item.adjustableQuantity,
                        rawAdjustableQuantity.enabled {
-                        // TODO: The server should guarantee minimum and maximum when adjustable quantity is enabled.
+                        // TODO: Payment Pages currently models these bounds as optional, although enabled
+                        // adjustable quantity is normally populated with server defaults of 0 and 99.
+                        // Once the response contract requires both bounds when enabled, reject missing
+                        // values during decoding and remove these client-side fallbacks.
                         adjustableQuantity = Checkout.Session.AdjustableQuantity(
                             enabled: true,
                             maximum: rawAdjustableQuantity.maximum ?? 99,
@@ -157,7 +168,12 @@ extension PaymentPagesAPIResponse {
                             locale: locale
                         ),
                         unitAmountDecimal: item.unitAmountDecimal.map {
-                            makeSessionAmount($0, currency: currency, locale: locale)
+                            makeSessionAmount(
+                                $0,
+                                currency: currency,
+                                locale: locale,
+                                supportsSubcentPrecision: true
+                            )
                         },
                         unitLabel: item.unitLabel,
                         quantity: item.quantity,
