@@ -68,6 +68,22 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertFalse(elementsSession.shouldAttestOnConfirmation)
     }
 
+    func testDecodedObjectFromAPIResponseMapping_analyticsToR() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["flags"] = ["ocs_mobile_enable_analytics_to_r": true]
+
+        var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertTrue(elementsSession.isAnalyticsToRStripeEnabled)
+
+        elementsSessionJson["flags"] = ["ocs_mobile_enable_analytics_to_r": false]
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertFalse(elementsSession.isAnalyticsToRStripeEnabled)
+
+        elementsSessionJson["flags"] = [:]
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertFalse(elementsSession.isAnalyticsToRStripeEnabled)
+    }
+
     func testDecodedObjectFromAPIResponseMapping_linkBrandLink() {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         elementsSessionJson[jsonDict: "link_settings"]?["link_brand"] = "link"
