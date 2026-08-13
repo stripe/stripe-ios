@@ -85,7 +85,7 @@ public class AddressViewController: UIViewController {
     @MainActor
     protocol IntegrationDelegate: AnyObject {
         /// Handles completion with the customer's collected address details.
-        func save(addressDetails: AddressDetails?, setLoading: (Bool) -> Void) async throws
+        func save(addressDetails: AddressDetails, setLoading: (Bool) -> Void) async throws
     }
 
     weak var integrationDelegate: IntegrationDelegate?
@@ -368,24 +368,51 @@ extension AddressViewController {
     }
 
     func didContinue() {
-        // Re-baseline change tracking to the just-saved values. The same instance can be
-        // presented again, and each save sends the form back to the merchant, so the next open
-        // should compare against what was saved here — not the state captured at first init.
-        captureInitialSnapshot()
-
         Task { @MainActor in
+            guard let addressDetails else {
+                stpAssertionFailure("AddressViewController attempted to continue with an invalid address.")
+                return
+            }
             do {
                 try await self.integrationDelegate?.save(
                     addressDetails: addressDetails,
-                    // TODO(gbirch) fill in loading UI behavior
-                    setLoading: { _ in }
+                    setLoading: { [weak self] isLoading in
+                        self?.setLoading(isLoading)
+                    }
                 )
+                // Re-baseline change tracking only after the save succeeds. If it fails, the
+                // customer can still retry or discard the unsaved values.
+                captureInitialSnapshot()
                 delegate?.addressViewControllerDidFinish(self, with: addressDetails)
                 selectedAutoCompleteResult = nil
             } catch {
                 self.latestError = error
             }
         }
+    }
+
+    private func setLoading(_ isLoading: Bool) {
+        if isLoading {
+            view.endEditing(true)
+            latestError = nil
+        }
+
+        let isUserInteractionEnabled = !isLoading
+        sendEventToSubviews(
+            isUserInteractionEnabled ? .shouldEnableUserInteraction : .shouldDisableUserInteraction,
+            from: view
+        )
+        view.isUserInteractionEnabled = isUserInteractionEnabled
+        navigationController?.navigationBar.isUserInteractionEnabled = isUserInteractionEnabled
+        closeButton.isEnabled = isUserInteractionEnabled
+
+        let buttonStatus: ConfirmButton.Status
+        if isLoading {
+            buttonStatus = .processing
+        } else {
+            buttonStatus = addressSection?.validationState.isValid == true ? .enabled : .disabled
+        }
+        button.update(status: buttonStatus, animated: true)
     }
 
     @objc func didTapBackground() {
@@ -615,7 +642,7 @@ extension AddressViewController {
 // MARK: - IntegrationDelegate
 // Default implementation that logs completion and forwards address details to the merchant delegate
 extension AddressViewController: AddressViewController.IntegrationDelegate {
-    func save(addressDetails: AddressDetails?, setLoading: (Bool) -> Void) async throws {
+    func save(addressDetails: AddressDetails, setLoading: (Bool) -> Void) async throws {
         logAddressCompleted()
     }
 }
