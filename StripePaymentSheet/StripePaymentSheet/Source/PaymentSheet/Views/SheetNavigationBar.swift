@@ -57,11 +57,11 @@ class SheetNavigationBar: UIView {
         return button
     }()
 
-    var leftmostElement: UIView {
+    var leadingElement: UIView {
         leftItemsStackView
     }
 
-    var rightmostElement: UIView? {
+    var trailingElement: UIView? {
         if !closeButtonRight.isHidden {
             return closeButtonRight
         } else if !additionalButton.isHidden {
