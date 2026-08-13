@@ -990,16 +990,15 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Mock metrics
         mockConcurrencyManager.mockAverageFPSMetric = 30
         mockConcurrencyManager.mockNumFramesScannedMetric = 50
-        mockDocumentScanner.mlModelMetricsTrackers = [
-            MLDetectorMetricsTrackerMock(
-                modelName: "mock_model",
-                mockAverageMetrics: .init(
-                    inference: 0.005,
-                    postProcess: 0.01
-                ),
-                mockNumFrames: 50
+        let metricsTracker = MLDetectorMetricsTrackerMock(
+            modelName: "mock_model",
+            mockAverageMetrics: .init(
+                inference: 0.005,
+                postProcess: 0.01
             ),
-        ]
+            mockNumFrames: 50
+        )
+        mockDocumentScanner.mlModelMetricsTrackers = [metricsTracker]
 
         // Mock that vc is scanning
         let vc = makeViewController(
@@ -1009,8 +1008,23 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         await waitForCameraSessionToStart()
         mockCameraFrameCaptured(vc)
 
+        let performanceMetricsRequested = expectation(description: "Performance metrics requested")
+        mockConcurrencyManager.getPerformanceMetricsCallback = {
+            performanceMetricsRequested.fulfill()
+        }
+        let modelPerformanceMetricsRequested = expectation(
+            description: "Model performance metrics requested"
+        )
+        metricsTracker.getPerformanceMetricsCallback = {
+            modelPerformanceMetricsRequested.fulfill()
+        }
+
         // Mock that scanner found desired classification
         mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardFront))
+        await fulfillment(
+            of: [performanceMetricsRequested, modelPerformanceMetricsRequested],
+            timeout: 1
+        )
 
         // Verify average_fps analytic sent
         let averageFPSAnalytics = mockAnalyticsClient.loggedAnalyticPayloads(
