@@ -35,11 +35,11 @@ public class STPConfirmPaymentMethodOptions: NSObject {
     @objc public var konbiniOptions: STPConfirmKonbiniOptions?
 
     /// Options for a Klarna Payment Method.
-    @objc public var klarnaOptions: STPConfirmKlarnaOptions?
+    @objc @_spi(KlarnaSDKPrivatePreview) public var klarnaOptions: STPConfirmKlarnaOptions?
 
     /// Initializes payment method options with Klarna options.
     /// - Parameter klarnaOptions: Options for a Klarna Payment Method.
-    @objc public convenience init(klarnaOptions: STPConfirmKlarnaOptions) {
+    @objc @_spi(KlarnaSDKPrivatePreview) public convenience init(klarnaOptions: STPConfirmKlarnaOptions) {
         self.init()
         self.klarnaOptions = klarnaOptions
     }
