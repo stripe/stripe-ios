@@ -60,8 +60,8 @@ import XCTest
         outputSettings = configuration.outputSettings
         configureCompletion = { setupResult in
             queue.async { [weak self] in
-                self?.configureSessionCompletionExp.fulfill()
                 completion(setupResult)
+                self?.configureSessionCompletionExp.fulfill()
             }
         }
     }

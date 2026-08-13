@@ -36,9 +36,6 @@ final class IdentityImageUploader {
     let analyticsClient: IdentityAnalyticsClient
     let sheetController: VerificationSheetControllerProtocol
 
-    /// Worker queue to encode the image to jpeg
-    let imageEncodingQueue = DispatchQueue(label: "com.stripe.identity.image-encoding")
-
     init(
         configuration: Configuration,
         sheetController: VerificationSheetControllerProtocol
@@ -54,31 +51,30 @@ final class IdentityImageUploader {
         lowResImage: CGImage,
         highResFileName: String,
         lowResFileName: String
-    ) -> Future<LowHighResFiles> {
-        let lowResUploadFuture = uploadLowResImage(
-            lowResImage,
-            fileName: lowResFileName
-        )
-
-        return uploadJPEGResize(
-            image: highResImage,
-            fileName: highResFileName,
-            jpegCompressionQuality: configuration.highResImageCompressionQuality,
-            newSize: CGSize(
-                width: configuration.highResImageMaxDimension,
-                height: configuration.highResImageMaxDimension
+    ) async throws -> LowHighResFiles {
+        let lowResTask = Task {
+            try await uploadLowResImage(
+                lowResImage,
+                fileName: lowResFileName
             )
-        ).chained { highResFile in
-            return lowResUploadFuture.chained { lowResFile in
-                // Convert promise to a tuple of file IDs
-                return Promise(
-                    value: (
-                        lowRes: lowResFile,
-                        highRes: highResFile
-                    )
-                )
-            }
         }
+
+        let highResTask = Task {
+            try await uploadJPEGResize(
+                image: highResImage,
+                fileName: highResFileName,
+                jpegCompressionQuality: configuration.highResImageCompressionQuality,
+                newSize: CGSize(
+                    width: configuration.highResImageMaxDimension,
+                    height: configuration.highResImageMaxDimension
+                )
+            )
+        }
+
+        return try await (
+            lowRes: lowResTask.value,
+            highRes: highResTask.value
+        )
     }
 
     func uploadLowAndHighResImages(
@@ -87,28 +83,27 @@ final class IdentityImageUploader {
         cropPaddingComputationMethod: CGImage.CropPaddingComputationMethod,
         lowResFileName: String,
         highResFileName: String
-    ) -> Future<LowHighResFiles> {
-        let lowResUploadFuture = uploadLowResImage(
-            image,
-            fileName: lowResFileName
-        )
-
-        return uploadHighResImage(
-            image,
-            regionOfInterest: highResRegionOfInterest,
-            cropPaddingComputationMethod: cropPaddingComputationMethod,
-            fileName: highResFileName
-        ).chained { highResFile in
-            return lowResUploadFuture.chained { lowResFile in
-                // Convert promise to a tuple of file IDs
-                return Promise(
-                    value: (
-                        lowRes: lowResFile,
-                        highRes: highResFile
-                    )
-                )
-            }
+    ) async throws -> LowHighResFiles {
+        let lowResTask = Task {
+            try await uploadLowResImage(
+                image,
+                fileName: lowResFileName
+            )
         }
+
+        let highResTask = Task {
+            try await uploadHighResImage(
+                image,
+                regionOfInterest: highResRegionOfInterest,
+                cropPaddingComputationMethod: cropPaddingComputationMethod,
+                fileName: highResFileName
+            )
+        }
+
+        return try await (
+            lowRes: lowResTask.value,
+            highRes: highResTask.value
+        )
     }
 
     /// Crops, resizes, and uploads the high resolution image to the server
@@ -117,7 +112,7 @@ final class IdentityImageUploader {
         regionOfInterest: CGRect?,
         cropPaddingComputationMethod: CGImage.CropPaddingComputationMethod,
         fileName: String
-    ) -> Future<StripeFile> {
+    ) async throws -> StripeFile {
         do {
             // Crop image if there's a region of interest
             var imageToResize = image
@@ -129,7 +124,7 @@ final class IdentityImageUploader {
                 )
             }
 
-            return uploadJPEGResize(
+            return try await uploadJPEGResize(
                 image: imageToResize,
                 fileName: fileName,
                 jpegCompressionQuality: configuration.highResImageCompressionQuality,
@@ -139,8 +134,8 @@ final class IdentityImageUploader {
                 )
             )
         } catch {
-            logUploadError(error, stage: .highResCrop, fileName: fileName)
-            return Promise(error: error)
+            await logUploadError(error, stage: .highResCrop, fileName: fileName)
+            throw error
         }
     }
 
@@ -148,8 +143,8 @@ final class IdentityImageUploader {
     func uploadLowResImage(
         _ image: CGImage,
         fileName: String
-    ) -> Future<StripeFile> {
-        return uploadJPEGResize(
+    ) async throws -> StripeFile {
+        try await uploadJPEGResize(
             image: image,
             fileName: fileName,
             jpegCompressionQuality: configuration.lowResImageCompressionQuality,
@@ -165,18 +160,18 @@ final class IdentityImageUploader {
         fileName: String,
         jpegCompressionQuality: CGFloat,
         newSize: CGSize
-    ) -> Future<StripeFile> {
+    ) async throws -> StripeFile {
         do {
             let resizedImage = try image.scaledDown(toMaxPixelDimension: newSize)
 
-            return uploadJPEG(
+            return try await uploadJPEG(
                 image: resizedImage,
                 fileName: fileName,
                 jpegCompressionQuality: jpegCompressionQuality
             )
         } catch {
-            logUploadError(error, stage: .imageResize, fileName: fileName)
-            return Promise(error: error)
+            await logUploadError(error, stage: .imageResize, fileName: fileName)
+            throw error
         }
     }
 
@@ -185,39 +180,30 @@ final class IdentityImageUploader {
         image: CGImage,
         fileName: String,
         jpegCompressionQuality: CGFloat
-    ) -> Future<StripeFile> {
-        let promise = Promise<StripeFile>()
-        imageEncodingQueue.async { [weak self] in
-            guard let self = self else { return }
-
+    ) async throws -> StripeFile {
+        do {
             let uiImage = UIImage(cgImage: image)
-            self.apiClient.uploadImage(
+            let (file, metrics) = try await self.apiClient.uploadImage(
                 uiImage,
                 compressionQuality: jpegCompressionQuality,
                 purpose: self.configuration.filePurpose,
                 fileName: fileName
-            ).observe { [weak self] result in
-                promise.fullfill(with: result.map { $0.file })
+            )
 
-                if let self = self,
-                    case .success((let file, let metrics)) = result
-                {
-                    self.analyticsClient.logImageUpload(
-                        timeToUpload: metrics.timeToUpload,
-                        compressionQuality: jpegCompressionQuality,
-                        fileId: file.id,
-                        fileName: fileName,
-                        fileSizeBytes: metrics.fileSizeBytes,
-                        sheetController: self.sheetController
-                    )
-                } else if let self = self,
-                    case .failure(let error) = result
-                {
-                    self.logUploadError(error, stage: .imageUpload, fileName: fileName)
-                }
-            }
+            await self.analyticsClient.logImageUpload(
+                timeToUpload: metrics.timeToUpload,
+                compressionQuality: jpegCompressionQuality,
+                fileId: file.id,
+                fileName: fileName,
+                fileSizeBytes: metrics.fileSizeBytes,
+                sheetController: self.sheetController
+            )
+
+            return file
+        } catch {
+            await self.logUploadError(error, stage: .imageUpload, fileName: fileName)
+            throw error
         }
-        return promise
     }
 }
 
@@ -227,6 +213,8 @@ private extension IdentityImageUploader {
         case imageResize
         case imageUpload
     }
+
+    @MainActor
     func logUploadError(
         _ error: Error,
         stage: UploadErrorStage,

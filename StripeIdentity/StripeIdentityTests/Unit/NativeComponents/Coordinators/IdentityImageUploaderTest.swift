@@ -30,9 +30,15 @@ final class IdentityImageUploaderTest: XCTestCase {
     var mockAPIClient: IdentityAPIClientTestMock!
     var uploader: IdentityImageUploader!
     var mockAnalyticsClient: MockAnalyticsClientV2!
+    var mockStripeFile: StripeFile!
+    var mockUploadMetrics = STPAPIClient.ImageUploadMetrics(
+        timeToUpload: 0,
+        fileSizeBytes: 0
+    )
 
     override func setUp() {
         super.setUp()
+        mockStripeFile = try! FileMock.identityDocument.make()
         mockAPIClient = IdentityAPIClientTestMock(
             verificationSessionId: "VS_123",
             ephemeralKeySecret: "EAK_123"
@@ -75,28 +81,21 @@ final class IdentityImageUploaderTest: XCTestCase {
     }
 
     // Tests that JPEG is uploaded at the specified
-    func testUploadJPEG() {
+    func testUploadJPEG() async throws {
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
-        let uploadResponseExp = expectation(description: "Upload completed")
         let fileName = "test_name"
         let compressionQuality: CGFloat = 0.1
 
-        uploader.uploadJPEG(
-            image: mockImage,
-            fileName: fileName,
-            jpegCompressionQuality: compressionQuality
-        ).observe { result in
-            switch result {
-            case .failure(let error):
-                XCTFail("Failed with \(error)")
-            case .success(let stripeFile):
-                XCTAssertEqual(stripeFile, DocumentUploaderTest.mockStripeFile)
-            }
-            uploadResponseExp.fulfill()
+        let uploadTask = Task {
+            try await uploader.uploadJPEG(
+                image: mockImage,
+                fileName: fileName,
+                jpegCompressionQuality: compressionQuality
+            )
         }
 
         // Wait until request is made
-        wait(for: uploadRequestExpectations, timeout: 1)
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
 
         // Verify request params match expected values
         XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.count, 1)
@@ -107,36 +106,37 @@ final class IdentityImageUploaderTest: XCTestCase {
         XCTAssertEqual(uploadRequest?.purpose, "mock_purpose")
         XCTAssertEqual(uploadRequest?.fileName, fileName)
 
-        // Verify promise is observed after API responds to request
+        // Complete the upload request
         mockAPIClient.imageUpload.respondToRequests(
             with: .success(
                 (
-                    file: DocumentUploaderTest.mockStripeFile,
-                    metrics: DocumentUploaderTest.mockUploadMetrics
+                    file: mockStripeFile,
+                    metrics: mockUploadMetrics
                 )
             )
         )
-        wait(for: [uploadResponseExp], timeout: 1)
+
+        let stripeFile = try await uploadTask.value
+        XCTAssertEqual(stripeFile, mockStripeFile)
     }
 
-    func testAnalytics() {
+    func testAnalytics() async throws {
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
-        let uploadResponseExp = expectation(description: "Upload completed")
 
-        uploader.uploadJPEG(
-            image: mockImage,
-            fileName: "mock_file_name",
-            jpegCompressionQuality: 0.9
-        ).observe { _ in
-            uploadResponseExp.fulfill()
+        let uploadTask = Task {
+            try await uploader.uploadJPEG(
+                image: mockImage,
+                fileName: "mock_file_name",
+                jpegCompressionQuality: 0.9
+            )
         }
 
         // Respond to request
-        wait(for: uploadRequestExpectations, timeout: 1)
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
         mockAPIClient.imageUpload.respondToRequests(
             with: .success(
                 (
-                    file: DocumentUploaderTest.mockStripeFile,
+                    file: mockStripeFile,
                     metrics: .init(
                         timeToUpload: 3.5,  // 3500ms
                         fileSizeBytes: 2500  // 2.44kB
@@ -145,8 +145,7 @@ final class IdentityImageUploaderTest: XCTestCase {
             )
         )
 
-        // Wait for analytics to be logged
-        wait(for: [uploadResponseExp], timeout: 1)
+        _ = try await uploadTask.value
 
         let uploadAnalytic = mockAnalyticsClient.loggedAnalyticPayloads(
             withEventName: "image_upload"
@@ -164,18 +163,18 @@ final class IdentityImageUploaderTest: XCTestCase {
         XCTAssert(analytic: uploadAnalytic, hasMetadata: "value", withValue: Double(3500))
     }
 
-    func testUploadLowResImage() {
+    func testUploadLowResImage() async throws {
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
 
-        uploader.uploadLowResImage(
-            mockImage,
-            fileName: "low-res-prefix_full_frame"
-        ).observe { _ in
-            // no-op
+        Task {
+            _ = try await uploader.uploadLowResImage(
+                mockImage,
+                fileName: "low-res-prefix_full_frame"
+            )
         }
 
         // Wait until request is made
-        wait(for: uploadRequestExpectations, timeout: 1)
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
 
         guard let uploadRequest = mockAPIClient.imageUpload.requestHistory.first else {
             return XCTFail("Expected an upload request")
@@ -197,20 +196,20 @@ final class IdentityImageUploaderTest: XCTestCase {
         XCTAssertEqual(imageFromData?.size, imageSize)
     }
 
-    func testUploadHighResImageUncropped() {
+    func testUploadHighResImageUncropped() async throws {
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
 
-        uploader.uploadHighResImage(
-            mockImage,
-            regionOfInterest: nil,
-            cropPaddingComputationMethod: .maxImageWidthOrHeight,
-            fileName: "high-res-prefix"
-        ).observe { _ in
-            // no-op
+        Task {
+            _ = try await uploader.uploadHighResImage(
+                mockImage,
+                regionOfInterest: nil,
+                cropPaddingComputationMethod: .maxImageWidthOrHeight,
+                fileName: "high-res-prefix"
+            )
         }
 
         // Wait until request is made
-        wait(for: uploadRequestExpectations, timeout: 1)
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
 
         guard let uploadRequest = mockAPIClient.imageUpload.requestHistory.first else {
             return XCTFail("Expected an upload request")
@@ -232,20 +231,20 @@ final class IdentityImageUploaderTest: XCTestCase {
         XCTAssertEqual(imageFromData?.size, imageSize)
     }
 
-    func testUploadHighResImageCropped() {
+    func testUploadHighResImageCropped() async throws {
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
 
-        uploader.uploadHighResImage(
-            mockImage,
-            regionOfInterest: DocumentUploaderTest.mockRegionOfInterest,
-            cropPaddingComputationMethod: .maxImageWidthOrHeight,
-            fileName: "high-res-prefix"
-        ).observe { _ in
-            // no-op
+        Task {
+            _ = try await uploader.uploadHighResImage(
+                mockImage,
+                regionOfInterest: DocumentUploaderTest.mockRegionOfInterest,
+                cropPaddingComputationMethod: .maxImageWidthOrHeight,
+                fileName: "high-res-prefix"
+            )
         }
 
         // Wait until request is made
-        wait(for: uploadRequestExpectations, timeout: 1)
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
 
         guard let uploadRequest = mockAPIClient.imageUpload.requestHistory.first else {
             return XCTFail("Expected an upload request")
