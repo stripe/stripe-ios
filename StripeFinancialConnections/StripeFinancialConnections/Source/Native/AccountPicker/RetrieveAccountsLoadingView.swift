@@ -31,15 +31,12 @@ final class RetrieveAccountsLoadingView: UIView {
                 subtitle: nil,
                 contentView: {
                     if appearance.colors == .link {
-                        let rows = (0..<2).map { _ in ShimmeringAccountPickerRow(grouped: true) }
-                        let rowsStack = UIStackView(arrangedSubviews: rows)
-                        rowsStack.axis = .vertical
-                        rowsStack.spacing = 0
+                        let row = ShimmeringAccountPickerRow(grouped: true)
                         let container = UIView()
                         container.backgroundColor = appearance.colors.iconBackground
                         container.layer.cornerRadius = 12
                         container.layer.masksToBounds = true
-                        container.addAndPinSubview(rowsStack)
+                        container.addAndPinSubview(row)
                         return container
                     } else {
                         let verticalStackView = UIStackView(

@@ -123,7 +123,13 @@ final class InstitutionCellView: UIView {
         loadingView.removeFromSuperview()
 
         if show {
-            horizontalStackView.addArrangedSubview(loadingView)
+            if let chevronIndex = horizontalStackView.arrangedSubviews.firstIndex(of: chevronImageView) {
+                // Insert before the chevron so it stays in place, instead of
+                // appending after it and shifting it left.
+                horizontalStackView.insertArrangedSubview(loadingView, at: chevronIndex)
+            } else {
+                horizontalStackView.addArrangedSubview(loadingView)
+            }
             loadingView.startAnimating()
         } else {
             loadingView.stopAnimating()

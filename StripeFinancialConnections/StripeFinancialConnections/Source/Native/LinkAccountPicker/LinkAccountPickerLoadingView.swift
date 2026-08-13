@@ -14,22 +14,17 @@ final class LinkAccountPickerLoadingView: ShimmeringView {
     init(appearance: FinancialConnectionsAppearance = .stripe) {
         super.init(frame: .zero)
         if appearance.colors == .link {
-            let rowsStack = UIStackView()
-            rowsStack.axis = .vertical
-            rowsStack.spacing = 0
-            for _ in 0..<2 {
-                let row = UIView()
-                row.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activate([
-                    row.heightAnchor.constraint(equalToConstant: 88)
-                ])
-                rowsStack.addArrangedSubview(row)
-            }
+            let row = UIView()
+            row.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                row.heightAnchor.constraint(equalToConstant: 88)
+            ])
+
             let container = UIView()
             container.backgroundColor = appearance.colors.iconBackground
             container.layer.cornerRadius = 12
             container.layer.masksToBounds = true
-            container.addAndPinSubview(rowsStack)
+            container.addAndPinSubview(row)
             addAndPinSubview(container)
         } else {
             let verticalStackView = UIStackView()
