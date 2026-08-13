@@ -191,7 +191,7 @@ private class MockAuthenticationContext: NSObject, STPAuthenticationContext {
     }
 }
 
-private class MockCheckoutConfirmDataSource: CheckoutConfirmDataSource {
+private class MockCheckoutConfirmDataSource: CheckoutConfirmationInterface {
     var applePayConfiguration: Checkout.ApplePayConfiguration?
     let session: Checkout.Session
     let apiClient: STPAPIClient
@@ -209,4 +209,18 @@ private class MockCheckoutConfirmDataSource: CheckoutConfirmDataSource {
     }
 
     func commitSession(_ response: PaymentPagesAPIResponse) async throws {}
+
+    func updateBillingTaxRegionIfNecessaryForPaymentSheet(
+        address: Checkout.Address,
+        canUpdateWhileSheetPresented: Bool
+    ) async throws -> Checkout.Session {
+        return session
+    }
+
+    func updateShippingTaxRegionIfNecessaryForPaymentSheet(
+        address: Checkout.Address,
+        canUpdateWhileSheetPresented: Bool
+    ) async throws -> Checkout.Session {
+        return session
+    }
 }

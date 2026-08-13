@@ -10,7 +10,7 @@
 
 extension Checkout {
     static func confirmLink(
-        checkout: CheckoutConfirmDataSource,
+        checkout: CheckoutConfirmationInterface,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
         clientAttributionMetadata: STPClientAttributionMetadata,

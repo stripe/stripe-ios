@@ -119,7 +119,7 @@ private class MockPKPaymentAuthorizationController: PKPaymentAuthorizationContro
 }
 
 @MainActor
-private class CheckoutApplePayContextFunctionalTestDataSource: CheckoutConfirmDataSource {
+private class CheckoutApplePayContextFunctionalTestDataSource: CheckoutConfirmationInterface {
     var applePayConfiguration: Checkout.ApplePayConfiguration? = Checkout.ApplePayConfiguration(merchantId: "merchant.com.test")
     let session: Checkout.Session
     let apiClient: STPAPIClient
@@ -136,6 +136,20 @@ private class CheckoutApplePayContextFunctionalTestDataSource: CheckoutConfirmDa
     }
 
     func commitSession(_ response: PaymentPagesAPIResponse) async throws {}
+
+    func updateBillingTaxRegionIfNecessaryForPaymentSheet(
+        address: Checkout.Address,
+        canUpdateWhileSheetPresented: Bool
+    ) async throws -> Checkout.Session {
+        return session
+    }
+
+    func updateShippingTaxRegionIfNecessaryForPaymentSheet(
+        address: Checkout.Address,
+        canUpdateWhileSheetPresented: Bool
+    ) async throws -> Checkout.Session {
+        return session
+    }
 }
 
 private class MockAuthContext: NSObject, STPAuthenticationContext {

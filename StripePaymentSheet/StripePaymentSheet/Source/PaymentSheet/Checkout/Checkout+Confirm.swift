@@ -1,13 +1,14 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-// MARK: - CheckoutConfirmDataSource
+// MARK: - CheckoutConfirmationInterface
 
-/// The data the confirm flow needs from `Checkout`.
+/// The data the confirm flow needs from `Checkout`, including the sanctioned
+/// update methods (e.g. billing/shipping tax sync) it may need to call mid-confirmation.
 /// Using this protocol instead of `Checkout` directly keeps the static confirm
 /// functions decoupled from the full `Checkout` object and testable in isolation.
 @MainActor
-protocol CheckoutConfirmDataSource: AnyObject {
+protocol CheckoutConfirmationInterface: CheckoutSessionBillingAddressUpdater, CheckoutSessionShippingAddressUpdater {
     var applePayConfiguration: Checkout.ApplePayConfiguration? { get }
     var session: Checkout.Session { get }
     var apiClient: STPAPIClient { get }
@@ -15,10 +16,9 @@ protocol CheckoutConfirmDataSource: AnyObject {
     var returnURL: String? { get }
     var merchantDisplayName: String { get }
     var expressCheckoutElementBillingDetailsCollectionConfiguration: ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration { get }
-    func commitSession(_ response: PaymentPagesAPIResponse) async throws
 }
 
-extension Checkout: CheckoutConfirmDataSource {
+extension Checkout: CheckoutConfirmationInterface {
     var applePayConfiguration: ApplePayConfiguration? { configuration.applePayConfiguration }
     var returnURL: String? { configuration.returnURL }
     var merchantDisplayName: String { effectiveMerchantDisplayName }
@@ -79,7 +79,7 @@ extension Checkout {
     }
 
     static func confirm(
-        checkout: CheckoutConfirmDataSource,
+        checkout: CheckoutConfirmationInterface,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler
@@ -115,7 +115,7 @@ extension Checkout {
     }
 
     static func confirmPaymentOption(
-        checkout: CheckoutConfirmDataSource,
+        checkout: CheckoutConfirmationInterface,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
         intentConfirmParamsForDeferredIntent: IntentConfirmParams?,
