@@ -66,7 +66,7 @@ class AnalyticLoggableErrorTest: XCTestCase {
         )
 
         // Decoding Error from an iOS library
-        let decodingError = DecodingError.keyNotFound(STPCodingKey(intValue: 0)!, .init(codingPath: [], debugDescription: "PII"))
+        let decodingError = DecodingError.keyNotFound(STPCodingKey(intValue: 0), .init(codingPath: [], debugDescription: "PII"))
         XCTAssertEqual(
             decodingError.serializeForV1Analytics() as? [String: String],
             [

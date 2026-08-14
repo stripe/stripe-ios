@@ -71,7 +71,7 @@ extension Checkout {
 
         let paymentStatus: Checkout.PaymentStatus
         let paymentMethodOptions: STPPaymentMethodOptions?
-        let customer: STPCheckoutSessionCustomer?
+        let customer: PaymentPagesAPIResponse.Customer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
         let setupFutureUsage: String?
         let setupFutureUsageForPaymentMethodType: [String: String]

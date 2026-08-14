@@ -16,6 +16,16 @@ import PassKit
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
+extension PaymentPagesAPIResponse {
+    static func decode(
+        fromAPIResponse response: [AnyHashable: Any]
+    ) throws -> PaymentPagesAPIResponse {
+        let data = try JSONSerialization.data(withJSONObject: response)
+        return try StripeJSONDecoder().decode(PaymentPagesAPIResponse.self, from: data)
+    }
+
+}
+
 // MARK: - Emission Recorder
 
 @MainActor
@@ -121,6 +131,7 @@ enum CheckoutTestHelpers {
         "object": "checkout.session",
         "livemode": false,
         "mode": "modeless",
+        "status": "open",
         "payment_status": "unpaid",
         "payment_method_types": ["card"],
         "currency": "usd",
@@ -132,10 +143,7 @@ enum CheckoutTestHelpers {
     /// To test field *absence*, mutate `baseSessionJSON` directly instead.
     static func makeSession(_ overrides: [String: Any] = [:]) -> PaymentPagesAPIResponse {
         let json = makeSessionJSON(overrides)
-        guard let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json) else {
-            fatalError("makeSession: failed to decode PaymentPagesAPIResponse from \(json)")
-        }
-        return session
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeSessionJSON(_ overrides: [String: Any] = [:]) -> [String: Any] {
@@ -298,20 +306,20 @@ enum CheckoutTestHelpers {
         var json = openSessionJSON
         json["customer_email"] = customerEmail
         json["billing_address_collection"] = billingAddressCollection
-        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeClosedSession() -> PaymentPagesAPIResponse {
         var json = openSessionJSON
         json["status"] = "complete"
         json["payment_status"] = "paid"
-        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeOpenSession(allowedCountries: [String]) -> PaymentPagesAPIResponse {
         var json = openSessionJSON
         json["shipping_address_collection"] = ["allowed_countries": allowedCountries]
-        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeAdaptivePricingSession(
@@ -356,7 +364,7 @@ enum CheckoutTestHelpers {
             ]
         }
 
-        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
     private static func jsonObject(_ value: Any) -> Any {
@@ -423,6 +431,6 @@ extension PaymentPagesAPIResponse {
     private func withOverrides(_ overrides: [String: Any]) -> PaymentPagesAPIResponse {
         let json = (allResponseFields as? [String: Any] ?? [:])
             .merging(overrides) { _, new in new }
-        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 }

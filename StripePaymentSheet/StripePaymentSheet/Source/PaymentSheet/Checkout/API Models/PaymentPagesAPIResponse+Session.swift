@@ -12,12 +12,11 @@ extension PaymentPagesAPIResponse {
     /// Builds a public, read-only ``Checkout.Session`` snapshot from this API response object.
     func makePublicSession() -> Checkout.Session {
         let publicPaymentStatus = Checkout.PaymentStatus.paymentStatus(from: paymentStatus)
-        let publicStatus = status.map {
-            Checkout.Status(
-                type: Checkout.StatusType.statusType(from: $0),
-                paymentStatus: publicPaymentStatus
-            )
-        }
+        let publicStatus = Checkout.Status(
+            type: Checkout.StatusType.statusType(from: status),
+            paymentStatus: publicPaymentStatus
+        )
+        let elementsSessionValue = elementsSession.value
         let publicDiscountAmounts = Self.makeDiscountAmounts(
             from: recurringDetails?.totalDiscountAmounts ?? [],
             currency: currency
@@ -48,7 +47,6 @@ extension PaymentPagesAPIResponse {
         let automaticTaxAddressSource = Self.makeAutomaticTaxAddressSource(
             from: taxContext?.automaticTaxAddressSource
         )
-        let elementsSessionValue = elementsSession.value
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }

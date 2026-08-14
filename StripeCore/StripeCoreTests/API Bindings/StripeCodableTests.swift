@@ -65,7 +65,29 @@ struct TestNonOptionalEnumCodable: UnknownFieldsCodable {
     var _allResponseFieldsStorage: NonEncodableParameters?
 }
 
+private struct RawStripeJSONDictionary: Decodable {
+    let value: [AnyHashable: Any]
+
+    init(from decoder: Decoder) throws {
+        value = try decoder.stripeJSONDictionary
+    }
+}
+
 class StripeCodableTests: APIStubbedTestCase {
+    func testStripeJSONDictionaryReturnsCurrentObject() throws {
+        let data = try JSONSerialization.data(withJSONObject: ["id": "pm_123"])
+
+        let decoded = try StripeJSONDecoder().decode(RawStripeJSONDictionary.self, from: data)
+
+        XCTAssertEqual(decoded.value["id"] as? String, "pm_123")
+    }
+
+    func testStripeJSONDictionaryRejectsOtherDecoders() throws {
+        let data = try JSONSerialization.data(withJSONObject: ["id": "pm_123"])
+
+        XCTAssertThrowsError(try JSONDecoder().decode(RawStripeJSONDictionary.self, from: data))
+    }
+
     func codableTest<T: UnknownFieldsCodable>(
         codable: T,
         completion: @escaping ([String: Any], Result<T, Error>) -> Void
