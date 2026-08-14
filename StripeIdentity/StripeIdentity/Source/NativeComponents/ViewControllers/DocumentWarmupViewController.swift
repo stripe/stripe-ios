@@ -61,6 +61,7 @@ final class DocumentWarmupViewController: IdentityFlowViewController {
 
         Task { @MainActor in
             let isVerifyDocumentViaWalletAvailable = await verifyViaWalletManager.isVerifyDocumentViaWalletAvailable()
+            VerifyWithWalletLogger.log("isVerifyDocumentViaWalletAvailable=\(isVerifyDocumentViaWalletAvailable)")
             if isVerifyDocumentViaWalletAvailable {
                 updateVerifyViaWalletFlowViewModel(walletButtonState: .enabled)
             }
@@ -97,6 +98,7 @@ final class DocumentWarmupViewController: IdentityFlowViewController {
                             return
                         }
 
+                        VerifyWithWalletLogger.log("button tapped")
                         updateVerifyViaWalletFlowViewModel(walletButtonState: .loading)
                         Task { @MainActor in
                             defer {
@@ -105,13 +107,17 @@ final class DocumentWarmupViewController: IdentityFlowViewController {
 
                             do {
                                 let status = try await self.verifyViaWalletManager.requestDocument()
+                                VerifyWithWalletLogger.log("requestDocument returned status=\(status)")
                                 if status == .validated {
+                                    VerifyWithWalletLogger.log("status validated, submitting verification page")
                                     self.sheetController?.submitVerificationPageAndTransition(
                                         from: self.analyticsScreenName
                                     ) {}
+                                } else {
+                                    VerifyWithWalletLogger.logError("not transitioning, status=\(status)")
                                 }
                             } catch {
-                                debugPrint("Verify via Wallet failed: \(error)")
+                                VerifyWithWalletLogger.logError("requestDocument failed: \(error)")
                             }
                         }
                     }

@@ -99,26 +99,38 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
     }
 
     func createWalletIdentitySession() -> Promise<StripeAPI.VerificationPageWalletIdentitySession> {
-        return apiClient.post(
-            resource: APIEndpointVerificationPageWalletIdentitySessions(id: verificationSessionId),
+        let endpoint = APIEndpointVerificationPageWalletIdentitySessions(id: verificationSessionId)
+        VerifyWithWalletLogger.log("POST \(endpoint)")
+        let promise: Promise<StripeAPI.VerificationPageWalletIdentitySession> = apiClient.post(
+            resource: endpoint,
             parameters: [
                 "platform": "apple_passkit",
                 "app_identifier": Bundle.main.bundleIdentifier ?? "",
             ]
         )
+        promise.observe { result in
+            VerifyWithWalletLogger.log("POST \(endpoint) result=\(result)")
+        }
+        return promise
     }
 
     func submitWalletIdentitySession(
         id: String,
         outcome: StripeAPI.VerificationPageWalletIdentitySessionOutcome
     ) -> Promise<StripeAPI.VerificationPageWalletIdentitySessionSubmission> {
-        return apiClient.post(
-            resource: APIEndpointVerificationPageWalletIdentitySessionSubmit(
-                id: verificationSessionId,
-                walletIdentitySessionId: id
-            ),
+        let endpoint = APIEndpointVerificationPageWalletIdentitySessionSubmit(
+            id: verificationSessionId,
+            walletIdentitySessionId: id
+        )
+        VerifyWithWalletLogger.log("POST \(endpoint) outcome=\(outcome)")
+        let promise: Promise<StripeAPI.VerificationPageWalletIdentitySessionSubmission> = apiClient.post(
+            resource: endpoint,
             object: outcome
         )
+        promise.observe { result in
+            VerifyWithWalletLogger.log("POST \(endpoint) result=\(result)")
+        }
+        return promise
     }
 
     func updateIdentityVerificationPageData(

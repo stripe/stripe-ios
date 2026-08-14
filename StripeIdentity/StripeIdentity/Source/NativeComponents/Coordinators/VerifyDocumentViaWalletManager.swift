@@ -74,31 +74,40 @@ enum VerifyDocumentViaWalletManagerError: Error {
             throw VerifyDocumentViaWalletManagerError.unavailable
         }
 
+        VerifyWithWalletLogger.log("creating wallet identity session")
         let walletSession = try await createWalletIdentitySession()
+        VerifyWithWalletLogger.log("created wallet identity session id=\(walletSession.sessionId) documentRequests=\(walletSession.request.documentRequests.map { $0.documentType })")
         guard let nonce = walletSession.request.nonce.base64URLDecodedData else {
+            VerifyWithWalletLogger.logError("failed to decode nonce")
             throw VerifyDocumentViaWalletManagerError.invalidNonce
         }
 
-        guard let descriptor = try await makeRequestableDocumentDescriptor(
+        guard let descriptor = try makeSubmittableDocumentDescriptor(
             documentRequests: walletSession.request.documentRequests
         ) else {
+            VerifyWithWalletLogger.logError("no document descriptor could be built for documentRequests=\(walletSession.request.documentRequests.map { $0.documentType }) with idDocumentTypeAllowlistKeys=\(idDocumentTypeAllowlistKeys); submitting noDocument without presenting PassKit UI")
             return try await submitWalletIdentitySession(
                 id: walletSession.sessionId,
                 outcome: .noDocument
             ).status
         }
+        VerifyWithWalletLogger.log("using descriptor=\(descriptor)")
 
         let request = PKIdentityRequest()
         request.descriptor = descriptor
         request.nonce = nonce
         request.merchantIdentifier = walletSession.request.merchantIdentifier
 
+        VerifyWithWalletLogger.log("requesting document from PassKit, merchantIdentifier=\(walletSession.request.merchantIdentifier)")
         let outcome = try await requestDocumentOutcome(request)
+        VerifyWithWalletLogger.log("PassKit outcome=\(outcome)")
 
-        return try await submitWalletIdentitySession(
+        let submission = try await submitWalletIdentitySession(
             id: walletSession.sessionId,
             outcome: outcome
-        ).status
+        )
+        VerifyWithWalletLogger.log("submitted wallet identity session, status=\(submission.status)")
+        return submission.status
     }
 
     @MainActor
@@ -132,18 +141,24 @@ enum VerifyDocumentViaWalletManagerError: Error {
     ) async throws -> StripeAPI.VerificationPageWalletIdentitySessionOutcome {
         do {
             guard let document = try await requestDocument(request) else {
+                VerifyWithWalletLogger.log("PassKit returned no document")
                 return .noDocument
             }
             guard !document.encryptedData.isEmpty else {
+                VerifyWithWalletLogger.logError("PassKit document has empty encryptedData")
                 throw VerifyDocumentViaWalletManagerError.invalidEncryptedResponse
             }
+            VerifyWithWalletLogger.log("PassKit returned document with \(document.encryptedData.count) bytes")
             return .credentialReturned(
                 encryptedResponse: document.encryptedData.base64URLEncodedString
             )
         } catch {
+            VerifyWithWalletLogger.logError("PassKit requestDocument threw error=\(error)")
             guard let nonCredentialOutcome = Self.nonCredentialOutcome(for: error) else {
+                VerifyWithWalletLogger.logError("error is not a recognized non-credential outcome, rethrowing")
                 throw error
             }
+            VerifyWithWalletLogger.log("mapped error to outcome=\(nonCredentialOutcome)")
             return nonCredentialOutcome
         }
     }
@@ -172,13 +187,22 @@ enum VerifyDocumentViaWalletManagerError: Error {
         }
     }
 
+    /// Builds the descriptor to actually submit to PassKit for a given wallet identity session,
+    /// without re-checking `canRequestDocument()`. That check was already satisfied (using a generic
+    /// descriptor built from `idDocumentTypeAllowlistKeys`) when we decided to show the wallet button;
+    /// re-running it here against the backend's specific `requestedElements` can diverge and return
+    /// false even when PassKit is able to service the request, silently skipping the PassKit UI.
     @available(iOS 16.0, *)
-    private func makeRequestableDocumentDescriptor(
+    private func makeSubmittableDocumentDescriptor(
         documentRequests: [StripeAPI.VerificationPageWalletIdentitySession.Request.DocumentRequest]
-    ) async throws -> (any PKIdentityDocumentDescriptor)? {
-        let descriptors = await requestableDocumentDescriptors(
-            in: try makeDocumentDescriptors(documentRequests: documentRequests)
-        )
+    ) throws -> (any PKIdentityDocumentDescriptor)? {
+        return makeDocumentDescriptor(from: try makeDocumentDescriptors(documentRequests: documentRequests))
+    }
+
+    @available(iOS 16.0, *)
+    private func makeDocumentDescriptor(
+        from descriptors: [any PKIdentityDocumentDescriptor]
+    ) -> (any PKIdentityDocumentDescriptor)? {
         guard !descriptors.isEmpty else {
             return nil
         }
@@ -201,7 +225,9 @@ enum VerifyDocumentViaWalletManagerError: Error {
         let authorizationController = PKIdentityAuthorizationController()
         var requestableDescriptors: [any PKIdentityDocumentDescriptor] = []
         for descriptor in descriptors {
-            if await authorizationController.canRequestDocument(descriptor) {
+            let canRequest = await authorizationController.canRequestDocument(descriptor)
+            VerifyWithWalletLogger.log("canRequestDocument(\(descriptor))=\(canRequest)")
+            if canRequest {
                 requestableDescriptors.append(descriptor)
             }
         }
@@ -218,6 +244,11 @@ enum VerifyDocumentViaWalletManagerError: Error {
     private func makeDocumentDescriptors(
         documentRequests: [StripeAPI.VerificationPageWalletIdentitySession.Request.DocumentRequest]
     ) throws -> [any PKIdentityDocumentDescriptor] {
+        let disallowedRequests = documentRequests.filter { !idDocumentTypeAllowlistKeys.contains($0.documentType) }
+        if !disallowedRequests.isEmpty {
+            VerifyWithWalletLogger.logError("documentTypes not in idDocumentTypeAllowlistKeys=\(idDocumentTypeAllowlistKeys), skipping: \(disallowedRequests.map { $0.documentType })")
+        }
+
         var descriptors: [any PKIdentityDocumentDescriptor] = []
         for request in documentRequests where idDocumentTypeAllowlistKeys.contains(request.documentType) {
             let descriptor: (any PKIdentityDocumentDescriptor)?
@@ -228,15 +259,18 @@ enum VerifyDocumentViaWalletManagerError: Error {
                 if #available(iOS 18.0, *) {
                     descriptor = PKIdentityNationalIDCardDescriptor()
                 } else {
+                    VerifyWithWalletLogger.logError("id_card requires iOS 18+, skipping")
                     descriptor = nil
                 }
             case "passport":
                 if #available(iOS 26.0, *) {
                     descriptor = PKIdentityPhotoIDDescriptor()
                 } else {
+                    VerifyWithWalletLogger.logError("passport requires iOS 26+, skipping")
                     descriptor = nil
                 }
             default:
+                VerifyWithWalletLogger.logError("unrecognized documentType=\(request.documentType), skipping")
                 descriptor = nil
             }
             if let descriptor {
@@ -278,6 +312,7 @@ enum VerifyDocumentViaWalletManagerError: Error {
             if let identityElement = identityElement(for: requestedElement) {
                 elements.append(identityElement)
             } else {
+                VerifyWithWalletLogger.logError("unsupported requestedElement=\(requestedElement)")
                 throw VerifyDocumentViaWalletManagerError.unsupportedRequestedElements
             }
         }
@@ -370,8 +405,10 @@ enum VerifyDocumentViaWalletManagerError: Error {
             activeAuthorizationController = nil
         }
 
+        VerifyWithWalletLogger.log("calling PKIdentityAuthorizationController.requestDocument")
         return try await withCheckedThrowingContinuation { continuation in
             authorizationController.requestDocument(request) { document, error in
+                VerifyWithWalletLogger.log("PKIdentityAuthorizationController.requestDocument callback, document=\(document != nil), error=\(String(describing: error))")
                 if let document {
                     continuation.resume(returning: document)
                 } else if let error {
