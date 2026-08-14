@@ -17,7 +17,6 @@ extension ExpressCheckoutElement {
         public var confirmHandler: ConfirmHandler = { _ in }
 
         /// Creates a configuration with default values.
-        public init() {
-        }
+        public init() {}
     }
 }
