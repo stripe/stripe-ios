@@ -2429,7 +2429,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             if let paymentMethodOptions {
                 json["payment_method_options"] = paymentMethodOptions
             }
-            let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+            let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
             return PaymentSheetFormFactory(
                 intent: .checkout(checkoutSession.makePublicSession()),
                 elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),

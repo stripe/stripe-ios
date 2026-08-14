@@ -225,7 +225,7 @@ final class CheckoutUnitTests: XCTestCase {
             "automatic_tax_enabled": true,
             "automatic_tax_address_source": "session.shipping",
         ]
-        let session = try XCTUnwrap(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
         var configuration = Checkout.Configuration(
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
@@ -320,7 +320,7 @@ final class CheckoutUnitTests: XCTestCase {
             "automatic_tax_enabled": true,
             "automatic_tax_address_source": "session.shipping",
         ]
-        let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session))
 
         // ...and a previously stored local shipping address
@@ -386,7 +386,7 @@ final class CheckoutUnitTests: XCTestCase {
     func testBillingAddressCollection_whenRequired() {
         var json = CheckoutTestHelpers.openSessionJSON
         json["billing_address_collection"] = "required"
-        let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!.makePublicSession()
+        let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
         XCTAssertEqual(session.billingAddressCollection, .required)
     }
 
@@ -394,25 +394,25 @@ final class CheckoutUnitTests: XCTestCase {
         // "auto" should decode as automatic
         var jsonAuto = CheckoutTestHelpers.openSessionJSON
         jsonAuto["billing_address_collection"] = "auto"
-        let sessionAuto = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: jsonAuto)!.makePublicSession()
+        let sessionAuto = try! PaymentPagesAPIResponse.decode(fromAPIResponse: jsonAuto).makePublicSession()
         XCTAssertEqual(sessionAuto.billingAddressCollection, .automatic)
 
         // absent field should default to automatic
         let jsonNil = CheckoutTestHelpers.openSessionJSON
-        let sessionNil = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: jsonNil)!.makePublicSession()
+        let sessionNil = try! PaymentPagesAPIResponse.decode(fromAPIResponse: jsonNil).makePublicSession()
         XCTAssertEqual(sessionNil.billingAddressCollection, .automatic)
     }
 
     func testAllowedShippingCountries_whenPresent() {
         var json = CheckoutTestHelpers.openSessionJSON
         json["shipping_address_collection"] = ["allowed_countries": ["US", "CA", "IE", "GB"]]
-        let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!.makePublicSession()
+        let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
         XCTAssertEqual(session.allowedShippingCountries, ["US", "CA", "IE", "GB"])
     }
 
     func testAllowedShippingCountries_whenNil() {
         let json = CheckoutTestHelpers.openSessionJSON
-        let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!.makePublicSession()
+        let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
         XCTAssertNil(session.allowedShippingCountries)
     }
 
@@ -438,7 +438,7 @@ final class CheckoutUnitTests: XCTestCase {
             "subtotal": 12000,
             "total": 13185,
         ]
-        let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!.makePublicSession()
+        let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
         XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 1185)
         XCTAssertEqual(session.tax.taxAmounts?.count, 1)
     }
@@ -473,7 +473,7 @@ final class CheckoutUnitTests: XCTestCase {
             "subtotal": 10000,
             "total": 10700,
         ]
-        let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!.makePublicSession()
+        let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
         XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 700)
         XCTAssertEqual(session.tax.taxAmounts?.count, 2)
     }
@@ -484,7 +484,7 @@ final class CheckoutUnitTests: XCTestCase {
             "subtotal": 10000,
             "total": 10000,
         ]
-        let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!.makePublicSession()
+        let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
         XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 0)
         XCTAssertNil(session.tax.taxAmounts)
     }
@@ -494,13 +494,13 @@ final class CheckoutUnitTests: XCTestCase {
     func testRequiresShippingAddress_whenCountriesPresent() {
         var json = CheckoutTestHelpers.openSessionJSON
         json["shipping_address_collection"] = ["allowed_countries": ["US", "CA"]]
-        let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!.makePublicSession()
+        let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
         XCTAssertTrue(session.requiresShippingAddress)
     }
 
     func testRequiresShippingAddress_whenNil() {
         let json = CheckoutTestHelpers.openSessionJSON
-        let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!.makePublicSession()
+        let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
         XCTAssertFalse(session.requiresShippingAddress)
     }
 
@@ -530,7 +530,7 @@ final class CheckoutUnitTests: XCTestCase {
             "total": 21000,
         ]
 
-        let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!.makePublicSession()
+        let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
 
         // Verify tax amounts
         XCTAssertEqual(session.tax.taxAmounts?.count, 1)
@@ -559,7 +559,7 @@ final class CheckoutUnitTests: XCTestCase {
         var updatedJSON = CheckoutTestHelpers.openSessionJSON
         updatedJSON["status"] = "complete"
         updatedJSON["payment_status"] = "paid"
-        let confirmResponse = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: updatedJSON)!
+        let confirmResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: updatedJSON)
 
         // When the confirmed session is committed
         try await checkout.commitSession(confirmResponse)
@@ -587,7 +587,7 @@ final class CheckoutUnitTests: XCTestCase {
         var updatedJSON = CheckoutTestHelpers.openSessionJSON
         updatedJSON["status"] = "complete"
         updatedJSON["payment_status"] = "paid"
-        let confirmResponse = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: updatedJSON)!
+        let confirmResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: updatedJSON)
 
         try await checkout.commitSession(confirmResponse)
 
@@ -615,7 +615,7 @@ final class CheckoutUnitTests: XCTestCase {
 
         var updatedJSON = CheckoutTestHelpers.openSessionJSON
         updatedJSON["status"] = "complete"
-        let confirmResponse = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: updatedJSON)!
+        let confirmResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: updatedJSON)
 
         try await checkout.commitSession(confirmResponse)
 
@@ -634,14 +634,14 @@ final class CheckoutUnitTests: XCTestCase {
         var firstResponse = CheckoutTestHelpers.openSessionJSON
         firstResponse["status"] = "complete"
         firstResponse["payment_status"] = "paid"
-        let firstConfirm = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: firstResponse)!
+        let firstConfirm = try PaymentPagesAPIResponse.decode(fromAPIResponse: firstResponse)
 
         try await checkout.commitSession(firstConfirm)
         XCTAssertEqual(checkout.session.status?.type, .complete)
 
         var secondResponse = CheckoutTestHelpers.openSessionJSON
         secondResponse["status"] = "open"
-        let secondSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: secondResponse)!
+        let secondSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: secondResponse)
 
         try await checkout.commitSession(secondSession)
         XCTAssertEqual(checkout.session.status?.type, .open)
