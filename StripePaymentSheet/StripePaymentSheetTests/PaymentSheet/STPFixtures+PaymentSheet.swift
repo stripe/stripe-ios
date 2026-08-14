@@ -412,7 +412,7 @@ extension Intent {
             json["recurring_details"] = recurringDetails
         }
 
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
         return .checkout(checkoutSession.makePublicSession())
     }
 }

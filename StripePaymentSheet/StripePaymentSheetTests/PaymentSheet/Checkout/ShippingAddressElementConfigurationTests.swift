@@ -18,7 +18,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         var elementsSessionJSON = CheckoutTestHelpers.minimalElementsSessionJSON
         elementsSessionJSON["flags"] = ["ocs_mobile_should_use_autocomplete_proxy_endpoints": true]
         sessionJSON["elements_session"] = elementsSessionJSON
-        let apiResponse = try XCTUnwrap(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: sessionJSON))
+        let apiResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
 
         var configuration = Checkout.Configuration(
             clientSecret: "cs_test_123_secret_abc",

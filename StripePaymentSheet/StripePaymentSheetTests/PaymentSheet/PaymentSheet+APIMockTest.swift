@@ -299,7 +299,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testCheckoutSessionConfirmWithNewPaymentMethodViaLink() async throws {
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+        let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: MockJson.checkoutSession)
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
 
         // In non-passthrough mode, Link payment details are converted to params and
@@ -362,7 +362,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testCheckoutSessionConfirmWithNewPaymentMethodSelectedSendsSaveAndAllowRedisplay() async throws {
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+        let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: MockJson.checkoutSession)
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .selected
@@ -386,7 +386,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testCheckoutSessionConfirmWithNewPaymentMethodDeselectedOmitsSaveAndUsesUnspecifiedAllowRedisplay() async throws {
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+        let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: MockJson.checkoutSession)
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .deselected
@@ -410,7 +410,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testCheckoutSessionConfirmWithHiddenCheckboxOmitsSavePaymentMethod() async throws {
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+        let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: MockJson.checkoutSession)
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         let confirmParams = MockParams.intentConfirmParams
 
@@ -435,7 +435,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     func testCheckoutSessionConfirmWithPaymentModeSetupFutureUsageDeselectedUsesLimitedAllowRedisplay() async throws {
         var checkoutSessionJSON = MockJson.checkoutSession
         checkoutSessionJSON["setup_future_usage"] = "off_session"
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
+        let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: checkoutSessionJSON)
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .deselected
@@ -465,7 +465,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
             "enabled": false,
             "status": "not_accepted",
         ]
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
+        let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: checkoutSessionJSON)
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .hidden
@@ -491,7 +491,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     func testCheckoutSessionConfirmWithNonCardPaymentMethodIncludesSavePaymentMethod() async throws {
         var checkoutSessionJSON = MockJson.checkoutSession
         checkoutSessionJSON["payment_method_types"] = ["paypal"]
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
+        let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: checkoutSessionJSON)
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         let confirmParams = IntentConfirmParams(type: .stripe(.payPal))
         confirmParams.saveForFutureUseCheckboxState = .selected
