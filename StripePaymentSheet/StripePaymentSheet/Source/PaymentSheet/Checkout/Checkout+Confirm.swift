@@ -72,7 +72,7 @@ extension Checkout {
 
     func confirmationContext(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> ConfirmationContext {
         // TODO: Link Payment Element Configuration
-        var paymentConfiguration = PaymentSheet.Configuration()
+        let paymentConfiguration = PaymentSheet.Configuration()
         switch paymentMethod {
         case .applePay:
             return ConfirmationContext(
