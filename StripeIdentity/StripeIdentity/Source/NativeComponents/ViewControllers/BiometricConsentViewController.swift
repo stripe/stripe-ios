@@ -104,7 +104,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                 backgroundColor: .systemBackground,
                 headerType: {
                     if let configuration {
-                        guard configuration.showsIcon else {
+                        guard !configuration.hideBrandingHeader else {
                             return .plain
                         }
                         return .banner(

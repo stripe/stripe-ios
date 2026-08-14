@@ -27,16 +27,16 @@ final public class IdentityVerificationSheet {
     public struct Configuration {
         /// Configuration for the biometric consent screen's header.
         @_spi(STP) public struct BiometricConsentConfiguration {
-            /// Whether to display the brand icon above the consent title.
-            public var showsIcon: Bool
+            /// Whether to hide the branding header above the consent title.
+            public var hideBrandingHeader: Bool
 
             /// Initializes a biometric consent header configuration.
             /// - Parameters:
-            ///   - showsIcon: Whether to display the brand icon above the consent title.
+            ///   - hideBrandingHeader: Whether to hide the branding header above the consent title.
             public init(
-                showsIcon: Bool
+                hideBrandingHeader: Bool
             ) {
-                self.showsIcon = showsIcon
+                self.hideBrandingHeader = hideBrandingHeader
             }
         }
 
