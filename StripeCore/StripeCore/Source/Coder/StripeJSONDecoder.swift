@@ -348,7 +348,7 @@ private struct STPUnkeyedDecodingContainer: UnkeyedDecodingContainer, STPDecodin
     }
 
     mutating func _decode<T>(_ type: T.Type) throws -> T where T: Decodable {
-        let newPath = codingPath + [STPCodingKey(intValue: currentIndex)!]
+        let newPath = codingPath + [STPCodingKey(intValue: currentIndex)]
 
         let value: T = try castFromNSObject(codingPath: newPath, type, _popObject())
         if var sdValue = value as? UnknownFieldsDecodable {
@@ -713,7 +713,7 @@ extension STPDecodingContainerProtocol {
                 let arrayType = T.self as! (_STPDecodableIsArray.Type)
                 convertedArray.append(
                     try arrayType.valueType._castFromNSObject(
-                        codingPath: codingPath + [STPCodingKey(intValue: index)!],
+                        codingPath: codingPath + [STPCodingKey(intValue: index)],
                         decodingContainer: self,
                         object: value as! NSObject
                     )
