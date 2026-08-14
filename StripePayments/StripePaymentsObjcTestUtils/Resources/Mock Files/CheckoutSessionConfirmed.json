@@ -8,33 +8,71 @@
   },
   "checkout_items": [
     {
-      "key": "li_1abc",
-      "type": "one_time_price_item",
-      "one_time_price_item": {
-        "quantity": 2,
-        "price": {
-          "id": "price_1abc",
-          "currency": "usd",
-          "unit_amount": 750,
-          "product": {
-            "name": "Widget"
+      "key": "ci_1abc",
+      "type": "one_time_price",
+      "one_time_price": {
+        "items": [
+          {
+            "inner_item_key": "cii_1abc",
+            "quantity": 2,
+            "subtotal": 1500,
+            "total": 1612,
+            "unit_amount": 750,
+            "unit_amount_decimal": "750",
+            "tax_amounts": [
+              {
+                "amount": 112,
+                "inclusive": false,
+                "tax_rate": {
+                  "percentage": 7.45,
+                  "display_name": "Sales Tax"
+                }
+              }
+            ],
+            "tax_inclusive": 0,
+            "tax_exclusive": 112,
+            "price": {
+              "id": "price_1abc",
+              "currency": "usd",
+              "unit_amount": 750,
+              "product": {
+                "name": "Widget",
+                "images": []
+              }
+            }
+          },
+          {
+            "inner_item_key": "cii_2def",
+            "quantity": 1,
+            "subtotal": 500,
+            "total": 574,
+            "unit_amount": 500,
+            "unit_amount_decimal": "500",
+            "tax_amounts": [
+              {
+                "amount": 74,
+                "inclusive": false,
+                "tax_rate": {
+                  "percentage": 7.45,
+                  "display_name": "Sales Tax"
+                }
+              }
+            ],
+            "tax_inclusive": 0,
+            "tax_exclusive": 74,
+            "price": {
+              "id": "price_2def",
+              "currency": "usd",
+              "unit_amount": 500,
+              "product": {
+                "name": "Gadget",
+                "images": []
+              }
+            }
           }
-        }
-      }
-    },
-    {
-      "key": "li_2def",
-      "type": "one_time_price_item",
-      "one_time_price_item": {
-        "quantity": 1,
-        "price": {
-          "id": "price_2def",
-          "currency": "usd",
-          "unit_amount": 500,
-          "product": {
-            "name": "Gadget"
-          }
-        }
+        ],
+        "subtotal": 2000,
+        "total": 2186
       }
     }
   ],

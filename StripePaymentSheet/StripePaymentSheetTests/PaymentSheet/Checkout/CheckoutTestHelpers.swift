@@ -15,13 +15,6 @@ import OHHTTPStubsSwift
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
-extension Checkout.Amount {
-    /// Test helper for constructing a ``Checkout/Amount`` from a minor-units integer.
-    static func testValue(_ minorUnits: Int, currency: String = "usd") -> Checkout.Amount {
-        return PaymentPagesAPIResponse.makeAmount(minorUnits, currency: currency)
-    }
-}
-
 // MARK: - Emission Recorder
 
 @MainActor
@@ -84,13 +77,53 @@ enum CheckoutTestHelpers {
         "payment_method_preference": ["ordered_payment_method_types": ["card"]],
     ]
 
+    static func makeOneTimePriceCheckoutItems(
+        currency: String = "usd",
+        unitAmount: Int = 1000
+    ) -> [[String: Any]] {
+        return [
+            [
+                "key": "checkout_item_test",
+                "type": "one_time_price",
+                "one_time_price": [
+                    "items": [
+                        [
+                            "inner_item_key": "checkout_item_inner_test",
+                            "quantity": 1,
+                            "subtotal": unitAmount,
+                            "total": unitAmount,
+                            "unit_amount": unitAmount,
+                            "unit_amount_decimal": String(unitAmount),
+                            "tax_amounts": [],
+                            "tax_inclusive": 0,
+                            "tax_exclusive": 0,
+                            "price": [
+                                "id": "price_test",
+                                "currency": currency,
+                                "unit_amount": unitAmount,
+                                "product": [
+                                    "name": "Test product",
+                                    "images": [],
+                                ],
+                            ],
+                        ],
+                    ],
+                    "subtotal": unitAmount,
+                    "total": unitAmount,
+                ],
+            ],
+        ]
+    }
+
     static let baseSessionJSON: [String: Any] = [
         "session_id": "cs_test",
         "object": "checkout.session",
         "livemode": false,
-        "mode": "payment",
+        "mode": "modeless",
         "payment_status": "unpaid",
         "payment_method_types": ["card"],
+        "currency": "usd",
+        "checkout_items": makeOneTimePriceCheckoutItems(),
         "elements_session": minimalElementsSessionJSON,
     ]
 
@@ -251,11 +284,12 @@ enum CheckoutTestHelpers {
         "object": "checkout.session",
         "client_secret": "cs_test_123_secret_abc",
         "livemode": false,
-        "mode": "payment",
+        "mode": "modeless",
         "status": "open",
         "payment_status": "unpaid",
         "payment_method_types": ["card"],
         "currency": "usd",
+        "checkout_items": makeOneTimePriceCheckoutItems(),
         "elements_session": minimalElementsSessionJSON,
     ]
 
@@ -289,6 +323,10 @@ enum CheckoutTestHelpers {
     ) -> PaymentPagesAPIResponse {
         var json: [AnyHashable: Any] = openSessionJSON
         json["currency"] = currency
+        json["checkout_items"] = makeOneTimePriceCheckoutItems(
+            currency: currency,
+            unitAmount: integrationAmount
+        )
         json["total_summary"] = [
             "subtotal": integrationAmount,
             "total": integrationAmount,
