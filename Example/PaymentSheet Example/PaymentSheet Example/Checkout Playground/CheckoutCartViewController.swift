@@ -338,15 +338,11 @@ final class CheckoutCartViewController: UIViewController {
         nameLabel.numberOfLines = 0
 
         let unitAmountLabel = UILabel()
-        unitAmountLabel.text = item.unitAmount.amount
+        unitAmountLabel.text = "\((item.unitAmountDecimal ?? item.unitAmount).amount) × \(item.quantity)"
         unitAmountLabel.font = .preferredFont(forTextStyle: .subheadline)
         unitAmountLabel.textColor = .secondaryLabel
 
-        let quantityLabel = UILabel()
-        quantityLabel.text = "Qty: \(item.quantity)"
-        quantityLabel.font = .preferredFont(forTextStyle: .headline)
-
-        let detailsStackView = UIStackView(arrangedSubviews: [nameLabel, unitAmountLabel, quantityLabel])
+        let detailsStackView = UIStackView(arrangedSubviews: [nameLabel, unitAmountLabel])
         detailsStackView.axis = .vertical
         detailsStackView.spacing = 6
 

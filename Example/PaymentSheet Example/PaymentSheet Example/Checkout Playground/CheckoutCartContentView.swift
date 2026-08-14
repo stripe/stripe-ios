@@ -73,14 +73,9 @@ struct CheckoutCartContentView: View {
                                 Text(item.displayName)
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                Text(item.unitAmount.amount)
+                                Text("\((item.unitAmountDecimal ?? item.unitAmount).amount) × \(item.quantity)")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
-
-                                Spacer()
-
-                                Text("Qty: \(item.quantity)")
-                                    .font(.body).bold()
                             }
                             Spacer()
                         }
