@@ -76,7 +76,7 @@ class PaymentSheet_AddressTests: PaymentSheetUITestCase {
         if verifyAnalytics {
             let autocompleteSuggestionsAnalytic = analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_suggestions" }
             XCTAssertNotNil(autocompleteSuggestionsAnalytic)
-            XCTAssertEqual(autocompleteSuggestionsAnalytic?["character_count"] as? Int, 16)
+            XCTAssertNotNil(autocompleteSuggestionsAnalytic?["result_count"])
             XCTAssertNotNil(autocompleteSuggestionsAnalytic?["source"])
         }
         searchedCell.tap()
@@ -98,10 +98,10 @@ class PaymentSheet_AddressTests: PaymentSheetUITestCase {
         XCTAssertEqual(app.textFields["State"].value as! String, state)
         XCTAssertEqual(app.textFields["ZIP"].value as! String, zip)
         if verifyAnalytics {
-            let autocompleteCompleteAnalytic = analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_complete" }
-            XCTAssertNotNil(autocompleteCompleteAnalytic)
-            XCTAssertEqual(autocompleteCompleteAnalytic?["character_count"] as? Int, 16)
-            XCTAssertNotNil(autocompleteCompleteAnalytic?["source"])
+            let autocompleteSelectedAnalytic = analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_selected" }
+            XCTAssertNotNil(autocompleteSelectedAnalytic)
+            XCTAssertEqual(autocompleteSelectedAnalytic?["query_length"] as? Int, 16)
+            XCTAssertNotNil(autocompleteSelectedAnalytic?["source"])
         }
     }
 
