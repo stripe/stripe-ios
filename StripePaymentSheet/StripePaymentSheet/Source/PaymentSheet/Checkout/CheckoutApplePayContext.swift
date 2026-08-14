@@ -26,7 +26,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         case success
     }
 
-    private weak var checkoutApplePayDataSource: CheckoutApplePayDataSource?
+    private weak var sessionUpdater: ExpressCheckoutSessionUpdater?
     private let session: Checkout.Session
     private let merchantLabel: String
     private let apiClient: STPAPIClient
@@ -44,14 +44,15 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
     init(
         checkoutSession: Checkout.Session,
-        checkoutApplePayDataSource: CheckoutApplePayDataSource,
+        confirmationContext: Checkout.ApplePayConfirmationContext,
+        sessionUpdater: ExpressCheckoutSessionUpdater,
         authorizationController: PKPaymentAuthorizationController
     ) {
         self.session = checkoutSession
-        self.checkoutApplePayDataSource = checkoutApplePayDataSource
-        self.merchantLabel = checkoutApplePayDataSource.merchantDisplayName
-        self.apiClient = checkoutApplePayDataSource.apiClient
-        self.returnURL = checkoutApplePayDataSource.returnURL
+        self.sessionUpdater = sessionUpdater
+        self.merchantLabel = confirmationContext.merchantDisplayName
+        self.apiClient = confirmationContext.apiClient
+        self.returnURL = confirmationContext.returnURL
         self.authorizationController = authorizationController
         super.init()
     }
@@ -149,7 +150,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 // The payment already succeeded at this point, so a failure here shouldn't be
                 // reported to the customer as a failed payment - just log it.
                 do {
-                    try await self.checkoutApplePayDataSource?.commitSession(response)
+                    try await self.sessionUpdater?.commitSession(response)
                 } catch {
                     let errorAnalytic = ErrorAnalytic(
                         event: .unexpectedPaymentSheetConfirmationError,
@@ -237,9 +238,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
     static func create(
         checkoutSession: Checkout.Session,
-        checkoutApplePayDataSource: CheckoutApplePayDataSource
+        confirmationContext: Checkout.ApplePayConfirmationContext,
+        sessionUpdater: ExpressCheckoutSessionUpdater
     ) throws -> CheckoutApplePayContext {
-        guard let applePayConfig = checkoutApplePayDataSource.applePayConfiguration else {
+        guard let applePayConfig = confirmationContext.applePayConfiguration else {
             throw CheckoutError.applePayNotConfigured
         }
 
@@ -258,7 +260,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
         assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `Checkout.ApplePayConfiguration`.")
 
-        let merchantLabel = checkoutApplePayDataSource.merchantDisplayName
+        let merchantLabel = confirmationContext.merchantDisplayName
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
 
         // TODO: Set requiredShippingContactFields when shipping address collection is implemented.
@@ -272,7 +274,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         let authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
         return CheckoutApplePayContext(
             checkoutSession: checkoutSession,
-            checkoutApplePayDataSource: checkoutApplePayDataSource,
+            confirmationContext: confirmationContext,
+            sessionUpdater: sessionUpdater,
             authorizationController: authorizationController
         )
     }

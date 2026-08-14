@@ -57,9 +57,9 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     struct TestIntent {
         let description: String
         let intent: Intent
-        let checkout: TestCheckoutSessionUpdater?
+        let checkout: CheckoutSessionBillingAddressUpdater?
 
-        init(_ description: String, _ intent: Intent, checkout: TestCheckoutSessionUpdater? = nil) {
+        init(_ description: String, _ intent: Intent, checkout: CheckoutSessionBillingAddressUpdater? = nil) {
             self.description = description
             self.intent = intent
             self.checkout = checkout
@@ -67,14 +67,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     /// Mock stand-in for a full `Checkout` object.
-    final class TestCheckoutSessionUpdater: CheckoutApplePayDataSource, CheckoutSessionBillingAddressUpdater {
+    final class TestCheckoutSessionUpdater: CheckoutSessionBillingAddressUpdater {
         private(set) var session: Checkout.Session
-        // Apple Pay is not exercised in these LPM confirm flow tests.
-        var applePayConfiguration: Checkout.ApplePayConfiguration? { nil }
-        var apiClient: STPAPIClient { STPAPIClient.shared }
-        var paymentHandler: STPPaymentHandler { STPPaymentHandler(apiClient: STPAPIClient.shared) }
-        var returnURL: String? { nil }
-        var merchantDisplayName: String { "" }
 
         init(session: Checkout.Session) {
             self.session = session
@@ -1726,7 +1720,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        guard case .checkout = testIntent.intent, let checkout = testIntent.checkout else {
+        guard case .checkout(let checkoutSession) = testIntent.intent else {
             PaymentSheet.confirm(
                 configuration: configuration,
                 authenticationContext: self,
@@ -1749,11 +1743,10 @@ extension PaymentSheetLPMConfirmFlowTests {
                 analyticsHelper: analyticsHelper
             )
             let result = await Checkout.confirm(
-                checkoutSession: checkout.session,
+                checkoutSession: checkoutSession,
                 confirmationContext: confirmationContext,
                 authenticationContext: self,
-                paymentHandler: paymentHandler,
-                checkoutApplePayDataSource: checkout
+                paymentHandler: paymentHandler
             )
             completion(result.paymentSheetResult, nil)
         }

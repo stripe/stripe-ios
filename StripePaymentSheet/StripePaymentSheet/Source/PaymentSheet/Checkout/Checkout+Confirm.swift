@@ -1,25 +1,27 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-// MARK: - CheckoutApplePayDataSource
-
-/// Convenience bag of everything Apple Pay needs for confirmation
-@MainActor
-protocol CheckoutApplePayDataSource: AnyObject {
-    var applePayConfiguration: Checkout.ApplePayConfiguration? { get }
-    var apiClient: STPAPIClient { get }
-    var returnURL: String? { get }
-    var merchantDisplayName: String { get }
-    func commitSession(_ response: PaymentPagesAPIResponse) async throws
-}
-
-extension Checkout: CheckoutApplePayDataSource {
-    var applePayConfiguration: ApplePayConfiguration? { configuration.applePayConfiguration }
-    var returnURL: String? { configuration.returnURL }
-    var merchantDisplayName: String { effectiveMerchantDisplayName }
-}
-
 // MARK: - Confirm
+
+extension Checkout {
+    /// Convenience bag of everything Apple Pay needs for confirmation, aside from committing the session
+    /// back to `Checkout` (see ``CheckoutSessionBillingAddressUpdater`` for that).
+    struct ApplePayConfirmationContext {
+        let applePayConfiguration: Checkout.ApplePayConfiguration?
+        let apiClient: STPAPIClient
+        let returnURL: String?
+        let merchantDisplayName: String
+    }
+
+    var applePayConfirmationContext: ApplePayConfirmationContext {
+        ApplePayConfirmationContext(
+            applePayConfiguration: configuration.applePayConfiguration,
+            apiClient: apiClient,
+            returnURL: configuration.returnURL,
+            merchantDisplayName: effectiveMerchantDisplayName
+        )
+    }
+}
 
 extension Checkout {
     /// Convenience bag of params needed for confirmation
@@ -68,29 +70,6 @@ extension Checkout {
             confirmationChallenge: paymentElement.embeddedPaymentElement.confirmationChallenge,
             analyticsHelper: paymentElement.embeddedPaymentElement.analyticsHelper
         )
-    }
-
-    func confirmationContext(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> ConfirmationContext {
-        // TODO: Link Payment Element Configuration
-        let paymentConfiguration = PaymentSheet.Configuration()
-        switch paymentMethod {
-        case .applePay:
-            return ConfirmationContext(
-                paymentOption: .applePay,
-                configuration: paymentConfiguration,
-                integrationShape: .expressCheckout,
-                confirmationChallenge: nil, // Apple Pay is not a Card Testing attack vector
-                analyticsHelper: PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: paymentConfiguration)
-            )
-        case .link:
-            return ConfirmationContext(
-                paymentOption: .link(option: .wallet(brand: session.elementsSession.linkBrand ?? .link)),
-                configuration: paymentConfiguration,
-                integrationShape: .expressCheckout,
-                confirmationChallenge: ConfirmationChallenge(elementsSession: session.elementsSession, stripeAttest: apiClient.stripeAttest),
-                analyticsHelper: PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: paymentConfiguration) // TODO: figure out ECE analytics plan
-            )
-        }
     }
 
     static func confirm(

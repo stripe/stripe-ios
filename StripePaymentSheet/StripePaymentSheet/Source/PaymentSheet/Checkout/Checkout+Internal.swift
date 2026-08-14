@@ -21,7 +21,8 @@ extension Checkout: ExpressCheckoutElementDelegate {
             case .applePay:
                 return await Checkout.confirmApplePay(
                     checkoutSession: session,
-                    checkoutApplePayDataSource: self
+                    confirmationContext: applePayConfirmationContext,
+                    sessionUpdater: self
                 )
             case .link:
                 return .init(paymentSheetResult: .canceled) // TODO: link

@@ -351,28 +351,24 @@ class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
     }
 }
 
-class MockCheckoutApplePayDataSource: CheckoutApplePayDataSource {
-    var applePayConfiguration: Checkout.ApplePayConfiguration?
-    let session: Checkout.Session
-    let apiClient: STPAPIClient
-    var returnURL: String?
-    let merchantDisplayName: String
+class StubExpressCheckoutSessionUpdater: ExpressCheckoutSessionUpdater {
+    func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {}
+}
 
-    init(
-        session: Checkout.Session,
+extension Checkout.ApplePayConfirmationContext {
+    static func makeMock(
         apiClient: STPAPIClient,
         returnURL: String? = nil,
         merchantDisplayName: String = "Test Merchant",
         applePayConfiguration: Checkout.ApplePayConfiguration? = Checkout.ApplePayConfiguration(merchantId: "merchant.com.test")
-    ) {
-        self.session = session
-        self.apiClient = apiClient
-        self.returnURL = returnURL
-        self.merchantDisplayName = merchantDisplayName
-        self.applePayConfiguration = applePayConfiguration
+    ) -> Checkout.ApplePayConfirmationContext {
+        Checkout.ApplePayConfirmationContext(
+            applePayConfiguration: applePayConfiguration,
+            apiClient: apiClient,
+            returnURL: returnURL,
+            merchantDisplayName: merchantDisplayName
+        )
     }
-
-    func commitSession(_ response: PaymentPagesAPIResponse) async throws {}
 }
 
 // MARK: - PaymentPagesAPIResponse decorator helpers

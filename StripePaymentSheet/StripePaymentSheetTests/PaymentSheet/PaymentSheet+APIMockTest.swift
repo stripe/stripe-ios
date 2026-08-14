@@ -813,8 +813,7 @@ private extension PaymentSheetAPIMockTest {
             checkoutSession: checkout.session,
             confirmationContext: confirmationContext,
             authenticationContext: self,
-            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
-            checkoutApplePayDataSource: checkout
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
         ).paymentSheetResult
     }
 

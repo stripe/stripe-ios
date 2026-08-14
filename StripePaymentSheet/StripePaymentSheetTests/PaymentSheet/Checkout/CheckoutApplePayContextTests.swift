@@ -134,11 +134,13 @@ final class CheckoutApplePayContextTests: XCTestCase {
             "currency": "usd",
             "total_summary": ["subtotal": 1000, "total": 1000, "due": 1000],
         ])
-        let dataSource = MockCheckoutApplePayDataSource(session: response.makePublicSession(), apiClient: resolvedAPIClient)
+        let session = response.makePublicSession()
+        let configuration = Checkout.ApplePayConfirmationContext.makeMock(apiClient: resolvedAPIClient)
         let mockController = MockPKPaymentAuthorizationController()
         let context = CheckoutApplePayContext(
-            checkoutSession: dataSource.session,
-            checkoutApplePayDataSource: dataSource,
+            checkoutSession: session,
+            confirmationContext: configuration,
+            sessionUpdater: StubExpressCheckoutSessionUpdater(),
             authorizationController: mockController
         )
         return (context, mockController)
