@@ -1,0 +1,97 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1U4OEIFY0qyl6XeW8Z4fNTyl\?client_secret=seti_1U4OEIFY0qyl6XeW8Z4fNTyl_secret_V4XIIkmvhSUV147cEaaXh31etYxUsBL&expand%5B0%5D=payment_method$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=7GDILvAmFRL17wkYXkKrXS2cTrPBxVB_zbWTnKZRYUyJYObbiS9gqU51q350h7gfWB7605Q6xi_O9G8u; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=7GDILvAmFRL17wkYXkKrXS2cTrPBxVB_zbWTnKZRYUyJYObbiS9gqU51q350h7gfWB7605Q6xi_O9G8u&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-07-29.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=7GDILvAmFRL17wkYXkKrXS2cTrPBxVB_zbWTnKZRYUyJYObbiS9gqU51q350h7gfWB7605Q6xi_O9G8u&t=1"}],"include_subdomains":true}
+request-id: req_r7yACfStiAFXn6
+Content-Length: 1755
+Vary: Origin
+Date: Fri, 14 Aug 2026 16:45:15 GMT
+stripe-version: 2020-08-27
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "id" : "seti_1U4OEIFY0qyl6XeW8Z4fNTyl",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : null,
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1U4OEHFY0qyl6XeWvT9VnK6s",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "card" : {
+      "regulated_status" : "unregulated",
+      "last4" : "4242",
+      "funding" : "credit",
+      "generated_from" : null,
+      "networks" : {
+        "available" : [
+          "visa"
+        ],
+        "preferred" : null
+      },
+      "brand" : "visa",
+      "checks" : {
+        "address_postal_code_check" : null,
+        "cvc_check" : null,
+        "address_line1_check" : null
+      },
+      "three_d_secure_usage" : {
+        "supported" : true
+      },
+      "wallet" : null,
+      "display_brand" : "visa",
+      "exp_month" : 12,
+      "exp_year" : 2028,
+      "country" : "US"
+    },
+    "livemode" : false,
+    "created" : 1786725913,
+    "allow_redisplay" : "unspecified",
+    "shared_payment_granted_token" : null,
+    "customer" : null,
+    "type" : "card",
+    "customer_account" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "allowed_payment_method_types" : null,
+  "payment_method_types" : [
+    "card"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1786725914,
+  "client_secret" : "seti_1U4OEIFY0qyl6XeW8Z4fNTyl_secret_V4XIIkmvhSUV147cEaaXh31etYxUsBL",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "succeeded"
+}
