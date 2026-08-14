@@ -12,11 +12,7 @@ import SwiftUI
 struct CheckoutCartContentView: View {
     @ObservedObject var checkout: Checkout
     var showsShippingAddressSection: Bool
-    @Binding var isLoading: Bool
-    @Binding var errorMessage: String?
-
-    @State private var showShippingAddressSheet = false
-    @State private var shippingAddressDetails: AddressElement.AddressDetails?
+    var errorMessage: String?
 
     var body: some View {
         ScrollView {
@@ -114,20 +110,11 @@ struct CheckoutCartContentView: View {
                 addressCard(
                     name: override.name,
                     address: override.address,
-                    onEdit: { showShippingAddressSheet = true }
+                    onEdit: presentShippingAddressElement
                 )
             } else {
-                emptyAddressCard(label: "Add shipping address", onAdd: { showShippingAddressSheet = true })
+                emptyAddressCard(label: "Add shipping address", onAdd: presentShippingAddressElement)
             }
-        }
-        .sheet(isPresented: $showShippingAddressSheet) {
-            AddressElement(
-                address: shippingAddressBinding,
-                configuration: makeAddressConfiguration(
-                    title: "Shipping Address",
-                    override: checkout.session.shippingAddress
-                )
-            )
         }
     }
 
@@ -203,31 +190,6 @@ struct CheckoutCartContentView: View {
         .cornerRadius(16)
         .padding(.horizontal)
         .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
-    }
-
-    // MARK: - Address Configuration
-
-    private func makeAddressConfiguration(
-        title: String,
-        override: Checkout.Session.ShippingAddress?
-    ) -> AddressElement.Configuration {
-        var config = AddressElement.Configuration()
-        config.title = title
-        config.buttonTitle = "Save Address"
-        if let override {
-            config.defaultValues = .init(
-                address: .init(
-                    city: override.address.city,
-                    country: override.address.country,
-                    line1: override.address.line1 ?? "",
-                    line2: override.address.line2,
-                    postalCode: override.address.postalCode,
-                    state: override.address.state
-                ),
-                name: override.name
-            )
-        }
-        return config
     }
 
     @ViewBuilder
@@ -306,42 +268,9 @@ struct CheckoutCartContentView: View {
         }
     }
 
-    private func checkoutAddress(from details: AddressElement.AddressDetails.Address) -> Checkout.Address {
-        let line1 = details.line1.isEmpty ? nil : details.line1
-        return Checkout.Address(
-            country: details.country,
-            line1: line1,
-            line2: details.line2,
-            city: details.city,
-            state: details.state,
-            postalCode: details.postalCode
-        )
-    }
-
-    private var shippingAddressBinding: Binding<AddressElement.AddressDetails?> {
-        Binding(
-            get: { shippingAddressDetails },
-            set: { newValue in
-                shippingAddressDetails = newValue
-                guard let details = newValue else { return }
-                updateShippingAddress(details)
-            }
-        )
-    }
-
-    private func updateShippingAddress(_ details: AddressElement.AddressDetails) {
+    private func presentShippingAddressElement() {
         Task {
-            isLoading = true
-            errorMessage = nil
-            do {
-                try await checkout.updateShippingAddress(
-                    name: details.name,
-                    address: checkoutAddress(from: details.address)
-                )
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-            isLoading = false
+            await checkout.getShippingAddressElement().present()
         }
     }
 
@@ -350,8 +279,6 @@ struct CheckoutCartContentView: View {
 struct CheckoutCartSheet: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var checkout: Checkout
-    @State private var isLoading = false
-    @State private var errorMessage: String?
 
     var body: some View {
         NavigationView {
@@ -362,15 +289,8 @@ struct CheckoutCartSheet: View {
                 CheckoutCartContentView(
                     checkout: checkout,
                     showsShippingAddressSection: true,
-                    isLoading: $isLoading,
-                    errorMessage: $errorMessage
+                    errorMessage: nil
                 )
-
-                if isLoading {
-                    Color.black.opacity(0.1)
-                        .ignoresSafeArea()
-                    ProgressView()
-                }
             }
             .navigationTitle("Cart")
             .navigationBarTitleDisplayMode(.inline)

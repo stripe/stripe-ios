@@ -788,8 +788,9 @@ workflows:
             echo "Running shard ${SHARD_NUM} of ${BITRISE_IO_PARALLEL_TOTAL}"
         title: Set test plan based on parallel index
     - script@1:
+        is_skippable: true
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "$(xcode-select -p)/Applications/Simulator.app" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
     # First attempt is is_skippable so the runner-hang flake does not
     # immediately fail the build; the gate script decides retry-vs-fail.
@@ -824,8 +825,9 @@ workflows:
   ui-tests-connect:
     steps:
     - script@1:
+        is_skippable: true
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "$(xcode-select -p)/Applications/Simulator.app" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
     - xcode-test@6:
         is_skippable: true
@@ -857,8 +859,9 @@ workflows:
   ui-tests-crypto:
     steps:
     - script@1:
+        is_skippable: true
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "$(xcode-select -p)/Applications/Simulator.app" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
     - xcode-test@6:
         is_skippable: true

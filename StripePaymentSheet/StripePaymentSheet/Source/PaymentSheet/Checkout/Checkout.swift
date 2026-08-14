@@ -141,6 +141,8 @@ public final class Checkout: ObservableObject {
                 session: loadedSession
             )
             self.shippingAddressElement = shippingAddressElement
+            self.shippingAddressElement.delegate = self
+
             try await applyDefaults(shippingAddress: normalizedDefaultShippingAddress)
 
             // 2.

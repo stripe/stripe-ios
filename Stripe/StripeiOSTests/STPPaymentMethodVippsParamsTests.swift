@@ -21,7 +21,8 @@ class STPPaymentMethodVippsParamsTests: STPNetworkStubbingTestCase {
 
         let exp = expectation(description: "Payment Method Vipps create")
 
-        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let client = STPAPIClient(publishableKey: STPTestingFRPublishableKey)
+        client.betas = ["vipps_preview=v1"]
         client.createPaymentMethod(with: params) {
             (paymentMethod: STPPaymentMethod?, error: Error?) in
             exp.fulfill()
