@@ -107,4 +107,3 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         )
     }
 }
-
