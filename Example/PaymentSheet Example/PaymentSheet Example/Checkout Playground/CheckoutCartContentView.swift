@@ -47,14 +47,19 @@ struct CheckoutCartContentView: View {
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            let items = checkout.session.lineItems
+            let items = checkout.session.orderSummaryItems.flatMap { orderSummaryItem in
+                switch orderSummaryItem {
+                case .oneTimePrice(let oneTimePrice):
+                    return oneTimePrice.items
+                }
+            }
             if items.isEmpty {
                 Text("No items")
                     .foregroundColor(.secondary)
                     .padding(.horizontal)
             } else {
                 VStack(spacing: 0) {
-                    ForEach(items) { item in
+                    ForEach(items, id: \.key) { item in
                         HStack(alignment: .top, spacing: 16) {
                             RoundedRectangle(cornerRadius: 12)
                                 .fill(Color(UIColor.secondarySystemBackground))
@@ -65,10 +70,10 @@ struct CheckoutCartContentView: View {
                                 )
 
                             VStack(alignment: .leading, spacing: 6) {
-                                Text(item.name)
+                                Text(item.displayName)
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                Text(item.unitAmount?.amount ?? "")
+                                Text(item.unitAmount.amount)
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
 
@@ -79,14 +84,14 @@ struct CheckoutCartContentView: View {
                             }
                             Spacer()
                             Text(formatCartCurrency(
-                                amount: (item.unitAmount?.minorUnitsAmount ?? 0) * item.quantity,
+                                amount: Int(item.unitAmount.minorUnitsAmount) * item.quantity,
                                 currency: checkout.session.currency
                             ))
                                 .font(.headline)
                         }
                         .padding()
 
-                        if item.id != items.last?.id {
+                        if item.key != items.last?.key {
                             Divider().padding(.leading, 112)
                         }
                     }

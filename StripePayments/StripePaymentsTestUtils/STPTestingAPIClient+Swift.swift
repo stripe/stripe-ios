@@ -196,6 +196,8 @@ extension STPTestingAPIClient {
         let publishableKey: String
     }
 
+    // This helper is used by tests, which Periphery excludes from its scan.
+    // periphery:ignore
     /// Creates a unified (modeless) Checkout Session backed by `checkout_items`.
     func createCheckoutSession(
         types: [String] = ["card"],
@@ -207,6 +209,7 @@ extension STPTestingAPIClient {
         automaticTax: Bool = false,
         customerEmailLocation: String? = nil,
         returnURL: String? = nil,
+        useOneTimePrice: Bool = true,
         additionalParameters: [String: Any] = [:]
     ) async throws -> CreateCheckoutSessionResponse {
         var mergedParameters: [String: Any] = [:]
@@ -228,6 +231,10 @@ extension STPTestingAPIClient {
             "amount": amount,
             "customer": customerID,
             "return_url": returnURL,
+            // TODO: Delete this temporary opt-in after August 15, 2026. Older clients
+            // relying on `checkout_items[].one_time_price_item` should be gone by then,
+            // so the test backend can always return `checkout_items[].one_time_price`.
+            "use_one_time_price": useOneTimePrice ? true : nil,
             "additional_parameters": mergedParameters.isEmpty ? nil : mergedParameters,
         ]
         return try await makeRequest(endpoint: "create_checkout_session_unified", params: params)

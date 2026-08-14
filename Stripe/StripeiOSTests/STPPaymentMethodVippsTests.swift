@@ -20,8 +20,10 @@ class STPPaymentMethodVippsTests: STPNetworkStubbingTestCase {
             withClientSecret: Self.vippsPaymentIntentClientSecret,
             expand: ["payment_method"]
         ) { paymentIntent, _ in
-            XCTAssertNotNil(paymentIntent?.paymentMethod?.allResponseFields["vipps"])
-            let vippsJSON = try? XCTUnwrap(paymentIntent?.paymentMethod?.vipps?.allResponseFields)
+            // Redirect payment attempts eventually expire and move their PaymentMethod into lastPaymentError.
+            let paymentMethod = paymentIntent?.paymentMethod ?? paymentIntent?.lastPaymentError?.paymentMethod
+            XCTAssertNotNil(paymentMethod?.allResponseFields["vipps"])
+            let vippsJSON = try? XCTUnwrap(paymentMethod?.vipps?.allResponseFields)
             completion(vippsJSON)
         }
     }

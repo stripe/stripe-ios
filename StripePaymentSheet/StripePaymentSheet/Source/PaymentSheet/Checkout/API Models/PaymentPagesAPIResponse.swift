@@ -17,7 +17,7 @@ import Foundation
 class PaymentPagesAPIResponse: NSObject {
     let sessionId: String
     let clientSecret: String?
-    let currency: String?
+    let currency: String
     let checkoutItems: [CheckoutItem]
     let livemode: Bool
     let status: String?
@@ -87,7 +87,7 @@ class PaymentPagesAPIResponse: NSObject {
     private init(
         sessionId: String,
         clientSecret: String?,
-        currency: String?,
+        currency: String,
         checkoutItems: [CheckoutItem],
         livemode: Bool,
         status: String?,
@@ -154,50 +154,164 @@ class PaymentPagesAPIResponse: NSObject {
 
 extension PaymentPagesAPIResponse {
     struct CheckoutItem {
-        let key: String?
-        let type: String?
-        let oneTimePriceItem: OneTimePriceItem?
+        let key: String
+        let oneTimePrice: OneTimePrice
 
-        init(_ dict: [AnyHashable: Any]) {
-            key = dict["key"] as? String
-            type = dict["type"] as? String
-            oneTimePriceItem = (dict["one_time_price_item"] as? [AnyHashable: Any]).map(OneTimePriceItem.init)
+        init?(_ dict: [AnyHashable: Any]) {
+            guard let key = dict["key"] as? String,
+                  let type = dict["type"] as? String,
+                  type == "one_time_price",
+                  let oneTimePriceDict = dict["one_time_price"] as? [AnyHashable: Any],
+                  let oneTimePrice = OneTimePrice(oneTimePriceDict) else {
+                return nil
+            }
+            self.key = key
+            self.oneTimePrice = oneTimePrice
+        }
+    }
+
+    struct OneTimePrice {
+        let items: [OneTimePriceItem]
+        let subtotal: Int
+        let total: Int
+
+        init?(_ dict: [AnyHashable: Any]) {
+            guard let itemDicts = dict["items"] as? [[AnyHashable: Any]],
+                  let subtotal = dict["subtotal"] as? Int,
+                  let total = dict["total"] as? Int else {
+                return nil
+            }
+            let items = itemDicts.compactMap(OneTimePriceItem.init)
+            guard items.count == itemDicts.count else {
+                return nil
+            }
+            self.items = items
+            self.subtotal = subtotal
+            self.total = total
         }
     }
 
     struct OneTimePriceItem {
-        let quantity: Int?
-        let price: Price?
+        let price: Price
+        let quantity: Int
+        let unitAmount: Int?
+        let unitAmountDecimal: Double?
+        let unitLabel: String?
+        let taxAmounts: [TaxAmount]
+        let taxInclusive: Int
+        let taxExclusive: Int
+        let adjustableQuantity: AdjustableQuantity?
 
-        init(_ dict: [AnyHashable: Any]) {
-            quantity = dict["quantity"] as? Int
-            price = (dict["price"] as? [AnyHashable: Any]).map(Price.init)
+        init?(_ dict: [AnyHashable: Any]) {
+            guard (dict["inner_item_key"] as? String) != nil,
+                  let priceDict = dict["price"] as? [AnyHashable: Any],
+                  let price = Price(priceDict),
+                  let quantity = dict["quantity"] as? Int,
+                  quantity >= 0,
+                  (dict["subtotal"] as? Int) != nil,
+                  (dict["total"] as? Int) != nil,
+                  let taxAmountDicts = dict["tax_amounts"] as? [[AnyHashable: Any]],
+                  let taxInclusive = dict["tax_inclusive"] as? Int,
+                  let taxExclusive = dict["tax_exclusive"] as? Int else {
+                return nil
+            }
+
+            guard dict["unit_amount"] == nil
+                || dict["unit_amount"] is NSNull
+                || dict["unit_amount"] is Int else {
+                return nil
+            }
+            let unitAmount = dict["unit_amount"] as? Int
+
+            guard dict["unit_amount_decimal"] == nil
+                || dict["unit_amount_decimal"] is NSNull
+                || dict["unit_amount_decimal"] is String else {
+                return nil
+            }
+            let unitAmountDecimal: Double?
+            if let rawUnitAmountDecimal = dict["unit_amount_decimal"] as? String {
+                guard let parsedUnitAmountDecimal = Double(rawUnitAmountDecimal),
+                      parsedUnitAmountDecimal.isFinite else {
+                    return nil
+                }
+                unitAmountDecimal = parsedUnitAmountDecimal
+            } else {
+                unitAmountDecimal = nil
+            }
+
+            guard unitAmount != nil || price.unitAmount != nil || unitAmountDecimal != nil else {
+                return nil
+            }
+
+            guard dict["unit_label"] == nil
+                || dict["unit_label"] is NSNull
+                || dict["unit_label"] is String else {
+                return nil
+            }
+            let unitLabel = dict["unit_label"] as? String
+
+            let taxAmounts = taxAmountDicts.compactMap(TaxAmount.init)
+            guard taxAmounts.count == taxAmountDicts.count else {
+                return nil
+            }
+
+            let adjustableQuantity: AdjustableQuantity?
+            if dict["adjustable_quantity"] == nil || dict["adjustable_quantity"] is NSNull {
+                adjustableQuantity = nil
+            } else if let adjustableQuantityDict = dict["adjustable_quantity"] as? [AnyHashable: Any],
+                      let parsedAdjustableQuantity = AdjustableQuantity(adjustableQuantityDict) {
+                adjustableQuantity = parsedAdjustableQuantity
+            } else {
+                return nil
+            }
+
+            self.price = price
+            self.quantity = quantity
+            self.unitAmount = unitAmount
+            self.unitAmountDecimal = unitAmountDecimal
+            self.unitLabel = unitLabel
+            self.taxAmounts = taxAmounts
+            self.taxInclusive = taxInclusive
+            self.taxExclusive = taxExclusive
+            self.adjustableQuantity = adjustableQuantity
         }
     }
 
     struct Price {
-        let currency: String?
+        let id: String
+        let currency: String
         let unitAmount: Int?
-        let unitAmountDecimal: String?
-        let product: Product?
+        let product: Product
 
-        init(_ dict: [AnyHashable: Any]) {
-            currency = dict["currency"] as? String
-            unitAmount = dict["unit_amount"] as? Int
-            unitAmountDecimal = dict["unit_amount_decimal"] as? String
-            product = (dict["product"] as? [AnyHashable: Any]).map(Product.init)
+        init?(_ dict: [AnyHashable: Any]) {
+            guard let id = dict["id"] as? String,
+                  let currency = dict["currency"] as? String,
+                  !currency.isEmpty,
+                  let productDict = dict["product"] as? [AnyHashable: Any],
+                  let product = Product(productDict),
+                  dict["unit_amount"] == nil
+                    || dict["unit_amount"] is NSNull
+                    || dict["unit_amount"] is Int else {
+                return nil
+            }
+            self.id = id
+            self.currency = currency
+            self.unitAmount = dict["unit_amount"] as? Int
+            self.product = product
         }
     }
 
     struct Product {
-        let name: String?
-        let description: String?
-        let images: [String]?
+        let name: String
+        let images: [String]
 
-        init(_ dict: [AnyHashable: Any]) {
-            name = dict["name"] as? String
-            description = dict["description"] as? String
-            images = dict["images"] as? [String]
+        init?(_ dict: [AnyHashable: Any]) {
+            guard let name = dict["name"] as? String,
+                  let images = dict["images"] as? [String] else {
+                return nil
+            }
+            self.name = name
+            self.images = images
         }
     }
 
@@ -219,9 +333,19 @@ extension PaymentPagesAPIResponse {
         let totalDiscountAmounts: [DiscountAmount]?
         let totalTaxAmounts: [TaxAmount]?
 
-        init(_ dict: [AnyHashable: Any]) {
+        init?(_ dict: [AnyHashable: Any]) {
             totalDiscountAmounts = (dict["total_discount_amounts"] as? [[AnyHashable: Any]])?.map(DiscountAmount.init)
-            totalTaxAmounts = (dict["total_tax_amounts"] as? [[AnyHashable: Any]])?.map(TaxAmount.init)
+            if dict["total_tax_amounts"] == nil || dict["total_tax_amounts"] is NSNull {
+                totalTaxAmounts = nil
+            } else if let taxAmountDicts = dict["total_tax_amounts"] as? [[AnyHashable: Any]] {
+                let parsedTaxAmounts = taxAmountDicts.compactMap(TaxAmount.init)
+                guard parsedTaxAmounts.count == taxAmountDicts.count else {
+                    return nil
+                }
+                totalTaxAmounts = parsedTaxAmounts
+            } else {
+                return nil
+            }
         }
     }
 
@@ -258,24 +382,64 @@ extension PaymentPagesAPIResponse {
     }
 
     struct TaxAmount {
-        let amount: Int?
-        let inclusive: Bool?
-        let displayName: String?
-        let taxRate: TaxRate?
+        let amount: Int
+        let inclusive: Bool
+        let taxRate: TaxRate
 
-        init(_ dict: [AnyHashable: Any]) {
-            amount = dict["amount"] as? Int
-            inclusive = dict["inclusive"] as? Bool
-            displayName = dict["display_name"] as? String
-            taxRate = (dict["tax_rate"] as? [AnyHashable: Any]).map(TaxRate.init)
+        init?(_ dict: [AnyHashable: Any]) {
+            guard let amount = dict["amount"] as? Int,
+                  let inclusive = dict["inclusive"] as? Bool,
+                  let taxRateDict = dict["tax_rate"] as? [AnyHashable: Any],
+                  let taxRate = TaxRate(taxRateDict) else {
+                return nil
+            }
+            self.amount = amount
+            self.inclusive = inclusive
+            self.taxRate = taxRate
         }
     }
 
     struct TaxRate {
-        let displayName: String?
+        let displayName: String
+        let percentage: Double
+        let rateType: String?
 
-        init(_ dict: [AnyHashable: Any]) {
-            displayName = dict["display_name"] as? String
+        init?(_ dict: [AnyHashable: Any]) {
+            guard let displayName = dict["display_name"] as? String,
+                  let percentage = dict["percentage"] as? Double,
+                  dict["rate_type"] == nil
+                    || dict["rate_type"] is NSNull
+                    || dict["rate_type"] is String else {
+                return nil
+            }
+            let rateType = dict["rate_type"] as? String
+            guard rateType == nil || rateType == "flat_amount" || rateType == "percentage" else {
+                return nil
+            }
+            self.displayName = displayName
+            self.percentage = percentage
+            self.rateType = rateType
+        }
+    }
+
+    struct AdjustableQuantity {
+        let enabled: Bool
+        let maximum: Int?
+        let minimum: Int?
+
+        init?(_ dict: [AnyHashable: Any]) {
+            guard let enabled = dict["enabled"] as? Bool,
+                  dict["maximum"] == nil
+                    || dict["maximum"] is NSNull
+                    || dict["maximum"] is Int,
+                  dict["minimum"] == nil
+                    || dict["minimum"] is NSNull
+                    || dict["minimum"] is Int else {
+                return nil
+            }
+            self.enabled = enabled
+            self.maximum = dict["maximum"] as? Int
+            self.minimum = dict["minimum"] as? Int
         }
     }
 
@@ -382,12 +546,35 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
     class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
               let sessionId = dict["session_id"] as? String,
+              let currency = dict["currency"] as? String,
+              !currency.isEmpty,
+              (dict["mode"] as? String) == "modeless",
+              let checkoutItemDicts = dict["checkout_items"] as? [[AnyHashable: Any]],
+              !checkoutItemDicts.isEmpty,
               let livemode = dict["livemode"] as? Bool,
               let paymentStatus = dict["payment_status"] as? String,
               (dict["payment_method_types"] as? [String]) != nil,
               let elementsSessionDict = dict["elements_session"] as? [AnyHashable: Any],
               let elementsSessionValue = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionDict)
         else {
+            return nil
+        }
+
+        let checkoutItems = checkoutItemDicts.compactMap(CheckoutItem.init)
+        guard checkoutItems.count == checkoutItemDicts.count,
+              checkoutItems.allSatisfy({ checkoutItem in
+                  checkoutItem.oneTimePrice.items.allSatisfy { $0.price.currency == currency }
+              }) else {
+            return nil
+        }
+
+        let recurringDetails: RecurringDetails?
+        if dict["recurring_details"] == nil || dict["recurring_details"] is NSNull {
+            recurringDetails = nil
+        } else if let recurringDetailsDict = dict["recurring_details"] as? [AnyHashable: Any],
+                  let parsedRecurringDetails = RecurringDetails(recurringDetailsDict) {
+            recurringDetails = parsedRecurringDetails
+        } else {
             return nil
         }
 
@@ -418,8 +605,8 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
         return PaymentPagesAPIResponse(
             sessionId: sessionId,
             clientSecret: dict["client_secret"] as? String,
-            currency: dict["currency"] as? String,
-            checkoutItems: (dict["checkout_items"] as? [[AnyHashable: Any]])?.map(CheckoutItem.init) ?? [],
+            currency: currency,
+            checkoutItems: checkoutItems,
             livemode: livemode,
             status: dict["status"] as? String,
             paymentStatus: paymentStatus,
@@ -440,7 +627,7 @@ extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
             billingAddressCollection: dict["billing_address_collection"] as? String,
             shippingAddressCollection: (dict["shipping_address_collection"] as? [AnyHashable: Any]).map(ShippingAddressCollection.init),
             shippingRate: (dict["shipping_rate"] as? [AnyHashable: Any]).map(ShippingRate.init),
-            recurringDetails: (dict["recurring_details"] as? [AnyHashable: Any]).map(RecurringDetails.init),
+            recurringDetails: recurringDetails,
             totalSummary: (dict["total_summary"] as? [AnyHashable: Any]).map(TotalSummary.init),
             adaptivePricingInfo: (dict["adaptive_pricing_info"] as? [AnyHashable: Any]).map(AdaptivePricingInfo.init),
             developerToolContext: (dict["developer_tool_context"] as? [AnyHashable: Any]).map(DeveloperToolContext.init),

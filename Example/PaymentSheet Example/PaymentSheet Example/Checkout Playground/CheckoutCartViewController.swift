@@ -302,7 +302,12 @@ final class CheckoutCartViewController: UIViewController {
         let itemsStackView = UIStackView()
         itemsStackView.axis = .vertical
 
-        let items = checkout.session.lineItems
+        let items = checkout.session.orderSummaryItems.flatMap { orderSummaryItem in
+            switch orderSummaryItem {
+            case .oneTimePrice(let oneTimePrice):
+                return oneTimePrice.items
+            }
+        }
         if items.isEmpty {
             let emptyLabel = UILabel()
             emptyLabel.text = "No items"
@@ -322,7 +327,10 @@ final class CheckoutCartViewController: UIViewController {
         return makeSection(title: "Items", content: makeCard(containing: itemsStackView))
     }
 
-    private func makeLineItemRow(item: Checkout.LineItem, currency: String?) -> UIView {
+    private func makeLineItemRow(
+        item: Checkout.Session.OrderSummaryItem.OneTimePrice.Item,
+        currency: String?
+    ) -> UIView {
         let placeholderView = UIView()
         placeholderView.backgroundColor = .secondarySystemBackground
         placeholderView.layer.cornerRadius = 12
@@ -335,12 +343,12 @@ final class CheckoutCartViewController: UIViewController {
         placeholderView.addSubview(imageView)
 
         let nameLabel = UILabel()
-        nameLabel.text = item.name
+        nameLabel.text = item.displayName
         nameLabel.font = .preferredFont(forTextStyle: .headline)
         nameLabel.numberOfLines = 0
 
         let unitAmountLabel = UILabel()
-        unitAmountLabel.text = item.unitAmount?.amount ?? ""
+        unitAmountLabel.text = item.unitAmount.amount
         unitAmountLabel.font = .preferredFont(forTextStyle: .subheadline)
         unitAmountLabel.textColor = .secondaryLabel
 
@@ -354,7 +362,7 @@ final class CheckoutCartViewController: UIViewController {
 
         let totalLabel = UILabel()
         totalLabel.text = formatCartCurrency(
-            amount: (item.unitAmount?.minorUnitsAmount ?? 0) * item.quantity,
+            amount: Int(item.unitAmount.minorUnitsAmount) * item.quantity,
             currency: currency
         )
         totalLabel.font = .preferredFont(forTextStyle: .headline)
