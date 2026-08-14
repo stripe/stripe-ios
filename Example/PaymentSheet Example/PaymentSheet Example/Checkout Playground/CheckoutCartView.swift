@@ -155,9 +155,9 @@ struct CheckoutCartView: View {
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             config.currencySelectorElement.appearance = currencySelectorAppearance
-            config.expressCheckoutElement = .init(confirmHandler: { result in
+            config.expressCheckoutElement.confirmHandler = { result in
                 eceConfirmResult = result
-            })
+            }
             config.shippingAddressElement.title = "Shipping Address"
             config.shippingAddressElement.buttonTitle = "Save Address"
             checkout = try await Checkout(configuration: config)
