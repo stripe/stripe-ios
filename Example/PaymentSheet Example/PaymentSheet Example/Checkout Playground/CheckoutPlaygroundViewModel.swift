@@ -45,6 +45,7 @@ extension CheckoutPlayground {
         @Published var expressCheckoutElementBillingDetailsCollectionConfiguration = ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration()
         @Published var checkoutEndpointOption: EndpointOption = .hosted
         @Published var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
+        @Published var delayPaymentPagesRequests = false
 
         @Published var isCreating = false
         @Published var errorMessage: String?

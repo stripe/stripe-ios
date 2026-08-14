@@ -25,6 +25,11 @@ MINOR
 * [Added] Added `billingDetailsCollectionConfiguration` to `LinkConfiguration`, allowing `LinkControllerPreview` consumers to configure billing details collection in the Link sheet (private preview).
 * [Added] `LinkController` now supports appearance customization via `LinkAppearance` (private preview).
 
+### AddressElement
+* [Changed] No longer supports swipe-to-dismiss.
+* [Changed] Now treats the 'X' button as a true cancel button that discards changes.
+* [Changed] If a customer taps the 'X' button with unsaved changes, now presents a dialog to confirm the cancellation.
+
 ## 26.4.1 2026-07-23
 ### Payments
 * [Fixed] Fixed an issue where some Alipay payments incorrectly reported failure after succeeding.

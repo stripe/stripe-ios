@@ -10,7 +10,7 @@
 
 extension Checkout {
     static func confirmLink(
-        checkout: CheckoutConfirmDataSource,
+        checkoutSession: Checkout.Session,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
         clientAttributionMetadata: STPClientAttributionMetadata,
@@ -21,7 +21,6 @@ extension Checkout {
             return .init(paymentSheetResult: .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption))
         }
 
-        let checkoutSession = checkout.session
         let elementsSession = checkoutSession.elementsSession
         let configuration = confirmationContext.configuration
         let confirmationChallenge = confirmationContext.confirmationChallenge
@@ -116,7 +115,7 @@ extension Checkout {
                         analyticsHelper: confirmationContext.analyticsHelper
                     )
                     let result = await Self.confirmPaymentOption(
-                        checkout: checkout,
+                        checkoutSession: checkoutSession,
                         confirmationContext: linkConfirmationContext,
                         authenticationContext: linkAuthenticationContext,
                         intentConfirmParamsForDeferredIntent: nil,

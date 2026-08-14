@@ -57,9 +57,9 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     struct TestIntent {
         let description: String
         let intent: Intent
-        let checkout: (any CheckoutConfirmDataSource)?
+        let checkout: (any CheckoutApplePayDataSource)?
 
-        init(_ description: String, _ intent: Intent, checkout: (any CheckoutConfirmDataSource)? = nil) {
+        init(_ description: String, _ intent: Intent, checkout: (any CheckoutApplePayDataSource)? = nil) {
             self.description = description
             self.intent = intent
             self.checkout = checkout
@@ -67,7 +67,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     /// Mock stand-in for a full `Checkout` object.
-    final class TestCheckoutSessionUpdater: CheckoutConfirmDataSource, CheckoutSessionBillingAddressUpdater {
+    final class TestCheckoutSessionUpdater: CheckoutApplePayDataSource, CheckoutSessionBillingAddressUpdater {
         private(set) var session: Checkout.Session
         // Apple Pay is not exercised in these LPM confirm flow tests.
         var applePayConfiguration: Checkout.ApplePayConfiguration? { nil }
@@ -104,7 +104,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         case JP = "jp"
         case BR = "br"
         case FR = "fr"
-        case NO = "no"
         case TH = "th"
         case DE = "de"
         case IT = "it"
@@ -130,8 +129,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             case .BR:
                 return STPTestingBRPublishableKey
             case .FR:
-                return STPTestingFRPublishableKey
-            case .NO:
                 return STPTestingFRPublishableKey
             case .TH:
                 return STPTestingTHPublishableKey
@@ -462,7 +459,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             intentKinds: [.paymentIntent],
             currency: "NOK",
             paymentMethodType: .vipps,
-            merchantCountry: .NO,
+            merchantCountry: .FR,
             expectedHierarchy: ExpectedFormHierarchy.Vipps.paymentIntent
         ) { _ in }
     }
@@ -1035,6 +1032,9 @@ extension PaymentSheetLPMConfirmFlowTests {
 
         // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
+        if paymentMethodType == .vipps {
+            apiClient.betas = ["vipps_preview=v1"]
+        }
 
         var configuration: PaymentSheet.Configuration = {
             // Use argument if non-nil, otherwise create a default
@@ -1750,10 +1750,11 @@ extension PaymentSheetLPMConfirmFlowTests {
                 analyticsHelper: analyticsHelper
             )
             let result = await Checkout.confirm(
-                checkout: checkout,
+                checkoutSession: (checkout as! TestCheckoutSessionUpdater).session,
                 confirmationContext: confirmationContext,
                 authenticationContext: self,
-                paymentHandler: paymentHandler
+                paymentHandler: paymentHandler,
+                checkoutApplePayDataSource: checkout
             )
             completion(result.paymentSheetResult, nil)
         }

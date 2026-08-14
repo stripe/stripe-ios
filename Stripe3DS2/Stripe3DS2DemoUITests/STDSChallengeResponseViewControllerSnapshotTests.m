@@ -12,6 +12,9 @@
 
 #import "STDSChallengeResponseViewController.h"
 #import "STDSChallengeResponseObject+TestObjects.h"
+#import "STDSExpandableInformationView.h"
+#import "STDSStackView.h"
+#import "STDSTextChallengeView.h"
 
 /**
  Calls FBSnapshotVerifyView with a default 2% per-pixel color differentiation, as M1 and Intel machines render shadows differently.
@@ -97,6 +100,45 @@ FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDef
     [self waitForChallengeResponseTimer];
     
     STPSnapshotVerifyView(challengeResponseViewController.view, @"OOBResponse");
+}
+
+- (void)testHorizontalStackViewUsesRightToLeftOrder {
+    STDSStackView *stackView = [[STDSStackView alloc] initWithAlignment:STDSStackViewLayoutAxisHorizontal];
+    stackView.semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
+    stackView.frame = CGRectMake(0, 0, 100, 40);
+
+    UIView *firstView = [UIView new];
+    UIView *secondView = [UIView new];
+    [stackView addArrangedSubview:firstView];
+    [stackView addArrangedSubview:secondView];
+    [NSLayoutConstraint activateConstraints:@[
+        [firstView.widthAnchor constraintEqualToConstant:40],
+        [secondView.widthAnchor constraintEqualToConstant:60],
+    ]];
+
+    [stackView layoutIfNeeded];
+
+    XCTAssertGreaterThan(CGRectGetMinX(firstView.frame), CGRectGetMinX(secondView.frame));
+}
+
+- (void)testExpandableInformationChevronFlipsForRightToLeftLayout {
+    STDSExpandableInformationView *view = [STDSExpandableInformationView new];
+    UIImageView *titleImageView = [view valueForKey:@"titleImageView"];
+
+    XCTAssertTrue(titleImageView.image.flipsForRightToLeftLayoutDirection);
+}
+
+- (void)testTextFieldEditingRectDoesNotOverlapRightToLeftClearButton {
+    STDSTextField *textField = [STDSTextField new];
+    textField.frame = CGRectMake(0, 0, 320, 44);
+    textField.semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
+    textField.clearButtonMode = UITextFieldViewModeAlways;
+    textField.text = @"123456";
+
+    CGRect editingRect = [textField editingRectForBounds:textField.bounds];
+    CGRect clearButtonRect = [textField clearButtonRectForBounds:textField.bounds];
+
+    XCTAssertFalse(CGRectIntersectsRect(editingRect, clearButtonRect));
 }
 
 - (void)testLoadingAmex {

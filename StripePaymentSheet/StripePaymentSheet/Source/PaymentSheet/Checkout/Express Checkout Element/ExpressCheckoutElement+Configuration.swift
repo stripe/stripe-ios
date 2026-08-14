@@ -10,21 +10,7 @@
 extension ExpressCheckoutElement {
     /// Configuration options for ``ExpressCheckoutElement``.
     public struct Configuration {
-        /// A closure called after a wallet payment confirmation completes.
-        public typealias ConfirmHandler = (_ result: Checkout.ConfirmResult) -> Void
-
-        /// Called after a wallet payment confirmation completes.
-        public var confirmHandler: ConfirmHandler?
-
-        /// Describes how billing details should be collected.
-        ///
-        /// - Note: Unlike ``PaymentElement/BillingDetailsCollectionConfiguration``, suppressing billing
-        /// address collection isn't supported with a Checkout Session, so `address` has no `.never` case.
-        public var billingDetailsCollectionConfiguration: BillingDetailsCollectionConfiguration = .init()
-
-        /// Creates a configuration with default values.
-        public init() {}
-
+        
         /// Configuration for how billing details are collected during wallet payments (e.g. Apple Pay).
         public struct BillingDetailsCollectionConfiguration: Equatable {
             /// Billing details fields collection options.
@@ -63,6 +49,24 @@ extension ExpressCheckoutElement {
 
             /// Creates a billing details collection configuration with default values.
             public init() {}
+        }
+
+        /// A closure called after a wallet payment confirmation completes.
+        public typealias ConfirmHandler = (_ result: Checkout.ConfirmResult) -> Void
+
+        /// Describes how billing details should be collected.
+        ///
+        /// - Note: Unlike ``PaymentElement/BillingDetailsCollectionConfiguration``, suppressing billing
+        /// address collection isn't supported with a Checkout Session, so `address` has no `.never` case.
+        public var billingDetailsCollectionConfiguration: BillingDetailsCollectionConfiguration = .init()
+
+        /// Called after a wallet payment confirmation completes.
+        public var confirmHandler: ConfirmHandler
+
+        /// Creates a configuration.
+        /// - Parameter confirmHandler: Called after a wallet payment confirmation completes.
+        public init(confirmHandler: @escaping ConfirmHandler) {
+            self.confirmHandler = confirmHandler
         }
     }
 }

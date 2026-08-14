@@ -13,6 +13,8 @@ struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
             "payment_element_presenting_view_controller_unavailable"
         case expressCheckoutElementPresentingViewControllerUnavailable =
             "express_checkout_element_presenting_view_controller_unavailable"
+        case shippingAddressElementPresentingViewControllerUnavailable =
+            "shipping_address_element_presenting_view_controller_unavailable"
     }
 
     let errorCode: ErrorCode

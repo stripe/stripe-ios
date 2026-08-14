@@ -396,6 +396,11 @@ extension STPElementsSession {
     var shouldUseAutocompleteProxyEndpoints: Bool {
         flags["ocs_mobile_should_use_autocomplete_proxy_endpoints"] == true
     }
+
+    /// Whether legacy analytics (`STPAnalyticsClient`) should be sent to r.stripe.com instead of q.stripe.com.
+    var isAnalyticsToRStripeEnabled: Bool {
+        flags["ocs_mobile_enable_analytics_to_r"] == true
+    }
 }
 
 extension STPElementsSession {

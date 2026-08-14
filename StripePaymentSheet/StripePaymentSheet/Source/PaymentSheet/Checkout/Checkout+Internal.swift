@@ -11,14 +11,13 @@ import Foundation
 import UIKit
 
 extension Checkout: ExpressCheckoutElementDelegate {
-    /// Called by ExpressCheckoutElement when the user taps the Apple Pay button.
-    func confirmApplePay() async -> ConfirmResult {
+    func expressCheckoutElementShouldConfirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod) async -> ConfirmResult {
         guard sessionIsOpen else {
-            return .failed(CheckoutError.unknown(debugDescription: "Checkout.confirmApplePay() cannot confirm a Checkout Session that is no longer open."))
+            return .failed(CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() cannot confirm a Checkout Session that is no longer open."))
         }
         guard let presentingViewController = UIWindow.visibleViewController else {
             let errorMessage = "ExpressCheckoutElement could not find a presenting view controller."
-            assertionFailure(errorMessage)
+            stpAssertionFailure(errorMessage)
             let analytic = UnexpectedCheckoutElementsErrorAnalytic(
                 errorCode: .expressCheckoutElementPresentingViewControllerUnavailable,
                 errorMessage: errorMessage
@@ -26,14 +25,18 @@ extension Checkout: ExpressCheckoutElementDelegate {
             STPAnalyticsClient.sharedClient.log(analytic: analytic)
             return .failed(CheckoutError.unknown(debugDescription: errorMessage))
         }
+        let confirmationContext = confirmationContext(for: paymentMethod)
         let authenticationContext = AuthenticationContext(
             presentingViewController: presentingViewController,
-            appearance: configuration.paymentElement.appearance
+            appearance: .default
         )
-        let result = await Checkout.confirmApplePay(
-            checkout: self,
-            authenticationContext: authenticationContext
-        )
+
+        let result = await Checkout.confirm(
+            checkoutSession: session,
+            confirmationContext: confirmationContext,
+            authenticationContext: authenticationContext,
+            paymentHandler: paymentHandler,
+            checkoutApplePayDataSource: self)
         switch result.paymentSheetResult {
         case .completed:
             return .succeeded(paymentStatus: Checkout.PaymentStatus.paymentStatus(from: result.checkoutSessionResponse?.paymentStatus ?? ""))
@@ -46,6 +49,7 @@ extension Checkout: ExpressCheckoutElementDelegate {
 }
 
 extension Checkout: CurrencySelectorElementDelegate {}
+extension Checkout: ShippingAddressElementDelegate {}
 
 extension Checkout {
 

@@ -73,8 +73,8 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Methods
 
-    private func makeButton(for button: ExpressButton) -> UIView {
-        switch button {
+    private func makeButton(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> UIView {
+        switch paymentMethod {
         case .applePay:
             return makeApplePayButton()
         case .link:
@@ -106,8 +106,8 @@ public final class ExpressCheckoutElementUIView: UIView {
     @objc private func handleApplePayTapped() {
         Task { @MainActor [weak self] in
             guard let self else { return }
-            guard let result = await self.delegate?.confirmApplePay() else { return }
-            self.configuration.expressCheckoutElement.confirmHandler?(result)
+            guard let result = await self.delegate?.expressCheckoutElementShouldConfirm(.applePay) else { return }
+            self.configuration.expressCheckoutElement?.confirmHandler(result)
         }
     }
 

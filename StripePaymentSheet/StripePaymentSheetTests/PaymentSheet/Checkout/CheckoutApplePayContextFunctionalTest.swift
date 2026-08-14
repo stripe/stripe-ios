@@ -80,9 +80,9 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             returnURL: returnURL
         )
         let context = CheckoutApplePayContext(
-            checkout: dataSource,
-            authorizationController: MockPKPaymentAuthorizationController(),
-            authenticationContext: MockAuthContext()
+            checkoutSession: dataSource.session,
+            checkoutApplePayDataSource: dataSource,
+            authorizationController: MockPKPaymentAuthorizationController()
         )
         return (context, apiClient)
     }
@@ -119,11 +119,10 @@ private class MockPKPaymentAuthorizationController: PKPaymentAuthorizationContro
 }
 
 @MainActor
-private class CheckoutApplePayContextFunctionalTestDataSource: CheckoutConfirmDataSource {
+private class CheckoutApplePayContextFunctionalTestDataSource: CheckoutApplePayDataSource {
     var applePayConfiguration: Checkout.ApplePayConfiguration? = Checkout.ApplePayConfiguration(merchantId: "merchant.com.test")
     let session: Checkout.Session
     let apiClient: STPAPIClient
-    let paymentHandler: STPPaymentHandler
     var returnURL: String?
     let merchantDisplayName = "Functional Test Merchant"
     var expressCheckoutElementBillingDetailsCollectionConfiguration = ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration()
@@ -131,15 +130,8 @@ private class CheckoutApplePayContextFunctionalTestDataSource: CheckoutConfirmDa
     init(session: Checkout.Session, apiClient: STPAPIClient, returnURL: String? = nil) {
         self.session = session
         self.apiClient = apiClient
-        self.paymentHandler = STPPaymentHandler(apiClient: apiClient)
         self.returnURL = returnURL
     }
 
     func commitSession(_ response: PaymentPagesAPIResponse) async throws {}
-}
-
-private class MockAuthContext: NSObject, STPAuthenticationContext {
-    func authenticationPresentingViewController() -> UIViewController {
-        UIViewController()
-    }
 }

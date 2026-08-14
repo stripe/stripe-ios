@@ -57,7 +57,7 @@ extension Checkout {
         public var paymentElement: PaymentElement.Configuration = .init()
 
         /// Configuration for ExpressCheckoutElement.
-        public var expressCheckoutElement: ExpressCheckoutElement.Configuration = .init()
+        public var expressCheckoutElement: ExpressCheckoutElement.Configuration?
 
         /// Configuration for the Adaptive Pricing currency selector returned by
         /// ``Checkout.getCurrencySelectorElement()``.

@@ -120,6 +120,9 @@ final class PaymentSheetLoader {
             let isFcLiteKillswitchEnabled = elementsSession.flags["elements_disable_fc_lite"] == true
             FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = isFcLiteKillswitchEnabled
 
+            // Send legacy analytics to r.stripe.com instead of q.stripe.com if enabled
+            STPAnalyticsClient.sendAnalyticsToRStripe = elementsSession.isAnalyticsToRStripeEnabled
+
             let remoteFcLiteOverrideEnabled = shouldPreferFCLite(elementsSession: elementsSession)
             FinancialConnectionsSDKAvailability.remoteFcLiteOverride = remoteFcLiteOverrideEnabled
 

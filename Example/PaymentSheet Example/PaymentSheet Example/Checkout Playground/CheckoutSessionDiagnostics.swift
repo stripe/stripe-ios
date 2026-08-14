@@ -42,14 +42,15 @@ final class CheckoutSessionDiagnostics: ObservableObject {
     private var captureGeneration = UUID()
 
     /// Returns a copy of the shared API client that records Stripe request IDs for this cart.
-    func makeAPIClient() -> STPAPIClient {
+    func makeAPIClient(paymentPagesRequestDelay: TimeInterval) -> STPAPIClient {
         requests.removeAll()
         let captureGeneration = UUID()
         self.captureGeneration = captureGeneration
 
         let apiClient = STPAPIClient.shared.makeCopy()
         let requestCapture = CheckoutRequestCapture(
-            forwardingConfiguration: apiClient.urlSession.configuration
+            forwardingConfiguration: apiClient.urlSession.configuration,
+            paymentPagesRequestDelay: paymentPagesRequestDelay
         ) { [weak self] response in
             let request = Request(
                 requestID: response.requestID,

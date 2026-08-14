@@ -12,13 +12,13 @@ import Foundation
 
 extension Checkout {
     static func confirmApplePay(
-        checkout: CheckoutConfirmDataSource,
-        authenticationContext: STPAuthenticationContext
+        checkoutSession: Checkout.Session,
+        checkoutApplePayDataSource: CheckoutApplePayDataSource
     ) async -> InternalConfirmResult {
         do {
             let context = try CheckoutApplePayContext.create(
-                checkout: checkout,
-                authenticationContext: authenticationContext
+                checkoutSession: checkoutSession,
+                checkoutApplePayDataSource: checkoutApplePayDataSource
             )
             return await context.presentApplePay()
         } catch {

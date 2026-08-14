@@ -134,13 +134,12 @@ final class CheckoutApplePayContextTests: XCTestCase {
             "currency": "usd",
             "total_summary": ["subtotal": 1000, "total": 1000, "due": 1000],
         ])
-        let dataSource = MockCheckoutConfirmDataSource(session: response.makePublicSession(), apiClient: resolvedAPIClient)
+        let dataSource = MockCheckoutApplePayDataSource(session: response.makePublicSession(), apiClient: resolvedAPIClient)
         let mockController = MockPKPaymentAuthorizationController()
-        let authContext = MockAuthenticationContext()
         let context = CheckoutApplePayContext(
-            checkout: dataSource,
-            authorizationController: mockController,
-            authenticationContext: authContext
+            checkoutSession: dataSource.session,
+            checkoutApplePayDataSource: dataSource,
+            authorizationController: mockController
         )
         return (context, mockController)
     }
@@ -185,17 +184,10 @@ private class MockPKPaymentAuthorizationController: PKPaymentAuthorizationContro
     }
 }
 
-private class MockAuthenticationContext: NSObject, STPAuthenticationContext {
-    func authenticationPresentingViewController() -> UIViewController {
-        return UIViewController()
-    }
-}
-
-private class MockCheckoutConfirmDataSource: CheckoutConfirmDataSource {
+private class MockCheckoutApplePayDataSource: CheckoutApplePayDataSource {
     var applePayConfiguration: Checkout.ApplePayConfiguration?
     let session: Checkout.Session
     let apiClient: STPAPIClient
-    let paymentHandler: STPPaymentHandler
     var returnURL: String?
     let merchantDisplayName: String
     var expressCheckoutElementBillingDetailsCollectionConfiguration = ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration()
@@ -203,7 +195,6 @@ private class MockCheckoutConfirmDataSource: CheckoutConfirmDataSource {
     init(session: Checkout.Session, apiClient: STPAPIClient) {
         self.session = session
         self.apiClient = apiClient
-        self.paymentHandler = STPPaymentHandler(apiClient: apiClient)
         self.merchantDisplayName = "Test Merchant"
         self.applePayConfiguration = Checkout.ApplePayConfiguration(merchantId: "merchant.com.test")
     }

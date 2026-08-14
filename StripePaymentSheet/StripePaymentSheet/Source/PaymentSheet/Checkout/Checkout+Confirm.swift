@@ -1,24 +1,20 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-// MARK: - CheckoutConfirmDataSource
+// MARK: - CheckoutApplePayDataSource
 
-/// The data the confirm flow needs from `Checkout`.
-/// Using this protocol instead of `Checkout` directly keeps the static confirm
-/// functions decoupled from the full `Checkout` object and testable in isolation.
+/// Convenience bag of everything Apple Pay needs for confirmation
 @MainActor
-protocol CheckoutConfirmDataSource: AnyObject {
+protocol CheckoutApplePayDataSource: AnyObject {
     var applePayConfiguration: Checkout.ApplePayConfiguration? { get }
-    var session: Checkout.Session { get }
     var apiClient: STPAPIClient { get }
-    var paymentHandler: STPPaymentHandler { get }
     var returnURL: String? { get }
     var merchantDisplayName: String { get }
     var expressCheckoutElementBillingDetailsCollectionConfiguration: ExpressCheckoutElement.Configuration.BillingDetailsCollectionConfiguration { get }
     func commitSession(_ response: PaymentPagesAPIResponse) async throws
 }
 
-extension Checkout: CheckoutConfirmDataSource {
+extension Checkout: CheckoutApplePayDataSource {
     var applePayConfiguration: ApplePayConfiguration? { configuration.applePayConfiguration }
     var returnURL: String? { configuration.returnURL }
     var merchantDisplayName: String { effectiveMerchantDisplayName }
@@ -78,17 +74,41 @@ extension Checkout {
         )
     }
 
+    func confirmationContext(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> ConfirmationContext {
+        // TODO: Link Payment Element Configuration
+        let paymentConfiguration = PaymentSheet.Configuration()
+        switch paymentMethod {
+        case .applePay:
+            return ConfirmationContext(
+                paymentOption: .applePay,
+                configuration: paymentConfiguration,
+                integrationShape: .expressCheckout,
+                confirmationChallenge: nil, // Apple Pay is not a Card Testing attack vector
+                analyticsHelper: PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: paymentConfiguration)
+            )
+        case .link:
+            return ConfirmationContext(
+                paymentOption: .link(option: .wallet(brand: session.elementsSession.linkBrand ?? .link)),
+                configuration: paymentConfiguration,
+                integrationShape: .expressCheckout,
+                confirmationChallenge: ConfirmationChallenge(elementsSession: session.elementsSession, stripeAttest: apiClient.stripeAttest),
+                analyticsHelper: PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: paymentConfiguration) // TODO: figure out ECE analytics plan
+            )
+        }
+    }
+
     static func confirm(
-        checkout: CheckoutConfirmDataSource,
+        checkoutSession: Checkout.Session,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
-        paymentHandler: STPPaymentHandler
+        paymentHandler: STPPaymentHandler,
+        checkoutApplePayDataSource: CheckoutApplePayDataSource
     ) async -> InternalConfirmResult {
         // 1. Handle pre-confirm actions, such as Bacs mandate acceptance or saved-card CVC recollection.
         let preconfirmActionsResult = await PaymentSheet.handlePreconfirmActionsIfNecessary(
             configuration: confirmationContext.configuration,
             authenticationContext: authenticationContext,
-            intent: .checkout(checkout.session),
+            intent: .checkout(checkoutSession),
             paymentOption: confirmationContext.paymentOption,
             paymentHandler: paymentHandler,
             integrationShape: confirmationContext.integrationShape
@@ -106,22 +126,23 @@ extension Checkout {
 
         // 2. Confirm the Checkout Session using the selected payment option.
         return await confirmPaymentOption(
-            checkout: checkout,
+            checkoutSession: checkoutSession,
             confirmationContext: confirmationContext,
             authenticationContext: authenticationContext,
             intentConfirmParamsForDeferredIntent: intentConfirmParams,
-            paymentHandler: paymentHandler
+            paymentHandler: paymentHandler,
+            checkoutApplePayDataSource: checkoutApplePayDataSource
         )
     }
 
     static func confirmPaymentOption(
-        checkout: CheckoutConfirmDataSource,
+        checkoutSession: Checkout.Session,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
         intentConfirmParamsForDeferredIntent: IntentConfirmParams?,
-        paymentHandler: STPPaymentHandler
+        paymentHandler: STPPaymentHandler,
+        checkoutApplePayDataSource: CheckoutApplePayDataSource? = nil
     ) async -> InternalConfirmResult {
-        let checkoutSession = checkout.session
         let paymentOption = confirmationContext.paymentOption
         let elementsSession = checkoutSession.elementsSession
         let configuration = confirmationContext.configuration
@@ -133,9 +154,14 @@ extension Checkout {
 
         switch paymentOption {
         case .applePay:
+            guard let checkoutApplePayDataSource else {
+                fatalError(
+                    "Cannot call confirmPaymentOption with .applePay without a checkoutApplePayDataSource"
+                )
+            }
             return await confirmApplePay(
-                checkout: checkout,
-                authenticationContext: authenticationContext
+                checkoutSession: checkoutSession,
+                checkoutApplePayDataSource: checkoutApplePayDataSource
             )
         case .new(let confirmParams):
             // MARK: - New PM
@@ -196,7 +222,7 @@ extension Checkout {
         case .link:
             // MARK: - Link
             return await confirmLink(
-                checkout: checkout,
+                checkoutSession: checkoutSession,
                 confirmationContext: confirmationContext,
                 authenticationContext: authenticationContext,
                 clientAttributionMetadata: clientAttributionMetadata,

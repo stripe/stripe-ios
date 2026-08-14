@@ -810,10 +810,11 @@ private extension PaymentSheetAPIMockTest {
             analyticsHelper: ._testValue()
         )
         return await Checkout.confirm(
-            checkout: checkout,
+            checkoutSession: checkout.session,
             confirmationContext: confirmationContext,
             authenticationContext: self,
-            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
+            checkoutApplePayDataSource: checkout
         ).paymentSheetResult
     }
 

@@ -42,35 +42,12 @@ final class AddressViewControllerTests: XCTestCase {
         // Then only the integration delegate receives the valid address
         XCTAssertEqual(integrationDelegate.receivedAddressDetails.count, 1)
         let addressDetails = integrationDelegate.receivedAddressDetails[0]
-        XCTAssertEqual(addressDetails?.name, "Jane Doe")
-        XCTAssertEqual(addressDetails?.address.city, "San Francisco")
-        XCTAssertEqual(addressDetails?.address.country, "US")
-        XCTAssertEqual(addressDetails?.address.line1, "354 Oyster Point Blvd")
-        XCTAssertEqual(addressDetails?.address.postalCode, "94080")
-        XCTAssertEqual(addressDetails?.address.state, "CA")
-        XCTAssertTrue(merchantDelegate.receivedAddressDetails.isEmpty)
-    }
-
-    func testDidContinuePassesNilAddressToIntegrationDelegate() async {
-        // Given an AddressViewController with an invalid address and a custom integration delegate
-        let merchantDelegate = MerchantDelegate()
-        let integrationDelegate = IntegrationDelegate()
-        integrationDelegate.saveExpectation = expectation(description: "Save nil address")
-        let viewController = makeViewController(
-            configuration: makeConfiguration(),
-            merchantDelegate: merchantDelegate,
-            integrationDelegate: integrationDelegate
-        )
-        viewController.loadViewIfNeeded()
-
-        // When address collection completes
-        viewController.didContinue()
-        await fulfillment(of: [integrationDelegate.saveExpectation!])
-
-        // Then only the integration delegate receives the nil address
-        XCTAssertEqual(integrationDelegate.receivedAddressDetails.count, 1)
-        XCTAssertNil(integrationDelegate.receivedAddressDetails[0])
-        XCTAssertTrue(merchantDelegate.receivedAddressDetails.isEmpty)
+        XCTAssertEqual(addressDetails.name, "Jane Doe")
+        XCTAssertEqual(addressDetails.address.city, "San Francisco")
+        XCTAssertEqual(addressDetails.address.country, "US")
+        XCTAssertEqual(addressDetails.address.line1, "354 Oyster Point Blvd")
+        XCTAssertEqual(addressDetails.address.postalCode, "94080")
+        XCTAssertEqual(addressDetails.address.state, "CA")
     }
 
     func testDefaultIntegrationDelegateLogsAndForwardsValidAddress() async {
@@ -100,26 +77,6 @@ final class AddressViewControllerTests: XCTestCase {
         XCTAssertNotNil(addressCompletionEvent)
     }
 
-    func testDefaultIntegrationDelegateLogsAndForwardsNilAddress() async {
-        // Given an AddressViewController using the default integration delegate with an invalid address
-        let merchantDelegate = MerchantDelegate()
-        merchantDelegate.completionExpectation = expectation(description: "Merchant completion")
-        let viewController = makeViewController(
-            configuration: makeConfiguration(),
-            merchantDelegate: merchantDelegate
-        )
-        viewController.loadViewIfNeeded()
-
-        // When address collection completes
-        viewController.didContinue()
-        await fulfillment(of: [merchantDelegate.completionExpectation!])
-
-        // Then the merchant receives nil and completion is logged
-        XCTAssertEqual(merchantDelegate.receivedAddressDetails.count, 1)
-        XCTAssertNil(merchantDelegate.receivedAddressDetails[0])
-        XCTAssertNotNil(addressCompletionEvent)
-    }
-
     func testDidContinueDisplaysIntegrationDelegateError() async {
         // Given an AddressViewController whose integration delegate fails to save
         let expectedError = NSError(
@@ -131,7 +88,13 @@ final class AddressViewControllerTests: XCTestCase {
         let integrationDelegate = IntegrationDelegate(error: expectedError)
         integrationDelegate.saveExpectation = expectation(description: "Save address")
         let viewController = makeViewController(
-            configuration: makeConfiguration(),
+            configuration: makeConfiguration(defaultAddress: .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                postalCode: "94080",
+                state: "CA"
+            )),
             merchantDelegate: merchantDelegate,
             integrationDelegate: integrationDelegate
         )
@@ -145,6 +108,57 @@ final class AddressViewControllerTests: XCTestCase {
         XCTAssertEqual(viewController.errorLabel.text, expectedError.localizedDescription)
         XCTAssertFalse(viewController.errorLabel.isHidden)
         XCTAssertTrue(merchantDelegate.receivedAddressDetails.isEmpty)
+    }
+
+    func testDidContinueShowsLoadingAndBlocksInteractionWhileSaving() async {
+        // Given an AddressViewController whose integration delegate performs an asynchronous save
+        let merchantDelegate = MerchantDelegate()
+        merchantDelegate.completionExpectation = expectation(description: "Merchant completion")
+        let integrationDelegate = IntegrationDelegate()
+        integrationDelegate.waitsForCompletion = true
+        integrationDelegate.loadingExpectation = expectation(description: "Loading started")
+        let viewController = makeViewController(
+            configuration: makeConfiguration(defaultAddress: .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                postalCode: "94080",
+                state: "CA"
+            )),
+            merchantDelegate: merchantDelegate,
+            integrationDelegate: integrationDelegate
+        )
+        let navigationController = UINavigationController(rootViewController: viewController)
+        viewController.loadViewIfNeeded()
+
+        // When address collection completes and the save begins
+        viewController.didContinue()
+        await fulfillment(of: [integrationDelegate.loadingExpectation!])
+
+        // Then the form, navigation, and save button are disabled while the button shows loading
+        XCTAssertFalse(viewController.view.isUserInteractionEnabled)
+        XCTAssertFalse(navigationController.navigationBar.isUserInteractionEnabled)
+        XCTAssertFalse((viewController.navigationItem.leftBarButtonItem?.customView as? UIButton)?.isEnabled ?? true)
+        if case .processing = viewController.button.status {
+            // Expected
+        } else {
+            XCTFail("Expected the save button to be processing")
+        }
+        XCTAssertTrue(merchantDelegate.receivedAddressDetails.isEmpty)
+
+        // When the save succeeds
+        integrationDelegate.completeSave()
+        await fulfillment(of: [merchantDelegate.completionExpectation!])
+
+        // Then interaction is restored before the integration is notified of completion
+        XCTAssertTrue(viewController.view.isUserInteractionEnabled)
+        XCTAssertTrue(navigationController.navigationBar.isUserInteractionEnabled)
+        XCTAssertTrue((viewController.navigationItem.leftBarButtonItem?.customView as? UIButton)?.isEnabled ?? false)
+        if case .enabled = viewController.button.status {
+            // Expected
+        } else {
+            XCTFail("Expected the save button to be enabled")
+        }
     }
 
     private var addressCompletionEvent: [String: Any]? {
@@ -211,21 +225,37 @@ private final class MerchantDelegate: AddressViewControllerDelegate {
 @MainActor
 private final class IntegrationDelegate: AddressViewController.IntegrationDelegate {
     var saveExpectation: XCTestExpectation?
-    var receivedAddressDetails: [AddressViewController.AddressDetails?] = []
+    var loadingExpectation: XCTestExpectation?
+    var receivedAddressDetails: [AddressViewController.AddressDetails] = []
+    var waitsForCompletion = false
     private let error: Error?
+    private var saveContinuation: CheckedContinuation<Void, Never>?
 
     init(error: Error? = nil) {
         self.error = error
     }
 
     func save(
-        addressDetails: AddressViewController.AddressDetails?,
+        addressDetails: AddressViewController.AddressDetails,
         setLoading: (Bool) -> Void
     ) async throws {
         receivedAddressDetails.append(addressDetails)
         saveExpectation?.fulfill()
+        if waitsForCompletion {
+            setLoading(true)
+            loadingExpectation?.fulfill()
+            await withCheckedContinuation { continuation in
+                saveContinuation = continuation
+            }
+            setLoading(false)
+        }
         if let error {
             throw error
         }
+    }
+
+    func completeSave() {
+        saveContinuation?.resume()
+        saveContinuation = nil
     }
 }
