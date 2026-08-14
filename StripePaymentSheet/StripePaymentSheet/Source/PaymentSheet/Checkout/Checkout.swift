@@ -381,8 +381,7 @@ public final class Checkout: ObservableObject {
                     checkoutSession: self.session,
                     confirmationContext: confirmationContext,
                     authenticationContext: authenticationContext,
-                    paymentHandler: self.paymentHandler,
-                    checkoutApplePayDataSource: self
+                    paymentHandler: self.paymentHandler
                 )
                 if let checkoutSessionResponse = result.checkoutSessionResponse {
                     try await self.commitSession(checkoutSessionResponse)

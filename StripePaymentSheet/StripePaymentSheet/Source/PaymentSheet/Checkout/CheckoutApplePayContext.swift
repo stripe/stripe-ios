@@ -49,10 +49,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     ) {
         self.session = checkoutSession
         self.checkoutApplePayDataSource = checkoutApplePayDataSource
-        self.authorizationController = authorizationController
         self.merchantLabel = checkoutApplePayDataSource.merchantDisplayName
         self.apiClient = checkoutApplePayDataSource.apiClient
         self.returnURL = checkoutApplePayDataSource.returnURL
+        self.authorizationController = authorizationController
         super.init()
     }
 

@@ -15,28 +15,18 @@ extension Checkout: ExpressCheckoutElementDelegate {
         guard sessionIsOpen else {
             return .failed(CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() cannot confirm a Checkout Session that is no longer open."))
         }
-        guard let presentingViewController = UIWindow.visibleViewController else {
-            let errorMessage = "ExpressCheckoutElement could not find a presenting view controller."
-            stpAssertionFailure(errorMessage)
-            let analytic = UnexpectedCheckoutElementsErrorAnalytic(
-                errorCode: .expressCheckoutElementPresentingViewControllerUnavailable,
-                errorMessage: errorMessage
-            )
-            STPAnalyticsClient.sharedClient.log(analytic: analytic)
-            return .failed(CheckoutError.unknown(debugDescription: errorMessage))
-        }
-        let confirmationContext = confirmationContext(for: paymentMethod)
-        let authenticationContext = AuthenticationContext(
-            presentingViewController: presentingViewController,
-            appearance: .default
-        )
 
-        let result = await Checkout.confirm(
-            checkoutSession: session,
-            confirmationContext: confirmationContext,
-            authenticationContext: authenticationContext,
-            paymentHandler: paymentHandler,
-            checkoutApplePayDataSource: self)
+        let result = await {
+            switch paymentMethod {
+            case .applePay:
+                return await Checkout.confirmApplePay(
+                    checkoutSession: session,
+                    checkoutApplePayDataSource: self
+                )
+            case .link:
+                return .init(paymentSheetResult: .canceled) // TODO: link
+            }
+        }()
         switch result.paymentSheetResult {
         case .completed:
             return .succeeded(paymentStatus: Checkout.PaymentStatus.paymentStatus(from: result.checkoutSessionResponse?.paymentStatus ?? ""))

@@ -94,11 +94,10 @@ extension Checkout {
     }
 
     static func confirm(
-        checkoutSession: Checkout.Session,
+        checkoutSession: Session,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
-        paymentHandler: STPPaymentHandler,
-        checkoutApplePayDataSource: CheckoutApplePayDataSource
+        paymentHandler: STPPaymentHandler
     ) async -> InternalConfirmResult {
         // 1. Handle pre-confirm actions, such as Bacs mandate acceptance or saved-card CVC recollection.
         let preconfirmActionsResult = await PaymentSheet.handlePreconfirmActionsIfNecessary(
@@ -126,18 +125,16 @@ extension Checkout {
             confirmationContext: confirmationContext,
             authenticationContext: authenticationContext,
             intentConfirmParamsForDeferredIntent: intentConfirmParams,
-            paymentHandler: paymentHandler,
-            checkoutApplePayDataSource: checkoutApplePayDataSource
+            paymentHandler: paymentHandler
         )
     }
 
     static func confirmPaymentOption(
-        checkoutSession: Checkout.Session,
+        checkoutSession: Session,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
         intentConfirmParamsForDeferredIntent: IntentConfirmParams?,
-        paymentHandler: STPPaymentHandler,
-        checkoutApplePayDataSource: CheckoutApplePayDataSource? = nil
+        paymentHandler: STPPaymentHandler
     ) async -> InternalConfirmResult {
         let paymentOption = confirmationContext.paymentOption
         let elementsSession = checkoutSession.elementsSession
@@ -150,15 +147,9 @@ extension Checkout {
 
         switch paymentOption {
         case .applePay:
-            guard let checkoutApplePayDataSource else {
-                return .init(paymentSheetResult: .failed(
-                    error: CheckoutError.unknown(debugDescription: "Cannot confirm .applePay without a checkoutApplePayDataSource")
-                ))
-            }
-            return await confirmApplePay(
-                checkoutSession: checkoutSession,
-                checkoutApplePayDataSource: checkoutApplePayDataSource
-            )
+            // MARK: - Apple Pay
+            // TODO: Figure out checkout.confirm enqueue Apple Pay deadlock (Apple Pay confirm enqueued, CS mutations in Apple Pay sheet -> blocked because confirm enqueued)
+            return .init(paymentSheetResult: .canceled)
         case .new(let confirmParams):
             // MARK: - New PM
             let paymentMethodType: STPPaymentMethodType = {
