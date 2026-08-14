@@ -24,6 +24,7 @@ struct CheckoutCartView: View {
     let integrationType: CheckoutPlayground.IntegrationType
     var showExpressCheckoutElement: Bool = false
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
+    var delayPaymentPagesRequests = false
 
     var body: some View {
         NavigationView {
@@ -121,7 +122,9 @@ struct CheckoutCartView: View {
         errorMessage = nil
         do {
             var config = Checkout.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
-            config.apiClient = diagnostics.makeAPIClient()
+            config.apiClient = diagnostics.makeAPIClient(
+                paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
+            )
             config.adaptivePricing.allowed = adaptivePricing
             config.applePayConfiguration = Checkout.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"

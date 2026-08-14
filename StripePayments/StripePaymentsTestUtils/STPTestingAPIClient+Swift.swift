@@ -52,7 +52,8 @@ extension STPTestingAPIClient {
 
         createPaymentIntent(
             withParams: params,
-            account: merchantCountry
+            account: merchantCountry,
+            apiVersion: types.contains("vipps") ? "\(STPAPIClient.apiVersion); vipps_preview=v1" : nil
         ) { clientSecret, error in
             guard let clientSecret = clientSecret,
                   error == nil

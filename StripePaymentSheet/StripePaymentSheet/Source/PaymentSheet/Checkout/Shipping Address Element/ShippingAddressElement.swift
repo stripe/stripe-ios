@@ -5,7 +5,15 @@
 //  Created by George Birch on 8/4/26.
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import UIKit
+
+/// Handles Checkout mutations requested by a ShippingAddressElement.
+@MainActor
+protocol ShippingAddressElementDelegate: AnyObject {
+    /// Sets the customer's shipping address.
+    func updateShippingAddress(name: String?, address: Checkout.Address) async throws
+}
 
 /// A shipping address form backed by a Checkout Session.
 @MainActor
@@ -16,6 +24,7 @@ public final class ShippingAddressElement {
     private(set) var addressViewController: AddressViewController!
     private var isPresenting = false
     private var presentationCompletion: (() -> Void)?
+    weak var delegate: ShippingAddressElementDelegate?
 
     init(
         configuration: Configuration,
@@ -31,8 +40,10 @@ public final class ShippingAddressElement {
             useAutocompleteEndpoints: useAutocompleteEndpoints
         )
         addressViewController = AddressViewController(
+            addressSpecProvider: .shared,
             configuration: addressViewControllerConfiguration,
-            delegate: self
+            delegate: self,
+            integrationDelegate: self
         )
     }
 
@@ -100,6 +111,32 @@ public final class ShippingAddressElement {
         isPresenting = true
         presentationCompletion = completion
         presentingViewController.present(navigationController, animated: true)
+    }
+}
+
+extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
+    func save(
+        addressDetails: AddressViewController.AddressDetails,
+        setLoading: (Bool) -> Void
+    ) async throws {
+        guard let delegate else {
+            stpAssertionFailure("ShippingAddressElement does not have a delegate.")
+            return
+        }
+
+        setLoading(true)
+        defer { setLoading(false) }
+        try await delegate.updateShippingAddress(
+            name: addressDetails.name,
+            address: Checkout.Address(
+                country: addressDetails.address.country,
+                line1: addressDetails.address.line1.nonEmpty,
+                line2: addressDetails.address.line2,
+                city: addressDetails.address.city,
+                state: addressDetails.address.state,
+                postalCode: addressDetails.address.postalCode
+            )
+        )
     }
 }
 
