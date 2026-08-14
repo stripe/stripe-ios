@@ -110,7 +110,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         // Given a context that finished with success
         let (context, mockController) = makeContext()
         context.paymentState = .success
-        context.result = .init(paymentSheetResult: .completed, checkoutSessionResponse: PaymentPagesAPIResponse.decodedObject(fromAPIResponse: makeConfirmResponseJSON())!)
+        context.result = .init(paymentSheetResult: .completed, checkoutSessionResponse: try! PaymentPagesAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON()))
 
         // When the sheet is dismissed
         let resultTask = Task { await context.presentApplePay() }
@@ -165,6 +165,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             "mode": "modeless",
             "currency": "usd",
             "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(),
+            "status": "complete",
             "payment_status": "paid",
             "payment_method_types": ["card"],
             "elements_session": CheckoutTestHelpers.minimalElementsSessionJSON,
