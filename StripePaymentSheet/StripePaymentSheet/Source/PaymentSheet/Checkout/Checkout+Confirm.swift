@@ -293,7 +293,7 @@ extension Checkout {
             // 4. Handle the intent returned by the confirm response.
             let paymentSheetResult = try await handleCheckoutSessionConfirmResponse(
                 response: response,
-                returnURL: configuration.returnURL,
+                configuration: configuration,
                 authenticationContext: authenticationContext,
                 paymentHandler: paymentHandler
             )
@@ -304,37 +304,37 @@ extension Checkout {
     }
 
     @MainActor
-    static func handleCheckoutSessionConfirmResponse(
+    private static func handleCheckoutSessionConfirmResponse(
         response: PaymentPagesAPIResponse,
-        returnURL: String?,
+        configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler
     ) async throws -> PaymentSheetResult {
         if let setupIntent = response.setupIntent {
-            return await handleNextAction(
-                for: setupIntent,
-                returnURL: returnURL,
+            return await handleCheckoutSessionSetupIntentResponse(
+                setupIntent: setupIntent,
+                configuration: configuration,
                 authenticationContext: authenticationContext,
                 paymentHandler: paymentHandler
             )
         } else if let paymentIntent = response.paymentIntent {
-            return await handleNextAction(
-                for: paymentIntent,
-                returnURL: returnURL,
+            return await handleCheckoutSessionPaymentIntentResponse(
+                paymentIntent: paymentIntent,
+                configuration: configuration,
                 authenticationContext: authenticationContext,
                 paymentHandler: paymentHandler
             )
         } else {
-            throw CheckoutError.unknown(
+            throw PaymentSheetError.unknown(
                 debugDescription: "Checkout session confirm response contained neither a PaymentIntent nor a SetupIntent"
             )
         }
     }
 
     @MainActor
-    private static func handleNextAction(
-        for paymentIntent: STPPaymentIntent,
-        returnURL: String?,
+    private static func handleCheckoutSessionPaymentIntentResponse(
+        paymentIntent: STPPaymentIntent,
+        configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler
     ) async -> PaymentSheetResult {
@@ -342,7 +342,7 @@ extension Checkout {
             paymentHandler.handleNextAction(
                 for: paymentIntent,
                 with: authenticationContext,
-                returnURL: returnURL
+                returnURL: configuration.returnURL
             ) { status, _, error in
                 continuation.resume(returning: PaymentSheet.makePaymentSheetResult(for: status, error: error))
             }
@@ -350,9 +350,9 @@ extension Checkout {
     }
 
     @MainActor
-    private static func handleNextAction(
-        for setupIntent: STPSetupIntent,
-        returnURL: String?,
+    private static func handleCheckoutSessionSetupIntentResponse(
+        setupIntent: STPSetupIntent,
+        configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler
     ) async -> PaymentSheetResult {
@@ -360,7 +360,7 @@ extension Checkout {
             paymentHandler.handleNextAction(
                 for: setupIntent,
                 with: authenticationContext,
-                returnURL: returnURL
+                returnURL: configuration.returnURL
             ) { status, _, error in
                 continuation.resume(returning: PaymentSheet.makePaymentSheetResult(for: status, error: error))
             }
