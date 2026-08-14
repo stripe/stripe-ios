@@ -20,14 +20,15 @@ public final class ExpressCheckoutElementUIView: UIView {
     private let configuration: Checkout.Configuration
     private let stackView = UIStackView()
     private var linkBrand: LinkBrand
-    private weak var delegate: ExpressCheckoutElementDelegate?
+    weak var delegate: ExpressCheckoutElementDelegate?
 
     // MARK: - Init
 
-    init(session: Checkout.Session, configuration: Checkout.Configuration, delegate: ExpressCheckoutElementDelegate) {
+    /// Buttons aren't populated until the first call to ``update(with:)``, since the
+    /// initial session isn't known until Checkout finishes initializing.
+    init(configuration: Checkout.Configuration) {
         self.configuration = configuration
-        self.delegate = delegate
-        self.linkBrand = session.elementsSession.linkBrand ?? .link
+        self.linkBrand = .link
         super.init(frame: .zero)
 
         // TODO: Appearance
@@ -42,9 +43,6 @@ public final class ExpressCheckoutElementUIView: UIView {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
-
-        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
-        buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
     }
 
     @available(*, unavailable)
@@ -73,7 +71,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Methods
 
-    private func makeButton(for button: ExpressButton) -> UIView {
+    private func makeButton(for button: ExpressCheckoutElement.ExpressButton) -> UIView {
         switch button {
         case .applePay:
             return makeApplePayButton()

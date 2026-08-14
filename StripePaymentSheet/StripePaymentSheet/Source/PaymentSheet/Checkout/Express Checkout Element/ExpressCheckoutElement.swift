@@ -28,16 +28,34 @@ public final class ExpressCheckoutElement {
     /// A UIKit view that displays the express checkout buttons.
     public let uiView: ExpressCheckoutElementUIView
 
+    /// The wallet payment methods currently available to show, given the session and configuration.
+    public var availableExpressCheckoutPaymentMethods: [ExpressCheckoutElement.ExpressButton] {
+        viewModel.availableExpressCheckoutPaymentMethods
+    }
+
+    weak var delegate: ExpressCheckoutElementDelegate? {
+        didSet { uiView.delegate = delegate }
+    }
+
+    // MARK: - Private Properties
+
+    private let viewModel: ExpressCheckoutElementViewModel
+
     // MARK: - Init
 
-    init(
-        sessionSource: CheckoutSessionSource,
-        configuration: Checkout.Configuration,
-        delegate: ExpressCheckoutElementDelegate
-    ) {
-        let uiView = ExpressCheckoutElementUIView(session: sessionSource.initialSession, configuration: configuration, delegate: delegate)
-        let viewModel = ExpressCheckoutElementViewModel(sessionSource: sessionSource, configuration: configuration, uiView: uiView)
+    /// Buttons aren't populated until ``attach(sessionSource:)`` is called, since the initial
+    /// session isn't known until Checkout finishes initializing.
+    init(configuration: Checkout.Configuration) {
+        let uiView = ExpressCheckoutElementUIView(configuration: configuration)
+        let viewModel = ExpressCheckoutElementViewModel(configuration: configuration, uiView: uiView)
         self.uiView = uiView
+        self.viewModel = viewModel
         self.view = ExpressCheckoutElementView(viewModel: viewModel)
+    }
+
+    // MARK: - Internal Methods
+
+    func attach(sessionSource: CheckoutSessionSource) {
+        viewModel.attach(sessionSource: sessionSource)
     }
 }

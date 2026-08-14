@@ -283,8 +283,8 @@ final class CheckoutCartViewController: UIViewController {
             return
         }
 
-        if showExpressCheckoutElement, let expressCheckoutElement = checkout.getExpressCheckoutElement() {
-            paymentBarStackView.addArrangedSubview(expressCheckoutElement.uiView)
+        if showExpressCheckoutElement {
+            paymentBarStackView.addArrangedSubview(checkout.getExpressCheckoutElement().uiView)
         }
 
         switch integrationType {
