@@ -230,6 +230,27 @@ class PlaygroundViewController: UIViewController {
         phoneView.isHidden = !uiSwitch.isOn
     }
 
+    @IBAction func enableVerifyViaWalletValueChanged(_ uiSwitch: UISwitch) {
+        let otherSwitches: [UISwitch] = [
+            drivingLicenseSwitch,
+            passportSwitch,
+            idCardSwitch,
+            requireIDNumberSwitch,
+            requireAddressSwitch,
+            requireLiveCaptureSwitch,
+            requireSelfieSwitch,
+            requirePhoneNumberSwitch,
+            fallbackToDocumentSwitch,
+            useLocalWalletFlowSwitch,
+        ]
+        for otherSwitch in otherSwitches {
+            if uiSwitch.isOn {
+                otherSwitch.isOn = false
+            }
+            otherSwitch.isEnabled = !uiSwitch.isOn
+        }
+    }
+
     func requestVerificationSession() {
         // Disable the button while we make the request
         updateButtonState(isLoading: true)
@@ -237,7 +258,12 @@ class PlaygroundViewController: UIViewController {
         var endpoint: String
         var requestDict: [String: Any]
 
-        if creationMethod == .reuse {
+        if enableVerifyViaWalletSwitch.isOn {
+            endpoint = verifyEndpoint
+            requestDict = [
+                "verification_flow": "vf_1U3fMpGMZYGNxJkBVl4CupPG"
+            ]
+        } else if creationMethod == .reuse {
             endpoint = reuseEndpoint
 
             requestDict = [

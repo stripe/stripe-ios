@@ -276,6 +276,9 @@
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="p1F-rt-r1f">
                                                         <rect key="frame" x="357" y="0.0" width="51" height="31"/>
+                                                        <connections>
+                                                            <action selector="enableVerifyViaWalletValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="vfW-a1-act"/>
+                                                        </connections>
                                                     </switch>
                                                 </subviews>
                                                 <viewLayoutGuide key="safeArea" id="QoF-HF-L5m"/>
