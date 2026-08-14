@@ -83,13 +83,6 @@ struct CheckoutCartContentView: View {
                                     .font(.body).bold()
                             }
                             Spacer()
-                            Text(formatCartCurrency(
-                                minorUnitsAmount: (item.unitAmountDecimal ?? item.unitAmount).minorUnitsAmount
-                                    * Double(item.quantity),
-                                currency: checkout.session.currency,
-                                minorUnitsAmountDivisor: checkout.session.minorUnitsAmountDivisor
-                            ))
-                                .font(.headline)
                         }
                         .padding()
 

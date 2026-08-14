@@ -309,11 +309,7 @@ final class CheckoutCartViewController: UIViewController {
         } else {
             for (index, item) in items.enumerated() {
                 itemsStackView.addArrangedSubview(
-                    makeLineItemRow(
-                        item: item,
-                        currency: checkout.session.currency,
-                        minorUnitsAmountDivisor: checkout.session.minorUnitsAmountDivisor
-                    )
+                    makeLineItemRow(item: item)
                 )
                 if index < items.count - 1 {
                     itemsStackView.addArrangedSubview(makeSeparator())
@@ -324,11 +320,7 @@ final class CheckoutCartViewController: UIViewController {
         return makeSection(title: "Items", content: makeCard(containing: itemsStackView))
     }
 
-    private func makeLineItemRow(
-        item: Checkout.Session.OrderSummaryItem.OneTimePrice.Item,
-        currency: String?,
-        minorUnitsAmountDivisor: Int?
-    ) -> UIView {
+    private func makeLineItemRow(item: Checkout.Session.OrderSummaryItem.OneTimePrice.Item) -> UIView {
         let placeholderView = UIView()
         placeholderView.backgroundColor = .secondarySystemBackground
         placeholderView.layer.cornerRadius = 12
@@ -358,17 +350,7 @@ final class CheckoutCartViewController: UIViewController {
         detailsStackView.axis = .vertical
         detailsStackView.spacing = 6
 
-        let totalLabel = UILabel()
-        totalLabel.text = formatCartCurrency(
-            minorUnitsAmount: (item.unitAmountDecimal ?? item.unitAmount).minorUnitsAmount
-                * Double(item.quantity),
-            currency: currency,
-            minorUnitsAmountDivisor: minorUnitsAmountDivisor
-        )
-        totalLabel.font = .preferredFont(forTextStyle: .headline)
-        totalLabel.setContentHuggingPriority(.required, for: .horizontal)
-
-        let rowStackView = UIStackView(arrangedSubviews: [placeholderView, detailsStackView, totalLabel])
+        let rowStackView = UIStackView(arrangedSubviews: [placeholderView, detailsStackView])
         rowStackView.alignment = .top
         rowStackView.spacing = 16
 
