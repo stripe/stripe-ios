@@ -304,6 +304,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
             "payment_status": "unpaid",
+            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 2345),
         ]).makePublicSession()
 
         XCTAssertFalse(session.noPaymentRequired)
