@@ -172,31 +172,3 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
 }
 
-// MARK: - Mocks
-
-private class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
-    override func dismiss(completion: (() -> Void)? = nil) {
-        completion?()
-    }
-
-    override func present(completion: (@Sendable (Bool) -> Void)? = nil) {
-        completion?(true)
-    }
-}
-
-private class MockCheckoutApplePayDataSource: CheckoutApplePayDataSource {
-    var applePayConfiguration: Checkout.ApplePayConfiguration?
-    let session: Checkout.Session
-    let apiClient: STPAPIClient
-    var returnURL: String?
-    let merchantDisplayName: String
-
-    init(session: Checkout.Session, apiClient: STPAPIClient) {
-        self.session = session
-        self.apiClient = apiClient
-        self.merchantDisplayName = "Test Merchant"
-        self.applePayConfiguration = Checkout.ApplePayConfiguration(merchantId: "merchant.com.test")
-    }
-
-    func commitSession(_ response: PaymentPagesAPIResponse) async throws {}
-}

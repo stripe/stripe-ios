@@ -74,10 +74,11 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             checkoutSessionId: sessionResponse.id,
             adaptivePricingAllowed: false
         )
-        let dataSource = CheckoutApplePayContextFunctionalTestDataSource(
+        let dataSource = MockCheckoutApplePayDataSource(
             session: initResponse.makePublicSession(),
             apiClient: apiClient,
-            returnURL: returnURL
+            returnURL: returnURL,
+            merchantDisplayName: "Functional Test Merchant"
         )
         let context = CheckoutApplePayContext(
             checkoutSession: dataSource.session,
@@ -107,30 +108,3 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
     }
 }
 
-// MARK: - Test doubles
-private class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
-    override func present(completion: ((Bool) -> Void)? = nil) {
-        completion?(true)
-    }
-
-    override func dismiss(completion: (() -> Void)? = nil) {
-        completion?()
-    }
-}
-
-@MainActor
-private class CheckoutApplePayContextFunctionalTestDataSource: CheckoutApplePayDataSource {
-    var applePayConfiguration: Checkout.ApplePayConfiguration? = Checkout.ApplePayConfiguration(merchantId: "merchant.com.test")
-    let session: Checkout.Session
-    let apiClient: STPAPIClient
-    var returnURL: String?
-    let merchantDisplayName = "Functional Test Merchant"
-
-    init(session: Checkout.Session, apiClient: STPAPIClient, returnURL: String? = nil) {
-        self.session = session
-        self.apiClient = apiClient
-        self.returnURL = returnURL
-    }
-
-    func commitSession(_ response: PaymentPagesAPIResponse) async throws {}
-}

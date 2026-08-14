@@ -146,7 +146,17 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 }
 
                 // 3. Commit the confirmed session back to Checkout so its state stays current.
-                try await self.checkoutApplePayDataSource?.commitSession(response)
+                // The payment already succeeded at this point, so a failure here shouldn't be
+                // reported to the customer as a failed payment - just log it.
+                do {
+                    try await self.checkoutApplePayDataSource?.commitSession(response)
+                } catch {
+                    let errorAnalytic = ErrorAnalytic(
+                        event: .unexpectedPaymentSheetConfirmationError,
+                        error: error
+                    )
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                }
 
                 // TODO: post-next-action work
 
@@ -221,26 +231,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     ) {
         // TODO: Wire up coupon code handling.
         handler(PKPaymentRequestCouponCodeUpdate(paymentSummaryItems: summaryItems()))
-    }
-
-    override func responds(to aSelector: Selector!) -> Bool {
-        if aSelector == #selector(paymentAuthorizationController(_:didSelectPaymentMethod:handler:)) {
-            // TODO: Update billing tax region when the user switches cards.
-            return false
-        }
-        if aSelector == #selector(paymentAuthorizationController(_:didSelectShippingContact:handler:)) {
-            // TODO: Collect shipping address and update shipping tax region.
-            return false
-        }
-        if aSelector == #selector(paymentAuthorizationController(_:didChangeCouponCode:handler:)) {
-            // TODO: Wire up coupon code handling.
-            return false
-        }
-        if aSelector == #selector(paymentAuthorizationController(_:didSelectShippingMethod:handler:)) {
-            // TODO: Handle multiple shipping rates from the session.
-            return false
-        }
-        return super.responds(to: aSelector)
     }
 
     // MARK: - Factory

@@ -57,9 +57,9 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     struct TestIntent {
         let description: String
         let intent: Intent
-        let checkout: (any CheckoutApplePayDataSource)?
+        let checkout: TestCheckoutSessionUpdater?
 
-        init(_ description: String, _ intent: Intent, checkout: (any CheckoutApplePayDataSource)? = nil) {
+        init(_ description: String, _ intent: Intent, checkout: TestCheckoutSessionUpdater? = nil) {
             self.description = description
             self.intent = intent
             self.checkout = checkout
@@ -834,7 +834,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     elementsSession: elementsSession,
                     configuration: configuration,
                     clientAttributionMetadata: clientAttributionMetadata,
-                    checkout: testIntent.checkout as? (any CheckoutSessionBillingAddressUpdater),
+                    checkout: testIntent.checkout,
                     completion: { result, _ in
                     switch result {
                     case .failed(error: let error):
@@ -1749,7 +1749,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 analyticsHelper: analyticsHelper
             )
             let result = await Checkout.confirm(
-                checkoutSession: (checkout as! TestCheckoutSessionUpdater).session,
+                checkoutSession: checkout.session,
                 confirmationContext: confirmationContext,
                 authenticationContext: self,
                 paymentHandler: paymentHandler,

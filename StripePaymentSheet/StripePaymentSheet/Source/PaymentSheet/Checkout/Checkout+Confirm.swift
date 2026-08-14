@@ -151,9 +151,9 @@ extension Checkout {
         switch paymentOption {
         case .applePay:
             guard let checkoutApplePayDataSource else {
-                fatalError(
-                    "Cannot call confirmPaymentOption with .applePay without a checkoutApplePayDataSource"
-                )
+                return .init(paymentSheetResult: .failed(
+                    error: CheckoutError.unknown(debugDescription: "Cannot confirm .applePay without a checkoutApplePayDataSource")
+                ))
             }
             return await confirmApplePay(
                 checkoutSession: checkoutSession,
