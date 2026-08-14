@@ -23,6 +23,7 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
             XCTAssertNotNil(params.additionalAPIParameters)
             XCTAssertEqual(params.additionalAPIParameters.count, 0)
             XCTAssertNil(params.paymentMethodID)
+            XCTAssertNil(params.paymentMethodOptions)
             XCTAssertNil(params.returnURL)
             XCTAssertNil(params.setAsDefaultPM)
             XCTAssertNil(params.useStripeSDK)
@@ -48,7 +49,7 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         // card type should have no default mandateData
         XCTAssertNil(params.mandateData)
 
-        for type in ["sepa_debit", "au_becs_debit", "bacs_debit", "bancontact", "ideal", "eps", "link", "us_bank_account", "cashapp", "paypal", "revolut_pay", "klarna"] {
+        for type in ["sepa_debit", "au_becs_debit", "bacs_debit", "bancontact", "ideal", "eps", "link", "us_bank_account", "cashapp", "paypal", "revolut_pay", "klarna", "alipay"] {
             params.mandateData = nil
             params.paymentMethodParams?.rawTypeString = type
             // Mandate-required type should have mandateData
@@ -95,6 +96,7 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         let params = STPSetupIntentConfirmParams(clientSecret: "test_client_secret")
         params.paymentMethodParams = STPPaymentMethodParams()
         params.paymentMethodID = "test_payment_method_id"
+        params.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         params.returnURL = "fake://testing_only"
         params.setAsDefaultPM = true
         params.useStripeSDK = true
@@ -112,6 +114,7 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         let paramsCopy = params.copy() as! STPSetupIntentConfirmParams
         XCTAssertEqual(params.clientSecret, paramsCopy.clientSecret)
         XCTAssertEqual(params.paymentMethodID, paramsCopy.paymentMethodID)
+        XCTAssertEqual(params.paymentMethodOptions, paramsCopy.paymentMethodOptions)
 
         // assert equal, not equal objects, because this is a shallow copy
         XCTAssertEqual(params.paymentMethodParams, paramsCopy.paymentMethodParams)
@@ -146,6 +149,24 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
     func testFormFieldMappingIncludesConfirmationToken() {
         let mapping = STPSetupIntentConfirmParams.propertyNamesToFormFieldNamesMapping()
         XCTAssertEqual(mapping[NSStringFromSelector(#selector(getter: STPSetupIntentConfirmParams.confirmationToken))], "confirmation_token")
+    }
+
+    func testFormEncodingIncludesAlipayOptions() {
+        // Given
+        let params = STPSetupIntentConfirmParams(clientSecret: "seti_123_secret_456")
+        let alipayOptions = STPConfirmAlipayOptions()
+        alipayOptions.currency = "usd"
+        let paymentMethodOptions = STPConfirmPaymentMethodOptions()
+        paymentMethodOptions.alipayOptions = alipayOptions
+        params.paymentMethodOptions = paymentMethodOptions
+
+        // When
+        let encoded = STPFormEncoder.dictionary(forObject: params)
+
+        // Then
+        let encodedPaymentMethodOptions = encoded["payment_method_options"] as? [String: Any]
+        let alipay = encodedPaymentMethodOptions?["alipay"] as? [String: Any]
+        XCTAssertEqual(alipay?["currency"] as? String, "usd")
     }
 
     func testClientSecretValidation() {

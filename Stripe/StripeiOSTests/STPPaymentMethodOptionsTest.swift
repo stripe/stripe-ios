@@ -18,6 +18,16 @@ import StripePaymentsTestUtils
 
 class STPPaymentMethodOptionsTest: STPNetworkStubbingTestCase {
 
+    func testAlipayCurrency() {
+        // Given
+        let options = STPPaymentMethodOptions.decodedObject(
+            fromAPIResponse: ["alipay": ["currency": "usd"]]
+        )
+
+        // Then
+        XCTAssertEqual(options?.currency(for: .alipay), "usd")
+    }
+
     func testUSBankAccountOptions_PaymentIntent() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 

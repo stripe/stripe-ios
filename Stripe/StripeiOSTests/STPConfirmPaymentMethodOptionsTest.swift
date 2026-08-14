@@ -32,4 +32,16 @@ class STPConfirmPaymentMethodOptionsTest: XCTestCase {
 
         XCTAssertEqual(propertyToFieldMap, expected)
     }
+
+    func testAlipayOptionsFormEncoding() {
+        let propertyToFieldMap = STPConfirmAlipayOptions.propertyNamesToFormFieldNamesMapping()
+        let expected = [
+            "currency": "currency",
+            "appBundleID": "app_bundle_id",
+            "appVersionKey": "app_version_key",
+            "setupFutureUsageRawString": "setup_future_usage",
+        ]
+
+        XCTAssertEqual(propertyToFieldMap, expected)
+    }
 }

@@ -74,6 +74,9 @@
 /* Paypal mandate text */
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
+/* Alipay mandate text */
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms.";
+
 /* Amazon Pay mandate text */
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.";
 
@@ -539,4 +542,3 @@ the heading the screen itself. */
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
-

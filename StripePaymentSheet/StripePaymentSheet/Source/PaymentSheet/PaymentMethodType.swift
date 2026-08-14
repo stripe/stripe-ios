@@ -260,7 +260,7 @@ extension PaymentSheet {
                     switch paymentMethod {
                     case .card:
                         return []
-                    case .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint:
+                    case .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint:
                         return [.returnURL]
                     case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
@@ -273,7 +273,7 @@ extension PaymentSheet {
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .link, .affirm, .paynow, .zip, .alma,
-                        .mobilePay, .vipps, .unknown, .alipay, .konbini, .promptPay, .swish, .multibanco,
+                        .mobilePay, .vipps, .unknown, .konbini, .promptPay, .swish, .multibanco,
                         .sunbit, .billie, .crypto, .payPay, .wero, .payByBank, .mbWay, .bizum:
                         return [.unsupportedForSetup]
                     @unknown default:
