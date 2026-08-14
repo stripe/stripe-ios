@@ -151,7 +151,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 // TODO: post-next-action work
 
                 handleSuccess(.completed, response)
-                
+
             } catch {
                 handleFailure(error)
             }
