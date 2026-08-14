@@ -30,6 +30,10 @@ public enum CheckoutError: Error, LocalizedError, Sendable {
     /// Apple Pay could not be presented. The device may not support Apple Pay or no payment cards are set up in Wallet.
     case applePayUnavailable
 
+    /// The Checkout Session's PaymentIntent or SetupIntent still requires further action (e.g. 3DS) after
+    /// confirming with Apple Pay. We can't present that action while the Apple Pay sheet is still up.
+    case applePayRequiresNextAction(status: String)
+
     /// The Stripe API returned an error with the given message.
     case apiError(message: String)
 
@@ -52,6 +56,8 @@ public enum CheckoutError: Error, LocalizedError, Sendable {
             return "Apple Pay configuration is missing. Set applePayConfiguration on Checkout.Configuration."
         case .applePayUnavailable:
             return "Apple Pay could not be presented. The device may not support Apple Pay or no payment cards are set up in Wallet."
+        case .applePayRequiresNextAction(let status):
+            return "The Checkout Session's intent still requires action (status: \(status)) after confirming with Apple Pay."
         case .apiError(let message):
             return message
         case .unknown(let debugDescription):

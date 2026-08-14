@@ -376,10 +376,11 @@ public final class Checkout: ObservableObject {
         do {
             let confirmResult = try await enqueueSessionUpdate {
                 let result = await Self.confirm(
-                    checkout: self,
+                    checkoutSession: self.session,
                     confirmationContext: confirmationContext,
                     authenticationContext: authenticationContext,
-                    paymentHandler: self.paymentHandler
+                    paymentHandler: self.paymentHandler,
+                    checkoutApplePayDataSource: self
                 )
                 if let checkoutSessionResponse = result.checkoutSessionResponse {
                     try await self.commitSession(checkoutSessionResponse)

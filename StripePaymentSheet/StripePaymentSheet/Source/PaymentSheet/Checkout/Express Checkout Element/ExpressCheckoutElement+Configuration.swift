@@ -14,9 +14,12 @@ extension ExpressCheckoutElement {
         public typealias ConfirmHandler = (_ result: Checkout.ConfirmResult) -> Void
 
         /// Called after a wallet payment confirmation completes.
-        public var confirmHandler: ConfirmHandler?
+        public var confirmHandler: ConfirmHandler
 
-        /// Creates a configuration with default values.
-        public init() {}
+        /// Creates a configuration.
+        /// - Parameter confirmHandler: Called after a wallet payment confirmation completes.
+        public init(confirmHandler: @escaping ConfirmHandler) {
+            self.confirmHandler = confirmHandler
+        }
     }
 }

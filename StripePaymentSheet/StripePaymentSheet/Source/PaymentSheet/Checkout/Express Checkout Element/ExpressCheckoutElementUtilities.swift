@@ -8,8 +8,8 @@
 @_spi(STP) import StripeCore
 
 enum ExpressCheckoutElementUtilities {
-    static func resolveButtons(for session: Checkout.Session, configuration: Checkout.Configuration) -> [ExpressButton] {
-        var buttons: [ExpressButton] = []
+    static func resolveButtons(for session: Checkout.Session, configuration: Checkout.Configuration) -> [ExpressCheckoutElement.PaymentMethod] {
+        var buttons: [ExpressCheckoutElement.PaymentMethod] = []
         for button in session.availableExpressButtonTypes {
             switch button {
             case .applePay:

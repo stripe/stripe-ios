@@ -13,7 +13,8 @@ import PassKit
 @_spi(STP) import StripePayments
 import UIKit
 
-/// Manages an active Apple Pay session.
+/// Responsible for handling the Apple Pay flow end to end: displaying line items,
+/// collecting billing and shipping, updating tax region, and confirming the Checkout Session.
 /// Owns the `PKPaymentAuthorizationController` and acts as its delegate directly.
 @MainActor
 final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerDelegate {
@@ -25,15 +26,12 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         case success
     }
 
-    private weak var checkout: CheckoutConfirmDataSource?
+    private weak var checkoutApplePayDataSource: CheckoutApplePayDataSource?
     private let session: Checkout.Session
     private let merchantLabel: String
     private let apiClient: STPAPIClient
-    private let paymentHandler: STPPaymentHandler
     private let returnURL: String?
-    var authorizationController: PKPaymentAuthorizationController
-    private let authenticationContext: STPAuthenticationContext
-    private let presentationWindow: UIWindow?
+    let authorizationController: PKPaymentAuthorizationController
 
     // Internal state
     private var continuation: CheckedContinuation<Checkout.InternalConfirmResult, Never>?
@@ -45,19 +43,16 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private var didFinish = false
 
     init(
-        checkout: CheckoutConfirmDataSource,
-        authorizationController: PKPaymentAuthorizationController,
-        authenticationContext: STPAuthenticationContext
+        checkoutSession: Checkout.Session,
+        checkoutApplePayDataSource: CheckoutApplePayDataSource,
+        authorizationController: PKPaymentAuthorizationController
     ) {
-        self.checkout = checkout
-        self.session = checkout.session
-        self.merchantLabel = checkout.merchantDisplayName
-        self.apiClient = checkout.apiClient
-        self.paymentHandler = checkout.paymentHandler
-        self.returnURL = checkout.returnURL
+        self.session = checkoutSession
+        self.checkoutApplePayDataSource = checkoutApplePayDataSource
         self.authorizationController = authorizationController
-        self.authenticationContext = authenticationContext
-        self.presentationWindow = authenticationContext.authenticationPresentingViewController().view.window
+        self.merchantLabel = checkoutApplePayDataSource.merchantDisplayName
+        self.apiClient = checkoutApplePayDataSource.apiClient
+        self.returnURL = checkoutApplePayDataSource.returnURL
         super.init()
     }
 
@@ -92,7 +87,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 if self.didCancelOrTimeoutWhilePending {
                     self.finishAndDismiss()
                 } else {
-                    // TODO: Add a willCompleteWithResult hook so callers can attach PKPaymentOrderDetails.
                     switch paymentSheetResult {
                     case .completed:
                         completion(PKPaymentAuthorizationResult(status: .success, errors: nil))
@@ -104,13 +98,13 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
             do {
                 // 1. Create PaymentMethod
-                let currentSession = self.checkout?.session ?? self.session
+                let checkoutSession = self.session
                 let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-                    intent: .checkout(currentSession),
-                    elementsSession: currentSession.elementsSession
+                    intent: .checkout(checkoutSession),
+                    elementsSession: checkoutSession.elementsSession
                 )
                 var fallbackBillingDetails: StripeAPI.BillingDetails?
-                if let email = currentSession.email {
+                if let email = checkoutSession.email {
                     var details = StripeAPI.BillingDetails()
                     details.email = email
                     fallbackBillingDetails = details
@@ -129,12 +123,14 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     return // The user canceled mid-payment - just abort
                 }
                 self.paymentState = .pending  // After this point, we can't cancel
-                let savePaymentMethod: Bool? = currentSession.noPaymentRequired ? nil
-                    : currentSession.merchantWillSavePaymentMethod(STPPaymentMethodType.card) ? true : nil
+                let savePaymentMethod: Bool? = checkoutSession.noPaymentRequired ? nil
+                    : checkoutSession.merchantWillSavePaymentMethod(STPPaymentMethodType.card) ? true : nil
+
+                // 2. Confirm
                 let response = try await self.apiClient.confirmCheckoutSession(
-                    sessionId: currentSession.id,
+                    sessionId: checkoutSession.id,
                     paymentMethod: paymentMethod.id,
-                    expectedAmount: currentSession.expectedAmount(),
+                    expectedAmount: checkoutSession.expectedAmount(),
                     expectedPaymentMethodType: paymentMethod.type?.rawValue ?? STPPaymentMethodType.card.identifier,
                     savePaymentMethod: savePaymentMethod,
                     returnURL: self.returnURL,
@@ -142,18 +138,20 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     clientAttributionMetadata: clientAttributionMetadata
                 )
 
-                // 3. Handle next actions
-                let paymentSheetResult = try await Checkout.handleCheckoutSessionConfirmResponse(
-                    response: response,
-                    returnURL: self.returnURL,
-                    authenticationContext: self.authenticationContext,
-                    paymentHandler: self.paymentHandler
-                )
+                // We can't present a next action here (the Apple Pay sheet is still up), so fail fast
+                // instead of routing through `handleNextAction`
+                if let responseStatus = self.responseStatus(response) {
+                    handleFailure(CheckoutError.applePayRequiresNextAction(status: responseStatus))
+                    return
+                }
 
-                // 4. Commit the confirmed session back to Checkout so its state stays current.
-                try await self.checkout?.commitSession(response)
+                // 3. Commit the confirmed session back to Checkout so its state stays current.
+                try await self.checkoutApplePayDataSource?.commitSession(response)
 
-                handleSuccess(paymentSheetResult, response)
+                // TODO: post-next-action work
+
+                handleSuccess(.completed, response)
+                
             } catch {
                 handleFailure(error)
             }
@@ -187,10 +185,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 self._end()
             }
         }
-    }
-
-    nonisolated func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
-        return presentationWindow
     }
 
     func paymentAuthorizationController(
@@ -252,10 +246,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     // MARK: - Factory
 
     static func create(
-        checkout: CheckoutConfirmDataSource,
-        authenticationContext: STPAuthenticationContext
+        checkoutSession: Checkout.Session,
+        checkoutApplePayDataSource: CheckoutApplePayDataSource
     ) throws -> CheckoutApplePayContext {
-        guard let applePayConfig = checkout.applePayConfiguration else {
+        guard let applePayConfig = checkoutApplePayDataSource.applePayConfiguration else {
             throw CheckoutError.applePayNotConfigured
         }
 
@@ -265,7 +259,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
         // TODO: Product Usage
 
-        let checkoutSession = checkout.session
         let countryCode = checkoutSession.elementsSession.merchantCountryCode ?? "US"
         let paymentRequest = StripeAPI.paymentRequest(
             withMerchantIdentifier: applePayConfig.merchantId,
@@ -275,7 +268,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
         assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `Checkout.ApplePayConfiguration`.")
 
-        let merchantLabel = checkout.merchantDisplayName
+        let merchantLabel = checkoutApplePayDataSource.merchantDisplayName
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
 
         // TODO: Set requiredShippingContactFields when shipping address collection is implemented.
@@ -288,9 +281,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         }
         let authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
         return CheckoutApplePayContext(
-            checkout: checkout,
-            authorizationController: authorizationController,
-            authenticationContext: authenticationContext
+            checkoutSession: checkoutSession,
+            checkoutApplePayDataSource: checkoutApplePayDataSource,
+            authorizationController: authorizationController
         )
     }
 
@@ -312,7 +305,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     // MARK: - Helpers
 
     private func summaryItems() -> [PKPaymentSummaryItem] {
-        let session = checkout?.session ?? self.session
         return Self.makeSummaryItems(for: session, label: merchantLabel)
     }
 
@@ -341,6 +333,17 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             self.resume(with: self.result ?? .init(paymentSheetResult: .canceled))
             self._end()
         }
+    }
+
+    private func responseStatus(_ response: PaymentPagesAPIResponse) -> String? {
+        if let paymentIntent = response.paymentIntent,
+           paymentIntent.status != .succeeded, paymentIntent.status != .requiresCapture {
+            return String(describing: paymentIntent.status)
+        }
+        if let setupIntent = response.setupIntent, setupIntent.status != .succeeded {
+            return String(describing: setupIntent.status)
+        }
+        return nil
     }
 
     private func makeShippingDetailsParams(from payment: PKPayment) -> STPPaymentIntentShippingDetailsParams? {

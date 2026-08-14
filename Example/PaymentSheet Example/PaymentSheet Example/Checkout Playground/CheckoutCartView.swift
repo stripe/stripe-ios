@@ -153,9 +153,9 @@ struct CheckoutCartView: View {
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             config.currencySelectorElement.appearance = currencySelectorAppearance
-            config.expressCheckoutElement.confirmHandler = { [self] result in
+            config.expressCheckoutElement = .init(confirmHandler: { result in
                 eceConfirmResult = result
-            }
+            })
             checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription

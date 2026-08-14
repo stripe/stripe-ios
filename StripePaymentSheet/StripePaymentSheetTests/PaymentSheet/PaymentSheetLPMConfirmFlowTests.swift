@@ -57,9 +57,9 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     struct TestIntent {
         let description: String
         let intent: Intent
-        let checkout: (any CheckoutConfirmDataSource)?
+        let checkout: (any CheckoutApplePayDataSource)?
 
-        init(_ description: String, _ intent: Intent, checkout: (any CheckoutConfirmDataSource)? = nil) {
+        init(_ description: String, _ intent: Intent, checkout: (any CheckoutApplePayDataSource)? = nil) {
             self.description = description
             self.intent = intent
             self.checkout = checkout
@@ -67,7 +67,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     /// Mock stand-in for a full `Checkout` object.
-    final class TestCheckoutSessionUpdater: CheckoutConfirmDataSource, CheckoutSessionBillingAddressUpdater {
+    final class TestCheckoutSessionUpdater: CheckoutApplePayDataSource, CheckoutSessionBillingAddressUpdater {
         private(set) var session: Checkout.Session
         // Apple Pay is not exercised in these LPM confirm flow tests.
         var applePayConfiguration: Checkout.ApplePayConfiguration? { nil }
@@ -1749,10 +1749,11 @@ extension PaymentSheetLPMConfirmFlowTests {
                 analyticsHelper: analyticsHelper
             )
             let result = await Checkout.confirm(
-                checkout: checkout,
+                checkoutSession: (checkout as! TestCheckoutSessionUpdater).session,
                 confirmationContext: confirmationContext,
                 authenticationContext: self,
-                paymentHandler: paymentHandler
+                paymentHandler: paymentHandler,
+                checkoutApplePayDataSource: checkout
             )
             completion(result.paymentSheetResult, nil)
         }
