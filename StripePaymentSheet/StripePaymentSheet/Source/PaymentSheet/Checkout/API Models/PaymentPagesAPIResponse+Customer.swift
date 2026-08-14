@@ -9,43 +9,50 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-/// Customer data from a CheckoutSession response.
-struct STPCheckoutSessionCustomer {
-    /// The customer ID.
-    let id: String
+extension PaymentPagesAPIResponse {
+    /// Customer data from a Checkout Session response.
+    struct Customer: Decodable {
+        /// The customer ID.
+        let id: String
 
-    /// Saved payment methods for this customer.
-    let paymentMethods: [STPPaymentMethod]
+        /// Saved payment methods for this customer.
+        let paymentMethods: [STPPaymentMethod]
 
-    /// Whether the customer can detach saved payment methods via payment pages.
-    let canDetachPaymentMethod: Bool
+        /// Whether the customer can detach saved payment methods via Payment Pages.
+        let canDetachPaymentMethod: Bool
 
-    /// Customer email address.
-    let email: String?
+        /// Customer email address.
+        let email: String?
 
-    /// Customer name.
-    let name: String?
+        /// Customer name.
+        let name: String?
 
-    /// Customer phone number.
-    let phone: String?
+        /// Customer phone number.
+        let phone: String?
 
-    static func decodedObject(from dict: [AnyHashable: Any]?) -> STPCheckoutSessionCustomer? {
-        guard let dict = dict,
-              let id = dict["id"] as? String else {
-            return nil
+        private enum CodingKeys: String, CodingKey {
+            case id
+            case paymentMethods
+            case canDetachPaymentMethod
+            case email
+            case name
+            case phone
         }
 
-        // Parse payment methods array
-        let paymentMethods: [STPPaymentMethod] = (dict["payment_methods"] as? [[AnyHashable: Any]])?
-            .compactMap { STPPaymentMethod.decodedObject(fromAPIResponse: $0) } ?? []
-
-        return STPCheckoutSessionCustomer(
-            id: id,
-            paymentMethods: paymentMethods,
-            canDetachPaymentMethod: dict["can_detach_payment_method"] as? Bool ?? false,
-            email: dict["email"] as? String,
-            name: dict["name"] as? String,
-            phone: dict["phone"] as? String
-        )
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            id = try container.decode(String.self, forKey: .id)
+            paymentMethods = try container.decodeIfPresent(
+                [LegacyDecoded<STPPaymentMethod>].self,
+                forKey: .paymentMethods
+            )?.map(\.value) ?? []
+            canDetachPaymentMethod = try container.decodeIfPresent(
+                Bool.self,
+                forKey: .canDetachPaymentMethod
+            ) ?? false
+            email = try container.decodeIfPresent(String.self, forKey: .email)
+            name = try container.decodeIfPresent(String.self, forKey: .name)
+            phone = try container.decodeIfPresent(String.self, forKey: .phone)
+        }
     }
 }

@@ -7,6 +7,7 @@
 //
 
 @testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 import StripePaymentsObjcTestUtils
@@ -17,11 +18,11 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     // MARK: - STPAPIResponseDecodable Tests
 
-    func testDecodedObjectFromAPIResponseRequiredFields() {
-        let fullJson = STPTestUtils.jsonNamed("CheckoutSession")
+    func testDecodedObjectFromAPIResponseRequiredFields() throws {
+        let fullJson = try XCTUnwrap(STPTestUtils.jsonNamed("CheckoutSession"))
 
-        XCTAssertNotNil(
-            PaymentPagesAPIResponse.decodedObject(fromAPIResponse: fullJson),
+        XCTAssertNoThrow(
+            try PaymentPagesAPIResponse.decode(fromAPIResponse: fullJson),
             "can decode with full json"
         )
 
@@ -32,6 +33,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "mode",
             "checkout_items",
             "livemode",
+            "status",
             "payment_status",
             "payment_method_types",
             "elements_session",
@@ -39,18 +41,18 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         for field in requiredFields {
             var partialJson = fullJson
-            XCTAssertNotNil(partialJson?[field])
-            partialJson?.removeValue(forKey: field)
-            XCTAssertNil(
-                PaymentPagesAPIResponse.decodedObject(fromAPIResponse: partialJson),
+            XCTAssertNotNil(partialJson[field])
+            partialJson.removeValue(forKey: field)
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: partialJson),
                 "should fail to decode without \(field)"
             )
         }
 
         var emptyCurrencyJson = fullJson
-        emptyCurrencyJson?["currency"] = ""
-        XCTAssertNil(
-            PaymentPagesAPIResponse.decodedObject(fromAPIResponse: emptyCurrencyJson),
+        emptyCurrencyJson["currency"] = ""
+        XCTAssertThrowsError(
+            try PaymentPagesAPIResponse.decode(fromAPIResponse: emptyCurrencyJson),
             "should fail to decode with an empty currency"
         )
     }
@@ -59,12 +61,68 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         var json = STPTestUtils.jsonNamed("CheckoutSession")!
         // Invalid elements_session - missing payment_method_preference
         json["elements_session"] = ["garbage": true]
-        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+    }
+
+    func testDecodingErrorIncludesNestedFieldPath() throws {
+        let json = modifyingOneTimePriceItem { item in
+            item.removeValue(forKey: "quantity")
+        }
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json)) { error in
+            guard case .keyNotFound(let key, let context) = error as? DecodingError else {
+                return XCTFail("Expected keyNotFound, got \(error)")
+            }
+            XCTAssertEqual(key.stringValue, "quantity")
+            XCTAssertEqual(
+                context.codingPath.map(\.stringValue),
+                ["checkoutItems", "0", "oneTimePrice", "items", "0"]
+            )
+        }
+    }
+
+    func testLegacyDecodedPaymentMethodErrorIncludesArrayIndex() {
+        var json = CheckoutTestHelpers.baseSessionJSON
+        json["customer"] = [
+            "id": "cus_123",
+            "payment_methods": [["id": "pm_missing_created"]],
+        ]
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json)) { error in
+            guard case .dataCorrupted(let context) = error as? DecodingError else {
+                return XCTFail("Expected dataCorrupted, got \(error)")
+            }
+            XCTAssertEqual(
+                context.codingPath.map(\.stringValue),
+                ["customer", "paymentMethods", "0"]
+            )
+            XCTAssertTrue(context.debugDescription.contains("STPPaymentMethod"))
+        }
+    }
+
+    func testUnexpectedParsingErrorReporterAssertsAndSendsAnalytic() {
+        let analyticsClient = MockAnalyticsClient()
+        let error = DecodingError.dataCorrupted(
+            .init(codingPath: [], debugDescription: "Invalid customer")
+        )
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+
+        reportUnexpectedPaymentPagesParsingError(
+            error,
+            apiClient: STPAPIClient(publishableKey: "pk_test_123"),
+            analyticsClient: analyticsClient
+        )
+
+        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("Invalid customer"))
+        let analytic = analyticsClient.loggedAnalytics.last as? UnexpectedCheckoutElementsErrorAnalytic
+        XCTAssertEqual(analytic?.errorCode, .paymentPagesResponseParsingFailed)
+        XCTAssertTrue(analytic?.errorMessage.contains("Invalid customer") == true)
     }
 
     func testDecodedObjectFromAPIResponseMapping() {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let apiResponse = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        let apiResponse = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
         let session = apiResponse.makePublicSession()
 
         // The response object retains API-shaped values without public-model conversion.
@@ -176,7 +234,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testDecodedObjectWithMinimalRequiredFields() {
         // All required fields per API spec, but no optional fields
-        // status is nullable, so we omit it to test that behavior
         let apiResponse = CheckoutTestHelpers.makeSession([
             "session_id": "cs_test_minimal",
             "livemode": true,
@@ -184,7 +241,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = apiResponse.makePublicSession()
 
         XCTAssertEqual(session.id, "cs_test_minimal")
-        XCTAssertNil(session.status)
+        XCTAssertEqual(session.status?.type, .open)
         XCTAssertTrue(session.livemode)
 
         // Optional fields should be nil
@@ -201,6 +258,43 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNil(session.setupFutureUsage)
     }
 
+    func testExpandedIntentsDecodeLegacyModels() throws {
+        var paymentIntentJSON = CheckoutTestHelpers.baseSessionJSON
+        paymentIntentJSON["payment_intent"] = STPTestUtils.jsonNamed("PaymentIntent")!
+        let paymentIntentResponse = try PaymentPagesAPIResponse.decode(
+            fromAPIResponse: paymentIntentJSON
+        )
+
+        var setupIntentJSON = CheckoutTestHelpers.baseSessionJSON
+        setupIntentJSON["setup_intent"] = STPTestUtils.jsonNamed("SetupIntent")!
+        let setupIntentResponse = try PaymentPagesAPIResponse.decode(
+            fromAPIResponse: setupIntentJSON
+        )
+
+        XCTAssertEqual(
+            paymentIntentResponse.paymentIntent?.stripeId,
+            "pi_1Cl15wIl4IdHmuTbCWrpJXN6"
+        )
+        XCTAssertEqual(
+            setupIntentResponse.setupIntent?.stripeID,
+            "seti_123456789"
+        )
+    }
+
+    func testExpandedIntentsRejectMalformedObjects() {
+        var paymentIntentJSON = CheckoutTestHelpers.baseSessionJSON
+        paymentIntentJSON["payment_intent"] = ["id": "pi_invalid"]
+        XCTAssertThrowsError(
+            try PaymentPagesAPIResponse.decode(fromAPIResponse: paymentIntentJSON)
+        )
+
+        var setupIntentJSON = CheckoutTestHelpers.baseSessionJSON
+        setupIntentJSON["setup_intent"] = ["id": "seti_invalid"]
+        XCTAssertThrowsError(
+            try PaymentPagesAPIResponse.decode(fromAPIResponse: setupIntentJSON)
+        )
+    }
+
     func testDecodedObjectRejectsSetupMode() {
         let json = CheckoutTestHelpers.makeSessionJSON([
             "session_id": "cs_test_setup",
@@ -210,7 +304,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "setup_intent": "seti_test123456",
         ])
 
-        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
     func testModelessPaymentUsesSessionTotal() {
@@ -280,7 +374,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                 "payment_methods": [],
                 "can_detach_payment_method": false,
             ],
-        ])
+        ]).makePublicSession()
 
         XCTAssertFalse(session.customer?.canDetachPaymentMethod ?? true)
     }
@@ -291,7 +385,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                 "id": "cus_test_123",
                 "payment_methods": [],
             ],
-        ])
+        ]).makePublicSession()
 
         XCTAssertFalse(session.customer?.canDetachPaymentMethod ?? true)
     }
@@ -407,7 +501,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             ],
         ])
 
-        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
     func testUnifiedModeSessionRejectsMalformedOneTimePriceItems() {
@@ -430,34 +524,34 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             ],
         ])
 
-        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
     func testUnifiedModeSessionRejectsEmptyCheckoutItems() {
         let json = CheckoutTestHelpers.makeSessionJSON(["checkout_items": []])
 
-        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
     func testUnifiedModeSessionRejectsNonModelessMode() {
         let json = CheckoutTestHelpers.makeSessionJSON(["mode": "payment"])
 
-        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
     func testUnifiedModeSessionRejectsMissingRequiredOneTimePriceFields() {
         for field in ["key", "type", "one_time_price"] {
             let json = modifyingCheckoutItem { $0.removeValue(forKey: field) }
-            XCTAssertNil(
-                PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json),
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
                 "Expected missing checkout item field \(field) to fail decoding"
             )
         }
 
         for field in ["items", "subtotal", "total"] {
             let json = modifyingOneTimePrice { $0.removeValue(forKey: field) }
-            XCTAssertNil(
-                PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json),
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
                 "Expected missing one_time_price field \(field) to fail decoding"
             )
         }
@@ -477,8 +571,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         for field in requiredFields {
             let json = modifyingOneTimePriceItem { $0.removeValue(forKey: field) }
-            XCTAssertNil(
-                PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json),
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
                 "Expected missing nested item field \(field) to fail decoding"
             )
         }
@@ -487,22 +581,22 @@ class PaymentPagesAPIResponseTest: XCTestCase {
     func testUnifiedModeSessionRejectsMissingRequiredPriceAndProductFields() {
         for field in ["id", "currency", "product"] {
             let json = modifyingPrice { $0.removeValue(forKey: field) }
-            XCTAssertNil(
-                PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json),
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
                 "Expected missing Price field \(field) to fail decoding"
             )
         }
 
         for field in ["name", "images"] {
             let json = modifyingProduct { $0.removeValue(forKey: field) }
-            XCTAssertNil(
-                PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json),
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
                 "Expected missing Product field \(field) to fail decoding"
             )
         }
 
         let mismatchedCurrencyJSON = modifyingPrice { $0["currency"] = "eur" }
-        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: mismatchedCurrencyJSON))
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: mismatchedCurrencyJSON))
     }
 
     func testUnifiedModeSessionRejectsMalformedTaxAmounts() {
@@ -522,8 +616,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                 taxAmount.removeValue(forKey: field)
                 item["tax_amounts"] = [taxAmount]
             }
-            XCTAssertNil(
-                PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json),
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
                 "Expected missing tax amount field \(field) to fail decoding"
             )
         }
@@ -536,8 +630,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                 taxAmount["tax_rate"] = taxRate
                 item["tax_amounts"] = [taxAmount]
             }
-            XCTAssertNil(
-                PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json),
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
                 "Expected missing tax rate field \(field) to fail decoding"
             )
         }
@@ -547,7 +641,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let invalidDecimalJSON = modifyingOneTimePriceItem {
             $0["unit_amount_decimal"] = "not-a-decimal"
         }
-        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: invalidDecimalJSON))
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: invalidDecimalJSON))
 
         let missingAmountJSON = modifyingOneTimePriceItem { item in
             item.removeValue(forKey: "unit_amount")
@@ -556,7 +650,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             price.removeValue(forKey: "unit_amount")
             item["price"] = price
         }
-        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: missingAmountJSON))
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: missingAmountJSON))
     }
 
     func testUnifiedModeSessionMapsDecimalOnlyAmountLikeEwCS() throws {
@@ -568,7 +662,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             item["price"] = price
         }
 
-        let response = try XCTUnwrap(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
         let session = response.makePublicSession()
         guard case .oneTimePrice(let oneTimePrice) = session.orderSummaryItems.first else {
             return XCTFail("Expected one-time Price order summary item")
@@ -584,9 +678,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let enabledJSON = modifyingOneTimePriceItem {
             $0["adjustable_quantity"] = ["enabled": true]
         }
-        let enabledResponse = try XCTUnwrap(
-            PaymentPagesAPIResponse.decodedObject(fromAPIResponse: enabledJSON)
-        )
+        let enabledResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: enabledJSON)
         guard case .oneTimePrice(let enabledOneTimePrice) = enabledResponse.makePublicSession().orderSummaryItems.first else {
             return XCTFail("Expected one-time Price order summary item")
         }
@@ -598,9 +690,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let disabledJSON = modifyingOneTimePriceItem {
             $0["adjustable_quantity"] = ["enabled": false]
         }
-        let disabledResponse = try XCTUnwrap(
-            PaymentPagesAPIResponse.decodedObject(fromAPIResponse: disabledJSON)
-        )
+        let disabledResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: disabledJSON)
         guard case .oneTimePrice(let disabledOneTimePrice) = disabledResponse.makePublicSession().orderSummaryItems.first else {
             return XCTFail("Expected one-time Price order summary item")
         }
@@ -609,7 +699,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testUnifiedModeSessionAllowsEmptyNestedItems() throws {
         let json = modifyingOneTimePrice { $0["items"] = [] }
-        let response = try XCTUnwrap(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
         guard case .oneTimePrice(let oneTimePrice) = response.makePublicSession().orderSummaryItems.first else {
             return XCTFail("Expected one-time Price order summary item")
         }
@@ -790,7 +880,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         var jsonWithoutES = CheckoutTestHelpers.baseSessionJSON
         jsonWithoutES.removeValue(forKey: "elements_session")
-        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: jsonWithoutES))
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: jsonWithoutES))
     }
 
     private func modifyingCheckoutItem(
