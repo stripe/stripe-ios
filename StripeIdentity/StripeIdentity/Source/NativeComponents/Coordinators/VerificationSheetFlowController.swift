@@ -94,13 +94,6 @@ final class VerificationSheetFlowController: NSObject {
     private(set) var documentUploader: DocumentUploaderProtocol?
 
     init(
-        brandLogo: UIImage
-    ) {
-        self.brandLogo = brandLogo
-        self.biometricConsentConfiguration = nil
-    }
-
-    init(
         configuration: IdentityVerificationSheet.Configuration
     ) {
         self.brandLogo = configuration.brandLogo
