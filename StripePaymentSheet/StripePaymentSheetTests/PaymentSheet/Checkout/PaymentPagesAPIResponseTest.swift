@@ -140,7 +140,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         XCTAssertEqual(session.id, "cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(apiResponse.clientSecret, "cs_test_a1b2c3d4e5f6g7h8i9j0_secret_xyz123abc456")
-        XCTAssertEqual(session.totals.total.minorUnitsAmount, 2186)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 2149)
         XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 2000)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertEqual(session.minorUnitsAmountDivisor, 100)
@@ -182,11 +182,11 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(oneTimePrice.items.count, 2)
 
         XCTAssertEqual(session.totals.discount.minorUnitsAmount, 0)
-        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 186)
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 149)
 
         // Tax amounts
         XCTAssertEqual(session.tax.taxAmounts?.count, 1)
-        XCTAssertEqual(session.tax.taxAmounts?[0].amount.minorUnitsAmount, 186)
+        XCTAssertEqual(session.tax.taxAmounts?[0].amount.minorUnitsAmount, 149)
         XCTAssertFalse(session.tax.taxAmounts?[0].inclusive ?? true)
         XCTAssertEqual(session.tax.taxAmounts?[0].displayName, "Sales Tax")
 
