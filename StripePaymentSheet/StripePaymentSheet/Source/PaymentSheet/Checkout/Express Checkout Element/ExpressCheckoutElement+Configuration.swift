@@ -16,7 +16,7 @@ extension ExpressCheckoutElement {
         /// Called after a wallet payment confirmation completes.
         public var confirmHandler: ConfirmHandler = { _ in }
 
-        /// Creates a configuration.
+        /// Creates a configuration with default values.
         public init() {
         }
     }
