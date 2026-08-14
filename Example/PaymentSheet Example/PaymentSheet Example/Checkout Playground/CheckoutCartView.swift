@@ -160,7 +160,6 @@ struct CheckoutCartView: View {
                 eceConfirmResult = result
             })
             config.expressCheckoutElement.billingDetailsCollectionConfiguration = expressCheckoutElementBillingDetailsCollectionConfiguration
-            config.expressCheckoutElement.confirmHandler = { [self] result in
             config.shippingAddressElement.title = "Shipping Address"
             config.shippingAddressElement.buttonTitle = "Save Address"
             checkout = try await Checkout(configuration: config)
