@@ -2,6 +2,9 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### Payments
+* [Fixed] `STPPaymentCardTextField.isValid` no longer returns `true` while the US ZIP field holds an incomplete postal code. Postal validation now goes through `STPPostalCodeValidator`, matching `STPCardFormView`.
+
 ### PaymentSheet
 * [Added] StripePaymentSheet now depends on `StripeFinancialConnectionsLite` to support lightweight bank payment flows. If you use StripePaymentSheet with Carthage or by manually embedding the .xcframeworks, [you must also embed StripeFinancialConnectionsLite.xcframework](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2670) in your app. No action is required for CocoaPods or Swift Package Manager users.
 
