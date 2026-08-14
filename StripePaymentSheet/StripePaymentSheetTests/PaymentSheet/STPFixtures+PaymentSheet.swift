@@ -263,6 +263,13 @@ extension STPElementsSession {
 }
 
 extension Intent {
+    struct CheckoutOneTimePriceItemFixture {
+        let key: String
+        let displayName: String
+        let quantity: Int
+        let unitAmount: Int
+    }
+
     static func _testPaymentIntent(
         paymentMethodTypes: [STPPaymentMethodType],
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
@@ -299,7 +306,7 @@ extension Intent {
         amount: Int? = 2345,
         currency: String = "USD",
         email: String? = nil,
-        lineItems: [Checkout.LineItem] = [],
+        oneTimePriceItems: [CheckoutOneTimePriceItemFixture]? = nil,
         subtotal: Int? = nil,
         shippingAmount: Int = 0,
         taxAmount: Int = 0,
@@ -333,23 +340,45 @@ extension Intent {
             json["tax_context"] = taxContext
         }
 
-        if !lineItems.isEmpty {
-            json["checkout_items"] = lineItems.map { item -> [String: Any] in
-                return [
-                    "key": item.id,
-                    "type": "one_time_price_item",
-                    "one_time_price_item": [
-                        "quantity": item.quantity,
-                        "price": [
-                            "id": "price_\(item.id)",
-                            "currency": currency.lowercased(),
-                            "unit_amount": item.unitAmount?.minorUnitsAmount ?? 0,
-                            "product": ["name": item.name],
-                        ],
-                    ],
-                ]
-            }
+        let oneTimePriceItems = oneTimePriceItems ?? [
+            CheckoutOneTimePriceItemFixture(
+                key: "default",
+                displayName: "Test product",
+                quantity: 1,
+                unitAmount: subtotal ?? amount ?? 0
+            ),
+        ]
+        let rawOneTimePriceItems = oneTimePriceItems.enumerated().map { index, item -> [String: Any] in
+            return [
+                "inner_item_key": "checkout_item_inner_\(index)",
+                "quantity": item.quantity,
+                "subtotal": item.unitAmount * item.quantity,
+                "total": item.unitAmount * item.quantity,
+                "tax_amounts": [],
+                "tax_inclusive": 0,
+                "tax_exclusive": 0,
+                "price": [
+                    "id": "price_\(item.key)",
+                    "currency": currency.lowercased(),
+                    "unit_amount": item.unitAmount,
+                    "product": ["name": item.displayName, "images": []],
+                ],
+            ]
         }
+        let oneTimePriceSubtotal = rawOneTimePriceItems.reduce(0) {
+            $0 + ($1["subtotal"] as? Int ?? 0)
+        }
+        json["checkout_items"] = [
+            [
+                "key": "checkout_item_test",
+                "type": "one_time_price",
+                "one_time_price": [
+                    "items": rawOneTimePriceItems,
+                    "subtotal": oneTimePriceSubtotal,
+                    "total": oneTimePriceSubtotal,
+                ],
+            ],
+        ]
         if shippingAmount != 0 {
             json["shipping_rate"] = [
                 "id": "shr_test",
@@ -363,6 +392,11 @@ extension Intent {
             recurringDetails["total_tax_amounts"] = [[
                 "amount": taxAmount,
                 "inclusive": false,
+                "tax_rate": [
+                    "display_name": "Tax",
+                    "percentage": 0.0,
+                    "rate_type": "percentage",
+                ],
                 "taxable_amount": (subtotal ?? amount ?? 0),
             ], ]
         }

@@ -28,6 +28,9 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         // Required fields per API spec (non-nullable)
         let requiredFields = [
             "session_id",
+            "currency",
+            "mode",
+            "checkout_items",
             "livemode",
             "payment_status",
             "payment_method_types",
@@ -43,6 +46,13 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                 "should fail to decode without \(field)"
             )
         }
+
+        var emptyCurrencyJson = fullJson
+        emptyCurrencyJson?["currency"] = ""
+        XCTAssertNil(
+            PaymentPagesAPIResponse.decodedObject(fromAPIResponse: emptyCurrencyJson),
+            "should fail to decode with an empty currency"
+        )
     }
 
     func testDecodedObjectFromAPIResponseMalformedElementsSession() {
@@ -63,7 +73,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(apiResponse.paymentStatus, "unpaid")
         XCTAssertEqual(apiResponse.totalSummary?.subtotal, 2000)
         XCTAssertEqual(apiResponse.totalSummary?.total, 2686)
-        XCTAssertEqual(apiResponse.checkoutItems.first?.type, "one_time_price_item")
+        XCTAssertEqual(apiResponse.checkoutItems.first?.key, "ci_1abc")
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.activePresentmentCurrency, "eur")
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.integrationAmount, 12000)
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.integrationCurrency, "usd")
@@ -110,16 +120,11 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         XCTAssertNotNil(session.paymentMethodOptions)
 
-        // Line items
-        XCTAssertEqual(session.lineItems.count, 2)
-        XCTAssertEqual(session.lineItems[0].id, "li_1abc")
-        XCTAssertEqual(session.lineItems[0].name, "Widget")
-        XCTAssertEqual(session.lineItems[0].quantity, 2)
-        XCTAssertEqual(session.lineItems[0].unitAmount?.minorUnitsAmount, 750)
-        XCTAssertEqual(session.lineItems[1].id, "li_2def")
-        XCTAssertEqual(session.lineItems[1].name, "Gadget")
-        XCTAssertEqual(session.lineItems[1].quantity, 1)
-        XCTAssertEqual(session.lineItems[1].unitAmount?.minorUnitsAmount, 500)
+        XCTAssertEqual(session.orderSummaryItems.count, 1)
+        guard case .oneTimePrice(let oneTimePrice) = session.orderSummaryItems.first else {
+            return XCTFail("Expected one-time Price order summary item")
+        }
+        XCTAssertEqual(oneTimePrice.items.count, 2)
 
         // Totals — discount and tax
         XCTAssertEqual(session.total?.discount.minorUnitsAmount, 0)
@@ -184,7 +189,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         // Optional fields should be nil
         XCTAssertNil(session.total)
-        XCTAssertNil(session.currency)
+        XCTAssertEqual(session.currency, "usd")
         XCTAssertNil(apiResponse.clientSecret)
         XCTAssertNil(apiResponse.paymentIntentId)
         XCTAssertNil(apiResponse.setupIntentId)
@@ -196,20 +201,16 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNil(session.setupFutureUsage)
     }
 
-    func testDecodedObjectWithSetupMode() {
-        let apiResponse = CheckoutTestHelpers.makeSession([
+    func testDecodedObjectRejectsSetupMode() {
+        let json = CheckoutTestHelpers.makeSessionJSON([
             "session_id": "cs_test_setup",
             "status": "open",
             "mode": "setup",
             "payment_status": "no_payment_required",
             "setup_intent": "seti_test123456",
         ])
-        let session = apiResponse.makePublicSession()
 
-        XCTAssertEqual(session.status?.type, .open)
-        XCTAssertEqual(session.status?.paymentStatus, .noPaymentRequired)
-        XCTAssertEqual(apiResponse.setupIntentId, "seti_test123456")
-        XCTAssertNil(apiResponse.paymentIntentId)
+        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
     }
 
     func testModelessPaymentUsesSessionTotal() {
@@ -338,18 +339,31 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "checkout_items": [
                 [
                     "key": "checkout_item_abc123",
-                    "type": "one_time_price_item",
-                    "one_time_price_item": [
-                        "quantity": 2,
-                        "price": [
-                            "id": "price_test123",
-                            "currency": "usd",
-                            "unit_amount": 1000,
-                            "unit_amount_decimal": "1000",
-                            "product": [
-                                "name": "Classic T-Shirt",
-                                "description": "A comfy shirt",
-                                "images": ["https://example.com/shirt.png"],
+                    "type": "one_time_price",
+                    "one_time_price": [
+                        "subtotal": 2000,
+                        "total": 2148,
+                        "items": [
+                            [
+                                "inner_item_key": "checkout_item_inner_abc123",
+                                "quantity": 2,
+                                "subtotal": 2000,
+                                "total": 2148,
+                                "unit_amount": 1000,
+                                "unit_amount_decimal": "1000",
+                                "tax_amounts": [],
+                                "tax_inclusive": 0,
+                                "tax_exclusive": 148,
+                                "price": [
+                                    "id": "price_test123",
+                                    "currency": "usd",
+                                    "unit_amount": 1000,
+                                    "product": [
+                                        "name": "Classic T-Shirt",
+                                        "description": "A comfy shirt",
+                                        "images": ["https://example.com/shirt.png"],
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -357,14 +371,21 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             ],
         ]).makePublicSession()
 
-        XCTAssertEqual(session.lineItems.count, 1)
-        let item = session.lineItems[0]
-        XCTAssertEqual(item.id, "checkout_item_abc123")
-        XCTAssertEqual(item.name, "Classic T-Shirt")
-        XCTAssertEqual(item.description, "A comfy shirt")
-        XCTAssertEqual(item.images, ["https://example.com/shirt.png"])
-        XCTAssertEqual(item.quantity, 2)
-        XCTAssertEqual(item.unitAmount?.minorUnitsAmount, 1000)
+        XCTAssertEqual(session.orderSummaryItems.count, 1)
+        guard case .oneTimePrice(let oneTimePrice) = session.orderSummaryItems[0] else {
+            return XCTFail("Expected one-time price order summary item")
+        }
+        XCTAssertEqual(oneTimePrice.key, "checkout_item_abc123")
+        XCTAssertNil(oneTimePrice.description)
+        XCTAssertEqual(oneTimePrice.items.count, 1)
+        XCTAssertEqual(oneTimePrice.items[0].key, "price_test123")
+        XCTAssertEqual(oneTimePrice.items[0].displayName, "Classic T-Shirt")
+        XCTAssertEqual(oneTimePrice.items[0].images, ["https://example.com/shirt.png"])
+        XCTAssertEqual(oneTimePrice.items[0].quantity, 2)
+        XCTAssertEqual(oneTimePrice.items[0].unitAmount.minorUnitsAmount, 1000)
+        XCTAssertEqual(oneTimePrice.amountDetails.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(oneTimePrice.amountDetails.total.minorUnitsAmount, 2148)
+        XCTAssertEqual(oneTimePrice.amountDetails.taxExclusive.minorUnitsAmount, 148)
 
         XCTAssertEqual(session.tax.taxAmounts?.count, 1)
         XCTAssertEqual(session.tax.taxAmounts?[0].amount.minorUnitsAmount, 148)
@@ -379,33 +400,221 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.total?.total.minorUnitsAmount, 1816)
     }
 
-    func testUnifiedModeSessionSkipsUnsupportedCheckoutItemTypes() {
-        let session = CheckoutTestHelpers.makeSession([
-            "mode": "modeless",
+    func testUnifiedModeSessionRejectsUnsupportedCheckoutItemTypes() {
+        let json = CheckoutTestHelpers.makeSessionJSON([
             "checkout_items": [
                 ["key": "checkout_item_abc123", "type": "rate_card_subscription_item"],
             ],
-        ]).makePublicSession()
+        ])
 
-        XCTAssertTrue(session.lineItems.isEmpty)
+        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
     }
 
-    func testUnifiedModeSessionSkipsMalformedOneTimePriceItems() {
-        let session = CheckoutTestHelpers.makeSession([
-            "mode": "modeless",
+    func testUnifiedModeSessionRejectsMalformedOneTimePriceItems() {
+        let json = CheckoutTestHelpers.makeSessionJSON([
             "checkout_items": [
                 [
                     "key": "checkout_item_abc123",
-                    "type": "one_time_price_item",
-                    "one_time_price_item": [
-                        "quantity": 1,
-                        "price": ["id": "price_test123", "currency": "usd", "unit_amount": 1000],
+                    "type": "one_time_price",
+                    "one_time_price": [
+                        "subtotal": 1000,
+                        "total": 1000,
+                        "items": [
+                            [
+                                "quantity": 1,
+                                "price": ["id": "price_test123", "currency": "usd", "unit_amount": 1000],
+                            ],
+                        ],
                     ],
                 ],
             ],
-        ]).makePublicSession()
+        ])
 
-        XCTAssertTrue(session.lineItems.isEmpty)
+        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+    }
+
+    func testUnifiedModeSessionRejectsEmptyCheckoutItems() {
+        let json = CheckoutTestHelpers.makeSessionJSON(["checkout_items": []])
+
+        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+    }
+
+    func testUnifiedModeSessionRejectsNonModelessMode() {
+        let json = CheckoutTestHelpers.makeSessionJSON(["mode": "payment"])
+
+        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+    }
+
+    func testUnifiedModeSessionRejectsMissingRequiredOneTimePriceFields() {
+        for field in ["key", "type", "one_time_price"] {
+            let json = modifyingCheckoutItem { $0.removeValue(forKey: field) }
+            XCTAssertNil(
+                PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json),
+                "Expected missing checkout item field \(field) to fail decoding"
+            )
+        }
+
+        for field in ["items", "subtotal", "total"] {
+            let json = modifyingOneTimePrice { $0.removeValue(forKey: field) }
+            XCTAssertNil(
+                PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json),
+                "Expected missing one_time_price field \(field) to fail decoding"
+            )
+        }
+    }
+
+    func testUnifiedModeSessionRejectsMissingRequiredNestedItemFields() {
+        let requiredFields = [
+            "inner_item_key",
+            "price",
+            "quantity",
+            "subtotal",
+            "total",
+            "tax_amounts",
+            "tax_inclusive",
+            "tax_exclusive",
+        ]
+
+        for field in requiredFields {
+            let json = modifyingOneTimePriceItem { $0.removeValue(forKey: field) }
+            XCTAssertNil(
+                PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json),
+                "Expected missing nested item field \(field) to fail decoding"
+            )
+        }
+    }
+
+    func testUnifiedModeSessionRejectsMissingRequiredPriceAndProductFields() {
+        for field in ["id", "currency", "product"] {
+            let json = modifyingPrice { $0.removeValue(forKey: field) }
+            XCTAssertNil(
+                PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json),
+                "Expected missing Price field \(field) to fail decoding"
+            )
+        }
+
+        for field in ["name", "images"] {
+            let json = modifyingProduct { $0.removeValue(forKey: field) }
+            XCTAssertNil(
+                PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json),
+                "Expected missing Product field \(field) to fail decoding"
+            )
+        }
+
+        let mismatchedCurrencyJSON = modifyingPrice { $0["currency"] = "eur" }
+        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: mismatchedCurrencyJSON))
+    }
+
+    func testUnifiedModeSessionRejectsMalformedTaxAmounts() {
+        let validTaxRate: [String: Any] = [
+            "display_name": "Sales Tax",
+            "percentage": 7.25,
+        ]
+        let validTaxAmount: [String: Any] = [
+            "amount": 73,
+            "inclusive": false,
+            "tax_rate": validTaxRate,
+        ]
+
+        for field in ["amount", "inclusive", "tax_rate"] {
+            let json = modifyingOneTimePriceItem { item in
+                var taxAmount = validTaxAmount
+                taxAmount.removeValue(forKey: field)
+                item["tax_amounts"] = [taxAmount]
+            }
+            XCTAssertNil(
+                PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json),
+                "Expected missing tax amount field \(field) to fail decoding"
+            )
+        }
+
+        for field in ["display_name", "percentage"] {
+            let json = modifyingOneTimePriceItem { item in
+                var taxRate = validTaxRate
+                taxRate.removeValue(forKey: field)
+                var taxAmount = validTaxAmount
+                taxAmount["tax_rate"] = taxRate
+                item["tax_amounts"] = [taxAmount]
+            }
+            XCTAssertNil(
+                PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json),
+                "Expected missing tax rate field \(field) to fail decoding"
+            )
+        }
+    }
+
+    func testUnifiedModeSessionRejectsInvalidOrMissingAmountRepresentation() {
+        let invalidDecimalJSON = modifyingOneTimePriceItem {
+            $0["unit_amount_decimal"] = "not-a-decimal"
+        }
+        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: invalidDecimalJSON))
+
+        let missingAmountJSON = modifyingOneTimePriceItem { item in
+            item.removeValue(forKey: "unit_amount")
+            item.removeValue(forKey: "unit_amount_decimal")
+            var price = item["price"] as! [String: Any]
+            price.removeValue(forKey: "unit_amount")
+            item["price"] = price
+        }
+        XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: missingAmountJSON))
+    }
+
+    func testUnifiedModeSessionMapsDecimalOnlyAmountLikeEwCS() throws {
+        let json = modifyingOneTimePriceItem { item in
+            item.removeValue(forKey: "unit_amount")
+            item["unit_amount_decimal"] = "12.345"
+            var price = item["price"] as! [String: Any]
+            price.removeValue(forKey: "unit_amount")
+            item["price"] = price
+        }
+
+        let response = try XCTUnwrap(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+        let session = response.makePublicSession()
+        guard case .oneTimePrice(let oneTimePrice) = session.orderSummaryItems.first else {
+            return XCTFail("Expected one-time Price order summary item")
+        }
+        let item = try XCTUnwrap(oneTimePrice.items.first)
+        XCTAssertEqual(item.unitAmount.minorUnitsAmount, 0)
+        let unitAmountDecimal = try XCTUnwrap(item.unitAmountDecimal)
+        XCTAssertEqual(unitAmountDecimal.minorUnitsAmount, 12.345)
+        XCTAssertEqual(unitAmountDecimal.amount, "$0.12345")
+    }
+
+    func testUnifiedModeSessionMapsAdjustableQuantity() throws {
+        let enabledJSON = modifyingOneTimePriceItem {
+            $0["adjustable_quantity"] = ["enabled": true]
+        }
+        let enabledResponse = try XCTUnwrap(
+            PaymentPagesAPIResponse.decodedObject(fromAPIResponse: enabledJSON)
+        )
+        guard case .oneTimePrice(let enabledOneTimePrice) = enabledResponse.makePublicSession().orderSummaryItems.first else {
+            return XCTFail("Expected one-time Price order summary item")
+        }
+        let enabledQuantity = try XCTUnwrap(enabledOneTimePrice.items.first?.adjustableQuantity)
+        XCTAssertTrue(enabledQuantity.enabled)
+        XCTAssertEqual(enabledQuantity.minimum, 0)
+        XCTAssertEqual(enabledQuantity.maximum, 99)
+
+        let disabledJSON = modifyingOneTimePriceItem {
+            $0["adjustable_quantity"] = ["enabled": false]
+        }
+        let disabledResponse = try XCTUnwrap(
+            PaymentPagesAPIResponse.decodedObject(fromAPIResponse: disabledJSON)
+        )
+        guard case .oneTimePrice(let disabledOneTimePrice) = disabledResponse.makePublicSession().orderSummaryItems.first else {
+            return XCTFail("Expected one-time Price order summary item")
+        }
+        XCTAssertNil(disabledOneTimePrice.items.first?.adjustableQuantity)
+    }
+
+    func testUnifiedModeSessionAllowsEmptyNestedItems() throws {
+        let json = modifyingOneTimePrice { $0["items"] = [] }
+        let response = try XCTUnwrap(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json))
+        guard case .oneTimePrice(let oneTimePrice) = response.makePublicSession().orderSummaryItems.first else {
+            return XCTFail("Expected one-time Price order summary item")
+        }
+
+        XCTAssertTrue(oneTimePrice.items.isEmpty)
     }
 
     func testMerchantWillSavePaymentMethod_paymentModeWithoutSetupFutureUsage() {
@@ -447,24 +656,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
     func testMerchantWillSavePaymentMethod_paymentModeWithoutCustomer() {
         let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage": "off_session",
-        ])
-
-        XCTAssertFalse(session.makePublicSession().merchantWillSavePaymentMethod(.card))
-    }
-
-    func testMerchantWillSavePaymentMethod_setupModeWithCustomer() {
-        let session = CheckoutTestHelpers.makeSession([
-            "mode": "setup",
-            "payment_status": "no_payment_required",
-        ]).withCustomer()
-
-        XCTAssertTrue(session.makePublicSession().merchantWillSavePaymentMethod(.card))
-    }
-
-    func testMerchantWillSavePaymentMethod_setupModeWithoutCustomer() {
-        let session = CheckoutTestHelpers.makeSession([
-            "mode": "setup",
-            "payment_status": "no_payment_required",
         ])
 
         XCTAssertFalse(session.makePublicSession().merchantWillSavePaymentMethod(.card))
@@ -600,6 +791,56 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         var jsonWithoutES = CheckoutTestHelpers.baseSessionJSON
         jsonWithoutES.removeValue(forKey: "elements_session")
         XCTAssertNil(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: jsonWithoutES))
+    }
+
+    private func modifyingCheckoutItem(
+        _ mutation: (inout [String: Any]) -> Void
+    ) -> [String: Any] {
+        var json = CheckoutTestHelpers.makeSessionJSON()
+        var checkoutItems = json["checkout_items"] as! [[String: Any]]
+        mutation(&checkoutItems[0])
+        json["checkout_items"] = checkoutItems
+        return json
+    }
+
+    private func modifyingOneTimePrice(
+        _ mutation: (inout [String: Any]) -> Void
+    ) -> [String: Any] {
+        modifyingCheckoutItem { checkoutItem in
+            var oneTimePrice = checkoutItem["one_time_price"] as! [String: Any]
+            mutation(&oneTimePrice)
+            checkoutItem["one_time_price"] = oneTimePrice
+        }
+    }
+
+    private func modifyingOneTimePriceItem(
+        _ mutation: (inout [String: Any]) -> Void
+    ) -> [String: Any] {
+        modifyingOneTimePrice { oneTimePrice in
+            var items = oneTimePrice["items"] as! [[String: Any]]
+            mutation(&items[0])
+            oneTimePrice["items"] = items
+        }
+    }
+
+    private func modifyingPrice(
+        _ mutation: (inout [String: Any]) -> Void
+    ) -> [String: Any] {
+        modifyingOneTimePriceItem { item in
+            var price = item["price"] as! [String: Any]
+            mutation(&price)
+            item["price"] = price
+        }
+    }
+
+    private func modifyingProduct(
+        _ mutation: (inout [String: Any]) -> Void
+    ) -> [String: Any] {
+        modifyingPrice { price in
+            var product = price["product"] as! [String: Any]
+            mutation(&product)
+            price["product"] = product
+        }
     }
 
 }

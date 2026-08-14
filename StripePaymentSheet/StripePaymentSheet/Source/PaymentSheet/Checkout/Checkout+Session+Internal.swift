@@ -127,7 +127,7 @@ extension Checkout.Session {
             currencyOptions: currencyOptions,
             discountAmounts: discountAmounts,
             email: email,
-            lineItems: lineItems,
+            orderSummaryItems: orderSummaryItems,
             livemode: livemode,
             minorUnitsAmountDivisor: minorUnitsAmountDivisor,
             paymentOption: paymentOption.resolved(currentValue: self.paymentOption),
