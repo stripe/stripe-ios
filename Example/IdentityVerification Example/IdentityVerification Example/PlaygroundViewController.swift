@@ -45,7 +45,7 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet weak var phoneOtpContainerView: UIStackView!
 
     @IBOutlet weak var fallbackToDocumentSwitch: UISwitch!
-    private let hideBiometricConsentIconSwitch = UISwitch()
+    private let hideWelcomeBrandingHeaderSwitch = UISwitch()
     private let phoneElement: PhoneNumberElement
 
     private let phoneView: UIView
@@ -141,7 +141,7 @@ class PlaygroundViewController: UIViewController {
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
         // TODO(ccen) enable phoneOtpContainerView when backend adds support to PII
         phoneOtpContainerView.isHidden = true
-        addHideBiometricConsentIconSwitch()
+        addBiometricConfigurationSection()
         didChangeNewOrReuse(self)
     }
 
@@ -364,9 +364,9 @@ class PlaygroundViewController: UIViewController {
         var configuration = IdentityVerificationSheet.Configuration(
             brandLogo: UIImage(named: "BrandLogo")!
         )
-        if hideBiometricConsentIconSwitch.isOn {
+        if hideWelcomeBrandingHeaderSwitch.isOn {
             configuration.biometricConsent = .init(
-                showsIcon: false
+                hideBrandingHeader: true
             )
         }
 
@@ -430,22 +430,43 @@ class PlaygroundViewController: UIViewController {
         #endif
     }
 
-    private func addHideBiometricConsentIconSwitch() {
-        let label = UILabel()
-        label.text = "Hide merchant icon"
-        label.adjustsFontForContentSizeCategory = true
+    private func addBiometricConfigurationSection() {
+        let sectionLabel = UILabel()
+        sectionLabel.text = "Biometric configuration:"
+        sectionLabel.adjustsFontForContentSizeCategory = true
 
-        hideBiometricConsentIconSwitch.isOn = false
-        hideBiometricConsentIconSwitch.setContentHuggingPriority(.required, for: .horizontal)
+        let toggleLabel = UILabel()
+        toggleLabel.text = "Hide welcome branding header"
+        toggleLabel.adjustsFontForContentSizeCategory = true
 
-        let stackView = UIStackView(arrangedSubviews: [
-            label,
-            hideBiometricConsentIconSwitch,
+        hideWelcomeBrandingHeaderSwitch.isOn = false
+        hideWelcomeBrandingHeaderSwitch.setContentHuggingPriority(.required, for: .horizontal)
+
+        let toggleStackView = UIStackView(arrangedSubviews: [
+            toggleLabel,
+            hideWelcomeBrandingHeaderSwitch,
         ])
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.spacing = 8
-        nativeComponentsOptionsContainerView.addArrangedSubview(stackView)
+        toggleStackView.axis = .horizontal
+        toggleStackView.alignment = .center
+        toggleStackView.spacing = 8
+
+        let toggleContainerView = UIView()
+        toggleStackView.translatesAutoresizingMaskIntoConstraints = false
+        toggleContainerView.addSubview(toggleStackView)
+        NSLayoutConstraint.activate([
+            toggleStackView.topAnchor.constraint(equalTo: toggleContainerView.topAnchor),
+            toggleStackView.leadingAnchor.constraint(equalTo: toggleContainerView.leadingAnchor, constant: 16),
+            toggleStackView.trailingAnchor.constraint(equalTo: toggleContainerView.trailingAnchor),
+            toggleStackView.bottomAnchor.constraint(equalTo: toggleContainerView.bottomAnchor),
+        ])
+
+        let sectionStackView = UIStackView(arrangedSubviews: [
+            sectionLabel,
+            toggleContainerView,
+        ])
+        sectionStackView.axis = .vertical
+        sectionStackView.spacing = 8
+        nativeComponentsOptionsContainerView.addArrangedSubview(sectionStackView)
     }
 
     @IBAction func didChangeVerificationType(_ sender: Any) {
