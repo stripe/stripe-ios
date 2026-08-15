@@ -26,6 +26,7 @@ enum VerifyDocumentViaWalletManagerError: Error {
     // TODO: remove once the API returns this
     public static var shouldEnableVerifyDocumentViaWallet: Bool = false
     private static let localMerchantIdentifier = "merchant.com.stripe.IdentityVerification-Example"
+    private static let osVersionString = ProcessInfo.processInfo.operatingSystemVersionString
 
     private var shouldEnableVerifyDocumentViaWallet: Bool
     private var idDocumentTypeAllowlistKeys: [String]
@@ -53,24 +54,32 @@ enum VerifyDocumentViaWalletManagerError: Error {
     }
 
     func isVerifyDocumentViaWalletAvailable() async -> Bool {
+        VerifyWithWalletLogger.log("isVerifyDocumentViaWalletAvailable: osVersion=\(Self.osVersionString) shouldEnableVerifyDocumentViaWallet=\(shouldEnableVerifyDocumentViaWallet) idDocumentTypeAllowlistKeys=\(idDocumentTypeAllowlistKeys)")
         guard shouldEnableVerifyDocumentViaWallet else {
+            VerifyWithWalletLogger.log("isVerifyDocumentViaWalletAvailable=false, shouldEnableVerifyDocumentViaWallet is false")
             return false
         }
 
         guard #available(iOS 16.0, *) else {
+            VerifyWithWalletLogger.log("isVerifyDocumentViaWalletAvailable=false, iOS <16")
             return false
         }
 
-        return await !requestableDocumentDescriptors().isEmpty
+        let requestable = await requestableDocumentDescriptors()
+        VerifyWithWalletLogger.log("isVerifyDocumentViaWalletAvailable=\(!requestable.isEmpty), requestableDocumentDescriptors=\(requestable)")
+        return !requestable.isEmpty
     }
 
     @MainActor
     func requestDocument() async throws -> StripeAPI.VerificationPageWalletIdentitySessionSubmission.Status {
+        VerifyWithWalletLogger.log("requestDocument: osVersion=\(Self.osVersionString) shouldEnableVerifyDocumentViaWallet=\(shouldEnableVerifyDocumentViaWallet) idDocumentTypeAllowlistKeys=\(idDocumentTypeAllowlistKeys)")
         guard shouldEnableVerifyDocumentViaWallet else {
+            VerifyWithWalletLogger.logError("requestDocument: unavailable, shouldEnableVerifyDocumentViaWallet is false")
             throw VerifyDocumentViaWalletManagerError.unavailable
         }
 
         guard #available(iOS 16.0, *) else {
+            VerifyWithWalletLogger.logError("requestDocument: unavailable, iOS <16")
             throw VerifyDocumentViaWalletManagerError.unavailable
         }
 
@@ -81,6 +90,8 @@ enum VerifyDocumentViaWalletManagerError: Error {
             VerifyWithWalletLogger.logError("failed to decode nonce")
             throw VerifyDocumentViaWalletManagerError.invalidNonce
         }
+
+        await logPerDescriptorCanRequestDiagnostics(documentRequests: walletSession.request.documentRequests)
 
         guard let descriptor = try makeSubmittableDocumentDescriptor(
             documentRequests: walletSession.request.documentRequests
@@ -116,11 +127,19 @@ enum VerifyDocumentViaWalletManagerError: Error {
         merchantIdentifier: String,
         encryptedData: Data
     ) {
-        guard #available(iOS 16.0, *),
-            let descriptor = await requestableDocumentDescriptors().first
-        else {
+        VerifyWithWalletLogger.log("requestLocalDocumentData: osVersion=\(Self.osVersionString) idDocumentTypeAllowlistKeys=\(idDocumentTypeAllowlistKeys)")
+        guard #available(iOS 16.0, *) else {
+            VerifyWithWalletLogger.logError("requestLocalDocumentData: unavailable, iOS <16")
             throw VerifyDocumentViaWalletManagerError.unavailable
         }
+
+        let requestableDescriptors = await requestableDocumentDescriptors()
+        VerifyWithWalletLogger.log("requestLocalDocumentData: requestableDocumentDescriptors=\(requestableDescriptors)")
+        guard let descriptor = requestableDescriptors.first else {
+            VerifyWithWalletLogger.logError("requestLocalDocumentData: no requestable descriptors")
+            throw VerifyDocumentViaWalletManagerError.unavailable
+        }
+        VerifyWithWalletLogger.log("requestLocalDocumentData: using descriptor=\(descriptor)")
 
         let nonce = Data((0..<32).map { _ in UInt8.random(in: .min ... .max) })
         let request = PKIdentityRequest()
@@ -129,8 +148,10 @@ enum VerifyDocumentViaWalletManagerError: Error {
         request.merchantIdentifier = Self.localMerchantIdentifier
 
         guard let document = try await requestDocument(request) else {
+            VerifyWithWalletLogger.logError("requestLocalDocumentData: PassKit returned no document")
             throw VerifyDocumentViaWalletManagerError.missingDocument
         }
+        VerifyWithWalletLogger.log("requestLocalDocumentData: PassKit returned document with \(document.encryptedData.count) bytes")
         return (nonce, Self.localMerchantIdentifier, document.encryptedData)
     }
 
@@ -139,6 +160,13 @@ enum VerifyDocumentViaWalletManagerError: Error {
     private func requestDocumentOutcome(
         _ request: PKIdentityRequest
     ) async throws -> StripeAPI.VerificationPageWalletIdentitySessionOutcome {
+        // Diagnostic-only: does NOT gate whether we call requestDocument, per the note on
+        // makeSubmittableDocumentDescriptor above about canRequestDocument diverging from
+        // what PassKit will actually accept.
+        if let descriptor = request.descriptor {
+            let canRequest = await PKIdentityAuthorizationController().canRequestDocument(descriptor)
+            VerifyWithWalletLogger.log("diagnostic canRequestDocument(submittableDescriptor)=\(canRequest)")
+        }
         do {
             guard let document = try await requestDocument(request) else {
                 VerifyWithWalletLogger.log("PassKit returned no document")
@@ -153,7 +181,7 @@ enum VerifyDocumentViaWalletManagerError: Error {
                 encryptedResponse: document.encryptedData.base64URLEncodedString
             )
         } catch {
-            VerifyWithWalletLogger.logError("PassKit requestDocument threw error=\(error)")
+            VerifyWithWalletLogger.logError("PassKit requestDocument threw error=\(Self.describe(error))")
             guard let nonCredentialOutcome = Self.nonCredentialOutcome(for: error) else {
                 VerifyWithWalletLogger.logError("error is not a recognized non-credential outcome, rethrowing")
                 throw error
@@ -161,6 +189,16 @@ enum VerifyDocumentViaWalletManagerError: Error {
             VerifyWithWalletLogger.log("mapped error to outcome=\(nonCredentialOutcome)")
             return nonCredentialOutcome
         }
+    }
+
+    /// Formats an error with full NSError detail (domain, raw code, mapped PKIdentityError.Code name,
+    /// localizedDescription, userInfo) so a single log line has everything needed to diagnose without
+    /// a follow-up device run.
+    @available(iOS 16.0, *)
+    private static func describe(_ error: Error) -> String {
+        let nsError = error as NSError
+        let mappedCode = PKIdentityError.Code(rawValue: nsError.code)
+        return "domain=\(nsError.domain) code=\(nsError.code) mappedCode=\(String(describing: mappedCode)) localizedDescription=\(nsError.localizedDescription) userInfo=\(nsError.userInfo)"
     }
 
     @available(iOS 16.0, *)
@@ -171,6 +209,7 @@ enum VerifyDocumentViaWalletManagerError: Error {
         guard error.domain == PKIdentityErrorDomain,
             let code = PKIdentityError.Code(rawValue: error.code)
         else {
+            VerifyWithWalletLogger.log("nonCredentialOutcome: error domain/code not recognized as PKIdentityError, domain=\(error.domain) code=\(error.code)")
             return nil
         }
         if #available(iOS 18.0, *), code == .regionNotSupported {
@@ -184,6 +223,26 @@ enum VerifyDocumentViaWalletManagerError: Error {
             return .noDocument
         default:
             return nil
+        }
+    }
+
+    /// Diagnostic-only: checks `canRequestDocument` against each individual descriptor built from the
+    /// backend's `documentRequests` (with the backend's actual `requestedElements`), one type at a time,
+    /// before they get combined into the `AnyOf` descriptor actually submitted. This lets us tell whether
+    /// a type that's individually requestable stops being so once unioned with the others, all from a
+    /// single device run's logs, without needing to rebuild/redeploy to test each type in isolation.
+    @available(iOS 16.0, *)
+    private func logPerDescriptorCanRequestDiagnostics(
+        documentRequests: [StripeAPI.VerificationPageWalletIdentitySession.Request.DocumentRequest]
+    ) async {
+        guard let typedDescriptors = try? makeTypedDocumentDescriptors(documentRequests: documentRequests) else {
+            VerifyWithWalletLogger.logError("diagnostic: failed to build individual descriptors for canRequestDocument checks")
+            return
+        }
+        let authorizationController = PKIdentityAuthorizationController()
+        for (documentType, descriptor) in typedDescriptors {
+            let canRequest = await authorizationController.canRequestDocument(descriptor)
+            VerifyWithWalletLogger.log("diagnostic canRequestDocument(documentType=\(documentType), descriptor=\(descriptor))=\(canRequest)")
         }
     }
 
@@ -208,13 +267,16 @@ enum VerifyDocumentViaWalletManagerError: Error {
         }
 
         if descriptors.count == 1 {
+            VerifyWithWalletLogger.log("submitting single descriptor=\(descriptors[0])")
             return descriptors[0]
         }
 
         if #available(iOS 26.0, *) {
+            VerifyWithWalletLogger.log("combining \(descriptors.count) descriptors into PKIdentityAnyOfDescriptor: \(descriptors)")
             return PKIdentityAnyOfDescriptor(descriptors: descriptors)
         }
 
+        VerifyWithWalletLogger.log("iOS <26, falling back to first of \(descriptors.count) descriptors=\(descriptors[0])")
         return descriptors[0]
     }
 
@@ -241,27 +303,25 @@ enum VerifyDocumentViaWalletManagerError: Error {
     }
 
     @available(iOS 16.0, *)
-    private func makeDocumentDescriptors(
+    private func makeTypedDocumentDescriptors(
         documentRequests: [StripeAPI.VerificationPageWalletIdentitySession.Request.DocumentRequest]
-    ) throws -> [any PKIdentityDocumentDescriptor] {
+    ) throws -> [(documentType: String, descriptor: any PKIdentityDocumentDescriptor)] {
         let disallowedRequests = documentRequests.filter { !idDocumentTypeAllowlistKeys.contains($0.documentType) }
         if !disallowedRequests.isEmpty {
             VerifyWithWalletLogger.logError("documentTypes not in idDocumentTypeAllowlistKeys=\(idDocumentTypeAllowlistKeys), skipping: \(disallowedRequests.map { $0.documentType })")
         }
 
-        var descriptors: [any PKIdentityDocumentDescriptor] = []
+        var descriptors: [(documentType: String, descriptor: any PKIdentityDocumentDescriptor)] = []
         for request in documentRequests where idDocumentTypeAllowlistKeys.contains(request.documentType) {
+            VerifyWithWalletLogger.log("building descriptor for documentType=\(request.documentType) requestedElements=\(request.requestedElements)")
             let descriptor: (any PKIdentityDocumentDescriptor)?
             switch request.documentType {
             case "driving_license":
                 descriptor = PKIdentityDriversLicenseDescriptor()
             case "id_card":
-                if #available(iOS 18.0, *) {
-                    descriptor = PKIdentityNationalIDCardDescriptor()
-                } else {
-                    VerifyWithWalletLogger.logError("id_card requires iOS 18+, skipping")
-                    descriptor = nil
-                }
+                // TODO(IDPROD-XXXX): re-enable once regionNotSupported investigation is resolved.
+                VerifyWithWalletLogger.logError("id_card temporarily disabled for regionNotSupported debugging, skipping")
+                descriptor = nil
             case "passport":
                 if #available(iOS 26.0, *) {
                     descriptor = PKIdentityPhotoIDDescriptor()
@@ -274,12 +334,21 @@ enum VerifyDocumentViaWalletManagerError: Error {
                 descriptor = nil
             }
             if let descriptor {
-                addElements(try identityElements(from: request.requestedElements), to: descriptor)
-                descriptors.append(descriptor)
+                let elements = try identityElements(from: request.requestedElements)
+                VerifyWithWalletLogger.log("documentType=\(request.documentType) mapped to \(elements.count) PKIdentityElements=\(elements)")
+                addElements(elements, to: descriptor)
+                descriptors.append((documentType: request.documentType, descriptor: descriptor))
             }
         }
 
         return descriptors
+    }
+
+    @available(iOS 16.0, *)
+    private func makeDocumentDescriptors(
+        documentRequests: [StripeAPI.VerificationPageWalletIdentitySession.Request.DocumentRequest]
+    ) throws -> [any PKIdentityDocumentDescriptor] {
+        return try makeTypedDocumentDescriptors(documentRequests: documentRequests).map(\.descriptor)
     }
 
     @available(iOS 16.0, *)
