@@ -483,18 +483,26 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testTotalTaxAmounts_absent_isNil() {
-        var json = CheckoutTestHelpers.openSessionJSON
+        // Given a response without total_tax_amounts
+        let json = CheckoutTestHelpers.openSessionJSON
+
+        // When decoding the public Session
         let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
+
+        // Then taxAmounts is nil
         XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 0)
         XCTAssertNil(session.taxAmounts)
     }
 
     func testTotalTaxAmounts_presentButEmpty_isEmpty() {
+        // Given a response with an explicitly empty total_tax_amounts array
         var json = CheckoutTestHelpers.openSessionJSON
         json["recurring_details"] = ["total_tax_amounts": []]
 
+        // When decoding the public Session
         let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
 
+        // Then taxAmounts remains an empty, non-nil array
         XCTAssertNotNil(session.taxAmounts)
         XCTAssertTrue(session.taxAmounts?.isEmpty == true)
     }
