@@ -562,7 +562,29 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testSessionDebugDescription_isReadableAndMasksCustomerInformation() {
         // Given a session containing customer information
-        let session = CheckoutTestHelpers.makeOpenSession(customerEmail: "jenny@example.com")
+        var sessionJSON = CheckoutTestHelpers.openSessionJSON
+        sessionJSON["customer_email"] = "jenny@example.com"
+        let localCurrencyOption: [String: Any] = [
+            "currency": "gbp",
+            "amount": 800,
+            "presentment_exchange_rate": "0.8",
+            "conversion_markup_bps": 400,
+        ]
+        sessionJSON["adaptive_pricing_info"] = [
+            "integration_currency": "usd",
+            "integration_amount": 1000,
+            "active_presentment_currency": "gbp",
+            "local_currency_options": [localCurrencyOption],
+        ]
+        let discountAmount: [String: Any] = [
+            "amount": 500,
+            "coupon": ["id": "coupon_test", "name": "Summer sale"],
+            "promotion_code": ["code": "SUMMER"],
+        ]
+        sessionJSON["recurring_details"] = [
+            "total_discount_amounts": [discountAmount],
+        ]
+        let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
             .makePublicSession()
             .makeCopyOverriding(
                 shippingAddress: .newValue(
@@ -576,28 +598,109 @@ final class CheckoutUnitTests: XCTestCase {
                             postalCode: "94103"
                         )
                     )
+                ),
+                paymentOption: .newValue(
+                    .init(
+                        image: UIImage(),
+                        label: "Visa ending in 4242",
+                        billingDetails: .init(
+                            address: .init(
+                                city: "San Francisco",
+                                country: "US",
+                                line1: "510 Townsend Street",
+                                postalCode: "94103",
+                                state: "CA"
+                            ),
+                            email: "jenny@example.com",
+                            name: "Jenny Rosen",
+                            phone: "+14155550123"
+                        ),
+                        paymentMethodType: "card",
+                        mandateText: NSAttributedString(string: "Mandate text")
+                    )
                 )
             )
 
         // When generating its debug description
         let description = session.debugDescription
 
-        // Then it is multiline, preserves useful context, and masks customer information
-        XCTAssertTrue(description.hasPrefix("Checkout.Session {\n"))
-        XCTAssertTrue(description.contains("status: .open"))
-        XCTAssertTrue(description.contains("email: \"j**y@example.com\""))
-        XCTAssertTrue(description.contains("country: \"US\""))
-        XCTAssertTrue(description.contains("name: <redacted>"))
-        XCTAssertTrue(description.contains("state: \"CA\""))
-        XCTAssertTrue(description.contains("postalCode: \"94***\""))
-        XCTAssertFalse(description.contains("jenny@example.com"))
-        XCTAssertFalse(description.contains("Jenny Rosen"))
-        XCTAssertFalse(description.contains("510 Townsend Street"))
-        XCTAssertFalse(description.contains("San Francisco"))
-        XCTAssertFalse(description.contains("94103"))
-        XCTAssertFalse(description.contains("StripePaymentSheet."))
-        XCTAssertFalse(description.contains("elementsSession"))
-        XCTAssertFalse(description.contains("Optional("))
+        // Then it preserves useful context and masks customer information
+        XCTAssertEqual(
+            description,
+            """
+            Checkout.Session {
+              id: "cs_test_123"
+              status: .open
+              livemode: false
+              businessName: nil
+              currency: "usd"
+              currencyOptions: [
+                {
+                  currency: "gbp"
+                  amount: "£8.00"
+                  currencyConversion: {
+                    sourceCurrency: "usd"
+                    fxRate: "0.8"
+                  }
+                }
+                {
+                  currency: "usd"
+                  amount: "$10.00"
+                  currencyConversion: nil
+                }
+              ]
+              discountAmounts: [
+                {
+                  amount: "$5.00"
+                  displayName: "Summer sale"
+                  promotionCode: <redacted>
+                }
+              ]
+              email: "j***y@example.com"
+              minorUnitsAmountDivisor: 100
+              paymentOption: {
+                paymentMethodType: "card"
+                label: "Visa ending in 4242"
+                billingDetails: {
+                  country: "US"
+                }
+                mandateText: <redacted>
+              }
+              shippingAddress: {
+                country: "US"
+              }
+              orderSummaryItems: [
+                [0] oneTimePrice {
+                  key: "checkout_item_test"
+                  items: [
+                    [0] {
+                      key: "price_test"
+                      quantity: 1
+                      unitAmount: "$10.00"
+                      unitAmountDecimal: "$10.00"
+                      adjustableQuantity: nil
+                    }
+                  ]
+                  subtotal: "$10.00"
+                  discount: "$0.00"
+                  taxExclusive: "$0.00"
+                  taxInclusive: "$0.00"
+                  taxAmountCount: nil
+                  total: "$10.00"
+                }
+              ]
+              taxStatus: nil
+              taxAmountCount: nil
+              totals: {
+                subtotal: "$10.00"
+                taxExclusive: "$0.00"
+                taxInclusive: "$0.00"
+                discount: "$0.00"
+                total: "$10.00"
+              }
+            }
+            """
+        )
     }
 
     func testSessionDebugDescription_preservesAbsentAndEmptyTaxAmounts() {
@@ -608,8 +711,8 @@ final class CheckoutUnitTests: XCTestCase {
         let empty = try! PaymentPagesAPIResponse.decode(fromAPIResponse: emptyJSON).makePublicSession()
 
         // Then their debug descriptions preserve the distinction
-        XCTAssertTrue(absent.debugDescription.contains("taxAmounts: nil"))
-        XCTAssertTrue(empty.debugDescription.contains("taxAmounts: []"))
+        XCTAssertTrue(absent.debugDescription.contains("taxAmountCount: nil"))
+        XCTAssertTrue(empty.debugDescription.contains("taxAmountCount: 0"))
     }
 
     // MARK: - Requires Shipping Address Tests

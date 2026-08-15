@@ -152,6 +152,7 @@ struct CheckoutDiagnosticEmptyRequestsView: View {
 
 struct CheckoutDiagnosticCopyButton: View {
     let value: String
+    var accessibilityLabel: String?
 
     @State private var isCopied = false
     @State private var resetTask: Task<Void, Never>?
@@ -181,7 +182,7 @@ struct CheckoutDiagnosticCopyButton: View {
                 .clipShape(Capsule())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(isCopied ? "Copied" : "Copy \(value)")
+        .accessibilityLabel(isCopied ? "Copied" : accessibilityLabel ?? "Copy \(value)")
         .onDisappear {
             resetTask?.cancel()
         }

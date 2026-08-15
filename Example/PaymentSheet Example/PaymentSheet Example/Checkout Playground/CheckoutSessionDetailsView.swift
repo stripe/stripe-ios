@@ -94,7 +94,10 @@ private struct CheckoutSessionDebugView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                CheckoutDiagnosticCopyButton(value: sessionDebugDescription)
+                CheckoutDiagnosticCopyButton(
+                    value: sessionDebugDescription,
+                    accessibilityLabel: "Copy Checkout Session details"
+                )
             }
         }
     }
