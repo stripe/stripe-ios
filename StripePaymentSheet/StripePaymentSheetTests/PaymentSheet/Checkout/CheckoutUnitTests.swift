@@ -499,6 +499,119 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(session.taxAmounts?.isEmpty == true)
     }
 
+    func testAutomaticTaxComplete_zeroTaxableAmount_preservesComputedZeroTax() throws {
+        // Given an automatic-tax response observed for an IE shipping address
+        let zeroTaxAmount: [String: Any] = [
+            "amount": 0,
+            "inclusive": false,
+            "taxable_amount": 0,
+            "tax_rate": [
+                "object": "tax_rate",
+                "active": true,
+                "display_name": "Sales Tax",
+                "inclusive": false,
+                "percentage": 8.625,
+                "rate_type": "percentage",
+            ],
+        ]
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["tax_context"] = [
+            "automatic_tax_address_source": "session.shipping",
+            "automatic_tax_enabled": true,
+        ]
+        json["tax_meta"] = [
+            "computation_type": "automatic",
+            "status": "complete",
+        ]
+        json["recurring_details"] = [
+            "subtotal": 12000,
+            "total": 12000,
+            "total_summary": [
+                "due": 12000,
+                "subtotal": 12000,
+                "total": 12000,
+                "total_discount_amount_aggregate": 0,
+                "total_discount_amounts": [],
+                "total_proration_amount_aggregate": 0,
+                "total_tax_amounts": [zeroTaxAmount],
+            ],
+            "total_tax_amounts": [zeroTaxAmount],
+        ]
+        setOneTimePriceAmounts(
+            in: &json,
+            subtotal: 12000,
+            taxExclusive: 0,
+            total: 12000
+        )
+
+        // When decoding the response into the public Session
+        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
+        let taxAmount = try XCTUnwrap(session.taxAmounts?.first)
+
+        // Then the completed computation and its present zero-valued tax entry are preserved
+        XCTAssertEqual(session.tax?.status, .ready)
+        XCTAssertEqual(session.taxAmounts?.count, 1)
+        XCTAssertEqual(taxAmount.minorUnitsAmount, 0)
+        XCTAssertFalse(taxAmount.inclusive)
+        XCTAssertEqual(taxAmount.displayName, "Sales Tax")
+        XCTAssertEqual(taxAmount.percentage, 8.625)
+        XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 12000)
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 0)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 12000)
+    }
+
+    func testSessionDebugDescription_isReadableAndMasksCustomerInformation() {
+        // Given a session containing customer information
+        let session = CheckoutTestHelpers.makeOpenSession(customerEmail: "jenny@example.com")
+            .makePublicSession()
+            .makeCopyOverriding(
+                shippingAddress: .newValue(
+                    .init(
+                        name: "Jenny Rosen",
+                        address: .init(
+                            country: "US",
+                            line1: "510 Townsend Street",
+                            city: "San Francisco",
+                            state: "CA",
+                            postalCode: "94103"
+                        )
+                    )
+                )
+            )
+
+        // When generating its debug description
+        let description = session.debugDescription
+
+        // Then it is multiline, preserves useful context, and masks customer information
+        XCTAssertTrue(description.hasPrefix("Checkout.Session {\n"))
+        XCTAssertTrue(description.contains("status: .open"))
+        XCTAssertTrue(description.contains("email: \"j**y@example.com\""))
+        XCTAssertTrue(description.contains("country: \"US\""))
+        XCTAssertTrue(description.contains("name: <redacted>"))
+        XCTAssertTrue(description.contains("state: \"CA\""))
+        XCTAssertTrue(description.contains("postalCode: \"94***\""))
+        XCTAssertFalse(description.contains("jenny@example.com"))
+        XCTAssertFalse(description.contains("Jenny Rosen"))
+        XCTAssertFalse(description.contains("510 Townsend Street"))
+        XCTAssertFalse(description.contains("San Francisco"))
+        XCTAssertFalse(description.contains("94103"))
+        XCTAssertFalse(description.contains("StripePaymentSheet."))
+        XCTAssertFalse(description.contains("elementsSession"))
+        XCTAssertFalse(description.contains("Optional("))
+    }
+
+    func testSessionDebugDescription_preservesAbsentAndEmptyTaxAmounts() {
+        // Given sessions with absent and present-but-empty tax amounts
+        let absent = CheckoutTestHelpers.makeOpenSession().makePublicSession()
+        var emptyJSON = CheckoutTestHelpers.openSessionJSON
+        emptyJSON["recurring_details"] = ["total_tax_amounts": []]
+        let empty = try! PaymentPagesAPIResponse.decode(fromAPIResponse: emptyJSON).makePublicSession()
+
+        // Then their debug descriptions preserve the distinction
+        XCTAssertTrue(absent.debugDescription.contains("taxAmounts: nil"))
+        XCTAssertTrue(empty.debugDescription.contains("taxAmounts: []"))
+    }
+
     // MARK: - Requires Shipping Address Tests
 
     func testRequiresShippingAddress_whenCountriesPresent() {

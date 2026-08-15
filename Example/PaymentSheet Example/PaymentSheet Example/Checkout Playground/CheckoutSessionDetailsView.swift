@@ -5,13 +5,13 @@
 //  Created by Nick Porter on 8/11/26.
 //
 
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 struct CheckoutSessionDetailsView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var diagnostics: CheckoutSessionDiagnostics
-
-    let sessionID: String
+    @ObservedObject var checkout: Checkout
 
     @ViewBuilder
     var body: some View {
@@ -25,17 +25,21 @@ struct CheckoutSessionDetailsView: View {
     }
 
     private var content: some View {
-        VStack(spacing: 0) {
-            header
-            Divider()
+        NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
                     CheckoutDiagnosticSectionHeader(title: "Checkout session")
-                    CheckoutDiagnosticIdentifierCard(
-                        title: "Session ID",
-                        value: sessionID,
-                        systemImage: "cart.fill"
-                    )
+                    NavigationLink {
+                        CheckoutSessionDebugView(checkout: checkout)
+                    } label: {
+                        CheckoutDiagnosticNavigationCard(
+                            title: "Checkout Session",
+                            value: checkout.session.id,
+                            systemImage: "cart.fill"
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("View Checkout Session details")
 
                     CheckoutDiagnosticSectionHeader(
                         title: "API activity",
@@ -55,37 +59,43 @@ struct CheckoutSessionDetailsView: View {
                 }
                 .padding(20)
             }
+            .background(Color(uiColor: .systemGroupedBackground).ignoresSafeArea())
+            .navigationTitle("Session diagnostics")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
         }
-        .background(Color(uiColor: .systemGroupedBackground).ignoresSafeArea())
+        .navigationViewStyle(.stack)
+    }
+}
+
+private struct CheckoutSessionDebugView: View {
+    @ObservedObject var checkout: Checkout
+
+    private var sessionDebugDescription: String {
+        checkout.session.debugDescription
     }
 
-    private var header: some View {
-        HStack(spacing: 16) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Session diagnostics")
-                    .font(.title2.bold())
-                Text("IDs and Stripe API activity for this checkout")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-
-            Spacer()
-
-            Button {
-                dismiss()
-            } label: {
-                Image(systemName: "xmark")
-                    .font(.system(size: 13, weight: .bold))
-                    .foregroundColor(.secondary)
-                    .frame(width: 32, height: 32)
-                    .background(Color(uiColor: .secondarySystemGroupedBackground))
-                    .clipShape(Circle())
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Close session diagnostics")
+    var body: some View {
+        ScrollView {
+            Text(sessionDebugDescription)
+                .font(.system(.caption, design: .monospaced))
+                .textSelection(.enabled)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 16)
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(Color(uiColor: .systemGroupedBackground).ignoresSafeArea())
+        .navigationTitle("Checkout Session")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                CheckoutDiagnosticCopyButton(value: sessionDebugDescription)
+            }
+        }
     }
 }
