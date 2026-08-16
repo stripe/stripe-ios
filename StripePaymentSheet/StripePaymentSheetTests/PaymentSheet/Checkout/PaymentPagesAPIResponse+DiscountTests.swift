@@ -7,7 +7,7 @@
 import XCTest
 
 private extension PaymentPagesAPIResponse {
-    static func makeDiscounts(from overrides: [String: Any]) -> [Checkout.DiscountAmount] {
+    static func makeDiscounts(from overrides: [String: Any]) -> [Checkout.Session.DiscountAmount] {
         return CheckoutTestHelpers.makeSession(overrides).makePublicSession().discountAmounts
     }
 }
@@ -42,7 +42,9 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let discount = discounts[0]
         XCTAssertEqual(discount.displayName, "25% Off")
         XCTAssertEqual(discount.promotionCode, "SAVE25")
-        XCTAssertEqual(discount.amount.minorUnitsAmount, 500)
+        XCTAssertEqual(discount.amount, "$5.00")
+        XCTAssertEqual(discount.minorUnitsAmount, 500)
+        XCTAssertEqual(discount.percentOff, 25)
     }
 
     // MARK: - Discount with coupon only (no promotion code)
@@ -70,7 +72,9 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let discount = discounts[0]
         XCTAssertEqual(discount.displayName, "$10 Off")
         XCTAssertNil(discount.promotionCode)
-        XCTAssertEqual(discount.amount.minorUnitsAmount, 1000)
+        XCTAssertEqual(discount.amount, "$10.00")
+        XCTAssertEqual(discount.minorUnitsAmount, 1000)
+        XCTAssertNil(discount.percentOff)
     }
 
     // MARK: - Zero amount is filtered out
@@ -130,7 +134,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
                         "coupon": [
                             "id": "coupon_first",
                             "name": "First",
-                            "percent_off": 10.0,
+                            "percent_off": 10.5,
                         ] as [String: Any],
                         "promotion_code": [
                             "code": "FIRST10",
@@ -153,11 +157,15 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
 
         XCTAssertEqual(discounts[0].displayName, "First")
         XCTAssertEqual(discounts[0].promotionCode, "FIRST10")
-        XCTAssertEqual(discounts[0].amount.minorUnitsAmount, 500)
+        XCTAssertEqual(discounts[0].amount, "$5.00")
+        XCTAssertEqual(discounts[0].minorUnitsAmount, 500)
+        XCTAssertEqual(discounts[0].percentOff, 10.5)
 
         XCTAssertEqual(discounts[1].displayName, "Second")
         XCTAssertNil(discounts[1].promotionCode)
-        XCTAssertEqual(discounts[1].amount.minorUnitsAmount, 200)
+        XCTAssertEqual(discounts[1].amount, "$2.00")
+        XCTAssertEqual(discounts[1].minorUnitsAmount, 200)
+        XCTAssertNil(discounts[1].percentOff)
     }
 
     // MARK: - Zero amount mixed with valid discounts
@@ -188,7 +196,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
         XCTAssertEqual(discounts[0].displayName, "Valid")
-        XCTAssertEqual(discounts[0].amount.minorUnitsAmount, 300)
+        XCTAssertEqual(discounts[0].minorUnitsAmount, 300)
     }
 
     // MARK: - Missing coupon key (fallback display name)
@@ -231,5 +239,6 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
         XCTAssertEqual(discounts[0].displayName, "coupon_no_id")
+        XCTAssertEqual(discounts[0].percentOff, 5)
     }
 }

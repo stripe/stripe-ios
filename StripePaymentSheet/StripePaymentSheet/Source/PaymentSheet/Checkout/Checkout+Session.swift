@@ -34,7 +34,7 @@ extension Checkout {
         public let currencyOptions: [Checkout.CurrencyOption]
 
         /// The aggregate amounts calculated per discount for all line items.
-        public let discountAmounts: [Checkout.DiscountAmount]
+        public let discountAmounts: [DiscountAmount]
 
         /// The customer's email address.
         public let email: String?
