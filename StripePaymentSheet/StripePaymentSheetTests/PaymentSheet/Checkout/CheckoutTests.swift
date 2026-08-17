@@ -27,7 +27,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(session.status?.paymentStatus, .unpaid)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertFalse(session.livemode)
-        XCTAssertNotNil(session.total)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 2000)
         XCTAssertFalse(checkout.isLoading)
     }
 
@@ -62,14 +62,14 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         XCTAssertTrue(checkout.session.discountAmounts.isEmpty)
         XCTAssertNil(promotionCode(in: checkout.session))
-        XCTAssertEqual(2000, checkout.session.total?.total.minorUnitsAmount)
+        XCTAssertEqual(2000, checkout.session.totals.total.minorUnitsAmount)
 
         try await checkout.applyPromotionCode("SAVE25")
 
         let session = checkout.session
         XCTAssertFalse(session.discountAmounts.isEmpty)
         XCTAssertEqual(promotionCode(in: session), "SAVE25")
-        XCTAssertEqual(1500, session.total?.total.minorUnitsAmount)
+        XCTAssertEqual(1500, session.totals.total.minorUnitsAmount)
     }
 
     // TODO(porter): see disabled_testPromotionCodeApplyEmitsSessionUpdates above.
@@ -85,14 +85,14 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         try await checkout.applyPromotionCode("SAVE25")
         XCTAssertFalse(checkout.session.discountAmounts.isEmpty)
         XCTAssertEqual(promotionCode(in: checkout.session), "SAVE25")
-        XCTAssertEqual(1500, checkout.session.total?.total.minorUnitsAmount)
+        XCTAssertEqual(1500, checkout.session.totals.total.minorUnitsAmount)
 
         // Then remove
         try await checkout.removePromotionCode()
         let session = checkout.session
         XCTAssertTrue(session.discountAmounts.isEmpty)
         XCTAssertNil(promotionCode(in: session))
-        XCTAssertEqual(2000, session.total?.total.minorUnitsAmount)
+        XCTAssertEqual(2000, session.totals.total.minorUnitsAmount)
     }
 
     // TODO(porter): see disabled_testPromotionCodeApplyEmitsSessionUpdates above.
@@ -127,8 +127,8 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkout = try await Checkout(configuration: configuration)
 
         // Pre-tax price, CA sales has not yet been applied
-        XCTAssertEqual(checkout.session.total?.subtotal.minorUnitsAmount, 5050)
-        XCTAssertEqual(checkout.session.total?.total.minorUnitsAmount, 5050)
+        XCTAssertEqual(checkout.session.totals.subtotal.minorUnitsAmount, 5050)
+        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 5050)
 
         // Update the billing tax region to get tax applied
         try await checkout.updateBillingTaxRegionIfNecessary(
@@ -145,8 +145,8 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.status?.type, .open)
 
         // Post-tax price, CA sales tax was applied; subtotal unchanged proves the increase is purely tax
-        XCTAssertEqual(checkout.session.total?.subtotal.minorUnitsAmount, 5050)
-        XCTAssertEqual(checkout.session.total?.total.minorUnitsAmount, 5486)
+        XCTAssertEqual(checkout.session.totals.subtotal.minorUnitsAmount, 5050)
+        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 5486)
     }
 
     func testLoadUnifiedModeCheckoutSession() async throws {
@@ -161,7 +161,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let session = checkout.session
         XCTAssertEqual(session.id, checkoutSessionResponse.id)
         XCTAssertEqual(session.status?.type, .open)
-        XCTAssertEqual(session.total?.total.minorUnitsAmount, 2000)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 2000)
         XCTAssertEqual(session.expectedAmount(), 2000)
         XCTAssertEqual(session.orderSummaryItems.count, 1)
         guard case .oneTimePrice(let oneTimePrice) = session.orderSummaryItems.first else {
@@ -200,8 +200,8 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkout = try await Checkout(configuration: configuration)
 
         XCTAssertNil(checkout.session.shippingAddress)
-        XCTAssertEqual(checkout.session.total?.subtotal.minorUnitsAmount, 2000)
-        XCTAssertEqual(checkout.session.total?.total.minorUnitsAmount, 2000)
+        XCTAssertEqual(checkout.session.totals.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 2000)
         XCTAssertNil(checkout.session.tax.taxAmounts)
 
         try await checkout.updateShippingAddress(
@@ -228,8 +228,8 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         // Session should be refreshed (tax_region was sent to the server)
         XCTAssertEqual(checkout.session.status?.type, .open)
 
-        XCTAssertEqual(checkout.session.total?.subtotal.minorUnitsAmount, 2000)
-        XCTAssertEqual(checkout.session.total?.total.minorUnitsAmount, 2195)
+        XCTAssertEqual(checkout.session.totals.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 2195)
         XCTAssertEqual(checkout.session.tax.taxAmounts?.count, 1)
         XCTAssertEqual(checkout.session.tax.taxAmounts?.first?.amount.minorUnitsAmount, 195)
     }
@@ -265,15 +265,15 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(initialSession.currency, "eur")
         XCTAssertTrue(initialSession.adaptivePricingActive)
         XCTAssertNotNil(initialSession.exchangeRateMeta)
-        let eurTotal = try XCTUnwrap(initialSession.total?.total.minorUnitsAmount)
+        let eurTotal = initialSession.totals.total.minorUnitsAmount
 
         // Switch to USD
         try await checkout.selectCurrency("usd")
 
         let updatedSession = checkout.session
         XCTAssertEqual(updatedSession.currency, "usd")
-        XCTAssertEqual(updatedSession.total?.total.minorUnitsAmount, 2000)
-        XCTAssertNotEqual(updatedSession.total?.total.minorUnitsAmount, eurTotal, "USD total should differ from EUR total")
+        XCTAssertEqual(updatedSession.totals.total.minorUnitsAmount, 2000)
+        XCTAssertNotEqual(updatedSession.totals.total.minorUnitsAmount, eurTotal, "USD total should differ from EUR total")
     }
 
     private func promotionCode(in session: Checkout.Session?) -> String? {

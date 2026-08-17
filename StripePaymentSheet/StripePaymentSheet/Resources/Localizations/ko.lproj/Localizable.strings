@@ -290,8 +290,6 @@
 
 "Set up" = "설정";
 
-"Shipping" = "배송";
-
 "Shipping to %@ is not supported." = "%@ 배송은 지원되지 않습니다.";
 
 "Show details" = "세부사항 표시";

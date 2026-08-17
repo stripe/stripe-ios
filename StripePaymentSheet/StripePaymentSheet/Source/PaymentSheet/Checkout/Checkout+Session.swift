@@ -64,8 +64,8 @@ extension Checkout {
         /// Details about the tax computation status and aggregated tax amounts.
         public let tax: Checkout.Tax
 
-        /// Tax and discount details for the computed total amount.
-        public let total: Checkout.Total?
+        /// Aggregate subtotal, tax, discount, and total amounts for the Checkout Session.
+        public let totals: Checkout.Session.Totals
 
         // MARK: - Internal Properties
 
@@ -93,6 +93,7 @@ extension Checkout {
 
 extension Checkout.Session {
     /// An item included in the order summary.
+    @frozen
     public enum OrderSummaryItem: Sendable, Hashable {
         /// A group of one-time Prices.
         case oneTimePrice(OneTimePrice)
@@ -172,6 +173,11 @@ extension Checkout.Session {
         ///
         /// For example, `"$10.00"` is represented as `1000`.
         public let minorUnitsAmount: Double
+
+        public init(amount: String, minorUnitsAmount: Double) {
+            self.amount = amount
+            self.minorUnitsAmount = minorUnitsAmount
+        }
     }
 
     /// A tax amount included in an order summary item.

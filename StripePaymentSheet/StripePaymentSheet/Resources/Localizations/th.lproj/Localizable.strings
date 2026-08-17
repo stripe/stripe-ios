@@ -290,8 +290,6 @@
 
 "Set up" = "ตั้งค่า";
 
-"Shipping" = "การจัดส่ง";
-
 "Shipping to %@ is not supported." = "ระบบไม่รองรับการจัดส่งไปยัง%@";
 
 "Show details" = "แสดงรายละเอียด";

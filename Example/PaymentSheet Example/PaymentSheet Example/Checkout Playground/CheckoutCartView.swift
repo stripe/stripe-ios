@@ -41,23 +41,21 @@ struct CheckoutCartView: View {
                     )
                     .overlay(alignment: .bottom) {
                         VStack(spacing: 0) {
-                            if checkout.session.total != nil {
-                                if showExpressCheckoutElement,
-                                   let ece = checkout.getExpressCheckoutElement() {
-                                    ece.view
-                                        .padding(.horizontal)
-                                        .padding(.top, 16)
-                                }
-                                switch integrationType {
-                                case .flowController:
-                                    CheckoutCartPaymentButton(checkout: checkout)
-                                        .clipped()
-                                case .embedded:
-                                    CheckoutCartEmbeddedPaymentView(checkout: checkout)
-                                        .clipped()
-                                case .eceOnly:
-                                    EmptyView()
-                                }
+                            if showExpressCheckoutElement,
+                               let ece = checkout.getExpressCheckoutElement() {
+                                ece.view
+                                    .padding(.horizontal)
+                                    .padding(.top, 16)
+                            }
+                            switch integrationType {
+                            case .flowController:
+                                CheckoutCartPaymentButton(checkout: checkout)
+                                    .clipped()
+                            case .embedded:
+                                CheckoutCartEmbeddedPaymentView(checkout: checkout)
+                                    .clipped()
+                            case .eceOnly:
+                                EmptyView()
                             }
                         }
                         .background(
