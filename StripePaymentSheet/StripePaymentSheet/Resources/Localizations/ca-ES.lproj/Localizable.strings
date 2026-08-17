@@ -140,6 +140,10 @@
 
 "Did you mean %@? %@." = "Volíeu dir %1$@? %2$@.";
 
+"Discard Changes" = "Descarta els canvis";
+
+"Discard changes?" = "Voleu descarteu els canvis?";
+
 "Discount" = "Descompte";
 
 "EPS Bank" = "Banc EPS";
@@ -163,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entenc que Stripe cobrarà els dèbits directes de part de %@ i confirmo que soc el titular del compte i l'única persona requerida per autoritzar dèbits des d'aquest compte.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Continua editant";
 
 "Last 4 digits of SSN" = "Últims 4 dígits del número de la seguretat social (SSN)";
 
@@ -343,3 +349,5 @@
 "Yes, update" = "Sí, actualitzar";
 
 "Your IBAN should start with a two-letter country code." = "El teu IBAN ha de començar amb un codi de país de dues lletres.";
+
+"Your address changes won't be saved." = "Els canvis de la vostra adreça no es desaran.";

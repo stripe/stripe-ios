@@ -140,6 +140,10 @@
 
 "Did you mean %@? %@." = "Menade du %1$@? %2$@.";
 
+"Discard Changes" = "Kassera ändringar";
+
+"Discard changes?" = "Kasta ändringar?";
+
 "Discount" = "Rabatt";
 
 "EPS Bank" = "EPS Bank";
@@ -163,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jag är införstådd med att Stripe samlar in autogireringar på uppdrag av %@ och bekräftar att jag är kontoinnehavaren och den enda person som krävs för att godkänna debiteringar från detta konto.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Fortsätt redigera";
 
 "Last 4 digits of SSN" = "Sista 4 siffrorna i SSN";
 
@@ -343,3 +349,5 @@
 "Yes, update" = "Ja, uppdatera";
 
 "Your IBAN should start with a two-letter country code." = "Ditt IBAN ska börja med en landskod (två bokstäver).";
+
+"Your address changes won't be saved." = "Dina adressändringar kommer inte att sparas.";

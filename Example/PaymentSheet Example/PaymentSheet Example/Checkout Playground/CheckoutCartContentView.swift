@@ -13,6 +13,7 @@ struct CheckoutCartContentView: View {
     @ObservedObject var checkout: Checkout
     var showsShippingAddressSection: Bool
     var errorMessage: String?
+    @State private var showsTaxDetails = false
 
     var body: some View {
         ScrollView {
@@ -35,6 +36,9 @@ struct CheckoutCartContentView: View {
                 Spacer().frame(height: 160)
             }
             .padding(.top, 20)
+        }
+        .sheet(isPresented: $showsTaxDetails) {
+            CheckoutTaxDetailsView(taxAmounts: checkout.session.taxAmounts ?? [])
         }
     }
 
@@ -198,6 +202,8 @@ struct CheckoutCartContentView: View {
     @ViewBuilder
     private var orderSummarySection: some View {
         let totals = checkout.session.totals
+        let hasTaxDetails = checkout.session.taxAmounts?.isEmpty == false
+        let taxAddressPrompt = taxAddressPrompt(for: checkout.session.tax?.status)
         VStack(alignment: .leading, spacing: 16) {
             Text("Order Summary")
                 .font(.title2).bold()
@@ -221,10 +227,25 @@ struct CheckoutCartContentView: View {
                     }
                 }
 
-                if totals.taxExclusive.minorUnitsAmount > 0 {
-                    HStack {
+                if let taxAddressPrompt {
+                    VStack(alignment: .leading, spacing: 2) {
                         Text("Tax")
                             .foregroundColor(.secondary)
+                        Text(taxAddressPrompt)
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityElement(children: .combine)
+                } else if totals.taxExclusive.minorUnitsAmount > 0 {
+                    HStack {
+                        HStack(spacing: 4) {
+                            Text("Tax")
+                                .foregroundColor(.secondary)
+                            if hasTaxDetails {
+                                taxDetailsButton
+                            }
+                        }
                         Spacer()
                         Text(totals.taxExclusive.amount)
                             .foregroundColor(.primary)
@@ -241,6 +262,17 @@ struct CheckoutCartContentView: View {
                     Text(totals.total.amount)
                         .font(.title3).bold()
                 }
+
+                if taxAddressPrompt == nil && totals.taxInclusive.minorUnitsAmount > 0 {
+                    HStack(spacing: 4) {
+                        Text("Includes \(totals.taxInclusive.amount) in tax")
+                            .foregroundColor(.secondary)
+                        if hasTaxDetails && totals.taxExclusive.minorUnitsAmount == 0 {
+                            taxDetailsButton
+                        }
+                        Spacer()
+                    }
+                }
             }
             .padding()
             .background(Color(UIColor.systemBackground))
@@ -250,12 +282,69 @@ struct CheckoutCartContentView: View {
         }
     }
 
+    private var taxDetailsButton: some View {
+        Button {
+            showsTaxDetails = true
+        } label: {
+            Image(systemName: "info.circle")
+        }
+        .accessibilityLabel("Show tax details")
+    }
+
+    private func taxAddressPrompt(for status: Checkout.Session.Tax.Status?) -> String? {
+        switch status {
+        case .requiresShippingAddress:
+            return "Enter shipping address to calculate"
+        case .requiresBillingAddress:
+            return "Enter billing address to calculate"
+        case .ready, nil:
+            return nil
+        }
+    }
+
     private func presentShippingAddressElement() {
         Task {
             await checkout.getShippingAddressElement().present()
         }
     }
 
+}
+
+private struct CheckoutTaxDetailsView: View {
+    @Environment(\.dismiss) private var dismiss
+    let taxAmounts: [Checkout.Session.TaxAmount]
+
+    @ViewBuilder
+    var body: some View {
+        if #available(iOS 16.0, *) {
+            content
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
+        } else {
+            content
+        }
+    }
+
+    private var content: some View {
+        NavigationView {
+            List(Array(taxAmounts.enumerated()), id: \.offset) { _, taxAmount in
+                HStack {
+                    Text(taxAmount.displayName + (taxAmount.inclusive ? " (included)" : ""))
+                    Spacer()
+                    Text(taxAmount.amount)
+                }
+            }
+            .navigationTitle("Tax details")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
 }
 
 struct CheckoutCartSheet: View {
