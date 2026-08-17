@@ -23,8 +23,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         let session = checkout.session
         XCTAssertEqual(session.id, checkoutSessionResponse.id)
-        XCTAssertEqual(session.status?.type, .open)
-        XCTAssertEqual(session.status?.paymentStatus, .unpaid)
+        XCTAssertEqual(session.status, .open)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertFalse(session.livemode)
         XCTAssertEqual(session.totals.total.minorUnitsAmount, 2000)
@@ -142,7 +141,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         )
 
         // Session should be refreshed (tax_region was sent to the server)
-        XCTAssertEqual(checkout.session.status?.type, .open)
+        XCTAssertEqual(checkout.session.status, .open)
 
         // Post-tax price, CA sales tax was applied; subtotal unchanged proves the increase is purely tax
         XCTAssertEqual(checkout.session.totals.subtotal.minorUnitsAmount, 5050)
@@ -160,7 +159,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         let session = checkout.session
         XCTAssertEqual(session.id, checkoutSessionResponse.id)
-        XCTAssertEqual(session.status?.type, .open)
+        XCTAssertEqual(session.status, .open)
         XCTAssertEqual(session.totals.total.minorUnitsAmount, 2000)
         XCTAssertEqual(session.expectedAmount(), 2000)
         XCTAssertEqual(session.orderSummaryItems.count, 1)
@@ -226,7 +225,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(storedShipping?.address.postalCode, "90001")
 
         // Session should be refreshed (tax_region was sent to the server)
-        XCTAssertEqual(checkout.session.status?.type, .open)
+        XCTAssertEqual(checkout.session.status, .open)
 
         XCTAssertEqual(checkout.session.totals.subtotal.minorUnitsAmount, 2000)
         XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 2195)
