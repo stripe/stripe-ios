@@ -59,11 +59,18 @@ final class PartnerAuthViewController: SheetViewController {
         return dataSource.isNetworkingRelinkSession ? .bankAuthRepair : .partnerAuth
     }
 
+    // when true, we skip the prepane and open the institution's authentication flow as
+    // soon as the auth session is created. used when the user has already been told what
+    // to do by a previous pane (ex. the generic error pane's "try again").
+    private let autoLaunchAuthSession: Bool
+
     init(
         dataSource: PartnerAuthDataSource,
-        panePresentationStyle: PanePresentationStyle
+        panePresentationStyle: PanePresentationStyle,
+        autoLaunchAuthSession: Bool = false
     ) {
         self.dataSource = dataSource
+        self.autoLaunchAuthSession = autoLaunchAuthSession
         super.init(panePresentationStyle: panePresentationStyle)
     }
 
@@ -137,6 +144,21 @@ final class PartnerAuthViewController: SheetViewController {
             authSessionId: authSession.id
         )
 
+        if autoLaunchAuthSession, authSession.isOauthNonOptional {
+            dataSource.analyticsClient.log(
+                eventName: "auto_launch_auth_session",
+                parameters: [
+                    "requires_native_redirect": authSession.requiresNativeRedirect,
+                ],
+                pane: pane
+            )
+            // we have no prepane to show behind the browser, so fill the blank space with
+            // a spinner the same way the non-oauth flow does
+            insertLegacyLoadingView()
+            launchAuthSession(authSession)
+            return
+        }
+
         if authSession.isOauthNonOptional, let prepaneModel = authSession.display?.text?.oauthPrepane {
             prepaneViews = nil // the `deinit` of prepane views will remove views
             let prepaneViews = PrepaneViews(
@@ -157,11 +179,7 @@ final class PartnerAuthViewController: SheetViewController {
                         pane: .partnerAuth
                     )
 
-                    if authSession.requiresNativeRedirect {
-                        self.openInstitutionAuthenticationNativeRedirect(authSession: authSession)
-                    } else {
-                        self.openInstitutionAuthenticationWebView(authSession: authSession)
-                    }
+                    self.launchAuthSession(authSession)
                 },
                 didSelectCancel: { [weak self] in
                     guard let self = self else { return }
@@ -195,6 +213,15 @@ final class PartnerAuthViewController: SheetViewController {
         } else {
             insertLegacyLoadingView()
 
+            launchAuthSession(authSession)
+        }
+    }
+
+    /// Hands the user off to the institution, either through the banking app or a browser.
+    private func launchAuthSession(_ authSession: FinancialConnectionsAuthSession) {
+        if authSession.requiresNativeRedirect {
+            openInstitutionAuthenticationNativeRedirect(authSession: authSession)
+        } else {
             openInstitutionAuthenticationWebView(authSession: authSession)
         }
     }

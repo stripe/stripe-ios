@@ -290,8 +290,6 @@
 
 "Set up" = "Configurar";
 
-"Shipping" = "Envío";
-
 "Shipping to %@ is not supported." = "No se admiten los envíos a %@.";
 
 "Show details" = "Mostrar datos";
