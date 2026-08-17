@@ -188,7 +188,6 @@ final class CheckoutUnitTests: XCTestCase {
         // Given a ShippingAddressElement connected to its Checkout
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let shippingAddressElement = checkout.getShippingAddressElement()
-        var loadingStates: [Bool] = []
 
         // When the element saves a collected address
         try await shippingAddressElement.save(
@@ -202,12 +201,10 @@ final class CheckoutUnitTests: XCTestCase {
                     state: "WA"
                 ),
                 name: "Jane Doe"
-            ),
-            setLoading: { loadingStates.append($0) }
+            )
         )
 
-        // Then the Checkout Session is the source of truth and loading spans the update
-        XCTAssertEqual(loadingStates, [true, false])
+        // Then the Checkout Session is the source of truth
         XCTAssertEqual(checkout.session.shippingAddress?.name, "Jane Doe")
         XCTAssertEqual(checkout.session.shippingAddress?.address.line1, "123 Main St.")
         XCTAssertEqual(checkout.session.shippingAddress?.address.line2, "Apt. 4")

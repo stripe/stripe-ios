@@ -115,17 +115,12 @@ public final class ShippingAddressElement {
 }
 
 extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
-    func save(
-        addressDetails: AddressViewController.AddressDetails,
-        setLoading: (Bool) -> Void
-    ) async throws {
+    func save(addressDetails: AddressViewController.AddressDetails) async throws {
         guard let delegate else {
             stpAssertionFailure("ShippingAddressElement does not have a delegate.")
             return
         }
 
-        setLoading(true)
-        defer { setLoading(false) }
         try await delegate.updateShippingAddress(
             name: addressDetails.name,
             address: Checkout.Address(

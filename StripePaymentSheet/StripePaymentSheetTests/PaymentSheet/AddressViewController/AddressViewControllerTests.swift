@@ -116,7 +116,7 @@ final class AddressViewControllerTests: XCTestCase {
         merchantDelegate.completionExpectation = expectation(description: "Merchant completion")
         let integrationDelegate = IntegrationDelegate()
         integrationDelegate.waitsForCompletion = true
-        integrationDelegate.loadingExpectation = expectation(description: "Loading started")
+        integrationDelegate.saveExpectation = expectation(description: "Save started")
         let viewController = makeViewController(
             configuration: makeConfiguration(defaultAddress: .init(
                 city: "San Francisco",
@@ -133,7 +133,7 @@ final class AddressViewControllerTests: XCTestCase {
 
         // When address collection completes and the save begins
         viewController.didContinue()
-        await fulfillment(of: [integrationDelegate.loadingExpectation!])
+        await fulfillment(of: [integrationDelegate.saveExpectation!])
 
         // Then the form, navigation, and save button are disabled while the button shows loading
         XCTAssertFalse(viewController.view.isUserInteractionEnabled)
@@ -225,7 +225,6 @@ private final class MerchantDelegate: AddressViewControllerDelegate {
 @MainActor
 private final class IntegrationDelegate: AddressViewController.IntegrationDelegate {
     var saveExpectation: XCTestExpectation?
-    var loadingExpectation: XCTestExpectation?
     var receivedAddressDetails: [AddressViewController.AddressDetails] = []
     var waitsForCompletion = false
     private let error: Error?
@@ -235,19 +234,13 @@ private final class IntegrationDelegate: AddressViewController.IntegrationDelega
         self.error = error
     }
 
-    func save(
-        addressDetails: AddressViewController.AddressDetails,
-        setLoading: (Bool) -> Void
-    ) async throws {
+    func save(addressDetails: AddressViewController.AddressDetails) async throws {
         receivedAddressDetails.append(addressDetails)
         saveExpectation?.fulfill()
         if waitsForCompletion {
-            setLoading(true)
-            loadingExpectation?.fulfill()
             await withCheckedContinuation { continuation in
                 saveContinuation = continuation
             }
-            setLoading(false)
         }
         if let error {
             throw error
