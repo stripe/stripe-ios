@@ -8,16 +8,15 @@
 
 import CoreML
 import Foundation
-@_spi(STP) import StripeCore
 import Vision
 
 /// Loads and compiles CoreML models from a remote URL. The compiled model is saved
 /// to a cache directory. If a model with the same remote URL is loaded again, the
 /// cached model will be loaded instead of re-downloading it.
-final class MLModelLoader {
+final class MLModelLoader: @unchecked Sendable {
 
-    private let loadPromiseCacheQueue = DispatchQueue(label: "com.stripe.ml-loader")
-    private var loadPromiseCache: [URL: Promise<MLModel>] = [:]
+    private let loadTaskCacheQueue = DispatchQueue(label: "com.stripe.ml-loader")
+    private var loadTaskCache: [URL: Task<MLModel, Error>] = [:]
 
     let fileDownloader: FileDownloader
     let cacheDirectory: URL
@@ -70,65 +69,30 @@ final class MLModelLoader {
     /// - Parameters:
     ///   - remoteURL: The URL to download the model from.
     ///
-    /// - Returns: A future resolving to an `MLModel` instantiated from the compiled model.
+    /// - Returns: An `MLModel` instantiated from the compiled model.
     func loadModel(
         fromRemote remoteURL: URL
-    ) -> Future<MLModel> {
-        let returnedPromise = Promise<MLModel>()
-
-        // Dispatch before accessing promise cache
-        loadPromiseCacheQueue.async { [weak self] in
-            guard let self = self else { return }
-
-            // Check if we've already started downloading the model
-            if let cachedPromise = self.loadPromiseCache[remoteURL] {
-                return cachedPromise.observe(on: loadPromiseCacheQueue) { returnedPromise.fullfill(with: $0) }
+    ) async throws -> MLModel {
+        let (task, ownsCacheEntry) = loadTaskCacheQueue.sync {
+            if let task = loadTaskCache[remoteURL] {
+                return (task, false)
             }
 
-            // Check if model is already cached to file system
-            let cachedModel = self.getCachedLocation(forRemoteURL: remoteURL)
-            do {
-                let mlModel = try MLModel(contentsOf: cachedModel)
-                return returnedPromise.resolve(with: mlModel)
-            } catch {
-                if FileManager.default.fileExists(atPath: cachedModel.path) {
-                    Self.logModelLoadingError(
-                        error,
-                        stage: "load_cached_model"
-                    )
-
-                    // If the model failed to load because it was corrupted, delete the artifact
-                    try? FileManager.default.removeItem(at: cachedModel)
-                }
+            let task = Task {
+                try await self.loadModelFromCacheOrRemote(remoteURL)
             }
-
-            self.fileDownloader.downloadFileTemporarily(from: remoteURL).chained(on: loadPromiseCacheQueue) {
-                [weak self] tmpFileURL -> Promise<MLModel> in
-                let compilePromise = Promise<MLModel>()
-                compilePromise.fulfill { [weak self] in
-                    let tmpCompiledURL = try MLModel.compileModel(at: tmpFileURL)
-                    let compiledURL =
-                        self?.cache(
-                            compiledModel: tmpCompiledURL,
-                            downloadedFrom: remoteURL
-                        ) ?? tmpCompiledURL
-                    return try MLModel(contentsOf: compiledURL)
-                }
-                return compilePromise
-            }.observe(on: loadPromiseCacheQueue) { [weak self] result in
-                returnedPromise.fullfill(with: result)
-
-                // Remove from promise cache
-                self?.loadPromiseCacheQueue.async { [weak self] in
-                    self?.loadPromiseCache.removeValue(forKey: remoteURL)
-                }
-            }
-
-            // Cache the promise
-            self.loadPromiseCache[remoteURL] = returnedPromise
+            loadTaskCache[remoteURL] = task
+            return (task, true)
         }
 
-        return returnedPromise
+        defer {
+            if ownsCacheEntry {
+                _ = loadTaskCacheQueue.sync {
+                    loadTaskCache.removeValue(forKey: remoteURL)
+                }
+            }
+        }
+        return try await task.value
     }
 
     /// Downloads, compiles, and loads a `.mlmodel` file stored on a remote URL.
@@ -140,21 +104,44 @@ final class MLModelLoader {
     /// - Parameters:
     ///   - remoteURL: The URL to download the model from.
     ///
-    /// - Returns: A future resolving to a `VNCoreMLModel` instantiated from the compiled model.
+    /// - Returns: A `VNCoreMLModel` instantiated from the compiled model.
     func loadVisionModel(
         fromRemote remoteURL: URL
-    ) -> Future<VNCoreMLModel> {
-        return loadModel(fromRemote: remoteURL).chained(on: loadPromiseCacheQueue) { mlModel in
-            let promise = Promise<VNCoreMLModel>()
-            promise.fulfill {
-                return try VNCoreMLModel(for: mlModel)
-            }
-            return promise
-        }
+    ) async throws -> VNCoreMLModel {
+        try VNCoreMLModel(for: await loadModel(fromRemote: remoteURL))
     }
 }
 
 private extension MLModelLoader {
+    func loadModelFromCacheOrRemote(_ remoteURL: URL) async throws -> MLModel {
+        let cachedModel = getCachedLocation(forRemoteURL: remoteURL)
+        do {
+            return try MLModel(contentsOf: cachedModel)
+        } catch {
+            if FileManager.default.fileExists(atPath: cachedModel.path) {
+                Self.logModelLoadingError(
+                    error,
+                    stage: "load_cached_model"
+                )
+
+                // If the model failed to load because it was corrupted, delete the artifact
+                try? FileManager.default.removeItem(at: cachedModel)
+            }
+        }
+
+        return try await downloadCompileAndLoadModel(fromRemote: remoteURL)
+    }
+
+    func downloadCompileAndLoadModel(fromRemote remoteURL: URL) async throws -> MLModel {
+        let tmpFileURL = try await fileDownloader.downloadFileTemporarily(from: remoteURL)
+        let tmpCompiledURL = try MLModel.compileModel(at: tmpFileURL)
+        let compiledURL = cache(
+            compiledModel: tmpCompiledURL,
+            downloadedFrom: remoteURL
+        ) ?? tmpCompiledURL
+        return try MLModel(contentsOf: compiledURL)
+    }
+
     static func logModelLoadingError(
         _ error: Error,
         stage: String,

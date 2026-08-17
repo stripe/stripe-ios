@@ -13,32 +13,32 @@ import UIKit
 protocol IdentityAPIClient: AnyObject {
     var verificationSessionId: String { get }
 
-    func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage>
+    func getIdentityVerificationPage() async throws -> StripeAPI.VerificationPage
 
     func updateIdentityVerificationPageData(
         updating verificationData: StripeAPI.VerificationPageDataUpdate
-    ) -> Promise<StripeAPI.VerificationPageData>
+    ) async throws -> StripeAPI.VerificationPageData
 
-    func submitIdentityVerificationPage() -> Promise<StripeAPI.VerificationPageData>
+    func submitIdentityVerificationPage() async throws -> StripeAPI.VerificationPageData
 
     func uploadImage(
         _ image: UIImage,
         compressionQuality: CGFloat,
         purpose: String,
         fileName: String
-    ) -> Future<STPAPIClient.FileAndUploadMetrics>
+    ) async throws -> STPAPIClient.FileAndUploadMetrics
 
     func verifyTestVerificationSession(
         simulateDelay: Bool
-    ) -> Promise<StripeAPI.VerificationPageData>
+    ) async throws -> StripeAPI.VerificationPageData
 
     func unverifyTestVerificationSession(
         simulateDelay: Bool
-    ) -> Promise<StripeAPI.VerificationPageData>
+    ) async throws -> StripeAPI.VerificationPageData
 
-    func generatePhoneOtp() -> Promise<StripeAPI.VerificationPageData>
+    func generatePhoneOtp() async throws -> StripeAPI.VerificationPageData
 
-    func cannotPhoneVerifyOtp() -> Promise<StripeAPI.VerificationPageData>
+    func cannotPhoneVerifyOtp() async throws -> StripeAPI.VerificationPageData
 }
 
 final class IdentityAPIClientImpl: IdentityAPIClient {
@@ -84,8 +84,8 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         apiClient.appInfo = STPAPIClient.shared.appInfo
     }
 
-    func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage> {
-        return apiClient.get(
+    func getIdentityVerificationPage() async throws -> StripeAPI.VerificationPage {
+        try await apiClient.get(
             resource: APIEndpointVerificationPage(id: verificationSessionId),
             parameters: ["app_identifier": Bundle.main.bundleIdentifier ?? ""]
         )
@@ -93,15 +93,15 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
 
     func updateIdentityVerificationPageData(
         updating verificationData: StripeAPI.VerificationPageDataUpdate
-    ) -> Promise<StripeAPI.VerificationPageData> {
-        return apiClient.post(
+    ) async throws -> StripeAPI.VerificationPageData {
+        try await apiClient.post(
             resource: APIEndpointVerificationPageData(id: verificationSessionId),
             object: verificationData
         )
     }
 
-    func submitIdentityVerificationPage() -> Promise<StripeAPI.VerificationPageData> {
-        return apiClient.post(
+    func submitIdentityVerificationPage() async throws -> StripeAPI.VerificationPageData {
+        try await apiClient.post(
             resource: APIEndpointVerificationPageSubmit(id: verificationSessionId),
             parameters: [:]
         )
@@ -112,8 +112,8 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         compressionQuality: CGFloat,
         purpose: String,
         fileName: String
-    ) -> Future<STPAPIClient.FileAndUploadMetrics> {
-        return apiClient.uploadImageAndGetMetrics(
+    ) async throws -> STPAPIClient.FileAndUploadMetrics {
+        return try await apiClient.uploadImageAndGetMetrics(
             image,
             compressionQuality: compressionQuality,
             purpose: purpose,
@@ -122,29 +122,29 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         )
     }
 
-    func verifyTestVerificationSession(simulateDelay: Bool) -> Promise<StripeAPI.VerificationPageData> {
-        return apiClient.post(
+    func verifyTestVerificationSession(simulateDelay: Bool) async throws -> StripeAPI.VerificationPageData {
+        try await apiClient.post(
             resource: APIEndpointVerificationPageTestingVerify(id: verificationSessionId),
             parameters: ["simulate_delay": simulateDelay]
         )
     }
 
-    func unverifyTestVerificationSession(simulateDelay: Bool) -> Promise<StripeAPI.VerificationPageData> {
-        return apiClient.post(
+    func unverifyTestVerificationSession(simulateDelay: Bool) async throws -> StripeAPI.VerificationPageData {
+        try await apiClient.post(
             resource: APIEndpointVerificationPageTestingUnverify(id: verificationSessionId),
             parameters: ["simulate_delay": simulateDelay]
         )
     }
 
-    func generatePhoneOtp() -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
-        return apiClient.post(
+    func generatePhoneOtp() async throws -> StripeCore.StripeAPI.VerificationPageData {
+        try await apiClient.post(
             resource: APIEndpointVerificationPagePhoneOtpGenerate(id: verificationSessionId),
             parameters: [:]
         )
     }
 
-    func cannotPhoneVerifyOtp() -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
-        return apiClient.post(
+    func cannotPhoneVerifyOtp() async throws -> StripeCore.StripeAPI.VerificationPageData {
+        try await apiClient.post(
             resource: APIEndpointVerificationPagePhoneOtpCannotVerify(id: verificationSessionId),
             parameters: [:]
         )

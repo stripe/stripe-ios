@@ -13,6 +13,7 @@ import XCTest
 
 @_spi(STP) @testable import StripeIdentity
 
+@MainActor
 final class VerificationSheetControllerTest: XCTestCase {
 
     let mockVerificationSessionId = "vs_123"
@@ -57,13 +58,18 @@ final class VerificationSheetControllerTest: XCTestCase {
         exp = XCTestExpectation(description: "Finished API call")
     }
 
-    func testLoadValidResponse() throws {
+    func testLoadValidResponse() async throws {
         let mockResponse = try VerificationPageMock.response200.make()
+        let requestExp = expectation(description: "Request made")
+        mockAPIClient.verificationPage.callBackOnRequest {
+            requestExp.fulfill()
+        }
 
         // Load
-        controller.load().observe { _ in
-            self.exp.fulfill()
+        let loadTask = Task {
+            await controller.load()
         }
+        await fulfillment(of: [requestExp], timeout: 1)
 
         // Verify 1 request made with secret
         XCTAssertEqual(mockAPIClient.verificationPage.requestHistory.count, 1)
@@ -74,8 +80,9 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Respond to request with success
         mockAPIClient.verificationPage.respondToRequests(with: .success(mockResponse))
 
-        // Verify completion block is called
-        wait(for: [exp], timeout: 1)
+        // Verify load completes
+        let result = await loadTask.value
+        XCTAssertEqual(try? result.get(), mockResponse)
 
         // Verify response updated on controller
         XCTAssertEqual(try? controller.verificationPageResponse?.get(), mockResponse)
@@ -83,13 +90,18 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertTrue(mockMLModelLoader.didStartLoadingFaceModels)
     }
 
-    func testLoadSubmittedValidResponse() throws {
+    func testLoadSubmittedValidResponse() async throws {
         let mockResponse = try VerificationPageMock.response200Submitted.make()
+        let requestExp = expectation(description: "Request made")
+        mockAPIClient.verificationPage.callBackOnRequest {
+            requestExp.fulfill()
+        }
 
         // Load
-        controller.load().observe { _ in
-            self.exp.fulfill()
+        let loadTask = Task {
+            await controller.load()
         }
+        await fulfillment(of: [requestExp], timeout: 1)
 
         // Verify 1 request made with secret
         XCTAssertEqual(mockAPIClient.verificationPage.requestHistory.count, 1)
@@ -100,8 +112,9 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Respond to request with success
         mockAPIClient.verificationPage.respondToRequests(with: .success(mockResponse))
 
-        // Verify completion block is called
-        wait(for: [exp], timeout: 1)
+        // Verify load completes
+        let result = await loadTask.value
+        XCTAssertEqual(try? result.get(), mockResponse)
 
         // Verify response updated on controller
         XCTAssertEqual(try? controller.verificationPageResponse?.get(), mockResponse)
@@ -110,19 +123,27 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertTrue(controller.isVerificationPageSubmitted)
     }
 
-    func testLoadErrorResponse() throws {
+    func testLoadErrorResponse() async {
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
+        let requestExp = expectation(description: "Request made")
+        mockAPIClient.verificationPage.callBackOnRequest {
+            requestExp.fulfill()
+        }
 
         // Load
-        controller.load().observe { _ in
-            self.exp.fulfill()
+        let loadTask = Task {
+            await controller.load()
         }
+        await fulfillment(of: [requestExp], timeout: 1)
 
         // Respond to request with error
         mockAPIClient.verificationPage.respondToRequests(with: .failure(mockError))
 
-        // Verify completion block is called
-        wait(for: [exp], timeout: 1)
+        // Verify load completes with error
+        let result = await loadTask.value
+        guard case .failure = result else {
+            return XCTFail("Expected failure")
+        }
 
         // Verify error updated on controller
         guard case .failure = controller.verificationPageResponse else {
@@ -152,33 +173,44 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertTrue(mockResponse.shouldSubmit3DFaceCaptureData)
     }
 
-    func testLoadAndUpdateUI() throws {
+    func testLoadAndUpdateUI() async throws {
         let mockResponse = try VerificationPageMock.response200.make()
+        let requestExp = expectation(description: "Request made")
+        mockAPIClient.verificationPage.callBackOnRequest {
+            requestExp.fulfill()
+        }
+
         controller.loadAndUpdateUI(skipTestMode: true)
+        await fulfillment(of: [requestExp], timeout: 1)
 
         // Respond to request with success
         mockAPIClient.verificationPage.respondToRequests(with: .success(mockResponse))
 
         // Verify response sent to flowController
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
         XCTAssertEqual(
             try? mockFlowController.transitionedWithStaticContentResult?.get(),
             mockResponse
         )
     }
 
-    func testSaveDataValidResponse() throws {
+    func testSaveDataValidResponse() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         let mockResponse = try VerificationPageDataMock.noErrors.make()
         let mockData = StripeAPI.VerificationPageCollectedData(biometricConsent: true)
         mockFlowController.uncollectedFields = [.idDocumentFront, .idDocumentBack]
+        let saveRequestExp = expectation(description: "Save data request was made")
+        mockAPIClient.verificationPageData.callBackOnRequest {
+            saveRequestExp.fulfill()
+        }
 
         // Save data
-        controller.saveAndTransition(from: .biometricConsent, collectedData: mockData) {
-            self.exp.fulfill()
+        let saveTask = Task {
+            await controller.saveAndTransition(from: .biometricConsent, collectedData: mockData)
         }
+        await fulfillment(of: [saveRequestExp], timeout: 1)
 
         // Verify analytics client updated
         XCTAssertEqual(identityAnalyticsClient.timeToScreenFromScreen, .biometricConsent)
@@ -210,37 +242,41 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockAPIClient.verificationSessionSubmit.callBackOnRequest {
             submitRequestExp.fulfill()
         }
-        wait(for: [submitRequestExp], timeout: 1)
+        await fulfillment(of: [submitRequestExp], timeout: 1)
 
         // Verify submit request
         XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
         mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
 
-        // Verify completion block is called
-        wait(for: [exp], timeout: 1)
+        await saveTask.value
 
         // Verify value cached locally
         XCTAssertEqual(controller.collectedData.biometricConsent, true)
 
         // Verify response sent to flowController
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
         XCTAssertEqual(
             try? mockFlowController.transitionedWithUpdateDataResult?.get(),
             mockResponse
         )
     }
 
-    func testSaveDataErrorResponse() throws {
+    func testSaveDataErrorResponse() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
         let mockData = StripeAPI.VerificationPageCollectedData(biometricConsent: true)
+        let saveRequestExp = expectation(description: "Save data request was made")
+        mockAPIClient.verificationPageData.callBackOnRequest {
+            saveRequestExp.fulfill()
+        }
 
         // Save data
-        controller.saveAndTransition(from: .biometricConsent, collectedData: mockData) {
-            self.exp.fulfill()
+        let saveTask = Task {
+            await controller.saveAndTransition(from: .biometricConsent, collectedData: mockData)
         }
+        await fulfillment(of: [saveRequestExp], timeout: 1)
 
         // Verify analytics client updated
         XCTAssertEqual(identityAnalyticsClient.timeToScreenFromScreen, .biometricConsent)
@@ -248,20 +284,19 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Respond to request with failure
         mockAPIClient.verificationPageData.respondToRequests(with: .failure(mockError))
 
-        // Verify completion block is called
-        wait(for: [exp], timeout: 1)
+        await saveTask.value
 
         // Verify value not cached locally
         XCTAssertNil(controller.collectedData.biometricConsent)
 
         // Verify response sent to flowController
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
         guard case .failure = mockFlowController.transitionedWithUpdateDataResult else {
             return XCTFail("Expected failure")
         }
     }
 
-    func testSaveSelfieDataIncludesTrainingConsent() throws {
+    func testSaveSelfieDataIncludesTrainingConsent() async throws {
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         let mockResponse = try VerificationPageDataMock.noErrors.make()
@@ -273,18 +308,17 @@ final class VerificationSheetControllerTest: XCTestCase {
             saveRequestExp.fulfill()
         }
 
-        controller.saveSelfieFileDataAndTransition(
-            from: .selfieCapture,
-            selfieUploader: selfieUploader,
-            capturedImages: capturedImages,
-            trainingConsent: true
-        ) {
-            self.exp.fulfill()
+        selfieUploader.uploadResultValue = .success(try makeUploadedSelfieFiles())
+        let saveTask = Task {
+            await controller.saveSelfieFileDataAndTransition(
+                from: .selfieCapture,
+                selfieUploader: selfieUploader,
+                capturedImages: capturedImages,
+                trainingConsent: true
+            )
         }
 
-        selfieUploader.uploadPromise.resolve(with: try makeUploadedSelfieFiles())
-
-        wait(for: [saveRequestExp], timeout: 1)
+        await fulfillment(of: [saveRequestExp], timeout: 1)
         XCTAssertNil(
             mockAPIClient.verificationPageData.requestHistory.first?.collectedData?
                 .biometricConsent
@@ -301,16 +335,16 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockAPIClient.verificationSessionSubmit.callBackOnRequest {
             submitRequestExp.fulfill()
         }
-        wait(for: [submitRequestExp], timeout: 1)
+        await fulfillment(of: [submitRequestExp], timeout: 1)
 
         mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
 
-        wait(for: [exp], timeout: 1)
+        await saveTask.value
         XCTAssertNil(controller.collectedData.biometricConsent)
         XCTAssertEqual(controller.collectedData.face?.trainingConsent, true)
     }
 
-    func testSaveSelfieDataIncludes3DFieldsWhenExperimentIsEnabled() throws {
+    func testSaveSelfieDataIncludes3DFieldsWhenExperimentIsEnabled() async throws {
         let verificationPage = try VerificationPageMock.response200.make().withExperiments([
             .init(
                 experimentName: "idprod_3d_face_capture_mobile",
@@ -331,18 +365,17 @@ final class VerificationSheetControllerTest: XCTestCase {
             saveRequestExp.fulfill()
         }
 
-        controller.saveSelfieFileDataAndTransition(
-            from: .selfieCapture,
-            selfieUploader: selfieUploader,
-            capturedImages: capturedImages,
-            trainingConsent: true
-        ) {
-            self.exp.fulfill()
+        selfieUploader.uploadResultValue = .success(try makeUploadedSelfieFiles(includeSideFrames: true))
+        let saveTask = Task {
+            await controller.saveSelfieFileDataAndTransition(
+                from: .selfieCapture,
+                selfieUploader: selfieUploader,
+                capturedImages: capturedImages,
+                trainingConsent: true
+            )
         }
 
-        selfieUploader.uploadPromise.resolve(with: try makeUploadedSelfieFiles(includeSideFrames: true))
-
-        wait(for: [saveRequestExp], timeout: 1)
+        await fulfillment(of: [saveRequestExp], timeout: 1)
         let face = mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.face
         XCTAssertEqual(face?.leftHighResImage, "left_low")
         XCTAssertEqual(face?.rightHighResImage, "right_low")
@@ -355,10 +388,10 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockAPIClient.verificationSessionSubmit.callBackOnRequest {
             submitRequestExp.fulfill()
         }
-        wait(for: [submitRequestExp], timeout: 1)
+        await fulfillment(of: [submitRequestExp], timeout: 1)
 
         mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
-        wait(for: [exp], timeout: 1)
+        await saveTask.value
     }
 
     func testFaceDataIncludes3DFieldsWhenServerSupportIsEnabled() throws {
@@ -426,7 +459,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertNil(frameData.faceLandmarkResult)
     }
 
-    func testSaveDocumentFrontNotNeedbackSuccess() throws {
+    func testSaveDocumentFrontNotNeedbackSuccess() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
@@ -439,22 +472,18 @@ final class VerificationSheetControllerTest: XCTestCase {
             saveRequestExp.fulfill()
         }
 
-        let notNeedbackExp = expectation(description: "onNotNeedback is called")
-        controller.saveDocumentFrontAndDecideBack(
-            from: .biometricConsent,
-            documentUploader: mockDocumentUploader,
-            onCompletion: { isBackRequired in
-                if !isBackRequired {
-                    notNeedbackExp.fulfill()
-                }
-            }
-        )
-
         // Mock that document upload succeeded
-        mockDocumentUploader.frontUploadPromise.resolve(with: frontFileData)
+        mockDocumentUploader.frontUploadResultValue = .success(frontFileData)
+
+        let saveTask = Task {
+            await controller.saveDocumentFrontAndDecideBack(
+                from: .biometricConsent,
+                documentUploader: mockDocumentUploader
+            )
+        }
 
         // Verify save data request was made
-        wait(for: [saveRequestExp], timeout: 1)
+        await fulfillment(of: [saveRequestExp], timeout: 1)
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
         XCTAssertEqual(
             mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocumentFront,
@@ -467,14 +496,14 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockAPIClient.verificationSessionSubmit.callBackOnRequest {
             submitRequestExp.fulfill()
         }
-        wait(for: [submitRequestExp], timeout: 1)
+        await fulfillment(of: [submitRequestExp], timeout: 1)
 
         // Verify submit request
         XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
         mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
 
-        // Verify completion block is called
-        wait(for: [notNeedbackExp], timeout: 1)
+        let isBackRequired = await saveTask.value
+        XCTAssertFalse(isBackRequired)
 
         // Verify analytics client updated
         XCTAssertEqual(identityAnalyticsClient.timeToScreenFromScreen, .biometricConsent)
@@ -483,10 +512,10 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertEqual(controller.collectedData.idDocumentFront, frontFileData)
 
         // Verify response sent to flowController
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
     }
 
-    func testForceDocumentFrontNotNeedbackSuccess() throws {
+    func testForceDocumentFrontNotNeedbackSuccess() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
@@ -499,22 +528,17 @@ final class VerificationSheetControllerTest: XCTestCase {
             saveRequestExp.fulfill()
         }
 
-        let notNeedbackExp = expectation(description: "onNotNeedback is called")
-
-        controller.forceDocumentFrontAndDecideBack(
-            from: .biometricConsent,
-            onCompletion: { isBackRequired in
-                if !isBackRequired {
-                    notNeedbackExp.fulfill()
-                }
-            }
-        )
-
         // Mock that document upload succeeded
-        mockDocumentUploader.frontUploadPromise.resolve(with: frontFileData)
+        mockDocumentUploader.frontUploadResultValue = .success(frontFileData)
+
+        let saveTask = Task {
+            await controller.forceDocumentFrontAndDecideBack(
+                from: .biometricConsent
+            )
+        }
 
         // Verify save data request was made
-        wait(for: [saveRequestExp], timeout: 1)
+        await fulfillment(of: [saveRequestExp], timeout: 1)
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
         XCTAssertEqual(
             mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocumentFront,
@@ -527,14 +551,14 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockAPIClient.verificationSessionSubmit.callBackOnRequest {
             submitRequestExp.fulfill()
         }
-        wait(for: [submitRequestExp], timeout: 1)
+        await fulfillment(of: [submitRequestExp], timeout: 1)
 
         // Verify submit request
         XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
         mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
 
-        // Verify completion block is called
-        wait(for: [notNeedbackExp], timeout: 1)
+        let isBackRequired = await saveTask.value
+        XCTAssertFalse(isBackRequired)
 
         // Verify analytics client updated
         XCTAssertEqual(identityAnalyticsClient.timeToScreenFromScreen, .biometricConsent)
@@ -543,10 +567,10 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertEqual(controller.collectedData.idDocumentFront, frontFileData.withForceConfirm(true))
 
         // Verify response sent to flowController
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
     }
 
-    func testSaveDocumentFrontNeedbackSuccess() throws {
+    func testSaveDocumentFrontNeedbackSuccess() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
@@ -559,22 +583,18 @@ final class VerificationSheetControllerTest: XCTestCase {
             saveRequestExp.fulfill()
         }
 
-        let needBackExp = expectation(description: "onNeedBack is called")
-        controller.saveDocumentFrontAndDecideBack(
-            from: .biometricConsent,
-            documentUploader: mockDocumentUploader,
-            onCompletion: { isBackRequired in
-                if isBackRequired {
-                    needBackExp.fulfill()
-                }
-            }
-        )
-
         // Mock that document upload succeeded
-        mockDocumentUploader.frontUploadPromise.resolve(with: frontFileData)
+        mockDocumentUploader.frontUploadResultValue = .success(frontFileData)
+
+        let saveTask = Task {
+            await controller.saveDocumentFrontAndDecideBack(
+                from: .biometricConsent,
+                documentUploader: mockDocumentUploader
+            )
+        }
 
         // Verify save data request was made
-        wait(for: [saveRequestExp], timeout: 1)
+        await fulfillment(of: [saveRequestExp], timeout: 1)
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
         XCTAssertEqual(
             mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocumentFront,
@@ -584,14 +604,14 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Respond to request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
 
-        // Verify completion block is called
-        wait(for: [needBackExp], timeout: 1)
+        let isBackRequired = await saveTask.value
+        XCTAssertTrue(isBackRequired)
 
         // Verify values cached locally
         XCTAssertEqual(controller.collectedData.idDocumentFront, frontFileData)
     }
 
-    func testForceDocumentFrontNeedbackSuccess() throws {
+    func testForceDocumentFrontNeedbackSuccess() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
@@ -604,21 +624,17 @@ final class VerificationSheetControllerTest: XCTestCase {
             saveRequestExp.fulfill()
         }
 
-        let needBackExp = expectation(description: "onNeedBack is called")
-        controller.forceDocumentFrontAndDecideBack(
-            from: .biometricConsent,
-            onCompletion: { isBackRequired in
-                if isBackRequired {
-                    needBackExp.fulfill()
-                }
-            }
-        )
-
         // Mock that document upload succeeded
-        mockDocumentUploader.frontUploadPromise.resolve(with: frontFileData)
+        mockDocumentUploader.frontUploadResultValue = .success(frontFileData)
+
+        let saveTask = Task {
+            await controller.forceDocumentFrontAndDecideBack(
+                from: .biometricConsent
+            )
+        }
 
         // Verify save data request was made
-        wait(for: [saveRequestExp], timeout: 1)
+        await fulfillment(of: [saveRequestExp], timeout: 1)
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
         XCTAssertEqual(
             mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocumentFront,
@@ -628,26 +644,26 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Respond to request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
 
-        // Verify completion block is called
-        wait(for: [needBackExp], timeout: 1)
+        let isBackRequired = await saveTask.value
+        XCTAssertTrue(isBackRequired)
 
         // Verify values cached locally
         XCTAssertEqual(controller.collectedData.idDocumentFront, frontFileData.withForceConfirm(true))
     }
 
-    func testSaveDocumentFrontFailure() throws {
+    func testSaveDocumentFrontFailure() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
 
-        controller.saveDocumentFrontAndDecideBack(
-            from: .biometricConsent,
-            documentUploader: mockDocumentUploader,
-            onCompletion: { _ in }
-        )
         // Mock that document upload failed
-        mockDocumentUploader.frontUploadPromise.reject(with: mockError)
+        mockDocumentUploader.frontUploadResultValue = .failure(mockError)
+
+        _ = await controller.saveDocumentFrontAndDecideBack(
+            from: .biometricConsent,
+            documentUploader: mockDocumentUploader
+        )
 
         // Verify values cached locally
         XCTAssertEqual(controller.collectedData.idDocumentFront, nil)
@@ -656,13 +672,13 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 0)
 
         // Verify response sent to flowController
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
         guard case .failure = mockFlowController.transitionedWithUpdateDataResult else {
             return XCTFail("Expected failure")
         }
     }
 
-    func testSaveDocumentBackSuccess() throws {
+    func testSaveDocumentBackSuccess() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
@@ -675,18 +691,18 @@ final class VerificationSheetControllerTest: XCTestCase {
             saveRequestExp.fulfill()
         }
 
-        controller.saveDocumentBackAndTransition(
-            from: .biometricConsent,
-            documentUploader: mockDocumentUploader
-        ) {
-            self.exp.fulfill()
+        // Mock that document upload succeeded
+        mockDocumentUploader.backUploadResultValue = .success(backFileData)
+
+        let saveTask = Task {
+            await controller.saveDocumentBackAndTransition(
+                from: .biometricConsent,
+                documentUploader: mockDocumentUploader
+            )
         }
 
-        // Mock that document upload succeeded
-        mockDocumentUploader.backUploadPromise.resolve(with: backFileData)
-
         // Verify save data request was made
-        wait(for: [saveRequestExp], timeout: 1)
+        await fulfillment(of: [saveRequestExp], timeout: 1)
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
         XCTAssertEqual(
             mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocumentBack,
@@ -700,14 +716,13 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockAPIClient.verificationSessionSubmit.callBackOnRequest {
             submitRequestExp.fulfill()
         }
-        wait(for: [submitRequestExp], timeout: 1)
+        await fulfillment(of: [submitRequestExp], timeout: 1)
 
         // Verify submit request
         XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
         mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
 
-        // Verify completion block is called
-        wait(for: [exp], timeout: 1)
+        await saveTask.value
 
         // Verify analytics client updated
         XCTAssertEqual(identityAnalyticsClient.timeToScreenFromScreen, .biometricConsent)
@@ -716,10 +731,10 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertEqual(controller.collectedData.idDocumentBack, backFileData)
 
         // Verify response sent to flowController
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
     }
 
-    func testForceDocumentBackSuccess() throws {
+    func testForceDocumentBackSuccess() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
@@ -732,17 +747,17 @@ final class VerificationSheetControllerTest: XCTestCase {
             saveRequestExp.fulfill()
         }
 
-        controller.forceDocumentBackAndTransition(
-            from: .biometricConsent
-        ) {
-            self.exp.fulfill()
+        // Mock that document upload succeeded
+        mockDocumentUploader.backUploadResultValue = .success(backFileData)
+
+        let saveTask = Task {
+            await controller.forceDocumentBackAndTransition(
+                from: .biometricConsent
+            )
         }
 
-        // Mock that document upload succeeded
-        mockDocumentUploader.backUploadPromise.resolve(with: backFileData)
-
         // Verify save data request was made
-        wait(for: [saveRequestExp], timeout: 1)
+        await fulfillment(of: [saveRequestExp], timeout: 1)
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
         XCTAssertEqual(
             mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocumentBack,
@@ -756,14 +771,13 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockAPIClient.verificationSessionSubmit.callBackOnRequest {
             submitRequestExp.fulfill()
         }
-        wait(for: [submitRequestExp], timeout: 1)
+        await fulfillment(of: [submitRequestExp], timeout: 1)
 
         // Verify submit request
         XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
         mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
 
-        // Verify completion block is called
-        wait(for: [exp], timeout: 1)
+        await saveTask.value
 
         // Verify analytics client updated
         XCTAssertEqual(identityAnalyticsClient.timeToScreenFromScreen, .biometricConsent)
@@ -772,22 +786,22 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertEqual(controller.collectedData.idDocumentBack, backFileData.withForceConfirm(true))
 
         // Verify response sent to flowController
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
     }
 
-    func testSaveDocumentBackFailure() throws {
+    func testSaveDocumentBackFailure() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
 
-        controller.saveDocumentBackAndTransition(
+        // Mock that document upload failed
+        mockDocumentUploader.backUploadResultValue = .failure(mockError)
+
+        await controller.saveDocumentBackAndTransition(
             from: .biometricConsent,
             documentUploader: mockDocumentUploader
-        ) {}
-
-        // Mock that document upload failed
-        mockDocumentUploader.backUploadPromise.reject(with: mockError)
+        )
 
         // Verify values cached locally
         XCTAssertEqual(controller.collectedData.idDocumentBack, nil)
@@ -796,13 +810,13 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 0)
 
         // Verify response sent to flowController
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
         guard case .failure = mockFlowController.transitionedWithUpdateDataResult else {
             return XCTFail("Expected failure")
         }
     }
 
-    func testSaveDataSubmitsValidResponse() throws {
+    func testSaveDataSubmitsValidResponse() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
@@ -812,6 +826,10 @@ final class VerificationSheetControllerTest: XCTestCase {
         let mockDataResponse = try VerificationPageDataMock.noErrors.make()
         let mockSubmitResponse = try VerificationPageDataMock.submitted.make()
         let mockData = VerificationPageDataUpdateMock.default.collectedData!
+        let saveRequestExp = expectation(description: "Save data request was made")
+        mockAPIClient.verificationPageData.callBackOnRequest {
+            saveRequestExp.fulfill()
+        }
 
         // Mock number of attempted scans
         controller.analyticsClient.countDidStartDocumentScan(for: .front)
@@ -819,9 +837,10 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.analyticsClient.countDidStartDocumentScan(for: .back)
 
         // Save data
-        controller.saveAndTransition(from: .biometricConsent, collectedData: mockData) {
-            self.exp.fulfill()
+        let saveTask = Task {
+            await controller.saveAndTransition(from: .biometricConsent, collectedData: mockData)
         }
+        await fulfillment(of: [saveRequestExp], timeout: 1)
 
         // Respond to save data request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockDataResponse))
@@ -830,7 +849,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockAPIClient.verificationSessionSubmit.callBackOnRequest {
             submitRequestExp.fulfill()
         }
-        wait(for: [submitRequestExp], timeout: 1)
+        await fulfillment(of: [submitRequestExp], timeout: 1)
 
         // Verify submit request
         XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
@@ -838,8 +857,7 @@ final class VerificationSheetControllerTest: XCTestCase {
             with: .success(mockSubmitResponse)
         )
 
-        // Verify completion block is called
-        wait(for: [exp], timeout: 1)
+        await saveTask.value
 
         // Verify value cached locally
         XCTAssertEqual(controller.collectedData, mockData)
@@ -863,14 +881,14 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssert(analytic: analytic, hasMetadata: "selfie_retry_times", withValue: 0)
 
         // Verify response sent to flowController
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
         XCTAssertEqual(
             try? mockFlowController.transitionedWithUpdateDataResult?.get(),
             mockSubmitResponse
         )
     }
 
-    func testSaveDataSubmitsFallbackResponse() throws {
+    func testSaveDataSubmitsFallbackResponse() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
@@ -880,6 +898,10 @@ final class VerificationSheetControllerTest: XCTestCase {
         let mockDataResponse = try VerificationPageDataMock.noErrors.make()
         let mockSubmitResponse = try VerificationPageDataMock.submittedNotClosed.make()
         let mockData = VerificationPageDataUpdateMock.default.collectedData!
+        let saveRequestExp = expectation(description: "Save data request was made")
+        mockAPIClient.verificationPageData.callBackOnRequest {
+            saveRequestExp.fulfill()
+        }
 
         // Mock number of attempted scans
         controller.analyticsClient.countDidStartDocumentScan(for: .front)
@@ -887,9 +909,10 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.analyticsClient.countDidStartDocumentScan(for: .back)
 
         // Save data
-        controller.saveAndTransition(from: .biometricConsent, collectedData: mockData) {
-            self.exp.fulfill()
+        let saveTask = Task {
+            await controller.saveAndTransition(from: .biometricConsent, collectedData: mockData)
         }
+        await fulfillment(of: [saveRequestExp], timeout: 1)
 
         // Respond to save data request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockDataResponse))
@@ -898,7 +921,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockAPIClient.verificationSessionSubmit.callBackOnRequest {
             submitRequestExp.fulfill()
         }
-        wait(for: [submitRequestExp], timeout: 1)
+        await fulfillment(of: [submitRequestExp], timeout: 1)
 
         // Verify submit request
         XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
@@ -906,8 +929,7 @@ final class VerificationSheetControllerTest: XCTestCase {
             with: .success(mockSubmitResponse)
         )
 
-        // Verify completion block is called
-        wait(for: [exp], timeout: 1)
+        await saveTask.value
 
         // Verify missing got updated
         XCTAssertEqual(try controller.verificationPageResponse?.get().requirements.missing, mockSubmitResponse.requirements.missing)
@@ -919,14 +941,14 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertEqual(controller.isVerificationPageSubmitted, false)
 
         // Verify response sent to flowController
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
         XCTAssertEqual(
             try? mockFlowController.transitionedWithUpdateDataResult?.get(),
             mockSubmitResponse
         )
     }
 
-    func testSaveDataSubmitsErrorResponse() throws {
+    func testSaveDataSubmitsErrorResponse() async throws {
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
 
         // Mock initial VerificationPage request successful
@@ -937,11 +959,16 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         let mockData = StripeAPI.VerificationPageCollectedData(biometricConsent: true)
         let mockResponse = try VerificationPageDataMock.response200.make()
+        let saveRequestExp = expectation(description: "Save data request was made")
+        mockAPIClient.verificationPageData.callBackOnRequest {
+            saveRequestExp.fulfill()
+        }
 
         // Save data
-        controller.saveAndTransition(from: .biometricConsent, collectedData: mockData) {
-            self.exp.fulfill()
+        let saveTask = Task {
+            await controller.saveAndTransition(from: .biometricConsent, collectedData: mockData)
         }
+        await fulfillment(of: [saveRequestExp], timeout: 1)
 
         // Respond to save data request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
@@ -950,13 +977,12 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockAPIClient.verificationSessionSubmit.callBackOnRequest {
             submitRequestExp.fulfill()
         }
-        wait(for: [submitRequestExp], timeout: 1)
+        await fulfillment(of: [submitRequestExp], timeout: 1)
 
         // Respond with error
         mockAPIClient.verificationSessionSubmit.respondToRequests(with: .failure(mockError))
 
-        // Verify completion block is called
-        wait(for: [exp], timeout: 1)
+        await saveTask.value
 
         // Verify not submitted
         XCTAssertEqual(controller.isVerificationPageSubmitted, false)
@@ -965,20 +991,24 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertEqual(mockAnalyticsClient.loggedAnalyticsPayloads.count, 0)
 
         // Verify response sent to flowController
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
         guard case .failure = mockFlowController.transitionedWithUpdateDataResult else {
             return XCTFail("Expected failure")
         }
     }
 
-    func testVerifyAndTransitionWithoutDelay() throws {
+    func testVerifyAndTransitionWithoutDelay() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
-        exp = XCTestExpectation(description: "transition finished")
-        controller.verifyAndTransition(simulateDelay: false) {
-            self.exp.fulfill()
+        let requestExp = expectation(description: "verify request made")
+        mockAPIClient.verifyUnverifyRequest.callBackOnRequest {
+            requestExp.fulfill()
         }
+        let verifyTask = Task {
+            await controller.verifyAndTransition(simulateDelay: false)
+        }
+        await fulfillment(of: [requestExp], timeout: 1)
 
         XCTAssertEqual(mockAPIClient.verifyUnverifyRequest.requestHistory.count, 1)
 
@@ -989,19 +1019,23 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         mockAPIClient.verifyUnverifyRequest.respondToRequests(with: .success(try VerificationPageDataMock.response200.make()))
 
-        wait(for: [exp], timeout: 1)
+        await verifyTask.value
 
         XCTAssertEqual(controller.testModeReturnValue, IdentityVerificationSheet.VerificationFlowResult.flowCompleted)
     }
 
-    func testVerifyAndTransitionWithDelay() throws {
+    func testVerifyAndTransitionWithDelay() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
-        exp = XCTestExpectation(description: "transition finished")
-        controller.verifyAndTransition(simulateDelay: true) {
-            self.exp.fulfill()
+        let requestExp = expectation(description: "verify request made")
+        mockAPIClient.verifyUnverifyRequest.callBackOnRequest {
+            requestExp.fulfill()
         }
+        let verifyTask = Task {
+            await controller.verifyAndTransition(simulateDelay: true)
+        }
+        await fulfillment(of: [requestExp], timeout: 1)
 
         XCTAssertEqual(mockAPIClient.verifyUnverifyRequest.requestHistory.count, 1)
 
@@ -1012,19 +1046,23 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         mockAPIClient.verifyUnverifyRequest.respondToRequests(with: .success(try VerificationPageDataMock.response200.make()))
 
-        wait(for: [exp], timeout: 1)
+        await verifyTask.value
 
         XCTAssertEqual(controller.testModeReturnValue, IdentityVerificationSheet.VerificationFlowResult.flowCompleted)
     }
 
-    func testUnverifyAndTransitionWithoutDelay() throws {
+    func testUnverifyAndTransitionWithoutDelay() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
-        exp = XCTestExpectation(description: "transition finished")
-        controller.unverifyAndTransition(simulateDelay: false) {
-            self.exp.fulfill()
+        let requestExp = expectation(description: "unverify request made")
+        mockAPIClient.verifyUnverifyRequest.callBackOnRequest {
+            requestExp.fulfill()
         }
+        let unverifyTask = Task {
+            await controller.unverifyAndTransition(simulateDelay: false)
+        }
+        await fulfillment(of: [requestExp], timeout: 1)
 
         XCTAssertEqual(mockAPIClient.verifyUnverifyRequest.requestHistory.count, 1)
 
@@ -1035,20 +1073,23 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         mockAPIClient.verifyUnverifyRequest.respondToRequests(with: .success(try VerificationPageDataMock.response200.make()))
 
-        wait(for: [exp], timeout: 1)
+        await unverifyTask.value
 
         XCTAssertEqual(controller.testModeReturnValue, IdentityVerificationSheet.VerificationFlowResult.flowCompleted)
     }
 
-    func testUnverifyAndTransitionWithDelay() throws {
+    func testUnverifyAndTransitionWithDelay() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
-        // Verify
-        exp = XCTestExpectation(description: "transition finished")
-        controller.unverifyAndTransition(simulateDelay: true) {
-            self.exp.fulfill()
+        let requestExp = expectation(description: "unverify request made")
+        mockAPIClient.verifyUnverifyRequest.callBackOnRequest {
+            requestExp.fulfill()
         }
+        let unverifyTask = Task {
+            await controller.unverifyAndTransition(simulateDelay: true)
+        }
+        await fulfillment(of: [requestExp], timeout: 1)
 
         XCTAssertEqual(mockAPIClient.verifyUnverifyRequest.requestHistory.count, 1)
 
@@ -1059,35 +1100,70 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         mockAPIClient.verifyUnverifyRequest.respondToRequests(with: .success(try VerificationPageDataMock.response200.make()))
 
-        wait(for: [exp], timeout: 1)
+        await unverifyTask.value
 
         XCTAssertEqual(controller.testModeReturnValue, IdentityVerificationSheet.VerificationFlowResult.flowCompleted)
     }
 
-    func testGeneratePhoneOtp() throws {
+    func testGeneratePhoneOtp() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
-        // Verify
-        controller.generatePhoneOtp { _ in
-            self.exp.fulfill()
+        let requestExp = expectation(description: "generate OTP request made")
+        mockAPIClient.verificationPageGeneratePhoneOtp.callBackOnRequest {
+            requestExp.fulfill()
         }
+        let generateTask = Task { await controller.generatePhoneOtp() }
+        await fulfillment(of: [requestExp], timeout: 1)
 
         XCTAssertEqual(mockAPIClient.verificationPageGeneratePhoneOtp.requestHistory.count, 1)
 
         // Respond with generatePhoneOtp, trigger callback
         mockAPIClient.verificationPageGeneratePhoneOtp.respondToRequests(with: .success(try VerificationPageDataMock.response200.make()))
-        wait(for: [exp], timeout: 1)
+        _ = await generateTask.value
     }
 
-    func testCannotVerifyPhoneOtp() throws {
+    func testGeneratePhoneOtpFailureTransitionsAndReturnsNil() async throws {
+        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+
+        let requestExp = expectation(description: "generate OTP request made")
+        mockAPIClient.verificationPageGeneratePhoneOtp.callBackOnRequest {
+            requestExp.fulfill()
+        }
+
+        let generateTask = Task { await controller.generatePhoneOtp() }
+        await fulfillment(of: [requestExp], timeout: 1)
+
+        let error = NSError(domain: "test", code: 1)
+        mockAPIClient.verificationPageGeneratePhoneOtp.respondToRequests(with: .failure(error))
+
+        await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        let result = await generateTask.value
+        XCTAssertNil(result)
+    }
+
+    func testCannotVerifyPhoneOtp() async throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
-        // Verify
-        controller.sendCannotVerifyPhoneOtpAndTransition(completion: {})
+        let requestExp = expectation(description: "cannot verify OTP request made")
+        mockAPIClient.verificationPageCannotVerifyPhoneOtp.callBackOnRequest {
+            requestExp.fulfill()
+        }
+        let cannotVerifyTask = Task { await controller.sendCannotVerifyPhoneOtpAndTransition() }
+        await fulfillment(of: [requestExp], timeout: 1)
 
         XCTAssertEqual(mockAPIClient.verificationPageCannotVerifyPhoneOtp.requestHistory.count, 1)
+
+        let submitRequestExp = expectation(description: "submit request made")
+        mockAPIClient.verificationSessionSubmit.callBackOnRequest {
+            submitRequestExp.fulfill()
+        }
+        mockAPIClient.verificationPageCannotVerifyPhoneOtp.respondToRequests(with: .success(try VerificationPageDataMock.response200.make()))
+        await fulfillment(of: [submitRequestExp], timeout: 1)
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(try VerificationPageDataMock.response200.make()))
+
+        await cannotVerifyTask.value
     }
 
     func testDismissResultNotSubmitted() throws {
@@ -1319,10 +1395,10 @@ private final class MockDelegate: VerificationSheetControllerDelegate {
 }
 
 private final class SelfieUploaderMock: SelfieUploaderProtocol {
-    let uploadPromise = Promise<SelfieUploader.FileData>()
+    var uploadResultValue: Result<SelfieUploader.FileData, Error>?
 
-    var uploadFuture: Future<SelfieUploader.FileData>? {
-        return uploadPromise
+    func uploadResult() async -> Result<SelfieUploader.FileData, Error>? {
+        uploadResultValue
     }
 
     func uploadImages(_ capturedImages: FaceCaptureData) {

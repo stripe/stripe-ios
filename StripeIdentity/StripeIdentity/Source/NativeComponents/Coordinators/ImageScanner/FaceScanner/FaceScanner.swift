@@ -8,7 +8,6 @@
 
 import CoreVideo
 @_spi(STP) import StripeCameraCore
-@_spi(STP) import StripeCore
 import Vision
 
 typealias AnyFaceScanner = AnyImageScanner<FaceScannerOutput>
@@ -78,41 +77,34 @@ extension FaceScanner: ImageScanner {
         pixelBuffer: CVPixelBuffer,
         sampleBuffer: CMSampleBuffer,
         cameraProperties: CameraSession.DeviceProperties?
-    ) -> StripeCore.Future<FaceScannerOutput> {
-        do {
-            let faceDetectorOutput: FaceDetectorOutput
-            let facePose: FacePose?
-            let faceLandmarkResult: String?
-            if let faceGeometryDetector {
-                let faceGeometry = try faceGeometryDetector.detectFace(pixelBuffer: pixelBuffer)
-                faceDetectorOutput = faceGeometry?.faceDetectorOutput ?? .init(predictions: [])
-                facePose = faceGeometry?.facePose
-                faceLandmarkResult = faceGeometry?.faceLandmarkResult
-            } else if let faceDetector {
-                faceDetectorOutput = try faceDetector.scanImage(pixelBuffer: pixelBuffer)
-                facePose = nil
-                faceLandmarkResult = nil
-            } else {
-                faceDetectorOutput = .init(predictions: [])
-                facePose = nil
-                faceLandmarkResult = nil
-            }
-            return Promise(
-                value: .init(
-                    faceDetectorOutput: faceDetectorOutput,
-                    cameraProperties: cameraProperties,
-                    configuration: configuration,
-                    motionBlurResult: motionBlurResult(
-                        faceDetectorOutput: faceDetectorOutput
-                    ),
-                    facePose: facePose,
-                    faceLandmarkResult: faceLandmarkResult
-                )
-            )
-        } catch {
-            return Promise(error: error)
+    ) throws -> FaceScannerOutput {
+        let faceDetectorOutput: FaceDetectorOutput
+        let facePose: FacePose?
+        let faceLandmarkResult: String?
+        if let faceGeometryDetector {
+            let faceGeometry = try faceGeometryDetector.detectFace(pixelBuffer: pixelBuffer)
+            faceDetectorOutput = faceGeometry?.faceDetectorOutput ?? .init(predictions: [])
+            facePose = faceGeometry?.facePose
+            faceLandmarkResult = faceGeometry?.faceLandmarkResult
+        } else if let faceDetector {
+            faceDetectorOutput = try faceDetector.scanImage(pixelBuffer: pixelBuffer)
+            facePose = nil
+            faceLandmarkResult = nil
+        } else {
+            faceDetectorOutput = .init(predictions: [])
+            facePose = nil
+            faceLandmarkResult = nil
         }
-
+        return FaceScannerOutput(
+            faceDetectorOutput: faceDetectorOutput,
+            cameraProperties: cameraProperties,
+            configuration: configuration,
+            motionBlurResult: motionBlurResult(
+                faceDetectorOutput: faceDetectorOutput
+            ),
+            facePose: facePose,
+            faceLandmarkResult: faceLandmarkResult
+        )
     }
 
     func reset() {

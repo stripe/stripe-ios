@@ -60,8 +60,8 @@ import XCTest
         outputSettings = configuration.outputSettings
         configureCompletion = { setupResult in
             queue.async { [weak self] in
-                self?.configureSessionCompletionExp.fulfill()
                 completion(setupResult)
+                self?.configureSessionCompletionExp.fulfill()
             }
         }
     }
@@ -127,8 +127,8 @@ import XCTest
     ) {
         startSessionCompletion = {
             queue.async { [weak self] in
-                self?.startSessionCompletionExp.fulfill()
                 completion()
+                self?.startSessionCompletionExp.fulfill()
             }
         }
     }
@@ -150,8 +150,8 @@ import XCTest
     ) {
         stopSessionCompletion = {
             queue.async { [weak self] in
-                self?.stopSessionCompletionExp.fulfill()
                 completion()
+                self?.stopSessionCompletionExp.fulfill()
             }
         }
     }

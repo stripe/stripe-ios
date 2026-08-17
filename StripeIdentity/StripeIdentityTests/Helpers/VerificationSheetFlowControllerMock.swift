@@ -43,18 +43,16 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
         self.uncollectedFields = uncollectedFields
     }
 
-    func transitionToNextScreen(
+    @MainActor func transitionToNextScreen(
         skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>?,
-        sheetController: VerificationSheetControllerProtocol,
-        completion: @escaping () -> Void
-    ) {
+        sheetController: VerificationSheetControllerProtocol
+    ) async {
         // do something to skipTestMode
         transitionedWithStaticContentResult = staticContentResult
         transitionedWithUpdateDataResult = updateDataResult
         didTransitionToNextScreenExp.fulfill()
-        completion()
     }
 
     func transitionToCountryNotListedScreen(
@@ -87,11 +85,10 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
         // no-op
     }
 
-    func transitionToErrorScreen(
+    @MainActor func transitionToErrorScreen(
         sheetController: StripeIdentity.VerificationSheetControllerProtocol,
-        error: Error,
-        completion: @escaping () -> Void
-    ) {
+        error: Error
+    ) async {
         // no-op
     }
 
