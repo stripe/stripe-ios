@@ -77,6 +77,45 @@ final class AddressViewControllerTests: XCTestCase {
         XCTAssertNotNil(addressCompletionEvent)
     }
 
+    func testViewDidAppearAlwaysNotifiesCustomIntegrationDelegate() {
+        // Given
+        let integrationDelegate = IntegrationDelegate()
+        let viewController = makeViewController(
+            configuration: makeConfiguration(),
+            merchantDelegate: MerchantDelegate(),
+            integrationDelegate: integrationDelegate
+        )
+        viewController.loadViewIfNeeded()
+
+        // When
+        viewController.viewDidAppear(false)
+        viewController.viewDidAppear(false)
+
+        // Then
+        XCTAssertEqual(integrationDelegate.didShowCallCount, 2)
+    }
+
+    func testDefaultIntegrationDelegateLogsAddressShowOnce() {
+        // Given
+        let viewController = makeViewController(
+            configuration: makeConfiguration(),
+            merchantDelegate: MerchantDelegate()
+        )
+        viewController.loadViewIfNeeded()
+
+        // When
+        viewController.viewDidAppear(false)
+        viewController.viewDidAppear(false)
+
+        // Then
+        XCTAssertEqual(
+            STPAnalyticsClient.sharedClient._testLogHistory.filter {
+                $0["event"] as? String == "mc_address_show"
+            }.count,
+            1
+        )
+    }
+
     func testDidContinueDisplaysIntegrationDelegateError() async {
         // Given an AddressViewController whose integration delegate fails to save
         let expectedError = NSError(
@@ -224,6 +263,7 @@ private final class MerchantDelegate: AddressViewControllerDelegate {
 
 @MainActor
 private final class IntegrationDelegate: AddressViewController.IntegrationDelegate {
+    var didShowCallCount = 0
     var saveExpectation: XCTestExpectation?
     var receivedAddressDetails: [AddressViewController.AddressDetails] = []
     var waitsForCompletion = false
@@ -232,6 +272,10 @@ private final class IntegrationDelegate: AddressViewController.IntegrationDelega
 
     init(error: Error? = nil) {
         self.error = error
+    }
+
+    func didShow() {
+        didShowCallCount += 1
     }
 
     func save(addressDetails: AddressViewController.AddressDetails) async throws {
