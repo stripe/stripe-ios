@@ -130,6 +130,7 @@ extension Checkout.Session {
             shippingAddress: shippingAddress.resolved(currentValue: self.shippingAddress),
             status: status,
             tax: tax,
+            taxAmounts: taxAmounts,
             totals: totals,
             paymentStatus: paymentStatus,
             paymentMethodOptions: paymentMethodOptions,

@@ -218,10 +218,12 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 149)
 
         // Tax amounts
-        XCTAssertEqual(session.tax.taxAmounts?.count, 1)
-        XCTAssertEqual(session.tax.taxAmounts?[0].amount.minorUnitsAmount, 149)
-        XCTAssertFalse(session.tax.taxAmounts?[0].inclusive ?? true)
-        XCTAssertEqual(session.tax.taxAmounts?[0].displayName, "Sales Tax")
+        XCTAssertEqual(session.taxAmounts?.count, 1)
+        XCTAssertFalse(session.taxAmounts?[0].amount.isEmpty ?? true)
+        XCTAssertEqual(session.taxAmounts?[0].minorUnitsAmount, 149)
+        XCTAssertFalse(session.taxAmounts?[0].inclusive ?? true)
+        XCTAssertEqual(session.taxAmounts?[0].displayName, "Sales Tax")
+        XCTAssertEqual(session.taxAmounts?[0].percentage, 7.45)
 
         // Automatic tax
         XCTAssertTrue(session.automaticTaxEnabled)
@@ -430,10 +432,10 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 1000)
         XCTAssertEqual(session.totals.total.minorUnitsAmount, 1000)
         XCTAssertEqual(session.totals.discount.minorUnitsAmount, 0)
-        XCTAssertEqual(session.tax.taxAmounts?.count, 1)
-        XCTAssertEqual(session.tax.taxAmounts?[0].amount.minorUnitsAmount, 186)
-        XCTAssertFalse(session.tax.taxAmounts?[0].inclusive ?? true)
-        XCTAssertEqual(session.tax.taxAmounts?[0].displayName, "Sales Tax")
+        XCTAssertEqual(session.taxAmounts?.count, 1)
+        XCTAssertEqual(session.taxAmounts?[0].minorUnitsAmount, 186)
+        XCTAssertFalse(session.taxAmounts?[0].inclusive ?? true)
+        XCTAssertEqual(session.taxAmounts?[0].displayName, "Sales Tax")
     }
 
     func testUnifiedModeSessionParsesCheckoutItemsTaxAndDiscounts() {
@@ -503,9 +505,9 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(oneTimePrice.amountDetails.total.minorUnitsAmount, 2148)
         XCTAssertEqual(oneTimePrice.amountDetails.taxExclusive.minorUnitsAmount, 148)
 
-        XCTAssertEqual(session.tax.taxAmounts?.count, 1)
-        XCTAssertEqual(session.tax.taxAmounts?[0].amount.minorUnitsAmount, 148)
-        XCTAssertEqual(session.tax.taxAmounts?[0].displayName, "Sales Tax")
+        XCTAssertEqual(session.taxAmounts?.count, 1)
+        XCTAssertEqual(session.taxAmounts?[0].minorUnitsAmount, 148)
+        XCTAssertEqual(session.taxAmounts?[0].displayName, "Sales Tax")
 
         XCTAssertEqual(session.discountAmounts.count, 1)
         XCTAssertEqual(session.discountAmounts[0].amount.minorUnitsAmount, 332)
@@ -865,47 +867,118 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertFalse(Intent.checkout(session.makePublicSession()).isSetupFutureUsageSet(for: .payPal))
     }
 
-    // MARK: - TaxStatus Tests
+    // MARK: - Tax Tests
+
+    func testTax_automaticComplete_isReady() {
+        // Given automatic tax completed
+        let response = CheckoutTestHelpers.makeSession([
+            "tax_meta": [
+                "computation_type": "automatic",
+                "status": "complete",
+            ],
+        ]).withCustomer()
+
+        // When creating the public Session
+        let session = response.makePublicSession()
+
+        // Then the public tax status is ready
+        XCTAssertEqual(session.tax?.status, .ready)
+    }
 
     func testTaxStatus_automaticRequiresLocationInputs_usesTaxContextAddressSource() {
+        // Given automatic tax requires location inputs
         let taxMeta: [String: Any] = [
             "computation_type": "automatic",
             "status": "requires_location_inputs",
         ]
+
+        // When decoding sessions that use shipping, billing, and no address source
         let shipping = CheckoutTestHelpers.makeSession([
             "tax_meta": taxMeta,
             "tax_context": ["automatic_tax_address_source": "session.shipping"],
         ]).withCustomer().makePublicSession()
-        XCTAssertEqual(shipping.tax.status, .requiresShippingAddress)
-
         let billing = CheckoutTestHelpers.makeSession([
             "tax_meta": taxMeta,
             "tax_context": ["automatic_tax_address_source": "session.billing"],
         ]).withCustomer().makePublicSession()
-        XCTAssertEqual(billing.tax.status, .requiresBillingAddress)
-
         let missingSource = CheckoutTestHelpers.makeSession(["tax_meta": taxMeta]).withCustomer().makePublicSession()
-        XCTAssertEqual(missingSource.tax.status, .requiresBillingAddress)
+
+        // Then each Session reflects the address requirement, or has no tax state without a source
+        XCTAssertEqual(shipping.tax?.status, .requiresShippingAddress)
+        XCTAssertEqual(billing.tax?.status, .requiresBillingAddress)
+        XCTAssertNil(missingSource.tax)
     }
 
-    func testTaxStatus_automaticFailed_returnsUnknown() {
-        let session = CheckoutTestHelpers.makeSession([
+    func testTax_automaticFailed_isNil() {
+        // Given automatic tax failed
+        let response = CheckoutTestHelpers.makeSession([
             "tax_meta": [
                 "computation_type": "automatic",
                 "status": "failed",
             ],
-        ]).withCustomer().makePublicSession()
-        XCTAssertEqual(session.tax.status, .unknown)
+        ]).withCustomer()
+
+        // When creating the public Session
+        let session = response.makePublicSession()
+
+        // Then the public Session has no tax state
+        XCTAssertNil(session.tax)
     }
 
-    func testTaxStatus_nonAutomaticComputationType_isReady() {
-        let session = CheckoutTestHelpers.makeSession([
+    func testTax_automaticUnsupportedStatus_isNil() {
+        // Given automatic tax returns an unsupported status
+        let response = CheckoutTestHelpers.makeSession([
+            "tax_meta": [
+                "computation_type": "automatic",
+                "status": "future_status",
+            ],
+        ]).withCustomer()
+
+        // When creating the public Session
+        let session = response.makePublicSession()
+
+        // Then the public Session has no tax state
+        XCTAssertNil(session.tax)
+    }
+
+    func testTax_missingMetadata_isNil() {
+        // Given a response without tax metadata
+        let response = CheckoutTestHelpers.makeSession().withCustomer()
+
+        // When creating the public Session
+        let session = response.makePublicSession()
+
+        // Then the public Session has no tax state
+        XCTAssertNil(session.tax)
+    }
+
+    func testTax_missingComputationType_isNil() {
+        // Given tax metadata without a computation type
+        let response = CheckoutTestHelpers.makeSession([
+            "tax_meta": ["status": "complete"],
+        ]).withCustomer()
+
+        // When creating the public Session
+        let session = response.makePublicSession()
+
+        // Then the public Session has no tax state
+        XCTAssertNil(session.tax)
+    }
+
+    func testTax_nonAutomaticComputationType_isReady() {
+        // Given a non-automatic tax computation
+        let response = CheckoutTestHelpers.makeSession([
             "tax_meta": [
                 "computation_type": "dynamic",
                 "status": "requires_location_inputs",
             ],
-        ]).withCustomer().makePublicSession()
-        XCTAssertEqual(session.tax.status, .ready)
+        ]).withCustomer()
+
+        // When creating the public Session
+        let session = response.makePublicSession()
+
+        // Then the public tax status is ready
+        XCTAssertEqual(session.tax?.status, .ready)
     }
 
     // MARK: - Elements Session Tests
