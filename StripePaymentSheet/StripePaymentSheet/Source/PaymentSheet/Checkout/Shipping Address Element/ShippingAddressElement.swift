@@ -36,14 +36,14 @@ public final class ShippingAddressElement {
         let addressViewControllerConfiguration = configuration.makeAddressViewControllerConfiguration(
             shippingAddress: initialShippingAddress,
             allowedCountries: allowedCountries,
-            apiClient: apiClient,
-            useAutocompleteEndpoints: useAutocompleteEndpoints
+            apiClient: apiClient
         )
         addressViewController = AddressViewController(
             addressSpecProvider: .shared,
             configuration: addressViewControllerConfiguration,
             delegate: self,
-            integrationDelegate: self
+            integrationDelegate: self,
+            useAutocompleteEndpoints: useAutocompleteEndpoints
         )
     }
 
@@ -115,17 +115,12 @@ public final class ShippingAddressElement {
 }
 
 extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
-    func save(
-        addressDetails: AddressViewController.AddressDetails,
-        setLoading: (Bool) -> Void
-    ) async throws {
+    func save(addressDetails: AddressViewController.AddressDetails) async throws {
         guard let delegate else {
             stpAssertionFailure("ShippingAddressElement does not have a delegate.")
             return
         }
 
-        setLoading(true)
-        defer { setLoading(false) }
         try await delegate.updateShippingAddress(
             name: addressDetails.name,
             address: Checkout.Address(

@@ -143,6 +143,8 @@ import UIKit
             return PaymentSheet.LinkConfiguration(display: .automatic, brand: brand)
         case .never:
             return PaymentSheet.LinkConfiguration(display: .never, brand: brand)
+        case .walletButtonHidden:
+            return PaymentSheet.LinkConfiguration(display: .walletButtonHidden, brand: brand)
         }
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
@@ -266,7 +268,6 @@ import UIKit
         }
 
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
-        configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
         configuration.termsDisplay = cardTermsDisplay
         return configuration
     }
@@ -408,7 +409,6 @@ import UIKit
             )
         }
         configuration.additionalFields.checkboxLabel = "Save this address for future orders"
-        configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
         return configuration
     }
 

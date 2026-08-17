@@ -237,7 +237,7 @@ public final class EmbeddedPaymentElement {
                 case .applePay:
                     return PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
                 case .link:
-                    return PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
+                    return PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: configuration)
                 case .saved(paymentMethod: let paymentMethod, confirmParams: _):
                     return loadResult.savedPaymentMethods.contains(paymentMethod)
                 case .new(confirmParams: let confirmParams):

@@ -140,6 +140,10 @@
 
 "Did you mean %@? %@." = "Erre gondolt: %1$@? %2$@.";
 
+"Discard Changes" = "Módosítások elvetése";
+
+"Discard changes?" = "Módosítások elvetése?";
+
 "Discount" = "Engedmény";
 
 "EPS Bank" = "EPS Bank";
@@ -163,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tudomásul veszem, hogy a Stripe beszedéseket végez a(z) %@ nevében, és megerősítem, hogy én vagyok a számla tulajdonosa és az egyetlen személy, aki a terheléseket engedélyezheti erről a számláról.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Szerkesztés folytatása";
 
 "Last 4 digits of SSN" = "Az SSN utolsó 4 számjegye";
 
@@ -343,3 +349,5 @@
 "Yes, update" = "Igen, frissítés";
 
 "Your IBAN should start with a two-letter country code." = "Az IBAN-számának egy kétbetűs országkóddal kell kezdődnie.";
+
+"Your address changes won't be saved." = "A cím módosításai nem lesznek mentve.";
