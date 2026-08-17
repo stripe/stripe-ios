@@ -194,11 +194,10 @@ class STPPaymentCardTextFieldViewModel: NSObject {
     }
 
     func validationStateForPostalCode() -> STPCardValidationState {
-        if (postalCode?.count ?? 0) > 0 {
-            return .valid
-        } else {
-            return .incomplete
-        }
+        return STPPostalCodeValidator.validationState(
+            forPostalCode: postalCode,
+            countryCode: postalCodeCountryCode
+        )
     }
 
     func validationStateForCardNumber(handler: @escaping (STPCardValidationState) -> Void) {
