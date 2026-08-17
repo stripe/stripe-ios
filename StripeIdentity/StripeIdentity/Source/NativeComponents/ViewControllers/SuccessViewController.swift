@@ -12,6 +12,10 @@ import UIKit
 
 final class SuccessViewController: IdentityFlowViewController {
 
+    private enum Styling {
+        static let iconSize = CGSize(width: 32, height: 32)
+    }
+
     private let htmlView = HTMLViewWithIconLabels()
 
     init(
@@ -42,13 +46,15 @@ final class SuccessViewController: IdentityFlowViewController {
             sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
         }
 
+        let clockIcon = Image.iconClock.makeImage(template: true)
+        let largeClockIcon = clockIcon.resized(to: Styling.iconSize) ?? clockIcon
         var flowViewModel = IdentityFlowView.ViewModel(
             headerViewModel: .init(
                 backgroundColor: .systemBackground,
                 headerType: .banner(
                     iconViewModel: .init(
                         iconType: .plain,
-                        iconImage: Image.iconClock.makeImage(template: true),
+                        iconImage: largeClockIcon,
                         iconImageContentMode: .center,
                         iconTintColor: .white,
                         shouldIconBackgroundMatchTintColor: true,
