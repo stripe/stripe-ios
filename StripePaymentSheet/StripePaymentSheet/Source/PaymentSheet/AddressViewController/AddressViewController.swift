@@ -88,7 +88,7 @@ public class AddressViewController: UIViewController {
     @MainActor
     protocol IntegrationDelegate: AnyObject {
         /// Handles completion with the customer's collected address details.
-        func save(addressDetails: AddressDetails, setLoading: (Bool) -> Void) async throws
+        func save(addressDetails: AddressDetails) async throws
     }
 
     weak var integrationDelegate: IntegrationDelegate?
@@ -378,13 +378,9 @@ extension AddressViewController {
                 stpAssertionFailure("AddressViewController attempted to continue with an invalid address.")
                 return
             }
+            setLoading(true)
             do {
-                try await self.integrationDelegate?.save(
-                    addressDetails: addressDetails,
-                    setLoading: { [weak self] isLoading in
-                        self?.setLoading(isLoading)
-                    }
-                )
+                try await self.integrationDelegate?.save(addressDetails: addressDetails)
                 // Re-baseline change tracking only after the save succeeds. If it fails, the
                 // customer can still retry or discard the unsaved values.
                 captureInitialSnapshot()
@@ -393,6 +389,7 @@ extension AddressViewController {
             } catch {
                 self.latestError = error
             }
+            setLoading(false)
         }
     }
 
@@ -647,7 +644,7 @@ extension AddressViewController {
 // MARK: - IntegrationDelegate
 // Default implementation that logs completion and forwards address details to the merchant delegate
 extension AddressViewController: AddressViewController.IntegrationDelegate {
-    func save(addressDetails: AddressDetails, setLoading: (Bool) -> Void) async throws {
+    func save(addressDetails: AddressDetails) async throws {
         logAddressCompleted()
     }
 }
