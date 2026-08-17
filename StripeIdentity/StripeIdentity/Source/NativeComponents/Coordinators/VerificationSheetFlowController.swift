@@ -595,10 +595,17 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         staticContent: StripeAPI.VerificationPage,
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
+        let declineAndContinueButtonText = staticContent.enable3DFaceCapture
+            ? staticContent.selfie?.declineAndContinueButtonText
+                ?? staticContent.biometricConsent.declineButtonText
+            : nil
+
         do {
             return try SelfieWarmupViewController(
                 sheetController: sheetController,
-                trainingConsentText: staticContent.selfie?.trainingConsentText
+                usesBiometricConsentLayout: staticContent.enable3DFaceCapture,
+                trainingConsentText: staticContent.selfie?.trainingConsentText,
+                declineAndContinueButtonText: declineAndContinueButtonText
             )
         } catch {
             return ErrorViewController(

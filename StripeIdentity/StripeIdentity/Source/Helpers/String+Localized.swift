@@ -332,6 +332,20 @@ extension String.Localized {
         )
     }
 
+    static var selfieWarmupConsentTitle: String {
+        STPLocalizedString(
+            "Verify with a selfie",
+            "Title for selfie warmup page with biometric training consent"
+        )
+    }
+
+    static var selfieWarmupConsentBody: String {
+        STPLocalizedString(
+            "With your permission, Stripe may use your images to improve fraud detection. Declining doesn't affect your verification.",
+            "Body for selfie warmup page with biometric training consent"
+        )
+    }
+
     static var selfieWarmupTrainingConsentTitle: String {
         STPLocalizedString(
             "Help us improve verifications",

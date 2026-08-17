@@ -10,15 +10,27 @@
 import UIKit
 
 class SelfieWarmupView: UIView {
+    enum Layout: Equatable {
+        case standard
+        case biometricConsent
+    }
+
     struct Styling {
         static let horizontalInset: CGFloat = 16
         static let heroHeight: CGFloat = 176
+        static let biometricConsentHeroHeight: CGFloat = 144
         static let iconSize: CGFloat = 144
         static let cardCornerRadius: CGFloat = 32
         static let cardInsets: NSDirectionalEdgeInsets = .init(
             top: 32,
             leading: 24,
             bottom: 40,
+            trailing: 24
+        )
+        static let biometricConsentCardInsets: NSDirectionalEdgeInsets = .init(
+            top: 32,
+            leading: 24,
+            bottom: 0,
             trailing: 24
         )
         static let warmupTitleSpacing: CGFloat = 12
@@ -82,7 +94,6 @@ class SelfieWarmupView: UIView {
         label.font = IdentityUI.titleFont
         label.accessibilityTraits = [.header]
         label.adjustsFontForContentSizeCategory = true
-        label.text = String.Localized.selfieWarmupTitle
         return label
     }()
 
@@ -92,13 +103,13 @@ class SelfieWarmupView: UIView {
         label.textAlignment = .center
         label.font = IdentityUI.instructionsFont
         label.adjustsFontForContentSizeCategory = true
-        label.text = String.Localized.selfieWarmupBody
         return label
     }()
 
-    init() {
+    init(layout: Layout = .standard) {
         super.init(frame: .zero)
-        installViews()
+        configure(for: layout)
+        installViews(for: layout)
     }
 
     required init?(coder: NSCoder) {
@@ -107,17 +118,41 @@ class SelfieWarmupView: UIView {
 }
 
 extension SelfieWarmupView {
-    fileprivate func installViews() {
+    fileprivate func configure(for layout: Layout) {
+        switch layout {
+        case .standard:
+            selfieWarmupIconImageView.tintColor = IdentityUI.iconColor
+            selfieWarmupTitleLabel.font = IdentityUI.titleFont
+            selfieWarmupTitleLabel.text = String.Localized.selfieWarmupTitle
+            selfieWarmupBodyLabel.text = String.Localized.selfieWarmupBody
+        case .biometricConsent:
+            selfieWarmupIconImageView.tintColor = IdentityUI.darkIconColor
+            selfieWarmupTitleLabel.font = IdentityUI.titleFont
+            selfieWarmupTitleLabel.text = String.Localized.selfieWarmupConsentTitle
+            selfieWarmupBodyLabel.text = String.Localized.selfieWarmupConsentBody
+        }
+    }
+
+    fileprivate func installViews(for layout: Layout) {
         backgroundColor = .systemBackground
         addAndPinSubview(stackView)
 
-        stackView.addArrangedSubview(heroView)
-        stackView.addArrangedSubview(cardWrapperView)
+        switch layout {
+        case .standard:
+            stackView.addArrangedSubview(heroView)
+            stackView.addArrangedSubview(cardWrapperView)
+        case .biometricConsent:
+            stackView.addArrangedSubview(cardWrapperView)
+            stackView.addArrangedSubview(heroView)
+        }
 
         heroView.addSubview(selfieWarmupIconImageView)
         cardWrapperView.addSubview(cardTopBackgroundView)
         cardWrapperView.addSubview(cardView)
-        cardView.addAndPinSubview(cardStackView, insets: Styling.cardInsets)
+        let cardInsets = layout == .biometricConsent
+            ? Styling.biometricConsentCardInsets
+            : Styling.cardInsets
+        cardView.addAndPinSubview(cardStackView, insets: cardInsets)
 
         cardStackView.addArrangedSubview(selfieWarmupTitleLabel)
         cardStackView.addArrangedSubview(selfieWarmupBodyLabel)
@@ -127,8 +162,11 @@ extension SelfieWarmupView {
         cardTopBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         cardView.translatesAutoresizingMaskIntoConstraints = false
 
+        let heroHeight = layout == .biometricConsent
+            ? Styling.biometricConsentHeroHeight
+            : Styling.heroHeight
         NSLayoutConstraint.activate([
-            heroView.heightAnchor.constraint(equalToConstant: Styling.heroHeight),
+            heroView.heightAnchor.constraint(equalToConstant: heroHeight),
             selfieWarmupIconImageView.centerXAnchor.constraint(equalTo: heroView.centerXAnchor),
             selfieWarmupIconImageView.centerYAnchor.constraint(equalTo: heroView.centerYAnchor),
             selfieWarmupIconImageView.widthAnchor.constraint(equalToConstant: Styling.iconSize),

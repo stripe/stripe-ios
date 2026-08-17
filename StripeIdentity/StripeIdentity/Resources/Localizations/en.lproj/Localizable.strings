@@ -337,6 +337,9 @@
 /* Accessibility label while photo of front of identity document is uploading */
 "Uploading front identity document photo" = "Uploading front identity document photo";
 
+/* Title for selfie warmup page with biometric training consent */
+"Verify with a selfie" = "Verify with a selfie";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Verify your identity";
 
@@ -350,9 +353,11 @@
 /* Back button title for returning to welcome screen of Identity verification */
 "Welcome" = "Welcome";
 
+/* Body for selfie warmup page with biometric training consent */
+"With your permission, Stripe may use your images to improve fraud detection. Declining doesn't affect your verification." = "With your permission, Stripe may use your images to improve fraud detection. Declining doesn't affect your verification.";
+
 /* Line 2 of error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed */
 "You can either try again or upload an image from your device." = "You can either try again or upload an image from your device.";
 
 /* Text for message of warning alert */
 "Your selfie images have not been saved. Do you want to leave?" = "Your selfie images have not been saved. Do you want to leave?";
-

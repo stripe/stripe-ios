@@ -15,11 +15,18 @@ final class SelfieWarmupViewController: IdentityFlowViewController {
 
     init(
         sheetController: VerificationSheetControllerProtocol,
-        trainingConsentText: String? = nil
+        usesBiometricConsentLayout: Bool = false,
+        trainingConsentText: String? = nil,
+        declineAndContinueButtonText: String? = nil
     ) throws {
         var didOpenURLHandler: ((URL) -> Void)?
-        let warmupView = SelfieWarmupView()
+        let warmupView = SelfieWarmupView(
+            layout: usesBiometricConsentLayout ? .biometricConsent : .standard
+        )
         let showsTrainingConsent = trainingConsentText?.isEmpty == false
+        let declineButtonText = usesBiometricConsentLayout
+            ? declineAndContinueButtonText ?? String.Localized.decline
+            : String.Localized.decline
 
         let buttons: [IdentityFlowView.ViewModel.Button] = {
             if showsTrainingConsent {
@@ -34,7 +41,7 @@ final class SelfieWarmupViewController: IdentityFlowViewController {
                         }
                     ),
                     .init(
-                        text: String.Localized.decline,
+                        text: declineButtonText,
                         state: .enabled,
                         isPrimary: false,
                         didTap: {
@@ -60,7 +67,9 @@ final class SelfieWarmupViewController: IdentityFlowViewController {
             }
 
             return .init(
-                text: Self.trainingConsentHTMLText(trainingConsentText),
+                text: usesBiometricConsentLayout
+                    ? trainingConsentText
+                    : Self.trainingConsentHTMLText(trainingConsentText),
                 style: .html(makeStyle: Self.trainingConsentHTMLStyle),
                 didOpenURL: { url in
                     didOpenURLHandler?(url)

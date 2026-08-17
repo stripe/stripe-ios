@@ -58,6 +58,12 @@ final class SelfieWarmupViewControllerTest: XCTestCase {
         )
 
         XCTAssertEqual(vc.flowViewModel.buttons.count, 2)
+        XCTAssertEqual(vc.flowViewModel.buttons.last?.text, String.Localized.decline)
+        XCTAssertTrue(
+            vc.flowViewModel.buttonTopContentViewModel?.text.contains(
+                String.Localized.selfieWarmupTrainingConsentTitle
+            ) == true
+        )
 
         vc.flowViewModel.buttons.last?.didTap()
 
@@ -66,6 +72,26 @@ final class SelfieWarmupViewControllerTest: XCTestCase {
             mockSheetController.transitionedToSelfieCaptureTrainingConsent,
             false
         )
+    }
+
+    func testBiometricConsentLayoutUsesServerCopy() throws {
+        let trainingConsentText = try XCTUnwrap(
+            SelfieWarmupViewControllerTest.mockVerificationPage.selfie?
+                .trainingConsentText
+        )
+        let declineAndContinueButtonText = try XCTUnwrap(
+            SelfieWarmupViewControllerTest.mockVerificationPage.selfie?
+                .declineAndContinueButtonText
+        )
+        let vc = try SelfieWarmupViewController(
+            sheetController: mockSheetController,
+            usesBiometricConsentLayout: true,
+            trainingConsentText: trainingConsentText,
+            declineAndContinueButtonText: declineAndContinueButtonText
+        )
+
+        XCTAssertEqual(vc.flowViewModel.buttons.last?.text, "Decline and continue")
+        XCTAssertEqual(vc.flowViewModel.buttonTopContentViewModel?.text, trainingConsentText)
     }
 
 }
