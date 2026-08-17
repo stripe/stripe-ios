@@ -13,19 +13,35 @@ import UIKit
 final class RowButtonFlatWithDisclosure: RowButton {
     // MARK: - Subviews
     private lazy var disclosureImageView: UIImageView = {
-        let disclosureImage: UIImage
-        if let customDisclosureImage = appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage {
-            disclosureImage = customDisclosureImage
-        } else {
-            disclosureImage = Image.icon_chevron_right.makeImage(template: true)
-                .imageFlippedForRightToLeftLayoutDirection()
-        }
+        let disclosureImage = appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage
+            ?? Image.icon_chevron_right.makeImage(template: true)
         let chevronImageView = UIImageView(image: disclosureImage)
         chevronImageView.tintColor = appearance.embeddedPaymentElement.row.flat.disclosure.color
         chevronImageView.contentMode = .scaleAspectFit
         chevronImageView.translatesAutoresizingMaskIntoConstraints = false
         return chevronImageView
     }()
+
+    // The row can inherit its layout direction after initialization, so resolve the default image during layout.
+    private var disclosureImageLayoutDirection: UIUserInterfaceLayoutDirection?
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        guard appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage == nil else {
+            return
+        }
+        let layoutDirection = effectiveUserInterfaceLayoutDirection
+        guard disclosureImageLayoutDirection != layoutDirection else {
+            return
+        }
+        disclosureImageLayoutDirection = layoutDirection
+
+        let disclosureImage = Image.icon_chevron_right.makeImage(template: true)
+        disclosureImageView.image = layoutDirection == .rightToLeft
+            ? disclosureImage.withHorizontallyFlippedOrientation()
+            : disclosureImage
+    }
 
     override func setupUI() {
         let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
