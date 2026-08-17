@@ -57,7 +57,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         XCTAssertEqual(addressConfiguration.defaultValues.address.country, "US")
         XCTAssertEqual(addressConfiguration.defaultValues.address.line1, "510 Townsend St.")
         XCTAssertTrue(addressConfiguration.apiClient === configuration.apiClient)
-        XCTAssertTrue(addressConfiguration.useAutocompleteEndpoints)
+        XCTAssertTrue(shippingAddressElement.addressViewController.useAutocompleteEndpoints)
     }
 
     func testMakeAddressViewControllerConfiguration() {
@@ -83,8 +83,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         let addressConfiguration = configuration.makeAddressViewControllerConfiguration(
             shippingAddress: shippingAddress,
             allowedCountries: ["US", "CA"],
-            apiClient: apiClient,
-            useAutocompleteEndpoints: true
+            apiClient: apiClient
         )
 
         // Then
@@ -100,7 +99,6 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         XCTAssertEqual(addressConfiguration.defaultValues.address.state, "CA")
         XCTAssertEqual(addressConfiguration.defaultValues.address.postalCode, "94103")
         XCTAssertTrue(addressConfiguration.apiClient === apiClient)
-        XCTAssertTrue(addressConfiguration.useAutocompleteEndpoints)
     }
 
     func testMakeAddressViewControllerConfigurationIgnoresDisallowedShippingAddress() {
@@ -115,8 +113,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         let addressConfiguration = configuration.makeAddressViewControllerConfiguration(
             shippingAddress: shippingAddress,
             allowedCountries: ["US"],
-            apiClient: .shared,
-            useAutocompleteEndpoints: false
+            apiClient: .shared
         )
 
         // Then

@@ -321,6 +321,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case automatic
         case never
+        case walletButtonHidden
     }
 
     enum ForceOnelink: String, PickerEnum {
@@ -734,12 +735,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on, off
     }
 
-    enum UseAutocompleteEndpoints: String, PickerEnum {
-        static var enumName: String { "Autocomplete Endpoints" }
-        case on
-        case off
-    }
-
     var uiStyle: UIStyle
     var layout: Layout
     var mode: Mode
@@ -816,7 +811,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var cardFundingAcceptance: CardFundingAcceptance
     var opensCardScannerAutomatically: OpensCardScannerAutomatically
     var termsDisplay: PaymentMethodTermsDisplay
-    var useAutocompleteEndpoints: UseAutocompleteEndpoints
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -886,8 +880,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             cardBrandAcceptance: .all,
             cardFundingAcceptance: .all,
             opensCardScannerAutomatically: .off,
-            termsDisplay: .unset,
-            useAutocompleteEndpoints: .off
+            termsDisplay: .unset
         )
     }
 
