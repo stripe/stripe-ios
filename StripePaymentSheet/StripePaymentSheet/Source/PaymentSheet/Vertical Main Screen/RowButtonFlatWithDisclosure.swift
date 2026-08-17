@@ -22,23 +22,16 @@ final class RowButtonFlatWithDisclosure: RowButton {
         return chevronImageView
     }()
 
-    // The row can inherit its layout direction after initialization, so resolve the default image during layout.
-    private var disclosureImageLayoutDirection: UIUserInterfaceLayoutDirection?
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        guard appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage == nil else {
+        guard previousTraitCollection?.layoutDirection != traitCollection.layoutDirection,
+              appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage == nil else {
             return
         }
-        let layoutDirection = effectiveUserInterfaceLayoutDirection
-        guard disclosureImageLayoutDirection != layoutDirection else {
-            return
-        }
-        disclosureImageLayoutDirection = layoutDirection
 
         let disclosureImage = Image.icon_chevron_right.makeImage(template: true)
-        disclosureImageView.image = layoutDirection == .rightToLeft
+        disclosureImageView.image = effectiveUserInterfaceLayoutDirection == .rightToLeft
             ? disclosureImage.withHorizontallyFlippedOrientation()
             : disclosureImage
     }
