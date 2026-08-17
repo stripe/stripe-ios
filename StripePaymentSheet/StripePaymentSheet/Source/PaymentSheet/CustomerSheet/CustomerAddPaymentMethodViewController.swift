@@ -297,14 +297,14 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             appearance: configuration.appearance
         )
         addressConfiguration.apiClient = configuration.apiClient
-        addressConfiguration.useAutocompleteEndpoints = useAutocompleteEndpoints
 
         let autoCompleteViewController = AutoCompleteViewController(
             configuration: addressConfiguration,
             initialLine1Text: addressSectionElement.line1?.text,
             selectedCountry: addressSectionElement.selectedCountryCode,
             addressSpecProvider: AddressSpecProvider.shared,
-            verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance)
+            verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance),
+            useAutocompleteEndpoints: useAutocompleteEndpoints
         )
         autoCompleteViewController.delegate = self
 
