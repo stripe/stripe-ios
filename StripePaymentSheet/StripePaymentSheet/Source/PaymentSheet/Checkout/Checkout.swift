@@ -46,7 +46,7 @@ public final class Checkout: ObservableObject {
     }
 
     /// The configuration supplied at initialization.
-    public let configuration: Configuration
+    let configuration: Configuration
 
     // MARK: - Internal Properties
 

@@ -24,19 +24,5 @@ extension Checkout.Session {
         public let discount: Checkout.Session.Amount
         /// The grand total, including discounts and tax.
         public let total: Checkout.Session.Amount
-
-        public init(
-            subtotal: Checkout.Session.Amount,
-            taxExclusive: Checkout.Session.Amount,
-            taxInclusive: Checkout.Session.Amount,
-            discount: Checkout.Session.Amount,
-            total: Checkout.Session.Amount
-        ) {
-            self.subtotal = subtotal
-            self.taxExclusive = taxExclusive
-            self.taxInclusive = taxInclusive
-            self.discount = discount
-            self.total = total
-        }
     }
 }

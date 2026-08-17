@@ -14,6 +14,5 @@ extension Checkout.Session {
     public struct PresentmentDetails: Sendable, Hashable {
         /// Three-letter ISO 4217 presentment currency code in lowercase.
         public let presentmentCurrency: String
-
     }
 }

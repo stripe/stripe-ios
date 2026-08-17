@@ -27,7 +27,7 @@ extension Checkout.Session {
         /// The percentage discounted, if this is a percentage-based discount.
         public let percentOff: Double?
 
-        public init(
+        init(
             amount: String,
             minorUnitsAmount: Double,
             displayName: String,

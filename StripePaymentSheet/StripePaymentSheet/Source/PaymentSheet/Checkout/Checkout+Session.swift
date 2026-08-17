@@ -178,11 +178,6 @@ extension Checkout.Session {
         ///
         /// For example, `"$10.00"` is represented as `1000`.
         public let minorUnitsAmount: Double
-
-        public init(amount: String, minorUnitsAmount: Double) {
-            self.amount = amount
-            self.minorUnitsAmount = minorUnitsAmount
-        }
     }
 
     /// A tax amount included in an order summary item or aggregated across the session.

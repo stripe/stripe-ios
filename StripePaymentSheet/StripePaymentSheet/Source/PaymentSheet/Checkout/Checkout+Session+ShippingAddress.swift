@@ -19,7 +19,7 @@ extension Checkout.Session {
         /// - Parameters:
         ///   - name: The customer's full name.
         ///   - address: The customer's shipping address.
-        public init(name: String? = nil, address: Checkout.Address) {
+        init(name: String? = nil, address: Checkout.Address) {
             self.name = name
             self.address = address
         }
