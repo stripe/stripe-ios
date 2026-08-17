@@ -265,9 +265,7 @@ final class CheckoutCartViewController: UIViewController {
             contentStackView.addArrangedSubview(makeShippingAddressSection(checkout: checkout))
         }
 
-        contentStackView.addArrangedSubview(
-            makeOrderSummarySection(totals: checkout.session.totals)
-        )
+        contentStackView.addArrangedSubview(makeOrderSummarySection(session: checkout.session))
 
         renderPaymentBar(checkout: checkout)
         updateLoadingOverlay()
@@ -419,7 +417,10 @@ final class CheckoutCartViewController: UIViewController {
         )
     }
 
-    private func makeOrderSummarySection(totals: Checkout.Session.Totals) -> UIView {
+    private func makeOrderSummarySection(session: Checkout.Session) -> UIView {
+        let totals = session.totals
+        let hasTaxDetails = session.taxAmounts?.isEmpty == false
+        let taxAddressPrompt = taxAddressPrompt(for: session.tax?.status)
         let summaryStackView = UIStackView()
         summaryStackView.axis = .vertical
         summaryStackView.spacing = 12
@@ -440,11 +441,14 @@ final class CheckoutCartViewController: UIViewController {
             )
         }
 
-        if totals.taxExclusive.minorUnitsAmount > 0 {
+        if let taxAddressPrompt {
+            summaryStackView.addArrangedSubview(makeTaxAddressPromptRow(message: taxAddressPrompt))
+        } else if totals.taxExclusive.minorUnitsAmount > 0 {
             summaryStackView.addArrangedSubview(
                 makeSummaryRow(
                     title: "Tax",
-                    amount: totals.taxExclusive.amount
+                    amount: totals.taxExclusive.amount,
+                    showsTaxDetailsButton: hasTaxDetails
                 )
             )
         }
@@ -458,17 +462,59 @@ final class CheckoutCartViewController: UIViewController {
             )
         )
 
+        if taxAddressPrompt == nil && totals.taxInclusive.minorUnitsAmount > 0 {
+            summaryStackView.addArrangedSubview(
+                makeSummaryRow(
+                    title: "Includes \(totals.taxInclusive.amount) in tax",
+                    amount: "",
+                    showsTaxDetailsButton: hasTaxDetails && totals.taxExclusive.minorUnitsAmount == 0
+                )
+            )
+        }
+
         return makeSection(
             title: "Order Summary",
             content: makeCard(containing: makePaddedView(containing: summaryStackView))
         )
     }
 
+    private func makeTaxAddressPromptRow(message: String) -> UIView {
+        let titleLabel = UILabel()
+        titleLabel.text = "Tax"
+        titleLabel.textColor = .secondaryLabel
+        titleLabel.font = .preferredFont(forTextStyle: .body)
+
+        let promptLabel = UILabel()
+        promptLabel.text = message
+        promptLabel.textColor = .secondaryLabel
+        promptLabel.font = .preferredFont(forTextStyle: .footnote)
+        promptLabel.numberOfLines = 0
+
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, promptLabel])
+        stackView.axis = .vertical
+        stackView.spacing = 2
+        stackView.isAccessibilityElement = true
+        stackView.accessibilityLabel = "Tax. \(message)"
+        return stackView
+    }
+
+    private func taxAddressPrompt(for status: Checkout.Session.Tax.Status?) -> String? {
+        switch status {
+        case .requiresShippingAddress:
+            return "Enter shipping address to calculate"
+        case .requiresBillingAddress:
+            return "Enter billing address to calculate"
+        case .ready, nil:
+            return nil
+        }
+    }
+
     private func makeSummaryRow(
         title: String,
         amount: String,
         color: UIColor = .secondaryLabel,
-        emphasizesText: Bool = false
+        emphasizesText: Bool = false,
+        showsTaxDetailsButton: Bool = false
     ) -> UIView {
         let titleLabel = UILabel()
         titleLabel.text = title
@@ -481,7 +527,18 @@ final class CheckoutCartViewController: UIViewController {
         amountLabel.font = .preferredFont(forTextStyle: emphasizesText ? .headline : .body)
         amountLabel.setContentHuggingPriority(.required, for: .horizontal)
 
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, amountLabel])
+        let titleStackView = UIStackView(arrangedSubviews: [titleLabel])
+        titleStackView.alignment = .center
+        titleStackView.spacing = 4
+        if showsTaxDetailsButton {
+            let infoButton = UIButton(type: .system)
+            infoButton.setImage(UIImage(systemName: "info.circle"), for: .normal)
+            infoButton.accessibilityLabel = "Show tax details"
+            infoButton.addTarget(self, action: #selector(taxDetailsButtonTapped), for: .touchUpInside)
+            titleStackView.addArrangedSubview(infoButton)
+        }
+
+        let stackView = UIStackView(arrangedSubviews: [titleStackView, amountLabel])
         stackView.distribution = .equalSpacing
         return stackView
     }
@@ -753,6 +810,21 @@ final class CheckoutCartViewController: UIViewController {
             preferredStyle: .alert
         )
         alertController.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alertController, animated: true)
+    }
+
+    @objc private func taxDetailsButtonTapped() {
+        guard let taxAmounts = checkout?.session.taxAmounts, !taxAmounts.isEmpty else { return }
+        let message = taxAmounts.map { taxAmount in
+            let included = taxAmount.inclusive ? " (included)" : ""
+            return "\(taxAmount.displayName)\(included): \(taxAmount.amount)"
+        }.joined(separator: "\n")
+        let alertController = UIAlertController(
+            title: "Tax details",
+            message: message,
+            preferredStyle: .alert
+        )
+        alertController.addAction(UIAlertAction(title: "Done", style: .default))
         present(alertController, animated: true)
     }
 }
