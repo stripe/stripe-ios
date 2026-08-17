@@ -20,6 +20,7 @@ struct CheckoutCartView: View {
 
     let clientSecret: String
     let shippingAddressCollection: Bool
+    let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     var showExpressCheckoutElement: Bool = false
@@ -35,7 +36,7 @@ struct CheckoutCartView: View {
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
-                        showsShippingAddressSection: shippingAddressCollection,
+                        showsShippingAddressSection: shippingAddressCollection || checkout.session.shippingAddress != nil,
                         errorMessage: errorMessage
                     )
                     .overlay(alignment: .bottom) {
@@ -124,6 +125,7 @@ struct CheckoutCartView: View {
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
             config.adaptivePricing.allowed = adaptivePricing
+            config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
             config.applePayConfiguration = Checkout.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
