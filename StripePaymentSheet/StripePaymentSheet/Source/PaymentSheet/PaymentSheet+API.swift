@@ -710,7 +710,8 @@ extension PaymentSheet {
 
         switch confirmOption {
         case .wallet:
-            let useNativeLink = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
+            let useNativeLink = true
+//            let useNativeLink = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
             if useNativeLink {
                 // logPayment is false because callers of PaymentSheet.confirm() are responsible for logging the payment result.
                 let linkController = PayWithNativeLinkController(
@@ -726,17 +727,18 @@ extension PaymentSheet {
                 linkController.presentAsBottomSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
                     completion(result, confirmationType)
                 })
-            } else {
-                let linkController = PayWithLinkController(
-                    intent: intent,
-                    elementsSession: elementsSession,
-                    configuration: configuration,
-                    analyticsHelper: analyticsHelper,
-                    confirmationChallenge: confirmationChallenge,
-                    confirmHandler: confirmHandler
-                )
-                linkController.present(from: authenticationContext.authenticationPresentingViewController(), completion: completion)
             }
+//            else {
+//                let linkController = PayWithLinkController(
+//                    intent: intent,
+//                    elementsSession: elementsSession,
+//                    configuration: configuration,
+//                    analyticsHelper: analyticsHelper,
+//                    confirmationChallenge: confirmationChallenge,
+//                    confirmHandler: confirmHandler
+//                )
+//                linkController.present(from: authenticationContext.authenticationPresentingViewController(), completion: completion)
+//            }
         case .signUp(_, let linkAccount, let phoneNumberFromSignup, let consentAction, let legalName, let intentConfirmParams):
             let billingDetails = intentConfirmParams.paymentMethodParams.billingDetails
             let countryCode = billingDetails?.address?.country ?? elementsSession.countryCode
