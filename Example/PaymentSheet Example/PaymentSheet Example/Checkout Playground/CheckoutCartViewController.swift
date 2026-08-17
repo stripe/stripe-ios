@@ -265,11 +265,7 @@ final class CheckoutCartViewController: UIViewController {
             contentStackView.addArrangedSubview(makeShippingAddressSection(checkout: checkout))
         }
 
-        if let total = checkout.session.total {
-            contentStackView.addArrangedSubview(
-                makeOrderSummarySection(total: total, currency: checkout.session.currency)
-            )
-        }
+        contentStackView.addArrangedSubview(makeOrderSummarySection(session: checkout.session))
 
         renderPaymentBar(checkout: checkout)
         updateLoadingOverlay()
@@ -278,13 +274,9 @@ final class CheckoutCartViewController: UIViewController {
     private func renderPaymentBar(checkout: Checkout) {
         removeAllArrangedSubviews(from: paymentBarStackView)
 
-        guard checkout.session.total != nil else {
-            paymentBarStackView.isHidden = true
-            return
-        }
-
         if showExpressCheckoutElement {
-            paymentBarStackView.addArrangedSubview(checkout.getExpressCheckoutElement().uiView)
+            let expressCheckoutElement = checkout.getExpressCheckoutElement()
+            paymentBarStackView.addArrangedSubview(expressCheckoutElement.uiView)
         }
 
         switch integrationType {
@@ -302,7 +294,12 @@ final class CheckoutCartViewController: UIViewController {
         let itemsStackView = UIStackView()
         itemsStackView.axis = .vertical
 
-        let items = checkout.session.lineItems
+        let items = checkout.session.orderSummaryItems.flatMap { orderSummaryItem in
+            switch orderSummaryItem {
+            case .oneTimePrice(let oneTimePrice):
+                return oneTimePrice.items
+            }
+        }
         if items.isEmpty {
             let emptyLabel = UILabel()
             emptyLabel.text = "No items"
@@ -311,7 +308,7 @@ final class CheckoutCartViewController: UIViewController {
         } else {
             for (index, item) in items.enumerated() {
                 itemsStackView.addArrangedSubview(
-                    makeLineItemRow(item: item, currency: checkout.session.currency)
+                    makeLineItemRow(item: item)
                 )
                 if index < items.count - 1 {
                     itemsStackView.addArrangedSubview(makeSeparator())
@@ -322,7 +319,7 @@ final class CheckoutCartViewController: UIViewController {
         return makeSection(title: "Items", content: makeCard(containing: itemsStackView))
     }
 
-    private func makeLineItemRow(item: Checkout.LineItem, currency: String?) -> UIView {
+    private func makeLineItemRow(item: Checkout.Session.OrderSummaryItem.OneTimePrice.Item) -> UIView {
         let placeholderView = UIView()
         placeholderView.backgroundColor = .secondarySystemBackground
         placeholderView.layer.cornerRadius = 12
@@ -335,32 +332,20 @@ final class CheckoutCartViewController: UIViewController {
         placeholderView.addSubview(imageView)
 
         let nameLabel = UILabel()
-        nameLabel.text = item.name
+        nameLabel.text = item.displayName
         nameLabel.font = .preferredFont(forTextStyle: .headline)
         nameLabel.numberOfLines = 0
 
         let unitAmountLabel = UILabel()
-        unitAmountLabel.text = item.unitAmount?.amount ?? ""
+        unitAmountLabel.text = "\((item.unitAmountDecimal ?? item.unitAmount).amount) × \(item.quantity)"
         unitAmountLabel.font = .preferredFont(forTextStyle: .subheadline)
         unitAmountLabel.textColor = .secondaryLabel
 
-        let quantityLabel = UILabel()
-        quantityLabel.text = "Qty: \(item.quantity)"
-        quantityLabel.font = .preferredFont(forTextStyle: .headline)
-
-        let detailsStackView = UIStackView(arrangedSubviews: [nameLabel, unitAmountLabel, quantityLabel])
+        let detailsStackView = UIStackView(arrangedSubviews: [nameLabel, unitAmountLabel])
         detailsStackView.axis = .vertical
         detailsStackView.spacing = 6
 
-        let totalLabel = UILabel()
-        totalLabel.text = formatCartCurrency(
-            amount: (item.unitAmount?.minorUnitsAmount ?? 0) * item.quantity,
-            currency: currency
-        )
-        totalLabel.font = .preferredFont(forTextStyle: .headline)
-        totalLabel.setContentHuggingPriority(.required, for: .horizontal)
-
-        let rowStackView = UIStackView(arrangedSubviews: [placeholderView, detailsStackView, totalLabel])
+        let rowStackView = UIStackView(arrangedSubviews: [placeholderView, detailsStackView])
         rowStackView.alignment = .top
         rowStackView.spacing = 16
 
@@ -433,42 +418,38 @@ final class CheckoutCartViewController: UIViewController {
         )
     }
 
-    private func makeOrderSummarySection(total: Checkout.Total, currency: String?) -> UIView {
+    private func makeOrderSummarySection(session: Checkout.Session) -> UIView {
+        let totals = session.totals
+        let hasTaxDetails = session.taxAmounts?.isEmpty == false
+        let taxAddressPrompt = taxAddressPrompt(for: session.tax?.status)
         let summaryStackView = UIStackView()
         summaryStackView.axis = .vertical
         summaryStackView.spacing = 12
         summaryStackView.addArrangedSubview(
             makeSummaryRow(
                 title: "Subtotal",
-                amount: formatCartCurrency(amount: total.subtotal.minorUnitsAmount, currency: currency)
+                amount: totals.subtotal.amount
             )
         )
 
-        if total.discount.minorUnitsAmount > 0 {
+        if totals.discount.minorUnitsAmount > 0 {
             summaryStackView.addArrangedSubview(
                 makeSummaryRow(
                     title: "Discount",
-                    amount: "-" + formatCartCurrency(amount: total.discount.minorUnitsAmount, currency: currency),
+                    amount: "-" + totals.discount.amount,
                     color: .systemGreen
                 )
             )
         }
 
-        if total.shippingRate.minorUnitsAmount > 0 {
-            summaryStackView.addArrangedSubview(
-                makeSummaryRow(
-                    title: "Shipping",
-                    amount: formatCartCurrency(amount: total.shippingRate.minorUnitsAmount, currency: currency)
-                )
-            )
-        }
-
-        let taxAmount = total.taxExclusive.minorUnitsAmount + total.taxInclusive.minorUnitsAmount
-        if taxAmount > 0 {
+        if let taxAddressPrompt {
+            summaryStackView.addArrangedSubview(makeTaxAddressPromptRow(message: taxAddressPrompt))
+        } else if totals.taxExclusive.minorUnitsAmount > 0 {
             summaryStackView.addArrangedSubview(
                 makeSummaryRow(
                     title: "Tax",
-                    amount: formatCartCurrency(amount: taxAmount, currency: currency)
+                    amount: totals.taxExclusive.amount,
+                    showsTaxDetailsButton: hasTaxDetails
                 )
             )
         }
@@ -477,10 +458,20 @@ final class CheckoutCartViewController: UIViewController {
         summaryStackView.addArrangedSubview(
             makeSummaryRow(
                 title: "Total",
-                amount: formatCartCurrency(amount: total.total.minorUnitsAmount, currency: currency),
+                amount: totals.total.amount,
                 emphasizesText: true
             )
         )
+
+        if taxAddressPrompt == nil && totals.taxInclusive.minorUnitsAmount > 0 {
+            summaryStackView.addArrangedSubview(
+                makeSummaryRow(
+                    title: "Includes \(totals.taxInclusive.amount) in tax",
+                    amount: "",
+                    showsTaxDetailsButton: hasTaxDetails && totals.taxExclusive.minorUnitsAmount == 0
+                )
+            )
+        }
 
         return makeSection(
             title: "Order Summary",
@@ -488,11 +479,43 @@ final class CheckoutCartViewController: UIViewController {
         )
     }
 
+    private func makeTaxAddressPromptRow(message: String) -> UIView {
+        let titleLabel = UILabel()
+        titleLabel.text = "Tax"
+        titleLabel.textColor = .secondaryLabel
+        titleLabel.font = .preferredFont(forTextStyle: .body)
+
+        let promptLabel = UILabel()
+        promptLabel.text = message
+        promptLabel.textColor = .secondaryLabel
+        promptLabel.font = .preferredFont(forTextStyle: .footnote)
+        promptLabel.numberOfLines = 0
+
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, promptLabel])
+        stackView.axis = .vertical
+        stackView.spacing = 2
+        stackView.isAccessibilityElement = true
+        stackView.accessibilityLabel = "Tax. \(message)"
+        return stackView
+    }
+
+    private func taxAddressPrompt(for status: Checkout.Session.Tax.Status?) -> String? {
+        switch status {
+        case .requiresShippingAddress:
+            return "Enter shipping address to calculate"
+        case .requiresBillingAddress:
+            return "Enter billing address to calculate"
+        case .ready, nil:
+            return nil
+        }
+    }
+
     private func makeSummaryRow(
         title: String,
         amount: String,
         color: UIColor = .secondaryLabel,
-        emphasizesText: Bool = false
+        emphasizesText: Bool = false,
+        showsTaxDetailsButton: Bool = false
     ) -> UIView {
         let titleLabel = UILabel()
         titleLabel.text = title
@@ -505,7 +528,18 @@ final class CheckoutCartViewController: UIViewController {
         amountLabel.font = .preferredFont(forTextStyle: emphasizesText ? .headline : .body)
         amountLabel.setContentHuggingPriority(.required, for: .horizontal)
 
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, amountLabel])
+        let titleStackView = UIStackView(arrangedSubviews: [titleLabel])
+        titleStackView.alignment = .center
+        titleStackView.spacing = 4
+        if showsTaxDetailsButton {
+            let infoButton = UIButton(type: .system)
+            infoButton.setImage(UIImage(systemName: "info.circle"), for: .normal)
+            infoButton.accessibilityLabel = "Show tax details"
+            infoButton.addTarget(self, action: #selector(taxDetailsButtonTapped), for: .touchUpInside)
+            titleStackView.addArrangedSubview(infoButton)
+        }
+
+        let stackView = UIStackView(arrangedSubviews: [titleStackView, amountLabel])
         stackView.distribution = .equalSpacing
         return stackView
     }
@@ -573,11 +607,9 @@ final class CheckoutCartViewController: UIViewController {
         amountLabel.font = .preferredFont(forTextStyle: .headline)
         amountLabel.setContentHuggingPriority(.required, for: .horizontal)
 
-        if let total = checkout.session.total, let currency = checkout.session.currency {
-            let formattedAmount = formatCartCurrency(amount: total.total.minorUnitsAmount, currency: currency)
-            amountLabel.text = formattedAmount
-            button.accessibilityLabel = "Checkout, \(formattedAmount)"
-        }
+        let formattedAmount = checkout.session.totals.total.amount
+        amountLabel.text = formattedAmount
+        button.accessibilityLabel = "Checkout, \(formattedAmount)"
 
         let stackView = UIStackView(arrangedSubviews: [titleLabel, amountLabel])
         stackView.distribution = .equalSpacing
@@ -779,6 +811,21 @@ final class CheckoutCartViewController: UIViewController {
             preferredStyle: .alert
         )
         alertController.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alertController, animated: true)
+    }
+
+    @objc private func taxDetailsButtonTapped() {
+        guard let taxAmounts = checkout?.session.taxAmounts, !taxAmounts.isEmpty else { return }
+        let message = taxAmounts.map { taxAmount in
+            let included = taxAmount.inclusive ? " (included)" : ""
+            return "\(taxAmount.displayName)\(included): \(taxAmount.amount)"
+        }.joined(separator: "\n")
+        let alertController = UIAlertController(
+            title: "Tax details",
+            message: message,
+            preferredStyle: .alert
+        )
+        alertController.addAction(UIAlertAction(title: "Done", style: .default))
         present(alertController, animated: true)
     }
 }

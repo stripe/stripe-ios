@@ -10,8 +10,7 @@ extension ShippingAddressElement.Configuration {
     func makeAddressViewControllerConfiguration(
         shippingAddress: Checkout.Session.ShippingAddress?,
         allowedCountries: [String]?,
-        apiClient: STPAPIClient,
-        useAutocompleteEndpoints: Bool
+        apiClient: STPAPIClient
     ) -> AddressViewController.Configuration {
         let allowedCountries = allowedCountries ?? []
         let defaultValues: AddressViewController.Configuration.DefaultAddressDetails
@@ -40,7 +39,6 @@ extension ShippingAddressElement.Configuration {
             title: title
         )
         configuration.apiClient = apiClient
-        configuration.useAutocompleteEndpoints = useAutocompleteEndpoints
         return configuration
     }
 }

@@ -25,8 +25,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // Verify checkout session fields
         XCTAssertEqual(checkoutSession.id, checkoutSessionId)
-        XCTAssertEqual(checkoutSession.status?.type, .open)
-        XCTAssertEqual(checkoutSession.status?.paymentStatus, .unpaid)
+        XCTAssertEqual(checkoutSession.status, .open)
         XCTAssertEqual(checkoutSession.currency, "usd")
         XCTAssertFalse(checkoutSession.livemode)
         XCTAssertTrue((apiResponse.allResponseFields["payment_method_types"] as? [String])?.contains("card") ?? false)
@@ -48,7 +47,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // 2. Init the checkout session to get the actual amount
         let initResponse = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId, adaptivePricingAllowed: false)
-        let expectedAmount = initResponse.makePublicSession().total?.total.minorUnitsAmount ?? 0
+        let expectedAmount = initResponse.makePublicSession().expectedAmount() ?? 0
 
         // 3. Create a payment method with test card and billing email
         let cardParams = STPPaymentMethodCardParams()
@@ -70,8 +69,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         )
 
         // 5. Verify response
-        XCTAssertEqual(response.makePublicSession().status?.type, .complete)
-        XCTAssertEqual(response.makePublicSession().status?.paymentStatus, .paid)
+        XCTAssertEqual(response.makePublicSession().status, .complete(.paid))
         XCTAssertNotNil(response.paymentIntent)
     }
 
@@ -93,7 +91,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // Verify standard checkout session fields
         XCTAssertEqual(checkoutSession.id, checkoutSessionId)
-        XCTAssertEqual(checkoutSession.status?.type, .open)
+        XCTAssertEqual(checkoutSession.status, .open)
         XCTAssertFalse(checkoutSession.livemode)
 
         // Verify adaptive pricing is active and currency is localized to EUR
@@ -117,7 +115,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // Verify standard checkout session fields
         XCTAssertEqual(checkoutSession.id, checkoutSessionId)
-        XCTAssertEqual(checkoutSession.status?.type, .open)
+        XCTAssertEqual(checkoutSession.status, .open)
         XCTAssertFalse(checkoutSession.livemode)
 
         // Adaptive pricing should NOT be active; currency stays as integration currency (USD)
@@ -174,7 +172,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // 5. Verify the session was returned successfully (proves the API accepted our request)
         XCTAssertEqual(updatedSession.id, checkoutSessionResponse.id)
-        XCTAssertEqual(updatedSession.status?.type, .open)
+        XCTAssertEqual(updatedSession.status, .open)
     }
 
     // TODO(porter): see disabled_testUpdatePaymentMethodExpiry above.
@@ -232,7 +230,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // 5. Verify the session was returned successfully (proves the API accepted our request)
         XCTAssertEqual(updatedSession.id, checkoutSessionResponse.id)
-        XCTAssertEqual(updatedSession.status?.type, .open)
+        XCTAssertEqual(updatedSession.status, .open)
     }
 
     // MARK: - Setup Mode
@@ -253,8 +251,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // Verify checkout session fields
         XCTAssertEqual(checkoutSession.id, checkoutSessionId)
-        XCTAssertEqual(checkoutSession.status?.type, .open)
-        XCTAssertEqual(checkoutSession.status?.paymentStatus, .noPaymentRequired)
+        XCTAssertEqual(checkoutSession.status, .open)
         XCTAssertEqual(checkoutSession.currency, "usd")
         XCTAssertFalse(checkoutSession.livemode)
         XCTAssertTrue((apiResponse.allResponseFields["payment_method_types"] as? [String])?.contains("card") ?? false)
@@ -296,8 +293,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         )
 
         // 5. Verify response
-        XCTAssertEqual(response.makePublicSession().status?.type, .complete)
-        XCTAssertEqual(response.makePublicSession().status?.paymentStatus, .noPaymentRequired)
+        XCTAssertEqual(response.makePublicSession().status, .complete(.noPaymentRequired))
         XCTAssertNotNil(response.setupIntent)
     }
 }

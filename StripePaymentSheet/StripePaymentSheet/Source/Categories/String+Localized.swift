@@ -786,13 +786,6 @@ extension String.Localized {
         )
     }
 
-    static var shipping: String {
-        STPLocalizedString(
-            "Shipping",
-            "Label for the shipping cost row in an order summary."
-        )
-    }
-
     static var tax: String {
         STPLocalizedString(
             "Tax",
