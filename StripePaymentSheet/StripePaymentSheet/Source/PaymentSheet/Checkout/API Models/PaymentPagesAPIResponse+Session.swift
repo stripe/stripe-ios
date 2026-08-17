@@ -16,20 +16,19 @@ extension PaymentPagesAPIResponse {
             from: recurringDetails?.totalDiscountAmounts ?? [],
             currency: currency
         )
-        let publicTaxAmounts = Self.makeTaxAmounts(
-            from: recurringDetails?.totalTaxAmounts ?? [],
-            currency: currency
-        )
+        // TODO: Have Payment Pages return session-level tax amounts directly. `recurring_details`
+        // is an odd source for one-time-price modeless Checkout, and clients shouldn't need to
+        // derive this aggregate from recurring-specific response models.
+        let publicTaxAmounts = recurringDetails?.totalTaxAmounts?.map {
+            Self.makeSessionTaxAmount(from: $0, currency: currency, locale: .autoupdatingCurrent)
+        }
         let publicOrderSummaryItems = Self.makeOrderSummaryItems(
             from: checkoutItems,
             defaultCurrency: currency,
             locale: .autoupdatingCurrent
         )
         let publicTotals = Self.makeTotals(from: checkoutItems, currency: currency)
-        let publicTax = Checkout.Tax(
-            status: Self.makeTaxStatus(taxMeta: taxMeta, taxContext: taxContext),
-            taxAmounts: publicTaxAmounts.isEmpty ? nil : publicTaxAmounts
-        )
+        let publicTax = Self.makeTax(taxMeta: taxMeta, taxContext: taxContext)
         let localizedPricesMetas = Self.makeLocalizedPricesMetas(from: adaptivePricingInfo)
         let exchangeRateMeta = Self.makeExchangeRateMeta(from: adaptivePricingInfo)
         let automaticTaxEnabled = taxContext?.automaticTaxEnabled ?? false
@@ -57,6 +56,7 @@ extension PaymentPagesAPIResponse {
             shippingAddress: nil,
             status: status,
             tax: publicTax,
+            taxAmounts: publicTaxAmounts,
             totals: publicTotals,
             paymentStatus: paymentStatus,
             paymentMethodOptions: paymentMethodOptions,
@@ -237,19 +237,6 @@ extension PaymentPagesAPIResponse {
         }
     }
 
-    private static func makeTaxAmounts(
-        from taxAmounts: [TaxAmount],
-        currency: String
-    ) -> [Checkout.TaxAmount] {
-        taxAmounts.map { taxAmount in
-            return Checkout.TaxAmount(
-                amount: makeAmount(taxAmount.amount, currency: currency),
-                inclusive: taxAmount.inclusive,
-                displayName: taxAmount.taxRate.displayName
-            )
-        }
-    }
-
     private static func makeTotals(
         from checkoutItems: [CheckoutItem],
         currency: String
@@ -275,22 +262,31 @@ extension PaymentPagesAPIResponse {
         )
     }
 
-    private static func makeTaxStatus(
+    private static func makeTax(
         taxMeta: TaxMeta?,
         taxContext: TaxContext?
-    ) -> Checkout.TaxStatus {
-        guard taxMeta?.computationType == "automatic" else { return .ready }
+    ) -> Checkout.Session.Tax? {
+        // TODO: Decode computation_type as an enum. Longer term, the backend should return
+        // the public tax status directly instead of requiring each client to derive it.
+        // Until then, match EwCS by treating every non-automatic computation type as ready.
+        guard let computationType = taxMeta?.computationType else { return nil }
+        guard computationType == "automatic" else {
+            return Checkout.Session.Tax(status: .ready)
+        }
         switch taxMeta?.status {
         case "complete":
-            return .ready
+            return Checkout.Session.Tax(status: .ready)
         case "requires_location_inputs":
-            return taxContext?.automaticTaxAddressSource == "session.shipping"
-                ? .requiresShippingAddress
-                : .requiresBillingAddress
-        case "failed":
-            return .unknown
+            switch taxContext?.automaticTaxAddressSource {
+            case "session.shipping":
+                return Checkout.Session.Tax(status: .requiresShippingAddress)
+            case "session.billing":
+                return Checkout.Session.Tax(status: .requiresBillingAddress)
+            default:
+                return nil
+            }
         default:
-            return .ready
+            return nil
         }
     }
 

@@ -58,8 +58,16 @@ extension Checkout {
         /// Status of the Checkout Session.
         public let status: Status
 
-        /// Details about the tax computation status and aggregated tax amounts.
-        public let tax: Checkout.Tax
+        /// The tax computation state, if available.
+        public let tax: Tax?
+
+        /// The aggregate amounts calculated per tax rate for all line items, or `nil` when
+        /// tax has not yet been computed.
+        ///
+        /// For example, if this contains $5 of exclusive state tax, $2 of exclusive county
+        /// tax, and $1 of inclusive VAT, ``totals`` contains $7 in `taxExclusive` and $1 in
+        /// `taxInclusive`.
+        public let taxAmounts: [TaxAmount]?
 
         /// Aggregate subtotal, tax, discount, and total amounts for the Checkout Session.
         public let totals: Checkout.Session.Totals
@@ -177,7 +185,7 @@ extension Checkout.Session {
         }
     }
 
-    /// A tax amount included in an order summary item.
+    /// A tax amount included in an order summary item or aggregated across the session.
     public struct TaxAmount: Sendable, Hashable {
         /// The localized, formatted representation of the tax amount.
         public let amount: String

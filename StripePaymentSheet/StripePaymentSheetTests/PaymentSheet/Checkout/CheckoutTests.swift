@@ -201,7 +201,8 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertNil(checkout.session.shippingAddress)
         XCTAssertEqual(checkout.session.totals.subtotal.minorUnitsAmount, 2000)
         XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 2000)
-        XCTAssertNil(checkout.session.tax.taxAmounts)
+        XCTAssertNotNil(checkout.session.taxAmounts)
+        XCTAssertTrue(checkout.session.taxAmounts?.isEmpty == true)
 
         try await checkout.updateShippingAddress(
             name: "John Smith",
@@ -229,8 +230,8 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         XCTAssertEqual(checkout.session.totals.subtotal.minorUnitsAmount, 2000)
         XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 2195)
-        XCTAssertEqual(checkout.session.tax.taxAmounts?.count, 1)
-        XCTAssertEqual(checkout.session.tax.taxAmounts?.first?.amount.minorUnitsAmount, 195)
+        XCTAssertEqual(checkout.session.taxAmounts?.count, 1)
+        XCTAssertEqual(checkout.session.taxAmounts?.first?.minorUnitsAmount, 195)
     }
 
     func testAdaptivePricingActiveForUnifiedModeCheckoutSession() async throws {

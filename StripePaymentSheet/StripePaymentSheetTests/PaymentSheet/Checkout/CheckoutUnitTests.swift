@@ -188,7 +188,6 @@ final class CheckoutUnitTests: XCTestCase {
         // Given a ShippingAddressElement connected to its Checkout
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         let shippingAddressElement = checkout.getShippingAddressElement()
-        var loadingStates: [Bool] = []
 
         // When the element saves a collected address
         try await shippingAddressElement.save(
@@ -202,12 +201,10 @@ final class CheckoutUnitTests: XCTestCase {
                     state: "WA"
                 ),
                 name: "Jane Doe"
-            ),
-            setLoading: { loadingStates.append($0) }
+            )
         )
 
-        // Then the Checkout Session is the source of truth and loading spans the update
-        XCTAssertEqual(loadingStates, [true, false])
+        // Then the Checkout Session is the source of truth
         XCTAssertEqual(checkout.session.shippingAddress?.name, "Jane Doe")
         XCTAssertEqual(checkout.session.shippingAddress?.address.line1, "123 Main St.")
         XCTAssertEqual(checkout.session.shippingAddress?.address.line2, "Apt. 4")
@@ -442,7 +439,7 @@ final class CheckoutUnitTests: XCTestCase {
         )
         let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
         XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 1185)
-        XCTAssertEqual(session.tax.taxAmounts?.count, 1)
+        XCTAssertEqual(session.taxAmounts?.count, 1)
     }
 
     func testTotalTaxExclusive_multipleAmounts() {
@@ -479,14 +476,32 @@ final class CheckoutUnitTests: XCTestCase {
         )
         let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
         XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 700)
-        XCTAssertEqual(session.tax.taxAmounts?.count, 2)
+        XCTAssertEqual(session.taxAmounts?.count, 2)
     }
 
-    func testTotalTaxExclusive_noTaxAmounts() {
-        var json = CheckoutTestHelpers.openSessionJSON
+    func testTotalTaxAmounts_absent_isNil() {
+        // Given a response without total_tax_amounts
+        let json = CheckoutTestHelpers.openSessionJSON
+
+        // When decoding the public Session
         let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
+
+        // Then taxAmounts is nil
         XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 0)
-        XCTAssertNil(session.tax.taxAmounts)
+        XCTAssertNil(session.taxAmounts)
+    }
+
+    func testTotalTaxAmounts_presentButEmpty_isEmpty() {
+        // Given a response with an explicitly empty total_tax_amounts array
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["recurring_details"] = ["total_tax_amounts": []]
+
+        // When decoding the public Session
+        let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
+
+        // Then taxAmounts remains an empty, non-nil array
+        XCTAssertNotNil(session.taxAmounts)
+        XCTAssertTrue(session.taxAmounts?.isEmpty == true)
     }
 
     // MARK: - Requires Shipping Address Tests
@@ -534,9 +549,9 @@ final class CheckoutUnitTests: XCTestCase {
         let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
 
         // Verify tax amounts
-        XCTAssertEqual(session.tax.taxAmounts?.count, 1)
-        XCTAssertEqual(session.tax.taxAmounts?.first?.amount.minorUnitsAmount, 1000)
-        XCTAssertEqual(session.tax.taxAmounts?.first?.displayName, "Sales Tax")
+        XCTAssertEqual(session.taxAmounts?.count, 1)
+        XCTAssertEqual(session.taxAmounts?.first?.minorUnitsAmount, 1000)
+        XCTAssertEqual(session.taxAmounts?.first?.displayName, "Sales Tax")
 
         // Verify address collection settings
         XCTAssertEqual(session.billingAddressCollection, .required)
