@@ -11,11 +11,6 @@ import Foundation
 extension PaymentPagesAPIResponse {
     /// Builds a public, read-only ``Checkout.Session`` snapshot from this API response object.
     func makePublicSession() -> Checkout.Session {
-        let publicPaymentStatus = Checkout.PaymentStatus.paymentStatus(from: paymentStatus)
-        let publicStatus = Checkout.Status(
-            type: Checkout.StatusType.statusType(from: status),
-            paymentStatus: publicPaymentStatus
-        )
         let elementsSessionValue = elementsSession.value
         let publicDiscountAmounts = Self.makeDiscountAmounts(
             from: recurringDetails?.totalDiscountAmounts ?? [],
@@ -60,10 +55,10 @@ extension PaymentPagesAPIResponse {
             minorUnitsAmountDivisor: Self.makeMinorUnitsAmountDivisor(currency: currency),
             paymentOption: nil,
             shippingAddress: nil,
-            status: publicStatus,
+            status: status,
             tax: publicTax,
             totals: publicTotals,
-            paymentStatus: publicPaymentStatus,
+            paymentStatus: paymentStatus,
             paymentMethodOptions: paymentMethodOptions,
             customer: customer,
             savedPaymentMethodsOfferSave: Self.makeSavedPaymentMethodsOfferSave(from: savedPaymentMethodsOfferSave),
@@ -395,24 +390,27 @@ extension PaymentPagesAPIResponse {
     }
 }
 
-extension Checkout.StatusType {
-    static func statusType(from string: String) -> Checkout.StatusType {
+extension Checkout.Session.Status {
+    static func status(
+        from string: String,
+        paymentStatus: Checkout.Session.Status.PaymentStatus
+    ) -> Checkout.Session.Status? {
         switch string.lowercased() {
         case "open": return .open
-        case "complete": return .complete
+        case "complete": return .complete(paymentStatus)
         case "expired": return .expired
-        default: return .unknown
+        default: return nil
         }
     }
 }
 
-extension Checkout.PaymentStatus {
-    static func paymentStatus(from string: String) -> Checkout.PaymentStatus {
+extension Checkout.Session.Status.PaymentStatus {
+    static func paymentStatus(from string: String) -> Checkout.Session.Status.PaymentStatus? {
         switch string.lowercased() {
         case "paid": return .paid
         case "unpaid": return .unpaid
         case "no_payment_required": return .noPaymentRequired
-        default: return .unknown
+        default: return nil
         }
     }
 }
