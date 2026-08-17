@@ -151,7 +151,6 @@ extension ExpressCheckoutElement {
             case automatic
         }
 
-
         /// Controls the layout of express payment buttons.
         public struct ButtonLayout {
             /// Maximum number of columns. nil uses the default.
