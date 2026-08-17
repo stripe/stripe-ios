@@ -30,7 +30,12 @@ extension Checkout: ExpressCheckoutElementDelegate {
         }()
         switch result.paymentSheetResult {
         case .completed:
-            return .succeeded(paymentStatus: Checkout.PaymentStatus.paymentStatus(from: result.checkoutSessionResponse?.paymentStatus ?? ""))
+            guard let checkoutSessionResponse = result.checkoutSessionResponse else {
+                let error = CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() completed without a Checkout Session response.")
+                STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+                return .failed(error)
+            }
+            return .succeeded(paymentStatus: checkoutSessionResponse.paymentStatus)
         case .canceled:
             return .canceled
         case .failed(let error):
