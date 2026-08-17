@@ -140,6 +140,10 @@
 
 "Did you mean %@? %@." = "Ali ste mislili %1$@? %2$@.";
 
+"Discard Changes" = "Opusti spremembe";
+
+"Discard changes?" = "Opusti spremembe?";
+
 "Discount" = "Popust";
 
 "EPS Bank" = "Banka EPS";
@@ -163,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Potrjujem, da bo družba Stripe zbirala direktne obremenitve v imenu podjetja %@ ter da sem lastnik računa in edina oseba, ki lahko odobri bremenitve s tega računa.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Nadaljuj z urejanjem";
 
 "Last 4 digits of SSN" = "Zadnje 4 števke SSN";
 
@@ -343,3 +349,5 @@
 "Yes, update" = "Da, posodobi";
 
 "Your IBAN should start with a two-letter country code." = "Vaša koda IBAN se mora začeti z dvomestno kodo države.";
+
+"Your address changes won't be saved." = "Vaše spremembe naslova ne bodo shranjene.";

@@ -140,6 +140,10 @@
 
 "Did you mean %@? %@." = "Bedoelde je %1$@? %2$@.";
 
+"Discard Changes" = "Wijzigingen verwijderen";
+
+"Discard changes?" = "Wijzigingen verwijderen?";
+
 "Discount" = "Korting";
 
 "EPS Bank" = "EPS Bank";
@@ -163,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ik begrijp dat Stripe namens %@ bedragen via automatische incasso gaat afschrijven en ik bevestig dat ik als rekeninghouder de enige vereiste persoon ben om afschrijvingen van deze rekening te autoriseren.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Doorgaan met bewerken";
 
 "Last 4 digits of SSN" = "Laatste 4 cijfers van BSN";
 
@@ -343,3 +349,5 @@
 "Yes, update" = "Ja, bijwerken";
 
 "Your IBAN should start with a two-letter country code." = "Het IBAN-nummer moet beginnen met een landcode van twee letters.";
+
+"Your address changes won't be saved." = "Jouw adreswijzigingen worden niet opgeslagen.";
