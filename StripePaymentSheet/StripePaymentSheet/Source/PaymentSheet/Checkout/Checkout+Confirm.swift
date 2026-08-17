@@ -7,15 +7,19 @@ extension Checkout {
     /// Convenience bag of everything Apple Pay needs for confirmation, aside from committing the session
     /// back to `Checkout` (see ``CheckoutSessionBillingAddressUpdater`` for that).
     struct ApplePayConfirmationContext {
-        let applePayConfiguration: Checkout.ApplePayConfiguration?
+        let applePayConfiguration: Checkout.ApplePayConfiguration
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
     }
 
-    var applePayConfirmationContext: ApplePayConfirmationContext {
-        ApplePayConfirmationContext(
-            applePayConfiguration: configuration.applePayConfiguration,
+    /// `nil` if Apple Pay wasn't configured on this ``Checkout.Configuration``.
+    var applePayConfirmationContext: ApplePayConfirmationContext? {
+        guard let applePayConfiguration = configuration.applePayConfiguration else {
+            return nil
+        }
+        return ApplePayConfirmationContext(
+            applePayConfiguration: applePayConfiguration,
             apiClient: apiClient,
             returnURL: configuration.returnURL,
             merchantDisplayName: effectiveMerchantDisplayName
