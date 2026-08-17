@@ -37,7 +37,7 @@ final class CheckoutUnitTests: XCTestCase {
     func testInitSetsLoadedState() async throws {
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
         XCTAssertFalse(checkout.isLoading)
-        XCTAssertEqual(checkout.session.status?.type, .open)
+        XCTAssertEqual(checkout.session.status, .open)
     }
 
     func testGetCurrencySelectorElementReturnsNilWhenAdaptivePricingIsNotAllowed() async throws {
@@ -565,8 +565,7 @@ final class CheckoutUnitTests: XCTestCase {
         try await checkout.commitSession(confirmResponse)
 
         // Then Checkout updates the session and notifies observers
-        XCTAssertEqual(checkout.session.status?.type, .complete)
-        XCTAssertEqual(checkout.session.status?.paymentStatus, .paid)
+        XCTAssertEqual(checkout.session.status, .complete(.paid))
         // There are two emissions: one for the committed session, one for PaymentElement re-syncing the payment option.
         XCTAssertEqual(recorder.sessions.count, 2)
     }
@@ -637,14 +636,14 @@ final class CheckoutUnitTests: XCTestCase {
         let firstConfirm = try PaymentPagesAPIResponse.decode(fromAPIResponse: firstResponse)
 
         try await checkout.commitSession(firstConfirm)
-        XCTAssertEqual(checkout.session.status?.type, .complete)
+        XCTAssertEqual(checkout.session.status, .complete(.paid))
 
         var secondResponse = CheckoutTestHelpers.openSessionJSON
         secondResponse["status"] = "open"
         let secondSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: secondResponse)
 
         try await checkout.commitSession(secondSession)
-        XCTAssertEqual(checkout.session.status?.type, .open)
+        XCTAssertEqual(checkout.session.status, .open)
         XCTAssertEqual(recorder.sessions.count, 4)
     }
 
@@ -652,7 +651,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testSessionAvailableAfterInit() async throws {
         let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        XCTAssertEqual(checkout.session.status?.type, .open)
+        XCTAssertEqual(checkout.session.status, .open)
     }
 
     func testIsLoadingFalseAfterInit() async throws {

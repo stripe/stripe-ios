@@ -26,8 +26,8 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let currency: String
     let checkoutItems: [CheckoutItem]
     let livemode: Bool
-    let status: String
-    let paymentStatus: String
+    let status: Checkout.Session.Status
+    let paymentStatus: Checkout.Session.Status.PaymentStatus
     let customerEmail: String?
     let url: String?
     let savedPaymentMethodsOfferSave: SavedPaymentMethodsOfferSave?
@@ -144,14 +144,22 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         checkoutItems = decodedCheckoutItems
 
         livemode = try container.decode(Bool.self, forKey: .livemode)
-        status = try container.decode(String.self, forKey: .status)
-        guard ["open", "complete", "expired"].contains(status.lowercased()) else {
-            throw decoder.dataCorrupted("Unsupported Checkout Session status: \(status)")
+        let decodedPaymentStatus = try container.decode(String.self, forKey: .paymentStatus)
+        guard let paymentStatus = Checkout.Session.Status.PaymentStatus.paymentStatus(
+            from: decodedPaymentStatus
+        ) else {
+            throw decoder.dataCorrupted("Unsupported payment_status: \(decodedPaymentStatus)")
         }
-        paymentStatus = try container.decode(String.self, forKey: .paymentStatus)
-        guard ["paid", "unpaid", "no_payment_required"].contains(paymentStatus.lowercased()) else {
-            throw decoder.dataCorrupted("Unsupported payment_status: \(paymentStatus)")
+        self.paymentStatus = paymentStatus
+
+        let decodedStatus = try container.decode(String.self, forKey: .status)
+        guard let status = Checkout.Session.Status.status(
+            from: decodedStatus,
+            paymentStatus: paymentStatus
+        ) else {
+            throw decoder.dataCorrupted("Unsupported Checkout Session status: \(decodedStatus)")
         }
+        self.status = status
         _ = try container.decode([String].self, forKey: .paymentMethodTypes)
 
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)

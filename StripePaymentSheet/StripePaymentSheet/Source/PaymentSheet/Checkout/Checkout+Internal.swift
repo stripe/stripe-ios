@@ -188,9 +188,9 @@ extension Checkout {
         }
     }
 
-    /// True if the session is still actionable (open or no status yet).
+    /// True if the session is still actionable.
     var sessionIsOpen: Bool {
-        session.status?.type == .open || session.status?.type == nil
+        session.status == .open
     }
 
     // MARK: - Validation

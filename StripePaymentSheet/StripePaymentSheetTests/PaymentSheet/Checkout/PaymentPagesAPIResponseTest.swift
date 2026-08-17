@@ -57,6 +57,40 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         )
     }
 
+    func testDecodedObjectFromAPIResponseMapsSessionStatus() throws {
+        let testCases: [(status: String, paymentStatus: String, expected: Checkout.Session.Status)] = [
+            ("open", "unpaid", .open),
+            ("expired", "unpaid", .expired),
+            ("complete", "paid", .complete(.paid)),
+            ("complete", "unpaid", .complete(.unpaid)),
+            ("complete", "no_payment_required", .complete(.noPaymentRequired)),
+        ]
+
+        for testCase in testCases {
+            var json = STPTestUtils.jsonNamed("CheckoutSession")!
+            json["status"] = testCase.status
+            json["payment_status"] = testCase.paymentStatus
+
+            let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+
+            XCTAssertEqual(response.makePublicSession().status, testCase.expected)
+        }
+    }
+
+    func testDecodedObjectFromAPIResponseRejectsUnknownSessionStatus() {
+        var json = STPTestUtils.jsonNamed("CheckoutSession")!
+        json["status"] = "future_status"
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+    }
+
+    func testDecodedObjectFromAPIResponseRejectsUnknownPaymentStatus() {
+        var json = STPTestUtils.jsonNamed("CheckoutSession")!
+        json["payment_status"] = "future_status"
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+    }
+
     func testDecodedObjectFromAPIResponseMalformedElementsSession() {
         var json = STPTestUtils.jsonNamed("CheckoutSession")!
         // Invalid elements_session - missing payment_method_preference
@@ -127,8 +161,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         // The response object retains API-shaped values without public-model conversion.
         XCTAssertEqual(apiResponse.sessionId, "cs_test_a1b2c3d4e5f6g7h8i9j0")
-        XCTAssertEqual(apiResponse.status, "open")
-        XCTAssertEqual(apiResponse.paymentStatus, "unpaid")
+        XCTAssertEqual(apiResponse.status, .open)
+        XCTAssertEqual(apiResponse.paymentStatus, .unpaid)
         XCTAssertEqual(apiResponse.checkoutItems.first?.key, "ci_1abc")
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.activePresentmentCurrency, "eur")
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.integrationAmount, 12000)
@@ -145,8 +179,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.currency, "usd")
         XCTAssertEqual(session.minorUnitsAmountDivisor, 100)
         XCTAssertEqual(session.paymentStatus, .unpaid)
-        XCTAssertEqual(session.status?.type, .open)  // status is nullable but present in JSON
-        XCTAssertEqual(session.status?.paymentStatus, .unpaid)
+        XCTAssertEqual(session.status, .open)
         XCTAssertEqual(apiResponse.paymentIntentId, "pi_test123456789")
         XCTAssertNil(apiResponse.setupIntentId)
         XCTAssertFalse(session.livemode)
@@ -235,7 +268,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = apiResponse.makePublicSession()
 
         XCTAssertEqual(session.id, "cs_test_minimal")
-        XCTAssertEqual(session.status?.type, .open)
+        XCTAssertEqual(session.status, .open)
         XCTAssertTrue(session.livemode)
 
         XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 1000)
