@@ -143,6 +143,8 @@ import UIKit
             return PaymentSheet.LinkConfiguration(display: .automatic, brand: brand)
         case .never:
             return PaymentSheet.LinkConfiguration(display: .never, brand: brand)
+        case .walletButtonHidden:
+            return PaymentSheet.LinkConfiguration(display: .walletButtonHidden, brand: brand)
         }
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
