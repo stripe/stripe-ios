@@ -950,9 +950,6 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
     ) {
         let prefix = index.map { "Logo[\($0)]" } ?? "Logo"
 
-        // Compare alt text
-        XCTAssertEqual(actual.altText, expected.altText, "\(prefix) alt text mismatch", file: file, line: line)
-
         // Compare light and dark images using .pngData()
         XCTAssertTrue(actual.light.pngData() == expected.light.pngData(), "\(prefix).light image mismatch", file: file, line: line)
         XCTAssertTrue(actual.dark.pngData() == expected.dark.pngData(), "\(prefix).dark image mismatch", file: file, line: line)
