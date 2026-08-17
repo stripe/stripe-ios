@@ -36,9 +36,10 @@ struct CheckoutCartView: View {
                     CheckoutCartContentView(
                         checkout: checkout,
                         showsShippingAddressSection: shippingAddressCollection,
-                        errorMessage: errorMessage
+                        errorMessage: errorMessage,
+                        bottomContentPadding: 0
                     )
-                    .overlay(alignment: .bottom) {
+                    .safeAreaInset(edge: .bottom, spacing: 0) {
                         VStack(spacing: 0) {
                             if showExpressCheckoutElement,
                                let ece = checkout.getExpressCheckoutElement() {

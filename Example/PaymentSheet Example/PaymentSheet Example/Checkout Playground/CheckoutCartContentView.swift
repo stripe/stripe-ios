@@ -13,6 +13,7 @@ struct CheckoutCartContentView: View {
     @ObservedObject var checkout: Checkout
     var showsShippingAddressSection: Bool
     var errorMessage: String?
+    var bottomContentPadding: CGFloat = 160
 
     var body: some View {
         ScrollView {
@@ -32,7 +33,7 @@ struct CheckoutCartContentView: View {
                 }
                 orderSummarySection
 
-                Spacer().frame(height: 160)
+                Spacer().frame(height: bottomContentPadding)
             }
             .padding(.top, 20)
         }
