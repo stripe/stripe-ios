@@ -2414,26 +2414,22 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethodOptions: [String: Any]? = nil,
             previousCustomerInput: IntentConfirmParams? = nil
         ) -> PaymentMethodElement {
-            var json: [String: Any] = [
+            var json = CheckoutTestHelpers.makeSessionJSON([
                 "session_id": "cs_test_paypal",
-                "object": "checkout.session",
-                "livemode": false,
-                "mode": "payment",
-                "payment_status": "unpaid",
                 "payment_method_types": ["paypal"],
                 "customer": ["id": "cus_123"],
                 "elements_session": [
                     "session_id": "es_test",
                     "payment_method_preference": ["ordered_payment_method_types": ["paypal"]],
                 ],
-            ]
+            ])
             if let setupFutureUsage {
                 json["setup_future_usage"] = setupFutureUsage
             }
             if let paymentMethodOptions {
                 json["payment_method_options"] = paymentMethodOptions
             }
-            let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+            let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
             return PaymentSheetFormFactory(
                 intent: .checkout(checkoutSession.makePublicSession()),
                 elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),

@@ -24,21 +24,4 @@ extension Checkout {
             self.minorUnitsAmount = minorUnitsAmount
         }
     }
-
-    /// A monetary amount supporting sub-minor-unit precision.
-    ///
-    /// Use this for sub-cent pricing (for example, usage-based billing) where rounding to
-    /// the nearest minor unit would lose precision.
-    public struct DecimalAmount: Sendable, Hashable {
-        /// A localized, formatted string representation including currency symbols.
-        public let amount: String
-        /// The amount in the smallest currency unit, supporting decimal precision
-        /// (for example, `0.5` for half a cent).
-        public let minorUnitsAmount: Decimal
-
-        public init(amount: String, minorUnitsAmount: Decimal) {
-            self.amount = amount
-            self.minorUnitsAmount = minorUnitsAmount
-        }
-    }
 }

@@ -62,7 +62,7 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
     }
 
     func testTruncatingTitle() {
-        let sut = makeSUT(title: "Test title that is pretty long and should wrap")
+        let sut = makeSUT(title: "Test title that is pretty long and should truncate")
         sut.setStyle(.back(showAdditionalButton: false))
         verify(sut)
     }
@@ -71,6 +71,14 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
         let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance, brand: .link)
         sut.setStyle(.back(showAdditionalButton: false))
         sut.title = "Test title that is pretty long and should wrap"
+        verify(sut)
+    }
+
+    func testRightToLeft() {
+        let sut = makeSUT(title: "Test title that is pretty long and should truncate")
+        sut.semanticContentAttribute = .forceRightToLeft
+        sut.setStyle(.back(showAdditionalButton: true))
+
         verify(sut)
     }
 

@@ -21,6 +21,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     let integrationType: CheckoutPlayground.IntegrationType
     let showExpressCheckoutElement: Bool
     let currencySelectorAppearance: CurrencySelectorElement.Appearance
+    let delayPaymentPagesRequests: Bool
 
     func makeUIViewController(context: Context) -> UINavigationController {
         let viewController = CheckoutCartViewController(
@@ -30,6 +31,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
             integrationType: integrationType,
             showExpressCheckoutElement: showExpressCheckoutElement,
             currencySelectorAppearance: currencySelectorAppearance,
+            delayPaymentPagesRequests: delayPaymentPagesRequests,
             closeAction: { dismiss() }
         )
         return UINavigationController(rootViewController: viewController)
@@ -47,6 +49,7 @@ final class CheckoutCartViewController: UIViewController {
     private let integrationType: CheckoutPlayground.IntegrationType
     private let showExpressCheckoutElement: Bool
     private let currencySelectorAppearance: CurrencySelectorElement.Appearance
+    private let delayPaymentPagesRequests: Bool
     private let closeAction: () -> Void
     private let diagnostics = CheckoutSessionDiagnostics()
 
@@ -76,6 +79,7 @@ final class CheckoutCartViewController: UIViewController {
         integrationType: CheckoutPlayground.IntegrationType,
         showExpressCheckoutElement: Bool,
         currencySelectorAppearance: CurrencySelectorElement.Appearance,
+        delayPaymentPagesRequests: Bool,
         closeAction: @escaping () -> Void
     ) {
         self.clientSecret = clientSecret
@@ -84,6 +88,7 @@ final class CheckoutCartViewController: UIViewController {
         self.integrationType = integrationType
         self.showExpressCheckoutElement = showExpressCheckoutElement
         self.currencySelectorAppearance = currencySelectorAppearance
+        self.delayPaymentPagesRequests = delayPaymentPagesRequests
         self.closeAction = closeAction
         super.init(nibName: nil, bundle: nil)
     }
@@ -201,7 +206,9 @@ final class CheckoutCartViewController: UIViewController {
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             configuration.currencySelectorElement.appearance = currencySelectorAppearance
-            configuration.apiClient = diagnostics.makeAPIClient()
+            configuration.apiClient = diagnostics.makeAPIClient(
+                paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
+            )
 
             let checkout = try await Checkout(configuration: configuration)
             self.checkout = checkout
@@ -295,7 +302,12 @@ final class CheckoutCartViewController: UIViewController {
         let itemsStackView = UIStackView()
         itemsStackView.axis = .vertical
 
-        let items = checkout.session.lineItems
+        let items = checkout.session.orderSummaryItems.flatMap { orderSummaryItem in
+            switch orderSummaryItem {
+            case .oneTimePrice(let oneTimePrice):
+                return oneTimePrice.items
+            }
+        }
         if items.isEmpty {
             let emptyLabel = UILabel()
             emptyLabel.text = "No items"
@@ -315,7 +327,10 @@ final class CheckoutCartViewController: UIViewController {
         return makeSection(title: "Items", content: makeCard(containing: itemsStackView))
     }
 
-    private func makeLineItemRow(item: Checkout.LineItem, currency: String?) -> UIView {
+    private func makeLineItemRow(
+        item: Checkout.Session.OrderSummaryItem.OneTimePrice.Item,
+        currency: String?
+    ) -> UIView {
         let placeholderView = UIView()
         placeholderView.backgroundColor = .secondarySystemBackground
         placeholderView.layer.cornerRadius = 12
@@ -328,12 +343,12 @@ final class CheckoutCartViewController: UIViewController {
         placeholderView.addSubview(imageView)
 
         let nameLabel = UILabel()
-        nameLabel.text = item.name
+        nameLabel.text = item.displayName
         nameLabel.font = .preferredFont(forTextStyle: .headline)
         nameLabel.numberOfLines = 0
 
         let unitAmountLabel = UILabel()
-        unitAmountLabel.text = item.unitAmount?.amount ?? ""
+        unitAmountLabel.text = item.unitAmount.amount
         unitAmountLabel.font = .preferredFont(forTextStyle: .subheadline)
         unitAmountLabel.textColor = .secondaryLabel
 
@@ -347,7 +362,7 @@ final class CheckoutCartViewController: UIViewController {
 
         let totalLabel = UILabel()
         totalLabel.text = formatCartCurrency(
-            amount: (item.unitAmount?.minorUnitsAmount ?? 0) * item.quantity,
+            amount: Int(item.unitAmount.minorUnitsAmount) * item.quantity,
             currency: currency
         )
         totalLabel.font = .preferredFont(forTextStyle: .headline)

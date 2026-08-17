@@ -22,6 +22,15 @@ extension NSDecimalNumber {
         "HUF": 2,
     ]
 
+    /// Converts an amount from a currency's minor units to its major units.
+    ///
+    /// For example, `92_123` USD minor units becomes `921.23`, while
+    /// `92_123` JPY minor units remains `92_123`.
+    ///
+    /// - Parameters:
+    ///   - amount: The amount in minor units.
+    ///   - currency: The three-letter ISO 4217 currency code.
+    /// - Returns: The amount expressed in major units.
     @objc @_spi(STP) public class func stp_decimalNumber(
         withAmount amount: Int,
         currency: String?
