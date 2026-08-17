@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 extension Checkout: ExpressCheckoutElementDelegate {
-    func expressCheckoutElementShouldConfirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod) async -> ConfirmResult {
+    func expressCheckoutElementShouldConfirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod, presentingViewController: UIViewController?) async -> ConfirmResult {
         guard sessionIsOpen else {
             return .failed(CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() cannot confirm a Checkout Session that is no longer open."))
         }
@@ -44,7 +44,7 @@ extension Checkout: ExpressCheckoutElementDelegate {
                     confirmationChallenge: confirmationChallenge,
                     analyticsHelper: analyticsHelper
                 )
-                guard let presentingViewController = UIWindow.visibleViewController else {
+                guard let presentingViewController = presentingViewController ?? UIWindow.visibleViewController else {
                     let errorMessage = "Checkout.expressCheckoutElementShouldConfirm() could not find a presenting view controller for Link."
                     stpAssertionFailure(errorMessage)
                     STPAnalyticsClient.sharedClient.log(analytic: UnexpectedCheckoutElementsErrorAnalytic(
