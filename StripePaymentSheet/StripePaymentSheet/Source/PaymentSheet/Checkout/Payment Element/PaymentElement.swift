@@ -76,7 +76,8 @@ public final class PaymentElement {
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
-            userInterfaceStyle: checkout.configuration.userInterfaceStyle
+            userInterfaceStyle: checkout.configuration.userInterfaceStyle,
+            returnURL: checkout.configuration.returnURL
         )
         self.paymentSheetFlowController = try await PaymentSheet.FlowController.create(
             checkout: checkout,
@@ -87,7 +88,8 @@ public final class PaymentElement {
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
-            userInterfaceStyle: checkout.configuration.userInterfaceStyle
+            userInterfaceStyle: checkout.configuration.userInterfaceStyle,
+            returnURL: checkout.configuration.returnURL
         )
         self.embeddedPaymentElement = try await EmbeddedPaymentElement.create(
             checkout: checkout,
@@ -141,13 +143,15 @@ extension PaymentElement {
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
-            userInterfaceStyle: checkout.configuration.userInterfaceStyle
+            userInterfaceStyle: checkout.configuration.userInterfaceStyle,
+            returnURL: checkout.configuration.returnURL
         )
         embeddedPaymentElement.configuration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
-            userInterfaceStyle: checkout.configuration.userInterfaceStyle
+            userInterfaceStyle: checkout.configuration.userInterfaceStyle,
+            returnURL: checkout.configuration.returnURL
         )
 
         // Update FlowController

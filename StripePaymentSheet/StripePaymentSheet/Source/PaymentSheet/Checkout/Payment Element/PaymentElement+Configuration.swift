@@ -130,12 +130,14 @@ extension PaymentElement {
             apiClient: STPAPIClient,
             defaults: Checkout.Configuration.Defaults,
             merchantDisplayName: String,
-            userInterfaceStyle: Checkout.UserInterfaceStyle
+            userInterfaceStyle: Checkout.UserInterfaceStyle,
+            returnURL: String
         ) -> EmbeddedPaymentElement.Configuration {
             var configuration = embeddedConfiguration
             configuration.apiClient = apiClient
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
+            configuration.returnURL = returnURL
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
@@ -147,12 +149,14 @@ extension PaymentElement {
             apiClient: STPAPIClient,
             defaults: Checkout.Configuration.Defaults,
             merchantDisplayName: String,
-            userInterfaceStyle: Checkout.UserInterfaceStyle
+            userInterfaceStyle: Checkout.UserInterfaceStyle,
+            returnURL: String
         ) -> PaymentSheet.Configuration {
             var configuration = paymentSheetConfiguration
             configuration.apiClient = apiClient
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
+            configuration.returnURL = returnURL
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)

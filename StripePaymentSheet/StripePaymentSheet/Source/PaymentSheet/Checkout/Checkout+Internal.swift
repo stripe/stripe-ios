@@ -25,7 +25,50 @@ extension Checkout: ExpressCheckoutElementDelegate {
                     sessionUpdater: self
                 )
             case .link:
-                return .init(paymentSheetResult: .canceled) // TODO: link
+                var paymentSheetConfiguration = PaymentSheet.Configuration()
+                paymentSheetConfiguration.apiClient = apiClient
+                paymentSheetConfiguration.merchantDisplayName = effectiveMerchantDisplayName
+                paymentSheetConfiguration.returnURL = configuration.returnURL
+                paymentSheetConfiguration.style = configuration.userInterfaceStyle
+                if let display = configuration.linkConfiguration?.display {
+                    paymentSheetConfiguration.link.display = PaymentSheet.LinkConfiguration.Display(rawValue: display.rawValue) ?? .automatic
+                }
+                let confirmationChallenge = ConfirmationChallenge(elementsSession: session.elementsSession, stripeAttest: apiClient.stripeAttest)
+                let analyticsHelper = PaymentSheetAnalyticsHelper(
+                    integrationShape: .expressCheckout,
+                    configuration: paymentSheetConfiguration)
+                let confirmationContext = ConfirmationContext(
+                    paymentOption: .link(option: .wallet(brand: session.elementsSession.linkBrand ?? .link)),
+                    configuration: paymentSheetConfiguration,
+                    integrationShape: .expressCheckout,
+                    confirmationChallenge: confirmationChallenge,
+                    analyticsHelper: analyticsHelper
+                )
+                guard let presentingViewController = UIWindow.visibleViewController else {
+                    let errorMessage = "Checkout.expressCheckoutElementShouldConfirm() could not find a presenting view controller for Link."
+                    stpAssertionFailure(errorMessage)
+                    STPAnalyticsClient.sharedClient.log(analytic: UnexpectedCheckoutElementsErrorAnalytic(
+                        errorCode: .expressCheckoutElementPresentingViewControllerUnavailable,
+                        errorMessage: errorMessage
+                    ))
+                    return InternalConfirmResult(paymentSheetResult: .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)))
+                }
+                let linkResult = await Checkout.confirmLink(
+                    checkoutSession: session,
+                    confirmationContext: confirmationContext,
+                    authenticationContext: AuthenticationContext(presentingViewController: presentingViewController, appearance: paymentSheetConfiguration.appearance),
+                    clientAttributionMetadata: STPClientAttributionMetadata.makeClientAttributionMetadata(intent: .checkout(session), elementsSession: session.elementsSession),
+                    paymentHandler: paymentHandler)
+                // The payment already succeeded at this point, so a commit failure here shouldn't be
+                // reported to the customer as a failed payment - just log it.
+                if let checkoutSessionResponse = linkResult.checkoutSessionResponse {
+                    do {
+                        try await self.commitSession(checkoutSessionResponse)
+                    } catch {
+                        STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedPaymentSheetConfirmationError, error: error))
+                    }
+                }
+                return linkResult
             }
         }()
         switch result.paymentSheetResult {
