@@ -234,26 +234,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         handler(PKPaymentRequestCouponCodeUpdate(paymentSummaryItems: summaryItems()))
     }
 
-    override func responds(to aSelector: Selector!) -> Bool {
-        if aSelector == #selector(paymentAuthorizationController(_:didSelectPaymentMethod:handler:)) {
-            // TODO: Update billing tax region when the user switches cards.
-            return false
-        }
-        if aSelector == #selector(paymentAuthorizationController(_:didSelectShippingContact:handler:)) {
-            // TODO: Collect shipping address and update shipping tax region.
-            return false
-        }
-        if aSelector == #selector(paymentAuthorizationController(_:didChangeCouponCode:handler:)) {
-            // TODO: Wire up coupon code handling.
-            return false
-        }
-        if aSelector == #selector(paymentAuthorizationController(_:didSelectShippingMethod:handler:)) {
-            // TODO: Handle multiple shipping rates from the session.
-            return false
-        }
-        return super.responds(to: aSelector)
-    }
-
     // MARK: - Factory
 
     static func create(
