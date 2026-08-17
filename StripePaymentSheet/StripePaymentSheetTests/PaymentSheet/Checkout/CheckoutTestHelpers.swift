@@ -15,11 +15,14 @@ import OHHTTPStubsSwift
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
-extension Checkout.Amount {
-    /// Test helper for constructing a ``Checkout/Amount`` from a minor-units integer.
-    static func testValue(_ minorUnits: Int, currency: String = "usd") -> Checkout.Amount {
-        return PaymentPagesAPIResponse.makeAmount(minorUnits, currency: currency)
+extension PaymentPagesAPIResponse {
+    static func decode(
+        fromAPIResponse response: [AnyHashable: Any]
+    ) throws -> PaymentPagesAPIResponse {
+        let data = try JSONSerialization.data(withJSONObject: response)
+        return try StripeJSONDecoder().decode(PaymentPagesAPIResponse.self, from: data)
     }
+
 }
 
 // MARK: - Emission Recorder
@@ -84,13 +87,54 @@ enum CheckoutTestHelpers {
         "payment_method_preference": ["ordered_payment_method_types": ["card"]],
     ]
 
+    static func makeOneTimePriceCheckoutItems(
+        currency: String = "usd",
+        unitAmount: Int = 1000
+    ) -> [[String: Any]] {
+        return [
+            [
+                "key": "checkout_item_test",
+                "type": "one_time_price",
+                "one_time_price": [
+                    "items": [
+                        [
+                            "inner_item_key": "checkout_item_inner_test",
+                            "quantity": 1,
+                            "subtotal": unitAmount,
+                            "total": unitAmount,
+                            "unit_amount": unitAmount,
+                            "unit_amount_decimal": String(unitAmount),
+                            "tax_amounts": [],
+                            "tax_inclusive": 0,
+                            "tax_exclusive": 0,
+                            "price": [
+                                "id": "price_test",
+                                "currency": currency,
+                                "unit_amount": unitAmount,
+                                "product": [
+                                    "name": "Test product",
+                                    "images": [],
+                                ],
+                            ],
+                        ],
+                    ],
+                    "subtotal": unitAmount,
+                    "total": unitAmount,
+                ],
+            ],
+        ]
+    }
+
     static let baseSessionJSON: [String: Any] = [
         "session_id": "cs_test",
         "object": "checkout.session",
         "livemode": false,
-        "mode": "payment",
+        "mode": "modeless",
+        "status": "open",
         "payment_status": "unpaid",
         "payment_method_types": ["card"],
+        "currency": "usd",
+        "checkout_items": makeOneTimePriceCheckoutItems(),
         "elements_session": minimalElementsSessionJSON,
     ]
 
@@ -98,10 +142,7 @@ enum CheckoutTestHelpers {
     /// To test field *absence*, mutate `baseSessionJSON` directly instead.
     static func makeSession(_ overrides: [String: Any] = [:]) -> PaymentPagesAPIResponse {
         let json = makeSessionJSON(overrides)
-        guard let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json) else {
-            fatalError("makeSession: failed to decode PaymentPagesAPIResponse from \(json)")
-        }
-        return session
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeSessionJSON(_ overrides: [String: Any] = [:]) -> [String: Any] {
@@ -251,11 +292,12 @@ enum CheckoutTestHelpers {
         "object": "checkout.session",
         "client_secret": "cs_test_123_secret_abc",
         "livemode": false,
-        "mode": "payment",
+        "mode": "modeless",
         "status": "open",
         "payment_status": "unpaid",
         "payment_method_types": ["card"],
         "currency": "usd",
+        "checkout_items": makeOneTimePriceCheckoutItems(),
         "elements_session": minimalElementsSessionJSON,
     ]
 
@@ -263,20 +305,20 @@ enum CheckoutTestHelpers {
         var json = openSessionJSON
         json["customer_email"] = customerEmail
         json["billing_address_collection"] = billingAddressCollection
-        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeClosedSession() -> PaymentPagesAPIResponse {
         var json = openSessionJSON
         json["status"] = "complete"
         json["payment_status"] = "paid"
-        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeOpenSession(allowedCountries: [String]) -> PaymentPagesAPIResponse {
         var json = openSessionJSON
         json["shipping_address_collection"] = ["allowed_countries": allowedCountries]
-        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeAdaptivePricingSession(
@@ -289,11 +331,10 @@ enum CheckoutTestHelpers {
     ) -> PaymentPagesAPIResponse {
         var json: [AnyHashable: Any] = openSessionJSON
         json["currency"] = currency
-        json["total_summary"] = [
-            "subtotal": integrationAmount,
-            "total": integrationAmount,
-            "due": integrationAmount,
-        ]
+        json["checkout_items"] = makeOneTimePriceCheckoutItems(
+            currency: currency,
+            unitAmount: integrationAmount
+        )
         json["developer_tool_context"] = [
             "adaptive_pricing": [
                 "active": adaptivePricingActive,
@@ -317,7 +358,7 @@ enum CheckoutTestHelpers {
             ]
         }
 
-        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
     private static func jsonObject(_ value: Any) -> Any {
@@ -352,6 +393,6 @@ extension PaymentPagesAPIResponse {
     private func withOverrides(_ overrides: [String: Any]) -> PaymentPagesAPIResponse {
         let json = (allResponseFields as? [String: Any] ?? [:])
             .merging(overrides) { _, new in new }
-        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 }

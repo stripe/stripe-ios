@@ -41,8 +41,7 @@ extension STPAPIClient {
             ],
         ]
 
-        let checkoutSession: PaymentPagesAPIResponse = try await APIRequest<PaymentPagesAPIResponse>.post(
-            with: self,
+        let checkoutSession = try await post(
             endpoint: "payment_pages/\(checkoutSessionId)/init",
             parameters: parameters
         )
@@ -63,8 +62,7 @@ extension STPAPIClient {
         params["elements_session_client"] = [
             "is_aggregation_expected": true,
         ]
-        return try await APIRequest<PaymentPagesAPIResponse>.post(
-            with: self,
+        return try await post(
             endpoint: "payment_pages/\(checkoutSessionId)",
             parameters: params
         )
@@ -74,8 +72,7 @@ extension STPAPIClient {
         _ paymentMethodId: String,
         fromCheckoutSession checkoutSessionId: String
     ) async throws {
-        _ = try await APIRequest<PaymentPagesAPIResponse>.post(
-            with: self,
+        _ = try await post(
             endpoint: "payment_pages/\(checkoutSessionId)",
             parameters: [
                 "payment_method_to_detach": paymentMethodId,
@@ -103,8 +100,7 @@ extension STPAPIClient {
             expiryDetails: expiryDetails
         )
         params["elements_session_client"] = ["is_aggregation_expected": true]
-        return try await APIRequest<PaymentPagesAPIResponse>.post(
-            with: self,
+        return try await post(
             endpoint: "payment_pages/\(checkoutSessionId)",
             parameters: params
         )
@@ -207,10 +203,27 @@ extension STPAPIClient {
             parameters["passive_captcha_token"] = passiveCaptchaToken
         }
 
-        return try await APIRequest<PaymentPagesAPIResponse>.post(
-            with: self,
+        return try await post(
             endpoint: "payment_pages/\(sessionId)/confirm",
             parameters: parameters
         )
+    }
+
+    private func post(
+        endpoint: String,
+        parameters: [String: Any]
+    ) async throws -> PaymentPagesAPIResponse {
+        do {
+            return try await withCheckedThrowingContinuation { continuation in
+                post(resource: endpoint, parameters: parameters) { result in
+                    continuation.resume(with: result)
+                }
+            }
+        } catch {
+            if error is DecodingError {
+                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
+            }
+            throw error
+        }
     }
 }

@@ -10,43 +10,39 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-/// Internal response model for the mobile Payment Pages API endpoints.
+/// Internal response model for the Payment Pages API endpoints.
 ///
 /// Properties in this model mirror the API payload. Conversion to the public Checkout
 /// representation belongs in `makePublicSession()`.
-class PaymentPagesAPIResponse: NSObject {
+struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible {
+    var _allResponseFieldsStorage: NonEncodableParameters?
+
     let sessionId: String
     let clientSecret: String?
-    let currency: String?
+    let paymentIntentId: String?
+    let paymentIntent: STPPaymentIntent?
+    let setupIntentId: String?
+    let setupIntent: STPSetupIntent?
+    let currency: String
     let checkoutItems: [CheckoutItem]
     let livemode: Bool
-    let status: String?
-    let paymentStatus: String
-    let paymentIntentId: String?
-    let setupIntentId: String?
-    let paymentIntent: STPPaymentIntent?
-    let setupIntent: STPSetupIntent?
-    let paymentMethodOptions: STPPaymentMethodOptions?
-    let customer: STPCheckoutSessionCustomer?
+    let status: Checkout.Session.Status
+    let paymentStatus: Checkout.Session.Status.PaymentStatus
     let customerEmail: String?
     let url: String?
-    let returnUrl: String?
     let savedPaymentMethodsOfferSave: SavedPaymentMethodsOfferSave?
     let setupFutureUsage: String?
     let setupFutureUsageForPaymentMethodType: [String: String]?
     let billingAddressCollection: String?
     let shippingAddressCollection: ShippingAddressCollection?
-    let shippingRate: ShippingRate?
     let recurringDetails: RecurringDetails?
-    let totalSummary: TotalSummary?
     let adaptivePricingInfo: AdaptivePricingInfo?
     let developerToolContext: DeveloperToolContext?
     let taxContext: TaxContext?
     let taxMeta: TaxMeta?
+    let paymentMethodOptions: STPPaymentMethodOptions?
+    let customer: Customer?
     let elementsSession: ElementsSession
-
-    /// The raw API response used to create this object.
-    let allResponseFields: [AnyHashable: Any]
 
     /// Extracts the client secret from whichever expanded intent is present in the response.
     func intentClientSecret() throws -> String {
@@ -60,397 +56,444 @@ class PaymentPagesAPIResponse: NSObject {
         )
     }
 
-    override var description: String {
+    var description: String {
         let props: [String] = [
-            String(format: "%@: %p", NSStringFromClass(PaymentPagesAPIResponse.self), self),
+            "PaymentPagesAPIResponse",
             "sessionId = \(sessionId)",
-            "totalSummary = \(String(describing: totalSummary))",
             "clientSecret = <redacted>",
-            "currency = \(String(describing: currency))",
+            "currency = \(currency)",
             "mode = \(String(describing: allResponseFields["mode"]))",
-            "status = \(String(describing: status))",
+            "status = \(status)",
             "paymentIntentId = \(String(describing: paymentIntentId))",
             "setupIntentId = \(String(describing: setupIntentId))",
-            "paymentIntent = \(String(describing: paymentIntent))",
-            "setupIntent = \(String(describing: setupIntent))",
             "paymentMethodTypes = \(String(describing: allResponseFields["payment_method_types"]))",
             "livemode = \(livemode)",
             "customerId = \(String(describing: customer?.id))",
             "customerEmail = \(String(describing: customerEmail))",
             "url = \(String(describing: url))",
-            "returnUrl = \(String(describing: returnUrl))",
             "savedPaymentMethodsOfferSave = \(String(describing: savedPaymentMethodsOfferSave))",
         ]
         return "<\(props.joined(separator: "; "))>"
     }
 
-    private init(
-        sessionId: String,
-        clientSecret: String?,
-        currency: String?,
-        checkoutItems: [CheckoutItem],
-        livemode: Bool,
-        status: String?,
-        paymentStatus: String,
-        paymentIntentId: String?,
-        setupIntentId: String?,
-        paymentIntent: STPPaymentIntent?,
-        setupIntent: STPSetupIntent?,
-        paymentMethodOptions: STPPaymentMethodOptions?,
-        customer: STPCheckoutSessionCustomer?,
-        customerEmail: String?,
-        url: String?,
-        returnUrl: String?,
-        savedPaymentMethodsOfferSave: SavedPaymentMethodsOfferSave?,
-        setupFutureUsage: String?,
-        setupFutureUsageForPaymentMethodType: [String: String]?,
-        billingAddressCollection: String?,
-        shippingAddressCollection: ShippingAddressCollection?,
-        shippingRate: ShippingRate?,
-        recurringDetails: RecurringDetails?,
-        totalSummary: TotalSummary?,
-        adaptivePricingInfo: AdaptivePricingInfo?,
-        developerToolContext: DeveloperToolContext?,
-        taxContext: TaxContext?,
-        taxMeta: TaxMeta?,
-        elementsSession: ElementsSession,
-        allResponseFields: [AnyHashable: Any]
-    ) {
-        self.sessionId = sessionId
-        self.clientSecret = clientSecret
-        self.currency = currency
-        self.checkoutItems = checkoutItems
-        self.livemode = livemode
-        self.status = status
+    private enum CodingKeys: String, CodingKey {
+        case sessionId
+        case clientSecret
+        case paymentIntent
+        case setupIntent
+        case currency
+        case checkoutItems
+        case livemode
+        case mode
+        case status
+        case paymentStatus
+        case paymentMethodTypes
+        case customerEmail
+        case url
+        case savedPaymentMethodsOfferSave = "customer_managed_saved_payment_methods_offer_save"
+        case setupFutureUsage
+        case setupFutureUsageForPaymentMethodType
+        case billingAddressCollection
+        case shippingAddressCollection
+        case recurringDetails
+        case adaptivePricingInfo
+        case developerToolContext
+        case taxContext
+        case taxMeta
+        case paymentMethodOptions
+        case customer
+        case elementsSession
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        sessionId = try container.decode(String.self, forKey: .sessionId)
+        clientSecret = try container.decodeIfPresent(String.self, forKey: .clientSecret)
+        let decodedPaymentIntent = try container.decodeIfPresent(
+            LegacyExpandable<STPPaymentIntent>.self,
+            forKey: .paymentIntent
+        )
+        paymentIntentId = decodedPaymentIntent?.id
+        paymentIntent = decodedPaymentIntent?.expandedObject
+        let decodedSetupIntent = try container.decodeIfPresent(
+            LegacyExpandable<STPSetupIntent>.self,
+            forKey: .setupIntent
+        )
+        setupIntentId = decodedSetupIntent?.id
+        setupIntent = decodedSetupIntent?.expandedObject
+        let decodedCurrency = try container.decode(String.self, forKey: .currency)
+        guard !decodedCurrency.isEmpty else {
+            throw decoder.dataCorrupted("currency must not be empty")
+        }
+        currency = decodedCurrency
+
+        let mode = try container.decode(String.self, forKey: .mode)
+        guard mode == "modeless" else {
+            throw decoder.dataCorrupted("Only modeless Checkout Sessions are supported")
+        }
+
+        let decodedCheckoutItems = try container.decode([CheckoutItem].self, forKey: .checkoutItems)
+        guard !decodedCheckoutItems.isEmpty else {
+            throw decoder.dataCorrupted("checkout_items must not be empty")
+        }
+        guard decodedCheckoutItems.allSatisfy({ checkoutItem in
+            checkoutItem.oneTimePrice.items.allSatisfy { $0.price.currency == decodedCurrency }
+        }) else {
+            throw decoder.dataCorrupted("Every Checkout item currency must match currency")
+        }
+        checkoutItems = decodedCheckoutItems
+
+        livemode = try container.decode(Bool.self, forKey: .livemode)
+        let decodedPaymentStatus = try container.decode(String.self, forKey: .paymentStatus)
+        guard let paymentStatus = Checkout.Session.Status.PaymentStatus.paymentStatus(
+            from: decodedPaymentStatus
+        ) else {
+            throw decoder.dataCorrupted("Unsupported payment_status: \(decodedPaymentStatus)")
+        }
         self.paymentStatus = paymentStatus
-        self.paymentIntentId = paymentIntentId
-        self.setupIntentId = setupIntentId
-        self.paymentIntent = paymentIntent
-        self.setupIntent = setupIntent
-        self.paymentMethodOptions = paymentMethodOptions
-        self.customer = customer
-        self.customerEmail = customerEmail
-        self.url = url
-        self.returnUrl = returnUrl
-        self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
-        self.setupFutureUsage = setupFutureUsage
-        self.setupFutureUsageForPaymentMethodType = setupFutureUsageForPaymentMethodType
-        self.billingAddressCollection = billingAddressCollection
-        self.shippingAddressCollection = shippingAddressCollection
-        self.shippingRate = shippingRate
-        self.recurringDetails = recurringDetails
-        self.totalSummary = totalSummary
-        self.adaptivePricingInfo = adaptivePricingInfo
-        self.developerToolContext = developerToolContext
-        self.taxContext = taxContext
-        self.taxMeta = taxMeta
-        self.elementsSession = elementsSession
-        self.allResponseFields = allResponseFields
-        super.init()
+
+        let decodedStatus = try container.decode(String.self, forKey: .status)
+        guard let status = Checkout.Session.Status.status(
+            from: decodedStatus,
+            paymentStatus: paymentStatus
+        ) else {
+            throw decoder.dataCorrupted("Unsupported Checkout Session status: \(decodedStatus)")
+        }
+        self.status = status
+        _ = try container.decode([String].self, forKey: .paymentMethodTypes)
+
+        customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
+        url = try container.decodeIfPresent(String.self, forKey: .url)
+        savedPaymentMethodsOfferSave = try container.decodeIfPresent(
+            SavedPaymentMethodsOfferSave.self,
+            forKey: .savedPaymentMethodsOfferSave
+        )
+        setupFutureUsage = try container.decodeIfPresent(String.self, forKey: .setupFutureUsage)
+        setupFutureUsageForPaymentMethodType = try container.decodeIfPresent(
+            [String: String].self,
+            forKey: .setupFutureUsageForPaymentMethodType
+        )
+        billingAddressCollection = try container.decodeIfPresent(
+            String.self,
+            forKey: .billingAddressCollection
+        )
+        shippingAddressCollection = try container.decodeIfPresent(
+            ShippingAddressCollection.self,
+            forKey: .shippingAddressCollection
+        )
+        recurringDetails = try container.decodeIfPresent(RecurringDetails.self, forKey: .recurringDetails)
+        adaptivePricingInfo = try container.decodeIfPresent(
+            AdaptivePricingInfo.self,
+            forKey: .adaptivePricingInfo
+        )
+        developerToolContext = try container.decodeIfPresent(
+            DeveloperToolContext.self,
+            forKey: .developerToolContext
+        )
+        taxContext = try container.decodeIfPresent(TaxContext.self, forKey: .taxContext)
+        taxMeta = try container.decodeIfPresent(TaxMeta.self, forKey: .taxMeta)
+        paymentMethodOptions = try container.decodeIfPresent(
+            LegacyDecoded<STPPaymentMethodOptions>.self,
+            forKey: .paymentMethodOptions
+        )?.value
+        customer = try container.decodeIfPresent(Customer.self, forKey: .customer)
+        elementsSession = try container.decode(ElementsSession.self, forKey: .elementsSession)
+    }
+}
+
+extension PaymentPagesAPIResponse {
+    /// Adapts a dictionary-backed API model to `Decodable` while it is migrated.
+    struct LegacyDecoded<Value: STPAPIResponseDecodable>: Decodable {
+        let value: Value
+
+        init(from decoder: Decoder) throws {
+            let dictionary = try decoder.stripeJSONDictionary
+            guard let value = Value.decodedObject(fromAPIResponse: dictionary) else {
+                throw DecodingError.dataCorrupted(
+                    .init(
+                        codingPath: decoder.codingPath,
+                        debugDescription: "Could not decode \(Value.self) using its legacy parser"
+                    )
+                )
+            }
+            self.value = value
+        }
+    }
+
+    private struct LegacyExpandable<Value: STPAPIResponseDecodable>: Decodable {
+        let id: String
+        let expandedObject: Value?
+
+        private enum CodingKeys: String, CodingKey {
+            case id
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            if let id = try? container.decode(String.self) {
+                self.id = id
+                self.expandedObject = nil
+                return
+            }
+
+            let expandedObject = try LegacyDecoded<Value>(from: decoder).value
+            guard let id = expandedObject.allResponseFields["id"] as? String else {
+                throw DecodingError.keyNotFound(
+                    CodingKeys.id,
+                    .init(
+                        codingPath: decoder.codingPath,
+                        debugDescription: "Expanded \(Value.self) is missing id"
+                    )
+                )
+            }
+            self.id = id
+            self.expandedObject = expandedObject
+        }
     }
 }
 
 // MARK: - API-shaped nested models
 
 extension PaymentPagesAPIResponse {
-    struct CheckoutItem {
-        let key: String?
-        let type: String?
-        let oneTimePriceItem: OneTimePriceItem?
+    struct CheckoutItem: Decodable {
+        let key: String
+        let oneTimePrice: OneTimePrice
 
-        init(_ dict: [AnyHashable: Any]) {
-            key = dict["key"] as? String
-            type = dict["type"] as? String
-            oneTimePriceItem = (dict["one_time_price_item"] as? [AnyHashable: Any]).map(OneTimePriceItem.init)
+        private enum CodingKeys: String, CodingKey {
+            case key
+            case type
+            case oneTimePrice
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            key = try container.decode(String.self, forKey: .key)
+            let type = try container.decode(String.self, forKey: .type)
+            guard type == "one_time_price" else {
+                throw decoder.dataCorrupted("Unsupported Checkout item type: \(type)")
+            }
+            oneTimePrice = try container.decode(OneTimePrice.self, forKey: .oneTimePrice)
         }
     }
 
-    struct OneTimePriceItem {
-        let quantity: Int?
-        let price: Price?
-
-        init(_ dict: [AnyHashable: Any]) {
-            quantity = dict["quantity"] as? Int
-            price = (dict["price"] as? [AnyHashable: Any]).map(Price.init)
-        }
+    struct OneTimePrice: Decodable {
+        let items: [OneTimePriceItem]
+        let subtotal: Int
+        let total: Int
     }
 
-    struct Price {
-        let currency: String?
+    struct OneTimePriceItem: Decodable {
+        let price: Price
+        let quantity: Int
         let unitAmount: Int?
-        let unitAmountDecimal: String?
-        let product: Product?
+        let unitAmountDecimal: Double?
+        let unitLabel: String?
+        let taxAmounts: [TaxAmount]
+        let taxInclusive: Int
+        let taxExclusive: Int
+        let adjustableQuantity: AdjustableQuantity?
 
-        init(_ dict: [AnyHashable: Any]) {
-            currency = dict["currency"] as? String
-            unitAmount = dict["unit_amount"] as? Int
-            unitAmountDecimal = dict["unit_amount_decimal"] as? String
-            product = (dict["product"] as? [AnyHashable: Any]).map(Product.init)
+        private enum CodingKeys: String, CodingKey {
+            case innerItemKey
+            case price
+            case quantity
+            case subtotal
+            case total
+            case unitAmount
+            case unitAmountDecimal
+            case unitLabel
+            case taxAmounts
+            case taxInclusive
+            case taxExclusive
+            case adjustableQuantity
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            _ = try container.decode(String.self, forKey: .innerItemKey)
+            price = try container.decode(Price.self, forKey: .price)
+            quantity = try container.decode(Int.self, forKey: .quantity)
+            guard quantity >= 0 else {
+                throw decoder.dataCorrupted("quantity must not be negative")
+            }
+            _ = try container.decode(Int.self, forKey: .subtotal)
+            _ = try container.decode(Int.self, forKey: .total)
+            unitAmount = try container.decodeIfPresent(Int.self, forKey: .unitAmount)
+
+            if let rawUnitAmountDecimal = try container.decodeIfPresent(
+                String.self,
+                forKey: .unitAmountDecimal
+            ) {
+                guard let parsedUnitAmountDecimal = Double(rawUnitAmountDecimal),
+                      parsedUnitAmountDecimal.isFinite else {
+                    throw decoder.dataCorrupted("unit_amount_decimal must be a finite number")
+                }
+                unitAmountDecimal = parsedUnitAmountDecimal
+            } else {
+                unitAmountDecimal = nil
+            }
+
+            guard unitAmount != nil || price.unitAmount != nil || unitAmountDecimal != nil else {
+                throw decoder.dataCorrupted("A one-time Price item must have a unit amount")
+            }
+
+            unitLabel = try container.decodeIfPresent(String.self, forKey: .unitLabel)
+            taxAmounts = try container.decode([TaxAmount].self, forKey: .taxAmounts)
+            taxInclusive = try container.decode(Int.self, forKey: .taxInclusive)
+            taxExclusive = try container.decode(Int.self, forKey: .taxExclusive)
+            adjustableQuantity = try container.decodeIfPresent(
+                AdjustableQuantity.self,
+                forKey: .adjustableQuantity
+            )
         }
     }
 
-    struct Product {
-        let name: String?
-        let description: String?
-        let images: [String]?
+    struct Price: Decodable {
+        let id: String
+        let currency: String
+        let unitAmount: Int?
+        let product: Product
 
-        init(_ dict: [AnyHashable: Any]) {
-            name = dict["name"] as? String
-            description = dict["description"] as? String
-            images = dict["images"] as? [String]
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            id = try container.decode(String.self, forKey: .id)
+            currency = try container.decode(String.self, forKey: .currency)
+            guard !currency.isEmpty else {
+                throw decoder.dataCorrupted("Price currency must not be empty")
+            }
+            unitAmount = try container.decodeIfPresent(Int.self, forKey: .unitAmount)
+            product = try container.decode(Product.self, forKey: .product)
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case id
+            case currency
+            case unitAmount
+            case product
         }
     }
 
-    struct TotalSummary {
-        let subtotal: Int?
-        let total: Int?
-        let appliedBalance: Int?
-        let balanceAppliedToNextInvoice: Bool?
-
-        init(_ dict: [AnyHashable: Any]) {
-            subtotal = dict["subtotal"] as? Int
-            total = dict["total"] as? Int
-            appliedBalance = dict["applied_balance"] as? Int
-            balanceAppliedToNextInvoice = dict["balance_applied_to_next_invoice"] as? Bool
-        }
+    struct Product: Decodable {
+        let name: String
+        let images: [String]
     }
 
-    struct RecurringDetails {
+    struct RecurringDetails: Decodable {
         let totalDiscountAmounts: [DiscountAmount]?
         let totalTaxAmounts: [TaxAmount]?
-
-        init(_ dict: [AnyHashable: Any]) {
-            totalDiscountAmounts = (dict["total_discount_amounts"] as? [[AnyHashable: Any]])?.map(DiscountAmount.init)
-            totalTaxAmounts = (dict["total_tax_amounts"] as? [[AnyHashable: Any]])?.map(TaxAmount.init)
-        }
     }
 
-    struct DiscountAmount {
+    struct DiscountAmount: Decodable {
         let amount: Int?
         let displayName: String?
         let coupon: Coupon?
         let promotionCode: PromotionCode?
-
-        init(_ dict: [AnyHashable: Any]) {
-            amount = dict["amount"] as? Int
-            displayName = dict["display_name"] as? String
-            coupon = (dict["coupon"] as? [AnyHashable: Any]).map(Coupon.init)
-            promotionCode = (dict["promotion_code"] as? [AnyHashable: Any]).map(PromotionCode.init)
-        }
     }
 
-    struct Coupon {
+    struct Coupon: Decodable {
         let id: String?
         let name: String?
-
-        init(_ dict: [AnyHashable: Any]) {
-            id = dict["id"] as? String
-            name = dict["name"] as? String
-        }
     }
 
-    struct PromotionCode {
+    struct PromotionCode: Decodable {
         let code: String?
+    }
 
-        init(_ dict: [AnyHashable: Any]) {
-            code = dict["code"] as? String
+    struct TaxAmount: Decodable {
+        let amount: Int
+        let inclusive: Bool
+        let taxRate: TaxRate
+    }
+
+    struct TaxRate: Decodable {
+        let displayName: String
+        let percentage: Double
+        let rateType: String?
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            displayName = try container.decode(String.self, forKey: .displayName)
+            percentage = try container.decode(Double.self, forKey: .percentage)
+            rateType = try container.decodeIfPresent(String.self, forKey: .rateType)
+            guard rateType == nil || rateType == "flat_amount" || rateType == "percentage" else {
+                throw decoder.dataCorrupted("Unsupported tax rate type: \(rateType!)")
+            }
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case displayName
+            case percentage
+            case rateType
         }
     }
 
-    struct TaxAmount {
-        let amount: Int?
-        let inclusive: Bool?
-        let displayName: String?
-        let taxRate: TaxRate?
-
-        init(_ dict: [AnyHashable: Any]) {
-            amount = dict["amount"] as? Int
-            inclusive = dict["inclusive"] as? Bool
-            displayName = dict["display_name"] as? String
-            taxRate = (dict["tax_rate"] as? [AnyHashable: Any]).map(TaxRate.init)
-        }
+    struct AdjustableQuantity: Decodable {
+        let enabled: Bool
+        let maximum: Int?
+        let minimum: Int?
     }
 
-    struct TaxRate {
-        let displayName: String?
-
-        init(_ dict: [AnyHashable: Any]) {
-            displayName = dict["display_name"] as? String
-        }
-    }
-
-    struct ShippingAddressCollection {
+    struct ShippingAddressCollection: Decodable {
         let allowedCountries: [String]?
-
-        init(_ dict: [AnyHashable: Any]) {
-            allowedCountries = dict["allowed_countries"] as? [String]
-        }
     }
 
-    struct ShippingRate {
-        let amount: Int?
-
-        init(_ dict: [AnyHashable: Any]) {
-            amount = dict["amount"] as? Int
-        }
-    }
-
-    struct AdaptivePricingInfo {
+    struct AdaptivePricingInfo: Decodable {
         let activePresentmentCurrency: String?
         let integrationAmount: Int?
         let integrationCurrency: String?
         let localCurrencyOptions: [LocalCurrencyOption]?
-
-        init(_ dict: [AnyHashable: Any]) {
-            activePresentmentCurrency = dict["active_presentment_currency"] as? String
-            integrationAmount = dict["integration_amount"] as? Int
-            integrationCurrency = dict["integration_currency"] as? String
-            localCurrencyOptions = (dict["local_currency_options"] as? [[AnyHashable: Any]])?.map(LocalCurrencyOption.init)
-        }
     }
 
-    struct LocalCurrencyOption {
+    struct LocalCurrencyOption: Decodable {
         let amount: Int?
         let conversionMarkupBps: Int?
         let currency: String?
         let presentmentExchangeRate: String?
-
-        init(_ dict: [AnyHashable: Any]) {
-            amount = dict["amount"] as? Int
-            conversionMarkupBps = dict["conversion_markup_bps"] as? Int
-            currency = dict["currency"] as? String
-            presentmentExchangeRate = dict["presentment_exchange_rate"] as? String
-        }
     }
 
-    struct DeveloperToolContext {
+    struct DeveloperToolContext: Decodable {
         let adaptivePricing: AdaptivePricing?
 
-        init(_ dict: [AnyHashable: Any]) {
-            adaptivePricing = (dict["adaptive_pricing"] as? [AnyHashable: Any]).map(AdaptivePricing.init)
-        }
-
-        struct AdaptivePricing {
+        struct AdaptivePricing: Decodable {
             let active: Bool?
-
-            init(_ dict: [AnyHashable: Any]) {
-                active = dict["active"] as? Bool
-            }
         }
     }
 
-    struct TaxContext {
+    struct TaxContext: Decodable {
         let automaticTaxEnabled: Bool?
         let automaticTaxAddressSource: String?
-
-        init(_ dict: [AnyHashable: Any]) {
-            automaticTaxEnabled = dict["automatic_tax_enabled"] as? Bool
-            automaticTaxAddressSource = dict["automatic_tax_address_source"] as? String
-        }
     }
 
-    struct TaxMeta {
+    struct TaxMeta: Decodable {
         let computationType: String?
         let status: String?
-
-        init(_ dict: [AnyHashable: Any]) {
-            computationType = dict["computation_type"] as? String
-            status = dict["status"] as? String
-        }
     }
 
-    struct SavedPaymentMethodsOfferSave {
+    struct SavedPaymentMethodsOfferSave: Decodable {
         let enabled: Bool?
         let status: String?
-
-        init(_ dict: [AnyHashable: Any]) {
-            enabled = dict["enabled"] as? Bool
-            status = dict["status"] as? String
-        }
     }
 
-    struct ElementsSession {
+    struct ElementsSession: Decodable {
         let businessName: String?
         let value: STPElementsSession
+
+        private enum CodingKeys: String, CodingKey {
+            case businessName
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            businessName = try container.decodeIfPresent(String.self, forKey: .businessName)
+            value = try LegacyDecoded<STPElementsSession>(from: decoder).value
+        }
     }
 }
 
-// MARK: - STPAPIResponseDecodable
-
-extension PaymentPagesAPIResponse: STPAPIResponseDecodable {
-    @objc
-    class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-        guard let dict = response,
-              let sessionId = dict["session_id"] as? String,
-              let livemode = dict["livemode"] as? Bool,
-              let paymentStatus = dict["payment_status"] as? String,
-              (dict["payment_method_types"] as? [String]) != nil,
-              let elementsSessionDict = dict["elements_session"] as? [AnyHashable: Any],
-              let elementsSessionValue = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionDict)
-        else {
-            return nil
-        }
-
-        let paymentIntent: STPPaymentIntent?
-        let paymentIntentId: String?
-        if let intentDict = dict["payment_intent"] as? [AnyHashable: Any] {
-            paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: intentDict)
-            paymentIntentId = paymentIntent?.stripeId
-        } else {
-            paymentIntent = nil
-            paymentIntentId = dict["payment_intent"] as? String
-        }
-
-        let setupIntent: STPSetupIntent?
-        let setupIntentId: String?
-        if let intentDict = dict["setup_intent"] as? [AnyHashable: Any] {
-            setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: intentDict)
-            setupIntentId = setupIntent?.stripeID
-        } else {
-            setupIntent = nil
-            setupIntentId = dict["setup_intent"] as? String
-        }
-
-        let customer = STPCheckoutSessionCustomer.decodedObject(
-            from: dict["customer"] as? [AnyHashable: Any]
+private extension Decoder {
+    func dataCorrupted(_ description: String) -> DecodingError {
+        return DecodingError.dataCorrupted(
+            .init(codingPath: codingPath, debugDescription: description)
         )
-
-        return PaymentPagesAPIResponse(
-            sessionId: sessionId,
-            clientSecret: dict["client_secret"] as? String,
-            currency: dict["currency"] as? String,
-            checkoutItems: (dict["checkout_items"] as? [[AnyHashable: Any]])?.map(CheckoutItem.init) ?? [],
-            livemode: livemode,
-            status: dict["status"] as? String,
-            paymentStatus: paymentStatus,
-            paymentIntentId: paymentIntentId,
-            setupIntentId: setupIntentId,
-            paymentIntent: paymentIntent,
-            setupIntent: setupIntent,
-            paymentMethodOptions: STPPaymentMethodOptions.decodedObject(
-                fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any]
-            ),
-            customer: customer,
-            customerEmail: dict["customer_email"] as? String,
-            url: dict["url"] as? String,
-            returnUrl: dict["return_url"] as? String,
-            savedPaymentMethodsOfferSave: (dict["customer_managed_saved_payment_methods_offer_save"] as? [AnyHashable: Any]).map(SavedPaymentMethodsOfferSave.init),
-            setupFutureUsage: dict["setup_future_usage"] as? String,
-            setupFutureUsageForPaymentMethodType: dict["setup_future_usage_for_payment_method_type"] as? [String: String],
-            billingAddressCollection: dict["billing_address_collection"] as? String,
-            shippingAddressCollection: (dict["shipping_address_collection"] as? [AnyHashable: Any]).map(ShippingAddressCollection.init),
-            shippingRate: (dict["shipping_rate"] as? [AnyHashable: Any]).map(ShippingRate.init),
-            recurringDetails: (dict["recurring_details"] as? [AnyHashable: Any]).map(RecurringDetails.init),
-            totalSummary: (dict["total_summary"] as? [AnyHashable: Any]).map(TotalSummary.init),
-            adaptivePricingInfo: (dict["adaptive_pricing_info"] as? [AnyHashable: Any]).map(AdaptivePricingInfo.init),
-            developerToolContext: (dict["developer_tool_context"] as? [AnyHashable: Any]).map(DeveloperToolContext.init),
-            taxContext: (dict["tax_context"] as? [AnyHashable: Any]).map(TaxContext.init),
-            taxMeta: (dict["tax_meta"] as? [AnyHashable: Any]).map(TaxMeta.init),
-            elementsSession: ElementsSession(
-                businessName: elementsSessionDict["business_name"] as? String,
-                value: elementsSessionValue
-            ),
-            allResponseFields: dict
-        ) as? Self
     }
 }

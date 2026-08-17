@@ -65,11 +65,7 @@ extension Checkout.Session {
     /// Returns the expected amount for payment-style sessions and `nil` for setup-style sessions.
     func expectedAmount() -> Int? {
         guard !noPaymentRequired else { return nil }
-        guard let total = total?.total.minorUnitsAmount else {
-            stpAssertionFailure("Missing expected amount from checkout session")
-            return nil
-        }
-        return total
+        return Int(totals.total.minorUnitsAmount)
     }
 
     func merchantWillSavePaymentMethod(_ paymentMethodType: STPPaymentMethodType) -> Bool {
@@ -127,14 +123,15 @@ extension Checkout.Session {
             currencyOptions: currencyOptions,
             discountAmounts: discountAmounts,
             email: email,
-            lineItems: lineItems,
+            orderSummaryItems: orderSummaryItems,
             livemode: livemode,
             minorUnitsAmountDivisor: minorUnitsAmountDivisor,
             paymentOption: paymentOption.resolved(currentValue: self.paymentOption),
             shippingAddress: shippingAddress.resolved(currentValue: self.shippingAddress),
             status: status,
             tax: tax,
-            total: total,
+            taxAmounts: taxAmounts,
+            totals: totals,
             paymentStatus: paymentStatus,
             paymentMethodOptions: paymentMethodOptions,
             customer: customer,

@@ -140,6 +140,10 @@
 
 "Did you mean %@? %@." = "Tarkoititko %1$@? %2$@.";
 
+"Discard Changes" = "Hylkää muutokset";
+
+"Discard changes?" = "Hylätäänkö muutokset?";
+
 "Discount" = "Alennus";
 
 "EPS Bank" = "EPS-pankki";
@@ -163,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ymmärrän, että Stripe kerää suoraveloituksia yrityksen %@ puolesta sekä vahvistan, että olen tilinhaltija ja ainoa henkilö, jota tarvitaan tämän tilin veloitusten varmentamiseen.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Jatka muokkaamista";
 
 "Last 4 digits of SSN" = "SSN:n 4 viimeistä numeroa";
 
@@ -290,8 +296,6 @@
 
 "Set up" = "Määritä";
 
-"Shipping" = "Toimitus";
-
 "Shipping to %@ is not supported." = "Toimitusta kohteeseen %@ ei tueta.";
 
 "Show details" = "Näytä tiedot";
@@ -345,3 +349,5 @@
 "Yes, update" = "Kyllä, päivitä";
 
 "Your IBAN should start with a two-letter country code." = "IBAN-tilinumero alkaa kaksikirjaimisella maakoodilla.";
+
+"Your address changes won't be saved." = "Osoitteesi muutoksia ei tallenneta.";

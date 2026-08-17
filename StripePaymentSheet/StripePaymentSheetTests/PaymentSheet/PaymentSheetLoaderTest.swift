@@ -839,8 +839,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                     return
                 }
                 XCTAssertEqual(loadedSession.id, checkoutSessionId)
-                XCTAssertEqual(loadedSession.status?.type, .open)
-                XCTAssertEqual(loadedSession.status?.paymentStatus, .noPaymentRequired)
+                XCTAssertEqual(loadedSession.status, .open)
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
                 XCTAssertTrue(loadResult.elementsSession.orderedPaymentMethodTypes.contains(.card))
             case .failure(let error):

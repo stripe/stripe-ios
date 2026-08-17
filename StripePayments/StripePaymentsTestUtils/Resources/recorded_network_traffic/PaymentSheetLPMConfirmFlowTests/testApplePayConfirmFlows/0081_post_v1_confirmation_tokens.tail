@@ -3,33 +3,33 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=lXgo-D-OdFMx1DNJvsiN8iXEGhzCpKTmkRKdUwiF3dkC2MPE-SCCE6-fmVpHEeqh4zGsqvskPcVEIUFQ; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Cq0tFNUjdubI4UukwNFlqDM1pIsViYCHqXrdoST6SoOFegxpJHD1W-w9wqCEAfJ8Bc-nwZECHjzA04xO; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=lXgo-D-OdFMx1DNJvsiN8iXEGhzCpKTmkRKdUwiF3dkC2MPE-SCCE6-fmVpHEeqh4zGsqvskPcVEIUFQ&t=1"
-stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-06-24.dahlia. See https://docs.stripe.com/upgrades
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=Cq0tFNUjdubI4UukwNFlqDM1pIsViYCHqXrdoST6SoOFegxpJHD1W-w9wqCEAfJ8Bc-nwZECHjzA04xO&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-07-29.dahlia. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=lXgo-D-OdFMx1DNJvsiN8iXEGhzCpKTmkRKdUwiF3dkC2MPE-SCCE6-fmVpHEeqh4zGsqvskPcVEIUFQ&t=1"}],"include_subdomains":true}
-request-id: req_luaRbysfwdT85e
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=Cq0tFNUjdubI4UukwNFlqDM1pIsViYCHqXrdoST6SoOFegxpJHD1W-w9wqCEAfJ8Bc-nwZECHjzA04xO&t=1"}],"include_subdomains":true}
+request-id: req_esKyUnOr8TO6xY
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 1748
 Vary: Origin
-Date: Fri, 31 Jul 2026 15:19:56 GMT
-original-request: req_luaRbysfwdT85e
+Date: Fri, 14 Aug 2026 16:43:51 GMT
+original-request: req_esKyUnOr8TO6xY
 stripe-version: 2020-08-27
-idempotency-key: 914d0315-cfa3-4d12-ae28-1bd6ca759a4e
+idempotency-key: 82ce2171-2b36-43b0-92cf-b842cc4b5eef
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[mode]=payment&client_context\[payment_method_options]\[card]\[setup_future_usage]=off_session&client_context\[payment_method_types]\[0]=card&payment_method=pm_1TzIE4FY0qyl6XeW9jPonQo3&return_url=https%3A\/\/foo\.com&shipping\[address]\[city]=San%20Francisco&shipping\[address]\[country]=US&shipping\[address]\[line1]=510%20Townsend%20St&shipping\[address]\[postal_code]=94103&shipping\[address]\[state]=CA&shipping\[name]=Jane%20Doe
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[mode]=payment&client_context\[payment_method_options]\[card]\[setup_future_usage]=off_session&client_context\[payment_method_types]\[0]=card&payment_method=pm_1U4OCxFY0qyl6XeWNrdRNLKY&return_url=https%3A\/\/foo\.com&shipping\[address]\[city]=San%20Francisco&shipping\[address]\[country]=US&shipping\[address]\[line1]=510%20Townsend%20St&shipping\[address]\[postal_code]=94103&shipping\[address]\[state]=CA&shipping\[name]=Jane%20Doe
 
 {
-  "id" : "ctoken_1TzIE4FY0qyl6XeWEshb3O8h",
+  "id" : "ctoken_1U4OCxFY0qyl6XeWgjWQzLvW",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : {
@@ -44,7 +44,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "name" : "Jane Doe",
     "phone" : null
   },
-  "expires_at" : 1785554396,
+  "expires_at" : 1786769031,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : null,
   "object" : "confirmation_token",
@@ -100,7 +100,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "type" : "card",
     "customer_account" : null
   },
-  "created" : 1785511196,
+  "created" : 1786725831,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null
