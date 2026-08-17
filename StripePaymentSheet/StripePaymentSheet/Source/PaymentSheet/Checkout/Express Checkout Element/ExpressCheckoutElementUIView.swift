@@ -108,7 +108,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     @objc private func handleLinkTapped() {
-        // TODO: handle Link
+        // TODO: Handle Link
     }
 
     private func confirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod) {
