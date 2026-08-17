@@ -9,7 +9,7 @@ extension Checkout {
     struct ApplePayConfirmationContext {
         let applePayConfiguration: Checkout.ApplePayConfiguration?
         let apiClient: STPAPIClient
-        let returnURL: String?
+        let returnURL: String
         let merchantDisplayName: String
     }
 

@@ -104,14 +104,18 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     @objc private func handleApplePayTapped() {
-        Task { @MainActor [weak self] in
-            guard let self,
-                let result = await self.delegate?.expressCheckoutElementShouldConfirm(.applePay) else { return }
-            self.configuration.expressCheckoutElement.confirmHandler(result)
-        }
+        confirm(.applePay)
     }
 
     @objc private func handleLinkTapped() {
-        // TODO: Handle Link
+        // TODO: handle Link
+    }
+
+    private func confirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod) {
+        Task { @MainActor [weak self] in
+            guard let self,
+                let result = await self.delegate?.expressCheckoutElementShouldConfirm(paymentMethod) else { return }
+            self.configuration.expressCheckoutElement.confirmHandler(result)
+        }
     }
 }

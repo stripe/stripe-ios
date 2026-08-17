@@ -399,7 +399,7 @@ class StubExpressCheckoutSessionUpdater: ExpressCheckoutSessionUpdater {
 extension Checkout.ApplePayConfirmationContext {
     static func makeMock(
         apiClient: STPAPIClient,
-        returnURL: String? = nil,
+        returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
         applePayConfiguration: Checkout.ApplePayConfiguration? = Checkout.ApplePayConfiguration(merchantId: "merchant.com.test")
     ) -> Checkout.ApplePayConfirmationContext {

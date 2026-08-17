@@ -75,14 +75,14 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             adaptivePricingAllowed: false
         )
         let session = initResponse.makePublicSession()
-        let configuration = Checkout.ApplePayConfirmationContext.makeMock(
+        let applePayConfirmationContext = Checkout.ApplePayConfirmationContext.makeMock(
             apiClient: apiClient,
             returnURL: returnURL,
             merchantDisplayName: "Functional Test Merchant"
         )
         let context = CheckoutApplePayContext(
             checkoutSession: session,
-            confirmationContext: configuration,
+            applePayConfirmationContext: applePayConfirmationContext,
             sessionUpdater: StubExpressCheckoutSessionUpdater(),
             authorizationController: MockPKPaymentAuthorizationController()
         )
