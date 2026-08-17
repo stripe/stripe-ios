@@ -498,6 +498,7 @@ workflows:
         inputs:
         - scheme: AllStripeFrameworks
         - destination: generic/platform=iOS Simulator
+        - xcodebuild_options: ARCHS=arm64
     - deploy-to-bitrise-io@2: {}
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 16,OS=26.1
