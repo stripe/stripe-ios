@@ -764,7 +764,7 @@ final class CheckoutCartViewController: UIViewController {
         guard let checkout else { return }
         let detailsView = CheckoutSessionDetailsView(
             diagnostics: diagnostics,
-            sessionID: checkout.session.id
+            checkout: checkout
         )
         let viewController = UIHostingController(rootView: detailsView)
         if let sheetPresentationController = viewController.sheetPresentationController {

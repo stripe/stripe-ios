@@ -63,6 +63,35 @@ struct CheckoutDiagnosticIdentifierCard: View {
     }
 }
 
+struct CheckoutDiagnosticNavigationCard: View {
+    let title: String
+    let value: String
+    let systemImage: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            diagnosticIcon(systemImage)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.subheadline.weight(.medium))
+                Text(value)
+                    .font(.caption.monospaced())
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+            }
+
+            Spacer(minLength: 8)
+            Image(systemName: "chevron.right")
+                .font(.caption.weight(.semibold))
+                .foregroundColor(.secondary)
+        }
+        .padding(14)
+        .checkoutDiagnosticCard()
+    }
+}
+
 struct CheckoutDiagnosticRequestCard: View {
     let request: CheckoutSessionDiagnostics.Request
 
@@ -123,6 +152,7 @@ struct CheckoutDiagnosticEmptyRequestsView: View {
 
 struct CheckoutDiagnosticCopyButton: View {
     let value: String
+    var accessibilityLabel: String?
 
     @State private var isCopied = false
     @State private var resetTask: Task<Void, Never>?
@@ -152,7 +182,7 @@ struct CheckoutDiagnosticCopyButton: View {
                 .clipShape(Capsule())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(isCopied ? "Copied" : "Copy \(value)")
+        .accessibilityLabel(isCopied ? "Copied" : accessibilityLabel ?? "Copy \(value)")
         .onDisappear {
             resetTask?.cancel()
         }
