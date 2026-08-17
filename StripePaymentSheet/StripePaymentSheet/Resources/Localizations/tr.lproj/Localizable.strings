@@ -290,8 +290,6 @@
 
 "Set up" = "Ayarla";
 
-"Shipping" = "Gönderim";
-
 "Shipping to %@ is not supported." = "Varış noktası %@ olan gönderimler desteklenmez.";
 
 "Show details" = "Ayrıntıları göster";

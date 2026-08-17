@@ -21,7 +21,7 @@ extension STPApplePayContext {
         label: String,
         currency: String?
     ) -> [PKPaymentSummaryItem] {
-        guard !session.noPaymentRequired, let total = session.total else {
+        guard !session.noPaymentRequired else {
             return [PKPaymentSummaryItem(label: label, amount: .zero, type: .pending)]
         }
 
@@ -37,9 +37,10 @@ extension STPApplePayContext {
                     // Prefer unitAmountDecimal for the edge case where the Stripe API doesn't return a `unitAmount`
                     // (and so becomes 0) for prices with sub-cent precision like $0.1234.
                     let unitAmount = item.unitAmountDecimal ?? item.unitAmount
-                    let amount = NSDecimalNumber(value: unitAmount.minorUnitsAmount)
-                        .multiplying(by: NSDecimalNumber(value: item.quantity))
-                        .multiplying(by: NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency))
+                    let amount = makeApplePayAmount(
+                        minorUnitsAmount: unitAmount.minorUnitsAmount * Double(item.quantity),
+                        currency: currency
+                    )
                     summaryItems.append(
                         PKPaymentSummaryItem(label: itemLabel, amount: amount, type: .final)
                     )
@@ -47,44 +48,35 @@ extension STPApplePayContext {
             }
         }
 
-        let shipping = total.shippingRate.minorUnitsAmount
-        let tax = total.taxExclusive.minorUnitsAmount
-        let discount = total.discount.minorUnitsAmount
+        let totals = session.totals
+        let tax = totals.taxExclusive.minorUnitsAmount
+        let discount = totals.discount.minorUnitsAmount
 
-        // Skip the breakdown rows when there's nothing to break down — the product rows already sum to the total.
-        let hasModifiers = shipping != 0 || tax != 0 || discount != 0
+        // Skip the breakdown rows when there's nothing to break down — product rows already sum to the total.
+        let hasModifiers = tax != 0 || discount != 0
         if hasModifiers {
             summaryItems.append(
                 PKPaymentSummaryItem(
                     label: String.Localized.subtotal,
-                    amount: NSDecimalNumber.stp_decimalNumber(
-                        withAmount: total.subtotal.minorUnitsAmount,
+                    amount: makeApplePayAmount(
+                        minorUnitsAmount: totals.subtotal.minorUnitsAmount,
                         currency: currency
                     ),
                     type: .final
                 )
             )
-            if shipping != 0 {
-                summaryItems.append(
-                    PKPaymentSummaryItem(
-                        label: String.Localized.shipping,
-                        amount: NSDecimalNumber.stp_decimalNumber(withAmount: shipping, currency: currency),
-                        type: .final
-                    )
-                )
-            }
             if tax != 0 {
                 summaryItems.append(
                     PKPaymentSummaryItem(
                         label: String.Localized.tax,
-                        amount: NSDecimalNumber.stp_decimalNumber(withAmount: tax, currency: currency),
+                        amount: makeApplePayAmount(minorUnitsAmount: tax, currency: currency),
                         type: .final
                     )
                 )
             }
             if discount != 0 {
                 // `discount` is non-negative; flip the sign so Apple Pay shows it as a deduction.
-                let amount = NSDecimalNumber.stp_decimalNumber(withAmount: discount, currency: currency)
+                let amount = makeApplePayAmount(minorUnitsAmount: discount, currency: currency)
                 let negativeAmount = NSDecimalNumber(decimal: -amount.decimalValue)
                 summaryItems.append(
                     PKPaymentSummaryItem(
@@ -100,8 +92,8 @@ extension STPApplePayContext {
         summaryItems.append(
             PKPaymentSummaryItem(
                 label: label,
-                amount: NSDecimalNumber.stp_decimalNumber(
-                    withAmount: total.total.minorUnitsAmount,
+                amount: makeApplePayAmount(
+                    minorUnitsAmount: totals.total.minorUnitsAmount,
                     currency: currency
                 ),
                 type: .final
@@ -109,6 +101,14 @@ extension STPApplePayContext {
         )
 
         return summaryItems
+    }
+
+    private static func makeApplePayAmount(
+        minorUnitsAmount: Double,
+        currency: String?
+    ) -> NSDecimalNumber {
+        return NSDecimalNumber(value: minorUnitsAmount)
+            .multiplying(by: NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency))
     }
 
     // Partial billing address from the Apple Pay sheet (no street until authorization).

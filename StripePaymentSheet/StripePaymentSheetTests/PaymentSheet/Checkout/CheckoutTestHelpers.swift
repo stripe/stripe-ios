@@ -335,11 +335,6 @@ enum CheckoutTestHelpers {
             currency: currency,
             unitAmount: integrationAmount
         )
-        json["total_summary"] = [
-            "subtotal": integrationAmount,
-            "total": integrationAmount,
-            "due": integrationAmount,
-        ]
         json["developer_tool_context"] = [
             "adaptive_pricing": [
                 "active": adaptivePricingActive,

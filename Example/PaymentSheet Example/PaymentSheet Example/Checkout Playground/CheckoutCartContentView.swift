@@ -73,21 +73,11 @@ struct CheckoutCartContentView: View {
                                 Text(item.displayName)
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                Text(item.unitAmount.amount)
+                                Text("\((item.unitAmountDecimal ?? item.unitAmount).amount) × \(item.quantity)")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
-
-                                Spacer()
-
-                                Text("Qty: \(item.quantity)")
-                                    .font(.body).bold()
                             }
                             Spacer()
-                            Text(formatCartCurrency(
-                                amount: Int(item.unitAmount.minorUnitsAmount) * item.quantity,
-                                currency: checkout.session.currency
-                            ))
-                                .font(.headline)
                         }
                         .padding()
 
@@ -207,69 +197,56 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var orderSummarySection: some View {
-        if let total = checkout.session.total {
-            let currency = checkout.session.currency
-            let taxAmount = total.taxExclusive.minorUnitsAmount + total.taxInclusive.minorUnitsAmount
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Order Summary")
-                    .font(.title2).bold()
-                    .padding(.horizontal)
+        let totals = checkout.session.totals
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Order Summary")
+                .font(.title2).bold()
+                .padding(.horizontal)
 
-                VStack(spacing: 12) {
+            VStack(spacing: 12) {
+                HStack {
+                    Text("Subtotal")
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text(totals.subtotal.amount)
+                        .foregroundColor(.primary)
+                }
+                if totals.discount.minorUnitsAmount > 0 {
                     HStack {
-                        Text("Subtotal")
-                            .foregroundColor(.secondary)
+                        Text("Discount")
+                            .foregroundColor(.green)
                         Spacer()
-                        Text(formatCartCurrency(amount: total.subtotal.minorUnitsAmount, currency: currency))
-                            .foregroundColor(.primary)
-                    }
-                    if total.discount.minorUnitsAmount > 0 {
-                        HStack {
-                            Text("Discount")
-                                .foregroundColor(.green)
-                            Spacer()
-                            Text("-" + formatCartCurrency(amount: total.discount.minorUnitsAmount, currency: currency))
-                                .foregroundColor(.green)
-                        }
-                    }
-
-                    if total.shippingRate.minorUnitsAmount > 0 {
-                        HStack {
-                            Text("Shipping")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text(formatCartCurrency(amount: total.shippingRate.minorUnitsAmount, currency: currency))
-                                .foregroundColor(.primary)
-                        }
-                    }
-
-                    if taxAmount > 0 {
-                        HStack {
-                            Text("Tax")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text(formatCartCurrency(amount: taxAmount, currency: currency))
-                                .foregroundColor(.primary)
-                        }
-                    }
-
-                    Divider()
-                        .padding(.vertical, 4)
-
-                    HStack {
-                        Text("Total")
-                            .font(.title3).bold()
-                        Spacer()
-                        Text(formatCartCurrency(amount: total.total.minorUnitsAmount, currency: currency))
-                            .font(.title3).bold()
+                        Text("-" + totals.discount.amount)
+                            .foregroundColor(.green)
                     }
                 }
-                .padding()
-                .background(Color(UIColor.systemBackground))
-                .cornerRadius(16)
-                .padding(.horizontal)
-                .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+
+                if totals.taxExclusive.minorUnitsAmount > 0 {
+                    HStack {
+                        Text("Tax")
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Text(totals.taxExclusive.amount)
+                            .foregroundColor(.primary)
+                    }
+                }
+
+                Divider()
+                    .padding(.vertical, 4)
+
+                HStack {
+                    Text("Total")
+                        .font(.title3).bold()
+                    Spacer()
+                    Text(totals.total.amount)
+                        .font(.title3).bold()
+                }
             }
+            .padding()
+            .background(Color(UIColor.systemBackground))
+            .cornerRadius(16)
+            .padding(.horizontal)
+            .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
         }
     }
 

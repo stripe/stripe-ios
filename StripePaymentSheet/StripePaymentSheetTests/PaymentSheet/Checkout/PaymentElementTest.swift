@@ -392,11 +392,6 @@ final class PaymentElementTest: XCTestCase {
         var json = CheckoutTestHelpers.openSessionJSON
         json["payment_method_types"] = paymentMethodTypes
         json["elements_session"] = elementsSessionJSON
-        json["total_summary"] = [
-            "subtotal": 1099,
-            "total": 1099,
-            "due": 1099,
-        ]
         return json
     }
 

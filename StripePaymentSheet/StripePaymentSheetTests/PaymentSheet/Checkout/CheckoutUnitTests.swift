@@ -434,12 +434,14 @@ final class CheckoutUnitTests: XCTestCase {
                 ],
             ],
         ]
-        json["total_summary"] = [
-            "subtotal": 12000,
-            "total": 13185,
-        ]
+        setOneTimePriceAmounts(
+            in: &json,
+            subtotal: 12000,
+            taxExclusive: 1185,
+            total: 13185
+        )
         let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
-        XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 1185)
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 1185)
         XCTAssertEqual(session.tax.taxAmounts?.count, 1)
     }
 
@@ -469,23 +471,21 @@ final class CheckoutUnitTests: XCTestCase {
                 ],
             ],
         ]
-        json["total_summary"] = [
-            "subtotal": 10000,
-            "total": 10700,
-        ]
+        setOneTimePriceAmounts(
+            in: &json,
+            subtotal: 10000,
+            taxExclusive: 700,
+            total: 10700
+        )
         let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
-        XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 700)
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 700)
         XCTAssertEqual(session.tax.taxAmounts?.count, 2)
     }
 
     func testTotalTaxExclusive_noTaxAmounts() {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["total_summary"] = [
-            "subtotal": 10000,
-            "total": 10000,
-        ]
         let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
-        XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 0)
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 0)
         XCTAssertNil(session.tax.taxAmounts)
     }
 
@@ -524,11 +524,12 @@ final class CheckoutUnitTests: XCTestCase {
                 ],
             ],
         ]
-        json["total_summary"] = [
-            "due": 21000,
-            "subtotal": 20000,
-            "total": 21000,
-        ]
+        setOneTimePriceAmounts(
+            in: &json,
+            subtotal: 20000,
+            taxExclusive: 1000,
+            total: 21000
+        )
 
         let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
 
@@ -543,10 +544,9 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(session.allowedShippingCountries, ["US", "CA", "GB"])
 
         // Verify totals
-        XCTAssertNotNil(session.total)
-        XCTAssertEqual(session.total?.subtotal.minorUnitsAmount, 20000)
-        XCTAssertEqual(session.total?.total.minorUnitsAmount, 21000)
-        XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 1000)
+        XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 20000)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 21000)
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 1000)
     }
 
     // MARK: - commitSession Tests
@@ -751,6 +751,31 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertNil(params["payment_method_to_update[billing_details][address][line1]"])
         XCTAssertNil(params["payment_method_to_update[billing_details][address][city]"])
         XCTAssertEqual(params.count, 3)
+    }
+
+    private func setOneTimePriceAmounts(
+        in json: inout [AnyHashable: Any],
+        subtotal: Int,
+        taxExclusive: Int,
+        taxInclusive: Int = 0,
+        total: Int
+    ) {
+        var checkoutItems = json["checkout_items"] as! [[String: Any]]
+        var checkoutItem = checkoutItems[0]
+        var oneTimePrice = checkoutItem["one_time_price"] as! [String: Any]
+        var items = oneTimePrice["items"] as! [[String: Any]]
+        var item = items[0]
+        item["subtotal"] = subtotal
+        item["tax_exclusive"] = taxExclusive
+        item["tax_inclusive"] = taxInclusive
+        item["total"] = total
+        items[0] = item
+        oneTimePrice["items"] = items
+        oneTimePrice["subtotal"] = subtotal
+        oneTimePrice["total"] = total
+        checkoutItem["one_time_price"] = oneTimePrice
+        checkoutItems[0] = checkoutItem
+        json["checkout_items"] = checkoutItems
     }
 
 }
