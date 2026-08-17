@@ -35,7 +35,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "livemode",
             "status",
             "payment_status",
-            "payment_method_types",
             "elements_session",
         ]
 
@@ -694,11 +693,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testUnifiedModeSessionRejectsMissingRequiredNestedItemFields() {
         let requiredFields = [
-            "inner_item_key",
             "price",
             "quantity",
-            "subtotal",
-            "total",
             "tax_amounts",
             "tax_inclusive",
             "tax_exclusive",
@@ -709,6 +705,20 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             XCTAssertThrowsError(
                 try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
                 "Expected missing nested item field \(field) to fail decoding"
+            )
+        }
+    }
+
+    func testUnifiedModeSessionIgnoresUnusedFields() {
+        var json = CheckoutTestHelpers.makeSessionJSON()
+        json.removeValue(forKey: "payment_method_types")
+        XCTAssertNoThrow(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+
+        for field in ["inner_item_key", "subtotal", "total"] {
+            let json = modifyingOneTimePriceItem { $0.removeValue(forKey: field) }
+            XCTAssertNoThrow(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected unused nested item field \(field) to be ignored"
             )
         }
     }
