@@ -142,7 +142,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 // We can't present a next action here (the Apple Pay sheet is still up), so fail fast
                 // instead of routing through `handleNextAction`
                 if let responseStatus = self.responseStatus(response) {
-                    handleFailure(CheckoutError.applePayRequiresNextAction(status: responseStatus))
+                    handleFailure(CheckoutError.unknown(debugDescription: "The Checkout Session's intent still requires action (status: \(responseStatus)) after confirming with Apple Pay."))
                     return
                 }
 
