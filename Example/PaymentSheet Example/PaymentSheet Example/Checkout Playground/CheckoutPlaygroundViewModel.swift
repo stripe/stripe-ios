@@ -44,6 +44,7 @@ extension CheckoutPlayground {
         @Published var currencySelectorAppearance = CurrencySelectorElement.Appearance()
         @Published var checkoutEndpointOption: EndpointOption = .hosted
         @Published var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
+        @Published var delayPaymentPagesRequests = false
 
         @Published var isCreating = false
         @Published var errorMessage: String?
@@ -100,6 +101,7 @@ extension CheckoutPlayground {
             var body: [String: Any] = [
                 "merchant_country_code": "us_tax",
                 "mode": "unified",
+                "use_one_time_price": true,
                 "currency": currency.rawValue,
                 "customer": customerType.rawValue,
                 "shipping_address_collection": shippingAddressCollection,

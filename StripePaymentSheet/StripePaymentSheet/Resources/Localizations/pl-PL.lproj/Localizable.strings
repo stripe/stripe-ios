@@ -290,8 +290,6 @@
 
 "Set up" = "Ustaw";
 
-"Shipping" = "Dostawa";
-
 "Shipping to %@ is not supported." = "Wysyłka do lokalizacji: %@ nie jest obsługiwana";
 
 "Show details" = "Pokaż szczegóły";

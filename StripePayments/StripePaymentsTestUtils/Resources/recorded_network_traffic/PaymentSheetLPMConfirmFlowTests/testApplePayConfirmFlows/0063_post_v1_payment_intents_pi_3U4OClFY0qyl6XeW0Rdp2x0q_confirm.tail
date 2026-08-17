@@ -1,0 +1,88 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3U4OClFY0qyl6XeW0Rdp2x0q\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=alqeQNl8H5V7LBVkuhI5ZH6_7KsysH7F-hIZJ0rsDvtL0I3Qg_9II6E1BTyUb79WYL26yrbpPwDh5Wlc; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=alqeQNl8H5V7LBVkuhI5ZH6_7KsysH7F-hIZJ0rsDvtL0I3Qg_9II6E1BTyUb79WYL26yrbpPwDh5Wlc&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-07-29.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=alqeQNl8H5V7LBVkuhI5ZH6_7KsysH7F-hIZJ0rsDvtL0I3Qg_9II6E1BTyUb79WYL26yrbpPwDh5Wlc&t=1"}],"include_subdomains":true}
+request-id: req_lAb0aOP828RqHL
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1378
+Vary: Origin
+Date: Fri, 14 Aug 2026 16:43:42 GMT
+original-request: req_lAb0aOP828RqHL
+stripe-version: 2020-08-27
+idempotency-key: 5b3e09d4-f96c-4aa1-a59f-290e30a49f65
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : {
+    "tracking_number" : null,
+    "phone" : null,
+    "carrier" : null,
+    "name" : "Jane Doe",
+    "address" : {
+      "state" : "CA",
+      "country" : "US",
+      "line2" : null,
+      "city" : "San Francisco",
+      "line1" : "510 Townsend St",
+      "postal_code" : "94103"
+    }
+  },
+  "payment_method_options" : {
+    "card" : {
+      "setup_future_usage" : "off_session"
+    }
+  },
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "status" : "succeeded",
+  "payment_method" : "pm_1U4OCmFY0qyl6XeW64aJSh8T",
+  "client_secret" : "pi_3U4OClFY0qyl6XeW0Rdp2x0q_secret_JpMwGW1HQlhjo3ebQ0Vo2me73",
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "id" : "pi_3U4OClFY0qyl6XeW0Rdp2x0q",
+  "allowed_payment_method_types" : null,
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "card"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1786725819,
+  "description" : null
+}

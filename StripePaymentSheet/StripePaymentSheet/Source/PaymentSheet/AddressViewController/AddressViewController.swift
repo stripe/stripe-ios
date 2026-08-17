@@ -27,6 +27,9 @@ public class AddressViewController: UIViewController {
     // MARK: - Public properties
     /// Configuration containing e.g. appearance styling properties, default values, etc.
     public let configuration: Configuration
+    /// Whether to use the Stripe autocomplete endpoints for address autocomplete instead of Apple MapKit.
+    /// This is decided internally by the SDK (e.g. from the elements session) and defaults to `true` when there's no session to consult (e.g. the standalone Address Element).
+    let useAutocompleteEndpoints: Bool
     /// A valid address or nil.
     private var addressDetails: AddressDetails? {
         guard let addressSection = addressSection else { return nil }
@@ -89,7 +92,7 @@ public class AddressViewController: UIViewController {
         /// Handles cancellation without saving the address.
         func didCancel()
         /// Handles completion with the customer's collected address details.
-        func save(addressDetails: AddressDetails, setLoading: (Bool) -> Void) async throws
+        func save(addressDetails: AddressDetails) async throws
     }
 
     weak var integrationDelegate: IntegrationDelegate?
@@ -266,11 +269,13 @@ public class AddressViewController: UIViewController {
         addressSpecProvider: AddressSpecProvider,
         configuration: Configuration,
         delegate: AddressViewControllerDelegate,
-        integrationDelegate: IntegrationDelegate? = nil
+        integrationDelegate: IntegrationDelegate? = nil,
+        useAutocompleteEndpoints: Bool = true
     ) {
         self.addressSpecProvider = addressSpecProvider
         self.configuration = configuration
         self.delegate = delegate
+        self.useAutocompleteEndpoints = useAutocompleteEndpoints
         super.init(nibName: nil, bundle: nil)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
         if configuration.useNavigationBarTitle {
@@ -373,13 +378,9 @@ extension AddressViewController {
                 stpAssertionFailure("AddressViewController attempted to continue with an invalid address.")
                 return
             }
+            setLoading(true)
             do {
-                try await self.integrationDelegate?.save(
-                    addressDetails: addressDetails,
-                    setLoading: { [weak self] isLoading in
-                        self?.setLoading(isLoading)
-                    }
-                )
+                try await self.integrationDelegate?.save(addressDetails: addressDetails)
                 // Re-baseline change tracking only after the save succeeds. If it fails, the
                 // customer can still retry or discard the unsaved values.
                 captureInitialSnapshot()
@@ -388,6 +389,7 @@ extension AddressViewController {
             } catch {
                 self.latestError = error
             }
+            setLoading(false)
         }
     }
 
@@ -422,7 +424,7 @@ extension AddressViewController {
     @objc func presentAutocomplete() {
         assert(navigationController != nil)
         let keyboardShowing = view.firstResponder() != nil
-        let autoCompleteViewController = AutoCompleteViewController(configuration: configuration, initialLine1Text: addressSection?.line1?.text, selectedCountry: addressSection?.selectedCountryCode ?? "", addressSpecProvider: addressSpecProvider, keyboardAlreadyShowing: keyboardShowing)
+        let autoCompleteViewController = AutoCompleteViewController(configuration: configuration, initialLine1Text: addressSection?.line1?.text, selectedCountry: addressSection?.selectedCountryCode ?? "", addressSpecProvider: addressSpecProvider, keyboardAlreadyShowing: keyboardShowing, useAutocompleteEndpoints: useAutocompleteEndpoints)
         autoCompleteViewController.delegate = self
         navigationController?.pushViewController(autoCompleteViewController, animated: true)
     }
@@ -673,7 +675,7 @@ extension AddressViewController: AddressViewController.IntegrationDelegate {
     func didCancel() {
     }
 
-    func save(addressDetails: AddressDetails, setLoading: (Bool) -> Void) async throws {
+    func save(addressDetails: AddressDetails) async throws {
         logAddressCompleted()
     }
 

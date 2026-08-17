@@ -242,12 +242,12 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(checkout.session.paymentOption?.label, "PayNow")
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
 
-        let completedSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: {
+        let completedSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: {
             var json = Self.openSessionJSON(paymentMethodTypes: ["card", "paynow"])
             json["status"] = "complete"
             json["payment_status"] = "paid"
             return json
-        }())!
+        }())
         try await checkout.commitSession(completedSession)
 
         // Then the Checkout payment option still reflects FlowController's selected payment option.
@@ -365,7 +365,7 @@ final class PaymentElementTest: XCTestCase {
         requestRecorder: CheckoutSessionRequestRecorder
     ) {
         let sessionJSON = STPTestUtils.jsonNamed("CheckoutSession")!
-        let session = try XCTUnwrap(PaymentPagesAPIResponse.decodedObject(fromAPIResponse: sessionJSON))
+        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
         let requestRecorder = CheckoutSessionRequestRecorder()
         let configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: session)
         CheckoutTestHelpers.stubCheckoutSessionRequests(
@@ -377,9 +377,9 @@ final class PaymentElementTest: XCTestCase {
     }
 
     private static func makeOpenSession(paymentMethodTypes: [String], businessName: String? = nil) -> PaymentPagesAPIResponse {
-        return PaymentPagesAPIResponse.decodedObject(
+        return try! PaymentPagesAPIResponse.decode(
             fromAPIResponse: openSessionJSON(paymentMethodTypes: paymentMethodTypes, businessName: businessName)
-        )!
+        )
     }
 
     private static func openSessionJSON(paymentMethodTypes: [String], businessName: String? = nil) -> [AnyHashable: Any] {
@@ -392,11 +392,6 @@ final class PaymentElementTest: XCTestCase {
         var json = CheckoutTestHelpers.openSessionJSON
         json["payment_method_types"] = paymentMethodTypes
         json["elements_session"] = elementsSessionJSON
-        json["total_summary"] = [
-            "subtotal": 1099,
-            "total": 1099,
-            "due": 1099,
-        ]
         return json
     }
 

@@ -135,7 +135,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         shippingAddressElement.delegate = delegate
 
         // When
-        try await shippingAddressElement.save(addressDetails: makeAddressDetails()) { _ in }
+        try await shippingAddressElement.save(addressDetails: makeAddressDetails())
 
         // Then
         let events = shippingAddressEvents
@@ -156,7 +156,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
 
         // When
         do {
-            try await shippingAddressElement.save(addressDetails: makeAddressDetails()) { _ in }
+            try await shippingAddressElement.save(addressDetails: makeAddressDetails())
             XCTFail("Expected save to fail")
         } catch CheckoutError.apiError {
             // Expected

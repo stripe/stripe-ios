@@ -246,6 +246,97 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
         }
     }
 
+    func testPollDoesNotRetryOnClientError() async throws {
+        // Given an API call that fails with a 4xx carrying details the caller needs
+        let extraFields: [String: Any] = ["reason": "missing_required_data"]
+        let clientError = try MakeStripeAPIError(statusCode: 400, extraFields: extraFields)
+
+        do {
+            // When we poll
+            _ = try await apiClient.poll(
+                initialPollDelay: 0.01,
+                maxNumberOfRetries: 3,
+                retryInterval: 0.01,
+                sleepAction: { _ in
+                    self.tracker.sleepCallCount += 1
+                },
+                apiCall: {
+                    self.tracker.apiCallCount += 1
+                    throw clientError
+                }
+            )
+            XCTFail("Should throw an error")
+        } catch {
+            // Then the original error surfaces immediately, with its `extra_fields` intact,
+            // rather than being retried and replaced by `maxRetriesReached`
+            XCTAssertEqual(error.extraFields?["reason"] as? String, "missing_required_data")
+            XCTAssertEqual(self.tracker.apiCallCount, 1)
+            // only the initial poll delay, no retry intervals
+            XCTAssertEqual(self.tracker.sleepCallCount, 1)
+        }
+    }
+
+    func testPollRetriesOnServerError() async throws {
+        // Given an API call that fails with a 5xx, which may well succeed on retry
+        let maxRetries = 3
+        let serverError = try MakeStripeAPIError(statusCode: 500)
+
+        do {
+            // When we poll
+            _ = try await apiClient.poll(
+                initialPollDelay: 0.01,
+                maxNumberOfRetries: maxRetries,
+                retryInterval: 0.01,
+                sleepAction: { _ in
+                    self.tracker.sleepCallCount += 1
+                },
+                apiCall: {
+                    self.tracker.apiCallCount += 1
+                    throw serverError
+                }
+            )
+            XCTFail("Should throw an error")
+        } catch let error as FinancialConnectionsAsyncAPIClient.PollingError {
+            // Then we retry as usual
+            XCTAssertEqual(error, .maxRetriesReached)
+            XCTAssertEqual(self.tracker.apiCallCount, maxRetries)
+        } catch {
+            XCTFail("Wrong error type: \(error)")
+        }
+    }
+
+    func testPollRetriesOnTransientClientError() async throws {
+        // Given a 4xx that's transient by design and may well succeed on retry
+        let maxRetries = 3
+        for statusCode in [408, 429] {
+            tracker = CallTracker()
+            let transientError = try MakeStripeAPIError(statusCode: statusCode)
+
+            do {
+                // When we poll
+                _ = try await apiClient.poll(
+                    initialPollDelay: 0.01,
+                    maxNumberOfRetries: maxRetries,
+                    retryInterval: 0.01,
+                    sleepAction: { _ in
+                        self.tracker.sleepCallCount += 1
+                    },
+                    apiCall: {
+                        self.tracker.apiCallCount += 1
+                        throw transientError
+                    }
+                )
+                XCTFail("Should throw an error")
+            } catch let error as FinancialConnectionsAsyncAPIClient.PollingError {
+                // Then we retry as usual, rather than aborting after one attempt
+                XCTAssertEqual(error, .maxRetriesReached, "Status code \(statusCode)")
+                XCTAssertEqual(self.tracker.apiCallCount, maxRetries, "Status code \(statusCode)")
+            } catch {
+                XCTFail("Wrong error type for status code \(statusCode): \(error)")
+            }
+        }
+    }
+
     func testDefaultParameters() async throws {
         var callCount = 0
 

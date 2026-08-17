@@ -13,14 +13,14 @@ extension Checkout {
     /// A currency option available on a checkout session when adaptive pricing is active.
     public struct CurrencyOption: Sendable, Hashable {
         /// The total amount in this currency.
-        public let amount: Amount
+        public let amount: Session.Amount
         /// Three-letter ISO 4217 currency code in lowercase.
         public let currency: String
         /// Currency conversion details, present only for the customer's local currency.
         public let currencyConversion: CurrencyConversion?
 
         public init(
-            amount: Amount,
+            amount: Session.Amount,
             currency: String,
             currencyConversion: CurrencyConversion? = nil
         ) {
