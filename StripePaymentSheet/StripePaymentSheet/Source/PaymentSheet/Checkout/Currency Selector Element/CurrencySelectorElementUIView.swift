@@ -39,7 +39,7 @@ public final class CurrencySelectorElementUIView: UIView {
     }()
 
     init?(
-        session: Checkout.Session,
+        session: CheckoutController.Session,
         delegate: CurrencySelectorElementDelegate,
         appearance: CurrencySelectorElement.Appearance
     ) async {
@@ -86,7 +86,7 @@ public final class CurrencySelectorElementUIView: UIView {
         containerStackView.addArrangedSubview(errorLabel)
     }
 
-    func update(with session: Checkout.Session) {
+    func update(with session: CheckoutController.Session) {
         guard let (_, exchangeRateMeta, rawCurrency) =
                 CurrencySelectorUtilities.adaptivePricingData(from: session)
         else {
@@ -109,7 +109,7 @@ public final class CurrencySelectorElementUIView: UIView {
     }
 
     private func buildSelectorItems(
-        session: Checkout.Session,
+        session: CheckoutController.Session,
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta
     ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
         let resolvedLabelContent = resolveLabelContent()
@@ -125,7 +125,7 @@ public final class CurrencySelectorElementUIView: UIView {
     }
 
     private func updateSelectorItems(
-        session: Checkout.Session,
+        session: CheckoutController.Session,
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta
     ) {
         let (left, right) = buildSelectorItems(session: session, exchangeRateMeta: exchangeRateMeta)
@@ -133,7 +133,7 @@ public final class CurrencySelectorElementUIView: UIView {
     }
 
     private func buildSelectorView(
-        session: Checkout.Session,
+        session: CheckoutController.Session,
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
         currency: CurrencySelectorUtilities.CurrencyCode
     ) {

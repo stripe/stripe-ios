@@ -9,7 +9,7 @@ import Foundation
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout.Session {
+extension CheckoutController.Session {
     /// An aggregate discount amount calculated across all line items in a Checkout Session.
     public struct DiscountAmount: Sendable, Hashable {
         /// The localized, formatted representation of the discount amount.

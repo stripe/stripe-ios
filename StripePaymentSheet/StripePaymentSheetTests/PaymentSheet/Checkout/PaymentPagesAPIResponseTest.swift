@@ -58,7 +58,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
     }
 
     func testDecodedObjectFromAPIResponseMapsSessionStatus() throws {
-        let testCases: [(status: String, paymentStatus: String, expected: Checkout.Session.Status)] = [
+        let testCases: [(status: String, paymentStatus: String, expected: CheckoutController.Session.Status)] = [
             ("open", "unpaid", .open),
             ("expired", "unpaid", .expired),
             ("complete", "paid", .complete(.paid)),

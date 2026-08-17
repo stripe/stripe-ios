@@ -194,7 +194,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
                 CheckoutPlayground.PickerRow(
                     title: "Default Shipping Address",
                     selection: $defaultShippingAddressOption,
-                    tooltip: "Sets `Checkout.Configuration.defaults.shippingDetails` before loading Checkout.",
+                    tooltip: "Sets `CheckoutController.Configuration.defaults.shippingDetails` before loading Checkout.",
                     displayText: { $0.displayName }
                 )
                 switch defaultShippingAddressOption {

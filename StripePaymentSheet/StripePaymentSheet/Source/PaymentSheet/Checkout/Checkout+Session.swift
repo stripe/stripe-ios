@@ -14,7 +14,7 @@ import UIKit
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout {
+extension CheckoutController {
     /// A read-only representation of a Stripe Checkout Session.
     public struct Session {
         // MARK: - Public Properties
@@ -70,7 +70,7 @@ extension Checkout {
         public let taxAmounts: [TaxAmount]?
 
         /// Aggregate subtotal, tax, discount, and total amounts for the Checkout Session.
-        public let totals: Checkout.Session.Totals
+        public let totals: CheckoutController.Session.Totals
 
         // MARK: - Internal Properties
 
@@ -96,7 +96,7 @@ extension Checkout {
     }
 }
 
-extension Checkout.Session {
+extension CheckoutController.Session {
     /// An item included in the order summary.
     @frozen
     public enum OrderSummaryItem: Sendable, Hashable {

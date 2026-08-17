@@ -26,8 +26,8 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let currency: String
     let checkoutItems: [CheckoutItem]
     let livemode: Bool
-    let status: Checkout.Session.Status
-    let paymentStatus: Checkout.Session.Status.PaymentStatus
+    let status: CheckoutController.Session.Status
+    let paymentStatus: CheckoutController.Session.Status.PaymentStatus
     let customerEmail: String?
     let url: String?
     let savedPaymentMethodsOfferSave: SavedPaymentMethodsOfferSave?
@@ -143,7 +143,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
 
         livemode = try container.decode(Bool.self, forKey: .livemode)
         let decodedPaymentStatus = try container.decode(String.self, forKey: .paymentStatus)
-        guard let paymentStatus = Checkout.Session.Status.PaymentStatus.paymentStatus(
+        guard let paymentStatus = CheckoutController.Session.Status.PaymentStatus.paymentStatus(
             from: decodedPaymentStatus
         ) else {
             throw decoder.dataCorrupted("Unsupported payment_status: \(decodedPaymentStatus)")
@@ -151,7 +151,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         self.paymentStatus = paymentStatus
 
         let decodedStatus = try container.decode(String.self, forKey: .status)
-        guard let status = Checkout.Session.Status.status(
+        guard let status = CheckoutController.Session.Status.status(
             from: decodedStatus,
             paymentStatus: paymentStatus
         ) else {
