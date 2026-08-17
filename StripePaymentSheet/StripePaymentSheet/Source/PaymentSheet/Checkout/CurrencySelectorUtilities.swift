@@ -117,8 +117,8 @@ enum CurrencySelectorUtilities {
             formattedRate = meta.exchangeRate
         }
 
-        if meta.conversionMarkupBps > 0 {
-            let feePercent = String(format: "%g", Double(meta.conversionMarkupBps) / 100.0)
+        if let conversionMarkupBps = meta.conversionMarkupBps, conversionMarkupBps > 0 {
+            let feePercent = String(format: "%g", Double(conversionMarkupBps) / 100.0)
             return .Localized.exchangeRateWithConversionFee(
                 localCurrency: localCurrency,
                 rate: formattedRate,
@@ -137,7 +137,7 @@ enum CurrencySelectorUtilities {
     /// Returns the expandable detail text for the exchange rate, or nil if not applicable.
     /// This will be replaced by a server-provided string from the translation layer in the future.
     static func detailText(exchangeRateMeta meta: STPCheckoutSessionExchangeRateMeta) -> String? {
-        guard meta.conversionMarkupBps > 0 else { return nil }
+        guard let conversionMarkupBps = meta.conversionMarkupBps, conversionMarkupBps > 0 else { return nil }
         return "This string will come from the translation layer in the future"
     }
 

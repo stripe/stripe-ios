@@ -46,7 +46,7 @@ extension Checkout {
 
         /// The factor used to convert the session's presentment amounts between minor and major
         /// currency units. For USD this is `100`; for JPY this is `1`. `nil` when the session has
-        /// no currency (e.g. setup mode).
+        /// no currency.
         public let minorUnitsAmountDivisor: Int?
 
         /// The currently selected payment option.

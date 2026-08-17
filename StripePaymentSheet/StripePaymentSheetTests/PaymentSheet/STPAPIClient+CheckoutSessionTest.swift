@@ -94,9 +94,10 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkoutSession.status, .open)
         XCTAssertFalse(checkoutSession.livemode)
 
-        // Verify adaptive pricing is active and currency is localized to EUR
+        // Verify adaptive pricing is active while the session currency remains the USD integration currency
         XCTAssertTrue(checkoutSession.adaptivePricingActive)
-        XCTAssertEqual(checkoutSession.currency, "eur")
+        XCTAssertEqual(checkoutSession.currency, "usd")
+        XCTAssertEqual(checkoutSession.presentmentDetails?.presentmentCurrency, "eur")
         XCTAssertNotNil(checkoutSession.exchangeRateMeta)
         XCTAssertFalse(checkoutSession.localizedPricesMetas.isEmpty)
     }

@@ -37,7 +37,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let shippingAddressCollection: ShippingAddressCollection?
     let recurringDetails: RecurringDetails?
     let adaptivePricingInfo: AdaptivePricingInfo?
-    let developerToolContext: DeveloperToolContext?
     let taxContext: TaxContext?
     let taxMeta: TaxMeta?
     let paymentMethodOptions: STPPaymentMethodOptions?
@@ -97,7 +96,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case shippingAddressCollection
         case recurringDetails
         case adaptivePricingInfo
-        case developerToolContext
         case taxContext
         case taxMeta
         case paymentMethodOptions
@@ -185,10 +183,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         adaptivePricingInfo = try container.decodeIfPresent(
             AdaptivePricingInfo.self,
             forKey: .adaptivePricingInfo
-        )
-        developerToolContext = try container.decodeIfPresent(
-            DeveloperToolContext.self,
-            forKey: .developerToolContext
         )
         taxContext = try container.decodeIfPresent(TaxContext.self, forKey: .taxContext)
         taxMeta = try container.decodeIfPresent(TaxMeta.self, forKey: .taxMeta)
@@ -439,25 +433,17 @@ extension PaymentPagesAPIResponse {
     }
 
     struct AdaptivePricingInfo: Decodable {
-        let activePresentmentCurrency: String?
-        let integrationAmount: Int?
-        let integrationCurrency: String?
-        let localCurrencyOptions: [LocalCurrencyOption]?
+        let activePresentmentCurrency: String
+        let integrationAmount: Int
+        let integrationCurrency: String
+        let localCurrencyOptions: [LocalCurrencyOption]
     }
 
     struct LocalCurrencyOption: Decodable {
-        let amount: Int?
+        let amount: Int
         let conversionMarkupBps: Int?
-        let currency: String?
-        let presentmentExchangeRate: String?
-    }
-
-    struct DeveloperToolContext: Decodable {
-        let adaptivePricing: AdaptivePricing?
-
-        struct AdaptivePricing: Decodable {
-            let active: Bool?
-        }
+        let currency: String
+        let presentmentExchangeRate: String
     }
 
     struct TaxContext: Decodable {

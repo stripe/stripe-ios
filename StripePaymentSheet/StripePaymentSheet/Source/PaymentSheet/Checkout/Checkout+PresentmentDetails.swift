@@ -2,6 +2,8 @@
 //  Checkout+PresentmentDetails.swift
 //  StripePaymentSheet
 //
+//  Created by Yuki Tokuhiro on 8/17/26.
+//
 
 import Foundation
 
@@ -13,8 +15,5 @@ extension Checkout.Session {
         /// Three-letter ISO 4217 presentment currency code in lowercase.
         public let presentmentCurrency: String
 
-        public init(presentmentCurrency: String) {
-            self.presentmentCurrency = presentmentCurrency
-        }
     }
 }

@@ -167,10 +167,10 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.activePresentmentCurrency, "eur")
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.integrationAmount, 12000)
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.integrationCurrency, "usd")
-        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions?.first?.amount, 10839)
-        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions?.first?.currency, "eur")
-        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions?.first?.conversionMarkupBps, 400)
-        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions?.first?.presentmentExchangeRate, "0.90325")
+        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions.first?.amount, 10839)
+        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions.first?.currency, "eur")
+        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions.first?.conversionMarkupBps, 400)
+        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions.first?.presentmentExchangeRate, "0.90325")
 
         XCTAssertEqual(session.id, "cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(apiResponse.clientSecret, "cs_test_a1b2c3d4e5f6g7h8i9j0_secret_xyz123abc456")
@@ -279,6 +279,91 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNil(apiResponse.url)
         XCTAssertNil(session.savedPaymentMethodsOfferSave)
         XCTAssertNil(session.setupFutureUsage)
+    }
+
+    func testAdaptivePricingInfoRejectsMissingRequiredFields() {
+        let adaptivePricingInfo: [String: Any] = [
+            "active_presentment_currency": "eur",
+            "integration_amount": 1200,
+            "integration_currency": "usd",
+            "local_currency_options": [
+                [
+                    "amount": 1080,
+                    "conversion_markup_bps": 400,
+                    "currency": "eur",
+                    "presentment_exchange_rate": "0.9",
+                ],
+            ],
+        ]
+
+        for field in [
+            "active_presentment_currency",
+            "integration_amount",
+            "integration_currency",
+            "local_currency_options",
+        ] {
+            var invalidAdaptivePricingInfo = adaptivePricingInfo
+            invalidAdaptivePricingInfo.removeValue(forKey: field)
+            var json = CheckoutTestHelpers.baseSessionJSON
+            json["adaptive_pricing_info"] = invalidAdaptivePricingInfo
+
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected missing \(field) to fail decoding"
+            )
+        }
+    }
+
+    func testAdaptivePricingLocalCurrencyOptionRejectsMissingRequiredFields() {
+        let localCurrencyOption: [String: Any] = [
+            "amount": 1080,
+            "conversion_markup_bps": 400,
+            "currency": "eur",
+            "presentment_exchange_rate": "0.9",
+        ]
+
+        for field in ["amount", "currency", "presentment_exchange_rate"] {
+            var invalidLocalCurrencyOption = localCurrencyOption
+            invalidLocalCurrencyOption.removeValue(forKey: field)
+            var json = CheckoutTestHelpers.baseSessionJSON
+            json["adaptive_pricing_info"] = [
+                "active_presentment_currency": "eur",
+                "integration_amount": 1200,
+                "integration_currency": "usd",
+                "local_currency_options": [invalidLocalCurrencyOption],
+            ]
+
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected missing \(field) to fail decoding"
+            )
+        }
+    }
+
+    func testAdaptivePricingLocalCurrencyOptionAllowsMissingConversionMarkup() throws {
+        var json = CheckoutTestHelpers.baseSessionJSON
+        json["adaptive_pricing_info"] = [
+            "active_presentment_currency": "eur",
+            "integration_amount": 1200,
+            "integration_currency": "usd",
+            "local_currency_options": [
+                [
+                    "amount": 1080,
+                    "currency": "eur",
+                    "presentment_exchange_rate": "0.9",
+                ],
+            ],
+        ]
+
+        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        let session = response.makePublicSession()
+        let exchangeRateMeta = try XCTUnwrap(session.exchangeRateMeta)
+
+        XCTAssertNil(response.adaptivePricingInfo?.localCurrencyOptions.first?.conversionMarkupBps)
+        XCTAssertTrue(session.adaptivePricingActive)
+        XCTAssertNil(exchangeRateMeta.conversionMarkupBps)
+        XCTAssertNotNil(CurrencySelectorUtilities.adaptivePricingData(from: session))
+        XCTAssertNil(CurrencySelectorUtilities.detailText(exchangeRateMeta: exchangeRateMeta))
     }
 
     func testExpandedIntentsDecodeLegacyModels() throws {

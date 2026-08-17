@@ -29,8 +29,8 @@ final class Checkout_AdaptivePricingTests: STPNetworkStubbingTestCase {
         let checkout = try await Checkout(configuration: configuration)
         let eurSession = checkout.session
 
-        // Then Checkout reflects the EUR currency and totals returned by Payment Pages
-        XCTAssertEqual(eurSession.currency, "eur")
+        // Then Checkout keeps the USD integration currency and reflects the EUR presentment details and totals
+        XCTAssertEqual(eurSession.currency, "usd")
         XCTAssertEqual(eurSession.presentmentDetails?.presentmentCurrency, "eur")
         XCTAssertTrue(eurSession.adaptivePricingActive)
         XCTAssertNotNil(eurSession.exchangeRateMeta)
@@ -41,7 +41,7 @@ final class Checkout_AdaptivePricingTests: STPNetworkStubbingTestCase {
         try await checkout.selectCurrency("usd")
         let usdSession = checkout.session
 
-        // Then Checkout reflects the updated USD currency and totals returned by Payment Pages
+        // Then Checkout keeps the USD integration currency and reflects the updated USD presentment details and totals
         XCTAssertEqual(usdSession.currency, "usd")
         XCTAssertEqual(usdSession.presentmentDetails?.presentmentCurrency, "usd")
         XCTAssertEqual(usdSession.totals.total.minorUnitsAmount, 2000)
