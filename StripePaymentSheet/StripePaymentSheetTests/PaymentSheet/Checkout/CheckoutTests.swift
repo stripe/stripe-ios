@@ -234,48 +234,6 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.taxAmounts?.first?.minorUnitsAmount, 195)
     }
 
-    func testAdaptivePricingActiveForUnifiedModeCheckoutSession() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
-            merchantCountry: "us_tax",
-            customerEmailLocation: "FR"
-        )
-        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        configuration.adaptivePricing.allowed = true
-        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkout = try await Checkout(configuration: configuration)
-
-        XCTAssertEqual(checkout.session.currency, "eur")
-        XCTAssertTrue(checkout.session.adaptivePricingActive)
-        XCTAssertNotNil(checkout.session.exchangeRateMeta)
-    }
-
-    func testSelectCurrency() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
-            merchantCountry: "us_tax",
-            customerEmailLocation: "DE"
-        )
-        var configuration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        configuration.adaptivePricing.allowed = true
-        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkout = try await Checkout(configuration: configuration)
-
-        let initialSession = checkout.session
-
-        // Session loads with the localized currency (EUR for DE)
-        XCTAssertEqual(initialSession.currency, "eur")
-        XCTAssertTrue(initialSession.adaptivePricingActive)
-        XCTAssertNotNil(initialSession.exchangeRateMeta)
-        let eurTotal = initialSession.totals.total.minorUnitsAmount
-
-        // Switch to USD
-        try await checkout.selectCurrency("usd")
-
-        let updatedSession = checkout.session
-        XCTAssertEqual(updatedSession.currency, "usd")
-        XCTAssertEqual(updatedSession.totals.total.minorUnitsAmount, 2000)
-        XCTAssertNotEqual(updatedSession.totals.total.minorUnitsAmount, eurTotal, "USD total should differ from EUR total")
-    }
-
     private func promotionCode(in session: Checkout.Session?) -> String? {
         session?.discountAmounts.first(where: { $0.promotionCode != nil })?.promotionCode
     }

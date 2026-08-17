@@ -152,7 +152,7 @@ enum CurrencySelectorUtilities {
               session.adaptivePricingActive,
               !session.localizedPricesMetas.isEmpty,
               let exchangeRateMeta = session.exchangeRateMeta,
-              let currency = session.currency
+              let currency = session.activePresentmentCurrency
         else { return nil }
         return (session, exchangeRateMeta, currency)
     }

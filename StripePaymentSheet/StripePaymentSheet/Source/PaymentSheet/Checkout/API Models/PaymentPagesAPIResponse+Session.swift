@@ -31,6 +31,9 @@ extension PaymentPagesAPIResponse {
         let publicTax = Self.makeTax(taxMeta: taxMeta, taxContext: taxContext)
         let localizedPricesMetas = Self.makeLocalizedPricesMetas(from: adaptivePricingInfo)
         let exchangeRateMeta = Self.makeExchangeRateMeta(from: adaptivePricingInfo)
+        let presentmentDetails = adaptivePricingInfo?.activePresentmentCurrency.map {
+            Checkout.Session.PresentmentDetails(presentmentCurrency: $0)
+        }
         let automaticTaxEnabled = taxContext?.automaticTaxEnabled ?? false
         let automaticTaxAddressSource = Self.makeAutomaticTaxAddressSource(
             from: taxContext?.automaticTaxAddressSource
@@ -43,10 +46,7 @@ extension PaymentPagesAPIResponse {
             id: sessionId,
             businessName: elementsSession.businessName,
             currency: currency,
-            currencyOptions: Self.makeCurrencyOptions(
-                from: localizedPricesMetas,
-                exchangeRateMeta: exchangeRateMeta
-            ),
+            presentmentDetails: presentmentDetails,
             discountAmounts: publicDiscountAmounts,
             email: customerEmail ?? customer?.email,
             orderSummaryItems: publicOrderSummaryItems,
@@ -371,22 +371,6 @@ extension PaymentPagesAPIResponse {
         )
     }
 
-    static func makeCurrencyOptions(
-        from metas: [STPCheckoutSessionLocalizedPriceMeta],
-        exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
-    ) -> [Checkout.CurrencyOption] {
-        metas.map { meta in
-            let conversion: Checkout.CurrencyConversion? = exchangeRateMeta.flatMap { rate in
-                guard meta.currency.lowercased() == rate.localizedCurrency.lowercased() else { return nil }
-                return Checkout.CurrencyConversion(fxRate: rate.exchangeRate, sourceCurrency: rate.sellCurrency)
-            }
-            return Checkout.CurrencyOption(
-                amount: makeAmount(meta.total, currency: meta.currency),
-                currency: meta.currency,
-                currencyConversion: conversion
-            )
-        }
-    }
 }
 
 extension Checkout.Session.Status {

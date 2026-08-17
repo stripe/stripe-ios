@@ -639,21 +639,9 @@ final class CheckoutUnitTests: XCTestCase {
               livemode: false
               businessName: nil
               currency: "usd"
-              currencyOptions: [
-                {
-                  currency: "gbp"
-                  amount: "£8.00"
-                  currencyConversion: {
-                    sourceCurrency: "usd"
-                    fxRate: "0.8"
-                  }
-                }
-                {
-                  currency: "usd"
-                  amount: "$10.00"
-                  currencyConversion: nil
-                }
-              ]
+              presentmentDetails: {
+                presentmentCurrency: "gbp"
+              }
               discountAmounts: [
                 {
                   amount: "$5.00"

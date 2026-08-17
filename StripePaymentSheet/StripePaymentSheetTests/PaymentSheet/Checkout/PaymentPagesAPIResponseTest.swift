@@ -245,15 +245,9 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.exchangeRateMeta?.sellCurrency, "usd")
         XCTAssertEqual(session.exchangeRateMeta?.exchangeRate, "0.90325")
 
-        // Currency options (derived from adaptive pricing)
-        XCTAssertEqual(session.currencyOptions.count, 2)
-        XCTAssertEqual(session.currencyOptions[0].currency, "eur")
-        XCTAssertEqual(session.currencyOptions[0].amount.minorUnitsAmount, 10839)
-        XCTAssertEqual(session.currencyOptions[0].currencyConversion?.fxRate, "0.90325")
-        XCTAssertEqual(session.currencyOptions[0].currencyConversion?.sourceCurrency, "usd")
-        XCTAssertEqual(session.currencyOptions[1].currency, "usd")
-        XCTAssertEqual(session.currencyOptions[1].amount.minorUnitsAmount, 12000)
-        XCTAssertNil(session.currencyOptions[1].currencyConversion)
+        // Presentment details (derived from adaptive pricing)
+        XCTAssertEqual(session.currency, "usd")
+        XCTAssertEqual(session.presentmentDetails?.presentmentCurrency, "eur")
 
         XCTAssertEqual(
             apiResponse.allResponseFields as NSDictionary,
@@ -276,6 +270,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 1000)
         XCTAssertEqual(session.totals.total.minorUnitsAmount, 1000)
         XCTAssertEqual(session.currency, "usd")
+        XCTAssertNil(session.presentmentDetails)
         XCTAssertNil(apiResponse.clientSecret)
         XCTAssertNil(apiResponse.paymentIntentId)
         XCTAssertNil(apiResponse.setupIntentId)
