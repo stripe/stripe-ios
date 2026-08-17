@@ -30,7 +30,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let session: Checkout.Session
     private let merchantLabel: String
     private let apiClient: STPAPIClient
-    private let returnURL: String?
+    private let returnURL: String
     let authorizationController: PKPaymentAuthorizationController
 
     // Internal state
@@ -241,11 +241,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         applePayConfirmationContext: Checkout.ApplePayConfirmationContext,
         sessionUpdater: ExpressCheckoutSessionUpdater
     ) throws -> CheckoutApplePayContext {
-        guard let applePayConfig = applePayConfirmationContext.applePayConfiguration else {
-            let error = CheckoutError.unknown(debugDescription: "Apple Pay configuration is missing.")
-            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
-            throw error
-        }
+        let applePayConfig = applePayConfirmationContext.applePayConfiguration
 
         guard PKPaymentAuthorizationController.canMakePayments() else {
             let error = CheckoutError.unknown(debugDescription: "Apple Pay isn't set up on this device (e.g. no cards in wallet).")

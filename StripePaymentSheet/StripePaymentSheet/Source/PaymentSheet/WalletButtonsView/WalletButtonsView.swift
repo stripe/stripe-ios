@@ -98,7 +98,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
         for type in flowController.elementsSession.orderedPaymentMethodTypesAndWallets {
             switch type {
             case "link":
-                if PaymentSheet.isLinkEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
+                if PaymentSheet.shouldShowLinkButton(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
                     appendIfAllowed(.link)
                 }
             case "apple_pay":
@@ -110,7 +110,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
             }
         }
 
-        if flowController.elementsSession.linkPassthroughModeEnabled && PaymentSheet.isLinkEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
+        if flowController.elementsSession.linkPassthroughModeEnabled && PaymentSheet.shouldShowLinkButton(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
             // Link in passthrough mode won't be in `orderedPaymentMethodTypesAndWallets`, so we append it.
             appendIfAllowed(.link)
         }

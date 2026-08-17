@@ -19,6 +19,11 @@ extension Checkout: ExpressCheckoutElementDelegate {
         let result = await {
             switch paymentMethod {
             case .applePay:
+                guard let applePayConfirmationContext else {
+                    let error = CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() was called for Apple Pay, but Apple Pay wasn't configured.")
+                    STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+                    return InternalConfirmResult(paymentSheetResult: .failed(error: error))
+                }
                 return await Checkout.confirmApplePay(
                     checkoutSession: session,
                     applePayConfirmationContext: applePayConfirmationContext,

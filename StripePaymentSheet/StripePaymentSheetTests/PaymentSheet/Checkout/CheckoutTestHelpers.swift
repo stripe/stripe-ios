@@ -401,7 +401,7 @@ extension Checkout.ApplePayConfirmationContext {
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: Checkout.ApplePayConfiguration? = Checkout.ApplePayConfiguration(merchantId: "merchant.com.test")
+        applePayConfiguration: Checkout.ApplePayConfiguration = Checkout.ApplePayConfiguration(merchantId: "merchant.com.test")
     ) -> Checkout.ApplePayConfirmationContext {
         Checkout.ApplePayConfirmationContext(
             applePayConfiguration: applePayConfiguration,
