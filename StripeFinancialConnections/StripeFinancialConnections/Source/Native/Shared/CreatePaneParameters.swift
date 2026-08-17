@@ -13,8 +13,18 @@ import Foundation
 // pane push.
 struct CreatePaneParameters {
     let nextPaneOrDrawerOnSecondaryCta: String?
+    let genericErrorPane: FinancialConnectionsGenericErrorPane?
+    // Skips the prepane and opens the institution's OAuth flow as soon as the
+    // auth session is created.
+    let autoLaunchAuthSession: Bool
 
-    init(nextPaneOrDrawerOnSecondaryCta: String? = nil) {
+    init(
+        nextPaneOrDrawerOnSecondaryCta: String? = nil,
+        genericErrorPane: FinancialConnectionsGenericErrorPane? = nil,
+        autoLaunchAuthSession: Bool = false
+    ) {
         self.nextPaneOrDrawerOnSecondaryCta = nextPaneOrDrawerOnSecondaryCta
+        self.genericErrorPane = genericErrorPane
+        self.autoLaunchAuthSession = autoLaunchAuthSession
     }
 }

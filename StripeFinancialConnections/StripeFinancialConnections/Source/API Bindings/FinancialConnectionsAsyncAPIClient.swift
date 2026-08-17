@@ -180,6 +180,15 @@ final class FinancialConnectionsAsyncAPIClient {
             do {
                 return try await apiCall()
             } catch {
+                // A client error will never succeed on retry, and its response body may carry
+                // information the caller needs (ex. a server-driven error pane in `extra_fields`),
+                // so surface it right away instead of losing it to `maxRetriesReached`.
+                //
+                // Note that a still-in-progress poll comes back as a decoding error rather than
+                // a client error, so this doesn't cut polling short.
+                if error.isClientError {
+                    throw error
+                }
                 if attempt == maxNumberOfRetries - 1 {
                     throw PollingError.maxRetriesReached
                 }

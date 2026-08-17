@@ -29,6 +29,7 @@ class AutoCompleteViewController: UIViewController {
     let verticalOffset: CGFloat
     /// Whether the keyboard was already visible when this view controller was presented.
     let keyboardAlreadyShowing: Bool
+    let useAutocompleteEndpoints: Bool
     /// Session token for grouping autocomplete and place details calls.
     let sessionToken: String = UUID().uuidString
 
@@ -154,7 +155,8 @@ class AutoCompleteViewController: UIViewController {
         selectedCountry: String,
         addressSpecProvider: AddressSpecProvider = .shared,
         verticalOffset: CGFloat = 0,
-        keyboardAlreadyShowing: Bool = false
+        keyboardAlreadyShowing: Bool = false,
+        useAutocompleteEndpoints: Bool = true
     ) {
         self.configuration = configuration
         self.initialLine1Text = initialLine1Text
@@ -162,9 +164,10 @@ class AutoCompleteViewController: UIViewController {
         self.addressSpecProvider = addressSpecProvider
         self.verticalOffset = verticalOffset
         self.keyboardAlreadyShowing = keyboardAlreadyShowing
+        self.useAutocompleteEndpoints = useAutocompleteEndpoints
         super.init(nibName: nil, bundle: nil)
         if let initialLine1Text = initialLine1Text, !initialLine1Text.isEmpty {
-            if configuration.useAutocompleteEndpoints {
+            if useAutocompleteEndpoints {
                 fetchAPIResults(query: initialLine1Text)
             } else {
                 mapKitQueryStartTime = Date()
@@ -314,7 +317,7 @@ class AutoCompleteViewController: UIViewController {
 extension AutoCompleteViewController: ElementDelegate {
     func didUpdate(element: Element) {
         let query = autoCompleteLine.text
-        if configuration.useAutocompleteEndpoints {
+        if useAutocompleteEndpoints {
             guard query != lastFetchedQuery else { return }
             lastFetchedQuery = query
             guard query.count >= minimumQueryLength else {
