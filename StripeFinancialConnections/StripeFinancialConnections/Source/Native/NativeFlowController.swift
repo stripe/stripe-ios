@@ -691,6 +691,24 @@ extension NativeFlowController {
         // dismiss the current pane
         dismissCurrentPane(animated: false)
 
+        // the server can hand us a fully-formed error screen, in which case we show that
+        // instead of one of our own
+        if let genericErrorPane = FinancialConnectionsGenericErrorPane.from(error: error) {
+            dataManager
+                .analyticsClient
+                .logExpectedError(
+                    error,
+                    errorName: "GenericErrorPaneError",
+                    pane: referrerPane
+                )
+            pushPane(
+                .genericError,
+                parameters: CreatePaneParameters(genericErrorPane: genericErrorPane),
+                animated: false
+            )
+            return
+        }
+
         dataManager.errorPaneError = error
         dataManager.errorPaneReferrerPane = referrerPane
         pushPane(.unexpectedError, animated: false)
@@ -962,6 +980,13 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
+    }
+
+    func accountPickerViewController(
+        _ viewController: AccountPickerViewController,
+        didReceiveError error: Error
+    ) {
+        showErrorPane(forError: error, referrerPane: .accountPicker)
     }
 
     func accountPickerViewController(
@@ -1389,6 +1414,33 @@ extension NativeFlowController: ErrorViewControllerDelegate {
     }
 }
 
+// MARK: - GenericErrorViewControllerDelegate
+
+extension NativeFlowController: GenericErrorViewControllerDelegate {
+    func genericErrorViewControllerDidSelectRestartAuthFlow(_ viewController: GenericErrorViewController) {
+        guard dataManager.institution != nil else {
+            // there's no institution to re-authenticate with, so the best we
+            // can do is let the user pick one
+            genericErrorViewControllerDidSelectAnotherBank(viewController)
+            return
+        }
+        dataManager.authSession = nil // clear any lingering auth sessions
+        // partner auth creates a new auth session and, because of
+        // `autoLaunchAuthSession`, goes straight to the institution's OAuth flow
+        pushPane(
+            .partnerAuth,
+            parameters: CreatePaneParameters(autoLaunchAuthSession: true),
+            animated: true,
+            removeCurrent: true
+        )
+    }
+
+    func genericErrorViewControllerDidSelectAnotherBank(_ viewController: GenericErrorViewController) {
+        dataManager.authSession = nil // clear any lingering auth sessions
+        pushPane(.institutionPicker, animated: true, removeCurrent: true)
+    }
+}
+
 // MARK: - Static Helpers
 
 private func CreatePaneViewController(
@@ -1627,7 +1679,8 @@ private func CreatePaneViewController(
             )
             let partnerAuthViewController = PartnerAuthViewController(
                 dataSource: partnerAuthDataSource,
-                panePresentationStyle: panePresentationStyle
+                panePresentationStyle: panePresentationStyle,
+                autoLaunchAuthSession: parameters?.autoLaunchAuthSession ?? false
             )
             partnerAuthViewController.delegate = nativeFlowController
             viewController = partnerAuthViewController
@@ -1670,6 +1723,23 @@ private func CreatePaneViewController(
         } else {
             // if backend returns `unexpected_error`, the parameters being NULL
             // might be OK and we will go to terminal error
+            viewController = nil
+        }
+    case .genericError:
+        if let genericErrorPane = parameters?.genericErrorPane {
+            let genericErrorDataSource = GenericErrorDataSource(
+                genericErrorPane: genericErrorPane,
+                authSession: dataManager.authSession,
+                appearance: dataManager.manifest.appearance,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
+            )
+            let genericErrorViewController = GenericErrorViewController(dataSource: genericErrorDataSource)
+            genericErrorViewController.delegate = nativeFlowController
+            viewController = genericErrorViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
             viewController = nil
         }
     case .authOptions:
