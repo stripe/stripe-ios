@@ -29,7 +29,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testMakeSummaryItemsWithAmount() {
         // Given a session with a known total
         let session = CheckoutTestHelpers.makeSession([
-            "total_summary": ["subtotal": 2500, "total": 2500, "due": 2500],
+            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 2500),
             "currency": "usd",
         ]).makePublicSession()
 
@@ -135,11 +135,11 @@ final class CheckoutApplePayContextTests: XCTestCase {
             "total_summary": ["subtotal": 1000, "total": 1000, "due": 1000],
         ])
         let session = response.makePublicSession()
-        let configuration = Checkout.ApplePayConfirmationContext.makeMock(apiClient: resolvedAPIClient)
+        let applePayConfirmationContext = Checkout.ApplePayConfirmationContext.makeMock(apiClient: resolvedAPIClient)
         let mockController = MockPKPaymentAuthorizationController()
         let context = CheckoutApplePayContext(
             checkoutSession: session,
-            confirmationContext: configuration,
+            applePayConfirmationContext: applePayConfirmationContext,
             sessionUpdater: StubExpressCheckoutSessionUpdater(),
             authorizationController: mockController
         )
