@@ -106,7 +106,7 @@ struct CheckoutCartView: View {
                 if let checkout {
                     CheckoutSessionDetailsView(
                         diagnostics: diagnostics,
-                        sessionID: checkout.session.id
+                        checkout: checkout
                     )
                 }
             }
