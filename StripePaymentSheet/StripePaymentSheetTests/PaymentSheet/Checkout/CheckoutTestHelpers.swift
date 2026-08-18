@@ -196,6 +196,7 @@ enum CheckoutTestHelpers {
         let resolvedClientSecret = clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
         let sessionId = Checkout.extractSessionId(from: resolvedClientSecret)
         let apiClient = APIStubbedTestCase.stubbedAPIClient()
+        apiClient.publishableKey = "pk_test_123"
 
         // Keep tests offline except for explicitly stubbed Checkout init work.
         if stubAllOutgoingRequests {

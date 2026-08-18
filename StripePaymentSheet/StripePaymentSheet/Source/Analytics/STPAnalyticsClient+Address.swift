@@ -62,6 +62,26 @@ extension STPAnalyticsClient {
         self.logAddressControllerEvent(event: .csbillingAddressCompleted, addressAnalyticData: analyticData, apiClient: apiClient)
     }
 
+    func logShippingAddressElementEvent(
+        event: STPAnalyticEvent,
+        addressAnalyticData: AddressAnalyticData,
+        checkoutSessionId: String,
+        error: Error? = nil,
+        apiClient: STPAPIClient
+    ) {
+        assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
+        var additionalParams: [String: Any] = ["checkout_session_id": checkoutSessionId]
+        if let error {
+            additionalParams.mergeAssertingOnOverwrites(error.serializeForV1Analytics())
+        }
+        logAddressControllerEvent(
+            event: event,
+            addressAnalyticData: addressAnalyticData,
+            additionalParams: additionalParams,
+            apiClient: apiClient
+        )
+    }
+
     // MARK: - Autocomplete
 
     func logAddressAutocompleteStart(addressCountryCode: String, sessionToken: String, apiClient: STPAPIClient) {

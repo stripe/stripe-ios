@@ -175,6 +175,7 @@ class AddressViewControllerSnapshotTests: STPSnapshotTestCase {
                 )
             ),
             allowedCountries: ["US"],
+            checkoutSessionId: "cs_test_123",
             apiClient: .init(publishableKey: "pk_test_1234"),
             useAutocompleteEndpoints: false
         )
