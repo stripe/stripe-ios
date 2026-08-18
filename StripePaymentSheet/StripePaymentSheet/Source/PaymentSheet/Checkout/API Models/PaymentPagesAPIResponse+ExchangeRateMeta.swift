@@ -22,6 +22,6 @@ struct STPCheckoutSessionExchangeRateMeta: Equatable {
     public let integrationCurrency: String
     /// The customer's local currency (e.g. "gbp").
     public let localizedCurrency: String
-    /// The conversion markup in basis points (e.g. 400).
-    public let conversionMarkupBps: Int
+    /// The conversion markup in basis points (e.g. 400), if provided.
+    public let conversionMarkupBps: Int?
 }
