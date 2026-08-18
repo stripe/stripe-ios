@@ -89,12 +89,14 @@ struct CryptoOnrampExampleView: View {
                                 Label("L0 KYC Mode", systemImage: "person.text.rectangle")
                             }
 
-                            Divider()
+                            if seamlessSignInEmail == nil {
+                                Divider()
 
-                            Button {
-                                isShowingScopesSheet = true
-                            } label: {
-                                Label("OAuth Scopes…", systemImage: "slider.horizontal.3")
+                                Button {
+                                    isShowingScopesSheet = true
+                                } label: {
+                                    Label("OAuth Scopes…", systemImage: "slider.horizontal.3")
+                                }
                             }
                         } label: {
                             Image(systemName: "gearshape")
