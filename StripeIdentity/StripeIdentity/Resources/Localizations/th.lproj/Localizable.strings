@@ -2,6 +2,8 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "ระบบจะถ่ายภาพ 2-3 รายการโดยอัตโนมัติในขั้นตอนถัดไปเพื่อยืนยันว่าเป็นคุณจริงๆ";
 /* Title for accepted types of ids */
 "Accepted forms of ID include" = "รูปแบบเอกสารประจำตัวที่ยอมรับประกอบด้วย";
+/* Button text to allow the optional training consent choice */
+"Allow" = "อนุญาต";
 /* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "หรือคุณจะทำการอัปโหลดรูปภาพเอกสารประจำตัวด้วยตนเองก็ได้";
 /* Opens the app's settings in the Settings app */
@@ -38,6 +40,12 @@
 "Camera permission" = "สิทธิ์สำหรับกล้องถ่ายรูป";
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "กล้องไม่พร้อมใช้งาน";
+/* Status text displayed over the selfie viewfinder after capturing the front of a face */
+"Captured front" = "จับภาพด้านหน้าแล้ว";
+/* Status text displayed over the selfie viewfinder after capturing the left side of a face */
+"Captured left" = "จับภาพด้านซ้ายแล้ว";
+/* Status text displayed over the selfie viewfinder after capturing the right side of a face */
+"Captured right" = "จับภาพด้านขวาแล้ว";
 /* Instructional text during selfie is being captured */
 "Capturing…" = "กำลังจับภาพ...";
 /* Instructional text when the document is not centered in the frame */
@@ -54,6 +62,8 @@
 "Date of birth" = "วันเกิด";
 /* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "ดูเหมือนว่าวันเกิดไม่ถูกต้อง";
+/* Button text to decline the optional training consent choice */
+"Decline" = "ปฏิเสธ";
 /* Instructional text when environement is too bright
    Instructional text when the document is too glarry
    Instructional text when user needs remove anything blocking the document */
@@ -76,6 +86,8 @@
 "Flip your identity card over to the other side" = "พลิกไปยังอีกด้านของบัตรประจำตัว";
 /* Flip your passport or government-issued photo ID over to the other side */
 "Flip your passport or government-issued photo ID over to the other side" = "พลิกหนังสือเดินทางหรือบัตรประจำตัวที่มีรูปถ่ายที่ออกโดยรัฐบาลไปอีกด้านหนึ่ง";
+/* Body for selfie warmup page */
+"Follow the instructions to take selfies to compare against the image on your photo ID." = "ทำตามคำแนะนำเพื่อถ่ายเซลฟีสำหรับเปรียบเทียบกับรูปถ่ายบนเอกสารประจำตัวของคุณ";
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "อัปโหลดรูปภาพ %@ ด้านหน้าเรียบร้อย";
 /* Accessibility label when front driver's license photo has successfully uploaded */
@@ -108,8 +120,14 @@
 "Get ready to take a selfie" = "เตรียมตัวถ่ายภาพเซลฟี";
 /* Button to go back to the previous screen */
 "Go Back" = "ย้อนกลับ";
+/* Status text displayed over the blurred selfie while checking uploaded selfie images */
+"Great! Checking your images...." = "เยี่ยม! กำลังตรวจสอบรูปภาพของคุณ....";
+/* Title for the optional training consent section on the selfie warmup page */
+"Help us improve verifications" = "ช่วยเราปรับปรุงการตรวจสอบยืนยัน";
 /* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "ถือไว้ให้นิ่ง ระบบกำลังสแกน";
+/* Status text displayed over the selfie viewfinder while capturing selfies */
+"Hold still..." = "อยู่นิ่งๆ...";
 /* Ready button text on warmup screen */
 "I'm ready" = "ฉันพร้อมแล้ว";
 /* Label for ID number section */
@@ -165,6 +183,8 @@
 "Phone Verification" = "การยืนยันหมายเลขโทรศัพท์";
 /* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "คลังภาพ";
+/* Status text displayed over the selfie viewfinder while positioning a face */
+"Place your face within the frame" = "วางใบหน้าของคุณภายในกรอบ";
 /* Instructions for uploading images of passport */
 "Please upload an image of your passport" = "โปรดอัปโหลดรูปภาพของหนังสือเดินทาง";
 /* Instructions for uploading images of a driver's license, government issued photo id, or passport */
@@ -242,6 +262,14 @@
 "Try Again" = "ลองอีกครั้ง";
 /* Instructional text when the document is too glarry */
 "Try reduce glare and make ID visible" = "ลองลดแสงสะท้อนในรูปภาพและตรวจสอบว่ามองเห็นเอกสารประจำตัวครบทุกส่วน";
+/* Status text displayed over the selfie viewfinder while capturing the left side of a face */
+"Turn head left" = "หันศีรษะไปทางซ้าย";
+/* Status text displayed over the selfie viewfinder while capturing the right side of a face */
+"Turn head right" = "หันศีรษะไปทางขวา";
+/* Instructional text for scanning the left side of a selfie */
+"Turn your head left." = "หันศีรษะของคุณไปทางซ้าย";
+/* Instructional text for scanning the right side of a selfie */
+"Turn your head right." = "หันศีรษะของคุณไปทางขวา";
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "เชื่อมต่อไม่ได้";
 /* Title for warning alert */

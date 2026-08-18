@@ -2,6 +2,8 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Noen få bilder tas automatisk i neste trinn for å bekrefte at det er deg";
 /* Title for accepted types of ids */
 "Accepted forms of ID include" = "Godkjente former for ID inkluderer";
+/* Button text to allow the optional training consent choice */
+"Allow" = "Tillat";
 /* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "Alternativt kan du laste opp et bilde av identitetsdokumentet manuelt.";
 /* Opens the app's settings in the Settings app */
@@ -38,6 +40,12 @@
 "Camera permission" = "Kameratilgang";
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Kamera utilgjengelig";
+/* Status text displayed over the selfie viewfinder after capturing the front of a face */
+"Captured front" = "Forside fotografert";
+/* Status text displayed over the selfie viewfinder after capturing the left side of a face */
+"Captured left" = "Venstre fotografert";
+/* Status text displayed over the selfie viewfinder after capturing the right side of a face */
+"Captured right" = "Høyre fotografert";
 /* Instructional text during selfie is being captured */
 "Capturing…" = "Tar bilde …";
 /* Instructional text when the document is not centered in the frame */
@@ -54,6 +62,8 @@
 "Date of birth" = "Fødselsdato";
 /* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Fødselsdato ser ikke gyldig ut";
+/* Button text to decline the optional training consent choice */
+"Decline" = "Avvis";
 /* Instructional text when environement is too bright
    Instructional text when the document is too glarry
    Instructional text when user needs remove anything blocking the document */
@@ -76,6 +86,8 @@
 "Flip your identity card over to the other side" = "Snu identitetskortet over til den andre siden";
 /* Flip your passport or government-issued photo ID over to the other side */
 "Flip your passport or government-issued photo ID over to the other side" = "Snu passet eller den offentlig utstedte ID-en med bilde over til den andre siden";
+/* Body for selfie warmup page */
+"Follow the instructions to take selfies to compare against the image on your photo ID." = "Følg instruksjonene for å ta selfier som kan sammenlignes med bildet på legitimasjonen din.";
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "Forsiden av bildet, %@, ble lastet opp";
 /* Accessibility label when front driver's license photo has successfully uploaded */
@@ -108,8 +120,14 @@
 "Get ready to take a selfie" = "Gjør deg klar til å ta en selfie";
 /* Button to go back to the previous screen */
 "Go Back" = "Gå tilbake";
+/* Status text displayed over the blurred selfie while checking uploaded selfie images */
+"Great! Checking your images...." = "Flott! Kontrollerer bildene dine …";
+/* Title for the optional training consent section on the selfie warmup page */
+"Help us improve verifications" = "Hjelp oss med å forbedre bekreftelser";
 /* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Vær rolig, skanner";
+/* Status text displayed over the selfie viewfinder while capturing selfies */
+"Hold still..." = "Hold deg i ro …";
 /* Ready button text on warmup screen */
 "I'm ready" = "Jeg er klar";
 /* Label for ID number section */
@@ -165,6 +183,8 @@
 "Phone Verification" = "Telefonverifisering";
 /* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Bildebibliotek";
+/* Status text displayed over the selfie viewfinder while positioning a face */
+"Place your face within the frame" = "Plasser ansiktet ditt i rammen";
 /* Instructions for uploading images of passport */
 "Please upload an image of your passport" = "Last opp et bilde av passet ditt";
 /* Instructions for uploading images of a driver's license, government issued photo id, or passport */
@@ -242,6 +262,14 @@
 "Try Again" = "Prøv igjen";
 /* Instructional text when the document is too glarry */
 "Try reduce glare and make ID visible" = "Prøv å redusere gjenskinn og gjør ID-en synlig";
+/* Status text displayed over the selfie viewfinder while capturing the left side of a face */
+"Turn head left" = "Snu hodet til venstre";
+/* Status text displayed over the selfie viewfinder while capturing the right side of a face */
+"Turn head right" = "Snu hodet til høyre";
+/* Instructional text for scanning the left side of a selfie */
+"Turn your head left." = "Snu hodet til venstre.";
+/* Instructional text for scanning the right side of a selfie */
+"Turn your head right." = "Snu hodet til høyre.";
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Kan ikke opprette en tilkobling.";
 /* Title for warning alert */

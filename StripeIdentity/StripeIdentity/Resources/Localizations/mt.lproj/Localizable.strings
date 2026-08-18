@@ -2,6 +2,8 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Fil-pass li jmiss se niġbdu ftit ritratti awtomatikament biex nivverifikaw li int min qed tgħid li int";
 /* Title for accepted types of ids */
 "Accepted forms of ID include" = "Ix-xorta ta' dokumenti tal-identità aċċettati";
+/* Button text to allow the optional training consent choice */
+"Allow" = "Ippermetti";
 /* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "Inkella tista' ttella' ritratt tad-dokument tal-identità tiegħek int stess.";
 /* Opens the app's settings in the Settings app */
@@ -38,6 +40,12 @@
 "Camera permission" = "Permess għall-kamera";
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Il-kamera mhux disponibbli";
+/* Status text displayed over the selfie viewfinder after capturing the front of a face */
+"Captured front" = "Naħa ta’ quddiem lesta";
+/* Status text displayed over the selfie viewfinder after capturing the left side of a face */
+"Captured left" = "Naħa tax-xellug lesta";
+/* Status text displayed over the selfie viewfinder after capturing the right side of a face */
+"Captured right" = "Naħa tal-lemin lesta";
 /* Instructional text during selfie is being captured */
 "Capturing…" = "Qed nieħdu l-istessi...";
 /* Instructional text when the document is not centered in the frame */
@@ -54,6 +62,8 @@
 "Date of birth" = "Id-data tat-twelid";
 /* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Id-data tat-twelid ma tidhirx li hija tajba";
+/* Button text to decline the optional training consent choice */
+"Decline" = "Irriġetta";
 /* Instructional text when environement is too bright
    Instructional text when the document is too glarry
    Instructional text when user needs remove anything blocking the document */
@@ -76,6 +86,8 @@
 "Flip your identity card over to the other side" = "Dawwar il-karta tal-identità tiegħek";
 /* Flip your passport or government-issued photo ID over to the other side */
 "Flip your passport or government-issued photo ID over to the other side" = "Aqleb il-passaport tiegħek jew l-ID bir-ritratt maħruġa mill-gvern bil-maqlub għan-naħa l-oħra";
+/* Body for selfie warmup page */
+"Follow the instructions to take selfies to compare against the image on your photo ID." = "Segwi l-istruzzjonijiet biex tieħu stessi ħalli jitqabblu mal-immaġni fuq l-ID bir-ritratt tiegħek.";
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "Ir-ritratt ta' quddiem ta’ %@ ġie mtella' b'suċċess";
 /* Accessibility label when front driver's license photo has successfully uploaded */
@@ -108,8 +120,14 @@
 "Get ready to take a selfie" = "Ħejji ruħek għall-istessu";
 /* Button to go back to the previous screen */
 "Go Back" = "Mur Lura";
+/* Status text displayed over the blurred selfie while checking uploaded selfie images */
+"Great! Checking your images...." = "Eċċellenti! Qed niċċekkjaw ir-ritratti tiegħek....";
+/* Title for the optional training consent section on the selfie warmup page */
+"Help us improve verifications" = "Għinna ntejbu l-verifiki";
 /* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Tiċċaqlaqx, qed niskennjaw";
+/* Status text displayed over the selfie viewfinder while capturing selfies */
+"Hold still..." = "Tiċċaqlaqx...";
 /* Ready button text on warmup screen */
 "I'm ready" = "Jien lest/a";
 /* Label for ID number section */
@@ -165,6 +183,8 @@
 "Phone Verification" = "Verifika bil-Mowbajl";
 /* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Ġabra tar-Ritratti";
+/* Status text displayed over the selfie viewfinder while positioning a face */
+"Place your face within the frame" = "Poġġi wiċċek fil-frejm";
 /* Instructions for uploading images of passport */
 "Please upload an image of your passport" = "Jekk jogħġbok tella' ritratt tal-passaport tiegħek";
 /* Instructions for uploading images of a driver's license, government issued photo id, or passport */
@@ -242,6 +262,14 @@
 "Try Again" = "Erġa' Pprova";
 /* Instructional text when the document is too glarry */
 "Try reduce glare and make ID visible" = "Ipprova naqqas id-dija u ara li d-dokument  tal-identitá jidher sewwa";
+/* Status text displayed over the selfie viewfinder while capturing the left side of a face */
+"Turn head left" = "Dawwar rasek lejn ix-xellug";
+/* Status text displayed over the selfie viewfinder while capturing the right side of a face */
+"Turn head right" = "Dawwar rasek lejn il-lemin";
+/* Instructional text for scanning the left side of a selfie */
+"Turn your head left." = "Dawwar rasek lejn ix-xellug.";
+/* Instructional text for scanning the right side of a selfie */
+"Turn your head right." = "Dawwar rasek lejn il-lemin.";
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Ma nistgħux nagħmlu konnessjoni.";
 /* Title for warning alert */

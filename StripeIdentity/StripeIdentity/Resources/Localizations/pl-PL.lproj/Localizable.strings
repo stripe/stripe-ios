@@ -2,6 +2,8 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "W kolejnym kroku zostanie zrobionych kilka zdjęć, aby potwierdzić Twoją tożsamość";
 /* Title for accepted types of ids */
 "Accepted forms of ID include" = "Akceptowane formy dokumentu tożsamości to";
+/* Button text to allow the optional training consent choice */
+"Allow" = "Zezwól";
 /* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "Można też ręcznie przesłać zdjęcie dokumentu tożsamości.";
 /* Opens the app's settings in the Settings app */
@@ -38,6 +40,12 @@
 "Camera permission" = "Zezwolenie dla aparatu";
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Aparat niedostępny";
+/* Status text displayed over the selfie viewfinder after capturing the front of a face */
+"Captured front" = "Zrobiono zdjęcie od przodu";
+/* Status text displayed over the selfie viewfinder after capturing the left side of a face */
+"Captured left" = "Zrobiono zdjęcie lewej strony";
+/* Status text displayed over the selfie viewfinder after capturing the right side of a face */
+"Captured right" = "Zrobiono zdjęcie prawej strony";
 /* Instructional text during selfie is being captured */
 "Capturing…" = "Przechwytywanie…";
 /* Instructional text when the document is not centered in the frame */
@@ -54,6 +62,8 @@
 "Date of birth" = "Data urodzenia";
 /* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Data urodzenia wygląda na nieprawidłową";
+/* Button text to decline the optional training consent choice */
+"Decline" = "Odrzuć";
 /* Instructional text when environement is too bright
    Instructional text when the document is too glarry
    Instructional text when user needs remove anything blocking the document */
@@ -76,6 +86,8 @@
 "Flip your identity card over to the other side" = "Obróć dowód tożsamości na drugą stronę";
 /* Flip your passport or government-issued photo ID over to the other side */
 "Flip your passport or government-issued photo ID over to the other side" = "Odwróć swój paszport lub dokument tożsamości ze zdjęciem wydany przez organ państwowy na drugą stronę";
+/* Body for selfie warmup page */
+"Follow the instructions to take selfies to compare against the image on your photo ID." = "Postępuj zgodnie z instrukcjami, aby zrobić selfie do porównania ze zdjęciem na dowodzie tożsamości.";
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "Zdjęcie przedniej strony dokumentu %@ zostało przesłane pomyślnie";
 /* Accessibility label when front driver's license photo has successfully uploaded */
@@ -108,8 +120,14 @@
 "Get ready to take a selfie" = "Przygotuj się do zrobienia selfie";
 /* Button to go back to the previous screen */
 "Go Back" = "Wróć";
+/* Status text displayed over the blurred selfie while checking uploaded selfie images */
+"Great! Checking your images...." = "Świetnie! Sprawdzanie Twoich obrazów...";
+/* Title for the optional training consent section on the selfie warmup page */
+"Help us improve verifications" = "Pomóż nam ulepszyć proces weryfikacji";
 /* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Zaczekaj, trwa skanowanie";
+/* Status text displayed over the selfie viewfinder while capturing selfies */
+"Hold still..." = "Zaczekaj...";
 /* Ready button text on warmup screen */
 "I'm ready" = "Gotowe";
 /* Label for ID number section */
@@ -165,6 +183,8 @@
 "Phone Verification" = "Weryfikacja numeru telefonu";
 /* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Biblioteka zdjęć";
+/* Status text displayed over the selfie viewfinder while positioning a face */
+"Place your face within the frame" = "Umieść twarz w ramce";
 /* Instructions for uploading images of passport */
 "Please upload an image of your passport" = "Prześlij zdjęcie paszportu";
 /* Instructions for uploading images of a driver's license, government issued photo id, or passport */
@@ -242,6 +262,14 @@
 "Try Again" = "Spróbuj ponownie";
 /* Instructional text when the document is too glarry */
 "Try reduce glare and make ID visible" = "Spróbuj zmniejszyć oświetlenie i upewnij się, że dokument tożsamości jest widoczny.";
+/* Status text displayed over the selfie viewfinder while capturing the left side of a face */
+"Turn head left" = "Obróć głowę w lewo";
+/* Status text displayed over the selfie viewfinder while capturing the right side of a face */
+"Turn head right" = "Obróć głowę w prawo";
+/* Instructional text for scanning the left side of a selfie */
+"Turn your head left." = "Obróć głowę w lewo.";
+/* Instructional text for scanning the right side of a selfie */
+"Turn your head right." = "Obróć głowę w prawo.";
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Nie można nawiązać połączenia.";
 /* Title for warning alert */

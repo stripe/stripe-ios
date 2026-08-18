@@ -2,6 +2,8 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "下一步将自动拍摄一些照片来验证是否是您本人";
 /* Title for accepted types of ids */
 "Accepted forms of ID include" = "接受的身份证件包括";
+/* Button text to allow the optional training consent choice */
+"Allow" = "允许";
 /* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "您也可以手动上传您的身份证件的照片。";
 /* Opens the app's settings in the Settings app */
@@ -38,6 +40,12 @@
 "Camera permission" = "相机许可";
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "相机不可用";
+/* Status text displayed over the selfie viewfinder after capturing the front of a face */
+"Captured front" = "已拍摄正面";
+/* Status text displayed over the selfie viewfinder after capturing the left side of a face */
+"Captured left" = "已拍摄左侧";
+/* Status text displayed over the selfie viewfinder after capturing the right side of a face */
+"Captured right" = "已拍摄右侧";
 /* Instructional text during selfie is being captured */
 "Capturing…" = "正在拍摄...";
 /* Instructional text when the document is not centered in the frame */
@@ -54,6 +62,8 @@
 "Date of birth" = "出生日期";
 /* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "出生日期看似无效";
+/* Button text to decline the optional training consent choice */
+"Decline" = "拒绝";
 /* Instructional text when environement is too bright
    Instructional text when the document is too glarry
    Instructional text when user needs remove anything blocking the document */
@@ -76,6 +86,8 @@
 "Flip your identity card over to the other side" = "将身份证翻到另一面";
 /* Flip your passport or government-issued photo ID over to the other side */
 "Flip your passport or government-issued photo ID over to the other side" = "将您的护照或政府签发的带照片身份证件翻转到另一面";
+/* Body for selfie warmup page */
+"Follow the instructions to take selfies to compare against the image on your photo ID." = "按照说明拍摄自拍照，以便与身份证件上的照片进行比对。";
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "%@ 正面照片已成功上传";
 /* Accessibility label when front driver's license photo has successfully uploaded */
@@ -108,8 +120,14 @@
 "Get ready to take a selfie" = "准备好自拍";
 /* Button to go back to the previous screen */
 "Go Back" = "返回";
+/* Status text displayed over the blurred selfie while checking uploaded selfie images */
+"Great! Checking your images...." = "太棒了！正在检查您的图片....";
+/* Title for the optional training consent section on the selfie warmup page */
+"Help us improve verifications" = "帮助我们改进验证";
 /* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "保持不动，正在扫描";
+/* Status text displayed over the selfie viewfinder while capturing selfies */
+"Hold still..." = "请保持不动...";
 /* Ready button text on warmup screen */
 "I'm ready" = "我准备好了";
 /* Label for ID number section */
@@ -165,6 +183,8 @@
 "Phone Verification" = "电话验证";
 /* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "照片库";
+/* Status text displayed over the selfie viewfinder while positioning a face */
+"Place your face within the frame" = "请将脸部置于框内";
 /* Instructions for uploading images of passport */
 "Please upload an image of your passport" = "请上传您的护照的照片";
 /* Instructions for uploading images of a driver's license, government issued photo id, or passport */
@@ -242,6 +262,14 @@
 "Try Again" = "重试";
 /* Instructional text when the document is too glarry */
 "Try reduce glare and make ID visible" = "尝试减少眩光并使身份证件可见";
+/* Status text displayed over the selfie viewfinder while capturing the left side of a face */
+"Turn head left" = "向左转头";
+/* Status text displayed over the selfie viewfinder while capturing the right side of a face */
+"Turn head right" = "向右转头";
+/* Instructional text for scanning the left side of a selfie */
+"Turn your head left." = "向左转头。";
+/* Instructional text for scanning the right side of a selfie */
+"Turn your head right." = "向右转头。";
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "无法建立连接。";
 /* Title for warning alert */

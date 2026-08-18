@@ -2,6 +2,8 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Một vài ảnh sẽ được chụp tự động ở bước tiếp theo để xác minh đó là bạn";
 /* Title for accepted types of ids */
 "Accepted forms of ID include" = "Các loại ID được chấp nhận bao gồm";
+/* Button text to allow the optional training consent choice */
+"Allow" = "Cho phép";
 /* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "Ngoài ra, bạn có thể tự tải lên ảnh giấy tờ tùy thân của mình.";
 /* Opens the app's settings in the Settings app */
@@ -38,6 +40,12 @@
 "Camera permission" = "Cấp quyền máy ảnh";
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Máy ảnh không khả dụng";
+/* Status text displayed over the selfie viewfinder after capturing the front of a face */
+"Captured front" = "Đã chụp phía trước";
+/* Status text displayed over the selfie viewfinder after capturing the left side of a face */
+"Captured left" = "Đã chụp bên trái";
+/* Status text displayed over the selfie viewfinder after capturing the right side of a face */
+"Captured right" = "Đã chụp bên phải";
 /* Instructional text during selfie is being captured */
 "Capturing…" = "Đang chụp…";
 /* Instructional text when the document is not centered in the frame */
@@ -54,6 +62,8 @@
 "Date of birth" = "Ngày sinh";
 /* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Ngày sinh có vẻ không hợp lệ";
+/* Button text to decline the optional training consent choice */
+"Decline" = "Từ chối";
 /* Instructional text when environement is too bright
    Instructional text when the document is too glarry
    Instructional text when user needs remove anything blocking the document */
@@ -76,6 +86,8 @@
 "Flip your identity card over to the other side" = "Lật thẻ căn cước của bạn sang mặt khác";
 /* Flip your passport or government-issued photo ID over to the other side */
 "Flip your passport or government-issued photo ID over to the other side" = "Lật ngược hộ chiếu hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
+/* Body for selfie warmup page */
+"Follow the instructions to take selfies to compare against the image on your photo ID." = "Làm theo hướng dẫn để chụp ảnh tự chụp nhằm so sánh với hình ảnh trên giấy tờ tùy thân có ảnh của bạn.";
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "Tải lên ảnh mặt trước %@ thành công";
 /* Accessibility label when front driver's license photo has successfully uploaded */
@@ -108,8 +120,14 @@
 "Get ready to take a selfie" = "Sẵn sàng để tự chụp ảnh";
 /* Button to go back to the previous screen */
 "Go Back" = "Quay lại";
+/* Status text displayed over the blurred selfie while checking uploaded selfie images */
+"Great! Checking your images...." = "Tuyệt vời! Đang kiểm tra hình ảnh của bạn…";
+/* Title for the optional training consent section on the selfie warmup page */
+"Help us improve verifications" = "Giúp chúng tôi cải thiện quá trình xác minh";
 /* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Giữ yên, đang quét";
+/* Status text displayed over the selfie viewfinder while capturing selfies */
+"Hold still..." = "Giữ yên...";
 /* Ready button text on warmup screen */
 "I'm ready" = "Đã sẵn sàng";
 /* Label for ID number section */
@@ -165,6 +183,8 @@
 "Phone Verification" = "Xác minh Số điện thoại";
 /* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Thư viện ảnh";
+/* Status text displayed over the selfie viewfinder while positioning a face */
+"Place your face within the frame" = "Đặt khuôn mặt của bạn vào trong khung hình";
 /* Instructions for uploading images of passport */
 "Please upload an image of your passport" = "Vui lòng tải lên hình ảnh hộ chiếu";
 /* Instructions for uploading images of a driver's license, government issued photo id, or passport */
@@ -242,6 +262,14 @@
 "Try Again" = "Hãy thử lại";
 /* Instructional text when the document is too glarry */
 "Try reduce glare and make ID visible" = "Hãy thử giảm độ chói và đảm bảo ID được nhìn rõ";
+/* Status text displayed over the selfie viewfinder while capturing the left side of a face */
+"Turn head left" = "Quay đầu sang trái";
+/* Status text displayed over the selfie viewfinder while capturing the right side of a face */
+"Turn head right" = "Quay đầu sang phải";
+/* Instructional text for scanning the left side of a selfie */
+"Turn your head left." = "Quay đầu sang trái.";
+/* Instructional text for scanning the right side of a selfie */
+"Turn your head right." = "Quay đầu sang phải.";
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Không thể thiết lập kết nối.";
 /* Title for warning alert */

@@ -2,6 +2,8 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Järgmises etapis tehakse automaatselt mõned fotod, et kinnitada, et see olete teie";
 /* Title for accepted types of ids */
 "Accepted forms of ID include" = "Aktsepteeritud isikut tõendavad dokumendid hõlmavad järgmist";
+/* Button text to allow the optional training consent choice */
+"Allow" = "Luba";
 /* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "Samuti võite oma isikut tõendava dokumendi foto käsitsi üles laadida.";
 /* Opens the app's settings in the Settings app */
@@ -38,6 +40,12 @@
 "Camera permission" = "Kaamera luba";
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Kaamera pole saadaval";
+/* Status text displayed over the selfie viewfinder after capturing the front of a face */
+"Captured front" = "Jäädvustatud esiosa";
+/* Status text displayed over the selfie viewfinder after capturing the left side of a face */
+"Captured left" = "Jäädvustatud vasakult";
+/* Status text displayed over the selfie viewfinder after capturing the right side of a face */
+"Captured right" = "Jäädvustatud paremalt";
 /* Instructional text during selfie is being captured */
 "Capturing…" = "Pildistamine …";
 /* Instructional text when the document is not centered in the frame */
@@ -54,6 +62,8 @@
 "Date of birth" = "Sünnikuupäev";
 /* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Sünnikuupäev ei näi olevat õige";
+/* Button text to decline the optional training consent choice */
+"Decline" = "Tagasilükkamine";
 /* Instructional text when environement is too bright
    Instructional text when the document is too glarry
    Instructional text when user needs remove anything blocking the document */
@@ -76,6 +86,8 @@
 "Flip your identity card over to the other side" = "Pöörake ID-kaart ümber";
 /* Flip your passport or government-issued photo ID over to the other side */
 "Flip your passport or government-issued photo ID over to the other side" = "Pöörake oma passi või valitsuse väljastatud fotoga isikut tõendava dokumendi teine pool";
+/* Body for selfie warmup page */
+"Follow the instructions to take selfies to compare against the image on your photo ID." = "Järgige juhiseid, et teha endast selfisid, mida võrrelda teie fotoga isikut tõendaval dokumendil.";
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "%@ foto esiosa on edukalt üles laaditud";
 /* Accessibility label when front driver's license photo has successfully uploaded */
@@ -108,8 +120,14 @@
 "Get ready to take a selfie" = "Valmistuge tegema selfit";
 /* Button to go back to the previous screen */
 "Go Back" = "Mine tagasi";
+/* Status text displayed over the blurred selfie while checking uploaded selfie images */
+"Great! Checking your images...." = "Suurepärane! Kontrollime teie pilte....";
+/* Title for the optional training consent section on the selfie warmup page */
+"Help us improve verifications" = "Aidake meil kinnitamist parandada";
 /* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Hoidke paigal, skannimine";
+/* Status text displayed over the selfie viewfinder while capturing selfies */
+"Hold still..." = "Hoia paigal...";
 /* Ready button text on warmup screen */
 "I'm ready" = "Olen valmis jätkama";
 /* Label for ID number section */
@@ -165,6 +183,8 @@
 "Phone Verification" = "Telefoni kinnitus";
 /* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Fototeek";
+/* Status text displayed over the selfie viewfinder while positioning a face */
+"Place your face within the frame" = "Asetage nägu raami sisse";
 /* Instructions for uploading images of passport */
 "Please upload an image of your passport" = "Laadige üles oma passi pilt";
 /* Instructions for uploading images of a driver's license, government issued photo id, or passport */
@@ -242,6 +262,14 @@
 "Try Again" = "Proovi uuesti";
 /* Instructional text when the document is too glarry */
 "Try reduce glare and make ID visible" = "Proovige vähendada läiget ja veenduge, et ID oleks nähtav";
+/* Status text displayed over the selfie viewfinder while capturing the left side of a face */
+"Turn head left" = "Pöörake pead vasakule";
+/* Status text displayed over the selfie viewfinder while capturing the right side of a face */
+"Turn head right" = "Pöörake pead paremale";
+/* Instructional text for scanning the left side of a selfie */
+"Turn your head left." = "Pöörake pead vasakule.";
+/* Instructional text for scanning the right side of a selfie */
+"Turn your head right." = "Pöörake pead paremale.";
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Ühendust ei saa luua.";
 /* Title for warning alert */

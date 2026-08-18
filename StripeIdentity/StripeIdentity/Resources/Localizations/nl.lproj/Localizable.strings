@@ -2,6 +2,8 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "In de volgende stap worden er automatisch een paar foto's gemaakt om te verifiëren dat jij het bent";
 /* Title for accepted types of ids */
 "Accepted forms of ID include" = "Geaccepteerde identiteitsbewijzen";
+/* Button text to allow the optional training consent choice */
+"Allow" = "Toestaan";
 /* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "Als alternatief kun je ook handmatig een foto van je identiteitsbewijs uploaden.";
 /* Opens the app's settings in the Settings app */
@@ -38,6 +40,12 @@
 "Camera permission" = "Toestemming voor camera";
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Camera niet beschikbaar";
+/* Status text displayed over the selfie viewfinder after capturing the front of a face */
+"Captured front" = "Voorkant vastgelegd";
+/* Status text displayed over the selfie viewfinder after capturing the left side of a face */
+"Captured left" = "Links vastgelegd";
+/* Status text displayed over the selfie viewfinder after capturing the right side of a face */
+"Captured right" = "Rechts vastgelegd";
 /* Instructional text during selfie is being captured */
 "Capturing…" = "Selfie wordt gemaakt...";
 /* Instructional text when the document is not centered in the frame */
@@ -54,6 +62,8 @@
 "Date of birth" = "Geboortedatum";
 /* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Geboortedatum lijkt ongeldig te zijn";
+/* Button text to decline the optional training consent choice */
+"Decline" = "Weigeren";
 /* Instructional text when environement is too bright
    Instructional text when the document is too glarry
    Instructional text when user needs remove anything blocking the document */
@@ -76,6 +86,8 @@
 "Flip your identity card over to the other side" = "Draai je identiteitskaart om, zodat de andere kant zichtbaar is";
 /* Flip your passport or government-issued photo ID over to the other side */
 "Flip your passport or government-issued photo ID over to the other side" = "Draai het paspoort of officieel identiteitsbewijs met foto om zodat de andere kant zichtbaar is";
+/* Body for selfie warmup page */
+"Follow the instructions to take selfies to compare against the image on your photo ID." = "Volg de instructies om een selfie te maken en deze te vergelijken met de afbeelding op je identiteitsbewijs met foto.";
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "Voorkant %@ foto succesvol geüpload";
 /* Accessibility label when front driver's license photo has successfully uploaded */
@@ -108,8 +120,14 @@
 "Get ready to take a selfie" = "Maak je klaar om een selfie te nemen";
 /* Button to go back to the previous screen */
 "Go Back" = "Terug";
+/* Status text displayed over the blurred selfie while checking uploaded selfie images */
+"Great! Checking your images...." = "Geweldig! Je afbeeldingen controleren....";
+/* Title for the optional training consent section on the selfie warmup page */
+"Help us improve verifications" = "Help ons verificaties te verbeteren";
 /* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Niet bewegen, het document wordt gescand";
+/* Status text displayed over the selfie viewfinder while capturing selfies */
+"Hold still..." = "Stilhouden...";
 /* Ready button text on warmup screen */
 "I'm ready" = "Ik ben klaar";
 /* Label for ID number section */
@@ -165,6 +183,8 @@
 "Phone Verification" = "Telefonische verificatie";
 /* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Fotobibliotheek";
+/* Status text displayed over the selfie viewfinder while positioning a face */
+"Place your face within the frame" = "Plaats je gezicht binnen het kader";
 /* Instructions for uploading images of passport */
 "Please upload an image of your passport" = "Upload een afbeelding van je paspoort";
 /* Instructions for uploading images of a driver's license, government issued photo id, or passport */
@@ -242,6 +262,14 @@
 "Try Again" = "Opnieuw proberen";
 /* Instructional text when the document is too glarry */
 "Try reduce glare and make ID visible" = "Probeer de glans te verminderen en zorg dat de ID zichtbaar is";
+/* Status text displayed over the selfie viewfinder while capturing the left side of a face */
+"Turn head left" = "Draai hoofd naar links";
+/* Status text displayed over the selfie viewfinder while capturing the right side of a face */
+"Turn head right" = "Draai hoofd naar rechts";
+/* Instructional text for scanning the left side of a selfie */
+"Turn your head left." = "Draai je hoofd naar links";
+/* Instructional text for scanning the right side of a selfie */
+"Turn your head right." = "Draai je hoofd naar rechts";
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Kan geen verbinding maken";
 /* Title for warning alert */

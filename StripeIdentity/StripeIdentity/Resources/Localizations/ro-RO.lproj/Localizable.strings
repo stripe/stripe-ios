@@ -2,6 +2,8 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Câteva fotografii vor fi efectuate automat la următorul pas pentru a verifica dacă sunteți dvs.";
 /* Title for accepted types of ids */
 "Accepted forms of ID include" = "Formele de identificare acceptate includ";
+/* Button text to allow the optional training consent choice */
+"Allow" = "Permiteți";
 /* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "Alternativ, puteți încărca manual o fotografie a documentului dvs. de identitate.";
 /* Opens the app's settings in the Settings app */
@@ -38,6 +40,12 @@
 "Camera permission" = "Permisiune cameră";
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Cameră indisponibilă";
+/* Status text displayed over the selfie viewfinder after capturing the front of a face */
+"Captured front" = "Captură față";
+/* Status text displayed over the selfie viewfinder after capturing the left side of a face */
+"Captured left" = "Captură stânga";
+/* Status text displayed over the selfie viewfinder after capturing the right side of a face */
+"Captured right" = "Captură dreapta";
 /* Instructional text during selfie is being captured */
 "Capturing…" = "Se captează…";
 /* Instructional text when the document is not centered in the frame */
@@ -54,6 +62,8 @@
 "Date of birth" = "Data nașterii";
 /* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Data nașterii pare a nu fi validă";
+/* Button text to decline the optional training consent choice */
+"Decline" = "Refuzare";
 /* Instructional text when environement is too bright
    Instructional text when the document is too glarry
    Instructional text when user needs remove anything blocking the document */
@@ -76,6 +86,8 @@
 "Flip your identity card over to the other side" = "Întoarceți cartea de identitate pe partea cealaltă";
 /* Flip your passport or government-issued photo ID over to the other side */
 "Flip your passport or government-issued photo ID over to the other side" = "Întoarceți pașaportul sau documentul de identitate cu fotografie emis de guvern pe cealaltă parte";
+/* Body for selfie warmup page */
+"Follow the instructions to take selfies to compare against the image on your photo ID." = "Urmați instrucțiunile pentru a face selfie-uri care să fie comparate cu imaginea de pe actul de identitate cu fotografie.";
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "Fotografia cu fața %@ a fost încărcată cu succes";
 /* Accessibility label when front driver's license photo has successfully uploaded */
@@ -108,8 +120,14 @@
 "Get ready to take a selfie" = "Pregătiți-vă pentru a efectua un selfie";
 /* Button to go back to the previous screen */
 "Go Back" = "Înapoi";
+/* Status text displayed over the blurred selfie while checking uploaded selfie images */
+"Great! Checking your images...." = "Excelent! Vă verificăm imaginile....";
+/* Title for the optional training consent section on the selfie warmup page */
+"Help us improve verifications" = "Ajutați-ne să îmbunătățim verificările";
 /* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Nu mișcați, se scanează";
+/* Status text displayed over the selfie viewfinder while capturing selfies */
+"Hold still..." = "Nu vă mișcați...";
 /* Ready button text on warmup screen */
 "I'm ready" = "Sunt gata";
 /* Label for ID number section */
@@ -165,6 +183,8 @@
 "Phone Verification" = "Verificare număr de telefon";
 /* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Galerie foto";
+/* Status text displayed over the selfie viewfinder while positioning a face */
+"Place your face within the frame" = "Așezați-vă fața în cadru";
 /* Instructions for uploading images of passport */
 "Please upload an image of your passport" = "Vă rugăm să încărcați o imagine a pașaportului dvs.";
 /* Instructions for uploading images of a driver's license, government issued photo id, or passport */
@@ -242,6 +262,14 @@
 "Try Again" = "Încercați din nou";
 /* Instructional text when the document is too glarry */
 "Try reduce glare and make ID visible" = "Încercați să reduceți strălucirea și să faceți vizibil documentul de identitate";
+/* Status text displayed over the selfie viewfinder while capturing the left side of a face */
+"Turn head left" = "Întoarceți capul spre stânga";
+/* Status text displayed over the selfie viewfinder while capturing the right side of a face */
+"Turn head right" = "Întoarceți capul spre dreapta";
+/* Instructional text for scanning the left side of a selfie */
+"Turn your head left." = "Întoarceți capul la stânga.";
+/* Instructional text for scanning the right side of a selfie */
+"Turn your head right." = "Întoarceți capul la dreapta.";
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Nu s-a putut stabili o conexiune.";
 /* Title for warning alert */
