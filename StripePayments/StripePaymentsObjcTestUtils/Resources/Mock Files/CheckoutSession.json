@@ -114,11 +114,6 @@
       }
     ]
   },
-  "developer_tool_context": {
-    "adaptive_pricing": {
-      "active": true
-    }
-  },
   "currency": "usd",
   "mode": "modeless",
   "status": "open",

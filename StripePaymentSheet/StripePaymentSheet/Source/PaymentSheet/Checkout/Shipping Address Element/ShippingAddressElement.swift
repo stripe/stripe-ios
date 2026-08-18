@@ -12,7 +12,7 @@ import UIKit
 @MainActor
 protocol ShippingAddressElementDelegate: AnyObject {
     /// Sets the customer's shipping address.
-    func updateShippingAddress(name: String?, address: Checkout.Address) async throws
+    func updateShippingAddress(name: String?, address: CheckoutController.Address) async throws
 }
 
 /// A shipping address form backed by a Checkout Session.
@@ -30,7 +30,7 @@ public final class ShippingAddressElement {
 
     init(
         configuration: Configuration,
-        initialShippingAddress: Checkout.Session.ShippingAddress?,
+        initialShippingAddress: CheckoutController.Session.ShippingAddress?,
         allowedCountries: [String]?,
         checkoutSessionId: String,
         apiClient: STPAPIClient,
@@ -51,14 +51,14 @@ public final class ShippingAddressElement {
         )
     }
 
-    func normalizedInitialShippingAddress() async -> Checkout.Session.ShippingAddress? {
+    func normalizedInitialShippingAddress() async -> CheckoutController.Session.ShippingAddress? {
         // Read the address back from the form to include its validation and normalization.
         guard let addressDetails = await addressViewController.initialAddressDetails() else {
             return nil
         }
-        return Checkout.Session.ShippingAddress(
+        return CheckoutController.Session.ShippingAddress(
             name: addressDetails.name,
-            address: Checkout.Address(
+            address: CheckoutController.Address(
                 country: addressDetails.address.country,
                 line1: addressDetails.address.line1,
                 line2: addressDetails.address.line2,
@@ -148,7 +148,7 @@ extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
         do {
             try await delegate.updateShippingAddress(
                 name: addressDetails.name,
-                address: Checkout.Address(
+                address: CheckoutController.Address(
                     country: addressDetails.address.country,
                     line1: addressDetails.address.line1.nonEmpty,
                     line2: addressDetails.address.line2,

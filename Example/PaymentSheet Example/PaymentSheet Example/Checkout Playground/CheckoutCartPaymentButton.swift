@@ -9,9 +9,9 @@
 import SwiftUI
 
 struct CheckoutCartPaymentButton: View {
-    @ObservedObject var checkout: Checkout
+    @ObservedObject var checkout: CheckoutController
 
-    private var session: Checkout.Session { checkout.session }
+    private var session: CheckoutController.Session { checkout.session }
 
     @State private var showConfirmStub = false
 
