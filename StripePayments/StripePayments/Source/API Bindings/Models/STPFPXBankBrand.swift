@@ -87,6 +87,19 @@ public class STPFPXBank: NSObject {
         return identifiers[brand]
     }
 
+    /// Returns the code identifying the provided bank brand in the FPX status API;
+    /// i.e. `STPIdentifierFromFPXBankBrand(STPCardBrandUob) ==  @"UOB0226"`.
+    /// - Parameters:
+    ///   - brand: The brand you want to convert to an FPX bank code
+    ///   - isBusiness: Requests the code for the business version of this bank brand, which may be different from the code used for individual accounts
+    /// - Returns: A string representing the brand, suitable for checking against the FPX status API.
+    @objc public static func bankCodeFrom(_ brand: STPFPXBankBrand, _ isBusiness: Bool) -> String? {
+        guard let codes = bankCodes[brand] else {
+            return nil
+        }
+        return isBusiness ? codes.business : codes.individual
+    }
+
     /// Human-readable display names, keyed by bank brand.
     private static let displayNames: [STPFPXBankBrand: String] = [
         .affinBank: "Affin Bank",
@@ -165,5 +178,32 @@ public class STPFPXBank: NSObject {
         "agrobank": .agrobank,
         "bank_of_china": .bankOfChina,
         "mbsb_bank": .mbsbBank,
+    ]
+
+    /// FPX status API bank codes, keyed by bank brand. A `nil` code means that
+    /// variant (business or individual) is unavailable for the brand.
+    private static let bankCodes: [STPFPXBankBrand: (business: String?, individual: String?)] = [
+        .affinBank: (business: "ABB0232", individual: "ABB0233"),
+        .allianceBank: (business: "ABMB0213", individual: "ABMB0212"),
+        .ambank: (business: "AMBB0208", individual: "AMBB0209"),
+        .bankIslam: (business: nil, individual: "BIMB0340"),
+        .bankMuamalat: (business: "BMMB0342", individual: "BMMB0341"),
+        .bankRakyat: (business: "BKRM0602", individual: "BKRM0602"),
+        .BSN: (business: nil, individual: "BSN0601"),
+        .CIMB: (business: "BCBB0235", individual: "BCBB0235"),
+        .hongLeongBank: (business: "HLB0224", individual: "HLB0224"),
+        .HSBC: (business: "HSBC0223", individual: "HSBC0223"),
+        .KFH: (business: "KFH0346", individual: "KFH0346"),
+        .maybank2E: (business: "MBB0228", individual: "MBB0228"),
+        .maybank2U: (business: nil, individual: "MB2U0227"),
+        .ocbc: (business: "OCBC0229", individual: "OCBC0229"),
+        .publicBank: (business: "PBB0233", individual: "PBB0233"),
+        .RHB: (business: "RHB0218", individual: "RHB0218"),
+        .standardChartered: (business: "SCB0215", individual: "SCB0216"),
+        .UOB: (business: "UOB0228", individual: "UOB0226"),
+        .agrobank: (business: "AGRO02", individual: "AGRO01"),
+        .bankOfChina: (business: nil, individual: "BOCM01"),
+        .mbsbBank: (business: "MBSB001", individual: "MBSB001"),
+        .unknown: (business: "unknown", individual: "unknown"),
     ]
 }
