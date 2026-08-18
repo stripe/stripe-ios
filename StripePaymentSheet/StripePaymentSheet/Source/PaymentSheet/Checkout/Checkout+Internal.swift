@@ -16,7 +16,6 @@ extension Checkout: ExpressCheckoutElementDelegate {
         guard sessionIsOpen else {
             return .failed(CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() cannot confirm a Checkout Session that is no longer open."))
         }
-        
 
         let result = await {
             switch paymentMethod {
