@@ -188,10 +188,11 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         XCTAssertTrue(viewController.canRemoveOrEdit)
     }
 
-    func testCanRemovePaymentMethods_checkoutSessionWithoutDetachPermission_returnsFalse() {
+    func testCanRemovePaymentMethods_checkoutSessionWithoutDetachPermission_returnsFalse() async throws {
+        let checkout = try await makeCheckoutSession(canDetachPaymentMethod: false)
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
-            intent: makeCheckoutSessionIntent(canDetachPaymentMethod: false),
+            intent: .checkout(checkout.intentContext),
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -202,10 +203,11 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         XCTAssertFalse(viewController.canRemovePaymentMethods)
     }
 
-    func testCanRemovePaymentMethods_checkoutSessionWithDetachPermission_returnsTrue() {
+    func testCanRemovePaymentMethods_checkoutSessionWithDetachPermission_returnsTrue() async throws {
+        let checkout = try await makeCheckoutSession(canDetachPaymentMethod: true)
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
-            intent: makeCheckoutSessionIntent(canDetachPaymentMethod: true),
+            intent: .checkout(checkout.intentContext),
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -216,7 +218,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
 
-    private func makeCheckoutSessionIntent(canDetachPaymentMethod: Bool) -> Intent {
+    private func makeCheckoutSession(canDetachPaymentMethod: Bool) async throws -> Checkout {
         let session = CheckoutTestHelpers.makeSession([
             "customer": [
                 "id": "cus_test_123",
@@ -224,7 +226,9 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                 "can_detach_payment_method": canDetachPaymentMethod,
             ],
         ])
-        return .checkout(session.makePublicSession())
+        return try await Checkout(
+            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session)
+        )
     }
 
 }

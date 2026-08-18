@@ -15,6 +15,11 @@ import PassKit
 import StripePaymentsTestUtils
 @_spi(STP) import StripeUICore
 
+@MainActor
+private enum CheckoutIntentTestStore {
+    static var checkouts: [Checkout] = []
+}
+
 public extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available
     static func _testValue_MostPermissive(isApplePayEnabled: Bool = true) -> Self {
@@ -231,8 +236,8 @@ extension STPElementsSession {
                 return setupIntent.paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
             case .deferredIntent(let intentConfig):
                 return intentConfig.paymentMethodTypes ?? []
-            case .checkout(let session):
-                return session.elementsSession.orderedPaymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
+            case .checkout(let context):
+                return context.session?.elementsSession.orderedPaymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" } ?? []
             }
         }()
         var customerSessionData: [String: Any]?
@@ -405,8 +410,18 @@ extension Intent {
         return _testCheckoutSession(apiResponse: checkoutSession)
     }
 
+    @MainActor
     static func _testCheckoutSession(apiResponse: PaymentPagesAPIResponse) -> Intent {
-        return .checkout(apiResponse.makePublicSession())
+        let configuration = Checkout.Configuration(
+            clientSecret: apiResponse.clientSecret ?? "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        let checkout = Checkout(
+            testSession: apiResponse.makePublicSession(),
+            configuration: configuration
+        )
+        CheckoutIntentTestStore.checkouts.append(checkout)
+        return .checkout(checkout.intentContext)
     }
 }
 

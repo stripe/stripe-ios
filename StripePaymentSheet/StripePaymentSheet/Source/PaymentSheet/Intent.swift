@@ -21,7 +21,7 @@ enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
-    case checkout(Checkout.Session)
+    case checkout(CheckoutIntentContext)
 
     @MainActor
     var stripeId: String? {
@@ -29,7 +29,7 @@ enum Intent {
         case .paymentIntent(let intent): intent.stripeId
         case .setupIntent(let intent): intent.stripeID
         case .deferredIntent: nil
-        case .checkout(let session): session.id
+        case .checkout(let context): context.session?.id
         }
     }
 
@@ -47,8 +47,8 @@ enum Intent {
             case .setup:
                 return false
             }
-        case .checkout(let session):
-            return !session.noPaymentRequired
+        case .checkout(let context):
+            return context.session.map { !$0.noPaymentRequired } ?? false
         }
     }
 
@@ -67,10 +67,10 @@ enum Intent {
 
     @MainActor
     var collectsTaxFromBillingAddress: Bool {
-        guard case .checkout(let checkout) = self else {
+        guard case .checkout(let context) = self else {
             return false
         }
-        return checkout.collectsTaxFromBillingAddress
+        return context.session?.collectsTaxFromBillingAddress ?? false
     }
 
     var intentConfig: PaymentSheet.IntentConfiguration? {
@@ -108,8 +108,8 @@ enum Intent {
             case .setup(let currency, _):
                 return currency
             }
-        case .checkout(let session):
-            return session.currency
+        case .checkout(let context):
+            return context.session?.currency
         }
     }
 
@@ -127,8 +127,8 @@ enum Intent {
             case .setup:
                 return nil
             }
-        case .checkout(let session):
-            return session.expectedAmount()
+        case .checkout(let context):
+            return context.session?.expectedAmount()
         }
     }
 
@@ -142,7 +142,8 @@ enum Intent {
                 return setupFutureUsage?.rawValue
             }
             return nil
-        case .checkout(let session):
+        case .checkout(let context):
+            guard let session = context.session else { return nil }
             return session.noPaymentRequired ? nil : session.setupFutureUsage
         case .setupIntent:
             return nil
@@ -162,8 +163,8 @@ enum Intent {
                 return !setupFutureUsageValues.isEmpty
             }
             return nil
-        case .checkout(let session):
-            return session.isPaymentMethodOptionsSetupFutureUsageSet
+        case .checkout(let context):
+            return context.session?.isPaymentMethodOptionsSetupFutureUsageSet
         case .setupIntent:
             return nil
         }
@@ -188,7 +189,8 @@ enum Intent {
             case .setup:
                 return true
             }
-        case .checkout(let session):
+        case .checkout(let context):
+            guard let session = context.session else { return false }
             guard !session.noPaymentRequired else { return true }
             guard let setupFutureUsage = session.setupFutureUsage(for: paymentMethodType) else {
                 return false
@@ -200,8 +202,8 @@ enum Intent {
     @MainActor
     func allowsPaymentMethodRemoval(elementsSession: STPElementsSession) -> Bool {
         switch self {
-        case .checkout(let session):
-            return session.customer?.canDetachPaymentMethod ?? false
+        case .checkout(let context):
+            return context.session?.customer?.canDetachPaymentMethod ?? false
         case .paymentIntent, .setupIntent, .deferredIntent:
             return elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         }

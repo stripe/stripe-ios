@@ -516,7 +516,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     }
 
     private static func makeCheckoutUpdaterIfNecessary(for intent: Intent) -> CheckoutSessionBillingAddressUpdater? {
-        guard case .checkout(let session) = intent else {
+        guard case .checkout(let context) = intent,
+              let session = context.session else {
             return nil
         }
         return TestCheckoutSessionBillingAddressUpdater(session: session)

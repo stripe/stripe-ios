@@ -135,7 +135,7 @@ extension Checkout {
                 confirmOption: confirmOption,
                 configuration: configuration,
                 authenticationContext: authenticationContext,
-                intent: .checkout(checkoutSession),
+                intent: .checkout(checkoutContext),
                 elementsSession: elementsSession,
                 analyticsHelper: confirmationContext.analyticsHelper,
                 confirmationChallenge: confirmationChallenge,

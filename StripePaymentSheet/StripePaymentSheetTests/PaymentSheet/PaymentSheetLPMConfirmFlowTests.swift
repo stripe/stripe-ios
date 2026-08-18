@@ -1228,7 +1228,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     testSession: checkoutSession.makePublicSession(),
                     configuration: checkoutConfiguration
                 )
-                intents.append(TestIntent("CheckoutSession", .checkout(checkout.session), checkout: checkout))
+                intents.append(TestIntent("CheckoutSession", .checkout(checkout.intentContext), checkout: checkout))
             }
             guard paymentMethod != .blik else {
                 // Blik doesn't support server-side confirmation
@@ -1728,8 +1728,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        guard case .checkout = testIntent.intent,
-              let checkout = testIntent.checkout as? Checkout else {
+        guard case .checkout(let checkoutContext) = testIntent.intent else {
             PaymentSheet.confirm(
                 configuration: configuration,
                 authenticationContext: self,
@@ -1752,7 +1751,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 analyticsHelper: analyticsHelper
             )
             let result = await Checkout.confirm(
-                checkoutContext: checkout.intentContext,
+                checkoutContext: checkoutContext,
                 confirmationContext: confirmationContext,
                 authenticationContext: self,
                 paymentHandler: paymentHandler

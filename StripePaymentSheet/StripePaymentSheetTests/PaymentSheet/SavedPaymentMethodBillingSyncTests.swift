@@ -88,7 +88,8 @@ private extension SavedPaymentMethodBillingSyncTests {
             automaticTaxEnabled: true,
             automaticTaxAddressSource: "session.billing"
         )
-        guard case .checkout(let session) = intent else {
+        guard case .checkout(let context) = intent,
+              let session = context.session else {
             fatalError("Expected a Checkout Session")
         }
         let updater = MockCheckoutSessionBillingAddressUpdater(
@@ -113,7 +114,7 @@ private extension SavedPaymentMethodBillingSyncTests {
         checkout: Checkout
     ) -> PaymentSheetFlowControllerViewController {
         let loadResult = PaymentSheetLoader.LoadResult(
-            intent: .checkout(checkout.session),
+            intent: .checkout(checkout.intentContext),
             elementsSession: ._testValue(
                 paymentMethodTypes: ["card"],
                 isLinkPassthroughModeEnabled: false

@@ -59,16 +59,11 @@ extension Checkout {
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler
     ) async -> InternalConfirmResult {
-        guard let checkoutSession = checkoutContext.session else {
-            return .init(paymentSheetResult: .failed(error: PaymentSheetError.integrationError(
-                nonPIIDebugDescription: "Checkout must outlive the Payment Element created from it."
-            )))
-        }
         // 1. Handle pre-confirm actions, such as Bacs mandate acceptance or saved-card CVC recollection.
         let preconfirmActionsResult = await PaymentSheet.handlePreconfirmActionsIfNecessary(
             configuration: confirmationContext.configuration,
             authenticationContext: authenticationContext,
-            intent: .checkout(checkoutSession),
+            intent: .checkout(checkoutContext),
             paymentOption: confirmationContext.paymentOption,
             paymentHandler: paymentHandler,
             integrationShape: confirmationContext.integrationShape
@@ -111,7 +106,7 @@ extension Checkout {
         let configuration = confirmationContext.configuration
         let confirmationChallenge = confirmationContext.confirmationChallenge
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-            intent: .checkout(checkoutSession),
+            intent: .checkout(checkoutContext),
             elementsSession: elementsSession
         )
 
@@ -203,7 +198,7 @@ extension Checkout {
             let checkout = try checkoutContext.requireCheckout()
             var checkoutSession = checkout.session
             let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-                intent: .checkout(checkoutSession),
+                intent: .checkout(checkoutContext),
                 elementsSession: elementsSession
             )
 

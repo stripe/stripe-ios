@@ -71,11 +71,16 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             return paymentIntent.clientSecret
         case .setupIntent(let setupIntent):
             return setupIntent.clientSecret
-        case .checkout(let checkoutSession):
+        case .checkout(let checkoutContext):
             guard let checkout else {
                 let message = "Missing Checkout controller for CheckoutSession Apple Pay confirmation."
                 stpAssertionFailure(message)
                 throw PaymentSheetError.unknown(debugDescription: message)
+            }
+            guard let checkoutSession = checkoutContext.session else {
+                throw PaymentSheetError.integrationError(
+                    nonPIIDebugDescription: "Checkout must outlive the Payment Element created from it."
+                )
             }
             return try await handleCheckoutSessionApplePay(
                 checkout: checkout,
@@ -371,22 +376,24 @@ extension STPApplePayContext {
 
         // Keep tax in sync with the billing address as the user switches cards.
         let paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping ((PKPaymentRequestPaymentMethodUpdate) -> Void)) -> Void)? = {
-            guard case .checkout(let checkoutSession) = intent else { return nil }
+            guard case .checkout(let checkoutContext) = intent else { return nil }
             guard let checkout else {
                 stpAssertionFailure("Missing Checkout controller for CheckoutSession Apple Pay payment method update.")
                 return nil
             }
-            let label = intent.sellerDetails?.businessName ?? configuration.merchantDisplayName
-            let currency = intent.currency
             return { pkPaymentMethod, completion in
                 Task { @MainActor in
-                    var session = checkoutSession
+                    guard var session = checkoutContext.session else {
+                        completion(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
+                        return
+                    }
                     if let postalAddress = pkPaymentMethod.billingAddress?.postalAddresses.first?.value,
                        let address = STPApplePayContext.makeCheckoutAddress(from: postalAddress) {
                         session = (try? await checkout.updateBillingTaxRegionIfNecessaryForPaymentSheet(address: address, canUpdateWhileSheetPresented: true)) ?? session
                     }
+                    let label = intent.sellerDetails?.businessName ?? configuration.merchantDisplayName
                     completion(PKPaymentRequestPaymentMethodUpdate(
-                        paymentSummaryItems: STPApplePayContext.makePaymentSummaryItems(for: session, label: label, currency: currency)
+                        paymentSummaryItems: STPApplePayContext.makePaymentSummaryItems(for: session, label: label, currency: session.currency)
                     ))
                 }
             }
@@ -441,7 +448,8 @@ extension STPApplePayContext {
         if let paymentSummaryItems = applePay.paymentSummaryItems {
             // Use the merchant supplied paymentSummaryItems
             paymentRequest.paymentSummaryItems = paymentSummaryItems
-        } else if case .checkout(let session) = intent {
+        } else if case .checkout(let context) = intent,
+                  let session = context.session {
             paymentRequest.paymentSummaryItems = STPApplePayContext.makePaymentSummaryItems(for: session,
                 label: label,
                 currency: intent.currency
@@ -519,7 +527,7 @@ private func makeFallbackBillingDetails(
     var fallbackBillingDetails = StripeAPI.BillingDetails()
     var hasFallbackBillingDetails = false
 
-    if case .checkout(let session) = intent, let email = session.email {
+    if case .checkout(let context) = intent, let email = context.session?.email {
         fallbackBillingDetails.email = email
         hasFallbackBillingDetails = true
     }
