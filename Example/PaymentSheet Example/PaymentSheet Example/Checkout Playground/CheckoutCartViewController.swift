@@ -207,6 +207,9 @@ final class CheckoutCartViewController: UIViewController {
                 returnURL: "payments-example://stripe-redirect"
             )
             configuration.adaptivePricing.allowed = adaptivePricing
+            configuration.applePayConfiguration = Checkout.ApplePayConfiguration(
+                merchantId: "merchant.com.stripe.paymentsheet.example"
+            )
             configuration.currencySelectorElement.appearance = currencySelectorAppearance
             configuration.apiClient = diagnostics.makeAPIClient(
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
@@ -279,10 +282,7 @@ final class CheckoutCartViewController: UIViewController {
     private func renderPaymentBar(checkout: Checkout) {
         removeAllArrangedSubviews(from: paymentBarStackView)
 
-        if showExpressCheckoutElement {
-            let expressCheckoutElement = checkout.getExpressCheckoutElement { [weak self] result in
-                self?.showExpressCheckoutElementConfirmResult(result)
-            }
+        if showExpressCheckoutElement, let expressCheckoutElement = checkout.getExpressCheckoutElement() {
             paymentBarStackView.addArrangedSubview(expressCheckoutElement.uiView)
         }
 

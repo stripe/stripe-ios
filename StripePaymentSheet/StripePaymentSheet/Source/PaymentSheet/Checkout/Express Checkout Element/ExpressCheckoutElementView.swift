@@ -20,7 +20,7 @@ public struct ExpressCheckoutElementView: View {
     }
 
     public var body: some View {
-        if !viewModel.availableExpressCheckoutPaymentMethods.isEmpty {
+        if viewModel.isAvailable {
             ExpressCheckoutElementUIViewRepresentable(viewModel: viewModel)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -28,39 +28,27 @@ public struct ExpressCheckoutElementView: View {
 }
 
 /// Bridges ExpressCheckoutElement's UIKit state into SwiftUI without retaining Checkout.
-///
-/// This is the single source of truth for which wallet buttons are currently available:
-/// ``ExpressCheckoutElement/availableExpressCheckoutPaymentMethods`` reads from this instance
-/// rather than maintaining its own session subscription.
 @MainActor
 final class ExpressCheckoutElementViewModel: ObservableObject {
     let uiView: ExpressCheckoutElementUIView
-    @Published var availableExpressCheckoutPaymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
+    @Published var isAvailable: Bool
 
-    private let configuration: ExpressCheckoutElement.Configuration
     private var sessionCancellable: AnyCancellable?
 
-    init(configuration: ExpressCheckoutElement.Configuration, uiView: ExpressCheckoutElementUIView) {
-        self.configuration = configuration
+    init(
+        sessionSource: CheckoutSessionSource,
+        configuration: Checkout.Configuration,
+        uiView: ExpressCheckoutElementUIView
+    ) {
         self.uiView = uiView
-    }
-
-    /// Resolves the initial button list from `sessionSource` and subscribes to future session
-    /// changes. Called once Checkout has an initial session to hand off, since that isn't known
-    /// until after `Checkout.init` has finished loading and syncing it.
-    func attach(sessionSource: CheckoutSessionSource) {
-        update(with: sessionSource.initialSession)
+        self.isAvailable = !ExpressCheckoutElementUtilities.resolveButtons(for: sessionSource.initialSession, configuration: configuration).isEmpty
         sessionCancellable = sessionSource.sessionPublisher
             .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
-                self?.update(with: session)
+                self?.uiView.update(with: session)
+                self?.isAvailable = !ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration).isEmpty
             }
-    }
-
-    private func update(with session: Checkout.Session) {
-        uiView.update(with: session)
-        availableExpressCheckoutPaymentMethods = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
     }
 }
 

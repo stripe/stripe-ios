@@ -43,9 +43,7 @@ struct CheckoutCartView: View {
                     .overlay(alignment: .bottom) {
                         VStack(spacing: 0) {
                             if showExpressCheckoutElement {
-                                let ece = checkout.getExpressCheckoutElement { result in
-                                    eceConfirmResult = result
-                                }
+                                let ece = checkout.getExpressCheckoutElement()
                                 ece.view
                                     .padding(.horizontal)
                                     .padding(.top, 16)
@@ -152,13 +150,13 @@ struct CheckoutCartView: View {
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
             config.adaptivePricing.allowed = adaptivePricing
-            config.currencySelectorElement.appearance = currencySelectorAppearance
-            var expressCheckoutElementConfig = ExpressCheckoutElement.Configuration()
-            expressCheckoutElementConfig.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
+            config.applePayConfiguration = Checkout.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
-            expressCheckoutElementConfig.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
-            config.expressCheckoutElement = expressCheckoutElementConfig
+            config.expressCheckoutElement.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
+            config.expressCheckoutElement.confirmHandler = { result in
+                eceConfirmResult = result
+            }
             config.shippingAddressElement.title = "Shipping Address"
             config.shippingAddressElement.buttonTitle = "Save Address"
             checkout = try await Checkout(configuration: config)

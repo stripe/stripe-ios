@@ -18,19 +18,17 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Properties
 
-    private let configuration: ExpressCheckoutElement.Configuration
+    private let configuration: Checkout.Configuration
     private let stackView = UIStackView()
     private var linkBrand: LinkBrand
-    weak var delegate: ExpressCheckoutElementDelegate?
-    var confirmHandler: ExpressCheckoutElement.ConfirmHandler?
+    private weak var delegate: ExpressCheckoutElementDelegate?
 
     // MARK: - Init
 
-    /// Buttons aren't populated until the first call to ``update(with:)``, since the
-    /// initial session isn't known until Checkout finishes initializing.
-    init(configuration: ExpressCheckoutElement.Configuration) {
+    init(session: Checkout.Session, configuration: Checkout.Configuration, delegate: ExpressCheckoutElementDelegate) {
         self.configuration = configuration
-        self.linkBrand = .link
+        self.delegate = delegate
+        self.linkBrand = session.elementsSession.linkBrand ?? .link
         super.init(frame: .zero)
 
         // TODO: Appearance
@@ -45,6 +43,9 @@ public final class ExpressCheckoutElementUIView: UIView {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
+
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
+        buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
     }
 
     @available(*, unavailable)
@@ -119,7 +120,7 @@ public final class ExpressCheckoutElementUIView: UIView {
         Task { @MainActor [weak self] in
             guard let self,
                 let result = await self.delegate?.expressCheckoutElementShouldConfirm(paymentMethod, presentingViewController: presentingViewController) else { return }
-            self.confirmHandler?(result)
+            self.configuration.expressCheckoutElement.confirmHandler(result)
         }
     }
 }

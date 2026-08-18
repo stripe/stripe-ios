@@ -54,7 +54,7 @@ public final class Checkout: ObservableObject {
     private(set) var paymentElement: PaymentElement!
 
     /// The ExpressCheckoutElement for this Checkout instance.
-    private var expressCheckoutElement: ExpressCheckoutElement
+    private var expressCheckoutElement: ExpressCheckoutElement?
 
     /// The CurrencySelectorElement for this Checkout instance, when Adaptive Pricing is available.
     private var currencySelectorElement: CurrencySelectorElement?
@@ -133,11 +133,6 @@ public final class Checkout: ObservableObject {
             self.session = loadedSession
             self.nonisolatedSession = loadedSession // temporary hack
 
-            // Constructed here (rather than alongside the other elements below) so that this
-            // stored property has a value before `self` starts escaping into the elements below.
-            // Its session subscription is wired up later, once `self` is safe to reference.
-            self.expressCheckoutElement = ExpressCheckoutElement(configuration: configuration.expressCheckoutElement)
-
             // Element initialization is intentionally sequential:
 
             // 1. Initialize SAE so that its form can normalize the raw default shipping address before it is applied to the session
@@ -162,8 +157,11 @@ public final class Checkout: ObservableObject {
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
 
             // 3. ECE
-            self.expressCheckoutElement.attach(sessionSource: sessionSource)
-            self.expressCheckoutElement.delegate = self
+            self.expressCheckoutElement = ExpressCheckoutElement(
+                sessionSource: sessionSource,
+                configuration: configuration,
+                delegate: self
+            )
 
             // 4. CSE
             if configuration.adaptivePricing.allowed {
@@ -336,11 +334,7 @@ public final class Checkout: ObservableObject {
     }
 
     /// Returns the ExpressCheckoutElement for this Checkout instance.
-    /// - Parameter confirmHandler: Called after ECE confirmation finishes with the result.
-    public func getExpressCheckoutElement(
-        _ confirmHandler: @escaping ExpressCheckoutElement.ConfirmHandler
-    ) -> ExpressCheckoutElement {
-        expressCheckoutElement.setConfirmHandler(confirmHandler)
+    public func getExpressCheckoutElement() -> ExpressCheckoutElement? {
         return expressCheckoutElement
     }
 
