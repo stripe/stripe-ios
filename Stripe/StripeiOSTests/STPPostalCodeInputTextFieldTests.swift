@@ -17,7 +17,7 @@ import XCTest
 class STPPostalCodeInputTextFieldTests: XCTestCase {
 
     func testClearingInvalidPostalCodeAfterCountryChange() {
-        let postalCodeField = STPPostalCodeInputTextField(postalCodeRequirement: .standard)
+        let postalCodeField = STPPostalCodeInputTextField()
         postalCodeField.countryCode = "UK"
         postalCodeField.text = "DL12"  // valid UK post code, invalid US ZIP Code
 
@@ -32,7 +32,7 @@ class STPPostalCodeInputTextFieldTests: XCTestCase {
     }
 
     func testPreservingValidPostalCodeAfterCountryChange() {
-        let postalCodeField = STPPostalCodeInputTextField(postalCodeRequirement: .standard)
+        let postalCodeField = STPPostalCodeInputTextField()
         postalCodeField.countryCode = "US"
         postalCodeField.text = "10010"  // valid US and HR ZIP/postal code
 
@@ -47,7 +47,7 @@ class STPPostalCodeInputTextFieldTests: XCTestCase {
     }
 
     func testChangeToNonRequiredPostalCodeIsValid() {
-        let postalCodeField = STPPostalCodeInputTextField(postalCodeRequirement: .upe)
+        let postalCodeField = STPPostalCodeInputTextField()
         // given that the postal code field is empty...
 
         // when
