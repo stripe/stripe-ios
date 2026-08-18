@@ -223,16 +223,19 @@ extension PaymentPagesAPIResponse {
     private static func makeDiscountAmounts(
         from discountAmounts: [DiscountAmount],
         currency: String
-    ) -> [Checkout.DiscountAmount] {
+    ) -> [Checkout.Session.DiscountAmount] {
         discountAmounts.compactMap { discount in
             guard let amount = discount.amount, amount > 0 else { return nil }
-            return Checkout.DiscountAmount(
-                amount: makeAmount(amount, currency: currency),
+            let publicAmount = makeAmount(amount, currency: currency)
+            return Checkout.Session.DiscountAmount(
+                amount: publicAmount.amount,
+                minorUnitsAmount: publicAmount.minorUnitsAmount,
                 displayName: discount.displayName
                     ?? discount.coupon?.name
                     ?? discount.coupon?.id
                     ?? String.Localized.discount,
-                promotionCode: discount.promotionCode?.code
+                promotionCode: discount.promotionCode?.code,
+                percentOff: discount.coupon?.percentOff
             )
         }
     }

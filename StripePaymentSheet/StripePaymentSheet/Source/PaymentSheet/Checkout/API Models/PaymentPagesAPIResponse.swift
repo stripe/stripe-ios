@@ -393,6 +393,7 @@ extension PaymentPagesAPIResponse {
     struct Coupon: Decodable {
         let id: String?
         let name: String?
+        let percentOff: Double?
     }
 
     struct PromotionCode: Decodable {

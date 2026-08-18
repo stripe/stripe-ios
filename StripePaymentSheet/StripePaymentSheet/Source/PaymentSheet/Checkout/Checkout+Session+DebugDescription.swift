@@ -88,9 +88,11 @@ extension Checkout.Session: CustomDebugStringConvertible {
         for discount in discountAmounts {
             lines.append(contentsOf: [
                 "    {",
-                "      amount: \(discount.amount.debugValue)",
+                "      amount: \(String(reflecting: discount.amount))",
+                "      minorUnitsAmount: \(discount.minorUnitsAmount)",
                 "      displayName: \(String(reflecting: discount.displayName))",
                 "      promotionCode: \(discount.promotionCode == nil ? "nil" : "<redacted>")",
+                "      percentOff: \(discount.percentOff.debugValue)",
                 "    }",
             ])
         }
@@ -204,6 +206,13 @@ private extension Optional where Wrapped == Int {
     /// Example: `100`; `nil` remains `nil`.
     var debugValue: String {
         map(String.init) ?? "nil"
+    }
+}
+
+private extension Optional where Wrapped == Double {
+    /// Example: `25.5`; `nil` remains `nil`.
+    var debugValue: String {
+        map { String($0) } ?? "nil"
     }
 }
 

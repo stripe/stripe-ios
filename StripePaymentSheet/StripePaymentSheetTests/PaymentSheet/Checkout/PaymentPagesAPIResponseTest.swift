@@ -510,7 +510,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.taxAmounts?[0].displayName, "Sales Tax")
 
         XCTAssertEqual(session.discountAmounts.count, 1)
-        XCTAssertEqual(session.discountAmounts[0].amount.minorUnitsAmount, 332)
+        XCTAssertEqual(session.discountAmounts[0].minorUnitsAmount, 332)
         XCTAssertEqual(session.discountAmounts[0].displayName, "Welcome")
 
         XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 148)

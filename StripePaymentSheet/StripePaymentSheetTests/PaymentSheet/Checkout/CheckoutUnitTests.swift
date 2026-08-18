@@ -657,8 +657,10 @@ final class CheckoutUnitTests: XCTestCase {
               discountAmounts: [
                 {
                   amount: "$5.00"
+                  minorUnitsAmount: 500.0
                   displayName: "Summer sale"
                   promotionCode: <redacted>
+                  percentOff: nil
                 }
               ]
               email: "j***y@example.com"
