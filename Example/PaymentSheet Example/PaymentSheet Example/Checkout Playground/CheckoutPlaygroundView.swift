@@ -44,6 +44,8 @@ struct CheckoutPlaygroundView: View {
                         CheckoutPlaygroundFeaturesSection(
                             customerType: viewModel.customerType,
                             shippingAddressCollection: $viewModel.shippingAddressCollection,
+                            defaultShippingAddressOption: $viewModel.defaultShippingAddressOption,
+                            customDefaultShippingAddress: $viewModel.customDefaultShippingAddress,
                             billingAddressCollection: $viewModel.billingAddressCollection,
                             automaticTax: $viewModel.automaticTax,
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
@@ -84,6 +86,7 @@ struct CheckoutPlaygroundView: View {
                         CheckoutCartView(
                             clientSecret: clientSecret,
                             shippingAddressCollection: viewModel.shippingAddressCollection,
+                            defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
@@ -94,6 +97,7 @@ struct CheckoutPlaygroundView: View {
                         CheckoutCartUIKitView(
                             clientSecret: clientSecret,
                             shippingAddressCollection: viewModel.shippingAddressCollection,
+                            defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
