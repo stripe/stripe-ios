@@ -212,6 +212,7 @@ extension STPElementsSession {
         return elementsSession
     }
 
+    @MainActor
     static func _testValue(
         intent: Intent,
         isLinkPassthroughModeEnabled: Bool? = nil,
