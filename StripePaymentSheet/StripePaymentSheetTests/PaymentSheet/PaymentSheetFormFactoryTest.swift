@@ -1404,7 +1404,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             .init(
                 paymentMethod: .FPX,
                 apiPath: "fpx[bank]",
-                itemCount: 25,
+                itemCount: 21,
                 firstValue: "affin_bank",
                 lastValue: "uob"
             ),

@@ -3,7 +3,7 @@ PATCH
 
 ## X.Y.Z - changes pending release
 ### Payments
-* [Added] Added support for the following FPX banks: Agrobank, Bank of China, Deutsche Bank, Public Bank Enterprise, MBSB Bank, BNP Paribas, and Citibank.
+* [Added] Added support for the following FPX banks: Agrobank, Bank of China, and MBSB Bank.
 
 ## 26.7.0 2026-08-17
 ### PaymentSheet

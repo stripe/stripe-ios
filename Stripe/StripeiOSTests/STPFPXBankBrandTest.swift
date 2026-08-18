@@ -32,11 +32,7 @@ class STPFPXBankBrandTest: XCTestCase {
         .UOB: (id: "uob", name: "UOB Bank"),
         .agrobank: (id: "agrobank", name: "Agrobank"),
         .bankOfChina: (id: "bank_of_china", name: "Bank of China"),
-        .deutscheBank: (id: "deutsche_bank", name: "Deutsche Bank"),
-        .publicBankEnterprise: (id: "pb_enterprise", name: "Public Bank Enterprise"),
-        .mbsb_bank: (id: "mbsb_bank", name: "MBSB Bank"),
-        .bnp_paribas: (id: "bnp_paribas", name: "BNP Paribas"),
-        .citibank: (id: "citibank", name: "Citibank"),
+        .mbsbBank: (id: "mbsb_bank", name: "MBSB Bank"),        
         .unknown: (id: "unknown", name: "Unknown"),
     ]
 
