@@ -15,6 +15,7 @@ import PassKit
 typealias PaymentSheetResultCompletionBlock = ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
 
 /// A shim class; ApplePayContext expects a protocol/delegate, but PaymentSheet uses closures.
+@MainActor
 private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate {
     let completion: PaymentSheetResultCompletionBlock
     /// Retain this class until Apple Pay completes
@@ -345,6 +346,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
 extension STPApplePayContext {
 
+    @MainActor
     static func create(
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -415,6 +417,7 @@ extension STPApplePayContext {
         }
     }
 
+    @MainActor
     static func createPaymentRequest(
         intent: Intent,
         configuration: PaymentElementConfiguration,
@@ -508,6 +511,7 @@ private func makeShippingDetails(from configuration: PaymentElementConfiguration
     )
 }
 
+@MainActor
 private func makeFallbackBillingDetails(
     intent: Intent,
     configuration: PaymentElementConfiguration
