@@ -163,7 +163,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
     /// 3. The response from request is empty
     func testSubmitVerificationFrames() throws {
         let base64EncodedVerificationFrames = "base64_encoded_list_of_verify_frames"
-        let mockResponse = "{}".data(using: .utf8)!
+        let mockResponse = Data("{}".utf8)
         let mockParameter = VerifyFrames(
             clientSecret: CIVIntentMockData.clientSecret,
             verificationFramesData: base64EncodedVerificationFrames
@@ -224,27 +224,24 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
     /// 3. The response from request is empty
     func testSubmitVerificationFrames_Expanded() throws {
         let verificationFrameData = VerificationFramesData(
-            imageData: "image_data".data(using: .utf8)!,
+            imageData: Data("image_data".utf8),
             viewfinderMargins: ViewFinderMargins(left: 0, upper: 0, right: 0, lower: 0)
         )
 
-        let mockResponse = "{}".data(using: .utf8)!
-
-        /// The list of verification frame datas are encoded with snake_case before converting to a `VerifyFrames` object
-        let jsonEncoder = JSONEncoder()
-        jsonEncoder.keyEncodingStrategy = .convertToSnakeCase
-        let jsonVerificationFramesData = try jsonEncoder.encode([verificationFrameData])
-
-        /// Turn the JSON data into a string
-        let verificationFramesDataString =
-            String(data: jsonVerificationFramesData, encoding: .utf8) ?? ""
-
-        let urlEncodedString = URLEncoder.string(byURLEncoding: verificationFramesDataString)
+        let mockResponse = Data("{}".utf8)
 
         // Stub the request to submit verify frames
         stub { request in
             guard let httpBody = request.ohhttpStubs_httpBody else {
                 XCTFail("Expected an httpBody but found none")
+                return false
+            }
+            guard let bodyString = String(data: httpBody, encoding: .utf8) else {
+                XCTFail("Expected a UTF-8 httpBody")
+                return false
+            }
+            guard let queryItems = URLComponents(string: "?\(bodyString)")?.queryItems else {
+                XCTFail("Expected a URL-encoded httpBody")
                 return false
             }
 
@@ -255,9 +252,28 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
                 ),
                 true
             )
+            XCTAssertEqual(queryItems.first { $0.name == "client_secret" }?.value, CIVIntentMockData.clientSecret)
+            guard
+                let verificationFramesDataString = queryItems.first(where: { $0.name == "verification_frames_data" })?.value,
+                let verificationFramesData = verificationFramesDataString.data(using: .utf8),
+                let verificationFramesJSON = try? JSONSerialization.jsonObject(with: verificationFramesData) as? NSArray
+            else {
+                XCTFail("Expected verification_frames_data JSON")
+                return false
+            }
             XCTAssertEqual(
-                String(data: httpBody, encoding: .utf8),
-                "client_secret=\(CIVIntentMockData.clientSecret)&verification_frames_data=\(urlEncodedString)"
+                verificationFramesJSON,
+                [
+                    [
+                        "image_data": "aW1hZ2VfZGF0YQ==",
+                        "viewfinder_margins": [
+                            "left": 0,
+                            "upper": 0,
+                            "right": 0,
+                            "lower": 0,
+                        ],
+                    ],
+                ] as NSArray
             )
             XCTAssertEqual(request.httpMethod, "POST")
 
@@ -296,7 +312,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
     /// 2. The response from request is empty
     func testUploadScanStats() throws {
         let startDate = Date()
-        let mockResponse = "{}".data(using: .utf8)!
+        let mockResponse = Data("{}".utf8)
         let payload: ScanAnalyticsPayload = .init(
             configuration: .init(strictModeFrames: 0),
             payloadInfo: .init(
