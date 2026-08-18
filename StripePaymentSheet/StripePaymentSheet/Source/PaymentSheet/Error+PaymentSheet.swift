@@ -34,16 +34,36 @@ extension Error {
 }
 
 private extension NSError {
-    /// Returns `errorMessageKey` only when the error is a `card_error`, which per Stripe API docs
-    /// is safe to display to end users. All other error types (e.g. `invalid_request_error`)
-    /// contain developer-facing details and fall back to the generic message.
-    /// When `stripeErrorTypeKey` is absent (e.g. SDK-internal connection errors), the message
-    /// is assumed to be intentionally user-facing.
+    /// Returns a user-safe error message applying live/test mode rules:
+    /// - `card_error`: always shows the raw card message (safe per Stripe API docs).
+    /// - Non-card errors in **live mode**: shows a generic message. If a request ID is
+    ///   available it is appended ("Something went wrong. Request ID: req_xxx") so users
+    ///   can reference it with support; otherwise falls back to the generic unexpected-error string.
+    /// - Non-card errors in **test mode**: preserves the raw server message so developers
+    ///   can diagnose issues during integration.
+    /// - When `stripeErrorTypeKey` is absent (e.g. SDK-internal connection errors), the
+    ///   message is assumed to be intentionally user-facing and is returned as-is.
     var userSafeErrorMessage: String {
         let errorType = userInfo[STPError.stripeErrorTypeKey] as? String
-        if let errorType, errorType != "card_error" {
+        guard let errorType else {
+            return userInfo[STPError.errorMessageKey] as? String ?? NSError.stp_unexpectedErrorMessage()
+        }
+        guard errorType != "card_error" else {
+            return userInfo[STPError.errorMessageKey] as? String ?? NSError.stp_unexpectedErrorMessage()
+        }
+        // Non-card server error: apply live/test-mode logic.
+        let isLiveMode = userInfo[STPError.stripeLivemodeKey] as? Bool ?? false
+        if isLiveMode {
+            if let requestId = userInfo[STPError.stripeRequestIDKey] as? String {
+                let format = STPLocalizedString(
+                    "Something went wrong. Request ID: %@",
+                    "Error message shown to the user in live mode for non-card API errors, including the request ID for support reference."
+                )
+                return String(format: format, requestId)
+            }
             return NSError.stp_unexpectedErrorMessage()
         }
+        // Test mode: preserve the raw server message to aid developer debugging.
         return userInfo[STPError.errorMessageKey] as? String ?? NSError.stp_unexpectedErrorMessage()
     }
 }

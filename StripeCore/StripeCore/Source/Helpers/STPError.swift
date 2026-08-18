@@ -76,6 +76,9 @@ import Foundation
     /// The HTTP status code of the failed request as an Int e.g. 400.
     @objc public static let httpStatusCodeKey = "com.stripe.lib:HTTPStatusCodeKey"
 
+    /// Whether the error occurred in live mode. `true` for live mode, `false` for test mode.
+    @objc public static let stripeLivemodeKey = "com.stripe.lib:LivemodeKey"
+
     /// Returns a localized user-facing message for a given error code.
     /// This method can be used to display an appropriate error message to the user.
     /// - Parameter errorCode: The error code string from Stripe API (e.g., "incorrect_number", "card_declined")
@@ -217,6 +220,11 @@ extension NSError {
         if let intent = intent,
            let type = intent["object"] as? String {
             userInfo[type] = intent
+        }
+
+        // stripeLivemodeKey
+        if let livemode = intent?["livemode"] as? Bool {
+            userInfo[STPError.stripeLivemodeKey] = livemode
         }
 
         // code
