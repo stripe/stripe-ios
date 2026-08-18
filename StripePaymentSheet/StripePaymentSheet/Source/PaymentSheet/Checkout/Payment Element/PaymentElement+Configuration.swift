@@ -134,6 +134,8 @@ extension PaymentElement {
             userInterfaceStyle: CheckoutController.UserInterfaceStyle
         ) -> EmbeddedPaymentElement.Configuration {
             var configuration = embeddedConfiguration
+            configuration.allowsDelayedPaymentMethods = true
+            configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.apiClient = apiClient
             configuration.apply(linkConfiguration: linkConfiguration)
             configuration.merchantDisplayName = merchantDisplayName
@@ -153,6 +155,8 @@ extension PaymentElement {
             userInterfaceStyle: CheckoutController.UserInterfaceStyle
         ) -> PaymentSheet.Configuration {
             var configuration = paymentSheetConfiguration
+            configuration.allowsDelayedPaymentMethods = true
+            configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.apiClient = apiClient
             configuration.apply(linkConfiguration: linkConfiguration)
             configuration.merchantDisplayName = merchantDisplayName
