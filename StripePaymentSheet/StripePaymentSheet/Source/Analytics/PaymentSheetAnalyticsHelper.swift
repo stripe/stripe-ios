@@ -75,7 +75,7 @@ final class PaymentSheetAnalyticsHelper {
         let event: STPAnalyticEvent? = {
             switch integrationShape {
             case .expressCheckout:
-                // TODO(link-checkout): Implement analytics for ExpressCheckoutElement.
+                // TODO: Implement analytics for ExpressCheckoutElement.
                 return nil
             case .flowController:
                 switch (configuration.customer != nil, configuration.applePay != nil) {
