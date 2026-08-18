@@ -6,7 +6,7 @@ app:
   - FASTLANE_XCODE_LIST_TIMEOUT: "120"
   - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   - DEFAULT_TEST_DEVICE_26_1: platform=iOS Simulator,name=iPhone 12 mini,OS=26.1
-  - DEFAULT_TEST_DEVICE_26_4_1: platform=iOS Simulator,name=iPhone 12 mini,OS=26.4.1
+  - DEFAULT_TEST_DEVICE_26_5: platform=iOS Simulator,name=iPhone 12 mini,OS=26.5
   - BITRISE_PROJECT_PATH: Stripe.xcworkspace
   - GIT_AUTHOR_NAME: Bitrise CI
   - GIT_AUTHOR_EMAIL: mobile-sdk-team@stripe.com
@@ -82,7 +82,7 @@ workflows:
     - script@1:
         title: Record and update snapshots
         inputs:
-        - content: ruby ci_scripts/record_snapshots.rb --commit --version 16.4 --version 26.4.1
+        - content: ruby ci_scripts/record_snapshots.rb --commit --version 16.4 --version 26.5
     - deploy-to-bitrise-io@2: {}
     - script@1:
         title: Push snapshot changes
@@ -105,9 +105,9 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-26.4.x
+        stack: osx-xcode-26.5.x
     envs:
-    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_4_1
+    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_5
   deploy-docs:
     steps:
     - activate-ssh-key@4: {}
@@ -139,9 +139,9 @@ workflows:
         title: Build documentation
     meta:
       bitrise.io:
-        stack: osx-xcode-26.4.x
+        stack: osx-xcode-26.5.x
     envs:
-    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_4_1
+    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_5
   trigger-react-native-ci:
     steps:
     - script@1:
@@ -194,7 +194,7 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-26.4.x
+        stack: osx-xcode-26.5.x
         machine_type_id: g2.mac.large
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
@@ -419,7 +419,7 @@ workflows:
     after_run: []
     meta:
       bitrise.io:
-        stack: osx-xcode-26.4.x
+        stack: osx-xcode-26.5.x
         machine_type_id: g2.mac.large
   framework-tests-ios-26:
     steps:
@@ -462,7 +462,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-26.4.x
+        stack: osx-xcode-26.5.x
         machine_type_id: g2.mac.large
     envs:
     - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE
@@ -490,7 +490,7 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-26.4.x
+        stack: osx-xcode-26.5.x
         machine_type_id: g2.mac.large
   test-builds-xcode-26-1:
     steps:
@@ -556,10 +556,10 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-26.4.x
+        stack: osx-xcode-26.5.x
         machine_type_id: g2.mac.large
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.4.1
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.5
   install-runtime-15:
     steps:
     - script@1:
@@ -615,7 +615,7 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-26.4.x
+        stack: osx-xcode-26.5.x
         machine_type_id: g2.mac.large
   lint-tests:
     steps:
@@ -649,7 +649,7 @@ workflows:
         title: fastlane analyze
     meta:
       bitrise.io:
-        stack: osx-xcode-26.4.x
+        stack: osx-xcode-26.5.x
         machine_type_id: g2.mac.large
   notify_ci:
     steps:
@@ -672,7 +672,7 @@ workflows:
       - LOKALISE_API_KEY: $LOKALISE_API_KEY
     meta:
       bitrise.io:
-        stack: osx-xcode-26.4.x
+        stack: osx-xcode-26.5.x
         machine_type_id: g2.mac.large
   pod-lint-tests:
     steps:
@@ -775,7 +775,7 @@ workflows:
         title: Generate size report
     meta:
       bitrise.io:
-        stack: osx-xcode-26.4.x
+        stack: osx-xcode-26.5.x
         machine_type_id: g2.mac.large
   ui-tests-paymentsheet:
     steps:
@@ -820,7 +820,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-26.4.x
+        stack: osx-xcode-26.5.x
         machine_type_id: g2.mac.large
   ui-tests-connect:
     steps:
@@ -854,7 +854,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-26.4.x
+        stack: osx-xcode-26.5.x
         machine_type_id: g2.mac.large
   ui-tests-crypto:
     steps:
@@ -888,7 +888,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-26.4.x
+        stack: osx-xcode-26.5.x
         machine_type_id: g2.mac.large
   upload_logs:
     steps:
@@ -901,5 +901,5 @@ workflows:
         title: Deploy test log artifacts
 meta:
   bitrise.io:
-    stack: osx-xcode-26.4.x
+    stack: osx-xcode-26.5.x
     machine_type_id: g2.mac.large
