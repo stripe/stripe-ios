@@ -148,6 +148,12 @@ extension STPFPXBankBrand: CustomStringConvertible {
             return "standardChartered"
         case .unknown:
             return "unknown"
+        case .agrobank:
+            return "agrobank"
+        case .bankOfChina:
+            return "bankOfChina"
+        case .mbsbBank:
+            return "mbsbBank"
         }
     }
 }
