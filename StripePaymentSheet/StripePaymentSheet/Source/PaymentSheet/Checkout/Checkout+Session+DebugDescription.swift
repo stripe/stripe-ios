@@ -19,7 +19,7 @@ extension Checkout.Session: CustomDebugStringConvertible {
             "  currency: \(currency.debugValue)",
         ]
 
-        lines.append(contentsOf: currencyOptionsDebugDescriptionLines)
+        lines.append(contentsOf: presentmentDetailsDebugDescriptionLines)
         lines.append(contentsOf: discountAmountsDebugDescriptionLines)
         lines.append(contentsOf: [
             "  email: \(email.maskedEmailDebugValue)",
@@ -51,32 +51,15 @@ extension Checkout.Session: CustomDebugStringConvertible {
         return lines.joined(separator: "\n")
     }
 
-    private var currencyOptionsDebugDescriptionLines: [String] {
-        guard !currencyOptions.isEmpty else {
-            return ["  currencyOptions: []"]
+    private var presentmentDetailsDebugDescriptionLines: [String] {
+        guard let presentmentDetails else {
+            return ["  presentmentDetails: nil"]
         }
-
-        var lines = ["  currencyOptions: ["]
-        for option in currencyOptions {
-            lines.append(contentsOf: [
-                "    {",
-                "      currency: \(String(reflecting: option.currency))",
-                "      amount: \(option.amount.debugValue)",
-            ])
-            if let conversion = option.currencyConversion {
-                lines.append(contentsOf: [
-                    "      currencyConversion: {",
-                    "        sourceCurrency: \(String(reflecting: conversion.sourceCurrency))",
-                    "        fxRate: \(String(reflecting: conversion.fxRate))",
-                    "      }",
-                ])
-            } else {
-                lines.append("      currencyConversion: nil")
-            }
-            lines.append("    }")
-        }
-        lines.append("  ]")
-        return lines
+        return [
+            "  presentmentDetails: {",
+            "    presentmentCurrency: \(String(reflecting: presentmentDetails.presentmentCurrency))",
+            "  }",
+        ]
     }
 
     private var discountAmountsDebugDescriptionLines: [String] {

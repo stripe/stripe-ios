@@ -105,7 +105,7 @@ enum Intent {
                 return currency
             }
         case .checkout(let session):
-            return session.currency
+            return session.activePresentmentCurrency
         }
     }
 

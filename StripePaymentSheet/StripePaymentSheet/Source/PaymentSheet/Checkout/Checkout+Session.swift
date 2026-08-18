@@ -29,9 +29,8 @@ extension Checkout {
         /// Three-letter ISO 4217 currency code in lowercase (e.g. `"usd"`).
         public let currency: String?
 
-        /// The currency options available on the Checkout Session when adaptive pricing is active.
-        /// Empty when adaptive pricing is not active.
-        public let currencyOptions: [Checkout.CurrencyOption]
+        /// Details about the currency presented to the customer when adaptive pricing is active.
+        public let presentmentDetails: PresentmentDetails?
 
         /// The aggregate amounts calculated per discount for all line items.
         public let discountAmounts: [DiscountAmount]
@@ -45,8 +44,9 @@ extension Checkout {
         /// `true` if this object exists in live mode, `false` for test mode.
         public let livemode: Bool
 
-        /// The factor used to convert between minor and major currency units. For USD this
-        /// is `100`; for JPY this is `1`. `nil` when the session has no currency (e.g. setup mode).
+        /// The factor used to convert the session's presentment amounts between minor and major
+        /// currency units. For USD this is `100`; for JPY this is `1`. `nil` when the session has
+        /// no currency.
         public let minorUnitsAmountDivisor: Int?
 
         /// The currently selected payment option.
