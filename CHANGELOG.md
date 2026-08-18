@@ -30,7 +30,7 @@ PATCH
 * [Added] Added support for registering wallet addresses on the Tempo network.
 
 ### Payments
-* [Added] Added Klarna confirmation options for passing SDK-generated interoperability and partner confirmation tokens (private preview).
+* [Added] Added Klarna confirmation options for passing SDK-generated interoperability tokens to PaymentIntent and SetupIntent confirmation, and partner confirmation tokens to PaymentIntent confirmation (private preview).
 
 ### PaymentSheet
 * [Added] Added `billingDetailsCollectionConfiguration` to `LinkConfiguration`, allowing `LinkControllerPreview` consumers to configure billing details collection in the Link sheet (private preview).

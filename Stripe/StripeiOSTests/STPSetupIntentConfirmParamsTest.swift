@@ -7,7 +7,7 @@
 //
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) @_spi(KlarnaSDKPrivatePreview) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
@@ -96,7 +96,9 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         let params = STPSetupIntentConfirmParams(clientSecret: "test_client_secret")
         params.paymentMethodParams = STPPaymentMethodParams()
         params.paymentMethodID = "test_payment_method_id"
-        params.paymentMethodOptions = STPConfirmPaymentMethodOptions()
+        params.paymentMethodOptions = STPConfirmPaymentMethodOptions(
+            klarnaOptions: STPConfirmKlarnaOptions(interoperabilityToken: "interoperability_token")
+        )
         params.returnURL = "fake://testing_only"
         params.setAsDefaultPM = true
         params.useStripeSDK = true
@@ -118,6 +120,7 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
 
         // assert equal, not equal objects, because this is a shallow copy
         XCTAssertEqual(params.paymentMethodParams, paramsCopy.paymentMethodParams)
+        XCTAssertTrue(params.paymentMethodOptions === paramsCopy.paymentMethodOptions)
         XCTAssertEqual(params.mandateData, paramsCopy.mandateData)
 
         XCTAssertEqual(params.returnURL, paramsCopy.returnURL)
@@ -129,6 +132,28 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         )
         XCTAssertEqual(params.confirmationToken, paramsCopy.confirmationToken)
 
+    }
+
+    func testPaymentMethodOptionsFormEncoding() throws {
+        let params = STPSetupIntentConfirmParams()
+        params.paymentMethodOptions = STPConfirmPaymentMethodOptions(
+            klarnaOptions: STPConfirmKlarnaOptions(interoperabilityToken: "interoperability_token")
+        )
+
+        let encoded = STPFormEncoder.dictionary(forObject: params)
+        let paymentMethodOptions = try XCTUnwrap(encoded["payment_method_options"] as? [String: Any])
+        let klarnaOptions = try XCTUnwrap(paymentMethodOptions["klarna"] as? [String: Any])
+
+        XCTAssertEqual(klarnaOptions["interoperability_token"] as? String, "interoperability_token")
+        XCTAssertNil(klarnaOptions["partner_confirmation_token"])
+    }
+
+    func testFormFieldMappingIncludesPaymentMethodOptions() {
+        let mapping = STPSetupIntentConfirmParams.propertyNamesToFormFieldNamesMapping()
+        XCTAssertEqual(
+            mapping[NSStringFromSelector(#selector(getter: STPSetupIntentConfirmParams.paymentMethodOptions))],
+            "payment_method_options"
+        )
     }
 
     func testConfirmationTokenProperty() {
