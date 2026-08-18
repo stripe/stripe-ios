@@ -133,7 +133,7 @@ extension STPFPXBankBrand: CustomStringConvertible {
         case .bankMuamalat:
             return "bankMuamalat"
         case .bankRakyat:
-            return "bankRakyat"        
+            return "bankRakyat"
         case .hongLeongBank:
             return "hongLeongBank"
         case .maybank2E:
