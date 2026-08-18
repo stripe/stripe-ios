@@ -1038,14 +1038,14 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let firstUpdateExpectation = expectation(description: "First update completes")
         let secondUpdateExpectation = expectation(description: "Second update completes")
         // Given a PaymentSheet.FlowController instance...
-        PaymentSheet.FlowController.create(intentConfiguration: intentConfig, configuration: configuration) { result in
+        PaymentSheet.FlowController.create(intentConfiguration: intentConfig, configuration: configuration) { @MainActor result in
             switch result {
             case .success(let sut):
                 // ...the vc's intent should match the initial intent config...
                 XCTAssertTrue(sut.intent.isPaymentIntent)
                 // ...and updating the intent config should succeed...
                 intentConfig.mode = .setup(currency: nil, setupFutureUsage: .offSession)
-                sut.update(intentConfiguration: intentConfig) { error in
+                sut.update(intentConfiguration: intentConfig) { @MainActor error in
                     XCTAssertNil(error)
                     XCTAssertNil(sut.paymentOption)
                     XCTAssertFalse(sut.intent.isPaymentIntent)
@@ -1053,7 +1053,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
                     // ...updating the intent config multiple times should succeed...
                     intentConfig.mode = .payment(amount: 100, currency: "USD", setupFutureUsage: nil)
-                    sut.update(intentConfiguration: intentConfig) { error in
+                    sut.update(intentConfiguration: intentConfig) { @MainActor error in
                         XCTAssertNil(error)
                         XCTAssertNil(sut.paymentOption)
                         XCTAssertTrue(sut.intent.isPaymentIntent)
