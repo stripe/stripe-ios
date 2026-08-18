@@ -11,28 +11,32 @@ import Foundation
 import UIKit
 
 extension Checkout: ExpressCheckoutElementDelegate {
-    func expressCheckoutElementShouldConfirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod) async -> ConfirmResult {
+    func expressCheckoutElementShouldConfirm(
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
+        presentingViewController: UIViewController
+    ) async -> ConfirmResult {
         guard sessionIsOpen else {
-            return .failed(CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() cannot confirm a Checkout Session that is no longer open."))
+            let error = CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() cannot confirm a Checkout Session that is no longer open.")
+            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+            return .failed(error)
         }
-
-        let result = await {
-            switch paymentMethod {
-            case .applePay:
-                guard let applePayConfirmationContext else {
-                    let error = CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() was called for Apple Pay, but Apple Pay wasn't configured.")
-                    STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
-                    return InternalConfirmResult(paymentSheetResult: .failed(error: error))
-                }
-                return await Checkout.confirmApplePay(
-                    checkoutSession: session,
-                    applePayConfirmationContext: applePayConfirmationContext,
-                    sessionUpdater: self
-                )
-            case .link:
-                return .init(paymentSheetResult: .canceled) // TODO: link
-            }
-        }()
+        guard let expressCheckoutConfirmationContext = confirmationContext(for: paymentMethod) else {
+            let error = CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() could not build a confirmation context for \(paymentMethod).")
+            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+            return .failed(error)
+        }
+        let authenticationContext = AuthenticationContext(
+            presentingViewController: presentingViewController,
+            appearance: expressCheckoutConfirmationContext.configuration.appearance
+        )
+        let result = await Checkout.confirm(
+            checkoutSession: session,
+            confirmationContext: expressCheckoutConfirmationContext,
+            authenticationContext: authenticationContext,
+            paymentHandler: paymentHandler,
+            applePayConfirmationContext: applePayConfirmationContext,
+            sessionUpdater: self
+        )
         switch result.paymentSheetResult {
         case .completed:
             guard let checkoutSessionResponse = result.checkoutSessionResponse else {

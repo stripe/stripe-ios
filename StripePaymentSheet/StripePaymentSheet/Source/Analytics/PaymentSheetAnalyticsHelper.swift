@@ -29,6 +29,7 @@ final class PaymentSheetAnalyticsHelper {
         case complete
         case embedded
         case linkController
+        case expressCheckout
 
         var analyticsValue: String {
             switch self {
@@ -40,6 +41,8 @@ final class PaymentSheetAnalyticsHelper {
                 return "embedded"
             case .linkController:
                 return "linkcontroller"
+            case .expressCheckout:
+                return "expresscheckout"
             }
         }
 
@@ -47,7 +50,7 @@ final class PaymentSheetAnalyticsHelper {
             switch self {
             case .complete, .flowController, .embedded:
                 return true
-            case .linkController:
+            case .linkController, .expressCheckout:
                 return false
             }
         }
@@ -71,7 +74,7 @@ final class PaymentSheetAnalyticsHelper {
     func logInitialized() {
         let event: STPAnalyticEvent = {
             switch integrationShape {
-            case .flowController:
+            case .flowController, .expressCheckout:
                 switch (configuration.customer != nil, configuration.applePay != nil) {
                 case (false, false):
                     return .mcInitCustomDefault
@@ -230,7 +233,7 @@ final class PaymentSheetAnalyticsHelper {
     func logSavedPMScreenOptionSelected(option: SavedPaymentOptionsViewController.Selection) {
         let (event, selectedLPM): (STPAnalyticEvent?, String?) = {
             switch integrationShape {
-            case .flowController:
+            case .flowController, .expressCheckout:
                 switch option {
                 case .add:
                     return (.mcOptionSelectCustomNewPM, nil)
@@ -290,7 +293,7 @@ final class PaymentSheetAnalyticsHelper {
     func logSavedPaymentMethodRemoved(paymentMethod: STPPaymentMethod) {
         let event: STPAnalyticEvent = {
             switch integrationShape {
-            case .flowController:
+            case .flowController, .expressCheckout:
                 return .mcOptionRemoveCustomSavedPM
             case .complete, .linkController:
                 return .mcOptionRemoveCompleteSavedPM
@@ -389,7 +392,7 @@ final class PaymentSheetAnalyticsHelper {
 
         let event: STPAnalyticEvent = {
             switch integrationShape {
-            case .flowController:
+            case .flowController, .expressCheckout:
                 switch paymentOption {
                 case .new, .external:
                     return success ? .mcPaymentCustomNewPMSuccess : .mcPaymentCustomNewPMFailure

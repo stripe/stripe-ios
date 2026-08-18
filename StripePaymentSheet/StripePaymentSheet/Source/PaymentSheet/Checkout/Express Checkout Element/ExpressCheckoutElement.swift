@@ -5,10 +5,15 @@
 //  Created by Joyce Qin on 7/22/26.
 //
 
+import UIKit
+
 /// Handles Checkout mutations requested by an ExpressCheckoutElement.
 @MainActor
 protocol ExpressCheckoutElementDelegate: AnyObject {
-    func expressCheckoutElementShouldConfirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod) async -> Checkout.ConfirmResult
+    func expressCheckoutElementShouldConfirm(
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
+        presentingViewController: UIViewController
+    ) async -> Checkout.ConfirmResult
 }
 
 /// An express checkout element backed by a Checkout Session.
