@@ -457,6 +457,36 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 #endif
     }
 
+    func testCreatePaymentRequest_CheckoutSessionUsesCurrentSession() throws {
+        let intent = Intent._testCheckoutSession(amount: 2_345, currency: "USD")
+        guard case .checkout(let context) = intent else {
+            return XCTFail("Expected a Checkout Session intent")
+        }
+        let checkout = try XCTUnwrap(context.checkout)
+
+        let initialRequest = STPApplePayContext.createPaymentRequest(
+            intent: intent,
+            configuration: configuration,
+            applePay: applePayConfiguration
+        )
+        XCTAssertEqual(initialRequest.paymentSummaryItems[0].amount, 23.45)
+        XCTAssertEqual(initialRequest.currencyCode, "USD")
+
+        let updatedIntent = Intent._testCheckoutSession(amount: 9_876, currency: "EUR")
+        guard case .checkout(let updatedContext) = updatedIntent else {
+            return XCTFail("Expected an updated Checkout Session intent")
+        }
+        checkout.dangerouslySetSessionDirectly(try XCTUnwrap(updatedContext.session))
+
+        let updatedRequest = STPApplePayContext.createPaymentRequest(
+            intent: intent,
+            configuration: configuration,
+            applePay: applePayConfiguration
+        )
+        XCTAssertEqual(updatedRequest.paymentSummaryItems[0].amount, 98.76)
+        XCTAssertEqual(updatedRequest.currencyCode, "EUR")
+    }
+
     func testCreatePaymentRequest_CheckoutSession_SetupMode() {
         let intent = Intent._testCheckoutSession(hasPaymentDue: false, amount: nil, currency: "USD")
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)

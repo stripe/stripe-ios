@@ -333,6 +333,7 @@ final class PaymentElementTest: XCTestCase {
         weak var weakCurrencySelectorUIView: CurrencySelectorElementUIView?
         weak var weakFlowController: PaymentSheet.FlowController?
         weak var weakEmbeddedPaymentElement: EmbeddedPaymentElement?
+        var intentContext: CheckoutIntentContext?
 
         do {
             let checkout = try await Checkout(
@@ -349,6 +350,7 @@ final class PaymentElementTest: XCTestCase {
             weakCurrencySelectorUIView = currencySelectorElement?.uiView
             weakFlowController = paymentElement.paymentSheetFlowController
             weakEmbeddedPaymentElement = paymentElement.embeddedPaymentElement
+            intentContext = checkout.intentContext
         }
 
         XCTAssertNil(weakCheckout)
@@ -357,6 +359,31 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertNil(weakCurrencySelectorUIView)
         XCTAssertNil(weakFlowController)
         XCTAssertNil(weakEmbeddedPaymentElement)
+        XCTAssertNil(intentContext?.checkout)
+    }
+
+    func testStandalonePaymentElementsDoNotRetainCheckout() async throws {
+        weak var weakCheckout: Checkout?
+        var flowController: PaymentSheet.FlowController?
+        var embeddedPaymentElement: EmbeddedPaymentElement?
+
+        do {
+            let checkout = try await Checkout(
+                configuration: CheckoutTestHelpers.makeConfiguration(
+                    apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card"])
+                )
+            )
+            weakCheckout = checkout
+            flowController = checkout.getPaymentElement().paymentSheetFlowController
+            embeddedPaymentElement = checkout.getPaymentElement().embeddedPaymentElement
+        }
+
+        XCTAssertNil(weakCheckout)
+        XCTAssertNotNil(flowController)
+        XCTAssertNotNil(embeddedPaymentElement)
+
+        flowController = nil
+        embeddedPaymentElement = nil
     }
 
     /// `CheckoutSession.json` already has automatic tax sourced from billing and a saved card with a full billing address.

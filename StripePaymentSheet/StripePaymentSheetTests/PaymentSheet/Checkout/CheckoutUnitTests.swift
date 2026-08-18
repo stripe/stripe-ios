@@ -57,6 +57,60 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(firstElement === secondElement)
     }
 
+    func testIntentReadsCurrentCheckoutSession() throws {
+        var initialJSON = CheckoutTestHelpers.openSessionJSON
+        initialJSON["session_id"] = "cs_initial"
+        initialJSON["currency"] = "usd"
+        initialJSON["customer"] = [
+            "id": "cus_initial",
+            "payment_methods": [],
+            "can_detach_payment_method": false,
+        ]
+        setOneTimePriceAmounts(
+            in: &initialJSON,
+            subtotal: 1_000,
+            taxExclusive: 0,
+            total: 1_000
+        )
+        let initialResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: initialJSON)
+        let checkout = Checkout(
+            testSession: initialResponse.makePublicSession(),
+            configuration: Checkout.Configuration(
+                clientSecret: "cs_initial_secret_test",
+                returnURL: "stripe-ios-test://checkout-return"
+            )
+        )
+        let intent = Intent.checkout(checkout.intentContext)
+
+        XCTAssertEqual(intent.stripeId, "cs_initial")
+        XCTAssertEqual(intent.currency, "usd")
+        XCTAssertEqual(intent.amount, 1_000)
+        XCTAssertFalse(intent.allowsPaymentMethodRemoval(elementsSession: checkout.session.elementsSession))
+
+        var updatedJSON = CheckoutTestHelpers.openSessionJSON
+        updatedJSON["session_id"] = "cs_updated"
+        updatedJSON["currency"] = "eur"
+        updatedJSON["customer"] = [
+            "id": "cus_updated",
+            "payment_methods": [],
+            "can_detach_payment_method": true,
+        ]
+        setOneTimePriceAmounts(
+            in: &updatedJSON,
+            subtotal: 2_500,
+            taxExclusive: 0,
+            total: 2_500
+        )
+        let updatedResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: updatedJSON)
+        checkout.dangerouslySetSessionDirectly(updatedResponse.makePublicSession())
+
+        XCTAssertEqual(intent.stripeId, "cs_updated")
+        XCTAssertEqual(intent.currency, "eur")
+        XCTAssertEqual(intent.amount, 2_500)
+        XCTAssertEqual(checkout.intentContext.session?.customerId, "cus_updated")
+        XCTAssertTrue(intent.allowsPaymentMethodRemoval(elementsSession: checkout.session.elementsSession))
+    }
+
     func testCheckoutIntentContextReportsReleasedCheckout() {
         var checkout: Checkout? = Checkout(
             testSession: CheckoutTestHelpers.makeOpenSession().makePublicSession(),

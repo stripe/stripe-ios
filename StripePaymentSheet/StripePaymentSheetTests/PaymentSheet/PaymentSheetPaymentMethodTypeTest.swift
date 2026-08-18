@@ -16,6 +16,25 @@ import XCTest
 @MainActor
 class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
+    func testCheckoutRequirementsUseCurrentSession() {
+        let initialResponse = CheckoutTestHelpers.makeOpenSession()
+        let checkout = Checkout(
+            testSession: initialResponse.makePublicSession(),
+            configuration: Checkout.Configuration(
+                clientSecret: "cs_test_123_secret_abc",
+                returnURL: "stripe-ios-test://checkout-return"
+            )
+        )
+        let intent = Intent.checkout(checkout.intentContext)
+
+        XCTAssertFalse(intent.fulfilledRequirements.contains(.shippingAddress))
+
+        let updatedResponse = CheckoutTestHelpers.makeOpenSession(allowedCountries: ["US"])
+        checkout.dangerouslySetSessionDirectly(updatedResponse.makePublicSession())
+
+        XCTAssertTrue(intent.fulfilledRequirements.contains(.shippingAddress))
+    }
+
     func makeConfiguration(
         hasReturnURL: Bool = false
     ) -> PaymentSheet.Configuration {

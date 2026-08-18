@@ -849,6 +849,32 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertEqual(analyticsClient._testLogHistory.last!["displayed_successfully"] as? Bool, false)
     }
 
+    func testCheckoutAnalyticsUseCurrentSession() {
+        let initialResponse = CheckoutTestHelpers.makeSession(["currency": "usd"])
+        let checkout = Checkout(
+            testSession: initialResponse.makePublicSession(),
+            configuration: Checkout.Configuration(
+                clientSecret: "cs_test_123_secret_abc",
+                returnURL: "stripe-ios-test://checkout-return"
+            )
+        )
+        let sut = PaymentSheetAnalyticsHelper(
+            integrationShape: .complete,
+            configuration: PaymentSheet.Configuration(),
+            analyticsClient: analyticsClient
+        )
+        sut.intent = .checkout(checkout.intentContext)
+
+        sut.logShow(showingSavedPMList: false)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["currency"] as? String, "usd")
+
+        let updatedResponse = CheckoutTestHelpers.makeSession(["currency": "eur"])
+        checkout.dangerouslySetSessionDirectly(updatedResponse.makePublicSession())
+
+        sut.logShow(showingSavedPMList: false)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["currency"] as? String, "eur")
+    }
+
     // MARK: - Helpers
 
     func makeConfig(
