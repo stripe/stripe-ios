@@ -810,7 +810,7 @@ private extension PaymentSheetAPIMockTest {
             analyticsHelper: ._testValue()
         )
         return await Checkout.confirm(
-            checkoutSession: checkout.session,
+            checkoutContext: checkout.intentContext,
             confirmationContext: confirmationContext,
             authenticationContext: self,
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)

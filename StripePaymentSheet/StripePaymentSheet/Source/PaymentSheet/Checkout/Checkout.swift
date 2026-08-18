@@ -400,7 +400,7 @@ public final class Checkout: ObservableObject {
         do {
             let confirmResult = try await enqueueSessionUpdate {
                 let result = await Self.confirm(
-                    checkoutSession: self.session,
+                    checkoutContext: self.intentContext,
                     confirmationContext: confirmationContext,
                     authenticationContext: authenticationContext,
                     paymentHandler: self.paymentHandler

@@ -1219,7 +1219,15 @@ extension PaymentSheetLPMConfirmFlowTests {
                     checkoutSessionId: checkoutSessionResponse.id,
                     adaptivePricingAllowed: true
                 )
-                let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession())
+                var checkoutConfiguration = Checkout.Configuration(
+                    clientSecret: checkoutSession.clientSecret ?? checkoutSessionResponse.clientSecret,
+                    returnURL: "stripe-ios-test://checkout-return"
+                )
+                checkoutConfiguration.apiClient = csApiClient
+                let checkout = Checkout(
+                    testSession: checkoutSession.makePublicSession(),
+                    configuration: checkoutConfiguration
+                )
                 intents.append(TestIntent("CheckoutSession", .checkout(checkout.session), checkout: checkout))
             }
             guard paymentMethod != .blik else {
@@ -1720,7 +1728,8 @@ extension PaymentSheetLPMConfirmFlowTests {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        guard case .checkout(let checkoutSession) = testIntent.intent else {
+        guard case .checkout = testIntent.intent,
+              let checkout = testIntent.checkout as? Checkout else {
             PaymentSheet.confirm(
                 configuration: configuration,
                 authenticationContext: self,
@@ -1743,7 +1752,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 analyticsHelper: analyticsHelper
             )
             let result = await Checkout.confirm(
-                checkoutSession: checkoutSession,
+                checkoutContext: checkout.intentContext,
                 confirmationContext: confirmationContext,
                 authenticationContext: self,
                 paymentHandler: paymentHandler

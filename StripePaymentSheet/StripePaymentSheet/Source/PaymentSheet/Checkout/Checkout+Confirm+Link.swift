@@ -10,7 +10,7 @@
 
 extension Checkout {
     static func confirmLink(
-        checkoutSession: Session,
+        checkoutContext: CheckoutIntentContext,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
         clientAttributionMetadata: STPClientAttributionMetadata,
@@ -21,15 +21,20 @@ extension Checkout {
             return .init(paymentSheetResult: .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption))
         }
 
+        guard let checkoutSession = checkoutContext.session else {
+            return .init(paymentSheetResult: .failed(error: PaymentSheetError.integrationError(
+                nonPIIDebugDescription: "Checkout must outlive the Payment Element created from it."
+            )))
+        }
         let elementsSession = checkoutSession.elementsSession
         let configuration = confirmationContext.configuration
         let confirmationChallenge = confirmationContext.confirmationChallenge
         let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
-            checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
+            checkoutContext.session?.merchantWillSavePaymentMethod(paymentMethodType) ?? false
         }
         let setAllowRedisplay: (IntentConfirmParams, STPPaymentMethodType) -> Void = { confirmParams, paymentMethodType in
             confirmParams.setAllowRedisplayForCheckoutSession(
-                merchantWillSavePaymentMethod: checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
+                merchantWillSavePaymentMethod: checkoutContext.session?.merchantWillSavePaymentMethod(paymentMethodType) ?? false
             )
         }
 
@@ -49,7 +54,7 @@ extension Checkout {
                     paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethodParams.type)
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     let result = await Self.handleCheckoutSessionConfirmation(
-                        checkoutSession: checkoutSession,
+                        checkoutContext: checkoutContext,
                         confirmType: .new(
                             params: paymentMethodParams,
                             paymentOptions: STPConfirmPaymentMethodOptions(),
@@ -78,7 +83,7 @@ extension Checkout {
                 Task { @MainActor in
                     let radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethod.type)
                     let result = await Self.handleCheckoutSessionConfirmation(
-                        checkoutSession: checkoutSession,
+                        checkoutContext: checkoutContext,
                         confirmType: .saved(
                             paymentMethod,
                             paymentOptions: nil,
@@ -115,7 +120,7 @@ extension Checkout {
                         analyticsHelper: confirmationContext.analyticsHelper
                     )
                     let result = await Self.confirmPaymentOption(
-                        checkoutSession: checkoutSession,
+                        checkoutContext: checkoutContext,
                         confirmationContext: linkConfirmationContext,
                         authenticationContext: linkAuthenticationContext,
                         intentConfirmParamsForDeferredIntent: nil,
