@@ -1476,6 +1476,14 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             saveForFutureUseCheckboxState: .hidden
         )
         let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        let setupPaymentMethodOptions = STPConfirmPaymentMethodOptions()
+        setupPaymentMethodOptions.alipayOptions = STPConfirmAlipayOptions()
+        setupPaymentMethodOptions.alipayOptions?.currency = "usd"
+        let setupConfirmType = PaymentSheet.ConfirmPaymentMethodType.new(
+            params: paymentMethodParams,
+            paymentOptions: setupPaymentMethodOptions,
+            saveForFutureUseCheckboxState: .hidden
+        )
 
         // When
         let regularPaymentIntentParams = PaymentSheet.makePaymentIntentParams(
@@ -1499,17 +1507,9 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             ),
             configuration: configuration
         )
-        let setupIntent = STPFixtures.makeSetupIntent(
-            paymentMethodTypes: [.alipay],
-            paymentMethodOptions: STPPaymentMethodOptions(
-                usBankAccount: nil,
-                card: nil,
-                allResponseFields: ["alipay": ["currency": "usd"]]
-            )
-        )
         let setupIntentParams = PaymentSheet.makeSetupIntentParams(
-            confirmPaymentMethodType: confirmType,
-            setupIntent: setupIntent,
+            confirmPaymentMethodType: setupConfirmType,
+            setupIntent: STPFixtures.makeSetupIntent(paymentMethodTypes: [.alipay]),
             configuration: configuration
         )
 

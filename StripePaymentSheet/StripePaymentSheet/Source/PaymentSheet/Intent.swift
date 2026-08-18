@@ -109,6 +109,15 @@ enum Intent {
         }
     }
 
+    func currency(for paymentMethodType: STPPaymentMethodType) -> String? {
+        switch self {
+        case .setupIntent(let setupIntent):
+            return setupIntent.paymentMethodOptions?.currency(for: paymentMethodType)
+        case .paymentIntent, .deferredIntent, .checkout:
+            return currency
+        }
+    }
+
     var amount: Int? {
         switch self {
         case .paymentIntent(let pi):

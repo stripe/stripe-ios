@@ -955,19 +955,17 @@ extension PaymentSheet {
         configuration: PaymentElementConfiguration
     ) -> STPSetupIntentConfirmParams {
         let params: STPSetupIntentConfirmParams
-        let suppliedPaymentMethodOptions: STPConfirmPaymentMethodOptions?
         switch confirmPaymentMethodType {
         case let .saved(paymentMethod, paymentMethodOptions, clientAttributionMetadata, radarOptions):
-            suppliedPaymentMethodOptions = paymentMethodOptions
             params = STPSetupIntentConfirmParams(
                 clientSecret: setupIntent.clientSecret,
                 paymentMethodType: paymentMethod.type
             )
             params.paymentMethodID = paymentMethod.stripeId
+            params.paymentMethodOptions = paymentMethodOptions
             params.radarOptions = radarOptions
             params.clientAttributionMetadata = clientAttributionMetadata
         case let .new(paymentMethodParams, paymentMethodOptions, paymentMethod, _, shouldSetAsDefaultPM):
-            suppliedPaymentMethodOptions = paymentMethodOptions
             if let paymentMethod {
                 params = STPSetupIntentConfirmParams(
                     clientSecret: setupIntent.clientSecret,
@@ -978,6 +976,7 @@ extension PaymentSheet {
                 params = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                 params.paymentMethodParams = paymentMethodParams
             }
+            params.paymentMethodOptions = paymentMethodOptions
             // Send CAM at the top-level of all requests in scope for consistency
             // Also send under payment_method_data because there are existing dependencies
             params.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
@@ -992,15 +991,6 @@ extension PaymentSheet {
         // Set moto (mail order and telephone orders) for Dashboard b/c merchants key in cards on behalf of customers
         if configuration.apiClient.publishableKeyIsUserKey {
             params.additionalAPIParameters["payment_method_options"] = ["card": ["moto": true]]
-        }
-        if params.paymentMethodType == .alipay,
-            let currency = setupIntent.paymentMethodOptions?.currency(for: .alipay)
-        {
-            let paymentMethodOptions = suppliedPaymentMethodOptions ?? STPConfirmPaymentMethodOptions()
-            let alipayOptions = paymentMethodOptions.alipayOptions ?? STPConfirmAlipayOptions()
-            alipayOptions.currency = currency
-            paymentMethodOptions.alipayOptions = alipayOptions
-            params.paymentMethodOptions = paymentMethodOptions
         }
         params.returnURL = configuration.returnURL
         return params

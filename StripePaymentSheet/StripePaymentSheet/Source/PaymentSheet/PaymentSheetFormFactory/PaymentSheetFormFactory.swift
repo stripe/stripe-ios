@@ -146,7 +146,7 @@ class PaymentSheetFormFactory {
                   collectsTaxFromBillingAddress: intent.collectsTaxFromBillingAddress,
                   isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType),
                   countryCode: elementsSession.countryCode,
-                  currency: intent.currency,
+                  currency: intent.currency(for: paymentMethodType),
                   savePaymentMethodConsentBehavior: Self.makeSavePaymentMethodConsentBehavior(intent: intent, elementsSession: elementsSession),
                   allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                   allowsLinkDefaultOptIn: elementsSession.allowsLinkDefaultOptIn,
@@ -282,9 +282,7 @@ class PaymentSheetFormFactory {
                  .billie, .sunbit, .alma, .payByBank:
                 return makeContactInformationAndBillingAddressForm()
             case .alipay:
-                return makeContactInformationAndBillingAddressForm(
-                    additionalElements: makeSetupMandateElements(for: paymentMethod)
-                )
+                return makeAlipay()
             case .promptPay, .multibanco:
                 return makeContactInformationAndBillingAddressForm(
                     emailRequired: true,
@@ -808,7 +806,7 @@ extension PaymentSheetFormFactory {
         emailAPIPath: String? = nil,
         phoneRequired: Bool = false,
         additionalElements: [Element] = []
-    ) -> PaymentMethodElement {
+    ) -> PaymentMethodElementWrapper<FormElement> {
         let contactInfoSection = makeContactInformationSection(
             nameRequiredByPaymentMethod: false,
             emailRequiredByPaymentMethod: emailRequired,
@@ -820,6 +818,21 @@ extension PaymentSheetFormFactory {
         return makeDefaultsApplierWrapper(
             for: FormElement(autoSectioningElements: elements, theme: theme)
         )
+    }
+
+    func makeAlipay() -> PaymentMethodElement {
+        let form = makeContactInformationAndBillingAddressForm(
+            additionalElements: makeSetupMandateElements(for: .alipay)
+        )
+        guard !isPaymentIntent, let currency else {
+            return form
+        }
+        return PaymentMethodElementWrapper(updatingParamsFrom: form) { _, params in
+            let alipayOptions = params.confirmPaymentMethodOptions.alipayOptions ?? STPConfirmAlipayOptions()
+            alipayOptions.currency = currency.lowercased()
+            params.confirmPaymentMethodOptions.alipayOptions = alipayOptions
+            return params
+        }
     }
 
     func makeWero() -> PaymentMethodElement {

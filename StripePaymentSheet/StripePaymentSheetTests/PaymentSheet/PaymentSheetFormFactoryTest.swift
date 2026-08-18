@@ -2431,9 +2431,15 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 setupFutureUsage: .offSession
             )
         )
-        let setupForm = makeAlipayForm(
-            intent: ._testSetupIntent(paymentMethodTypes: [.alipay])
+        let setupIntent = STPFixtures.makeSetupIntent(
+            paymentMethodTypes: [.alipay],
+            paymentMethodOptions: STPPaymentMethodOptions(
+                usBankAccount: nil,
+                card: nil,
+                allResponseFields: ["alipay": ["currency": "usd"]]
+            )
         )
+        let setupForm = makeAlipayForm(intent: .setupIntent(setupIntent))
 
         // Then
         XCTAssertNil(paymentForm.getMandateElement())
@@ -2443,6 +2449,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(futureUsagePaymentForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
         XCTAssertEqual(setupForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
+
+        sendEventToSubviews(.viewDidAppear, from: setupForm.view)
+        let setupParams = setupForm.updateParams(params: IntentConfirmParams(type: .stripe(.alipay)))
+        XCTAssertEqual(setupParams?.confirmPaymentMethodOptions.alipayOptions?.currency, "usd")
     }
 
     func testCheckoutSessionSetupFutureUsage_appliesMandateBehavior() {
