@@ -13,7 +13,6 @@ struct CheckoutCartContentView: View {
     @ObservedObject var checkout: Checkout
     var showsShippingAddressSection: Bool
     var errorMessage: String?
-    var bottomContentPadding: CGFloat = 160
     @State private var showsTaxDetails = false
 
     var body: some View {
@@ -33,8 +32,6 @@ struct CheckoutCartContentView: View {
                     shippingAddressSection
                 }
                 orderSummarySection
-
-                Spacer().frame(height: bottomContentPadding)
             }
             .padding(.top, 20)
         }
