@@ -129,11 +129,13 @@ extension PaymentElement {
         func makeEmbeddedConfiguration(
             apiClient: STPAPIClient,
             defaults: CheckoutController.Configuration.Defaults,
+            linkConfiguration: CheckoutController.LinkConfiguration?,
             merchantDisplayName: String,
             userInterfaceStyle: CheckoutController.UserInterfaceStyle
         ) -> EmbeddedPaymentElement.Configuration {
             var configuration = embeddedConfiguration
             configuration.apiClient = apiClient
+            configuration.apply(linkConfiguration: linkConfiguration)
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
@@ -146,11 +148,13 @@ extension PaymentElement {
         func makePaymentSheetConfiguration(
             apiClient: STPAPIClient,
             defaults: CheckoutController.Configuration.Defaults,
+            linkConfiguration: CheckoutController.LinkConfiguration?,
             merchantDisplayName: String,
             userInterfaceStyle: CheckoutController.UserInterfaceStyle
         ) -> PaymentSheet.Configuration {
             var configuration = paymentSheetConfiguration
             configuration.apiClient = apiClient
+            configuration.apply(linkConfiguration: linkConfiguration)
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
@@ -158,6 +162,32 @@ extension PaymentElement {
                 configuration.defaultBillingDetails.set(billingDetails)
             }
             return configuration
+        }
+    }
+}
+
+private extension PaymentSheet.Configuration {
+    mutating func apply(linkConfiguration: CheckoutController.LinkConfiguration?) {
+        switch linkConfiguration?.display {
+        case .none, .automatic:
+            link.display = .automatic
+        case .never:
+            link.display = .never
+        case .walletButtonHidden:
+            link.display = .walletButtonHidden
+        }
+    }
+}
+
+private extension EmbeddedPaymentElement.Configuration {
+    mutating func apply(linkConfiguration: CheckoutController.LinkConfiguration?) {
+        switch linkConfiguration?.display {
+        case .none, .automatic:
+            link.display = .automatic
+        case .never:
+            link.display = .never
+        case .walletButtonHidden:
+            link.display = .walletButtonHidden
         }
     }
 }
