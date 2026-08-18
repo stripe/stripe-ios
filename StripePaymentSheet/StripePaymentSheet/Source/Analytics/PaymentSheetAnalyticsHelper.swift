@@ -28,8 +28,8 @@ final class PaymentSheetAnalyticsHelper {
         case flowController
         case complete
         case embedded
-        case expressCheckout
         case linkController
+        case expressCheckout
 
         var analyticsValue: String {
             switch self {
@@ -39,10 +39,10 @@ final class PaymentSheetAnalyticsHelper {
                 return "paymentsheet"
             case .embedded:
                 return "embedded"
-            case .expressCheckout:
-                return "expresscheckout"
             case .linkController:
                 return "linkcontroller"
+            case .expressCheckout:
+                return "expresscheckout"
             }
         }
 
