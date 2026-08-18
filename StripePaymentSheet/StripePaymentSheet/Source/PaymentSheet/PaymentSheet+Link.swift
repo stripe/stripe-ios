@@ -101,8 +101,21 @@ extension PaymentSheet {
 
 // MARK: - Native Link helpers
 
+#if DEBUG
+/// Debug-only seam for forcing native Link in example apps/playgrounds, bypassing the
+/// account-level `link_mobile_use_attestation_endpoints` check. Not for production use.
+@_spi(STP) public enum LinkDebugOverrides {
+    @_spi(STP) public static var forceNativeLink = false
+}
+#endif
+
 /// Check if native Link is available on this device
 func deviceCanUseNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+    #if DEBUG
+    if LinkDebugOverrides.forceNativeLink {
+        return true
+    }
+    #endif
     return deviceCanUseNativeLink(
         useAttestationEndpoints: elementsSession.linkSettings?.useAttestationEndpoints,
         apiClient: configuration.apiClient

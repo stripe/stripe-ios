@@ -15,6 +15,7 @@ struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var checkoutEndpoint: String
     @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
     @Binding var delayPaymentPagesRequests: Bool
+    @Binding var forceNativeLink: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -87,6 +88,11 @@ struct CheckoutPlaygroundConfigurationSection: View {
                     title: "Delay Payment Pages Requests",
                     isOn: $delayPaymentPagesRequests,
                     tooltip: "Adds a 1-second delay before Payment Pages API requests except the initial /init request so loading states are easier to inspect."
+                )
+                CheckoutPlayground.ToggleRow(
+                    title: "Force Native Link",
+                    isOn: $forceNativeLink,
+                    tooltip: "Debug-only client-side override that forces native Link regardless of the account's link_mobile_use_attestation_endpoints setting. Only affects presentation; confirmation may still fail if the account isn't provisioned for native Link."
                 )
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
