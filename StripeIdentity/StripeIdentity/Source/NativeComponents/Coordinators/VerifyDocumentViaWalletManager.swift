@@ -114,11 +114,20 @@ enum VerifyDocumentViaWalletManagerError: Error {
         let outcome = try await requestDocumentOutcome(request)
         VerifyWithWalletLogger.log("PassKit outcome=\(outcome)")
 
-        let submission = try await submitWalletIdentitySession(
-            id: walletSession.sessionId,
-            outcome: outcome
-        )
-        VerifyWithWalletLogger.log("submitted wallet identity session, status=\(submission.status)")
+        // Don't block the UI transition on the backend submit round-trip; fire it in the
+        // background since the server-side endpoint isn't fully supported yet for this demo.
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let submission = try await self.submitWalletIdentitySession(
+                    id: walletSession.sessionId,
+                    outcome: outcome
+                )
+                VerifyWithWalletLogger.log("submitted wallet identity session, status=\(submission.status)")
+            } catch {
+                VerifyWithWalletLogger.logError("submitWalletIdentitySession failed: \(error)")
+            }
+        }
         return outcome
     }
 
