@@ -10,6 +10,32 @@
 @_spi(STP) import StripePayments
 
 class STPFPXBankBrandTest: XCTestCase {
+    /// Expected API identifier and display name for every bank brand.
+    private static let expectedValues: [STPFPXBankBrand: (id: String, name: String)] = [
+        .affinBank: (id: "affin_bank", name: "Affin Bank"),
+        .allianceBank: (id: "alliance_bank", name: "Alliance Bank"),
+        .ambank: (id: "ambank", name: "AmBank"),
+        .bankIslam: (id: "bank_islam", name: "Bank Islam"),
+        .bankMuamalat: (id: "bank_muamalat", name: "Bank Muamalat"),
+        .bankRakyat: (id: "bank_rakyat", name: "Bank Rakyat"),
+        .BSN: (id: "bsn", name: "BSN"),
+        .CIMB: (id: "cimb", name: "CIMB Clicks"),
+        .hongLeongBank: (id: "hong_leong_bank", name: "Hong Leong Bank"),
+        .HSBC: (id: "hsbc", name: "HSBC BANK"),
+        .KFH: (id: "kfh", name: "KFH"),
+        .maybank2E: (id: "maybank2e", name: "Maybank2E"),
+        .maybank2U: (id: "maybank2u", name: "Maybank2U"),
+        .ocbc: (id: "ocbc", name: "OCBC Bank"),
+        .publicBank: (id: "public_bank", name: "Public Bank"),
+        .RHB: (id: "rhb", name: "RHB Bank"),
+        .standardChartered: (id: "standard_chartered", name: "Standard Chartered"),
+        .UOB: (id: "uob", name: "UOB Bank"),
+        .agrobank: (id: "agrobank", name: "Agrobank"),
+        .bankOfChina: (id: "bank_of_china", name: "Bank of China"),
+        .mbsbBank: (id: "mbsb_bank", name: "MBSB Bank"),
+        .unknown: (id: "unknown", name: "Unknown"),
+    ]
+
     func testStringFromBrand() {
         for brand in STPFPXBankBrand.allCases {
             let brandName = STPFPXBank.stringFrom(brand)
@@ -17,66 +43,9 @@ class STPFPXBankBrandTest: XCTestCase {
             let reverseTransformedBrand = STPFPXBank.brandFrom(brandID)
             XCTAssertEqual(reverseTransformedBrand, brand)
 
-            switch brand {
-            case .affinBank:
-                XCTAssertEqual(brandID, "affin_bank")
-                XCTAssertEqual(brandName, "Affin Bank")
-            case .allianceBank:
-                XCTAssertEqual(brandID, "alliance_bank")
-                XCTAssertEqual(brandName, "Alliance Bank")
-            case .ambank:
-                XCTAssertEqual(brandID, "ambank")
-                XCTAssertEqual(brandName, "AmBank")
-            case .bankIslam:
-                XCTAssertEqual(brandID, "bank_islam")
-                XCTAssertEqual(brandName, "Bank Islam")
-            case .bankMuamalat:
-                XCTAssertEqual(brandID, "bank_muamalat")
-                XCTAssertEqual(brandName, "Bank Muamalat")
-            case .bankRakyat:
-                XCTAssertEqual(brandID, "bank_rakyat")
-                XCTAssertEqual(brandName, "Bank Rakyat")
-            case .BSN:
-                XCTAssertEqual(brandID, "bsn")
-                XCTAssertEqual(brandName, "BSN")
-            case .CIMB:
-                XCTAssertEqual(brandID, "cimb")
-                XCTAssertEqual(brandName, "CIMB Clicks")
-            case .hongLeongBank:
-                XCTAssertEqual(brandID, "hong_leong_bank")
-                XCTAssertEqual(brandName, "Hong Leong Bank")
-            case .HSBC:
-                XCTAssertEqual(brandID, "hsbc")
-                XCTAssertEqual(brandName, "HSBC BANK")
-            case .KFH:
-                XCTAssertEqual(brandID, "kfh")
-                XCTAssertEqual(brandName, "KFH")
-            case .maybank2E:
-                XCTAssertEqual(brandID, "maybank2e")
-                XCTAssertEqual(brandName, "Maybank2E")
-            case .maybank2U:
-                XCTAssertEqual(brandID, "maybank2u")
-                XCTAssertEqual(brandName, "Maybank2U")
-            case .ocbc:
-                XCTAssertEqual(brandID, "ocbc")
-                XCTAssertEqual(brandName, "OCBC Bank")
-            case .publicBank:
-                XCTAssertEqual(brandID, "public_bank")
-                XCTAssertEqual(brandName, "Public Bank")
-            case .RHB:
-                XCTAssertEqual(brandID, "rhb")
-                XCTAssertEqual(brandName, "RHB Bank")
-            case .standardChartered:
-                XCTAssertEqual(brandID, "standard_chartered")
-                XCTAssertEqual(brandName, "Standard Chartered")
-            case .UOB:
-                XCTAssertEqual(brandID, "uob")
-                XCTAssertEqual(brandName, "UOB Bank")
-            case .unknown:
-                XCTAssertEqual(brandID, "unknown")
-                XCTAssertEqual(brandName, "Unknown")
-            @unknown default:
-                break
+            if let expected = Self.expectedValues[brand] {
+                XCTAssertEqual(brandID, expected.id)
+                XCTAssertEqual(brandName, expected.name)
             }
         }
     }

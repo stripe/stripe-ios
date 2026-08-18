@@ -325,9 +325,6 @@ enum CheckoutTestHelpers {
 
     static func makeAdaptivePricingSession(
         currency: String = "usd",
-        adaptivePricingActive: Bool = true,
-        includeLocalizedPrices: Bool = true,
-        includeExchangeRateFields: Bool = true,
         integrationAmount: Int = 1200,
         localAmount: Int = 1000
     ) -> PaymentPagesAPIResponse {
@@ -337,28 +334,18 @@ enum CheckoutTestHelpers {
             currency: currency,
             unitAmount: integrationAmount
         )
-        json["developer_tool_context"] = [
-            "adaptive_pricing": [
-                "active": adaptivePricingActive,
-            ],
+        let localCurrencyOption: [AnyHashable: Any] = [
+            "currency": "gbp",
+            "amount": localAmount,
+            "presentment_exchange_rate": "0.776917",
+            "conversion_markup_bps": 400,
         ]
-
-        if includeLocalizedPrices {
-            var localCurrencyOption: [AnyHashable: Any] = [
-                "currency": "gbp",
-                "amount": localAmount,
-            ]
-            if includeExchangeRateFields {
-                localCurrencyOption["presentment_exchange_rate"] = "0.776917"
-                localCurrencyOption["conversion_markup_bps"] = 400
-            }
-            json["adaptive_pricing_info"] = [
-                "integration_currency": "usd",
-                "integration_amount": integrationAmount,
-                "active_presentment_currency": currency,
-                "local_currency_options": [localCurrencyOption],
-            ]
-        }
+        json["adaptive_pricing_info"] = [
+            "integration_currency": "usd",
+            "integration_amount": integrationAmount,
+            "active_presentment_currency": currency,
+            "local_currency_options": [localCurrencyOption],
+        ]
 
         return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }

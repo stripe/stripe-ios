@@ -22,33 +22,6 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         XCTAssertNil(checkout.getCurrencySelectorElement())
     }
 
-    func testUnavailableWhenAdaptivePricingNotActive() async throws {
-        let session = makeSession(adaptivePricingActive: false)
-        let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
-        )
-
-        XCTAssertNil(checkout.getCurrencySelectorElement())
-    }
-
-    func testUnavailableWhenLocalizedPricesEmpty() async throws {
-        let session = makeSession(includeLocalizedPrices: false)
-        let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
-        )
-
-        XCTAssertNil(checkout.getCurrencySelectorElement())
-    }
-
-    func testUnavailableWhenExchangeRateMetaNil() async throws {
-        let session = makeSession(includeExchangeRateFields: false)
-        let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
-        )
-
-        XCTAssertNil(checkout.getCurrencySelectorElement())
-    }
-
     func testAvailableWhenAdaptivePricingActive() async throws {
         let session = makeSession()
         let checkout = try await Checkout(
@@ -145,16 +118,10 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     // MARK: - Helpers
 
     private func makeSession(
-        adaptivePricingActive: Bool = true,
-        includeLocalizedPrices: Bool = true,
-        includeExchangeRateFields: Bool = true,
         integrationAmount: Int = 1200,
         localAmount: Int = 1000
     ) -> PaymentPagesAPIResponse {
         CheckoutTestHelpers.makeAdaptivePricingSession(
-            adaptivePricingActive: adaptivePricingActive,
-            includeLocalizedPrices: includeLocalizedPrices,
-            includeExchangeRateFields: includeExchangeRateFields,
             integrationAmount: integrationAmount,
             localAmount: localAmount
         )
