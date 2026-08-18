@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-extension Checkout {
+extension CheckoutController {
     static func confirmApplePay(
         checkoutSession: Session,
         applePayConfirmationContext: ApplePayConfirmationContext,

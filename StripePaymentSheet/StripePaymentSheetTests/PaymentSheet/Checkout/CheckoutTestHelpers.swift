@@ -30,14 +30,14 @@ extension PaymentPagesAPIResponse {
 
 @MainActor
 class CheckoutEmissionRecorder {
-    var sessions: [Checkout.Session] = []
+    var sessions: [CheckoutController.Session] = []
     var loading: [Bool] = []
     private var subscriptions = Set<AnyCancellable>()
 
-    init(_ checkout: Checkout) {
+    init(_ checkout: CheckoutController) {
         checkout.$session.dropFirst().sink { [weak self] in self?.sessions.append($0) }
             .store(in: &subscriptions)
-        checkout.$isLoading.dropFirst().sink { [weak self] in self?.loading.append($0) }
+        checkout.$isUpdating.dropFirst().sink { [weak self] in self?.loading.append($0) }
             .store(in: &subscriptions)
     }
 }
@@ -152,7 +152,7 @@ enum CheckoutTestHelpers {
 
     // MARK: - Checkout-flow helpers
 
-    /// Builds a `Checkout.Configuration`, replacing its `apiClient` with one that uses test stubs.
+    /// Builds a `CheckoutController.Configuration`, replacing its `apiClient` with one that uses test stubs.
     ///
     /// - Parameters:
     ///   - apiResponse: The Checkout Session response returned by the stubbed `/init` request.
@@ -161,12 +161,12 @@ enum CheckoutTestHelpers {
     @MainActor
     static func makeConfiguration(
         apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
-        configuration: Checkout.Configuration? = nil,
+        configuration: CheckoutController.Configuration? = nil,
         stubAllOutgoingRequests: Bool = true
-    ) -> Checkout.Configuration {
+    ) -> CheckoutController.Configuration {
         // Use the production Checkout initializer with a test-controlled API client.
         let clientSecret = configuration?.clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
-        var resolvedConfiguration = configuration ?? Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var resolvedConfiguration = configuration ?? CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         resolvedConfiguration.apiClient = makeStubbedAPIClient(
             apiResponse: apiResponse,
             clientSecret: clientSecret,
@@ -179,10 +179,10 @@ enum CheckoutTestHelpers {
     @MainActor
     static func makeCurrencySelectorConfiguration(
         apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
-        configuration: Checkout.Configuration? = nil
-    ) -> Checkout.Configuration {
+        configuration: CheckoutController.Configuration? = nil
+    ) -> CheckoutController.Configuration {
         let clientSecret = configuration?.clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
-        var resolvedConfiguration = configuration ?? Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var resolvedConfiguration = configuration ?? CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         resolvedConfiguration.adaptivePricing.allowed = true
         return makeConfiguration(apiResponse: apiResponse, configuration: resolvedConfiguration)
     }
@@ -194,7 +194,7 @@ enum CheckoutTestHelpers {
         stubAllOutgoingRequests: Bool = true
     ) -> STPAPIClient {
         let resolvedClientSecret = clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
-        let sessionId = Checkout.extractSessionId(from: resolvedClientSecret)
+        let sessionId = CheckoutController.extractSessionId(from: resolvedClientSecret)
         let apiClient = APIStubbedTestCase.stubbedAPIClient()
         apiClient.publishableKey = "pk_test_123"
 
@@ -214,7 +214,7 @@ enum CheckoutTestHelpers {
             request.httpMethod == "POST"
                 && request.url?.path == "/v1/payment_pages/\(sessionId)/init"
         }) { _ in
-            // Feed Checkout(configuration:) the session fixture this test requested.
+            // Feed CheckoutController(configuration:) the session fixture this test requested.
             var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
             responseJSON["client_secret"] = resolvedClientSecret
             responseJSON["session_id"] = responseJSON["session_id"] ?? sessionId
@@ -248,7 +248,7 @@ enum CheckoutTestHelpers {
     ///     sessionJSON: { CheckoutTestHelpers.openSessionJSON }
     /// )
     ///
-    /// _ = try await Checkout(configuration: configuration)
+    /// _ = try await CheckoutController(configuration: configuration)
     /// XCTAssertEqual(recorder.requests.map(\.kind), [.initSession, .updateSession])
     /// XCTAssertEqual(recorder.requests[1].params["tax_region[country]"], "US")
     /// ```
@@ -384,14 +384,14 @@ class StubExpressCheckoutSessionUpdater: ExpressCheckoutSessionUpdater {
     func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {}
 }
 
-extension Checkout.ApplePayConfirmationContext {
+extension CheckoutController.ApplePayConfirmationContext {
     static func makeMock(
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: Checkout.ApplePayConfiguration = Checkout.ApplePayConfiguration(merchantId: "merchant.com.test")
-    ) -> Checkout.ApplePayConfirmationContext {
-        Checkout.ApplePayConfirmationContext(
+        applePayConfiguration: CheckoutController.ApplePayConfiguration = CheckoutController.ApplePayConfiguration(merchantId: "merchant.com.test")
+    ) -> CheckoutController.ApplePayConfirmationContext {
+        CheckoutController.ApplePayConfirmationContext(
             applePayConfiguration: applePayConfiguration,
             apiClient: apiClient,
             returnURL: returnURL,

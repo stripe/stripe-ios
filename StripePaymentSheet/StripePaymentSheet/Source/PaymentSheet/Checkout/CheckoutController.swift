@@ -1,5 +1,5 @@
 //
-//  Checkout.swift
+//  CheckoutController.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 2/25/26.
@@ -16,61 +16,43 @@ import UIKit
 /// Manages a Checkout Session lifecycle.
 ///
 /// ```swift
-/// let checkout = try await Checkout(configuration: .init(clientSecret: "cs_xxx_secret_yyy"))
+/// let checkout = try await CheckoutController(configuration: .init(clientSecret: "cs_xxx_secret_yyy"))
 /// print(checkout.session)
 /// ```
 ///
 /// The async initializer loads the session from Stripe before returning.
 ///
-/// Observe loading state and session changes with ``isLoading`` and ``session``
+/// Observe loading state and session changes with ``isUpdating`` and ``session``
 /// (published via `ObservableObject`).
 @_spi(STP)
 @_spi(ReactNativeSDK)
 @MainActor
-public final class Checkout: ObservableObject {
+public final class CheckoutController: ObservableObject {
     // MARK: - Public Properties
 
-    /// The current loading state of the checkout session.
-    ///
-    /// After initialization this is always ``false``. It transitions to ``true``
-    /// while a mutation is in flight.
-    @Published public internal(set) var isLoading: Bool = false
+    /// True when the session is being updated.
+    /// Use this to disable interactive UI e.g. your buy button.
+    @Published public internal(set) var isUpdating: Bool = false
 
     /// The Checkout Session, updated from Stripe after every mutation.
-    @Published public private(set) var session: Session {
-        didSet {
-            nonisolatedSession = session
-            // Just some notes: Setting session causes the publisher to fire even when it didn't change.
-            // AFAICT that's okay, deduping sees like a minor optimization to slightly reduce the amount of UI updates.
-        }
-    }
+    @Published public private(set) var session: Session
 
     /// The configuration supplied at initialization.
-    public let configuration: Configuration
+    let configuration: Configuration
 
     // MARK: - Internal Properties
 
-    /// The PaymentElement for this Checkout instance.
+    /// The PaymentElement for this CheckoutController instance.
     private(set) var paymentElement: PaymentElement!
 
-    /// The ExpressCheckoutElement for this Checkout instance.
+    /// The ExpressCheckoutElement for this CheckoutController instance.
     private var expressCheckoutElement: ExpressCheckoutElement?
 
-    /// The CurrencySelectorElement for this Checkout instance, when Adaptive Pricing is available.
+    /// The CurrencySelectorElement for this CheckoutController instance, when Adaptive Pricing is available.
     private var currencySelectorElement: CurrencySelectorElement?
 
-    /// The ShippingAddressElement for this Checkout instance.
+    /// The ShippingAddressElement for this CheckoutController instance.
     private let shippingAddressElement: ShippingAddressElement
-
-    // TODO(gbirch) TODO(porter) remove this nonisolatedSession
-    //  once MPE is properly MainActor isolated
-    /// A snapshot of the current ``session`` accessible from non-MainActor contexts.
-    ///
-    /// Marked `nonisolated(unsafe)` because PaymentSheet internals read this from non-MainActor
-    /// contexts. This is safe: reads only occur after the session is loaded and while the payment
-    /// UI is presented, a window during which no mutations occur. Writes are always on MainActor
-    /// because they go through `Checkout`'s MainActor-isolated mutation methods.
-    nonisolated(unsafe) private(set) var nonisolatedSession: Session!
 
     let clientSecret: String
     let apiClient: STPAPIClient
@@ -83,17 +65,17 @@ public final class Checkout: ObservableObject {
     var pendingOperations: [Task<Void, Error>] = [] {
         didSet {
             // If the queue has gone from empty to non-empty, we set
-            //  isLoading to true. We avoid setting it if the queue
+            //  isUpdating to true. We avoid setting it if the queue
             //  was already non-empty to prevent duplicate loading emissions.
-            if !pendingOperations.isEmpty && !isLoading {
-                isLoading = true
+            if !pendingOperations.isEmpty && !isUpdating {
+                isUpdating = true
             }
 
             // If the queue has gone from non-empty to empty, we set
-            //  isLoading to false. There shouldn't be a situation in
-            //  which the isLoading is already false, but we check just in case.
-            if pendingOperations.isEmpty && isLoading {
-                isLoading = false
+            //  isUpdating to false. There shouldn't be a situation in
+            //  which the isUpdating is already false, but we check just in case.
+            if pendingOperations.isEmpty && isUpdating {
+                isUpdating = false
             }
         }
     }
@@ -131,7 +113,6 @@ public final class Checkout: ObservableObject {
             )
             let loadedSession = apiResponse.makePublicSession()
             self.session = loadedSession
-            self.nonisolatedSession = loadedSession // temporary hack
 
             // Element initialization is intentionally sequential:
 
@@ -240,7 +221,7 @@ public final class Checkout: ObservableObject {
     /// the address is sent to the server to compute updated tax amounts.
     ///
     /// - Parameter address: The billing address to use for tax calculation. To reset tax computation
-    ///   to a country-only region, pass a ``Checkout.Address`` with just the country.
+    ///   to a country-only region, pass a ``CheckoutController.Address`` with just the country.
     /// - Throws: ``CheckoutError`` if the session is not open, or if
     ///   the server request fails.
     func updateBillingTaxRegionIfNecessary(
@@ -263,7 +244,7 @@ public final class Checkout: ObservableObject {
     /// - Parameters:
     ///   - name: The customer's full name.
     ///   - address: The shipping address to set. To reset tax computation
-    ///     to a country-only region, pass a ``Checkout.Address`` with just the country.
+    ///     to a country-only region, pass a ``CheckoutController.Address`` with just the country.
     /// - Throws: ``CheckoutError`` if the session is not open, or if
     ///   the server request fails.
     public func updateShippingAddress(
@@ -328,22 +309,22 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Element methods
 
-    /// Returns the PaymentElement for this Checkout instance.
+    /// Returns the PaymentElement for this CheckoutController instance.
     public func getPaymentElement() -> PaymentElement {
         return paymentElement
     }
 
-    /// Returns the ExpressCheckoutElement for this Checkout instance.
+    /// Returns the ExpressCheckoutElement for this CheckoutController instance.
     public func getExpressCheckoutElement() -> ExpressCheckoutElement? {
         return expressCheckoutElement
     }
 
-    /// Returns the CurrencySelectorElement when Adaptive Pricing is available for this Checkout instance.
+    /// Returns the CurrencySelectorElement when Adaptive Pricing is available for this CheckoutController instance.
     public func getCurrencySelectorElement() -> CurrencySelectorElement? {
         return currencySelectorElement
     }
 
-    /// Returns the ShippingAddressElement for this Checkout instance.
+    /// Returns the ShippingAddressElement for this CheckoutController instance.
     public func getShippingAddressElement() -> ShippingAddressElement {
         return shippingAddressElement
     }
@@ -355,17 +336,17 @@ public final class Checkout: ObservableObject {
     /// - Returns: A `ConfirmResult` enum - either succeeded, canceled, or failed.
     public func confirm(from presentingViewController: UIViewController? = nil) async -> ConfirmResult {
         guard let presentingViewController = presentingViewController ?? UIWindow.visibleViewController else {
-            let errorMessage = "Checkout.confirm(from:) could not find a presenting view controller."
+            let errorMessage = "CheckoutController.confirm(from:) could not find a presenting view controller."
             assertionFailure(errorMessage)
             return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
 
         guard sessionIsOpen else {
-            return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: "Checkout.confirm(from:) cannot confirm a Checkout Session that is no longer open."))
+            return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController.confirm(from:) cannot confirm a Checkout Session that is no longer open."))
         }
 
         guard pendingOperations.isEmpty else {
-            return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: "Checkout.confirm(from:) was called while the Checkout Session is still loading. Wait until Checkout.isLoading is false."))
+            return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController.confirm(from:) was called while the Checkout Session is still loading. Wait until CheckoutController.isUpdating is false."))
         }
 
         guard let confirmationContext = confirmationContext(for: paymentElement) else {
@@ -414,7 +395,7 @@ public final class Checkout: ObservableObject {
 
 // MARK: - Defaults
 
-extension Checkout {
+extension CheckoutController {
     func applyDefaults(shippingAddress: Session.ShippingAddress?) async throws {
         let defaults = configuration.defaults
 
@@ -440,7 +421,7 @@ extension Checkout {
 // MARK: - Internal session setters
 // These exist here because `session` is private(set) to enforce that session can only be mutated through these sanctioned paths.
 // Setting the session should generally only be done via `commitSession` to avoid putting us into an inconsistent state e.g. without using commitSession, MPE is not aware of the updated session.
-extension Checkout {
+extension CheckoutController {
     /// Replaces the current session from an API response, applies local state, and updates Checkout elements.
     ///
     /// Existing local state is preserved unless explicitly replaced.

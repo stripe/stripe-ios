@@ -14,7 +14,7 @@ import UIKit
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout {
+extension CheckoutController {
     /// A read-only representation of a Stripe Checkout Session.
     public struct Session {
         // MARK: - Public Properties
@@ -70,7 +70,7 @@ extension Checkout {
         public let taxAmounts: [TaxAmount]?
 
         /// Aggregate subtotal, tax, discount, and total amounts for the Checkout Session.
-        public let totals: Checkout.Session.Totals
+        public let totals: CheckoutController.Session.Totals
 
         // MARK: - Internal Properties
 
@@ -82,7 +82,7 @@ extension Checkout {
         let setupFutureUsageForPaymentMethodType: [String: String]
         let allowedShippingCountries: [String]?
         let localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
-        let exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
+        let exchangeRateMeta: ExchangeRateMeta?
         let adaptivePricingActive: Bool
         let billingAddressCollection: BillingAddressCollection
         let automaticTaxEnabled: Bool
@@ -96,7 +96,7 @@ extension Checkout {
     }
 }
 
-extension Checkout.Session {
+extension CheckoutController.Session {
     /// An item included in the order summary.
     @frozen
     public enum OrderSummaryItem: Sendable, Hashable {
@@ -178,11 +178,6 @@ extension Checkout.Session {
         ///
         /// For example, `"$10.00"` is represented as `1000`.
         public let minorUnitsAmount: Double
-
-        public init(amount: String, minorUnitsAmount: Double) {
-            self.amount = amount
-            self.minorUnitsAmount = minorUnitsAmount
-        }
     }
 
     /// A tax amount included in an order summary item or aggregated across the session.

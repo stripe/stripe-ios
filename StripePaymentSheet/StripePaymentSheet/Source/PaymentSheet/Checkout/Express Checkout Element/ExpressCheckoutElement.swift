@@ -13,7 +13,7 @@ protocol ExpressCheckoutElementDelegate: AnyObject {
     func expressCheckoutElementShouldConfirm(
         _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
         presentingViewController: UIViewController
-    ) async -> Checkout.ConfirmResult
+    ) async -> CheckoutController.ConfirmResult
 }
 
 /// An express checkout element backed by a Checkout Session.
@@ -37,7 +37,7 @@ public final class ExpressCheckoutElement {
 
     init(
         sessionSource: CheckoutSessionSource,
-        configuration: Checkout.Configuration,
+        configuration: CheckoutController.Configuration,
         delegate: ExpressCheckoutElementDelegate
     ) {
         let uiView = ExpressCheckoutElementUIView(session: sessionSource.initialSession, configuration: configuration, delegate: delegate)

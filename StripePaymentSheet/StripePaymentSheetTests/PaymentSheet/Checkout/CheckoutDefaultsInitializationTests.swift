@@ -19,9 +19,9 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
     func testInitAppliesBillingDefaultThroughBillingTaxUpdateWhenNeeded() async throws {
         stubCheckoutSessionRequests()
 
-        var configuration = Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        var billingDetails = Checkout.Configuration.Defaults.BillingDetails()
+        var billingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
         billingDetails.name = "Billing Name"
         billingDetails.address = .init(
             country: "US",
@@ -32,7 +32,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         )
         configuration.defaults.billingDetails = billingDetails
 
-        let checkout = try await Checkout(configuration: configuration)
+        let checkout = try await CheckoutController(configuration: configuration)
         let requests = requestRecorder.requests
 
         XCTAssertNotNil(checkout.getPaymentElement())
@@ -46,9 +46,9 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         // Given a Checkout Session that uses shipping for tax
         stubCheckoutSessionRequests(automaticTaxAddressSource: "shipping")
 
-        var configuration = Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
+        var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Shipping Name"
         shippingDetails.address = .init(
             country: "US",
@@ -60,7 +60,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         configuration.defaults.shippingDetails = shippingDetails
 
         // When Checkout initializes
-        let checkout = try await Checkout(configuration: configuration)
+        let checkout = try await CheckoutController(configuration: configuration)
         let requests = requestRecorder.requests
 
         // Then the shipping default is applied before PaymentElement loads
@@ -86,9 +86,9 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         // Given a Checkout Session that uses shipping for tax
         stubCheckoutSessionRequests(automaticTaxAddressSource: "shipping")
 
-        var configuration = Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
+        var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Shipping Name"
         shippingDetails.address = .init(
             country: "US",
@@ -100,7 +100,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         configuration.defaults.shippingDetails = shippingDetails
 
         // When Checkout initializes
-        let checkout = try await Checkout(configuration: configuration)
+        let checkout = try await CheckoutController(configuration: configuration)
 
         // Then the invalid shipping default remains in the SAE for correction but is not applied
         XCTAssertNotNil(checkout.getPaymentElement())
@@ -118,9 +118,9 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         // Given an address with a state for a country whose form does not collect one
         stubCheckoutSessionRequests(automaticTaxAddressSource: "shipping", allowedShippingCountries: ["AT"])
 
-        var configuration = Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
+        var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Shipping Name"
         shippingDetails.address = .init(
             country: "AT",
@@ -132,7 +132,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         configuration.defaults.shippingDetails = shippingDetails
 
         // When Checkout initializes
-        let checkout = try await Checkout(configuration: configuration)
+        let checkout = try await CheckoutController(configuration: configuration)
         let requests = requestRecorder.requests
 
         // Then the SAE does not show or return the provided state
@@ -146,9 +146,9 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         // Given a Brazilian state name that does not match an SDK state name or code
         stubCheckoutSessionRequests(automaticTaxAddressSource: "shipping", allowedShippingCountries: ["BR"])
 
-        var configuration = Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
+        var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Shipping Name"
         shippingDetails.address = .init(
             country: "BR",
@@ -160,7 +160,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         configuration.defaults.shippingDetails = shippingDetails
 
         // When Checkout initializes
-        let checkout = try await Checkout(configuration: configuration)
+        let checkout = try await CheckoutController(configuration: configuration)
 
         // Then the required state dropdown remains blank and the invalid address is not applied
         XCTAssertEqual(checkout.getShippingAddressElement().addressViewController.addressSection?.state?.rawData, "")
@@ -172,11 +172,11 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         // Given a Checkout Session that uses shipping for tax
         stubCheckoutSessionRequests(automaticTaxAddressSource: "shipping")
 
-        var configuration = Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
 
         // When Checkout initializes
-        let checkout = try await Checkout(configuration: configuration)
+        let checkout = try await CheckoutController(configuration: configuration)
 
         // Then Checkout does not manufacture or apply a shipping default
         XCTAssertNotNil(checkout.getPaymentElement())
@@ -188,9 +188,9 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         // Given a Checkout Session that does not allow the default shipping address's country
         stubCheckoutSessionRequests(automaticTaxAddressSource: "shipping")
 
-        var configuration = Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
+        var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Shipping Name"
         shippingDetails.address = .init(
             country: "GB",
@@ -201,7 +201,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         configuration.defaults.shippingDetails = shippingDetails
 
         // When Checkout initializes
-        let checkout = try await Checkout(configuration: configuration)
+        let checkout = try await CheckoutController(configuration: configuration)
         let paymentElement = checkout.getPaymentElement()
 
         // Then the shipping default is treated as nil

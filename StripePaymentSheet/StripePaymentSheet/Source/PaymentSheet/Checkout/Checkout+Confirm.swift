@@ -3,17 +3,17 @@
 
 // MARK: - Confirm
 
-extension Checkout {
+extension CheckoutController {
     /// Convenience bag of everything Apple Pay needs for confirmation, aside from committing the session
     /// back to `Checkout` (see ``CheckoutSessionBillingAddressUpdater`` for that).
     struct ApplePayConfirmationContext {
-        let applePayConfiguration: Checkout.ApplePayConfiguration
+        let applePayConfiguration: CheckoutController.ApplePayConfiguration
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
     }
 
-    /// `nil` if Apple Pay wasn't configured on this ``Checkout.Configuration``.
+    /// `nil` if Apple Pay wasn't configured on this ``CheckoutController.Configuration``.
     var applePayConfirmationContext: ApplePayConfirmationContext? {
         guard let applePayConfiguration = configuration.applePayConfiguration else {
             return nil
@@ -27,7 +27,7 @@ extension Checkout {
     }
 }
 
-extension Checkout {
+extension CheckoutController {
     /// Convenience bag of params needed for confirmation
     struct ConfirmationContext {
         let paymentOption: PaymentOption
@@ -256,7 +256,7 @@ extension Checkout {
     /// Confirms a checkout session with a new payment method
     @MainActor
     static func handleCheckoutSessionConfirmation(
-        checkoutSession: Checkout.Session,
+        checkoutSession: CheckoutController.Session,
         confirmType: PaymentSheet.ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
