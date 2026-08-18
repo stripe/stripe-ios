@@ -263,7 +263,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         let merchantLabel = applePayConfirmationContext.merchantDisplayName
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
 
-        // TODO: Set requiredShippingContactFields when shipping address collection is implemented.
+        let billingDetailsCollectionConfiguration = applePayConfirmationContext.billingDetailsCollectionConfiguration
+        paymentRequest.requiredBillingContactFields = makeRequiredBillingContactFields(from: billingDetailsCollectionConfiguration)
+        paymentRequest.requiredShippingContactFields = makeRequiredShippingContactFields(from: billingDetailsCollectionConfiguration)
+        // TODO: Add .postalAddress to requiredShippingContactFields when shipping address collection is implemented.
 
         // PKPaymentAuthorizationController.init is non-nullable even for invalid requests.
         // Use PKPaymentAuthorizationViewController.init as a proxy — it IS nullable and
@@ -280,6 +283,37 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             sessionUpdater: sessionUpdater,
             authorizationController: authorizationController
         )
+    }
+
+    // MARK: - Required contact fields
+
+    private static func makeRequiredBillingContactFields(
+        from billingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration
+    ) -> Set<PKContactField> {
+        var requiredPKContactFields = Set<PKContactField>()
+        // By default, we always want to request the billing address (as it includes the postal code).
+        if billingDetailsCollectionConfiguration.address == .automatic || billingDetailsCollectionConfiguration.address == .full {
+            requiredPKContactFields.insert(.postalAddress)
+        }
+        // Only request name field - phone and email go into shipping contact fields.
+        if billingDetailsCollectionConfiguration.name == .always {
+            requiredPKContactFields.insert(.name)
+        }
+        return requiredPKContactFields
+    }
+
+    private static func makeRequiredShippingContactFields(
+        from billingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration
+    ) -> Set<PKContactField> {
+        var requiredPKContactFields = Set<PKContactField>()
+        // Phone and email are collected through shipping contact fields.
+        if billingDetailsCollectionConfiguration.email == .always {
+            requiredPKContactFields.insert(.emailAddress)
+        }
+        if billingDetailsCollectionConfiguration.phone == .always {
+            requiredPKContactFields.insert(.phoneNumber)
+        }
+        return requiredPKContactFields
     }
 
     // MARK: - Present

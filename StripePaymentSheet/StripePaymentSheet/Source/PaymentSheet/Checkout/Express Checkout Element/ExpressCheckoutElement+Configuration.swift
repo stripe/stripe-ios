@@ -168,3 +168,23 @@ extension ExpressCheckoutElement {
     public typealias ConfirmHandler = (_ result: Checkout.ConfirmResult) -> Void
 
 }
+
+extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration {
+    /// Converts to the equivalent `PaymentSheet.BillingDetailsCollectionConfiguration`, used to
+    /// apply these requirements to the Link confirmation flow.
+    var asPaymentSheetConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
+        func collectionMode(_ mode: CollectionMode) -> PaymentSheet.BillingDetailsCollectionConfiguration.CollectionMode {
+            switch mode {
+            case .automatic: return .automatic
+            case .never: return .never
+            case .always: return .always
+            }
+        }
+        return PaymentSheet.BillingDetailsCollectionConfiguration(
+            name: collectionMode(name),
+            phone: collectionMode(phone),
+            email: collectionMode(email),
+            address: address == .full ? .full : .automatic
+        )
+    }
+}

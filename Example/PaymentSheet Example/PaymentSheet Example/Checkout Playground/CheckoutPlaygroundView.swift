@@ -51,6 +51,12 @@ struct CheckoutPlaygroundView: View {
                             automaticPaymentMethods: $viewModel.automaticPaymentMethods
                         )
 
+                        if viewModel.expressCheckoutElementOption == .show {
+                            CheckoutPlaygroundExpressCheckoutElementSection(
+                                billingDetailsCollectionConfiguration: $viewModel.eceBillingDetailsCollectionConfiguration
+                            )
+                        }
+
                         currencySelectorAppearanceSection
 
                         if !viewModel.automaticPaymentMethods {
@@ -87,6 +93,7 @@ struct CheckoutPlaygroundView: View {
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
+                            eceBillingDetailsCollectionConfiguration: viewModel.eceBillingDetailsCollectionConfiguration,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
@@ -97,6 +104,7 @@ struct CheckoutPlaygroundView: View {
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
+                            eceBillingDetailsCollectionConfiguration: viewModel.eceBillingDetailsCollectionConfiguration,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )

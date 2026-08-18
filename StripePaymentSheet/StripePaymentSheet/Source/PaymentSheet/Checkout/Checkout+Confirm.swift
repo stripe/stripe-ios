@@ -8,6 +8,7 @@ extension Checkout {
     /// back to `Checkout` (see ``CheckoutSessionBillingAddressUpdater`` for that).
     struct ApplePayConfirmationContext {
         let applePayConfiguration: ExpressCheckoutElement.ApplePayConfiguration
+        let billingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
@@ -20,6 +21,7 @@ extension Checkout {
         }
         return ApplePayConfirmationContext(
             applePayConfiguration: applePayConfiguration,
+            billingDetailsCollectionConfiguration: configuration.expressCheckoutElement.billingDetailsCollectionConfiguration,
             apiClient: apiClient,
             returnURL: configuration.returnURL,
             merchantDisplayName: effectiveMerchantDisplayName

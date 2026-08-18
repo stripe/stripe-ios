@@ -37,6 +37,7 @@ extension Checkout: ExpressCheckoutElementDelegate {
                 paymentSheetConfiguration.returnURL = configuration.returnURL
                 paymentSheetConfiguration.style = configuration.userInterfaceStyle
                 paymentSheetConfiguration.link.display = PaymentSheet.LinkConfiguration.Display(rawValue: expressCheckoutElementConfiguration.linkConfiguration.display.rawValue) ?? .automatic
+                paymentSheetConfiguration.billingDetailsCollectionConfiguration = expressCheckoutElementConfiguration.billingDetailsCollectionConfiguration.asPaymentSheetConfiguration
                 let confirmationChallenge = ConfirmationChallenge(elementsSession: session.elementsSession, stripeAttest: apiClient.stripeAttest)
                 let analyticsHelper = PaymentSheetAnalyticsHelper(
                     integrationShape: .expressCheckout,

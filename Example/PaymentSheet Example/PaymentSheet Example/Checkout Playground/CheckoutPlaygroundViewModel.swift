@@ -30,6 +30,7 @@ extension CheckoutPlayground {
                 }
             }
         }
+        @Published var eceBillingDetailsCollectionConfiguration = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
         @Published var currency: Currency = .usd
         @Published var customerType: CustomerType = .guest
         @Published var lineItems: [LineItemConfig] = LineItemConfig.defaults

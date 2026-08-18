@@ -5,6 +5,15 @@
 //  Created by Nick Porter on 2/24/26.
 
 import Foundation
+@_spi(STP) import StripePaymentSheet
+
+extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration.CollectionMode: Identifiable {
+    public var id: String { rawValue }
+}
+
+extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration.AddressCollectionMode: Identifiable {
+    public var id: String { rawValue }
+}
 
 enum CheckoutPlayground {
     enum UIFramework: String, CaseIterable, Identifiable {

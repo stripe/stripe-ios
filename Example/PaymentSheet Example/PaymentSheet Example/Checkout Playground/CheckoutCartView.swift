@@ -24,6 +24,7 @@ struct CheckoutCartView: View {
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     var showExpressCheckoutElement: Bool = false
+    var eceBillingDetailsCollectionConfiguration = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
     var delayPaymentPagesRequests = false
 
@@ -156,6 +157,7 @@ struct CheckoutCartView: View {
             expressCheckoutElementConfig.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
+            expressCheckoutElementConfig.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
             config.expressCheckoutElement = expressCheckoutElementConfig
             config.shippingAddressElement.title = "Shipping Address"
             config.shippingAddressElement.buttonTitle = "Save Address"
