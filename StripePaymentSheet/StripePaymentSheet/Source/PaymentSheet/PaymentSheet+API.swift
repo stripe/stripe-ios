@@ -50,12 +50,14 @@ extension PaymentSheet {
         paymentMethodID: String? = nil,
         confirmationChallenge: ConfirmationChallenge? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+        completion: @MainActor @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         if case .checkout = intent {
             let message = "Checkout Session confirmation must go through CheckoutController.confirm, not PaymentSheet.confirm."
             stpAssertionFailure(message)
-            completion(.failed(error: PaymentSheetError.unknown(debugDescription: message)), nil)
+            Task { @MainActor in
+                completion(.failed(error: PaymentSheetError.unknown(debugDescription: message)), nil)
+            }
             return
         }
 
