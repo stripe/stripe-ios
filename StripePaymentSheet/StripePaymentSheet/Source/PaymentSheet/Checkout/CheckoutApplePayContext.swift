@@ -27,15 +27,15 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     }
 
     private weak var sessionUpdater: ExpressCheckoutSessionUpdater?
-    private let session: Checkout.Session
+    private let session: CheckoutController.Session
     private let merchantLabel: String
     private let apiClient: STPAPIClient
     private let returnURL: String
     let authorizationController: PKPaymentAuthorizationController
 
     // Internal state
-    private var continuation: CheckedContinuation<Checkout.InternalConfirmResult, Never>?
-    var result: Checkout.InternalConfirmResult?
+    private var continuation: CheckedContinuation<CheckoutController.InternalConfirmResult, Never>?
+    var result: CheckoutController.InternalConfirmResult?
     var paymentState: PaymentState = .notStarted
     /// YES if the flow cancelled or timed out.  This toggles which delegate method (didFinish or didAuthorize) resumes our continuation
     var didCancelOrTimeoutWhilePending = false
@@ -43,8 +43,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private var didFinish = false
 
     init(
-        checkoutSession: Checkout.Session,
-        applePayConfirmationContext: Checkout.ApplePayConfirmationContext,
+        checkoutSession: CheckoutController.Session,
+        applePayConfirmationContext: CheckoutController.ApplePayConfirmationContext,
         sessionUpdater: ExpressCheckoutSessionUpdater,
         authorizationController: PKPaymentAuthorizationController
     ) {
@@ -237,8 +237,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     // MARK: - Factory
 
     static func create(
-        checkoutSession: Checkout.Session,
-        applePayConfirmationContext: Checkout.ApplePayConfirmationContext,
+        checkoutSession: CheckoutController.Session,
+        applePayConfirmationContext: CheckoutController.ApplePayConfirmationContext,
         sessionUpdater: ExpressCheckoutSessionUpdater
     ) throws -> CheckoutApplePayContext {
         let applePayConfig = applePayConfirmationContext.applePayConfiguration
@@ -258,7 +258,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             currency: checkoutSession.currency ?? "USD"
         )
 
-        assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `Checkout.ApplePayConfiguration`.")
+        assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `CheckoutController.ApplePayConfiguration`.")
 
         let merchantLabel = applePayConfirmationContext.merchantDisplayName
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
@@ -284,7 +284,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
     // MARK: - Present
 
-    func presentApplePay() async -> Checkout.InternalConfirmResult {
+    func presentApplePay() async -> CheckoutController.InternalConfirmResult {
         authorizationController.delegate = self
         return await withCheckedContinuation { continuation in
             self.continuation = continuation
@@ -306,7 +306,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     }
 
     // TODO: Build summary items from session line items, tax, shipping, and discounts.
-    static func makeSummaryItems(for session: Checkout.Session, label: String) -> [PKPaymentSummaryItem] {
+    static func makeSummaryItems(for session: CheckoutController.Session, label: String) -> [PKPaymentSummaryItem] {
         if let amount = session.expectedAmount() {
             return [PKPaymentSummaryItem(label: label, amount: NSDecimalNumber.stp_decimalNumber(withAmount: amount, currency: session.currency), type: .final)]
         }
@@ -318,7 +318,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         didFinish = true
     }
 
-    private func resume(with result: Checkout.InternalConfirmResult) {
+    private func resume(with result: CheckoutController.InternalConfirmResult) {
         guard let c = continuation else { return }
         continuation = nil
         c.resume(returning: result)

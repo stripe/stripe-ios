@@ -384,14 +384,14 @@ class StubExpressCheckoutSessionUpdater: ExpressCheckoutSessionUpdater {
     func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {}
 }
 
-extension Checkout.ApplePayConfirmationContext {
+extension CheckoutController.ApplePayConfirmationContext {
     static func makeMock(
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: Checkout.ApplePayConfiguration = Checkout.ApplePayConfiguration(merchantId: "merchant.com.test")
-    ) -> Checkout.ApplePayConfirmationContext {
-        Checkout.ApplePayConfirmationContext(
+        applePayConfiguration: CheckoutController.ApplePayConfiguration = CheckoutController.ApplePayConfiguration(merchantId: "merchant.com.test")
+    ) -> CheckoutController.ApplePayConfirmationContext {
+        CheckoutController.ApplePayConfirmationContext(
             applePayConfiguration: applePayConfiguration,
             apiClient: apiClient,
             returnURL: returnURL,

@@ -16,7 +16,7 @@ struct CheckoutCartView: View {
 
     @State private var isLoading = false
     @State private var errorMessage: String?
-    @State private var eceConfirmResult: Checkout.ConfirmResult?
+    @State private var eceConfirmResult: CheckoutController.ConfirmResult?
     @State private var showsCheckoutDetails = false
 
     let clientSecret: String

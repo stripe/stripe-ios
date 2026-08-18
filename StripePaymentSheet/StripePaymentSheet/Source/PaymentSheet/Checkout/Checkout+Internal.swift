@@ -16,12 +16,12 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
         presentingViewController: UIViewController
     ) async -> ConfirmResult {
         guard sessionIsOpen else {
-            let error = CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() cannot confirm a Checkout Session that is no longer open.")
+            let error = CheckoutError.unknown(debugDescription: "CheckoutController.expressCheckoutElementShouldConfirm() cannot confirm a Checkout Session that is no longer open.")
             STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
             return .failed(error)
         }
         guard let expressCheckoutConfirmationContext = confirmationContext(for: paymentMethod) else {
-            let error = CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() could not build a confirmation context for \(paymentMethod).")
+            let error = CheckoutError.unknown(debugDescription: "CheckoutController.expressCheckoutElementShouldConfirm() could not build a confirmation context for \(paymentMethod).")
             STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
             return .failed(error)
         }
@@ -29,7 +29,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             presentingViewController: presentingViewController,
             appearance: expressCheckoutConfirmationContext.configuration.appearance
         )
-        let result = await Checkout.confirm(
+        let result = await CheckoutController.confirm(
             checkoutSession: session,
             confirmationContext: expressCheckoutConfirmationContext,
             authenticationContext: authenticationContext,
@@ -40,7 +40,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
         switch result.paymentSheetResult {
         case .completed:
             guard let checkoutSessionResponse = result.checkoutSessionResponse else {
-                let error = CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() completed without a Checkout Session response.")
+                let error = CheckoutError.unknown(debugDescription: "CheckoutController.expressCheckoutElementShouldConfirm() completed without a Checkout Session response.")
                 STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
                 return .failed(error)
             }
