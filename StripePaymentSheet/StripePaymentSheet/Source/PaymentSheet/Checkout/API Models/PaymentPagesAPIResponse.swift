@@ -15,6 +15,7 @@ import Foundation
 /// Properties in this model mirror the API payload. Conversion to the public Checkout
 /// representation belongs in `makePublicSession()`.
 struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible {
+    // TODO: Make this Decodable instead, we don't need _allResponseFieldStorage.
     var _allResponseFieldsStorage: NonEncodableParameters?
 
     let sessionId: String
@@ -86,6 +87,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case mode
         case status
         case paymentStatus
+        case paymentMethodTypes
         case customerEmail
         case url
         case savedPaymentMethodsOfferSave = "customer_managed_saved_payment_methods_offer_save"
@@ -157,6 +159,8 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
             throw decoder.dataCorrupted("Unsupported Checkout Session status: \(decodedStatus)")
         }
         self.status = status
+        _ = try container.decode([String].self, forKey: .paymentMethodTypes)
+
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
         url = try container.decodeIfPresent(String.self, forKey: .url)
         savedPaymentMethodsOfferSave = try container.decodeIfPresent(
@@ -285,8 +289,11 @@ extension PaymentPagesAPIResponse {
         let adjustableQuantity: AdjustableQuantity?
 
         private enum CodingKeys: String, CodingKey {
+            case innerItemKey
             case price
             case quantity
+            case subtotal
+            case total
             case unitAmount
             case unitAmountDecimal
             case unitLabel
@@ -298,11 +305,14 @@ extension PaymentPagesAPIResponse {
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
+            _ = try container.decode(String.self, forKey: .innerItemKey)
             price = try container.decode(Price.self, forKey: .price)
             quantity = try container.decode(Int.self, forKey: .quantity)
             guard quantity >= 0 else {
                 throw decoder.dataCorrupted("quantity must not be negative")
             }
+            _ = try container.decode(Int.self, forKey: .subtotal)
+            _ = try container.decode(Int.self, forKey: .total)
             unitAmount = try container.decodeIfPresent(Int.self, forKey: .unitAmount)
 
             if let rawUnitAmountDecimal = try container.decodeIfPresent(

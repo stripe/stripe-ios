@@ -82,7 +82,7 @@ extension CheckoutController {
         let setupFutureUsageForPaymentMethodType: [String: String]
         let allowedShippingCountries: [String]?
         let localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
-        let exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
+        let exchangeRateMeta: ExchangeRateMeta?
         let adaptivePricingActive: Bool
         let billingAddressCollection: BillingAddressCollection
         let automaticTaxEnabled: Bool

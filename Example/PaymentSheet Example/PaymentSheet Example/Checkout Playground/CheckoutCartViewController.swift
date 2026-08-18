@@ -736,7 +736,7 @@ final class CheckoutCartViewController: UIViewController {
     }
 
     private func updateLoadingOverlay() {
-        let isLoading = checkout?.isLoading == true || isUpdatingShippingAddress
+        let isLoading = checkout?.isUpdating == true || isUpdatingShippingAddress
         loadingOverlayView.isHidden = !isLoading
         isLoading ? loadingActivityIndicator.startAnimating() : loadingActivityIndicator.stopAnimating()
     }

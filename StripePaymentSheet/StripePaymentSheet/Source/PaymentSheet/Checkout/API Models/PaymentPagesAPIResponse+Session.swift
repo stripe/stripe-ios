@@ -317,9 +317,7 @@ extension PaymentPagesAPIResponse {
             return []
         }
         var metas: [STPCheckoutSessionLocalizedPriceMeta] = adaptivePricingInfo.localCurrencyOptions.map { option in
-            // Local currency options no longer include a dedicated ID, so currency is stable.
             return STPCheckoutSessionLocalizedPriceMeta(
-                id: option.currency,
                 currency: option.currency,
                 total: option.amount
             )
@@ -331,7 +329,6 @@ extension PaymentPagesAPIResponse {
         }) {
             metas.append(
                 STPCheckoutSessionLocalizedPriceMeta(
-                    id: adaptivePricingInfo.integrationCurrency,
                     currency: adaptivePricingInfo.integrationCurrency,
                     total: adaptivePricingInfo.integrationAmount
                 )
@@ -343,7 +340,7 @@ extension PaymentPagesAPIResponse {
 
     private static func makeExchangeRateMeta(
         from adaptivePricingInfo: AdaptivePricingInfo?
-    ) -> STPCheckoutSessionExchangeRateMeta? {
+    ) -> CheckoutController.Session.ExchangeRateMeta? {
         guard let adaptivePricingInfo,
               let selectedOption = adaptivePricingInfo.localCurrencyOptions.first(where: {
                   $0.currency.lowercased() == adaptivePricingInfo.activePresentmentCurrency.lowercased()
@@ -351,10 +348,7 @@ extension PaymentPagesAPIResponse {
             return nil
         }
 
-        return STPCheckoutSessionExchangeRateMeta(
-            id: "\(adaptivePricingInfo.integrationCurrency.lowercased())_to_\(selectedOption.currency.lowercased())",
-            buyCurrency: selectedOption.currency,
-            sellCurrency: adaptivePricingInfo.integrationCurrency,
+        return CheckoutController.Session.ExchangeRateMeta(
             exchangeRate: selectedOption.presentmentExchangeRate,
             integrationCurrency: adaptivePricingInfo.integrationCurrency,
             localizedCurrency: selectedOption.currency,

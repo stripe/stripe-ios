@@ -35,6 +35,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "livemode",
             "status",
             "payment_status",
+            "payment_method_types",
             "elements_session",
         ]
 
@@ -240,8 +241,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.localizedPricesMetas[1].currency, "usd")
         XCTAssertEqual(session.localizedPricesMetas[1].total, 12000)
         XCTAssertNotNil(session.exchangeRateMeta)
-        XCTAssertEqual(session.exchangeRateMeta?.buyCurrency, "eur")
-        XCTAssertEqual(session.exchangeRateMeta?.sellCurrency, "usd")
+        XCTAssertEqual(session.exchangeRateMeta?.localizedCurrency, "eur")
+        XCTAssertEqual(session.exchangeRateMeta?.integrationCurrency, "usd")
         XCTAssertEqual(session.exchangeRateMeta?.exchangeRate, "0.90325")
 
         // Presentment details (derived from adaptive pricing)
@@ -693,8 +694,11 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testUnifiedModeSessionRejectsMissingRequiredNestedItemFields() {
         let requiredFields = [
+            "inner_item_key",
             "price",
             "quantity",
+            "subtotal",
+            "total",
             "tax_amounts",
             "tax_inclusive",
             "tax_exclusive",
@@ -705,20 +709,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             XCTAssertThrowsError(
                 try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
                 "Expected missing nested item field \(field) to fail decoding"
-            )
-        }
-    }
-
-    func testUnifiedModeSessionIgnoresUnusedFields() {
-        var json = CheckoutTestHelpers.makeSessionJSON()
-        json.removeValue(forKey: "payment_method_types")
-        XCTAssertNoThrow(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
-
-        for field in ["inner_item_key", "subtotal", "total"] {
-            let json = modifyingOneTimePriceItem { $0.removeValue(forKey: field) }
-            XCTAssertNoThrow(
-                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
-                "Expected unused nested item field \(field) to be ignored"
             )
         }
     }
