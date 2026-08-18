@@ -148,7 +148,7 @@ final class PaymentSheetLoaderAutomaticTaxTest: XCTestCase {
                 "automatic_tax_address_source": automaticTaxAddressSource,
             ],
         ])
-        return .checkout(response.makePublicSession())
+        return ._testCheckoutSession(apiResponse: response)
     }
 
     private func makeCard(

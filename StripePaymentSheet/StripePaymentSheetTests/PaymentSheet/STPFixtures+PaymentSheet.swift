@@ -402,7 +402,11 @@ extension Intent {
             json["recurring_details"] = recurringDetails
         }
         let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
-        return .checkout(checkoutSession.makePublicSession())
+        return _testCheckoutSession(apiResponse: checkoutSession)
+    }
+
+    static func _testCheckoutSession(apiResponse: PaymentPagesAPIResponse) -> Intent {
+        return .checkout(apiResponse.makePublicSession())
     }
 }
 

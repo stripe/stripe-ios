@@ -79,7 +79,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             overrides["customer_managed_saved_payment_methods_offer_save"] = offerSave
         }
         let session = CheckoutTestHelpers.makeSession(overrides)
-        return .checkout(session.makePublicSession())
+        return ._testCheckoutSession(apiResponse: session)
     }
 
     func testUpdatesParams() {
@@ -2431,7 +2431,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             }
             let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
             return PaymentSheetFormFactory(
-                intent: .checkout(checkoutSession.makePublicSession()),
+                intent: ._testCheckoutSession(apiResponse: checkoutSession),
                 elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),
                 configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
                 paymentMethod: .stripe(.payPal),
