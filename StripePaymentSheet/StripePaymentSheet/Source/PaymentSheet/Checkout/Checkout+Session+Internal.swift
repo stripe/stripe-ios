@@ -50,6 +50,11 @@ extension Checkout.Session {
     var noPaymentRequired: Bool {
         return paymentStatus == .noPaymentRequired
     }
+
+    /// The currency associated with the session's amounts.
+    var activePresentmentCurrency: String? {
+        return presentmentDetails?.presentmentCurrency ?? currency
+    }
 }
 
 // MARK: - Methods
@@ -120,7 +125,7 @@ extension Checkout.Session {
             id: id,
             businessName: businessName,
             currency: currency,
-            currencyOptions: currencyOptions,
+            presentmentDetails: presentmentDetails,
             discountAmounts: discountAmounts,
             email: email,
             orderSummaryItems: orderSummaryItems,

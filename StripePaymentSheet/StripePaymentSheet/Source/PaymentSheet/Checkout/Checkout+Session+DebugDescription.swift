@@ -19,7 +19,7 @@ extension Checkout.Session: CustomDebugStringConvertible {
             "  currency: \(currency.debugValue)",
         ]
 
-        lines.append(contentsOf: currencyOptionsDebugDescriptionLines)
+        lines.append(contentsOf: presentmentDetailsDebugDescriptionLines)
         lines.append(contentsOf: discountAmountsDebugDescriptionLines)
         lines.append(contentsOf: [
             "  email: \(email.maskedEmailDebugValue)",
@@ -51,32 +51,15 @@ extension Checkout.Session: CustomDebugStringConvertible {
         return lines.joined(separator: "\n")
     }
 
-    private var currencyOptionsDebugDescriptionLines: [String] {
-        guard !currencyOptions.isEmpty else {
-            return ["  currencyOptions: []"]
+    private var presentmentDetailsDebugDescriptionLines: [String] {
+        guard let presentmentDetails else {
+            return ["  presentmentDetails: nil"]
         }
-
-        var lines = ["  currencyOptions: ["]
-        for option in currencyOptions {
-            lines.append(contentsOf: [
-                "    {",
-                "      currency: \(String(reflecting: option.currency))",
-                "      amount: \(option.amount.debugValue)",
-            ])
-            if let conversion = option.currencyConversion {
-                lines.append(contentsOf: [
-                    "      currencyConversion: {",
-                    "        sourceCurrency: \(String(reflecting: conversion.sourceCurrency))",
-                    "        fxRate: \(String(reflecting: conversion.fxRate))",
-                    "      }",
-                ])
-            } else {
-                lines.append("      currencyConversion: nil")
-            }
-            lines.append("    }")
-        }
-        lines.append("  ]")
-        return lines
+        return [
+            "  presentmentDetails: {",
+            "    presentmentCurrency: \(String(reflecting: presentmentDetails.presentmentCurrency))",
+            "  }",
+        ]
     }
 
     private var discountAmountsDebugDescriptionLines: [String] {
@@ -88,9 +71,11 @@ extension Checkout.Session: CustomDebugStringConvertible {
         for discount in discountAmounts {
             lines.append(contentsOf: [
                 "    {",
-                "      amount: \(discount.amount.debugValue)",
+                "      amount: \(String(reflecting: discount.amount))",
+                "      minorUnitsAmount: \(discount.minorUnitsAmount)",
                 "      displayName: \(String(reflecting: discount.displayName))",
                 "      promotionCode: \(discount.promotionCode == nil ? "nil" : "<redacted>")",
+                "      percentOff: \(discount.percentOff.debugValue)",
                 "    }",
             ])
         }
@@ -204,6 +189,13 @@ private extension Optional where Wrapped == Int {
     /// Example: `100`; `nil` remains `nil`.
     var debugValue: String {
         map(String.init) ?? "nil"
+    }
+}
+
+private extension Optional where Wrapped == Double {
+    /// Example: `25.5`; `nil` remains `nil`.
+    var debugValue: String {
+        map { String($0) } ?? "nil"
     }
 }
 

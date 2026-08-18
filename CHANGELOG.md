@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 PATCH
 
 ## X.Y.Z - changes pending release
+### Payments
+* [Added] Added support for the following FPX banks: Agrobank, Bank of China, and MBSB Bank.
 
 ## 26.7.0 2026-08-17
 ### PaymentSheet

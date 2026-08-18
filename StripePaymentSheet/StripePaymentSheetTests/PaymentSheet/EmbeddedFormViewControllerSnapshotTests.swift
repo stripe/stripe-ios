@@ -13,6 +13,7 @@
 import XCTest
 
 final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
+    private var testWindows: [UIWindow] = []
 
     override func setUp() async throws {
         await PaymentSheetLoader.loadMiscellaneousSingletons()
@@ -47,13 +48,28 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
         )
     }
 
-    func makeBottomSheetAndLayout(_ sut: EmbeddedFormViewController) -> BottomSheetViewController {
+    func makeBottomSheetAndLayout(
+        _ sut: EmbeddedFormViewController,
+        traits: UITraitCollection? = nil
+    ) -> BottomSheetViewController {
         let bottomSheet = BottomSheetViewController(
             contentViewController: sut,
             appearance: .default,
             isTestMode: false,
             didCancelNative3DS2: {}
         )
+        if let traits {
+            let host = UIViewController()
+            host.addChild(bottomSheet)
+            host.setOverrideTraitCollection(traits, forChild: bottomSheet)
+            host.view.addSubview(bottomSheet.view)
+            bottomSheet.didMove(toParent: host)
+
+            let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 1_000))
+            window.rootViewController = host
+            window.isHidden = false
+            testWindows.append(window)
+        }
         bottomSheet.view.setNeedsLayout()
         bottomSheet.view.layoutIfNeeded()
         let height = bottomSheet.view.systemLayoutSizeFitting(
@@ -66,10 +82,12 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
     func verify(
         _ sut: EmbeddedFormViewController,
         identifier: String? = nil,
+        rightToLeft: Bool = false,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let bottomSheet = makeBottomSheetAndLayout(sut)
+        let traits = rightToLeft ? UITraitCollection(layoutDirection: .rightToLeft) : nil
+        let bottomSheet = makeBottomSheetAndLayout(sut, traits: traits)
         STPSnapshotVerifyView(bottomSheet.view, identifier: identifier, file: file, line: line)
     }
 
@@ -177,6 +195,24 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
         sut.updateMandate()
         sut.updateErrorLabel(for: MockError())
         verify(sut)
+    }
+
+    func testDisplaysErrorAndMandateRightToLeft() {
+        struct MockError: LocalizedError {
+            var errorDescription: String? {
+                return "Mock error description"
+            }
+        }
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.formSheetAction = .confirm(completion: { _ in })
+        let sut = makeEmbeddedFormViewController(
+            configuration: configuration,
+            paymentMethodType: .SEPADebit
+        )
+
+        sut.updateMandate()
+        sut.updateErrorLabel(for: MockError())
+        verify(sut, rightToLeft: true)
     }
 }
 
