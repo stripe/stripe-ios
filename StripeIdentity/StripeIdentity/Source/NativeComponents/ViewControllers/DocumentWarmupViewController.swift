@@ -34,6 +34,7 @@ final class DocumentWarmupViewController: IdentityFlowViewController {
                 didOpenURL: { _ in }
             ),
             didTapButton: {
+                VerifyWithWalletLogger.log("continue-with-camera tapped (wallet unavailable), transitioning to document capture")
                 sheetController.transitionToDocumentCapture()
             }
         )
@@ -56,6 +57,7 @@ final class DocumentWarmupViewController: IdentityFlowViewController {
         super.viewDidLoad()
 
         guard #available(iOS 16.0, *) else {
+            VerifyWithWalletLogger.log("viewDidLoad: skipping wallet availability check, iOS <16")
             return
         }
 
@@ -79,6 +81,7 @@ final class DocumentWarmupViewController: IdentityFlowViewController {
                     state: .enabled,
                     isPrimary: true,
                     didTap: { [weak self] in
+                        VerifyWithWalletLogger.log("continue-with-camera tapped, transitioning to document capture")
                         self?.sheetController?.transitionToDocumentCapture()
                     }
                 ),
@@ -106,15 +109,16 @@ final class DocumentWarmupViewController: IdentityFlowViewController {
                             }
 
                             do {
-                                let status = try await self.verifyViaWalletManager.requestDocument()
-                                VerifyWithWalletLogger.log("requestDocument returned status=\(status)")
-                                if status == .validated {
-                                    VerifyWithWalletLogger.log("status validated, submitting verification page")
+                                let outcome = try await self.verifyViaWalletManager.requestDocument()
+                                VerifyWithWalletLogger.log("requestDocument returned outcome=\(outcome)")
+                                switch outcome {
+                                case .credentialReturned:
+                                    VerifyWithWalletLogger.log("credential returned, submitting verification page")
                                     self.sheetController?.submitVerificationPageAndTransition(
                                         from: self.analyticsScreenName
                                     ) {}
-                                } else {
-                                    VerifyWithWalletLogger.logError("not transitioning, status=\(status)")
+                                case .userDeclined, .noDocument:
+                                    VerifyWithWalletLogger.log("not transitioning, falling back to camera flow, outcome=\(outcome)")
                                 }
                             } catch {
                                 VerifyWithWalletLogger.logError("requestDocument failed: \(error)")

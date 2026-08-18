@@ -88,7 +88,7 @@ private final class VerifyDocumentViaWalletManagerMock: VerifyDocumentViaWalletM
     }
 
     @MainActor
-    func requestDocument() async throws -> StripeAPI.VerificationPageWalletIdentitySessionSubmission.Status {
-        return .validated
+    func requestDocument() async throws -> StripeAPI.VerificationPageWalletIdentitySessionOutcome {
+        return .credentialReturned(encryptedResponse: "mock_encrypted_response")
     }
 }

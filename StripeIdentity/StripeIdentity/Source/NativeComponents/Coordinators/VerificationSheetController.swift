@@ -296,23 +296,33 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     }
 
     private func submitVerificationPageAndTransition(completion: @escaping () -> Void) {
+        VerifyWithWalletLogger.log("submitVerificationPageAndTransition: calling submitIdentityVerificationPage")
+        let loggedCompletion: () -> Void = {
+            VerifyWithWalletLogger.log("submitVerificationPageAndTransition: transition completion invoked")
+            completion()
+        }
         apiClient.submitIdentityVerificationPage().observe(on: .main) { [weak self] submittedData in
             guard let self else { return }
 
             guard case .success(let resultData) = submittedData
             else {
+                if case .failure(let error) = submittedData {
+                    VerifyWithWalletLogger.logError("submitIdentityVerificationPage failed: \(error)")
+                }
                 self.isVerificationPageSubmitted = false
-                self.transitionWithVerificaionPageDataResult(submittedData, completion: completion)
+                self.transitionWithVerificaionPageDataResult(submittedData, completion: loggedCompletion)
                 return
             }
 
             self.isVerificationPageSubmitted = resultData.submittedAndClosed()
+            VerifyWithWalletLogger.log("submitIdentityVerificationPage succeeded: submitted=\(resultData.submitted) needsFallback=\(resultData.needsFallback()) missing=\(resultData.requirements.missing)")
 
             if resultData.needsFallback() {
                 guard let verificationPageResponse = self.verificationPageOrLogError(
                     missingError: .missingVerificationPageResponseForFallbackUpdate,
                     assertionMessage: "Fail to get VerificationPageResponse is nil"
                 ) else {
+                    VerifyWithWalletLogger.logError("needsFallback=true but verificationPageResponse is missing, cannot fall back")
                     return
                 }
                 self.verificationPageResponse = .success(
@@ -324,7 +334,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             }
             self.transitionWithVerificaionPageDataResult(
                 submittedData,
-                completion: completion
+                completion: loggedCompletion
             )
         }
     }

@@ -11,7 +11,7 @@ import PassKit
 
 protocol VerifyDocumentViaWalletManagerProtocol: AnyObject {
     func isVerifyDocumentViaWalletAvailable() async -> Bool
-    @MainActor func requestDocument() async throws -> StripeAPI.VerificationPageWalletIdentitySessionSubmission.Status
+    @MainActor func requestDocument() async throws -> StripeAPI.VerificationPageWalletIdentitySessionOutcome
 }
 
 enum VerifyDocumentViaWalletManagerError: Error {
@@ -71,7 +71,7 @@ enum VerifyDocumentViaWalletManagerError: Error {
     }
 
     @MainActor
-    func requestDocument() async throws -> StripeAPI.VerificationPageWalletIdentitySessionSubmission.Status {
+    func requestDocument() async throws -> StripeAPI.VerificationPageWalletIdentitySessionOutcome {
         VerifyWithWalletLogger.log("requestDocument: osVersion=\(Self.osVersionString) shouldEnableVerifyDocumentViaWallet=\(shouldEnableVerifyDocumentViaWallet) idDocumentTypeAllowlistKeys=\(idDocumentTypeAllowlistKeys)")
         guard shouldEnableVerifyDocumentViaWallet else {
             VerifyWithWalletLogger.logError("requestDocument: unavailable, shouldEnableVerifyDocumentViaWallet is false")
@@ -97,10 +97,11 @@ enum VerifyDocumentViaWalletManagerError: Error {
             documentRequests: walletSession.request.documentRequests
         ) else {
             VerifyWithWalletLogger.logError("no document descriptor could be built for documentRequests=\(walletSession.request.documentRequests.map { $0.documentType }) with idDocumentTypeAllowlistKeys=\(idDocumentTypeAllowlistKeys); submitting noDocument without presenting PassKit UI")
-            return try await submitWalletIdentitySession(
+            _ = try await submitWalletIdentitySession(
                 id: walletSession.sessionId,
                 outcome: .noDocument
-            ).status
+            )
+            return .noDocument
         }
         VerifyWithWalletLogger.log("using descriptor=\(descriptor)")
 
@@ -118,7 +119,7 @@ enum VerifyDocumentViaWalletManagerError: Error {
             outcome: outcome
         )
         VerifyWithWalletLogger.log("submitted wallet identity session, status=\(submission.status)")
-        return submission.status
+        return outcome
     }
 
     @MainActor
