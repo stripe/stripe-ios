@@ -56,11 +56,6 @@ import UIKit
         return paymentMethodOptionsForPaymentMethodType?["setup_future_usage"] as? String
     }
 
-    @_spi(STP) public func currency(for paymentMethodType: STPPaymentMethodType) -> String? {
-        let paymentMethodOptionsForPaymentMethodType = allResponseFields[paymentMethodType.identifier] as? [String: Any]
-        return paymentMethodOptionsForPaymentMethodType?["currency"] as? String
-    }
-
 }
 // MARK: - card
 

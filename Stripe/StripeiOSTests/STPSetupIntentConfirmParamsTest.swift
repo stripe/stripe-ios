@@ -116,7 +116,6 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         let paramsCopy = params.copy() as! STPSetupIntentConfirmParams
         XCTAssertEqual(params.clientSecret, paramsCopy.clientSecret)
         XCTAssertEqual(params.paymentMethodID, paramsCopy.paymentMethodID)
-        XCTAssertEqual(params.paymentMethodOptions, paramsCopy.paymentMethodOptions)
 
         // assert equal, not equal objects, because this is a shallow copy
         XCTAssertEqual(params.paymentMethodParams, paramsCopy.paymentMethodParams)

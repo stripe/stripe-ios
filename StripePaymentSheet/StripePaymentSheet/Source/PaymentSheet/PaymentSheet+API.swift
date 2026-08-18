@@ -956,16 +956,15 @@ extension PaymentSheet {
     ) -> STPSetupIntentConfirmParams {
         let params: STPSetupIntentConfirmParams
         switch confirmPaymentMethodType {
-        case let .saved(paymentMethod, paymentMethodOptions, clientAttributionMetadata, radarOptions):
+        case let .saved(paymentMethod, _, clientAttributionMetadata, radarOptions):
             params = STPSetupIntentConfirmParams(
                 clientSecret: setupIntent.clientSecret,
                 paymentMethodType: paymentMethod.type
             )
             params.paymentMethodID = paymentMethod.stripeId
-            params.paymentMethodOptions = paymentMethodOptions
             params.radarOptions = radarOptions
             params.clientAttributionMetadata = clientAttributionMetadata
-        case let .new(paymentMethodParams, paymentMethodOptions, paymentMethod, _, shouldSetAsDefaultPM):
+        case let .new(paymentMethodParams, _, paymentMethod, _, shouldSetAsDefaultPM):
             if let paymentMethod {
                 params = STPSetupIntentConfirmParams(
                     clientSecret: setupIntent.clientSecret,
@@ -976,7 +975,6 @@ extension PaymentSheet {
                 params = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                 params.paymentMethodParams = paymentMethodParams
             }
-            params.paymentMethodOptions = paymentMethodOptions
             // Send CAM at the top-level of all requests in scope for consistency
             // Also send under payment_method_data because there are existing dependencies
             params.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata

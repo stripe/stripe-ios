@@ -1074,8 +1074,7 @@ extension STPFixtures {
     static func makeSetupIntent(
         paymentMethodTypes: [STPPaymentMethodType] = [.card],
         usage: String = "off_session",
-        paymentMethodJson: [String: Any]? = nil,
-        paymentMethodOptions: STPPaymentMethodOptions? = nil
+        paymentMethodJson: [String: Any]? = nil
     ) -> STPSetupIntent {
         var json = STPTestUtils.jsonNamed(STPTestJSONSetupIntent)!
         json["usage"] = usage
@@ -1085,9 +1084,6 @@ extension STPFixtures {
         if let paymentMethodJson = paymentMethodJson {
             json["payment_method"] = paymentMethodJson
 
-        }
-        if let paymentMethodOptions {
-            json["payment_method_options"] = paymentMethodOptions.dictionaryValue
         }
         return STPSetupIntent.decodedObject(fromAPIResponse: json)!
     }

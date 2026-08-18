@@ -1463,7 +1463,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         }
     }
 
-    func testMakeIntentParams_alipayFutureUsage() {
+    func testMakeIntentParams_alipay_sets_mandate() {
         // Given
         let paymentMethodParams = STPPaymentMethodParams(
             alipay: STPPaymentMethodAlipayParams(),
@@ -1476,14 +1476,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             saveForFutureUseCheckboxState: .hidden
         )
         let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-        let setupPaymentMethodOptions = STPConfirmPaymentMethodOptions()
-        setupPaymentMethodOptions.alipayOptions = STPConfirmAlipayOptions()
-        setupPaymentMethodOptions.alipayOptions?.currency = "usd"
-        let setupConfirmType = PaymentSheet.ConfirmPaymentMethodType.new(
-            params: paymentMethodParams,
-            paymentOptions: setupPaymentMethodOptions,
-            saveForFutureUseCheckboxState: .hidden
-        )
 
         // When
         let regularPaymentIntentParams = PaymentSheet.makePaymentIntentParams(
@@ -1508,7 +1500,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             configuration: configuration
         )
         let setupIntentParams = PaymentSheet.makeSetupIntentParams(
-            confirmPaymentMethodType: setupConfirmType,
+            confirmPaymentMethodType: confirmType,
             setupIntent: STPFixtures.makeSetupIntent(paymentMethodTypes: [.alipay]),
             configuration: configuration
         )
@@ -1518,7 +1510,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         XCTAssertNotNil(futureUsagePaymentIntentParams.mandateData)
         XCTAssertNotNil(paymentMethodOptionsFutureUsagePaymentIntentParams.mandateData)
         XCTAssertNotNil(setupIntentParams.mandateData)
-        XCTAssertEqual(setupIntentParams.paymentMethodOptions?.alipayOptions?.currency, "usd")
     }
 
     func testMakeDeferredPaymentUserAgent() {

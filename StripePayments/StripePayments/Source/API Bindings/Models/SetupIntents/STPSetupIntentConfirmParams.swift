@@ -53,7 +53,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     /// @note alternative to `paymentMethodParams`
     @objc public var paymentMethodID: String?
     /// Options to update the associated PaymentMethod during SetupIntent confirmation.
-    @objc @_spi(KlarnaSDKPrivatePreview) @_spi(STP) public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
+    @objc @_spi(KlarnaSDKPrivatePreview) public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
     /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
     /// This should be a boolean NSNumber, so that it can be `nil`
     @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
