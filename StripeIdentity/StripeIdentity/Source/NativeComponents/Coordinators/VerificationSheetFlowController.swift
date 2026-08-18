@@ -59,6 +59,11 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
         sheetController: VerificationSheetControllerProtocol
     )
 
+    func transitionToSuccessScreen(
+        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
+        sheetController: VerificationSheetControllerProtocol
+    )
+
     func transitionToErrorScreen(
         sheetController: VerificationSheetControllerProtocol,
         error: Error,
@@ -287,6 +292,32 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     completion: {}
                 )
             }
+        }
+    }
+
+    func transitionToSuccessScreen(
+        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
+        sheetController: VerificationSheetControllerProtocol
+    ) {
+        do {
+            let staticContent = try staticContentResult.get()
+            transition(
+                to: SuccessViewController(
+                    successContent: staticContent.success,
+                    sheetController: sheetController
+                ),
+                shouldAnimate: true,
+                completion: {}
+            )
+        } catch {
+            transition(
+                to: ErrorViewController(
+                    sheetController: sheetController,
+                    error: .error(error)
+                ),
+                shouldAnimate: true,
+                completion: {}
+            )
         }
     }
 

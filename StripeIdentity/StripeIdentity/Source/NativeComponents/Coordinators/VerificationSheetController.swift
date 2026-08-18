@@ -122,6 +122,9 @@ protocol VerificationSheetControllerProtocol: AnyObject {
 
     /// Transition to DocumentCaptureViewController without any API request
     func transitionToDocumentCapture()
+
+    /// Transition to SuccessViewController without any API request
+    func transitionToSuccess()
 }
 
 private enum VerificationSheetControllerError: String, AnalyticLoggableStringErrorV2 {
@@ -130,6 +133,7 @@ private enum VerificationSheetControllerError: String, AnalyticLoggableStringErr
     case missingVerificationPageResponseForIndividualTransition
     case missingVerificationPageResponseForSelfieCaptureTransition
     case missingVerificationPageResponseForDocumentCaptureTransition
+    case missingVerificationPageResponseForSuccessTransition
     case missingVerificationPageResponseForPageDataTransition
     case missingVerificationPageResponseForClearDataCalculation
 }
@@ -570,6 +574,20 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
 
         flowController.transitionToDocumentCaptureScreen(
+            staticContentResult: verificationPageResponse,
+            sheetController: self
+        )
+    }
+
+    func transitionToSuccess() {
+        guard let verificationPageResponse = verificationPageResponseOrLogMissing(
+            .missingVerificationPageResponseForSuccessTransition,
+            assertionMessage: "verificationPageResponse is nil"
+        ) else {
+            return
+        }
+
+        flowController.transitionToSuccessScreen(
             staticContentResult: verificationPageResponse,
             sheetController: self
         )

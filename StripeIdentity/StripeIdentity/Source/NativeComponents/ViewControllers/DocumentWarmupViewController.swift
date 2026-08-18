@@ -113,12 +113,11 @@ final class DocumentWarmupViewController: IdentityFlowViewController {
                                 VerifyWithWalletLogger.log("requestDocument returned outcome=\(outcome)")
                                 switch outcome {
                                 case .credentialReturned:
-                                    VerifyWithWalletLogger.log("credential returned, submitting verification page")
-                                    self.sheetController?.submitVerificationPageAndTransition(
-                                        from: self.analyticsScreenName
-                                    ) {}
+                                    VerifyWithWalletLogger.log("credential returned, transitioning to success screen")
+                                    self.sheetController?.transitionToSuccess()
                                 case .userDeclined, .noDocument:
-                                    VerifyWithWalletLogger.log("not transitioning, falling back to camera flow, outcome=\(outcome)")
+                                    VerifyWithWalletLogger.log("falling back to camera flow, outcome=\(outcome)")
+                                    self.sheetController?.transitionToDocumentCapture()
                                 }
                             } catch {
                                 VerifyWithWalletLogger.logError("requestDocument failed: \(error)")
