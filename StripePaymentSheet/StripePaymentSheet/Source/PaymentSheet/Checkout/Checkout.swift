@@ -136,7 +136,7 @@ public final class Checkout: ObservableObject {
             // Constructed here (rather than alongside the other elements below) so that this
             // stored property has a value before `self` starts escaping into the elements below.
             // Its session subscription is wired up later, once `self` is safe to reference.
-            self.expressCheckoutElement = ExpressCheckoutElement(configuration: configuration)
+            self.expressCheckoutElement = ExpressCheckoutElement(configuration: configuration.expressCheckoutElement)
 
             // Element initialization is intentionally sequential:
 
@@ -335,7 +335,11 @@ public final class Checkout: ObservableObject {
     }
 
     /// Returns the ExpressCheckoutElement for this Checkout instance.
-    public func getExpressCheckoutElement() -> ExpressCheckoutElement {
+    /// - Parameter confirmHandler: Called after ECE confirmation finishes with the result.
+    public func getExpressCheckoutElement(
+        _ confirmHandler: @escaping ExpressCheckoutElement.ConfirmHandler
+    ) -> ExpressCheckoutElement {
+        expressCheckoutElement.setConfirmHandler(confirmHandler)
         return expressCheckoutElement
     }
 

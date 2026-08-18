@@ -1,8 +1,31 @@
-@_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
 // MARK: - Confirm
+
+extension Checkout {
+    /// Convenience bag of everything Apple Pay needs for confirmation, aside from committing the session
+    /// back to `Checkout` (see ``CheckoutSessionBillingAddressUpdater`` for that).
+    struct ApplePayConfirmationContext {
+        let applePayConfiguration: ExpressCheckoutElement.ApplePayConfiguration
+        let apiClient: STPAPIClient
+        let returnURL: String
+        let merchantDisplayName: String
+    }
+
+    /// `nil` if Apple Pay wasn't configured on this ``Checkout.Configuration``.
+    var applePayConfirmationContext: ApplePayConfirmationContext? {
+        guard let applePayConfiguration = configuration.expressCheckoutElement.applePayConfiguration else {
+            return nil
+        }
+        return ApplePayConfirmationContext(
+            applePayConfiguration: applePayConfiguration,
+            apiClient: apiClient,
+            returnURL: configuration.returnURL,
+            merchantDisplayName: effectiveMerchantDisplayName
+        )
+    }
+}
 
 extension Checkout {
     /// Convenience bag of params needed for confirmation
@@ -108,9 +131,8 @@ extension Checkout {
         switch paymentOption {
         case .applePay:
             // MARK: - Apple Pay
-            // TODO: Make a new STPApplePayContext-wrapping thing.
+            // TODO: Figure out checkout.confirm enqueue Apple Pay deadlock (Apple Pay confirm enqueued, CS mutations in Apple Pay sheet -> blocked because confirm enqueued)
             return .init(paymentSheetResult: .canceled)
-
         case .new(let confirmParams):
             // MARK: - New PM
             let paymentMethodType: STPPaymentMethodType = {

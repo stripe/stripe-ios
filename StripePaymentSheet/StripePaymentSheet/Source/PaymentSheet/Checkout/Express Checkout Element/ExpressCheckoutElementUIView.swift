@@ -7,6 +7,7 @@
 
 import PassKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import UIKit
 
 /// A UIKit view that displays wallet payment buttons (Apple Pay, Link).
@@ -17,16 +18,17 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Properties
 
-    private let configuration: Checkout.Configuration
+    private let configuration: ExpressCheckoutElement.Configuration
     private let stackView = UIStackView()
     private var linkBrand: LinkBrand
     weak var delegate: ExpressCheckoutElementDelegate?
+    var confirmHandler: ExpressCheckoutElement.ConfirmHandler?
 
     // MARK: - Init
 
     /// Buttons aren't populated until the first call to ``update(with:)``, since the
     /// initial session isn't known until Checkout finishes initializing.
-    init(configuration: Checkout.Configuration) {
+    init(configuration: ExpressCheckoutElement.Configuration) {
         self.configuration = configuration
         self.linkBrand = .link
         super.init(frame: .zero)
@@ -71,8 +73,8 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Methods
 
-    private func makeButton(for button: ExpressCheckoutElement.ExpressButton) -> UIView {
-        switch button {
+    private func makeButton(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> UIView {
+        switch paymentMethod {
         case .applePay:
             return makeApplePayButton()
         case .link:
@@ -102,10 +104,22 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     @objc private func handleApplePayTapped() {
-        // TODO: Handle Apple Pay
+        confirm(.applePay)
     }
 
     @objc private func handleLinkTapped() {
-        // TODO: Handle Link
+        confirm(.link)
+    }
+
+    private func confirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod) {
+        // Resolve the presenting view controller from this button's own window rather than
+        // e.g. the app's topmost visible view controller, which isn't necessarily the same
+        // (e.g. if this button lives in a different window/scene, or under a presented VC).
+        let presentingViewController = window?.rootViewController?.findTopMostPresentedViewController()
+        Task { @MainActor [weak self] in
+            guard let self,
+                let result = await self.delegate?.expressCheckoutElementShouldConfirm(paymentMethod, presentingViewController: presentingViewController) else { return }
+            self.confirmHandler?(result)
+        }
     }
 }

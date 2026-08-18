@@ -10,28 +10,24 @@ import PassKit
 @_spi(STP)
 @_spi(ReactNativeSDK)
 extension ExpressCheckoutElement {
-    public enum PaymentMethod {
-        case applePay
-        case link
-    }
-
     /// Configuration options for ``ExpressCheckoutElement``.
     public struct Configuration {
         /// Whether to require collecting a shipping address. Default: `false`.
         public var shippingAddressRequired: Bool = false
         /// Configuration for collecting billing details.
         public var billingDetailsCollectionConfiguration: BillingDetailsCollectionConfiguration = .init()
+        /// Sets the configuration for Apple Pay.
+        public var applePayConfiguration: ApplePayConfiguration?
+        /// Sets the configuration for Link.
+        public var linkConfiguration: LinkConfiguration = .init()
+
         /// Overrides display order of payment methods. nil uses default dynamic ordering.
         public var paymentMethodOrder: [ExpressCheckoutElement.PaymentMethod]?
         /// Controls appearance of Express Checkout Element.
         public var appearance: Appearance = .init()
-        /// Called after ECE confirmation finishes with the result.
-        public var confirmHandler: ConfirmHandler
 
         /// Creates an Express Checkout Element configuration with default values.
-        public init(confirmHandler: @escaping ConfirmHandler) {
-            self.confirmHandler = confirmHandler
-        }
+        public init() {}
     }
     /// Configuration for how billing details are collected during checkout.
     public struct BillingDetailsCollectionConfiguration: Equatable {
@@ -165,6 +161,7 @@ extension ExpressCheckoutElement {
 
         /// Layout of the express payment buttons.
         public var buttonLayout: ButtonLayout = .init()
+
         public init() {}
     }
 

@@ -9,6 +9,7 @@
 import Combine
 import OHHTTPStubs
 import OHHTTPStubsSwift
+import PassKit
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
@@ -376,6 +377,38 @@ enum CheckoutTestHelpers {
         default:
             return value
         }
+    }
+}
+
+// MARK: - Apple Pay test doubles
+
+class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
+    override func present(completion: (@Sendable (Bool) -> Void)? = nil) {
+        completion?(true)
+    }
+
+    override func dismiss(completion: (() -> Void)? = nil) {
+        completion?()
+    }
+}
+
+class StubExpressCheckoutSessionUpdater: ExpressCheckoutSessionUpdater {
+    func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {}
+}
+
+extension Checkout.ApplePayConfirmationContext {
+    static func makeMock(
+        apiClient: STPAPIClient,
+        returnURL: String = "stripe-ios-test://checkout-return",
+        merchantDisplayName: String = "Test Merchant",
+        applePayConfiguration: Checkout.ApplePayConfiguration = Checkout.ApplePayConfiguration(merchantId: "merchant.com.test")
+    ) -> Checkout.ApplePayConfirmationContext {
+        Checkout.ApplePayConfirmationContext(
+            applePayConfiguration: applePayConfiguration,
+            apiClient: apiClient,
+            returnURL: returnURL,
+            merchantDisplayName: merchantDisplayName
+        )
     }
 }
 

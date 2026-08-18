@@ -202,9 +202,6 @@ final class CheckoutCartViewController: UIViewController {
                 returnURL: "payments-example://stripe-redirect"
             )
             configuration.adaptivePricing.allowed = adaptivePricing
-            configuration.applePayConfiguration = Checkout.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.paymentsheet.example"
-            )
             configuration.currencySelectorElement.appearance = currencySelectorAppearance
             configuration.apiClient = diagnostics.makeAPIClient(
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
@@ -275,7 +272,9 @@ final class CheckoutCartViewController: UIViewController {
         removeAllArrangedSubviews(from: paymentBarStackView)
 
         if showExpressCheckoutElement {
-            let expressCheckoutElement = checkout.getExpressCheckoutElement()
+            let expressCheckoutElement = checkout.getExpressCheckoutElement { [weak self] result in
+                self?.showExpressCheckoutElementConfirmResult(result)
+            }
             paymentBarStackView.addArrangedSubview(expressCheckoutElement.uiView)
         }
 
@@ -808,6 +807,22 @@ final class CheckoutCartViewController: UIViewController {
         let alertController = UIAlertController(
             title: "Confirm stubbed",
             message: "Checkout confirm is not implemented yet.",
+            preferredStyle: .alert
+        )
+        alertController.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alertController, animated: true)
+    }
+
+    private func showExpressCheckoutElementConfirmResult(_ result: Checkout.ConfirmResult) {
+        let message: String
+        switch result {
+        case .succeeded(let paymentStatus): message = "Payment status: \(paymentStatus)"
+        case .canceled: message = "The payment was canceled."
+        case .failed(let error): message = error.localizedDescription
+        }
+        let alertController = UIAlertController(
+            title: "Express Checkout Element",
+            message: message,
             preferredStyle: .alert
         )
         alertController.addAction(UIAlertAction(title: "OK", style: .default))

@@ -8,8 +8,90 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+import UIKit
 
-extension Checkout: ExpressCheckoutElementDelegate {}
+extension Checkout: ExpressCheckoutElementDelegate {
+    func expressCheckoutElementShouldConfirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod, presentingViewController: UIViewController?) async -> ConfirmResult {
+        let expressCheckoutElementConfiguration = configuration.expressCheckoutElement
+        guard sessionIsOpen else {
+            return .failed(CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() cannot confirm a Checkout Session that is no longer open."))
+        }
+        
+
+        let result = await {
+            switch paymentMethod {
+            case .applePay:
+                guard let applePayConfirmationContext else {
+                    let error = CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() was called for Apple Pay, but Apple Pay wasn't configured.")
+                    STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+                    return InternalConfirmResult(paymentSheetResult: .failed(error: error))
+                }
+                return await Checkout.confirmApplePay(
+                    checkoutSession: session,
+                    applePayConfirmationContext: applePayConfirmationContext,
+                    sessionUpdater: self
+                )
+            case .link:
+                var paymentSheetConfiguration = PaymentSheet.Configuration()
+                paymentSheetConfiguration.apiClient = apiClient
+                paymentSheetConfiguration.merchantDisplayName = effectiveMerchantDisplayName
+                paymentSheetConfiguration.returnURL = configuration.returnURL
+                paymentSheetConfiguration.style = configuration.userInterfaceStyle
+                paymentSheetConfiguration.link.display = PaymentSheet.LinkConfiguration.Display(rawValue: expressCheckoutElementConfiguration.linkConfiguration.display.rawValue) ?? .automatic
+                let confirmationChallenge = ConfirmationChallenge(elementsSession: session.elementsSession, stripeAttest: apiClient.stripeAttest)
+                let analyticsHelper = PaymentSheetAnalyticsHelper(
+                    integrationShape: .expressCheckout,
+                    configuration: paymentSheetConfiguration)
+                let confirmationContext = ConfirmationContext(
+                    paymentOption: .link(option: .wallet(brand: session.elementsSession.linkBrand ?? .link)),
+                    configuration: paymentSheetConfiguration,
+                    integrationShape: .expressCheckout,
+                    confirmationChallenge: confirmationChallenge,
+                    analyticsHelper: analyticsHelper
+                )
+                guard let presentingViewController = presentingViewController ?? UIWindow.visibleViewController else {
+                    let errorMessage = "Checkout.expressCheckoutElementShouldConfirm() could not find a presenting view controller for Link."
+                    stpAssertionFailure(errorMessage)
+                    STPAnalyticsClient.sharedClient.log(analytic: UnexpectedCheckoutElementsErrorAnalytic(
+                        errorCode: .expressCheckoutElementPresentingViewControllerUnavailable,
+                        errorMessage: errorMessage
+                    ))
+                    return InternalConfirmResult(paymentSheetResult: .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)))
+                }
+                let linkResult = await Checkout.confirmLink(
+                    checkoutSession: session,
+                    confirmationContext: confirmationContext,
+                    authenticationContext: AuthenticationContext(presentingViewController: presentingViewController, appearance: paymentSheetConfiguration.appearance),
+                    clientAttributionMetadata: STPClientAttributionMetadata.makeClientAttributionMetadata(intent: .checkout(session), elementsSession: session.elementsSession),
+                    paymentHandler: paymentHandler)
+                // The payment already succeeded at this point, so a commit failure here shouldn't be
+                // reported to the customer as a failed payment - just log it.
+                if let checkoutSessionResponse = linkResult.checkoutSessionResponse {
+                    do {
+                        try await self.commitSession(checkoutSessionResponse)
+                    } catch {
+                        STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedPaymentSheetConfirmationError, error: error))
+                    }
+                }
+                return linkResult
+            }
+        }()
+        switch result.paymentSheetResult {
+        case .completed:
+            guard let checkoutSessionResponse = result.checkoutSessionResponse else {
+                let error = CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() completed without a Checkout Session response.")
+                STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+                return .failed(error)
+            }
+            return .succeeded(paymentStatus: checkoutSessionResponse.paymentStatus)
+        case .canceled:
+            return .canceled
+        case .failed(let error):
+            return .failed(error)
+        }
+    }
+}
+
 extension Checkout: CurrencySelectorElementDelegate {}
 extension Checkout: ShippingAddressElementDelegate {}
 

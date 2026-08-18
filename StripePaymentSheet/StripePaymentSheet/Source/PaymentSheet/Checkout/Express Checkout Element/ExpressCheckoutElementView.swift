@@ -35,12 +35,12 @@ public struct ExpressCheckoutElementView: View {
 @MainActor
 final class ExpressCheckoutElementViewModel: ObservableObject {
     let uiView: ExpressCheckoutElementUIView
-    @Published var availableExpressCheckoutPaymentMethods: [ExpressCheckoutElement.ExpressButton] = []
+    @Published var availableExpressCheckoutPaymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
 
-    private let configuration: Checkout.Configuration
+    private let configuration: ExpressCheckoutElement.Configuration
     private var sessionCancellable: AnyCancellable?
 
-    init(configuration: Checkout.Configuration, uiView: ExpressCheckoutElementUIView) {
+    init(configuration: ExpressCheckoutElement.Configuration, uiView: ExpressCheckoutElementUIView) {
         self.configuration = configuration
         self.uiView = uiView
     }
