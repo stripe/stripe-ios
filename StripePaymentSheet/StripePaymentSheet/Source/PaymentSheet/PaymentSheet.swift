@@ -475,6 +475,7 @@ internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSh
     func clearTextFields()
 }
 
+@MainActor
 protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
