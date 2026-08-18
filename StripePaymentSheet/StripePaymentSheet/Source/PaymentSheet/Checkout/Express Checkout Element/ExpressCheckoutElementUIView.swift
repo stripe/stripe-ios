@@ -18,14 +18,14 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Properties
 
-    private let configuration: Checkout.Configuration
+    private let configuration: CheckoutController.Configuration
     private let stackView = UIStackView()
     private var linkBrand: LinkBrand
     private weak var delegate: ExpressCheckoutElementDelegate?
 
     // MARK: - Init
 
-    init(session: Checkout.Session, configuration: Checkout.Configuration, delegate: ExpressCheckoutElementDelegate) {
+    init(session: CheckoutController.Session, configuration: CheckoutController.Configuration, delegate: ExpressCheckoutElementDelegate) {
         self.configuration = configuration
         self.delegate = delegate
         self.linkBrand = session.elementsSession.linkBrand ?? .link
@@ -55,7 +55,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Internal Methods
 
-    func update(with session: Checkout.Session) {
+    func update(with session: CheckoutController.Session) {
         linkBrand = session.elementsSession.linkBrand ?? .link
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)

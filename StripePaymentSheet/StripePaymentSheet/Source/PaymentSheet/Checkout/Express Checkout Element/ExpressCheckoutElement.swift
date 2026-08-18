@@ -37,7 +37,7 @@ public final class ExpressCheckoutElement {
 
     init(
         sessionSource: CheckoutSessionSource,
-        configuration: Checkout.Configuration,
+        configuration: CheckoutController.Configuration,
         delegate: ExpressCheckoutElementDelegate
     ) {
         let uiView = ExpressCheckoutElementUIView(session: sessionSource.initialSession, configuration: configuration, delegate: delegate)

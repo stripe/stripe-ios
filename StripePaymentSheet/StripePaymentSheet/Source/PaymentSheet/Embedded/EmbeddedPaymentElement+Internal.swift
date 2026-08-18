@@ -111,7 +111,7 @@ extension EmbeddedPaymentElement {
         savedPaymentMethods: [STPPaymentMethod],
         analyticsHelper: PaymentSheetAnalyticsHelper,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?,
-        checkout: Checkout?,
+        checkout: CheckoutController?,
         formCache: PaymentMethodFormCache,
         delegate: EmbeddedFormViewControllerDelegate
     ) -> EmbeddedFormViewController? {
@@ -715,7 +715,7 @@ extension EmbeddedPaymentElement {
 
         if let checkout {
             if !checkout.pendingOperations.isEmpty {
-                let errorMessage = "confirm was called while the Checkout session is still loading. Wait until Checkout.isLoading is false."
+                let errorMessage = "confirm was called while the Checkout session is still loading. Wait until CheckoutController.isUpdating is false."
                 let error = PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)
                 return (.failed(error: error), nil)
             }

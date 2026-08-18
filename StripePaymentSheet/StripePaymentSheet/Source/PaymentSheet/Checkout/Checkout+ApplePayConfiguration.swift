@@ -9,7 +9,7 @@ import PassKit
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout {
+extension CheckoutController {
     /// Configuration for Apple Pay.
     public struct ApplePayConfiguration {
         /// The Apple Pay merchant identifier.
