@@ -15,6 +15,7 @@ import XCTest
 import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
+@MainActor
 class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
     func test_shouldRecollectCardCVC() throws {

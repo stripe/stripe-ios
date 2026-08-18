@@ -10,6 +10,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 /// Provides shared implementations of common operations for managing saved payment methods in PaymentSheet
+@MainActor
 final class SavedPaymentMethodManager {
 
     enum Error: Swift.Error {

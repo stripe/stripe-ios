@@ -13,6 +13,7 @@ import StripeCoreTestUtils
 import UIKit
 
 // @iOS26
+@MainActor
 final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
     var appearance = PaymentSheet.Appearance().applyingLiquidGlassIfPossible()
     var theme: ElementsAppearance {

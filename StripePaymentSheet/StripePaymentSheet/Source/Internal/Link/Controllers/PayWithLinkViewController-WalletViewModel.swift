@@ -12,12 +12,14 @@ import Foundation
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
+@MainActor
 protocol PayWithLinkWalletViewModelDelegate: AnyObject {
     func viewModelDidChange(_ viewModel: PayWithLinkViewController.WalletViewModel)
 }
 
 extension PayWithLinkViewController {
 
+    @MainActor
     final class WalletViewModel {
         let context: Context
         let linkAccount: PaymentSheetLinkAccount
