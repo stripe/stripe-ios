@@ -11,7 +11,10 @@ import Foundation
 @_spi(ReactNativeSDK)
 extension Checkout {
     /// A currency option available on a checkout session when adaptive pricing is active.
-    public struct CurrencyOption: Sendable, Hashable {
+    public struct CurrencyOption: Identifiable, Sendable, Hashable {
+        /// A stable identifier for this option.
+        public var id: String { currency }
+
         /// The total amount in this currency.
         public let amount: Session.Amount
         /// Three-letter ISO 4217 currency code in lowercase.

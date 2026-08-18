@@ -283,6 +283,7 @@ extension PaymentPagesAPIResponse {
     }
 
     struct OneTimePriceItem: Decodable {
+        let innerItemKey: String
         let price: Price
         let quantity: Int
         let unitAmount: Int?
@@ -310,7 +311,7 @@ extension PaymentPagesAPIResponse {
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            _ = try container.decode(String.self, forKey: .innerItemKey)
+            innerItemKey = try container.decode(String.self, forKey: .innerItemKey)
             price = try container.decode(Price.self, forKey: .price)
             quantity = try container.decode(Int.self, forKey: .quantity)
             guard quantity >= 0 else {

@@ -8,7 +8,7 @@ import Foundation
 @_spi(ReactNativeSDK)
 extension Checkout.Session {
     /// Shipping address of the customer.
-    public struct ShippingAddress: Equatable {
+    public struct ShippingAddress: Equatable, Hashable, Sendable {
         /// The customer's full name.
         public let name: String?
 
