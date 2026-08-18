@@ -37,13 +37,7 @@ public final class Checkout: ObservableObject {
     @Published public internal(set) var isLoading: Bool = false
 
     /// The Checkout Session, updated from Stripe after every mutation.
-    @Published public private(set) var session: Session {
-        didSet {
-            nonisolatedSession = session
-            // Just some notes: Setting session causes the publisher to fire even when it didn't change.
-            // AFAICT that's okay, deduping sees like a minor optimization to slightly reduce the amount of UI updates.
-        }
-    }
+    @Published public private(set) var session: Session
 
     /// The configuration supplied at initialization.
     public let configuration: Configuration
@@ -61,16 +55,6 @@ public final class Checkout: ObservableObject {
 
     /// The ShippingAddressElement for this Checkout instance.
     private let shippingAddressElement: ShippingAddressElement
-
-    // TODO(gbirch) TODO(porter) remove this nonisolatedSession
-    //  once MPE is properly MainActor isolated
-    /// A snapshot of the current ``session`` accessible from non-MainActor contexts.
-    ///
-    /// Marked `nonisolated(unsafe)` because PaymentSheet internals read this from non-MainActor
-    /// contexts. This is safe: reads only occur after the session is loaded and while the payment
-    /// UI is presented, a window during which no mutations occur. Writes are always on MainActor
-    /// because they go through `Checkout`'s MainActor-isolated mutation methods.
-    nonisolated(unsafe) private(set) var nonisolatedSession: Session!
 
     let clientSecret: String
     let apiClient: STPAPIClient
@@ -131,7 +115,6 @@ public final class Checkout: ObservableObject {
             )
             let loadedSession = apiResponse.makePublicSession()
             self.session = loadedSession
-            self.nonisolatedSession = loadedSession // temporary hack
 
             // Element initialization is intentionally sequential:
 
