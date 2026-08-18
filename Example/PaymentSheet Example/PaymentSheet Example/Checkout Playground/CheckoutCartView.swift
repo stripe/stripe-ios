@@ -42,8 +42,8 @@ struct CheckoutCartView: View {
                     )
                     .overlay(alignment: .bottom) {
                         VStack(spacing: 0) {
-                            if showExpressCheckoutElement {
-                                let ece = checkout.getExpressCheckoutElement()
+                            if showExpressCheckoutElement,
+                               let ece = checkout.getExpressCheckoutElement() {
                                 ece.view
                                     .padding(.horizontal)
                                     .padding(.top, 16)
@@ -153,6 +153,7 @@ struct CheckoutCartView: View {
             config.applePayConfiguration = Checkout.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
+            config.currencySelectorElement.appearance = currencySelectorAppearance
             config.expressCheckoutElement.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
             config.expressCheckoutElement.confirmHandler = { result in
                 eceConfirmResult = result
