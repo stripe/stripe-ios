@@ -13,6 +13,7 @@ import StripeCoreTestUtils
 import XCTest
 
 // @iOS26
+@MainActor
 final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTestCase {
     func makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
         return .init(
