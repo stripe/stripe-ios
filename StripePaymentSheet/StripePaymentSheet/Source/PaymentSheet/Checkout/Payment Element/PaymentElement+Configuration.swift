@@ -226,10 +226,6 @@ extension PaymentElement {
         /// Defaults to `automatic`.
         public var name: CollectionMode = .automatic
 
-        /// How to collect the phone field.
-        /// Defaults to `automatic`.
-        public var phone: CollectionMode = .automatic
-
         /// How to collect the email field.
         /// Defaults to `automatic`.
         /// - Note: Intentionally non-public, unclear what the merchant use case for this is given they need to provide an email up-front.
@@ -262,7 +258,6 @@ private extension PaymentElement.BillingDetailsCollectionConfiguration {
     func paymentSheetConfiguration() -> PaymentSheet.BillingDetailsCollectionConfiguration {
         var configuration = PaymentSheet.BillingDetailsCollectionConfiguration()
         configuration.name = .init(rawValue: name.rawValue)!
-        configuration.phone = .init(rawValue: phone.rawValue)!
         configuration.email = .init(rawValue: email.rawValue)!
         configuration.address = address.paymentSheetAddressCollectionMode
         configuration.attachDefaultsToPaymentMethod = attachDefaultsToPaymentMethod
