@@ -13,6 +13,33 @@ import Foundation
 @_spi(STP) import StripePayments
 import UIKit
 
+@MainActor
+final class CheckoutIntentContext {
+
+    weak var checkout: Checkout?
+
+    init(checkout: Checkout) {
+        self.checkout = checkout
+    }
+
+    var session: Checkout.Session? {
+        guard let checkout else {
+            assertionFailure("Checkout must outlive the Payment Element created from it.")
+            return nil
+        }
+        return checkout.session
+    }
+
+    func requireCheckout() throws -> Checkout {
+        guard let checkout else {
+            throw PaymentSheetError.integrationError(
+                nonPIIDebugDescription: "Checkout must outlive the Payment Element created from it."
+            )
+        }
+        return checkout
+    }
+}
+
 /// Manages a Checkout Session lifecycle.
 ///
 /// ```swift
@@ -54,10 +81,11 @@ public final class Checkout: ObservableObject {
     private var currencySelectorElement: CurrencySelectorElement?
 
     /// The ShippingAddressElement for this Checkout instance.
-    private let shippingAddressElement: ShippingAddressElement
+    private var shippingAddressElement: ShippingAddressElement!
 
     let clientSecret: String
     let apiClient: STPAPIClient
+    lazy var intentContext = CheckoutIntentContext(checkout: self)
     lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: apiClient)
     var effectiveMerchantDisplayName: String {
         configuration.merchantDisplayName ?? session.businessName ?? Bundle.displayName ?? ""
@@ -158,6 +186,16 @@ public final class Checkout: ObservableObject {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
     }
+
+    #if DEBUG
+    init(testSession: Session, configuration: Configuration) {
+        self.clientSecret = configuration.clientSecret
+        self.configuration = configuration
+        self.apiClient = configuration.apiClient
+        self.session = testSession
+        self.shippingAddressElement = nil
+    }
+    #endif
 
     private static func makeShippingAddressElement(
         configuration: Configuration,

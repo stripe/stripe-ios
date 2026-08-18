@@ -57,6 +57,28 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(firstElement === secondElement)
     }
 
+    func testCheckoutIntentContextReportsReleasedCheckout() {
+        var checkout: Checkout? = Checkout(
+            testSession: CheckoutTestHelpers.makeOpenSession().makePublicSession(),
+            configuration: Checkout.Configuration(
+                clientSecret: "cs_test_123_secret_abc",
+                returnURL: "stripe-ios-test://checkout-return"
+            )
+        )
+        let context = checkout!.intentContext
+        weak var weakCheckout = checkout
+
+        checkout = nil
+
+        XCTAssertNil(weakCheckout)
+        XCTAssertNil(context.checkout)
+        XCTAssertThrowsError(try context.requireCheckout()) { error in
+            guard case PaymentSheetError.integrationError = error else {
+                return XCTFail("Expected an integration error, got \(error)")
+            }
+        }
+    }
+
     func testCurrencySelectorElementLogsInitializationOnce() async throws {
         let analyticsClient = STPAnalyticsClient.sharedClient
         let previousLogHistory = analyticsClient._testLogHistory
