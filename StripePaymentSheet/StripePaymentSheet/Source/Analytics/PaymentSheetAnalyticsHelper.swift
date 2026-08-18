@@ -30,7 +30,6 @@ final class PaymentSheetAnalyticsHelper {
         case embedded
         case expressCheckout
         case linkController
-        case expressCheckout
 
         var analyticsValue: String {
             switch self {
@@ -44,8 +43,6 @@ final class PaymentSheetAnalyticsHelper {
                 return "expresscheckout"
             case .linkController:
                 return "linkcontroller"
-            case .expressCheckout:
-                return "expresscheckout"
             }
         }
 
@@ -103,9 +100,6 @@ final class PaymentSheetAnalyticsHelper {
                     return .mcInitCompleteCustomerApplePay
                 }
             case .embedded:
-                return .mcInitEmbedded
-            case .expressCheckout:
-                stpAssertionFailure("logInitialized() is not implemented for expressCheckout integration")
                 return .mcInitEmbedded
             }
         }()
@@ -275,9 +269,6 @@ final class PaymentSheetAnalyticsHelper {
                     stpAssertionFailure("Embedded should only use this function to record tapped saved payment methods")
                     return (nil, nil)
                 }
-            case .expressCheckout:
-                stpAssertionFailure("logSavedPMScreenOptionSelected() is not implemented for expressCheckout integration")
-                return (nil, nil)
             }
         }()
         guard let event else {
@@ -317,9 +308,6 @@ final class PaymentSheetAnalyticsHelper {
             case .complete, .linkController:
                 return .mcOptionRemoveCompleteSavedPM
             case .embedded:
-                return .mcOptionRemoveEmbeddedSavedPM
-            case .expressCheckout:
-                stpAssertionFailure("logSavedPaymentMethodRemoved() is not supported for expressCheckout integration")
                 return .mcOptionRemoveEmbeddedSavedPM
             }
         }()
@@ -441,9 +429,6 @@ final class PaymentSheetAnalyticsHelper {
                     return success ? .mcPaymentCompleteLinkSuccess : .mcPaymentCompleteLinkFailure
                 }
             case .embedded:
-                return success ? .mcPaymentEmbeddedSuccess : .mcPaymentEmbeddedFailure
-            case .expressCheckout:
-                stpAssertionFailure("logPayment() is not implemented for expressCheckout integration")
                 return success ? .mcPaymentEmbeddedSuccess : .mcPaymentEmbeddedFailure
             }
         }()
