@@ -182,7 +182,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.walletButtonsShownExternally = walletButtonsViewState.isVisible
         self.shouldShowApplePayInList = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && Self.walletButtonsViewAllowsExpressType(.applePay, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         // Edge case: If Apple Pay isn't in the list, show Link as a wallet button and not in the list
-        self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && (shouldShowApplePayInList || walletButtonsViewState.showApplePay) && Self.walletButtonsViewAllowsExpressType(.link, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
+        self.shouldShowLinkInList = PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration) && isFlowController && (shouldShowApplePayInList || walletButtonsViewState.showApplePay) && Self.walletButtonsViewAllowsExpressType(.link, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
         // Link can be the customer's default even when it is rendered as a wallet button instead of a selected row.
@@ -220,7 +220,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             && !configuration.willUseWalletButtonsView {
             walletOptions.insert(.applePay)
         }
-        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+        if PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
             && !shouldShowLinkInList
             && !walletButtonsShownExternally
             && !configuration.willUseWalletButtonsView {
@@ -584,7 +584,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
-            callback: { [weak self] confirmOption, _ in
+            callback: { [weak self] confirmOption, _, _ in
                 guard let self else { return }
                 self.linkConfirmOption = confirmOption
                 self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
@@ -621,7 +621,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             visiblePaymentMethods.append(RowButtonType.applePay.analyticsIdentifier)
         }
         // if Link is showing as an express button
-        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration), !shouldShowLinkInList {
+        if PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration), !shouldShowLinkInList {
             visiblePaymentMethods.append(RowButtonType.link.analyticsIdentifier)
         }
         paymentMethodListViewController?.rowButtons.forEach { rowButton in

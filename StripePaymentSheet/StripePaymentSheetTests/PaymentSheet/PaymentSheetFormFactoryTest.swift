@@ -1364,6 +1364,21 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
     }
 
+    func testMBWayRequiresPhone() {
+        // Given automatic billing detail collection
+        // When building an MB WAY form
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.mbWay]),
+            elementsSession: ._testValue(paymentMethodTypes: [STPPaymentMethodType.mbWay.identifier]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.mbWay)
+        ).make()
+
+        // Then phone is required
+        XCTAssertNotNil(form.getPhoneNumberElement())
+        XCTAssertNil(form.updateParams(params: .init(type: .stripe(.mbWay))))
+    }
+
     func testBankDebitForms() {
         // Given billing detail collection disabled
         var configuration = PaymentSheet.Configuration()
@@ -1389,7 +1404,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             .init(
                 paymentMethod: .FPX,
                 apiPath: "fpx[bank]",
-                itemCount: 18,
+                itemCount: 21,
                 firstValue: "affin_bank",
                 lastValue: "uob"
             ),
@@ -1429,6 +1444,21 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             auBecsForm.getAllUnwrappedSubElements().compactMap { $0 as? TextFieldElement }.count,
             2
         )
+    }
+
+    func testBizumRequiresPhone() {
+        // Given automatic billing detail collection
+        // When building a Bizum form
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.bizum]),
+            elementsSession: ._testValue(paymentMethodTypes: [STPPaymentMethodType.bizum.identifier]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.bizum)
+        ).make()
+
+        // Then phone is required
+        XCTAssertNotNil(form.getPhoneNumberElement())
+        XCTAssertNil(form.updateParams(params: .init(type: .stripe(.bizum))))
     }
 
     func testLinkPMModeCardFormContainsMandateText() {
@@ -2384,26 +2414,22 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethodOptions: [String: Any]? = nil,
             previousCustomerInput: IntentConfirmParams? = nil
         ) -> PaymentMethodElement {
-            var json: [String: Any] = [
+            var json = CheckoutTestHelpers.makeSessionJSON([
                 "session_id": "cs_test_paypal",
-                "object": "checkout.session",
-                "livemode": false,
-                "mode": "payment",
-                "payment_status": "unpaid",
                 "payment_method_types": ["paypal"],
                 "customer": ["id": "cus_123"],
                 "elements_session": [
                     "session_id": "es_test",
                     "payment_method_preference": ["ordered_payment_method_types": ["paypal"]],
                 ],
-            ]
+            ])
             if let setupFutureUsage {
                 json["setup_future_usage"] = setupFutureUsage
             }
             if let paymentMethodOptions {
                 json["payment_method_options"] = paymentMethodOptions
             }
-            let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+            let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
             return PaymentSheetFormFactory(
                 intent: .checkout(checkoutSession.makePublicSession()),
                 elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),

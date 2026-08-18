@@ -193,7 +193,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.elementsSession = loadResult.elementsSession
         self.checkout = checkout
         self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
-        self.isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+        self.isLinkEnabled = PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
         self.couldShowLinkInHeader = isLinkEnabled && !isApplePayEnabled
         self.configuration = configuration
         self.analyticsHelper = analyticsHelper
@@ -350,7 +350,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper
-        ) { [weak self] confirmOption, _ in
+        ) { [weak self] confirmOption, _, _ in
             guard let self else { return }
             self.linkConfirmOption = confirmOption
             self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)

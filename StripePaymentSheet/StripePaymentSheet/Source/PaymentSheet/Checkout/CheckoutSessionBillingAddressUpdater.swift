@@ -13,10 +13,7 @@
 @MainActor
 protocol CheckoutSessionBillingAddressUpdater: AnyObject {
     // TODO: Delete this when CheckoutSession confirmation no longer uses `PaymentSheet.confirm`.
-    func commitSession(
-        _ apiResponse: PaymentPagesAPIResponse?,
-        applying localMutation: (@MainActor @Sendable (Checkout.Session) -> Checkout.Session)?
-    ) async throws
+    func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws
 
     func updateBillingTaxRegionIfNecessaryForPaymentSheet(
         address: Checkout.Address,
@@ -24,13 +21,15 @@ protocol CheckoutSessionBillingAddressUpdater: AnyObject {
     ) async throws -> Checkout.Session
 }
 
-extension CheckoutSessionBillingAddressUpdater {
-    func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
-        try await commitSession(apiResponse, applying: nil)
-    }
-}
-
 extension Checkout: CheckoutSessionBillingAddressUpdater {
+    func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
+        try await commitSession(
+            apiResponse,
+            shippingAddress: .keepOldValue,
+            paymentOption: .keepOldValue
+        )
+    }
+
     func updateBillingTaxRegionIfNecessaryForPaymentSheet(
         address: Address,
         canUpdateWhileSheetPresented: Bool

@@ -3,21 +3,21 @@ https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bcurrency%5
 400
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=83t3_AEWTul9YQwrBScYuhlVYKMFkDi-KUjer191kF2sqrUHHyVwnSBBlO357TOb1lCgtIc9Dez20FtV; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=d1iyK4sm6jN9f72-KN_XaeGXrPNhJc6d0EGy8vDUoxBDjHUy7gGbB3qNZyAIiyBO4EmGprA1d4PM9a50; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=83t3_AEWTul9YQwrBScYuhlVYKMFkDi-KUjer191kF2sqrUHHyVwnSBBlO357TOb1lCgtIc9Dez20FtV&t=1"
-stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-06-24.dahlia. See https://docs.stripe.com/upgrades
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=d1iyK4sm6jN9f72-KN_XaeGXrPNhJc6d0EGy8vDUoxBDjHUy7gGbB3qNZyAIiyBO4EmGprA1d4PM9a50&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-07-29.dahlia. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=83t3_AEWTul9YQwrBScYuhlVYKMFkDi-KUjer191kF2sqrUHHyVwnSBBlO357TOb1lCgtIc9Dez20FtV&t=1"}],"include_subdomains":true}
-request-id: req_3y8d5RA1QircTL
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=d1iyK4sm6jN9f72-KN_XaeGXrPNhJc6d0EGy8vDUoxBDjHUy7gGbB3qNZyAIiyBO4EmGprA1d4PM9a50&t=1"}],"include_subdomains":true}
+request-id: req_RujYqMSj6DqrZp
 Content-Length: 952
 Vary: Origin
-Date: Wed, 29 Jul 2026 20:00:06 GMT
+Date: Fri, 14 Aug 2026 16:43:09 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300

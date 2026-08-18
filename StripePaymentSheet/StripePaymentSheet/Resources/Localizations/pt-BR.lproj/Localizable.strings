@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Confirmar dados de pagamento";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Confirme o pagamento por Bizum no seu aplicativo bancário para dispositivos móveis em até %@ para concluir a compra.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Confirme o pagamento no seu aplicativo MB WAY em até %@ para concluir a compra.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirme o pagamento no seu banco ou aplicativo de pagamento em até %@ para concluir a compra.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirme o pagamento no aplicativo do seu banco em até %@ para concluir a compra.";
@@ -136,9 +140,15 @@
 
 "Did you mean %@? %@." = "Você quis dizer %1$@? %2$@.";
 
+"Discard Changes" = "Descartar alterações";
+
+"Discard changes?" = "Descartar as alterações?";
+
 "Discount" = "Desconto";
 
 "EPS Bank" = "Banco EPS";
+
+"Edit address" = "Editar endereço";
 
 "Enter address manually" = "Inserir endereço manualmente";
 
@@ -157,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entendo que a Stripe fará débitos automáticos em nome de %@ e confirmo que sou titular da conta e a única pessoa necessária para autorizar débitos nesta conta.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Continuar editando";
 
 "Last 4 digits of SSN" = "Últimos 4 dígitos do SSN";
 
@@ -284,8 +296,6 @@
 
 "Set up" = "Configurar";
 
-"Shipping" = "Envio";
-
 "Shipping to %@ is not supported." = "Envios para %@ não são aceitos.";
 
 "Show details" = "Mostrar detalhes";
@@ -339,3 +349,5 @@
 "Yes, update" = "Sim, atualizar";
 
 "Your IBAN should start with a two-letter country code." = "Seu IBAN deve começar com um código de país de duas letras.";
+
+"Your address changes won't be saved." = "As alterações do seu endereço não serão salvas.";

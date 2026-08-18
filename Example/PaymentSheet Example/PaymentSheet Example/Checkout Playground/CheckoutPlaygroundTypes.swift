@@ -5,8 +5,24 @@
 //  Created by Nick Porter on 2/24/26.
 
 import Foundation
+@_spi(STP) import StripePaymentSheet
 
 enum CheckoutPlayground {
+    enum UIFramework: String, CaseIterable, Identifiable {
+
+        case swiftUI
+        case uiKit
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .swiftUI: return "SwiftUI"
+            case .uiKit: return "UIKit"
+            }
+        }
+    }
+
     enum EndpointOption: String, CaseIterable, Identifiable {
         case hosted
         case localhost
@@ -96,13 +112,13 @@ enum CheckoutPlayground {
 
         var displayName: String {
             switch self {
-            case .none: return "None"
-            case .us: return "US"
-            case .fr: return "FR"
-            case .de: return "DE"
-            case .jp: return "JP"
-            case .gb: return "GB"
-            case .br: return "BR"
+            case .none: return "No Override"
+            case .us: return "United States (US)"
+            case .fr: return "France (FR)"
+            case .de: return "Germany (DE)"
+            case .jp: return "Japan (JP)"
+            case .gb: return "United Kingdom (GB)"
+            case .br: return "Brazil (BR)"
             }
         }
     }
@@ -118,6 +134,58 @@ enum CheckoutPlayground {
             case .automatic: return "Auto"
             case .required: return "Required"
             }
+        }
+    }
+
+    enum DefaultShippingAddressOption: String, CaseIterable, Identifiable {
+
+        case none
+        case usTestAddress
+        case custom
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .none: return "No address"
+            case .usTestAddress: return "US test address"
+            case .custom: return "Custom"
+            }
+        }
+    }
+
+    struct DefaultShippingAddress: Equatable {
+
+        var name: String
+        var line1: String
+        var line2: String
+        var city: String
+        var state: String
+        var postalCode: String
+        var country: String
+
+        static let usTestAddress = DefaultShippingAddress(
+            name: "Jenny Rosen",
+            line1: "510 Townsend St",
+            line2: "",
+            city: "San Francisco",
+            state: "CA",
+            postalCode: "94103",
+            country: "US"
+        )
+
+        var checkoutShippingDetails: Checkout.Configuration.Defaults.ShippingDetails {
+            var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
+            shippingDetails.name = name
+            shippingDetails.address = Checkout.Address(
+                country: country,
+                line1: line1,
+                line2: line2,
+                city: city,
+                state: state,
+                postalCode: postalCode
+            )
+            return shippingDetails
         }
     }
 

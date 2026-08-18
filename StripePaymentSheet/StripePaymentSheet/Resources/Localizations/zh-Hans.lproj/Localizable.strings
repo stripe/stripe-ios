@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "确认支付详情";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "请在 %@ 内在您的手机银行应用中确认 Bizum 支付，以完成购买。";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "请在 %@ 内在您的 MB WAY 应用中确认支付，以完成购买。";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "在您的银行或支付应用程序中确认向 %@ 的付款，以完成购物。";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@内在您的银行应用中确认付款，完成购物。";
@@ -136,9 +140,15 @@
 
 "Did you mean %@? %@." = "你是指 %1$@ 吗？%2$@。";
 
+"Discard Changes" = "放弃更改";
+
+"Discard changes?" = "放弃更改？";
+
 "Discount" = "折扣";
 
 "EPS Bank" = "EPS 银行";
+
+"Edit address" = "编辑地址";
 
 "Enter address manually" = "手动输入地址";
 
@@ -157,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "我理解 Stripe 将代表 %@ 收取直接借记，且确认我是该账户持有人，且是唯一一个需要授权该账户扣款的人。";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "继续编辑";
 
 "Last 4 digits of SSN" = "社会保障号码 (SSN) 最后 4 位";
 
@@ -284,8 +296,6 @@
 
 "Set up" = "设置";
 
-"Shipping" = "配送";
-
 "Shipping to %@ is not supported." = "不支持向 %@ 配送。";
 
 "Show details" = "显示详情";
@@ -339,3 +349,5 @@
 "Yes, update" = "是的，更新";
 
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 应以两个字母的国家代码开头。";
+
+"Your address changes won't be saved." = "您的地址更改不会被保存。";

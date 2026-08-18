@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Xác nhận thông tin thanh toán";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Xác nhận thanh toán Bizum trong biểu mẫu ngân hàng di động của bạn trong vòng %@ để hoàn tất giao dịch mua.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Xác nhận thanh toán trong ứng dụng MB WAY của bạn trong vòng %@ để hoàn tất giao dịch mua.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng hoặc ứng dụng thanh toán của bạn trong vòng %@ để hoàn tất giao dịch mua.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng của quý vị trong vòng %@ để hoàn tất giao dịch mua.";
@@ -136,9 +140,15 @@
 
 "Did you mean %@? %@." = "Ý của quý vị có phải là %1$@? %2$@.";
 
+"Discard Changes" = "Hủy thay đổi";
+
+"Discard changes?" = "Hủy thay đổi?";
+
 "Discount" = "Giảm giá";
 
 "EPS Bank" = "Ngân hàng EPS";
+
+"Edit address" = "Chỉnh sửa địa chỉ";
 
 "Enter address manually" = "Nhập địa chỉ thủ công";
 
@@ -157,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tôi hiểu rằng Stripe sẽ thu Ghi nợ Trực tiếp thay mặt %@ và tôi xác nhận rằng tôi là chủ tài khoản và là người duy nhất cần có để ủy quyền ghi nợ từ tài khoản này.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Tiếp tục chỉnh sửa";
 
 "Last 4 digits of SSN" = "4 chữ số cuối của SSN";
 
@@ -284,8 +296,6 @@
 
 "Set up" = "Cài đặt";
 
-"Shipping" = "Vận chuyển";
-
 "Shipping to %@ is not supported." = "Chuyển hàng đến %@ không được hỗ trợ.";
 
 "Show details" = "Hiển thị chi tiết";
@@ -339,3 +349,5 @@
 "Yes, update" = "Có, cập nhật";
 
 "Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
+
+"Your address changes won't be saved." = "Các thay đổi địa chỉ của bạn sẽ không được lưu.";

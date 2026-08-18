@@ -32,6 +32,17 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true)
     }
 
+    func test_UpdateAndRemovePaymentMethodViewControllerRightToLeft() {
+        _test_UpdatePaymentMethodViewController(
+            paymentMethodType: .card,
+            darkMode: false,
+            canUpdate: true,
+            isCBCEligible: true,
+            canSetAsDefaultPM: true,
+            rightToLeft: true
+        )
+    }
+
     // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
     // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
     func test_UpdatePaymentMethodViewControllerLightMode_supressAddress_wCBC() {
@@ -175,7 +186,8 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                                  expired: Bool = false,
                                                  canSetAsDefaultPM: Bool = false,
                                                  isDefault: Bool = false,
-                                                 cardBrandFilter: CardBrandFilter = .default) {
+                                                 cardBrandFilter: CardBrandFilter = .default,
+                                                 rightToLeft: Bool = false) {
         let paymentMethod: STPPaymentMethod = {
             switch paymentMethodType {
             case .card:
@@ -221,6 +233,9 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         let stubViewController = StubBottomSheetContentViewController()
         let bottomSheet = BottomSheetViewController(contentViewController: stubViewController, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
         bottomSheet.pushContentViewController(sut)
+        if rightToLeft {
+            bottomSheet.view.forceRightToLeftLayout()
+        }
         bottomSheet.view.autosizeHeight(width: 375)
 
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: bottomSheet.view.frame.size.height + sut.view.frame.size.height))

@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Potvrdite podatke o plaćanju";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Potvrdite plaćanje Bizum u svojoj aplikaciji mobilnog bankarstva unutar %@ da biste dovršili kupnju.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Potvrdite plaćanje u svojoj aplikaciji MB WAY unutar %@ da biste dovršili kupnju.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Potvrdite plaćanje u aplikaciji svoje banke ili aplikaciji za plaćanje unutar %@ da biste dovršili kupnju.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Potvrdite plaćanje u aplikaciji svoje banke unutar %@ da biste dovršili kupnju.";
@@ -136,9 +140,15 @@
 
 "Did you mean %@? %@." = "Jeste li mislili na %1$@? %2$@.";
 
+"Discard Changes" = "Odbacite promjene";
+
+"Discard changes?" = "Odbaciti promjene?";
+
 "Discount" = "S popustom";
 
 "EPS Bank" = "Banka EPS";
+
+"Edit address" = "Uredi adresu";
 
 "Enter address manually" = "Unesite adresu ručno";
 
@@ -157,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Razumijem da će Stripe naplaćivati izravna terećenja u ime %@ i potvrđujem da sam vlasnik računa i jedina osoba koja mora autorizirati terećenja s ovog računa.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Nastavite uređivati";
 
 "Last 4 digits of SSN" = "Zadnje četiri znamenke SSN-a";
 
@@ -284,8 +296,6 @@
 
 "Set up" = "Postavi";
 
-"Shipping" = "Dostava";
-
 "Shipping to %@ is not supported." = "Dostava do %@ nije podržana.";
 
 "Show details" = "Prikaži pojedinosti";
@@ -339,3 +349,5 @@
 "Yes, update" = "Da, ažuriraj";
 
 "Your IBAN should start with a two-letter country code." = "Vaš bi IBAN trebao započeti s kodom države od dva slova.";
+
+"Your address changes won't be saved." = "Promjene vaše adrese neće biti spremljene.";

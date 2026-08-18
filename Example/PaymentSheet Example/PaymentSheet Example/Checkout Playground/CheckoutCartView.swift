@@ -12,16 +12,20 @@ import SwiftUI
 struct CheckoutCartView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var checkout: Checkout?
+    @StateObject private var diagnostics = CheckoutSessionDiagnostics()
 
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var showsCheckoutDetails = false
 
     let clientSecret: String
     let shippingAddressCollection: Bool
+    let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     var showExpressCheckoutElement: Bool = false
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
+    var delayPaymentPagesRequests = false
 
     var body: some View {
         NavigationView {
@@ -32,29 +36,26 @@ struct CheckoutCartView: View {
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
-                        showsShippingAddressSection: shippingAddressCollection,
-                        isLoading: $isLoading,
-                        errorMessage: $errorMessage
+                        showsShippingAddressSection: shippingAddressCollection || checkout.session.shippingAddress != nil,
+                        errorMessage: errorMessage
                     )
                     .overlay(alignment: .bottom) {
                         VStack(spacing: 0) {
-                            if checkout.session.total != nil {
-                                if showExpressCheckoutElement,
-                                   let ece = checkout.getExpressCheckoutElement() {
-                                    ece.view
-                                        .padding(.horizontal)
-                                        .padding(.top, 16)
-                                }
-                                switch integrationType {
-                                case .flowController:
-                                    CheckoutCartPaymentButton(checkout: checkout)
-                                        .clipped()
-                                case .embedded:
-                                    CheckoutCartEmbeddedPaymentView(checkout: checkout)
-                                        .clipped()
-                                case .eceOnly:
-                                    EmptyView()
-                                }
+                            if showExpressCheckoutElement,
+                               let ece = checkout.getExpressCheckoutElement() {
+                                ece.view
+                                    .padding(.horizontal)
+                                    .padding(.top, 16)
+                            }
+                            switch integrationType {
+                            case .flowController:
+                                CheckoutCartPaymentButton(checkout: checkout)
+                                    .clipped()
+                            case .embedded:
+                                CheckoutCartEmbeddedPaymentView(checkout: checkout)
+                                    .clipped()
+                            case .eceOnly:
+                                EmptyView()
                             }
                         }
                         .background(
@@ -90,6 +91,24 @@ struct CheckoutCartView: View {
                             .foregroundColor(.primary)
                     }
                 }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showsCheckoutDetails = true
+                    } label: {
+                        Image(systemName: "ladybug")
+                    }
+                    .disabled(checkout == nil)
+                    .opacity(checkout == nil ? 0 : 1)
+                    .accessibilityLabel("Session diagnostics")
+                }
+            }
+            .sheet(isPresented: $showsCheckoutDetails) {
+                if let checkout {
+                    CheckoutSessionDetailsView(
+                        diagnostics: diagnostics,
+                        checkout: checkout
+                    )
+                }
             }
             .task {
                 await loadCheckout()
@@ -102,11 +121,17 @@ struct CheckoutCartView: View {
         errorMessage = nil
         do {
             var config = Checkout.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
+            config.apiClient = diagnostics.makeAPIClient(
+                paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
+            )
             config.adaptivePricing.allowed = adaptivePricing
+            config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
             config.applePayConfiguration = Checkout.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             config.currencySelectorElement.appearance = currencySelectorAppearance
+            config.shippingAddressElement.title = "Shipping Address"
+            config.shippingAddressElement.buttonTitle = "Save Address"
             checkout = try await Checkout(configuration: config)
         } catch {
             errorMessage = error.localizedDescription

@@ -59,6 +59,9 @@ public final class Checkout: ObservableObject {
     /// The CurrencySelectorElement for this Checkout instance, when Adaptive Pricing is available.
     private var currencySelectorElement: CurrencySelectorElement?
 
+    /// The ShippingAddressElement for this Checkout instance.
+    private let shippingAddressElement: ShippingAddressElement
+
     // TODO(gbirch) TODO(porter) remove this nonisolatedSession
     //  once MPE is properly MainActor isolated
     /// A snapshot of the current ``session`` accessible from non-MainActor contexts.
@@ -128,18 +131,39 @@ public final class Checkout: ObservableObject {
             )
             let loadedSession = apiResponse.makePublicSession()
             self.session = loadedSession
-            self.nonisolatedSession = session // temporary hack
+            self.nonisolatedSession = loadedSession // temporary hack
 
-            try await applyDefaults()
+            // Element initialization is intentionally sequential:
 
-            // Load elements
+            // 1. Initialize SAE so that its form can normalize the raw default shipping address before it is applied to the session
+            let (shippingAddressElement, normalizedDefaultShippingAddress) = await Self.makeShippingAddressElement(
+                configuration: configuration,
+                session: loadedSession
+            )
+            self.shippingAddressElement = shippingAddressElement
+            self.shippingAddressElement.delegate = self
+
+            try await applyDefaults(shippingAddress: normalizedDefaultShippingAddress)
+
+            // 2.
+            // PaymentElement reads from the session during initialization, then updates it with the
+            // initial payment option and may sync its billing address to recalculate tax. It must finish
+            // before creating the session source so the remaining elements receive the resulting session
+            // as their initial value.
             self.paymentElement = try await PaymentElement(checkout: self)
+
+            // Create the session source that we can pass to the reaminign elements, which do not need to mutate the session.
+            // Elements past this point can be initialized in any order since they do not mutate the session.
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
+
+            // 3. ECE
             self.expressCheckoutElement = ExpressCheckoutElement(
                 sessionSource: sessionSource,
                 configuration: configuration,
                 delegate: self
             )
+
+            // 4. CSE
             if configuration.adaptivePricing.allowed {
                 self.currencySelectorElement = await CurrencySelectorElement(
                     sessionSource: sessionSource,
@@ -147,10 +171,43 @@ public final class Checkout: ObservableObject {
                     delegate: self
                 )
             }
-
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
+    }
+
+    private static func makeShippingAddressElement(
+        configuration: Configuration,
+        session: Session
+    ) async -> (ShippingAddressElement, Session.ShippingAddress?) {
+        let defaultShippingAddress: Session.ShippingAddress?
+        if let shippingDetails = configuration.defaults.shippingDetails,
+           let address = shippingDetails.address {
+            defaultShippingAddress = Session.ShippingAddress(
+                name: shippingDetails.name,
+                address: address
+            )
+        } else {
+            defaultShippingAddress = nil
+        }
+
+        // Initialize the SAE with the raw default so its form can normalize the address.
+        let shippingAddressElement = ShippingAddressElement(
+            configuration: configuration.shippingAddressElement,
+            initialShippingAddress: defaultShippingAddress ?? session.shippingAddress,
+            allowedCountries: session.allowedShippingCountries,
+            checkoutSessionId: session.id,
+            apiClient: configuration.apiClient,
+            useAutocompleteEndpoints: session.elementsSession.shouldUseAutocompleteProxyEndpoints
+        )
+        let normalizedDefaultShippingAddress: Session.ShippingAddress?
+        if defaultShippingAddress != nil {
+            normalizedDefaultShippingAddress = await shippingAddressElement.normalizedInitialShippingAddress()
+        } else {
+            normalizedDefaultShippingAddress = nil
+        }
+
+        return (shippingAddressElement, normalizedDefaultShippingAddress)
     }
 
     // MARK: - Promotion Codes
@@ -220,13 +277,12 @@ public final class Checkout: ObservableObject {
         let shippingAddress = Session.ShippingAddress(name: name, address: address)
         guard session.shippingAddress != shippingAddress else { return }
         if session.shouldSendTaxRegion(for: "shipping") {
-            try await performUpdate(.setTaxRegion(address), applying: { session in
-                session.makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
-            })
+            try await performUpdate(
+                .setTaxRegion(address),
+                shippingAddress: .newValue(shippingAddress)
+            )
         } else {
-            try await performUpdate(applying: { session in
-                session.makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
-            })
+            try await performUpdate(shippingAddress: .newValue(shippingAddress))
         }
     }
 
@@ -285,6 +341,11 @@ public final class Checkout: ObservableObject {
     /// Returns the CurrencySelectorElement when Adaptive Pricing is available for this Checkout instance.
     public func getCurrencySelectorElement() -> CurrencySelectorElement? {
         return currencySelectorElement
+    }
+
+    /// Returns the ShippingAddressElement for this Checkout instance.
+    public func getShippingAddressElement() -> ShippingAddressElement {
+        return shippingAddressElement
     }
 
     // MARK: - Confirm
@@ -352,19 +413,25 @@ public final class Checkout: ObservableObject {
 // MARK: - Defaults
 
 extension Checkout {
-    func applyDefaults() async throws {
+    func applyDefaults(shippingAddress: Session.ShippingAddress?) async throws {
         let defaults = configuration.defaults
 
         if let billingDetails = defaults.billingDetails,
            let address = billingDetails.address {
             try await updateBillingTaxRegionIfNecessary(address: address)
         }
-        if let shippingDetails = defaults.shippingDetails,
-           let address = shippingDetails.address {
-            try await updateShippingAddress(
-                name: shippingDetails.name,
-                address: address
-            )
+
+        if let shippingAddress {
+            do {
+                try await updateShippingAddress(
+                    name: shippingAddress.name,
+                    address: shippingAddress.address
+                )
+            } catch CheckoutError.invalidShippingCountry {
+                // Treat a default address with a disallowed country as nil.
+            } catch {
+                throw error
+            }
         }
     }
 }
@@ -372,27 +439,23 @@ extension Checkout {
 // These exist here because `session` is private(set) to enforce that session can only be mutated through these sanctioned paths.
 // Setting the session should generally only be done via `commitSession` to avoid putting us into an inconsistent state e.g. without using commitSession, MPE is not aware of the updated session.
 extension Checkout {
-    /// Replaces the current session from an API response, applies client-side mutations, and updates Checkout elements.
+    /// Replaces the current session from an API response, applies local state, and updates Checkout elements.
     ///
-    /// Client-side address overrides are copied from the current session to the new one
-    /// automatically. To update an address, pass a `localMutation` closure.
+    /// Existing local state is preserved unless explicitly replaced.
     func commitSession(
         _ apiResponse: PaymentPagesAPIResponse? = nil,
-        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
+        shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
+        paymentOption: SessionFieldUpdate<Session.PaymentOptionDisplayData> = .keepOldValue
     ) async throws {
-        // === Update the session ===
-        // Generate a new session from the API response, or fall back to the current session.
         let newSession = apiResponse?.makePublicSession() ?? session
-
-        // Preserve client-side address overrides on the new session.
-        let sessionWithLocalAddress = newSession.makeCopyOverriding(
-            shippingAddress: .newValue(session.shippingAddress),
-            paymentOption: .newValue(session.paymentOption)
+        session = newSession.makeCopyOverriding(
+            shippingAddress: .newValue(
+                shippingAddress.resolved(currentValue: session.shippingAddress)
+            ),
+            paymentOption: .newValue(
+                paymentOption.resolved(currentValue: session.paymentOption)
+            )
         )
-
-        // Apply any additional local mutations to the session.
-        let finalSession = localMutation?(sessionWithLocalAddress) ?? sessionWithLocalAddress
-        session = finalSession
 
         // === Update Payment Element and all other asynchronously updated elements ==
         try await paymentElement?.update(checkout: self)

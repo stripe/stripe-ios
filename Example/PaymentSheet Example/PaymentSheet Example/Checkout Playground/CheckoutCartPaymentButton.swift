@@ -41,9 +41,7 @@ struct CheckoutCartPaymentButton: View {
                 HStack {
                     Text("Checkout")
                     Spacer()
-                    if let total = session.total, let currency = session.currency {
-                        Text(formatCartCurrency(amount: total.total.minorUnitsAmount, currency: currency))
-                    }
+                    Text(session.totals.total.amount)
                 }
                 .font(.headline)
                 .foregroundColor(.white)

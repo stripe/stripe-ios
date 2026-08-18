@@ -1,18 +1,46 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
+### Payments
+* [Added] Added support for the following FPX banks: Agrobank, Bank of China, and MBSB Bank.
+
+## 26.7.0 2026-08-17
+### PaymentSheet
+* [Added] StripePaymentSheet now depends on `StripeFinancialConnectionsLite` to support lightweight bank payment flows. If you use StripePaymentSheet with Carthage or by manually embedding the .xcframeworks, [you must also embed StripeFinancialConnectionsLite.xcframework](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2670) in your app. No action is required for CocoaPods or Swift Package Manager users.
+* [Changed] Address autocomplete results sourced from internal service.
+* [Added] Added `PaymentSheet.LinkConfiguration.Display.walletButtonHidden`, which keeps Link enabled but hides its button from the payment element UI.
+
+### AddressElement
+* [Changed] Address autocomplete results sourced from internal service.
+
+## 26.6.0 2026-08-10
+### PaymentSheet
+* [Fixed] LinkController (private preview) now returns an error when no funding sources are available for a Link session, rather than silently falling back to card.
+* [Added] Added public `STPAPIClient.betas` support for merchant-supplied beta headers. To use Vipps in PaymentSheet beta, set `vipps_preview=v1` on the `STPAPIClient` instance that you pass into PaymentSheet or Checkout, for example `Set(["vipps_preview=v1"])`.
 
 ### CryptoOnramp (Alpha)
 * [Added] Added `CryptoOnrampCoordinator.deleteWalletAddress(walletId:)` to delete a registered wallet address.
+
+### PaymentSheet
+* [Added] Added support for MB WAY payments.
+* [Added] Added support for Bizum payments.
 
 ## 26.5.0 2026-08-03
 ### CryptoOnramp (Alpha)
 * [Added] Added support for registering wallet addresses on the Tempo network.
 
+### Payments
+* [Added] Added Klarna confirmation options for passing SDK-generated interoperability tokens to PaymentIntent and SetupIntent confirmation, and partner confirmation tokens to PaymentIntent confirmation (private preview).
+
 ### PaymentSheet
 * [Added] Added `billingDetailsCollectionConfiguration` to `LinkConfiguration`, allowing `LinkControllerPreview` consumers to configure billing details collection in the Link sheet (private preview).
 * [Added] `LinkController` now supports appearance customization via `LinkAppearance` (private preview).
+
+### AddressElement
+* [Changed] No longer supports swipe-to-dismiss.
+* [Changed] Now treats the 'X' button as a true cancel button that discards changes.
+* [Changed] If a customer taps the 'X' button with unsaved changes, now presents a dialog to confirm the cancellation.
 
 ## 26.4.1 2026-07-23
 ### Payments

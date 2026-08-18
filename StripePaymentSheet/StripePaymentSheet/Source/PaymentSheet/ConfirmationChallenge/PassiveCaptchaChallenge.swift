@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripePayments
 
 /// PassiveCaptcha, delivered in the `v1/elements/sessions` response.
-/// - Seealso: https://git.corp.stripe.com/stripe-internal/pay-server/blob/master/lib/elements/api/resources/elements_passive_captcha_resource.rb
 struct PassiveCaptchaData: Equatable, Hashable {
 
     let siteKey: String
@@ -72,7 +71,17 @@ actor PassiveCaptchaChallenge {
     init(passiveCaptchaData: PassiveCaptchaData, hcaptchaFactory: HCaptchaFactory) {
         self.passiveCaptchaData = passiveCaptchaData
         self.hcaptchaFactory = hcaptchaFactory
-        _ = Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
+        // Use [weak self] so this task does not prevent the actor from being deallocated.
+        // When the actor is deallocated, deinit cancels tokenTask.
+        Task { [weak self] in
+            _ = try? await self?.fetchToken()
+        }
+    }
+
+    deinit {
+        // Cancel the in-flight token task so any lingering HCaptcha WebView is stopped
+        // and does not log analytics after this challenge is released.
+        tokenTask?.cancel()
     }
 
     public func fetchToken() async throws -> String {

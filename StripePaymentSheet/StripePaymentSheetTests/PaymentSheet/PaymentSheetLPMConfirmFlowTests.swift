@@ -74,12 +74,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             self.session = session
         }
 
-        func commitSession(
-            _ apiResponse: PaymentPagesAPIResponse?,
-            applying localMutation: (@MainActor @Sendable (Checkout.Session) -> Checkout.Session)?
-        ) async throws {
-            let updatedSession = apiResponse?.makePublicSession() ?? session
-            session = localMutation?(updatedSession) ?? updatedSession
+        func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
+            session = apiResponse.makePublicSession()
         }
 
         func updateBillingTaxRegionIfNecessaryForPaymentSheet(
@@ -451,6 +447,16 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         ) { _ in }
     }
 
+    func testVippsConfirmFlows() async throws {
+        try await _testConfirm(
+            intentKinds: [.paymentIntent],
+            currency: "NOK",
+            paymentMethodType: .vipps,
+            merchantCountry: .FR,
+            expectedHierarchy: ExpectedFormHierarchy.Vipps.paymentIntent
+        ) { _ in }
+    }
+
     func testTwintConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "CHF",
@@ -589,6 +595,28 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.Multibanco.paymentIntent) { form in
             form.getTextFieldElement("Email").setText("foo@bar.com")
+        }
+    }
+
+    func testMBWayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .mbWay,
+                               merchantCountry: .FR,
+                               expectedHierarchy: ExpectedFormHierarchy.MBWay.paymentIntent) { form in
+            form.getPhoneNumberElement().setSelectedCountryCode("PT")
+            form.getPhoneNumberElement().setPhoneNumber("911111112")
+        }
+    }
+
+    func testBizumConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .bizum,
+                               merchantCountry: .FR,
+                               expectedHierarchy: ExpectedFormHierarchy.Bizum.paymentIntent) { form in
+            form.getPhoneNumberElement().setSelectedCountryCode("ES")
+            form.getPhoneNumberElement().setPhoneNumber("600000001")
         }
     }
 
@@ -997,6 +1025,9 @@ extension PaymentSheetLPMConfirmFlowTests {
 
         // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
+        if paymentMethodType == .vipps {
+            apiClient.betas = ["vipps_preview=v1"]
+        }
 
         var configuration: PaymentSheet.Configuration = {
             // Use argument if non-nil, otherwise create a default

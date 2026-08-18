@@ -14,6 +14,9 @@ class PassiveCaptchaChallengeTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        // Clear analytics at the start of each test to prevent contamination from lingering
+        // background tasks started by a previous test.
+        STPAnalyticsClient.sharedClient._testLogHistory = []
         // Create a key window for HCaptcha WebView to initialize properly
         let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
         if let windowScene = windowScene {
