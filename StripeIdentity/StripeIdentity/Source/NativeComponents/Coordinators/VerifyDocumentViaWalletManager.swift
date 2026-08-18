@@ -25,6 +25,8 @@ enum VerifyDocumentViaWalletManagerError: Error {
 @_spi(VerifyWithWallet) public final class VerifyDocumentViaWalletManager: VerifyDocumentViaWalletManagerProtocol {
     // TODO: remove once the API returns this
     public static var shouldEnableVerifyDocumentViaWallet: Bool = false
+    // TODO(for demo): remove once the wallet session id is surfaced through a proper API
+    @_spi(VerifyWithWallet) public static var lastWalletIdentitySessionId: String?
     private static let localMerchantIdentifier = "merchant.com.stripe.IdentityVerification-Example"
     private static let osVersionString = ProcessInfo.processInfo.operatingSystemVersionString
 
@@ -85,6 +87,7 @@ enum VerifyDocumentViaWalletManagerError: Error {
 
         VerifyWithWalletLogger.log("creating wallet identity session")
         let walletSession = try await createWalletIdentitySession()
+        Self.lastWalletIdentitySessionId = walletSession.sessionId
         VerifyWithWalletLogger.log("created wallet identity session id=\(walletSession.sessionId) documentRequests=\(walletSession.request.documentRequests.map { $0.documentType })")
         guard let nonce = walletSession.request.nonce.base64URLDecodedData else {
             VerifyWithWalletLogger.logError("failed to decode nonce")

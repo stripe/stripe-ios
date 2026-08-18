@@ -255,6 +255,7 @@ class PlaygroundViewController: UIViewController {
         // Disable the button while we make the request
         updateButtonState(isLoading: true)
         VerifyDocumentViaWalletManager.shouldEnableVerifyDocumentViaWallet = enableVerifyViaWalletSwitch.isOn
+        VerifyDocumentViaWalletManager.lastWalletIdentitySessionId = nil
         var endpoint: String
         var requestDict: [String: Any]
 
@@ -437,13 +438,17 @@ class PlaygroundViewController: UIViewController {
             self.verificationSheet?.present(
                 from: self,
                 completion: { [weak self] result in
+                    let debugString = [
+                        verificationSessionId,
+                        VerifyDocumentViaWalletManager.lastWalletIdentitySessionId,
+                    ].compactMap { $0 }.joined(separator: "\n")
                     switch result {
                     case .flowCompleted:
-                        self?.displayAlert("Completed!", verificationSessionId)
+                        self?.displayAlert("Completed!", debugString)
                     case .flowCanceled:
-                        self?.displayAlert("Canceled!", verificationSessionId)
+                        self?.displayAlert("Canceled!", debugString)
                     case .flowFailed(let error):
-                        self?.displayAlert("Failed!", verificationSessionId)
+                        self?.displayAlert("Failed!", debugString)
                         print(error)
                     }
                 }
