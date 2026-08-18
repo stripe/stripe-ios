@@ -438,10 +438,10 @@ class PlaygroundViewController: UIViewController {
             self.verificationSheet?.present(
                 from: self,
                 completion: { [weak self] result in
-                    let debugString = [
-                        verificationSessionId,
-                        VerifyDocumentViaWalletManager.lastWalletIdentitySessionId,
-                    ].compactMap { $0 }.joined(separator: "\n")
+                    let debugString = """
+                        vs=\(verificationSessionId ?? "nil")
+                        wis=\(VerifyDocumentViaWalletManager.lastWalletIdentitySessionId ?? "nil")
+                        """
                     switch result {
                     case .flowCompleted:
                         self?.displayAlert("Completed!", debugString)
