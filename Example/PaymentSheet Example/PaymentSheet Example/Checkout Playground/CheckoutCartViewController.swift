@@ -17,6 +17,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
 
     let clientSecret: String
     let shippingAddressCollection: Bool
+    let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     let showExpressCheckoutElement: Bool
@@ -27,6 +28,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
         let viewController = CheckoutCartViewController(
             clientSecret: clientSecret,
             shippingAddressCollection: shippingAddressCollection,
+            defaultShippingAddress: defaultShippingAddress,
             adaptivePricing: adaptivePricing,
             integrationType: integrationType,
             showExpressCheckoutElement: showExpressCheckoutElement,
@@ -45,6 +47,7 @@ final class CheckoutCartViewController: UIViewController {
 
     private let clientSecret: String
     private let shippingAddressCollection: Bool
+    private let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     private let adaptivePricing: Bool
     private let integrationType: CheckoutPlayground.IntegrationType
     private let showExpressCheckoutElement: Bool
@@ -75,6 +78,7 @@ final class CheckoutCartViewController: UIViewController {
     init(
         clientSecret: String,
         shippingAddressCollection: Bool,
+        defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?,
         adaptivePricing: Bool,
         integrationType: CheckoutPlayground.IntegrationType,
         showExpressCheckoutElement: Bool,
@@ -84,6 +88,7 @@ final class CheckoutCartViewController: UIViewController {
     ) {
         self.clientSecret = clientSecret
         self.shippingAddressCollection = shippingAddressCollection
+        self.defaultShippingAddress = defaultShippingAddress
         self.adaptivePricing = adaptivePricing
         self.integrationType = integrationType
         self.showExpressCheckoutElement = showExpressCheckoutElement
@@ -202,6 +207,7 @@ final class CheckoutCartViewController: UIViewController {
                 returnURL: "payments-example://stripe-redirect"
             )
             configuration.adaptivePricing.allowed = adaptivePricing
+            configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
             configuration.applePayConfiguration = Checkout.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
@@ -261,7 +267,7 @@ final class CheckoutCartViewController: UIViewController {
 
         contentStackView.addArrangedSubview(makeLineItemsSection(checkout: checkout))
 
-        if shippingAddressCollection {
+        if shippingAddressCollection || checkout.session.shippingAddress != nil {
             contentStackView.addArrangedSubview(makeShippingAddressSection(checkout: checkout))
         }
 

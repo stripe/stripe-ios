@@ -10,8 +10,10 @@ import UIKit
 /// Handles Checkout mutations requested by an ExpressCheckoutElement.
 @MainActor
 protocol ExpressCheckoutElementDelegate: AnyObject {
-    /// - Parameter presentingViewController: The view controller that owns the tapped button's window, used to present any UI required to confirm (e.g. Link authentication). This may differ from the view controller used elsewhere, e.g. with ``Checkout/confirm(from:)``.
-    func expressCheckoutElementShouldConfirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod, presentingViewController: UIViewController?) async -> Checkout.ConfirmResult
+    func expressCheckoutElementShouldConfirm(
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
+        presentingViewController: UIViewController
+    ) async -> Checkout.ConfirmResult
 }
 
 /// An express checkout element backed by a Checkout Session.

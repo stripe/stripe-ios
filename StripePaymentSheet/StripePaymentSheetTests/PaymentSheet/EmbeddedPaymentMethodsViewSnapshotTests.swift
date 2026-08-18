@@ -13,6 +13,7 @@ import StripeCoreTestUtils
 import XCTest
 
 class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
+    private var testWindows: [UIWindow] = []
 
     // MARK: Flat radio snapshot tests
 
@@ -861,6 +862,52 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
+    func testEmbeddedPaymentMethodsView_flatWithDisclosureRightToLeft() {
+        verifyRightToLeft(style: .flatWithDisclosure)
+    }
+
+    func testEmbeddedPaymentMethodsView_flatRadioRightToLeft() {
+        verifyRightToLeft(style: .flatWithRadio)
+    }
+
+    func testEmbeddedPaymentMethodsView_floatingRightToLeft() {
+        verifyRightToLeft(style: .floatingButton)
+    }
+
+    func testEmbeddedPaymentMethodsView_flatWithCheckmarkRightToLeft() {
+        verifyRightToLeft(style: .flatWithCheckmark)
+    }
+
+    private func verifyRightToLeft(
+        style: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        var appearance: PaymentSheet.Appearance = .default
+        appearance.embeddedPaymentElement.row.style = style
+
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+                                                      savedPaymentMethod: nil,
+                                                      appearance: appearance,
+                                                      shouldShowApplePay: true,
+                                                      shouldShowLink: true,
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
+        embeddedView.autosizeHeight(width: 300)
+        let containerView = UIView()
+        containerView.addAndPinSubview(embeddedView)
+        let traitHost = host(
+            containerView,
+            size: CGSize(width: 300, height: embeddedView.bounds.height),
+            traits: UITraitCollection(layoutDirection: .rightToLeft)
+        )
+
+        withExtendedLifetime(traitHost) {
+            STPSnapshotVerifyView(containerView, file: file, line: line)
+        }
+    }
+
     func testEmbeddedPaymentMethodsView_flatWithDisclosure_color() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
@@ -1410,6 +1457,27 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     ) {
         view.autosizeHeight(width: 300)
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+    }
+
+    private func host(
+        _ view: UIView,
+        size: CGSize,
+        traits: UITraitCollection
+    ) -> UIWindow {
+        let host = UIViewController()
+        let child = UIViewController()
+        child.view = view
+        host.addChild(child)
+        host.setOverrideTraitCollection(traits, forChild: child)
+        host.view.addAndPinSubview(view)
+        child.didMove(toParent: host)
+
+        let window = UIWindow(frame: CGRect(origin: .zero, size: size))
+        window.rootViewController = host
+        window.isHidden = false
+        testWindows.append(window)
+        window.layoutIfNeeded()
+        return window
     }
 }
 

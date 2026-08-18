@@ -31,6 +31,11 @@ extension PaymentPagesAPIResponse {
         let publicTax = Self.makeTax(taxMeta: taxMeta, taxContext: taxContext)
         let localizedPricesMetas = Self.makeLocalizedPricesMetas(from: adaptivePricingInfo)
         let exchangeRateMeta = Self.makeExchangeRateMeta(from: adaptivePricingInfo)
+        // TODO: Read explicit integration and presentment currency fields from the mobile
+        // translation layer once available instead of deriving them from the PP response shape.
+        let presentmentDetails = adaptivePricingInfo.map {
+            Checkout.Session.PresentmentDetails(presentmentCurrency: $0.activePresentmentCurrency)
+        }
         let automaticTaxEnabled = taxContext?.automaticTaxEnabled ?? false
         let automaticTaxAddressSource = Self.makeAutomaticTaxAddressSource(
             from: taxContext?.automaticTaxAddressSource
@@ -42,11 +47,8 @@ extension PaymentPagesAPIResponse {
         return Checkout.Session(
             id: sessionId,
             businessName: elementsSession.businessName,
-            currency: currency,
-            currencyOptions: Self.makeCurrencyOptions(
-                from: localizedPricesMetas,
-                exchangeRateMeta: exchangeRateMeta
-            ),
+            currency: adaptivePricingInfo?.integrationCurrency ?? currency,
+            presentmentDetails: presentmentDetails,
             discountAmounts: publicDiscountAmounts,
             email: customerEmail ?? customer?.email,
             orderSummaryItems: publicOrderSummaryItems,
@@ -67,7 +69,7 @@ extension PaymentPagesAPIResponse {
             allowedShippingCountries: shippingAddressCollection?.allowedCountries,
             localizedPricesMetas: localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,
-            adaptivePricingActive: developerToolContext?.adaptivePricing?.active ?? false,
+            adaptivePricingActive: adaptivePricingInfo != nil,
             billingAddressCollection: billingAddressCollection.flatMap(Checkout.Session.BillingAddressCollection.init(rawValue:)) ?? .automatic,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
@@ -223,16 +225,19 @@ extension PaymentPagesAPIResponse {
     private static func makeDiscountAmounts(
         from discountAmounts: [DiscountAmount],
         currency: String
-    ) -> [Checkout.DiscountAmount] {
+    ) -> [Checkout.Session.DiscountAmount] {
         discountAmounts.compactMap { discount in
             guard let amount = discount.amount, amount > 0 else { return nil }
-            return Checkout.DiscountAmount(
-                amount: makeAmount(amount, currency: currency),
+            let publicAmount = makeAmount(amount, currency: currency)
+            return Checkout.Session.DiscountAmount(
+                amount: publicAmount.amount,
+                minorUnitsAmount: publicAmount.minorUnitsAmount,
                 displayName: discount.displayName
                     ?? discount.coupon?.name
                     ?? discount.coupon?.id
                     ?? String.Localized.discount,
-                promotionCode: discount.promotionCode?.code
+                promotionCode: discount.promotionCode?.code,
+                percentOff: discount.coupon?.percentOff
             )
         }
     }
@@ -308,32 +313,27 @@ extension PaymentPagesAPIResponse {
     private static func makeLocalizedPricesMetas(
         from adaptivePricingInfo: AdaptivePricingInfo?
     ) -> [STPCheckoutSessionLocalizedPriceMeta] {
-        guard let adaptivePricingInfo,
-              let localCurrencyOptions = adaptivePricingInfo.localCurrencyOptions else {
+        guard let adaptivePricingInfo else {
             return []
         }
-        var metas: [STPCheckoutSessionLocalizedPriceMeta] = localCurrencyOptions.compactMap { option in
-            guard let currency = option.currency,
-                  let amount = option.amount else {
-                return nil
-            }
+        var metas: [STPCheckoutSessionLocalizedPriceMeta] = adaptivePricingInfo.localCurrencyOptions.map { option in
             // Local currency options no longer include a dedicated ID, so currency is stable.
             return STPCheckoutSessionLocalizedPriceMeta(
-                id: currency,
-                currency: currency,
-                total: amount
+                id: option.currency,
+                currency: option.currency,
+                total: option.amount
             )
         }
 
         // Always include the integration currency as an option.
-        if let integrationCurrency = adaptivePricingInfo.integrationCurrency,
-           let integrationAmount = adaptivePricingInfo.integrationAmount,
-           !metas.contains(where: { $0.currency.lowercased() == integrationCurrency.lowercased() }) {
+        if !metas.contains(where: {
+            $0.currency.lowercased() == adaptivePricingInfo.integrationCurrency.lowercased()
+        }) {
             metas.append(
                 STPCheckoutSessionLocalizedPriceMeta(
-                    id: integrationCurrency,
-                    currency: integrationCurrency,
-                    total: integrationAmount
+                    id: adaptivePricingInfo.integrationCurrency,
+                    currency: adaptivePricingInfo.integrationCurrency,
+                    total: adaptivePricingInfo.integrationAmount
                 )
             )
         }
@@ -345,45 +345,23 @@ extension PaymentPagesAPIResponse {
         from adaptivePricingInfo: AdaptivePricingInfo?
     ) -> STPCheckoutSessionExchangeRateMeta? {
         guard let adaptivePricingInfo,
-              let activePresentmentCurrency = adaptivePricingInfo.activePresentmentCurrency,
-              let integrationCurrency = adaptivePricingInfo.integrationCurrency,
-              let localCurrencyOptions = adaptivePricingInfo.localCurrencyOptions,
-              let selectedOption = localCurrencyOptions.first(where: {
-                  $0.currency?.lowercased() == activePresentmentCurrency.lowercased()
-              }) ?? localCurrencyOptions.first,
-              let localizedCurrency = selectedOption.currency,
-              let exchangeRate = selectedOption.presentmentExchangeRate,
-              let conversionMarkupBps = selectedOption.conversionMarkupBps else {
+              let selectedOption = adaptivePricingInfo.localCurrencyOptions.first(where: {
+                  $0.currency.lowercased() == adaptivePricingInfo.activePresentmentCurrency.lowercased()
+              }) ?? adaptivePricingInfo.localCurrencyOptions.first else {
             return nil
         }
 
         return STPCheckoutSessionExchangeRateMeta(
-            id: "\(integrationCurrency.lowercased())_to_\(localizedCurrency.lowercased())",
-            buyCurrency: localizedCurrency,
-            sellCurrency: integrationCurrency,
-            exchangeRate: exchangeRate,
-            integrationCurrency: integrationCurrency,
-            localizedCurrency: localizedCurrency,
-            conversionMarkupBps: conversionMarkupBps
+            id: "\(adaptivePricingInfo.integrationCurrency.lowercased())_to_\(selectedOption.currency.lowercased())",
+            buyCurrency: selectedOption.currency,
+            sellCurrency: adaptivePricingInfo.integrationCurrency,
+            exchangeRate: selectedOption.presentmentExchangeRate,
+            integrationCurrency: adaptivePricingInfo.integrationCurrency,
+            localizedCurrency: selectedOption.currency,
+            conversionMarkupBps: selectedOption.conversionMarkupBps
         )
     }
 
-    static func makeCurrencyOptions(
-        from metas: [STPCheckoutSessionLocalizedPriceMeta],
-        exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
-    ) -> [Checkout.CurrencyOption] {
-        metas.map { meta in
-            let conversion: Checkout.CurrencyConversion? = exchangeRateMeta.flatMap { rate in
-                guard meta.currency.lowercased() == rate.localizedCurrency.lowercased() else { return nil }
-                return Checkout.CurrencyConversion(fxRate: rate.exchangeRate, sourceCurrency: rate.sellCurrency)
-            }
-            return Checkout.CurrencyOption(
-                amount: makeAmount(meta.total, currency: meta.currency),
-                currency: meta.currency,
-                currencyConversion: conversion
-            )
-        }
-    }
 }
 
 extension Checkout.Session.Status {

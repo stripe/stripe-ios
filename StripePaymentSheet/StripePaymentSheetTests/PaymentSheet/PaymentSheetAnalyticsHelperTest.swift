@@ -106,7 +106,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(isApplePayEnabled, lastEvent.additionalParams[jsonDict: "mpe_config"]?["apple_pay_config"] as? Bool)
             XCTAssertEqual(isCustomerProvided, lastEvent.additionalParams[jsonDict: "mpe_config"]?["customer"] as? Bool)
             switch integrationShape {
-            case .complete, .flowController, .linkController:
+            case .complete, .flowController, .linkController, .expressCheckout:
                 XCTAssertEqual("automatic", lastEvent.additionalParams[jsonDict: "mpe_config"]?["payment_method_layout"] as? String)
             case .embedded:
                 XCTAssertEqual("continue", lastEvent.additionalParams[jsonDict: "mpe_config"]?["form_sheet_action"] as? String)

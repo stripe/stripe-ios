@@ -32,8 +32,6 @@ struct CheckoutCartContentView: View {
                     shippingAddressSection
                 }
                 orderSummarySection
-
-                Spacer().frame(height: 160)
             }
             .padding(.top, 20)
         }

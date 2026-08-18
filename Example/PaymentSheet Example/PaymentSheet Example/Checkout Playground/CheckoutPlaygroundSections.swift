@@ -176,6 +176,8 @@ struct CheckoutPlaygroundLineItemCard: View {
 struct CheckoutPlaygroundFeaturesSection: View {
     let customerType: CheckoutPlayground.CustomerType
     @Binding var shippingAddressCollection: Bool
+    @Binding var defaultShippingAddressOption: CheckoutPlayground.DefaultShippingAddressOption
+    @Binding var customDefaultShippingAddress: CheckoutPlayground.DefaultShippingAddress
     @Binding var billingAddressCollection: CheckoutPlayground.BillingAddressCollection
     @Binding var automaticTax: Bool
     @Binding var checkoutSessionPaymentMethodSave: Bool
@@ -195,6 +197,20 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $shippingAddressCollection,
                     tooltip: "Sets `shipping_address_collection` to allow specific countries (US, CA, GB, AU). Necessary for physical goods."
                 )
+                CheckoutPlayground.PickerRow(
+                    title: "Default Shipping Address",
+                    selection: $defaultShippingAddressOption,
+                    tooltip: "Sets `Checkout.Configuration.defaults.shippingDetails` before loading Checkout.",
+                    displayText: { $0.displayName }
+                )
+                switch defaultShippingAddressOption {
+                case .none:
+                    EmptyView()
+                case .usTestAddress:
+                    CheckoutPlaygroundShippingAddressPreview(address: .usTestAddress)
+                case .custom:
+                    CheckoutPlaygroundShippingAddressEditor(address: $customDefaultShippingAddress)
+                }
                 CheckoutPlayground.PickerRow(
                     title: "Billing Address",
                     selection: $billingAddressCollection,
@@ -226,6 +242,103 @@ struct CheckoutPlaygroundFeaturesSection: View {
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+}
+
+private struct CheckoutPlaygroundShippingAddressPreview: View {
+
+    let address: CheckoutPlayground.DefaultShippingAddress
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "mappin.circle.fill")
+                .font(.system(size: 20))
+                .foregroundColor(.blue)
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(address.name)
+                    .font(.subheadline.weight(.semibold))
+                Text(address.line1)
+                Text("\(address.city), \(address.state) \(address.postalCode)")
+                Text(address.country)
+            }
+            .font(.subheadline)
+            .foregroundColor(.secondary)
+
+            Spacer()
+        }
+        .padding(.vertical, 12)
+        .padding(.horizontal, 16)
+        .background(Color(uiColor: .secondarySystemGroupedBackground))
+    }
+}
+
+private struct CheckoutPlaygroundShippingAddressEditor: View {
+
+    @Binding var address: CheckoutPlayground.DefaultShippingAddress
+
+    var body: some View {
+        VStack(spacing: 12) {
+            CheckoutPlaygroundShippingAddressField(
+                title: "Name",
+                placeholder: "Jenny Rosen",
+                text: $address.name
+            )
+            CheckoutPlaygroundShippingAddressField(
+                title: "Address line 1",
+                placeholder: "510 Townsend St",
+                text: $address.line1
+            )
+            CheckoutPlaygroundShippingAddressField(
+                title: "Address line 2",
+                placeholder: "Apartment, suite, etc.",
+                text: $address.line2
+            )
+            CheckoutPlaygroundShippingAddressField(
+                title: "City",
+                placeholder: "San Francisco",
+                text: $address.city
+            )
+            CheckoutPlaygroundShippingAddressField(
+                title: "State",
+                placeholder: "CA",
+                text: $address.state
+            )
+            CheckoutPlaygroundShippingAddressField(
+                title: "ZIP / postal code",
+                placeholder: "94103",
+                text: $address.postalCode
+            )
+            CheckoutPlaygroundShippingAddressField(
+                title: "Country",
+                placeholder: "US",
+                text: $address.country
+            )
+        }
+        .padding(16)
+        .background(Color(uiColor: .secondarySystemGroupedBackground))
+    }
+}
+
+private struct CheckoutPlaygroundShippingAddressField: View {
+
+    let title: String
+    let placeholder: String
+    @Binding var text: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.secondary)
+            TextField(placeholder, text: $text)
+                .font(.body)
+                .padding(.horizontal, 12)
+                .frame(height: 40)
+                .background(Color(uiColor: .tertiarySystemFill))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .accessibilityLabel(title)
         }
     }
 }

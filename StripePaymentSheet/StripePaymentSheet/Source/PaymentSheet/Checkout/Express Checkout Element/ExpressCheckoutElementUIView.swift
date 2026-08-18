@@ -113,13 +113,17 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     private func confirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod) {
-        // Resolve the presenting view controller from this button's own window rather than
-        // e.g. the app's topmost visible view controller, which isn't necessarily the same
-        // (e.g. if this button lives in a different window/scene, or under a presented VC).
-        let presentingViewController = window?.rootViewController?.findTopMostPresentedViewController()
         Task { @MainActor [weak self] in
-            guard let self,
-                let result = await self.delegate?.expressCheckoutElementShouldConfirm(paymentMethod, presentingViewController: presentingViewController) else { return }
+            guard let self else { return }
+            guard let presentingViewController = self.window?.rootViewController?.findTopMostPresentedViewController() else {
+                let error = CheckoutError.unknown(debugDescription: "ExpressCheckoutElementUIView could not find a presenting view controller.")
+                self.configuration.expressCheckoutElement.confirmHandler(.failed(error))
+                return
+            }
+            guard let result = await self.delegate?.expressCheckoutElementShouldConfirm(
+                paymentMethod,
+                presentingViewController: presentingViewController
+            ) else { return }
             self.configuration.expressCheckoutElement.confirmHandler(result)
         }
     }
