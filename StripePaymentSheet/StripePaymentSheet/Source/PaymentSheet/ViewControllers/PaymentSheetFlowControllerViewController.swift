@@ -22,7 +22,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let loadResult: PaymentSheetLoader.LoadResult
-    weak var checkout: Checkout?
+    weak var checkout: CheckoutController?
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -183,7 +183,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         configuration: PaymentSheet.Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        checkout: Checkout? = nil,
+        checkout: CheckoutController? = nil,
         initialState: FlowControllerViewControllerInitialState = .preservingFormInput(from: nil)
     ) {
         let previousConfirmParams = initialState.previousCustomerInputForHorizontalController
@@ -691,7 +691,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 
     /// Syncs Checkout billing before accepting a saved-method tap.
     private func syncCheckoutBillingThenClose(
-        checkout: Checkout,
+        checkout: CheckoutController,
         billingDetails: STPPaymentMethodBillingDetails?,
         previousSelection: SavedPaymentOptionsViewController.SelectionSnapshot
     ) {

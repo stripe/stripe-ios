@@ -14,7 +14,7 @@ import UIKit
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout {
+extension CheckoutController {
     /// A read-only representation of a Stripe Checkout Session.
     public struct Session {
         // MARK: - Public Properties
@@ -29,9 +29,8 @@ extension Checkout {
         /// Three-letter ISO 4217 currency code in lowercase (e.g. `"usd"`).
         public let currency: String?
 
-        /// The currency options available on the Checkout Session when adaptive pricing is active.
-        /// Empty when adaptive pricing is not active.
-        public let currencyOptions: [Checkout.CurrencyOption]
+        /// Details about the currency presented to the customer when adaptive pricing is active.
+        public let presentmentDetails: PresentmentDetails?
 
         /// The aggregate amounts calculated per discount for all line items.
         public let discountAmounts: [DiscountAmount]
@@ -45,8 +44,9 @@ extension Checkout {
         /// `true` if this object exists in live mode, `false` for test mode.
         public let livemode: Bool
 
-        /// The factor used to convert between minor and major currency units. For USD this
-        /// is `100`; for JPY this is `1`. `nil` when the session has no currency (e.g. setup mode).
+        /// The factor used to convert the session's presentment amounts between minor and major
+        /// currency units. For USD this is `100`; for JPY this is `1`. `nil` when the session has
+        /// no currency.
         public let minorUnitsAmountDivisor: Int?
 
         /// The currently selected payment option.
@@ -70,7 +70,7 @@ extension Checkout {
         public let taxAmounts: [TaxAmount]?
 
         /// Aggregate subtotal, tax, discount, and total amounts for the Checkout Session.
-        public let totals: Checkout.Session.Totals
+        public let totals: CheckoutController.Session.Totals
 
         // MARK: - Internal Properties
 
@@ -82,7 +82,7 @@ extension Checkout {
         let setupFutureUsageForPaymentMethodType: [String: String]
         let allowedShippingCountries: [String]?
         let localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
-        let exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
+        let exchangeRateMeta: ExchangeRateMeta?
         let adaptivePricingActive: Bool
         let billingAddressCollection: BillingAddressCollection
         let automaticTaxEnabled: Bool
@@ -96,7 +96,7 @@ extension Checkout {
     }
 }
 
-extension Checkout.Session {
+extension CheckoutController.Session {
     /// An item included in the order summary.
     @frozen
     public enum OrderSummaryItem: Sendable, Hashable {
@@ -178,11 +178,6 @@ extension Checkout.Session {
         ///
         /// For example, `"$10.00"` is represented as `1000`.
         public let minorUnitsAmount: Double
-
-        public init(amount: String, minorUnitsAmount: Double) {
-            self.amount = amount
-            self.minorUnitsAmount = minorUnitsAmount
-        }
     }
 
     /// A tax amount included in an order summary item or aggregated across the session.

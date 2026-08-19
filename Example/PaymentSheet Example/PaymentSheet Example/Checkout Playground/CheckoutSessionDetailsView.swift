@@ -11,7 +11,7 @@ import SwiftUI
 struct CheckoutSessionDetailsView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var diagnostics: CheckoutSessionDiagnostics
-    @ObservedObject var checkout: Checkout
+    @ObservedObject var checkout: CheckoutController
 
     @ViewBuilder
     var body: some View {
@@ -75,7 +75,7 @@ struct CheckoutSessionDetailsView: View {
 }
 
 private struct CheckoutSessionDebugView: View {
-    @ObservedObject var checkout: Checkout
+    @ObservedObject var checkout: CheckoutController
 
     private var sessionDebugDescription: String {
         checkout.session.debugDescription
