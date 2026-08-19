@@ -108,7 +108,7 @@ extension CheckoutController.Session {
         /// The stable identity of this order summary item within its Checkout Session.
         public var id: ID {
             switch self {
-            case .oneTimePrice(let oneTimePrice):
+            case let .oneTimePrice(oneTimePrice):
                 return .oneTimePrice(oneTimePrice.key)
             }
         }
