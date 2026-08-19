@@ -68,9 +68,9 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
 
     /// Mock stand-in for a full `Checkout` object.
     final class TestCheckoutSessionUpdater: CheckoutSessionBillingAddressUpdater {
-        private(set) var session: Checkout.Session
+        private(set) var session: CheckoutController.Session
 
-        init(session: Checkout.Session) {
+        init(session: CheckoutController.Session) {
             self.session = session
         }
 
@@ -79,9 +79,9 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         }
 
         func updateBillingTaxRegionIfNecessaryForPaymentSheet(
-            address: Checkout.Address,
+            address: CheckoutController.Address,
             canUpdateWhileSheetPresented: Bool
-        ) async throws -> Checkout.Session {
+        ) async throws -> CheckoutController.Session {
             return session
         }
     }
@@ -1219,12 +1219,12 @@ extension PaymentSheetLPMConfirmFlowTests {
                     checkoutSessionId: checkoutSessionResponse.id,
                     adaptivePricingAllowed: true
                 )
-                var checkoutConfiguration = Checkout.Configuration(
+                var checkoutConfiguration = CheckoutController.Configuration(
                     clientSecret: checkoutSession.clientSecret ?? checkoutSessionResponse.clientSecret,
                     returnURL: "stripe-ios-test://checkout-return"
                 )
                 checkoutConfiguration.apiClient = csApiClient
-                let checkout = Checkout(
+                let checkout = CheckoutController(
                     testSession: checkoutSession.makePublicSession(),
                     configuration: checkoutConfiguration
                 )
@@ -1743,14 +1743,14 @@ extension PaymentSheetLPMConfirmFlowTests {
         }
 
         Task { @MainActor in
-            let confirmationContext = Checkout.ConfirmationContext(
+            let confirmationContext = CheckoutController.ConfirmationContext(
                 paymentOption: paymentOption,
                 configuration: configuration,
                 integrationShape: .complete,
                 confirmationChallenge: nil,
                 analyticsHelper: analyticsHelper
             )
-            let result = await Checkout.confirm(
+            let result = await CheckoutController.confirm(
                 checkoutContext: checkoutContext,
                 confirmationContext: confirmationContext,
                 authenticationContext: self,

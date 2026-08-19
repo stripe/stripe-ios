@@ -18,9 +18,9 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     func testCheckoutRequirementsUseCurrentSession() {
         let initialResponse = CheckoutTestHelpers.makeOpenSession()
-        let checkout = Checkout(
+        let checkout = CheckoutController(
             testSession: initialResponse.makePublicSession(),
-            configuration: Checkout.Configuration(
+            configuration: CheckoutController.Configuration(
                 clientSecret: "cs_test_123_secret_abc",
                 returnURL: "stripe-ios-test://checkout-return"
             )

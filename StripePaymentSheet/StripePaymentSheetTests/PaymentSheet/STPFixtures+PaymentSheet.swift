@@ -17,7 +17,7 @@ import StripePaymentsTestUtils
 
 @MainActor
 private enum CheckoutIntentTestStore {
-    static var checkouts: [Checkout] = []
+    static var checkouts: [CheckoutController] = []
 }
 
 public extension PaymentSheet.Configuration {
@@ -412,11 +412,11 @@ extension Intent {
 
     @MainActor
     static func _testCheckoutSession(apiResponse: PaymentPagesAPIResponse) -> Intent {
-        let configuration = Checkout.Configuration(
+        let configuration = CheckoutController.Configuration(
             clientSecret: apiResponse.clientSecret ?? "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
-        let checkout = Checkout(
+        let checkout = CheckoutController(
             testSession: apiResponse.makePublicSession(),
             configuration: configuration
         )

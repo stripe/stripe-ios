@@ -859,9 +859,9 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 }
 
 private final class TestCheckoutSessionBillingAddressUpdater: CheckoutSessionBillingAddressUpdater {
-    private var session: Checkout.Session
+    private var session: CheckoutController.Session
 
-    init(session: Checkout.Session) {
+    init(session: CheckoutController.Session) {
         self.session = session
     }
 
@@ -870,9 +870,9 @@ private final class TestCheckoutSessionBillingAddressUpdater: CheckoutSessionBil
     }
 
     func updateBillingTaxRegionIfNecessaryForPaymentSheet(
-        address: Checkout.Address,
+        address: CheckoutController.Address,
         canUpdateWhileSheetPresented: Bool
-    ) async throws -> Checkout.Session {
+    ) async throws -> CheckoutController.Session {
         return session
     }
 }

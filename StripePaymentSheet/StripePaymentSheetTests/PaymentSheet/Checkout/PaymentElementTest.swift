@@ -35,8 +35,8 @@ final class PaymentElementTest: XCTestCase {
 
     func testConfigurationSetsCheckoutDefaultBillingDetails() async throws {
         // Given Checkout billing defaults
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        var billingDetails = Checkout.Configuration.Defaults.BillingDetails()
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var billingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
         billingDetails.name = "Jane Doe"
         billingDetails.address = .init(
             country: "US",
@@ -49,7 +49,7 @@ final class PaymentElementTest: XCTestCase {
         checkoutConfiguration.defaults.billingDetails = billingDetails
 
         // When Checkout creates PaymentElement
-        let checkout = try await Checkout(
+        let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
         )
         let paymentElement = checkout.getPaymentElement()
@@ -71,12 +71,12 @@ final class PaymentElementTest: XCTestCase {
 
     func testConfigurationSetsCheckoutMerchantDisplayName() async throws {
         // Given Checkout merchant display name
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.merchantDisplayName = "Configured Merchant"
         checkoutConfiguration.userInterfaceStyle = .alwaysDark
 
         // When Checkout creates PaymentElement
-        let checkout = try await Checkout(
+        let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(
                 apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card"], businessName: "Dashboard Merchant"),
                 configuration: checkoutConfiguration
@@ -95,10 +95,10 @@ final class PaymentElementTest: XCTestCase {
 
     func testConfigurationDefaultsMerchantDisplayNameToCheckoutSessionBusinessName() async throws {
         // Given Checkout Session business name
-        let checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        let checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
 
         // When Checkout creates PaymentElement without an explicit merchant display name
-        let checkout = try await Checkout(
+        let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(
                 apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card"], businessName: "Dashboard Merchant"),
                 configuration: checkoutConfiguration
@@ -115,8 +115,8 @@ final class PaymentElementTest: XCTestCase {
 
     func testConfigurationSetsCheckoutDefaultShippingDetails() async throws {
         // Given Checkout shipping defaults
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Jane Doe"
         shippingDetails.address = .init(
             country: "US",
@@ -129,7 +129,7 @@ final class PaymentElementTest: XCTestCase {
         checkoutConfiguration.defaults.shippingDetails = shippingDetails
 
         // When Checkout creates PaymentElement
-        let checkout = try await Checkout(
+        let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
         )
         let paymentElement = checkout.getPaymentElement()
@@ -156,11 +156,11 @@ final class PaymentElementTest: XCTestCase {
 
     func testConfigurationSetsFullBillingAddressCollectionWhenCheckoutRequiresBillingAddress() async throws {
         // Given automatic billing address collection in PaymentElement
-        let checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        let checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "required")
 
         // When Checkout requires billing address collection
-        let checkout = try await Checkout(
+        let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(
                 apiResponse: session,
                 configuration: checkoutConfiguration
@@ -175,11 +175,11 @@ final class PaymentElementTest: XCTestCase {
 
     func testConfigurationPreservesFullBillingAddressCollectionWhenCheckoutBillingAddressCollectionIsAutomatic() async throws {
         // Given full billing address collection in PaymentElement
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.paymentElement.billingDetailsCollectionConfiguration.address = .full
 
         // When Checkout uses automatic billing address collection
-        let checkout = try await Checkout(
+        let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
         )
         let paymentElement = checkout.getPaymentElement()
@@ -194,7 +194,7 @@ final class PaymentElementTest: XCTestCase {
         let (configuration, requestRecorder) = try stubAutomaticTaxSavedCardCheckout()
 
         // When Checkout loads its PaymentElement...
-        let checkout = try await Checkout(configuration: configuration)
+        let checkout = try await CheckoutController(configuration: configuration)
 
         // Then the saved card's billing address is used to update the tax region...
         let requests = requestRecorder.requests
@@ -213,9 +213,9 @@ final class PaymentElementTest: XCTestCase {
 
     func testCheckoutSessionUpdatePreservesFlowControllerPaymentOption() async throws {
         // Given a Checkout PaymentElement with PayNow available in the real FlowController sheet UI...
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.paymentElement.paymentMethodLayout = .vertical
-        let checkout = try await Checkout(
+        let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(
                 apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card", "paynow"]),
                 configuration: configuration
@@ -327,7 +327,7 @@ final class PaymentElementTest: XCTestCase {
     }
 
     func testCheckoutAndElementsDoNotRetainEachOther() async throws {
-        weak var weakCheckout: Checkout?
+        weak var weakCheckout: CheckoutController?
         weak var weakPaymentElement: PaymentElement?
         weak var weakCurrencySelectorElement: CurrencySelectorElement?
         weak var weakCurrencySelectorUIView: CurrencySelectorElementUIView?
@@ -336,7 +336,7 @@ final class PaymentElementTest: XCTestCase {
         var intentContext: CheckoutIntentContext?
 
         do {
-            let checkout = try await Checkout(
+            let checkout = try await CheckoutController(
                 configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(
                     apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card"])
                 )
@@ -363,12 +363,12 @@ final class PaymentElementTest: XCTestCase {
     }
 
     func testStandalonePaymentElementsDoNotRetainCheckout() async throws {
-        weak var weakCheckout: Checkout?
+        weak var weakCheckout: CheckoutController?
         var flowController: PaymentSheet.FlowController?
         var embeddedPaymentElement: EmbeddedPaymentElement?
 
         do {
-            let checkout = try await Checkout(
+            let checkout = try await CheckoutController(
                 configuration: CheckoutTestHelpers.makeConfiguration(
                     apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card"])
                 )
@@ -388,7 +388,7 @@ final class PaymentElementTest: XCTestCase {
 
     /// `CheckoutSession.json` already has automatic tax sourced from billing and a saved card with a full billing address.
     private func stubAutomaticTaxSavedCardCheckout() throws -> (
-        configuration: Checkout.Configuration,
+        configuration: CheckoutController.Configuration,
         requestRecorder: CheckoutSessionRequestRecorder
     ) {
         let sessionJSON = STPTestUtils.jsonNamed("CheckoutSession")!
@@ -427,7 +427,7 @@ final class PaymentElementTest: XCTestCase {
         updateStatusCode: Int32 = 200,
         didSelectPaymentOption: @escaping () -> Void
     ) async throws -> (
-        checkout: Checkout,
+        checkout: CheckoutController,
         embeddedPaymentElement: EmbeddedPaymentElement,
         savedPaymentMethodRow: RowButton,
         requestRecorder: CheckoutSessionRequestRecorder
@@ -462,13 +462,13 @@ final class PaymentElementTest: XCTestCase {
             }
         )
 
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         configuration.paymentElement.rowSelectionBehavior = .immediateAction(
             didSelectPaymentOption: didSelectPaymentOption
         )
 
-        let checkout = try await Checkout(configuration: configuration)
+        let checkout = try await CheckoutController(configuration: configuration)
         let embeddedPaymentElement = checkout.getPaymentElement().embeddedPaymentElement
         let savedPaymentMethodRow = try XCTUnwrap(
             embeddedPaymentElement.embeddedPaymentMethodsView.rowButtons.first {

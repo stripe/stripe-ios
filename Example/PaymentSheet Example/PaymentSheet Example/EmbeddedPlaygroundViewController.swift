@@ -37,7 +37,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
     private let intentConfig: EmbeddedPaymentElement.IntentConfiguration?
 
-    private let checkout: Checkout?
+    private let checkout: CheckoutController?
 
     private(set) var embeddedPaymentElement: EmbeddedPaymentElement?
     private var paymentMethodsViewController: EmbeddedPaymentElementWrapperViewController?
@@ -104,7 +104,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
     init(
         configuration: EmbeddedPaymentElement.Configuration,
         intentConfig: EmbeddedPaymentElement.IntentConfiguration?,
-        checkout: Checkout?,
+        checkout: CheckoutController?,
         playgroundController: PlaygroundController
     ) {
         self.configuration = configuration
