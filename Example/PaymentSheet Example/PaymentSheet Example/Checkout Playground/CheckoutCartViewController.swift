@@ -601,7 +601,7 @@ final class CheckoutCartViewController: UIViewController {
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 14
         button.addTarget(self, action: #selector(checkoutButtonTapped), for: .touchUpInside)
-        button.isEnabled = checkout.session.paymentOption != nil && !checkout.isUpdating
+        button.isEnabled = !checkout.isUpdating
         button.alpha = button.isEnabled ? 1 : 0.5
 
         let titleLabel = UILabel()
@@ -825,7 +825,7 @@ final class CheckoutCartViewController: UIViewController {
                 title = "Canceled"
                 message = "The payment was canceled."
             case .failed(let error):
-                title = "Failed"
+                title = "Unable to complete checkout"
                 message = error.localizedDescription
             }
             let alertController = UIAlertController(

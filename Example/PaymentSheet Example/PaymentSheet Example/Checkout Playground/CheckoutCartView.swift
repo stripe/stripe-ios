@@ -131,7 +131,7 @@ struct CheckoutCartView: View {
         switch confirmResult {
         case .succeeded: return "Success"
         case .canceled: return "Canceled"
-        case .failed: return "Failed"
+        case .failed: return "Unable to complete checkout"
         case nil: return ""
         }
     }

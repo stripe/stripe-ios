@@ -51,7 +51,7 @@ struct CheckoutCartPaymentButton: View {
                 .cornerRadius(14)
             }
             .padding(.horizontal)
-            .disabled(session.paymentOption == nil || checkout.isUpdating)
+            .disabled(checkout.isUpdating)
         }
         .padding(.bottom, 16)
         .padding(.top, 16)
