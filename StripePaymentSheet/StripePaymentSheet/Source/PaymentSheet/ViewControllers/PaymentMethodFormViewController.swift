@@ -217,14 +217,14 @@ class PaymentMethodFormViewController: UIViewController {
             appearance: configuration.appearance
         )
         addressConfiguration.apiClient = configuration.apiClient
-        addressConfiguration.useAutocompleteEndpoints = configuration.useAutocompleteEndpoints && elementsSession.shouldUseAutocompleteProxyEndpoints
 
         let autoCompleteViewController = AutoCompleteViewController(
             configuration: addressConfiguration,
             initialLine1Text: addressSectionElement.line1?.text,
             selectedCountry: addressSectionElement.selectedCountryCode,
             addressSpecProvider: AddressSpecProvider.shared,
-            verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance)
+            verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance),
+            useAutocompleteEndpoints: elementsSession.shouldUseAutocompleteProxyEndpoints
         )
         autoCompleteViewController.delegate = self
 
@@ -562,7 +562,7 @@ extension PaymentMethodFormViewController {
                 returnURL: configuration.returnURL,
                 onEvent: nil,
                 amount: session.expectedAmount(),
-                currency: session.currency,
+                currency: session.activePresentmentCurrency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
@@ -678,7 +678,7 @@ extension PaymentMethodFormViewController {
                 returnURL: configuration.returnURL,
                 onEvent: nil,
                 amount: session.expectedAmount(),
-                currency: session.currency,
+                currency: session.activePresentmentCurrency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,

@@ -303,6 +303,13 @@ extension String.Localized {
         )
     }
 
+    static var alipay_mandate_text: String {
+        STPLocalizedString(
+            "By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms.",
+            "Alipay mandate text"
+        )
+    }
+
     static var revolut_pay_mandate_text: String {
         STPLocalizedString(
             "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.",
@@ -783,13 +790,6 @@ extension String.Localized {
         STPLocalizedString(
             "Subtotal",
             "Label for the subtotal row in an order summary, before tax/shipping/discounts."
-        )
-    }
-
-    static var shipping: String {
-        STPLocalizedString(
-            "Shipping",
-            "Label for the shipping cost row in an order summary."
         )
     }
 

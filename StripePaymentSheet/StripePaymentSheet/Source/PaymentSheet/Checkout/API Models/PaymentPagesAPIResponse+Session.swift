@@ -9,40 +9,33 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension PaymentPagesAPIResponse {
-    /// Builds a public, read-only ``Checkout.Session`` snapshot from this API response object.
-    func makePublicSession() -> Checkout.Session {
-        let publicPaymentStatus = Checkout.PaymentStatus.paymentStatus(from: paymentStatus)
-        let publicStatus = Checkout.Status(
-            type: Checkout.StatusType.statusType(from: status),
-            paymentStatus: publicPaymentStatus
-        )
+    /// Builds a public, read-only ``CheckoutController.Session`` snapshot from this API response object.
+    func makePublicSession() -> CheckoutController.Session {
         let elementsSessionValue = elementsSession.value
         let publicDiscountAmounts = Self.makeDiscountAmounts(
             from: recurringDetails?.totalDiscountAmounts ?? [],
             currency: currency
         )
-        let publicTaxAmounts = Self.makeTaxAmounts(
-            from: recurringDetails?.totalTaxAmounts ?? [],
-            currency: currency
-        )
+        // TODO: Have Payment Pages return session-level tax amounts directly. `recurring_details`
+        // is an odd source for one-time-price modeless Checkout, and clients shouldn't need to
+        // derive this aggregate from recurring-specific response models.
+        let publicTaxAmounts = recurringDetails?.totalTaxAmounts?.map {
+            Self.makeSessionTaxAmount(from: $0, currency: currency, locale: .autoupdatingCurrent)
+        }
         let publicOrderSummaryItems = Self.makeOrderSummaryItems(
             from: checkoutItems,
             defaultCurrency: currency,
             locale: .autoupdatingCurrent
         )
-        let publicTotal = Self.makeTotal(
-            from: totalSummary,
-            currency: currency,
-            taxAmounts: publicTaxAmounts,
-            discountAmounts: publicDiscountAmounts,
-            shippingRate: shippingRate
-        )
-        let publicTax = Checkout.Tax(
-            status: Self.makeTaxStatus(taxMeta: taxMeta, taxContext: taxContext),
-            taxAmounts: publicTaxAmounts.isEmpty ? nil : publicTaxAmounts
-        )
+        let publicTotals = Self.makeTotals(from: checkoutItems, currency: currency)
+        let publicTax = Self.makeTax(taxMeta: taxMeta, taxContext: taxContext)
         let localizedPricesMetas = Self.makeLocalizedPricesMetas(from: adaptivePricingInfo)
         let exchangeRateMeta = Self.makeExchangeRateMeta(from: adaptivePricingInfo)
+        // TODO: Read explicit integration and presentment currency fields from the mobile
+        // translation layer once available instead of deriving them from the PP response shape.
+        let presentmentDetails = adaptivePricingInfo.map {
+            CheckoutController.Session.PresentmentDetails(presentmentCurrency: $0.activePresentmentCurrency)
+        }
         let automaticTaxEnabled = taxContext?.automaticTaxEnabled ?? false
         let automaticTaxAddressSource = Self.makeAutomaticTaxAddressSource(
             from: taxContext?.automaticTaxAddressSource
@@ -51,14 +44,11 @@ extension PaymentPagesAPIResponse {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }
 
-        return Checkout.Session(
+        return CheckoutController.Session(
             id: sessionId,
             businessName: elementsSession.businessName,
-            currency: currency,
-            currencyOptions: Self.makeCurrencyOptions(
-                from: localizedPricesMetas,
-                exchangeRateMeta: exchangeRateMeta
-            ),
+            currency: adaptivePricingInfo?.integrationCurrency ?? currency,
+            presentmentDetails: presentmentDetails,
             discountAmounts: publicDiscountAmounts,
             email: customerEmail ?? customer?.email,
             orderSummaryItems: publicOrderSummaryItems,
@@ -66,10 +56,11 @@ extension PaymentPagesAPIResponse {
             minorUnitsAmountDivisor: Self.makeMinorUnitsAmountDivisor(currency: currency),
             paymentOption: nil,
             shippingAddress: nil,
-            status: publicStatus,
+            status: status,
             tax: publicTax,
-            total: publicTotal,
-            paymentStatus: publicPaymentStatus,
+            taxAmounts: publicTaxAmounts,
+            totals: publicTotals,
+            paymentStatus: paymentStatus,
             paymentMethodOptions: paymentMethodOptions,
             customer: customer,
             savedPaymentMethodsOfferSave: Self.makeSavedPaymentMethodsOfferSave(from: savedPaymentMethodsOfferSave),
@@ -78,8 +69,8 @@ extension PaymentPagesAPIResponse {
             allowedShippingCountries: shippingAddressCollection?.allowedCountries,
             localizedPricesMetas: localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,
-            adaptivePricingActive: developerToolContext?.adaptivePricing?.active ?? false,
-            billingAddressCollection: billingAddressCollection.flatMap(Checkout.Session.BillingAddressCollection.init(rawValue:)) ?? .automatic,
+            adaptivePricingActive: adaptivePricingInfo != nil,
+            billingAddressCollection: billingAddressCollection.flatMap(CheckoutController.Session.BillingAddressCollection.init(rawValue:)) ?? .automatic,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
             elementsSession: elementsSessionValue
@@ -90,19 +81,18 @@ extension PaymentPagesAPIResponse {
 // MARK: - Public model conversion
 
 extension PaymentPagesAPIResponse {
-    static func makeAmount(_ minorUnitsAmount: Int, currency: String) -> Checkout.Amount {
-        let formatted = String.localizedAmountDisplayString(for: minorUnitsAmount, currency: currency)
-        return Checkout.Amount(amount: formatted, minorUnitsAmount: minorUnitsAmount)
+    static func makeAmount(_ minorUnitsAmount: Int, currency: String) -> CheckoutController.Session.Amount {
+        return makeAmount(Double(minorUnitsAmount), currency: currency, locale: .autoupdatingCurrent)
     }
 
     // TODO: Have Payment Pages return Session.Amount-shaped values so clients don't duplicate
     // minor-to-major conversion and locale-aware currency formatting.
-    private static func makeSessionAmount(
+    private static func makeAmount(
         _ minorUnitsAmount: Double,
         currency: String,
         locale: Locale,
         supportsSubcentPrecision: Bool = false
-    ) -> Checkout.Session.Amount {
+    ) -> CheckoutController.Session.Amount {
         let minorUnitValueInMajorUnits = NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency) // e.g. USD: 0.01
         let decimalizedAmount = NSDecimalNumber(value: minorUnitsAmount).multiplying(by: minorUnitValueInMajorUnits) // e.g. 49,900 × 0.01 = 499.00
         let formatter = NumberFormatter()
@@ -117,7 +107,7 @@ extension PaymentPagesAPIResponse {
         }
         let formatted = formatter.string(from: decimalizedAmount)
             ?? "\(formatter.currencySymbol ?? "")\(decimalizedAmount)"
-        return Checkout.Session.Amount(
+        return CheckoutController.Session.Amount(
             amount: formatted,
             minorUnitsAmount: minorUnitsAmount
         )
@@ -132,23 +122,23 @@ extension PaymentPagesAPIResponse {
         from checkoutItems: [CheckoutItem],
         defaultCurrency: String,
         locale: Locale
-    ) -> [Checkout.Session.OrderSummaryItem] {
+    ) -> [CheckoutController.Session.OrderSummaryItem] {
         checkoutItems.map { item in
             let oneTimePrice = item.oneTimePrice
-            let publicItems: [Checkout.Session.OrderSummaryItem.OneTimePrice.Item] =
+            let publicItems: [CheckoutController.Session.OrderSummaryItem.OneTimePrice.Item] =
                 oneTimePrice.items.map { item in
                     let price = item.price
                     let product = price.product
                     let currency = price.currency
                     let unitAmount = item.unitAmount ?? price.unitAmount ?? 0
-                    let adjustableQuantity: Checkout.Session.AdjustableQuantity?
+                    let adjustableQuantity: CheckoutController.Session.AdjustableQuantity?
                     if let rawAdjustableQuantity = item.adjustableQuantity,
                        rawAdjustableQuantity.enabled {
                         // TODO: Payment Pages currently models these bounds as optional, although enabled
                         // adjustable quantity is normally populated with server defaults of 0 and 99.
                         // Once the response contract requires both bounds when enabled, reject missing
                         // values during decoding and remove these client-side fallbacks.
-                        adjustableQuantity = Checkout.Session.AdjustableQuantity(
+                        adjustableQuantity = CheckoutController.Session.AdjustableQuantity(
                             enabled: true,
                             maximum: rawAdjustableQuantity.maximum ?? 99,
                             minimum: rawAdjustableQuantity.minimum ?? 0
@@ -156,17 +146,17 @@ extension PaymentPagesAPIResponse {
                     } else {
                         adjustableQuantity = nil
                     }
-                    return Checkout.Session.OrderSummaryItem.OneTimePrice.Item(
+                    return CheckoutController.Session.OrderSummaryItem.OneTimePrice.Item(
                         key: price.id,
                         displayName: product.name,
                         images: product.images,
-                        unitAmount: makeSessionAmount(
+                        unitAmount: makeAmount(
                             Double(unitAmount),
                             currency: currency,
                             locale: locale
                         ),
                         unitAmountDecimal: item.unitAmountDecimal.map {
-                            makeSessionAmount(
+                            makeAmount(
                                 $0,
                                 currency: currency,
                                 locale: locale,
@@ -184,28 +174,28 @@ extension PaymentPagesAPIResponse {
             }
             let taxInclusive = oneTimePrice.items.reduce(0) { $0 + $1.taxInclusive }
             let taxExclusive = oneTimePrice.items.reduce(0) { $0 + $1.taxExclusive }
-            let amountDetails = Checkout.Session.OrderSummaryItem.OneTimePrice.AmountDetails(
-                total: makeSessionAmount(Double(oneTimePrice.total), currency: defaultCurrency, locale: locale),
-                subtotal: makeSessionAmount(
+            let amountDetails = CheckoutController.Session.OrderSummaryItem.OneTimePrice.AmountDetails(
+                total: makeAmount(Double(oneTimePrice.total), currency: defaultCurrency, locale: locale),
+                subtotal: makeAmount(
                     Double(oneTimePrice.subtotal),
                     currency: defaultCurrency,
                     locale: locale
                 ),
                 taxAmounts: taxAmounts.isEmpty ? nil : taxAmounts,
-                discount: makeSessionAmount(0, currency: defaultCurrency, locale: locale),
-                taxInclusive: makeSessionAmount(
+                discount: makeAmount(0, currency: defaultCurrency, locale: locale),
+                taxInclusive: makeAmount(
                     Double(taxInclusive),
                     currency: defaultCurrency,
                     locale: locale
                 ),
-                taxExclusive: makeSessionAmount(
+                taxExclusive: makeAmount(
                     Double(taxExclusive),
                     currency: defaultCurrency,
                     locale: locale
                 )
             )
             return .oneTimePrice(
-                Checkout.Session.OrderSummaryItem.OneTimePrice(
+                CheckoutController.Session.OrderSummaryItem.OneTimePrice(
                     key: item.key,
                     description: nil,
                     items: publicItems,
@@ -219,9 +209,9 @@ extension PaymentPagesAPIResponse {
         from taxAmount: TaxAmount,
         currency: String,
         locale: Locale
-    ) -> Checkout.Session.TaxAmount {
-        let publicAmount = makeSessionAmount(Double(taxAmount.amount), currency: currency, locale: locale)
-        return Checkout.Session.TaxAmount(
+    ) -> CheckoutController.Session.TaxAmount {
+        let publicAmount = makeAmount(Double(taxAmount.amount), currency: currency, locale: locale)
+        return CheckoutController.Session.TaxAmount(
             amount: publicAmount.amount,
             minorUnitsAmount: publicAmount.minorUnitsAmount,
             inclusive: taxAmount.inclusive,
@@ -235,74 +225,73 @@ extension PaymentPagesAPIResponse {
     private static func makeDiscountAmounts(
         from discountAmounts: [DiscountAmount],
         currency: String
-    ) -> [Checkout.DiscountAmount] {
+    ) -> [CheckoutController.Session.DiscountAmount] {
         discountAmounts.compactMap { discount in
             guard let amount = discount.amount, amount > 0 else { return nil }
-            return Checkout.DiscountAmount(
-                amount: makeAmount(amount, currency: currency),
+            let publicAmount = makeAmount(amount, currency: currency)
+            return CheckoutController.Session.DiscountAmount(
+                amount: publicAmount.amount,
+                minorUnitsAmount: publicAmount.minorUnitsAmount,
                 displayName: discount.displayName
                     ?? discount.coupon?.name
                     ?? discount.coupon?.id
                     ?? String.Localized.discount,
-                promotionCode: discount.promotionCode?.code
+                promotionCode: discount.promotionCode?.code,
+                percentOff: discount.coupon?.percentOff
             )
         }
     }
 
-    private static func makeTaxAmounts(
-        from taxAmounts: [TaxAmount],
+    private static func makeTotals(
+        from checkoutItems: [CheckoutItem],
         currency: String
-    ) -> [Checkout.TaxAmount] {
-        taxAmounts.map { taxAmount in
-            return Checkout.TaxAmount(
-                amount: makeAmount(taxAmount.amount, currency: currency),
-                inclusive: taxAmount.inclusive,
-                displayName: taxAmount.taxRate.displayName
-            )
+    ) -> CheckoutController.Session.Totals {
+        var subtotal = 0
+        var taxExclusive = 0
+        var taxInclusive = 0
+        var total = 0
+        for checkoutItem in checkoutItems {
+            let oneTimePrice = checkoutItem.oneTimePrice
+            subtotal += oneTimePrice.subtotal
+            taxExclusive += oneTimePrice.items.reduce(0) { $0 + $1.taxExclusive }
+            taxInclusive += oneTimePrice.items.reduce(0) { $0 + $1.taxInclusive }
+            total += oneTimePrice.total
         }
-    }
-
-    private static func makeTotal(
-        from totalSummary: TotalSummary?,
-        currency: String,
-        taxAmounts: [Checkout.TaxAmount],
-        discountAmounts: [Checkout.DiscountAmount],
-        shippingRate: ShippingRate?
-    ) -> Checkout.Total? {
-        guard let totalSummary,
-              let subtotal = totalSummary.subtotal,
-              let total = totalSummary.total else { return nil }
-        let taxInclusive = taxAmounts.filter(\.inclusive).reduce(0) { $0 + $1.amount.minorUnitsAmount }
-        let taxExclusive = taxAmounts.filter { !$0.inclusive }.reduce(0) { $0 + $1.amount.minorUnitsAmount }
-        let discount = discountAmounts.reduce(0) { $0 + $1.amount.minorUnitsAmount }
-        return Checkout.Total(
+        return CheckoutController.Session.Totals(
             subtotal: makeAmount(subtotal, currency: currency),
             taxExclusive: makeAmount(taxExclusive, currency: currency),
             taxInclusive: makeAmount(taxInclusive, currency: currency),
-            shippingRate: makeAmount(shippingRate?.amount ?? 0, currency: currency),
-            discount: makeAmount(discount, currency: currency),
-            total: makeAmount(total, currency: currency),
-            appliedBalance: makeAmount(totalSummary.appliedBalance ?? 0, currency: currency),
-            balanceAppliedToNextInvoice: totalSummary.balanceAppliedToNextInvoice ?? false
+            // Discounts are not currently supported in unified mode.
+            discount: makeAmount(0, currency: currency),
+            total: makeAmount(total, currency: currency)
         )
     }
 
-    private static func makeTaxStatus(
+    private static func makeTax(
         taxMeta: TaxMeta?,
         taxContext: TaxContext?
-    ) -> Checkout.TaxStatus {
-        guard taxMeta?.computationType == "automatic" else { return .ready }
+    ) -> CheckoutController.Session.Tax? {
+        // TODO: Decode computation_type as an enum. Longer term, the backend should return
+        // the public tax status directly instead of requiring each client to derive it.
+        // Until then, match EwCS by treating every non-automatic computation type as ready.
+        guard let computationType = taxMeta?.computationType else { return nil }
+        guard computationType == "automatic" else {
+            return CheckoutController.Session.Tax(status: .ready)
+        }
         switch taxMeta?.status {
         case "complete":
-            return .ready
+            return CheckoutController.Session.Tax(status: .ready)
         case "requires_location_inputs":
-            return taxContext?.automaticTaxAddressSource == "session.shipping"
-                ? .requiresShippingAddress
-                : .requiresBillingAddress
-        case "failed":
-            return .unknown
+            switch taxContext?.automaticTaxAddressSource {
+            case "session.shipping":
+                return CheckoutController.Session.Tax(status: .requiresShippingAddress)
+            case "session.billing":
+                return CheckoutController.Session.Tax(status: .requiresBillingAddress)
+            default:
+                return nil
+            }
         default:
-            return .ready
+            return nil
         }
     }
 
@@ -324,32 +313,24 @@ extension PaymentPagesAPIResponse {
     private static func makeLocalizedPricesMetas(
         from adaptivePricingInfo: AdaptivePricingInfo?
     ) -> [STPCheckoutSessionLocalizedPriceMeta] {
-        guard let adaptivePricingInfo,
-              let localCurrencyOptions = adaptivePricingInfo.localCurrencyOptions else {
+        guard let adaptivePricingInfo else {
             return []
         }
-        var metas: [STPCheckoutSessionLocalizedPriceMeta] = localCurrencyOptions.compactMap { option in
-            guard let currency = option.currency,
-                  let amount = option.amount else {
-                return nil
-            }
-            // Local currency options no longer include a dedicated ID, so currency is stable.
+        var metas: [STPCheckoutSessionLocalizedPriceMeta] = adaptivePricingInfo.localCurrencyOptions.map { option in
             return STPCheckoutSessionLocalizedPriceMeta(
-                id: currency,
-                currency: currency,
-                total: amount
+                currency: option.currency,
+                total: option.amount
             )
         }
 
         // Always include the integration currency as an option.
-        if let integrationCurrency = adaptivePricingInfo.integrationCurrency,
-           let integrationAmount = adaptivePricingInfo.integrationAmount,
-           !metas.contains(where: { $0.currency.lowercased() == integrationCurrency.lowercased() }) {
+        if !metas.contains(where: {
+            $0.currency.lowercased() == adaptivePricingInfo.integrationCurrency.lowercased()
+        }) {
             metas.append(
                 STPCheckoutSessionLocalizedPriceMeta(
-                    id: integrationCurrency,
-                    currency: integrationCurrency,
-                    total: integrationAmount
+                    currency: adaptivePricingInfo.integrationCurrency,
+                    total: adaptivePricingInfo.integrationAmount
                 )
             )
         }
@@ -359,67 +340,45 @@ extension PaymentPagesAPIResponse {
 
     private static func makeExchangeRateMeta(
         from adaptivePricingInfo: AdaptivePricingInfo?
-    ) -> STPCheckoutSessionExchangeRateMeta? {
+    ) -> CheckoutController.Session.ExchangeRateMeta? {
         guard let adaptivePricingInfo,
-              let activePresentmentCurrency = adaptivePricingInfo.activePresentmentCurrency,
-              let integrationCurrency = adaptivePricingInfo.integrationCurrency,
-              let localCurrencyOptions = adaptivePricingInfo.localCurrencyOptions,
-              let selectedOption = localCurrencyOptions.first(where: {
-                  $0.currency?.lowercased() == activePresentmentCurrency.lowercased()
-              }) ?? localCurrencyOptions.first,
-              let localizedCurrency = selectedOption.currency,
-              let exchangeRate = selectedOption.presentmentExchangeRate,
-              let conversionMarkupBps = selectedOption.conversionMarkupBps else {
+              let selectedOption = adaptivePricingInfo.localCurrencyOptions.first(where: {
+                  $0.currency.lowercased() == adaptivePricingInfo.activePresentmentCurrency.lowercased()
+              }) ?? adaptivePricingInfo.localCurrencyOptions.first else {
             return nil
         }
 
-        return STPCheckoutSessionExchangeRateMeta(
-            id: "\(integrationCurrency.lowercased())_to_\(localizedCurrency.lowercased())",
-            buyCurrency: localizedCurrency,
-            sellCurrency: integrationCurrency,
-            exchangeRate: exchangeRate,
-            integrationCurrency: integrationCurrency,
-            localizedCurrency: localizedCurrency,
-            conversionMarkupBps: conversionMarkupBps
+        return CheckoutController.Session.ExchangeRateMeta(
+            exchangeRate: selectedOption.presentmentExchangeRate,
+            integrationCurrency: adaptivePricingInfo.integrationCurrency,
+            localizedCurrency: selectedOption.currency,
+            conversionMarkupBps: selectedOption.conversionMarkupBps
         )
     }
 
-    static func makeCurrencyOptions(
-        from metas: [STPCheckoutSessionLocalizedPriceMeta],
-        exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
-    ) -> [Checkout.CurrencyOption] {
-        metas.map { meta in
-            let conversion: Checkout.CurrencyConversion? = exchangeRateMeta.flatMap { rate in
-                guard meta.currency.lowercased() == rate.localizedCurrency.lowercased() else { return nil }
-                return Checkout.CurrencyConversion(fxRate: rate.exchangeRate, sourceCurrency: rate.sellCurrency)
-            }
-            return Checkout.CurrencyOption(
-                amount: makeAmount(meta.total, currency: meta.currency),
-                currency: meta.currency,
-                currencyConversion: conversion
-            )
-        }
-    }
 }
 
-extension Checkout.StatusType {
-    static func statusType(from string: String) -> Checkout.StatusType {
+extension CheckoutController.Session.Status {
+    static func status(
+        from string: String,
+        paymentStatus: CheckoutController.Session.Status.PaymentStatus
+    ) -> CheckoutController.Session.Status? {
         switch string.lowercased() {
         case "open": return .open
-        case "complete": return .complete
+        case "complete": return .complete(paymentStatus)
         case "expired": return .expired
-        default: return .unknown
+        default: return nil
         }
     }
 }
 
-extension Checkout.PaymentStatus {
-    static func paymentStatus(from string: String) -> Checkout.PaymentStatus {
+extension CheckoutController.Session.Status.PaymentStatus {
+    static func paymentStatus(from string: String) -> CheckoutController.Session.Status.PaymentStatus? {
         switch string.lowercased() {
         case "paid": return .paid
         case "unpaid": return .unpaid
         case "no_payment_required": return .noPaymentRequired
-        default: return .unknown
+        default: return nil
         }
     }
 }

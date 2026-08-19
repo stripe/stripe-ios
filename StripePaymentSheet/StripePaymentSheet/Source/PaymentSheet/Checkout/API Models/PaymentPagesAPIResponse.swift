@@ -15,6 +15,7 @@ import Foundation
 /// Properties in this model mirror the API payload. Conversion to the public Checkout
 /// representation belongs in `makePublicSession()`.
 struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible {
+    // TODO: Make this Decodable instead, we don't need _allResponseFieldStorage.
     var _allResponseFieldsStorage: NonEncodableParameters?
 
     let sessionId: String
@@ -26,21 +27,17 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let currency: String
     let checkoutItems: [CheckoutItem]
     let livemode: Bool
-    let status: String
-    let paymentStatus: String
+    let status: CheckoutController.Session.Status
+    let paymentStatus: CheckoutController.Session.Status.PaymentStatus
     let customerEmail: String?
     let url: String?
-    let returnUrl: String?
     let savedPaymentMethodsOfferSave: SavedPaymentMethodsOfferSave?
     let setupFutureUsage: String?
     let setupFutureUsageForPaymentMethodType: [String: String]?
     let billingAddressCollection: String?
     let shippingAddressCollection: ShippingAddressCollection?
-    let shippingRate: ShippingRate?
     let recurringDetails: RecurringDetails?
-    let totalSummary: TotalSummary?
     let adaptivePricingInfo: AdaptivePricingInfo?
-    let developerToolContext: DeveloperToolContext?
     let taxContext: TaxContext?
     let taxMeta: TaxMeta?
     let paymentMethodOptions: STPPaymentMethodOptions?
@@ -63,7 +60,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         let props: [String] = [
             "PaymentPagesAPIResponse",
             "sessionId = \(sessionId)",
-            "totalSummary = \(String(describing: totalSummary))",
             "clientSecret = <redacted>",
             "currency = \(currency)",
             "mode = \(String(describing: allResponseFields["mode"]))",
@@ -75,7 +71,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
             "customerId = \(String(describing: customer?.id))",
             "customerEmail = \(String(describing: customerEmail))",
             "url = \(String(describing: url))",
-            "returnUrl = \(String(describing: returnUrl))",
             "savedPaymentMethodsOfferSave = \(String(describing: savedPaymentMethodsOfferSave))",
         ]
         return "<\(props.joined(separator: "; "))>"
@@ -95,17 +90,13 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case paymentMethodTypes
         case customerEmail
         case url
-        case returnUrl
         case savedPaymentMethodsOfferSave = "customer_managed_saved_payment_methods_offer_save"
         case setupFutureUsage
         case setupFutureUsageForPaymentMethodType
         case billingAddressCollection
         case shippingAddressCollection
-        case shippingRate
         case recurringDetails
-        case totalSummary
         case adaptivePricingInfo
-        case developerToolContext
         case taxContext
         case taxMeta
         case paymentMethodOptions
@@ -152,19 +143,26 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         checkoutItems = decodedCheckoutItems
 
         livemode = try container.decode(Bool.self, forKey: .livemode)
-        status = try container.decode(String.self, forKey: .status)
-        guard ["open", "complete", "expired"].contains(status.lowercased()) else {
-            throw decoder.dataCorrupted("Unsupported Checkout Session status: \(status)")
+        let decodedPaymentStatus = try container.decode(String.self, forKey: .paymentStatus)
+        guard let paymentStatus = CheckoutController.Session.Status.PaymentStatus.paymentStatus(
+            from: decodedPaymentStatus
+        ) else {
+            throw decoder.dataCorrupted("Unsupported payment_status: \(decodedPaymentStatus)")
         }
-        paymentStatus = try container.decode(String.self, forKey: .paymentStatus)
-        guard ["paid", "unpaid", "no_payment_required"].contains(paymentStatus.lowercased()) else {
-            throw decoder.dataCorrupted("Unsupported payment_status: \(paymentStatus)")
+        self.paymentStatus = paymentStatus
+
+        let decodedStatus = try container.decode(String.self, forKey: .status)
+        guard let status = CheckoutController.Session.Status.status(
+            from: decodedStatus,
+            paymentStatus: paymentStatus
+        ) else {
+            throw decoder.dataCorrupted("Unsupported Checkout Session status: \(decodedStatus)")
         }
+        self.status = status
         _ = try container.decode([String].self, forKey: .paymentMethodTypes)
 
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
         url = try container.decodeIfPresent(String.self, forKey: .url)
-        returnUrl = try container.decodeIfPresent(String.self, forKey: .returnUrl)
         savedPaymentMethodsOfferSave = try container.decodeIfPresent(
             SavedPaymentMethodsOfferSave.self,
             forKey: .savedPaymentMethodsOfferSave
@@ -182,16 +180,10 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
             ShippingAddressCollection.self,
             forKey: .shippingAddressCollection
         )
-        shippingRate = try container.decodeIfPresent(ShippingRate.self, forKey: .shippingRate)
         recurringDetails = try container.decodeIfPresent(RecurringDetails.self, forKey: .recurringDetails)
-        totalSummary = try container.decodeIfPresent(TotalSummary.self, forKey: .totalSummary)
         adaptivePricingInfo = try container.decodeIfPresent(
             AdaptivePricingInfo.self,
             forKey: .adaptivePricingInfo
-        )
-        developerToolContext = try container.decodeIfPresent(
-            DeveloperToolContext.self,
-            forKey: .developerToolContext
         )
         taxContext = try container.decodeIfPresent(TaxContext.self, forKey: .taxContext)
         taxMeta = try container.decodeIfPresent(TaxMeta.self, forKey: .taxMeta)
@@ -381,13 +373,6 @@ extension PaymentPagesAPIResponse {
         let images: [String]
     }
 
-    struct TotalSummary: Decodable {
-        let subtotal: Int?
-        let total: Int?
-        let appliedBalance: Int?
-        let balanceAppliedToNextInvoice: Bool?
-    }
-
     struct RecurringDetails: Decodable {
         let totalDiscountAmounts: [DiscountAmount]?
         let totalTaxAmounts: [TaxAmount]?
@@ -403,6 +388,7 @@ extension PaymentPagesAPIResponse {
     struct Coupon: Decodable {
         let id: String?
         let name: String?
+        let percentOff: Double?
     }
 
     struct PromotionCode: Decodable {
@@ -447,30 +433,18 @@ extension PaymentPagesAPIResponse {
         let allowedCountries: [String]?
     }
 
-    struct ShippingRate: Decodable {
-        let amount: Int?
-    }
-
     struct AdaptivePricingInfo: Decodable {
-        let activePresentmentCurrency: String?
-        let integrationAmount: Int?
-        let integrationCurrency: String?
-        let localCurrencyOptions: [LocalCurrencyOption]?
+        let activePresentmentCurrency: String
+        let integrationAmount: Int
+        let integrationCurrency: String
+        let localCurrencyOptions: [LocalCurrencyOption]
     }
 
     struct LocalCurrencyOption: Decodable {
-        let amount: Int?
+        let amount: Int
         let conversionMarkupBps: Int?
-        let currency: String?
-        let presentmentExchangeRate: String?
-    }
-
-    struct DeveloperToolContext: Decodable {
-        let adaptivePricing: AdaptivePricing?
-
-        struct AdaptivePricing: Decodable {
-            let active: Bool?
-        }
+        let currency: String
+        let presentmentExchangeRate: String
     }
 
     struct TaxContext: Decodable {

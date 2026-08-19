@@ -104,7 +104,7 @@ final class PaymentSheetLoader {
             let elementsSessionAndIntent = try await elementsSessionAndIntentTask.value
             let intent = elementsSessionAndIntent.intent
             let elementsSession = elementsSessionAndIntent.elementsSession
-            let (isLinkEnabled, didLinkLookupTimeOut) = await loadLink(
+            let (_, didLinkLookupTimeOut) = await loadLink(
                 elementsSession: elementsSession,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
@@ -169,7 +169,7 @@ final class PaymentSheetLoader {
                 savedPaymentMethods: filteredSavedPaymentMethods,
                 customerID: configuration.customer?.id,
                 showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
-                showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false,
+                showLink: integrationShape.canDefaultToLinkOrApplePay ? PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration) : false,
                 elementsSession: elementsSession,
                 defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
             )

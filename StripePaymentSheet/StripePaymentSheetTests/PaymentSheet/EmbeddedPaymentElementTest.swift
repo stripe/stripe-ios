@@ -920,9 +920,9 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCheckoutSession() async throws {
         let response = try await STPTestingAPIClient.shared.createCheckoutSession()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = apiClient
-        let checkout = try await Checkout(configuration: checkoutConfiguration)
+        let checkout = try await CheckoutController(configuration: checkoutConfiguration)
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient
@@ -940,9 +940,9 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCheckoutSessionCancelsInFlight() async throws {
         let response = try await STPTestingAPIClient.shared.createCheckoutSession()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = apiClient
-        let checkout = try await Checkout(configuration: checkoutConfiguration)
+        let checkout = try await CheckoutController(configuration: checkoutConfiguration)
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient
@@ -964,9 +964,9 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCheckoutSessionNoOpsForCompleteSession() async throws {
         let response = try await STPTestingAPIClient.shared.createCheckoutSession()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = apiClient
-        let checkout = try await Checkout(configuration: checkoutConfiguration)
+        let checkout = try await CheckoutController(configuration: checkoutConfiguration)
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient
@@ -989,15 +989,15 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // Should no-op
         let result = await sut.update(checkout: checkout)
         XCTAssertEqual(result, .succeeded)
-        XCTAssertEqual(checkout.session.status?.type, .complete)
+        XCTAssertEqual(checkout.session.status, .complete(.paid))
     }
 
     func testUpdateCheckoutSessionNoOpsForExpiredSession() async throws {
         let response = try await STPTestingAPIClient.shared.createCheckoutSession()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = apiClient
-        let checkout = try await Checkout(configuration: checkoutConfiguration)
+        let checkout = try await CheckoutController(configuration: checkoutConfiguration)
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient

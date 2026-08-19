@@ -214,6 +214,8 @@ extension FinancialConnectionsAnalyticsClient {
             return .linkLogin
         case is ErrorViewController:
             return .unexpectedError
+        case is GenericErrorViewController:
+            return .genericError
         default:
             return .unparsable
         }

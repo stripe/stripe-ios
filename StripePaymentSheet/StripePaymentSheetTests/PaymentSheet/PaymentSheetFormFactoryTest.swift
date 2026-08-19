@@ -1404,7 +1404,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             .init(
                 paymentMethod: .FPX,
                 apiPath: "fpx[bank]",
-                itemCount: 18,
+                itemCount: 21,
                 firstValue: "affin_bank",
                 lastValue: "uob"
             ),
@@ -2406,6 +2406,43 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             return
         }
         XCTAssertTrue(paypalForm_setup_paymentOption.didDisplayMandate)
+    }
+
+    func testAlipayDisplaysMandateWhenSettingUp() {
+        // Given
+        let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+
+        func makeAlipayForm(intent: Intent) -> PaymentMethodElement {
+            PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["alipay"]),
+                configuration: .paymentElement(configuration),
+                paymentMethod: .stripe(.alipay)
+            ).make()
+        }
+
+        // When
+        let paymentForm = makeAlipayForm(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.alipay])
+        )
+        let futureUsagePaymentForm = makeAlipayForm(
+            intent: ._testPaymentIntent(
+                paymentMethodTypes: [.alipay],
+                setupFutureUsage: .offSession
+            )
+        )
+        let setupForm = makeAlipayForm(
+            intent: ._testSetupIntent(paymentMethodTypes: [.alipay])
+        )
+
+        // Then
+        XCTAssertNil(paymentForm.getMandateElement())
+        let expectedMandate = String(
+            format: String.Localized.alipay_mandate_text,
+            configuration.merchantDisplayName
+        )
+        XCTAssertEqual(futureUsagePaymentForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
+        XCTAssertEqual(setupForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
     }
 
     func testCheckoutSessionSetupFutureUsage_appliesMandateBehavior() {

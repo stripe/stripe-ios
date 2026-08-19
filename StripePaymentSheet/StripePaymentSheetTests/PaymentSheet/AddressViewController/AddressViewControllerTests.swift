@@ -77,6 +77,45 @@ final class AddressViewControllerTests: XCTestCase {
         XCTAssertNotNil(addressCompletionEvent)
     }
 
+    func testViewDidAppearAlwaysNotifiesCustomIntegrationDelegate() {
+        // Given
+        let integrationDelegate = IntegrationDelegate()
+        let viewController = makeViewController(
+            configuration: makeConfiguration(),
+            merchantDelegate: MerchantDelegate(),
+            integrationDelegate: integrationDelegate
+        )
+        viewController.loadViewIfNeeded()
+
+        // When
+        viewController.viewDidAppear(false)
+        viewController.viewDidAppear(false)
+
+        // Then
+        XCTAssertEqual(integrationDelegate.didShowCallCount, 2)
+    }
+
+    func testDefaultIntegrationDelegateLogsAddressShowOnce() {
+        // Given
+        let viewController = makeViewController(
+            configuration: makeConfiguration(),
+            merchantDelegate: MerchantDelegate()
+        )
+        viewController.loadViewIfNeeded()
+
+        // When
+        viewController.viewDidAppear(false)
+        viewController.viewDidAppear(false)
+
+        // Then
+        XCTAssertEqual(
+            STPAnalyticsClient.sharedClient._testLogHistory.filter {
+                $0["event"] as? String == "mc_address_show"
+            }.count,
+            1
+        )
+    }
+
     func testDidContinueDisplaysIntegrationDelegateError() async {
         // Given an AddressViewController whose integration delegate fails to save
         let expectedError = NSError(
@@ -116,7 +155,7 @@ final class AddressViewControllerTests: XCTestCase {
         merchantDelegate.completionExpectation = expectation(description: "Merchant completion")
         let integrationDelegate = IntegrationDelegate()
         integrationDelegate.waitsForCompletion = true
-        integrationDelegate.loadingExpectation = expectation(description: "Loading started")
+        integrationDelegate.saveExpectation = expectation(description: "Save started")
         let viewController = makeViewController(
             configuration: makeConfiguration(defaultAddress: .init(
                 city: "San Francisco",
@@ -133,7 +172,7 @@ final class AddressViewControllerTests: XCTestCase {
 
         // When address collection completes and the save begins
         viewController.didContinue()
-        await fulfillment(of: [integrationDelegate.loadingExpectation!])
+        await fulfillment(of: [integrationDelegate.saveExpectation!])
 
         // Then the form, navigation, and save button are disabled while the button shows loading
         XCTAssertFalse(viewController.view.isUserInteractionEnabled)
@@ -224,8 +263,8 @@ private final class MerchantDelegate: AddressViewControllerDelegate {
 
 @MainActor
 private final class IntegrationDelegate: AddressViewController.IntegrationDelegate {
+    var didShowCallCount = 0
     var saveExpectation: XCTestExpectation?
-    var loadingExpectation: XCTestExpectation?
     var receivedAddressDetails: [AddressViewController.AddressDetails] = []
     var waitsForCompletion = false
     private let error: Error?
@@ -235,19 +274,17 @@ private final class IntegrationDelegate: AddressViewController.IntegrationDelega
         self.error = error
     }
 
-    func save(
-        addressDetails: AddressViewController.AddressDetails,
-        setLoading: (Bool) -> Void
-    ) async throws {
+    func didShow() {
+        didShowCallCount += 1
+    }
+
+    func save(addressDetails: AddressViewController.AddressDetails) async throws {
         receivedAddressDetails.append(addressDetails)
         saveExpectation?.fulfill()
         if waitsForCompletion {
-            setLoading(true)
-            loadingExpectation?.fulfill()
             await withCheckedContinuation { continuation in
                 saveContinuation = continuation
             }
-            setLoading(false)
         }
         if let error {
             throw error

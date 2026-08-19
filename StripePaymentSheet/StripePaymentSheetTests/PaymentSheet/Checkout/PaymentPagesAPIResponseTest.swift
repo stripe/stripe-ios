@@ -57,6 +57,40 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         )
     }
 
+    func testDecodedObjectFromAPIResponseMapsSessionStatus() throws {
+        let testCases: [(status: String, paymentStatus: String, expected: CheckoutController.Session.Status)] = [
+            ("open", "unpaid", .open),
+            ("expired", "unpaid", .expired),
+            ("complete", "paid", .complete(.paid)),
+            ("complete", "unpaid", .complete(.unpaid)),
+            ("complete", "no_payment_required", .complete(.noPaymentRequired)),
+        ]
+
+        for testCase in testCases {
+            var json = STPTestUtils.jsonNamed("CheckoutSession")!
+            json["status"] = testCase.status
+            json["payment_status"] = testCase.paymentStatus
+
+            let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+
+            XCTAssertEqual(response.makePublicSession().status, testCase.expected)
+        }
+    }
+
+    func testDecodedObjectFromAPIResponseRejectsUnknownSessionStatus() {
+        var json = STPTestUtils.jsonNamed("CheckoutSession")!
+        json["status"] = "future_status"
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+    }
+
+    func testDecodedObjectFromAPIResponseRejectsUnknownPaymentStatus() {
+        var json = STPTestUtils.jsonNamed("CheckoutSession")!
+        json["payment_status"] = "future_status"
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+    }
+
     func testDecodedObjectFromAPIResponseMalformedElementsSession() {
         var json = STPTestUtils.jsonNamed("CheckoutSession")!
         // Invalid elements_session - missing payment_method_preference
@@ -127,28 +161,25 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         // The response object retains API-shaped values without public-model conversion.
         XCTAssertEqual(apiResponse.sessionId, "cs_test_a1b2c3d4e5f6g7h8i9j0")
-        XCTAssertEqual(apiResponse.status, "open")
-        XCTAssertEqual(apiResponse.paymentStatus, "unpaid")
-        XCTAssertEqual(apiResponse.totalSummary?.subtotal, 2000)
-        XCTAssertEqual(apiResponse.totalSummary?.total, 2686)
+        XCTAssertEqual(apiResponse.status, .open)
+        XCTAssertEqual(apiResponse.paymentStatus, .unpaid)
         XCTAssertEqual(apiResponse.checkoutItems.first?.key, "ci_1abc")
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.activePresentmentCurrency, "eur")
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.integrationAmount, 12000)
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.integrationCurrency, "usd")
-        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions?.first?.amount, 10839)
-        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions?.first?.currency, "eur")
-        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions?.first?.conversionMarkupBps, 400)
-        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions?.first?.presentmentExchangeRate, "0.90325")
+        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions.first?.amount, 10839)
+        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions.first?.currency, "eur")
+        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions.first?.conversionMarkupBps, 400)
+        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions.first?.presentmentExchangeRate, "0.90325")
 
         XCTAssertEqual(session.id, "cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(apiResponse.clientSecret, "cs_test_a1b2c3d4e5f6g7h8i9j0_secret_xyz123abc456")
-        XCTAssertEqual(session.total?.total.minorUnitsAmount, 2686)
-        XCTAssertEqual(session.total?.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 2149)
+        XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 2000)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertEqual(session.minorUnitsAmountDivisor, 100)
         XCTAssertEqual(session.paymentStatus, .unpaid)
-        XCTAssertEqual(session.status?.type, .open)  // status is nullable but present in JSON
-        XCTAssertEqual(session.status?.paymentStatus, .unpaid)
+        XCTAssertEqual(session.status, .open)
         XCTAssertEqual(apiResponse.paymentIntentId, "pi_test123456789")
         XCTAssertNil(apiResponse.setupIntentId)
         XCTAssertFalse(session.livemode)
@@ -168,7 +199,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.elementsSession.sessionID, "elements_session_test123")
         XCTAssertEqual(session.email, "test@example.com")
         XCTAssertEqual(apiResponse.url, "https://checkout.stripe.com/c/pay/cs_test_a1b2c3d4e5f6g7h8i9j0")
-        XCTAssertEqual(apiResponse.returnUrl, "https://example.com/return")
 
         // Verify saved payment methods offer save
         XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
@@ -184,15 +214,16 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         }
         XCTAssertEqual(oneTimePrice.items.count, 2)
 
-        // Totals — discount and tax
-        XCTAssertEqual(session.total?.discount.minorUnitsAmount, 0)
-        XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 186)
+        XCTAssertEqual(session.totals.discount.minorUnitsAmount, 0)
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 149)
 
         // Tax amounts
-        XCTAssertEqual(session.tax.taxAmounts?.count, 1)
-        XCTAssertEqual(session.tax.taxAmounts?[0].amount.minorUnitsAmount, 186)
-        XCTAssertFalse(session.tax.taxAmounts?[0].inclusive ?? true)
-        XCTAssertEqual(session.tax.taxAmounts?[0].displayName, "Sales Tax")
+        XCTAssertEqual(session.taxAmounts?.count, 1)
+        XCTAssertFalse(session.taxAmounts?[0].amount.isEmpty ?? true)
+        XCTAssertEqual(session.taxAmounts?[0].minorUnitsAmount, 149)
+        XCTAssertFalse(session.taxAmounts?[0].inclusive ?? true)
+        XCTAssertEqual(session.taxAmounts?[0].displayName, "Sales Tax")
+        XCTAssertEqual(session.taxAmounts?[0].percentage, 7.45)
 
         // Automatic tax
         XCTAssertTrue(session.automaticTaxEnabled)
@@ -202,8 +233,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.allowedShippingCountries, ["US", "CA"])
         XCTAssertTrue(session.requiresShippingAddress)
 
-        XCTAssertEqual(session.total?.shippingRate.minorUnitsAmount, 500)
-
         // Adaptive pricing
         XCTAssertTrue(session.adaptivePricingActive)
         XCTAssertEqual(session.localizedPricesMetas.count, 2)
@@ -212,19 +241,13 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.localizedPricesMetas[1].currency, "usd")
         XCTAssertEqual(session.localizedPricesMetas[1].total, 12000)
         XCTAssertNotNil(session.exchangeRateMeta)
-        XCTAssertEqual(session.exchangeRateMeta?.buyCurrency, "eur")
-        XCTAssertEqual(session.exchangeRateMeta?.sellCurrency, "usd")
+        XCTAssertEqual(session.exchangeRateMeta?.localizedCurrency, "eur")
+        XCTAssertEqual(session.exchangeRateMeta?.integrationCurrency, "usd")
         XCTAssertEqual(session.exchangeRateMeta?.exchangeRate, "0.90325")
 
-        // Currency options (derived from adaptive pricing)
-        XCTAssertEqual(session.currencyOptions.count, 2)
-        XCTAssertEqual(session.currencyOptions[0].currency, "eur")
-        XCTAssertEqual(session.currencyOptions[0].amount.minorUnitsAmount, 10839)
-        XCTAssertEqual(session.currencyOptions[0].currencyConversion?.fxRate, "0.90325")
-        XCTAssertEqual(session.currencyOptions[0].currencyConversion?.sourceCurrency, "usd")
-        XCTAssertEqual(session.currencyOptions[1].currency, "usd")
-        XCTAssertEqual(session.currencyOptions[1].amount.minorUnitsAmount, 12000)
-        XCTAssertNil(session.currencyOptions[1].currencyConversion)
+        // Presentment details (derived from adaptive pricing)
+        XCTAssertEqual(session.currency, "usd")
+        XCTAssertEqual(session.presentmentDetails?.presentmentCurrency, "eur")
 
         XCTAssertEqual(
             apiResponse.allResponseFields as NSDictionary,
@@ -241,21 +264,106 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = apiResponse.makePublicSession()
 
         XCTAssertEqual(session.id, "cs_test_minimal")
-        XCTAssertEqual(session.status?.type, .open)
+        XCTAssertEqual(session.status, .open)
         XCTAssertTrue(session.livemode)
 
-        // Optional fields should be nil
-        XCTAssertNil(session.total)
+        XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 1000)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 1000)
         XCTAssertEqual(session.currency, "usd")
+        XCTAssertNil(session.presentmentDetails)
         XCTAssertNil(apiResponse.clientSecret)
         XCTAssertNil(apiResponse.paymentIntentId)
         XCTAssertNil(apiResponse.setupIntentId)
         XCTAssertNil(session.customer)
         XCTAssertNil(session.email)
         XCTAssertNil(apiResponse.url)
-        XCTAssertNil(apiResponse.returnUrl)
         XCTAssertNil(session.savedPaymentMethodsOfferSave)
         XCTAssertNil(session.setupFutureUsage)
+    }
+
+    func testAdaptivePricingInfoRejectsMissingRequiredFields() {
+        let adaptivePricingInfo: [String: Any] = [
+            "active_presentment_currency": "eur",
+            "integration_amount": 1200,
+            "integration_currency": "usd",
+            "local_currency_options": [
+                [
+                    "amount": 1080,
+                    "conversion_markup_bps": 400,
+                    "currency": "eur",
+                    "presentment_exchange_rate": "0.9",
+                ],
+            ],
+        ]
+
+        for field in [
+            "active_presentment_currency",
+            "integration_amount",
+            "integration_currency",
+            "local_currency_options",
+        ] {
+            var invalidAdaptivePricingInfo = adaptivePricingInfo
+            invalidAdaptivePricingInfo.removeValue(forKey: field)
+            var json = CheckoutTestHelpers.baseSessionJSON
+            json["adaptive_pricing_info"] = invalidAdaptivePricingInfo
+
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected missing \(field) to fail decoding"
+            )
+        }
+    }
+
+    func testAdaptivePricingLocalCurrencyOptionRejectsMissingRequiredFields() {
+        let localCurrencyOption: [String: Any] = [
+            "amount": 1080,
+            "conversion_markup_bps": 400,
+            "currency": "eur",
+            "presentment_exchange_rate": "0.9",
+        ]
+
+        for field in ["amount", "currency", "presentment_exchange_rate"] {
+            var invalidLocalCurrencyOption = localCurrencyOption
+            invalidLocalCurrencyOption.removeValue(forKey: field)
+            var json = CheckoutTestHelpers.baseSessionJSON
+            json["adaptive_pricing_info"] = [
+                "active_presentment_currency": "eur",
+                "integration_amount": 1200,
+                "integration_currency": "usd",
+                "local_currency_options": [invalidLocalCurrencyOption],
+            ]
+
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected missing \(field) to fail decoding"
+            )
+        }
+    }
+
+    func testAdaptivePricingLocalCurrencyOptionAllowsMissingConversionMarkup() throws {
+        var json = CheckoutTestHelpers.baseSessionJSON
+        json["adaptive_pricing_info"] = [
+            "active_presentment_currency": "eur",
+            "integration_amount": 1200,
+            "integration_currency": "usd",
+            "local_currency_options": [
+                [
+                    "amount": 1080,
+                    "currency": "eur",
+                    "presentment_exchange_rate": "0.9",
+                ],
+            ],
+        ]
+
+        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        let session = response.makePublicSession()
+        let exchangeRateMeta = try XCTUnwrap(session.exchangeRateMeta)
+
+        XCTAssertNil(response.adaptivePricingInfo?.localCurrencyOptions.first?.conversionMarkupBps)
+        XCTAssertTrue(session.adaptivePricingActive)
+        XCTAssertNil(exchangeRateMeta.conversionMarkupBps)
+        XCTAssertNotNil(CurrencySelectorUtilities.adaptivePricingData(from: session))
+        XCTAssertNil(CurrencySelectorUtilities.detailText(exchangeRateMeta: exchangeRateMeta))
     }
 
     func testExpandedIntentsDecodeLegacyModels() throws {
@@ -311,7 +419,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
             "payment_status": "unpaid",
-            "total_summary": ["subtotal": 2345, "total": 2345, "due": 2345],
+            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 2345),
         ]).makePublicSession()
 
         XCTAssertFalse(session.noPaymentRequired)
@@ -322,7 +430,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
             "payment_status": "no_payment_required",
-            "total_summary": ["subtotal": 0, "total": 0, "due": 0],
         ]).makePublicSession()
 
         XCTAssertTrue(session.noPaymentRequired)
@@ -390,10 +497,9 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertFalse(session.customer?.canDetachPaymentMethod ?? true)
     }
 
-    func testTotalsWithTaxFromTaxAmounts() {
+    func testAggregateTaxAmountsRemainSeparateFromTotals() {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
-            "total_summary": ["due": 2186, "subtotal": 2000, "total": 2186],
             "recurring_details": [
                 "total_tax_amounts": [
                     ["amount": 186, "inclusive": false, "taxable_amount": 2000,
@@ -402,21 +508,19 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             ],
         ]).makePublicSession()
 
-        XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 186)
-        XCTAssertEqual(session.total?.subtotal.minorUnitsAmount, 2000)
-        XCTAssertEqual(session.total?.total.minorUnitsAmount, 2186)
-        XCTAssertEqual(session.total?.discount.minorUnitsAmount, 0)
-        XCTAssertEqual(session.total?.shippingRate.minorUnitsAmount, 0)
-        XCTAssertEqual(session.tax.taxAmounts?.count, 1)
-        XCTAssertEqual(session.tax.taxAmounts?[0].amount.minorUnitsAmount, 186)
-        XCTAssertFalse(session.tax.taxAmounts?[0].inclusive ?? true)
-        XCTAssertEqual(session.tax.taxAmounts?[0].displayName, "Sales Tax")
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 0)
+        XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 1000)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 1000)
+        XCTAssertEqual(session.totals.discount.minorUnitsAmount, 0)
+        XCTAssertEqual(session.taxAmounts?.count, 1)
+        XCTAssertEqual(session.taxAmounts?[0].minorUnitsAmount, 186)
+        XCTAssertFalse(session.taxAmounts?[0].inclusive ?? true)
+        XCTAssertEqual(session.taxAmounts?[0].displayName, "Sales Tax")
     }
 
     func testUnifiedModeSessionParsesCheckoutItemsTaxAndDiscounts() {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
-            "total_summary": ["due": 1816, "subtotal": 2000, "total": 1816],
             "recurring_details": [
                 "total_tax_amounts": [
                     [
@@ -481,17 +585,48 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(oneTimePrice.amountDetails.total.minorUnitsAmount, 2148)
         XCTAssertEqual(oneTimePrice.amountDetails.taxExclusive.minorUnitsAmount, 148)
 
-        XCTAssertEqual(session.tax.taxAmounts?.count, 1)
-        XCTAssertEqual(session.tax.taxAmounts?[0].amount.minorUnitsAmount, 148)
-        XCTAssertEqual(session.tax.taxAmounts?[0].displayName, "Sales Tax")
+        XCTAssertEqual(session.taxAmounts?.count, 1)
+        XCTAssertEqual(session.taxAmounts?[0].minorUnitsAmount, 148)
+        XCTAssertEqual(session.taxAmounts?[0].displayName, "Sales Tax")
 
         XCTAssertEqual(session.discountAmounts.count, 1)
-        XCTAssertEqual(session.discountAmounts[0].amount.minorUnitsAmount, 332)
+        XCTAssertEqual(session.discountAmounts[0].minorUnitsAmount, 332)
         XCTAssertEqual(session.discountAmounts[0].displayName, "Welcome")
 
-        XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 148)
-        XCTAssertEqual(session.total?.discount.minorUnitsAmount, 332)
-        XCTAssertEqual(session.total?.total.minorUnitsAmount, 1816)
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 148)
+        XCTAssertEqual(session.totals.discount.minorUnitsAmount, 0)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 2148)
+    }
+
+    func testTotalsSumOneTimePrices() {
+        let session = CheckoutTestHelpers.makeSession([
+            "checkout_items": [
+                makeOneTimePriceCheckoutItem(
+                    key: "one_time_price_1",
+                    subtotal: 1000,
+                    taxExclusive: 100,
+                    taxInclusive: 0,
+                    total: 1100
+                ),
+                makeOneTimePriceCheckoutItem(
+                    key: "one_time_price_2",
+                    subtotal: 500,
+                    taxExclusive: 0,
+                    taxInclusive: 40,
+                    total: 500
+                ),
+            ],
+        ]).makePublicSession()
+
+        XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 1500)
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 100)
+        XCTAssertEqual(session.totals.taxInclusive.minorUnitsAmount, 40)
+        XCTAssertEqual(session.totals.discount.minorUnitsAmount, 0)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 1600)
+        XCTAssertEqual(
+            session.totals.total.amount,
+            String.localizedAmountDisplayString(for: 1600, currency: "usd")
+        )
     }
 
     func testUnifiedModeSessionRejectsUnsupportedCheckoutItemTypes() {
@@ -812,47 +947,118 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertFalse(Intent.checkout(session.makePublicSession()).isSetupFutureUsageSet(for: .payPal))
     }
 
-    // MARK: - TaxStatus Tests
+    // MARK: - Tax Tests
+
+    func testTax_automaticComplete_isReady() {
+        // Given automatic tax completed
+        let response = CheckoutTestHelpers.makeSession([
+            "tax_meta": [
+                "computation_type": "automatic",
+                "status": "complete",
+            ],
+        ]).withCustomer()
+
+        // When creating the public Session
+        let session = response.makePublicSession()
+
+        // Then the public tax status is ready
+        XCTAssertEqual(session.tax?.status, .ready)
+    }
 
     func testTaxStatus_automaticRequiresLocationInputs_usesTaxContextAddressSource() {
+        // Given automatic tax requires location inputs
         let taxMeta: [String: Any] = [
             "computation_type": "automatic",
             "status": "requires_location_inputs",
         ]
+
+        // When decoding sessions that use shipping, billing, and no address source
         let shipping = CheckoutTestHelpers.makeSession([
             "tax_meta": taxMeta,
             "tax_context": ["automatic_tax_address_source": "session.shipping"],
         ]).withCustomer().makePublicSession()
-        XCTAssertEqual(shipping.tax.status, .requiresShippingAddress)
-
         let billing = CheckoutTestHelpers.makeSession([
             "tax_meta": taxMeta,
             "tax_context": ["automatic_tax_address_source": "session.billing"],
         ]).withCustomer().makePublicSession()
-        XCTAssertEqual(billing.tax.status, .requiresBillingAddress)
-
         let missingSource = CheckoutTestHelpers.makeSession(["tax_meta": taxMeta]).withCustomer().makePublicSession()
-        XCTAssertEqual(missingSource.tax.status, .requiresBillingAddress)
+
+        // Then each Session reflects the address requirement, or has no tax state without a source
+        XCTAssertEqual(shipping.tax?.status, .requiresShippingAddress)
+        XCTAssertEqual(billing.tax?.status, .requiresBillingAddress)
+        XCTAssertNil(missingSource.tax)
     }
 
-    func testTaxStatus_automaticFailed_returnsUnknown() {
-        let session = CheckoutTestHelpers.makeSession([
+    func testTax_automaticFailed_isNil() {
+        // Given automatic tax failed
+        let response = CheckoutTestHelpers.makeSession([
             "tax_meta": [
                 "computation_type": "automatic",
                 "status": "failed",
             ],
-        ]).withCustomer().makePublicSession()
-        XCTAssertEqual(session.tax.status, .unknown)
+        ]).withCustomer()
+
+        // When creating the public Session
+        let session = response.makePublicSession()
+
+        // Then the public Session has no tax state
+        XCTAssertNil(session.tax)
     }
 
-    func testTaxStatus_nonAutomaticComputationType_isReady() {
-        let session = CheckoutTestHelpers.makeSession([
+    func testTax_automaticUnsupportedStatus_isNil() {
+        // Given automatic tax returns an unsupported status
+        let response = CheckoutTestHelpers.makeSession([
+            "tax_meta": [
+                "computation_type": "automatic",
+                "status": "future_status",
+            ],
+        ]).withCustomer()
+
+        // When creating the public Session
+        let session = response.makePublicSession()
+
+        // Then the public Session has no tax state
+        XCTAssertNil(session.tax)
+    }
+
+    func testTax_missingMetadata_isNil() {
+        // Given a response without tax metadata
+        let response = CheckoutTestHelpers.makeSession().withCustomer()
+
+        // When creating the public Session
+        let session = response.makePublicSession()
+
+        // Then the public Session has no tax state
+        XCTAssertNil(session.tax)
+    }
+
+    func testTax_missingComputationType_isNil() {
+        // Given tax metadata without a computation type
+        let response = CheckoutTestHelpers.makeSession([
+            "tax_meta": ["status": "complete"],
+        ]).withCustomer()
+
+        // When creating the public Session
+        let session = response.makePublicSession()
+
+        // Then the public Session has no tax state
+        XCTAssertNil(session.tax)
+    }
+
+    func testTax_nonAutomaticComputationType_isReady() {
+        // Given a non-automatic tax computation
+        let response = CheckoutTestHelpers.makeSession([
             "tax_meta": [
                 "computation_type": "dynamic",
                 "status": "requires_location_inputs",
             ],
-        ]).withCustomer().makePublicSession()
-        XCTAssertEqual(session.tax.status, .ready)
+        ]).withCustomer()
+
+        // When creating the public Session
+        let session = response.makePublicSession()
+
+        // Then the public tax status is ready
+        XCTAssertEqual(session.tax?.status, .ready)
     }
 
     // MARK: - Elements Session Tests
@@ -931,6 +1137,35 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             mutation(&product)
             price["product"] = product
         }
+    }
+
+    private func makeOneTimePriceCheckoutItem(
+        key: String,
+        subtotal: Int,
+        taxExclusive: Int,
+        taxInclusive: Int,
+        total: Int
+    ) -> [String: Any] {
+        var checkoutItem = CheckoutTestHelpers.makeOneTimePriceCheckoutItems()[0]
+        checkoutItem["key"] = key
+        var oneTimePrice = checkoutItem["one_time_price"] as! [String: Any]
+        var item = (oneTimePrice["items"] as! [[String: Any]])[0]
+        var price = item["price"] as! [String: Any]
+        item["inner_item_key"] = "\(key)_inner"
+        item["subtotal"] = subtotal
+        item["total"] = total
+        item["unit_amount"] = subtotal
+        item["unit_amount_decimal"] = String(subtotal)
+        item["tax_exclusive"] = taxExclusive
+        item["tax_inclusive"] = taxInclusive
+        price["id"] = "\(key)_price"
+        price["unit_amount"] = subtotal
+        item["price"] = price
+        oneTimePrice["items"] = [item]
+        oneTimePrice["subtotal"] = subtotal
+        oneTimePrice["total"] = total
+        checkoutItem["one_time_price"] = oneTimePrice
+        return checkoutItem
     }
 
 }

@@ -14,7 +14,7 @@ import UIKit
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout {
+extension CheckoutController {
     /// A read-only representation of a Stripe Checkout Session.
     public struct Session {
         // MARK: - Public Properties
@@ -29,12 +29,11 @@ extension Checkout {
         /// Three-letter ISO 4217 currency code in lowercase (e.g. `"usd"`).
         public let currency: String?
 
-        /// The currency options available on the Checkout Session when adaptive pricing is active.
-        /// Empty when adaptive pricing is not active.
-        public let currencyOptions: [Checkout.CurrencyOption]
+        /// Details about the currency presented to the customer when adaptive pricing is active.
+        public let presentmentDetails: PresentmentDetails?
 
         /// The aggregate amounts calculated per discount for all line items.
-        public let discountAmounts: [Checkout.DiscountAmount]
+        public let discountAmounts: [DiscountAmount]
 
         /// The customer's email address.
         public let email: String?
@@ -45,8 +44,9 @@ extension Checkout {
         /// `true` if this object exists in live mode, `false` for test mode.
         public let livemode: Bool
 
-        /// The factor used to convert between minor and major currency units. For USD this
-        /// is `100`; for JPY this is `1`. `nil` when the session has no currency (e.g. setup mode).
+        /// The factor used to convert the session's presentment amounts between minor and major
+        /// currency units. For USD this is `100`; for JPY this is `1`. `nil` when the session has
+        /// no currency.
         public let minorUnitsAmountDivisor: Int?
 
         /// The currently selected payment option.
@@ -56,20 +56,25 @@ extension Checkout {
         public let shippingAddress: ShippingAddress?
 
         /// Status of the Checkout Session.
+        public let status: Status
+
+        /// The tax computation state, if available.
+        public let tax: Tax?
+
+        /// The aggregate amounts calculated per tax rate for all line items, or `nil` when
+        /// tax has not yet been computed.
         ///
-        /// `nil` if the server did not return a status. When non-nil, ``Status.paymentStatus``
-        /// is populated from the top-level payment status.
-        public let status: Checkout.Status?
+        /// For example, if this contains $5 of exclusive state tax, $2 of exclusive county
+        /// tax, and $1 of inclusive VAT, ``totals`` contains $7 in `taxExclusive` and $1 in
+        /// `taxInclusive`.
+        public let taxAmounts: [TaxAmount]?
 
-        /// Details about the tax computation status and aggregated tax amounts.
-        public let tax: Checkout.Tax
-
-        /// Tax and discount details for the computed total amount.
-        public let total: Checkout.Total?
+        /// Aggregate subtotal, tax, discount, and total amounts for the Checkout Session.
+        public let totals: CheckoutController.Session.Totals
 
         // MARK: - Internal Properties
 
-        let paymentStatus: Checkout.PaymentStatus
+        let paymentStatus: Status.PaymentStatus
         let paymentMethodOptions: STPPaymentMethodOptions?
         let customer: PaymentPagesAPIResponse.Customer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
@@ -77,7 +82,7 @@ extension Checkout {
         let setupFutureUsageForPaymentMethodType: [String: String]
         let allowedShippingCountries: [String]?
         let localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
-        let exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
+        let exchangeRateMeta: ExchangeRateMeta?
         let adaptivePricingActive: Bool
         let billingAddressCollection: BillingAddressCollection
         let automaticTaxEnabled: Bool
@@ -91,8 +96,9 @@ extension Checkout {
     }
 }
 
-extension Checkout.Session {
+extension CheckoutController.Session {
     /// An item included in the order summary.
+    @frozen
     public enum OrderSummaryItem: Sendable, Hashable {
         /// A group of one-time Prices.
         case oneTimePrice(OneTimePrice)
@@ -174,7 +180,7 @@ extension Checkout.Session {
         public let minorUnitsAmount: Double
     }
 
-    /// A tax amount included in an order summary item.
+    /// A tax amount included in an order summary item or aggregated across the session.
     public struct TaxAmount: Sendable, Hashable {
         /// The localized, formatted representation of the tax amount.
         public let amount: String

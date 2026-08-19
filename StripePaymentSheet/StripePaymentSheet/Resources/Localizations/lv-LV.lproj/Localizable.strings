@@ -140,6 +140,10 @@
 
 "Did you mean %@? %@." = "Vai jūs domājāt %1$@? %2$@.";
 
+"Discard Changes" = "Izmaiņu atmešana";
+
+"Discard changes?" = "Vai atmest izmaiņas?";
+
 "Discount" = "Atlaide";
 
 "EPS Bank" = "EPS Bank";
@@ -163,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Es saprotu, ka Stripe iekasēs tiešā debeta maksājumus %@ vārdā, un apstiprinu, ka esmu konta turētājs un vienīgā persona, kurai ir jāautorizē debeti no šī konta.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Rediģēšanas turpināšana";
 
 "Last 4 digits of SSN" = "SSN pēdējie 4 cipari";
 
@@ -290,8 +296,6 @@
 
 "Set up" = "Iestatīt";
 
-"Shipping" = "Piegāde";
-
 "Shipping to %@ is not supported." = "Piegāde uz %@ netiek atbalstīts.";
 
 "Show details" = "Rādīt informāciju";
@@ -345,3 +349,5 @@
 "Yes, update" = "Jā, atjaunināt";
 
 "Your IBAN should start with a two-letter country code." = "IBAN sākumā jābūt divu burtu valsts kodam.";
+
+"Your address changes won't be saved." = "Jūsu adreses izmaiņas netiks saglabātas.";

@@ -10,9 +10,10 @@
 import SwiftUI
 
 struct CheckoutCartContentView: View {
-    @ObservedObject var checkout: Checkout
+    @ObservedObject var checkout: CheckoutController
     var showsShippingAddressSection: Bool
     var errorMessage: String?
+    @State private var showsTaxDetails = false
 
     var body: some View {
         ScrollView {
@@ -31,10 +32,11 @@ struct CheckoutCartContentView: View {
                     shippingAddressSection
                 }
                 orderSummarySection
-
-                Spacer().frame(height: 160)
             }
             .padding(.top, 20)
+        }
+        .sheet(isPresented: $showsTaxDetails) {
+            CheckoutTaxDetailsView(taxAmounts: checkout.session.taxAmounts ?? [])
         }
     }
 
@@ -73,21 +75,11 @@ struct CheckoutCartContentView: View {
                                 Text(item.displayName)
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                Text(item.unitAmount.amount)
+                                Text("\((item.unitAmountDecimal ?? item.unitAmount).amount) × \(item.quantity)")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
-
-                                Spacer()
-
-                                Text("Qty: \(item.quantity)")
-                                    .font(.body).bold()
                             }
                             Spacer()
-                            Text(formatCartCurrency(
-                                amount: Int(item.unitAmount.minorUnitsAmount) * item.quantity,
-                                currency: checkout.session.currency
-                            ))
-                                .font(.headline)
                         }
                         .padding()
 
@@ -126,7 +118,7 @@ struct CheckoutCartContentView: View {
     // MARK: - Address Helpers
 
     @ViewBuilder
-    private func addressCard(name: String?, address: Checkout.Address, onEdit: @escaping () -> Void) -> some View {
+    private func addressCard(name: String?, address: CheckoutController.Address, onEdit: @escaping () -> Void) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: "mappin.circle.fill")
                 .foregroundColor(.blue)
@@ -207,69 +199,104 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var orderSummarySection: some View {
-        if let total = checkout.session.total {
-            let currency = checkout.session.currency
-            let taxAmount = total.taxExclusive.minorUnitsAmount + total.taxInclusive.minorUnitsAmount
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Order Summary")
-                    .font(.title2).bold()
-                    .padding(.horizontal)
+        let totals = checkout.session.totals
+        let hasTaxDetails = checkout.session.taxAmounts?.isEmpty == false
+        let taxAddressPrompt = taxAddressPrompt(for: checkout.session.tax?.status)
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Order Summary")
+                .font(.title2).bold()
+                .padding(.horizontal)
 
-                VStack(spacing: 12) {
+            VStack(spacing: 12) {
+                HStack {
+                    Text("Subtotal")
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text(totals.subtotal.amount)
+                        .foregroundColor(.primary)
+                }
+                if totals.discount.minorUnitsAmount > 0 {
                     HStack {
-                        Text("Subtotal")
-                            .foregroundColor(.secondary)
+                        Text("Discount")
+                            .foregroundColor(.green)
                         Spacer()
-                        Text(formatCartCurrency(amount: total.subtotal.minorUnitsAmount, currency: currency))
-                            .foregroundColor(.primary)
-                    }
-                    if total.discount.minorUnitsAmount > 0 {
-                        HStack {
-                            Text("Discount")
-                                .foregroundColor(.green)
-                            Spacer()
-                            Text("-" + formatCartCurrency(amount: total.discount.minorUnitsAmount, currency: currency))
-                                .foregroundColor(.green)
-                        }
-                    }
-
-                    if total.shippingRate.minorUnitsAmount > 0 {
-                        HStack {
-                            Text("Shipping")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text(formatCartCurrency(amount: total.shippingRate.minorUnitsAmount, currency: currency))
-                                .foregroundColor(.primary)
-                        }
-                    }
-
-                    if taxAmount > 0 {
-                        HStack {
-                            Text("Tax")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text(formatCartCurrency(amount: taxAmount, currency: currency))
-                                .foregroundColor(.primary)
-                        }
-                    }
-
-                    Divider()
-                        .padding(.vertical, 4)
-
-                    HStack {
-                        Text("Total")
-                            .font(.title3).bold()
-                        Spacer()
-                        Text(formatCartCurrency(amount: total.total.minorUnitsAmount, currency: currency))
-                            .font(.title3).bold()
+                        Text("-" + totals.discount.amount)
+                            .foregroundColor(.green)
                     }
                 }
-                .padding()
-                .background(Color(UIColor.systemBackground))
-                .cornerRadius(16)
-                .padding(.horizontal)
-                .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+
+                if let taxAddressPrompt {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Tax")
+                            .foregroundColor(.secondary)
+                        Text(taxAddressPrompt)
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityElement(children: .combine)
+                } else if totals.taxExclusive.minorUnitsAmount > 0 {
+                    HStack {
+                        HStack(spacing: 4) {
+                            Text("Tax")
+                                .foregroundColor(.secondary)
+                            if hasTaxDetails {
+                                taxDetailsButton
+                            }
+                        }
+                        Spacer()
+                        Text(totals.taxExclusive.amount)
+                            .foregroundColor(.primary)
+                    }
+                }
+
+                Divider()
+                    .padding(.vertical, 4)
+
+                HStack {
+                    Text("Total")
+                        .font(.title3).bold()
+                    Spacer()
+                    Text(totals.total.amount)
+                        .font(.title3).bold()
+                }
+
+                if taxAddressPrompt == nil && totals.taxInclusive.minorUnitsAmount > 0 {
+                    HStack(spacing: 4) {
+                        Text("Includes \(totals.taxInclusive.amount) in tax")
+                            .foregroundColor(.secondary)
+                        if hasTaxDetails && totals.taxExclusive.minorUnitsAmount == 0 {
+                            taxDetailsButton
+                        }
+                        Spacer()
+                    }
+                }
             }
+            .padding()
+            .background(Color(UIColor.systemBackground))
+            .cornerRadius(16)
+            .padding(.horizontal)
+            .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+        }
+    }
+
+    private var taxDetailsButton: some View {
+        Button {
+            showsTaxDetails = true
+        } label: {
+            Image(systemName: "info.circle")
+        }
+        .accessibilityLabel("Show tax details")
+    }
+
+    private func taxAddressPrompt(for status: CheckoutController.Session.Tax.Status?) -> String? {
+        switch status {
+        case .requiresShippingAddress:
+            return "Enter shipping address to calculate"
+        case .requiresBillingAddress:
+            return "Enter billing address to calculate"
+        case .ready, nil:
+            return nil
         }
     }
 
@@ -281,9 +308,46 @@ struct CheckoutCartContentView: View {
 
 }
 
+private struct CheckoutTaxDetailsView: View {
+    @Environment(\.dismiss) private var dismiss
+    let taxAmounts: [CheckoutController.Session.TaxAmount]
+
+    @ViewBuilder
+    var body: some View {
+        if #available(iOS 16.0, *) {
+            content
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
+        } else {
+            content
+        }
+    }
+
+    private var content: some View {
+        NavigationView {
+            List(Array(taxAmounts.enumerated()), id: \.offset) { _, taxAmount in
+                HStack {
+                    Text(taxAmount.displayName + (taxAmount.inclusive ? " (included)" : ""))
+                    Spacer()
+                    Text(taxAmount.amount)
+                }
+            }
+            .navigationTitle("Tax details")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
+
 struct CheckoutCartSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject var checkout: Checkout
+    @ObservedObject var checkout: CheckoutController
 
     var body: some View {
         NavigationView {

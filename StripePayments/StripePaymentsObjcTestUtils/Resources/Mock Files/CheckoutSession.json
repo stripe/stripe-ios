@@ -2,9 +2,9 @@
   "session_id": "cs_test_a1b2c3d4e5f6g7h8i9j0",
   "object": "checkout.session",
   "total_summary": {
-    "due": 2686,
+    "due": 2149,
     "subtotal": 2000,
-    "total": 2686
+    "total": 2149
   },
   "checkout_items": [
     {
@@ -45,12 +45,12 @@
             "inner_item_key": "cii_2def",
             "quantity": 1,
             "subtotal": 500,
-            "total": 574,
+            "total": 537,
             "unit_amount": 500,
             "unit_amount_decimal": "500",
             "tax_amounts": [
               {
-                "amount": 74,
+                "amount": 37,
                 "inclusive": false,
                 "tax_rate": {
                   "percentage": 7.45,
@@ -59,7 +59,7 @@
               }
             ],
             "tax_inclusive": 0,
-            "tax_exclusive": 74,
+            "tax_exclusive": 37,
             "price": {
               "id": "price_2def",
               "currency": "usd",
@@ -72,16 +72,16 @@
           }
         ],
         "subtotal": 2000,
-        "total": 2186
+        "total": 2149
       }
     }
   ],
   "recurring_details": {
     "total_tax_amounts": [
       {
-        "amount": 186,
+        "amount": 149,
         "inclusive": false,
-        "taxable_amount": 2500,
+        "taxable_amount": 2000,
         "tax_rate": {
           "percentage": 7.45,
           "display_name": "Sales Tax"
@@ -90,32 +90,10 @@
     ],
     "total_discount_amounts": [],
     "subtotal": 2000,
-    "total": 2686,
-    "due": 2686,
+    "total": 2149,
+    "due": 2149,
     "currency": "usd"
   },
-  "shipping_rate": {
-    "id": "shr_standard",
-    "amount": 500
-  },
-  "shipping_options": [
-    {
-      "shipping_rate": {
-        "id": "shr_standard",
-        "display_name": "Standard Shipping",
-        "amount": 500,
-        "currency": "usd"
-      }
-    },
-    {
-      "shipping_rate": {
-        "id": "shr_express",
-        "display_name": "Express Shipping",
-        "amount": 1500,
-        "currency": "usd"
-      }
-    }
-  ],
   "tax_context": {
     "automatic_tax_enabled": true,
     "automatic_tax_address_source": "session.billing"
@@ -135,11 +113,6 @@
         "presentment_exchange_rate": "0.90325"
       }
     ]
-  },
-  "developer_tool_context": {
-    "adaptive_pricing": {
-      "active": true
-    }
   },
   "currency": "usd",
   "mode": "modeless",

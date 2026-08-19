@@ -36,6 +36,11 @@ enum ExpectedFormHierarchy {
 
     enum Alipay {
         static var paymentIntent: FormHierarchyNode { emptyForm }
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By saving your payment information, you allow Stri..."])
+            ])
+        }
     }
 
     // MARK: - PayNow
@@ -237,7 +242,7 @@ enum ExpectedFormHierarchy {
         static var paymentIntent: FormHierarchyNode {
             FormHierarchyNode(type: "FormElement", children: [
                 FormHierarchyNode(type: "SectionElement", children: [
-                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "18", "label": "FPX Bank"])
+                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "21", "label": "FPX Bank"])
                 ]),
             ])
         }
