@@ -34,7 +34,7 @@ extension CheckoutController {
         let configuration: PaymentElementConfiguration
         let integrationShape: PaymentSheet.IntegrationShape
         let confirmationChallenge: ConfirmationChallenge?
-        let analyticsHelper: PaymentSheetAnalyticsHelper
+        let analyticsHelper: PaymentSheetAnalyticsHelper // TODO: remove?
     }
 
     struct InternalConfirmResult {
