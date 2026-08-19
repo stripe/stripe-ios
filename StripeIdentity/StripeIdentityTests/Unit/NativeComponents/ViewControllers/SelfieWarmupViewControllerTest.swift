@@ -58,10 +58,10 @@ final class SelfieWarmupViewControllerTest: XCTestCase {
         )
 
         XCTAssertEqual(vc.flowViewModel.buttons.count, 2)
-        XCTAssertEqual(vc.flowViewModel.buttons.last?.text, String.Localized.decline)
+        XCTAssertEqual(vc.flowViewModel.buttons.last?.text, "Decline")
         XCTAssertTrue(
             vc.flowViewModel.buttonTopContentViewModel?.text.contains(
-                String.Localized.selfieWarmupTrainingConsentTitle
+                "Help us improve verifications"
             ) == true
         )
 
