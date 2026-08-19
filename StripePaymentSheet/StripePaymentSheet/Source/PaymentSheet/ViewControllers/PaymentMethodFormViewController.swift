@@ -15,7 +15,6 @@ protocol PaymentMethodFormViewControllerDelegate: AnyObject {
     func updateErrorLabel(for error: Error?)
 }
 
-@MainActor
 class PaymentMethodFormViewController: UIViewController {
     let form: PaymentMethodElement
     let intent: Intent
