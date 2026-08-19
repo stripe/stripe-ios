@@ -187,7 +187,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     /// Handles Apple Pay confirmation for CheckoutSession by calling the confirm API with the payment method.
     private func handleCheckoutSessionApplePay(
         checkout: CheckoutSessionBillingAddressUpdater,
-        checkoutSession: Checkout.Session,
+        checkoutSession: CheckoutController.Session,
         paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment,
         context: STPApplePayContext

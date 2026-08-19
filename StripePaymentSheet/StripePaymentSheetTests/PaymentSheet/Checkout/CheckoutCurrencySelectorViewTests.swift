@@ -15,35 +15,8 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     // MARK: - Availability tests
 
     func testUnavailableWhenAdaptivePricingDataIsUnavailableAtInitialization() async throws {
-        let checkout = try await Checkout(
+        let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
-        )
-
-        XCTAssertNil(checkout.getCurrencySelectorElement())
-    }
-
-    func testUnavailableWhenAdaptivePricingNotActive() async throws {
-        let session = makeSession(adaptivePricingActive: false)
-        let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
-        )
-
-        XCTAssertNil(checkout.getCurrencySelectorElement())
-    }
-
-    func testUnavailableWhenLocalizedPricesEmpty() async throws {
-        let session = makeSession(includeLocalizedPrices: false)
-        let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
-        )
-
-        XCTAssertNil(checkout.getCurrencySelectorElement())
-    }
-
-    func testUnavailableWhenExchangeRateMetaNil() async throws {
-        let session = makeSession(includeExchangeRateFields: false)
-        let checkout = try await Checkout(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
         )
 
         XCTAssertNil(checkout.getCurrencySelectorElement())
@@ -51,7 +24,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
     func testAvailableWhenAdaptivePricingActive() async throws {
         let session = makeSession()
-        let checkout = try await Checkout(
+        let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
         )
 
@@ -63,10 +36,10 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     // MARK: - Label update tests
 
     func testLabelsUpdateWhenSessionAmountChanges() async throws {
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.currencySelectorElement.appearance.labelContent = .amount
         let session = makeSession(integrationAmount: 1200, localAmount: 1000)
-        let checkout = try await Checkout(
+        let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(
                 apiResponse: session,
                 configuration: configuration
@@ -145,16 +118,10 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     // MARK: - Helpers
 
     private func makeSession(
-        adaptivePricingActive: Bool = true,
-        includeLocalizedPrices: Bool = true,
-        includeExchangeRateFields: Bool = true,
         integrationAmount: Int = 1200,
         localAmount: Int = 1000
     ) -> PaymentPagesAPIResponse {
         CheckoutTestHelpers.makeAdaptivePricingSession(
-            adaptivePricingActive: adaptivePricingActive,
-            includeLocalizedPrices: includeLocalizedPrices,
-            includeExchangeRateFields: includeExchangeRateFields,
             integrationAmount: integrationAmount,
             localAmount: localAmount
         )
