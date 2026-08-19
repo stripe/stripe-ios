@@ -1215,19 +1215,13 @@ extension PaymentSheetLPMConfirmFlowTests {
                     returnURL: "https://foo.com"
                 )
                 let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-                let checkoutSession = try await csApiClient.initCheckoutSession(
-                    checkoutSessionId: checkoutSessionResponse.id,
-                    adaptivePricingAllowed: true
-                )
                 var checkoutConfiguration = CheckoutController.Configuration(
-                    clientSecret: checkoutSession.clientSecret ?? checkoutSessionResponse.clientSecret,
+                    clientSecret: checkoutSessionResponse.clientSecret,
                     returnURL: "stripe-ios-test://checkout-return"
                 )
                 checkoutConfiguration.apiClient = csApiClient
-                let checkout = CheckoutController(
-                    testSession: checkoutSession.makePublicSession(),
-                    configuration: checkoutConfiguration
-                )
+                checkoutConfiguration.adaptivePricing.allowed = true
+                let checkout = try await CheckoutController(configuration: checkoutConfiguration)
                 intents.append(TestIntent("CheckoutSession", .checkout(checkout.intentContext), checkout: checkout))
             }
             guard paymentMethod != .blik else {
