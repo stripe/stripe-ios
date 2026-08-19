@@ -497,6 +497,10 @@ workflows:
         machine_type_id: g2.mac.large
   install-and-integration-tests:
     steps:
+    - xcode-start-simulator@0:
+        title: Start iOS 16.4 installation test simulator
+        inputs:
+        - destination: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
     - fastlane@3:
         inputs:
         - lane: installation_cocoapods_without_frameworks_objc
