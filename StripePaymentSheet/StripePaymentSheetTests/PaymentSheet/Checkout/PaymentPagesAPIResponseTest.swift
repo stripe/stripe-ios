@@ -832,14 +832,19 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNil(disabledOneTimePrice.items.first?.adjustableQuantity)
     }
 
-    func testUnifiedModeSessionAllowsEmptyNestedItems() throws {
+    func testUnifiedModeSessionRejectsEmptyOneTimePriceItems() {
         let json = modifyingOneTimePrice { $0["items"] = [] }
-        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
-        guard case .oneTimePrice(let oneTimePrice) = response.makePublicSession().orderSummaryItems.first else {
-            return XCTFail("Expected one-time Price order summary item")
-        }
 
-        XCTAssertTrue(oneTimePrice.items.isEmpty)
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json)) { error in
+            guard case .dataCorrupted(let context) = error as? DecodingError else {
+                return XCTFail("Expected dataCorrupted, got \(error)")
+            }
+            XCTAssertEqual(
+                context.codingPath.map(\.stringValue),
+                ["checkoutItems", "0", "oneTimePrice"]
+            )
+            XCTAssertEqual(context.debugDescription, "one_time_price items must not be empty")
+        }
     }
 
     func testMerchantWillSavePaymentMethod_paymentModeWithoutSetupFutureUsage() {

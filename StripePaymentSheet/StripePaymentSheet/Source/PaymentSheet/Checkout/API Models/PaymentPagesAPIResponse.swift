@@ -275,6 +275,22 @@ extension PaymentPagesAPIResponse {
         let items: [OneTimePriceItem]
         let subtotal: Int
         let total: Int
+
+        private enum CodingKeys: String, CodingKey {
+            case items
+            case subtotal
+            case total
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            items = try container.decode([OneTimePriceItem].self, forKey: .items)
+            guard !items.isEmpty else {
+                throw decoder.dataCorrupted("one_time_price items must not be empty")
+            }
+            subtotal = try container.decode(Int.self, forKey: .subtotal)
+            total = try container.decode(Int.self, forKey: .total)
+        }
     }
 
     struct OneTimePriceItem: Decodable {
