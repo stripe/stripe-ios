@@ -36,6 +36,11 @@ enum ExpectedFormHierarchy {
 
     enum Alipay {
         static var paymentIntent: FormHierarchyNode { emptyForm }
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By saving your payment information, you allow Stri..."])
+            ])
+        }
     }
 
     // MARK: - PayNow
