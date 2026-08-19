@@ -8,7 +8,7 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-extension Checkout {
+extension CheckoutController {
     static func confirmLink(
         checkoutSession: Session,
         confirmationContext: ConfirmationContext,
@@ -107,7 +107,7 @@ extension Checkout {
                 linkCompletion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
             ) {
                 Task { @MainActor in
-                    let linkConfirmationContext = Checkout.ConfirmationContext(
+                    let linkConfirmationContext = CheckoutController.ConfirmationContext(
                         paymentOption: linkPaymentOption,
                         configuration: configuration,
                         integrationShape: confirmationContext.integrationShape,
