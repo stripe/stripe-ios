@@ -218,7 +218,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
 
-    private func makeCheckoutSession(canDetachPaymentMethod: Bool) async throws -> Checkout {
+    private func makeCheckoutSession(canDetachPaymentMethod: Bool) async throws -> CheckoutController {
         let session = CheckoutTestHelpers.makeSession([
             "customer": [
                 "id": "cus_test_123",
@@ -226,7 +226,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                 "can_detach_payment_method": canDetachPaymentMethod,
             ],
         ])
-        return try await Checkout(
+        return try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session)
         )
     }

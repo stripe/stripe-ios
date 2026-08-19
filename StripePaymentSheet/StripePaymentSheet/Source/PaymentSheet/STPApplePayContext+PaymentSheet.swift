@@ -79,7 +79,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             }
             guard let checkoutSession = checkoutContext.session else {
                 throw PaymentSheetError.integrationError(
-                    nonPIIDebugDescription: "Checkout must outlive the Payment Element created from it."
+                    nonPIIDebugDescription: "CheckoutController must outlive the Payment Element created from it."
                 )
             }
             return try await handleCheckoutSessionApplePay(
@@ -192,7 +192,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     /// Handles Apple Pay confirmation for CheckoutSession by calling the confirm API with the payment method.
     private func handleCheckoutSessionApplePay(
         checkout: CheckoutSessionBillingAddressUpdater,
-        checkoutSession: Checkout.Session,
+        checkoutSession: CheckoutController.Session,
         paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment,
         context: STPApplePayContext
@@ -393,7 +393,7 @@ extension STPApplePayContext {
                     }
                     let label = intent.sellerDetails?.businessName ?? configuration.merchantDisplayName
                     completion(PKPaymentRequestPaymentMethodUpdate(
-                        paymentSummaryItems: STPApplePayContext.makePaymentSummaryItems(for: session, label: label, currency: session.currency)
+                        paymentSummaryItems: STPApplePayContext.makePaymentSummaryItems(for: session, label: label, currency: session.activePresentmentCurrency)
                     ))
                 }
             }

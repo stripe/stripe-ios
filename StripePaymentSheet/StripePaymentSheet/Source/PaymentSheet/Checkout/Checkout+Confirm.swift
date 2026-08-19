@@ -4,7 +4,7 @@
 
 // MARK: - Confirm
 
-extension Checkout {
+extension CheckoutController {
     /// Convenience bag of params needed for confirmation
     struct ConfirmationContext {
         let paymentOption: PaymentOption
@@ -98,7 +98,7 @@ extension Checkout {
     ) async -> InternalConfirmResult {
         guard let checkoutSession = checkoutContext.session else {
             return .init(paymentSheetResult: .failed(error: PaymentSheetError.integrationError(
-                nonPIIDebugDescription: "Checkout must outlive the Payment Element created from it."
+                nonPIIDebugDescription: "CheckoutController must outlive the Payment Element created from it."
             )))
         }
         let paymentOption = confirmationContext.paymentOption
