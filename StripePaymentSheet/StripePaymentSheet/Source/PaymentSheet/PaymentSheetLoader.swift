@@ -260,12 +260,7 @@ final class PaymentSheetLoader {
                                                                                                              configuration: configuration)
             } catch let error {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
-                guard shouldFallback(for: error) else {
-                    throw error
-                }
-                // Fallback to regular retrieve PI when retrieve PI with preferences fails
-                paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret)
-                elementsSession = .makeBackupElementsSession(with: paymentIntent)
+                throw error
             }
             guard ![.succeeded, .canceled, .requiresCapture].contains(paymentIntent.status) else {
                 // Error if the PaymentIntent is in a terminal state
@@ -280,12 +275,7 @@ final class PaymentSheetLoader {
                                                                                                            configuration: configuration)
             } catch let error {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
-                guard shouldFallback(for: error) else {
-                    throw error
-                }
-                // Fallback to regular retrieve SI when retrieve SI with preferences fails
-                setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret)
-                elementsSession = .makeBackupElementsSession(with: setupIntent)
+                throw error
             }
             guard ![.succeeded, .canceled].contains(setupIntent.status) else {
                 // Error if the SetupIntent is in a terminal state
@@ -300,13 +290,7 @@ final class PaymentSheetLoader {
                 intent = .deferredIntent(intentConfig: intentConfig)
             } catch {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
-                guard shouldFallback(for: error) else {
-                    throw error
-                }
-                // Fall back to a backup ElementsSession with the payment methods from the merchant's intent config or, if none were supplied, a card.
-                let paymentMethodTypes = intentConfig.paymentMethodTypes?.map { STPPaymentMethod.type(from: $0) } ?? [.card]
-                elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
-                intent = .deferredIntent(intentConfig: intentConfig)
+                throw error
             }
         case .checkout(let checkout):
             elementsSession = checkout.session.elementsSession
@@ -322,21 +306,6 @@ final class PaymentSheetLoader {
             print(message)
         }
         return (elementsSession, intent)
-    }
-
-    static func shouldFallback(for error: Error) -> Bool {
-        let error = error as NSError
-        // Show fallback for unknown server errors (500s).
-        // Otherwise, don't fall back in order to
-        // 1. avoid loading a potentially degraded UX instead of prompting the customer to retry loading (e.g. bad network).
-        // 2. let the merchant see potential integration errors (e.g. bad publishable key, invalid intent configuration)
-        if
-            let httpStatusCode = error.userInfo[STPError.httpStatusCodeKey] as? Int,
-            httpStatusCode >= 500
-        {
-            return true
-        }
-        return false
     }
 
     static func defaultStripePaymentMethodId(forCustomerID customerID: String?) -> String? {

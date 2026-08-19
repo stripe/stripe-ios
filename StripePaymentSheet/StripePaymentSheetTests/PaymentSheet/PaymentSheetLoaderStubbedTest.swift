@@ -173,25 +173,19 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         wait(for: [loaded], timeout: 2)
     }
 
-    func testPaymentSheetLoadPaymentIntentFallback() {
-        // If v1/elements/session fails to load...
+    func testPaymentSheetLoadPaymentIntentOnFailureBehavior() {
+        // Given v1/elements/sessions fails with a server error...
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
         } response: { _ in
             return HTTPStubsResponse(data: Data(), statusCode: 500, headers: nil)
         }
-        // ...and /v1/payment_intents succeeds...
-        stub { urlRequest in
-            return urlRequest.url?.absoluteString.contains("/v1/payment_intents") ?? false
-        } response: { _ in
-            return HTTPStubsResponse(data: try! FileMock.payment_intents_200.data(), statusCode: 200, headers: nil)
-        }
-        // ...and the customer has payment methods...
+        // ...and the customer has payment methods
         StubbedBackend.stubPaymentMethods(paymentMethodTypes: [.card])
         StubbedBackend.stubCustomers()
         StubbedBackend.stubLookup()
 
-        // ...loading PaymentSheet with a customer...
+        // When loading PaymentSheet with a customer
         let loaded = expectation(description: "Loaded")
         let configuration = self.configuration(apiClient: stubbedAPIClient())
         let analyticsClient = STPTestingAnalyticsClient()
@@ -203,156 +197,37 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         ) { result in
             loaded.fulfill()
             switch result {
-            case .success(let (loadResult, _)):
-                // ...should still succeed...
-                guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
-                    XCTFail()
-                    return
-                }
-
-                // ...with an ElementsSession whose payment method types is equal to the PaymentIntent...
-                XCTAssertEqual(
-                    paymentIntent.paymentMethodTypes,
-                    loadResult.elementsSession.orderedPaymentMethodTypes
-                )
-
-                // ...and with the customer's payment methods
-                XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
-
-                // ...and with link disabled
-                XCTAssertFalse(PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
-
-                // ...and apple pay enabled
-                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
-
-                // ...and should report analytics indicating the v1/elements/session load failed
-                let analyticEvents = analyticsClient.events.map { $0.event }
-                XCTAssertEqual(analyticEvents, [.paymentSheetLoadStarted, .paymentSheetElementsSessionLoadFailed, .paymentSheetLoadSucceeded])
+            case .success:
+                // Then loading fails instead of succeeding with a degraded ElementsSession
+                XCTFail("Loading should fail when v1/elements/sessions fails.")
             case .failure(let error):
-                XCTFail(error.nonGenericDescription)
+                // ...and surfaces the server error rather than swallowing it
+                let error = error as NSError
+                XCTAssertEqual(error.domain, STPError.stripeDomain)
+                XCTAssertEqual(error.code, STPErrorCode.apiError.rawValue)
+                XCTAssertEqual(error.userInfo[STPError.httpStatusCodeKey] as? Int, 500)
+                XCTAssertEqual(error.localizedDescription, "There was an unexpected error -- try again in a few seconds")
             }
+            // ...and reports analytics indicating both the v1/elements/sessions failure and the load failure
+            let analyticEvents = analyticsClient.events.map { $0.event }
+            XCTAssertEqual(analyticEvents, [.paymentSheetLoadStarted, .paymentSheetElementsSessionLoadFailed, .paymentSheetLoadFailed])
         }
         wait(for: [loaded], timeout: 10)
     }
 
-    func testPaymentSheetLoadPaymentIntentFallbackCardPrioritization() {
-        // If v1/elements/session fails to load...
+    func testPaymentSheetLoadSetupIntentOnFailureBehavior() {
+        // Given v1/elements/sessions fails with a server error...
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
         } response: { _ in
             return HTTPStubsResponse(data: Data(), statusCode: 500, headers: nil)
         }
-        // ...and /v1/payment_intents succeeds...
-        stub { urlRequest in
-            return urlRequest.url?.absoluteString.contains("/v1/payment_intents") ?? false
-        } response: { _ in
-            return HTTPStubsResponse(data: try! FileMock.payment_intents_misordered_pms_200.data(), statusCode: 200, headers: nil)
-        }
-        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
-        StubbedBackend.stubCustomers()
-        StubbedBackend.stubLookup()
-
-        // ...loading PaymentSheet with a customer...
-        let loaded = expectation(description: "Loaded")
-        let configuration = self.configuration(apiClient: stubbedAPIClient())
-        let analyticsClient = STPTestingAnalyticsClient()
-        PaymentSheetLoader.load(
-            mode: .paymentIntentClientSecret("pi_1234_secret_1234"),
-            configuration: configuration,
-            analyticsHelper: ._testValue(configuration: configuration, analyticsClient: analyticsClient),
-            integrationShape: .paymentSheet
-        ) { result in
-            loaded.fulfill()
-            switch result {
-            case .success(let (loadResult, _)):
-                // ...should still succeed...
-                guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
-                    XCTFail()
-                    return
-                }
-
-                // ...with an ElementsSession whose payment method types contain the same as the PaymentIntent...
-                XCTAssertEqual(
-                    Set(paymentIntent.paymentMethodTypes.map { $0 }),
-                    Set(loadResult.elementsSession.orderedPaymentMethodTypes)
-                )
-
-                // and with card listed first
-                XCTAssert(loadResult.elementsSession.orderedPaymentMethodTypes.first == .card)
-            case .failure(let error):
-                XCTFail(error.nonGenericDescription)
-            }
-        }
-        wait(for: [loaded], timeout: 10)
-    }
-
-    func testPaymentSheetLoadPaymentIntentFallbackNoCard() {
-        // If v1/elements/session fails to load...
-        stub { urlRequest in
-            return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
-        } response: { _ in
-            return HTTPStubsResponse(data: Data(), statusCode: 500, headers: nil)
-        }
-        // ...and /v1/payment_intents succeeds...
-        stub { urlRequest in
-            return urlRequest.url?.absoluteString.contains("/v1/payment_intents") ?? false
-        } response: { _ in
-            return HTTPStubsResponse(data: try! FileMock.payment_intents_no_card_200.data(), statusCode: 200, headers: nil)
-        }
-        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
-        StubbedBackend.stubCustomers()
-        StubbedBackend.stubLookup()
-
-        // ...loading PaymentSheet with a customer...
-        let loaded = expectation(description: "Loaded")
-        let configuration = self.configuration(apiClient: stubbedAPIClient())
-        let analyticsClient = STPTestingAnalyticsClient()
-        PaymentSheetLoader.load(
-            mode: .paymentIntentClientSecret("pi_1234_secret_1234"),
-            configuration: configuration,
-            analyticsHelper: ._testValue(configuration: configuration, analyticsClient: analyticsClient),
-            integrationShape: .paymentSheet
-        ) { result in
-            loaded.fulfill()
-            switch result {
-            case .success(let (loadResult, _)):
-                // ...should still succeed...
-                guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
-                    XCTFail()
-                    return
-                }
-
-                // ...with an ElementsSession whose payment method types is equal to the PaymentIntent...
-                XCTAssertEqual(
-                    paymentIntent.paymentMethodTypes.map { $0 },
-                    loadResult.elementsSession.orderedPaymentMethodTypes
-                )
-            case .failure(let error):
-                XCTFail(error.nonGenericDescription)
-            }
-        }
-        wait(for: [loaded], timeout: 10)
-    }
-
-    func testPaymentSheetLoadSetupIntentFallback() {
-        // If v1/elements/session fails to load...
-        stub { urlRequest in
-            return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
-        } response: { _ in
-            return HTTPStubsResponse(data: Data(), statusCode: 500, headers: nil)
-        }
-        // ...and /v1/setup_intents succeeds...
-        stub { urlRequest in
-            return urlRequest.url?.absoluteString.contains("/v1/setup_intents") ?? false
-        } response: { _ in
-            return HTTPStubsResponse(data: try! FileMock.setup_intents_200.data(), statusCode: 200, headers: nil)
-        }
-        // ...and the customer has payment methods...
+        // ...and the customer has payment methods
         StubbedBackend.stubPaymentMethods(paymentMethodTypes: [.card])
         StubbedBackend.stubCustomers()
         StubbedBackend.stubLookup()
 
-        // ...loading PaymentSheet with a customer...
+        // When loading PaymentSheet with a customer
         let loaded = expectation(description: "Loaded")
         let analyticsClient = STPTestingAnalyticsClient()
         let configuration = self.configuration(apiClient: stubbedAPIClient())
@@ -364,56 +239,43 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         ) { result in
             loaded.fulfill()
             switch result {
-            case .success(let (loadResult, _)):
-                // ...should still succeed...
-                guard case let .setupIntent(setupIntent) = loadResult.intent else {
-                    XCTFail()
-                    return
-                }
-
-                // ...with an ElementsSession whose payment method types is equal to the SetupIntent...
-                XCTAssertEqual(
-                    setupIntent.paymentMethodTypes,
-                    loadResult.elementsSession.orderedPaymentMethodTypes
-                )
-
-                // ...and with the customer's payment methods
-                XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
-
-                // ...and with link disabled
-                XCTAssertFalse(PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
-
-                // ...and apple pay enabled
-                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
-
-                // ...and should report analytics indicating the v1/elements/session load failed
-                let analyticEvents = analyticsClient.events.map { $0.event }
-                XCTAssertEqual(analyticEvents, [.paymentSheetLoadStarted, .paymentSheetElementsSessionLoadFailed, .paymentSheetLoadSucceeded])
+            case .success:
+                // Then loading fails instead of succeeding with a degraded ElementsSession
+                XCTFail("Loading should fail when v1/elements/sessions fails.")
             case .failure(let error):
-                XCTFail(error.nonGenericDescription)
+                // ...and surfaces the server error rather than swallowing it
+                let error = error as NSError
+                XCTAssertEqual(error.domain, STPError.stripeDomain)
+                XCTAssertEqual(error.code, STPErrorCode.apiError.rawValue)
+                XCTAssertEqual(error.userInfo[STPError.httpStatusCodeKey] as? Int, 500)
+                XCTAssertEqual(error.localizedDescription, "There was an unexpected error -- try again in a few seconds")
             }
+            // ...and reports analytics indicating both the v1/elements/sessions failure and the load failure
+            let analyticEvents = analyticsClient.events.map { $0.event }
+            XCTAssertEqual(analyticEvents, [.paymentSheetLoadStarted, .paymentSheetElementsSessionLoadFailed, .paymentSheetLoadFailed])
         }
         wait(for: [loaded], timeout: 10)
     }
 
-    func testPaymentSheetLoadDeferredFallback() {
-        // If v1/elements/session fails to load...
+    func testPaymentSheetLoadDeferredOnFailureBehavior() {
+        // Given v1/elements/sessions fails with a server error...
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
         } response: { _ in
             return HTTPStubsResponse(data: Data(), statusCode: 500, headers: nil)
         }
 
-        // ...and we're using a deferred intent without PM types specified...
+        // ...and we're using a deferred intent that specifies payment method types...
         var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd"), confirmHandler: { _, _ in return "" })
+        intentConfig.paymentMethodTypes = ["card", "klarna"]
 
-        // ...and the customer has payment methods...
+        // ...and the customer has payment methods
         StubbedBackend.stubPaymentMethods(paymentMethodTypes: [.card])
         StubbedBackend.stubCustomers()
         StubbedBackend.stubLookup()
 
-        // ...loading PaymentSheet with a customer...
-        let loaded = expectation(description: "LoadedWithoutTypes")
+        // When loading PaymentSheet with a customer
+        let loaded = expectation(description: "Loaded")
         let configuration = self.configuration(apiClient: stubbedAPIClient())
         let analyticsClient = STPTestingAnalyticsClient()
         PaymentSheetLoader.load(
@@ -424,83 +286,26 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         ) { result in
             loaded.fulfill()
             switch result {
-            case .success(let (loadResult, _)):
-                // ...should still succeed...
-                guard case .deferredIntent = loadResult.intent else {
-                    XCTFail()
-                    return
-                }
-
-                // ...with an ElementsSession whose payment method types is just [.card]
-                XCTAssertEqual(
-                    [.card],
-                    loadResult.elementsSession.orderedPaymentMethodTypes
-                )
-
-                // ...and with the customer's payment methods
-                XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
-
-                // ...and with link disabled
-                XCTAssertFalse(PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
-
-                // ...and apple pay enabled
-                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
-
-                // ...and should report analytics indicating the v1/elements/session load failed
-                let analyticEvents = analyticsClient.events.map { $0.event }
-                XCTAssertEqual(analyticEvents, [.paymentSheetLoadStarted, .paymentSheetElementsSessionLoadFailed, .paymentSheetLoadSucceeded])
+            case .success:
+                // Then loading fails, rather than synthesizing an ElementsSession from the intent config's payment method types
+                XCTFail("Loading should fail when v1/elements/sessions fails.")
             case .failure(let error):
-                XCTFail(error.nonGenericDescription)
+                // ...and surfaces the server error rather than swallowing it
+                let error = error as NSError
+                XCTAssertEqual(error.domain, STPError.stripeDomain)
+                XCTAssertEqual(error.code, STPErrorCode.apiError.rawValue)
+                XCTAssertEqual(error.userInfo[STPError.httpStatusCodeKey] as? Int, 500)
+                XCTAssertEqual(error.localizedDescription, "There was an unexpected error -- try again in a few seconds")
             }
+            // ...and reports analytics indicating both the v1/elements/sessions failure and the load failure
+            let analyticEvents = analyticsClient.events.map { $0.event }
+            XCTAssertEqual(analyticEvents, [.paymentSheetLoadStarted, .paymentSheetElementsSessionLoadFailed, .paymentSheetLoadFailed])
         }
-        wait(for: [loaded], timeout: 2)
-        analyticsClient.events = []
-
-        // Doing the same load as above, but with an IntentConfig that specifies payment method types...
-        intentConfig.paymentMethodTypes = ["card", "klarna"]
-        let loaded2 = expectation(description: "LoadedWithTypes")
-        PaymentSheetLoader.load(
-            mode: .deferredIntent(intentConfig),
-            configuration: configuration,
-            analyticsHelper: ._testValue(configuration: configuration, analyticsClient: analyticsClient),
-            integrationShape: .paymentSheet
-        ) { result in
-            loaded2.fulfill()
-            switch result {
-            case .success(let (loadResult, _)):
-                // ...should still succeed...
-                guard case .deferredIntent = loadResult.intent else {
-                    XCTFail()
-                    return
-                }
-
-                // ...with an ElementsSession whose payment method types matches the intent config
-                XCTAssertEqual(
-                    [.card, .klarna],
-                    loadResult.elementsSession.orderedPaymentMethodTypes
-                )
-
-                // ...and with the customer's payment methods
-                XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
-
-                // ...and with link disabled
-                XCTAssertFalse(PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
-
-                // ...and apple pay enabled
-                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
-
-                // ...and should report analytics indicating the v1/elements/session load failed
-                let analyticEvents = analyticsClient.events.map { $0.event }
-                XCTAssertEqual(analyticEvents, [.paymentSheetLoadStarted, .paymentSheetElementsSessionLoadFailed, .paymentSheetLoadSucceeded])
-            case .failure(let error):
-                XCTFail(error.nonGenericDescription)
-            }
-        }
-        wait(for: [loaded2], timeout: 2)
+        wait(for: [loaded], timeout: 10)
     }
 
     func testSendsErrorAnalytic() {
-        // If v1/elements/session and the fallback fail to load...
+        // If v1/elements/session fails to load...
         let analyticsClient = STPAnalyticsClient()
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
