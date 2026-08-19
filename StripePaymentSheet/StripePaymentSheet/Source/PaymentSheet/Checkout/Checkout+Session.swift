@@ -98,6 +98,7 @@ extension CheckoutController {
 
 extension CheckoutController.Session {
     /// An item included in the order summary.
+    @frozen
     public enum OrderSummaryItem: Identifiable, Sendable, Hashable {
         /// A stable identifier for an order summary item.
         public enum ID: Sendable, Hashable {
