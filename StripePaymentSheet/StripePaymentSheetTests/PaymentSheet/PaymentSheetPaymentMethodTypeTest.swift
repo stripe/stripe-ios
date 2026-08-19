@@ -16,14 +16,10 @@ import XCTest
 @MainActor
 class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
-    func testCheckoutRequirementsUseCurrentSession() {
+    func testCheckoutRequirementsUseCurrentSession() async throws {
         let initialResponse = CheckoutTestHelpers.makeOpenSession()
-        let checkout = CheckoutController(
-            testSession: initialResponse.makePublicSession(),
-            configuration: CheckoutController.Configuration(
-                clientSecret: "cs_test_123_secret_abc",
-                returnURL: "stripe-ios-test://checkout-return"
-            )
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: initialResponse)
         )
         let intent = Intent.checkout(checkout.intentContext)
 

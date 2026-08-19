@@ -849,14 +849,10 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertEqual(analyticsClient._testLogHistory.last!["displayed_successfully"] as? Bool, false)
     }
 
-    func testCheckoutAnalyticsUseCurrentSession() {
+    func testCheckoutAnalyticsUseCurrentSession() async throws {
         let initialResponse = CheckoutTestHelpers.makeSession(["currency": "usd"])
-        let checkout = CheckoutController(
-            testSession: initialResponse.makePublicSession(),
-            configuration: CheckoutController.Configuration(
-                clientSecret: "cs_test_123_secret_abc",
-                returnURL: "stripe-ios-test://checkout-return"
-            )
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: initialResponse)
         )
         let sut = PaymentSheetAnalyticsHelper(
             integrationShape: .complete,
