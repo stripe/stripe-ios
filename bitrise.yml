@@ -30,14 +30,14 @@ pipelines:
     workflows:
       lint-tests:
         abort_on_fail: true
-      update-snapshots: {}
+      update-snapshots-and-lokalise: {}
       framework-tests: {}
-      framework-tests-ios-26: {}
-      install-tests: {}
+      framework-tests-and-builds-xcode-26-1: {}
+      install-and-integration-tests: {}
       size-report: {}
       ui-tests-paymentsheet:
         parallel: 4
-      ui-tests-connect: {}
+      ui-tests-connect-crypto: {}
 
   releases-trigger-pipeline:
     workflows:
@@ -45,13 +45,13 @@ pipelines:
       lint-tests:
         abort_on_fail: true
       framework-tests-no-mocks: {}
-      framework-tests-ios-26: {}
+      framework-tests-and-builds-xcode-26-1: {}
       deploy-docs: {}
-      install-tests: {}
+      install-and-integration-tests: {}
       size-report: {}
       ui-tests-paymentsheet:
         parallel: 4
-      ui-tests-connect: {}
+      ui-tests-connect-crypto: {}
       legacy-tests-15: {}
       legacy-tests-16: {}
       pod-lint-tests: {}
@@ -65,7 +65,7 @@ pipelines:
       deploy-dry-run: {}
       pod-lint-tests: {}
 workflows:
-  update-snapshots:
+  update-snapshots-and-lokalise:
     steps:
     - activate-ssh-key@4: {}
     - script@1:
@@ -419,7 +419,7 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  framework-tests-ios-26:
+  framework-tests-and-builds-xcode-26-1:
     steps:
     - script@1:
         inputs:
@@ -495,7 +495,7 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  install-tests:
+  install-and-integration-tests:
     steps:
     - fastlane@3:
         inputs:
@@ -793,7 +793,7 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  ui-tests-connect:
+  ui-tests-connect-crypto:
     steps:
     - script@1:
         is_skippable: true
