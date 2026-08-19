@@ -52,6 +52,7 @@ final class InstitutionTableView: UIView {
     }
     private var institutions: [FinancialConnectionsInstitution] = []
     private var shouldLogScroll = true
+    private var cardBackgroundView: UIView?
 
     private lazy var manualEntryTableFooterView: InstitutionTableFooterView = {
         let manualEntryTableFooterView = InstitutionTableFooterView(
@@ -125,16 +126,34 @@ final class InstitutionTableView: UIView {
         }
         dataSource.defaultRowAnimation = .fade
         super.init(frame: frame)
-        tableView.backgroundColor = FinancialConnectionsAppearance.Colors.background
-        tableView.separatorInset = .zero
-        tableView.separatorStyle = .none
+        if appearance.colors == .link {
+            tableView.backgroundColor = .clear
+            // No cornerRadius/masksToBounds on the tableView itself — cardBackgroundView provides
+            // the visual card rounding. Keeping masksToBounds=false lets the scroll indicator
+            // escape the card inset and render at the screen edge.
+            tableView.verticalScrollIndicatorInsets = UIEdgeInsets(
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: -Constants.Layout.defaultHorizontalMargin
+            )
+            tableView.separatorStyle = .singleLine
+            tableView.separatorColor = FinancialConnectionsAppearance.Colors.borderNeutral
+            tableView.separatorInset = UIEdgeInsets(top: 0, left: 92, bottom: 0, right: 0)
+        } else {
+            tableView.backgroundColor = FinancialConnectionsAppearance.Colors.background
+            tableView.separatorInset = .zero
+            tableView.separatorStyle = .none
+        }
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 72
+        let hairline = 1.0 / UIScreen.main.nativeScale
         tableView.contentInset = UIEdgeInsets(
-            // add extra inset at the top/bottom to show the cell-selected-state separators
-            top: 1.0 / UIScreen.main.nativeScale,
+            // Link theme: no top inset — a hairline gap lets cell content peek above the sticky
+            // search bar header when scrolled. Stripe theme keeps the hairline to show separators.
+            top: appearance.colors == .link ? 0 : hairline,
             left: 0,
-            bottom: 1.0 / UIScreen.main.nativeScale,
+            bottom: hairline,
             right: 0
         )
         tableView.keyboardDismissMode = .onDrag
@@ -144,6 +163,15 @@ final class InstitutionTableView: UIView {
         tableView.register(InstitutionTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.delegate = self
         addAndPinSubview(tableView)
+        if appearance.colors == .link {
+            let cardBg = UIView()
+            cardBg.backgroundColor = appearance.colors.iconBackground
+            cardBg.layer.cornerRadius = 12
+            cardBg.layer.masksToBounds = true
+            // Insert behind tableView so cells render on top
+            insertSubview(cardBg, belowSubview: tableView)
+            cardBackgroundView = cardBg
+        }
         // calling `load` activates the `UITableView` data source
         // by appening a section, which in turn will display
         // the section header (which contains the search bar)
@@ -187,6 +215,8 @@ final class InstitutionTableView: UIView {
             }
         }
 
+        updateCardBackgroundViewFrame()
+
         // resize loading view to always be below header view
         let loadingViewY: CGFloat
         if let searchBarContainerView = searchBarContainerView {
@@ -209,6 +239,37 @@ final class InstitutionTableView: UIView {
         )
     }
 
+    private func updateCardBackgroundViewFrame() {
+        guard let cardBackgroundView = cardBackgroundView else { return }
+        let numberOfRows = tableView.numberOfRows(inSection: 0)
+        guard numberOfRows > 0 else {
+            cardBackgroundView.isHidden = true
+            return
+        }
+        cardBackgroundView.isHidden = false
+        // Compute card top: first cell visual position, clamped to section header bottom
+        // so the card never slides under the sticky search bar.
+        let firstCellRect = tableView.rectForRow(at: IndexPath(row: 0, section: 0))
+        let sectionHeaderHeight = searchBarContainerView?.bounds.height ?? 0
+        let cardTop = max(sectionHeaderHeight, firstCellRect.minY - tableView.contentOffset.y)
+        // Compute card bottom: footer bottom (or last cell bottom) in wrapper coordinates.
+        // Content space → wrapper space: subtract contentOffset.y (tableView is pinned to wrapper).
+        let contentBottom: CGFloat
+        if let footerView = tableView.tableFooterView {
+            contentBottom = footerView.frame.maxY - tableView.contentOffset.y
+        } else {
+            let lastRow = IndexPath(row: numberOfRows - 1, section: 0)
+            contentBottom = tableView.rectForRow(at: lastRow).maxY - tableView.contentOffset.y
+        }
+        let cardBottom = max(cardTop, min(bounds.height, contentBottom))
+        cardBackgroundView.frame = CGRect(
+            x: 0,
+            y: cardTop,
+            width: bounds.width,
+            height: cardBottom - cardTop
+        )
+    }
+
     func load(
         institutions: [FinancialConnectionsInstitution],
         isUserSearching: Bool,
@@ -222,6 +283,7 @@ final class InstitutionTableView: UIView {
         snapshot.appendSections([Section.main])
         snapshot.appendItems(institutions, toSection: Section.main)
         dataSource.apply(snapshot, animatingDifferences: false, completion: nil)
+        setNeedsLayout()
 
         // clear state (some of this is defensive programming)
         showError(false, isUserSearching: isUserSearching)
@@ -301,6 +363,7 @@ final class InstitutionTableView: UIView {
         } else {
             tableView.tableFooterView = nil
         }
+        setNeedsLayout()
     }
 
     func showLoadingView(
@@ -358,6 +421,10 @@ extension InstitutionTableView: UITableViewDelegate {
         if let institution = dataSource.itemIdentifier(for: indexPath) {
             delegate?.institutionTableView(self, didSelectInstitution: institution)
         }
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        updateCardBackgroundViewFrame()
     }
 
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {

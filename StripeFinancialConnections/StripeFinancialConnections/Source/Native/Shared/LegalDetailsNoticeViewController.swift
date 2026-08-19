@@ -98,13 +98,16 @@ private func CreateSingleLinkView(
     verticalLabelStackView.axis = .vertical
     verticalLabelStackView.spacing = 0
 
+    let linkColor: UIColor = appearance.colors == .link
+        ? FinancialConnectionsAppearance.Colors.textDefault
+        : appearance.colors.textAction
     let titleLabelFont: FinancialConnectionsFont = .label(.largeEmphasized)
     let titleLabel = AttributedTextView(
         font: titleLabelFont,
         boldFont: titleLabelFont,
         linkFont: titleLabelFont,
         textColor: FinancialConnectionsAppearance.Colors.textDefault,
-        linkColor: appearance.colors.textAction,
+        linkColor: linkColor,
         showLinkUnderline: false
     )
     titleLabel.setText(title, action: didSelectURL)
@@ -117,7 +120,7 @@ private func CreateSingleLinkView(
             boldFont: contentFont,
             linkFont: contentFont,
             textColor: FinancialConnectionsAppearance.Colors.textSubdued,
-            linkColor: appearance.colors.textAction,
+            linkColor: linkColor,
             showLinkUnderline: false
         )
         contentLabel.setText(content, action: didSelectURL)

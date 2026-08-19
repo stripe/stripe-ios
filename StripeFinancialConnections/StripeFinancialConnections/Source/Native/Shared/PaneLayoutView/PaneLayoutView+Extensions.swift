@@ -234,18 +234,29 @@ extension PaneLayoutView {
         topText: String? = nil,
         appearance: FinancialConnectionsAppearance,
         bottomText: String? = nil,
-        didSelectURL: ((URL) -> Void)? = nil
+        didSelectURL: ((URL) -> Void)? = nil,
+        preferHorizontalButtonsForLink: Bool = false
     ) -> (footerView: UIView?, primaryButton: StripeUICore.Button?, secondaryButton: StripeUICore.Button?) {
         guard
             primaryButtonConfiguration != nil || secondaryButtonConfiguration != nil
         else {
             return (nil, nil, nil)  // display no footer
         }
+        let useHorizontalLayout =
+            preferHorizontalButtonsForLink
+            && appearance.colors == .link
+            && primaryButtonConfiguration != nil
+            && secondaryButtonConfiguration != nil
         let footerStackView = FooterStackView(
             didSelectPrimaryButton: primaryButtonConfiguration?.action,
             didSelectSecondaryButton: secondaryButtonConfiguration?.action
         )
-        footerStackView.axis = .vertical
+        if useHorizontalLayout {
+            footerStackView.axis = .horizontal
+            footerStackView.distribution = .fillEqually
+        } else {
+            footerStackView.axis = .vertical
+        }
         footerStackView.spacing = 8
 
         if let topText = topText {
@@ -278,14 +289,18 @@ extension PaneLayoutView {
             )
             primaryButton.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                primaryButton.heightAnchor.constraint(equalToConstant: 56)
+                primaryButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight)
             ])
-            footerStackView.addArrangedSubview(primaryButton)
+            // In the horizontal layout, the secondary button is added first (left),
+            // so the primary button (right) is added below once both exist.
+            if !useHorizontalLayout {
+                footerStackView.addArrangedSubview(primaryButton)
+            }
         }
 
         var secondaryButtonReference: StripeUICore.Button?
         if let secondaryButtonConfiguration = secondaryButtonConfiguration {
-            let secondaryButton = Button.secondary()
+            let secondaryButton = Button.secondary(appearance: appearance)
             secondaryButtonReference = secondaryButton
             secondaryButton.title = secondaryButtonConfiguration.title.text
             secondaryButton.accessibilityLabel = secondaryButtonConfiguration.title.accessibilityText
@@ -296,10 +311,26 @@ extension PaneLayoutView {
                 for: .touchUpInside
             )
             secondaryButton.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                secondaryButton.heightAnchor.constraint(equalToConstant: 56)
-            ])
-            footerStackView.addArrangedSubview(secondaryButton)
+            if useHorizontalLayout {
+                secondaryButton.layer.borderWidth = 0.5
+                secondaryButton.layer.borderColor = appearance.colors.border.cgColor
+                secondaryButton.layer.cornerRadius = appearance.buttonHeight / 2
+                secondaryButton.clipsToBounds = true
+                NSLayoutConstraint.activate([
+                    secondaryButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight)
+                ])
+                footerStackView.addArrangedSubview(secondaryButton)
+                if let primaryButton = primaryButtonReference {
+                    footerStackView.addArrangedSubview(primaryButton)
+                }
+            } else {
+                if appearance.colors != .link {
+                    NSLayoutConstraint.activate([
+                        secondaryButton.heightAnchor.constraint(equalToConstant: 56)
+                    ])
+                }
+                footerStackView.addArrangedSubview(secondaryButton)
+            }
         }
 
         if let bottomText {

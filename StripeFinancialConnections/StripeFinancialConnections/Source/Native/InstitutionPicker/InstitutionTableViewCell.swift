@@ -15,6 +15,7 @@ final class InstitutionTableViewCell: UITableViewCell {
     }()
 
     private var institutionCellView: InstitutionCellView?
+    private var appearance: FinancialConnectionsAppearance?
 
     private lazy var overlayView: UIView = {
         let overlayView = UIView()
@@ -38,7 +39,12 @@ final class InstitutionTableViewCell: UITableViewCell {
     }
 
     private func adjustBackgroundColor(isHighlighted: Bool) {
-        contentView.backgroundColor = isHighlighted ? FinancialConnectionsAppearance.Colors.backgroundHighlighted : FinancialConnectionsAppearance.Colors.background
+        let restingColor: UIColor = appearance?.colors == .link
+            ? .clear
+            : FinancialConnectionsAppearance.Colors.background
+        contentView.backgroundColor = isHighlighted
+            ? FinancialConnectionsAppearance.Colors.backgroundHighlighted
+            : restingColor
         backgroundColor = contentView.backgroundColor
 
         // fix a bug where the background color of a
@@ -73,6 +79,9 @@ final class InstitutionTableViewCell: UITableViewCell {
 extension InstitutionTableViewCell {
 
     func customize(with institution: FinancialConnectionsInstitution, appearance: FinancialConnectionsAppearance) {
+        self.appearance = appearance
+        adjustBackgroundColor(isHighlighted: false)
+
         let institutionCellView = InstitutionCellView(appearance: appearance)
         institutionIconView.setImageUrl(institution.icon?.default)
 

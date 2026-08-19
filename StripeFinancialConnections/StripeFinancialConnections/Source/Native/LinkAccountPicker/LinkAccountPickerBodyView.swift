@@ -30,11 +30,13 @@ final class LinkAccountPickerBodyView: UIView {
     ) {
         super.init(frame: .zero)
 
-        let verticalStackView = UIStackView()
-        verticalStackView.axis = .vertical
-        verticalStackView.spacing = 16
+        let isLinkTheme = appearance.colors == .link
+        let outerStackView = UIStackView()
+        outerStackView.axis = .vertical
+        outerStackView.spacing = 16
 
-        // add account rows
+        // build account row views
+        var accountRowViews: [AccountPickerRowView] = []
         accountTuples.forEach { accountTuple in
             let accountRowView = AccountPickerRowView(
                 isDisabled: !accountTuple.accountPickerAccount.allowSelection && accountTuple.accountPickerAccount.drawerOnSelection == nil,
@@ -66,8 +68,9 @@ final class LinkAccountPickerBodyView: UIView {
                     (accountTuple.accountPickerAccount.caption == nil) ? rowTitles.balanceString : nil,
                 isSelected: false // initially nothing is selected
             )
+            accountRowView.isInsideGroup = isLinkTheme
             partnerAccountIdToRowView[accountTuple.partnerAccount.id] = accountRowView
-            verticalStackView.addArrangedSubview(accountRowView)
+            accountRowViews.append(accountRowView)
         }
 
         // add a 'new bank account' button row
@@ -81,13 +84,48 @@ final class LinkAccountPickerBodyView: UIView {
             }
         )
         newAccountRowView.accessibilityIdentifier = "add_bank_account"
-        verticalStackView.addArrangedSubview(newAccountRowView)
 
-        addAndPinSubview(verticalStackView)
+        if isLinkTheme {
+            // wrap account rows + new account row in a single grey grouped container
+            let accountRowsStack = UIStackView()
+            accountRowsStack.axis = .vertical
+            accountRowsStack.spacing = 0
+            for (index, rowView) in accountRowViews.enumerated() {
+                if index > 0 {
+                    accountRowsStack.addArrangedSubview(makeSeparator())
+                }
+                accountRowsStack.addArrangedSubview(rowView)
+            }
+            // new account row goes inside the container as the last row
+            accountRowsStack.addArrangedSubview(makeSeparator())
+            accountRowsStack.addArrangedSubview(newAccountRowView)
+
+            let groupContainer = UIView()
+            groupContainer.backgroundColor = appearance.colors.iconBackground
+            groupContainer.layer.cornerRadius = 12
+            groupContainer.layer.masksToBounds = true
+            groupContainer.addAndPinSubview(accountRowsStack)
+            outerStackView.addArrangedSubview(groupContainer)
+        } else {
+            accountRowViews.forEach { outerStackView.addArrangedSubview($0) }
+            outerStackView.addArrangedSubview(newAccountRowView)
+        }
+
+        addAndPinSubview(outerStackView)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    private func makeSeparator() -> UIView {
+        let separator = UIView()
+        separator.backgroundColor = FinancialConnectionsAppearance.Colors.borderNeutral
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            separator.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
+        ])
+        return separator
     }
 
     func selectAccounts(_ selectedAccounts: [FinancialConnectionsAccountTuple]) {

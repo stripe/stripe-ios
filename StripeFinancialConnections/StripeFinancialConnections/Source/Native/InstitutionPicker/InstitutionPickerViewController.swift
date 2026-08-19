@@ -56,11 +56,12 @@ class InstitutionPickerViewController: UIViewController {
         )
         verticalStackView.axis = .vertical
         verticalStackView.isLayoutMarginsRelativeArrangement = true
+        let isLinkTheme = dataSource.manifest.appearance.colors == .link
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 16,
-            leading: Constants.Layout.defaultHorizontalMargin,
+            leading: isLinkTheme ? 0 : Constants.Layout.defaultHorizontalMargin,
             bottom: Self.headerAndSearchBarSpacing,
-            trailing: Constants.Layout.defaultHorizontalMargin
+            trailing: isLinkTheme ? 0 : Constants.Layout.defaultHorizontalMargin
         )
         verticalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         return verticalStackView
@@ -73,28 +74,31 @@ class InstitutionPickerViewController: UIViewController {
         )
         verticalStackView.axis = .vertical
         verticalStackView.isLayoutMarginsRelativeArrangement = true
+        let isLinkTheme = dataSource.manifest.appearance.colors == .link
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 0, // the `headerView` has bottom padding
-            leading: Constants.Layout.defaultHorizontalMargin,
+            leading: isLinkTheme ? 0 : Constants.Layout.defaultHorizontalMargin,
             bottom: 16,
-            trailing: Constants.Layout.defaultHorizontalMargin
+            trailing: isLinkTheme ? 0 : Constants.Layout.defaultHorizontalMargin
         )
         verticalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         // the "shadow" fixes an issue where the "search bar sticky header"
         // has a visible 1 pixel gap. the shadow is not actually a shadow,
         // but rather a "top border"
-        verticalStackView.layer.shadowOpacity = 1.0
-        verticalStackView.layer.shadowColor = verticalStackView.backgroundColor?.cgColor
-        verticalStackView.layer.shadowRadius = 0
-        verticalStackView.layer.shadowOffset = CGSize(
-            width: 0,
-            // the `height` is greater than 1 px because this also fixes
-            // an issue where the sticky header animates to final position
-            // (this is default iOS/UITableView behavior), and the animation
-            // is slow, which can cause the institution cells to temporarily
-            // appear IF the user scrolls up very quickly
-            height: -Self.headerAndSearchBarSpacing
-        )
+        if !isLinkTheme {
+            verticalStackView.layer.shadowOpacity = 1.0
+            verticalStackView.layer.shadowColor = verticalStackView.backgroundColor?.cgColor
+            verticalStackView.layer.shadowRadius = 0
+            verticalStackView.layer.shadowOffset = CGSize(
+                width: 0,
+                // the `height` is greater than 1 px because this also fixes
+                // an issue where the sticky header animates to final position
+                // (this is default iOS/UITableView behavior), and the animation
+                // is slow, which can cause the institution cells to temporarily
+                // appear IF the user scrolls up very quickly
+                height: -Self.headerAndSearchBarSpacing
+            )
+        }
         self.shadowLayer = verticalStackView.layer
         return verticalStackView
     }()
@@ -148,7 +152,19 @@ class InstitutionPickerViewController: UIViewController {
     private func setupView() {
         view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
-        view.addAndPinSubview(institutionTableView)
+        if dataSource.manifest.appearance.colors == .link {
+            view.addAndPinSubview(
+                institutionTableView,
+                insets: NSDirectionalEdgeInsets(
+                    top: 0,
+                    leading: Constants.Layout.defaultHorizontalMargin,
+                    bottom: 0,
+                    trailing: Constants.Layout.defaultHorizontalMargin
+                )
+            )
+        } else {
+            view.addAndPinSubview(institutionTableView)
+        }
         institutionTableView.setTableHeaderView(headerView)
         if !dataSource.manifest.institutionSearchDisabled {
             institutionTableView.searchBarContainerView = searchBarContainerView

@@ -13,6 +13,9 @@ final class AccountPickerRowView: UIView {
 
     private let appearance: FinancialConnectionsAppearance
     private let didSelect: () -> Void
+    var isInsideGroup: Bool = false {
+        didSet { updateLayer() }
+    }
     private var isSelected: Bool = false {
         didSet {
             updateLayer()
@@ -122,28 +125,37 @@ final class AccountPickerRowView: UIView {
     }
 
     private func updateLayer() {
-        layer.cornerRadius = 12
-        if isSelected {
-            layer.borderColor = appearance.colors.border.cgColor
-            layer.borderWidth = 2
-            let shadowWidthOffset: CGFloat = 0
-            layer.shadowPath = CGPath(
-                roundedRect: CGRect(x: shadowWidthOffset / 2, y: 0, width: bounds.width - shadowWidthOffset, height: bounds.height),
-                cornerWidth: layer.cornerRadius,
-                cornerHeight: layer.cornerRadius,
-                transform: nil
-            )
-            layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
-            layer.shadowRadius = 1.5 / UIScreen.main.nativeScale
-            layer.shadowOpacity = 0.23
-            layer.shadowOffset = CGSize(
-                width: 0,
-                height: 1 / UIScreen.main.nativeScale
-            )
-        } else {
-            layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
-            layer.borderWidth = 1
+        if isInsideGroup {
+            layer.cornerRadius = 0
+            backgroundColor = .clear
+            layer.borderWidth = 0
+            layer.borderColor = UIColor.clear.cgColor
             layer.shadowOpacity = 0
+        } else {
+            layer.cornerRadius = 12
+            backgroundColor = FinancialConnectionsAppearance.Colors.background
+            if isSelected {
+                layer.borderColor = appearance.colors.border.cgColor
+                layer.borderWidth = 2
+                let shadowWidthOffset: CGFloat = 0
+                layer.shadowPath = CGPath(
+                    roundedRect: CGRect(x: shadowWidthOffset / 2, y: 0, width: bounds.width - shadowWidthOffset, height: bounds.height),
+                    cornerWidth: layer.cornerRadius,
+                    cornerHeight: layer.cornerRadius,
+                    transform: nil
+                )
+                layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
+                layer.shadowRadius = 1.5 / UIScreen.main.nativeScale
+                layer.shadowOpacity = 0.23
+                layer.shadowOffset = CGSize(
+                    width: 0,
+                    height: 1 / UIScreen.main.nativeScale
+                )
+            } else {
+                layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
+                layer.borderWidth = 1
+                layer.shadowOpacity = 0
+            }
         }
     }
 

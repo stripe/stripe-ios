@@ -67,20 +67,22 @@ class NetworkingLinkSignupFooterView: HitTestView {
         saveToLinkButton.addTarget(self, action: #selector(didSelectSaveToLinkButton), for: .touchUpInside)
         saveToLinkButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            saveToLinkButton.heightAnchor.constraint(equalToConstant: 56)
+            saveToLinkButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight)
         ])
         return saveToLinkButton
     }()
 
     private lazy var notNowButton: StripeUICore.Button = {
-        let saveToLinkButton = Button.secondary()
+        let saveToLinkButton = Button.secondary(appearance: appearance)
         saveToLinkButton.title = notNowButtonText
         saveToLinkButton.accessibilityIdentifier = "networking_link_signup_footer_view.not_now_button"
         saveToLinkButton.addTarget(self, action: #selector(didSelectNotNowButton), for: .touchUpInside)
         saveToLinkButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            saveToLinkButton.heightAnchor.constraint(equalToConstant: 56)
-        ])
+        if appearance.colors != .link {
+            NSLayoutConstraint.activate([
+                saveToLinkButton.heightAnchor.constraint(equalToConstant: 56)
+            ])
+        }
         return saveToLinkButton
     }()
 

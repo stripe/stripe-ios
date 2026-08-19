@@ -6,11 +6,12 @@
 //
 
 import Foundation
+@_spi(STP) import StripeUICore
 import UIKit
 
 final class RetrieveAccountsLoadingView: UIView {
 
-    init(institutionIconUrl: String?) {
+    init(institutionIconUrl: String?, appearance: FinancialConnectionsAppearance = .stripe) {
         super.init(frame: .zero)
         let paneLayoutView = PaneLayoutView(
             contentView: PaneLayoutView.createContentView(
@@ -29,17 +30,27 @@ final class RetrieveAccountsLoadingView: UIView {
                 ),
                 subtitle: nil,
                 contentView: {
-                    let verticalStackView = UIStackView(
-                        arrangedSubviews: [
-                            ShimmeringAccountPickerRow(),
-                            ShimmeringAccountPickerRow(),
-                            ShimmeringAccountPickerRow(),
-                            ShimmeringAccountPickerRow(),
-                        ]
-                    )
-                    verticalStackView.axis = .vertical
-                    verticalStackView.spacing = 16
-                    return verticalStackView
+                    if appearance.colors == .link {
+                        let row = ShimmeringAccountPickerRow(grouped: true)
+                        let container = UIView()
+                        container.backgroundColor = appearance.colors.iconBackground
+                        container.layer.cornerRadius = 12
+                        container.layer.masksToBounds = true
+                        container.addAndPinSubview(row)
+                        return container
+                    } else {
+                        let verticalStackView = UIStackView(
+                            arrangedSubviews: [
+                                ShimmeringAccountPickerRow(),
+                                ShimmeringAccountPickerRow(),
+                                ShimmeringAccountPickerRow(),
+                                ShimmeringAccountPickerRow(),
+                            ]
+                        )
+                        verticalStackView.axis = .vertical
+                        verticalStackView.spacing = 16
+                        return verticalStackView
+                    }
                 }()
             ),
             footerView: nil
@@ -54,11 +65,13 @@ final class RetrieveAccountsLoadingView: UIView {
 
 private class ShimmeringAccountPickerRow: ShimmeringView {
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(grouped: Bool = false) {
+        super.init(frame: .zero)
         clipsToBounds = true
-        layer.cornerRadius = 12
-        backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+        if !grouped {
+            layer.cornerRadius = 12
+            backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+        }
 
         translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

@@ -126,18 +126,19 @@ extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
 // all the common changes to `UINavigationController`
 extension FinancialConnectionsNavigationController {
 
-    func configureAppearanceForNative() {
+    func configureAppearanceForNative(appearance: FinancialConnectionsAppearance = .stripe) {
         let backButtonImage = Image
             .back_arrow
             .makeImage(template: false)
             .applyFinancialConnectionsBackButtonEdgeInsets()
-        let appearance = UINavigationBarAppearance()
-        appearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
-        appearance.backgroundColor = FinancialConnectionsAppearance.Colors.background
-        appearance.shadowColor = .clear  // remove border
-        navigationBar.standardAppearance = appearance
-        navigationBar.scrollEdgeAppearance = appearance
-        navigationBar.compactAppearance = appearance
+
+        let navBarAppearance = UINavigationBarAppearance()
+        navBarAppearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
+        navBarAppearance.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        navBarAppearance.shadowColor = .clear  // remove border
+        navigationBar.standardAppearance = navBarAppearance
+        navigationBar.scrollEdgeAppearance = navBarAppearance
+        navigationBar.compactAppearance = navBarAppearance
 
         // change the back button color
         navigationBar.tintColor = FinancialConnectionsAppearance.Colors.icon
