@@ -7,7 +7,7 @@
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout {
+extension CheckoutController {
     /// Configuration for Link.
     public struct LinkConfiguration {
         /// Controls whether Link is displayed.
@@ -24,6 +24,8 @@ extension Checkout {
             case automatic
             /// Never show Link.
             case never
+            /// Keep Link enabled, but hide its button or row in PaymentElement.
+            case walletButtonHidden
         }
     }
 }

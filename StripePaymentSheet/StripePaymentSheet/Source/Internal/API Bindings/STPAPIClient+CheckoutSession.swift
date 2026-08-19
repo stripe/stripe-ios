@@ -91,8 +91,8 @@ extension STPAPIClient {
     func updatePaymentMethod(
         _ paymentMethodId: String,
         inCheckoutSession checkoutSessionId: String,
-        billingDetails: Checkout.PaymentMethodBillingDetails? = nil,
-        expiryDetails: Checkout.PaymentMethodExpiryDetails? = nil
+        billingDetails: CheckoutController.PaymentMethodBillingDetails? = nil,
+        expiryDetails: CheckoutController.PaymentMethodExpiryDetails? = nil
     ) async throws -> PaymentPagesAPIResponse {
         var params = Self.updatePaymentMethodParameters(
             paymentMethodId: paymentMethodId,
@@ -108,8 +108,8 @@ extension STPAPIClient {
 
     static func updatePaymentMethodParameters(
         paymentMethodId: String,
-        billingDetails: Checkout.PaymentMethodBillingDetails?,
-        expiryDetails: Checkout.PaymentMethodExpiryDetails?
+        billingDetails: CheckoutController.PaymentMethodBillingDetails?,
+        expiryDetails: CheckoutController.PaymentMethodExpiryDetails?
     ) -> [String: Any] {
         var params: [String: Any] = [
             "payment_method_to_update[payment_method_id]": paymentMethodId,

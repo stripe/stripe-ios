@@ -60,14 +60,14 @@ public final class PaymentElement {
 
     let paymentSheetFlowController: PaymentSheet.FlowController
     let embeddedPaymentElement: EmbeddedPaymentElement
-    weak var checkout: Checkout?
+    weak var checkout: CheckoutController?
     private var cancellables = Set<AnyCancellable>()
     var paymentOptionSourceOfTruthIsFlowController = false
     private var isSuppressingPaymentOptionUpdates = false
 
     // MARK: - Internal methods
 
-    init(checkout: Checkout) async throws {
+    init(checkout: CheckoutController) async throws {
         // Note: PaymentElement is just nice user-facing packaging around the existing Embedded and FC classes
         let configuration = checkout.configuration.paymentElement
 
@@ -75,6 +75,7 @@ public final class PaymentElement {
         let paymentSheetConfiguration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
+            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
@@ -86,6 +87,7 @@ public final class PaymentElement {
         let embeddedConfiguration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
+            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
@@ -107,13 +109,13 @@ public final class PaymentElement {
                     return
                 }
                 paymentOptionSourceOfTruthIsFlowController = true
-                self.checkout?.setPaymentOption(paymentOption.map(Checkout.Session.PaymentOptionDisplayData.init))
+                self.checkout?.setPaymentOption(paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
             }
             .store(in: &cancellables)
         // We don't know whether to use FC or Embedded's payment option at this point, so we'll use Embedded since it has more info (includes mandate text).
         stpAssert(paymentSheetFlowController.paymentOption?.label == embeddedPaymentElement.paymentOption?.label, "Payment Element assumes that the FlowController's payment option is the same as the Embedded's on first load!")
         checkout.setPaymentOption(
-            embeddedPaymentElement.paymentOption.map(Checkout.Session.PaymentOptionDisplayData.init)
+            embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init)
         )
         paymentOptionSourceOfTruthIsFlowController = false // We used embedded's payment option
         try await checkout.syncBillingAddress(from: embeddedPaymentElement._paymentOption?.checkoutBillingDetails)
@@ -127,7 +129,7 @@ extension PaymentElement {
         return paymentSheetFlowController.isPresentingPaymentUI || embeddedPaymentElement.isPresentingPaymentUI
     }
 
-    func update(checkout: Checkout) async throws {
+    func update(checkout: CheckoutController) async throws {
         // FlowController.update and EmbeddedPaymentElement.update can both publish their current/default payment option while applying the new Checkout session. Suppress those intermediate callbacks - we'll explicitly set the payment option ourselves in this method.
         stpAssert(!isSuppressingPaymentOptionUpdates, "PaymentElement.update(checkout:) does not support overlapping updates.")
         isSuppressingPaymentOptionUpdates = true
@@ -140,12 +142,14 @@ extension PaymentElement {
         paymentSheetFlowController.configuration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
+            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
         embeddedPaymentElement.configuration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
+            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
@@ -165,9 +169,9 @@ extension PaymentElement {
         // If neither was used, their payment options should be equal (the default), and we pick one arbitrarily.
         let paymentOption = {
             if paymentOptionSourceOfTruthIsFlowController {
-                paymentSheetFlowController.paymentOption.map(Checkout.Session.PaymentOptionDisplayData.init)
+                paymentSheetFlowController.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init)
             } else {
-                embeddedPaymentElement.paymentOption.map(Checkout.Session.PaymentOptionDisplayData.init)
+                embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init)
             }
         }()
         checkout.setPaymentOption(paymentOption)
@@ -200,13 +204,13 @@ extension PaymentElement: EmbeddedPaymentElementDelegate {
             return
         }
         paymentOptionSourceOfTruthIsFlowController = false
-        checkout?.setPaymentOption(embeddedPaymentElement.paymentOption.map(Checkout.Session.PaymentOptionDisplayData.init))
+        checkout?.setPaymentOption(embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
     }
 }
 
-// MARK: - Checkout.Session.PaymentOptionDisplayData
+// MARK: - CheckoutController.Session.PaymentOptionDisplayData
 
-extension Checkout.Session.PaymentOptionDisplayData {
+extension CheckoutController.Session.PaymentOptionDisplayData {
     init(_ paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData) {
         self.init(
             image: paymentOption.image,

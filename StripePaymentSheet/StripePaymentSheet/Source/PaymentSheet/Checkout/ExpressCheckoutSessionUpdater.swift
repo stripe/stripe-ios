@@ -16,4 +16,4 @@ protocol ExpressCheckoutSessionUpdater: AnyObject {
     func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws
 }
 
-extension Checkout: ExpressCheckoutSessionUpdater {}
+extension CheckoutController: ExpressCheckoutSessionUpdater {}

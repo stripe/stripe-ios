@@ -175,6 +175,7 @@ class AddressViewControllerSnapshotTests: STPSnapshotTestCase {
                 )
             ),
             allowedCountries: ["US"],
+            checkoutSessionId: "cs_test_123",
             apiClient: .init(publishableKey: "pk_test_1234"),
             useAutocompleteEndpoints: false
         )
@@ -296,7 +297,7 @@ private final class ShippingAddressElementSnapshotDelegate: ShippingAddressEleme
     var updateExpectation: XCTestExpectation?
     private var updateContinuation: CheckedContinuation<Void, Never>?
 
-    func updateShippingAddress(name: String?, address: Checkout.Address) async throws {
+    func updateShippingAddress(name: String?, address: CheckoutController.Address) async throws {
         updateExpectation?.fulfill()
         await withCheckedContinuation { continuation in
             updateContinuation = continuation

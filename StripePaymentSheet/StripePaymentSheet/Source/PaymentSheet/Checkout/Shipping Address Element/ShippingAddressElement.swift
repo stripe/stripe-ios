@@ -12,7 +12,7 @@ import UIKit
 @MainActor
 protocol ShippingAddressElementDelegate: AnyObject {
     /// Sets the customer's shipping address.
-    func updateShippingAddress(name: String?, address: Checkout.Address) async throws
+    func updateShippingAddress(name: String?, address: CheckoutController.Address) async throws
 }
 
 /// A shipping address form backed by a Checkout Session.
@@ -22,17 +22,21 @@ protocol ShippingAddressElementDelegate: AnyObject {
 public final class ShippingAddressElement {
 
     private(set) var addressViewController: AddressViewController!
+    private let checkoutSessionId: String
+    private var didLogAddressShow = false
     private var isPresenting = false
     private var presentationCompletion: (() -> Void)?
     weak var delegate: ShippingAddressElementDelegate?
 
     init(
         configuration: Configuration,
-        initialShippingAddress: Checkout.Session.ShippingAddress?,
+        initialShippingAddress: CheckoutController.Session.ShippingAddress?,
         allowedCountries: [String]?,
+        checkoutSessionId: String,
         apiClient: STPAPIClient,
         useAutocompleteEndpoints: Bool
     ) {
+        self.checkoutSessionId = checkoutSessionId
         let addressViewControllerConfiguration = configuration.makeAddressViewControllerConfiguration(
             shippingAddress: initialShippingAddress,
             allowedCountries: allowedCountries,
@@ -47,14 +51,14 @@ public final class ShippingAddressElement {
         )
     }
 
-    func normalizedInitialShippingAddress() async -> Checkout.Session.ShippingAddress? {
+    func normalizedInitialShippingAddress() async -> CheckoutController.Session.ShippingAddress? {
         // Read the address back from the form to include its validation and normalization.
         guard let addressDetails = await addressViewController.initialAddressDetails() else {
             return nil
         }
-        return Checkout.Session.ShippingAddress(
+        return CheckoutController.Session.ShippingAddress(
             name: addressDetails.name,
-            address: Checkout.Address(
+            address: CheckoutController.Address(
                 country: addressDetails.address.country,
                 line1: addressDetails.address.line1,
                 line2: addressDetails.address.line2,
@@ -110,27 +114,71 @@ public final class ShippingAddressElement {
         let navigationController = UINavigationController(rootViewController: addressViewController)
         isPresenting = true
         presentationCompletion = completion
+        didLogAddressShow = false
         presentingViewController.present(navigationController, animated: true)
     }
 }
 
 extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
+
+    func didShow() {
+        guard !didLogAddressShow else { return }
+        didLogAddressShow = true
+        log(
+            event: .shippingAddressElementShown,
+            addressAnalyticData: addressViewController.addressShowAnalyticData
+        )
+    }
+
+    func didCancel() {
+        log(
+            event: .shippingAddressElementCanceled,
+            addressAnalyticData: addressViewController.currentAddressAnalyticData
+        )
+    }
+
     func save(addressDetails: AddressViewController.AddressDetails) async throws {
         guard let delegate else {
             stpAssertionFailure("ShippingAddressElement does not have a delegate.")
             return
         }
 
-        try await delegate.updateShippingAddress(
-            name: addressDetails.name,
-            address: Checkout.Address(
-                country: addressDetails.address.country,
-                line1: addressDetails.address.line1.nonEmpty,
-                line2: addressDetails.address.line2,
-                city: addressDetails.address.city,
-                state: addressDetails.address.state,
-                postalCode: addressDetails.address.postalCode
+        let addressAnalyticData = addressViewController.addressAnalyticData(for: addressDetails)
+        log(event: .shippingAddressElementSaveStarted, addressAnalyticData: addressAnalyticData)
+        do {
+            try await delegate.updateShippingAddress(
+                name: addressDetails.name,
+                address: CheckoutController.Address(
+                    country: addressDetails.address.country,
+                    line1: addressDetails.address.line1.nonEmpty,
+                    line2: addressDetails.address.line2,
+                    city: addressDetails.address.city,
+                    state: addressDetails.address.state,
+                    postalCode: addressDetails.address.postalCode
+                )
             )
+            log(event: .shippingAddressElementSaveCompleted, addressAnalyticData: addressAnalyticData)
+        } catch {
+            log(
+                event: .shippingAddressElementSaveFailed,
+                addressAnalyticData: addressAnalyticData,
+                error: error
+            )
+            throw error
+        }
+    }
+
+    private func log(
+        event: STPAnalyticEvent,
+        addressAnalyticData: AddressAnalyticData,
+        error: Error? = nil
+    ) {
+        STPAnalyticsClient.sharedClient.logShippingAddressElementEvent(
+            event: event,
+            addressAnalyticData: addressAnalyticData,
+            checkoutSessionId: checkoutSessionId,
+            error: error,
+            apiClient: addressViewController.configuration.apiClient
         )
     }
 }

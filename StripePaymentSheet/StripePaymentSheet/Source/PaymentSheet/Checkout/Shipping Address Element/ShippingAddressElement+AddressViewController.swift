@@ -8,7 +8,7 @@
 
 extension ShippingAddressElement.Configuration {
     func makeAddressViewControllerConfiguration(
-        shippingAddress: Checkout.Session.ShippingAddress?,
+        shippingAddress: CheckoutController.Session.ShippingAddress?,
         allowedCountries: [String]?,
         apiClient: STPAPIClient
     ) -> AddressViewController.Configuration {

@@ -10,33 +10,38 @@ import Foundation
 @_spi(STP) import StripePayments
 import UIKit
 
-extension Checkout: ExpressCheckoutElementDelegate {
-    func expressCheckoutElementShouldConfirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod) async -> ConfirmResult {
+extension CheckoutController: ExpressCheckoutElementDelegate {
+    func expressCheckoutElementShouldConfirm(
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
+        presentingViewController: UIViewController
+    ) async -> ConfirmResult {
         guard sessionIsOpen else {
-            return .failed(CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() cannot confirm a Checkout Session that is no longer open."))
+            let error = CheckoutError.unknown(debugDescription: "CheckoutController.expressCheckoutElementShouldConfirm() cannot confirm a Checkout Session that is no longer open.")
+            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+            return .failed(error)
         }
-
-        let result = await {
-            switch paymentMethod {
-            case .applePay:
-                guard let applePayConfirmationContext else {
-                    let error = CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() was called for Apple Pay, but Apple Pay wasn't configured.")
-                    STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
-                    return InternalConfirmResult(paymentSheetResult: .failed(error: error))
-                }
-                return await Checkout.confirmApplePay(
-                    checkoutSession: session,
-                    applePayConfirmationContext: applePayConfirmationContext,
-                    sessionUpdater: self
-                )
-            case .link:
-                return .init(paymentSheetResult: .canceled) // TODO: link
-            }
-        }()
+        guard let expressCheckoutConfirmationContext = confirmationContext(for: paymentMethod) else {
+            let error = CheckoutError.unknown(debugDescription: "CheckoutController.expressCheckoutElementShouldConfirm() could not build a confirmation context for \(paymentMethod).")
+            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+            return .failed(error)
+        }
+        let authenticationContext = AuthenticationContext(
+            presentingViewController: presentingViewController,
+            appearance: expressCheckoutConfirmationContext.configuration.appearance
+        )
+        // TODO: static confirm protections
+        let result = await CheckoutController.confirm(
+            checkoutSession: session,
+            confirmationContext: expressCheckoutConfirmationContext,
+            authenticationContext: authenticationContext,
+            paymentHandler: paymentHandler,
+            applePayConfirmationContext: applePayConfirmationContext,
+            sessionUpdater: self
+        )
         switch result.paymentSheetResult {
         case .completed:
             guard let checkoutSessionResponse = result.checkoutSessionResponse else {
-                let error = CheckoutError.unknown(debugDescription: "Checkout.expressCheckoutElementShouldConfirm() completed without a Checkout Session response.")
+                let error = CheckoutError.unknown(debugDescription: "CheckoutController.expressCheckoutElementShouldConfirm() completed without a Checkout Session response.")
                 STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
                 return .failed(error)
             }
@@ -49,10 +54,10 @@ extension Checkout: ExpressCheckoutElementDelegate {
     }
 }
 
-extension Checkout: CurrencySelectorElementDelegate {}
-extension Checkout: ShippingAddressElementDelegate {}
+extension CheckoutController: CurrencySelectorElementDelegate {}
+extension CheckoutController: ShippingAddressElementDelegate {}
 
-extension Checkout {
+extension CheckoutController {
 
     // MARK: - Currency
 
@@ -84,7 +89,7 @@ extension Checkout {
     /// - Parameters:
     ///   - timeout: Maximum time to wait, in seconds.
     func awaitPendingOperations(
-        timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout
+        timeout: TimeInterval = CheckoutController.defaultPendingOperationsTimeout
     ) async throws {
         let snapshot = pendingOperations
         guard !snapshot.isEmpty else { return }
@@ -111,7 +116,7 @@ extension Checkout {
     /// will return that value to the caller.
     ///
     /// Operations execute in strict FIFO order: each task waits for the previous
-    /// task before running its body. While the queue is non-empty, ``isLoading``
+    /// task before running its body. While the queue is non-empty, ``isUpdating``
     /// is `true`; once the queue drains it returns to `false.`
     /// - Throws: Any error thrown by `body`.
     /// - Returns: The value returned by `body`.
@@ -176,7 +181,7 @@ extension Checkout {
             do {
                 let updatedSessionAPIResponse: PaymentPagesAPIResponse?
                 if let update {
-                    let sessionId = Checkout.extractSessionId(from: self.clientSecret)
+                    let sessionId = CheckoutController.extractSessionId(from: self.clientSecret)
                     updatedSessionAPIResponse = try await self.apiClient.updateCheckoutSession(
                         checkoutSessionId: sessionId,
                         parameters: update.parameters

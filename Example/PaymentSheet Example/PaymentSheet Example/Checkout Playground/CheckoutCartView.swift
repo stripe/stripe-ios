@@ -11,16 +11,17 @@ import SwiftUI
 
 struct CheckoutCartView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var checkout: Checkout?
+    @State private var checkout: CheckoutController?
     @StateObject private var diagnostics = CheckoutSessionDiagnostics()
 
     @State private var isLoading = false
     @State private var errorMessage: String?
-    @State private var eceConfirmResult: Checkout.ConfirmResult?
+    @State private var eceConfirmResult: CheckoutController.ConfirmResult?
     @State private var showsCheckoutDetails = false
 
     let clientSecret: String
     let shippingAddressCollection: Bool
+    let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     var showExpressCheckoutElement: Bool = false
@@ -36,7 +37,7 @@ struct CheckoutCartView: View {
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
-                        showsShippingAddressSection: shippingAddressCollection,
+                        showsShippingAddressSection: shippingAddressCollection || checkout.session.shippingAddress != nil,
                         errorMessage: errorMessage
                     )
                     .overlay(alignment: .bottom) {
@@ -106,7 +107,7 @@ struct CheckoutCartView: View {
                 if let checkout {
                     CheckoutSessionDetailsView(
                         diagnostics: diagnostics,
-                        sessionID: checkout.session.id
+                        checkout: checkout
                     )
                 }
             }
@@ -144,12 +145,13 @@ struct CheckoutCartView: View {
         isLoading = true
         errorMessage = nil
         do {
-            var config = Checkout.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
+            var config = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
             config.apiClient = diagnostics.makeAPIClient(
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
             config.adaptivePricing.allowed = adaptivePricing
-            config.applePayConfiguration = Checkout.ApplePayConfiguration(
+            config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
+            config.applePayConfiguration = CheckoutController.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             config.currencySelectorElement.appearance = currencySelectorAppearance
@@ -158,7 +160,7 @@ struct CheckoutCartView: View {
             }
             config.shippingAddressElement.title = "Shipping Address"
             config.shippingAddressElement.buttonTitle = "Save Address"
-            checkout = try await Checkout(configuration: config)
+            checkout = try await CheckoutController(configuration: config)
         } catch {
             errorMessage = error.localizedDescription
         }

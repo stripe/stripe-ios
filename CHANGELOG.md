@@ -1,11 +1,14 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+### Payments
+* [Added] Added support for the following FPX banks: Agrobank, Bank of China, and MBSB Bank.
 
 ## 26.7.0 2026-08-17
 ### PaymentSheet
 * [Added] StripePaymentSheet now depends on `StripeFinancialConnectionsLite` to support lightweight bank payment flows. If you use StripePaymentSheet with Carthage or by manually embedding the .xcframeworks, [you must also embed StripeFinancialConnectionsLite.xcframework](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2670) in your app. No action is required for CocoaPods or Swift Package Manager users.
+* [Added] Added private preview support for setting up Alipay payment methods for future off-session use with PaymentIntents and SetupIntents.
 * [Changed] Address autocomplete results sourced from internal service.
 * [Added] Added `PaymentSheet.LinkConfiguration.Display.walletButtonHidden`, which keeps Link enabled but hides its button from the payment element UI.
 
@@ -29,7 +32,7 @@ PATCH
 * [Added] Added support for registering wallet addresses on the Tempo network.
 
 ### Payments
-* [Added] Added Klarna confirmation options for passing SDK-generated interoperability and partner confirmation tokens (private preview).
+* [Added] Added Klarna confirmation options for passing SDK-generated interoperability tokens to PaymentIntent and SetupIntent confirmation, and partner confirmation tokens to PaymentIntent confirmation (private preview).
 
 ### PaymentSheet
 * [Added] Added `billingDetailsCollectionConfiguration` to `LinkConfiguration`, allowing `LinkControllerPreview` consumers to configure billing details collection in the Link sheet (private preview).
