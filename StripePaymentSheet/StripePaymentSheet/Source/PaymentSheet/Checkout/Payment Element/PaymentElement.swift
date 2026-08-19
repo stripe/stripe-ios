@@ -75,6 +75,7 @@ public final class PaymentElement {
         let paymentSheetConfiguration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
+            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
@@ -86,6 +87,7 @@ public final class PaymentElement {
         let embeddedConfiguration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
+            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
@@ -140,12 +142,14 @@ extension PaymentElement {
         paymentSheetFlowController.configuration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
+            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
         embeddedPaymentElement.configuration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
             defaults: checkout.configuration.defaults,
+            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
