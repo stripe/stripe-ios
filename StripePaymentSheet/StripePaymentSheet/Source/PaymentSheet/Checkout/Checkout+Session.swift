@@ -100,16 +100,11 @@ extension CheckoutController.Session {
     /// An item included in the order summary.
     @frozen
     public enum OrderSummaryItem: Identifiable, Sendable, Hashable {
-        /// A stable identifier for an order summary item.
-        public enum ID: Sendable, Hashable {
-            case oneTimePrice(String)
-        }
-
         /// The stable identity of this order summary item within its Checkout Session.
-        public var id: ID {
+        public var id: String {
             switch self {
             case let .oneTimePrice(oneTimePrice):
-                return .oneTimePrice(oneTimePrice.key)
+                return oneTimePrice.key
             }
         }
 

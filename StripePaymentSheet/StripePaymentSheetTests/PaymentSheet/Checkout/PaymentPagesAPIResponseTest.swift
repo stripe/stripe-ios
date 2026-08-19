@@ -571,7 +571,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         XCTAssertEqual(session.orderSummaryItems.count, 1)
         let orderSummaryItem = session.orderSummaryItems[0]
-        XCTAssertEqual(orderSummaryItem.id, .oneTimePrice("checkout_item_abc123"))
+        XCTAssertEqual(orderSummaryItem.id, "checkout_item_abc123")
         guard case .oneTimePrice(let oneTimePrice) = orderSummaryItem else {
             return XCTFail("Expected one-time price order summary item")
         }
