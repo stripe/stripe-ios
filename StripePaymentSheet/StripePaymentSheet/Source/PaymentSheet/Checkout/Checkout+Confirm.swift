@@ -89,7 +89,7 @@ extension CheckoutController {
                 integrationShape: .expressCheckout,
                 confirmationChallenge: nil,
                 analyticsHelper: PaymentSheetAnalyticsHelper(
-                    integrationShape: .expressCheckout,
+                    integrationShape: .complete, // ECE never actually logs anything from PaymentSheetAnalyticsHelper
                     configuration: paymentSheetConfiguration
                 )
             )

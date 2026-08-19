@@ -10,7 +10,7 @@
 
 extension STPClientAttributionMetadata {
     static func makeClientAttributionMetadataIfNecessary(analyticsHelper: PaymentSheetAnalyticsHelper, intent: Intent, elementsSession: STPElementsSession) -> STPClientAttributionMetadata? {
-        if analyticsHelper.integrationShape.shouldMakeClientAttributionMetadata {
+        if analyticsHelper.integrationShape.isMPE {
             return makeClientAttributionMetadata(intent: intent, elementsSession: elementsSession)
         }
         return nil

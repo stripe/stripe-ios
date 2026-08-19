@@ -111,8 +111,6 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             case .embedded:
                 XCTAssertEqual("continue", lastEvent.additionalParams[jsonDict: "mpe_config"]?["form_sheet_action"] as? String)
                 XCTAssertEqual(true, lastEvent.additionalParams[jsonDict: "mpe_config"]?["embedded_view_displays_mandate_text"] as? Bool)
-            case .expressCheckout:
-                break
             }
         }
     }
@@ -859,7 +857,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape
     ) -> PaymentElementConfiguration {
         switch integrationShape {
-        case .flowController, .complete, .linkController, .expressCheckout:
+        case .flowController, .complete, .linkController:
             var config = PaymentSheet.Configuration()
             config.applePay = applePay
             config.customer = customer
