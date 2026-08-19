@@ -80,6 +80,7 @@ extension CheckoutController {
         var paymentSheetConfiguration = PaymentSheet.Configuration()
         paymentSheetConfiguration.apiClient = apiClient
         paymentSheetConfiguration.merchantDisplayName = effectiveMerchantDisplayName
+        paymentSheetConfiguration.returnURL = configuration.returnURL
         paymentSheetConfiguration.style = configuration.userInterfaceStyle
         switch paymentMethod {
         case .applePay:
@@ -94,7 +95,20 @@ extension CheckoutController {
                 )
             )
         case .link:
-            return nil // TODO: link
+            if let display = configuration.linkConfiguration?.display {
+                paymentSheetConfiguration.link.display = PaymentSheet.LinkConfiguration.Display(rawValue: display.rawValue) ?? .automatic
+            }
+            let confirmationChallenge = ConfirmationChallenge(elementsSession: session.elementsSession, stripeAttest: apiClient.stripeAttest)
+            return ConfirmationContext(
+                paymentOption: .link(option: .wallet(brand: session.elementsSession.linkBrand ?? .link)),
+                configuration: paymentSheetConfiguration,
+                integrationShape: .expressCheckout,
+                confirmationChallenge: confirmationChallenge,
+                analyticsHelper: PaymentSheetAnalyticsHelper(
+                    integrationShape: .expressCheckout,
+                    configuration: paymentSheetConfiguration
+                )
+            )
         }
     }
 

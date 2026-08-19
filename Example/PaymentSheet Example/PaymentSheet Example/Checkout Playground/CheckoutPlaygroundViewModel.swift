@@ -47,6 +47,11 @@ extension CheckoutPlayground {
         @Published var checkoutEndpointOption: EndpointOption = .hosted
         @Published var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
         @Published var delayPaymentPagesRequests = false
+        @Published var forceNativeLink = false {
+            didSet {
+                LinkDebugOverrides.forceNativeLink = forceNativeLink
+            }
+        }
 
         @Published var isCreating = false
         @Published var errorMessage: String?
