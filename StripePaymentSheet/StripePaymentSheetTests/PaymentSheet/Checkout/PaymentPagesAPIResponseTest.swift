@@ -26,7 +26,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "can decode with full json"
         )
 
-        // Required fields per API spec (non-nullable)
+        // Required by the modeless mobile Checkout decoder, which supports a narrower response
+        // profile than the generic PaymentPage API schema.
         let requiredFields = [
             "session_id",
             "currency",

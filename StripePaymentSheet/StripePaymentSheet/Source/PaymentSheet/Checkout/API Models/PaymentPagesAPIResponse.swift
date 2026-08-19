@@ -10,7 +10,12 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-/// Internal response model for the Payment Pages API endpoints.
+/// Internal response model for the Payment Pages API endpoints used by mobile Checkout.
+///
+/// This decoder supports modeless Checkout responses with Elements aggregation, which is a
+/// narrower contract than the generic PaymentPage OpenAPI schema. Checkout requests aggregation
+/// and treats responses that omit required mobile fields, including `elements_session`, as
+/// unsupported.
 ///
 /// Properties in this model mirror the API payload. Conversion to the public Checkout
 /// representation belongs in `makePublicSession()`.
