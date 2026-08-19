@@ -12,6 +12,7 @@ import UIKit
 class FCLiteSecureAuthFlowViewController: UIViewController {
     private let manifest: LinkAccountSessionManifest
     private let elementsSessionContext: ElementsSessionContext?
+    private let prefillDetails: WebPrefillDetails?
     private let completion: ((FCLiteWebFlowResult) -> Void)
 
     /// Stored to maintain a strong reference and prevent deallocation.
@@ -22,17 +23,20 @@ class FCLiteSecureAuthFlowViewController: UIViewController {
             baseHostedAuthUrl: manifest.hostedAuthURL,
             isInstantDebits: manifest.isInstantDebits,
             hasExistingAccountholderToken: manifest.hasAccountholderToken,
-            elementsSessionContext: elementsSessionContext
+            elementsSessionContext: elementsSessionContext,
+            prefillDetailsOverride: prefillDetails
         )
     }
 
     init(
         manifest: LinkAccountSessionManifest,
         elementsSessionContext: ElementsSessionContext?,
+        prefillDetails: WebPrefillDetails?,
         completion: @escaping ((FCLiteWebFlowResult) -> Void)
     ) {
         self.manifest = manifest
         self.elementsSessionContext = elementsSessionContext
+        self.prefillDetails = prefillDetails
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
     }
