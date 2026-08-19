@@ -811,7 +811,11 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testUnifiedModeSessionMapsAdjustableQuantity() throws {
         let enabledJSON = modifyingOneTimePriceItem {
-            $0["adjustable_quantity"] = ["enabled": true]
+            $0["adjustable_quantity"] = [
+                "enabled": true,
+                "minimum": 2,
+                "maximum": 10,
+            ]
         }
         let enabledResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: enabledJSON)
         guard case .oneTimePrice(let enabledOneTimePrice) = enabledResponse.makePublicSession().orderSummaryItems.first else {
@@ -819,8 +823,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         }
         let enabledQuantity = try XCTUnwrap(enabledOneTimePrice.items.first?.adjustableQuantity)
         XCTAssertTrue(enabledQuantity.enabled)
-        XCTAssertEqual(enabledQuantity.minimum, 0)
-        XCTAssertEqual(enabledQuantity.maximum, 99)
+        XCTAssertEqual(enabledQuantity.minimum, 2)
+        XCTAssertEqual(enabledQuantity.maximum, 10)
 
         let disabledJSON = modifyingOneTimePriceItem {
             $0["adjustable_quantity"] = ["enabled": false]
@@ -830,6 +834,44 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             return XCTFail("Expected one-time Price order summary item")
         }
         XCTAssertNil(disabledOneTimePrice.items.first?.adjustableQuantity)
+    }
+
+    func testUnifiedModeSessionRejectsEnabledAdjustableQuantityWithoutBounds() {
+        for field in ["minimum", "maximum"] {
+            var adjustableQuantity: [String: Any] = [
+                "enabled": true,
+                "minimum": 0,
+                "maximum": 99,
+            ]
+            adjustableQuantity.removeValue(forKey: field)
+            let json = modifyingOneTimePriceItem {
+                $0["adjustable_quantity"] = adjustableQuantity
+            }
+
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected missing \(field) to fail decoding"
+            )
+        }
+    }
+
+    func testUnifiedModeSessionRejectsEnabledAdjustableQuantityWithNullBounds() {
+        for field in ["minimum", "maximum"] {
+            var adjustableQuantity: [String: Any] = [
+                "enabled": true,
+                "minimum": 0,
+                "maximum": 99,
+            ]
+            adjustableQuantity[field] = NSNull()
+            let json = modifyingOneTimePriceItem {
+                $0["adjustable_quantity"] = adjustableQuantity
+            }
+
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected null \(field) to fail decoding"
+            )
+        }
     }
 
     func testUnifiedModeSessionAllowsEmptyNestedItems() throws {
