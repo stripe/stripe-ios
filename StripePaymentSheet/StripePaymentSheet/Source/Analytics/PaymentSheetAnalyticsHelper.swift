@@ -238,7 +238,6 @@ final class PaymentSheetAnalyticsHelper {
         let (event, selectedLPM): (STPAnalyticEvent?, String?) = {
             switch integrationShape {
             case .expressCheckout:
-                // TODO: Implement analytics for ExpressCheckoutElement.
                 return (nil, nil)
             case .flowController:
                 switch option {
@@ -301,7 +300,6 @@ final class PaymentSheetAnalyticsHelper {
         let event: STPAnalyticEvent? = {
             switch integrationShape {
             case .expressCheckout:
-                // TODO: Implement analytics for ExpressCheckoutElement.
                 return nil
             case .flowController:
                 return .mcOptionRemoveCustomSavedPM

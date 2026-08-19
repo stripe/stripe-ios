@@ -29,6 +29,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             presentingViewController: presentingViewController,
             appearance: expressCheckoutConfirmationContext.configuration.appearance
         )
+        // TODO: static confirm protections
         let result = await CheckoutController.confirm(
             checkoutSession: session,
             confirmationContext: expressCheckoutConfirmationContext,
