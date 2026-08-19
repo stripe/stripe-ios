@@ -32,6 +32,7 @@ pipelines:
         abort_on_fail: true
       update-snapshots-and-lokalise: {}
       framework-tests: {}
+      lpm-confirm-flow-tests: {}
       framework-tests-and-builds-xcode-26-1: {}
       install-and-integration-tests: {}
       size-report: {}
@@ -331,6 +332,7 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripePaymentSheet
+        - xcodebuild_options: -skip-testing:StripePaymentSheetTests/PaymentSheetLPMConfirmFlowTests
         is_always_run: true
     - xcode-test@6:
         inputs:
@@ -409,6 +411,25 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: StripeCryptoOnramp
         is_always_run: true
+    - deploy-to-bitrise-io@2: {}
+    - save-spm-cache@1: {}
+    before_run:
+    - install-runtime-16
+    - prep_all
+    after_run: []
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
+  lpm-confirm-flow-tests:
+    steps:
+    - xcode-test@6:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripePaymentSheet
+        - xcodebuild_options: -only-testing:StripePaymentSheetTests/PaymentSheetLPMConfirmFlowTests
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
     before_run:
