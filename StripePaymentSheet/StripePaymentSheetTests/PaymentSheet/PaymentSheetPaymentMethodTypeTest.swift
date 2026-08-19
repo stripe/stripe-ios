@@ -129,6 +129,64 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
     }
 
+    // MARK: - Alipay
+
+    func testSupportsAddingAlipayWithSetupFutureUsage() {
+        // Given
+        let configuration = makeConfiguration(hasReturnURL: true)
+        let intent = Intent._testPaymentIntent(
+            paymentMethodTypes: [.alipay],
+            setupFutureUsage: .offSession
+        )
+
+        // When
+        let result = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .alipay,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: ._testValue(intent: intent),
+            supportedPaymentMethods: [.alipay]
+        )
+
+        // Then
+        XCTAssertEqual(result, .supported)
+    }
+
+    func testSupportsAddingAlipaySetupIntent() {
+        // Given
+        let configuration = makeConfiguration(hasReturnURL: true)
+        let intent = Intent._testSetupIntent(paymentMethodTypes: [.alipay])
+
+        // When
+        let result = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .alipay,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: ._testValue(intent: intent),
+            supportedPaymentMethods: [.alipay]
+        )
+
+        // Then
+        XCTAssertEqual(result, .supported)
+    }
+
+    func testSupportsAddingAlipaySetupRequiresReturnURL() {
+        // Given
+        let intent = Intent._testSetupIntent(paymentMethodTypes: [.alipay])
+
+        // When
+        let result = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .alipay,
+            configuration: makeConfiguration(),
+            intent: intent,
+            elementsSession: ._testValue(intent: intent),
+            supportedPaymentMethods: [.alipay]
+        )
+
+        // Then
+        XCTAssertEqual(result, .missingRequirements([.returnURL]))
+    }
+
     /// Returns true, iDEAL in `supportedPaymentMethods` and URL and delayed payment method support requirements for setting up are met
     func testSupportsAdding_inSupportedList_urlConfiguredRequiredDelayedRequired() {
         var configuration = makeConfiguration(hasReturnURL: true)
