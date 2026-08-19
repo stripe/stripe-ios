@@ -16,13 +16,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           # The pull_request ref is a merge commit. We only need it and its
           # base parent to determine which strings the PR adds.
           fetch-depth: 2
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
           ruby-version: 3.0
       - name: Install dependencies
@@ -49,12 +49,12 @@ jobs:
           else
             echo "Missing translations detected, continue workflow..."
           fi
-      - uses: davidme-stripe/find-comment@v3.0.0
+      - uses: davidme-stripe/find-comment@d5fe37641ad8451bdd80312415672ba26c86575e # v3.0.0
         id: find_comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Missing Translations
-      - uses: davidme-stripe/create-or-update-comment@v4
+      - uses: davidme-stripe/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
         if: steps.missing.outputs.translations
         with:
           body: |

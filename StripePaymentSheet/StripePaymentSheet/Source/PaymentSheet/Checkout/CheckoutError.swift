@@ -9,9 +9,7 @@
 import Foundation
 
 /// An error returned by ``Checkout``.
-@_spi(STP)
-@_spi(ReactNativeSDK)
-public enum CheckoutError: Error, LocalizedError, Sendable {
+enum CheckoutError: Error, LocalizedError, Sendable {
     /// The client secret provided to ``Checkout`` is empty.
     case invalidClientSecret
 
@@ -32,7 +30,7 @@ public enum CheckoutError: Error, LocalizedError, Sendable {
 
     // MARK: - LocalizedError
 
-    public var errorDescription: String? {
+    var errorDescription: String? {
         switch self {
         case .invalidClientSecret:
             return "Checkout was initialized with an empty client secret."
