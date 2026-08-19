@@ -81,7 +81,7 @@ public final class CheckoutController: ObservableObject {
     private var currencySelectorElement: CurrencySelectorElement?
 
     /// The ShippingAddressElement for this CheckoutController instance.
-    private var shippingAddressElement: ShippingAddressElement!
+    private let shippingAddressElement: ShippingAddressElement
 
     let clientSecret: String
     let apiClient: STPAPIClient
@@ -189,16 +189,6 @@ public final class CheckoutController: ObservableObject {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
     }
-
-    #if DEBUG
-    init(testSession: Session, configuration: Configuration) {
-        self.clientSecret = configuration.clientSecret
-        self.configuration = configuration
-        self.apiClient = configuration.apiClient
-        self.session = testSession
-        self.shippingAddressElement = nil
-    }
-    #endif
 
     private static func makeShippingAddressElement(
         configuration: Configuration,
