@@ -50,4 +50,45 @@ class FinancialConnectionsLiteTests: XCTestCase {
         XCTAssertEqual(fcLite.prefillDetails?.phone, "5551234567")
         XCTAssertEqual(fcLite.prefillDetails?.countryCode, "US")
     }
+
+    func testPresentEmbeddedInReplacesStackInPlace() {
+        // Given a navigation controller that's never been presented
+        let navigationController = UINavigationController(rootViewController: UIViewController())
+        let fcLite = FinancialConnectionsLite(clientSecret: "las_123", returnUrl: nil)
+
+        // When embedding the flow into it
+        fcLite.present(embeddedIn: navigationController) { _ in }
+
+        // Then the stack is replaced in place with FC Lite's own container, and no new modal is presented
+        XCTAssertEqual(navigationController.viewControllers.count, 1)
+        XCTAssertTrue(navigationController.viewControllers.first is FCLiteContainerViewController)
+        XCTAssertTrue(navigationController.isNavigationBarHidden)
+        XCTAssertNil(navigationController.presentedViewController)
+    }
+
+    func testPresentEmbeddedInCallsCompletionWithoutDismissing() {
+        // Given a navigation controller embedded with FC Lite
+        let navigationController = UINavigationController(rootViewController: UIViewController())
+        let fcLite = FinancialConnectionsLite(clientSecret: "las_123", returnUrl: nil)
+        var receivedResult: FinancialConnectionsSDKResult?
+        fcLite.present(embeddedIn: navigationController) { result in
+            receivedResult = result
+        }
+
+        // When the flow completes
+        let completionExpectation = expectation(description: "completion fires")
+        fcLite.handleFlowCompletion(result: .cancelled)
+        DispatchQueue.main.async {
+            completionExpectation.fulfill()
+        }
+        wait(for: [completionExpectation], timeout: 1)
+
+        // Then the completion handler fires directly (no presented view controller to dismiss)
+        switch receivedResult {
+        case .cancelled:
+            break
+        default:
+            XCTFail("Expected .cancelled, got \(String(describing: receivedResult))")
+        }
+    }
 }

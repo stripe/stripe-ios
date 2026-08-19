@@ -231,8 +231,7 @@ extension HostController {
         financialConnectionsLite.prefillDetails = prefillDetails
         self.financialConnectionsLite = financialConnectionsLite
 
-        let presentingViewController = navigationController.topViewController ?? navigationController
-        financialConnectionsLite.present(from: presentingViewController) { [weak self] result in
+        financialConnectionsLite.present(embeddedIn: navigationController) { [weak self] result in
             guard let self else { return }
             self.handleFCLiteResult(result, manifest: manifest)
         }
