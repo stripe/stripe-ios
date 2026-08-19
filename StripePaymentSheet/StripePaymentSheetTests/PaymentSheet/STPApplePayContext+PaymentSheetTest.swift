@@ -442,8 +442,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     // MARK: - CheckoutSession Tests
 
-    func testCreatePaymentRequest_CheckoutSession_PaymentMode() {
-        let intent = Intent._testCheckoutSession(amount: 2345, currency: "USD")
+    func testCreatePaymentRequest_CheckoutSession_PaymentMode() async throws {
+        let intent = try await Intent._testCheckoutSession(amount: 2345, currency: "USD")
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
         XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
         XCTAssertEqual(sut.paymentSummaryItems[0].type, .final)
@@ -457,8 +457,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 #endif
     }
 
-    func testCreatePaymentRequest_CheckoutSession_SetupMode() {
-        let intent = Intent._testCheckoutSession(hasPaymentDue: false, amount: nil, currency: "USD")
+    func testCreatePaymentRequest_CheckoutSession_SetupMode() async throws {
+        let intent = try await Intent._testCheckoutSession(hasPaymentDue: false, amount: nil, currency: "USD")
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
         XCTAssertEqual(sut.paymentSummaryItems[0].amount, .zero)
         XCTAssertEqual(sut.paymentSummaryItems[0].type, .pending)
@@ -472,8 +472,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 #endif
     }
 
-    func testCreatePaymentRequest_CheckoutSession_SetupMode_WithZeroAmount() {
-        let intent = Intent._testCheckoutSession(hasPaymentDue: false, amount: 0, currency: "USD")
+    func testCreatePaymentRequest_CheckoutSession_SetupMode_WithZeroAmount() async throws {
+        let intent = try await Intent._testCheckoutSession(hasPaymentDue: false, amount: 0, currency: "USD")
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
         XCTAssertEqual(sut.paymentSummaryItems[0].amount, .zero)
         XCTAssertEqual(sut.paymentSummaryItems[0].type, .pending)
@@ -530,11 +530,11 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         return config
     }
 
-    func testCreatePaymentRequest_CheckoutSession_SingleOrderSummaryItem() {
+    func testCreatePaymentRequest_CheckoutSession_SingleOrderSummaryItem() async throws {
         let oneTimePriceItems: [Intent.CheckoutOneTimePriceItemFixture] = [
             .init(key: "li_1", displayName: "Widget", quantity: 1, unitAmount: 2345),
         ]
-        let intent = Intent._testCheckoutSession(
+        let intent = try await Intent._testCheckoutSession(
             amount: 2345,
             currency: "USD",
             oneTimePriceItems: oneTimePriceItems
@@ -550,12 +550,12 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.paymentSummaryItems[1].type, .final)
     }
 
-    func testCreatePaymentRequest_CheckoutSession_MultipleOrderSummaryItemsWithQuantity() {
+    func testCreatePaymentRequest_CheckoutSession_MultipleOrderSummaryItemsWithQuantity() async throws {
         let oneTimePriceItems: [Intent.CheckoutOneTimePriceItemFixture] = [
             .init(key: "li_1", displayName: "Widget", quantity: 3, unitAmount: 1000),
             .init(key: "li_2", displayName: "Gadget", quantity: 1, unitAmount: 500),
         ]
-        let intent = Intent._testCheckoutSession(
+        let intent = try await Intent._testCheckoutSession(
             amount: 3500,
             currency: "USD",
             oneTimePriceItems: oneTimePriceItems
@@ -572,13 +572,13 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.paymentSummaryItems[2].type, .final)
     }
 
-    func testCreatePaymentRequest_CheckoutSession_WithTaxBreakdownRow() {
+    func testCreatePaymentRequest_CheckoutSession_WithTaxBreakdownRow() async throws {
         let oneTimePriceItems: [Intent.CheckoutOneTimePriceItemFixture] = [
             .init(key: "li_1", displayName: "Widget", quantity: 1, unitAmount: 2000),
             .init(key: "li_2", displayName: "Gadget", quantity: 2, unitAmount: 500),
         ]
         // subtotal = 3000, tax = 200 -> total = 3200
-        let intent = Intent._testCheckoutSession(
+        let intent = try await Intent._testCheckoutSession(
             amount: 3200,
             currency: "USD",
             oneTimePriceItems: oneTimePriceItems,
@@ -601,11 +601,11 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.paymentSummaryItems[4].type, .final)
     }
 
-    func testCreatePaymentRequest_CheckoutSession_OmitsBreakdownWhenZero() {
+    func testCreatePaymentRequest_CheckoutSession_OmitsBreakdownWhenZero() async throws {
         let oneTimePriceItems: [Intent.CheckoutOneTimePriceItemFixture] = [
             .init(key: "li_1", displayName: "Widget", quantity: 1, unitAmount: 2345),
         ]
-        let intent = Intent._testCheckoutSession(
+        let intent = try await Intent._testCheckoutSession(
             amount: 2345,
             currency: "USD",
             oneTimePriceItems: oneTimePriceItems,
@@ -621,8 +621,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     // MARK: - CheckoutSession Billing Contact Tests
 
-    func testCreatePaymentRequest_CheckoutSession_PopulatesBillingContactFromDefaultBillingDetails() {
-        let intent = Intent._testCheckoutSession(
+    func testCreatePaymentRequest_CheckoutSession_PopulatesBillingContactFromDefaultBillingDetails() async throws {
+        let intent = try await Intent._testCheckoutSession(
             amount: 2345,
             currency: "USD"
         )
@@ -657,10 +657,10 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(postalAddress?.postalCode, "94103")
     }
 
-    func testCreatePaymentRequest_CheckoutSession_NoBillingContactForCountryOnlyDefaultBillingDetails() {
+    func testCreatePaymentRequest_CheckoutSession_NoBillingContactForCountryOnlyDefaultBillingDetails() async throws {
         // Billing details without a street shouldn't be pre-populated on the Apple Pay sheet,
         // otherwise Apple Pay shows "Update Billing Address" in red.
-        let intent = Intent._testCheckoutSession(
+        let intent = try await Intent._testCheckoutSession(
             amount: 2345,
             currency: "USD"
         )
@@ -672,8 +672,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertNil(sut.billingContact)
     }
 
-    func testCreatePaymentRequest_CheckoutSession_PopulatesBillingContactWithLine1OnlyDefaultBillingDetails() {
-        let intent = Intent._testCheckoutSession(
+    func testCreatePaymentRequest_CheckoutSession_PopulatesBillingContactWithLine1OnlyDefaultBillingDetails() async throws {
+        let intent = try await Intent._testCheckoutSession(
             amount: 2345,
             currency: "USD"
         )
@@ -689,8 +689,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(billingContact?.postalAddress?.street, "123 Main St")
     }
 
-    func testCreatePaymentRequest_CheckoutSession_NoBillingContact_WhenNoBillingAddress() {
-        let intent = Intent._testCheckoutSession(amount: 2345, currency: "USD")
+    func testCreatePaymentRequest_CheckoutSession_NoBillingContact_WhenNoBillingAddress() async throws {
+        let intent = try await Intent._testCheckoutSession(amount: 2345, currency: "USD")
         guard case .checkout = intent else {
             XCTFail("Expected checkout intent")
             return
@@ -710,8 +710,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     // MARK: - Checkout session billing details
 
-    func testCreate_CheckoutSessionForwardsEmailToBillingDetails() {
-        let intent = Intent._testCheckoutSession(amount: 2345, currency: "USD", email: "guest@example.com")
+    func testCreate_CheckoutSessionForwardsEmailToBillingDetails() async throws {
+        let intent = try await Intent._testCheckoutSession(amount: 2345, currency: "USD", email: "guest@example.com")
         let applePayContext = makeApplePayContext(for: intent)
         XCTAssertEqual(applePayContext.fallbackBillingDetails?.email, "guest@example.com")
     }
@@ -770,8 +770,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertNil(applePayContext.fallbackBillingDetails)
     }
 
-    func testCreate_CheckoutSessionWithNoEmail_fallbackBillingDetailsNil() {
-        let intent = Intent._testCheckoutSession(amount: 2345, currency: "USD")
+    func testCreate_CheckoutSessionWithNoEmail_fallbackBillingDetailsNil() async throws {
+        let intent = try await Intent._testCheckoutSession(amount: 2345, currency: "USD")
         let applePayContext = makeApplePayContext(for: intent)
         XCTAssertNil(applePayContext.fallbackBillingDetails)
     }
@@ -782,7 +782,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertNil(applePayContext.fallbackBillingDetails)
     }
 
-    func testCreatePaymentRequest_CheckoutSession_MerchantPaymentSummaryItemsTakePrecedence() {
+    func testCreatePaymentRequest_CheckoutSession_MerchantPaymentSummaryItemsTakePrecedence() async throws {
         let merchantItems: [PKPaymentSummaryItem] = [
             PKPaymentSummaryItem(label: "Custom", amount: NSDecimalNumber(string: "9.99"), type: .final),
         ]
@@ -798,7 +798,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         let oneTimePriceItems: [Intent.CheckoutOneTimePriceItemFixture] = [
             .init(key: "li_1", displayName: "Widget", quantity: 1, unitAmount: 2345),
         ]
-        let intent = Intent._testCheckoutSession(
+        let intent = try await Intent._testCheckoutSession(
             amount: 2345,
             currency: "USD",
             oneTimePriceItems: oneTimePriceItems
@@ -810,12 +810,12 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.paymentSummaryItems[0].amount, NSDecimalNumber(string: "9.99"))
     }
 
-    func testCreatePaymentRequest_automaticTaxFromBillingRequestsPostalAddress() {
+    func testCreatePaymentRequest_automaticTaxFromBillingRequestsPostalAddress() async throws {
         var config = configuration
         config.billingDetailsCollectionConfiguration.address = .automatic
 
         let request = STPApplePayContext.createPaymentRequest(
-            intent: ._testCheckoutSession(
+            intent: try await ._testCheckoutSession(
                 automaticTaxEnabled: true,
                 automaticTaxAddressSource: "session.billing"
             ),

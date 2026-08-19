@@ -21,8 +21,8 @@ final class SavedPaymentMethodBillingSyncTests: XCTestCase {
         super.tearDown()
     }
 
-    func testSelectionWaitsForBillingTaxUpdate() async {
-        let (sut, updater) = makeController(suspendUpdate: true)
+    func testSelectionWaitsForBillingTaxUpdate() async throws {
+        let (sut, updater) = try await makeController(suspendUpdate: true)
         let delegate = MockVerticalSavedPaymentMethodsDelegate()
         sut.delegate = delegate
         sut.loadViewIfNeeded()
@@ -38,9 +38,9 @@ final class SavedPaymentMethodBillingSyncTests: XCTestCase {
         XCTAssertEqual(delegate.selectedPaymentMethod?.stripeId, "pm_second")
     }
 
-    func testFailureRestoresSelectionAndShowsError() async {
+    func testFailureRestoresSelectionAndShowsError() async throws {
         let error = CheckoutError.apiError(message: "Tax update failed")
-        let (sut, updater) = makeController(error: error)
+        let (sut, updater) = try await makeController(error: error)
         sut.loadViewIfNeeded()
         let rows = paymentMethodRows(in: sut)
 
@@ -83,8 +83,8 @@ private extension SavedPaymentMethodBillingSyncTests {
     func makeController(
         error: Error? = nil,
         suspendUpdate: Bool = false
-    ) -> (VerticalSavedPaymentMethodsViewController, MockCheckoutSessionBillingAddressUpdater) {
-        let intent = Intent._testCheckoutSession(
+    ) async throws -> (VerticalSavedPaymentMethodsViewController, MockCheckoutSessionBillingAddressUpdater) {
+        let intent = try await Intent._testCheckoutSession(
             automaticTaxEnabled: true,
             automaticTaxAddressSource: "session.billing"
         )

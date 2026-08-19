@@ -318,7 +318,7 @@ extension Intent {
         automaticTaxEnabled: Bool? = nil,
         automaticTaxAddressSource: String? = nil,
         discountAmount: Int = 0
-    ) -> Intent {
+    ) async throws -> Intent {
         var json = CheckoutTestHelpers.makeSessionJSON([
             "status": "open",
             "payment_status": hasPaymentDue ? "unpaid" : "no_payment_required",
@@ -407,18 +407,13 @@ extension Intent {
             json["recurring_details"] = recurringDetails
         }
         let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
-        return _testCheckoutSession(apiResponse: checkoutSession)
+        return try await _testCheckoutSession(apiResponse: checkoutSession)
     }
 
     @MainActor
-    static func _testCheckoutSession(apiResponse: PaymentPagesAPIResponse) -> Intent {
-        let configuration = CheckoutController.Configuration(
-            clientSecret: apiResponse.clientSecret ?? "cs_test_123_secret_abc",
-            returnURL: "stripe-ios-test://checkout-return"
-        )
-        let checkout = CheckoutController(
-            testSession: apiResponse.makePublicSession(),
-            configuration: configuration
+    static func _testCheckoutSession(apiResponse: PaymentPagesAPIResponse) async throws -> Intent {
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: apiResponse)
         )
         CheckoutIntentTestStore.checkouts.append(checkout)
         return .checkout(checkout.intentContext)
