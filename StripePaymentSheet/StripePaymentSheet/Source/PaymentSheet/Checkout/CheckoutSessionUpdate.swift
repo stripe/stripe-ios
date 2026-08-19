@@ -9,7 +9,7 @@
 import Foundation
 
 @_spi(STP)
-extension Checkout {
+extension CheckoutController {
     enum SessionUpdate {
         case setPromotionCode(String)
         case setTaxRegion(Address)

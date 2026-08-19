@@ -10,7 +10,7 @@
 import SwiftUI
 
 struct CheckoutCartContentView: View {
-    @ObservedObject var checkout: Checkout
+    @ObservedObject var checkout: CheckoutController
     var showsShippingAddressSection: Bool
     var errorMessage: String?
     @State private var showsTaxDetails = false
@@ -118,7 +118,7 @@ struct CheckoutCartContentView: View {
     // MARK: - Address Helpers
 
     @ViewBuilder
-    private func addressCard(name: String?, address: Checkout.Address, onEdit: @escaping () -> Void) -> some View {
+    private func addressCard(name: String?, address: CheckoutController.Address, onEdit: @escaping () -> Void) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: "mappin.circle.fill")
                 .foregroundColor(.blue)
@@ -289,7 +289,7 @@ struct CheckoutCartContentView: View {
         .accessibilityLabel("Show tax details")
     }
 
-    private func taxAddressPrompt(for status: Checkout.Session.Tax.Status?) -> String? {
+    private func taxAddressPrompt(for status: CheckoutController.Session.Tax.Status?) -> String? {
         switch status {
         case .requiresShippingAddress:
             return "Enter shipping address to calculate"
@@ -310,7 +310,7 @@ struct CheckoutCartContentView: View {
 
 private struct CheckoutTaxDetailsView: View {
     @Environment(\.dismiss) private var dismiss
-    let taxAmounts: [Checkout.Session.TaxAmount]
+    let taxAmounts: [CheckoutController.Session.TaxAmount]
 
     @ViewBuilder
     var body: some View {
@@ -347,7 +347,7 @@ private struct CheckoutTaxDetailsView: View {
 
 struct CheckoutCartSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject var checkout: Checkout
+    @ObservedObject var checkout: CheckoutController
 
     var body: some View {
         NavigationView {

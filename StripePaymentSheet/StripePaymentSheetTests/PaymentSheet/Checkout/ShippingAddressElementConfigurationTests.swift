@@ -20,14 +20,14 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         sessionJSON["elements_session"] = elementsSessionJSON
         let apiResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
 
-        var configuration = Checkout.Configuration(
+        var configuration = CheckoutController.Configuration(
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
         configuration.shippingAddressElement.title = "Delivery address"
         configuration.shippingAddressElement.buttonTitle = "Save delivery address"
         configuration.shippingAddressElement.appearance.colors.primary = .purple
-        var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
+        var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Jenny Rosen"
         shippingDetails.address = .init(
             country: "US",
@@ -43,7 +43,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         )
 
         // When
-        let checkout = try await Checkout(configuration: configuration)
+        let checkout = try await CheckoutController(configuration: configuration)
         let shippingAddressElement = checkout.getShippingAddressElement()
         let addressConfiguration = shippingAddressElement.addressViewController.configuration
 
@@ -63,7 +63,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
     func testMakeAddressViewControllerConfiguration() {
         // Given
         let apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        let shippingAddress = Checkout.Session.ShippingAddress(
+        let shippingAddress = CheckoutController.Session.ShippingAddress(
             name: "Jenny Rosen",
             address: .init(
                 country: "US",
@@ -103,7 +103,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
 
     func testMakeAddressViewControllerConfigurationIgnoresDisallowedShippingAddress() {
         // Given
-        let shippingAddress = Checkout.Session.ShippingAddress(
+        let shippingAddress = CheckoutController.Session.ShippingAddress(
             name: "Jenny Rosen",
             address: .init(country: "CA", line1: "123 Front St.")
         )
