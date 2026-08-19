@@ -35,7 +35,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "livemode",
             "status",
             "payment_status",
-            "payment_method_types",
             "elements_session",
         ]
 
@@ -55,6 +54,21 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             try PaymentPagesAPIResponse.decode(fromAPIResponse: emptyCurrencyJson),
             "should fail to decode with an empty currency"
         )
+    }
+
+    func testDecodedObjectFromAPIResponseDoesNotRequireUnusedFields() throws {
+        var json = CheckoutTestHelpers.makeSessionJSON()
+        json.removeValue(forKey: "payment_method_types")
+        var checkoutItems = json["checkout_items"] as! [[String: Any]]
+        var oneTimePrice = checkoutItems[0]["one_time_price"] as! [String: Any]
+        var items = oneTimePrice["items"] as! [[String: Any]]
+        items[0].removeValue(forKey: "subtotal")
+        items[0].removeValue(forKey: "total")
+        oneTimePrice["items"] = items
+        checkoutItems[0]["one_time_price"] = oneTimePrice
+        json["checkout_items"] = checkoutItems
+
+        XCTAssertNoThrow(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
     func testDecodedObjectFromAPIResponseMapsSessionStatus() throws {
@@ -164,6 +178,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(apiResponse.status, .open)
         XCTAssertEqual(apiResponse.paymentStatus, .unpaid)
         XCTAssertEqual(apiResponse.checkoutItems.first?.key, "ci_1abc")
+        XCTAssertEqual(apiResponse.checkoutItems.first?.oneTimePrice.items.first?.innerItemKey, "cii_1abc")
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.activePresentmentCurrency, "eur")
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.integrationAmount, 12000)
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.integrationCurrency, "usd")
@@ -173,7 +188,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions.first?.presentmentExchangeRate, "0.90325")
 
         XCTAssertEqual(session.id, "cs_test_a1b2c3d4e5f6g7h8i9j0")
-        XCTAssertEqual(apiResponse.clientSecret, "cs_test_a1b2c3d4e5f6g7h8i9j0_secret_xyz123abc456")
         XCTAssertEqual(session.totals.total.minorUnitsAmount, 2149)
         XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 2000)
         XCTAssertEqual(session.currency, "usd")
@@ -271,7 +285,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.totals.total.minorUnitsAmount, 1000)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertNil(session.presentmentDetails)
-        XCTAssertNil(apiResponse.clientSecret)
         XCTAssertNil(apiResponse.paymentIntentId)
         XCTAssertNil(apiResponse.setupIntentId)
         XCTAssertNil(session.customer)
@@ -576,7 +589,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(oneTimePrice.key, "checkout_item_abc123")
         XCTAssertNil(oneTimePrice.description)
         XCTAssertEqual(oneTimePrice.items.count, 1)
-        XCTAssertEqual(oneTimePrice.items[0].key, "price_test123")
+        XCTAssertEqual(oneTimePrice.items[0].key, "checkout_item_inner_abc123")
         XCTAssertEqual(oneTimePrice.items[0].displayName, "Classic T-Shirt")
         XCTAssertEqual(oneTimePrice.items[0].images, ["https://example.com/shirt.png"])
         XCTAssertEqual(oneTimePrice.items[0].quantity, 2)
@@ -697,8 +710,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "inner_item_key",
             "price",
             "quantity",
-            "subtotal",
-            "total",
             "tax_amounts",
             "tax_inclusive",
             "tax_exclusive",

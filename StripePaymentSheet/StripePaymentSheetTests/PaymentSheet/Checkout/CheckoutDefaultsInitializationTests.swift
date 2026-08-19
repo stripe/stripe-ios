@@ -235,7 +235,6 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
     ) -> [AnyHashable: Any] {
         var json = CheckoutTestHelpers.openSessionJSON
         json["session_id"] = sessionId
-        json["client_secret"] = clientSecret
         json["tax_context"] = [
             "automatic_tax_enabled": true,
             "automatic_tax_address_source": "session.\(automaticTaxAddressSource)",
