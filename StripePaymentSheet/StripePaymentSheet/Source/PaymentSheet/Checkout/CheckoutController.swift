@@ -13,27 +13,29 @@ import Foundation
 @_spi(STP) import StripePayments
 import UIKit
 
+// Wraps the Checkout Controller in a weak reference so that it can be passed through MPE code without a retain cycle
 @MainActor
 final class CheckoutIntentContext {
 
-    weak var checkout: Checkout?
+    weak var checkout: CheckoutController?
 
-    init(checkout: Checkout) {
+    init(checkout: CheckoutController) {
         self.checkout = checkout
     }
 
-    var session: Checkout.Session? {
+    var session: CheckoutController.Session? {
         guard let checkout else {
-            assertionFailure("Checkout must outlive the Payment Element created from it.")
+            assertionFailure("CheckoutController should never go out of memory during the lifecycle of MPE")
             return nil
         }
         return checkout.session
     }
 
-    func requireCheckout() throws -> Checkout {
+    func requireCheckout() throws -> CheckoutController {
         guard let checkout else {
+            assertionFailure("CheckoutController should never go out of memory during the lifecycle of MPE")
             throw PaymentSheetError.integrationError(
-                nonPIIDebugDescription: "Checkout must outlive the Payment Element created from it."
+                nonPIIDebugDescription: "CheckoutController must outlive the Payment Element created from it."
             )
         }
         return checkout
