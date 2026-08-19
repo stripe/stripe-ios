@@ -69,7 +69,7 @@ final class PaymentSheetAnalyticsHelper {
     }
 
     func logInitialized() {
-        let event: STPAnalyticEvent? = {
+        let event: STPAnalyticEvent = {
             switch integrationShape {
             case .flowController:
                 switch (configuration.customer != nil, configuration.applePay != nil) {
@@ -97,7 +97,6 @@ final class PaymentSheetAnalyticsHelper {
                 return .mcInitEmbedded
             }
         }()
-        guard let event else { return }
         log(event: event)
     }
 
@@ -289,7 +288,7 @@ final class PaymentSheetAnalyticsHelper {
     }
 
     func logSavedPaymentMethodRemoved(paymentMethod: STPPaymentMethod) {
-        let event: STPAnalyticEvent? = {
+        let event: STPAnalyticEvent = {
             switch integrationShape {
             case .flowController:
                 return .mcOptionRemoveCustomSavedPM
@@ -299,7 +298,6 @@ final class PaymentSheetAnalyticsHelper {
                 return .mcOptionRemoveEmbeddedSavedPM
             }
         }()
-        guard let event else { return }
         log(event: event, selectedLPM: paymentMethod.type.identifier)
     }
 
@@ -389,7 +387,7 @@ final class PaymentSheetAnalyticsHelper {
             }
         }
 
-        let event: STPAnalyticEvent? = {
+        let event: STPAnalyticEvent = {
             switch integrationShape {
             case .flowController:
                 switch paymentOption {
@@ -417,7 +415,6 @@ final class PaymentSheetAnalyticsHelper {
                 return success ? .mcPaymentEmbeddedSuccess : .mcPaymentEmbeddedFailure
             }
         }()
-        guard let event else { return }
         var params: [String: Any] = [:]
         if case .saved(let paymentMethod, _) = paymentOption {
             params["is_saved_payment_method"] = true
