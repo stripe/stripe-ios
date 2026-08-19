@@ -12,8 +12,7 @@ import UIKit
 
 extension CheckoutController: ExpressCheckoutElementDelegate {
     func expressCheckoutElementShouldConfirm(
-        _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
-        presentingViewController: UIViewController
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod
     ) async -> ConfirmResult {
         let flow: CheckoutConfirmationFlow?
         switch paymentMethod {
