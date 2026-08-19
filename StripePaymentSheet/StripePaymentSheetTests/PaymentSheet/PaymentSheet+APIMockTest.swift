@@ -802,19 +802,53 @@ private extension PaymentSheetAPIMockTest {
         configuration: PaymentElementConfiguration,
         paymentOption: PaymentOption
     ) async -> PaymentSheetResult {
-        let confirmationContext = CheckoutController.ConfirmationContext(
-            paymentOption: paymentOption,
-            configuration: configuration,
-            integrationShape: .embedded,
-            confirmationChallenge: nil,
-            analyticsHelper: ._testValue()
-        )
-        return await CheckoutController.confirm(
-            checkoutSession: checkout.session,
-            confirmationContext: confirmationContext,
-            authenticationContext: self,
-            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
-        ).paymentSheetResult
+        let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
+        let result: CheckoutController.InternalConfirmResult
+        switch paymentOption {
+        case .new(let confirmParams):
+            let parameters = CheckoutController.PaymentMethodConfirmationParameters(
+                option: .new(confirmParams),
+                configuration: configuration,
+                confirmationChallenge: nil,
+                authenticationContext: self,
+                paymentHandler: paymentHandler
+            )
+            result = await CheckoutController.confirmPaymentMethod(
+                checkoutSession: checkout.session,
+                parameters: parameters,
+                preconfirmIntegrationShape: .embedded
+            )
+        case .saved(let paymentMethod, let confirmParams):
+            let parameters = CheckoutController.PaymentMethodConfirmationParameters(
+                option: .saved(paymentMethod, confirmParams),
+                configuration: configuration,
+                confirmationChallenge: nil,
+                authenticationContext: self,
+                paymentHandler: paymentHandler
+            )
+            result = await CheckoutController.confirmPaymentMethod(
+                checkoutSession: checkout.session,
+                parameters: parameters,
+                preconfirmIntegrationShape: .embedded
+            )
+        case .link(let confirmOption):
+            let parameters = CheckoutController.LinkConfirmationParameters(
+                confirmOption: confirmOption,
+                configuration: configuration,
+                confirmationChallenge: nil,
+                analyticsHelper: ._testValue(),
+                authenticationContext: self,
+                paymentHandler: paymentHandler
+            )
+            result = await CheckoutController.confirmLink(
+                checkoutSession: checkout.session,
+                parameters: parameters
+            )
+        case .applePay, .external:
+            XCTFail("Unsupported payment option in Checkout API mock test")
+            return .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption)
+        }
+        return result.paymentSheetResult
     }
 
     func assertParam(_ params: [String: String], named name: String, is value: String?, line: UInt) {

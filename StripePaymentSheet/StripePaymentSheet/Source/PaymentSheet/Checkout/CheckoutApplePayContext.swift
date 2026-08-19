@@ -26,7 +26,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         case success
     }
 
-    private weak var sessionUpdater: ExpressCheckoutSessionUpdater?
     private let session: CheckoutController.Session
     private let merchantLabel: String
     private let apiClient: STPAPIClient
@@ -44,15 +43,13 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
     init(
         checkoutSession: CheckoutController.Session,
-        applePayConfirmationContext: CheckoutController.ApplePayConfirmationContext,
-        sessionUpdater: ExpressCheckoutSessionUpdater,
+        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
         authorizationController: PKPaymentAuthorizationController
     ) {
         self.session = checkoutSession
-        self.sessionUpdater = sessionUpdater
-        self.merchantLabel = applePayConfirmationContext.merchantDisplayName
-        self.apiClient = applePayConfirmationContext.apiClient
-        self.returnURL = applePayConfirmationContext.returnURL
+        self.merchantLabel = applePayConfirmationParameters.merchantDisplayName
+        self.apiClient = applePayConfirmationParameters.apiClient
+        self.returnURL = applePayConfirmationParameters.returnURL
         self.authorizationController = authorizationController
         super.init()
     }
@@ -146,21 +143,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     return
                 }
 
-                // 3. Commit the confirmed session back to Checkout so its state stays current.
-                // The payment already succeeded at this point, so a failure here shouldn't be
-                // reported to the customer as a failed payment - just log it.
-                do {
-                    try await self.sessionUpdater?.commitSession(response)
-                } catch {
-                    let errorAnalytic = ErrorAnalytic(
-                        event: .unexpectedCheckoutElementsError,
-                        error: error
-                    )
-                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                }
-
-                // TODO: post-next-action work
-
                 handleSuccess(.completed, response)
 
             } catch {
@@ -238,10 +220,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
     static func create(
         checkoutSession: CheckoutController.Session,
-        applePayConfirmationContext: CheckoutController.ApplePayConfirmationContext,
-        sessionUpdater: ExpressCheckoutSessionUpdater
+        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
     ) throws -> CheckoutApplePayContext {
-        let applePayConfig = applePayConfirmationContext.applePayConfiguration
+        let applePayConfig = applePayConfirmationParameters.applePayConfiguration
 
         guard PKPaymentAuthorizationController.canMakePayments() else {
             let error = CheckoutError.unknown(debugDescription: "Apple Pay isn't set up on this device (e.g. no cards in wallet).")
@@ -260,7 +241,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
         assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `CheckoutController.ApplePayConfiguration`.")
 
-        let merchantLabel = applePayConfirmationContext.merchantDisplayName
+        let merchantLabel = applePayConfirmationParameters.merchantDisplayName
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
 
         // TODO: Set requiredShippingContactFields when shipping address collection is implemented.
@@ -276,8 +257,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         let authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
         return CheckoutApplePayContext(
             checkoutSession: checkoutSession,
-            applePayConfirmationContext: applePayConfirmationContext,
-            sessionUpdater: sessionUpdater,
+            applePayConfirmationParameters: applePayConfirmationParameters,
             authorizationController: authorizationController
         )
     }
