@@ -5,6 +5,9 @@ MINOR
 ### Payments
 * [Added] Added support for the following FPX banks: Agrobank, Bank of China, and MBSB Bank.
 
+### StripeFinancialConnections
+* [Added] StripeFinancialConnections now depends on `StripeFinancialConnectionsLite` to power its fallback bank authentication flow, unlocking app-to-app bank authentication. If you use StripeFinancialConnections with Carthage or by manually embedding the .xcframeworks, [you must also embed StripeFinancialConnectionsLite.xcframework](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2680) in your app. No action is required for CocoaPods or Swift Package Manager users.
+
 ## 26.7.0 2026-08-17
 ### PaymentSheet
 * [Added] StripePaymentSheet now depends on `StripeFinancialConnectionsLite` to support lightweight bank payment flows. If you use StripePaymentSheet with Carthage or by manually embedding the .xcframeworks, [you must also embed StripeFinancialConnectionsLite.xcframework](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2670) in your app. No action is required for CocoaPods or Swift Package Manager users.
