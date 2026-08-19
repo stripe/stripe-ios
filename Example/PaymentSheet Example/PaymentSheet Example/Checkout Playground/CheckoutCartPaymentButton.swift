@@ -40,9 +40,16 @@ struct CheckoutCartPaymentButton: View {
                 }
             } label: {
                 HStack {
-                    Text("Checkout")
-                    Spacer()
-                    Text(session.totals.total.amount)
+                    if checkout.isUpdating {
+                        Spacer()
+                        ProgressView()
+                            .tint(.white)
+                        Spacer()
+                    } else {
+                        Text("Checkout")
+                        Spacer()
+                        Text(session.totals.total.amount)
+                    }
                 }
                 .font(.headline)
                 .foregroundColor(.white)

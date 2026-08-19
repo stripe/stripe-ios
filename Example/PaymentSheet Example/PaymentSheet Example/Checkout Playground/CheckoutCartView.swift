@@ -121,10 +121,11 @@ struct CheckoutCartView: View {
             .alert(
                 confirmResultAlertTitle,
                 isPresented: Binding(get: { confirmResult != nil }, set: { if !$0 { confirmResult = nil } }),
-                actions: { Button("OK") { confirmResult = nil } },
+                actions: { Button("OK") { acknowledgeConfirmResult() } },
                 message: { Text(confirmResultAlertMessage) }
             )
         }
+        .disabled(checkout?.isUpdating == true)
     }
 
     private var confirmResultAlertTitle: String {
@@ -140,8 +141,22 @@ struct CheckoutCartView: View {
         switch confirmResult {
         case .succeeded(let paymentStatus): return "Payment status: \(paymentStatus)"
         case .canceled: return "The payment was canceled."
-        case .failed(let error): return error.localizedDescription
+        case .failed(let error):
+            return "Localized: \(error.localizedDescription)\n\nDebug: \(String(reflecting: error))"
         case nil: return ""
+        }
+    }
+
+    private func acknowledgeConfirmResult() {
+        let confirmationSucceeded: Bool
+        if case .succeeded = confirmResult {
+            confirmationSucceeded = true
+        } else {
+            confirmationSucceeded = false
+        }
+        confirmResult = nil
+        if confirmationSucceeded {
+            dismiss()
         }
     }
 
