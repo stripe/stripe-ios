@@ -11,6 +11,7 @@ extension CheckoutController {
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
+        let billingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration
     }
 
     /// `nil` if Apple Pay wasn't configured on this ``CheckoutController.Configuration``.
@@ -22,7 +23,8 @@ extension CheckoutController {
             applePayConfiguration: applePayConfiguration,
             apiClient: apiClient,
             returnURL: configuration.returnURL,
-            merchantDisplayName: effectiveMerchantDisplayName
+            merchantDisplayName: effectiveMerchantDisplayName,
+            billingDetailsCollectionConfiguration: configuration.expressCheckoutElement.billingDetailsCollectionConfiguration
         )
     }
 }

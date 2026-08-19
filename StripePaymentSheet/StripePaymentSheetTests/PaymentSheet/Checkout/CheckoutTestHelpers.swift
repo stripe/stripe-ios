@@ -389,13 +389,15 @@ extension CheckoutController.ApplePayConfirmationContext {
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: CheckoutController.ApplePayConfiguration = CheckoutController.ApplePayConfiguration(merchantId: "merchant.com.test")
+        applePayConfiguration: CheckoutController.ApplePayConfiguration = CheckoutController.ApplePayConfiguration(merchantId: "merchant.com.test"),
+        billingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration = .init()
     ) -> CheckoutController.ApplePayConfirmationContext {
         CheckoutController.ApplePayConfirmationContext(
             applePayConfiguration: applePayConfiguration,
             apiClient: apiClient,
             returnURL: returnURL,
-            merchantDisplayName: merchantDisplayName
+            merchantDisplayName: merchantDisplayName,
+            billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration
         )
     }
 }
