@@ -66,7 +66,7 @@ extension PaymentSheet.FlowController {
 
     /// An asynchronous failable initializer for PaymentSheet.FlowController
     /// This asynchronously loads the CheckoutSession's payment methods and configuration.
-    /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
+    /// - Parameter checkout: A fully loaded Checkout instance whose ``CheckoutController.session`` is non-nil.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     /// - Returns: A valid PaymentSheet.FlowController instance.
     /// - Throws: An error if loading failed.
@@ -74,7 +74,7 @@ extension PaymentSheet.FlowController {
     @_spi(ReactNativeSDK)
     @MainActor
     public static func create(
-        checkout: Checkout,
+        checkout: CheckoutController,
         configuration: PaymentSheet.Configuration
     ) async throws -> PaymentSheet.FlowController {
         return try await withCheckedThrowingContinuation { continuation in
@@ -141,7 +141,7 @@ extension PaymentSheet.FlowController {
     /// - Parameter checkout: The Checkout instance whose session has been updated.
     /// - Throws: An error if the update fails. You should retry the update; the FlowController instance is not usable until the update succeeds.
     /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
-    func update(checkout: Checkout) async throws {
+    func update(checkout: CheckoutController) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             Task { @MainActor in
                 update(checkout: checkout) { error in

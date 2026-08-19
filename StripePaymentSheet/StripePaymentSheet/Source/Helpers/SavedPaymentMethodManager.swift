@@ -44,8 +44,8 @@ final class SavedPaymentMethodManager {
                 with updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         switch intent {
         case .checkout(let session):
-            let billing = Checkout.PaymentMethodBillingDetails(updateParams.billingDetails)
-            let expiry = Checkout.PaymentMethodExpiryDetails(updateParams.card)
+            let billing = CheckoutController.PaymentMethodBillingDetails(updateParams.billingDetails)
+            let expiry = CheckoutController.PaymentMethodExpiryDetails(updateParams.card)
             guard billing != nil || expiry != nil else {
                 throw PaymentSheetError.unknown(debugDescription: "Tried to update a payment method without billing details or expiry details.")
             }

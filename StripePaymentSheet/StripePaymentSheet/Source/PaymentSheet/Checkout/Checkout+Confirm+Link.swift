@@ -8,7 +8,7 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-extension Checkout {
+extension CheckoutController {
     static func confirmLink(
         checkoutContext: CheckoutIntentContext,
         confirmationContext: ConfirmationContext,
@@ -23,7 +23,7 @@ extension Checkout {
 
         guard let checkoutSession = checkoutContext.session else {
             return .init(paymentSheetResult: .failed(error: PaymentSheetError.integrationError(
-                nonPIIDebugDescription: "Checkout must outlive the Payment Element created from it."
+                nonPIIDebugDescription: "CheckoutController must outlive the Payment Element created from it."
             )))
         }
         let elementsSession = checkoutSession.elementsSession
@@ -112,7 +112,7 @@ extension Checkout {
                 linkCompletion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
             ) {
                 Task { @MainActor in
-                    let linkConfirmationContext = Checkout.ConfirmationContext(
+                    let linkConfirmationContext = CheckoutController.ConfirmationContext(
                         paymentOption: linkPaymentOption,
                         configuration: configuration,
                         integrationShape: confirmationContext.integrationShape,

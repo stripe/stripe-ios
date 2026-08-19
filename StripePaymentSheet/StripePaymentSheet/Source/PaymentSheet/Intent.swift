@@ -21,7 +21,7 @@ enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
-    case checkout(Checkout.Session)
+    case checkout(CheckoutController.Session)
 
     @MainActor
     var stripeId: String? {
@@ -109,7 +109,7 @@ enum Intent {
                 return currency
             }
         case .checkout(let session):
-            return session.currency
+            return session.activePresentmentCurrency
         }
     }
 

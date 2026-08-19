@@ -1156,9 +1156,9 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     func testUpdateCheckoutSession() async throws {
         let response = try await STPTestingAPIClient.shared.createCheckoutSession()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = apiClient
-        let checkout = try await Checkout(configuration: checkoutConfiguration)
+        let checkout = try await CheckoutController(configuration: checkoutConfiguration)
 
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
@@ -1172,9 +1172,9 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     func testUpdateCheckoutSessionFails() async throws {
         let response = try await STPTestingAPIClient.shared.createCheckoutSession()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = apiClient
-        let checkout = try await Checkout(configuration: checkoutConfiguration)
+        let checkout = try await CheckoutController(configuration: checkoutConfiguration)
 
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient

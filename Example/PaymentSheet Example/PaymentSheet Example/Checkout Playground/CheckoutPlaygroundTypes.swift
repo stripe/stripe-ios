@@ -174,10 +174,10 @@ enum CheckoutPlayground {
             country: "US"
         )
 
-        var checkoutShippingDetails: Checkout.Configuration.Defaults.ShippingDetails {
-            var shippingDetails = Checkout.Configuration.Defaults.ShippingDetails()
+        var checkoutShippingDetails: CheckoutController.Configuration.Defaults.ShippingDetails {
+            var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
             shippingDetails.name = name
-            shippingDetails.address = Checkout.Address(
+            shippingDetails.address = CheckoutController.Address(
                 country: country,
                 line1: line1,
                 line2: line2,

@@ -300,7 +300,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
     func testCheckoutSessionConfirmWithNewPaymentMethodViaLink() async throws {
         let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: MockJson.checkoutSession)
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
 
         // In non-passthrough mode, Link payment details are converted to params and
         // a new payment method is created before calling checkout session confirm
@@ -363,7 +363,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
     func testCheckoutSessionConfirmWithNewPaymentMethodSelectedSendsSaveAndAllowRedisplay() async throws {
         let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: MockJson.checkoutSession)
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .selected
 
@@ -387,7 +387,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
     func testCheckoutSessionConfirmWithNewPaymentMethodDeselectedOmitsSaveAndUsesUnspecifiedAllowRedisplay() async throws {
         let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: MockJson.checkoutSession)
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .deselected
 
@@ -411,7 +411,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
     func testCheckoutSessionConfirmWithHiddenCheckboxOmitsSavePaymentMethod() async throws {
         let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: MockJson.checkoutSession)
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         let confirmParams = MockParams.intentConfirmParams
 
         let createPaymentMethodExp = stubCreatePaymentMethodExpecting(allowRedisplay: "unspecified")
@@ -436,7 +436,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         var checkoutSessionJSON = MockJson.checkoutSession
         checkoutSessionJSON["setup_future_usage"] = "off_session"
         let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: checkoutSessionJSON)
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .deselected
 
@@ -466,7 +466,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
             "status": "not_accepted",
         ]
         let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: checkoutSessionJSON)
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .hidden
 
@@ -492,7 +492,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         var checkoutSessionJSON = MockJson.checkoutSession
         checkoutSessionJSON["payment_method_types"] = ["paypal"]
         let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: checkoutSessionJSON)
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         let confirmParams = IntentConfirmParams(type: .stripe(.payPal))
         confirmParams.saveForFutureUseCheckboxState = .selected
 
@@ -798,18 +798,18 @@ private extension PaymentSheetAPIMockTest {
     }
 
     func confirmCheckout(
-        _ checkout: Checkout,
+        _ checkout: CheckoutController,
         configuration: PaymentElementConfiguration,
         paymentOption: PaymentOption
     ) async -> PaymentSheetResult {
-        let confirmationContext = Checkout.ConfirmationContext(
+        let confirmationContext = CheckoutController.ConfirmationContext(
             paymentOption: paymentOption,
             configuration: configuration,
             integrationShape: .embedded,
             confirmationChallenge: nil,
             analyticsHelper: ._testValue()
         )
-        return await Checkout.confirm(
+        return await CheckoutController.confirm(
             checkoutContext: checkout.intentContext,
             confirmationContext: confirmationContext,
             authenticationContext: self,
