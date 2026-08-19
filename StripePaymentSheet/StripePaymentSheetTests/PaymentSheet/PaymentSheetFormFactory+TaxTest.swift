@@ -22,9 +22,9 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
         await PaymentSheetLoader.loadMiscellaneousSingletons()
     }
 
-    func testAllSupportedLPMsCollectMinimumTaxFields() {
+    func testAllSupportedLPMsCollectMinimumTaxFields() async throws {
         // Given automatic tax sourced from the Checkout Session billing address
-        let intent = makeCheckoutIntent()
+        let intent = try await makeCheckoutIntent()
         let configuration = makeConfiguration(country: "US")
 
         // When every supported LPM builds its production form
@@ -57,7 +57,7 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
         }
     }
 
-    func testSpecializedPaymentMethodFormsBuildTaxAddressInternally() {
+    func testSpecializedPaymentMethodFormsBuildTaxAddressInternally() async throws {
         let paymentMethods: [PaymentSheet.PaymentMethodType] = [
             .instantDebits,
             .linkCardBrand,
@@ -66,7 +66,7 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
 
         for paymentMethod in paymentMethods {
             let form = PaymentSheetFormFactory(
-                intent: makeCheckoutIntent(),
+                intent: try await makeCheckoutIntent(),
                 elementsSession: ._testCardValue(),
                 configuration: .paymentElement(makeConfiguration(country: "US")),
                 paymentMethod: paymentMethod
@@ -77,13 +77,13 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
         }
     }
 
-    func testTaxMinimumsOnlyApplyToCheckoutAutomaticTaxFromBilling() {
+    func testTaxMinimumsOnlyApplyToCheckoutAutomaticTaxFromBilling() async throws {
         let configuration = makeConfiguration(country: "US")
         let cases: [(intent: Intent, expectsAddress: Bool)] = [
             (._testValue(), false),
-            (makeCheckoutIntent(automaticTaxEnabled: false), false),
-            (makeCheckoutIntent(addressSource: "session.shipping"), false),
-            (makeCheckoutIntent(), true),
+            (try await makeCheckoutIntent(automaticTaxEnabled: false), false),
+            (try await makeCheckoutIntent(addressSource: "session.shipping"), false),
+            (try await makeCheckoutIntent(), true),
         ]
 
         for testCase in cases {
@@ -93,7 +93,7 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
         }
     }
 
-    func testCountryTaxMinimums() throws {
+    func testCountryTaxMinimums() async throws {
         let expectations: [(country: String, collectsFullAddress: Bool, collectsPostalCode: Bool)] = [
             ("US", true, true),
             ("PR", true, true),
@@ -106,7 +106,7 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
         for expectation in expectations {
             let form = makeForm(
                 paymentMethod: .card,
-                intent: makeCheckoutIntent(),
+                intent: try await makeCheckoutIntent(),
                 configuration: makeConfiguration(country: expectation.country)
             )
             let addressSection = try XCTUnwrap(addressSections(in: form).first)
@@ -124,10 +124,10 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
         }
     }
 
-    func testTaxAddressSectionUpdatesBillingParams() throws {
+    func testTaxAddressSectionUpdatesBillingParams() async throws {
         let form = makeForm(
             paymentMethod: .blik,
-            intent: makeCheckoutIntent(),
+            intent: try await makeCheckoutIntent(),
             configuration: makeConfiguration(country: "CA")
         )
         let outerForm = try XCTUnwrap(form as? FormElement)
@@ -145,8 +145,8 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
     private func makeCheckoutIntent(
         automaticTaxEnabled: Bool = true,
         addressSource: String = "session.billing"
-    ) -> Intent {
-        ._testCheckoutSession(
+    ) async throws -> Intent {
+        try await ._testCheckoutSession(
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: addressSource
         )

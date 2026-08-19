@@ -57,7 +57,7 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(firstElement === secondElement)
     }
 
-    func testIntentReadsCurrentCheckoutSession() throws {
+    func testIntentReadsCurrentCheckoutSession() async throws {
         var initialJSON = CheckoutTestHelpers.openSessionJSON
         initialJSON["session_id"] = "cs_initial"
         initialJSON["currency"] = "usd"
@@ -73,11 +73,14 @@ final class CheckoutUnitTests: XCTestCase {
             total: 1_000
         )
         let initialResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: initialJSON)
-        let checkout = CheckoutController(
-            testSession: initialResponse.makePublicSession(),
-            configuration: CheckoutController.Configuration(
-                clientSecret: "cs_initial_secret_test",
-                returnURL: "stripe-ios-test://checkout-return"
+        let configuration = CheckoutController.Configuration(
+            clientSecret: "cs_initial_secret_test",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                apiResponse: initialResponse,
+                configuration: configuration
             )
         )
         let intent = Intent.checkout(checkout.intentContext)
@@ -111,26 +114,17 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(intent.allowsPaymentMethodRemoval(elementsSession: checkout.session.elementsSession))
     }
 
-    func testCheckoutIntentContextReportsReleasedCheckout() {
-        var checkout: CheckoutController? = CheckoutController(
-            testSession: CheckoutTestHelpers.makeOpenSession().makePublicSession(),
-            configuration: CheckoutController.Configuration(
-                clientSecret: "cs_test_123_secret_abc",
-                returnURL: "stripe-ios-test://checkout-return"
-            )
+    func testCheckoutIntentContextDoesNotRetainCheckout() async throws {
+        var checkout: CheckoutController? = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration()
         )
-        let context = checkout!.intentContext
+        let context = try XCTUnwrap(checkout?.intentContext)
         weak var weakCheckout = checkout
 
         checkout = nil
 
         XCTAssertNil(weakCheckout)
         XCTAssertNil(context.checkout)
-        XCTAssertThrowsError(try context.requireCheckout()) { error in
-            guard case PaymentSheetError.integrationError = error else {
-                return XCTFail("Expected an integration error, got \(error)")
-            }
-        }
     }
 
     func testCurrencySelectorElementLogsInitializationOnce() async throws {

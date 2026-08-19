@@ -886,15 +886,16 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertFalse(session.makePublicSession().merchantWillSavePaymentMethod(.card))
     }
 
-    func testCheckoutSessionIntent_setupFutureUsageString() {
+    func testCheckoutSessionIntent_setupFutureUsageString() async throws {
         let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage": "off_session",
         ]).withCustomer()
 
-        XCTAssertEqual(Intent._testCheckoutSession(apiResponse: session).setupFutureUsageString, "off_session")
+        let intent = try await Intent._testCheckoutSession(apiResponse: session)
+        XCTAssertEqual(intent.setupFutureUsageString, "off_session")
     }
 
-    func testCheckoutSessionIntent_isPaymentMethodOptionsSetupFutureUsageSet() {
+    func testCheckoutSessionIntent_isPaymentMethodOptionsSetupFutureUsageSet() async throws {
         let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage_for_payment_method_type": [
                 "paypal": "off_session",
@@ -902,29 +903,32 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "payment_method_types": ["paypal"],
         ]).withCustomer()
 
-        XCTAssertEqual(Intent._testCheckoutSession(apiResponse: session).isPaymentMethodOptionsSetupFutureUsageSet, true)
+        let intent = try await Intent._testCheckoutSession(apiResponse: session)
+        XCTAssertEqual(intent.isPaymentMethodOptionsSetupFutureUsageSet, true)
     }
 
-    func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevel() {
+    func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevel() async throws {
         let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage": "off_session",
             "payment_method_types": ["paypal"],
         ]).withCustomer()
 
-        XCTAssertTrue(Intent._testCheckoutSession(apiResponse: session).isSetupFutureUsageSet(for: .payPal))
+        let intent = try await Intent._testCheckoutSession(apiResponse: session)
+        XCTAssertTrue(intent.isSetupFutureUsageSet(for: .payPal))
     }
 
-    func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevelNone() {
+    func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevelNone() async throws {
         let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage": "none",
             "payment_method_types": ["paypal"],
         ]).withCustomer()
 
-        XCTAssertEqual(Intent._testCheckoutSession(apiResponse: session).setupFutureUsageString, "none")
-        XCTAssertFalse(Intent._testCheckoutSession(apiResponse: session).isSetupFutureUsageSet(for: .payPal))
+        let intent = try await Intent._testCheckoutSession(apiResponse: session)
+        XCTAssertEqual(intent.setupFutureUsageString, "none")
+        XCTAssertFalse(intent.isSetupFutureUsageSet(for: .payPal))
     }
 
-    func testCheckoutSessionIntent_isSetupFutureUsageSet_perPaymentMethod() {
+    func testCheckoutSessionIntent_isSetupFutureUsageSet_perPaymentMethod() async throws {
         let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage_for_payment_method_type": [
                 "paypal": "off_session",
@@ -932,10 +936,11 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "payment_method_types": ["paypal"],
         ]).withCustomer()
 
-        XCTAssertTrue(Intent._testCheckoutSession(apiResponse: session).isSetupFutureUsageSet(for: .payPal))
+        let intent = try await Intent._testCheckoutSession(apiResponse: session)
+        XCTAssertTrue(intent.isSetupFutureUsageSet(for: .payPal))
     }
 
-    func testCheckoutSessionIntent_isSetupFutureUsageSet_perPaymentMethodNoneOverridesTopLevel() {
+    func testCheckoutSessionIntent_isSetupFutureUsageSet_perPaymentMethodNoneOverridesTopLevel() async throws {
         let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage": "off_session",
             "setup_future_usage_for_payment_method_type": [
@@ -944,7 +949,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "payment_method_types": ["paypal"],
         ]).withCustomer()
 
-        XCTAssertFalse(Intent._testCheckoutSession(apiResponse: session).isSetupFutureUsageSet(for: .payPal))
+        let intent = try await Intent._testCheckoutSession(apiResponse: session)
+        XCTAssertFalse(intent.isSetupFutureUsageSet(for: .payPal))
     }
 
     // MARK: - Tax Tests

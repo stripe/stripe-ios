@@ -57,9 +57,9 @@ final class PaymentSheetLoaderAutomaticTaxTest: XCTestCase {
         }
     }
 
-    func testFiltersCheckoutAutomaticTaxFromBillingAndPreservesSessionSavedPaymentMethods() {
-        let completeIntent = makeCheckoutIntent(paymentMethods: [makeCard()])
-        let incompleteIntent = makeCheckoutIntent(paymentMethods: [makeCard(line1: nil)])
+    func testFiltersCheckoutAutomaticTaxFromBillingAndPreservesSessionSavedPaymentMethods() async throws {
+        let completeIntent = try await makeCheckoutIntent(paymentMethods: [makeCard()])
+        let incompleteIntent = try await makeCheckoutIntent(paymentMethods: [makeCard(line1: nil)])
 
         XCTAssertEqual(filterCheckoutSavedPaymentMethods(intent: completeIntent).count, 1)
         XCTAssertTrue(filterCheckoutSavedPaymentMethods(intent: incompleteIntent).isEmpty)
@@ -70,16 +70,16 @@ final class PaymentSheetLoaderAutomaticTaxTest: XCTestCase {
         XCTAssertEqual(session.customer?.paymentMethods.count, 1)
     }
 
-    func testOnlyFiltersCheckoutAutomaticTaxFromBilling() {
+    func testOnlyFiltersCheckoutAutomaticTaxFromBilling() async throws {
         let incomplete = makeCard(line1: nil)
         let nonCheckoutIntents: [Intent] = [._testValue(), ._testSetupIntent()]
         let checkoutIntents = [
-            makeCheckoutIntent(
+            try await makeCheckoutIntent(
                 paymentMethods: [incomplete],
                 automaticTaxEnabled: false,
                 automaticTaxAddressSource: "session.billing"
             ),
-            makeCheckoutIntent(
+            try await makeCheckoutIntent(
                 paymentMethods: [incomplete],
                 automaticTaxEnabled: true,
                 automaticTaxAddressSource: "session.shipping"
@@ -103,11 +103,11 @@ final class PaymentSheetLoaderAutomaticTaxTest: XCTestCase {
         }
     }
 
-    func testTaxAddressFilteringComposesWithAllowedCountryFiltering() {
+    func testTaxAddressFilteringComposesWithAllowedCountryFiltering() async throws {
         let completeUS = makeCard()
         let incompleteUS = makeCard(line1: nil)
         let completeCA = makeCard(postalCode: "M5V 3L9", country: "CA")
-        let intent = makeCheckoutIntent(paymentMethods: [completeUS, incompleteUS, completeCA])
+        let intent = try await makeCheckoutIntent(paymentMethods: [completeUS, incompleteUS, completeCA])
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
 
@@ -138,7 +138,7 @@ final class PaymentSheetLoaderAutomaticTaxTest: XCTestCase {
         paymentMethods: [STPPaymentMethod],
         automaticTaxEnabled: Bool = true,
         automaticTaxAddressSource: String = "session.billing"
-    ) -> Intent {
+    ) async throws -> Intent {
         let response = CheckoutTestHelpers.makeSession([
             "customer": [
                 "id": "cus_123",
@@ -149,7 +149,7 @@ final class PaymentSheetLoaderAutomaticTaxTest: XCTestCase {
                 "automatic_tax_address_source": automaticTaxAddressSource,
             ],
         ])
-        return ._testCheckoutSession(apiResponse: response)
+        return try await ._testCheckoutSession(apiResponse: response)
     }
 
     private func makeCard(

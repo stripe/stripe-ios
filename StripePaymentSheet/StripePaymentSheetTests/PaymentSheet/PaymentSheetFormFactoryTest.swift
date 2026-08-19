@@ -67,7 +67,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     private func makeCheckoutSessionIntent(
         offerSave: [String: Any]? = nil,
         hasCustomer: Bool = true
-    ) -> Intent {
+    ) async throws -> Intent {
         var overrides: [String: Any] = [
             "status": "open",
             "currency": "usd",
@@ -79,7 +79,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             overrides["customer_managed_saved_payment_methods_offer_save"] = offerSave
         }
         let session = CheckoutTestHelpers.makeSession(overrides)
-        return ._testCheckoutSession(apiResponse: session)
+        return try await ._testCheckoutSession(apiResponse: session)
     }
 
     func testUpdatesParams() {
@@ -1091,10 +1091,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertTrue(factory.shouldDisplaySaveCheckbox)
     }
 
-    func testShowsCheckbox_CheckoutSessionOfferSaveNotAccepted() {
+    func testShowsCheckbox_CheckoutSessionOfferSaveNotAccepted() async throws {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: [
+            intent: try await makeCheckoutSessionIntent(offerSave: [
                 "enabled": true,
                 "status": "not_accepted",
             ]),
@@ -1110,11 +1110,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params?.saveForFutureUseCheckboxState, .deselected)
     }
 
-    func testCheckoutSessionOfferSaveDoesNotOverrideOptOutDefaultSelection() {
+    func testCheckoutSessionOfferSaveDoesNotOverrideOptOutDefaultSelection() async throws {
         var configuration = PaymentSheet.Configuration()
         configuration.savePaymentMethodOptInBehavior = .requiresOptOut
         let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: [
+            intent: try await makeCheckoutSessionIntent(offerSave: [
                 "enabled": true,
                 "status": "not_accepted",
             ]),
@@ -1129,10 +1129,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params?.saveForFutureUseCheckboxState, .selected)
     }
 
-    func testHidesCheckbox_CheckoutSessionOfferSaveDisabled() {
+    func testHidesCheckbox_CheckoutSessionOfferSaveDisabled() async throws {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: [
+            intent: try await makeCheckoutSessionIntent(offerSave: [
                 "enabled": false,
                 "status": "accepted",
             ]),
@@ -1144,10 +1144,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertFalse(factory.shouldDisplaySaveCheckbox)
     }
 
-    func testHidesCheckbox_CheckoutSessionOfferSaveEnabledWithoutCustomer() {
+    func testHidesCheckbox_CheckoutSessionOfferSaveEnabledWithoutCustomer() async throws {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: [
+            intent: try await makeCheckoutSessionIntent(offerSave: [
                 "enabled": true,
                 "status": "accepted",
             ], hasCustomer: false),
@@ -1159,13 +1159,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertFalse(factory.shouldDisplaySaveCheckbox)
     }
 
-    func testCheckoutSessionOfferSaveDefaultDoesNotOverridePreviousCustomerInput() {
+    func testCheckoutSessionOfferSaveDefaultDoesNotOverridePreviousCustomerInput() async throws {
         let previousCustomerInput = IntentConfirmParams(type: .stripe(.card))
         previousCustomerInput.saveForFutureUseCheckboxState = .selected
         let configuration = PaymentSheet.Configuration()
 
         let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: [
+            intent: try await makeCheckoutSessionIntent(offerSave: [
                 "enabled": true,
                 "status": "not_accepted",
             ]),
@@ -2408,12 +2408,12 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertTrue(paypalForm_setup_paymentOption.didDisplayMandate)
     }
 
-    func testCheckoutSessionSetupFutureUsage_appliesMandateBehavior() {
+    func testCheckoutSessionSetupFutureUsage_appliesMandateBehavior() async throws {
         func makeCheckoutSessionPayPalForm(
             setupFutureUsage: String? = nil,
             paymentMethodOptions: [String: Any]? = nil,
             previousCustomerInput: IntentConfirmParams? = nil
-        ) -> PaymentMethodElement {
+        ) async throws -> PaymentMethodElement {
             var json = CheckoutTestHelpers.makeSessionJSON([
                 "session_id": "cs_test_paypal",
                 "payment_method_types": ["paypal"],
@@ -2431,7 +2431,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             }
             let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
             return PaymentSheetFormFactory(
-                intent: ._testCheckoutSession(apiResponse: checkoutSession),
+                intent: try await ._testCheckoutSession(apiResponse: checkoutSession),
                 elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),
                 configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
                 paymentMethod: .stripe(.payPal),
@@ -2439,14 +2439,14 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             ).make()
         }
 
-        let paymentForm = makeCheckoutSessionPayPalForm()
+        let paymentForm = try await makeCheckoutSessionPayPalForm()
         guard let paymentOption = paymentForm.updateParams(params: IntentConfirmParams(type: .stripe(.payPal))) else {
             XCTFail("payment option should be non-nil")
             return
         }
         XCTAssertFalse(paymentOption.didDisplayMandate)
 
-        var setupFutureUsageForm = makeCheckoutSessionPayPalForm(
+        var setupFutureUsageForm = try await makeCheckoutSessionPayPalForm(
             setupFutureUsage: "off_session",
             previousCustomerInput: paymentOption
         )
