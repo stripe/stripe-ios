@@ -669,7 +669,7 @@ final class CheckoutUnitTests: XCTestCase {
                   key: "checkout_item_test"
                   items: [
                     [0] {
-                      key: "price_test"
+                      key: "checkout_item_inner_test"
                       quantity: 1
                       unitAmount: "$10.00"
                       unitAmountDecimal: "$10.00"
