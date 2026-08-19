@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 100
 
@@ -45,13 +45,13 @@ jobs:
             echo "diff_result.txt not found, skipping." 
           fi
 
-      - uses: davidme-stripe/find-comment@v1
+      - uses: davidme-stripe/find-comment@d2dae40ed151c634e4189471272b57e76ec19ba8 # v1.3.0
         id: find_comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Public API changes detected
 
-      - uses: davidme-stripe/create-or-update-comment@v1
+      - uses: davidme-stripe/create-or-update-comment@a35cf36e5301d70b76f316e867e7788a55a31dae # v1.4.5
         id: create-update-comment
         if: env.diff != ''
         with:
