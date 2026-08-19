@@ -7,7 +7,7 @@
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout {
+extension CheckoutController {
     /// Configuration for Link.
     public struct LinkConfiguration {
         /// Controls whether Link is displayed.

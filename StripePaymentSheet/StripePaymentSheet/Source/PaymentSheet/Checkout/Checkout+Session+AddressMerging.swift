@@ -9,7 +9,7 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-extension Checkout.Session {
+extension CheckoutController.Session {
 
     /// Populates empty fields in the configuration with checkout-collected addresses.
     /// Configuration values always take precedence over checkout-collected values.

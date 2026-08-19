@@ -128,9 +128,9 @@ extension PaymentElement {
 
         func makeEmbeddedConfiguration(
             apiClient: STPAPIClient,
-            defaults: Checkout.Configuration.Defaults,
+            defaults: CheckoutController.Configuration.Defaults,
             merchantDisplayName: String,
-            userInterfaceStyle: Checkout.UserInterfaceStyle
+            userInterfaceStyle: CheckoutController.UserInterfaceStyle
         ) -> EmbeddedPaymentElement.Configuration {
             var configuration = embeddedConfiguration
             configuration.apiClient = apiClient
@@ -145,9 +145,9 @@ extension PaymentElement {
 
         func makePaymentSheetConfiguration(
             apiClient: STPAPIClient,
-            defaults: Checkout.Configuration.Defaults,
+            defaults: CheckoutController.Configuration.Defaults,
             merchantDisplayName: String,
-            userInterfaceStyle: Checkout.UserInterfaceStyle
+            userInterfaceStyle: CheckoutController.UserInterfaceStyle
         ) -> PaymentSheet.Configuration {
             var configuration = paymentSheetConfiguration
             configuration.apiClient = apiClient
@@ -260,7 +260,7 @@ private extension PaymentElement.Configuration {
 }
 
 private extension PaymentSheet.BillingDetails {
-    mutating func set(_ billingDetails: Checkout.Configuration.Defaults.BillingDetails) {
+    mutating func set(_ billingDetails: CheckoutController.Configuration.Defaults.BillingDetails) {
         name = billingDetails.name
         if let billingAddress = billingDetails.address {
             address.set(billingAddress)
@@ -269,7 +269,7 @@ private extension PaymentSheet.BillingDetails {
 }
 
 private extension PaymentSheet.Address {
-    mutating func set(_ address: Checkout.Address) {
+    mutating func set(_ address: CheckoutController.Address) {
         city = address.city
         country = address.country
         line1 = address.line1
