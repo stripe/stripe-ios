@@ -7,6 +7,7 @@
 
 import Foundation
 import PassKit
+import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
@@ -112,9 +113,11 @@ final class DocumentWarmupViewController: IdentityFlowViewController {
                                 let outcome = try await self.verifyViaWalletManager.requestDocument()
                                 VerifyWithWalletLogger.log("requestDocument returned outcome=\(outcome)")
                                 switch outcome {
-                                case .credentialReturned:
-                                    VerifyWithWalletLogger.log("credential returned, transitioning to success screen")
-                                    self.sheetController?.transitionToSuccess()
+                                case .credentialReturned(let encryptedResponse):
+                                    VerifyWithWalletLogger.log("credential returned, presenting wallet payload before transitioning to success screen")
+                                    self.presentWalletPayload(encryptedResponse: encryptedResponse) {
+                                        self.sheetController?.transitionToSuccess()
+                                    }
                                 case .userDeclined, .noDocument:
                                     VerifyWithWalletLogger.log("falling back to camera flow, outcome=\(outcome)")
                                     self.sheetController?.transitionToDocumentCapture()
@@ -140,5 +143,46 @@ final class DocumentWarmupViewController: IdentityFlowViewController {
             backButtonTitle: nil,
             viewModel: flowViewModel
         )
+    }
+
+    // TODO(for demo): remove once the wallet payload doesn't need manual inspection
+    @available(iOS 16.0, *)
+    private func presentWalletPayload(encryptedResponse: String, completion: @escaping () -> Void) {
+        let payloadData = try? JSONSerialization.data(
+            withJSONObject: [
+                "session_id": VerifyDocumentViaWalletManager.lastWalletIdentitySessionId ?? "nil",
+                "encrypted_data": encryptedResponse,
+            ],
+            options: [.prettyPrinted, .sortedKeys]
+        )
+        let payload = payloadData.flatMap { String(bytes: $0, encoding: .utf8) } ?? encryptedResponse
+
+        let textView = UITextView()
+        textView.text = payload
+        textView.font = .monospacedSystemFont(ofSize: 12, weight: .regular)
+        textView.isEditable = false
+        textView.translatesAutoresizingMaskIntoConstraints = false
+
+        let viewController = UIViewController()
+        viewController.title = "Wallet payload"
+        viewController.view.backgroundColor = .systemBackground
+        viewController.view.addSubview(textView)
+        NSLayoutConstraint.activate([
+            textView.leadingAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            textView.trailingAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            textView.topAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            textView.bottomAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+        ])
+        viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(
+            systemItem: .close,
+            primaryAction: UIAction { [weak viewController] _ in
+                viewController?.dismiss(animated: true, completion: completion)
+            }
+        )
+        viewController.navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Copy",
+            primaryAction: UIAction { _ in UIPasteboard.general.string = payload }
+        )
+        present(UINavigationController(rootViewController: viewController), animated: true)
     }
 }

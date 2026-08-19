@@ -117,10 +117,11 @@ enum VerifyDocumentViaWalletManagerError: Error {
         let outcome = try await requestDocumentOutcome(request)
         VerifyWithWalletLogger.log("PassKit outcome=\(outcome)")
 
-        // Don't block the UI transition on the backend submit round-trip; fire it in the
-        // background since the server-side endpoint isn't fully supported yet for this demo.
-        Task { [weak self] in
-            guard let self else { return }
+        // Don't block the UI transition on the backend submit round-trip, but the call still
+        // needs to actually run to completion. Capture self strongly (not weakly) so the manager
+        // isn't deallocated out from under this Task if its owning view controller tears down
+        // right after requestDocument() returns, which would otherwise skip the submit entirely.
+        Task {
             do {
                 let submission = try await self.submitWalletIdentitySession(
                     id: walletSession.sessionId,
