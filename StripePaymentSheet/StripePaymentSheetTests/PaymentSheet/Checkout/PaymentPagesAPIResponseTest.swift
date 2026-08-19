@@ -734,7 +734,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: mismatchedCurrencyJSON))
     }
 
-    func testUnifiedModeSessionRejectsMalformedTaxAmounts() {
+    func testUnifiedModeSessionValidatesTaxAmounts() throws {
         let validTaxRate: [String: Any] = [
             "display_name": "Sales Tax",
             "percentage": 7.25,
@@ -770,6 +770,28 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                 "Expected missing tax rate field \(field) to fail decoding"
             )
         }
+
+        let flatTaxJSON = modifyingOneTimePriceItem { item in
+            item["tax_amounts"] = [
+                [
+                    "amount": 250,
+                    "inclusive": false,
+                    "tax_rate": [
+                        "display_name": "Retail delivery fee",
+                        "percentage": 0,
+                        "rate_type": "flat_amount",
+                    ],
+                ],
+            ]
+        }
+        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: flatTaxJSON)
+        guard case .oneTimePrice(let oneTimePrice) = response.makePublicSession().orderSummaryItems.first else {
+            return XCTFail("Expected one-time Price order summary item")
+        }
+        let taxAmount = try XCTUnwrap(oneTimePrice.amountDetails.taxAmounts?.first)
+        XCTAssertEqual(taxAmount.minorUnitsAmount, 250)
+        XCTAssertEqual(taxAmount.displayName, "Retail delivery fee")
+        XCTAssertNil(taxAmount.percentage)
     }
 
     func testUnifiedModeSessionRejectsInvalidOrMissingAmountRepresentation() {
