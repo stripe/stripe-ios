@@ -70,13 +70,19 @@ extension STPClientAttributionMetadata: Encodable {
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(clientSessionId, forKey: .clientSessionId)
-        try container.encodeIfPresent(elementsSessionConfigId, forKey: .elementsSessionConfigId)
-        try container.encodeIfPresent(checkoutSessionId, forKey: .checkoutSessionId)
+        try container.encodeIfPresent(clientSessionId?.nilIfEmpty, forKey: .clientSessionId)
+        try container.encodeIfPresent(elementsSessionConfigId?.nilIfEmpty, forKey: .elementsSessionConfigId)
+        try container.encodeIfPresent(checkoutSessionId?.nilIfEmpty, forKey: .checkoutSessionId)
         try container.encode(merchantIntegrationSource, forKey: .merchantIntegrationSource)
         try container.encode(merchantIntegrationSubtype, forKey: .merchantIntegrationSubtype)
         try container.encode(merchantIntegrationVersion, forKey: .merchantIntegrationVersion)
         try container.encodeIfPresent(paymentIntentCreationFlow, forKey: .paymentIntentCreationFlow)
         try container.encodeIfPresent(paymentMethodSelectionFlow, forKey: .paymentMethodSelectionFlow)
+    }
+}
+
+private extension String {
+    var nilIfEmpty: String? {
+        isEmpty ? nil : self
     }
 }
