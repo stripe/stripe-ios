@@ -33,7 +33,24 @@ extension CheckoutController {
             let completion: (InternalConfirmResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void = { result, _ in
                 continuation.resume(returning: result)
             }
+            // TODO: Have the Link confirmation callback return InternalConfirmResult for Checkout so the
+            // confirmed session doesn't need to be passed through this side channel.
             var linkCompletionResult: InternalConfirmResult?
+
+            func resultWithoutSessionResponse(_ result: PaymentSheetResult) -> InternalConfirmResult {
+                switch result {
+                case .completed:
+                    let error = CheckoutError.unknown(
+                        debugDescription: "Link completed Checkout confirmation without returning the confirmed session."
+                    )
+                    stpAssertionFailure(error.nonGenericDescription)
+                    return .failed(error)
+                case .canceled:
+                    return .canceled()
+                case .failed(let error):
+                    return .failed(error)
+                }
+            }
 
             // Called when Link produces raw payment method params, including signup fallback/direct confirm paths.
             func confirmWithPaymentMethodParams(
@@ -149,13 +166,13 @@ extension CheckoutController {
                 confirmWithPaymentMethod: confirmWithPaymentMethod(paymentMethod:linkAccount:saveForFutureUseCheckboxState:linkClientAttributionMetadata:),
                 confirmHandler: confirmHandler(linkAuthenticationContext:intent:elementsSession:linkPaymentOption:linkCompletion:),
                 paymentHandlerCompletion: { status, error in
-                    completion(.init(paymentSheetResult: PaymentSheet.makePaymentSheetResult(for: status, error: error)), nil)
+                    completion(resultWithoutSessionResponse(PaymentSheet.makePaymentSheetResult(for: status, error: error)), nil)
                 },
                 completion: { result, confirmationType in
                     if let internalResult = linkCompletionResult {
                         completion(internalResult, confirmationType)
                     } else {
-                        completion(.init(paymentSheetResult: result), confirmationType)
+                        completion(resultWithoutSessionResponse(result), confirmationType)
                     }
                 }
             )

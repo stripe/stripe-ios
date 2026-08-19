@@ -70,7 +70,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             // Helper 1: Handle failure
             let handleFailure = { (error: Error) in
                 self.paymentState = .error
-                self.result = .init(paymentSheetResult: .failed(error: error))
+                self.result = .failed(error)
                 if self.didCancelOrTimeoutWhilePending {
                     self.finishAndDismiss()
                 } else {
@@ -79,18 +79,13 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 }
             }
             // Helper 2: Handle success
-            let handleSuccess = { (paymentSheetResult: PaymentSheetResult, response: PaymentPagesAPIResponse) in
+            let handleSuccess = { (response: PaymentPagesAPIResponse) in
                 self.paymentState = .success
-                self.result = .init(paymentSheetResult: paymentSheetResult, checkoutSessionResponse: response)
+                self.result = .completed(response)
                 if self.didCancelOrTimeoutWhilePending {
                     self.finishAndDismiss()
                 } else {
-                    switch paymentSheetResult {
-                    case .completed:
-                        completion(PKPaymentAuthorizationResult(status: .success, errors: nil))
-                    case .canceled, .failed:
-                        completion(PKPaymentAuthorizationResult(status: .failure, errors: nil))
-                    }
+                    completion(PKPaymentAuthorizationResult(status: .success, errors: nil))
                 }
             }
 
@@ -143,7 +138,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     return
                 }
 
-                handleSuccess(.completed, response)
+                handleSuccess(response)
 
             } catch {
                 handleFailure(error)
@@ -158,7 +153,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         case .notStarted:
             Task {
                 await controller.dismiss()
-                self.resume(with: .init(paymentSheetResult: .canceled))
+                self.resume(with: .canceled())
                 self._end()
             }
         case .pending:
@@ -168,13 +163,13 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         case .error:
             Task {
                 await controller.dismiss()
-                self.resume(with: self.result ?? .init(paymentSheetResult: .failed(error: CheckoutError.unknown(debugDescription: "Apple Pay finished in error state without a result."))))
+                self.resume(with: self.result ?? .failed(CheckoutError.unknown(debugDescription: "Apple Pay finished in error state without a result.")))
                 self._end()
             }
         case .success:
             Task {
                 await controller.dismiss()
-                self.resume(with: self.result ?? .init(paymentSheetResult: .canceled))
+                self.resume(with: self.result ?? .canceled())
                 self._end()
             }
         }
@@ -273,7 +268,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 Task { @MainActor [weak self] in
                     let error = CheckoutError.unknown(debugDescription: "Could not present Apple Pay.")
                     STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
-                    self?.resume(with: .init(paymentSheetResult: .failed(error: error)))
+                    self?.resume(with: .failed(error))
                 }
             }
         }
@@ -307,7 +302,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private func finishAndDismiss() {
         Task { @MainActor in
             await self.authorizationController.dismiss()
-            self.resume(with: self.result ?? .init(paymentSheetResult: .canceled))
+            self.resume(with: self.result ?? .canceled())
             self._end()
         }
     }

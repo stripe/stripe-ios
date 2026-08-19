@@ -891,10 +891,7 @@ final class CheckoutUnitTests: XCTestCase {
         let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: responseJSON)
 
         // When the internal result is mapped to the public result
-        let result = checkout.mapConfirmationResult(.init(
-            paymentSheetResult: .completed,
-            checkoutSessionResponse: response
-        ))
+        let result = checkout.mapConfirmationResult(.completed(response))
 
         // Then success preserves the Checkout Session payment status
         guard case .succeeded(let paymentStatus) = result else {
@@ -908,7 +905,7 @@ final class CheckoutUnitTests: XCTestCase {
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
 
         // When the internal result is mapped to the public result
-        let result = checkout.mapConfirmationResult(.init(paymentSheetResult: .canceled))
+        let result = checkout.mapConfirmationResult(.canceled())
 
         // Then cancellation is preserved
         guard case .canceled = result else {

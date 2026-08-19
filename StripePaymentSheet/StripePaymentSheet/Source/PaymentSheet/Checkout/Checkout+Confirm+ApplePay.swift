@@ -22,7 +22,7 @@ extension CheckoutController {
             )
             return await context.presentApplePay()
         } catch {
-            return .init(paymentSheetResult: .failed(error: error))
+            return .failed(error)
         }
     }
 }

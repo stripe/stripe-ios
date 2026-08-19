@@ -45,16 +45,29 @@ extension CheckoutController {
         let paymentHandler: STPPaymentHandler
     }
 
-    struct InternalConfirmResult {
-        let paymentSheetResult: PaymentSheetResult
-        let checkoutSessionResponse: PaymentPagesAPIResponse?
+    enum InternalConfirmResult {
+        case completed(PaymentPagesAPIResponse)
+        case canceled(sessionResponse: PaymentPagesAPIResponse? = nil)
+        case failed(Error, sessionResponse: PaymentPagesAPIResponse? = nil)
 
-        init(
-            paymentSheetResult: PaymentSheetResult,
-            checkoutSessionResponse: PaymentPagesAPIResponse? = nil
-        ) {
-            self.paymentSheetResult = paymentSheetResult
-            self.checkoutSessionResponse = checkoutSessionResponse
+        var paymentSheetResult: PaymentSheetResult {
+            switch self {
+            case .completed:
+                return .completed
+            case .canceled:
+                return .canceled
+            case .failed(let error, _):
+                return .failed(error: error)
+            }
+        }
+
+        var checkoutSessionResponse: PaymentPagesAPIResponse? {
+            switch self {
+            case .completed(let response):
+                return response
+            case .canceled(let response), .failed(_, let response):
+                return response
+            }
         }
     }
 
@@ -210,21 +223,12 @@ extension CheckoutController {
     }
 
     func mapConfirmationResult(_ result: InternalConfirmResult) -> ConfirmResult {
-        switch result.paymentSheetResult {
-        case .completed:
-            guard let response = result.checkoutSessionResponse else {
-                let error = CheckoutError.unknown(
-                    debugDescription: "Checkout confirmation completed without a Checkout Session response."
-                )
-                STPAnalyticsClient.sharedClient.log(
-                    analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error)
-                )
-                return .failed(error)
-            }
+        switch result {
+        case .completed(let response):
             return .succeeded(paymentStatus: response.paymentStatus)
         case .canceled:
             return .canceled
-        case .failed(let error):
+        case .failed(let error, _):
             return .failed(error)
         }
     }
@@ -258,9 +262,9 @@ extension CheckoutController {
         case .succeeded(let params):
             intentConfirmParams = params
         case .canceled:
-            return .init(paymentSheetResult: .canceled)
+            return .canceled()
         case .failed(let error):
-            return .init(paymentSheetResult: .failed(error: error))
+            return .failed(error)
         }
 
         return await confirmPaymentMethodOption(
@@ -402,9 +406,16 @@ extension CheckoutController {
                 authenticationContext: authenticationContext,
                 paymentHandler: paymentHandler
             )
-            return .init(paymentSheetResult: paymentSheetResult, checkoutSessionResponse: response)
+            switch paymentSheetResult {
+            case .completed:
+                return .completed(response)
+            case .canceled:
+                return .canceled(sessionResponse: response)
+            case .failed(let error):
+                return .failed(error, sessionResponse: response)
+            }
         } catch {
-            return .init(paymentSheetResult: .failed(error: error))
+            return .failed(error)
         }
     }
 
