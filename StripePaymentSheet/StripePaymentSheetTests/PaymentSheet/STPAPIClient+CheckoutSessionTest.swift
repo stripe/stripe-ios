@@ -168,7 +168,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let updatedSession = try await sessionApiClient.updatePaymentMethod(
             paymentMethod.stripeId,
             inCheckoutSession: checkoutSessionResponse.id,
-            expiryDetails: Checkout.PaymentMethodExpiryDetails(expMonth: 6, expYear: 2029)
+            expiryDetails: CheckoutController.PaymentMethodExpiryDetails(expMonth: 6, expYear: 2029)
         ).makePublicSession()
 
         // 5. Verify the session was returned successfully (proves the API accepted our request)
@@ -215,11 +215,11 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let updatedSession = try await sessionApiClient.updatePaymentMethod(
             paymentMethod.stripeId,
             inCheckoutSession: checkoutSessionResponse.id,
-            billingDetails: Checkout.PaymentMethodBillingDetails(
+            billingDetails: CheckoutController.PaymentMethodBillingDetails(
                 name: "Jane Doe",
                 email: "jane@example.com",
                 phone: "+15551234567",
-                address: Checkout.PaymentMethodBillingAddress(
+                address: CheckoutController.PaymentMethodBillingAddress(
                     line1: "123 Main St",
                     city: "San Francisco",
                     state: "CA",

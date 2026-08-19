@@ -4,7 +4,7 @@
 
 // MARK: - Confirm
 
-extension Checkout {
+extension CheckoutController {
     /// Convenience bag of params needed for confirmation
     struct ConfirmationContext {
         let paymentOption: PaymentOption
@@ -182,7 +182,7 @@ extension Checkout {
     /// Confirms a checkout session with a new payment method
     @MainActor
     static func handleCheckoutSessionConfirmation(
-        checkoutSession: Checkout.Session,
+        checkoutSession: CheckoutController.Session,
         confirmType: PaymentSheet.ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,

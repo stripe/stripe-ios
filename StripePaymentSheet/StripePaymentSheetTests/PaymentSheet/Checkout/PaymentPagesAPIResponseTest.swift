@@ -58,7 +58,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
     }
 
     func testDecodedObjectFromAPIResponseMapsSessionStatus() throws {
-        let testCases: [(status: String, paymentStatus: String, expected: Checkout.Session.Status)] = [
+        let testCases: [(status: String, paymentStatus: String, expected: CheckoutController.Session.Status)] = [
             ("open", "unpaid", .open),
             ("expired", "unpaid", .expired),
             ("complete", "paid", .complete(.paid)),
@@ -241,8 +241,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.localizedPricesMetas[1].currency, "usd")
         XCTAssertEqual(session.localizedPricesMetas[1].total, 12000)
         XCTAssertNotNil(session.exchangeRateMeta)
-        XCTAssertEqual(session.exchangeRateMeta?.buyCurrency, "eur")
-        XCTAssertEqual(session.exchangeRateMeta?.sellCurrency, "usd")
+        XCTAssertEqual(session.exchangeRateMeta?.localizedCurrency, "eur")
+        XCTAssertEqual(session.exchangeRateMeta?.integrationCurrency, "usd")
         XCTAssertEqual(session.exchangeRateMeta?.exchangeRate, "0.90325")
 
         // Presentment details (derived from adaptive pricing)

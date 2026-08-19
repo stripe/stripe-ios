@@ -9,7 +9,7 @@ import Foundation
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout.Session {
+extension CheckoutController.Session {
     /// The status of a checkout session.
     public enum Status: Sendable, Hashable {
         /// The checkout session is still in progress. Payment processing has not started.
