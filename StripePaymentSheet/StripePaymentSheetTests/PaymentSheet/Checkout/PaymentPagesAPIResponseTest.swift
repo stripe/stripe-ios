@@ -501,6 +501,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
             "recurring_details": [
+                "total_discount_amounts": [],
                 "total_tax_amounts": [
                     ["amount": 186, "inclusive": false, "taxable_amount": 2000,
                      "tax_rate": ["percentage": 7.45, "display_name": "Sales Tax"], ],
@@ -531,7 +532,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                     ],
                 ],
                 "total_discount_amounts": [
-                    ["amount": 332, "coupon": ["id": "co_test", "name": "Welcome"]],
+                    ["amount": 332, "coupon": ["code": "co_test", "name": "Welcome"]],
                 ],
             ],
             "checkout_items": [
@@ -975,11 +976,17 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         // When decoding sessions that use shipping, billing, and no address source
         let shipping = CheckoutTestHelpers.makeSession([
             "tax_meta": taxMeta,
-            "tax_context": ["automatic_tax_address_source": "session.shipping"],
+            "tax_context": [
+                "automatic_tax_enabled": true,
+                "automatic_tax_address_source": "session.shipping",
+            ],
         ]).withCustomer().makePublicSession()
         let billing = CheckoutTestHelpers.makeSession([
             "tax_meta": taxMeta,
-            "tax_context": ["automatic_tax_address_source": "session.billing"],
+            "tax_context": [
+                "automatic_tax_enabled": true,
+                "automatic_tax_address_source": "session.billing",
+            ],
         ]).withCustomer().makePublicSession()
         let missingSource = CheckoutTestHelpers.makeSession(["tax_meta": taxMeta]).withCustomer().makePublicSession()
 
@@ -1005,20 +1012,17 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNil(session.tax)
     }
 
-    func testTax_automaticUnsupportedStatus_isNil() {
+    func testTax_automaticUnsupportedStatus_isRejected() {
         // Given automatic tax returns an unsupported status
-        let response = CheckoutTestHelpers.makeSession([
+        let json = CheckoutTestHelpers.makeSessionJSON([
             "tax_meta": [
                 "computation_type": "automatic",
                 "status": "future_status",
             ],
-        ]).withCustomer()
+        ])
 
-        // When creating the public Session
-        let session = response.makePublicSession()
-
-        // Then the public Session has no tax state
-        XCTAssertNil(session.tax)
+        // Then decoding fails instead of silently dropping tax state
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
     func testTax_missingMetadata_isNil() {
@@ -1032,24 +1036,21 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNil(session.tax)
     }
 
-    func testTax_missingComputationType_isNil() {
+    func testTax_missingComputationType_isRejected() {
         // Given tax metadata without a computation type
-        let response = CheckoutTestHelpers.makeSession([
+        let json = CheckoutTestHelpers.makeSessionJSON([
             "tax_meta": ["status": "complete"],
-        ]).withCustomer()
+        ])
 
-        // When creating the public Session
-        let session = response.makePublicSession()
-
-        // Then the public Session has no tax state
-        XCTAssertNil(session.tax)
+        // Then decoding fails instead of silently dropping tax state
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
     func testTax_nonAutomaticComputationType_isReady() {
         // Given a non-automatic tax computation
         let response = CheckoutTestHelpers.makeSession([
             "tax_meta": [
-                "computation_type": "dynamic",
+                "computation_type": "manual",
                 "status": "requires_location_inputs",
             ],
         ]).withCustomer()
@@ -1059,6 +1060,33 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         // Then the public tax status is ready
         XCTAssertEqual(session.tax?.status, .ready)
+    }
+
+    func testTaxMetaRejectsUnknownComputationType() {
+        let json = CheckoutTestHelpers.makeSessionJSON([
+            "tax_meta": [
+                "computation_type": "future_type",
+                "status": "complete",
+            ],
+        ])
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+    }
+
+    func testTaxContextRejectsMissingAutomaticTaxEnabled() {
+        let json = CheckoutTestHelpers.makeSessionJSON([
+            "tax_context": ["automatic_tax_address_source": "session.billing"],
+        ])
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+    }
+
+    func testShippingAddressCollectionRejectsMissingAllowedCountries() {
+        let json = CheckoutTestHelpers.makeSessionJSON([
+            "shipping_address_collection": [:] as [String: Any],
+        ])
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
     // MARK: - Elements Session Tests
