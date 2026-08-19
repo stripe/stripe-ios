@@ -33,6 +33,38 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         XCTAssertEqual(checkout.session.status, .complete(.paid))
     }
 
+    func testCanceledConfirmationCommitsReturnedSession() async throws {
+        // Given Stripe returns an updated session whose PaymentIntent was canceled
+        let checkout = try await makeCheckout()
+        stubConfirmation(responseJSON: makeConfirmedSessionJSON(paymentIntentStatus: "canceled"))
+
+        // When confirmation is canceled
+        let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
+
+        // Then the coordinator still commits the returned Checkout Session
+        guard case .canceled = result else {
+            XCTFail("Expected confirmation to be canceled, got \(result)")
+            return
+        }
+        XCTAssertEqual(checkout.session.status, .complete(.paid))
+    }
+
+    func testFailedConfirmationCommitsReturnedSession() async throws {
+        // Given Stripe returns an updated session whose PaymentIntent failed
+        let checkout = try await makeCheckout()
+        stubConfirmation(responseJSON: makeConfirmedSessionJSON(paymentIntentStatus: "requires_payment_method"))
+
+        // When confirmation fails
+        let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
+
+        // Then the coordinator still commits the returned Checkout Session
+        guard case .failed = result else {
+            XCTFail("Expected confirmation to fail, got \(result)")
+            return
+        }
+        XCTAssertEqual(checkout.session.status, .complete(.paid))
+    }
+
     func testConfirmRejectsDuplicateConfirmation() async throws {
         // Given a confirmation that remains in progress long enough to start another
         let checkout = try await makeCheckout()
@@ -139,12 +171,24 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         return .paymentMethod(parameters, preconfirmIntegrationShape: .embedded)
     }
 
-    private func stubConfirmation(responseTime: TimeInterval = 0) {
+    private func makeConfirmedSessionJSON(paymentIntentStatus: String) -> [AnyHashable: Any] {
+        var responseJSON = Self.confirmedSessionJSON
+        var paymentIntent = responseJSON["payment_intent"] as! [String: Any]
+        paymentIntent["status"] = paymentIntentStatus
+        responseJSON["payment_intent"] = paymentIntent
+        return responseJSON
+    }
+
+    private func stubConfirmation(
+        responseJSON: [AnyHashable: Any]? = nil,
+        responseTime: TimeInterval = 0
+    ) {
+        let responseJSON = responseJSON ?? Self.confirmedSessionJSON
         stub { request in
             request.url?.path.hasSuffix("/confirm") == true
         } response: { _ in
             HTTPStubsResponse(
-                jsonObject: Self.confirmedSessionJSON,
+                jsonObject: responseJSON,
                 statusCode: 200,
                 headers: nil
             ).responseTime(responseTime)
