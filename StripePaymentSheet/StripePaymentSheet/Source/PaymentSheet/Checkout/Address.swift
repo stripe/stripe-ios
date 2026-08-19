@@ -10,7 +10,7 @@ import Foundation
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout {
+extension CheckoutController {
     /// A postal address used by Checkout's billing and shipping address APIs.
     public struct Address: Equatable {
         /// Two-letter country code (ISO 3166-1 alpha-2). Always required.

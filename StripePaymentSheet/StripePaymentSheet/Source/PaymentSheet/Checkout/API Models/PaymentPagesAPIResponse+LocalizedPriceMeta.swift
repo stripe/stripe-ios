@@ -9,11 +9,9 @@
 import Foundation
 
 /// A localized price option for adaptive pricing in a CheckoutSession.
-struct STPCheckoutSessionLocalizedPriceMeta: Equatable {
-    /// The identifier for this localized price (e.g. "usd").
-    public let id: String
+struct STPCheckoutSessionLocalizedPriceMeta {
     /// The three-letter ISO currency code (e.g. "usd").
-    public let currency: String
+    let currency: String
     /// The total amount in the smallest currency unit (e.g. 12000 for $120.00).
-    public let total: Int
+    let total: Int
 }
