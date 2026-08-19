@@ -16,7 +16,7 @@ final class CurrencySelectorElementViewTests: XCTestCase {
     func testDisplaysAdaptivePricingSelector() async throws {
         // Given a currency selector with Adaptive Pricing data
         let session = CheckoutTestHelpers.makeAdaptivePricingSession()
-        let checkout = try await Checkout(
+        let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
         )
         let element = checkout.getCurrencySelectorElement()
