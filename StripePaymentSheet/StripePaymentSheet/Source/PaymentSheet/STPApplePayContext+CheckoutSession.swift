@@ -17,7 +17,7 @@ extension STPApplePayContext {
     /// Builds Apple Pay summary items from a checkout session's current state.
     /// Returns a pending total row when no payment is required or the total is unavailable.
     static func makePaymentSummaryItems(
-        for session: Checkout.Session,
+        for session: CheckoutController.Session,
         label: String,
         currency: String?
     ) -> [PKPaymentSummaryItem] {
@@ -113,11 +113,11 @@ extension STPApplePayContext {
 
     // Partial billing address from the Apple Pay sheet (no street until authorization).
     // Returns nil if there's no country to key tax on.
-    static func makeCheckoutAddress(from postalAddress: CNPostalAddress) -> Checkout.Address? {
+    static func makeCheckoutAddress(from postalAddress: CNPostalAddress) -> CheckoutController.Address? {
         guard let country = postalAddress.isoCountryCode.nonEmpty else {
             return nil
         }
-        return Checkout.Address(
+        return CheckoutController.Address(
             country: country,
             line1: nil,
             line2: nil,

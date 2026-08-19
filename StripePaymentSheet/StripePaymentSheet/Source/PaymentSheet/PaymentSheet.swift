@@ -48,7 +48,7 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
-        case checkout(Checkout)
+        case checkout(CheckoutController)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {
@@ -311,7 +311,7 @@ public class PaymentSheet {
         loadResult: PaymentSheetLoader.LoadResult,
         previousPaymentOption: PaymentOption?
     ) -> PaymentSheetViewControllerProtocol {
-        let checkout: Checkout? = {
+        let checkout: CheckoutController? = {
             guard case .checkout(let checkout) = mode else {
                 return nil
             }

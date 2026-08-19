@@ -9,12 +9,12 @@
 import SwiftUI
 
 struct CheckoutCartEmbeddedPaymentView: View {
-    @ObservedObject var checkout: Checkout
+    @ObservedObject var checkout: CheckoutController
 
     @State private var showConfirmStub = false
     @State private var showEmbeddedScreen = false
 
-    private var session: Checkout.Session { checkout.session }
+    private var session: CheckoutController.Session { checkout.session }
 
     var body: some View {
         paymentBarView

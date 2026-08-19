@@ -15,6 +15,7 @@ import Foundation
 /// Properties in this model mirror the API payload. Conversion to the public Checkout
 /// representation belongs in `makePublicSession()`.
 struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible {
+    // TODO: Make this Decodable instead, we don't need _allResponseFieldStorage.
     var _allResponseFieldsStorage: NonEncodableParameters?
 
     let sessionId: String
@@ -26,8 +27,8 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let currency: String
     let checkoutItems: [CheckoutItem]
     let livemode: Bool
-    let status: Checkout.Session.Status
-    let paymentStatus: Checkout.Session.Status.PaymentStatus
+    let status: CheckoutController.Session.Status
+    let paymentStatus: CheckoutController.Session.Status.PaymentStatus
     let customerEmail: String?
     let url: String?
     let savedPaymentMethodsOfferSave: SavedPaymentMethodsOfferSave?
@@ -37,7 +38,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let shippingAddressCollection: ShippingAddressCollection?
     let recurringDetails: RecurringDetails?
     let adaptivePricingInfo: AdaptivePricingInfo?
-    let developerToolContext: DeveloperToolContext?
     let taxContext: TaxContext?
     let taxMeta: TaxMeta?
     let paymentMethodOptions: STPPaymentMethodOptions?
@@ -97,7 +97,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case shippingAddressCollection
         case recurringDetails
         case adaptivePricingInfo
-        case developerToolContext
         case taxContext
         case taxMeta
         case paymentMethodOptions
@@ -145,7 +144,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
 
         livemode = try container.decode(Bool.self, forKey: .livemode)
         let decodedPaymentStatus = try container.decode(String.self, forKey: .paymentStatus)
-        guard let paymentStatus = Checkout.Session.Status.PaymentStatus.paymentStatus(
+        guard let paymentStatus = CheckoutController.Session.Status.PaymentStatus.paymentStatus(
             from: decodedPaymentStatus
         ) else {
             throw decoder.dataCorrupted("Unsupported payment_status: \(decodedPaymentStatus)")
@@ -153,7 +152,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         self.paymentStatus = paymentStatus
 
         let decodedStatus = try container.decode(String.self, forKey: .status)
-        guard let status = Checkout.Session.Status.status(
+        guard let status = CheckoutController.Session.Status.status(
             from: decodedStatus,
             paymentStatus: paymentStatus
         ) else {
@@ -185,10 +184,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         adaptivePricingInfo = try container.decodeIfPresent(
             AdaptivePricingInfo.self,
             forKey: .adaptivePricingInfo
-        )
-        developerToolContext = try container.decodeIfPresent(
-            DeveloperToolContext.self,
-            forKey: .developerToolContext
         )
         taxContext = try container.decodeIfPresent(TaxContext.self, forKey: .taxContext)
         taxMeta = try container.decodeIfPresent(TaxMeta.self, forKey: .taxMeta)
@@ -439,25 +434,17 @@ extension PaymentPagesAPIResponse {
     }
 
     struct AdaptivePricingInfo: Decodable {
-        let activePresentmentCurrency: String?
-        let integrationAmount: Int?
-        let integrationCurrency: String?
-        let localCurrencyOptions: [LocalCurrencyOption]?
+        let activePresentmentCurrency: String
+        let integrationAmount: Int
+        let integrationCurrency: String
+        let localCurrencyOptions: [LocalCurrencyOption]
     }
 
     struct LocalCurrencyOption: Decodable {
-        let amount: Int?
+        let amount: Int
         let conversionMarkupBps: Int?
-        let currency: String?
-        let presentmentExchangeRate: String?
-    }
-
-    struct DeveloperToolContext: Decodable {
-        let adaptivePricing: AdaptivePricing?
-
-        struct AdaptivePricing: Decodable {
-            let active: Bool?
-        }
+        let currency: String
+        let presentmentExchangeRate: String
     }
 
     struct TaxContext: Decodable {

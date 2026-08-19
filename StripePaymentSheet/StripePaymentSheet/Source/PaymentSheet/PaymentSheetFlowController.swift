@@ -335,7 +335,7 @@ extension PaymentSheet {
             }
         }
 
-        weak var checkout: Checkout?
+        weak var checkout: CheckoutController?
         private var isPresented = false
         private var pendingPresentTask: Task<Void, Never>?
         private(set) var didPresentAndContinue: Bool = false
@@ -429,14 +429,14 @@ extension PaymentSheet {
 
         /// An asynchronous failable initializer for PaymentSheet.FlowController
         /// This asynchronously loads the CheckoutSession's payment methods and configuration.
-        /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
+        /// - Parameter checkout: A fully loaded Checkout instance whose ``CheckoutController.session`` is non-nil.
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
         @_spi(STP)
         @_spi(ReactNativeSDK)
         @MainActor
         public static func create(
-            checkout: Checkout,
+            checkout: CheckoutController,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
@@ -599,7 +599,7 @@ extension PaymentSheet {
         /// then swaps to the payment options view controller on success or dismisses on failure.
         private func presentPaymentOptionsAwaitingMutations(
             from presentingViewController: UIViewController,
-            checkout: Checkout,
+            checkout: CheckoutController,
             completion: @escaping (Bool) -> Void
         ) {
             let loadingVC = LoadingViewController(
@@ -772,7 +772,7 @@ extension PaymentSheet {
                     if MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
                         stpAssertionFailure("`confirm` should not be called while the Checkout session is loading.")
                         let error = PaymentSheetError.flowControllerConfirmFailed(
-                            message: "confirmPayment was called while the Checkout session is still loading. Wait until Checkout.isLoading is false."
+                            message: "confirmPayment was called while the Checkout session is still loading. Wait until CheckoutController.isUpdating is false."
                         )
                         completion(.failed(error: error))
                         return
@@ -808,7 +808,7 @@ extension PaymentSheet {
         /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
         @MainActor
         func update(
-            checkout: Checkout,
+            checkout: CheckoutController,
             completion: @escaping (Error?) -> Void
         ) {
             // No-op if the session already reached a terminal state (complete/expired).
@@ -989,7 +989,7 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
-            checkout: Checkout? = nil,
+            checkout: CheckoutController? = nil,
             initialState: FlowControllerViewControllerInitialState = .preservingFormInput(from: nil)
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
@@ -1150,7 +1150,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
-    var checkout: Checkout? { get set }
+    var checkout: CheckoutController? { get set }
     func clearSelection()
 }
 
