@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Computed Properties
 
-extension Checkout.Session {
+extension CheckoutController.Session {
     /// The express button types available for this session, derived from the elements session.
     var availableExpressButtonTypes: [ExpressButton] {
         var types: [ExpressButton] = []
@@ -50,11 +50,16 @@ extension Checkout.Session {
     var noPaymentRequired: Bool {
         return paymentStatus == .noPaymentRequired
     }
+
+    /// The currency associated with the session's amounts.
+    var activePresentmentCurrency: String? {
+        return presentmentDetails?.presentmentCurrency ?? currency
+    }
 }
 
 // MARK: - Methods
 
-extension Checkout.Session {
+extension CheckoutController.Session {
     /// Returns `true` when the server needs a `tax_region` update for the given address type.
     ///
     /// - Parameter addressType: Either `"billing"` or `"shipping"`.
@@ -107,20 +112,20 @@ enum SessionFieldUpdate<Value> {
     }
 }
 
-extension Checkout.Session {
+extension CheckoutController.Session {
     /// Apologetic explanation for this method:
     /// - Situation: Session is immutable, so all mutations must create a new one.
     /// - Complication: Optional fields need three states here: keep the old value, replace with a non-nil value, or explicitly clear to nil.
     /// - Resolution: SessionFieldUpdate keeps that distinction visible at call sites instead of relying on double optionals.
     func makeCopyOverriding(
-        shippingAddress: SessionFieldUpdate<Checkout.Session.ShippingAddress> = .keepOldValue,
-        paymentOption: SessionFieldUpdate<Checkout.Session.PaymentOptionDisplayData> = .keepOldValue
+        shippingAddress: SessionFieldUpdate<CheckoutController.Session.ShippingAddress> = .keepOldValue,
+        paymentOption: SessionFieldUpdate<CheckoutController.Session.PaymentOptionDisplayData> = .keepOldValue
     ) -> Self {
         return Self(
             id: id,
             businessName: businessName,
             currency: currency,
-            currencyOptions: currencyOptions,
+            presentmentDetails: presentmentDetails,
             discountAmounts: discountAmounts,
             email: email,
             orderSummaryItems: orderSummaryItems,

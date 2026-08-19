@@ -5,13 +5,13 @@
 
 import Foundation
 
-extension Checkout.Session: CustomDebugStringConvertible {
+extension CheckoutController.Session: CustomDebugStringConvertible {
     /// A human-readable description of the Checkout Session for debugging.
     ///
     /// Customer information and other potentially sensitive values are masked or redacted.
     public var debugDescription: String {
         var lines = [
-            "Checkout.Session {",
+            "CheckoutController.Session {",
             "  id: \(String(reflecting: id))",
             "  status: \(status.debugDescription)",
             "  livemode: \(livemode)",
@@ -19,7 +19,7 @@ extension Checkout.Session: CustomDebugStringConvertible {
             "  currency: \(currency.debugValue)",
         ]
 
-        lines.append(contentsOf: currencyOptionsDebugDescriptionLines)
+        lines.append(contentsOf: presentmentDetailsDebugDescriptionLines)
         lines.append(contentsOf: discountAmountsDebugDescriptionLines)
         lines.append(contentsOf: [
             "  email: \(email.maskedEmailDebugValue)",
@@ -51,32 +51,15 @@ extension Checkout.Session: CustomDebugStringConvertible {
         return lines.joined(separator: "\n")
     }
 
-    private var currencyOptionsDebugDescriptionLines: [String] {
-        guard !currencyOptions.isEmpty else {
-            return ["  currencyOptions: []"]
+    private var presentmentDetailsDebugDescriptionLines: [String] {
+        guard let presentmentDetails else {
+            return ["  presentmentDetails: nil"]
         }
-
-        var lines = ["  currencyOptions: ["]
-        for option in currencyOptions {
-            lines.append(contentsOf: [
-                "    {",
-                "      currency: \(String(reflecting: option.currency))",
-                "      amount: \(option.amount.debugValue)",
-            ])
-            if let conversion = option.currencyConversion {
-                lines.append(contentsOf: [
-                    "      currencyConversion: {",
-                    "        sourceCurrency: \(String(reflecting: conversion.sourceCurrency))",
-                    "        fxRate: \(String(reflecting: conversion.fxRate))",
-                    "      }",
-                ])
-            } else {
-                lines.append("      currencyConversion: nil")
-            }
-            lines.append("    }")
-        }
-        lines.append("  ]")
-        return lines
+        return [
+            "  presentmentDetails: {",
+            "    presentmentCurrency: \(String(reflecting: presentmentDetails.presentmentCurrency))",
+            "  }",
+        ]
     }
 
     private var discountAmountsDebugDescriptionLines: [String] {
@@ -216,7 +199,7 @@ private extension Optional where Wrapped == Double {
     }
 }
 
-private extension Optional where Wrapped == Checkout.Session.AdjustableQuantity {
+private extension Optional where Wrapped == CheckoutController.Session.AdjustableQuantity {
     /// Example: `1...99 (enabled: true)`; `nil` remains `nil`.
     var debugValue: String {
         guard let value = self else {
@@ -226,13 +209,13 @@ private extension Optional where Wrapped == Checkout.Session.AdjustableQuantity 
     }
 }
 
-private extension Checkout.Session.Amount {
+private extension CheckoutController.Session.Amount {
     var debugValue: String {
         String(reflecting: amount)
     }
 }
 
-extension Checkout.Session.Status: CustomDebugStringConvertible {
+extension CheckoutController.Session.Status: CustomDebugStringConvertible {
     /// Examples: `.open`, `.expired`, or `.complete(.paid)`.
     public var debugDescription: String {
         switch self {
@@ -246,7 +229,7 @@ extension Checkout.Session.Status: CustomDebugStringConvertible {
     }
 }
 
-extension Checkout.Session.Status.PaymentStatus: CustomDebugStringConvertible {
+extension CheckoutController.Session.Status.PaymentStatus: CustomDebugStringConvertible {
     /// Examples: `.paid`, `.unpaid`, or `.noPaymentRequired`.
     public var debugDescription: String {
         switch self {
@@ -260,7 +243,7 @@ extension Checkout.Session.Status.PaymentStatus: CustomDebugStringConvertible {
     }
 }
 
-extension Checkout.Session.Tax.Status: CustomDebugStringConvertible {
+extension CheckoutController.Session.Tax.Status: CustomDebugStringConvertible {
     /// Examples: `.ready`, `.requiresShippingAddress`, or `.requiresBillingAddress`.
     public var debugDescription: String {
         switch self {

@@ -16,12 +16,12 @@ protocol CheckoutSessionBillingAddressUpdater: AnyObject {
     func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws
 
     func updateBillingTaxRegionIfNecessaryForPaymentSheet(
-        address: Checkout.Address,
+        address: CheckoutController.Address,
         canUpdateWhileSheetPresented: Bool
-    ) async throws -> Checkout.Session
+    ) async throws -> CheckoutController.Session
 }
 
-extension Checkout: CheckoutSessionBillingAddressUpdater {
+extension CheckoutController: CheckoutSessionBillingAddressUpdater {
     func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
         try await commitSession(
             apiResponse,

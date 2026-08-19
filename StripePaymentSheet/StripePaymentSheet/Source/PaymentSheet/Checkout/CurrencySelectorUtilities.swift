@@ -33,7 +33,7 @@ enum CurrencySelectorUtilities {
     ///
     /// - Parameter flagPrefixProvider: Returns an attributed flag icon for each currency code.
     static func buildSelectorItems(
-        exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
+        exchangeRateMeta: CheckoutController.Session.ExchangeRateMeta,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
         labelContent: CurrencySelectorElement.Appearance.LabelContent = .currencyCode,
         flagPrefixProvider: (String) -> NSAttributedString = { _ in NSAttributedString() }
@@ -88,7 +88,7 @@ enum CurrencySelectorUtilities {
     /// or a bank-fees disclaimer when the merchant's currency is selected.
     static func caption(
         forSelectedCurrency selectedCurrency: String,
-        exchangeRateMeta meta: STPCheckoutSessionExchangeRateMeta
+        exchangeRateMeta meta: CheckoutController.Session.ExchangeRateMeta
     ) -> String {
         let isIntegrationCurrencySelected = selectedCurrency == CurrencyCode(meta.integrationCurrency).apiValue
         if isIntegrationCurrencySelected {
@@ -105,7 +105,7 @@ enum CurrencySelectorUtilities {
         return formatter
     }()
 
-    static func formatExchangeRate(from meta: STPCheckoutSessionExchangeRateMeta) -> String {
+    static func formatExchangeRate(from meta: CheckoutController.Session.ExchangeRateMeta) -> String {
         let localCurrency = CurrencyCode(meta.localizedCurrency).displayValue
         let integrationCurrency = CurrencyCode(meta.integrationCurrency).displayValue
 
@@ -117,8 +117,8 @@ enum CurrencySelectorUtilities {
             formattedRate = meta.exchangeRate
         }
 
-        if meta.conversionMarkupBps > 0 {
-            let feePercent = String(format: "%g", Double(meta.conversionMarkupBps) / 100.0)
+        if let conversionMarkupBps = meta.conversionMarkupBps, conversionMarkupBps > 0 {
+            let feePercent = String(format: "%g", Double(conversionMarkupBps) / 100.0)
             return .Localized.exchangeRateWithConversionFee(
                 localCurrency: localCurrency,
                 rate: formattedRate,
@@ -136,8 +136,8 @@ enum CurrencySelectorUtilities {
 
     /// Returns the expandable detail text for the exchange rate, or nil if not applicable.
     /// This will be replaced by a server-provided string from the translation layer in the future.
-    static func detailText(exchangeRateMeta meta: STPCheckoutSessionExchangeRateMeta) -> String? {
-        guard meta.conversionMarkupBps > 0 else { return nil }
+    static func detailText(exchangeRateMeta meta: CheckoutController.Session.ExchangeRateMeta) -> String? {
+        guard let conversionMarkupBps = meta.conversionMarkupBps, conversionMarkupBps > 0 else { return nil }
         return "This string will come from the translation layer in the future"
     }
 
@@ -146,13 +146,13 @@ enum CurrencySelectorUtilities {
     /// Returns the adaptive pricing data needed to show a currency selector,
     /// or `nil` if adaptive pricing is not available for the given session.
     static func adaptivePricingData(
-        from session: Checkout.Session?
-    ) -> (session: Checkout.Session, exchangeRateMeta: STPCheckoutSessionExchangeRateMeta, currency: String)? {
+        from session: CheckoutController.Session?
+    ) -> (session: CheckoutController.Session, exchangeRateMeta: CheckoutController.Session.ExchangeRateMeta, currency: String)? {
         guard let session,
               session.adaptivePricingActive,
               !session.localizedPricesMetas.isEmpty,
               let exchangeRateMeta = session.exchangeRateMeta,
-              let currency = session.currency
+              let currency = session.activePresentmentCurrency
         else { return nil }
         return (session, exchangeRateMeta, currency)
     }
