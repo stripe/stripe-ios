@@ -16,6 +16,26 @@ private class ClassForBundle {}
 
 // MARK: Responses
 
+enum FulfillAdditionalKYCRequirementResponseMock: String, MockData {
+    var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    typealias ResponseType = AdditionalKYCFulfillmentResponse
+
+    case fulfillAdditionalKYCRequirementResponse_200 = "FulfillAdditionalKYCRequirementResponse_200"
+}
+
+enum RetrieveCryptoCustomerResponseMock: String, MockData {
+    var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    typealias ResponseType = CustomerResponse
+
+    case userActionDocument = "RetrieveCryptoCustomerResponse_UserActionDocument_200"
+    case partnerReviewDocument = "RetrieveCryptoCustomerResponse_PartnerReviewDocument_200"
+    case sourceOfFundsWithQuestionnaire = "RetrieveCryptoCustomerResponse_SourceOfFundsWithQuestionnaire_200"
+    case stripeReviewDocument = "RetrieveCryptoCustomerResponse_StripeReviewDocument_200"
+    case unknownSubmissionType = "RetrieveCryptoCustomerResponse_UnknownSubmissionType_200"
+}
+
 enum RetrieveKYCInfoResponseMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
