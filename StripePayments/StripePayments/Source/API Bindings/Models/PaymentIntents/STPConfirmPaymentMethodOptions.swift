@@ -8,8 +8,9 @@
 
 import Foundation
 
-/// Options to update the associated PaymentMethod during PaymentIntent confirmation.
+/// Payment method-specific options for PaymentIntent or SetupIntent confirmation.
 /// - seealso: https://stripe.com/docs/api/payment_intents/confirm#confirm_payment_intent-payment_method_options
+/// - seealso: https://stripe.com/docs/api/setup_intents/confirm#confirm_setup_intent-payment_method_options
 public class STPConfirmPaymentMethodOptions: NSObject {
 
     /// Options to update a Card PaymentMethod.

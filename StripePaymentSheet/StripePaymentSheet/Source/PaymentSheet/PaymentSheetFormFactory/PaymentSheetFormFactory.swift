@@ -278,9 +278,13 @@ class PaymentSheetFormFactory {
                 return makeWero()
             case .SEPADebit:
                 return makeSepaDebit()
-            case .grabPay, .alipay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
+            case .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank:
                 return makeContactInformationAndBillingAddressForm()
+            case .alipay:
+                return makeContactInformationAndBillingAddressForm(
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
+                )
             case .promptPay, .multibanco:
                 return makeContactInformationAndBillingAddressForm(
                     emailRequired: true,
@@ -321,6 +325,8 @@ class PaymentSheetFormFactory {
     private func makeSetupMandateElements(for paymentMethod: STPPaymentMethodType) -> [Element] {
         guard isSettingUp else { return [] }
         switch paymentMethod {
+        case .alipay:
+            return [makeAlipayMandate()]
         case .cashApp:
             return [makeCashAppMandate()]
         case .payPal:

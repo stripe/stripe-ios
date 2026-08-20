@@ -1,13 +1,15 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
 ### Payments
 * [Added] Added support for the following FPX banks: Agrobank, Bank of China, and MBSB Bank.
+* [Fixed] Fixed an issue where card decline error messages became generic after 3DS authentication.
 
 ## 26.7.0 2026-08-17
 ### PaymentSheet
 * [Added] StripePaymentSheet now depends on `StripeFinancialConnectionsLite` to support lightweight bank payment flows. If you use StripePaymentSheet with Carthage or by manually embedding the .xcframeworks, [you must also embed StripeFinancialConnectionsLite.xcframework](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2670) in your app. No action is required for CocoaPods or Swift Package Manager users.
+* [Added] Added private preview support for setting up Alipay payment methods for future off-session use with PaymentIntents and SetupIntents.
 * [Changed] Address autocomplete results sourced from internal service.
 * [Added] Added `PaymentSheet.LinkConfiguration.Display.walletButtonHidden`, which keeps Link enabled but hides its button from the payment element UI.
 

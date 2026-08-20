@@ -11,8 +11,8 @@ import Foundation
 
 extension CheckoutController.Session {
     /// The express button types available for this session, derived from the elements session.
-    var availableExpressButtonTypes: [ExpressButton] {
-        var types: [ExpressButton] = []
+    var availableExpressButtonTypes: [ExpressCheckoutElement.PaymentMethod] {
+        var types: [ExpressCheckoutElement.PaymentMethod] = []
         for type in elementsSession.orderedPaymentMethodTypesAndWallets {
             switch type {
             case "apple_pay" where !types.contains(.applePay) && elementsSession.isApplePayEnabled:
