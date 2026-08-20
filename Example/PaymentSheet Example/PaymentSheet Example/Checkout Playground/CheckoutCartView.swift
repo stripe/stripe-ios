@@ -25,6 +25,8 @@ struct CheckoutCartView: View {
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     var showExpressCheckoutElement: Bool = false
+    var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
+    var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
     var delayPaymentPagesRequests = false
 
@@ -174,6 +176,11 @@ struct CheckoutCartView: View {
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             config.currencySelectorElement.appearance = currencySelectorAppearance
+            config.expressCheckoutElement.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
+                merchantId: "merchant.com.stripe.paymentsheet.example",
+                display: applePayDisplay
+            )
+            config.expressCheckoutElement.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(display: linkDisplay)
             config.expressCheckoutElement.confirmHandler = { result in
                 confirmResult = result
             }

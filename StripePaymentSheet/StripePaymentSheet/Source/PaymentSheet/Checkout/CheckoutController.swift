@@ -143,7 +143,7 @@ public final class CheckoutController: ObservableObject {
             // 3. ECE
             self.expressCheckoutElement = ExpressCheckoutElement(
                 sessionSource: sessionSource,
-                configuration: configuration,
+                configuration: configuration.expressCheckoutElement,
                 delegate: self
             )
 
