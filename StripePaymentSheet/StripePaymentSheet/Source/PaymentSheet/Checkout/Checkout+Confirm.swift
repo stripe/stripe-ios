@@ -169,6 +169,7 @@ extension CheckoutController {
             return await confirmApplePay(
                 checkoutSession: checkoutSession,
                 applePayConfirmationContext: applePayConfirmationContext,
+                presentationWindow: authenticationContext.authenticationPresentingViewController().view.window,
                 sessionUpdater: sessionUpdater
             )
         case .new(let confirmParams):

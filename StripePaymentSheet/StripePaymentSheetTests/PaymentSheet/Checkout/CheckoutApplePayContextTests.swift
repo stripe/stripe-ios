@@ -14,6 +14,7 @@ import PassKit
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 import StripePaymentsObjcTestUtils
+import UIKit
 import XCTest
 
 @MainActor
@@ -55,6 +56,20 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(items[0].label, "Test Store")
         XCTAssertEqual(items[0].type, .pending)
         XCTAssertEqual(items[0].amount, .zero)
+    }
+
+    // MARK: - presentationWindow
+
+    func testPresentationWindowReturnsConfiguredWindow() {
+        // Given
+        let presentationWindow = UIWindow()
+        let (context, authorizationController) = makeContext(presentationWindow: presentationWindow)
+
+        // When
+        let returnedWindow = context.presentationWindow(for: authorizationController)
+
+        // Then
+        XCTAssertNotNil(returnedWindow)
     }
 
     // MARK: - paymentAuthorizationControllerDidFinish state machine
@@ -126,7 +141,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
     private func makeContext(
         sessionId: String = "cs_test_123",
-        apiClient: STPAPIClient? = nil
+        apiClient: STPAPIClient? = nil,
+        presentationWindow: UIWindow? = nil
     ) -> (CheckoutApplePayContext, MockPKPaymentAuthorizationController) {
         let resolvedAPIClient = apiClient ?? APIStubbedTestCase.stubbedAPIClient()
         let response = CheckoutTestHelpers.makeSession([
@@ -140,6 +156,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let context = CheckoutApplePayContext(
             checkoutSession: session,
             applePayConfirmationContext: applePayConfirmationContext,
+            presentationWindow: presentationWindow,
             sessionUpdater: StubExpressCheckoutSessionUpdater(),
             authorizationController: mockController
         )

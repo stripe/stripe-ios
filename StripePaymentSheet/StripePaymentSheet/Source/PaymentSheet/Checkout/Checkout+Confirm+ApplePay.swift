@@ -9,17 +9,20 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+import UIKit
 
 extension CheckoutController {
     static func confirmApplePay(
         checkoutSession: Session,
         applePayConfirmationContext: ApplePayConfirmationContext,
+        presentationWindow: UIWindow?,
         sessionUpdater: ExpressCheckoutSessionUpdater
     ) async -> InternalConfirmResult {
         do {
             let context = try CheckoutApplePayContext.create(
                 checkoutSession: checkoutSession,
                 applePayConfirmationContext: applePayConfirmationContext,
+                presentationWindow: presentationWindow,
                 sessionUpdater: sessionUpdater
             )
             return await context.presentApplePay()

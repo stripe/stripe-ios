@@ -31,6 +31,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let merchantLabel: String
     private let apiClient: STPAPIClient
     private let returnURL: String
+    private let presentationWindow: UIWindow?
     let authorizationController: PKPaymentAuthorizationController
 
     // Internal state
@@ -45,6 +46,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     init(
         checkoutSession: CheckoutController.Session,
         applePayConfirmationContext: CheckoutController.ApplePayConfirmationContext,
+        presentationWindow: UIWindow?,
         sessionUpdater: ExpressCheckoutSessionUpdater,
         authorizationController: PKPaymentAuthorizationController
     ) {
@@ -53,6 +55,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         self.merchantLabel = applePayConfirmationContext.merchantDisplayName
         self.apiClient = applePayConfirmationContext.apiClient
         self.returnURL = applePayConfirmationContext.returnURL
+        self.presentationWindow = presentationWindow
         self.authorizationController = authorizationController
         super.init()
     }
@@ -198,6 +201,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         }
     }
 
+    func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
+        return presentationWindow
+    }
+
     func paymentAuthorizationController(
         _ controller: PKPaymentAuthorizationController,
         didSelectPaymentMethod paymentMethod: PKPaymentMethod,
@@ -239,6 +246,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     static func create(
         checkoutSession: CheckoutController.Session,
         applePayConfirmationContext: CheckoutController.ApplePayConfirmationContext,
+        presentationWindow: UIWindow?,
         sessionUpdater: ExpressCheckoutSessionUpdater
     ) throws -> CheckoutApplePayContext {
         let applePayConfig = applePayConfirmationContext.applePayConfiguration
@@ -277,6 +285,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         return CheckoutApplePayContext(
             checkoutSession: checkoutSession,
             applePayConfirmationContext: applePayConfirmationContext,
+            presentationWindow: presentationWindow,
             sessionUpdater: sessionUpdater,
             authorizationController: authorizationController
         )
