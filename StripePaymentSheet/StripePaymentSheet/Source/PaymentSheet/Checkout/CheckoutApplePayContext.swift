@@ -96,14 +96,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     intent: .checkout(checkoutSession),
                     elementsSession: checkoutSession.elementsSession
                 )
-                // The Checkout Session's customer_email is authoritative: the backend rejects
-                // confirmation if the payment method's billing email differs from it, so it must
-                // override whatever email Apple Pay collected.
                 let paymentMethod = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<StripeAPI.PaymentMethod, Error>) in
                     StripeAPI.PaymentMethod.create(
                         apiClient: self.apiClient,
                         payment: payment,
-                        billingDetailsEmailOverride: checkoutSession.email,
                         clientAttributionMetadata: clientAttributionMetadata
                     ) { result in
                         continuation.resume(with: result)
@@ -238,13 +234,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
         let billingDetailsCollectionConfiguration = applePayConfirmationParameters.billingDetailsCollectionConfiguration
         paymentRequest.requiredBillingContactFields = billingDetailsCollectionConfiguration.requiredBillingContactFields
-        var requiredShippingContactFields = billingDetailsCollectionConfiguration.requiredShippingContactFields
-        // The Checkout Session's customer_email is authoritative and always overrides whatever
-        // email Apple Pay collects, so don't prompt for it in the first place.
-        if checkoutSession.email != nil {
-            requiredShippingContactFields.remove(.emailAddress)
-        }
-        paymentRequest.requiredShippingContactFields = requiredShippingContactFields
+        paymentRequest.requiredShippingContactFields = billingDetailsCollectionConfiguration.requiredShippingContactFields
         // TODO: Add postalAddress to requiredShippingContactFields when shipping address collection is implemented.
 
         // PKPaymentAuthorizationController.init is non-nullable even for invalid requests.
