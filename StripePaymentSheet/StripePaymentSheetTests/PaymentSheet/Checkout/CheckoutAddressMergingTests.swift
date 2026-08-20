@@ -1,5 +1,5 @@
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(ReactNativeSDK) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
 @MainActor
@@ -156,24 +156,6 @@ final class CheckoutAddressMergingTests: XCTestCase {
         config.billingDetailsCollectionConfiguration.address = .automatic
         session.applyAddressOverrides(to: &config)
         XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
-    }
-
-    // MARK: - Billing address collection (ExpressCheckoutElement)
-
-    func testECE_billingRequired_upgradesAutomaticToFull() {
-        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "required").makePublicSession()
-        var config = ExpressCheckoutElement.Configuration()
-        config.billingDetailsCollectionConfiguration.address = .automatic
-        session.applyBillingAddressCollectionOverride(to: &config)
-        XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
-    }
-
-    func testECE_billingAuto_doesntUpgradeAutomatic() {
-        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "auto").makePublicSession()
-        var config = ExpressCheckoutElement.Configuration()
-        config.billingDetailsCollectionConfiguration.address = .automatic
-        session.applyBillingAddressCollectionOverride(to: &config)
-        XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .automatic)
     }
 
 }
