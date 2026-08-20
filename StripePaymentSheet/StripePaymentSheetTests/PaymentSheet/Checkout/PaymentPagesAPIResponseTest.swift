@@ -18,7 +18,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     // MARK: - STPAPIResponseDecodable Tests
 
-    func testDecodedObjectFromAPIResponseRequiredFields() throws {
+    func testDecodedObjectRejectsMissingSDKRequiredFields() throws {
         let fullJson = try XCTUnwrap(STPTestUtils.jsonNamed("CheckoutSession"))
 
         XCTAssertNoThrow(
@@ -26,7 +26,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "can decode with full json"
         )
 
-        // Required fields per API spec (non-nullable)
+        // Fields required by the SDK for the supported mobile response profile.
         let requiredFields = [
             "session_id",
             "currency",
@@ -269,12 +269,52 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         )
     }
 
-    func testDecodedObjectWithMinimalRequiredFields() {
-        // All required fields per API spec, but no optional fields
-        let apiResponse = CheckoutTestHelpers.makeSession([
+    func testDecodedObjectWithOnlySDKRequiredFields() throws {
+        let json: [String: Any] = [
             "session_id": "cs_test_minimal",
+            "currency": "usd",
+            "mode": "modeless",
+            "checkout_items": [
+                [
+                    "key": "checkout_item_test",
+                    "type": "one_time_price",
+                    "one_time_price": [
+                        "items": [
+                            [
+                                "inner_item_key": "checkout_item_inner_test",
+                                "price": [
+                                    "id": "price_test",
+                                    "currency": "usd",
+                                    "product": [
+                                        "name": "Test product",
+                                        "images": [],
+                                    ],
+                                ],
+                                "quantity": 1,
+                                "subtotal": 1000,
+                                "total": 1000,
+                                "unit_amount": 1000,
+                                "tax_amounts": [],
+                                "tax_inclusive": 0,
+                                "tax_exclusive": 0,
+                            ],
+                        ],
+                        "subtotal": 1000,
+                        "total": 1000,
+                    ],
+                ],
+            ],
             "livemode": true,
-        ])
+            "status": "open",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "elements_session": [
+                "session_id": "es_test",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            ],
+        ]
+
+        let apiResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
         let session = apiResponse.makePublicSession()
 
         XCTAssertEqual(session.id, "cs_test_minimal")
@@ -353,30 +393,35 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         }
     }
 
-    func testAdaptivePricingLocalCurrencyOptionAllowsMissingConversionMarkup() throws {
-        var json = CheckoutTestHelpers.baseSessionJSON
-        json["adaptive_pricing_info"] = [
-            "active_presentment_currency": "eur",
-            "integration_amount": 1200,
-            "integration_currency": "usd",
-            "local_currency_options": [
-                [
-                    "amount": 1080,
-                    "currency": "eur",
-                    "presentment_exchange_rate": "0.9",
-                ],
-            ],
-        ]
+    func testAdaptivePricingLocalCurrencyOptionAllowsMissingOrNullConversionMarkup() throws {
+        let conversionMarkups: [Any?] = [nil, NSNull()]
 
-        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
-        let session = response.makePublicSession()
-        let exchangeRateMeta = try XCTUnwrap(session.exchangeRateMeta)
+        for conversionMarkup in conversionMarkups {
+            var localCurrencyOption: [String: Any] = [
+                "amount": 1080,
+                "currency": "eur",
+                "presentment_exchange_rate": "0.9",
+            ]
+            localCurrencyOption["conversion_markup_bps"] = conversionMarkup
 
-        XCTAssertNil(response.adaptivePricingInfo?.localCurrencyOptions.first?.conversionMarkupBps)
-        XCTAssertTrue(session.adaptivePricingActive)
-        XCTAssertNil(exchangeRateMeta.conversionMarkupBps)
-        XCTAssertNotNil(CurrencySelectorUtilities.adaptivePricingData(from: session))
-        XCTAssertNil(CurrencySelectorUtilities.detailText(exchangeRateMeta: exchangeRateMeta))
+            var json = CheckoutTestHelpers.baseSessionJSON
+            json["adaptive_pricing_info"] = [
+                "active_presentment_currency": "eur",
+                "integration_amount": 1200,
+                "integration_currency": "usd",
+                "local_currency_options": [localCurrencyOption],
+            ]
+
+            let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+            let session = response.makePublicSession()
+            let exchangeRateMeta = try XCTUnwrap(session.exchangeRateMeta)
+
+            XCTAssertNil(response.adaptivePricingInfo?.localCurrencyOptions.first?.conversionMarkupBps)
+            XCTAssertTrue(session.adaptivePricingActive)
+            XCTAssertNil(exchangeRateMeta.conversionMarkupBps)
+            XCTAssertNotNil(CurrencySelectorUtilities.adaptivePricingData(from: session))
+            XCTAssertNil(CurrencySelectorUtilities.detailText(exchangeRateMeta: exchangeRateMeta))
+        }
     }
 
     func testExpandedIntentsDecodeLegacyModels() throws {
