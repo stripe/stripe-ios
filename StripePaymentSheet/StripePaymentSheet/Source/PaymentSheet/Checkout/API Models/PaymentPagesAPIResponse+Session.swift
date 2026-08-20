@@ -147,7 +147,7 @@ extension PaymentPagesAPIResponse {
                         adjustableQuantity = nil
                     }
                     return CheckoutController.Session.OrderSummaryItem.OneTimePrice.Item(
-                        key: price.id,
+                        key: item.innerItemKey,
                         displayName: product.name,
                         images: product.images,
                         unitAmount: makeAmount(

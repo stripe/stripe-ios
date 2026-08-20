@@ -165,7 +165,7 @@ enum CheckoutTestHelpers {
         stubAllOutgoingRequests: Bool = true
     ) -> CheckoutController.Configuration {
         // Use the production Checkout initializer with a test-controlled API client.
-        let clientSecret = configuration?.clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
+        let clientSecret = configuration?.clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
         var resolvedConfiguration = configuration ?? CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         resolvedConfiguration.apiClient = makeStubbedAPIClient(
             apiResponse: apiResponse,
@@ -181,7 +181,7 @@ enum CheckoutTestHelpers {
         apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
         configuration: CheckoutController.Configuration? = nil
     ) -> CheckoutController.Configuration {
-        let clientSecret = configuration?.clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
+        let clientSecret = configuration?.clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
         var resolvedConfiguration = configuration ?? CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         resolvedConfiguration.adaptivePricing.allowed = true
         return makeConfiguration(apiResponse: apiResponse, configuration: resolvedConfiguration)
@@ -193,7 +193,7 @@ enum CheckoutTestHelpers {
         clientSecret: String? = nil,
         stubAllOutgoingRequests: Bool = true
     ) -> STPAPIClient {
-        let resolvedClientSecret = clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
+        let resolvedClientSecret = clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
         let sessionId = CheckoutController.extractSessionId(from: resolvedClientSecret)
         let apiClient = APIStubbedTestCase.stubbedAPIClient()
         apiClient.publishableKey = "pk_test_123"
@@ -216,7 +216,6 @@ enum CheckoutTestHelpers {
         }) { _ in
             // Feed CheckoutController(configuration:) the session fixture this test requested.
             var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
-            responseJSON["client_secret"] = resolvedClientSecret
             responseJSON["session_id"] = responseJSON["session_id"] ?? sessionId
             let data = try! JSONSerialization.data(withJSONObject: responseJSON, options: [])
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
@@ -227,7 +226,6 @@ enum CheckoutTestHelpers {
                 && request.url?.path == "/v1/payment_pages/\(sessionId)"
         }) { _ in
             var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
-            responseJSON["client_secret"] = resolvedClientSecret
             responseJSON["session_id"] = responseJSON["session_id"] ?? sessionId
             let data = try! JSONSerialization.data(withJSONObject: responseJSON, options: [])
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
@@ -292,7 +290,6 @@ enum CheckoutTestHelpers {
     static let openSessionJSON: [AnyHashable: Any] = [
         "session_id": "cs_test_123",
         "object": "checkout.session",
-        "client_secret": "cs_test_123_secret_abc",
         "livemode": false,
         "mode": "modeless",
         "status": "open",
