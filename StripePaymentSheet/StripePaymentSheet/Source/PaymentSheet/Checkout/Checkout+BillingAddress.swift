@@ -6,9 +6,9 @@
 //
 
 import Foundation
+import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-import PassKit
 
 extension CheckoutController {
     /// Syncs the payment method's billing address to Checkout tax calculation when needed.
@@ -43,4 +43,3 @@ protocol BillingDetailsCollectionConfiguration {
     var requiredBillingContactFields: Set<PKContactField> { get }
     var requiredShippingContactFields: Set<PKContactField> { get }
 }
-
