@@ -36,15 +36,17 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
         XCTAssertEqual(session.savedPaymentMethodsOfferSave!.status, .notAccepted)
     }
 
-    func testDecodedObjectRejectsUnrecognizedStatus() {
-        let json = CheckoutTestHelpers.makeSessionJSON([
+    func testDecodedObjectTreatsUnrecognizedStatusAsNotAccepted() {
+        let session = CheckoutTestHelpers.makeSession([
             "customer_managed_saved_payment_methods_offer_save": [
                 "enabled": true,
                 "status": "some_future_status",
             ],
-        ])
+        ]).makePublicSession()
 
-        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+        XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
+        XCTAssertTrue(session.savedPaymentMethodsOfferSave!.enabled)
+        XCTAssertEqual(session.savedPaymentMethodsOfferSave!.status, .notAccepted)
     }
 
     func testDecodedObjectRejectsMissingRequiredSaveOfferFields() {

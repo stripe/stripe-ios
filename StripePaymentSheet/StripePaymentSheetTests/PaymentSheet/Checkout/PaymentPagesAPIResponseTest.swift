@@ -1012,17 +1012,20 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNil(session.tax)
     }
 
-    func testTax_automaticUnsupportedStatus_isRejected() {
+    func testTax_automaticUnsupportedStatus_isNil() {
         // Given automatic tax returns an unsupported status
-        let json = CheckoutTestHelpers.makeSessionJSON([
+        let response = CheckoutTestHelpers.makeSession([
             "tax_meta": [
                 "computation_type": "automatic",
                 "status": "future_status",
             ],
-        ])
+        ]).withCustomer()
 
-        // Then decoding fails instead of silently dropping tax state
-        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+        // When creating the public Session
+        let session = response.makePublicSession()
+
+        // Then the unknown status doesn't prevent the Session from decoding
+        XCTAssertNil(session.tax)
     }
 
     func testTax_missingMetadata_isNil() {
@@ -1062,15 +1065,20 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.tax?.status, .ready)
     }
 
-    func testTaxMetaRejectsUnknownComputationType() {
-        let json = CheckoutTestHelpers.makeSessionJSON([
+    func testTaxMetaUnknownComputationType_isReady() {
+        // Given a computation type added after this SDK version shipped
+        let response = CheckoutTestHelpers.makeSession([
             "tax_meta": [
                 "computation_type": "future_type",
                 "status": "complete",
             ],
-        ])
+        ]).withCustomer()
 
-        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+        // When creating the public Session
+        let session = response.makePublicSession()
+
+        // Then it behaves like the other non-automatic computation types
+        XCTAssertEqual(session.tax?.status, .ready)
     }
 
     func testTaxContextRejectsMissingAutomaticTaxEnabled() {

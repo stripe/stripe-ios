@@ -277,7 +277,7 @@ extension PaymentPagesAPIResponse {
         guard taxMeta.computationType == .automatic else {
             return CheckoutController.Session.Tax(status: .ready)
         }
-        switch taxMeta.status {
+        switch taxMeta.status?.value {
         case .complete:
             return CheckoutController.Session.Tax(status: .ready)
         case .requiresLocationInputs:

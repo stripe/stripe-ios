@@ -453,7 +453,7 @@ extension PaymentPagesAPIResponse {
     }
 
     struct TaxMeta: Decodable {
-        enum ComputationType: String, Decodable {
+        enum ComputationType: String, SafeParsedEnumCodable {
             case off = "Off"
             case automatic
             case extensionDefined = "extension_defined"
@@ -461,24 +461,24 @@ extension PaymentPagesAPIResponse {
             case userDefined = "user_defined"
         }
 
-        enum Status: String, Decodable {
+        enum Status: String, SafeParsedEnumCodable {
             case complete
             case failed
             case requiresLocationInputs = "requires_location_inputs"
         }
 
-        let computationType: ComputationType
-        let status: Status?
+        let computationType: ParsedEnum<ComputationType>
+        let status: ParsedEnum<Status>?
     }
 
     struct SavedPaymentMethodsOfferSave: Decodable {
-        enum Status: String, Decodable {
+        enum Status: String, SafeParsedEnumCodable {
             case accepted
             case notAccepted = "not_accepted"
         }
 
         let enabled: Bool
-        let status: Status
+        let status: ParsedEnum<Status>
     }
 
     struct ElementsSession: Decodable {
