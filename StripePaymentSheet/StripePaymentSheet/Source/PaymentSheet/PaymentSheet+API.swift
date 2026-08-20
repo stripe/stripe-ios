@@ -21,10 +21,11 @@ extension PaymentSheet {
         case complete
         case flowController
         case embedded
+        case expressCheckout
 
         var requiresInterstitialForCVC: Bool {
             switch self {
-            case .complete:
+            case .complete, .expressCheckout:
                 return false
             case .flowController, .embedded:
                 return true

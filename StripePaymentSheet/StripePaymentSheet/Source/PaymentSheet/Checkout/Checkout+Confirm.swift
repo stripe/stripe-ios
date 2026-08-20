@@ -1,8 +1,31 @@
-@_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
 // MARK: - Confirm
+
+extension CheckoutController {
+    /// Convenience bag of everything Apple Pay needs for confirmation, aside from committing the session
+    /// back to `Checkout` (see ``CheckoutSessionBillingAddressUpdater`` for that).
+    struct ApplePayConfirmationContext {
+        let applePayConfiguration: CheckoutController.ApplePayConfiguration
+        let apiClient: STPAPIClient
+        let returnURL: String
+        let merchantDisplayName: String
+    }
+
+    /// `nil` if Apple Pay wasn't configured on this ``CheckoutController.Configuration``.
+    var applePayConfirmationContext: ApplePayConfirmationContext? {
+        guard let applePayConfiguration = configuration.applePayConfiguration else {
+            return nil
+        }
+        return ApplePayConfirmationContext(
+            applePayConfiguration: applePayConfiguration,
+            apiClient: apiClient,
+            returnURL: configuration.returnURL,
+            merchantDisplayName: effectiveMerchantDisplayName
+        )
+    }
+}
 
 extension CheckoutController {
     /// Convenience bag of params needed for confirmation
@@ -11,7 +34,7 @@ extension CheckoutController {
         let configuration: PaymentElementConfiguration
         let integrationShape: PaymentSheet.IntegrationShape
         let confirmationChallenge: ConfirmationChallenge?
-        let analyticsHelper: PaymentSheetAnalyticsHelper
+        let analyticsHelper: PaymentSheetAnalyticsHelper // TODO: remove?
     }
 
     struct InternalConfirmResult {
@@ -53,12 +76,38 @@ extension CheckoutController {
         )
     }
 
+    func confirmationContext(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> ConfirmationContext? {
+        var paymentSheetConfiguration = PaymentSheet.Configuration()
+        paymentSheetConfiguration.apiClient = apiClient
+        paymentSheetConfiguration.merchantDisplayName = effectiveMerchantDisplayName
+        paymentSheetConfiguration.style = configuration.userInterfaceStyle
+        switch paymentMethod {
+        case .applePay:
+            return ConfirmationContext(
+                paymentOption: .applePay,
+                configuration: paymentSheetConfiguration,
+                integrationShape: .expressCheckout,
+                confirmationChallenge: nil,
+                analyticsHelper: PaymentSheetAnalyticsHelper(
+                    integrationShape: .complete, // ECE never actually logs anything from PaymentSheetAnalyticsHelper
+                    configuration: paymentSheetConfiguration
+                )
+            )
+        case .link:
+            return nil // TODO: link
+        }
+    }
+
     static func confirm(
         checkoutSession: Session,
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
-        paymentHandler: STPPaymentHandler
+        paymentHandler: STPPaymentHandler,
+        applePayConfirmationContext: ApplePayConfirmationContext? = nil,
+        sessionUpdater: ExpressCheckoutSessionUpdater? = nil
     ) async -> InternalConfirmResult {
+        // TODO: protections
+
         // 1. Handle pre-confirm actions, such as Bacs mandate acceptance or saved-card CVC recollection.
         let preconfirmActionsResult = await PaymentSheet.handlePreconfirmActionsIfNecessary(
             configuration: confirmationContext.configuration,
@@ -85,7 +134,9 @@ extension CheckoutController {
             confirmationContext: confirmationContext,
             authenticationContext: authenticationContext,
             intentConfirmParamsForDeferredIntent: intentConfirmParams,
-            paymentHandler: paymentHandler
+            paymentHandler: paymentHandler,
+            applePayConfirmationContext: applePayConfirmationContext,
+            sessionUpdater: sessionUpdater
         )
     }
 
@@ -94,7 +145,9 @@ extension CheckoutController {
         confirmationContext: ConfirmationContext,
         authenticationContext: STPAuthenticationContext,
         intentConfirmParamsForDeferredIntent: IntentConfirmParams?,
-        paymentHandler: STPPaymentHandler
+        paymentHandler: STPPaymentHandler,
+        applePayConfirmationContext: ApplePayConfirmationContext? = nil,
+        sessionUpdater: ExpressCheckoutSessionUpdater? = nil
     ) async -> InternalConfirmResult {
         let paymentOption = confirmationContext.paymentOption
         let elementsSession = checkoutSession.elementsSession
@@ -108,9 +161,16 @@ extension CheckoutController {
         switch paymentOption {
         case .applePay:
             // MARK: - Apple Pay
-            // TODO: Make a new STPApplePayContext-wrapping thing.
-            return .init(paymentSheetResult: .canceled)
-
+            guard let applePayConfirmationContext, let sessionUpdater else {
+                let errorMessage = "confirmPaymentOption called with .applePay but no applePayConfirmationContext/sessionUpdater was provided."
+                stpAssertionFailure(errorMessage)
+                return .init(paymentSheetResult: .failed(error: CheckoutError.unknown(debugDescription: errorMessage)))
+            }
+            return await confirmApplePay(
+                checkoutSession: checkoutSession,
+                applePayConfirmationContext: applePayConfirmationContext,
+                sessionUpdater: sessionUpdater
+            )
         case .new(let confirmParams):
             // MARK: - New PM
             let paymentMethodType: STPPaymentMethodType = {

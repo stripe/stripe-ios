@@ -19,10 +19,14 @@ enum CheckoutError: Error, LocalizedError, Sendable {
     /// A pending Checkout operation did not complete before the timeout elapsed.
     case timedOut
 
+    /// The provided shipping country is not in the session's list of allowed shipping countries.
     case invalidShippingCountry(countryCode: String)
 
     /// The Stripe API returned an error with the given message.
     case apiError(message: String)
+
+    /// An unexpected error occurred in the Checkout SDK.
+    case unknown(debugDescription: String)
 
     // MARK: - LocalizedError
 
@@ -38,6 +42,8 @@ enum CheckoutError: Error, LocalizedError, Sendable {
             return "Country code '\(countryCode)' is not in allowedShippingCountries"
         case .apiError(let message):
             return message
+        case .unknown(let debugDescription):
+            return debugDescription
         }
     }
 }
