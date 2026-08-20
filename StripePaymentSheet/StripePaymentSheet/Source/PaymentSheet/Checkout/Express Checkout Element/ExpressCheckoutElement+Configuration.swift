@@ -27,30 +27,8 @@ extension ExpressCheckoutElement {
         public init() {}
     }
 
-    /// Configuration for Link.
-    public struct LinkConfiguration {
-        /// Controls whether Link is displayed.
-        public enum Display: String {
-            /// Show Link when it is available.
-            case automatic
-            /// Never show Link.
-            case never
-        }
-
-        /// Controls whether Link is displayed.
-        public var display: Display = .automatic
-
-        /// Whether missing billing details should be collected for existing Link payment methods.
-        @_spi(CollectMissingLinkBillingDetailsPreview) public var collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
-
-        /// Creates a Link configuration.
-        public init(display: Display = .automatic) {
-            self.display = display
-        }
-    }
-
     /// Configuration for Apple Pay.
-    public struct ApplePayConfiguration {
+    public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
         /// The Apple Pay merchant identifier.
         public let merchantId: String
 
@@ -80,6 +58,25 @@ extension ExpressCheckoutElement {
         ) {
                 self.merchantId = merchantId
             self.buttonType = buttonType
+            self.display = display
+        }
+    }
+
+    /// Configuration for Link.
+    public struct LinkConfiguration {
+        /// Controls whether Link is displayed.
+        public enum Display: String {
+            /// Show Link when it is available.
+            case automatic
+            /// Never show Link.
+            case never
+        }
+
+        /// Controls whether Link is displayed.
+        public var display: Display = .automatic
+
+        /// Creates a Link configuration.
+        public init(display: Display = .automatic) {
             self.display = display
         }
     }

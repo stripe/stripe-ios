@@ -18,7 +18,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     func testNoButtonsWhenSessionHasNoWalletTypes() {
         // Given a session with no wallet types in the elements session
         let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
-        let configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        let configuration = ExpressCheckoutElement.Configuration()
 
         XCTAssertEqual(
             ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration),
@@ -29,7 +29,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     func testNoApplePayButtonWithoutApplePayConfiguration() {
         // Given a session that includes apple_pay, but no applePayConfiguration
         let session = makeSessionWithWalletTypes(["apple_pay"]).makePublicSession()
-        let configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        let configuration = ExpressCheckoutElement.Configuration()
 
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertFalse(buttons.contains(.applePay))
@@ -38,8 +38,8 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     func testApplePayButtonWithApplePayConfiguration() {
         // Given a session with apple_pay and an applePayConfiguration
         let session = makeSessionWithWalletTypes(["apple_pay"]).makePublicSession()
-        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        configuration.applePayConfiguration = CheckoutController.ApplePayConfiguration(merchantId: "merchant.com.example")
+        var configuration = ExpressCheckoutElement.Configuration()
+        configuration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(merchantId: "merchant.com.example")
 
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertEqual(buttons.contains(.applePay), StripeAPI.deviceSupportsApplePay())
@@ -48,7 +48,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     func testLinkButtonShownByDefault() {
         // Given a session with link and no linkConfiguration override
         let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
-        let configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        let configuration = ExpressCheckoutElement.Configuration()
 
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertTrue(buttons.contains(.link))
