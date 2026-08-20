@@ -11,10 +11,59 @@ import XCTest
 
 @MainActor
 final class ShippingAddressElementConfigurationTests: XCTestCase {
+    func testCheckoutInitializesShippingAddressElement() async throws {
+        // Given
+        var sessionJSON = CheckoutTestHelpers.openSessionJSON
+        sessionJSON["shipping_address_collection"] = ["allowed_countries": ["US", "CA"]]
+        var elementsSessionJSON = CheckoutTestHelpers.minimalElementsSessionJSON
+        elementsSessionJSON["flags"] = ["ocs_mobile_should_use_autocomplete_proxy_endpoints": true]
+        sessionJSON["elements_session"] = elementsSessionJSON
+        let apiResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
+
+        var configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        configuration.shippingAddressElement.title = "Delivery address"
+        configuration.shippingAddressElement.buttonTitle = "Save delivery address"
+        configuration.shippingAddressElement.appearance.colors.primary = .purple
+        var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
+        shippingDetails.name = "Jenny Rosen"
+        shippingDetails.address = .init(
+            country: "US",
+            line1: "510 Townsend St.",
+            city: "San Francisco",
+            state: "CA",
+            postalCode: "94103"
+        )
+        configuration.defaults.shippingDetails = shippingDetails
+        configuration = CheckoutTestHelpers.makeConfiguration(
+            apiResponse: apiResponse,
+            configuration: configuration
+        )
+
+        // When
+        let checkout = try await CheckoutController(configuration: configuration)
+        let shippingAddressElement = checkout.getShippingAddressElement()
+        let addressConfiguration = shippingAddressElement.addressViewController.configuration
+
+        // Then
+        XCTAssertTrue(shippingAddressElement === checkout.getShippingAddressElement())
+        XCTAssertEqual(addressConfiguration.title, "Delivery address")
+        XCTAssertEqual(addressConfiguration.buttonTitle, "Save delivery address")
+        XCTAssertEqual(addressConfiguration.appearance.colors.primary, .purple)
+        XCTAssertEqual(addressConfiguration.allowedCountries, ["US", "CA"])
+        XCTAssertEqual(addressConfiguration.defaultValues.name, "Jenny Rosen")
+        XCTAssertEqual(addressConfiguration.defaultValues.address.country, "US")
+        XCTAssertEqual(addressConfiguration.defaultValues.address.line1, "510 Townsend St.")
+        XCTAssertTrue(addressConfiguration.apiClient === configuration.apiClient)
+        XCTAssertTrue(shippingAddressElement.addressViewController.useAutocompleteEndpoints)
+    }
+
     func testMakeAddressViewControllerConfiguration() {
         // Given
         let apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        let shippingAddress = Checkout.Session.ShippingAddress(
+        let shippingAddress = CheckoutController.Session.ShippingAddress(
             name: "Jenny Rosen",
             address: .init(
                 country: "US",
@@ -34,8 +83,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         let addressConfiguration = configuration.makeAddressViewControllerConfiguration(
             shippingAddress: shippingAddress,
             allowedCountries: ["US", "CA"],
-            apiClient: apiClient,
-            useAutocompleteEndpoints: true
+            apiClient: apiClient
         )
 
         // Then
@@ -51,12 +99,11 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         XCTAssertEqual(addressConfiguration.defaultValues.address.state, "CA")
         XCTAssertEqual(addressConfiguration.defaultValues.address.postalCode, "94103")
         XCTAssertTrue(addressConfiguration.apiClient === apiClient)
-        XCTAssertTrue(addressConfiguration.useAutocompleteEndpoints)
     }
 
     func testMakeAddressViewControllerConfigurationIgnoresDisallowedShippingAddress() {
         // Given
-        let shippingAddress = Checkout.Session.ShippingAddress(
+        let shippingAddress = CheckoutController.Session.ShippingAddress(
             name: "Jenny Rosen",
             address: .init(country: "CA", line1: "123 Front St.")
         )
@@ -66,8 +113,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         let addressConfiguration = configuration.makeAddressViewControllerConfiguration(
             shippingAddress: shippingAddress,
             allowedCountries: ["US"],
-            apiClient: .shared,
-            useAutocompleteEndpoints: false
+            apiClient: .shared
         )
 
         // Then

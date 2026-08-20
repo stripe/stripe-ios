@@ -30,7 +30,7 @@ extension PaymentSheet {
         .FPX,
         .bacsDebit,
         .alipay,
-        .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .paynow, .promptPay,
+        .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .vipps, .konbini, .paynow, .promptPay,
         .sunbit,
         .billie,
         .satispay,
@@ -42,6 +42,8 @@ extension PaymentSheet {
         .payPay,
         .wero,
         .payByBank,
+        .mbWay,
+        .bizum,
     ]
 
     /// A list of `STPPaymentMethodType` that can be saved in PaymentSheet
@@ -79,6 +81,12 @@ extension PaymentSheet {
     /// Canonical source of truth for whether Link is enabled
     static func isLinkEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
         return linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).isEmpty
+    }
+
+    /// Canonical source of truth for whether the Link button/row should be rendered in the payment element UI.
+    /// Link may remain functionally enabled (see `isLinkEnabled`) even when its button is hidden, e.g. to support automatic Link verification without a visible entry point.
+    static func shouldShowLinkButton(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+        return isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && configuration.link.shouldShowButton
     }
 
     /// Canonical source of truth for reasons why Link is disabled
@@ -349,11 +357,11 @@ extension PaymentSheet {
 
     /// Payment method types that require mandate data for PaymentIntents when `setup_future_usage` is set
     static var requiresMandateDataForPaymentIntent: Set<STPPaymentMethodType> {
-        [.payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint]
+        [.alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint]
     }
 
     /// Payment method types that require mandate data for SetupIntents
     static var requiresMandateDataForSetupIntent: Set<STPPaymentMethodType> {
-        [.payPal, .revolutPay, .satispay, .twint]
+        [.alipay, .payPal, .revolutPay, .satispay, .twint]
     }
 }

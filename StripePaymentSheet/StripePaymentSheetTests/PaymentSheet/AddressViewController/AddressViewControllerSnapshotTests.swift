@@ -11,6 +11,7 @@ import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(STP)@testable import StripeUICore
+import XCTest
 
 class AddressViewControllerSnapshotTests: STPSnapshotTestCase {
     private let addressSpecProvider: AddressSpecProvider = {
@@ -157,6 +158,49 @@ class AddressViewControllerSnapshotTests: STPSnapshotTestCase {
         verify(navVC.view)
     }
 
+    @MainActor
+    func testShippingAddressElement_saving() async {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
+        testWindow.isHidden = false
+        let shippingAddressElement = ShippingAddressElement(
+            configuration: .init(),
+            initialShippingAddress: .init(
+                name: "Jane Doe",
+                address: .init(
+                    country: "US",
+                    line1: "510 Townsend St.",
+                    city: "San Francisco",
+                    state: "CA",
+                    postalCode: "94103"
+                )
+            ),
+            allowedCountries: ["US"],
+            checkoutSessionId: "cs_test_123",
+            apiClient: .init(publishableKey: "pk_test_1234"),
+            useAutocompleteEndpoints: false
+        )
+        let updateDelegate = ShippingAddressElementSnapshotDelegate()
+        let updateExpectation = expectation(description: "Shipping address update started")
+        updateDelegate.updateExpectation = updateExpectation
+        shippingAddressElement.delegate = updateDelegate
+        _ = await shippingAddressElement.normalizedInitialShippingAddress()
+
+        let navVC = UINavigationController(rootViewController: shippingAddressElement.addressViewController)
+        testWindow.rootViewController = navVC
+        let animationsWereEnabled = UIView.areAnimationsEnabled
+        UIView.setAnimationsEnabled(false)
+        defer {
+            UIView.setAnimationsEnabled(animationsWereEnabled)
+            updateDelegate.completeUpdate()
+        }
+
+        shippingAddressElement.addressViewController.didContinue()
+        await fulfillment(of: [updateExpectation])
+        navVC.view.layoutIfNeeded()
+
+        verify(navVC.view)
+    }
+
     func testShippingAddressViewController_shippingEqualsBillingCheckbox() {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
@@ -244,5 +288,24 @@ extension AddressViewControllerSnapshotTests: AddressViewControllerDelegate {
         with address: AddressViewController.AddressDetails?
     ) {
         // no-op
+    }
+}
+
+@MainActor
+private final class ShippingAddressElementSnapshotDelegate: ShippingAddressElementDelegate {
+
+    var updateExpectation: XCTestExpectation?
+    private var updateContinuation: CheckedContinuation<Void, Never>?
+
+    func updateShippingAddress(name: String?, address: CheckoutController.Address) async throws {
+        updateExpectation?.fulfill()
+        await withCheckedContinuation { continuation in
+            updateContinuation = continuation
+        }
+    }
+
+    func completeUpdate() {
+        updateContinuation?.resume()
+        updateContinuation = nil
     }
 }

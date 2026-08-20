@@ -52,6 +52,8 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     /// Provide an already created PaymentMethod's id, and it will be used to confirm the SetupIntent.
     /// @note alternative to `paymentMethodParams`
     @objc public var paymentMethodID: String?
+    /// Options to update the associated PaymentMethod during SetupIntent confirmation.
+    @objc @_spi(KlarnaSDKPrivatePreview) public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
     /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
     /// This should be a boolean NSNumber, so that it can be `nil`
     @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
@@ -125,6 +127,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             "returnURL = \(returnURL ?? "")",
             "paymentMethodId = \(paymentMethodID ?? "")",
             "paymentMethodParams = \(String(describing: paymentMethodParams))",
+            "paymentMethodOptions = \(String(describing: paymentMethodOptions))",
             "useStripeSDK = \(useStripeSDK ?? false)",
             // Set as default payment method
             "setAsDefaultPM = \(setAsDefaultPM ?? 0)",
@@ -153,6 +156,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         copy._paymentMethodType = _paymentMethodType
         copy.paymentMethodParams = paymentMethodParams
         copy.paymentMethodID = paymentMethodID
+        copy.paymentMethodOptions = paymentMethodOptions
         copy.setAsDefaultPM = setAsDefaultPM
         copy.returnURL = returnURL
         copy.useStripeSDK = useStripeSDK
@@ -175,6 +179,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             NSStringFromSelector(#selector(getter: clientSecret)): "client_secret",
             NSStringFromSelector(#selector(getter: paymentMethodParams)): "payment_method_data",
             NSStringFromSelector(#selector(getter: paymentMethodID)): "payment_method",
+            NSStringFromSelector(#selector(getter: paymentMethodOptions)): "payment_method_options",
             NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
             NSStringFromSelector(#selector(getter: returnURL)): "return_url",
             NSStringFromSelector(#selector(getter: useStripeSDK_apiValue)): "use_stripe_sdk",
@@ -205,7 +210,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     /// - Returns: STPMandateDataParams with inferred values if mandate is required for the payment method type, nil otherwise
     @_spi(STP) public static func mandateDataIfRequired(for paymentMethodType: STPPaymentMethodType) -> STPMandateDataParams? {
         switch paymentMethodType {
-        case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .link, .USBankAccount,
+        case .AUBECSDebit, .alipay, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .link, .USBankAccount,
              .cashApp, .payPal, .revolutPay, .klarna, .amazonPay, .twint:
             return .makeWithInferredValues()
         default:

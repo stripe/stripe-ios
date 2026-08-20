@@ -68,24 +68,20 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
 
     /// Mock stand-in for a full `Checkout` object.
     final class TestCheckoutSessionUpdater: CheckoutSessionBillingAddressUpdater {
-        private(set) var session: Checkout.Session
+        private(set) var session: CheckoutController.Session
 
-        init(session: Checkout.Session) {
+        init(session: CheckoutController.Session) {
             self.session = session
         }
 
-        func commitSession(
-            _ apiResponse: PaymentPagesAPIResponse?,
-            applying localMutation: (@MainActor @Sendable (Checkout.Session) -> Checkout.Session)?
-        ) async throws {
-            let updatedSession = apiResponse?.makePublicSession() ?? session
-            session = localMutation?(updatedSession) ?? updatedSession
+        func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
+            session = apiResponse.makePublicSession()
         }
 
         func updateBillingTaxRegionIfNecessaryForPaymentSheet(
-            address: Checkout.Address,
+            address: CheckoutController.Address,
             canUpdateWhileSheetPresented: Bool
-        ) async throws -> Checkout.Session {
+        ) async throws -> CheckoutController.Session {
             return session
         }
     }
@@ -335,6 +331,12 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .alipay,
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.Alipay.paymentIntent) { _ in }
+
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "USD",
+                               paymentMethodType: .alipay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.Alipay.settingUp) { _ in }
     }
 
     func testOXXOConfirmFlows() async throws {
@@ -448,6 +450,16 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             paymentMethodType: .mobilePay,
             merchantCountry: .FR,
             expectedHierarchy: ExpectedFormHierarchy.MobilePay.paymentIntent
+        ) { _ in }
+    }
+
+    func testVippsConfirmFlows() async throws {
+        try await _testConfirm(
+            intentKinds: [.paymentIntent],
+            currency: "NOK",
+            paymentMethodType: .vipps,
+            merchantCountry: .FR,
+            expectedHierarchy: ExpectedFormHierarchy.Vipps.paymentIntent
         ) { _ in }
     }
 
@@ -589,6 +601,28 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.Multibanco.paymentIntent) { form in
             form.getTextFieldElement("Email").setText("foo@bar.com")
+        }
+    }
+
+    func testMBWayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .mbWay,
+                               merchantCountry: .FR,
+                               expectedHierarchy: ExpectedFormHierarchy.MBWay.paymentIntent) { form in
+            form.getPhoneNumberElement().setSelectedCountryCode("PT")
+            form.getPhoneNumberElement().setPhoneNumber("911111112")
+        }
+    }
+
+    func testBizumConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .bizum,
+                               merchantCountry: .FR,
+                               expectedHierarchy: ExpectedFormHierarchy.Bizum.paymentIntent) { form in
+            form.getPhoneNumberElement().setSelectedCountryCode("ES")
+            form.getPhoneNumberElement().setPhoneNumber("600000001")
         }
     }
 
@@ -997,6 +1031,9 @@ extension PaymentSheetLPMConfirmFlowTests {
 
         // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
+        if paymentMethodType == .vipps {
+            apiClient.betas = ["vipps_preview=v1"]
+        }
 
         var configuration: PaymentSheet.Configuration = {
             // Use argument if non-nil, otherwise create a default
@@ -1462,26 +1499,32 @@ extension PaymentSheetLPMConfirmFlowTests {
 
             return intents
         case .setupIntent:
+            let setupCurrency = paymentMethod == .alipay ? currency : nil
+            let setupIntentParameters: [String: Any] = paymentMethod == .alipay
+                ? ["payment_method_options": ["alipay": ["currency": currency]]]
+                : [:]
             let setupIntent: STPSetupIntent? = try await {
                 guard shouldTest(.intentFirst) else {
                     return nil
                 }
-                let clientSecret = try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer)
+                let clientSecret = try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer, otherParams: setupIntentParameters)
                 return try await apiClient.retrieveSetupIntent(clientSecret: clientSecret)
             }()
-            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession)) { _, _ in
-                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer)
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .setup(currency: setupCurrency, setupFutureUsage: .offSession)) { _, _ in
+                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer, otherParams: setupIntentParameters)
             }
-            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession)) { paymentMethod, _ in
-                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, paymentMethodID: paymentMethod.stripeId, customerID: customer, confirm: true, otherParams: paramsForServerSideConfirmation)
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .setup(currency: setupCurrency, setupFutureUsage: .offSession)) { paymentMethod, _ in
+                let otherParams = setupIntentParameters.merging(paramsForServerSideConfirmation) { _, b in b }
+                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, paymentMethodID: paymentMethod.stripeId, customerID: customer, confirm: true, otherParams: otherParams)
             }
             // Confirmation token variations
-            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { _ in
-                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer)
+            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .setup(currency: setupCurrency, setupFutureUsage: .offSession), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { _ in
+                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer, otherParams: setupIntentParameters)
             })
 
-            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { confirmationToken in
-                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer, confirm: true, otherParams: ["confirmation_token": confirmationToken.stripeId])
+            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .setup(currency: setupCurrency, setupFutureUsage: .offSession), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { confirmationToken in
+                let otherParams = setupIntentParameters.merging(["confirmation_token": confirmationToken.stripeId]) { _, b in b }
+                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer, confirm: true, otherParams: otherParams)
             })
 
             var intents: [TestIntent] = []
@@ -1704,14 +1747,14 @@ extension PaymentSheetLPMConfirmFlowTests {
         }
 
         Task { @MainActor in
-            let confirmationContext = Checkout.ConfirmationContext(
+            let confirmationContext = CheckoutController.ConfirmationContext(
                 paymentOption: paymentOption,
                 configuration: configuration,
                 integrationShape: .complete,
                 confirmationChallenge: nil,
                 analyticsHelper: analyticsHelper
             )
-            let result = await Checkout.confirm(
+            let result = await CheckoutController.confirm(
                 checkoutSession: checkoutSession,
                 confirmationContext: confirmationContext,
                 authenticationContext: self,

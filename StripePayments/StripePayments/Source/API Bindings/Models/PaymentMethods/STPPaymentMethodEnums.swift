@@ -80,6 +80,8 @@ import Foundation
     case crypto
     /// A MobilePay payment method
     case mobilePay
+    /// A Vipps payment method
+    case vipps
     /// A Konbini payment method
     case konbini
     /// A PromptPay payment method
@@ -96,6 +98,10 @@ import Foundation
     case wero
     /// A Pay by Bank payment method
     case payByBank
+    /// An MB WAY payment method
+    case mbWay
+    /// A Bizum payment method
+    case bizum
     /// An unknown type.
     case unknown
 
@@ -174,6 +180,8 @@ import Foundation
             return "Crypto"
         case .mobilePay:
             return "MobilePay"
+        case .vipps:
+            return "Vipps"
         case .konbini:
             return STPLocalizedString("Konbini", "Payment Method type brand name")
         case .promptPay:
@@ -190,6 +198,10 @@ import Foundation
             return "Wero"
         case .payByBank:
             return "Pay by Bank"
+        case .mbWay:
+            return "MB WAY"
+        case .bizum:
+            return "Bizum"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -271,6 +283,8 @@ import Foundation
             return "crypto"
         case .mobilePay:
             return "mobilepay"
+        case .vipps:
+            return "vipps"
         case .konbini:
             return "konbini"
         case .promptPay:
@@ -287,6 +301,10 @@ import Foundation
             return "wero"
         case .payByBank:
             return "pay_by_bank"
+        case .mbWay:
+            return "mb_way"
+        case .bizum:
+            return "bizum"
         }
     }
 

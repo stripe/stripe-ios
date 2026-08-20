@@ -125,6 +125,64 @@ class PaymentSheetPaymentMethodTypeTest: APIStubbedTestCase {
         )
     }
 
+    // MARK: - Alipay
+
+    func testSupportsAddingAlipayWithSetupFutureUsage() {
+        // Given
+        let configuration = makeConfiguration(hasReturnURL: true)
+        let intent = Intent._testPaymentIntent(
+            paymentMethodTypes: [.alipay],
+            setupFutureUsage: .offSession
+        )
+
+        // When
+        let result = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .alipay,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: ._testValue(intent: intent),
+            supportedPaymentMethods: [.alipay]
+        )
+
+        // Then
+        XCTAssertEqual(result, .supported)
+    }
+
+    func testSupportsAddingAlipaySetupIntent() {
+        // Given
+        let configuration = makeConfiguration(hasReturnURL: true)
+        let intent = Intent._testSetupIntent(paymentMethodTypes: [.alipay])
+
+        // When
+        let result = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .alipay,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: ._testValue(intent: intent),
+            supportedPaymentMethods: [.alipay]
+        )
+
+        // Then
+        XCTAssertEqual(result, .supported)
+    }
+
+    func testSupportsAddingAlipaySetupRequiresReturnURL() {
+        // Given
+        let intent = Intent._testSetupIntent(paymentMethodTypes: [.alipay])
+
+        // When
+        let result = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .alipay,
+            configuration: makeConfiguration(),
+            intent: intent,
+            elementsSession: ._testValue(intent: intent),
+            supportedPaymentMethods: [.alipay]
+        )
+
+        // Then
+        XCTAssertEqual(result, .missingRequirements([.returnURL]))
+    }
+
     /// Returns true, iDEAL in `supportedPaymentMethods` and URL and delayed payment method support requirements for setting up are met
     func testSupportsAdding_inSupportedList_urlConfiguredRequiredDelayedRequired() {
         var configuration = makeConfiguration(hasReturnURL: true)
@@ -331,7 +389,7 @@ class PaymentSheetPaymentMethodTypeTest: APIStubbedTestCase {
     }
 
     func testPaymentIntentFilteredPaymentMethodTypes_withSetupFutureUsage() {
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .cashApp, .mobilePay, .amazonPay, .klarna], setupFutureUsage: .onSession)
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .cashApp, .mobilePay, .vipps, .amazonPay, .klarna], setupFutureUsage: .onSession)
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
         configuration.allowsDelayedPaymentMethods = true
@@ -342,6 +400,19 @@ class PaymentSheetPaymentMethodTypeTest: APIStubbedTestCase {
         )
 
         XCTAssertEqual(types, [.stripe(.card), .stripe(.cashApp), .stripe(.amazonPay), .stripe(.klarna)])
+    }
+
+    func testPaymentIntentFilteredPaymentMethodTypes_includesVipps() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .vipps])
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "http://return-to-url"
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: ._testValue(intent: intent),
+            configuration: configuration
+        )
+
+        XCTAssertEqual(types, [.stripe(.card), .stripe(.vipps)])
     }
 
     func testSetupIntentFilteredPaymentMethodTypes() {

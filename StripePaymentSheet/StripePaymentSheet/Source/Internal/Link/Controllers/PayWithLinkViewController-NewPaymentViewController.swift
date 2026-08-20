@@ -54,7 +54,7 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var cancelButton: Button? = {
-            guard linkAccount.isInSignupFlow && context.launchedFromFlowController else {
+            guard linkAccount.isInSignupFlow && context.canContinueWithoutLink else {
                 return nil
             }
             let button = Button(

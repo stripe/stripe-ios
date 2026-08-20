@@ -15,6 +15,7 @@ extension CheckoutPlayground {
             "card", "link",
         ]
 
+        @Published var uiFramework: UIFramework = .swiftUI
         @Published var integrationType: IntegrationType = .flowController {
             didSet {
                 if integrationType == .eceOnly && expressCheckoutElementOption == .hide {
@@ -33,6 +34,8 @@ extension CheckoutPlayground {
         @Published var customerType: CustomerType = .guest
         @Published var lineItems: [LineItemConfig] = LineItemConfig.defaults
         @Published var shippingAddressCollection = true
+        @Published var defaultShippingAddressOption: DefaultShippingAddressOption = .none
+        @Published var customDefaultShippingAddress = DefaultShippingAddress.usTestAddress
         @Published var billingAddressCollection: BillingAddressCollection = .automatic
         @Published var automaticTax = true
         @Published var checkoutSessionPaymentMethodSave = true
@@ -43,6 +46,7 @@ extension CheckoutPlayground {
         @Published var currencySelectorAppearance = CurrencySelectorElement.Appearance()
         @Published var checkoutEndpointOption: EndpointOption = .hosted
         @Published var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
+        @Published var delayPaymentPagesRequests = false
 
         @Published var isCreating = false
         @Published var errorMessage: String?
@@ -51,6 +55,17 @@ extension CheckoutPlayground {
 
         var isButtonDisabled: Bool {
             isCreating || (!automaticPaymentMethods && paymentMethodTypes.isEmpty) || lineItems.isEmpty
+        }
+
+        var defaultShippingAddress: DefaultShippingAddress? {
+            switch defaultShippingAddressOption {
+            case .none:
+                return nil
+            case .usTestAddress:
+                return .usTestAddress
+            case .custom:
+                return customDefaultShippingAddress
+            }
         }
 
         func createSession() async {
@@ -99,6 +114,7 @@ extension CheckoutPlayground {
             var body: [String: Any] = [
                 "merchant_country_code": "us_tax",
                 "mode": "unified",
+                "use_one_time_price": true,
                 "currency": currency.rawValue,
                 "customer": customerType.rawValue,
                 "shipping_address_collection": shippingAddressCollection,

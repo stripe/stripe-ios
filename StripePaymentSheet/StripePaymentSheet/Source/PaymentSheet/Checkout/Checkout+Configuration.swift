@@ -10,7 +10,7 @@ import Foundation
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout {
+extension CheckoutController {
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
 
     /// Configuration options for a ``Checkout`` instance.
@@ -18,13 +18,13 @@ extension Checkout {
     /// Supply a configuration when creating a ``Checkout`` to customize behavior:
     ///
     /// ```swift
-    /// var config = Checkout.Configuration(
+    /// var config = CheckoutController.Configuration(
     ///     clientSecret: "cs_xxx_secret_yyy",
     ///     returnURL: "my-app://stripe-redirect"
     /// )
     /// config.adaptivePricing.allowed = true
     ///
-    /// let checkout = try await Checkout(configuration: config)
+    /// let checkout = try await CheckoutController(configuration: config)
     /// ```
     public struct Configuration {
         /// The client secret for your Checkout Session.
@@ -59,8 +59,12 @@ extension Checkout {
         /// Configuration for ExpressCheckoutElement.
         public var expressCheckoutElement: ExpressCheckoutElement.Configuration = .init()
 
+        /// Configuration for the Adaptive Pricing currency selector returned by
+        /// ``CheckoutController.getCurrencySelectorElement()``.
+        public var currencySelectorElement: CurrencySelectorElement.Configuration = .init()
+
         /// Configuration for the shipping address form returned by
-        /// ``Checkout.getShippingAddressElement()``.
+        /// ``CheckoutController.getShippingAddressElement()``.
         public var shippingAddressElement: ShippingAddressElement.Configuration = .init()
 
         /// Apple Pay configuration.
@@ -71,10 +75,6 @@ extension Checkout {
 
         /// The color styling to use for Checkout UI.
         public var userInterfaceStyle: UserInterfaceStyle = .automatic
-
-        /// Configuration for the Adaptive Pricing currency selector returned by
-        /// ``Checkout.getCurrencySelectorElement()``.
-        public var currencySelectorElement: CurrencySelectorElement.Configuration = .init()
 
         /// Creates a configuration.
         /// - Parameter clientSecret: The client secret for your Checkout Session.
@@ -106,7 +106,7 @@ extension Checkout {
             guard let url = URL(string: returnURL),
                   let scheme = url.scheme,
                   !scheme.isEmpty else {
-                assertionFailure("Checkout.Configuration.returnURL must be a valid URL with a scheme.")
+                assertionFailure("CheckoutController.Configuration.returnURL must be a valid URL with a scheme.")
                 return
             }
 
@@ -116,7 +116,7 @@ extension Checkout {
             STPURLCallbackHandler.shared().unregisterListener(listener)
             assert(
                 handled && listener.handledURL == url,
-                "Checkout.Configuration.returnURL must be forwarded to StripeAPI.handleURLCallback(with:) when your app receives the URL in application(_:open:options:) or scene(_:openURLContexts:)."
+                "CheckoutController.Configuration.returnURL must be forwarded to StripeAPI.handleURLCallback(with:) when your app receives the URL in application(_:open:options:) or scene(_:openURLContexts:)."
             )
 
             guard scheme.lowercased() != "http" && scheme.lowercased() != "https" else {
@@ -129,7 +129,7 @@ extension Checkout {
                 .map { $0.lowercased() } ?? []
             assert(
                 registeredSchemes.contains(scheme.lowercased()),
-                "Checkout.Configuration.returnURL uses the custom URL scheme '\(scheme)', but it is not registered in CFBundleURLTypes."
+                "CheckoutController.Configuration.returnURL uses the custom URL scheme '\(scheme)', but it is not registered in CFBundleURLTypes."
             )
         }
 #endif
@@ -138,7 +138,7 @@ extension Checkout {
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout.Configuration {
+extension CheckoutController.Configuration {
     /// Default customer details used to pre-populate Checkout integrations.
     public struct Defaults {
         /// Default billing details.
@@ -156,7 +156,7 @@ extension Checkout.Configuration {
             public var name: String?
 
             /// The customer's billing address.
-            public var address: Checkout.Address?
+            public var address: CheckoutController.Address?
 
             /// Creates default billing details.
             public init() {}
@@ -168,7 +168,7 @@ extension Checkout.Configuration {
             public var name: String?
 
             /// The customer's shipping address.
-            public var address: Checkout.Address?
+            public var address: CheckoutController.Address?
 
             /// Creates default shipping details.
             public init() {}
@@ -178,7 +178,7 @@ extension Checkout.Configuration {
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout.Configuration {
+extension CheckoutController.Configuration {
     /// Options for adaptive pricing behavior.
     ///
     /// Adaptive pricing lets customers see prices converted to their local

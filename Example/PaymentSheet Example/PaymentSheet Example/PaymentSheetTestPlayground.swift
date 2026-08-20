@@ -78,7 +78,6 @@ struct PaymentSheetTestPlayground: View {
         SearchableSettingView(setting: $playgroundController.settings.fcLiteEnabled, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.opensCardScannerAutomatically, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.termsDisplay, searchText: searchText)
-        SearchableSettingView(setting: $playgroundController.settings.useAutocompleteEndpoints, searchText: searchText)
     }
 
     var body: some View {

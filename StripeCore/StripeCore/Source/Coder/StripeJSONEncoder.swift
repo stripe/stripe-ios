@@ -352,7 +352,7 @@ struct STPUnkeyedEncodingContainer: UnkeyedEncodingContainer, StripeEncodingCont
             // Don't encode this
             return
         }
-        let newPath = codingPath + [STPCodingKey(intValue: count)!]
+        let newPath = codingPath + [STPCodingKey(intValue: count)]
         if let seValue = value as? UnknownFieldsEncodable {
             seValue.applyUnknownFieldEncodingTransforms(userInfo: userInfo, codingPath: newPath)
         }

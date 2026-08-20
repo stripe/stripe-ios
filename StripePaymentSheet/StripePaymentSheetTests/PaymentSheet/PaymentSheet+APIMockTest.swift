@@ -299,12 +299,12 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testCheckoutSessionConfirmWithNewPaymentMethodViaLink() async throws {
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
+        let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: MockJson.checkoutSession)
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
 
         // In non-passthrough mode, Link payment details are converted to params and
         // a new payment method is created before calling checkout session confirm
-        let confirmExp = stubCheckoutSessionConfirm(sessionId: checkoutSession.id)
+        let confirmExp = stubCheckoutSessionConfirm(sessionId: checkoutSession.sessionId)
         let logoutExp = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
 
         let configuration = MockParams.configurationWithCustomer(pk: MockParams.publicKey)
@@ -362,14 +362,14 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testCheckoutSessionConfirmWithNewPaymentMethodSelectedSendsSaveAndAllowRedisplay() async throws {
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
+        let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: MockJson.checkoutSession)
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .selected
 
         let createPaymentMethodExp = stubCreatePaymentMethodExpecting(allowRedisplay: "always")
         let confirmExp = stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.id,
+            sessionId: checkoutSession.sessionId,
             savePaymentMethod: true
         )
 
@@ -386,14 +386,14 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testCheckoutSessionConfirmWithNewPaymentMethodDeselectedOmitsSaveAndUsesUnspecifiedAllowRedisplay() async throws {
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
+        let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: MockJson.checkoutSession)
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .deselected
 
         let createPaymentMethodExp = stubCreatePaymentMethodExpecting(allowRedisplay: "unspecified")
         let confirmExp = stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.id,
+            sessionId: checkoutSession.sessionId,
             savePaymentMethod: false
         )
 
@@ -410,13 +410,13 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testCheckoutSessionConfirmWithHiddenCheckboxOmitsSavePaymentMethod() async throws {
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
+        let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: MockJson.checkoutSession)
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         let confirmParams = MockParams.intentConfirmParams
 
         let createPaymentMethodExp = stubCreatePaymentMethodExpecting(allowRedisplay: "unspecified")
         let confirmExp = stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.id,
+            sessionId: checkoutSession.sessionId,
             savePaymentMethod: nil
         )
 
@@ -435,14 +435,14 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     func testCheckoutSessionConfirmWithPaymentModeSetupFutureUsageDeselectedUsesLimitedAllowRedisplay() async throws {
         var checkoutSessionJSON = MockJson.checkoutSession
         checkoutSessionJSON["setup_future_usage"] = "off_session"
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
+        let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: checkoutSessionJSON)
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .deselected
 
         let createPaymentMethodExp = stubCreatePaymentMethodExpecting(allowRedisplay: "limited")
         let confirmExp = stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.id,
+            sessionId: checkoutSession.sessionId,
             savePaymentMethod: false
         )
 
@@ -465,14 +465,14 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
             "enabled": false,
             "status": "not_accepted",
         ]
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
+        let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: checkoutSessionJSON)
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         var confirmParams = MockParams.intentConfirmParams
         confirmParams.saveForFutureUseCheckboxState = .hidden
 
         let createPaymentMethodExp = stubCreatePaymentMethodExpecting(allowRedisplay: "limited")
         let confirmExp = stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.id,
+            sessionId: checkoutSession.sessionId,
             savePaymentMethod: nil
         )
 
@@ -491,14 +491,14 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     func testCheckoutSessionConfirmWithNonCardPaymentMethodIncludesSavePaymentMethod() async throws {
         var checkoutSessionJSON = MockJson.checkoutSession
         checkoutSessionJSON["payment_method_types"] = ["paypal"]
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: checkoutSessionJSON)!
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
+        let checkoutSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: checkoutSessionJSON)
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: checkoutSession, stubAllOutgoingRequests: false))
         let confirmParams = IntentConfirmParams(type: .stripe(.payPal))
         confirmParams.saveForFutureUseCheckboxState = .selected
 
         let createPaymentMethodExp = stubCreatePaymentMethodExpecting(allowRedisplay: "always")
         let confirmExp = stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.id,
+            sessionId: checkoutSession.sessionId,
             savePaymentMethod: true
         )
 
@@ -798,18 +798,18 @@ private extension PaymentSheetAPIMockTest {
     }
 
     func confirmCheckout(
-        _ checkout: Checkout,
+        _ checkout: CheckoutController,
         configuration: PaymentElementConfiguration,
         paymentOption: PaymentOption
     ) async -> PaymentSheetResult {
-        let confirmationContext = Checkout.ConfirmationContext(
+        let confirmationContext = CheckoutController.ConfirmationContext(
             paymentOption: paymentOption,
             configuration: configuration,
             integrationShape: .embedded,
             confirmationChallenge: nil,
             analyticsHelper: ._testValue()
         )
-        return await Checkout.confirm(
+        return await CheckoutController.confirm(
             checkoutSession: checkout.session,
             confirmationContext: confirmationContext,
             authenticationContext: self,

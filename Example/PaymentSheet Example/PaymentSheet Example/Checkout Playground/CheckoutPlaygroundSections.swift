@@ -7,17 +7,25 @@
 import SwiftUI
 
 struct CheckoutPlaygroundConfigurationSection: View {
+    @Binding var uiFramework: CheckoutPlayground.UIFramework
     @Binding var integrationType: CheckoutPlayground.IntegrationType
     @Binding var currency: CheckoutPlayground.Currency
     @Binding var customerType: CheckoutPlayground.CustomerType
     @Binding var checkoutEndpointOption: CheckoutPlayground.EndpointOption
     @Binding var checkoutEndpoint: String
     @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
+    @Binding var delayPaymentPagesRequests: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
             VStack(spacing: 1) {
+                CheckoutPlayground.PickerRow(
+                    title: "UI Framework",
+                    icon: "rectangle.3.group.fill",
+                    selection: $uiFramework,
+                    displayText: { $0.displayName }
+                )
                 CheckoutPlayground.PickerRow(
                     title: "PaymentElement",
                     icon: "square.stack.3d.up.fill",
@@ -75,6 +83,11 @@ struct CheckoutPlaygroundConfigurationSection: View {
                 .padding(.vertical, 12)
                 .padding(.horizontal, 16)
                 .background(Color(uiColor: .secondarySystemGroupedBackground))
+                CheckoutPlayground.ToggleRow(
+                    title: "Delay Payment Pages Requests",
+                    isOn: $delayPaymentPagesRequests,
+                    tooltip: "Adds a 1-second delay before Payment Pages API requests except the initial /init request so loading states are easier to inspect."
+                )
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -157,11 +170,12 @@ struct CheckoutPlaygroundLineItemCard: View {
 struct CheckoutPlaygroundFeaturesSection: View {
     let customerType: CheckoutPlayground.CustomerType
     @Binding var shippingAddressCollection: Bool
+    @Binding var defaultShippingAddressOption: CheckoutPlayground.DefaultShippingAddressOption
+    @Binding var customDefaultShippingAddress: CheckoutPlayground.DefaultShippingAddress
     @Binding var billingAddressCollection: CheckoutPlayground.BillingAddressCollection
     @Binding var automaticTax: Bool
     @Binding var checkoutSessionPaymentMethodSave: Bool
     @Binding var checkoutSessionPaymentMethodRemove: Bool
-    @Binding var adaptivePricingCountry: CheckoutPlayground.AdaptivePricingCountry
     @Binding var automaticPaymentMethods: Bool
 
     private var shouldShowAutomaticTax: Bool {
@@ -177,6 +191,20 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $shippingAddressCollection,
                     tooltip: "Sets `shipping_address_collection` to allow specific countries (US, CA, GB, AU). Necessary for physical goods."
                 )
+                CheckoutPlayground.PickerRow(
+                    title: "Default Shipping Address",
+                    selection: $defaultShippingAddressOption,
+                    tooltip: "Sets `CheckoutController.Configuration.defaults.shippingDetails` before loading Checkout.",
+                    displayText: { $0.displayName }
+                )
+                switch defaultShippingAddressOption {
+                case .none:
+                    EmptyView()
+                case .usTestAddress:
+                    CheckoutPlaygroundShippingAddressPreview(address: .usTestAddress)
+                case .custom:
+                    CheckoutPlaygroundShippingAddressEditor(address: $customDefaultShippingAddress)
+                }
                 CheckoutPlayground.PickerRow(
                     title: "Billing Address",
                     selection: $billingAddressCollection,
@@ -205,16 +233,106 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $checkoutSessionPaymentMethodRemove,
                     tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
                 )
-                CheckoutPlayground.PickerRow(
-                    title: "Country",
-                    icon: "globe",
-                    selection: $adaptivePricingCountry,
-                    tooltip: "Simulates the customer's country for adaptive pricing by sending a location-formatted customer_email. 'None' skips the email override.",
-                    displayText: { $0.displayName }
-                )
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+}
+
+private struct CheckoutPlaygroundShippingAddressPreview: View {
+
+    let address: CheckoutPlayground.DefaultShippingAddress
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "mappin.circle.fill")
+                .font(.system(size: 20))
+                .foregroundColor(.blue)
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(address.name)
+                    .font(.subheadline.weight(.semibold))
+                Text(address.line1)
+                Text("\(address.city), \(address.state) \(address.postalCode)")
+                Text(address.country)
+            }
+            .font(.subheadline)
+            .foregroundColor(.secondary)
+
+            Spacer()
+        }
+        .padding(.vertical, 12)
+        .padding(.horizontal, 16)
+        .background(Color(uiColor: .secondarySystemGroupedBackground))
+    }
+}
+
+private struct CheckoutPlaygroundShippingAddressEditor: View {
+
+    @Binding var address: CheckoutPlayground.DefaultShippingAddress
+
+    var body: some View {
+        VStack(spacing: 12) {
+            CheckoutPlaygroundShippingAddressField(
+                title: "Name",
+                placeholder: "Jenny Rosen",
+                text: $address.name
+            )
+            CheckoutPlaygroundShippingAddressField(
+                title: "Address line 1",
+                placeholder: "510 Townsend St",
+                text: $address.line1
+            )
+            CheckoutPlaygroundShippingAddressField(
+                title: "Address line 2",
+                placeholder: "Apartment, suite, etc.",
+                text: $address.line2
+            )
+            CheckoutPlaygroundShippingAddressField(
+                title: "City",
+                placeholder: "San Francisco",
+                text: $address.city
+            )
+            CheckoutPlaygroundShippingAddressField(
+                title: "State",
+                placeholder: "CA",
+                text: $address.state
+            )
+            CheckoutPlaygroundShippingAddressField(
+                title: "ZIP / postal code",
+                placeholder: "94103",
+                text: $address.postalCode
+            )
+            CheckoutPlaygroundShippingAddressField(
+                title: "Country",
+                placeholder: "US",
+                text: $address.country
+            )
+        }
+        .padding(16)
+        .background(Color(uiColor: .secondarySystemGroupedBackground))
+    }
+}
+
+private struct CheckoutPlaygroundShippingAddressField: View {
+
+    let title: String
+    let placeholder: String
+    @Binding var text: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.secondary)
+            TextField(placeholder, text: $text)
+                .font(.body)
+                .padding(.horizontal, 12)
+                .frame(height: 40)
+                .background(Color(uiColor: .tertiarySystemFill))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .accessibilityLabel(title)
         }
     }
 }
@@ -297,14 +415,12 @@ struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
     @Binding var selectedMethods: Set<String>
     let availableMethods: [String]
     @Environment(\.dismiss) var dismiss
-    @State private var searchText = ""
     @State private var customMethodType = ""
 
-    var filteredMethods: [String] {
-        if searchText.isEmpty {
-            return availableMethods
-        }
-        return availableMethods.filter { $0.localizedCaseInsensitiveContains(searchText) }
+    private var customMethods: [String] {
+        selectedMethods
+            .subtracting(availableMethods)
+            .sorted()
     }
 
     var body: some View {
@@ -320,15 +436,30 @@ struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
                             guard !trimmed.isEmpty else {
                                 return
                             }
-                            selectedMethods.insert(trimmed)
+                            selectedMethods = selectedMethods.union([trimmed])
                             customMethodType = ""
                         }
                         .disabled(customMethodType.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
+
+                    ForEach(customMethods, id: \.self) { method in
+                        HStack {
+                            Text(method)
+                            Spacer()
+                            Button {
+                                selectedMethods = selectedMethods.subtracting([method])
+                            } label: {
+                                Image(systemName: "minus.circle.fill")
+                                    .foregroundColor(.red)
+                            }
+                            .buttonStyle(.borderless)
+                            .accessibilityLabel("Remove \(method)")
+                        }
+                    }
                 }
 
                 Section("Available") {
-                    ForEach(filteredMethods, id: \.self) { method in
+                    ForEach(availableMethods, id: \.self) { method in
                         Button {
                             withAnimation {
                                 if selectedMethods.contains(method) {
@@ -353,7 +484,6 @@ struct CheckoutPlaygroundPaymentMethodSelectionSheet: View {
                     }
                 }
             }
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
             .navigationTitle("Select Payment Methods")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

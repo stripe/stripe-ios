@@ -7,10 +7,12 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_shippingApplied() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(Checkout.Session.ShippingAddress(
-            name: "John Smith",
-            address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
-        )))
+        let session = apiResponse.makePublicSession().makeCopyOverriding(
+            shippingAddress: .newValue(CheckoutController.Session.ShippingAddress(
+                name: "John Smith",
+                address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
+            ))
+        )
 
         var config = PaymentSheet.Configuration()
         XCTAssertNil(config.shippingDetails())
@@ -28,10 +30,12 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_configShippingTakesPrecedence() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(Checkout.Session.ShippingAddress(
-            name: "John Smith",
-            address: .init(country: "GB")
-        )))
+        let session = apiResponse.makePublicSession().makeCopyOverriding(
+            shippingAddress: .newValue(CheckoutController.Session.ShippingAddress(
+                name: "John Smith",
+                address: .init(country: "GB")
+            ))
+        )
 
         var config = PaymentSheet.Configuration()
         let existingDetails = AddressViewController.AddressDetails(
@@ -81,11 +85,13 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_embeddedShipping() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let shippingAddress = Checkout.Session.ShippingAddress(
+        let shippingAddress = CheckoutController.Session.ShippingAddress(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )
-        let session = apiResponse.makePublicSession().makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
+        let session = apiResponse.makePublicSession().makeCopyOverriding(
+            shippingAddress: .newValue(shippingAddress)
+        )
 
         var config = EmbeddedPaymentElement.Configuration()
         session.applyAddressOverrides(to: &config)

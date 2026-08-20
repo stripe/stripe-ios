@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Bekræft betalingsoplysninger";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Bekræft Bizum-betalingen i din mobilbank-app inden for %@ for at fuldføre købet.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Bekræft betalingen i din MB WAY-app inden for %@ for at fuldføre købet.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bekræft betalingen i din bank- eller betalingsapp indenfor %@ for at gennemføre købet.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Bekræft betalingen i din banks app  indenfor %@ for at gennemføre købet.";
@@ -136,9 +140,15 @@
 
 "Did you mean %@? %@." = "Mente du %1$@? %2$@.";
 
+"Discard Changes" = "Kassér ændringer";
+
+"Discard changes?" = "Kassér ændringer?";
+
 "Discount" = "Rabat";
 
 "EPS Bank" = "EPS Bank";
+
+"Edit address" = "Rediger adresse";
 
 "Enter address manually" = "Indtast adresse manuelt";
 
@@ -157,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jeg er indforstået med, at Stripe vil opkræve direkte debiteringer på vegne af %@ og bekræfter, at jeg er kontoindehaveren og den eneste person, der skal godkende debiteringer fra denne konto.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Fortsæt med at redigere";
 
 "Last 4 digits of SSN" = "Sidste 4 cifre af SSN";
 
@@ -284,8 +296,6 @@
 
 "Set up" = "Opsætning";
 
-"Shipping" = "Forsendelse";
-
 "Shipping to %@ is not supported." = "Forsewndelse til %@ understøttes ikke.";
 
 "Show details" = "Vis oplysninger";
@@ -339,3 +349,5 @@
 "Yes, update" = "Ja, opdater";
 
 "Your IBAN should start with a two-letter country code." = "Dit IBAN-nummer skal starte med en landekode på to bogstaver.";
+
+"Your address changes won't be saved." = "Dine adresseændringer bliver ikke gemt.";

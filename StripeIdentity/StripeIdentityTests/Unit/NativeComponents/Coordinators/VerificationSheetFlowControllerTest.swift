@@ -8,6 +8,8 @@
 
 @_spi(STP) import StripeCore
 import StripeCoreTestUtils
+@_spi(STP) import StripeUICore
+import UIKit
 import Vision
 import XCTest
 
@@ -43,6 +45,63 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
             flowController.navigationController.viewControllers.first as Any,
             LoadingViewController.self
         )
+    }
+
+    func testDarkBrandColorUsesWhitePrimaryButtonForeground() {
+        let brandColor = UIColor(red: 0.05, green: 0.12, blue: 0.20, alpha: 1)
+        let configuration = Button.Configuration.identityPrimary(
+            backgroundColor: brandColor
+        )
+
+        XCTAssertEqual(configuration.backgroundColor, brandColor)
+        XCTAssertEqual(configuration.foregroundColor, .white)
+        XCTAssertEqual(configuration.disabledForegroundColor, .systemGray)
+    }
+
+    func testLightBrandColorUsesBlackPrimaryButtonForeground() {
+        let brandColor = UIColor(red: 1, green: 0.85, blue: 0, alpha: 1)
+        let configuration = Button.Configuration.identityPrimary(
+            backgroundColor: brandColor
+        )
+
+        XCTAssertEqual(configuration.backgroundColor, brandColor)
+        XCTAssertEqual(configuration.foregroundColor, .black)
+        XCTAssertEqual(configuration.disabledForegroundColor, .systemGray)
+    }
+
+    func testNilBrandColorPreservesDefaultPrimaryButtonColors() {
+        let configuration = Button.Configuration.identityPrimary(backgroundColor: nil)
+
+        XCTAssertEqual(configuration.backgroundColor, Button.Configuration.tintColor)
+        XCTAssertEqual(configuration.foregroundColor, .white)
+        XCTAssertEqual(configuration.disabledForegroundColor, .systemGray)
+    }
+
+    func testDynamicBrandColorResolvesForCurrentAppearance() throws {
+        let lightBrandColor = UIColor(red: 1, green: 0.85, blue: 0, alpha: 1)
+        let darkBrandColor = UIColor(red: 0.05, green: 0.12, blue: 0.20, alpha: 1)
+        let dynamicBrandColor = UIColor { traitCollection in
+            return traitCollection.userInterfaceStyle == .dark
+                ? darkBrandColor
+                : lightBrandColor
+        }
+
+        var lightConfigurationResult: Button.Configuration?
+        UITraitCollection(userInterfaceStyle: .light).performAsCurrent {
+            lightConfigurationResult = .identityPrimary(backgroundColor: dynamicBrandColor)
+        }
+        var darkConfigurationResult: Button.Configuration?
+        UITraitCollection(userInterfaceStyle: .dark).performAsCurrent {
+            darkConfigurationResult = .identityPrimary(backgroundColor: dynamicBrandColor)
+        }
+
+        let lightConfiguration = try XCTUnwrap(lightConfigurationResult)
+        let darkConfiguration = try XCTUnwrap(darkConfigurationResult)
+
+        XCTAssertEqual(lightConfiguration.backgroundColor, lightBrandColor)
+        XCTAssertEqual(lightConfiguration.foregroundColor, .black)
+        XCTAssertEqual(darkConfiguration.backgroundColor, darkBrandColor)
+        XCTAssertEqual(darkConfiguration.foregroundColor, .white)
     }
 
     // Tests the navigation stack between screen transitions
@@ -354,6 +413,21 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
             missingRequirements: [.face],
             completion: { nextVC in
                 XCTAssertIs(nextVC, SelfieWarmupViewController.self)
+                exp.fulfill()
+            }
+        )
+
+        wait(for: [exp], timeout: 1)
+    }
+
+    func testNextViewControllerBiometricConsentPrecedesSelfie() throws {
+        let exp = expectation(
+            description: "testNextViewControllerBiometricConsentPrecedesSelfie"
+        )
+        try nextViewController(
+            missingRequirements: [.biometricConsent, .face],
+            completion: { nextVC in
+                XCTAssertIs(nextVC, BiometricConsentViewController.self)
                 exp.fulfill()
             }
         )

@@ -70,11 +70,17 @@ protocol PayWithLinkCoordinating: AnyObject {
 @objc(STP_Internal_PayWithLinkViewController)
 final class PayWithLinkViewController: BottomSheetViewController {
 
-    enum LinkAccountError: Error {
+    enum LinkAccountError: LocalizedError {
         case noLinkAccount
+        case noFundingSources
 
-        var localizedDescription: String {
-            "No Link account is set"
+        var errorDescription: String? {
+            switch self {
+            case .noLinkAccount:
+                return "No Link account is set"
+            case .noFundingSources:
+                return "No supported payment methods available for this Link session"
+            }
         }
     }
 
@@ -113,7 +119,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         }
 
         /// Returns the supported payment details types for the current Link account, filtered by the supportedPaymentMethodTypes.
-        /// Returns [.card] as fallback if no types are supported after filtering.
+        /// Returns an empty set if no funding sources are available at the session-level, consumer-level, or their intersection.
         func getSupportedPaymentDetailsTypes(linkAccount: PaymentSheetLinkAccount) -> Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> {
             var allSupportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: elementsSession)
 
@@ -122,12 +128,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 allSupportedPaymentDetailsTypes = allSupportedPaymentDetailsTypes.intersection(supportedPaymentDetailsTypes)
             }
 
-            if !allSupportedPaymentDetailsTypes.isEmpty {
-                return allSupportedPaymentDetailsTypes
-            } else {
-                // Card is the default payment method type when no other type is available.
-                return [ParsedEnum(.card)]
-            }
+            return allSupportedPaymentDetailsTypes
         }
 
         /// Creates a new Context object.
@@ -409,6 +410,12 @@ private extension PayWithLinkViewController {
         }
 
         let supportedPaymentDetailsTypesSet = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
+
+        guard !supportedPaymentDetailsTypesSet.isEmpty else {
+            finish(withResult: .failed(error: LinkAccountError.noFundingSources), deferredIntentConfirmationType: nil)
+            return
+        }
+
         let supportedPaymentDetailsTypes = supportedPaymentDetailsTypesSet.toSortedArray()
 
         Task { @MainActor in

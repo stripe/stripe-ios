@@ -143,6 +143,8 @@ import UIKit
             return PaymentSheet.LinkConfiguration(display: .automatic, brand: brand)
         case .never:
             return PaymentSheet.LinkConfiguration(display: .never, brand: brand)
+        case .walletButtonHidden:
+            return PaymentSheet.LinkConfiguration(display: .walletButtonHidden, brand: brand)
         }
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
@@ -266,7 +268,6 @@ import UIKit
         }
 
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
-        configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
         configuration.termsDisplay = cardTermsDisplay
         return configuration
     }
@@ -408,7 +409,6 @@ import UIKit
             )
         }
         configuration.additionalFields.checkboxLabel = "Save this address for future orders"
-        configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
         return configuration
     }
 
@@ -584,8 +584,8 @@ import UIKit
     }
 
     var clientSecret: String?
-    var checkout: Checkout?
-    var checkoutSession: Checkout.Session? { checkout?.session }
+    var checkout: CheckoutController?
+    var checkoutSession: CheckoutController.Session? { checkout?.session }
     var customerId: String?
     var ephemeralKey: String?
     var customerSessionClientSecret: String?
@@ -940,10 +940,10 @@ extension PlaygroundController {
                 // Load checkout session using Checkout SDK if using CheckoutSession
                 if let checkoutSessionClientSecret = json["checkoutSessionClientSecret"] {
                     do {
-                        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionClientSecret, returnURL: "payments-example://stripe-redirect")
+                        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: checkoutSessionClientSecret, returnURL: "payments-example://stripe-redirect")
                         checkoutConfiguration.adaptivePricing.allowed = settingsToLoad.csAdaptivePricing == .on
                         checkoutConfiguration.currencySelectorElement.appearance = self.currencySelectorAppearance
-                        self.checkout = try await Checkout(configuration: checkoutConfiguration)
+                        self.checkout = try await CheckoutController(configuration: checkoutConfiguration)
                     } catch {
                         self.checkout = nil
                         print("Failed to load checkout session: \(error)")

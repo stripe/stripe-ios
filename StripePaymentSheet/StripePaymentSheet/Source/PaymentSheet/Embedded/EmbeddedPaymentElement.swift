@@ -101,14 +101,14 @@ public final class EmbeddedPaymentElement {
 
     /// An asynchronous failable initializer for CheckoutSession mode
     /// Loads payment methods and configuration from a fully loaded Checkout instance.
-    /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
+    /// - Parameter checkout: A fully loaded Checkout instance whose ``CheckoutController.session`` is non-nil.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Returns: A valid EmbeddedPaymentElement instance
     /// - Throws: An error if loading failed.
     @_spi(STP)
     @_spi(ReactNativeSDK)
     public static func create(
-        checkout: Checkout,
+        checkout: CheckoutController,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
         try await checkout.awaitPendingOperations()
@@ -167,7 +167,7 @@ public final class EmbeddedPaymentElement {
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
     /// - Note: If you call `update` while a previous call to `update` is still in progress, the previous call returns `.canceled`.
     func update(
-        checkout: Checkout
+        checkout: CheckoutController
     ) async -> UpdateResult {
         // Session moved to a terminal state (e.g. during confirm), nothing to do.
         guard checkout.sessionIsOpen else {
@@ -237,7 +237,7 @@ public final class EmbeddedPaymentElement {
                 case .applePay:
                     return PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
                 case .link:
-                    return PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
+                    return PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: configuration)
                 case .saved(paymentMethod: let paymentMethod, confirmParams: _):
                     return loadResult.savedPaymentMethods.contains(paymentMethod)
                 case .new(confirmParams: let confirmParams):
@@ -388,13 +388,13 @@ public final class EmbeddedPaymentElement {
     internal private(set) var formCache: PaymentMethodFormCache = .init()
     /// The form view controller for the currently selected payment method.
     internal var selectedFormViewController: EmbeddedFormViewController?
-    /// The saved payment method waiting for its billing address to sync to Checkout.
+    /// The saved payment method waiting for its billing address to sync to CheckoutController.
     internal var pendingBillingAddressSyncSelection: PendingBillingAddressSyncSelection?
     /// Indicates if a payment has been successfully completed.
     internal var hasConfirmedIntent = false
     /// Tracks info about the currently in-flight or most recent update attempt.
     internal var latestUpdateContext: EmbeddedUpdateContext?
-    internal weak var checkout: Checkout?
+    internal weak var checkout: CheckoutController?
 #if DEBUG
     internal var _test_paymentOption: PaymentOption? // for testing only
 #endif

@@ -9,31 +9,35 @@
 import Combine
 import OHHTTPStubs
 import OHHTTPStubsSwift
+import PassKit
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
-extension Checkout.Amount {
-    /// Test helper for constructing a ``Checkout/Amount`` from a minor-units integer.
-    static func testValue(_ minorUnits: Int, currency: String = "usd") -> Checkout.Amount {
-        return PaymentPagesAPIResponse.makeAmount(minorUnits, currency: currency)
+extension PaymentPagesAPIResponse {
+    static func decode(
+        fromAPIResponse response: [AnyHashable: Any]
+    ) throws -> PaymentPagesAPIResponse {
+        let data = try JSONSerialization.data(withJSONObject: response)
+        return try StripeJSONDecoder().decode(PaymentPagesAPIResponse.self, from: data)
     }
+
 }
 
 // MARK: - Emission Recorder
 
 @MainActor
 class CheckoutEmissionRecorder {
-    var sessions: [Checkout.Session] = []
+    var sessions: [CheckoutController.Session] = []
     var loading: [Bool] = []
     private var subscriptions = Set<AnyCancellable>()
 
-    init(_ checkout: Checkout) {
+    init(_ checkout: CheckoutController) {
         checkout.$session.dropFirst().sink { [weak self] in self?.sessions.append($0) }
             .store(in: &subscriptions)
-        checkout.$isLoading.dropFirst().sink { [weak self] in self?.loading.append($0) }
+        checkout.$isUpdating.dropFirst().sink { [weak self] in self?.loading.append($0) }
             .store(in: &subscriptions)
     }
 }
@@ -84,13 +88,54 @@ enum CheckoutTestHelpers {
         "payment_method_preference": ["ordered_payment_method_types": ["card"]],
     ]
 
+    static func makeOneTimePriceCheckoutItems(
+        currency: String = "usd",
+        unitAmount: Int = 1000
+    ) -> [[String: Any]] {
+        return [
+            [
+                "key": "checkout_item_test",
+                "type": "one_time_price",
+                "one_time_price": [
+                    "items": [
+                        [
+                            "inner_item_key": "checkout_item_inner_test",
+                            "quantity": 1,
+                            "subtotal": unitAmount,
+                            "total": unitAmount,
+                            "unit_amount": unitAmount,
+                            "unit_amount_decimal": String(unitAmount),
+                            "tax_amounts": [],
+                            "tax_inclusive": 0,
+                            "tax_exclusive": 0,
+                            "price": [
+                                "id": "price_test",
+                                "currency": currency,
+                                "unit_amount": unitAmount,
+                                "product": [
+                                    "name": "Test product",
+                                    "images": [],
+                                ],
+                            ],
+                        ],
+                    ],
+                    "subtotal": unitAmount,
+                    "total": unitAmount,
+                ],
+            ],
+        ]
+    }
+
     static let baseSessionJSON: [String: Any] = [
         "session_id": "cs_test",
         "object": "checkout.session",
         "livemode": false,
-        "mode": "payment",
+        "mode": "modeless",
+        "status": "open",
         "payment_status": "unpaid",
         "payment_method_types": ["card"],
+        "currency": "usd",
+        "checkout_items": makeOneTimePriceCheckoutItems(),
         "elements_session": minimalElementsSessionJSON,
     ]
 
@@ -98,10 +143,7 @@ enum CheckoutTestHelpers {
     /// To test field *absence*, mutate `baseSessionJSON` directly instead.
     static func makeSession(_ overrides: [String: Any] = [:]) -> PaymentPagesAPIResponse {
         let json = makeSessionJSON(overrides)
-        guard let session = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json) else {
-            fatalError("makeSession: failed to decode PaymentPagesAPIResponse from \(json)")
-        }
-        return session
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeSessionJSON(_ overrides: [String: Any] = [:]) -> [String: Any] {
@@ -110,7 +152,7 @@ enum CheckoutTestHelpers {
 
     // MARK: - Checkout-flow helpers
 
-    /// Builds a `Checkout.Configuration`, replacing its `apiClient` with one that uses test stubs.
+    /// Builds a `CheckoutController.Configuration`, replacing its `apiClient` with one that uses test stubs.
     ///
     /// - Parameters:
     ///   - apiResponse: The Checkout Session response returned by the stubbed `/init` request.
@@ -119,12 +161,12 @@ enum CheckoutTestHelpers {
     @MainActor
     static func makeConfiguration(
         apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
-        configuration: Checkout.Configuration? = nil,
+        configuration: CheckoutController.Configuration? = nil,
         stubAllOutgoingRequests: Bool = true
-    ) -> Checkout.Configuration {
+    ) -> CheckoutController.Configuration {
         // Use the production Checkout initializer with a test-controlled API client.
-        let clientSecret = configuration?.clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
-        var resolvedConfiguration = configuration ?? Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        let clientSecret = configuration?.clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
+        var resolvedConfiguration = configuration ?? CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         resolvedConfiguration.apiClient = makeStubbedAPIClient(
             apiResponse: apiResponse,
             clientSecret: clientSecret,
@@ -137,10 +179,10 @@ enum CheckoutTestHelpers {
     @MainActor
     static func makeCurrencySelectorConfiguration(
         apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
-        configuration: Checkout.Configuration? = nil
-    ) -> Checkout.Configuration {
-        let clientSecret = configuration?.clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
-        var resolvedConfiguration = configuration ?? Checkout.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        configuration: CheckoutController.Configuration? = nil
+    ) -> CheckoutController.Configuration {
+        let clientSecret = configuration?.clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
+        var resolvedConfiguration = configuration ?? CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         resolvedConfiguration.adaptivePricing.allowed = true
         return makeConfiguration(apiResponse: apiResponse, configuration: resolvedConfiguration)
     }
@@ -151,9 +193,10 @@ enum CheckoutTestHelpers {
         clientSecret: String? = nil,
         stubAllOutgoingRequests: Bool = true
     ) -> STPAPIClient {
-        let resolvedClientSecret = clientSecret ?? apiResponse.clientSecret ?? "cs_test_123_secret_abc"
-        let sessionId = Checkout.extractSessionId(from: resolvedClientSecret)
+        let resolvedClientSecret = clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
+        let sessionId = CheckoutController.extractSessionId(from: resolvedClientSecret)
         let apiClient = APIStubbedTestCase.stubbedAPIClient()
+        apiClient.publishableKey = "pk_test_123"
 
         // Keep tests offline except for explicitly stubbed Checkout init work.
         if stubAllOutgoingRequests {
@@ -171,9 +214,8 @@ enum CheckoutTestHelpers {
             request.httpMethod == "POST"
                 && request.url?.path == "/v1/payment_pages/\(sessionId)/init"
         }) { _ in
-            // Feed Checkout(configuration:) the session fixture this test requested.
+            // Feed CheckoutController(configuration:) the session fixture this test requested.
             var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
-            responseJSON["client_secret"] = resolvedClientSecret
             responseJSON["session_id"] = responseJSON["session_id"] ?? sessionId
             let data = try! JSONSerialization.data(withJSONObject: responseJSON, options: [])
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
@@ -184,7 +226,6 @@ enum CheckoutTestHelpers {
                 && request.url?.path == "/v1/payment_pages/\(sessionId)"
         }) { _ in
             var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
-            responseJSON["client_secret"] = resolvedClientSecret
             responseJSON["session_id"] = responseJSON["session_id"] ?? sessionId
             let data = try! JSONSerialization.data(withJSONObject: responseJSON, options: [])
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
@@ -205,7 +246,7 @@ enum CheckoutTestHelpers {
     ///     sessionJSON: { CheckoutTestHelpers.openSessionJSON }
     /// )
     ///
-    /// _ = try await Checkout(configuration: configuration)
+    /// _ = try await CheckoutController(configuration: configuration)
     /// XCTAssertEqual(recorder.requests.map(\.kind), [.initSession, .updateSession])
     /// XCTAssertEqual(recorder.requests[1].params["tax_region[country]"], "US")
     /// ```
@@ -249,13 +290,13 @@ enum CheckoutTestHelpers {
     static let openSessionJSON: [AnyHashable: Any] = [
         "session_id": "cs_test_123",
         "object": "checkout.session",
-        "client_secret": "cs_test_123_secret_abc",
         "livemode": false,
-        "mode": "payment",
+        "mode": "modeless",
         "status": "open",
         "payment_status": "unpaid",
         "payment_method_types": ["card"],
         "currency": "usd",
+        "checkout_items": makeOneTimePriceCheckoutItems(),
         "elements_session": minimalElementsSessionJSON,
     ]
 
@@ -263,61 +304,47 @@ enum CheckoutTestHelpers {
         var json = openSessionJSON
         json["customer_email"] = customerEmail
         json["billing_address_collection"] = billingAddressCollection
-        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeClosedSession() -> PaymentPagesAPIResponse {
         var json = openSessionJSON
         json["status"] = "complete"
         json["payment_status"] = "paid"
-        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeOpenSession(allowedCountries: [String]) -> PaymentPagesAPIResponse {
         var json = openSessionJSON
         json["shipping_address_collection"] = ["allowed_countries": allowedCountries]
-        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeAdaptivePricingSession(
         currency: String = "usd",
-        adaptivePricingActive: Bool = true,
-        includeLocalizedPrices: Bool = true,
-        includeExchangeRateFields: Bool = true,
         integrationAmount: Int = 1200,
         localAmount: Int = 1000
     ) -> PaymentPagesAPIResponse {
         var json: [AnyHashable: Any] = openSessionJSON
         json["currency"] = currency
-        json["total_summary"] = [
-            "subtotal": integrationAmount,
-            "total": integrationAmount,
-            "due": integrationAmount,
+        json["checkout_items"] = makeOneTimePriceCheckoutItems(
+            currency: currency,
+            unitAmount: integrationAmount
+        )
+        let localCurrencyOption: [AnyHashable: Any] = [
+            "currency": "gbp",
+            "amount": localAmount,
+            "presentment_exchange_rate": "0.776917",
+            "conversion_markup_bps": 400,
         ]
-        json["developer_tool_context"] = [
-            "adaptive_pricing": [
-                "active": adaptivePricingActive,
-            ],
+        json["adaptive_pricing_info"] = [
+            "integration_currency": "usd",
+            "integration_amount": integrationAmount,
+            "active_presentment_currency": currency,
+            "local_currency_options": [localCurrencyOption],
         ]
 
-        if includeLocalizedPrices {
-            var localCurrencyOption: [AnyHashable: Any] = [
-                "currency": "gbp",
-                "amount": localAmount,
-            ]
-            if includeExchangeRateFields {
-                localCurrencyOption["presentment_exchange_rate"] = "0.776917"
-                localCurrencyOption["conversion_markup_bps"] = 400
-            }
-            json["adaptive_pricing_info"] = [
-                "integration_currency": "usd",
-                "integration_amount": integrationAmount,
-                "active_presentment_currency": currency,
-                "local_currency_options": [localCurrencyOption],
-            ]
-        }
-
-        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
     private static func jsonObject(_ value: Any) -> Any {
@@ -338,6 +365,38 @@ enum CheckoutTestHelpers {
     }
 }
 
+// MARK: - Apple Pay test doubles
+
+class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
+    override func present(completion: (@Sendable (Bool) -> Void)? = nil) {
+        completion?(true)
+    }
+
+    override func dismiss(completion: (() -> Void)? = nil) {
+        completion?()
+    }
+}
+
+class StubExpressCheckoutSessionUpdater: ExpressCheckoutSessionUpdater {
+    func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {}
+}
+
+extension CheckoutController.ApplePayConfirmationContext {
+    static func makeMock(
+        apiClient: STPAPIClient,
+        returnURL: String = "stripe-ios-test://checkout-return",
+        merchantDisplayName: String = "Test Merchant",
+        applePayConfiguration: CheckoutController.ApplePayConfiguration = CheckoutController.ApplePayConfiguration(merchantId: "merchant.com.test")
+    ) -> CheckoutController.ApplePayConfirmationContext {
+        CheckoutController.ApplePayConfirmationContext(
+            applePayConfiguration: applePayConfiguration,
+            apiClient: apiClient,
+            returnURL: returnURL,
+            merchantDisplayName: merchantDisplayName
+        )
+    }
+}
+
 // MARK: - PaymentPagesAPIResponse decorator helpers
 
 extension PaymentPagesAPIResponse {
@@ -352,6 +411,6 @@ extension PaymentPagesAPIResponse {
     private func withOverrides(_ overrides: [String: Any]) -> PaymentPagesAPIResponse {
         let json = (allResponseFields as? [String: Any] ?? [:])
             .merging(overrides) { _, new in new }
-        return PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 }

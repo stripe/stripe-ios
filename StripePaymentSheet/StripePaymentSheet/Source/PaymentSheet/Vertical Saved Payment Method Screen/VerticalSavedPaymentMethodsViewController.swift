@@ -379,7 +379,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
     }
 
     private func updateBillingTaxRegionAndCompleteSelection(
-        address: Checkout.Address,
+        address: CheckoutController.Address,
         using checkout: CheckoutSessionBillingAddressUpdater,
         paymentMethod: STPPaymentMethod,
         button: SavedPaymentMethodRowButton,

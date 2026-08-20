@@ -15,6 +15,13 @@ protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView)
 }
 
+/// A horizontal flow layout that mirrors its item geometry in right-to-left interfaces.
+final class RightToLeftCollectionViewFlowLayout: UICollectionViewFlowLayout {
+    override var flipsHorizontallyInOppositeLayoutDirection: Bool {
+        true
+    }
+}
+
 /// A carousel of Payment Method types e.g. [Card, Alipay, SEPA Debit]
 /// For internal SDK use only
 @objc(STP_Internal_PaymentMethodTypeCollectionView)
@@ -73,7 +80,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         self.selected = paymentMethodTypes[selectedItemIndex]
         self.appearance = appearance
         self.currency = currency
-        let layout = UICollectionViewFlowLayout()
+        let layout = RightToLeftCollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
             top: 0, left: appearance.formInsets.leading, bottom: 0,

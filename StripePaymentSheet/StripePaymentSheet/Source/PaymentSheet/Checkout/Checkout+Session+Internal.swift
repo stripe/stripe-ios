@@ -9,10 +9,10 @@ import Foundation
 
 // MARK: - Computed Properties
 
-extension Checkout.Session {
+extension CheckoutController.Session {
     /// The express button types available for this session, derived from the elements session.
-    var availableExpressButtonTypes: [ExpressButton] {
-        var types: [ExpressButton] = []
+    var availableExpressButtonTypes: [ExpressCheckoutElement.PaymentMethod] {
+        var types: [ExpressCheckoutElement.PaymentMethod] = []
         for type in elementsSession.orderedPaymentMethodTypesAndWallets {
             switch type {
             case "apple_pay" where !types.contains(.applePay) && elementsSession.isApplePayEnabled:
@@ -50,11 +50,16 @@ extension Checkout.Session {
     var noPaymentRequired: Bool {
         return paymentStatus == .noPaymentRequired
     }
+
+    /// The currency associated with the session's amounts.
+    var activePresentmentCurrency: String? {
+        return presentmentDetails?.presentmentCurrency ?? currency
+    }
 }
 
 // MARK: - Methods
 
-extension Checkout.Session {
+extension CheckoutController.Session {
     /// Returns `true` when the server needs a `tax_region` update for the given address type.
     ///
     /// - Parameter addressType: Either `"billing"` or `"shipping"`.
@@ -65,11 +70,7 @@ extension Checkout.Session {
     /// Returns the expected amount for payment-style sessions and `nil` for setup-style sessions.
     func expectedAmount() -> Int? {
         guard !noPaymentRequired else { return nil }
-        guard let total = total?.total.minorUnitsAmount else {
-            stpAssertionFailure("Missing expected amount from checkout session")
-            return nil
-        }
-        return total
+        return Int(totals.total.minorUnitsAmount)
     }
 
     func merchantWillSavePaymentMethod(_ paymentMethodType: STPPaymentMethodType) -> Bool {
@@ -111,33 +112,31 @@ enum SessionFieldUpdate<Value> {
     }
 }
 
-extension Checkout.Session {
+extension CheckoutController.Session {
     /// Apologetic explanation for this method:
     /// - Situation: Session is immutable, so all mutations must create a new one.
     /// - Complication: Optional fields need three states here: keep the old value, replace with a non-nil value, or explicitly clear to nil.
     /// - Resolution: SessionFieldUpdate keeps that distinction visible at call sites instead of relying on double optionals.
     func makeCopyOverriding(
-        shippingAddress: SessionFieldUpdate<Checkout.Session.ShippingAddress> = .keepOldValue,
-        paymentOption: SessionFieldUpdate<Checkout.Session.PaymentOptionDisplayData> = .keepOldValue
+        shippingAddress: SessionFieldUpdate<CheckoutController.Session.ShippingAddress> = .keepOldValue,
+        paymentOption: SessionFieldUpdate<CheckoutController.Session.PaymentOptionDisplayData> = .keepOldValue
     ) -> Self {
         return Self(
             id: id,
             businessName: businessName,
             currency: currency,
-            currencyOptions: currencyOptions,
+            presentmentDetails: presentmentDetails,
             discountAmounts: discountAmounts,
             email: email,
-            lineItems: lineItems,
+            orderSummaryItems: orderSummaryItems,
             livemode: livemode,
             minorUnitsAmountDivisor: minorUnitsAmountDivisor,
             paymentOption: paymentOption.resolved(currentValue: self.paymentOption),
-            savedPaymentMethods: savedPaymentMethods,
-            shipping: shipping,
             shippingAddress: shippingAddress.resolved(currentValue: self.shippingAddress),
-            shippingOptions: shippingOptions,
             status: status,
             tax: tax,
-            total: total,
+            taxAmounts: taxAmounts,
+            totals: totals,
             paymentStatus: paymentStatus,
             paymentMethodOptions: paymentMethodOptions,
             customer: customer,

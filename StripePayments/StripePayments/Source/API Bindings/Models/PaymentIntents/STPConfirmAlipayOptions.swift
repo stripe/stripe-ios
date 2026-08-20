@@ -9,8 +9,15 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-/// Alipay options to pass to `STPConfirmPaymentMethodOptions``
+/// Alipay options to pass to `STPConfirmPaymentMethodOptions`.
 public class STPConfirmAlipayOptions: NSObject {
+
+    /// Three-letter ISO currency code in lowercase. Required when confirming a SetupIntent.
+    @objc public var currency: String?
+
+    /// Indicates that you intend to make future payments with this payment method.
+    /// Alipay only supports `STPPaymentIntentSetupFutureUsage.offSession`.
+    @objc public var setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none
 
     /// The app bundle ID.
     /// @note This is automatically populated by the SDK.
@@ -31,8 +38,10 @@ public class STPConfirmAlipayOptions: NSObject {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
+            "currency = \(String(describing: currency))",
             "appBundleID = \(appBundleID)",
             "appVersionKey = \(appVersionKey)",
+            "setupFutureUsage = \(setupFutureUsage)",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -42,11 +51,17 @@ public class STPConfirmAlipayOptions: NSObject {
 
 // MARK: - STPFormEncodable
 extension STPConfirmAlipayOptions: STPFormEncodable {
+    @objc internal var setupFutureUsageRawString: String? {
+        return setupFutureUsage.stringValue
+    }
+
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
+            NSStringFromSelector(#selector(getter: currency)): "currency",
             NSStringFromSelector(#selector(getter: appBundleID)): "app_bundle_id",
             NSStringFromSelector(#selector(getter: appVersionKey)): "app_version_key",
+            NSStringFromSelector(#selector(getter: setupFutureUsageRawString)): "setup_future_usage",
         ]
     }
 

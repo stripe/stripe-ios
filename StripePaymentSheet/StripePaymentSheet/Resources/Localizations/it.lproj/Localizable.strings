@@ -112,6 +112,10 @@
 
 "Confirm payment details" = "Conferma i dati di pagamento";
 
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Conferma il pagamento Bizum nella tua richiesta di registrazione bancaria su dispositivo mobile entro %@ per completare l'acquisto.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Per completare l'acquisto, conferma il pagamento nella tua app MB WAY entro il giorno %@.";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Per completare l'acquisto, conferma il pagamento nell'app della tua banca o nell'app per i pagamenti entro %@";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Per completare l'acquisto, conferma il pagamento nell'app della tua banca entro %@.";
@@ -136,9 +140,15 @@
 
 "Did you mean %@? %@." = "Volevi dire %1$@? %2$@.";
 
+"Discard Changes" = "Elimina le modifiche";
+
+"Discard changes?" = "Eliminare le modifiche?";
+
 "Discount" = "Sconto";
 
 "EPS Bank" = "Banca EPS";
+
+"Edit address" = "Modifica l'indirizzo";
 
 "Enter address manually" = "Inserisci manualmente l'indirizzo";
 
@@ -157,6 +167,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Sono consapevole che Stripe riscuoterà addebiti diretti per conto di %@ e confermo di essere il titolare del conto e l'unica persona idonea ad autorizzare addebiti su questo conto.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Continua a modificare";
 
 "Last 4 digits of SSN" = "Ultime 4 cifre SSN";
 
@@ -284,8 +296,6 @@
 
 "Set up" = "Imposta";
 
-"Shipping" = "Spedizione";
-
 "Shipping to %@ is not supported." = "La spedizione in %@ non è supportata.";
 
 "Show details" = "Mostra dettagli";
@@ -339,3 +349,5 @@
 "Yes, update" = "Sì, aggiorna";
 
 "Your IBAN should start with a two-letter country code." = "L'IBAN deve iniziare con un codice di paese di due lettere.";
+
+"Your address changes won't be saved." = "Le modifiche all'indirizzo non verranno salvate.";

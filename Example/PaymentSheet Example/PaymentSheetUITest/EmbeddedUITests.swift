@@ -93,9 +93,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons.matching(identifier: "Setup").element(boundBy: 1).waitForExistenceAndTap()
         // ...(wait for it to finish updating)...
         XCTAssertTrue(app.buttons["Reload"].waitForExistence(timeout: 10))
-        // ...should cause Alipay to no longer be the selected payment method, since it is not valid for setup.
-        XCTAssertFalse(app.staticTexts["Payment method"].exists)
-        XCTAssertFalse(app.buttons["Alipay"].exists)
+        // ...should preserve Alipay as the selected payment method, since it is valid for setup.
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "Alipay")
+        XCTAssertTrue(app.buttons["Alipay"].isSelected)
 
         // ...go back into deferred PaymentIntent mode
         app.buttons.matching(identifier: "Payment").element(boundBy: 1).waitForExistenceAndTap()
@@ -589,6 +589,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         XCTAssertTrue(app.staticTexts["••••6789"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["••••6789"].isSelected)
+        app.swipeUp() // scroll to see the checkout button
         XCTAssertTrue(app.buttons["Checkout"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
 

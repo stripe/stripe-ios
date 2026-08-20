@@ -8,11 +8,56 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+import UIKit
 
-extension Checkout: ExpressCheckoutElementDelegate {}
-extension Checkout: CurrencySelectorElementDelegate {}
+extension CheckoutController: ExpressCheckoutElementDelegate {
+    func expressCheckoutElementShouldConfirm(
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
+        presentingViewController: UIViewController
+    ) async -> ConfirmResult {
+        guard sessionIsOpen else {
+            let error = CheckoutError.unknown(debugDescription: "CheckoutController.expressCheckoutElementShouldConfirm() cannot confirm a Checkout Session that is no longer open.")
+            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+            return .failed(error)
+        }
+        guard let expressCheckoutConfirmationContext = confirmationContext(for: paymentMethod) else {
+            let error = CheckoutError.unknown(debugDescription: "CheckoutController.expressCheckoutElementShouldConfirm() could not build a confirmation context for \(paymentMethod).")
+            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+            return .failed(error)
+        }
+        let authenticationContext = AuthenticationContext(
+            presentingViewController: presentingViewController,
+            appearance: expressCheckoutConfirmationContext.configuration.appearance
+        )
+        // TODO: static confirm protections
+        let result = await CheckoutController.confirm(
+            checkoutSession: session,
+            confirmationContext: expressCheckoutConfirmationContext,
+            authenticationContext: authenticationContext,
+            paymentHandler: paymentHandler,
+            applePayConfirmationContext: applePayConfirmationContext,
+            sessionUpdater: self
+        )
+        switch result.paymentSheetResult {
+        case .completed:
+            guard let checkoutSessionResponse = result.checkoutSessionResponse else {
+                let error = CheckoutError.unknown(debugDescription: "CheckoutController.expressCheckoutElementShouldConfirm() completed without a Checkout Session response.")
+                STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+                return .failed(error)
+            }
+            return .succeeded(paymentStatus: checkoutSessionResponse.paymentStatus)
+        case .canceled:
+            return .canceled
+        case .failed(let error):
+            return .failed(error)
+        }
+    }
+}
 
-extension Checkout {
+extension CheckoutController: CurrencySelectorElementDelegate {}
+extension CheckoutController: ShippingAddressElementDelegate {}
+
+extension CheckoutController {
 
     // MARK: - Currency
 
@@ -26,7 +71,9 @@ extension Checkout {
     // MARK: - Payment Option
 
     func setPaymentOption(_ paymentOption: Session.PaymentOptionDisplayData?) {
-        dangerouslySetSessionDirectly(session.makeCopyOverriding(paymentOption: .newValue(paymentOption)))
+        dangerouslySetSessionDirectly(
+            session.makeCopyOverriding(paymentOption: .newValue(paymentOption))
+        )
     }
 
     // MARK: - Session Updates
@@ -42,7 +89,7 @@ extension Checkout {
     /// - Parameters:
     ///   - timeout: Maximum time to wait, in seconds.
     func awaitPendingOperations(
-        timeout: TimeInterval = Checkout.defaultPendingOperationsTimeout
+        timeout: TimeInterval = CheckoutController.defaultPendingOperationsTimeout
     ) async throws {
         let snapshot = pendingOperations
         guard !snapshot.isEmpty else { return }
@@ -69,7 +116,7 @@ extension Checkout {
     /// will return that value to the caller.
     ///
     /// Operations execute in strict FIFO order: each task waits for the previous
-    /// task before running its body. While the queue is non-empty, ``isLoading``
+    /// task before running its body. While the queue is non-empty, ``isUpdating``
     /// is `true`; once the queue drains it returns to `false.`
     /// - Throws: Any error thrown by `body`.
     /// - Returns: The value returned by `body`.
@@ -120,11 +167,11 @@ extension Checkout {
     ///
     /// - Parameters:
     ///   - update: The API mutation to perform, or nil for a local-only update.
-    ///   - localMutation: A local change to the session to apply after the API call (or on its own).
+    ///   - shippingAddress: A local shipping-address change to apply after the API call (or on its own).
     ///   - canUpdateWhileSheetPresented: Bypasses the sheet-presented guard (e.g. billing sync on dismiss).
     func performUpdate(
         _ update: SessionUpdate? = nil,
-        applying localMutation: (@MainActor @Sendable (Session) -> Session)? = nil,
+        shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
         canUpdateWhileSheetPresented: Bool = false
     ) async throws {
         try await enqueueSessionUpdate {
@@ -134,7 +181,7 @@ extension Checkout {
             do {
                 let updatedSessionAPIResponse: PaymentPagesAPIResponse?
                 if let update {
-                    let sessionId = Checkout.extractSessionId(from: self.clientSecret)
+                    let sessionId = CheckoutController.extractSessionId(from: self.clientSecret)
                     updatedSessionAPIResponse = try await self.apiClient.updateCheckoutSession(
                         checkoutSessionId: sessionId,
                         parameters: update.parameters
@@ -146,16 +193,19 @@ extension Checkout {
                 // Errors from here should still get wrapped in API errors since the only way
                 //  local session application throws is if the API returned a session state that
                 //  the UI can't handle.
-                try await self.commitSession(updatedSessionAPIResponse, applying: localMutation)
+                try await self.commitSession(
+                    updatedSessionAPIResponse,
+                    shippingAddress: shippingAddress
+                )
             } catch {
                 throw CheckoutError.apiError(message: error.nonGenericDescription)
             }
         }
     }
 
-    /// True if the session is still actionable (open or no status yet).
+    /// True if the session is still actionable.
     var sessionIsOpen: Bool {
-        session.status?.type == .open || session.status?.type == nil
+        session.status == .open
     }
 
     // MARK: - Validation

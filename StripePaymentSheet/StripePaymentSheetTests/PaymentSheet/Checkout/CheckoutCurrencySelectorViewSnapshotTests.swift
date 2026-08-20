@@ -87,7 +87,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
 
     func testDisabledState() async throws {
         let view = try await makeCurrencySelectorView(selectedCurrency: "gbp")
-        view.isEnabled = false
+        view.setEnabled(false)
         verify(view)
     }
 
@@ -174,9 +174,9 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         appearance: CurrencySelectorElement.Appearance = .init()
     ) async throws -> CurrencySelectorElementUIView {
         let session = makeSession(selectedCurrency: selectedCurrency)
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.currencySelectorElement.appearance = appearance
-        let checkout = try await Checkout(
+        let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(
                 apiResponse: session,
                 configuration: configuration

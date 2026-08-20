@@ -96,6 +96,27 @@ class STPPaymentIntentConfirmParamsTest: XCTestCase {
         }
     }
 
+    func testAlipayFutureUsageFormEncoding() {
+        // Given
+        let params = STPPaymentIntentConfirmParams(
+            clientSecret: "pi_123_secret_456",
+            paymentMethodType: .alipay
+        )
+        let alipayOptions = STPConfirmAlipayOptions()
+        alipayOptions.setupFutureUsage = .offSession
+        let paymentMethodOptions = STPConfirmPaymentMethodOptions()
+        paymentMethodOptions.alipayOptions = alipayOptions
+        params.paymentMethodOptions = paymentMethodOptions
+
+        // When
+        let encoded = STPFormEncoder.dictionary(forObject: params)
+
+        // Then
+        let encodedPaymentMethodOptions = encoded["payment_method_options"] as? [String: Any]
+        let encodedAlipayOptions = encodedPaymentMethodOptions?["alipay"] as? [String: Any]
+        XCTAssertEqual(encodedAlipayOptions?["setup_future_usage"] as? String, "off_session")
+    }
+
     // #pragma clang diagnostic pop
 
     // MARK: STPFormEncodable Tests

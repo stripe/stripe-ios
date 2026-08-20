@@ -33,7 +33,7 @@ extension EmbeddedPaymentElement {
         // - Only restored if the previous input resulted in a completed form i.e. partial or invalid input is still discarded
 
         let shouldShowApplePay = PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
-        let shouldShowLink = PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
+        let shouldShowLink = PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: configuration)
         let savedPaymentMethodAccessoryType = RowButton.RightAccessoryButton.getAccessoryButtonType(
             savedPaymentMethodsCount: loadResult.savedPaymentMethods.count,
             isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
@@ -111,7 +111,7 @@ extension EmbeddedPaymentElement {
         savedPaymentMethods: [STPPaymentMethod],
         analyticsHelper: PaymentSheetAnalyticsHelper,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?,
-        checkout: Checkout?,
+        checkout: CheckoutController?,
         formCache: PaymentMethodFormCache,
         delegate: EmbeddedFormViewControllerDelegate
     ) -> EmbeddedFormViewController? {
@@ -715,7 +715,7 @@ extension EmbeddedPaymentElement {
 
         if let checkout {
             if !checkout.pendingOperations.isEmpty {
-                let errorMessage = "confirm was called while the Checkout session is still loading. Wait until Checkout.isLoading is false."
+                let errorMessage = "confirm was called while the Checkout session is still loading. Wait until CheckoutController.isUpdating is false."
                 let error = PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)
                 return (.failed(error: error), nil)
             }

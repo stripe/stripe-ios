@@ -26,7 +26,7 @@ private let paymentMethodLogoSize: CGSize = CGSize(width: 54, height: 40)
 @objc(STP_Internal_SavedPaymentMethodCollectionView)
 class SavedPaymentMethodCollectionView: UICollectionView {
     init(appearance: PaymentSheet.Appearance, needsVerticalPaddingForBadge: Bool = false) {
-        let layout = UICollectionViewFlowLayout()
+        let layout = RightToLeftCollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
             top: -6, left: appearance.formInsets.leading, bottom: 0,
@@ -114,6 +114,12 @@ extension SavedPaymentMethodCollectionView {
 
         lazy var paymentMethodLogoHeightConstraint: NSLayoutConstraint = {
              paymentMethodLogo.heightAnchor.constraint(equalToConstant: paymentMethodLogoSize.height)
+        }()
+
+        private lazy var spinner: ActivityIndicator = {
+            let spinner = ActivityIndicator(size: .medium)
+            spinner.translatesAutoresizingMaskIntoConstraints = false
+            return spinner
         }()
 
         fileprivate var viewModel: SavedPaymentOptionsViewController.Selection?
@@ -227,7 +233,12 @@ extension SavedPaymentMethodCollectionView {
                     equalTo: contentView.trailingAnchor, constant: 0),
                 accessoryButton.topAnchor.constraint(
                     equalTo: contentView.topAnchor, constant: 0),
+            ])
 
+            selectedIcon.addSubview(spinner)
+            NSLayoutConstraint.activate([
+                spinner.centerXAnchor.constraint(equalTo: selectedIcon.centerXAnchor),
+                spinner.centerYAnchor.constraint(equalTo: selectedIcon.centerYAnchor),
             ])
         }
 
@@ -266,6 +277,7 @@ extension SavedPaymentMethodCollectionView {
 
         // MARK: - Internal Methods
         func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsPaymentMethodUpdate: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false, linkBrand: LinkBrand = .link) {
+            setLoading(false)
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             selectableRectangle.isHidden = false
@@ -278,6 +290,22 @@ extension SavedPaymentMethodCollectionView {
             self.showDefaultPMBadge = showDefaultPMBadge
             self.linkBrand = linkBrand
             update()
+        }
+
+        /// Replaces the selected checkmark with a spinner while loading.
+        func setLoading(_ loading: Bool) {
+            guard loading != spinner.isAnimating else {
+                return
+            }
+
+            selectedIcon.setHiddenIfNecessary(!loading && !isSelected)
+            selectedIcon.imageView.setHiddenIfNecessary(loading)
+            if loading {
+                spinner.tintColor = appearance.colors.primary.contrastingColor
+                spinner.startAnimating()
+            } else {
+                spinner.stopAnimating()
+            }
         }
 
         func handleEvent(_ event: STPEvent) {
