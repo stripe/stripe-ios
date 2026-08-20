@@ -16,7 +16,7 @@ import UIKit
 @_spi(ReactNativeSDK)
 extension CheckoutController {
     /// A read-only representation of a Stripe Checkout Session.
-    public struct Session {
+    public struct Session: Identifiable {
         // MARK: - Public Properties
 
         /// The ID of the Checkout Session.
@@ -99,12 +99,23 @@ extension CheckoutController {
 extension CheckoutController.Session {
     /// An item included in the order summary.
     @frozen
-    public enum OrderSummaryItem: Sendable, Hashable {
+    public enum OrderSummaryItem: Identifiable, Sendable, Hashable {
+        /// The stable identity of this order summary item within its Checkout Session.
+        public var id: String {
+            switch self {
+            case let .oneTimePrice(oneTimePrice):
+                return oneTimePrice.key
+            }
+        }
+
         /// A group of one-time Prices.
         case oneTimePrice(OneTimePrice)
 
         /// A group of one-time Prices and their aggregated amounts.
-        public struct OneTimePrice: Sendable, Hashable {
+        public struct OneTimePrice: Identifiable, Sendable, Hashable {
+            /// The stable identity of this group within its Checkout Session.
+            public var id: String { key }
+
             /// A stable key that uniquely identifies this item within the Checkout Session.
             public let key: String
 
@@ -118,7 +129,10 @@ extension CheckoutController.Session {
             public let amountDetails: AmountDetails
 
             /// A one-time Price included in the group.
-            public struct Item: Sendable, Hashable {
+            public struct Item: Identifiable, Sendable, Hashable {
+                /// The stable identity of this item within its group.
+                public var id: String { key }
+
                 /// A stable key that identifies this item.
                 public let key: String
 
