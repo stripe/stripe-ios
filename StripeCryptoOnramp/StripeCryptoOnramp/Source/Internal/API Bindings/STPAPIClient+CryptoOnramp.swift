@@ -49,6 +49,35 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
+    /// Retrieves a crypto customer and its outstanding additional KYC requirements.
+    /// - Parameters:
+    ///   - id: The crypto customer ID.
+    ///   - consumerSessionClientSecret: The authenticated Link consumer session client secret.
+    /// - Returns: The crypto customer, including any additional KYC requirements.
+    func retrieveCryptoCustomer(id: String, consumerSessionClientSecret: String) async throws -> CustomerResponse {
+        // TODO: The design names this existing endpoint but its API review is
+        // still open. Confirm the final path and whether Link credentials belong in the query.
+        // Integration-test that URLSession's default `Accept-Language` behavior reaches this API
+        // before relying on it for server-provided requirement copy.
+        let endpoint = "crypto/customers/\(id)"
+        let request = RetrieveCryptoCustomerRequest(
+            credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret)
+        )
+        return try await get(
+            resource: endpoint,
+            parameters: try request.encodeJSONDictionary()
+        )
+    }
+
+    /// Submits documents and questionnaire answers for one additional KYC requirement.
+    /// - Parameter request: The requirement fulfillment payload.
+    /// - Returns: The newly created additional KYC submission.
+    func fulfillAdditionalKYCRequirement(_ request: FulfillAdditionalKYCRequirementRequest) async throws -> AdditionalKYCFulfillmentResponse {
+        // TODO: The endpoint name is still under API review. Revisit when we know the final endpoint
+        let endpoint = "crypto/internal/fulfill_additional_kyc_requirement"
+        return try await post(resource: endpoint, object: request)
+    }
+
     /// Attaches the specific KYC info to the current Link user on the backend.
     /// - Parameters:
     ///   - info: The collected customer information.
@@ -421,7 +450,7 @@ private extension STPAPIClient {
     }
 }
 
-private enum CryptoOnrampAPI {
+enum CryptoOnrampAPI {
     // Use a preview API version for networks and parameters behind preview API features.
     // Bump this when new onramp features require a newer API version.
     static let stripeAPIVersion = "2026-03-25.preview"
