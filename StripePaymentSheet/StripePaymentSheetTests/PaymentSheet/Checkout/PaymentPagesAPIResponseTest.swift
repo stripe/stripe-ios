@@ -628,13 +628,18 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         ]).makePublicSession()
 
         XCTAssertEqual(session.orderSummaryItems.count, 1)
-        guard case .oneTimePrice(let oneTimePrice) = session.orderSummaryItems[0] else {
+        let orderSummaryItem = session.orderSummaryItems[0]
+        XCTAssertEqual(orderSummaryItem.id, "checkout_item_abc123")
+        guard case .oneTimePrice(let oneTimePrice) = orderSummaryItem else {
             return XCTFail("Expected one-time price order summary item")
         }
         XCTAssertEqual(oneTimePrice.key, "checkout_item_abc123")
+        XCTAssertEqual(oneTimePrice.id, "checkout_item_abc123")
         XCTAssertNil(oneTimePrice.description)
         XCTAssertEqual(oneTimePrice.items.count, 1)
         XCTAssertEqual(oneTimePrice.items[0].key, "checkout_item_inner_abc123")
+        XCTAssertEqual(oneTimePrice.items[0].id, "checkout_item_inner_abc123")
+        XCTAssertNotEqual(oneTimePrice.items[0].id, "price_test123")
         XCTAssertEqual(oneTimePrice.items[0].displayName, "Classic T-Shirt")
         XCTAssertEqual(oneTimePrice.items[0].images, ["https://example.com/shirt.png"])
         XCTAssertEqual(oneTimePrice.items[0].quantity, 2)
