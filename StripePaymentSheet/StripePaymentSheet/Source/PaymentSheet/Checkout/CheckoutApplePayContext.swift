@@ -96,10 +96,17 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     intent: .checkout(checkoutSession),
                     elementsSession: checkoutSession.elementsSession
                 )
+                var fallbackBillingDetails: StripeAPI.BillingDetails?
+                if let email = checkoutSession.email {
+                    var details = StripeAPI.BillingDetails()
+                    details.email = email
+                    fallbackBillingDetails = details
+                }
                 let paymentMethod = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<StripeAPI.PaymentMethod, Error>) in
                     StripeAPI.PaymentMethod.create(
                         apiClient: self.apiClient,
                         payment: payment,
+                        fallbackBillingDetails: fallbackBillingDetails,
                         clientAttributionMetadata: clientAttributionMetadata
                     ) { result in
                         continuation.resume(with: result)

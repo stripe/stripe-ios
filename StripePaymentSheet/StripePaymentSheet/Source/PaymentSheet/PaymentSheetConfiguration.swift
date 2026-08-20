@@ -711,27 +711,29 @@ extension PaymentSheet {
 extension PaymentSheet.BillingDetailsCollectionConfiguration {
     /// Billing contact fields to require in the Apple Pay sheet.
     var requiredBillingContactFields: Set<PKContactField> {
-        var fields = Set<PKContactField>()
+        var requiredPKContactFields = Set<PKContactField>()
         // By default, we always want to request the billing address (as it includes the postal code).
         if address == .automatic || address == .full {
-            fields.insert(.postalAddress)
+            requiredPKContactFields.insert(.postalAddress)
         }
+        // Only request name field - phone and email go into shipping contact fields
         if name == .always {
-            fields.insert(.name)
+            requiredPKContactFields.insert(.name)
         }
-        return fields
+        return requiredPKContactFields
     }
 
     /// Shipping contact fields to require in the Apple Pay sheet, used to collect email/phone.
     var requiredShippingContactFields: Set<PKContactField> {
-        var fields = Set<PKContactField>()
+        var requiredPKContactFields = Set<PKContactField>()
+        // Phone and email are collected through shipping contact fields
         if email == .always {
-            fields.insert(.emailAddress)
+            requiredPKContactFields.insert(.emailAddress)
         }
         if phone == .always {
-            fields.insert(.phoneNumber)
+            requiredPKContactFields.insert(.phoneNumber)
         }
-        return fields
+        return requiredPKContactFields
     }
 }
 
