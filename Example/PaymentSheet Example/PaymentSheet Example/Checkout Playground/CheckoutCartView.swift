@@ -42,7 +42,7 @@ struct CheckoutCartView: View {
                         showsShippingAddressSection: shippingAddressCollection || checkout.session.shippingAddress != nil,
                         errorMessage: errorMessage
                     )
-                    .overlay(alignment: .bottom) {
+                    .safeAreaInset(edge: .bottom, spacing: 0) {
                         VStack(spacing: 0) {
                             if showExpressCheckoutElement,
                                let ece = checkout.getExpressCheckoutElement() {
