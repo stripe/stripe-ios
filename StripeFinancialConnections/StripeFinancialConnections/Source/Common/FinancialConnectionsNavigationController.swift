@@ -130,7 +130,6 @@ extension FinancialConnectionsNavigationController {
         let backButtonImage = Image
             .back_arrow
             .makeImage(template: false)
-            .imageFlippedForRightToLeftLayoutDirection()
             .applyFinancialConnectionsBackButtonEdgeInsets()
         let appearance = UINavigationBarAppearance()
         appearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
