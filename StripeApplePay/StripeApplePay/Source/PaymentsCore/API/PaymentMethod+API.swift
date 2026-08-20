@@ -33,13 +33,11 @@ extension StripeAPI.PaymentMethod {
     /// Converts a PKPayment object into a Stripe Payment Method using the Stripe API.
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
-    ///   - expectedEmail: If set and the billing details' email (collected from Apple Pay, or filled in from `fallbackBillingDetails`) doesn't match this value, it's replaced with this value.
     ///   - completion:  The callback to run with the returned Stripe source (and any errors that may have occurred).
     @_spi(STP) public static func create(
         apiClient: STPAPIClient = .shared,
         payment: PKPayment,
         fallbackBillingDetails: StripeAPI.BillingDetails? = nil,
-        expectedEmail: String? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata?,
         completion: @escaping PaymentMethodCompletionBlock
     ) {
@@ -54,13 +52,10 @@ extension StripeAPI.PaymentMethod {
             }
             var cardParams = StripeAPI.PaymentMethodParams.Card()
             cardParams.token = token.id
-            var billingDetails = StripeAPI.BillingDetails(
+            let billingDetails = StripeAPI.BillingDetails(
                 from: payment,
                 fallbackBillingDetails: fallbackBillingDetails
             )
-            if let expectedEmail, billingDetails.email != expectedEmail {
-                billingDetails.email = expectedEmail
-            }
             var paymentMethodParams = StripeAPI.PaymentMethodParams(type: .card, card: cardParams)
             paymentMethodParams.billingDetails = billingDetails
             paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
