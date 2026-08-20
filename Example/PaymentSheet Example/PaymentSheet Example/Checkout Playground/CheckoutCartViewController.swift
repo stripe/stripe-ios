@@ -609,6 +609,8 @@ final class CheckoutCartViewController: UIViewController {
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 14
         button.addTarget(self, action: #selector(checkoutButtonTapped), for: .touchUpInside)
+        button.isEnabled = checkout.session.paymentOption != nil && !checkout.isUpdating
+        button.alpha = button.isEnabled ? 1 : 0.5
 
         let titleLabel = UILabel()
         titleLabel.text = "Checkout"
@@ -818,13 +820,30 @@ final class CheckoutCartViewController: UIViewController {
     }
 
     @objc private func checkoutButtonTapped() {
-        let alertController = UIAlertController(
-            title: "Confirm stubbed",
-            message: "Checkout confirm is not implemented yet.",
-            preferredStyle: .alert
-        )
-        alertController.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alertController, animated: true)
+        guard let checkout else { return }
+        Task { @MainActor in
+            let result = await checkout.confirm(from: self)
+            let title: String
+            let message: String
+            switch result {
+            case .succeeded(let paymentStatus):
+                title = "Success"
+                message = "Payment status: \(paymentStatus)"
+            case .canceled:
+                title = "Canceled"
+                message = "The payment was canceled."
+            case .failed(let error):
+                title = "Failed"
+                message = error.localizedDescription
+            }
+            let alertController = UIAlertController(
+                title: title,
+                message: message,
+                preferredStyle: .alert
+            )
+            alertController.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alertController, animated: true)
+        }
     }
 
     @objc private func taxDetailsButtonTapped() {

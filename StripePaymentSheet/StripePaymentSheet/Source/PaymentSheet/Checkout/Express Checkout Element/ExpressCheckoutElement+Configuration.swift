@@ -5,8 +5,6 @@
 //  Created by Joyce Qin on 7/22/26.
 //
 
-import PassKit
-
 @_spi(STP)
 @_spi(ReactNativeSDK)
 extension ExpressCheckoutElement {
@@ -77,28 +75,14 @@ extension ExpressCheckoutElement {
 }
 
 extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration {
-    /// Billing contact fields to require in the Apple Pay sheet.
-    var requiredBillingContactFields: Set<PKContactField> {
-        var fields = Set<PKContactField>()
-        // By default, we always want to request the billing address (as it includes the postal code).
-        if address == .automatic || address == .full {
-            fields.insert(.postalAddress)
-        }
-        if name == .always {
-            fields.insert(.name)
-        }
-        return fields
-    }
-
-    /// Shipping contact fields to require in the Apple Pay sheet, used to collect email/phone.
-    var requiredShippingContactFields: Set<PKContactField> {
-        var fields = Set<PKContactField>()
-        if email == .always {
-            fields.insert(.emailAddress)
-        }
-        if phone == .always {
-            fields.insert(.phoneNumber)
-        }
-        return fields
+    /// Converts this configuration into the canonical ``PaymentSheet/BillingDetailsCollectionConfiguration``
+    /// so it can flow through shared Apple Pay/Checkout confirmation logic alongside Payment Element's config.
+    func paymentSheetConfiguration() -> PaymentSheet.BillingDetailsCollectionConfiguration {
+        var configuration = PaymentSheet.BillingDetailsCollectionConfiguration()
+        configuration.name = PaymentSheet.BillingDetailsCollectionConfiguration.CollectionMode(rawValue: name.rawValue) ?? .automatic
+        configuration.phone = PaymentSheet.BillingDetailsCollectionConfiguration.CollectionMode(rawValue: phone.rawValue) ?? .automatic
+        configuration.email = PaymentSheet.BillingDetailsCollectionConfiguration.CollectionMode(rawValue: email.rawValue) ?? .automatic
+        configuration.address = PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode(rawValue: address.rawValue) ?? .automatic
+        return configuration
     }
 }

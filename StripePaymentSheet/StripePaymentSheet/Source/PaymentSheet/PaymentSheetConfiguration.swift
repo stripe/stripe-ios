@@ -706,7 +706,36 @@ extension PaymentSheet {
             self.allowedCountries = allowedCountries
         }
     }
+}
 
+extension PaymentSheet.BillingDetailsCollectionConfiguration {
+    /// Billing contact fields to require in the Apple Pay sheet.
+    var requiredBillingContactFields: Set<PKContactField> {
+        var fields = Set<PKContactField>()
+        // By default, we always want to request the billing address (as it includes the postal code).
+        if address == .automatic || address == .full {
+            fields.insert(.postalAddress)
+        }
+        if name == .always {
+            fields.insert(.name)
+        }
+        return fields
+    }
+
+    /// Shipping contact fields to require in the Apple Pay sheet, used to collect email/phone.
+    var requiredShippingContactFields: Set<PKContactField> {
+        var fields = Set<PKContactField>()
+        if email == .always {
+            fields.insert(.emailAddress)
+        }
+        if phone == .always {
+            fields.insert(.phoneNumber)
+        }
+        return fields
+    }
+}
+
+extension PaymentSheet {
     /// Configuration for external payment methods
     /// - Seealso: See the [integration guide](https://stripe.com/docs/payments/external-payment-methods?platform=ios).
     public struct ExternalPaymentMethodConfiguration {

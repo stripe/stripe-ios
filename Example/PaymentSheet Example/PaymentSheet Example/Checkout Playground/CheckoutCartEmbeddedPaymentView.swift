@@ -10,8 +10,8 @@ import SwiftUI
 
 struct CheckoutCartEmbeddedPaymentView: View {
     @ObservedObject var checkout: CheckoutController
+    let onConfirm: (CheckoutController.ConfirmResult) -> Void
 
-    @State private var showConfirmStub = false
     @State private var showEmbeddedScreen = false
 
     private var session: CheckoutController.Session { checkout.session }
@@ -47,7 +47,9 @@ struct CheckoutCartEmbeddedPaymentView: View {
             }
 
             Button {
-                showConfirmStub = true
+                Task { @MainActor in
+                    onConfirm(await checkout.confirm())
+                }
             } label: {
                 HStack {
                     Text("Checkout")
@@ -61,13 +63,7 @@ struct CheckoutCartEmbeddedPaymentView: View {
                 .cornerRadius(14)
             }
             .padding(.horizontal)
-            .alert(isPresented: $showConfirmStub) {
-                Alert(
-                    title: Text("Confirm stubbed"),
-                    message: Text("Checkout confirm is not implemented yet."),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
+            .disabled(session.paymentOption == nil || checkout.isUpdating)
         }
         .padding(.bottom, 16)
         .padding(.top, 16)

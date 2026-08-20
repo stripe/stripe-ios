@@ -880,6 +880,39 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertFalse(checkout.isUpdating)
     }
 
+    // MARK: - Confirmation Result Tests
+
+    func testMapCompletedConfirmationResultUsesResponsePaymentStatus() async throws {
+        // Given a completed Checkout Session response
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        var responseJSON = CheckoutTestHelpers.openSessionJSON
+        responseJSON["status"] = "complete"
+        responseJSON["payment_status"] = "paid"
+        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: responseJSON)
+
+        // When the internal result is mapped to the public result
+        let result = checkout.mapConfirmationResult(.completed(response))
+
+        // Then success preserves the Checkout Session payment status
+        guard case .succeeded(let paymentStatus) = result else {
+            return XCTFail("Expected confirmation to succeed")
+        }
+        XCTAssertEqual(paymentStatus, .paid)
+    }
+
+    func testMapCanceledConfirmationResult() async throws {
+        // Given a canceled internal confirmation
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+
+        // When the internal result is mapped to the public result
+        let result = checkout.mapConfirmationResult(.canceled())
+
+        // Then cancellation is preserved
+        guard case .canceled = result else {
+            return XCTFail("Expected confirmation to be canceled")
+        }
+    }
+
     // MARK: - updatePaymentMethod Parameter Encoding Tests
 
     func testUpdatePaymentMethodParameters_expiryOnly() {
