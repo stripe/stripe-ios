@@ -217,8 +217,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
     ) throws -> CheckoutApplePayContext {
-        let applePayConfig = applePayConfirmationParameters.applePayConfiguration
-
         guard PKPaymentAuthorizationController.canMakePayments() else {
             let error = CheckoutError.unknown(debugDescription: "Apple Pay isn't set up on this device (e.g. no cards in wallet).")
             STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
@@ -227,22 +225,12 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
         // TODO: Product Usage
 
-        let countryCode = checkoutSession.elementsSession.merchantCountryCode ?? "US"
-        let paymentRequest = StripeAPI.paymentRequest(
-            withMerchantIdentifier: applePayConfig.merchantId,
-            country: countryCode,
-            currency: checkoutSession.currency ?? "USD"
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: checkoutSession,
+            applePayConfirmationParameters: applePayConfirmationParameters
         )
 
         assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `CheckoutController.ApplePayConfiguration`.")
-
-        let merchantLabel = applePayConfirmationParameters.merchantDisplayName
-        paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
-
-        let billingDetailsCollectionConfiguration = applePayConfirmationParameters.billingDetailsCollectionConfiguration
-        paymentRequest.requiredBillingContactFields = billingDetailsCollectionConfiguration.requiredBillingContactFields
-        paymentRequest.requiredShippingContactFields = billingDetailsCollectionConfiguration.requiredShippingContactFields
-        // TODO: Add postalAddress to requiredShippingContactFields when shipping address collection is implemented.
 
         // PKPaymentAuthorizationController.init is non-nullable even for invalid requests.
         // Use PKPaymentAuthorizationViewController.init as a proxy — it IS nullable and
@@ -289,6 +277,31 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             return [PKPaymentSummaryItem(label: label, amount: NSDecimalNumber.stp_decimalNumber(withAmount: amount, currency: session.currency), type: .final)]
         }
         return [PKPaymentSummaryItem(label: label, amount: .zero, type: .pending)]
+    }
+
+    /// Builds the `PKPaymentRequest` for a Checkout Session's Apple Pay flow, including which
+    /// billing/shipping contact fields Apple Pay must collect.
+    static func makePaymentRequest(
+        checkoutSession: CheckoutController.Session,
+        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
+    ) -> PKPaymentRequest {
+        let applePayConfig = applePayConfirmationParameters.applePayConfiguration
+        let countryCode = checkoutSession.elementsSession.merchantCountryCode ?? "US"
+        let paymentRequest = StripeAPI.paymentRequest(
+            withMerchantIdentifier: applePayConfig.merchantId,
+            country: countryCode,
+            currency: checkoutSession.currency ?? "USD"
+        )
+
+        let merchantLabel = applePayConfirmationParameters.merchantDisplayName
+        paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
+
+        let billingDetailsCollectionConfiguration = applePayConfirmationParameters.billingDetailsCollectionConfiguration
+        paymentRequest.requiredBillingContactFields = billingDetailsCollectionConfiguration.requiredBillingContactFields
+        paymentRequest.requiredShippingContactFields = billingDetailsCollectionConfiguration.requiredShippingContactFields
+        // TODO: Add postalAddress to requiredShippingContactFields when shipping address collection is implemented.
+
+        return paymentRequest
     }
 
     private func _end() {
