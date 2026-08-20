@@ -4,6 +4,7 @@ MINOR
 ## X.Y.Z - changes pending release
 ### Payments
 * [Added] Added support for the following FPX banks: Agrobank, Bank of China, and MBSB Bank.
+* [Fixed] Fixed an issue where card decline error messages became generic after 3DS authentication.
 
 ## 26.7.0 2026-08-17
 ### PaymentSheet

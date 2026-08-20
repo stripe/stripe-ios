@@ -30,19 +30,15 @@ pipelines:
     workflows:
       lint-tests:
         abort_on_fail: true
-      update-snapshots: {}
+      update-snapshots-and-lokalise: {}
       framework-tests: {}
       lpm-confirm-flow-tests: {}
-      framework-tests-ios-26: {}
-      test-builds-xcode-26-1: {}
-      install-tests: {}
+      framework-tests-and-builds-xcode-26-1: {}
+      install-and-integration-tests: {}
       size-report: {}
       ui-tests-paymentsheet:
         parallel: 4
-      ui-tests-connect: {}
-      ui-tests-crypto: {}
-      integration-all: {}
-      lokalise-upload: {}
+      ui-tests-connect-crypto: {}
 
   releases-trigger-pipeline:
     workflows:
@@ -50,19 +46,16 @@ pipelines:
       lint-tests:
         abort_on_fail: true
       framework-tests-no-mocks: {}
-      framework-tests-ios-26: {}
-      test-builds-xcode-26-1: {}
+      framework-tests-and-builds-xcode-26-1: {}
       deploy-docs: {}
-      install-tests: {}
+      install-and-integration-tests: {}
       size-report: {}
       ui-tests-paymentsheet:
         parallel: 4
-      ui-tests-connect: {}
-      ui-tests-crypto: {}
+      ui-tests-connect-crypto: {}
       legacy-tests-15: {}
       legacy-tests-16: {}
       pod-lint-tests: {}
-      integration-all: {}
 
   nightly-pipeline:
     workflows:
@@ -73,7 +66,7 @@ pipelines:
       deploy-dry-run: {}
       pod-lint-tests: {}
 workflows:
-  update-snapshots:
+  update-snapshots-and-lokalise:
     steps:
     - activate-ssh-key@4: {}
     - script@1:
@@ -89,11 +82,16 @@ workflows:
         title: Push snapshot changes
         inputs:
         - content: ruby ci_scripts/push_snapshots.rb
+    - script@1:
+        inputs:
+        - content: bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
+        title: Upload strings to lokalise
     before_run:
     - install-runtime-16
     - prep_all
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    - LOKALISE_API_KEY: $LOKALISE_API_KEY
   check-docs:
     steps:
     - script@1:
@@ -442,7 +440,7 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  framework-tests-ios-26:
+  framework-tests-and-builds-xcode-26-1:
     steps:
     - script@1:
         inputs:
@@ -455,6 +453,11 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: AllStripeFrameworks-iOS26
+    - xcode-build-for-test@2:
+        is_always_run: true
+        inputs:
+        - scheme: AllStripeFrameworks
+        - destination: generic/platform=iOS Simulator
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
     before_run:
@@ -513,22 +516,12 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  test-builds-xcode-26-1:
+  install-and-integration-tests:
     steps:
-    - xcode-build-for-test@2:
+    - xcode-start-simulator@0:
+        title: Start iOS 16.4 installation test simulator
         inputs:
-        - scheme: AllStripeFrameworks
-        - destination: generic/platform=iOS Simulator
-    - deploy-to-bitrise-io@2: {}
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 16,OS=26.1
-    before_run:
-    - prep_all
-    meta:
-      bitrise.io:
-        stack: osx-xcode-26.1.x
-  install-tests:
-    steps:
+        - destination: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
     - fastlane@3:
         inputs:
         - lane: installation_cocoapods_without_frameworks_objc
@@ -549,14 +542,8 @@ workflows:
         inputs:
         - lane: installation_spm_swift
         title: fastlane installation_spm_swift
-    before_run:
-    - install-runtime-16
-    - prep_all
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
-  integration-all:
-    steps:
     - xcode-test@6:
+        is_always_run: true
         is_skippable: true
         inputs: &integration_all_inputs
         - destination: $DEFAULT_TEST_DEVICE
@@ -570,17 +557,20 @@ workflows:
         inputs:
         - content: ./ci_scripts/xcode_test_runner_hang_gate.sh
     - xcode-test@6:
+        is_always_run: true
         run_if: '{{enveq "STRIPE_RETRY_XCODE_TEST" "yes"}}'
         inputs: *integration_all_inputs
-    - deploy-to-bitrise-io@2: {}
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
     before_run:
+    - install-runtime-16
     - prep_all
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.4.1
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.4.1
   install-runtime-15:
     steps:
     - script@1:
@@ -680,21 +670,6 @@ workflows:
         title: Send notification if failed
         is_always_run: true
         run_if: .IsBuildFailed
-  lokalise-upload:
-    steps:
-    - script@1:
-        inputs:
-        - content: bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
-        title: Upload strings to lokalise
-    before_run:
-    - install-runtime-16
-    - prep_all
-    envs:
-      - LOKALISE_API_KEY: $LOKALISE_API_KEY
-    meta:
-      bitrise.io:
-        stack: osx-xcode-26.4.x
-        machine_type_id: g2.mac.large
   pod-lint-tests:
     steps:
     - script@1:
@@ -843,13 +818,17 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  ui-tests-connect:
+  ui-tests-connect-crypto:
     steps:
     - script@1:
         is_skippable: true
         inputs:
         - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "$(xcode-select -p)/Applications/Simulator.app" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
+    - script@1:
+        inputs:
+        - content: envman add --key STRIPE_RETRY_XCODE_TEST --value no
+        title: Reset Connect retry state
     - xcode-test@6:
         is_skippable: true
         inputs: &ui_tests_connect_inputs
@@ -870,21 +849,13 @@ workflows:
         inputs: *ui_tests_connect_inputs
     - deploy-to-bitrise-io@2:
         is_always_run: true
-    before_run:
-    - install-runtime-16
-    - prep_all
-    meta:
-      bitrise.io:
-        stack: osx-xcode-26.4.x
-        machine_type_id: g2.mac.large
-  ui-tests-crypto:
-    steps:
     - script@1:
-        is_skippable: true
+        is_always_run: true
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "$(xcode-select -p)/Applications/Simulator.app" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
-        title: Warm up emulator (iPhone 12 mini, OS=16.4)
+        - content: envman add --key STRIPE_RETRY_XCODE_TEST --value no
+        title: Reset Crypto retry state
     - xcode-test@6:
+        is_always_run: true
         is_skippable: true
         inputs: &ui_tests_crypto_inputs
         - destination: $DEFAULT_TEST_DEVICE
@@ -900,6 +871,7 @@ workflows:
         inputs:
         - content: ./ci_scripts/xcode_test_runner_hang_gate.sh
     - xcode-test@6:
+        is_always_run: true
         run_if: '{{enveq "STRIPE_RETRY_XCODE_TEST" "yes"}}'
         inputs: *ui_tests_crypto_inputs
     - deploy-to-bitrise-io@2:
