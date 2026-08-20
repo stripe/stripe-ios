@@ -5,6 +5,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import StripeCoreTestUtils
 import XCTest
 
 @testable@_spi(STP) import StripeCore
@@ -13,7 +14,7 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
-class PaymentSheetPaymentMethodTypeTest: XCTestCase {
+class PaymentSheetPaymentMethodTypeTest: APIStubbedTestCase {
 
     func makeConfiguration(
         hasReturnURL: Bool = false
@@ -24,33 +25,28 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     // MARK: - Images
-    func testMakeImage_with_client_asset() {
+    func testMakeImage_with_client_asset() async {
         // A payment method with a client-side asset...
-        let loadExpectation = expectation(description: "No image download")
-        loadExpectation.isInverted = true
-        let clientImage = STPPaymentMethodType.cashApp.makeImage()!
-        let image = PaymentSheet.PaymentMethodType.stripe(.cashApp).makeImage(forDarkBackground: false) { image in
-            XCTFail("Unexpected downloaded image: \(image)")
-            loadExpectation.fulfill()
-        }
-
-        // ...should return that asset without downloading an override.
-        XCTAssertEqual(image, clientImage)
-        waitForExpectations(timeout: 0.1)
-    }
-
-    func testMakeImage_with_another_client_asset() {
-        // Another payment method with a client-side asset...
-        let e = expectation(description: "No image download")
-        e.isInverted = true
-        let usBankAccountImage = PaymentSheet.PaymentMethodType.stripe(.USBankAccount).makeImage(forDarkBackground: false) { _ in
-            // This shouldn't be called
-            XCTFail()
-            e.fulfill()
-        }
+        let paymentMethodType = PaymentSheet.PaymentMethodType.stripe(.USBankAccount)
+        let usBankAccountImage = paymentMethodType.makeImage(forDarkBackground: false)
         // ...should default to the client-side asset
         XCTAssertEqual(usBankAccountImage, STPPaymentMethodType.USBankAccount.makeImage())
-        waitForExpectations(timeout: 0.1)
+        // ...and have no different image to load asynchronously.
+        let loadedImage = await paymentMethodType.loadImage(forDarkBackground: false)
+        XCTAssertEqual(loadedImage, usBankAccountImage)
+    }
+
+    func testMakeImage_withoutCachedOrLocalImage_returnsNonzeroPlaceholder() {
+        let paymentMethodType = PaymentSheet.PaymentMethodType.external(._testBufoPayValue())
+        let downloadManager = DownloadManager(urlSessionConfiguration: Self.stubbedURLSessionConfig())
+
+        let image = paymentMethodType.makeImage(
+            forDarkBackground: false,
+            using: downloadManager
+        )
+
+        XCTAssertEqual(image.size, CGSize(width: 1, height: 1))
+        XCTAssertNotNil(image.cgImage)
     }
 
     func testAllSupportedPaymentMethodsHaveClientAssets() {
