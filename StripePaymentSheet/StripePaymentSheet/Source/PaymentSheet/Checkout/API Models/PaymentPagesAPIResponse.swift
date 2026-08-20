@@ -19,7 +19,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     var _allResponseFieldsStorage: NonEncodableParameters?
 
     let sessionId: String
-    let clientSecret: String?
     let paymentIntentId: String?
     let paymentIntent: STPPaymentIntent?
     let setupIntentId: String?
@@ -60,7 +59,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         let props: [String] = [
             "PaymentPagesAPIResponse",
             "sessionId = \(sessionId)",
-            "clientSecret = <redacted>",
             "currency = \(currency)",
             "mode = \(String(describing: allResponseFields["mode"]))",
             "status = \(status)",
@@ -78,7 +76,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
 
     private enum CodingKeys: String, CodingKey {
         case sessionId
-        case clientSecret
         case paymentIntent
         case setupIntent
         case currency
@@ -87,7 +84,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case mode
         case status
         case paymentStatus
-        case paymentMethodTypes
         case customerEmail
         case url
         case savedPaymentMethodsOfferSave = "customer_managed_saved_payment_methods_offer_save"
@@ -107,7 +103,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         sessionId = try container.decode(String.self, forKey: .sessionId)
-        clientSecret = try container.decodeIfPresent(String.self, forKey: .clientSecret)
         let decodedPaymentIntent = try container.decodeIfPresent(
             LegacyExpandable<STPPaymentIntent>.self,
             forKey: .paymentIntent
@@ -159,7 +154,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
             throw decoder.dataCorrupted("Unsupported Checkout Session status: \(decodedStatus)")
         }
         self.status = status
-        _ = try container.decode([String].self, forKey: .paymentMethodTypes)
 
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
         url = try container.decodeIfPresent(String.self, forKey: .url)
@@ -278,6 +272,7 @@ extension PaymentPagesAPIResponse {
     }
 
     struct OneTimePriceItem: Decodable {
+        let innerItemKey: String
         let price: Price
         let quantity: Int
         let unitAmount: Int?
@@ -292,8 +287,6 @@ extension PaymentPagesAPIResponse {
             case innerItemKey
             case price
             case quantity
-            case subtotal
-            case total
             case unitAmount
             case unitAmountDecimal
             case unitLabel
@@ -305,14 +298,12 @@ extension PaymentPagesAPIResponse {
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            _ = try container.decode(String.self, forKey: .innerItemKey)
+            innerItemKey = try container.decode(String.self, forKey: .innerItemKey)
             price = try container.decode(Price.self, forKey: .price)
             quantity = try container.decode(Int.self, forKey: .quantity)
             guard quantity >= 0 else {
                 throw decoder.dataCorrupted("quantity must not be negative")
             }
-            _ = try container.decode(Int.self, forKey: .subtotal)
-            _ = try container.decode(Int.self, forKey: .total)
             unitAmount = try container.decodeIfPresent(Int.self, forKey: .unitAmount)
 
             if let rawUnitAmountDecimal = try container.decodeIfPresent(
@@ -427,6 +418,24 @@ extension PaymentPagesAPIResponse {
         let enabled: Bool
         let maximum: Int?
         let minimum: Int?
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            enabled = try container.decode(Bool.self, forKey: .enabled)
+            if enabled {
+                maximum = try container.decode(Int.self, forKey: .maximum)
+                minimum = try container.decode(Int.self, forKey: .minimum)
+            } else {
+                maximum = try container.decodeIfPresent(Int.self, forKey: .maximum)
+                minimum = try container.decodeIfPresent(Int.self, forKey: .minimum)
+            }
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case enabled
+            case maximum
+            case minimum
+        }
     }
 
     struct ShippingAddressCollection: Decodable {

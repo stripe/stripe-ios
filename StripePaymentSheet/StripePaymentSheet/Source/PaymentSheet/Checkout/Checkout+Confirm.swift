@@ -292,9 +292,7 @@ extension CheckoutController {
         switch parameters.option {
         case .new(let confirmParams):
             // MARK: - New PM
-            let paymentMethodType: STPPaymentMethodType = {
-                return confirmParams.paymentMethodParams.type
-            }()
+            let paymentMethodType = confirmParams.paymentMethodParams.type
             confirmParams.setAllowRedisplayForCheckoutSession(
                 merchantWillSavePaymentMethod: checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
             )
