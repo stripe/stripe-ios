@@ -9,6 +9,25 @@
 import Foundation
 @_spi(STP) import StripePayments
 
+/// A billing address collection mode, implemented by both ``PaymentSheet/BillingDetailsCollectionConfiguration/AddressCollectionMode``
+/// and ``ExpressCheckoutElement/BillingDetailsCollectionConfiguration/AddressCollectionMode``, so server-driven
+/// billing address requirements can be resolved against either one generically.
+protocol BillingAddressCollectionMode: Equatable {
+    static var automatic: Self { get }
+    static var full: Self { get }
+    /// The "never collect the address" case, if this mode supports one, else `nil`. `ExpressCheckoutElement`'s
+    /// mode doesn't have one, since Apple Pay always collects at least the postal code.
+    static var neverCase: Self? { get }
+}
+
+extension PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode: BillingAddressCollectionMode {
+    static var neverCase: Self? { .never }
+}
+
+extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration.AddressCollectionMode: BillingAddressCollectionMode {
+    static var neverCase: Self? { nil }
+}
+
 extension CheckoutController.Session {
 
     /// Populates empty fields in the configuration with checkout-collected addresses.
@@ -25,6 +44,31 @@ extension CheckoutController.Session {
         )
     }
 
+    /// Upgrades `configuration`'s billing address collection mode to `.full` when the Checkout Session
+    /// requires a billing address.
+    func applyBillingAddressCollectionOverride(to configuration: inout ExpressCheckoutElement.Configuration) {
+        configuration.billingDetailsCollectionConfiguration.address = resolvedAddressCollectionMode(
+            serverBillingAddressCollection: billingAddressCollection,
+            clientBillingAddressCollection: configuration.billingDetailsCollectionConfiguration.address
+        )
+    }
+
+    private func resolvedAddressCollectionMode<Mode: BillingAddressCollectionMode>(
+        serverBillingAddressCollection: BillingAddressCollection,
+        clientBillingAddressCollection: Mode
+    ) -> Mode {
+        switch serverBillingAddressCollection {
+        case .automatic:
+            return clientBillingAddressCollection
+        case .required:
+            if let neverCase = Mode.neverCase, clientBillingAddressCollection == neverCase {
+                assertionFailure("billingDetailsCollectionConfiguration.address = .never is not supported with CheckoutSession.")
+                return clientBillingAddressCollection
+            }
+            return .full
+        }
+    }
+
     private func shippingAddressDetails(from shipping: ShippingAddress) -> AddressViewController.AddressDetails {
         AddressViewController.AddressDetails(
             address: .init(
@@ -38,21 +82,6 @@ extension CheckoutController.Session {
             name: shipping.name,
             phone: nil
         )
-    }
-
-    private func resolvedAddressCollectionMode(
-        serverBillingAddressCollection: BillingAddressCollection,
-        clientBillingAddressCollection: PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode
-    ) -> PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode {
-        switch (serverBillingAddressCollection, clientBillingAddressCollection) {
-        case (.required, .automatic), (.required, .full):
-            return .full
-        case (.required, .never):
-            assertionFailure("billingDetailsCollectionConfiguration.address = .never is not supported with CheckoutSession.")
-            return .never
-        case (.automatic, let clientBillingAddressCollection):
-            return clientBillingAddressCollection
-        }
     }
 
 }

@@ -22,12 +22,14 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 flow = nil
                 break
             }
+            var expressCheckoutElementConfiguration = configuration.expressCheckoutElement
+            session.applyBillingAddressCollectionOverride(to: &expressCheckoutElementConfiguration)
             flow = .applePay(.init(
                 applePayConfiguration: applePayConfiguration,
                 apiClient: apiClient,
                 returnURL: configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
-                billingDetailsCollectionConfiguration: configuration.expressCheckoutElement.billingDetailsCollectionConfiguration.paymentSheetConfiguration()
+                billingDetailsCollectionConfiguration: expressCheckoutElementConfiguration.billingDetailsCollectionConfiguration
             ))
         case .link:
             // ECE Link needs its own configuration and analytics lifecycle before it can build this flow.

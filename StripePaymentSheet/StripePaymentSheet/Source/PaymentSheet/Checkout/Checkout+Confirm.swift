@@ -18,7 +18,7 @@ extension CheckoutController {
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
-        let billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration
+        let billingDetailsCollectionConfiguration: any BillingDetailsCollectionConfiguration
     }
 
     /// The parameters needed to confirm a Checkout Session with Link.

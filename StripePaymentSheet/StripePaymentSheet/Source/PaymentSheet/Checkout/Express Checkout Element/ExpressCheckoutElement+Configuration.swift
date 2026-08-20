@@ -5,6 +5,8 @@
 //  Created by Joyce Qin on 7/22/26.
 //
 
+import PassKit
+
 @_spi(STP)
 @_spi(ReactNativeSDK)
 extension ExpressCheckoutElement {
@@ -74,15 +76,31 @@ extension ExpressCheckoutElement {
     }
 }
 
-extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration {
-    /// Converts this configuration into the canonical ``PaymentSheet/BillingDetailsCollectionConfiguration``
-    /// so it can flow through shared Apple Pay/Checkout confirmation logic alongside Payment Element's config.
-    func paymentSheetConfiguration() -> PaymentSheet.BillingDetailsCollectionConfiguration {
-        var configuration = PaymentSheet.BillingDetailsCollectionConfiguration()
-        configuration.name = PaymentSheet.BillingDetailsCollectionConfiguration.CollectionMode(rawValue: name.rawValue) ?? .automatic
-        configuration.phone = PaymentSheet.BillingDetailsCollectionConfiguration.CollectionMode(rawValue: phone.rawValue) ?? .automatic
-        configuration.email = PaymentSheet.BillingDetailsCollectionConfiguration.CollectionMode(rawValue: email.rawValue) ?? .automatic
-        configuration.address = PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode(rawValue: address.rawValue) ?? .automatic
-        return configuration
+extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration: BillingDetailsCollectionConfiguration {
+    /// Billing contact fields to require in the Apple Pay sheet.
+    var requiredBillingContactFields: Set<PKContactField> {
+        var requiredPKContactFields = Set<PKContactField>()
+        // By default, we always want to request the billing address (as it includes the postal code).
+        if address == .automatic || address == .full {
+            requiredPKContactFields.insert(.postalAddress)
+        }
+        // Only request name field - phone and email go into shipping contact fields
+        if name == .always {
+            requiredPKContactFields.insert(.name)
+        }
+        return requiredPKContactFields
+    }
+
+    /// Shipping contact fields to require in the Apple Pay sheet, used to collect email/phone.
+    var requiredShippingContactFields: Set<PKContactField> {
+        var requiredPKContactFields = Set<PKContactField>()
+        // Phone and email are collected through shipping contact fields
+        if email == .always {
+            requiredPKContactFields.insert(.emailAddress)
+        }
+        if phone == .always {
+            requiredPKContactFields.insert(.phoneNumber)
+        }
+        return requiredPKContactFields
     }
 }

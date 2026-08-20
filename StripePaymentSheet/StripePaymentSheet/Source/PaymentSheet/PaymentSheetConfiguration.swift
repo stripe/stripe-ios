@@ -792,7 +792,7 @@ extension PaymentSheet {
     }
 }
 
-extension PaymentSheet.BillingDetailsCollectionConfiguration {
+extension PaymentSheet.BillingDetailsCollectionConfiguration: BillingDetailsCollectionConfiguration {
     /// Billing contact fields to require in the Apple Pay sheet.
     var requiredBillingContactFields: Set<PKContactField> {
         var requiredPKContactFields = Set<PKContactField>()
