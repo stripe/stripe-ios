@@ -1,0 +1,14 @@
+{
+  "id": "crc_123",
+  "requirements": {
+    "entries": [
+      {
+        "description": "attestation",
+        "requested_by": "future_partner",
+        "awaiting_action_from": "user",
+        "submission_type": "attestation",
+        "errors": []
+      }
+    ]
+  }
+}

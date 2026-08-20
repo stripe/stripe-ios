@@ -1,0 +1,25 @@
+{
+  "id": "crc_123",
+  "requirements": {
+    "entries": [
+      {
+        "description": "proof_of_address",
+        "requested_by": "swapped",
+        "awaiting_action_from": "partner",
+        "submission_type": "document",
+        "errors": [],
+        "document": {
+          "accepted_subtypes": [
+            {
+              "id": "bank_statement",
+              "label": "Bank statement"
+            }
+          ],
+          "accepted_formats": ["pdf"],
+          "min_documents": 1,
+          "instructions": ["Include your name and address"]
+        }
+      }
+    ]
+  }
+}
