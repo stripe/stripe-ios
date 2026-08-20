@@ -76,6 +76,9 @@ final class CheckoutCartViewController: UIViewController {
 
     private let loadingOverlayView = UIView()
     private let loadingActivityIndicator = UIActivityIndicatorView(style: .medium)
+    private weak var checkoutButton: UIButton?
+    private weak var checkoutButtonContentView: UIStackView?
+    private weak var checkoutButtonActivityIndicator: UIActivityIndicatorView?
     private var errorMessage: String?
 
     init(
@@ -609,7 +612,7 @@ final class CheckoutCartViewController: UIViewController {
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 14
         button.addTarget(self, action: #selector(checkoutButtonTapped), for: .touchUpInside)
-        button.isEnabled = checkout.session.paymentOption != nil && !checkout.isUpdating
+        button.isEnabled = !checkout.isUpdating
         button.alpha = button.isEnabled ? 1 : 0.5
 
         let titleLabel = UILabel()
@@ -637,6 +640,19 @@ final class CheckoutCartViewController: UIViewController {
             stackView.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -16),
             stackView.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: -16),
         ])
+
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.color = .white
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        button.addSubview(activityIndicator)
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: button.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+        ])
+        checkoutButton = button
+        checkoutButtonContentView = stackView
+        checkoutButtonActivityIndicator = activityIndicator
+        updateCheckoutButtonLoadingState()
         return button
     }
 
@@ -746,9 +762,19 @@ final class CheckoutCartViewController: UIViewController {
     }
 
     private func updateLoadingOverlay() {
-        let isLoading = checkout?.isUpdating == true || isUpdatingShippingAddress
+        let isCheckoutUpdating = checkout?.isUpdating == true
+        let isLoading = isCheckoutUpdating || isUpdatingShippingAddress
         loadingOverlayView.isHidden = !isLoading
-        isLoading ? loadingActivityIndicator.startAnimating() : loadingActivityIndicator.stopAnimating()
+        loadingOverlayView.backgroundColor = isUpdatingShippingAddress ? UIColor.black.withAlphaComponent(0.1) : .clear
+        isUpdatingShippingAddress ? loadingActivityIndicator.startAnimating() : loadingActivityIndicator.stopAnimating()
+        updateCheckoutButtonLoadingState()
+    }
+
+    private func updateCheckoutButtonLoadingState() {
+        let isUpdating = checkout?.isUpdating == true
+        checkoutButton?.isEnabled = !isUpdating
+        checkoutButtonContentView?.isHidden = isUpdating
+        isUpdating ? checkoutButtonActivityIndicator?.startAnimating() : checkoutButtonActivityIndicator?.stopAnimating()
     }
 
     private func makeAddressViewController(checkout: CheckoutController) -> AddressViewController {
@@ -825,23 +851,31 @@ final class CheckoutCartViewController: UIViewController {
             let result = await checkout.confirm(from: self)
             let title: String
             let message: String
+            let dismissOnAcknowledgment: Bool
             switch result {
             case .succeeded(let paymentStatus):
                 title = "Success"
                 message = "Payment status: \(paymentStatus)"
+                dismissOnAcknowledgment = true
             case .canceled:
                 title = "Canceled"
                 message = "The payment was canceled."
+                dismissOnAcknowledgment = false
             case .failed(let error):
-                title = "Failed"
-                message = error.localizedDescription
+                title = "Unable to complete checkout"
+                message = "Localized: \(error.localizedDescription)\n\nDebug: \(String(reflecting: error))"
+                dismissOnAcknowledgment = false
             }
             let alertController = UIAlertController(
                 title: title,
                 message: message,
                 preferredStyle: .alert
             )
-            alertController.addAction(UIAlertAction(title: "OK", style: .default))
+            alertController.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                if dismissOnAcknowledgment {
+                    self?.closeAction()
+                }
+            })
             present(alertController, animated: true)
         }
     }

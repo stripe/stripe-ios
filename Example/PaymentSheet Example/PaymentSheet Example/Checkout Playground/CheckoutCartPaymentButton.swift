@@ -40,9 +40,16 @@ struct CheckoutCartPaymentButton: View {
                 }
             } label: {
                 HStack {
-                    Text("Checkout")
-                    Spacer()
-                    Text(session.totals.total.amount)
+                    if checkout.isUpdating {
+                        Spacer()
+                        ProgressView()
+                            .tint(.white)
+                        Spacer()
+                    } else {
+                        Text("Checkout")
+                        Spacer()
+                        Text(session.totals.total.amount)
+                    }
                 }
                 .font(.headline)
                 .foregroundColor(.white)
@@ -51,7 +58,7 @@ struct CheckoutCartPaymentButton: View {
                 .cornerRadius(14)
             }
             .padding(.horizontal)
-            .disabled(session.paymentOption == nil || checkout.isUpdating)
+            .disabled(checkout.isUpdating)
         }
         .padding(.bottom, 16)
         .padding(.top, 16)

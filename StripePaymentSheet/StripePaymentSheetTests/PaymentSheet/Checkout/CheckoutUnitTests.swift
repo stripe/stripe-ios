@@ -40,6 +40,25 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.status, .open)
     }
 
+    func testPaymentElementConfigurationsUseCheckoutReturnURL() async throws {
+        // Given a Checkout configuration with a return URL
+        let returnURL = "stripe-ios-test://custom-checkout-return"
+        let baseConfiguration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: returnURL
+        )
+
+        // When Checkout creates Payment Element's sheet and embedded integrations
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(configuration: baseConfiguration)
+        )
+        let paymentElement = checkout.getPaymentElement()
+
+        // Then both integrations use the Checkout return URL
+        XCTAssertEqual(paymentElement.paymentSheetFlowController.configuration.returnURL, returnURL)
+        XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.returnURL, returnURL)
+    }
+
     func testGetCurrencySelectorElementReturnsNilWhenAdaptivePricingIsNotAllowed() async throws {
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
 
