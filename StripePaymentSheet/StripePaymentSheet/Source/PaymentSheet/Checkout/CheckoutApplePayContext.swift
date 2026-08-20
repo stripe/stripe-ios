@@ -302,7 +302,11 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     // MARK: - Helpers
 
     private func summaryItems() -> [PKPaymentSummaryItem] {
-        return STPApplePayContext.makePaymentSummaryItems(for: session, label: merchantLabel, currency: session.currency)
+        return Self.makeSummaryItems(for: session, label: merchantLabel)
+    }
+
+    static func makeSummaryItems(for session: CheckoutController.Session, label: String) -> [PKPaymentSummaryItem] {
+        return STPApplePayContext.makePaymentSummaryItems(for: session, label: label, currency: session.currency)
     }
 
     private func _end() {
