@@ -295,6 +295,18 @@ extension PayWithLinkViewController {
             containerView.toggleArrangedSubview(errorView, shouldShow: error != nil, animated: true)
         }
 
+        func recordBankAccountConsentIfNeeded(for paymentDetails: ConsumerPaymentDetails) async {
+            guard case .bankAccount = paymentDetails.details,
+                  let consentText = context.elementsSession.linkPaymentMethodBankAccountDataConsent,
+                  !consentText.isEmpty
+            else {
+                return
+            }
+
+            // Fire and forget; consent recording must never block or fail payment confirmation.
+            _ = try? await linkAccount.recordConnectionsConsentAcquired(localizedConsentText: consentText)
+        }
+
         func reloadPaymentDetails(completion: (() -> Void)?) {
             let supportedPaymentDetailsTypes = context
                 .getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
@@ -332,6 +344,7 @@ extension PayWithLinkViewController {
                     switch validationResult {
                     case .complete(let updatedPaymentDetails, let confirmationExtras):
                         viewModel.updatePaymentMethod(updatedPaymentDetails)
+                        await recordBankAccountConsentIfNeeded(for: updatedPaymentDetails)
                         if context.launchedFromFlowController {
                             coordinator?.handlePaymentDetailsSelected(updatedPaymentDetails, confirmationExtras: confirmationExtras)
                         } else {
