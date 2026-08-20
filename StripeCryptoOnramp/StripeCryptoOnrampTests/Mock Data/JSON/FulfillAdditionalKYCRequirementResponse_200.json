@@ -1,0 +1,5 @@
+{
+  "id": "submission_123",
+  "object": "crypto_onramp_kyc_submission",
+  "status": "pending_verification"
+}

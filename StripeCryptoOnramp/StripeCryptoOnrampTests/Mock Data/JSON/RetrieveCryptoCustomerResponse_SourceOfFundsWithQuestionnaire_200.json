@@ -1,0 +1,42 @@
+{
+  "id": "crc_123",
+  "requirements": {
+    "entries": [
+      {
+        "description": "source_of_funds",
+        "requested_by": "swapped",
+        "awaiting_action_from": "user",
+        "submission_type": "document",
+        "errors": [
+          {
+            "code": "document_expired",
+            "message": "Upload a newer document"
+          }
+        ],
+        "document": {
+          "accepted_subtypes": [
+            {
+              "id": "payslip",
+              "label": "Payslip"
+            }
+          ],
+          "accepted_formats": ["pdf", "jpeg", "png"],
+          "min_documents": 1,
+          "instructions": ["Include your name"],
+          "additional_requirements": {
+            "questionnaire": {
+              "questions": [
+                {
+                  "id": "purchase_purpose",
+                  "prompt": "Why are you purchasing cryptocurrency?",
+                  "answer_type": "free_text",
+                  "required": true
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+}
