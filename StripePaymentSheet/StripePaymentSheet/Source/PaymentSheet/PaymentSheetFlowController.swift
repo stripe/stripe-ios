@@ -1150,7 +1150,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
-    var checkout: CheckoutController? { get set }
+    var checkout: CheckoutSessionBillingAddressUpdater? { get set }
     func clearSelection()
 }
 

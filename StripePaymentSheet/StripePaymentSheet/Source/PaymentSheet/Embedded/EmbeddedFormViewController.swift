@@ -89,7 +89,7 @@ class EmbeddedFormViewController: UIViewController {
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
-    private weak var checkout: CheckoutController?
+    private weak var checkout: CheckoutSessionBillingAddressUpdater?
     private var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
     /// The payment option to restore if the customer cancels this form.
@@ -165,7 +165,7 @@ class EmbeddedFormViewController: UIViewController {
          previousPaymentOption: PaymentOption? = nil,
          analyticsHelper: PaymentSheetAnalyticsHelper,
          paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
-         checkout: CheckoutController? = nil,
+         checkout: CheckoutSessionBillingAddressUpdater? = nil,
          formCache: PaymentMethodFormCache = .init(),
          delegate: EmbeddedFormViewControllerDelegate
     ) {
