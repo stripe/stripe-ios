@@ -49,6 +49,8 @@ extension PayWithLinkViewController {
             return paymentPicker
         }()
 
+        private lazy var dataConsentView = LinkMandateView(delegate: self, linkAppearance: viewModel.linkAppearance)
+
         private lazy var mandateView = LinkMandateView(delegate: self, linkAppearance: viewModel.linkAppearance)
 
         private lazy var confirmButton = ConfirmButton.makeLinkButton(
@@ -150,6 +152,7 @@ extension PayWithLinkViewController {
                 paymentPickerContainerView,
                 cardDetailsRecollectionSection.view,
                 errorView,
+                dataConsentView,
                 mandateView,
                 confirmButton,
             ])
@@ -251,10 +254,20 @@ extension PayWithLinkViewController {
                 mandateView.setText(mandate)
             }
 
+            if let bankAccountDataConsent = viewModel.bankAccountDataConsent {
+                dataConsentView.setText(bankAccountDataConsent)
+            }
+
             paymentPicker.reloadData()
             paymentPickerContainerView.toggleArrangedSubview(
                 mandateView,
                 shouldShow: viewModel.shouldShowMandate,
+                animated: animated
+            )
+
+            containerView.toggleArrangedSubview(
+                dataConsentView,
+                shouldShow: viewModel.shouldShowBankAccountDataConsent,
                 animated: animated
             )
 
