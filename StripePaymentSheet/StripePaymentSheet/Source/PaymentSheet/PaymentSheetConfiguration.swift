@@ -706,38 +706,7 @@ extension PaymentSheet {
             self.allowedCountries = allowedCountries
         }
     }
-}
 
-extension PaymentSheet.BillingDetailsCollectionConfiguration {
-    /// Billing contact fields to require in the Apple Pay sheet.
-    var requiredBillingContactFields: Set<PKContactField> {
-        var requiredPKContactFields = Set<PKContactField>()
-        // By default, we always want to request the billing address (as it includes the postal code).
-        if address == .automatic || address == .full {
-            requiredPKContactFields.insert(.postalAddress)
-        }
-        // Only request name field - phone and email go into shipping contact fields
-        if name == .always {
-            requiredPKContactFields.insert(.name)
-        }
-        return requiredPKContactFields
-    }
-
-    /// Shipping contact fields to require in the Apple Pay sheet, used to collect email/phone.
-    var requiredShippingContactFields: Set<PKContactField> {
-        var requiredPKContactFields = Set<PKContactField>()
-        // Phone and email are collected through shipping contact fields
-        if email == .always {
-            requiredPKContactFields.insert(.emailAddress)
-        }
-        if phone == .always {
-            requiredPKContactFields.insert(.phoneNumber)
-        }
-        return requiredPKContactFields
-    }
-}
-
-extension PaymentSheet {
     /// Configuration for external payment methods
     /// - Seealso: See the [integration guide](https://stripe.com/docs/payments/external-payment-methods?platform=ios).
     public struct ExternalPaymentMethodConfiguration {
@@ -820,6 +789,35 @@ extension PaymentSheet {
         /// Your implementation should complete the payment and return the result.
         /// - Note: This is always called on the main thread.
         public var customPaymentMethodConfirmHandler: CustomPaymentMethodConfirmHandler
+    }
+}
+
+extension PaymentSheet.BillingDetailsCollectionConfiguration {
+    /// Billing contact fields to require in the Apple Pay sheet.
+    var requiredBillingContactFields: Set<PKContactField> {
+        var requiredPKContactFields = Set<PKContactField>()
+        // By default, we always want to request the billing address (as it includes the postal code).
+        if address == .automatic || address == .full {
+            requiredPKContactFields.insert(.postalAddress)
+        }
+        // Only request name field - phone and email go into shipping contact fields
+        if name == .always {
+            requiredPKContactFields.insert(.name)
+        }
+        return requiredPKContactFields
+    }
+
+    /// Shipping contact fields to require in the Apple Pay sheet, used to collect email/phone.
+    var requiredShippingContactFields: Set<PKContactField> {
+        var requiredPKContactFields = Set<PKContactField>()
+        // Phone and email are collected through shipping contact fields
+        if email == .always {
+            requiredPKContactFields.insert(.emailAddress)
+        }
+        if phone == .always {
+            requiredPKContactFields.insert(.phoneNumber)
+        }
+        return requiredPKContactFields
     }
 }
 
