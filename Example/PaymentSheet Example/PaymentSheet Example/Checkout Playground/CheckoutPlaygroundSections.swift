@@ -238,7 +238,7 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
     @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
     @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
-    @Binding var billingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration
+    var onCustomizeBillingDetailsCollection: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -265,34 +265,26 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.linkConfiguration.display`.",
                         displayText: { $0.rawValue.capitalized }
                     )
-                    CheckoutPlayground.PickerRow(
-                      title: "Billing Name",
-                      icon: "person.fill",
-                      selection: $billingDetailsCollectionConfiguration.name,
-                      tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.name`.",
-                      displayText: { $0.rawValue.capitalized }
-                    )
-                    CheckoutPlayground.PickerRow(
-                        title: "Billing Phone",
-                        icon: "phone.fill",
-                        selection: $billingDetailsCollectionConfiguration.phone,
-                        tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.phone`.",
-                        displayText: { $0.rawValue.capitalized }
-                    )
-                    CheckoutPlayground.PickerRow(
-                        title: "Billing Email",
-                        icon: "envelope.fill",
-                        selection: $billingDetailsCollectionConfiguration.email,
-                        tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.email`.",
-                        displayText: { $0.rawValue.capitalized }
-                    )
-                    CheckoutPlayground.PickerRow(
-                        title: "Billing Address",
-                        icon: "house.fill",
-                        selection: $billingDetailsCollectionConfiguration.address,
-                        tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.address`.",
-                        displayText: { $0.rawValue.capitalized }
-                    )
+
+                    Button(action: onCustomizeBillingDetailsCollection) {
+                        HStack {
+                            Image(systemName: "person.text.rectangle.fill")
+                                .font(.system(size: 16))
+                                .frame(width: 24)
+                                .foregroundColor(.blue)
+                            Text("Billing Details Collection")
+                                .font(.subheadline)
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 16)
+                        .background(Color(uiColor: .secondarySystemGroupedBackground))
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
