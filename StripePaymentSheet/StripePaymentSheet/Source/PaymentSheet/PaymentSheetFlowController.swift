@@ -268,12 +268,12 @@ extension PaymentSheet {
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
         var viewController: FlowControllerViewControllerProtocol
 
-        private var presentPaymentOptionsCompletionWithResult: ((Bool) -> Void)?
+        private var presentPaymentOptionsCompletionWithResult: (@MainActor (Bool) -> Void)?
         private var selectionSnapshotBeforePresentation: FlowControllerSelectionSnapshot?
         private var didDismissLinkVerificationDialog: Bool = false
 
         // If a WalletButtonsView is currently visible
-        var walletButtonsViewState: WalletButtonsViewState = .hidden {
+        @MainActor var walletButtonsViewState: WalletButtonsViewState = .hidden {
             didSet {
                 // Update payment method options
                 self.updateForWalletButtonsView()
@@ -345,6 +345,7 @@ extension PaymentSheet {
 
         // MARK: - Initializer (Internal)
 
+        @MainActor
         required init(
             configuration: Configuration,
             loadResult: PaymentSheetLoader.LoadResult,
@@ -521,6 +522,19 @@ extension PaymentSheet {
             from presentingViewController: UIViewController,
             completion: ((_ didCancel: Bool) -> Void)? = nil
         ) {
+            Task { @MainActor in
+                self.presentPaymentOptionsOnMain(
+                    from: presentingViewController,
+                    completion: completion
+                )
+            }
+        }
+
+        @MainActor
+        private func presentPaymentOptionsOnMain(
+            from presentingViewController: UIViewController,
+            completion: ((_ didCancel: Bool) -> Void)?
+        ) {
             switch latestUpdateContext?.status {
             case .inProgress, .failed:
                 assertionFailure("Cannot call presentPaymentOptions when the last update call has not yet finished or failed.")
@@ -543,7 +557,7 @@ extension PaymentSheet {
             )
 
             // Overwrite completion closure to retain self until called
-            let wrappedCompletion: (Bool) -> Void = { didCancel in
+            let wrappedCompletion: @MainActor (Bool) -> Void = { didCancel in
                 // The snapshot is no longer needed on completion
                 self.selectionSnapshotBeforePresentation = nil
 
@@ -554,8 +568,7 @@ extension PaymentSheet {
             presentPaymentOptionsCompletionWithResult = wrappedCompletion
 
             // Mutations in-flight: show loading, await them, then present payment options internally.
-            // TODO(porter): Remove assumeIsolated once presentPaymentOptions is @MainActor (blocked on new FC API designs)
-            if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
+            if let checkout, !checkout.pendingOperations.isEmpty {
                 presentPaymentOptionsAwaitingMutations(
                     from: presentingViewController,
                     checkout: checkout,
@@ -597,6 +610,7 @@ extension PaymentSheet {
 
         /// Presents a loading sheet while awaiting in-flight Checkout mutations,
         /// then swaps to the payment options view controller on success or dismisses on failure.
+        @MainActor
         private func presentPaymentOptionsAwaitingMutations(
             from presentingViewController: UIViewController,
             checkout: CheckoutController,
@@ -647,12 +661,13 @@ extension PaymentSheet {
             }
         }
 
+        @MainActor
         private func presentNativeLinkInPlaceOfFlowController(
             from presentingViewController: UIViewController,
             selectedPaymentDetailsID: String? = nil,
             returnToPaymentSheet: @escaping () -> Void
         ) {
-            let completionCallback: (PaymentSheet.LinkConfirmOption?, Bool, Error?) -> Void = { [weak self] confirmOption, shouldReturnToPaymentSheet, _ in
+            let completionCallback: @MainActor (PaymentSheet.LinkConfirmOption?, Bool, Error?) -> Void = { [weak self] confirmOption, shouldReturnToPaymentSheet, _ in
                 guard let self else { return }
 
                 if let confirmOption {
@@ -693,8 +708,16 @@ extension PaymentSheet {
             from presentingViewController: UIViewController,
             completion: @escaping (PaymentSheetResult) -> Void
         ) {
-            assert(Thread.isMainThread, "PaymentSheet.FlowController.confirm must be called from the main thread.")
+            Task { @MainActor in
+                self.confirmOnMain(from: presentingViewController, completion: completion)
+            }
+        }
 
+        @MainActor
+        private func confirmOnMain(
+            from presentingViewController: UIViewController,
+            completion: @escaping (PaymentSheetResult) -> Void
+        ) {
             switch latestUpdateContext?.status {
             case .inProgress:
                 stpAssertionFailure("`confirm` should only be called when the last update has completed.")
@@ -768,8 +791,7 @@ extension PaymentSheet {
                 }
 
                 if let checkout {
-                    // TODO(porter): Remove assumeIsolated once confirm is @MainActor (blocked on new FC API designs)
-                    if MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
+                    if !checkout.pendingOperations.isEmpty {
                         stpAssertionFailure("`confirm` should not be called while the Checkout session is loading.")
                         let error = PaymentSheetError.flowControllerConfirmFailed(
                             message: "confirmPayment was called while the Checkout session is still loading. Wait until CheckoutController.isUpdating is false."
@@ -796,7 +818,16 @@ extension PaymentSheet {
         /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry.
         /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
         public func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
-            assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
+            Task { @MainActor in
+                self.updateOnMain(intentConfiguration: intentConfiguration, completion: completion)
+            }
+        }
+
+        @MainActor
+        private func updateOnMain(
+            intentConfiguration: IntentConfiguration,
+            completion: @escaping (Error?) -> Void
+        ) {
             assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
             performUpdate(mode: .deferredIntent(intentConfiguration), completion: completion)
         }
@@ -816,20 +847,19 @@ extension PaymentSheet {
                 completion(nil)
                 return
             }
-            assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
             let updateID = beginUpdate()
-            Task { @MainActor in
-                checkout.session.applyAddressOverrides(to: &configuration)
-                performUpdate(mode: .checkout(checkout), updateID: updateID, completion: completion)
-            }
+            checkout.session.applyAddressOverrides(to: &configuration)
+            performUpdate(mode: .checkout(checkout), updateID: updateID, completion: completion)
         }
 
         @discardableResult
+        @MainActor
         private func beginUpdate(updateID: UUID = UUID()) -> UUID {
             latestUpdateContext = UpdateContext(id: updateID)
             return updateID
         }
 
+        @MainActor
         private func performUpdate(
             mode: PaymentSheet.InitializationMode,
             updateID: UUID = UUID(),
@@ -845,7 +875,6 @@ extension PaymentSheet {
                 integrationShape: .flowController,
                 isUpdate: true
             ) { [weak self] result in
-                assert(Thread.isMainThread, "PaymentSheet.FlowController.update load callback must be called from the main thread.")
                 guard let self = self else {
                     assertionFailure("The PaymentSheet.FlowController instance was destroyed during a call to `update`")
                     return
@@ -884,6 +913,7 @@ extension PaymentSheet {
             }
         }
 
+        @MainActor
         func updateForWalletButtonsView() {
             // Rebuild with the current saved methods so deleted methods don't reappear.
             self.viewController = Self.makeViewController(
@@ -917,6 +947,7 @@ extension PaymentSheet {
             )
         }
 
+        @MainActor
         private func revertSelectionAfterCancellation() {
             guard let snapshot = selectionSnapshotBeforePresentation else {
                 return
@@ -945,6 +976,7 @@ extension PaymentSheet {
         }
 
         /// Updates the published paymentOption property based on the current state
+        @MainActor
         func updatePaymentOption() {
             if let selectedPaymentOption = internalPaymentOption {
                 paymentOption = PaymentOptionDisplayData(
@@ -1064,8 +1096,10 @@ extension PaymentSheet.FlowController: LoadingViewControllerDelegate {
         pendingPresentTask?.cancel()
         pendingPresentTask = nil
         loadingViewController.dismiss(animated: true) {
-            self.isPresented = false
-            self.presentPaymentOptionsCompletionWithResult?(true)
+            Task { @MainActor in
+                self.isPresented = false
+                self.presentPaymentOptionsCompletionWithResult?(true)
+            }
         }
     }
 }
@@ -1086,11 +1120,13 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
             self.didPresentAndContinue = true
         }
         flowControllerViewController.dismiss(animated: true) {
-            if didCancel {
-                self.revertSelectionAfterCancellation()
+            Task { @MainActor in
+                if didCancel {
+                    self.revertSelectionAfterCancellation()
+                }
+                self.presentPaymentOptionsCompletionWithResult?(didCancel)
+                self.isPresented = false
             }
-            self.presentPaymentOptionsCompletionWithResult?(didCancel)
-            self.isPresented = false
         }
     }
 }
