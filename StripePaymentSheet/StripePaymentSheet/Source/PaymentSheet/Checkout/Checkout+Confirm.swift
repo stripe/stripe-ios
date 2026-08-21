@@ -18,7 +18,6 @@ extension CheckoutController {
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
-        let billingDetailsCollectionConfiguration: any BillingDetailsCollectionConfiguration
     }
 
     /// The parameters needed to confirm a Checkout Session with Link.
@@ -114,8 +113,7 @@ extension CheckoutController {
                 applePayConfiguration: applePayConfiguration,
                 apiClient: apiClient,
                 returnURL: self.configuration.returnURL,
-                merchantDisplayName: effectiveMerchantDisplayName,
-                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration
+                merchantDisplayName: effectiveMerchantDisplayName
             ))
         case .link(let confirmOption):
             let analyticsHelper = paymentElement.paymentOptionSourceOfTruthIsFlowController

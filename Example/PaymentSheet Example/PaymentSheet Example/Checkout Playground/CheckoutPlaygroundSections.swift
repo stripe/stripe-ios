@@ -4,7 +4,6 @@
 //
 //  Created by Nick Porter on 2/24/26.
 
-@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 struct CheckoutPlaygroundConfigurationSection: View {
@@ -233,44 +232,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     title: "Payment Method Remove",
                     isOn: $checkoutSessionPaymentMethodRemove,
                     tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
-                )
-            }
-            .background(Color(uiColor: .secondarySystemGroupedBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-        }
-    }
-}
-
-struct CheckoutPlaygroundExpressCheckoutElementSection: View {
-    @Binding var billingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            CheckoutPlayground.SectionHeader(title: "Express Checkout Element", icon: "bolt.fill")
-            VStack(spacing: 1) {
-                CheckoutPlayground.PickerRow(
-                    title: "Billing Name",
-                    selection: $billingDetailsCollectionConfiguration.name,
-                    tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.name`.",
-                    displayText: { $0.rawValue.capitalized }
-                )
-                CheckoutPlayground.PickerRow(
-                    title: "Billing Phone",
-                    selection: $billingDetailsCollectionConfiguration.phone,
-                    tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.phone`.",
-                    displayText: { $0.rawValue.capitalized }
-                )
-                CheckoutPlayground.PickerRow(
-                    title: "Billing Email",
-                    selection: $billingDetailsCollectionConfiguration.email,
-                    tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.email`.",
-                    displayText: { $0.rawValue.capitalized }
-                )
-                CheckoutPlayground.PickerRow(
-                    title: "Billing Address",
-                    selection: $billingDetailsCollectionConfiguration.address,
-                    tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.address`.",
-                    displayText: { $0.rawValue.capitalized }
                 )
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))

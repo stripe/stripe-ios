@@ -32,7 +32,7 @@ struct CheckoutPlaygroundView: View {
                             customerType: $viewModel.customerType,
                             checkoutEndpointOption: $viewModel.checkoutEndpointOption,
                             checkoutEndpoint: $viewModel.checkoutEndpoint,
-                            expressCheckoutElementOption: $viewModel.expressCheckoutElement.option,
+                            expressCheckoutElementOption: $viewModel.expressCheckoutElementOption,
                             delayPaymentPagesRequests: $viewModel.delayPaymentPagesRequests
                         )
 
@@ -52,12 +52,6 @@ struct CheckoutPlaygroundView: View {
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
                             automaticPaymentMethods: $viewModel.automaticPaymentMethods
                         )
-
-                        if viewModel.expressCheckoutElement.option == .show {
-                            CheckoutPlaygroundExpressCheckoutElementSection(
-                                billingDetailsCollectionConfiguration: $viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration
-                            )
-                        }
 
                         currencySelectorAppearanceSection
 
@@ -95,8 +89,7 @@ struct CheckoutPlaygroundView: View {
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
-                            showExpressCheckoutElement: viewModel.expressCheckoutElement.option == .show,
-                            eceBillingDetailsCollectionConfiguration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
+                            showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
@@ -107,8 +100,7 @@ struct CheckoutPlaygroundView: View {
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
-                            showExpressCheckoutElement: viewModel.expressCheckoutElement.option == .show,
-                            eceBillingDetailsCollectionConfiguration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
+                            showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )

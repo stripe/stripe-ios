@@ -26,8 +26,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 applePayConfiguration: applePayConfiguration,
                 apiClient: apiClient,
                 returnURL: configuration.returnURL,
-                merchantDisplayName: effectiveMerchantDisplayName,
-                billingDetailsCollectionConfiguration: configuration.expressCheckoutElement.billingDetailsCollectionConfiguration
+                merchantDisplayName: effectiveMerchantDisplayName
             ))
         case .link:
             // ECE Link needs its own configuration and analytics lifecycle before it can build this flow.

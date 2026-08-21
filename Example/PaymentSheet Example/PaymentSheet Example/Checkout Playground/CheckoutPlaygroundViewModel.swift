@@ -8,11 +8,6 @@
 import SwiftUI
 
 extension CheckoutPlayground {
-    struct ExpressCheckoutElementSettings {
-        var option: ExpressCheckoutElementOption = .show
-        var billingDetailsCollectionConfiguration = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
-    }
-
     @MainActor
     final class ViewModel: ObservableObject {
         // Unified mode currently supports card and Link.
@@ -23,14 +18,14 @@ extension CheckoutPlayground {
         @Published var uiFramework: UIFramework = .swiftUI
         @Published var integrationType: IntegrationType = .flowController {
             didSet {
-                if integrationType == .eceOnly && expressCheckoutElement.option == .hide {
-                    expressCheckoutElement.option = .show
+                if integrationType == .eceOnly && expressCheckoutElementOption == .hide {
+                    expressCheckoutElementOption = .show
                 }
             }
         }
-        @Published var expressCheckoutElement = ExpressCheckoutElementSettings() {
+        @Published var expressCheckoutElementOption: ExpressCheckoutElementOption = .show {
             didSet {
-                if expressCheckoutElement.option == .hide && integrationType == .eceOnly {
+                if expressCheckoutElementOption == .hide && integrationType == .eceOnly {
                     integrationType = .flowController
                 }
             }

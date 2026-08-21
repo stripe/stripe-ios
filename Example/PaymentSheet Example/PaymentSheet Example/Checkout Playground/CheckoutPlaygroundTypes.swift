@@ -7,14 +7,6 @@
 import Foundation
 @_spi(STP) import StripePaymentSheet
 
-extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration.CollectionMode: @retroactive Identifiable {
-    public var id: String { rawValue }
-}
-
-extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration.AddressCollectionMode: @retroactive Identifiable {
-    public var id: String { rawValue }
-}
-
 enum CheckoutPlayground {
     enum UIFramework: String, CaseIterable, Identifiable {
 
