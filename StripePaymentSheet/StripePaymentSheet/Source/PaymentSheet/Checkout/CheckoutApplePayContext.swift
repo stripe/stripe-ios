@@ -31,8 +31,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let apiClient: STPAPIClient
     private let returnURL: String
     private let presentationWindow: UIWindow?
-    private weak var checkout: CheckoutSessionWalletUpdater?
     let authorizationController: PKPaymentAuthorizationController
+
+    private weak var checkout: CheckoutSessionWalletUpdater?
 
     // Internal state
     private var continuation: CheckedContinuation<CheckoutController.InternalConfirmResult, Never>?
@@ -46,16 +47,16 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     init(
         checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
+        authorizationController: PKPaymentAuthorizationController,
         checkout: CheckoutSessionWalletUpdater? = nil,
-        authorizationController: PKPaymentAuthorizationController
     ) {
         self.session = checkoutSession
         self.merchantLabel = applePayConfirmationParameters.merchantDisplayName
         self.apiClient = applePayConfirmationParameters.apiClient
         self.returnURL = applePayConfirmationParameters.returnURL
         self.presentationWindow = applePayConfirmationParameters.presentationWindow
-        self.checkout = checkout
         self.authorizationController = authorizationController
+        self.checkout = checkout
         super.init()
     }
 
@@ -277,8 +278,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         return CheckoutApplePayContext(
             checkoutSession: checkoutSession,
             applePayConfirmationParameters: applePayConfirmationParameters,
-            checkout: checkout,
-            authorizationController: authorizationController
+            authorizationController: authorizationController,
+            checkout: checkout
         )
     }
 
