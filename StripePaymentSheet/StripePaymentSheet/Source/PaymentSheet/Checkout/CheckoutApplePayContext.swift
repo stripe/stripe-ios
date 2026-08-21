@@ -26,12 +26,14 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         case success
     }
 
-    private let session: CheckoutController.Session
+    private var session: CheckoutController.Session
     private let merchantLabel: String
     private let apiClient: STPAPIClient
     private let returnURL: String
     private let presentationWindow: UIWindow?
     let authorizationController: PKPaymentAuthorizationController
+
+    private weak var checkoutWalletUpdater: CheckoutSessionWalletUpdater?
 
     // Internal state
     private var continuation: CheckedContinuation<CheckoutController.InternalConfirmResult, Never>?
@@ -45,7 +47,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     init(
         checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
-        authorizationController: PKPaymentAuthorizationController
+        authorizationController: PKPaymentAuthorizationController,
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater,
     ) {
         self.session = checkoutSession
         self.merchantLabel = applePayConfirmationParameters.merchantDisplayName
@@ -53,6 +56,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         self.returnURL = applePayConfirmationParameters.returnURL
         self.presentationWindow = applePayConfirmationParameters.presentationWindow
         self.authorizationController = authorizationController
+        self.checkoutWalletUpdater = checkoutWalletUpdater
         super.init()
     }
 
@@ -186,8 +190,22 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         didSelectPaymentMethod paymentMethod: PKPaymentMethod,
         handler: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
     ) {
-        // TODO: Update billing tax region when the user switches cards.
-        handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
+        guard session.collectsTaxFromBillingAddress,
+              let postalAddress = paymentMethod.billingAddress?.postalAddresses.first?.value,
+              let address = STPApplePayContext.makeCheckoutAddress(from: postalAddress),
+              let checkoutWalletUpdater else {
+            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
+            return
+        }
+        Task { @MainActor in
+            if let updatedSession = try? await checkoutWalletUpdater.updateBillingTaxRegionWithoutEnqueueing(
+                address: address,
+                canUpdateWhileSheetPresented: true
+            ) {
+                self.session = updatedSession
+            }
+            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
+        }
     }
 
     func paymentAuthorizationController(
@@ -221,7 +239,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
     static func create(
         checkoutSession: CheckoutController.Session,
-        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
+        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater
     ) throws -> CheckoutApplePayContext {
         let applePayConfig = applePayConfirmationParameters.applePayConfiguration
 
@@ -259,7 +278,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         return CheckoutApplePayContext(
             checkoutSession: checkoutSession,
             applePayConfirmationParameters: applePayConfirmationParameters,
-            authorizationController: authorizationController
+            authorizationController: authorizationController,
+            checkoutWalletUpdater: checkoutWalletUpdater
         )
     }
 

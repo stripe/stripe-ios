@@ -6,6 +6,7 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
+import Contacts
 import OHHTTPStubs
 import OHHTTPStubsSwift
 import PassKit
@@ -208,7 +209,102 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(result.paymentSheetResult, .completed)
     }
 
+    // MARK: - didSelectPaymentMethod (billing tax region)
+
+    func testDidSelectPaymentMethod_whenNotCollectingTaxFromBilling_doesNotUpdate() {
+        // Given a context whose session does not source tax from the billing address
+        let updater = MockCheckoutSessionWalletUpdater()
+        let (context, mockController) = makeTaxContext(
+            collectsTaxFromBillingAddress: false,
+            checkoutWalletUpdater: updater
+        )
+        let paymentMethod = MockPKPaymentMethod(billingAddress: makeBillingContact())
+
+        // When
+        let expectation = expectation(description: "handler called")
+        context.paymentAuthorizationController(mockController, didSelectPaymentMethod: paymentMethod) { _ in
+            expectation.fulfill()
+        }
+
+        // Then the updater is never consulted
+        waitForExpectations(timeout: 1)
+        XCTAssertEqual(updater.updateCallCount, 0)
+    }
+
+    func testDidSelectPaymentMethod_whenCollectingTaxFromBilling_updatesSessionAndSummaryItems() {
+        // Given a session that sources tax from billing, and an updater that returns a session with a new total
+        let updatedSession = CheckoutTestHelpers.makeSession([
+            "session_id": "cs_test_123",
+            "currency": "usd",
+            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 1500),
+        ]).makePublicSession()
+        let updater = MockCheckoutSessionWalletUpdater(sessionToReturn: updatedSession)
+        let (context, mockController) = makeTaxContext(
+            collectsTaxFromBillingAddress: true,
+            checkoutWalletUpdater: updater
+        )
+        let paymentMethod = MockPKPaymentMethod(billingAddress: makeBillingContact(country: "US"))
+
+        // When
+        let expectation = expectation(description: "handler called")
+        var receivedUpdate: PKPaymentRequestPaymentMethodUpdate?
+        context.paymentAuthorizationController(mockController, didSelectPaymentMethod: paymentMethod) { update in
+            receivedUpdate = update
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+
+        // Then the updater was called with the billing address and the sheet-presented flag
+        XCTAssertEqual(updater.updateCallCount, 1)
+        XCTAssertEqual(updater.lastAddress?.country, "US")
+        XCTAssertEqual(updater.lastCanUpdateWhileSheetPresented, true)
+
+        // ...and the handler's summary items reflect the updated session's new total
+        XCTAssertEqual(
+            receivedUpdate?.paymentSummaryItems.last?.amount,
+            NSDecimalNumber.stp_decimalNumber(withAmount: 1500, currency: "usd")
+        )
+    }
+
     // MARK: - Helpers
+
+    private func makeTaxContext(
+        collectsTaxFromBillingAddress: Bool,
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater
+    ) -> (CheckoutApplePayContext, MockPKPaymentAuthorizationController) {
+        let response = CheckoutTestHelpers.makeSession([
+            "session_id": "cs_test_123",
+            "currency": "usd",
+            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 1000),
+            "tax_context": [
+                "automatic_tax_enabled": collectsTaxFromBillingAddress,
+                "automatic_tax_address_source": "session.billing",
+            ],
+        ])
+        let session = response.makePublicSession()
+        let applePayConfirmationParameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient()
+        )
+        let mockController = MockPKPaymentAuthorizationController()
+        let context = CheckoutApplePayContext(
+            checkoutSession: session,
+            applePayConfirmationParameters: applePayConfirmationParameters,
+            authorizationController: mockController,
+            checkoutWalletUpdater: checkoutWalletUpdater
+        )
+        return (context, mockController)
+    }
+
+    private func makeBillingContact(country: String = "US") -> CNContact {
+        let contact = CNMutableContact()
+        let address = CNMutablePostalAddress()
+        address.isoCountryCode = country
+        address.city = "San Francisco"
+        address.state = "CA"
+        address.postalCode = "94105"
+        contact.postalAddresses = [CNLabeledValue(label: CNLabelHome, value: address)]
+        return contact
+    }
 
     private func makeContext(
         sessionId: String = "cs_test_123",
@@ -230,7 +326,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let context = CheckoutApplePayContext(
             checkoutSession: session,
             applePayConfirmationParameters: applePayConfirmationParameters,
-            authorizationController: mockController
+            authorizationController: mockController,
+            checkoutWalletUpdater: MockCheckoutSessionWalletUpdater()
         )
         return (context, mockController)
     }
@@ -264,4 +361,17 @@ final class CheckoutApplePayContextTests: XCTestCase {
         return json
     }
 
+}
+
+// MARK: - Test doubles
+
+private final class MockPKPaymentMethod: PKPaymentMethod {
+    private let mockBillingAddress: CNContact?
+
+    init(billingAddress: CNContact?) {
+        self.mockBillingAddress = billingAddress
+        super.init()
+    }
+
+    override var billingAddress: CNContact? { mockBillingAddress }
 }

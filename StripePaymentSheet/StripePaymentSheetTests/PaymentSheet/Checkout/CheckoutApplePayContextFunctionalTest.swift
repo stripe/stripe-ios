@@ -83,7 +83,8 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         let context = CheckoutApplePayContext(
             checkoutSession: session,
             applePayConfirmationParameters: applePayConfirmationParameters,
-            authorizationController: MockPKPaymentAuthorizationController()
+            authorizationController: MockPKPaymentAuthorizationController(),
+            checkoutWalletUpdater: MockCheckoutSessionWalletUpdater()
         )
         return (context, apiClient)
     }
