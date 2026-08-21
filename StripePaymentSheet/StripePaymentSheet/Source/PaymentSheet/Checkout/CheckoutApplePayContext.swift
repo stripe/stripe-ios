@@ -245,7 +245,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         let merchantLabel = applePayConfirmationParameters.merchantDisplayName
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
 
-        // TODO: Set requiredShippingContactFields when shipping address collection is implemented.
+        if applePayConfirmationParameters.shippingAddressRequired {
+            paymentRequest.requiredShippingContactFields = [.postalAddress, .name]
+        }
 
         // PKPaymentAuthorizationController.init is non-nullable even for invalid requests.
         // Use PKPaymentAuthorizationViewController.init as a proxy — it IS nullable and

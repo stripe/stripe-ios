@@ -13,6 +13,9 @@ extension ExpressCheckoutElement {
         /// A closure called after a wallet payment confirmation completes.
         public typealias ConfirmHandler = (_ result: CheckoutController.ConfirmResult) -> Void
 
+        /// Whether to require collecting a shipping address. Default: `false`.
+        public var shippingAddressRequired: Bool = false
+
         /// Called after a wallet payment confirmation completes.
         public var confirmHandler: ConfirmHandler = { _ in }
 

@@ -19,6 +19,7 @@ extension CheckoutController {
         let returnURL: String
         let merchantDisplayName: String
         let presentationWindow: UIWindow?
+        let shippingAddressRequired: Bool
     }
 
     /// The parameters needed to confirm a Checkout Session with Link.
@@ -115,7 +116,8 @@ extension CheckoutController {
                 apiClient: apiClient,
                 returnURL: self.configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
-                presentationWindow: presentingViewController.view.window
+                presentationWindow: presentingViewController.view.window,
+                shippingAddressRequired: false
             ))
         case .link(let confirmOption):
             let analyticsHelper = paymentElement.paymentOptionSourceOfTruthIsFlowController
