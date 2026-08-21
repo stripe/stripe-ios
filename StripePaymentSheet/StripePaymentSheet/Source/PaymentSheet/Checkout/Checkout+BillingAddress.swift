@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-extension CheckoutController {
+extension CheckoutSessionBillingAddressUpdater {
     /// Syncs the payment method's billing address to Checkout tax calculation when needed.
     func syncBillingAddress(from billingDetails: STPPaymentMethodBillingDetails?) async throws {
         // We need at least a country to build an Address for tax region calculation. Billing details
@@ -19,7 +19,7 @@ extension CheckoutController {
             return
         }
         let source = billingDetails.address
-        let address = Address(
+        let address = CheckoutController.Address(
             country: country,
             line1: source?.line1?.nonEmpty,
             line2: source?.line2?.nonEmpty,
@@ -27,7 +27,7 @@ extension CheckoutController {
             state: source?.state?.nonEmpty,
             postalCode: source?.postalCode?.nonEmpty
         )
-        try await updateBillingTaxRegionIfNecessary(
+        _ = try await updateBillingTaxRegionIfNecessaryForPaymentSheet(
             address: address,
             canUpdateWhileSheetPresented: true
         )
