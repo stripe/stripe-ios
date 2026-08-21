@@ -48,7 +48,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
         authorizationController: PKPaymentAuthorizationController,
-        checkout: CheckoutSessionWalletUpdater? = nil,
+        checkout: CheckoutSessionWalletUpdater,
     ) {
         self.session = checkoutSession
         self.merchantLabel = applePayConfirmationParameters.merchantDisplayName
@@ -240,7 +240,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     static func create(
         checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
-        checkout: CheckoutSessionWalletUpdater? = nil
+        checkout: CheckoutSessionWalletUpdater
     ) throws -> CheckoutApplePayContext {
         let applePayConfig = applePayConfirmationParameters.applePayConfiguration
 

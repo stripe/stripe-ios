@@ -14,7 +14,7 @@ extension CheckoutController {
     static func confirmApplePay(
         checkoutSession: Session,
         parameters: ApplePayConfirmationParameters,
-        checkout: CheckoutSessionWalletUpdater?
+        checkout: CheckoutSessionWalletUpdater
     ) async -> InternalConfirmResult {
         do {
             let context = try CheckoutApplePayContext.create(
