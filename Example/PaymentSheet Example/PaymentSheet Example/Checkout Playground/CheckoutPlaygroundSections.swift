@@ -15,10 +15,17 @@ struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var checkoutEndpoint: String
     @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
     @Binding var delayPaymentPagesRequests: Bool
+    let onReset: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
+            HStack {
+                CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
+                Spacer()
+                Button("Reset", action: onReset)
+                    .font(.callout.smallCaps())
+                    .buttonStyle(.bordered)
+            }
             VStack(spacing: 1) {
                 CheckoutPlayground.PickerRow(
                     title: "UI Framework",

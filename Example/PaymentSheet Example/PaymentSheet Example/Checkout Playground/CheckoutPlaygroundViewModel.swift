@@ -150,6 +150,10 @@ extension CheckoutPlayground {
             }
         }
 
+        func reset() {
+            apply(Settings())
+        }
+
         private func buildRequestBody() -> [String: Any] {
             var body: [String: Any] = [
                 "merchant_country_code": "us_tax",
@@ -199,6 +203,29 @@ extension CheckoutPlayground {
                 checkoutEndpoint: checkoutEndpoint,
                 delayPaymentPagesRequests: delayPaymentPagesRequests
             )
+        }
+
+        private func apply(_ settings: Settings) {
+            uiFramework = settings.uiFramework
+            integrationType = settings.integrationType
+            expressCheckoutElementOption = settings.expressCheckoutElementOption
+            currency = settings.currency
+            customerType = settings.customerType
+            lineItems = settings.lineItems
+            shippingAddressCollection = settings.shippingAddressCollection
+            defaultShippingAddressOption = settings.defaultShippingAddressOption
+            customDefaultShippingAddress = settings.customDefaultShippingAddress
+            billingAddressCollection = settings.billingAddressCollection
+            automaticTax = settings.automaticTax
+            checkoutSessionPaymentMethodSave = settings.checkoutSessionPaymentMethodSave
+            checkoutSessionPaymentMethodRemove = settings.checkoutSessionPaymentMethodRemove
+            adaptivePricingCountry = settings.adaptivePricingCountry
+            automaticPaymentMethods = settings.automaticPaymentMethods
+            paymentMethodTypes = settings.paymentMethodTypes
+            currencySelectorAppearance = settings.currencySelectorAppearance
+            checkoutEndpointOption = settings.checkoutEndpointOption
+            checkoutEndpoint = settings.checkoutEndpoint
+            delayPaymentPagesRequests = settings.delayPaymentPagesRequests
         }
 
         private func serializeSettingsToNSUserDefaults() {

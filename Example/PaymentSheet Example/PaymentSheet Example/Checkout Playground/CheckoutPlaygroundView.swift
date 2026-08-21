@@ -33,7 +33,8 @@ struct CheckoutPlaygroundView: View {
                             checkoutEndpointOption: $viewModel.checkoutEndpointOption,
                             checkoutEndpoint: $viewModel.checkoutEndpoint,
                             expressCheckoutElementOption: $viewModel.expressCheckoutElementOption,
-                            delayPaymentPagesRequests: $viewModel.delayPaymentPagesRequests
+                            delayPaymentPagesRequests: $viewModel.delayPaymentPagesRequests,
+                            onReset: viewModel.reset
                         )
 
                         CheckoutPlaygroundLineItemsSection(
