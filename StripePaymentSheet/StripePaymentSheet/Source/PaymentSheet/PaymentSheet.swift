@@ -311,7 +311,7 @@ public class PaymentSheet {
         loadResult: PaymentSheetLoader.LoadResult,
         previousPaymentOption: PaymentOption?
     ) -> PaymentSheetViewControllerProtocol {
-        let checkout: CheckoutSessionBillingAddressUpdater? = {
+        let checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = {
             guard case .checkout(let checkout) = mode else {
                 return nil
             }
@@ -337,7 +337,7 @@ public class PaymentSheet {
                 loadResult: loadResult,
                 isFlowController: false,
                 analyticsHelper: analyticsHelper,
-                checkout: checkout,
+                checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
                 previousPaymentOption: previousPaymentOption
             )
             vc.paymentSheetDelegate = self
