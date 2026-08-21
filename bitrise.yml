@@ -34,7 +34,6 @@ pipelines:
       framework-tests: {}
       lpm-confirm-flow-tests: {}
       framework-tests-and-builds-xcode-26-1: {}
-      deploy-dry-run: {}
       install-and-integration-tests: {}
       size-report: {}
       ui-tests-paymentsheet:
