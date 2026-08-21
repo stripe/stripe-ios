@@ -13,7 +13,6 @@ struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var customerType: CheckoutPlayground.CustomerType
     @Binding var checkoutEndpointOption: CheckoutPlayground.EndpointOption
     @Binding var checkoutEndpoint: String
-    @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
     @Binding var delayPaymentPagesRequests: Bool
 
     var body: some View {
@@ -31,12 +30,6 @@ struct CheckoutPlaygroundConfigurationSection: View {
                     icon: "square.stack.3d.up.fill",
                     selection: $integrationType,
                     tooltip: "Choose the PaymentElement presentation.\n\n• sheet: Presents PaymentElement as a payment method selector.\n• view: Displays PaymentElement in the checkout flow.\n• none: Hides PaymentElement.",
-                    displayText: { $0.displayName }
-                )
-                CheckoutPlayground.PickerRow(
-                    title: "ExpressCheckoutElement",
-                    icon: "bolt.fill",
-                    selection: $expressCheckoutElementOption,
                     displayText: { $0.displayName }
                 )
                 CheckoutPlayground.PickerRow(
@@ -233,6 +226,34 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $checkoutSessionPaymentMethodRemove,
                     tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
                 )
+            }
+            .background(Color(uiColor: .secondarySystemGroupedBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+}
+
+struct CheckoutPlaygroundExpressCheckoutElementSection: View {
+    @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
+    @Binding var expressCheckoutElementShippingAddressRequired: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            CheckoutPlayground.SectionHeader(title: "ExpressCheckoutElement", icon: "bolt.fill")
+            VStack(spacing: 1) {
+                CheckoutPlayground.PickerRow(
+                    title: "Show / Hide",
+                    icon: "eye.fill",
+                    selection: $expressCheckoutElementOption,
+                    displayText: { $0.displayName }
+                )
+                if expressCheckoutElementOption == .show {
+                    CheckoutPlayground.ToggleRow(
+                        title: "Requires Shipping Address",
+                        isOn: $expressCheckoutElementShippingAddressRequired,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.shippingAddressRequired`. When on, wallets like Apple Pay require the customer to provide a shipping address."
+                    )
+                }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
