@@ -22,7 +22,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let loadResult: PaymentSheetLoader.LoadResult
-    weak var checkout: CheckoutController?
+    weak var checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -183,7 +183,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         configuration: PaymentSheet.Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        checkout: CheckoutController? = nil,
+        checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
         initialState: FlowControllerViewControllerInitialState = .preservingFormInput(from: nil)
     ) {
         let previousConfirmParams = initialState.previousCustomerInputForHorizontalController
@@ -191,7 +191,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
-        self.checkout = checkout
+        self.checkoutBillingAddressUpdater = checkoutBillingAddressUpdater
         self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
         self.isLinkEnabled = PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
         self.couldShowLinkInHeader = isLinkEnabled && !isApplePayEnabled
@@ -547,7 +547,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     /// Syncs billing address to the checkout session, then closes the sheet.
     /// If the sync fails, stays on the sheet and shows the error instead.
     private func syncCheckoutBillingThenClose() {
-        guard let checkout,
+        guard let checkoutBillingAddressUpdater,
               let paymentOption = selectedPaymentOption else {
             flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return
@@ -561,7 +561,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
-                try await checkout.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
+                try await checkoutBillingAddressUpdater.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
             } catch {
                 self.error = error
             }
@@ -670,9 +670,9 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
                 updateUI()
                 return
             }
-            if let checkout {
+            if let checkoutBillingAddressUpdater {
                 syncCheckoutBillingThenClose(
-                    checkout: checkout,
+                    checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
                     billingDetails: paymentMethod.billingDetails,
                     previousSelection: previousSelection
                 )
@@ -691,7 +691,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 
     /// Syncs Checkout billing before accepting a saved-method tap.
     private func syncCheckoutBillingThenClose(
-        checkout: CheckoutController,
+        checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater,
         billingDetails: STPPaymentMethodBillingDetails?,
         previousSelection: SavedPaymentOptionsViewController.SelectionSnapshot
     ) {
@@ -703,7 +703,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
-                try await checkout.syncBillingAddress(from: billingDetails)
+                try await checkoutBillingAddressUpdater.syncBillingAddress(from: billingDetails)
             } catch {
                 self.savedPaymentOptionsViewController.setSelectedCellLoading(false)
                 self.savedPaymentOptionsViewController.restoreSelection(previousSelection)
