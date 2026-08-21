@@ -217,8 +217,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
     ) throws -> CheckoutApplePayContext {
-        let applePayConfig = applePayConfirmationParameters.applePayConfiguration
-
         guard PKPaymentAuthorizationController.canMakePayments() else {
             let error = CheckoutError.unknown(debugDescription: "Apple Pay isn't set up on this device (e.g. no cards in wallet).")
             STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
