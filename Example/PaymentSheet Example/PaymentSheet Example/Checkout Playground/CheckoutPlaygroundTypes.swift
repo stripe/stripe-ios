@@ -220,10 +220,23 @@ enum CheckoutPlayground {
     }
 
     struct LineItemConfig: Identifiable, Codable {
-        let id = UUID()
+
+        let id: UUID
         var name: String
         var unitAmount: Int
         var quantity: Int
+
+        init(
+            id: UUID = UUID(),
+            name: String,
+            unitAmount: Int,
+            quantity: Int
+        ) {
+            self.id = id
+            self.name = name
+            self.unitAmount = unitAmount
+            self.quantity = quantity
+        }
 
         static let defaults: [LineItemConfig] = [
             LineItemConfig(name: "Classic T-Shirt", unitAmount: 3500, quantity: 2),
