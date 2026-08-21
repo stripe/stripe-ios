@@ -84,7 +84,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             checkoutSession: session,
             applePayConfirmationParameters: applePayConfirmationParameters,
             authorizationController: MockPKPaymentAuthorizationController(),
-            checkout: MockCheckoutSessionWalletUpdater()
+            checkoutWalletUpdater: MockCheckoutSessionWalletUpdater()
         )
         return (context, apiClient)
     }

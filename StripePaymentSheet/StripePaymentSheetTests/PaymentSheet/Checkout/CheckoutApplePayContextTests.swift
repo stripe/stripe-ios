@@ -216,7 +216,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let updater = MockCheckoutSessionWalletUpdater()
         let (context, mockController) = makeTaxContext(
             collectsTaxFromBillingAddress: false,
-            checkout: updater
+            checkoutWalletUpdater: updater
         )
         let paymentMethod = MockPKPaymentMethod(billingAddress: makeBillingContact())
 
@@ -241,7 +241,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let updater = MockCheckoutSessionWalletUpdater(sessionToReturn: updatedSession)
         let (context, mockController) = makeTaxContext(
             collectsTaxFromBillingAddress: true,
-            checkout: updater
+            checkoutWalletUpdater: updater
         )
         let paymentMethod = MockPKPaymentMethod(billingAddress: makeBillingContact(country: "US"))
 
@@ -270,7 +270,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
     private func makeTaxContext(
         collectsTaxFromBillingAddress: Bool,
-        checkout: CheckoutSessionWalletUpdater
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater
     ) -> (CheckoutApplePayContext, MockPKPaymentAuthorizationController) {
         let response = CheckoutTestHelpers.makeSession([
             "session_id": "cs_test_123",
@@ -290,7 +290,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             checkoutSession: session,
             applePayConfirmationParameters: applePayConfirmationParameters,
             authorizationController: mockController,
-            checkout: checkout
+            checkoutWalletUpdater: checkoutWalletUpdater
         )
         return (context, mockController)
     }
@@ -327,7 +327,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             checkoutSession: session,
             applePayConfirmationParameters: applePayConfirmationParameters,
             authorizationController: mockController,
-            checkout: MockCheckoutSessionWalletUpdater()
+            checkoutWalletUpdater: MockCheckoutSessionWalletUpdater()
         )
         return (context, mockController)
     }

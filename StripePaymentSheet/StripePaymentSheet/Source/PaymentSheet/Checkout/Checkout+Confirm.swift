@@ -193,7 +193,7 @@ extension CheckoutController {
                 let result: InternalConfirmResult
                 switch flow {
                 case .applePay(let parameters):
-                    result = await Self.confirmApplePay(checkoutSession: self.session, parameters: parameters, checkout: self)
+                    result = await Self.confirmApplePay(checkoutSession: self.session, parameters: parameters, checkoutWalletUpdater: self)
                 case .link(let parameters):
                     result = await Self.confirmLink(checkoutSession: self.session, parameters: parameters)
                 case .paymentMethod(let parameters, let integrationShape):

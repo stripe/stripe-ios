@@ -33,7 +33,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let presentationWindow: UIWindow?
     let authorizationController: PKPaymentAuthorizationController
 
-    private weak var checkout: CheckoutSessionWalletUpdater?
+    private weak var checkoutWalletUpdater: CheckoutSessionWalletUpdater?
 
     // Internal state
     private var continuation: CheckedContinuation<CheckoutController.InternalConfirmResult, Never>?
@@ -48,7 +48,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
         authorizationController: PKPaymentAuthorizationController,
-        checkout: CheckoutSessionWalletUpdater,
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater,
     ) {
         self.session = checkoutSession
         self.merchantLabel = applePayConfirmationParameters.merchantDisplayName
@@ -56,7 +56,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         self.returnURL = applePayConfirmationParameters.returnURL
         self.presentationWindow = applePayConfirmationParameters.presentationWindow
         self.authorizationController = authorizationController
-        self.checkout = checkout
+        self.checkoutWalletUpdater = checkoutWalletUpdater
         super.init()
     }
 
@@ -193,12 +193,12 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         guard session.collectsTaxFromBillingAddress,
               let postalAddress = paymentMethod.billingAddress?.postalAddresses.first?.value,
               let address = STPApplePayContext.makeCheckoutAddress(from: postalAddress),
-              let checkout else {
+              let checkoutWalletUpdater else {
             handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
             return
         }
         Task { @MainActor in
-            if let updatedSession = try? await checkout.updateBillingTaxRegionWithoutEnqueueing(
+            if let updatedSession = try? await checkoutWalletUpdater.updateBillingTaxRegionWithoutEnqueueing(
                 address: address,
                 canUpdateWhileSheetPresented: true
             ) {
@@ -240,7 +240,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     static func create(
         checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
-        checkout: CheckoutSessionWalletUpdater
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater
     ) throws -> CheckoutApplePayContext {
         let applePayConfig = applePayConfirmationParameters.applePayConfiguration
 
@@ -279,7 +279,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             checkoutSession: checkoutSession,
             applePayConfirmationParameters: applePayConfirmationParameters,
             authorizationController: authorizationController,
-            checkout: checkout
+            checkoutWalletUpdater: checkoutWalletUpdater
         )
     }
 
