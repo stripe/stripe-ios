@@ -21,6 +21,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     let showExpressCheckoutElement: Bool
+    let expressCheckoutElementShippingAddressRequired: Bool
     let currencySelectorAppearance: CurrencySelectorElement.Appearance
     let delayPaymentPagesRequests: Bool
 
@@ -32,6 +33,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
             adaptivePricing: adaptivePricing,
             integrationType: integrationType,
             showExpressCheckoutElement: showExpressCheckoutElement,
+            expressCheckoutElementShippingAddressRequired: expressCheckoutElementShippingAddressRequired,
             currencySelectorAppearance: currencySelectorAppearance,
             delayPaymentPagesRequests: delayPaymentPagesRequests,
             closeAction: { dismiss() }
@@ -51,6 +53,7 @@ final class CheckoutCartViewController: UIViewController {
     private let adaptivePricing: Bool
     private let integrationType: CheckoutPlayground.IntegrationType
     private let showExpressCheckoutElement: Bool
+    private let expressCheckoutElementShippingAddressRequired: Bool
     private let currencySelectorAppearance: CurrencySelectorElement.Appearance
     private let delayPaymentPagesRequests: Bool
     private let closeAction: () -> Void
@@ -85,6 +88,7 @@ final class CheckoutCartViewController: UIViewController {
         adaptivePricing: Bool,
         integrationType: CheckoutPlayground.IntegrationType,
         showExpressCheckoutElement: Bool,
+        expressCheckoutElementShippingAddressRequired: Bool,
         currencySelectorAppearance: CurrencySelectorElement.Appearance,
         delayPaymentPagesRequests: Bool,
         closeAction: @escaping () -> Void
@@ -95,6 +99,7 @@ final class CheckoutCartViewController: UIViewController {
         self.adaptivePricing = adaptivePricing
         self.integrationType = integrationType
         self.showExpressCheckoutElement = showExpressCheckoutElement
+        self.expressCheckoutElementShippingAddressRequired = expressCheckoutElementShippingAddressRequired
         self.currencySelectorAppearance = currencySelectorAppearance
         self.delayPaymentPagesRequests = delayPaymentPagesRequests
         self.closeAction = closeAction
@@ -215,6 +220,7 @@ final class CheckoutCartViewController: UIViewController {
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             configuration.currencySelectorElement.appearance = currencySelectorAppearance
+            configuration.expressCheckoutElement.shippingAddressRequired = expressCheckoutElementShippingAddressRequired
             configuration.apiClient = diagnostics.makeAPIClient(
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
