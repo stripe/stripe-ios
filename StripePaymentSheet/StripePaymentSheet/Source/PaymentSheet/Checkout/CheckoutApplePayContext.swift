@@ -26,10 +26,11 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         case success
     }
 
-    private let session: CheckoutController.Session
+    private var session: CheckoutController.Session
     private let merchantLabel: String
     private let apiClient: STPAPIClient
     private let returnURL: String
+    private weak var checkout: ExpressCheckoutSessionUpdater?
     let authorizationController: PKPaymentAuthorizationController
 
     // Internal state
@@ -44,12 +45,14 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     init(
         checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
+        checkout: ExpressCheckoutSessionUpdater? = nil,
         authorizationController: PKPaymentAuthorizationController
     ) {
         self.session = checkoutSession
         self.merchantLabel = applePayConfirmationParameters.merchantDisplayName
         self.apiClient = applePayConfirmationParameters.apiClient
         self.returnURL = applePayConfirmationParameters.returnURL
+        self.checkout = checkout
         self.authorizationController = authorizationController
         super.init()
     }
@@ -180,8 +183,22 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         didSelectPaymentMethod paymentMethod: PKPaymentMethod,
         handler: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
     ) {
-        // TODO: Update billing tax region when the user switches cards.
-        handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
+        guard session.collectsTaxFromBillingAddress,
+              let postalAddress = paymentMethod.billingAddress?.postalAddresses.first?.value,
+              let address = STPApplePayContext.makeCheckoutAddress(from: postalAddress),
+              let checkout else {
+            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
+            return
+        }
+        Task { @MainActor in
+            if let updatedSession = try? await checkout.updateBillingTaxRegionWithoutEnqueueingForPaymentSheet(
+                address: address,
+                canUpdateWhileSheetPresented: true
+            ) {
+                self.session = updatedSession
+            }
+            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
+        }
     }
 
     func paymentAuthorizationController(
@@ -215,10 +232,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
     static func create(
         checkoutSession: CheckoutController.Session,
-        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
+        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
+        checkout: ExpressCheckoutSessionUpdater? = nil
     ) throws -> CheckoutApplePayContext {
-        let applePayConfig = applePayConfirmationParameters.applePayConfiguration
-
         guard PKPaymentAuthorizationController.canMakePayments() else {
             let error = CheckoutError.unknown(debugDescription: "Apple Pay isn't set up on this device (e.g. no cards in wallet).")
             STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
@@ -251,6 +267,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         return CheckoutApplePayContext(
             checkoutSession: checkoutSession,
             applePayConfirmationParameters: applePayConfirmationParameters,
+            checkout: checkout,
             authorizationController: authorizationController
         )
     }
@@ -306,6 +323,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         let billingDetailsCollectionConfiguration = applePayConfirmationParameters.billingDetailsCollectionConfiguration
         paymentRequest.requiredBillingContactFields = billingDetailsCollectionConfiguration.requiredBillingContactFields
         paymentRequest.requiredShippingContactFields = billingDetailsCollectionConfiguration.requiredShippingContactFields
+        // Apple Pay can't vary billing fields by country, so automatic tax from billing needs the postal address.
+        if checkoutSession.collectsTaxFromBillingAddress {
+            paymentRequest.requiredBillingContactFields.insert(.postalAddress)
+        }
         // TODO: Add postalAddress to requiredShippingContactFields when shipping address collection is implemented.
 
         return paymentRequest
