@@ -19,6 +19,7 @@ extension CheckoutController {
         let returnURL: String
         let merchantDisplayName: String
         let billingDetailsCollectionConfiguration: any BillingDetailsCollectionConfiguration
+        let presentationWindow: UIWindow?
     }
 
     /// The parameters needed to confirm a Checkout Session with Link.
@@ -115,7 +116,8 @@ extension CheckoutController {
                 apiClient: apiClient,
                 returnURL: self.configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
-                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration
+                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
+                presentationWindow: presentingViewController.view.window
             ))
         case .link(let confirmOption):
             let analyticsHelper = paymentElement.paymentOptionSourceOfTruthIsFlowController

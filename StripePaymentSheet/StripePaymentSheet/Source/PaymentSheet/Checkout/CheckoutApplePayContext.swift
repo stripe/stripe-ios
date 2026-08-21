@@ -30,6 +30,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let merchantLabel: String
     private let apiClient: STPAPIClient
     private let returnURL: String
+    private let presentationWindow: UIWindow?
     let authorizationController: PKPaymentAuthorizationController
 
     // Internal state
@@ -50,6 +51,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         self.merchantLabel = applePayConfirmationParameters.merchantDisplayName
         self.apiClient = applePayConfirmationParameters.apiClient
         self.returnURL = applePayConfirmationParameters.returnURL
+        self.presentationWindow = applePayConfirmationParameters.presentationWindow
         self.authorizationController = authorizationController
         super.init()
     }
@@ -173,6 +175,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 self._end()
             }
         }
+    }
+
+    @objc nonisolated func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
+        return presentationWindow
     }
 
     func paymentAuthorizationController(

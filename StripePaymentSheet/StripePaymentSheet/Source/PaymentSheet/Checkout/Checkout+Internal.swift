@@ -12,7 +12,8 @@ import UIKit
 
 extension CheckoutController: ExpressCheckoutElementDelegate {
     func expressCheckoutElementShouldConfirm(
-        _ paymentMethod: ExpressCheckoutElement.PaymentMethod
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
+        presentationWindow: UIWindow?
     ) async -> ConfirmResult {
         let flow: CheckoutConfirmationFlow?
         switch paymentMethod {
@@ -27,7 +28,8 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 apiClient: apiClient,
                 returnURL: configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
-                billingDetailsCollectionConfiguration: configuration.expressCheckoutElement.billingDetailsCollectionConfiguration
+                billingDetailsCollectionConfiguration: configuration.expressCheckoutElement.billingDetailsCollectionConfiguration,
+                presentationWindow: presentationWindow
             ))
         case .link:
             // ECE Link needs its own configuration and analytics lifecycle before it can build this flow.
