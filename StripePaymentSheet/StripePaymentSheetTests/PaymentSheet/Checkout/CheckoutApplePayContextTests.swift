@@ -234,7 +234,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let paymentRequest = CheckoutApplePayContext.makePaymentRequest(checkoutSession: session, applePayConfirmationParameters: parameters)
 
         // Then the postal address is required
-        XCTAssertFalse(paymentRequest.requiredBillingContactFields.contains(.postalAddress))
+        XCTAssertTrue(paymentRequest.requiredBillingContactFields.contains(.postalAddress))
     }
 
     func testMakePaymentRequest_ece_nameAlways_requiresBillingName() {
