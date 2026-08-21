@@ -792,6 +792,35 @@ extension PaymentSheet {
     }
 }
 
+extension PaymentSheet.BillingDetailsCollectionConfiguration: CheckoutBillingDetailsCollectionConfiguration {
+    /// Billing contact fields to require in the Apple Pay sheet.
+    var requiredBillingContactFields: Set<PKContactField> {
+        var requiredPKContactFields = Set<PKContactField>()
+        // By default, we always want to request the billing address (as it includes the postal code).
+        if address == .automatic || address == .full {
+            requiredPKContactFields.insert(.postalAddress)
+        }
+        // Only request name field - phone and email go into shipping contact fields
+        if name == .always {
+            requiredPKContactFields.insert(.name)
+        }
+        return requiredPKContactFields
+    }
+
+    /// Shipping contact fields to require in the Apple Pay sheet, used to collect email/phone.
+    var requiredShippingContactFields: Set<PKContactField> {
+        var requiredPKContactFields = Set<PKContactField>()
+        // Phone and email are collected through shipping contact fields
+        if email == .always {
+            requiredPKContactFields.insert(.emailAddress)
+        }
+        if phone == .always {
+            requiredPKContactFields.insert(.phoneNumber)
+        }
+        return requiredPKContactFields
+    }
+}
+
 extension STPPaymentMethodBillingDetails {
     func toPaymentSheetBillingDetails() -> PaymentSheet.BillingDetails {
         let address = PaymentSheet.Address(city: self.address?.city,

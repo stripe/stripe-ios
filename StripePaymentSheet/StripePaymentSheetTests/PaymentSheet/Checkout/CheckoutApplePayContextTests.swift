@@ -129,6 +129,153 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(items[0].amount, .zero)
     }
 
+    // MARK: - makePaymentRequest billing/shipping contact fields
+
+    func testMakePaymentRequest_defaultConfig_requiresOnlyPostalAddress() {
+        // Given a session with the default (automatic) billing details collection configuration
+        let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration()
+        )
+
+        // When building the payment request
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(checkoutSession: session, applePayConfirmationParameters: parameters)
+
+        // Then it requires the billing postal address (for tax/postal code) but nothing else
+        XCTAssertEqual(paymentRequest.requiredBillingContactFields, [.postalAddress])
+        XCTAssertTrue(paymentRequest.requiredShippingContactFields.isEmpty)
+    }
+
+    func testMakePaymentRequest_addressNever_doesNotRequireBillingAddress() {
+        // Given a configuration that never collects the billing address
+        let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
+        var billingConfig = PaymentSheet.BillingDetailsCollectionConfiguration()
+        billingConfig.address = .never
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            billingDetailsCollectionConfiguration: billingConfig
+        )
+
+        // When building the payment request
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(checkoutSession: session, applePayConfirmationParameters: parameters)
+
+        // Then the postal address isn't required
+        XCTAssertFalse(paymentRequest.requiredBillingContactFields.contains(.postalAddress))
+    }
+
+    func testMakePaymentRequest_nameAlways_requiresBillingName() {
+        // Given a configuration that always collects the billing name
+        let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
+        var billingConfig = PaymentSheet.BillingDetailsCollectionConfiguration()
+        billingConfig.name = .always
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            billingDetailsCollectionConfiguration: billingConfig
+        )
+
+        // When building the payment request
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(checkoutSession: session, applePayConfirmationParameters: parameters)
+
+        // Then the billing contact fields include the name, but not email or phone
+        XCTAssertTrue(paymentRequest.requiredBillingContactFields.contains(.name))
+        XCTAssertFalse(paymentRequest.requiredBillingContactFields.contains(.emailAddress))
+        XCTAssertFalse(paymentRequest.requiredBillingContactFields.contains(.phoneNumber))
+    }
+
+    func testMakePaymentRequest_emailAndPhoneAlways_requireShippingContactFields() {
+        // Given a configuration that always collects email and phone
+        let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
+        var billingConfig = PaymentSheet.BillingDetailsCollectionConfiguration()
+        billingConfig.email = .always
+        billingConfig.phone = .always
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            billingDetailsCollectionConfiguration: billingConfig
+        )
+
+        // When building the payment request
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(checkoutSession: session, applePayConfirmationParameters: parameters)
+
+        // Then email and phone are required as shipping contact fields, not billing
+        XCTAssertTrue(paymentRequest.requiredShippingContactFields.contains(.emailAddress))
+        XCTAssertTrue(paymentRequest.requiredShippingContactFields.contains(.phoneNumber))
+        XCTAssertFalse(paymentRequest.requiredBillingContactFields.contains(.emailAddress))
+        XCTAssertFalse(paymentRequest.requiredBillingContactFields.contains(.phoneNumber))
+    }
+
+    func testMakePaymentRequest_ece_defaultConfig_requiresOnlyPostalAddress() {
+        // Given a session with the default (automatic) billing details collection configuration
+        let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            billingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
+        )
+
+        // When building the payment request
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(checkoutSession: session, applePayConfirmationParameters: parameters)
+
+        // Then it requires the billing postal address (for tax/postal code) but nothing else
+        XCTAssertEqual(paymentRequest.requiredBillingContactFields, [.postalAddress])
+        XCTAssertTrue(paymentRequest.requiredShippingContactFields.isEmpty)
+    }
+
+    func testMakePaymentRequest_ece_addressFull_requiresPostalAddress() {
+        // Given a configuration that collects the full billing address
+        let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
+        var billingConfig = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
+        billingConfig.address = .full
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            billingDetailsCollectionConfiguration: billingConfig
+        )
+
+        // When building the payment request
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(checkoutSession: session, applePayConfirmationParameters: parameters)
+
+        // Then the postal address is required
+        XCTAssertTrue(paymentRequest.requiredBillingContactFields.contains(.postalAddress))
+    }
+
+    func testMakePaymentRequest_ece_nameAlways_requiresBillingName() {
+        // Given a configuration that always collects the billing name
+        let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
+        var billingConfig = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
+        billingConfig.name = .always
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            billingDetailsCollectionConfiguration: billingConfig
+        )
+
+        // When building the payment request
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(checkoutSession: session, applePayConfirmationParameters: parameters)
+
+        // Then the billing contact fields include the name, but not email or phone
+        XCTAssertTrue(paymentRequest.requiredBillingContactFields.contains(.name))
+        XCTAssertFalse(paymentRequest.requiredBillingContactFields.contains(.emailAddress))
+        XCTAssertFalse(paymentRequest.requiredBillingContactFields.contains(.phoneNumber))
+    }
+
+    func testMakePaymentRequest_ece_emailAndPhoneAlways_requireShippingContactFields() {
+        // Given a configuration that always collects email and phone
+        let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
+        var billingConfig = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
+        billingConfig.email = .always
+        billingConfig.phone = .always
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            billingDetailsCollectionConfiguration: billingConfig
+        )
+
+        // When building the payment request
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(checkoutSession: session, applePayConfirmationParameters: parameters)
+
+        // Then email and phone are required as shipping contact fields, not billing
+        XCTAssertTrue(paymentRequest.requiredShippingContactFields.contains(.emailAddress))
+        XCTAssertTrue(paymentRequest.requiredShippingContactFields.contains(.phoneNumber))
+        XCTAssertFalse(paymentRequest.requiredBillingContactFields.contains(.emailAddress))
+        XCTAssertFalse(paymentRequest.requiredBillingContactFields.contains(.phoneNumber))
+    }
     // MARK: - presentationWindow
 
     func testPresentationWindowReturnsConfiguredWindow() {
@@ -224,6 +371,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let session = response.makePublicSession()
         let applePayConfirmationParameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: resolvedAPIClient,
+            billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration(),
             presentationWindow: presentationWindow
         )
         let mockController = MockPKPaymentAuthorizationController()

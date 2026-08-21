@@ -23,6 +23,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     let showExpressCheckoutElement: Bool
     let applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
     let linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
+    var eceBillingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration
     let currencySelectorAppearance: CurrencySelectorElement.Appearance
     let delayPaymentPagesRequests: Bool
 
@@ -36,6 +37,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
             showExpressCheckoutElement: showExpressCheckoutElement,
             applePayDisplay: applePayDisplay,
             linkDisplay: linkDisplay,
+            eceBillingDetailsCollectionConfiguration: eceBillingDetailsCollectionConfiguration,
             currencySelectorAppearance: currencySelectorAppearance,
             delayPaymentPagesRequests: delayPaymentPagesRequests,
             closeAction: { dismiss() }
@@ -57,6 +59,7 @@ final class CheckoutCartViewController: UIViewController {
     private let showExpressCheckoutElement: Bool
     private let applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
     private let linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
+    private let eceBillingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration
     private let currencySelectorAppearance: CurrencySelectorElement.Appearance
     private let delayPaymentPagesRequests: Bool
     private let closeAction: () -> Void
@@ -93,6 +96,7 @@ final class CheckoutCartViewController: UIViewController {
         showExpressCheckoutElement: Bool,
         applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display,
         linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display,
+        eceBillingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration,
         currencySelectorAppearance: CurrencySelectorElement.Appearance,
         delayPaymentPagesRequests: Bool,
         closeAction: @escaping () -> Void
@@ -105,6 +109,7 @@ final class CheckoutCartViewController: UIViewController {
         self.showExpressCheckoutElement = showExpressCheckoutElement
         self.applePayDisplay = applePayDisplay
         self.linkDisplay = linkDisplay
+        self.eceBillingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
         self.currencySelectorAppearance = currencySelectorAppearance
         self.delayPaymentPagesRequests = delayPaymentPagesRequests
         self.closeAction = closeAction
@@ -224,6 +229,9 @@ final class CheckoutCartViewController: UIViewController {
             configuration.applePayConfiguration = CheckoutController.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
+            var expressCheckoutElementConfig = ExpressCheckoutElement.Configuration()
+            expressCheckoutElementConfig.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
+            configuration.expressCheckoutElement = expressCheckoutElementConfig
             configuration.currencySelectorElement.appearance = currencySelectorAppearance
             configuration.expressCheckoutElement.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example",

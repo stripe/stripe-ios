@@ -384,6 +384,7 @@ extension CheckoutController.ApplePayConfirmationParameters {
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
         applePayConfiguration: CheckoutController.ApplePayConfiguration = CheckoutController.ApplePayConfiguration(merchantId: "merchant.com.test"),
+        billingDetailsCollectionConfiguration: any CheckoutBillingDetailsCollectionConfiguration,
         presentationWindow: UIWindow? = nil
     ) -> CheckoutController.ApplePayConfirmationParameters {
         CheckoutController.ApplePayConfirmationParameters(
@@ -391,6 +392,7 @@ extension CheckoutController.ApplePayConfirmationParameters {
             apiClient: apiClient,
             returnURL: returnURL,
             merchantDisplayName: merchantDisplayName,
+            billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration,
             presentationWindow: presentationWindow
         )
     }
