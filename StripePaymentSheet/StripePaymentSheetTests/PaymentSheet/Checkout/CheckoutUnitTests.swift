@@ -76,19 +76,6 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(firstElement === secondElement)
     }
 
-    func testCheckoutIntentContextDoesNotRetainCheckout() async throws {
-        var checkout: CheckoutController? = try await CheckoutController(
-            configuration: CheckoutTestHelpers.makeConfiguration()
-        )
-        let context = try XCTUnwrap(checkout?.intentContext)
-        weak var weakCheckout = checkout
-
-        checkout = nil
-
-        XCTAssertNil(weakCheckout)
-        XCTAssertNil(context.checkout)
-    }
-
     func testCurrencySelectorElementLogsInitializationOnce() async throws {
         let analyticsClient = STPAnalyticsClient.sharedClient
         let previousLogHistory = analyticsClient._testLogHistory
