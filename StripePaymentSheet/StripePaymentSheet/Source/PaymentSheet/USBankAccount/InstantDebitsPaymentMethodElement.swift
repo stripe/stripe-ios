@@ -11,7 +11,6 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-@MainActor
 final class InstantDebitsPaymentMethodElement: ContainerElement {
     var elements: [Element] {
         return [formElement]

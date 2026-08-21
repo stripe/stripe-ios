@@ -12,8 +12,8 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 import UIKit
 
-// @iOS26
 @MainActor
+// @iOS26
 final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
     var appearance = PaymentSheet.Appearance().applyingLiquidGlassIfPossible()
     var theme: ElementsAppearance {
