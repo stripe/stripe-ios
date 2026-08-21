@@ -425,6 +425,20 @@ extension ConsumerSession {
             completion: completion)
     }
 
+    func recordConnectionsConsentAcquired(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        localizedConsentText: String,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<EmptyResponse, Error>) -> Void
+    ) {
+        apiClient.recordConnectionsConsentAcquired(
+            for: clientSecret,
+            localizedConsentText: localizedConsentText,
+            requestSurface: requestSurface,
+            completion: completion
+        )
+    }
+
     func logout(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         requestSurface: LinkRequestSurface = .default,

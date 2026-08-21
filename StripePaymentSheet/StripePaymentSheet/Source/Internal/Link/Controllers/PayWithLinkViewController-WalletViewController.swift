@@ -49,6 +49,8 @@ extension PayWithLinkViewController {
             return paymentPicker
         }()
 
+        private lazy var dataConsentView = LinkMandateView(delegate: self, linkAppearance: viewModel.linkAppearance)
+
         private lazy var mandateView = LinkMandateView(delegate: self, linkAppearance: viewModel.linkAppearance)
 
         private lazy var confirmButton = ConfirmButton.makeLinkButton(
@@ -150,6 +152,7 @@ extension PayWithLinkViewController {
                 paymentPickerContainerView,
                 cardDetailsRecollectionSection.view,
                 errorView,
+                dataConsentView,
                 mandateView,
                 confirmButton,
             ])
@@ -251,10 +254,20 @@ extension PayWithLinkViewController {
                 mandateView.setText(mandate)
             }
 
+            if let bankAccountDataConsent = viewModel.bankAccountDataConsent {
+                dataConsentView.setText(bankAccountDataConsent)
+            }
+
             paymentPicker.reloadData()
             paymentPickerContainerView.toggleArrangedSubview(
                 mandateView,
                 shouldShow: viewModel.shouldShowMandate,
+                animated: animated
+            )
+
+            containerView.toggleArrangedSubview(
+                dataConsentView,
+                shouldShow: viewModel.shouldShowBankAccountDataConsent,
                 animated: animated
             )
 
@@ -280,6 +293,18 @@ extension PayWithLinkViewController {
         func updateErrorLabel(for error: Error?) {
             errorView.text = error?.nonGenericDescription
             containerView.toggleArrangedSubview(errorView, shouldShow: error != nil, animated: true)
+        }
+
+        func recordBankAccountConsentIfNeeded(for paymentDetails: ConsumerPaymentDetails) async {
+            guard case .bankAccount = paymentDetails.details,
+                  let consentText = context.elementsSession.linkPaymentMethodBankAccountDataConsent,
+                  !consentText.isEmpty
+            else {
+                return
+            }
+
+            // Fire and forget; consent recording must never block or fail payment confirmation.
+            _ = try? await linkAccount.recordConnectionsConsentAcquired(localizedConsentText: consentText)
         }
 
         func reloadPaymentDetails(completion: (() -> Void)?) {
@@ -319,6 +344,7 @@ extension PayWithLinkViewController {
                     switch validationResult {
                     case .complete(let updatedPaymentDetails, let confirmationExtras):
                         viewModel.updatePaymentMethod(updatedPaymentDetails)
+                        await recordBankAccountConsentIfNeeded(for: updatedPaymentDetails)
                         if context.launchedFromFlowController {
                             coordinator?.handlePaymentDetailsSelected(updatedPaymentDetails, confirmationExtras: confirmationExtras)
                         } else {

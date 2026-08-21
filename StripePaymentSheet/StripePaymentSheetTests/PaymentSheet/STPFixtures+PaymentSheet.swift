@@ -322,10 +322,9 @@ extension Intent {
             json["customer_email"] = email
         }
         if automaticTaxEnabled != nil || automaticTaxAddressSource != nil {
-            var taxContext: [String: Any] = [:]
-            if let automaticTaxEnabled {
-                taxContext["automatic_tax_enabled"] = automaticTaxEnabled
-            }
+            var taxContext: [String: Any] = [
+                "automatic_tax_enabled": automaticTaxEnabled ?? false,
+            ]
             if let automaticTaxAddressSource {
                 taxContext["automatic_tax_address_source"] = automaticTaxAddressSource
             }
@@ -376,7 +375,10 @@ extension Intent {
                 ],
             ],
         ]
-        var recurringDetails: [String: Any] = [:]
+        var recurringDetails: [String: Any] = [
+            "total_discount_amounts": [],
+            "total_tax_amounts": [],
+        ]
         if taxAmount != 0 {
             recurringDetails["total_tax_amounts"] = [[
                 "amount": taxAmount,
@@ -393,11 +395,11 @@ extension Intent {
             recurringDetails["total_discount_amounts"] = [[
                 "amount": discountAmount,
                 "coupon": [
-                    "id": "coupon_test",
+                    "code": "coupon_test",
                 ],
             ], ]
         }
-        if !recurringDetails.isEmpty {
+        if taxAmount != 0 || discountAmount != 0 {
             json["recurring_details"] = recurringDetails
         }
         let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)

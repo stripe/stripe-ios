@@ -1075,7 +1075,7 @@ import UIKit
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) async throws -> PaymentSheetLoader.LoadResult {
         // Stub path: no real intent, PM creation and confirmation handled externally.
-        let intentConfiguration = PaymentSheet.IntentConfiguration(
+        var intentConfiguration = PaymentSheet.IntentConfiguration(
             mode: .setup(
                 currency: nil,
                 setupFutureUsage: .offSession
@@ -1086,6 +1086,7 @@ import UIKit
                 return PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT
             }
         )
+        intentConfiguration.financialConnectionsPermissions = linkConfiguration?.financialConnectionsPermissions
         let mode: PaymentSheet.InitializationMode = .deferredIntent(intentConfiguration)
 
         let (result, _) = try await PaymentSheetLoader.load(

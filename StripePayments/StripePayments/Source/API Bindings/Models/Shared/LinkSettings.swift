@@ -44,6 +44,7 @@ import Foundation
     @_spi(STP) public let linkShowPreferDebitCardHint: Bool?
     @_spi(STP) public let attestationStateSyncEnabled: Bool?
     @_spi(STP) public let linkSupportedPaymentMethodsOnboardingEnabled: [String]
+    @_spi(STP) public let linkPaymentMethodBankAccountDataConsent: String?
 
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
@@ -68,6 +69,7 @@ import Foundation
         linkShowPreferDebitCardHint: Bool?,
         attestationStateSyncEnabled: Bool?,
         linkSupportedPaymentMethodsOnboardingEnabled: [String],
+        linkPaymentMethodBankAccountDataConsent: String?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.brand = brand
@@ -86,6 +88,7 @@ import Foundation
         self.linkShowPreferDebitCardHint = linkShowPreferDebitCardHint
         self.attestationStateSyncEnabled = attestationStateSyncEnabled
         self.linkSupportedPaymentMethodsOnboardingEnabled = linkSupportedPaymentMethodsOnboardingEnabled
+        self.linkPaymentMethodBankAccountDataConsent = linkPaymentMethodBankAccountDataConsent
         self.allResponseFields = allResponseFields
     }
 
@@ -127,6 +130,9 @@ import Foundation
 
         let linkSupportedPaymentMethodsOnboardingEnabled = response["link_supported_payment_methods_onboarding_enabled"] as? [String] ?? []
 
+        let linkPaymentSessionContext = response["link_payment_session_context"] as? [AnyHashable: Any]
+        let linkPaymentMethodBankAccountDataConsent = linkPaymentSessionContext?["link_payment_method_bank_account_data_consent"] as? String
+
         // Collect the flags for the URL generator
         let linkFlags = response.reduce(into: [String: Bool]()) { partialResult, element in
             if let key = element.key as? String, let value = element.value as? Bool {
@@ -151,6 +157,7 @@ import Foundation
             linkShowPreferDebitCardHint: linkShowPreferDebitCardHint,
             attestationStateSyncEnabled: attestationStateSyncEnabled,
             linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled,
+            linkPaymentMethodBankAccountDataConsent: linkPaymentMethodBankAccountDataConsent,
             allResponseFields: response
         ) as? Self
     }

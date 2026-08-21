@@ -14,6 +14,7 @@ import PassKit
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
+import UIKit
 import XCTest
 
 extension PaymentPagesAPIResponse {
@@ -382,13 +383,15 @@ extension CheckoutController.ApplePayConfirmationParameters {
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: CheckoutController.ApplePayConfiguration = CheckoutController.ApplePayConfiguration(merchantId: "merchant.com.test")
+        applePayConfiguration: CheckoutController.ApplePayConfiguration = CheckoutController.ApplePayConfiguration(merchantId: "merchant.com.test"),
+        presentationWindow: UIWindow? = nil
     ) -> CheckoutController.ApplePayConfirmationParameters {
         CheckoutController.ApplePayConfirmationParameters(
             applePayConfiguration: applePayConfiguration,
             apiClient: apiClient,
             returnURL: returnURL,
-            merchantDisplayName: merchantDisplayName
+            merchantDisplayName: merchantDisplayName,
+            presentationWindow: presentationWindow
         )
     }
 }
