@@ -79,7 +79,7 @@ extension ExpressCheckoutElement {
             self.address = address
         }
     }
-  
+
     /// Configuration for Apple Pay.
     public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
         /// The Apple Pay merchant identifier.
