@@ -32,7 +32,6 @@ struct CheckoutPlaygroundView: View {
                             customerType: $viewModel.customerType,
                             checkoutEndpointOption: $viewModel.checkoutEndpointOption,
                             checkoutEndpoint: $viewModel.checkoutEndpoint,
-                            expressCheckoutElementOption: $viewModel.expressCheckoutElementOption,
                             delayPaymentPagesRequests: $viewModel.delayPaymentPagesRequests
                         )
 
@@ -51,6 +50,13 @@ struct CheckoutPlaygroundView: View {
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
                             automaticPaymentMethods: $viewModel.automaticPaymentMethods
+                        )
+
+                        CheckoutPlaygroundExpressCheckoutElementSection(
+                            expressCheckoutElementOption: $viewModel.expressCheckoutElementOption,
+                            expressCheckoutElementButtonTheme: $viewModel.expressCheckoutElementButtonTheme,
+                            expressCheckoutElementMaxColumns: $viewModel.expressCheckoutElementMaxColumns,
+                            expressCheckoutElementMaxRows: $viewModel.expressCheckoutElementMaxRows
                         )
 
                         currencySelectorAppearanceSection
@@ -90,6 +96,7 @@ struct CheckoutPlaygroundView: View {
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
+                            expressCheckoutElementAppearance: viewModel.expressCheckoutElementAppearance,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
@@ -101,6 +108,7 @@ struct CheckoutPlaygroundView: View {
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
+                            expressCheckoutElementAppearance: viewModel.expressCheckoutElementAppearance,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )

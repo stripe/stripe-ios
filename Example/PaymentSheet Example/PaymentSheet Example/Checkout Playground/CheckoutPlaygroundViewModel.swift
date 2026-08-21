@@ -30,6 +30,9 @@ extension CheckoutPlayground {
                 }
             }
         }
+        @Published var expressCheckoutElementButtonTheme: ExpressCheckoutElementButtonTheme = .automatic
+        @Published var expressCheckoutElementMaxColumns: ExpressCheckoutElementButtonLayoutLimit = .automatic
+        @Published var expressCheckoutElementMaxRows: ExpressCheckoutElementButtonLayoutLimit = .automatic
         @Published var currency: Currency = .usd
         @Published var customerType: CustomerType = .guest
         @Published var lineItems: [LineItemConfig] = LineItemConfig.defaults
@@ -55,6 +58,14 @@ extension CheckoutPlayground {
 
         var isButtonDisabled: Bool {
             isCreating || (!automaticPaymentMethods && paymentMethodTypes.isEmpty) || lineItems.isEmpty
+        }
+
+        var expressCheckoutElementAppearance: ExpressCheckoutElement.Appearance {
+            var appearance = ExpressCheckoutElement.Appearance()
+            appearance.buttonTheme = expressCheckoutElementButtonTheme.sdkValue
+            appearance.buttonLayout.maxColumns = expressCheckoutElementMaxColumns.intValue
+            appearance.buttonLayout.maxRows = expressCheckoutElementMaxRows.intValue
+            return appearance
         }
 
         var defaultShippingAddress: DefaultShippingAddress? {

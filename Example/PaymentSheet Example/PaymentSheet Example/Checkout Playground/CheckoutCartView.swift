@@ -25,6 +25,7 @@ struct CheckoutCartView: View {
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     var showExpressCheckoutElement: Bool = false
+    var expressCheckoutElementAppearance = ExpressCheckoutElement.Appearance()
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
     var delayPaymentPagesRequests = false
 
@@ -174,6 +175,7 @@ struct CheckoutCartView: View {
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             config.currencySelectorElement.appearance = currencySelectorAppearance
+            config.expressCheckoutElement.appearance = expressCheckoutElementAppearance
             config.expressCheckoutElement.confirmHandler = { result in
                 confirmResult = result
             }
