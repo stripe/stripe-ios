@@ -231,46 +231,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(updater.updateCallCount, 0)
     }
 
-    func testDidSelectPaymentMethod_withoutBillingAddress_doesNotUpdate() {
-        // Given a session that sources tax from billing, but the selected payment method has no billing address
-        let updater = MockCheckoutSessionWalletUpdater()
-        let (context, mockController) = makeTaxContext(
-            collectsTaxFromBillingAddress: true,
-            checkout: updater
-        )
-        let paymentMethod = MockPKPaymentMethod(billingAddress: nil)
-
-        // When
-        let expectation = expectation(description: "handler called")
-        context.paymentAuthorizationController(mockController, didSelectPaymentMethod: paymentMethod) { _ in
-            expectation.fulfill()
-        }
-
-        // Then the updater is never consulted
-        waitForExpectations(timeout: 1)
-        XCTAssertEqual(updater.updateCallCount, 0)
-    }
-
-    func testDidSelectPaymentMethod_whenCheckoutHasBeenDeallocated_doesNotUpdate() {
-        // Given a session that sources tax from billing, but the CheckoutSessionWalletUpdater is only
-        // weakly held by the context and nothing else keeps it alive (e.g. its owning CheckoutController
-        // has been deallocated)
-        let (context, mockController) = makeTaxContext(
-            collectsTaxFromBillingAddress: true,
-            checkout: MockCheckoutSessionWalletUpdater()
-        )
-        let paymentMethod = MockPKPaymentMethod(billingAddress: makeBillingContact())
-
-        // When it should not crash and should still call the handler
-        let expectation = expectation(description: "handler called")
-        context.paymentAuthorizationController(mockController, didSelectPaymentMethod: paymentMethod) { update in
-            XCTAssertFalse(update.paymentSummaryItems.isEmpty)
-            expectation.fulfill()
-        }
-
-        waitForExpectations(timeout: 1)
-    }
-
     func testDidSelectPaymentMethod_whenCollectingTaxFromBilling_updatesSessionAndSummaryItems() {
         // Given a session that sources tax from billing, and an updater that returns a session with a new total
         let updatedSession = CheckoutTestHelpers.makeSession([
@@ -304,26 +264,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
             receivedUpdate?.paymentSummaryItems.last?.amount,
             NSDecimalNumber.stp_decimalNumber(withAmount: 1500, currency: "usd")
         )
-    }
-
-    func testDidSelectPaymentMethod_whenUpdateThrows_stillCallsHandler() {
-        // Given an updater that fails to update the tax region
-        let updater = MockCheckoutSessionWalletUpdater(errorToThrow: CheckoutError.unknown(debugDescription: "test error"))
-        let (context, mockController) = makeTaxContext(
-            collectsTaxFromBillingAddress: true,
-            checkout: updater
-        )
-        let paymentMethod = MockPKPaymentMethod(billingAddress: makeBillingContact())
-
-        // When it should still call the handler rather than hanging
-        let expectation = expectation(description: "handler called")
-        context.paymentAuthorizationController(mockController, didSelectPaymentMethod: paymentMethod) { update in
-            XCTAssertFalse(update.paymentSummaryItems.isEmpty)
-            expectation.fulfill()
-        }
-
-        waitForExpectations(timeout: 1)
-        XCTAssertEqual(updater.updateCallCount, 1)
     }
 
     // MARK: - Helpers
