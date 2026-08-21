@@ -97,7 +97,15 @@ final class PaymentSheetAnalyticsHelper {
                 return .mcInitEmbedded
             }
         }()
-        log(event: event)
+        var additionalParams: [String: Any] = [
+            "active_link_session": LinkAccountContext.shared.account?.sessionState == .verified,
+            "mpe_config": configuration.analyticPayload,
+        ]
+        if event.shouldLogFcSdkAvailability {
+            additionalParams["fc_sdk_availability"] = FinancialConnectionsSDKAvailability.analyticsValue
+        }
+        let analytic = PaymentSheetAnalytic(event: event, additionalParams: additionalParams)
+        analyticsClient.log(analytic: analytic, apiClient: configuration.apiClient)
     }
 
     @MainActor
@@ -196,6 +204,7 @@ final class PaymentSheetAnalyticsHelper {
         )
     }
 
+    @MainActor
     func logShow(showingSavedPMList: Bool) {
         if case .embedded = integrationShape {
             stpAssertionFailure("logShow() is not supported for embedded integration")
@@ -216,6 +225,7 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event)
     }
 
+    @MainActor
     func logInitialDisplayedPaymentMethods(visiblePaymentMethods: [String], hiddenPaymentMethods: [String]) {
         var params: [String: Any] = [:]
         if !visiblePaymentMethods.isEmpty {
@@ -227,6 +237,7 @@ final class PaymentSheetAnalyticsHelper {
         log(event: .mcInitialDisplayedPaymentMethods, params: params)
     }
 
+    @MainActor
     func logSavedPMScreenOptionSelected(option: SavedPaymentOptionsViewController.Selection) {
         let (event, selectedLPM): (STPAnalyticEvent?, String?) = {
             switch integrationShape {
@@ -271,10 +282,12 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event, selectedLPM: selectedLPM, params: params)
     }
 
+    @MainActor
     func logNewPaymentMethodSelected(paymentMethodTypeIdentifier: String) {
         log(event: .paymentSheetCarouselPaymentMethodTapped, selectedLPM: paymentMethodTypeIdentifier)
     }
 
+    @MainActor
     func logWalletButtonTapped(walletType: PaymentSheet.WalletButtonsVisibility.ExpressType) {
         let selectedLPM: String = {
             switch walletType {
@@ -287,6 +300,7 @@ final class PaymentSheetAnalyticsHelper {
         log(event: .mcWalletButtonTapped, selectedLPM: selectedLPM)
     }
 
+    @MainActor
     func logSavedPaymentMethodRemoved(paymentMethod: STPPaymentMethod) {
         let event: STPAnalyticEvent = {
             switch integrationShape {
@@ -303,6 +317,7 @@ final class PaymentSheetAnalyticsHelper {
 
     /// Used to ensure we only send one `mc_form_interacted` event per `mc_form_shown` to avoid spamming.
     var didSendPaymentSheetFormInteractedEventAfterFormShown: Bool = false
+    @MainActor
     func logFormShown(paymentMethodTypeIdentifier: String) {
         didSendPaymentSheetFormInteractedEventAfterFormShown = false
         didSendPaymentSheetFormCompletedEvent = false
@@ -314,6 +329,7 @@ final class PaymentSheetAnalyticsHelper {
         )
     }
 
+    @MainActor
     func logFormInteracted(paymentMethodTypeIdentifier: String) {
         if !didSendPaymentSheetFormInteractedEventAfterFormShown {
             didSendPaymentSheetFormInteractedEventAfterFormShown = true
@@ -324,6 +340,7 @@ final class PaymentSheetAnalyticsHelper {
         }
     }
     var lastCardBrandSelected: STPCardBrand?
+    @MainActor
     func logCardBrandSelected(hostedSurface: HostedSurface, cardBrand: STPCardBrand) {
         if lastCardBrandSelected != cardBrand {
             lastCardBrandSelected = cardBrand
@@ -335,6 +352,7 @@ final class PaymentSheetAnalyticsHelper {
     var didSendPaymentSheetFormCompletedEvent: Bool = false
     /// Used because it is possible for logFormCompleted to be called before logFormShown when switching payment methods
     var lastLogFormShown: String?
+    @MainActor
     func logFormCompleted(paymentMethodTypeIdentifier: String) {
         if !didSendPaymentSheetFormCompletedEvent && paymentMethodTypeIdentifier == lastLogFormShown {
             didSendPaymentSheetFormCompletedEvent = true
@@ -345,6 +363,7 @@ final class PaymentSheetAnalyticsHelper {
         }
     }
 
+    @MainActor
     func logConfirmButtonTapped(paymentOption: PaymentOption) {
         let duration = getDuration(for: .formShown)
         var params: [String: Any] = [:]
@@ -361,6 +380,7 @@ final class PaymentSheetAnalyticsHelper {
         )
     }
 
+    @MainActor
     func logPayment(
         paymentOption: PaymentOption,
         result: PaymentSheetResult,
@@ -438,11 +458,13 @@ final class PaymentSheetAnalyticsHelper {
         )
     }
 
+    @MainActor
     func logEmbeddedUpdateStarted() {
         stpAssert(integrationShape == .embedded, "This function should only be used with embedded integration")
         log(event: .mcUpdateStartedEmbedded)
     }
 
+    @MainActor
     func logEmbeddedUpdateFinished(result: EmbeddedPaymentElement.UpdateResult, duration: TimeInterval) {
         stpAssert(integrationShape == .embedded, "This function should only be used with embedded integration")
 
@@ -457,10 +479,12 @@ final class PaymentSheetAnalyticsHelper {
         log(event: .mcUpdateFinishedEmbedded, duration: duration, error: error, params: ["status": result.analyticValue])
     }
 
+    @MainActor
     func logPaymentMethodMessagingFetchBegin() {
         log(event: .paymentMethodMessagingFetchBegin)
     }
 
+    @MainActor
     func logPaymentMethodMessagingDisplayed(duration: TimeInterval, displayedSuccessfully: Bool) {
         log(
             event: .paymentMethodMessagingDisplayed,
@@ -471,6 +495,7 @@ final class PaymentSheetAnalyticsHelper {
         )
     }
 
+    @MainActor
     func log(
         event: STPAnalyticEvent,
         duration: TimeInterval? = nil,
