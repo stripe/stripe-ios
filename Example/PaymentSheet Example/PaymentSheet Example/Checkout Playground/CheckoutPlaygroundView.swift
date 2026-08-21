@@ -53,9 +53,9 @@ struct CheckoutPlaygroundView: View {
                         )
 
                         CheckoutPlaygroundExpressCheckoutElementSection(
-                            expressCheckoutElementOption: $viewModel.expressCheckoutElementOption,
-                            applePayDisplay: $viewModel.applePayDisplay,
-                            linkDisplay: $viewModel.linkDisplay,
+                            expressCheckoutElementOption: $viewModel.expressCheckoutElement.option,
+                            applePayDisplay: $viewModel.expressCheckoutElement.applePayDisplay,
+                            linkDisplay: $viewModel.expressCheckoutElement.linkDisplay,
                             billingDetailsCollectionConfiguration: $viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration
                         )
 
@@ -95,9 +95,9 @@ struct CheckoutPlaygroundView: View {
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
-                            showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
-                            applePayDisplay: viewModel.applePayDisplay,
-                            linkDisplay: viewModel.linkDisplay,
+                            showExpressCheckoutElement: viewModel.expressCheckoutElement.option == .show,
+                            applePayDisplay: viewModel.expressCheckoutElement.applePayDisplay,
+                            linkDisplay: viewModel.expressCheckoutElement.linkDisplay,
                             eceBillingDetailsCollectionConfiguration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
@@ -109,9 +109,9 @@ struct CheckoutPlaygroundView: View {
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
-                            showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
-                            applePayDisplay: viewModel.applePayDisplay,
-                            linkDisplay: viewModel.linkDisplay,
+                            showExpressCheckoutElement: viewModel.expressCheckoutElement.option == .show,
+                            applePayDisplay: viewModel.expressCheckoutElement.applePayDisplay,
+                            linkDisplay: viewModel.expressCheckoutElement.linkDisplay,
                             eceBillingDetailsCollectionConfiguration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
