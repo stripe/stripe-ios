@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
 require 'fileutils'
-require 'open3'
 require 'yaml'
+require_relative 'framework_architecture_validator'
 
 DEFAULT_SIMULATOR_ARCHITECTURES = %w[arm64 x86_64].freeze
 
@@ -17,17 +17,10 @@ def die(string)
 end
 
 def verify_architectures(binary_path, expected_architectures)
-  output, error, status = Open3.capture3('lipo', '-archs', binary_path)
-  die "Failed to inspect architectures for #{binary_path}: #{error.strip}" unless status.success?
-
-  actual_architectures = output.split.sort
-  expected_architectures = expected_architectures.sort
-  if actual_architectures == expected_architectures
-    info "Verified architectures for #{binary_path}: #{actual_architectures.join(', ')}"
-    return
-  end
-
-  die "Unexpected architectures for #{binary_path}: expected #{expected_architectures.join(', ')}, found #{actual_architectures.join(', ')}"
+  architectures = FrameworkArchitectureValidator.verify(binary_path, expected_architectures)
+  info "Verified architectures for #{binary_path}: #{architectures.join(', ')}"
+rescue FrameworkArchitectureValidator::VerificationError => error
+  die error.message
 end
 
 # Joins the given strings. If one or more arguments is nil or empty, an exception is raised.
