@@ -126,7 +126,23 @@ extension CheckoutController {
                         option = .new(confirmParams)
                     case .saved(let paymentMethod, let confirmParams):
                         option = .saved(paymentMethod, confirmParams)
-                    case .applePay, .external, .link:
+                    case .link(let nestedConfirmOption):
+                        // Link's own UI can recursively resolve to another Link confirm option
+                        // (e.g. completing a sign-up flow); confirm it the same way as the
+                        // original Link selection.
+                        let nestedParameters = LinkConfirmationParameters(
+                            confirmOption: nestedConfirmOption,
+                            configuration: configuration,
+                            confirmationChallenge: confirmationChallenge,
+                            analyticsHelper: parameters.analyticsHelper,
+                            authenticationContext: linkAuthenticationContext,
+                            paymentHandler: parameters.paymentHandler
+                        )
+                        let result = await Self.confirmLink(checkoutSession: checkoutSession, parameters: nestedParameters)
+                        linkCompletionResult = result
+                        linkCompletion(result.paymentSheetResult, nil)
+                        return
+                    case .applePay, .external:
                         let error = PaymentSheetError.confirmingWithInvalidPaymentOption
                         stpAssertionFailure("Link returned an unsupported Checkout confirmation option.")
                         linkCompletion(.failed(error: error), nil)
