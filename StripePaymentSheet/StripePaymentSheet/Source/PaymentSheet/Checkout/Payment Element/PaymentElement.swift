@@ -77,8 +77,6 @@ public final class PaymentElement {
             returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
             linkConfiguration: checkout.configuration.linkConfiguration,
-            applePayConfiguration: checkout.configuration.applePayConfiguration,
-            merchantCountryCode: checkout.session.elementsSession.merchantCountryCode ?? "US",
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
@@ -92,8 +90,6 @@ public final class PaymentElement {
             returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
             linkConfiguration: checkout.configuration.linkConfiguration,
-            applePayConfiguration: checkout.configuration.applePayConfiguration,
-            merchantCountryCode: checkout.session.elementsSession.merchantCountryCode ?? "US",
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
@@ -150,8 +146,6 @@ extension PaymentElement {
             returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
             linkConfiguration: checkout.configuration.linkConfiguration,
-            applePayConfiguration: checkout.configuration.applePayConfiguration,
-            merchantCountryCode: checkout.session.elementsSession.merchantCountryCode ?? "US",
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
@@ -160,8 +154,6 @@ extension PaymentElement {
             returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
             linkConfiguration: checkout.configuration.linkConfiguration,
-            applePayConfiguration: checkout.configuration.applePayConfiguration,
-            merchantCountryCode: checkout.session.elementsSession.merchantCountryCode ?? "US",
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )

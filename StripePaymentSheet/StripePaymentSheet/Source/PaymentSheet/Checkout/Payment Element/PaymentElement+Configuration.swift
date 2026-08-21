@@ -131,8 +131,6 @@ extension PaymentElement {
             returnURL: String,
             defaults: CheckoutController.Configuration.Defaults,
             linkConfiguration: CheckoutController.LinkConfiguration?,
-            applePayConfiguration: CheckoutController.ApplePayConfiguration?,
-            merchantCountryCode: String,
             merchantDisplayName: String,
             userInterfaceStyle: CheckoutController.UserInterfaceStyle
         ) -> EmbeddedPaymentElement.Configuration {
@@ -142,7 +140,6 @@ extension PaymentElement {
             configuration.apiClient = apiClient
             configuration.returnURL = returnURL
             configuration.apply(linkConfiguration: linkConfiguration)
-            configuration.applePay = applePayConfiguration?.paymentSheetConfiguration(merchantCountryCode: merchantCountryCode)
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
@@ -157,8 +154,6 @@ extension PaymentElement {
             returnURL: String,
             defaults: CheckoutController.Configuration.Defaults,
             linkConfiguration: CheckoutController.LinkConfiguration?,
-            applePayConfiguration: CheckoutController.ApplePayConfiguration?,
-            merchantCountryCode: String,
             merchantDisplayName: String,
             userInterfaceStyle: CheckoutController.UserInterfaceStyle
         ) -> PaymentSheet.Configuration {
@@ -168,7 +163,6 @@ extension PaymentElement {
             configuration.apiClient = apiClient
             configuration.returnURL = returnURL
             configuration.apply(linkConfiguration: linkConfiguration)
-            configuration.applePay = applePayConfiguration?.paymentSheetConfiguration(merchantCountryCode: merchantCountryCode)
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
@@ -177,16 +171,6 @@ extension PaymentElement {
             }
             return configuration
         }
-    }
-}
-
-private extension CheckoutController.ApplePayConfiguration {
-    func paymentSheetConfiguration(merchantCountryCode: String) -> PaymentSheet.ApplePayConfiguration {
-        PaymentSheet.ApplePayConfiguration(
-            merchantId: merchantId,
-            merchantCountryCode: merchantCountryCode,
-            buttonType: buttonType ?? .plain
-        )
     }
 }
 

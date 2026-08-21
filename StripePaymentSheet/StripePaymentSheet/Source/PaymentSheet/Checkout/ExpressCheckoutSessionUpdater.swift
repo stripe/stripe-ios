@@ -18,14 +18,14 @@ protocol ExpressCheckoutSessionUpdater: AnyObject {
     ///
     /// - Warning: Only call this from a context that's already serialized behind the checkout's
     ///   pending operations. Calling the enqueuing variant there would deadlock.
-    func updateBillingTaxRegionWithoutEnqueueingForPaymentSheet(
+    func updateBillingTaxRegionWithoutEnqueueing(
         address: CheckoutController.Address,
         canUpdateWhileSheetPresented: Bool
     ) async throws -> CheckoutController.Session
 }
 
 extension CheckoutController: ExpressCheckoutSessionUpdater {
-    func updateBillingTaxRegionWithoutEnqueueingForPaymentSheet(
+    func updateBillingTaxRegionWithoutEnqueueing(
         address: Address,
         canUpdateWhileSheetPresented: Bool
     ) async throws -> Session {

@@ -191,7 +191,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             return
         }
         Task { @MainActor in
-            if let updatedSession = try? await checkout.updateBillingTaxRegionWithoutEnqueueingForPaymentSheet(
+            if let updatedSession = try? await checkout.updateBillingTaxRegionWithoutEnqueueing(
                 address: address,
                 canUpdateWhileSheetPresented: true
             ) {
