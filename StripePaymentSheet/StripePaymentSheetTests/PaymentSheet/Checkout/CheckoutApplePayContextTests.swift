@@ -289,6 +289,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     private func makeContext(
         sessionId: String = "cs_test_123",
         apiClient: STPAPIClient? = nil,
+        billingDetailsCollectionConfiguration: any CheckoutBillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration(),
         presentationWindow: UIWindow? = nil
     ) -> (CheckoutApplePayContext, MockPKPaymentAuthorizationController) {
         let resolvedAPIClient = apiClient ?? APIStubbedTestCase.stubbedAPIClient()
@@ -300,6 +301,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let session = response.makePublicSession()
         let applePayConfirmationParameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: resolvedAPIClient,
+            billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration,
             presentationWindow: presentationWindow
         )
         let mockController = MockPKPaymentAuthorizationController()
