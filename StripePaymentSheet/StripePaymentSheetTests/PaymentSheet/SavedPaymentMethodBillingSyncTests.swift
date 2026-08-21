@@ -127,7 +127,7 @@ private extension SavedPaymentMethodBillingSyncTests {
             configuration: PaymentSheet.Configuration(),
             loadResult: loadResult,
             analyticsHelper: ._testValue(),
-            checkout: checkout
+            checkoutBillingAddressUpdater: checkout
         )
     }
 

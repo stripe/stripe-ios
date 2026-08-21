@@ -100,6 +100,23 @@ extension PayWithLinkViewController {
             mandate != nil
         }
 
+        /// The data-sharing consent message to show when a linked bank account is selected.
+        var bankAccountDataConsent: NSAttributedString? {
+            guard case .bankAccount = selectedPaymentMethod?.details,
+                  let consentText = context.elementsSession.linkPaymentMethodBankAccountDataConsent,
+                  !consentText.isEmpty
+            else {
+                return nil
+            }
+
+            return STPStringUtils.attributedStringFromMarkdownLinks(in: consentText)
+        }
+
+        /// Whether or not the view should show the data-sharing consent message.
+        var shouldShowBankAccountDataConsent: Bool {
+            bankAccountDataConsent != nil
+        }
+
         /// Client attribution metadata for analytics
         var clientAttributionMetadata: STPClientAttributionMetadata? {
             STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)

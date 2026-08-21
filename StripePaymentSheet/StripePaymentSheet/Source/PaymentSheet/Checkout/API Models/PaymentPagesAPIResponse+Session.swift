@@ -19,7 +19,7 @@ extension PaymentPagesAPIResponse {
         // TODO: Have Payment Pages return session-level tax amounts directly. `recurring_details`
         // is an odd source for one-time-price modeless Checkout, and clients shouldn't need to
         // derive this aggregate from recurring-specific response models.
-        let publicTaxAmounts = recurringDetails?.totalTaxAmounts?.map {
+        let publicTaxAmounts = recurringDetails?.totalTaxAmounts.map {
             Self.makeSessionTaxAmount(from: $0, currency: currency, locale: .autoupdatingCurrent)
         }
         let publicOrderSummaryItems = Self.makeOrderSummaryItems(
@@ -225,17 +225,16 @@ extension PaymentPagesAPIResponse {
         currency: String
     ) -> [CheckoutController.Session.DiscountAmount] {
         discountAmounts.compactMap { discount in
-            guard let amount = discount.amount, amount > 0 else { return nil }
-            let publicAmount = makeAmount(amount, currency: currency)
+            guard discount.amount > 0 else { return nil }
+            let publicAmount = makeAmount(discount.amount, currency: currency)
             return CheckoutController.Session.DiscountAmount(
                 amount: publicAmount.amount,
                 minorUnitsAmount: publicAmount.minorUnitsAmount,
                 displayName: discount.displayName
-                    ?? discount.coupon?.name
-                    ?? discount.coupon?.id
-                    ?? String.Localized.discount,
+                    ?? discount.coupon.name
+                    ?? discount.coupon.code,
                 promotionCode: discount.promotionCode?.code,
-                percentOff: discount.coupon?.percentOff
+                percentOff: discount.coupon.percentOff
             )
         }
     }
@@ -269,17 +268,17 @@ extension PaymentPagesAPIResponse {
         taxMeta: TaxMeta?,
         taxContext: TaxContext?
     ) -> CheckoutController.Session.Tax? {
-        // TODO: Decode computation_type as an enum. Longer term, the backend should return
-        // the public tax status directly instead of requiring each client to derive it.
-        // Until then, match EwCS by treating every non-automatic computation type as ready.
-        guard let computationType = taxMeta?.computationType else { return nil }
-        guard computationType == "automatic" else {
+        // TODO: The backend should return the public tax status directly instead of requiring
+        // each client to derive it. Until then, match EwCS by treating every non-automatic
+        // computation type as ready.
+        guard let taxMeta else { return nil }
+        guard taxMeta.computationType == .automatic else {
             return CheckoutController.Session.Tax(status: .ready)
         }
-        switch taxMeta?.status {
-        case "complete":
+        switch taxMeta.status?.value {
+        case .complete:
             return CheckoutController.Session.Tax(status: .ready)
-        case "requires_location_inputs":
+        case .requiresLocationInputs:
             switch taxContext?.automaticTaxAddressSource {
             case "session.shipping":
                 return CheckoutController.Session.Tax(status: .requiresShippingAddress)
@@ -288,7 +287,7 @@ extension PaymentPagesAPIResponse {
             default:
                 return nil
             }
-        default:
+        case .failed, nil:
             return nil
         }
     }
@@ -303,8 +302,8 @@ extension PaymentPagesAPIResponse {
     ) -> STPCheckoutSessionSavedPaymentMethodsOfferSave? {
         guard let value else { return nil }
         return STPCheckoutSessionSavedPaymentMethodsOfferSave(
-            enabled: value.enabled ?? false,
-            status: value.status == "accepted" ? .accepted : .notAccepted
+            enabled: value.enabled,
+            status: value.status == .accepted ? .accepted : .notAccepted
         )
     }
 
