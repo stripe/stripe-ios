@@ -14,7 +14,6 @@ struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var customerType: CheckoutPlayground.CustomerType
     @Binding var checkoutEndpointOption: CheckoutPlayground.EndpointOption
     @Binding var checkoutEndpoint: String
-    @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
     @Binding var delayPaymentPagesRequests: Bool
 
     var body: some View {
@@ -32,12 +31,6 @@ struct CheckoutPlaygroundConfigurationSection: View {
                     icon: "square.stack.3d.up.fill",
                     selection: $integrationType,
                     tooltip: "Choose the PaymentElement presentation.\n\n• sheet: Presents PaymentElement as a payment method selector.\n• view: Displays PaymentElement in the checkout flow.\n• none: Hides PaymentElement.",
-                    displayText: { $0.displayName }
-                )
-                CheckoutPlayground.PickerRow(
-                    title: "ExpressCheckoutElement",
-                    icon: "bolt.fill",
-                    selection: $expressCheckoutElementOption,
                     displayText: { $0.displayName }
                 )
                 CheckoutPlayground.PickerRow(
@@ -242,36 +235,61 @@ struct CheckoutPlaygroundFeaturesSection: View {
 }
 
 struct CheckoutPlaygroundExpressCheckoutElementSection: View {
+    @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
+    @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
+    @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
     @Binding var billingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            CheckoutPlayground.SectionHeader(title: "Express Checkout Element", icon: "bolt.fill")
+            CheckoutPlayground.SectionHeader(title: "ExpressCheckoutElement", icon: "bolt.fill")
             VStack(spacing: 1) {
                 CheckoutPlayground.PickerRow(
-                    title: "Billing Name",
-                    selection: $billingDetailsCollectionConfiguration.name,
-                    tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.name`.",
-                    displayText: { $0.rawValue.capitalized }
+                    title: "Show / Hide",
+                    icon: "eye.fill",
+                    selection: $expressCheckoutElementOption,
+                    displayText: { $0.displayName }
                 )
-                CheckoutPlayground.PickerRow(
-                    title: "Billing Phone",
-                    selection: $billingDetailsCollectionConfiguration.phone,
-                    tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.phone`.",
-                    displayText: { $0.rawValue.capitalized }
-                )
-                CheckoutPlayground.PickerRow(
-                    title: "Billing Email",
-                    selection: $billingDetailsCollectionConfiguration.email,
-                    tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.email`.",
-                    displayText: { $0.rawValue.capitalized }
-                )
-                CheckoutPlayground.PickerRow(
-                    title: "Billing Address",
-                    selection: $billingDetailsCollectionConfiguration.address,
-                    tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.address`.",
-                    displayText: { $0.rawValue.capitalized }
-                )
+                if expressCheckoutElementOption == .show {
+                    CheckoutPlayground.PickerRow(
+                        title: "Apple Pay Display",
+                        icon: "apple.logo",
+                        selection: $applePayDisplay,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.applePayConfiguration.display`.",
+                        displayText: { $0.rawValue.capitalized }
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Link Display",
+                        icon: "link",
+                        selection: $linkDisplay,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.linkConfiguration.display`.",
+                        displayText: { $0.rawValue.capitalized }
+                    )
+                    CheckoutPlayground.PickerRow(
+                      title: "Billing Name",
+                      selection: $billingDetailsCollectionConfiguration.name,
+                      tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.name`.",
+                      displayText: { $0.rawValue.capitalized }
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Billing Phone",
+                        selection: $billingDetailsCollectionConfiguration.phone,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.phone`.",
+                        displayText: { $0.rawValue.capitalized }
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Billing Email",
+                        selection: $billingDetailsCollectionConfiguration.email,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.email`.",
+                        displayText: { $0.rawValue.capitalized }
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Billing Address",
+                        selection: $billingDetailsCollectionConfiguration.address,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.address`.",
+                        displayText: { $0.rawValue.capitalized }
+                    )
+                }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))

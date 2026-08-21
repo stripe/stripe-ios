@@ -7,6 +7,16 @@
 import Foundation
 @_spi(STP) import StripePaymentSheet
 
+extension ExpressCheckoutElement.ApplePayConfiguration.Display: CaseIterable, Identifiable {
+    public static var allCases: [Self] { [.automatic, .never] }
+    public var id: String { rawValue }
+}
+
+extension ExpressCheckoutElement.LinkConfiguration.Display: CaseIterable, Identifiable {
+    public static var allCases: [Self] { [.automatic, .never] }
+    public var id: String { rawValue }
+}
+
 extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration.CollectionMode: @retroactive Identifiable {
     public var id: String { rawValue }
 }
