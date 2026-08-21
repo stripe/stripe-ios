@@ -219,6 +219,54 @@ enum CheckoutPlayground {
         }
     }
 
+    enum ExpressCheckoutElementButtonTheme: String, CaseIterable, Identifiable {
+        case light
+        case dark
+        case automatic
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .light: return "Light"
+            case .dark: return "Dark"
+            case .automatic: return "Automatic"
+            }
+        }
+
+        var sdkValue: ExpressCheckoutElement.Appearance.ButtonTheme {
+            switch self {
+            case .light: return .light
+            case .dark: return .dark
+            case .automatic: return .automatic
+            }
+        }
+    }
+
+    enum ExpressCheckoutElementButtonLayoutLimit: String, CaseIterable, Identifiable {
+        case automatic
+        case one
+        case two
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .automatic: return "Automatic"
+            case .one: return "1"
+            case .two: return "2"
+            }
+        }
+
+        var intValue: Int? {
+            switch self {
+            case .automatic: return nil
+            case .one: return 1
+            case .two: return 2
+            }
+        }
+    }
+
     struct LineItemConfig: Identifiable {
         let id = UUID()
         var name: String
