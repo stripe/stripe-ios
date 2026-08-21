@@ -30,6 +30,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let merchantLabel: String
     private let apiClient: STPAPIClient
     private let returnURL: String
+    private let presentationWindow: UIWindow?
     let authorizationController: PKPaymentAuthorizationController
 
     // Internal state
@@ -50,6 +51,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         self.merchantLabel = applePayConfirmationParameters.merchantDisplayName
         self.apiClient = applePayConfirmationParameters.apiClient
         self.returnURL = applePayConfirmationParameters.returnURL
+        self.presentationWindow = applePayConfirmationParameters.presentationWindow
         self.authorizationController = authorizationController
         super.init()
     }
@@ -175,6 +177,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         }
     }
 
+    @objc nonisolated func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
+        return presentationWindow
+    }
+
     func paymentAuthorizationController(
         _ controller: PKPaymentAuthorizationController,
         didSelectPaymentMethod paymentMethod: PKPaymentMethod,
@@ -280,12 +286,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         return Self.makeSummaryItems(for: session, label: merchantLabel)
     }
 
-    // TODO: Build summary items from session line items, tax, shipping, and discounts.
     static func makeSummaryItems(for session: CheckoutController.Session, label: String) -> [PKPaymentSummaryItem] {
-        if let amount = session.expectedAmount() {
-            return [PKPaymentSummaryItem(label: label, amount: NSDecimalNumber.stp_decimalNumber(withAmount: amount, currency: session.currency), type: .final)]
-        }
-        return [PKPaymentSummaryItem(label: label, amount: .zero, type: .pending)]
+        return STPApplePayContext.makePaymentSummaryItems(for: session, label: label, currency: session.currency)
     }
 
     private func _end() {

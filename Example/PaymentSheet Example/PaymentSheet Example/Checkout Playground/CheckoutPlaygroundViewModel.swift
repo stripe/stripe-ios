@@ -32,6 +32,8 @@ extension CheckoutPlayground {
                 }
             }
         }
+        @Published var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
+        @Published var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
         @Published var currency: Currency
         @Published var customerType: CustomerType
         @Published var lineItems: [LineItemConfig]

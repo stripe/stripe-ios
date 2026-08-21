@@ -11,7 +11,7 @@ import Foundation
 extension PaymentOption {
     /// The billing details used to sync a CheckoutSession's billing address for tax calculation.
     ///
-    /// This is only read on CheckoutSession confirm paths (see `CheckoutController.syncBillingAddress(from:)`);
+    /// This is only read on CheckoutSession confirm paths (see `CheckoutSessionBillingAddressUpdater.syncBillingAddress(from:)`);
     /// other flows never consume it.
     var checkoutBillingDetails: STPPaymentMethodBillingDetails? {
         switch self {
