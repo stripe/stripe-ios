@@ -22,7 +22,10 @@ def verify_architectures(binary_path, expected_architectures)
 
   actual_architectures = output.split.sort
   expected_architectures = expected_architectures.sort
-  return if actual_architectures == expected_architectures
+  if actual_architectures == expected_architectures
+    info "Verified architectures for #{binary_path}: #{actual_architectures.join(', ')}"
+    return
+  end
 
   die "Unexpected architectures for #{binary_path}: expected #{expected_architectures.join(', ')}, found #{actual_architectures.join(', ')}"
 end
