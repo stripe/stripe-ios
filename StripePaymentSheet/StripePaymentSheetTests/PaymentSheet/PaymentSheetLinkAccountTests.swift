@@ -63,6 +63,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         XCTAssertEqual(result?.allowRedisplay, .always)
     }
 
+    @MainActor
     func testRefreshesWhenNeeded() {
         let sut = makeSUT()
         let listedPaymentDetailsExp = expectation(description: "Lists payment details")
