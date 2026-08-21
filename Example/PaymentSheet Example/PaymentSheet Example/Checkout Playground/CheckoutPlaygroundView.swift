@@ -32,7 +32,6 @@ struct CheckoutPlaygroundView: View {
                             customerType: $viewModel.customerType,
                             checkoutEndpointOption: $viewModel.checkoutEndpointOption,
                             checkoutEndpoint: $viewModel.checkoutEndpoint,
-                            expressCheckoutElementOption: $viewModel.expressCheckoutElementOption,
                             delayPaymentPagesRequests: $viewModel.delayPaymentPagesRequests
                         )
 
@@ -51,6 +50,12 @@ struct CheckoutPlaygroundView: View {
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
                             automaticPaymentMethods: $viewModel.automaticPaymentMethods
+                        )
+
+                        CheckoutPlaygroundExpressCheckoutElementSection(
+                            expressCheckoutElementOption: $viewModel.expressCheckoutElementOption,
+                            applePayDisplay: $viewModel.applePayDisplay,
+                            linkDisplay: $viewModel.linkDisplay
                         )
 
                         currencySelectorAppearanceSection
@@ -90,6 +95,8 @@ struct CheckoutPlaygroundView: View {
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
+                            applePayDisplay: viewModel.applePayDisplay,
+                            linkDisplay: viewModel.linkDisplay,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
@@ -101,6 +108,8 @@ struct CheckoutPlaygroundView: View {
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
+                            applePayDisplay: viewModel.applePayDisplay,
+                            linkDisplay: viewModel.linkDisplay,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )

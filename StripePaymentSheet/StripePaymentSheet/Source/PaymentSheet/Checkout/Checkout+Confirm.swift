@@ -14,7 +14,7 @@ extension CheckoutController {
 
     /// The parameters needed to confirm a Checkout Session with Apple Pay.
     struct ApplePayConfirmationParameters {
-        let applePayConfiguration: CheckoutController.ApplePayConfiguration
+        let applePayConfiguration: any CheckoutApplePayConfiguration
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
