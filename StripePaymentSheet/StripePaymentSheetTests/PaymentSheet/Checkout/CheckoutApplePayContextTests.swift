@@ -28,7 +28,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     // MARK: - makeSummaryItems
 
     func testMakeSummaryItemsWithAmount() {
-        // Given a session with a known total
+        // Given a session with a single item and no tax
         let session = CheckoutTestHelpers.makeSession([
             "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 2500),
             "currency": "usd",
@@ -37,11 +37,82 @@ final class CheckoutApplePayContextTests: XCTestCase {
         // When
         let items = CheckoutApplePayContext.makeSummaryItems(for: session, label: "Test Store")
 
-        // Then it returns a single final item with the correct amount
-        XCTAssertEqual(items.count, 1)
-        XCTAssertEqual(items[0].label, "Test Store")
-        XCTAssertEqual(items[0].type, .final)
+        // Then it returns the item row and a grand total, with no breakdown rows
+        XCTAssertEqual(items.count, 2)
+        XCTAssertEqual(items[0].label, "Test product")
         XCTAssertEqual(items[0].amount, NSDecimalNumber.stp_decimalNumber(withAmount: 2500, currency: "usd"))
+        XCTAssertEqual(items[1].label, "Test Store")
+        XCTAssertEqual(items[1].type, .final)
+        XCTAssertEqual(items[1].amount, NSDecimalNumber.stp_decimalNumber(withAmount: 2500, currency: "usd"))
+    }
+
+    func testMakeSummaryItemsWithLineItemsAndBreakdown() {
+        // Given a session with two line items and tax on one of them
+        let session = CheckoutTestHelpers.makeSession([
+            "currency": "usd",
+            "checkout_items": [
+                [
+                    "key": "checkout_item_widget",
+                    "type": "one_time_price",
+                    "one_time_price": [
+                        "items": [
+                            [
+                                "inner_item_key": "widget",
+                                "quantity": 1,
+                                "subtotal": 2000,
+                                "total": 2200,
+                                "unit_amount": 2000,
+                                "unit_amount_decimal": "2000",
+                                "tax_amounts": [],
+                                "tax_inclusive": 0,
+                                "tax_exclusive": 200,
+                                "price": ["id": "price_widget", "currency": "usd", "unit_amount": 2000, "product": ["name": "Widget", "images": []]],
+                            ],
+                        ],
+                        "subtotal": 2000,
+                        "total": 2200,
+                    ],
+                ],
+                [
+                    "key": "checkout_item_gadget",
+                    "type": "one_time_price",
+                    "one_time_price": [
+                        "items": [
+                            [
+                                "inner_item_key": "gadget",
+                                "quantity": 2,
+                                "subtotal": 1000,
+                                "total": 1000,
+                                "unit_amount": 500,
+                                "unit_amount_decimal": "500",
+                                "tax_amounts": [],
+                                "tax_inclusive": 0,
+                                "tax_exclusive": 0,
+                                "price": ["id": "price_gadget", "currency": "usd", "unit_amount": 500, "product": ["name": "Gadget", "images": []]],
+                            ],
+                        ],
+                        "subtotal": 1000,
+                        "total": 1000,
+                    ],
+                ],
+            ],
+        ]).makePublicSession()
+
+        // When
+        let items = CheckoutApplePayContext.makeSummaryItems(for: session, label: "Test Store")
+
+        // Then it returns line items, subtotal, tax, and a grand total (discount rows are unsupported in unified mode)
+        XCTAssertEqual(items.count, 5)
+        XCTAssertEqual(items[0].label, "Widget")
+        XCTAssertEqual(items[0].amount, NSDecimalNumber.stp_decimalNumber(withAmount: 2000, currency: "usd"))
+        XCTAssertEqual(items[1].label, "Gadget ×2")
+        XCTAssertEqual(items[1].amount, NSDecimalNumber.stp_decimalNumber(withAmount: 1000, currency: "usd"))
+        XCTAssertEqual(items[2].label, String.Localized.subtotal)
+        XCTAssertEqual(items[2].amount, NSDecimalNumber.stp_decimalNumber(withAmount: 3000, currency: "usd"))
+        XCTAssertEqual(items[3].label, String.Localized.tax)
+        XCTAssertEqual(items[3].amount, NSDecimalNumber.stp_decimalNumber(withAmount: 200, currency: "usd"))
+        XCTAssertEqual(items[4].label, "Test Store")
+        XCTAssertEqual(items[4].amount, NSDecimalNumber.stp_decimalNumber(withAmount: 3200, currency: "usd"))
     }
 
     func testMakeSummaryItemsWithNoAmount() {
