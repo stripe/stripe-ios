@@ -16,6 +16,7 @@ MINOR
 
 ## 26.7.0 2026-08-17
 ### PaymentSheet
+* [Fixed] Fixed FlowController not presenting the Link sheet when tapping Link in the horizontal payment method layout.
 * [Added] StripePaymentSheet now depends on `StripeFinancialConnectionsLite` to support lightweight bank payment flows. If you use StripePaymentSheet with Carthage or by manually embedding the .xcframeworks, [you must also embed StripeFinancialConnectionsLite.xcframework](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2670) in your app. No action is required for CocoaPods or Swift Package Manager users.
 * [Added] Added private preview support for setting up Alipay payment methods for future off-session use with PaymentIntents and SetupIntents.
 * [Changed] Address autocomplete results sourced from internal service.
