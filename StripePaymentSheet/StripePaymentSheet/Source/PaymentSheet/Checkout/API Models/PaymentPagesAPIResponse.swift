@@ -418,6 +418,24 @@ extension PaymentPagesAPIResponse {
         let enabled: Bool
         let maximum: Int?
         let minimum: Int?
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            enabled = try container.decode(Bool.self, forKey: .enabled)
+            if enabled {
+                maximum = try container.decode(Int.self, forKey: .maximum)
+                minimum = try container.decode(Int.self, forKey: .minimum)
+            } else {
+                maximum = try container.decodeIfPresent(Int.self, forKey: .maximum)
+                minimum = try container.decodeIfPresent(Int.self, forKey: .minimum)
+            }
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case enabled
+            case maximum
+            case minimum
+        }
     }
 
     struct ShippingAddressCollection: Decodable {

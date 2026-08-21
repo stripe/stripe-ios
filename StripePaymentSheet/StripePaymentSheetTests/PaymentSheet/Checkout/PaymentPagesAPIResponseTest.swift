@@ -628,13 +628,18 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         ]).makePublicSession()
 
         XCTAssertEqual(session.orderSummaryItems.count, 1)
-        guard case .oneTimePrice(let oneTimePrice) = session.orderSummaryItems[0] else {
+        let orderSummaryItem = session.orderSummaryItems[0]
+        XCTAssertEqual(orderSummaryItem.id, "checkout_item_abc123")
+        guard case .oneTimePrice(let oneTimePrice) = orderSummaryItem else {
             return XCTFail("Expected one-time price order summary item")
         }
         XCTAssertEqual(oneTimePrice.key, "checkout_item_abc123")
+        XCTAssertEqual(oneTimePrice.id, "checkout_item_abc123")
         XCTAssertNil(oneTimePrice.description)
         XCTAssertEqual(oneTimePrice.items.count, 1)
         XCTAssertEqual(oneTimePrice.items[0].key, "checkout_item_inner_abc123")
+        XCTAssertEqual(oneTimePrice.items[0].id, "checkout_item_inner_abc123")
+        XCTAssertNotEqual(oneTimePrice.items[0].id, "price_test123")
         XCTAssertEqual(oneTimePrice.items[0].displayName, "Classic T-Shirt")
         XCTAssertEqual(oneTimePrice.items[0].images, ["https://example.com/shirt.png"])
         XCTAssertEqual(oneTimePrice.items[0].quantity, 2)
@@ -867,7 +872,11 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testUnifiedModeSessionMapsAdjustableQuantity() throws {
         let enabledJSON = modifyingOneTimePriceItem {
-            $0["adjustable_quantity"] = ["enabled": true]
+            $0["adjustable_quantity"] = [
+                "enabled": true,
+                "minimum": 2,
+                "maximum": 10,
+            ]
         }
         let enabledResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: enabledJSON)
         guard case .oneTimePrice(let enabledOneTimePrice) = enabledResponse.makePublicSession().orderSummaryItems.first else {
@@ -875,8 +884,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         }
         let enabledQuantity = try XCTUnwrap(enabledOneTimePrice.items.first?.adjustableQuantity)
         XCTAssertTrue(enabledQuantity.enabled)
-        XCTAssertEqual(enabledQuantity.minimum, 0)
-        XCTAssertEqual(enabledQuantity.maximum, 99)
+        XCTAssertEqual(enabledQuantity.minimum, 2)
+        XCTAssertEqual(enabledQuantity.maximum, 10)
 
         let disabledJSON = modifyingOneTimePriceItem {
             $0["adjustable_quantity"] = ["enabled": false]
@@ -886,6 +895,44 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             return XCTFail("Expected one-time Price order summary item")
         }
         XCTAssertNil(disabledOneTimePrice.items.first?.adjustableQuantity)
+    }
+
+    func testUnifiedModeSessionRejectsEnabledAdjustableQuantityWithoutBounds() {
+        for field in ["minimum", "maximum"] {
+            var adjustableQuantity: [String: Any] = [
+                "enabled": true,
+                "minimum": 0,
+                "maximum": 99,
+            ]
+            adjustableQuantity.removeValue(forKey: field)
+            let json = modifyingOneTimePriceItem {
+                $0["adjustable_quantity"] = adjustableQuantity
+            }
+
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected missing \(field) to fail decoding"
+            )
+        }
+    }
+
+    func testUnifiedModeSessionRejectsEnabledAdjustableQuantityWithNullBounds() {
+        for field in ["minimum", "maximum"] {
+            var adjustableQuantity: [String: Any] = [
+                "enabled": true,
+                "minimum": 0,
+                "maximum": 99,
+            ]
+            adjustableQuantity[field] = NSNull()
+            let json = modifyingOneTimePriceItem {
+                $0["adjustable_quantity"] = adjustableQuantity
+            }
+
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected null \(field) to fail decoding"
+            )
+        }
     }
 
     func testUnifiedModeSessionAllowsEmptyNestedItems() throws {

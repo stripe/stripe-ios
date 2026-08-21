@@ -40,12 +40,29 @@ final class HTMLViewWithIconLabels: UIView {
         var nonIconText: [NonIconText] = []
 
         let bodyHtmlString: String
+        let shouldCenterBodyText: Bool
         let didOpenURL: (URL) -> Void
+
+        init(
+            iconText: [IconText] = [],
+            nonIconText: [NonIconText] = [],
+            bodyHtmlString: String,
+            shouldCenterBodyText: Bool = false,
+            didOpenURL: @escaping (URL) -> Void
+        ) {
+            self.iconText = iconText
+            self.nonIconText = nonIconText
+            self.bodyHtmlString = bodyHtmlString
+            self.shouldCenterBodyText = shouldCenterBodyText
+            self.didOpenURL = didOpenURL
+        }
 
         var bodyTextViewModel: HTMLTextView.ViewModel {
             return .init(
                 text: bodyHtmlString,
-                style: .html(makeStyle: Styling.bodyTextHTMLStyle),
+                style: .html(makeStyle: {
+                    Styling.bodyTextHTMLStyle(shouldCenterText: self.shouldCenterBodyText)
+                }),
                 didOpenURL: didOpenURL
             )
         }
@@ -153,7 +170,7 @@ extension HTMLViewWithIconLabels {
     fileprivate func rebuildIconTextViews(for viewModels: [IconLabelHTMLView.ViewModel]) throws {
         iconLabelViews.forEach { $0.removeFromSuperview() }
 
-        iconLabelViews = try viewModels.enumerated().map { _, viewModel in
+        iconLabelViews = try viewModels.map { viewModel in
             let view = IconLabelHTMLView()
             try view.configure(with: viewModel)
             vStack.insertArrangedSubview(view, at: 0)
@@ -202,13 +219,16 @@ extension HTMLViewWithIconLabels.Styling {
         return htmlStyle(for: nonIconLabelTextStyle, shouldCenterText: true)
     }
 
-    static func bodyTextHTMLStyle() -> HTMLStyle {
-        return htmlStyle(for: bodyTextStyle)
+    static func bodyTextHTMLStyle(shouldCenterText: Bool = false) -> HTMLStyle {
+        return htmlStyle(
+            for: bodyTextStyle,
+            shouldCenterText: shouldCenterText
+        )
     }
 
     private static func htmlStyle(
         for textStyle: UIFont.TextStyle,
-        shouldCenterText ceterText: Bool = false
+        shouldCenterText: Bool = false
     ) -> HTMLStyle {
         let boldFont = IdentityUI.preferredFont(forTextStyle: textStyle, weight: .bold)
         return .init(
@@ -221,7 +241,7 @@ extension HTMLViewWithIconLabels.Styling {
             h5Font: boldFont,
             h6Font: boldFont,
             isLinkUnderlined: false,
-            shouldCenterText: ceterText
+            shouldCenterText: shouldCenterText
         )
     }
 }
