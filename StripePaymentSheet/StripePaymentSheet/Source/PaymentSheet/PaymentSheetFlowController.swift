@@ -1096,8 +1096,10 @@ extension PaymentSheet.FlowController: LoadingViewControllerDelegate {
         pendingPresentTask?.cancel()
         pendingPresentTask = nil
         loadingViewController.dismiss(animated: true) {
-            self.isPresented = false
-            self.presentPaymentOptionsCompletionWithResult?(true)
+            Task { @MainActor in
+                self.isPresented = false
+                self.presentPaymentOptionsCompletionWithResult?(true)
+            }
         }
     }
 }
@@ -1118,11 +1120,13 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
             self.didPresentAndContinue = true
         }
         flowControllerViewController.dismiss(animated: true) {
-            if didCancel {
-                self.revertSelectionAfterCancellation()
+            Task { @MainActor in
+                if didCancel {
+                    self.revertSelectionAfterCancellation()
+                }
+                self.presentPaymentOptionsCompletionWithResult?(didCancel)
+                self.isPresented = false
             }
-            self.presentPaymentOptionsCompletionWithResult?(didCancel)
-            self.isPresented = false
         }
     }
 }
