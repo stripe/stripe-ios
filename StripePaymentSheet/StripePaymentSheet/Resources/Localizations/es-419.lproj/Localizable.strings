@@ -158,10 +158,6 @@
 
 "Fast, secure checkout" = "Proceso de compra rápido y seguro";
 
-"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Obtén %@ cuando pagues por primera vez con tu banco. <terms>Consulta las condiciones</terms>";
-
-"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Obtén %@ al pagar con tu banco. <terms>Consulta las condiciones</terms>";
-
 "Hide details" = "Ocultar detalles";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entiendo que Stripe cobrará débitos directos en nombre de %@ y confirmo que soy el titular de la cuenta y la única persona que se requiere que autorice los débitos a esta cuenta.";
@@ -193,8 +189,6 @@
 "New card" = "Nueva tarjeta";
 
 "New payment method" = "Nuevo método de pago";
-
-"No %@ promo" = "Sin promoción de %@";
 
 "Not you?" = "¿No eres tú?";
 

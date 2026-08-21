@@ -217,6 +217,8 @@ protocol FinancialConnectionsAPI {
     func updateAvailableIncentives(
         consumerSessionClientSecret: String,
         sessionID: String,
-        paymentDetailsID: String
+        paymentDetailsID: String,
+        intentID: String?,
+        onBehalfOf: String?
     ) -> Future<AvailableIncentives>
 }

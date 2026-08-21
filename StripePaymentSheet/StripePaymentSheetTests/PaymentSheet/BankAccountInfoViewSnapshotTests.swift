@@ -17,51 +17,10 @@ final class BankAccountInfoViewSnapshotTests: STPSnapshotTestCase {
     func test_noPromoBadge() {
         let view = BankAccountInfoView(
             frame: Self.frame,
-            appearance: PaymentSheet.Appearance.default.applyingLiquidGlassIfPossible(),
-            incentive: nil
+            appearance: PaymentSheet.Appearance.default.applyingLiquidGlassIfPossible()
         )
         view.setBankName(text: "Stripe Bank")
         view.setLastFourOfBank(text: "••••4242")
-        view.setIncentiveEligible(false)
-
-        verify(view)
-    }
-
-    func test_eligibleForPromo() {
-        let view = BankAccountInfoView(
-            frame: Self.frame,
-            appearance: PaymentSheet.Appearance.default.applyingLiquidGlassIfPossible(),
-            incentive: .init(identifier: "link_instant_debits", displayText: "$5")
-        )
-        view.setBankName(text: "Stripe Bank")
-        view.setLastFourOfBank(text: "••••4242")
-        view.setIncentiveEligible(true)
-
-        verify(view)
-    }
-
-    func test_eligibleForPromo_longName() {
-        let view = BankAccountInfoView(
-            frame: Self.frame,
-            appearance: PaymentSheet.Appearance.default.applyingLiquidGlassIfPossible(),
-            incentive: .init(identifier: "link_instant_debits", displayText: "$5")
-        )
-        view.setBankName(text: "The Official Stripe Bank")
-        view.setLastFourOfBank(text: "••••4242")
-        view.setIncentiveEligible(true)
-
-        verify(view)
-    }
-
-    func test_ineligibleForPromo() {
-        let view = BankAccountInfoView(
-            frame: Self.frame,
-            appearance: PaymentSheet.Appearance.default.applyingLiquidGlassIfPossible(),
-            incentive: .init(identifier: "link_instant_debits", displayText: "$5")
-        )
-        view.setBankName(text: "Stripe Bank")
-        view.setLastFourOfBank(text: "•••• 4242")
-        view.setIncentiveEligible(false)
 
         verify(view)
     }

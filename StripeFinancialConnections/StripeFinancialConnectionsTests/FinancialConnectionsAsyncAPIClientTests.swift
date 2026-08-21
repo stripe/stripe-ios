@@ -173,6 +173,57 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
         XCTAssertNotNil(updatedParameters["ios_assertion_object"])
     }
 
+    func testUpdateAvailableIncentivesIncludesMerchantContextAndUsesValidForSession() async throws {
+        // Given an incentive response that contains an offer that is invalid for the session
+        var requestBody: String?
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [MockURLProtocol.self]
+        let stpAPIClient = STPAPIClient(publishableKey: "pk_test_123")
+        stpAPIClient.urlSession = URLSession(configuration: configuration)
+        let apiClient = FinancialConnectionsAsyncAPIClient(apiClient: stpAPIClient)
+
+        MockURLProtocol.requestHandler = { request in
+            requestBody = self.bodyString(from: request)
+
+            let response = HTTPURLResponse(
+                url: try XCTUnwrap(request.url),
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "application/json"]
+            )!
+            let responseBody: [String: Any] = [
+                "data": [
+                    [
+                        "incentive_params": [
+                            "payment_method": "link_instant_debits",
+                        ],
+                        "incentive_display_text": "$5",
+                        "valid_for_session": false,
+                    ],
+                ],
+            ]
+            return (response, try JSONSerialization.data(withJSONObject: responseBody))
+        }
+        defer {
+            MockURLProtocol.requestHandler = nil
+        }
+
+        // When updating the available incentives with both forms of merchant context
+        let response = try await apiClient.updateAvailableIncentives(
+            consumerSessionClientSecret: "consumer_session_secret_123",
+            sessionID: "pi_123",
+            paymentDetailsID: "csmrpd_123",
+            intentID: "pi_123",
+            onBehalfOf: "acct_123"
+        )
+
+        // Then the merchant context is sent and the non-empty response remains ineligible
+        XCTAssertTrue(try XCTUnwrap(requestBody).contains("intent_id=pi_123"))
+        XCTAssertTrue(try XCTUnwrap(requestBody).contains("on_behalf_of=acct_123"))
+        XCTAssertFalse(response.hasIncentiveValidForSession)
+        XCTAssertEqual(response.data.first?.validForSession, false)
+    }
+
     // MARK: Polling
 
     func testSuccessfulFirstAttempt() async throws {
@@ -414,6 +465,33 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         return try decoder.decode(FinancialConnectionsPartnerAccount.self, from: data)
+    }
+
+    private func bodyString(from request: URLRequest) -> String? {
+        if let body = request.httpBody {
+            return String(data: body, encoding: .utf8)
+        }
+
+        guard let bodyStream = request.httpBodyStream else {
+            return nil
+        }
+
+        bodyStream.open()
+        defer { bodyStream.close() }
+
+        var body = Data()
+        let bufferSize = 1_024
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
+        defer { buffer.deallocate() }
+
+        while bodyStream.hasBytesAvailable {
+            let bytesRead = bodyStream.read(buffer, maxLength: bufferSize)
+            guard bytesRead > 0 else {
+                break
+            }
+            body.append(buffer, count: bytesRead)
+        }
+        return String(data: body, encoding: .utf8)
     }
 
     private func makeMinimalManifestResponse() -> [String: Any] {

@@ -61,6 +61,7 @@ import Foundation
     @_spi(STP) public let linkMode: LinkMode?
     @_spi(STP) public let billingDetails: BillingDetails?
     @_spi(STP) public let eligibleForIncentive: Bool
+    @_spi(STP) public let onBehalfOf: String?
     @_spi(STP) public let allowRedisplay: String?
     @_spi(STP) public let linkSettings: LinkSettings?
     @_spi(STP) public let clientAttributionMetadata: STPClientAttributionMetadata?
@@ -76,6 +77,19 @@ import Foundation
         return intentId
     }
 
+    @_spi(STP) public var incentiveEligibilityIntentID: String? {
+        guard eligibleForIncentive else {
+            return nil
+        }
+
+        switch intentId {
+        case .payment(let id), .setup(let id):
+            return id
+        case .deferred, .none:
+            return nil
+        }
+    }
+
     @_spi(STP) public init(
         amount: Int? = nil,
         currency: String? = nil,
@@ -84,6 +98,7 @@ import Foundation
         linkMode: LinkMode? = nil,
         billingDetails: BillingDetails? = nil,
         eligibleForIncentive: Bool = false,
+        onBehalfOf: String? = nil,
         allowRedisplay: String? = nil,
         linkSettings: LinkSettings? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil
@@ -95,6 +110,7 @@ import Foundation
         self.linkMode = linkMode
         self.billingDetails = billingDetails
         self.eligibleForIncentive = eligibleForIncentive
+        self.onBehalfOf = onBehalfOf
         self.allowRedisplay = allowRedisplay
         self.linkSettings = linkSettings
         self.clientAttributionMetadata = clientAttributionMetadata

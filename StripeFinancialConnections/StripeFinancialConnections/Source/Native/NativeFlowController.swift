@@ -624,13 +624,15 @@ extension NativeFlowController {
         self.dataManager.apiClient.updateAvailableIncentives(
             consumerSessionClientSecret: consumerSession.clientSecret,
             sessionID: incentiveEligibilitySession.id,
-            paymentDetailsID: paymentDetailsID
+            paymentDetailsID: paymentDetailsID,
+            intentID: self.dataManager.elementsSessionContext?.incentiveEligibilityIntentID,
+            onBehalfOf: self.dataManager.elementsSessionContext?.onBehalfOf
         ).observe { result in
             switch result {
             case .success(let availableIncentives):
                 let result = PaymentMethodWithIncentiveEligibility(
                     paymentMethod: paymentMethod,
-                    incentiveEligible: availableIncentives.data.isEmpty == false
+                    incentiveEligible: availableIncentives.hasIncentiveValidForSession
                 )
                 promise.resolve(with: result)
             case .failure(let error):

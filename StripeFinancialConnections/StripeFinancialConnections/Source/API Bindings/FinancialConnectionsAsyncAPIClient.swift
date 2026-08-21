@@ -985,9 +985,11 @@ extension FinancialConnectionsAsyncAPIClient {
     func updateAvailableIncentives(
         consumerSessionClientSecret: String,
         sessionID: String,
-        paymentDetailsID: String
+        paymentDetailsID: String,
+        intentID: String?,
+        onBehalfOf: String?
     ) async throws -> AvailableIncentives {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "request_surface": requestSurface,
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret
@@ -995,6 +997,8 @@ extension FinancialConnectionsAsyncAPIClient {
             "session_id": sessionID,
             "payment_details_id": paymentDetailsID,
         ]
+        parameters["intent_id"] = intentID
+        parameters["on_behalf_of"] = onBehalfOf
         return try await post(endpoint: .availableIncentives, parameters: parameters)
     }
 }

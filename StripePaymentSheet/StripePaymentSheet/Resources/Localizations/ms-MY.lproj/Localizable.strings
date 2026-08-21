@@ -158,10 +158,6 @@
 
 "Fast, secure checkout" = "Proses bayar dan keluar yang pantas dan selamat";
 
-"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Dapatkan kembali %@ apabila anda membuat pembayaran untuk kali pertama dengan bank anda. <terms>Lihat terma</terms>";
-
-"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Dapatkan kembali %@ apabila anda membuat pembayaran dengan bank anda. <terms>Lihat terma</terms>";
-
 "Hide details" = "Sembunyikan butiran";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Saya faham bahawa Stripe akan mengutip Debit Terus bagi pihak %@ dan mengesahkan sayalah pemegang akaun dan satu-satunya individu yang diperlukan untuk mengizinkan debit daripada akaun ini.";
@@ -193,8 +189,6 @@
 "New card" = "Kad baharu";
 
 "New payment method" = "Kaedah pembayaran baharu";
-
-"No %@ promo" = "Tiada promo %@";
 
 "Not you?" = "Bukan anda?";
 

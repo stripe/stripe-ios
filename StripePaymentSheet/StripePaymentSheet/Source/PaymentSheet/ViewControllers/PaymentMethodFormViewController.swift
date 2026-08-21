@@ -397,6 +397,7 @@ extension PaymentMethodFormViewController {
             linkMode: linkMode,
             billingDetails: billingDetails,
             eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil,
+            onBehalfOf: intent.intentConfig?.onBehalfOf,
             allowRedisplay: allowRedisplay?.stringValue,
             clientAttributionMetadata: clientAttributionMetadata
         )

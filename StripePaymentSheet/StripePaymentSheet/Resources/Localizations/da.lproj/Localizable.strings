@@ -158,10 +158,6 @@
 
 "Fast, secure checkout" = "Hurtig og sikker betaling";
 
-"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Få %@ tilbage, første gang du betaler med din bank. <terms>Se vilkår</terms>";
-
-"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Få %@ tilbage, når du betaler med din bank. <terms>Se vilkår</terms>";
-
 "Hide details" = "Skjul oplysninger";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jeg er indforstået med, at Stripe vil opkræve direkte debiteringer på vegne af %@ og bekræfter, at jeg er kontoindehaveren og den eneste person, der skal godkende debiteringer fra denne konto.";
@@ -193,8 +189,6 @@
 "New card" = "Nyt kort";
 
 "New payment method" = "Ny betalingsmetode";
-
-"No %@ promo" = "Ingen %@-kampagne";
 
 "Not you?" = "Ikke dig?";
 

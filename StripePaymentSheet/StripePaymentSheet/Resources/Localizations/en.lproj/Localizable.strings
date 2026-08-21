@@ -1,6 +1,12 @@
 /* Order summary line item showing name and quantity, e.g. 'Shirt ×3'. */
 "%1$@ ×%2$d" = "%1$@ ×%2$d";
 
+/* Disclaimer for when a promotion is available for setting up a bank account. e.g. '$5 back on […]' */
+"%@ back on a qualifying purchase when you pay by bank. <terms>View terms</terms>" = "%@ back on a qualifying purchase when you pay by bank. <terms>View terms</terms>";
+
+/* Disclaimer for when a promotion is available for paying with a bank account. e.g. '$5 back when […]' */
+"%@ back when you pay by bank. <terms>View terms</terms>" = "%@ back when you pay by bank. <terms>View terms</terms>";
+
 /* Message shown in a confirmation prompt when removing a saved payment method. */
 "%@ will no longer be saved to your wallet." = "%@ will no longer be saved to your wallet.";
 
@@ -243,12 +249,6 @@ with the transaction. */
 /* Select a bank dropdown for FPX */
 "FPX Bank" = "FPX Bank";
 
-/* Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]' */
-"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>";
-
-/* Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]' */
-"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Get %@ back when you pay with your bank. <terms>See terms</terms>";
-
 /* Button label to collapse and hide additional exchange rate details */
 "Hide details" = "Hide details";
 
@@ -296,9 +296,6 @@ with the transaction. */
 
 /* Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc. */
 "New payment method" = "New payment method";
-
-/* Label for when the user is not eligible for a promo. */
-"No %@ promo" = "No %@ promo";
 
 /* Title for a button that allows the user to use a different email in the signup flow. */
 "Not you?" = "Not you?";
@@ -505,6 +502,9 @@ is not supported by the merchant */
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "The provided verification code is incorrect.";
+
+/* Disclaimer for when a bank account is not eligible for a promotion. */
+"This bank account is ineligible for promotions. <terms>View terms</terms>" = "This bank account is ineligible for promotions. <terms>View terms</terms>";
 
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "This is your default";

@@ -274,7 +274,13 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         Promise<StripeFinancialConnections.LinkBankPaymentMethod>()
     }
 
-    func updateAvailableIncentives(consumerSessionClientSecret: String, sessionID: String, paymentDetailsID: String) -> Future<AvailableIncentives> {
+    func updateAvailableIncentives(
+        consumerSessionClientSecret: String,
+        sessionID: String,
+        paymentDetailsID: String,
+        intentID: String?,
+        onBehalfOf: String?
+    ) -> Future<AvailableIncentives> {
         Promise<AvailableIncentives>()
     }
 }

@@ -481,13 +481,17 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
     func updateAvailableIncentives(
         consumerSessionClientSecret: String,
         sessionID: String,
-        paymentDetailsID: String
+        paymentDetailsID: String,
+        intentID: String?,
+        onBehalfOf: String?
     ) -> Future<AvailableIncentives> {
         wrapAsyncToFuture {
             try await self.updateAvailableIncentives(
                 consumerSessionClientSecret: consumerSessionClientSecret,
                 sessionID: sessionID,
-                paymentDetailsID: paymentDetailsID
+                paymentDetailsID: paymentDetailsID,
+                intentID: intentID,
+                onBehalfOf: onBehalfOf
             )
         }
     }

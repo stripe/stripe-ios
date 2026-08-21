@@ -158,10 +158,6 @@
 
 "Fast, secure checkout" = "Finalització de la compra ràpida i segura";
 
-"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Obteniu %@ de reembossament quan pagueu per primera vegada amb el compte bancari. <terms>Consulteu les condicions</terms>";
-
-"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Recupereu %@ en pagar amb el compte bancari. <terms>Consulteu les condicions</terms>";
-
 "Hide details" = "Oculta els detalls";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entenc que Stripe cobrarà els dèbits directes de part de %@ i confirmo que soc el titular del compte i l'única persona requerida per autoritzar dèbits des d'aquest compte.";
@@ -193,8 +189,6 @@
 "New card" = "Nova targeta";
 
 "New payment method" = "Nou mètode de pagament";
-
-"No %@ promo" = "Sense promoció de %@";
 
 "Not you?" = "No ets tu?";
 
