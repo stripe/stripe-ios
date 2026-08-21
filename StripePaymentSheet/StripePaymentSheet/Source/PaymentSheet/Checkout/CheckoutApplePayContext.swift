@@ -30,7 +30,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let merchantLabel: String
     private let apiClient: STPAPIClient
     private let returnURL: String
-    private weak var checkout: ExpressCheckoutSessionUpdater?
+    private weak var checkout: CheckoutSessionWalletUpdater?
     let authorizationController: PKPaymentAuthorizationController
 
     // Internal state
@@ -45,7 +45,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     init(
         checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
-        checkout: ExpressCheckoutSessionUpdater? = nil,
+        checkout: CheckoutSessionWalletUpdater? = nil,
         authorizationController: PKPaymentAuthorizationController
     ) {
         self.session = checkoutSession
@@ -233,7 +233,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     static func create(
         checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
-        checkout: ExpressCheckoutSessionUpdater? = nil
+        checkout: CheckoutSessionWalletUpdater? = nil
     ) throws -> CheckoutApplePayContext {
         guard PKPaymentAuthorizationController.canMakePayments() else {
             let error = CheckoutError.unknown(debugDescription: "Apple Pay isn't set up on this device (e.g. no cards in wallet).")

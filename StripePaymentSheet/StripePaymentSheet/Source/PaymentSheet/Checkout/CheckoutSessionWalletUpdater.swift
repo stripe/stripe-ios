@@ -1,5 +1,5 @@
 //
-//  ExpressCheckoutSessionUpdater.swift
+//  CheckoutSessionWalletUpdater.swift
 //  StripePaymentSheet
 //
 
@@ -12,7 +12,7 @@
 /// whose callers run from fresh, non-nested contexts (e.g. a UI tap) and are fine going through the
 /// regular enqueued update path.
 @MainActor
-protocol ExpressCheckoutSessionUpdater: AnyObject {
+protocol CheckoutSessionWalletUpdater: AnyObject {
     /// Identical in effect to `CheckoutSessionBillingAddressUpdater.updateBillingTaxRegionIfNecessaryForPaymentSheet`,
     /// but does not enqueue behind the checkout's pending session updates.
     ///
@@ -24,7 +24,7 @@ protocol ExpressCheckoutSessionUpdater: AnyObject {
     ) async throws -> CheckoutController.Session
 }
 
-extension CheckoutController: ExpressCheckoutSessionUpdater {
+extension CheckoutController: CheckoutSessionWalletUpdater {
     func updateBillingTaxRegionWithoutEnqueueing(
         address: Address,
         canUpdateWhileSheetPresented: Bool
