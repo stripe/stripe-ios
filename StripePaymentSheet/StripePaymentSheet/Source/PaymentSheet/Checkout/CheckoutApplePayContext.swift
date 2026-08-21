@@ -33,7 +33,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let presentationWindow: UIWindow?
     private weak var checkout: CheckoutSessionWalletUpdater?
     let authorizationController: PKPaymentAuthorizationController
-  
 
     // Internal state
     private var continuation: CheckedContinuation<CheckoutController.InternalConfirmResult, Never>?
