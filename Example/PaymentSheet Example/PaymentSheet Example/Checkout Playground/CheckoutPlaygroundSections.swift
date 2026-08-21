@@ -267,24 +267,28 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                     )
                     CheckoutPlayground.PickerRow(
                       title: "Billing Name",
+                      icon: "person.fill",
                       selection: $billingDetailsCollectionConfiguration.name,
                       tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.name`.",
                       displayText: { $0.rawValue.capitalized }
                     )
                     CheckoutPlayground.PickerRow(
                         title: "Billing Phone",
+                        icon: "phone.fill",
                         selection: $billingDetailsCollectionConfiguration.phone,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.phone`.",
                         displayText: { $0.rawValue.capitalized }
                     )
                     CheckoutPlayground.PickerRow(
                         title: "Billing Email",
+                        icon: "envelope.fill",
                         selection: $billingDetailsCollectionConfiguration.email,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.email`.",
                         displayText: { $0.rawValue.capitalized }
                     )
                     CheckoutPlayground.PickerRow(
                         title: "Billing Address",
+                        icon: "house.fill",
                         selection: $billingDetailsCollectionConfiguration.address,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.billingDetailsCollectionConfiguration.address`.",
                         displayText: { $0.rawValue.capitalized }
