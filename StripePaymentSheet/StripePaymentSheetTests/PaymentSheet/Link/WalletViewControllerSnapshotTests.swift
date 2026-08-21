@@ -13,6 +13,7 @@ import XCTest
 
 @testable@_spi(STP) import StripePaymentSheet
 
+@MainActor
 // @iOS26
 final class WalletViewControllerSnapshotTests: STPSnapshotTestCase {
 

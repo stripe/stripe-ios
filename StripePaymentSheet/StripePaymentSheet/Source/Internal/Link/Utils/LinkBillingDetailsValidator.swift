@@ -8,6 +8,7 @@
 import Foundation
 @_spi(STP) import StripePayments
 
+@MainActor
 class LinkBillingDetailsValidator {
 
     enum ValidationResult {
