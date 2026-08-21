@@ -8,6 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 import UIKit
 
 extension CheckoutController: ExpressCheckoutElementDelegate {
@@ -30,8 +31,32 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 presentationWindow: presentationWindow
             ))
         case .link:
-            // ECE Link needs its own configuration and analytics lifecycle before it can build this flow.
-            flow = nil
+            guard let presentingViewController = presentationWindow?.findTopMostPresentedViewController() else {
+                flow = nil
+                break
+            }
+            let configuration: PaymentElementConfiguration
+            let analyticsHelper: PaymentSheetAnalyticsHelper
+            if paymentElement.paymentOptionSourceOfTruthIsFlowController {
+                configuration = paymentElement.paymentSheetFlowController.configuration
+                analyticsHelper = paymentElement.paymentSheetFlowController.analyticsHelper
+            } else {
+                configuration = paymentElement.embeddedPaymentElement.configuration
+                analyticsHelper = paymentElement.embeddedPaymentElement.analyticsHelper
+            }
+            let authenticationContext = AuthenticationContext(
+                presentingViewController: presentingViewController,
+                appearance: configuration.appearance
+            )
+            flow = .link(.init(
+                confirmOption: .wallet(brand: session.elementsSession.linkBrand ?? .link),
+                configuration: configuration,
+                confirmationChallenge: ConfirmationChallenge(
+                    elementsSession: session.elementsSession,
+                    stripeAttest: apiClient.stripeAttest),
+                analyticsHelper: analyticsHelper,
+                authenticationContext: authenticationContext,
+                paymentHandler: paymentHandler))
         }
         guard let flow else {
             let error = CheckoutError.unknown(debugDescription: "CheckoutController.expressCheckoutElementShouldConfirm() could not build a confirmation flow for \(paymentMethod).")
