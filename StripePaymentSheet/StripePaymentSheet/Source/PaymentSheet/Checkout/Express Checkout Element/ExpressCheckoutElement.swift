@@ -11,7 +11,8 @@ import UIKit
 @MainActor
 protocol ExpressCheckoutElementDelegate: AnyObject {
     func expressCheckoutElementShouldConfirm(
-        _ paymentMethod: ExpressCheckoutElement.PaymentMethod
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
+        presentationWindow: UIWindow?
     ) async -> CheckoutController.ConfirmResult
 }
 

@@ -115,7 +115,10 @@ public final class ExpressCheckoutElementUIView: UIView {
     private func confirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod) {
         Task { @MainActor [weak self] in
             guard let self else { return }
-            guard let result = await self.delegate?.expressCheckoutElementShouldConfirm(paymentMethod) else { return }
+            guard let result = await self.delegate?.expressCheckoutElementShouldConfirm(
+                paymentMethod,
+                presentationWindow: window
+            ) else { return }
             self.configuration.confirmHandler(result)
         }
     }
