@@ -1747,19 +1747,51 @@ extension PaymentSheetLPMConfirmFlowTests {
         }
 
         Task { @MainActor in
-            let confirmationContext = CheckoutController.ConfirmationContext(
-                paymentOption: paymentOption,
-                configuration: configuration,
-                integrationShape: .complete,
-                confirmationChallenge: nil,
-                analyticsHelper: analyticsHelper
-            )
-            let result = await CheckoutController.confirm(
-                checkoutSession: checkoutSession,
-                confirmationContext: confirmationContext,
-                authenticationContext: self,
-                paymentHandler: paymentHandler
-            )
+            let result: CheckoutController.InternalConfirmResult
+            switch paymentOption {
+            case .new(let confirmParams):
+                let parameters = CheckoutController.PaymentMethodConfirmationParameters(
+                    option: .new(confirmParams),
+                    configuration: configuration,
+                    confirmationChallenge: nil,
+                    authenticationContext: self,
+                    paymentHandler: paymentHandler
+                )
+                result = await CheckoutController.confirmPaymentMethod(
+                    checkoutSession: checkoutSession,
+                    parameters: parameters,
+                    preconfirmIntegrationShape: .complete
+                )
+            case .saved(let paymentMethod, let confirmParams):
+                let parameters = CheckoutController.PaymentMethodConfirmationParameters(
+                    option: .saved(paymentMethod, confirmParams),
+                    configuration: configuration,
+                    confirmationChallenge: nil,
+                    authenticationContext: self,
+                    paymentHandler: paymentHandler
+                )
+                result = await CheckoutController.confirmPaymentMethod(
+                    checkoutSession: checkoutSession,
+                    parameters: parameters,
+                    preconfirmIntegrationShape: .complete
+                )
+            case .link(let confirmOption):
+                let parameters = CheckoutController.LinkConfirmationParameters(
+                    confirmOption: confirmOption,
+                    configuration: configuration,
+                    confirmationChallenge: nil,
+                    analyticsHelper: analyticsHelper,
+                    authenticationContext: self,
+                    paymentHandler: paymentHandler
+                )
+                result = await CheckoutController.confirmLink(
+                    checkoutSession: checkoutSession,
+                    parameters: parameters
+                )
+            case .applePay, .external:
+                completion(.failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption), nil)
+                return
+            }
             completion(result.paymentSheetResult, nil)
         }
     }

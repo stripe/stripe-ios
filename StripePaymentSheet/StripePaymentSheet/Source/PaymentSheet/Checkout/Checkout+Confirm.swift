@@ -1,72 +1,260 @@
-@_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+import UIKit
 
-// MARK: - Confirm
+// MARK: - Types
 
 extension CheckoutController {
-    /// Convenience bag of params needed for confirmation
-    struct ConfirmationContext {
+    /// The supported confirmation flows for a Checkout Session.
+    enum CheckoutConfirmationFlow {
+        case applePay(ApplePayConfirmationParameters)
+        case link(LinkConfirmationParameters)
+        case paymentMethod(PaymentMethodConfirmationParameters, preconfirmIntegrationShape: PaymentSheet.IntegrationShape)
+    }
+
+    /// The parameters needed to confirm a Checkout Session with Apple Pay.
+    struct ApplePayConfirmationParameters {
+        let applePayConfiguration: CheckoutController.ApplePayConfiguration
+        let apiClient: STPAPIClient
+        let returnURL: String
+        let merchantDisplayName: String
+    }
+
+    /// The parameters needed to confirm a Checkout Session with Link.
+    struct LinkConfirmationParameters {
+        // TODO: Lots of stuff in here because current Link code nominally requires it but it may not all really be necessary.
+        let confirmOption: PaymentSheet.LinkConfirmOption
+        let configuration: PaymentElementConfiguration
+        let confirmationChallenge: ConfirmationChallenge?
+        let analyticsHelper: PaymentSheetAnalyticsHelper
+        let authenticationContext: STPAuthenticationContext
+        let paymentHandler: STPPaymentHandler
+    }
+
+    /// The parameters needed to confirm a Checkout Session with a new or saved payment method.
+    struct PaymentMethodConfirmationParameters {
+        enum Option {
+            case new(IntentConfirmParams)
+            case saved(STPPaymentMethod, IntentConfirmParams?)
+        }
+
+        let option: Option
+        let configuration: PaymentElementConfiguration
+        let confirmationChallenge: ConfirmationChallenge?
+        let authenticationContext: STPAuthenticationContext
+        let paymentHandler: STPPaymentHandler
+    }
+
+    enum InternalConfirmResult {
+        case completed(PaymentPagesAPIResponse)
+        case canceled(sessionResponse: PaymentPagesAPIResponse? = nil)
+        case failed(Error, sessionResponse: PaymentPagesAPIResponse? = nil)
+
+        var paymentSheetResult: PaymentSheetResult {
+            switch self {
+            case .completed:
+                return .completed
+            case .canceled:
+                return .canceled
+            case .failed(let error, _):
+                return .failed(error: error)
+            }
+        }
+
+        var checkoutSessionResponse: PaymentPagesAPIResponse? {
+            switch self {
+            case .completed(let response):
+                return response
+            case .canceled(let response), .failed(_, let response):
+                return response
+            }
+        }
+    }
+
+    // MARK: - Flow Construction
+
+    func confirmationFlow(
+        for paymentElement: PaymentElement,
+        presentingViewController: UIViewController
+    ) -> CheckoutConfirmationFlow? {
         let paymentOption: PaymentOption
         let configuration: PaymentElementConfiguration
         let integrationShape: PaymentSheet.IntegrationShape
         let confirmationChallenge: ConfirmationChallenge?
-        let analyticsHelper: PaymentSheetAnalyticsHelper
-    }
 
-    struct InternalConfirmResult {
-        let paymentSheetResult: PaymentSheetResult
-        let checkoutSessionResponse: PaymentPagesAPIResponse?
+        if paymentElement.paymentOptionSourceOfTruthIsFlowController {
+            guard let resolvedPaymentOption = paymentElement.paymentSheetFlowController.internalPaymentOption else {
+                return nil
+            }
+            paymentOption = resolvedPaymentOption
+            configuration = paymentElement.paymentSheetFlowController.configuration
+            integrationShape = .flowController
+            confirmationChallenge = paymentElement.paymentSheetFlowController.confirmationChallenge
+        } else {
+            guard let resolvedPaymentOption = paymentElement.embeddedPaymentElement._paymentOption else {
+                return nil
+            }
+            paymentOption = resolvedPaymentOption
+            configuration = paymentElement.embeddedPaymentElement.configuration
+            integrationShape = .embedded
+            confirmationChallenge = paymentElement.embeddedPaymentElement.confirmationChallenge
+        }
 
-        init(
-            paymentSheetResult: PaymentSheetResult,
-            checkoutSessionResponse: PaymentPagesAPIResponse? = nil
-        ) {
-            self.paymentSheetResult = paymentSheetResult
-            self.checkoutSessionResponse = checkoutSessionResponse
+        let authenticationContext = AuthenticationContext(
+            presentingViewController: presentingViewController,
+            appearance: configuration.appearance
+        )
+
+        // Normalize Payment Element state here, then build the corresponding confirmation flow.
+        switch paymentOption {
+        case .applePay:
+            guard let applePayConfiguration = self.configuration.applePayConfiguration else { return nil }
+            return .applePay(.init(
+                applePayConfiguration: applePayConfiguration,
+                apiClient: apiClient,
+                returnURL: self.configuration.returnURL,
+                merchantDisplayName: effectiveMerchantDisplayName
+            ))
+        case .link(let confirmOption):
+            let analyticsHelper = paymentElement.paymentOptionSourceOfTruthIsFlowController
+            ? paymentElement.paymentSheetFlowController.analyticsHelper
+            : paymentElement.embeddedPaymentElement.analyticsHelper
+            return .link(.init(
+                confirmOption: confirmOption,
+                configuration: configuration,
+                confirmationChallenge: confirmationChallenge,
+                analyticsHelper: analyticsHelper,
+                authenticationContext: authenticationContext,
+                paymentHandler: paymentHandler
+            ))
+        case .new(let confirmParams):
+            return .paymentMethod(
+                .init(
+                    option: .new(confirmParams),
+                    configuration: configuration,
+                    confirmationChallenge: confirmationChallenge,
+                    authenticationContext: authenticationContext,
+                    paymentHandler: paymentHandler
+                ),
+                preconfirmIntegrationShape: integrationShape
+            )
+        case .saved(let paymentMethod, let confirmParams):
+            return .paymentMethod(
+                .init(
+                    option: .saved(paymentMethod, confirmParams),
+                    configuration: configuration,
+                    confirmationChallenge: confirmationChallenge,
+                    authenticationContext: authenticationContext,
+                    paymentHandler: paymentHandler
+                ),
+                preconfirmIntegrationShape: integrationShape
+            )
+        case .external:
+            // TODO: fatal error here so we can not reutrn nil
+            return nil
         }
     }
 
-    func confirmationContext(for paymentElement: PaymentElement) -> ConfirmationContext? {
-        if paymentElement.paymentOptionSourceOfTruthIsFlowController {
-            guard let paymentOption = paymentElement.paymentSheetFlowController.internalPaymentOption else {
-                return nil
-            }
-            return ConfirmationContext(
-                paymentOption: paymentOption,
-                configuration: paymentElement.paymentSheetFlowController.configuration,
-                integrationShape: .flowController,
-                confirmationChallenge: paymentElement.paymentSheetFlowController.confirmationChallenge,
-                analyticsHelper: paymentElement.paymentSheetFlowController.analyticsHelper
+    // MARK: - Confirmation
+
+    func confirm(_ flow: CheckoutConfirmationFlow) async -> ConfirmResult {
+        // Validations
+        guard sessionIsOpen else {
+            return .failed(
+                PaymentSheetError.integrationError(
+                    nonPIIDebugDescription: "CheckoutController cannot confirm a Checkout Session that is no longer open."
+                )
+            )
+        }
+        guard !confirmationInProgress else {
+            return .failed(
+                PaymentSheetError.integrationError(
+                    nonPIIDebugDescription: "CheckoutController cannot start a second confirmation while one is in progress."
+                )
+            )
+        }
+        guard pendingOperations.isEmpty else {
+            return .failed(
+                PaymentSheetError.integrationError(
+                    nonPIIDebugDescription: "CheckoutController cannot confirm while the Checkout Session is updating. Wait until isUpdating is false."
+                )
             )
         }
 
-        guard let paymentOption = paymentElement.embeddedPaymentElement._paymentOption else {
-            return nil
+        confirmationInProgress = true
+        defer { confirmationInProgress = false }
+
+        do {
+            // 1. Put the confirm on the queue
+            let result = try await enqueueSessionUpdate {
+                // 2. Do the confirmation
+                let result: InternalConfirmResult
+                switch flow {
+                case .applePay(let parameters):
+                    result = await Self.confirmApplePay(checkoutSession: self.session, parameters: parameters)
+                case .link(let parameters):
+                    result = await Self.confirmLink(checkoutSession: self.session, parameters: parameters)
+                case .paymentMethod(let parameters, let integrationShape):
+                    result = await Self.confirmPaymentMethod(
+                        checkoutSession: self.session,
+                        parameters: parameters,
+                        preconfirmIntegrationShape: integrationShape
+                    )
+                }
+                // 3. Update the Session
+                if let response = result.checkoutSessionResponse {
+                    do {
+                        // TODO: This doesn't need to and should never actually throw
+                        try await self.commitSession(response)
+                    } catch {
+                        stpAssertionFailure("commit session should never fail")
+                        STPAnalyticsClient.sharedClient.log(
+                            analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error)
+                        )
+                        throw error
+                    }
+                }
+                return result
+            }
+            return mapConfirmationResult(result)
+        } catch {
+            return .failed(error)
         }
-        return ConfirmationContext(
-            paymentOption: paymentOption,
-            configuration: paymentElement.embeddedPaymentElement.configuration,
-            integrationShape: .embedded,
-            confirmationChallenge: paymentElement.embeddedPaymentElement.confirmationChallenge,
-            analyticsHelper: paymentElement.embeddedPaymentElement.analyticsHelper
-        )
     }
 
-    static func confirm(
+    func mapConfirmationResult(_ result: InternalConfirmResult) -> ConfirmResult {
+        switch result {
+        case .completed(let response):
+            return .succeeded(paymentStatus: response.paymentStatus)
+        case .canceled:
+            return .canceled
+        case .failed(let error, _):
+            return .failed(error)
+        }
+    }
+
+    // MARK: - Payment Method Confirmation
+
+    static func confirmPaymentMethod(
         checkoutSession: Session,
-        confirmationContext: ConfirmationContext,
-        authenticationContext: STPAuthenticationContext,
-        paymentHandler: STPPaymentHandler
+        parameters: PaymentMethodConfirmationParameters,
+        preconfirmIntegrationShape: PaymentSheet.IntegrationShape
     ) async -> InternalConfirmResult {
-        // 1. Handle pre-confirm actions, such as Bacs mandate acceptance or saved-card CVC recollection.
+        let paymentOption: PaymentOption
+        switch parameters.option {
+        case .new(let confirmParams):
+            paymentOption = .new(confirmParams: confirmParams)
+        case .saved(let paymentMethod, let confirmParams):
+            paymentOption = .saved(paymentMethod: paymentMethod, confirmParams: confirmParams)
+        }
+
         let preconfirmActionsResult = await PaymentSheet.handlePreconfirmActionsIfNecessary(
-            configuration: confirmationContext.configuration,
-            authenticationContext: authenticationContext,
+            configuration: parameters.configuration,
+            authenticationContext: parameters.authenticationContext,
             intent: .checkout(checkoutSession),
-            paymentOption: confirmationContext.paymentOption,
-            paymentHandler: paymentHandler,
-            integrationShape: confirmationContext.integrationShape
+            paymentOption: paymentOption,
+            paymentHandler: parameters.paymentHandler,
+            integrationShape: preconfirmIntegrationShape
         )
 
         let intentConfirmParams: IntentConfirmParams?
@@ -74,53 +262,35 @@ extension CheckoutController {
         case .succeeded(let params):
             intentConfirmParams = params
         case .canceled:
-            return .init(paymentSheetResult: .canceled)
+            return .canceled()
         case .failed(let error):
-            return .init(paymentSheetResult: .failed(error: error))
+            return .failed(error)
         }
 
-        // 2. Confirm the Checkout Session using the selected payment option.
-        return await confirmPaymentOption(
+        return await confirmPaymentMethodOption(
             checkoutSession: checkoutSession,
-            confirmationContext: confirmationContext,
-            authenticationContext: authenticationContext,
+            parameters: parameters,
             intentConfirmParamsForDeferredIntent: intentConfirmParams,
-            paymentHandler: paymentHandler
         )
     }
 
-    static func confirmPaymentOption(
+    static func confirmPaymentMethodOption(
         checkoutSession: Session,
-        confirmationContext: ConfirmationContext,
-        authenticationContext: STPAuthenticationContext,
-        intentConfirmParamsForDeferredIntent: IntentConfirmParams?,
-        paymentHandler: STPPaymentHandler
+        parameters: PaymentMethodConfirmationParameters,
+        intentConfirmParamsForDeferredIntent: IntentConfirmParams?
     ) async -> InternalConfirmResult {
-        let paymentOption = confirmationContext.paymentOption
         let elementsSession = checkoutSession.elementsSession
-        let configuration = confirmationContext.configuration
-        let confirmationChallenge = confirmationContext.confirmationChallenge
+        let configuration = parameters.configuration
+        let confirmationChallenge = parameters.confirmationChallenge
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
             intent: .checkout(checkoutSession),
             elementsSession: elementsSession
         )
 
-        switch paymentOption {
-        case .applePay:
-            // MARK: - Apple Pay
-            // TODO: Make a new STPApplePayContext-wrapping thing.
-            return .init(paymentSheetResult: .canceled)
-
+        switch parameters.option {
         case .new(let confirmParams):
             // MARK: - New PM
-            let paymentMethodType: STPPaymentMethodType = {
-                switch paymentOption.paymentMethodType {
-                case .stripe(let paymentMethodType):
-                    return paymentMethodType
-                default:
-                    return .unknown
-                }
-            }()
+            let paymentMethodType = confirmParams.paymentMethodParams.type
             confirmParams.setAllowRedisplayForCheckoutSession(
                 merchantWillSavePaymentMethod: checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
             )
@@ -135,8 +305,8 @@ extension CheckoutController {
                     shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
                 ),
                 configuration: configuration,
-                authenticationContext: authenticationContext,
-                paymentHandler: paymentHandler,
+                authenticationContext: parameters.authenticationContext,
+                paymentHandler: parameters.paymentHandler,
                 elementsSession: elementsSession
             )
             await confirmationChallenge?.complete()
@@ -156,26 +326,11 @@ extension CheckoutController {
                     radarOptions: nil
                 ),
                 configuration: configuration,
-                authenticationContext: authenticationContext,
-                paymentHandler: paymentHandler,
+                authenticationContext: parameters.authenticationContext,
+                paymentHandler: parameters.paymentHandler,
                 elementsSession: elementsSession
             )
             return result
-
-        case .external:
-            // MARK: - External PM
-            stpAssertionFailure("External payment methods not supported.")
-            return .init(paymentSheetResult: .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption))
-
-        case .link:
-            // MARK: - Link
-            return await confirmLink(
-                checkoutSession: checkoutSession,
-                confirmationContext: confirmationContext,
-                authenticationContext: authenticationContext,
-                clientAttributionMetadata: clientAttributionMetadata,
-                paymentHandler: paymentHandler
-            )
         }
     }
 
@@ -249,11 +404,20 @@ extension CheckoutController {
                 authenticationContext: authenticationContext,
                 paymentHandler: paymentHandler
             )
-            return .init(paymentSheetResult: paymentSheetResult, checkoutSessionResponse: response)
+            switch paymentSheetResult {
+            case .completed:
+                return .completed(response)
+            case .canceled:
+                return .canceled(sessionResponse: response)
+            case .failed(let error):
+                return .failed(error, sessionResponse: response)
+            }
         } catch {
-            return .init(paymentSheetResult: .failed(error: error))
+            return .failed(error)
         }
     }
+
+    // MARK: - Confirm Response Handling
 
     @MainActor
     private static func handleCheckoutSessionConfirmResponse(
@@ -318,6 +482,8 @@ extension CheckoutController {
             }
         }
     }
+
+    // MARK: - Helpers
 
     private static func makeCheckoutSessionShippingParams(configuration: PaymentElementConfiguration) -> STPPaymentIntentShippingDetailsParams? {
         return STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration)

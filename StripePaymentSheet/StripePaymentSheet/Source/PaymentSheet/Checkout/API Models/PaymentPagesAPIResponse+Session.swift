@@ -133,21 +133,19 @@ extension PaymentPagesAPIResponse {
                     let unitAmount = item.unitAmount ?? price.unitAmount ?? 0
                     let adjustableQuantity: CheckoutController.Session.AdjustableQuantity?
                     if let rawAdjustableQuantity = item.adjustableQuantity,
-                       rawAdjustableQuantity.enabled {
-                        // TODO: Payment Pages currently models these bounds as optional, although enabled
-                        // adjustable quantity is normally populated with server defaults of 0 and 99.
-                        // Once the response contract requires both bounds when enabled, reject missing
-                        // values during decoding and remove these client-side fallbacks.
+                       rawAdjustableQuantity.enabled,
+                       let maximum = rawAdjustableQuantity.maximum,
+                       let minimum = rawAdjustableQuantity.minimum {
                         adjustableQuantity = CheckoutController.Session.AdjustableQuantity(
                             enabled: true,
-                            maximum: rawAdjustableQuantity.maximum ?? 99,
-                            minimum: rawAdjustableQuantity.minimum ?? 0
+                            maximum: maximum,
+                            minimum: minimum
                         )
                     } else {
                         adjustableQuantity = nil
                     }
                     return CheckoutController.Session.OrderSummaryItem.OneTimePrice.Item(
-                        key: price.id,
+                        key: item.innerItemKey,
                         displayName: product.name,
                         images: product.images,
                         unitAmount: makeAmount(

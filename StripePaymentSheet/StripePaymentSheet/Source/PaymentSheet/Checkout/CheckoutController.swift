@@ -80,6 +80,9 @@ public final class CheckoutController: ObservableObject {
         }
     }
 
+    /// Guards confirmation across Payment Element and Express Checkout entry points.
+    var confirmationInProgress = false
+
     /// Default timeout used by ``awaitPendingOperations(timeout:)``.
     nonisolated static let defaultPendingOperationsTimeout: TimeInterval = 30
 
@@ -341,41 +344,13 @@ public final class CheckoutController: ObservableObject {
             return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
 
-        guard sessionIsOpen else {
-            return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController.confirm(from:) cannot confirm a Checkout Session that is no longer open."))
-        }
-
-        guard pendingOperations.isEmpty else {
-            return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController.confirm(from:) was called while the Checkout Session is still loading. Wait until CheckoutController.isUpdating is false."))
-        }
-
-        guard let confirmationContext = confirmationContext(for: paymentElement) else {
+        guard let flow = confirmationFlow(
+            for: paymentElement,
+            presentingViewController: presentingViewController
+        ) else {
             return .failed(PaymentSheetError.confirmingWithInvalidPaymentOption)
         }
-        let authenticationContext = AuthenticationContext(
-            presentingViewController: presentingViewController,
-            appearance: confirmationContext.configuration.appearance
-        )
-
-        do {
-            let confirmResult = try await enqueueSessionUpdate {
-                let result = await Self.confirm(
-                    checkoutSession: self.session,
-                    confirmationContext: confirmationContext,
-                    authenticationContext: authenticationContext,
-                    paymentHandler: self.paymentHandler
-                )
-                if let checkoutSessionResponse = result.checkoutSessionResponse {
-                    try await self.commitSession(checkoutSessionResponse)
-                }
-                return result
-            }
-            _ = confirmResult
-            // TODO: Map the internal confirm result into `ConfirmResult`.
-            return .canceled
-        } catch {
-            return .failed(error)
-        }
+        return await confirm(flow)
     }
 
     /// The result of an attempt to confirm a Checkout Session.

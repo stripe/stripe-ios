@@ -113,6 +113,24 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(embeddedConfiguration.merchantDisplayName, "Dashboard Merchant")
     }
 
+    func testConfigurationAllowsAllCheckoutPaymentMethodRequirements() async throws {
+        // Given a Checkout configuration
+        let checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+
+        // When Checkout creates PaymentElement
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
+        )
+        let paymentElement = checkout.getPaymentElement()
+        let paymentSheetConfiguration = paymentElement.paymentSheetFlowController.configuration
+        let embeddedConfiguration = paymentElement.embeddedPaymentElement.configuration
+
+        // Then both presentations allow payment methods supported by Checkout
+        XCTAssertTrue(paymentSheetConfiguration.allowsDelayedPaymentMethods)
+        XCTAssertTrue(paymentSheetConfiguration.allowsPaymentMethodsRequiringShippingAddress)
+        XCTAssertTrue(embeddedConfiguration.allowsDelayedPaymentMethods)
+        XCTAssertTrue(embeddedConfiguration.allowsPaymentMethodsRequiringShippingAddress)
+    }
     func testConfigurationSetsCheckoutDefaultShippingDetails() async throws {
         // Given Checkout shipping defaults
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")

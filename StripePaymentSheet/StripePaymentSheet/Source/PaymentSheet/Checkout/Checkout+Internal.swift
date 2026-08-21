@@ -8,8 +8,39 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+import UIKit
 
-extension CheckoutController: ExpressCheckoutElementDelegate {}
+extension CheckoutController: ExpressCheckoutElementDelegate {
+    func expressCheckoutElementShouldConfirm(
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod
+    ) async -> ConfirmResult {
+        let flow: CheckoutConfirmationFlow?
+        switch paymentMethod {
+        case .applePay:
+            // TODO: Use ECE-specific Apple Pay configuration once it is implemented.
+            guard let applePayConfiguration = configuration.applePayConfiguration else {
+                flow = nil
+                break
+            }
+            flow = .applePay(.init(
+                applePayConfiguration: applePayConfiguration,
+                apiClient: apiClient,
+                returnURL: configuration.returnURL,
+                merchantDisplayName: effectiveMerchantDisplayName
+            ))
+        case .link:
+            // ECE Link needs its own configuration and analytics lifecycle before it can build this flow.
+            flow = nil
+        }
+        guard let flow else {
+            let error = CheckoutError.unknown(debugDescription: "CheckoutController.expressCheckoutElementShouldConfirm() could not build a confirmation flow for \(paymentMethod).")
+            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+            return .failed(error)
+        }
+        return await confirm(flow)
+    }
+}
+
 extension CheckoutController: CurrencySelectorElementDelegate {}
 extension CheckoutController: ShippingAddressElementDelegate {}
 

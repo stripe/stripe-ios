@@ -74,7 +74,9 @@ public final class PaymentElement {
         // Create FlowController
         let paymentSheetConfiguration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
+            returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
+            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
@@ -85,7 +87,9 @@ public final class PaymentElement {
         // Create Embedded
         let embeddedConfiguration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
+            returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
+            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
@@ -139,13 +143,17 @@ extension PaymentElement {
         let configuration = checkout.configuration.paymentElement
         paymentSheetFlowController.configuration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
+            returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
+            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
         embeddedPaymentElement.configuration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
+            returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
+            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )

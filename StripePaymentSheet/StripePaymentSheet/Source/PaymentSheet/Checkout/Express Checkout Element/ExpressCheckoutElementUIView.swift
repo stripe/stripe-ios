@@ -7,6 +7,7 @@
 
 import PassKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import UIKit
 
 /// A UIKit view that displays wallet payment buttons (Apple Pay, Link).
@@ -73,8 +74,8 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Methods
 
-    private func makeButton(for button: ExpressButton) -> UIView {
-        switch button {
+    private func makeButton(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> UIView {
+        switch paymentMethod {
         case .applePay:
             return makeApplePayButton()
         case .link:
@@ -104,10 +105,18 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     @objc private func handleApplePayTapped() {
-        // TODO: Handle Apple Pay
+        confirm(.applePay)
     }
 
     @objc private func handleLinkTapped() {
         // TODO: Handle Link
+    }
+
+    private func confirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod) {
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            guard let result = await self.delegate?.expressCheckoutElementShouldConfirm(paymentMethod) else { return }
+            self.configuration.expressCheckoutElement.confirmHandler(result)
+        }
     }
 }

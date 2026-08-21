@@ -16,6 +16,7 @@ struct CheckoutCartView: View {
 
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var confirmResult: CheckoutController.ConfirmResult?
     @State private var showsCheckoutDetails = false
 
     let clientSecret: String
@@ -49,10 +50,14 @@ struct CheckoutCartView: View {
                             }
                             switch integrationType {
                             case .flowController:
-                                CheckoutCartPaymentButton(checkout: checkout)
+                                CheckoutCartPaymentButton(checkout: checkout) { result in
+                                    confirmResult = result
+                                }
                                     .clipped()
                             case .embedded:
-                                CheckoutCartEmbeddedPaymentView(checkout: checkout)
+                                CheckoutCartEmbeddedPaymentView(checkout: checkout) { result in
+                                    confirmResult = result
+                                }
                                     .clipped()
                             case .eceOnly:
                                 EmptyView()
@@ -113,6 +118,45 @@ struct CheckoutCartView: View {
             .task {
                 await loadCheckout()
             }
+            .alert(
+                confirmResultAlertTitle,
+                isPresented: Binding(get: { confirmResult != nil }, set: { if !$0 { confirmResult = nil } }),
+                actions: { Button("OK") { acknowledgeConfirmResult() } },
+                message: { Text(confirmResultAlertMessage) }
+            )
+        }
+        .disabled(checkout?.isUpdating == true)
+    }
+
+    private var confirmResultAlertTitle: String {
+        switch confirmResult {
+        case .succeeded: return "Success"
+        case .canceled: return "Canceled"
+        case .failed: return "Unable to complete checkout"
+        case nil: return ""
+        }
+    }
+
+    private var confirmResultAlertMessage: String {
+        switch confirmResult {
+        case .succeeded(let paymentStatus): return "Payment status: \(paymentStatus)"
+        case .canceled: return "The payment was canceled."
+        case .failed(let error):
+            return "Localized: \(error.localizedDescription)\n\nDebug: \(String(reflecting: error))"
+        case nil: return ""
+        }
+    }
+
+    private func acknowledgeConfirmResult() {
+        let confirmationSucceeded: Bool
+        if case .succeeded = confirmResult {
+            confirmationSucceeded = true
+        } else {
+            confirmationSucceeded = false
+        }
+        confirmResult = nil
+        if confirmationSucceeded {
+            dismiss()
         }
     }
 
@@ -130,6 +174,9 @@ struct CheckoutCartView: View {
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             config.currencySelectorElement.appearance = currencySelectorAppearance
+            config.expressCheckoutElement.confirmHandler = { result in
+                confirmResult = result
+            }
             config.shippingAddressElement.title = "Shipping Address"
             config.shippingAddressElement.buttonTitle = "Save Address"
             checkout = try await CheckoutController(configuration: config)

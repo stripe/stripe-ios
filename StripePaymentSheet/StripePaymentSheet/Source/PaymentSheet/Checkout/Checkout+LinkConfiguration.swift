@@ -24,6 +24,8 @@ extension CheckoutController {
             case automatic
             /// Never show Link.
             case never
+            /// Keep Link enabled, but hide its button or row in PaymentElement.
+            case walletButtonHidden
         }
     }
 }
