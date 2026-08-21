@@ -89,44 +89,6 @@ struct CheckoutPlaygroundConfigurationSection: View {
     }
 }
 
-struct CheckoutPlaygroundExpressCheckoutElementSection: View {
-    @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
-    @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
-    @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            CheckoutPlayground.SectionHeader(title: "ExpressCheckoutElement", icon: "bolt.fill")
-            VStack(spacing: 1) {
-                CheckoutPlayground.PickerRow(
-                    title: "Show / Hide",
-                    icon: "eye.fill",
-                    selection: $expressCheckoutElementOption,
-                    displayText: { $0.displayName }
-                )
-                if expressCheckoutElementOption == .show {
-                    CheckoutPlayground.PickerRow(
-                        title: "Apple Pay Display",
-                        icon: "apple.logo",
-                        selection: $applePayDisplay,
-                        tooltip: "Sets `ExpressCheckoutElement.Configuration.applePayConfiguration.display`.",
-                        displayText: { $0.rawValue.capitalized }
-                    )
-                    CheckoutPlayground.PickerRow(
-                        title: "Link Display",
-                        icon: "link",
-                        selection: $linkDisplay,
-                        tooltip: "Sets `ExpressCheckoutElement.Configuration.linkConfiguration.display`.",
-                        displayText: { $0.rawValue.capitalized }
-                    )
-                }
-            }
-            .background(Color(uiColor: .secondarySystemGroupedBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-        }
-    }
-}
-
 struct CheckoutPlaygroundLineItemsSection: View {
     let lineItems: [CheckoutPlayground.LineItemConfig]
     let currency: CheckoutPlayground.Currency
@@ -265,6 +227,44 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $checkoutSessionPaymentMethodRemove,
                     tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
                 )
+            }
+            .background(Color(uiColor: .secondarySystemGroupedBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+}
+
+struct CheckoutPlaygroundExpressCheckoutElementSection: View {
+    @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
+    @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
+    @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            CheckoutPlayground.SectionHeader(title: "ExpressCheckoutElement", icon: "bolt.fill")
+            VStack(spacing: 1) {
+                CheckoutPlayground.PickerRow(
+                    title: "Show / Hide",
+                    icon: "eye.fill",
+                    selection: $expressCheckoutElementOption,
+                    displayText: { $0.displayName }
+                )
+                if expressCheckoutElementOption == .show {
+                    CheckoutPlayground.PickerRow(
+                        title: "Apple Pay Display",
+                        icon: "apple.logo",
+                        selection: $applePayDisplay,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.applePayConfiguration.display`.",
+                        displayText: { $0.rawValue.capitalized }
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Link Display",
+                        icon: "link",
+                        selection: $linkDisplay,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.linkConfiguration.display`.",
+                        displayText: { $0.rawValue.capitalized }
+                    )
+                }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))

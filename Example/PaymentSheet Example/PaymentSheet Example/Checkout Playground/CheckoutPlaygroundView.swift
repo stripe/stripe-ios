@@ -35,12 +35,6 @@ struct CheckoutPlaygroundView: View {
                             delayPaymentPagesRequests: $viewModel.delayPaymentPagesRequests
                         )
 
-                        CheckoutPlaygroundExpressCheckoutElementSection(
-                            expressCheckoutElementOption: $viewModel.expressCheckoutElementOption,
-                            applePayDisplay: $viewModel.applePayDisplay,
-                            linkDisplay: $viewModel.linkDisplay
-                        )
-
                         CheckoutPlaygroundLineItemsSection(
                             lineItems: viewModel.lineItems,
                             currency: viewModel.currency
@@ -56,6 +50,12 @@ struct CheckoutPlaygroundView: View {
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
                             automaticPaymentMethods: $viewModel.automaticPaymentMethods
+                        )
+
+                        CheckoutPlaygroundExpressCheckoutElementSection(
+                            expressCheckoutElementOption: $viewModel.expressCheckoutElementOption,
+                            applePayDisplay: $viewModel.applePayDisplay,
+                            linkDisplay: $viewModel.linkDisplay
                         )
 
                         currencySelectorAppearanceSection
