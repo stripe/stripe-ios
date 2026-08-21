@@ -39,7 +39,7 @@ extension CheckoutController {
 /// implemented by both ``PaymentSheet/BillingDetailsCollectionConfiguration`` and
 /// ``ExpressCheckoutElement/BillingDetailsCollectionConfiguration`` so confirmation code
 /// can accept either one without converting between them.
-protocol BillingDetailsCollectionConfiguration {
+protocol CheckoutBillingDetailsCollectionConfiguration {
     var requiredBillingContactFields: Set<PKContactField> { get }
     var requiredShippingContactFields: Set<PKContactField> { get }
 }

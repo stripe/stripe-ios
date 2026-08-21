@@ -18,7 +18,7 @@ extension CheckoutController {
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
-        let billingDetailsCollectionConfiguration: any BillingDetailsCollectionConfiguration
+        let billingDetailsCollectionConfiguration: any CheckoutBillingDetailsCollectionConfiguration
         let presentationWindow: UIWindow?
     }
 

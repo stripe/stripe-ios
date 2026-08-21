@@ -76,7 +76,7 @@ extension ExpressCheckoutElement {
     }
 }
 
-extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration: BillingDetailsCollectionConfiguration {
+extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration: CheckoutBillingDetailsCollectionConfiguration {
     /// Billing contact fields to require in the Apple Pay sheet.
     var requiredBillingContactFields: Set<PKContactField> {
         var requiredPKContactFields = Set<PKContactField>()
