@@ -270,3 +270,5 @@ extension STPAPIClient {
         }
     }
 }
+
+extension STPAPIClient: CheckoutSessionPollingAPIClient {}
