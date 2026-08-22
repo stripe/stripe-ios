@@ -20,7 +20,6 @@ final class PaymentPagePollResponseTests: XCTestCase {
             ("succeeded", .succeeded),
             ("invalid", .invalid),
             ("expired", .expired),
-            ("new_state", .unparsable),
         ]
 
         for (rawValue, expected) in cases {
@@ -29,22 +28,33 @@ final class PaymentPagePollResponseTests: XCTestCase {
         }
     }
 
-    func testDecodesEveryPaymentObjectStatus() throws {
-        let cases: [(String, PaymentPagePollResponse.PaymentObjectStatus)] = [
-            ("canceled", .canceled),
-            ("processing", .processing),
-            ("requires_action", .requiresAction),
-            ("requires_capture", .requiresCapture),
-            ("requires_confirmation", .requiresConfirmation),
-            ("requires_payment_method", .requiresPaymentMethod),
-            ("requires_reauthorization", .requiresReauthorization),
-            ("succeeded", .succeeded),
-            ("new_status", .unparsable),
-        ]
+    func testUnknownStateFailsToDecode() throws {
+        XCTAssertThrowsError(try decode(state: "new_state")) { error in
+            XCTAssertTrue(error is DecodingError)
+        }
+    }
 
-        for (rawValue, expected) in cases {
-            let response = try decode(paymentObjectStatus: rawValue)
-            XCTAssertEqual(response.paymentObjectStatus, expected, rawValue)
+    func testPaymentObjectStatusOnlyDistinguishesRequiresPaymentMethod() throws {
+        XCTAssertEqual(
+            try decode(paymentObjectStatus: "requires_payment_method").paymentObjectStatus,
+            .requiresPaymentMethod
+        )
+
+        for rawValue in [
+            "canceled",
+            "processing",
+            "requires_action",
+            "requires_capture",
+            "requires_confirmation",
+            "requires_reauthorization",
+            "succeeded",
+            "new_status",
+        ] {
+            XCTAssertEqual(
+                try decode(paymentObjectStatus: rawValue).paymentObjectStatus,
+                .other,
+                rawValue
+            )
         }
     }
 

@@ -5,8 +5,6 @@
 //  Created by Yuki Tokuhiro on 8/22/26.
 //
 
-@_spi(STP) import StripeCore
-
 /// The small response returned by the Checkout Session poll endpoint.
 ///
 /// This response is used to decide when to stop waiting. It does not contain
@@ -16,7 +14,7 @@ struct PaymentPagePollResponse: Decodable, Equatable {
     let state: State
     let paymentObjectStatus: PaymentObjectStatus?
 
-    enum State: String, SafeEnumDecodable {
+    enum State: String, Decodable {
         case active
         case pendingAsyncCustomerAction = "pending_async_customer_action"
         case processingSubscription = "processing_subscription"
@@ -25,19 +23,18 @@ struct PaymentPagePollResponse: Decodable, Equatable {
         case succeeded
         case invalid
         case expired
-        case unparsable = ""
     }
 
-    enum PaymentObjectStatus: String, SafeEnumDecodable {
-        case canceled
-        case processing
-        case requiresAction = "requires_action"
-        case requiresCapture = "requires_capture"
-        case requiresConfirmation = "requires_confirmation"
-        case requiresPaymentMethod = "requires_payment_method"
-        case requiresReauthorization = "requires_reauthorization"
-        case succeeded
-        case unparsable = ""
+    /// The client only needs to distinguish a failed payment from every other
+    /// payment object status. The poll response is not used as session data.
+    enum PaymentObjectStatus: Decodable, Equatable {
+        case requiresPaymentMethod
+        case other
+
+        init(from decoder: Decoder) throws {
+            let rawValue = try decoder.singleValueContainer().decode(String.self)
+            self = rawValue == "requires_payment_method" ? .requiresPaymentMethod : .other
+        }
     }
 
     private enum CodingKeys: String, CodingKey {
