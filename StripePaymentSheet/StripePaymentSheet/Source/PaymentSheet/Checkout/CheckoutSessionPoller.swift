@@ -14,10 +14,6 @@ protocol CheckoutSessionPollingAPIClient {
         checkoutSessionId: String,
         timeout: TimeInterval
     ) async throws -> PaymentPagePollResponse
-
-    func retrieveCheckoutSession(
-        checkoutSessionId: String
-    ) async throws -> PaymentPagesAPIResponse
 }
 
 class CheckoutSessionPollingClock {
@@ -25,17 +21,29 @@ class CheckoutSessionPollingClock {
         Date().timeIntervalSinceReferenceDate
     }
 
-    func sleep(for duration: TimeInterval) async throws {
-        try await Task.sleep(
-            nanoseconds: UInt64(duration * 1_000_000_000)
-        )
+    func sleep(for duration: TimeInterval) async {
+        await withCheckedContinuation { continuation in
+            DispatchQueue.global().asyncAfter(deadline: .now() + duration) {
+                continuation.resume()
+            }
+        }
     }
 }
 
 /// Polls a Checkout Session until confirmation can continue or polling times out.
 struct CheckoutSessionPoller {
-    enum Error: Swift.Error {
-        case paymentFailed(session: PaymentPagesAPIResponse)
+    enum Outcome: Equatable {
+        /// Polling observed a state where confirmation can continue.
+        case completed
+
+        /// Polling timed out before observing a terminal state.
+        case timedOut
+
+        /// The payment object requires a new payment method.
+        case requiresPaymentMethod
+
+        /// The Checkout Session state is invalid or expired.
+        case invalidOrExpired
     }
 
     /// The maximum amount of time to poll before giving up and returning.
@@ -57,12 +65,8 @@ struct CheckoutSessionPoller {
         self.clock = clock
     }
 
-    /// Returns after polling terminates or times out.
-    ///
-    /// Throws `Error.paymentFailed` after observing `requires_payment_method`
-    /// and retrieving the full Checkout Session. Cancellation and full-session
-    /// retrieval errors are also propagated.
-    func poll(checkoutSessionId: String) async throws {
+    /// Returns the reason polling stopped. Request failures are retried until timeout.
+    func poll(checkoutSessionId: String) async -> Outcome {
         let startTime = clock.now()
         var lastPollStartElapsedTime: TimeInterval?
         var minimumTimeIntervalBetweenPolls = Self.minimumTimeInterval
@@ -90,11 +94,11 @@ struct CheckoutSessionPoller {
 
                 // If another `/poll` cannot start before we time out, give up polling.
                 guard delay < remainingTime else {
-                    return
+                    return .timedOut
                 }
 
                 if delay > 0 {
-                    try await clock.sleep(for: delay)
+                    await clock.sleep(for: delay)
                 }
             }
 
@@ -103,7 +107,7 @@ struct CheckoutSessionPoller {
             do {
                 let remainingTime = Self.timeout - elapsedTime()
                 guard remainingTime > 0 else {
-                    return
+                    return .timedOut
                 }
 
                 lastPollStartElapsedTime = elapsedTime()
@@ -111,11 +115,7 @@ struct CheckoutSessionPoller {
                     checkoutSessionId: checkoutSessionId,
                     timeout: remainingTime
                 )
-            } catch let error as CancellationError {
-                throw error
             } catch {
-                try Task.checkCancellation()
-
                 if Self.isRateLimitError(error) {
                     // Increase minimum interval between polls to try to stop being rate limited
                     minimumTimeIntervalBetweenPolls = Self.rateLimitTimeInterval(
@@ -132,11 +132,7 @@ struct CheckoutSessionPoller {
 
             // 3. Check the /poll status
             if pollResponse.paymentObjectStatus == .requiresPaymentMethod {
-                // 3a. Payment failed, do a full retrieve so we can update the Session
-                let session = try await apiClient.retrieveCheckoutSession(
-                    checkoutSessionId: checkoutSessionId
-                )
-                throw Error.paymentFailed(session: session)
+                return .requiresPaymentMethod
             }
 
             switch pollResponse.state {
@@ -147,13 +143,23 @@ struct CheckoutSessionPoller {
                 continue
             case .succeeded,
                  .processingAsyncPayment,
-                 .pendingAsyncCustomerAction,
-                 .invalid,
-                 .expired:
+                 .pendingAsyncCustomerAction:
                 // 3b. Checkout Session is client-complete, we're done!
-                return
+                return .completed
+            case .invalid,
+                 .expired:
+                // Note: EwCS stops polling and ignores these unexpected states, allowing confirmation
+                // to continue as a success:
+                // https://stripe.sourcegraphcloud.com/stripe-internal/mint/-/blob/pay-server/stripe-js-v3/src/checkout/outer/customCheckout/actions/confirm/pollPaymentPage.ts?L84-91
+                // https://stripe.sourcegraphcloud.com/stripe-internal/mint/-/blob/pay-server/stripe-js-v3/src/checkout/outer/customCheckout/actions/confirm/handleNextAction.ts?L200-220
+                // Instead, return a distinct outcome so the caller can retrieve the authoritative
+                // Session and return an error, matching Hosted Checkout:
+                // https://stripe.sourcegraphcloud.com/stripe-internal/mint/-/blob/pay-server/stripe-js-v3/src/checkout/hosted/helpers/pollApi.ts?L119-128
+                return .invalidOrExpired
             }
         }
+
+        return .timedOut
     }
 
     /// Returns an exponentially increasing minimum poll interval of 2, 4, then 8 seconds,
