@@ -8,6 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
+// MARK: - Dependencies
 protocol CheckoutSessionPollingAPIClient {
     func pollCheckoutSession(
         checkoutSessionId: String,
@@ -19,10 +20,9 @@ protocol CheckoutSessionPollingAPIClient {
     ) async throws -> PaymentPagesAPIResponse
 }
 
-// Only exists for tests to override
 class CheckoutSessionPollingClock {
     func now() -> TimeInterval {
-        ProcessInfo.processInfo.systemUptime
+        Date().timeIntervalSinceReferenceDate
     }
 
     func sleep(for duration: TimeInterval) async throws {
@@ -32,6 +32,7 @@ class CheckoutSessionPollingClock {
     }
 }
 
+/// Polls a Checkout Session until confirmation can continue or polling times out.
 struct CheckoutSessionPoller {
     enum Error: Swift.Error {
         case paymentFailed(session: PaymentPagesAPIResponse)
@@ -63,7 +64,7 @@ struct CheckoutSessionPoller {
     /// retrieval errors are also propagated.
     func poll(checkoutSessionId: String) async throws {
         let startTime = clock.now()
-        var lastPollStartTime: TimeInterval?
+        var lastPollStartElapsedTime: TimeInterval?
         var minimumTimeIntervalBetweenPolls = Self.minimumTimeInterval
         var consecutiveRateLimitCount = 0
 
@@ -75,7 +76,7 @@ struct CheckoutSessionPoller {
         // Keep polling until the overall timeout is reached.
         while elapsedTime() < Self.timeout {
             // 1. Ensure `minimumTimeIntervalBetweenPolls` has elapsed before kicking off another /poll, to avoid spamming.
-            if let lastPollStartTime {
+            if let lastPollStartElapsedTime {
                 //
                 //  Poll 1 starts                   Response ends               Poll 2 starts           Timeout
                 //  |-------------------------------|<---------- delay -------->|-----------------------X
@@ -83,15 +84,15 @@ struct CheckoutSessionPoller {
                 //  |<---------- minimumTimeIntervalBetweenPolls -------------->|
                 //                                  |<--------------- remainingTime ------------------->|
                 //                                  👆 we are here in time
-                let timeSinceLastPollStarted = clock.now() - lastPollStartTime
+                let timeSinceLastPollStarted = elapsedTime() - lastPollStartElapsedTime
                 let delay = max(0, minimumTimeIntervalBetweenPolls - timeSinceLastPollStarted)
                 let remainingTime = max(0, Self.timeout - elapsedTime())
 
-                // If we don't have time to /poll before we time out, give up polling.
-                guard delay >= remainingTime else {
+                // If another `/poll` cannot start before we time out, give up polling.
+                guard delay < remainingTime else {
                     return
                 }
-                
+
                 if delay > 0 {
                     try await clock.sleep(for: delay)
                 }
@@ -105,7 +106,7 @@ struct CheckoutSessionPoller {
                     return
                 }
 
-                lastPollStartTime = clock.now()
+                lastPollStartElapsedTime = elapsedTime()
                 pollResponse = try await apiClient.pollCheckoutSession(
                     checkoutSessionId: checkoutSessionId,
                     timeout: remainingTime
@@ -116,6 +117,7 @@ struct CheckoutSessionPoller {
                 try Task.checkCancellation()
 
                 if Self.isRateLimitError(error) {
+                    // Increase minimum interval between polls to try to stop being rate limited
                     minimumTimeIntervalBetweenPolls = Self.rateLimitTimeInterval(
                         retryCount: consecutiveRateLimitCount
                     )
@@ -124,10 +126,13 @@ struct CheckoutSessionPoller {
                 continue
             }
 
+            // At this point, `/poll` succeeded. Reset the interval and consecutive rate-limit count.
             minimumTimeIntervalBetweenPolls = Self.minimumTimeInterval
             consecutiveRateLimitCount = 0
 
+            // 3. Check the /poll status
             if pollResponse.paymentObjectStatus == .requiresPaymentMethod {
+                // 3a. Payment failed, do a full retrieve so we can update the Session
                 let session = try await apiClient.retrieveCheckoutSession(
                     checkoutSessionId: checkoutSessionId
                 )
@@ -138,18 +143,23 @@ struct CheckoutSessionPoller {
             case .active,
                  .processingSyncPayment,
                  .processingSubscription:
+                // 3b. Checkout Session is still processing, continue polling
                 continue
             case .succeeded,
                  .processingAsyncPayment,
                  .pendingAsyncCustomerAction,
                  .invalid,
                  .expired:
+                // 3b. Checkout Session is client-complete, we're done!
                 return
             }
         }
     }
 
-    /// Returns an exponentially increasing minimum poll interval of 2, 4, then 8 seconds, capped at 8 seconds.
+    /// Returns an exponentially increasing minimum poll interval of 2, 4, then 8 seconds,
+    /// capped at 8 seconds. This matches the defaults used by EwCS's
+    /// `calculateExponentialBackoff`.
+    /// https://stripe.sourcegraphcloud.com/stripe-internal/mint/-/blob/pay-server/stripe-js-v3/src/checkout/shared/helpers/exponentialBackoff.ts?L18-25
     private static func rateLimitTimeInterval(retryCount: Int) -> TimeInterval {
         let timeInterval = minimumRateLimitTimeInterval * pow(2, Double(retryCount))
         return min(timeInterval, maximumRateLimitTimeInterval)
