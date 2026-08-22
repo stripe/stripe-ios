@@ -597,9 +597,12 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         sessionProvider { [weak self] sessionResult in
             switch sessionResult {
             case .success(let session):
+                let permissions = self?.context.linkConfiguration?.financialConnectionsPermissions
                 session.createLinkAccountSession(
                     linkMode: self?.context.elementsSession.linkSettings?.linkMode,
-                    intentToken: self?.context.intent.stripeId ?? self?.context.elementsSession.sessionID
+                    intentToken: self?.context.intent.stripeId ?? self?.context.elementsSession.sessionID,
+                    permissions: (permissions?.isEmpty ?? true) ? nil : permissions,
+                    merchantToken: self?.context.elementsSession.accountID
                 ) { [session, weak self] linkAccountSessionResult in
                     switch linkAccountSessionResult {
                     case .success(let linkAccountSession):
