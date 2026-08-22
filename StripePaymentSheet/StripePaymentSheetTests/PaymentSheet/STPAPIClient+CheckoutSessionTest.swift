@@ -47,7 +47,8 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // When the session is polled
         let response = try await apiClient.pollCheckoutSession(
-            checkoutSessionId: sessionId
+            checkoutSessionId: sessionId,
+            timeout: 30
         )
 
         // Then its current poll state is returned

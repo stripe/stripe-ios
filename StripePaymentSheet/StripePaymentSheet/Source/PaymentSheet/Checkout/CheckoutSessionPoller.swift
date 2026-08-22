@@ -36,6 +36,10 @@ class CheckoutSessionPollingClock {
 struct CheckoutSessionPoller {
     enum Error: Swift.Error {
         case paymentFailed(session: PaymentPagesAPIResponse)
+        case badCheckoutSessionState(
+            state: PaymentPagePollResponse.State,
+            session: PaymentPagesAPIResponse
+        )
     }
 
     /// The maximum amount of time to poll before giving up and returning.
@@ -59,9 +63,9 @@ struct CheckoutSessionPoller {
 
     /// Returns after polling terminates or times out.
     ///
-    /// Throws `Error.paymentFailed` after observing `requires_payment_method`
-    /// and retrieving the full Checkout Session. Cancellation and full-session
-    /// retrieval errors are also propagated.
+    /// Throws an error carrying the retrieved Checkout Session after observing
+    /// `requires_payment_method`, `invalid`, or `expired`. Cancellation and
+    /// full-session retrieval errors are also propagated.
     func poll(checkoutSessionId: String) async throws {
         let startTime = clock.now()
         var lastPollStartElapsedTime: TimeInterval?
@@ -147,11 +151,24 @@ struct CheckoutSessionPoller {
                 continue
             case .succeeded,
                  .processingAsyncPayment,
-                 .pendingAsyncCustomerAction,
-                 .invalid,
-                 .expired:
+                 .pendingAsyncCustomerAction:
                 // 3b. Checkout Session is client-complete, we're done!
                 return
+            case .invalid,
+                 .expired:
+                // Note: EwCS stops polling and ignores these unexpected states, allowing confirmation
+                // to continue as a success:
+                // https://stripe.sourcegraphcloud.com/stripe-internal/mint/-/blob/pay-server/stripe-js-v3/src/checkout/outer/customCheckout/actions/confirm/pollPaymentPage.ts?L84-91
+                // https://stripe.sourcegraphcloud.com/stripe-internal/mint/-/blob/pay-server/stripe-js-v3/src/checkout/outer/customCheckout/actions/confirm/handleNextAction.ts?L200-220
+                // Instead, we'll retrieve the authoritative Session and throw, matching Hosted Checkout:
+                // https://stripe.sourcegraphcloud.com/stripe-internal/mint/-/blob/pay-server/stripe-js-v3/src/checkout/hosted/helpers/pollApi.ts?L119-128
+                let session = try await apiClient.retrieveCheckoutSession(
+                    checkoutSessionId: checkoutSessionId
+                )
+                throw Error.badCheckoutSessionState(
+                    state: pollResponse.state,
+                    session: session
+                )
             }
         }
     }
