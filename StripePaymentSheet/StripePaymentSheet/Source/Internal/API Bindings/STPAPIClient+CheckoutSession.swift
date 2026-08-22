@@ -68,6 +68,31 @@ extension STPAPIClient {
         )
     }
 
+    /// Retrieves the latest full Checkout Session.
+    func retrieveCheckoutSession(
+        checkoutSessionId: String
+    ) async throws -> PaymentPagesAPIResponse {
+        return try await get(
+            endpoint: "payment_pages/\(checkoutSessionId)",
+            parameters: [
+                "elements_session_client": [
+                    "is_aggregation_expected": true,
+                ],
+            ]
+        )
+    }
+
+    /// Retrieves the small state object used to determine whether a Checkout
+    /// Session transition is still in progress.
+    func pollCheckoutSession(
+        checkoutSessionId: String
+    ) async throws -> PaymentPagePollResponse {
+        return try await get(
+            endpoint: "payment_pages/\(checkoutSessionId)/poll",
+            parameters: [:]
+        )
+    }
+
     func detachPaymentMethod(
         _ paymentMethodId: String,
         fromCheckoutSession checkoutSessionId: String
@@ -216,6 +241,24 @@ extension STPAPIClient {
         do {
             return try await withCheckedThrowingContinuation { continuation in
                 post(resource: endpoint, parameters: parameters) { result in
+                    continuation.resume(with: result)
+                }
+            }
+        } catch {
+            if error is DecodingError {
+                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
+            }
+            throw error
+        }
+    }
+
+    private func get<T: Decodable>(
+        endpoint: String,
+        parameters: [String: Any]
+    ) async throws -> T {
+        do {
+            return try await withCheckedThrowingContinuation { continuation in
+                get(resource: endpoint, parameters: parameters) { (result: Result<T, Error>) in
                     continuation.resume(with: result)
                 }
             }
