@@ -13,7 +13,7 @@ import StripeCoreTestUtils
 import XCTest
 
 final class STPAPIClientTest: APIStubbedTestCase {
-    func testGetAppliesTimeoutAndRetryCount() {
+    func testGetAppliesTimeoutAndDisablesRetries() {
         // Given a 429 response and a default retry count greater than zero
         let originalMaxRetries = StripeAPI.maxRetries
         StripeAPI.maxRetries = 1
@@ -43,7 +43,7 @@ final class STPAPIClientTest: APIStubbedTestCase {
             resource: "test",
             parameters: [:],
             timeout: expectedTimeout,
-            retryCount: 0
+            retriesEnabled: false
         ) { (result: Result<EmptyResponse, Error>) in
             guard case .failure = result else {
                 XCTFail("Expected the 429 response to fail")
