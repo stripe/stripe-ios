@@ -145,6 +145,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         return fields
     }
 
+    @MainActor
     func testRecordConnectionsConsentAcquired_retriesOnAuthError() async throws {
         let sut = makeSUT()
         let refreshExp = expectation(description: "Refreshes when needed")
