@@ -12,6 +12,8 @@
 		1094816DB7E9DFAF01815365 /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63237DF22FD4600B9D2E8071 /* StripeApplePay.framework */; };
 		11DDC6610B393BFF4C6DF02C /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD1F5193E4A361EA9E8FED3 /* StripeCore.framework */; };
 		185A611D085DC24198C3D2D1 /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9C96D25ED549D6255FC274 /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1B09800AE1BB820ACD063B05 /* StripeFinancialConnectionsLite.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8B087D02B099A1ECC13A9376 /* StripeFinancialConnectionsLite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1FE9750093E1EDD645253117 /* StripeFinancialConnectionsLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B087D02B099A1ECC13A9376 /* StripeFinancialConnectionsLite.framework */; };
 		37CDE2E21F00571F147FCFF7 /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 89E47F13DA6D394178F06849 /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		424BBBEBF25E5F020FF40F36 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C2655A8B1DF0649CD996E045 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		551DB033DB4C8257ABAADA8F /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 240DDF52B887E788853A838B /* StripePaymentSheet.framework */; };
@@ -20,12 +22,10 @@
 		7CD54A47BC36A065ADA952BF /* StripeCoreTestUtils.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7C2D3C4D44C73D619A42CF3A /* StripeCoreTestUtils.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7ECCD70F9CE16A1854F2633E /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C2D3C4D44C73D619A42CF3A /* StripeCoreTestUtils.framework */; };
 		95B578013869DFEA1C912A10 /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2655A8B1DF0649CD996E045 /* Stripe3DS2.framework */; };
-		1FE9750093E1EDD645253117 /* StripeFinancialConnectionsLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B087D02B099A1ECC13A9376 /* StripeFinancialConnectionsLite.framework */; };
 		9F126696AD86BF2E861B5CC5 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16547B41C80B97FC2EFD0798 /* StripeFinancialConnections.framework */; };
 		C39CA2EBE08EE768559A8FD1 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD1F5193E4A361EA9E8FED3 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D89C23032CFB732A0CFCD565 /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E565B552830E657F863C4F8 /* StripePayments.framework */; };
 		FA36E30724AAC6E3EF717A6A /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9C96D25ED549D6255FC274 /* StripeUICore.framework */; };
-		1B09800AE1BB820ACD063B05 /* StripeFinancialConnectionsLite.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8B087D02B099A1ECC13A9376 /* StripeFinancialConnectionsLite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FBA21DE7C9261D3BFD53A6CB /* StripeFinancialConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16547B41C80B97FC2EFD0798 /* StripeFinancialConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FD441E14EDF702D50D812875 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = B195FF5EEDEAC460C45887F1 /* iOSSnapshotTestCase */; };
 		FF1C880D1C27F7C384DD2509 /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 63237DF22FD4600B9D2E8071 /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -95,7 +95,6 @@
 /* Begin PBXFileReference section */
 		0F208CB855923E7FD7BB0DC3 /* PaymentSheetLocalizationScreenshotGenerator-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheetLocalizationScreenshotGenerator-Debug.xcconfig"; sourceTree = "<group>"; };
 		16547B41C80B97FC2EFD0798 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8B087D02B099A1ECC13A9376 /* StripeFinancialConnectionsLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnectionsLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E565B552830E657F863C4F8 /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FD1F5193E4A361EA9E8FED3 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		240DDF52B887E788853A838B /* StripePaymentSheet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentSheet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -111,6 +110,7 @@
 		7C2D3C4D44C73D619A42CF3A /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		81BB8CD3461287DDB397717E /* PaymentSheet Example.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "PaymentSheet Example.xctestplan"; sourceTree = "<group>"; };
 		89E47F13DA6D394178F06849 /* StripePaymentsUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentsUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8B087D02B099A1ECC13A9376 /* StripeFinancialConnectionsLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnectionsLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F9C96D25ED549D6255FC274 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B69C155A2B9FDCBD009CE667 /* PaymentSheet Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "PaymentSheet Example.entitlements"; path = "PaymentSheet Example/PaymentSheet Example.entitlements"; sourceTree = "<group>"; };
 		B96951DD278BA611BBCBB10A /* PaymentSheet Example-Shard1.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "PaymentSheet Example-Shard1.xctestplan"; sourceTree = "<group>"; };
