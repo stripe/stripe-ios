@@ -55,4 +55,8 @@ info "Performing pod install..."
 
 pod install --no-repo-update || die "Executing \`pod install\` failed"
 
+if [[ "${1}" == "with_frameworks_swift" ]]; then
+  "${script_dir}/verify_consumer_architectures.sh" || die "Verifying CocoaPods consumer architectures failed"
+fi
+
 info "All good!"
