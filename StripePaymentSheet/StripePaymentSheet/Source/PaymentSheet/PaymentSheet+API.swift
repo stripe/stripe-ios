@@ -14,6 +14,29 @@ import Foundation
 import SwiftUI
 import UIKit
 
+enum PaymentOrSetupIntent {
+    case paymentIntent(STPPaymentIntent)
+    case setupIntent(STPSetupIntent)
+
+    func isSetupFutureUsageSet(paymentMethodType: STPPaymentMethodType) -> Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.isSetupFutureUsageSet(for: paymentMethodType)
+        case .setupIntent:
+            return true
+        }
+    }
+
+    var paymentMethod: STPPaymentMethod? {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.paymentMethod
+        case .setupIntent(let setupIntent):
+            return setupIntent.paymentMethod
+        }
+    }
+}
+
 extension PaymentSheet {
     static var _preconfirmShim: ((UIViewController) -> Void)?
 
@@ -800,29 +823,6 @@ extension PaymentSheet {
     }
 
     // MARK: - Helper methods
-
-    enum PaymentOrSetupIntent {
-        case paymentIntent(STPPaymentIntent)
-        case setupIntent(STPSetupIntent)
-
-        func isSetupFutureUsageSet(paymentMethodType: STPPaymentMethodType) -> Bool {
-            switch self {
-            case .paymentIntent(let paymentIntent):
-                return paymentIntent.isSetupFutureUsageSet(for: paymentMethodType)
-            case .setupIntent:
-                return true
-            }
-        }
-
-        var paymentMethod: STPPaymentMethod? {
-            switch self {
-            case .paymentIntent(let paymentIntent):
-                return paymentIntent.paymentMethod
-            case .setupIntent(let setupIntent):
-                return setupIntent.paymentMethod
-            }
-        }
-    }
 
     /// A helper method that sets the Customer's default payment method if necessary.
     /// - Parameter actionStatus: The final status returned by `STPPaymentHandler`'s completion block.
