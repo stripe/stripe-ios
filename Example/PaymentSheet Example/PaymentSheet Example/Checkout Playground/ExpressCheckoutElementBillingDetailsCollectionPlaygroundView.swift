@@ -40,13 +40,6 @@ struct ExpressCheckoutElementBillingDetailsCollectionPlaygroundView: View {
             } label: {
                 Label("Name", systemImage: "person.fill")
             }
-            Picker(selection: $configuration.phone) {
-                ForEach(ExpressCheckoutElement.BillingDetailsCollectionConfiguration.CollectionMode.allCases) { mode in
-                    Text(mode.rawValue.capitalized).tag(mode)
-                }
-            } label: {
-                Label("Phone", systemImage: "phone.fill")
-            }
             Picker(selection: $configuration.email) {
                 ForEach(ExpressCheckoutElement.BillingDetailsCollectionConfiguration.CollectionMode.allCases) { mode in
                     Text(mode.rawValue.capitalized).tag(mode)

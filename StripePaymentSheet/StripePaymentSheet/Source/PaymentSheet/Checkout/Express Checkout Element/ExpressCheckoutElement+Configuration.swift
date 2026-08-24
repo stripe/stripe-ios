@@ -55,10 +55,6 @@ extension ExpressCheckoutElement {
         /// Defaults to `automatic`.
         public var name: CollectionMode = .automatic
 
-        /// How to collect the phone field.
-        /// Defaults to `automatic`.
-        public var phone: CollectionMode = .automatic
-
         /// How to collect the email field.
         /// Defaults to `automatic`.
         public var email: CollectionMode = .automatic
@@ -69,12 +65,10 @@ extension ExpressCheckoutElement {
 
         public init(
             name: CollectionMode = .automatic,
-            phone: CollectionMode = .automatic,
             email: CollectionMode = .automatic,
             address: AddressCollectionMode = .automatic
         ) {
             self.name = name
-            self.phone = phone
             self.email = email
             self.address = address
         }
@@ -145,23 +139,15 @@ extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration: Checkout
         if address == .automatic || address == .full {
             requiredPKContactFields.insert(.postalAddress)
         }
-        // Only request name field - phone and email go into shipping contact fields
+        // Email isn't collected by Apple Pay.
         if name == .always {
             requiredPKContactFields.insert(.name)
         }
         return requiredPKContactFields
     }
 
-    /// Shipping contact fields to require in the Apple Pay sheet, used to collect email/phone.
+    /// ECE doesn't collect shipping contact fields for billing details.
     var requiredShippingContactFields: Set<PKContactField> {
-        var requiredPKContactFields = Set<PKContactField>()
-        // Phone and email are collected through shipping contact fields
-        if email == .always {
-            requiredPKContactFields.insert(.emailAddress)
-        }
-        if phone == .always {
-            requiredPKContactFields.insert(.phoneNumber)
-        }
-        return requiredPKContactFields
+        return []
     }
 }
