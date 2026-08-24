@@ -127,6 +127,9 @@ final public class FinancialConnectionsSheet {
     /// An existing consumer, if available.
     @_spi(STP) public var existingConsumer: StripeCore.FinancialConnectionsConsumer?
 
+    /// Whether the Link Account Session requests merchant data permissions.
+    @_spi(STP) public var hasRequestedDataPermissions: Bool = false
+
     /// Analytics client to use for logging analytics
     @_spi(STP) public let analyticsClient: STPAnalyticsClientProtocol
 
@@ -317,6 +320,7 @@ final public class FinancialConnectionsSheet {
         }
 
         var financialConnectionsApiClient: any FinancialConnectionsAPI = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
+        financialConnectionsApiClient.hasRequestedDataPermissions = hasRequestedDataPermissions
 
         if let existingConsumer {
             let verificationSessions = existingConsumer.verificationSessions.map { verificationSession in

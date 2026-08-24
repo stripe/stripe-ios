@@ -23,6 +23,9 @@ import UIKit
     /// A existing consumer, if avaialble.
     @_spi(STP) public var existingConsumer: FinancialConnectionsConsumer?
 
+    /// Whether the Link Account Session requests merchant data permissions.
+    @_spi(STP) public var hasRequestedDataPermissions: Bool = false
+
     private var navigationController: UINavigationController?
     private var wrapperViewController: FCLiteModalPresentationWrapper?
     private var completionHandler: ((FinancialConnectionsSDKResult) -> Void)?
@@ -54,7 +57,9 @@ import UIKit
         self.completionHandler = completion
 
         var apiClient: FCLiteAPIClient = FCLiteAPIClient(backingAPIClient: .shared)
-        apiClient.consumerPublishableKey = existingConsumer?.publishableKey
+        if !hasRequestedDataPermissions {
+            apiClient.consumerPublishableKey = existingConsumer?.publishableKey
+        }
 
         let containerVC = FCLiteContainerViewController(
             clientSecret: clientSecret,

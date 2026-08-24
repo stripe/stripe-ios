@@ -672,6 +672,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             clientSecret: linkAccountSession.clientSecret,
             returnURL: context.configuration.returnURL,
             existingConsumer: consumer,
+            hasRequestedDataPermissions: !linkAccountSession.permissions.isEmpty,
             style: {
                 switch context.linkAppearance?.style {
                 case .alwaysLight: return .alwaysLight

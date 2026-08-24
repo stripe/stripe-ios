@@ -77,6 +77,29 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         XCTAssertEqual(synchronize.manifest.appearance.logo, .stripe_logo)
     }
 
+    func testNativeFlowDataManagerPropagatesRequestedDataPermissions() throws {
+        // Given
+        let synchronize = try FinancialConnectionsSynchronizeMock.synchronize.make()
+        let apiClient = EmptyFinancialConnectionsAPIClient()
+
+        // When
+        _ = NativeFlowAPIDataManager(
+            manifest: synchronize.manifest,
+            configuration: .init(),
+            visualUpdate: synchronize.visual,
+            returnURL: nil,
+            consentPaneModel: synchronize.text?.consentPane,
+            accountPickerPane: synchronize.text?.accountPickerPane,
+            apiClient: apiClient,
+            clientSecret: "client_secret",
+            analyticsClient: FinancialConnectionsAnalyticsClient(),
+            elementsSessionContext: nil
+        )
+
+        // Then
+        XCTAssertTrue(apiClient.hasRequestedDataPermissions)
+    }
+
     func testLinkThemeWithoutBrandPreservesExistingLinkBranding() {
         let manifest = makeManifest(theme: .linkLight)
 

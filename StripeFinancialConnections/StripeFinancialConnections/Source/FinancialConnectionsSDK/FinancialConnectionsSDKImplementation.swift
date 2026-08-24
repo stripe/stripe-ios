@@ -21,6 +21,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         clientSecret: String,
         returnURL: String?,
         existingConsumer: FinancialConnectionsConsumer?,
+        hasRequestedDataPermissions: Bool,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
         linkBrand: LinkBrand?,
@@ -43,6 +44,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         )
         financialConnectionsSheet.apiClient = apiClient
         financialConnectionsSheet.existingConsumer = existingConsumer
+        financialConnectionsSheet.hasRequestedDataPermissions = hasRequestedDataPermissions
         financialConnectionsSheet.elementsSessionContext = elementsSessionContext
         financialConnectionsSheet.onEvent = onEvent
 
