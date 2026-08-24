@@ -4,26 +4,28 @@
 //
 //  Created by Nick Porter on 2/24/26.
 
+import Combine
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 extension CheckoutPlayground {
     @MainActor
     final class ViewModel: ObservableObject {
+
         // Unified mode currently supports card and Link.
         static let availablePaymentMethods = [
             "card", "link",
         ]
 
-        @Published var uiFramework: UIFramework = .swiftUI
-        @Published var integrationType: IntegrationType = .flowController {
+        @Published var uiFramework: UIFramework
+        @Published var integrationType: IntegrationType {
             didSet {
                 if integrationType == .eceOnly && expressCheckoutElementOption == .hide {
                     expressCheckoutElementOption = .show
                 }
             }
         }
-        @Published var expressCheckoutElementOption: ExpressCheckoutElementOption = .show {
+        @Published var expressCheckoutElementOption: ExpressCheckoutElementOption {
             didSet {
                 if expressCheckoutElementOption == .hide && integrationType == .eceOnly {
                     integrationType = .flowController
@@ -32,28 +34,65 @@ extension CheckoutPlayground {
         }
         @Published var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
         @Published var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
-        @Published var currency: Currency = .usd
-        @Published var customerType: CustomerType = .guest
-        @Published var lineItems: [LineItemConfig] = LineItemConfig.defaults
-        @Published var shippingAddressCollection = true
-        @Published var defaultShippingAddressOption: DefaultShippingAddressOption = .none
-        @Published var customDefaultShippingAddress = DefaultShippingAddress.usTestAddress
-        @Published var billingAddressCollection: BillingAddressCollection = .automatic
-        @Published var automaticTax = true
-        @Published var checkoutSessionPaymentMethodSave = true
-        @Published var checkoutSessionPaymentMethodRemove = true
-        @Published var adaptivePricingCountry: AdaptivePricingCountry = .none
-        @Published var automaticPaymentMethods = false
-        @Published var paymentMethodTypes: Set<String> = ["card"]
-        @Published var currencySelectorAppearance = CurrencySelectorElement.Appearance()
-        @Published var checkoutEndpointOption: EndpointOption = .hosted
-        @Published var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
-        @Published var delayPaymentPagesRequests = false
+        @Published var currency: Currency
+        @Published var customerType: CustomerType
+        @Published var lineItems: [LineItemConfig]
+        @Published var shippingAddressCollection: Bool
+        @Published var defaultShippingAddressOption: DefaultShippingAddressOption
+        @Published var customDefaultShippingAddress: DefaultShippingAddress
+        @Published var billingAddressCollection: BillingAddressCollection
+        @Published var automaticTax: Bool
+        @Published var checkoutSessionPaymentMethodSave: Bool
+        @Published var checkoutSessionPaymentMethodRemove: Bool
+        @Published var adaptivePricingCountry: AdaptivePricingCountry
+        @Published var automaticPaymentMethods: Bool
+        @Published var paymentMethodTypes: Set<String>
+        @Published var currencySelectorAppearance: CurrencySelectorElement.Appearance
+        @Published var checkoutEndpointOption: EndpointOption
+        @Published var checkoutEndpoint: String
+        @Published var delayPaymentPagesRequests: Bool
 
         @Published var isCreating = false
         @Published var errorMessage: String?
         @Published var clientSecret: String?
         @Published var navigateToCheckout = false
+
+        private var settingsSaveSubscription: AnyCancellable?
+
+        init() {
+            let settings = Self.settingsFromDefaults() ?? Settings()
+            uiFramework = settings.uiFramework
+            integrationType = settings.integrationType
+            expressCheckoutElementOption = settings.expressCheckoutElementOption
+            currency = settings.currency
+            customerType = settings.customerType
+            lineItems = settings.lineItems
+            shippingAddressCollection = settings.shippingAddressCollection
+            defaultShippingAddressOption = settings.defaultShippingAddressOption
+            customDefaultShippingAddress = settings.customDefaultShippingAddress
+            billingAddressCollection = settings.billingAddressCollection
+            automaticTax = settings.automaticTax
+            checkoutSessionPaymentMethodSave = settings.checkoutSessionPaymentMethodSave
+            checkoutSessionPaymentMethodRemove = settings.checkoutSessionPaymentMethodRemove
+            adaptivePricingCountry = settings.adaptivePricingCountry
+            automaticPaymentMethods = settings.automaticPaymentMethods
+            paymentMethodTypes = settings.paymentMethodTypes
+            currencySelectorAppearance = settings.currencySelectorAppearance
+            checkoutEndpointOption = settings.checkoutEndpointOption
+            checkoutEndpoint = settings.checkoutEndpoint
+            delayPaymentPagesRequests = settings.delayPaymentPagesRequests
+
+            settingsSaveSubscription = objectWillChange.sink { [weak self] _ in
+                guard let self else {
+                    return
+                }
+
+                // @Published sends objectWillChange before updating the property.
+                DispatchQueue.main.async {
+                    self.serializeSettingsToNSUserDefaults()
+                }
+            }
+        }
 
         var isButtonDisabled: Bool {
             isCreating || (!automaticPaymentMethods && paymentMethodTypes.isEmpty) || lineItems.isEmpty
@@ -71,6 +110,7 @@ extension CheckoutPlayground {
         }
 
         func createSession() async {
+            serializeSettingsToNSUserDefaults()
             isCreating = true
             errorMessage = nil
             defer {
@@ -136,6 +176,54 @@ extension CheckoutPlayground {
             }
 
             return body
+        }
+
+        private var settings: Settings {
+            Settings(
+                uiFramework: uiFramework,
+                integrationType: integrationType,
+                expressCheckoutElementOption: expressCheckoutElementOption,
+                currency: currency,
+                customerType: customerType,
+                lineItems: lineItems,
+                shippingAddressCollection: shippingAddressCollection,
+                defaultShippingAddressOption: defaultShippingAddressOption,
+                customDefaultShippingAddress: customDefaultShippingAddress,
+                billingAddressCollection: billingAddressCollection,
+                automaticTax: automaticTax,
+                checkoutSessionPaymentMethodSave: checkoutSessionPaymentMethodSave,
+                checkoutSessionPaymentMethodRemove: checkoutSessionPaymentMethodRemove,
+                adaptivePricingCountry: adaptivePricingCountry,
+                automaticPaymentMethods: automaticPaymentMethods,
+                paymentMethodTypes: paymentMethodTypes,
+                currencySelectorAppearance: currencySelectorAppearance,
+                checkoutEndpointOption: checkoutEndpointOption,
+                checkoutEndpoint: checkoutEndpoint,
+                delayPaymentPagesRequests: delayPaymentPagesRequests
+            )
+        }
+
+        private func serializeSettingsToNSUserDefaults() {
+            do {
+                let data = try JSONEncoder().encode(settings)
+                UserDefaults.standard.set(data, forKey: Settings.nsUserDefaultsKey)
+            } catch {
+                print("Unable to serialize Checkout playground settings: \(error)")
+            }
+        }
+
+        private static func settingsFromDefaults() -> Settings? {
+            guard let data = UserDefaults.standard.data(forKey: Settings.nsUserDefaultsKey) else {
+                return nil
+            }
+
+            do {
+                return try JSONDecoder().decode(Settings.self, from: data)
+            } catch {
+                print("Unable to deserialize Checkout playground settings: \(error)")
+                UserDefaults.standard.removeObject(forKey: Settings.nsUserDefaultsKey)
+                return nil
+            }
         }
     }
 }
