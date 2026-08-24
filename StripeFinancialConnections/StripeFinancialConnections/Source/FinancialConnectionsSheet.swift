@@ -253,6 +253,19 @@ final public class FinancialConnectionsSheet {
                                     .unknown(debugDescription: "\(errorDescription)\n\n\(sessionInfo)")
                             )
                         )
+                    case .paymentDetails(let id):
+                        let errorDescription = "Payment Details flow is not currently supported via this interface."
+                        let sessionInfo =
+                            """
+                            paymentDetailsId=\(id)
+                            """
+
+                        completion(
+                            .failed(
+                                error: FinancialConnectionsSheetError
+                                    .unknown(debugDescription: "\(errorDescription)\n\n\(sessionInfo)")
+                            )
+                        )
                     }
                 case .canceled:
                     completion(.canceled)

@@ -81,6 +81,8 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
                         completion(.completed(.instantDebits(instantDebitsLinkedBank)))
                     case .linkedAccount(let id):
                         completion(.completed(.linkedAccount(id: id)))
+                    case .paymentDetails(let id):
+                        completion(.completed(.paymentDetails(id: id)))
                     }
                 case .canceled:
                     completion(.cancelled)

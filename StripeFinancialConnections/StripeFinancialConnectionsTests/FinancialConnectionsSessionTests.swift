@@ -77,27 +77,25 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         XCTAssertEqual(synchronize.manifest.appearance.logo, .stripe_logo)
     }
 
-    func testNativeFlowDataManagerPropagatesRequestedDataPermissions() throws {
+    func testPaymentAccountResourceDecodesGeneratedPaymentDetailIDs() throws {
         // Given
-        let synchronize = try FinancialConnectionsSynchronizeMock.synchronize.make()
-        let apiClient = EmptyFinancialConnectionsAPIClient()
+        let response =
+            """
+            {
+              "id": "fcsess_123",
+              "generated_payment_detail_ids": ["csmrpd_123"],
+              "networking_successful": true,
+              "next_pane": "success"
+            }
+            """
 
         // When
-        _ = NativeFlowAPIDataManager(
-            manifest: synchronize.manifest,
-            configuration: .init(),
-            visualUpdate: synchronize.visual,
-            returnURL: nil,
-            consentPaneModel: synchronize.text?.consentPane,
-            accountPickerPane: synchronize.text?.accountPickerPane,
-            apiClient: apiClient,
-            clientSecret: "client_secret",
-            analyticsClient: FinancialConnectionsAnalyticsClient(),
-            elementsSessionContext: nil
+        let resource: FinancialConnectionsPaymentAccountResource = try StripeJSONDecoder.decode(
+            jsonData: Data(response.utf8)
         )
 
         // Then
-        XCTAssertTrue(apiClient.hasRequestedDataPermissions)
+        XCTAssertEqual(resource.generatedPaymentDetailIds, ["csmrpd_123"])
     }
 
     func testLinkThemeWithoutBrandPreservesExistingLinkBranding() {

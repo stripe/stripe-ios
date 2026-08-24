@@ -396,7 +396,9 @@ extension STPAPIClient {
         parameters["link_mode"] = linkMode?.rawValue
         parameters["intent_token"] = intentToken
         parameters["permissions"] = permissions
-        parameters["merchant_token"] = merchantToken
+        if permissions?.isEmpty == false {
+            parameters["merchant_token"] = merchantToken
+        }
 
         APIRequest<LinkAccountSession>.post(
             with: self,

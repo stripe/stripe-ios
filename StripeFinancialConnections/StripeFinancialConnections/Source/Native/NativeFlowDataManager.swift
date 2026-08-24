@@ -193,7 +193,6 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
 
     private func didUpdateManifest() {
         apiClient.isLinkWithStripe = manifest.isLinkWithStripe == true
-        apiClient.hasRequestedDataPermissions = !manifest.permissions.isEmpty
         analyticsClient.setAdditionalParameters(fromManifest: manifest)
     }
 }
