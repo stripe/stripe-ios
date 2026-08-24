@@ -14,6 +14,9 @@ MINOR
 ### PaymentSheet
 * [Added] Added `financialConnectionsPermissions` to `LinkConfiguration`, allowing `LinkControllerPreview` users to request Financial Connections data permissions (private preview).
 
+### StripeFinancialConnections
+* [Added] StripeFinancialConnections now depends on `StripeFinancialConnectionsLite` to power its fallback bank authentication flow, unlocking app-to-app bank authentication. If you use StripeFinancialConnections with Carthage or by manually embedding the .xcframeworks, [you must also embed StripeFinancialConnectionsLite.xcframework](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2680) in your app. No action is required for CocoaPods or Swift Package Manager users.
+
 ## 26.7.0 2026-08-17
 ### PaymentSheet
 * [Fixed] Fixed FlowController not presenting the Link sheet when tapping Link in the horizontal payment method layout.

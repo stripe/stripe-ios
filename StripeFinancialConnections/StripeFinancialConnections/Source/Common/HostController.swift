@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeFinancialConnectionsLite
 import UIKit
 
 /// An internal result type that helps us handle both
@@ -100,6 +101,7 @@ class HostController {
     private let analyticsClientV1: STPAnalyticsClientProtocol
 
     private var nativeFlowController: NativeFlowController?
+    private var financialConnectionsLite: FinancialConnectionsLite?
     private var linkAccountSessionId: String?
     lazy var hostViewController = HostViewController(
         analyticsClientV1: analyticsClientV1,
@@ -190,7 +192,7 @@ extension HostController: HostViewControllerDelegate {
 
         switch flow {
         case .webInstantDebits, .webFinancialConnections:
-            continueWithWebFlow(synchronizePayload.manifest)
+            continueWithFCLite(synchronizePayload.manifest)
         case .nativeInstantDebits, .nativeFinancialConnections:
             continueWithNativeFlow(synchronizePayload)
         }
@@ -206,9 +208,12 @@ extension HostController: HostViewControllerDelegate {
 
 // MARK: - Helpers
 
-private extension HostController {
+extension HostController {
 
-    func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest, prefillDetails: WebPrefillDetails? = nil) {
+    private func continueWithFCLite(
+        _ manifest: FinancialConnectionsSessionManifest,
+        prefillDetails: WebPrefillDetails? = nil
+    ) {
         delegate?.hostController(
             self,
             didReceiveEvent: FinancialConnectionsEvent(
@@ -216,26 +221,152 @@ private extension HostController {
             )
         )
 
+        let financialConnectionsLite = FinancialConnectionsLite(
+            clientSecret: clientSecret,
+            returnUrl: returnURL.flatMap(URL.init(string:)),
+            apiClient: apiClient.backingAPIClient
+        )
+        financialConnectionsLite.elementsSessionContext = elementsSessionContext
+        financialConnectionsLite.consumerPublishableKey = apiClient.consumerPublishableKey
+        financialConnectionsLite.prefillDetails = prefillDetails
+        self.financialConnectionsLite = financialConnectionsLite
+
+        financialConnectionsLite.present(embeddedIn: navigationController) { [weak self] result in
+            guard let self else { return }
+            self.handleFCLiteResult(result, manifest: manifest)
+        }
+    }
+
+    /// Adapts FC Lite's `FinancialConnectionsSDKResult` into the `HostControllerResult` expected by
+    /// the rest of the SDK. FC Lite only returns a lightweight linked bank for a successful Financial
+    /// Connections result, so we re-fetch the full session here to satisfy the host surface.
+    func handleFCLiteResult(
+        _ result: FinancialConnectionsSDKResult,
+        manifest: FinancialConnectionsSessionManifest
+    ) {
+        switch result {
+        case .completed(let completed):
+            handleFCLiteCompletion(completed, manifest: manifest)
+        case .cancelled:
+            handleFCLiteCancellation(manifest: manifest)
+        case .failed(let error):
+            notifyDelegateOfFailureEvents(error: error)
+            finishFromFCLite(.failed(error: error))
+        @unknown default:
+            let error = FinancialConnectionsSheetError.unknown(
+                debugDescription: "Unhandled FinancialConnectionsSDKResult case"
+            )
+            notifyDelegateOfFailureEvents(error: error)
+            finishFromFCLite(.failed(error: error))
+        }
+    }
+
+    private func handleFCLiteCompletion(
+        _ completed: FinancialConnectionsSDKResult.Completed,
+        manifest: FinancialConnectionsSessionManifest
+    ) {
+        switch completed {
+        case .financialConnections:
+            // FC Lite only returns a lightweight linked bank, so re-fetch the full session.
+            fetchSession { [weak self] fetchResult in
+                guard let self else { return }
+                switch fetchResult {
+                case .success(let session):
+                    self.notifyDelegateOfSuccessEvent(session: session)
+                    self.finishFromFCLite(
+                        .completed(.financialConnections(session)).updateWith(manifest)
+                    )
+                case .failure(let error):
+                    self.notifyDelegateOfFailureEvents(error: error)
+                    self.finishFromFCLite(.failed(error: error))
+                }
+            }
+        case .instantDebits(let linkedBank):
+            notifyDelegateOfSuccessEvent(session: nil)
+            finishFromFCLite(.completed(.instantDebits(linkedBank)))
+        case .linkedAccount(let id):
+            notifyDelegateOfSuccessEvent(session: nil)
+            finishFromFCLite(.completed(.linkedAccount(id: id)))
+        @unknown default:
+            let error = FinancialConnectionsSheetError.unknown(
+                debugDescription: "Unhandled FinancialConnectionsSDKResult.Completed case"
+            )
+            notifyDelegateOfFailureEvents(error: error)
+            finishFromFCLite(.failed(error: error))
+        }
+    }
+
+    /// FC Lite reports a plain cancellation, but the web fallback used to convert a
+    /// custom-manual-entry cancellation into a dedicated error. To preserve that behavior we
+    /// re-fetch the session on cancel (for Financial Connections only) and check its status.
+    func handleFCLiteCancellation(manifest: FinancialConnectionsSessionManifest) {
+        guard !manifest.isProductInstantDebits else {
+            notifyDelegateOfCancelEvent()
+            finishFromFCLite(.canceled)
+            return
+        }
+
+        fetchSession { [weak self] fetchResult in
+            guard let self else { return }
+            if case .success(let session) = fetchResult,
+               session.status == .cancelled,
+               session.statusDetails?.cancelled?.reason == .customManualEntry {
+                self.finishFromFCLite(.failed(error: FinancialConnectionsCustomManualEntryRequiredError()))
+            } else {
+                self.notifyDelegateOfCancelEvent()
+                self.finishFromFCLite(.canceled)
+            }
+        }
+    }
+
+    private func fetchSession(
+        completion: @escaping (Result<StripeAPI.FinancialConnectionsSession, Error>) -> Void
+    ) {
         let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: apiClient, clientSecret: clientSecret)
         let sessionFetcher = FinancialConnectionsSessionAPIFetcher(
             api: apiClient,
             clientSecret: clientSecret,
             accountFetcher: accountFetcher
         )
-        let webFlowViewController = FinancialConnectionsWebFlowViewController(
-            clientSecret: clientSecret,
-            apiClient: apiClient,
-            manifest: manifest,
-            sessionFetcher: sessionFetcher,
-            returnURL: returnURL,
-            elementsSessionContext: elementsSessionContext,
-            prefillDetailsOverride: prefillDetails
-        )
-        webFlowViewController.delegate = self
-        navigationController.setViewControllers([webFlowViewController], animated: true)
+        sessionFetcher.fetchSession().observe { result in
+            completion(result)
+        }
     }
 
-    func continueWithNativeFlow(_ synchronizePayload: FinancialConnectionsSynchronize) {
+    private func finishFromFCLite(_ result: HostControllerResult) {
+        let linkAccountSessionId = result.linkAccountSessionId ?? self.linkAccountSessionId
+        let viewController = navigationController.topViewController ?? navigationController
+        delegate?.hostController(
+            self,
+            viewController: viewController,
+            didFinish: result,
+            linkAccountSessionId: linkAccountSessionId
+        )
+    }
+
+    private func notifyDelegateOfSuccessEvent(session: StripeAPI.FinancialConnectionsSession?) {
+        delegate?.hostController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(
+                name: .success,
+                metadata: FinancialConnectionsEvent.Metadata(
+                    manualEntry: session?.paymentAccount?.isManualEntry ?? false
+                )
+            )
+        )
+    }
+
+    private func notifyDelegateOfCancelEvent() {
+        delegate?.hostController(self, didReceiveEvent: FinancialConnectionsEvent(name: .cancel))
+    }
+
+    private func notifyDelegateOfFailureEvents(error: Error) {
+        FinancialConnectionsEvent
+            .events(fromError: error)
+            .forEach { delegate?.hostController(self, didReceiveEvent: $0) }
+    }
+
+    private func continueWithNativeFlow(_ synchronizePayload: FinancialConnectionsSynchronize) {
         navigationController.configureAppearanceForNative()
 
         let dataManager = NativeFlowAPIDataManager(
@@ -256,31 +387,6 @@ private extension HostController {
         )
         nativeFlowController?.delegate = self
         nativeFlowController?.startFlow()
-    }
-}
-
-// MARK: - ConnectionsWebFlowViewControllerDelegate
-
-extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
-
-    func webFlowViewController(
-        _ viewController: FinancialConnectionsWebFlowViewController,
-        didFinish result: HostControllerResult
-    ) {
-        let linkAccountSessionId = result.linkAccountSessionId ?? linkAccountSessionId
-        delegate?.hostController(
-            self,
-            viewController: viewController,
-            didFinish: result,
-            linkAccountSessionId: linkAccountSessionId
-        )
-    }
-
-    func webFlowViewController(
-        _ webFlowViewController: UIViewController,
-        didReceiveEvent event: FinancialConnectionsEvent
-    ) {
-        delegate?.hostController(self, didReceiveEvent: event)
     }
 }
 
@@ -316,7 +422,7 @@ extension HostController: NativeFlowControllerDelegate {
         shouldLaunchWebFlow manifest: FinancialConnectionsSessionManifest,
         prefillDetails: WebPrefillDetails
     ) {
-        continueWithWebFlow(manifest, prefillDetails: prefillDetails)
+        continueWithFCLite(manifest, prefillDetails: prefillDetails)
     }
 }
 

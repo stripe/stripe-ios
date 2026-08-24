@@ -8,11 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-protocol FinancialConnectionsSessionFetcher {
-    func fetchSession() -> Future<StripeAPI.FinancialConnectionsSession>
-}
-
-class FinancialConnectionsSessionAPIFetcher: FinancialConnectionsSessionFetcher {
+class FinancialConnectionsSessionAPIFetcher {
 
     // MARK: - Properties
 

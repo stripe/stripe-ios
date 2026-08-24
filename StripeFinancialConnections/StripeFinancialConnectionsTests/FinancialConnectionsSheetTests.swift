@@ -10,12 +10,6 @@
 @testable @_spi(STP) @_spi(v25) import StripeFinancialConnections
 import XCTest
 
-class EmptySessionFetcher: FinancialConnectionsSessionFetcher {
-    func fetchSession() -> Future<StripeAPI.FinancialConnectionsSession> {
-        return Promise<StripeAPI.FinancialConnectionsSession>()
-    }
-}
-
 class FinancialConnectionsSheetTests: XCTestCase {
     private let mockViewController = UIViewController()
     private let mockClientSecret = "las_123345"
