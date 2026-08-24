@@ -651,10 +651,6 @@ workflows:
         inputs:
         - content: ./ci_scripts/check_image_format.sh
         title: Check png image format is 8-bit
-    - script@1:
-        inputs:
-        - content: ruby ci_scripts/tests/framework_architecture_validator_test.rb
-        title: Test release build scripts
     - fastlane@3:
         inputs:
         - lane: build_extras

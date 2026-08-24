@@ -2,9 +2,6 @@
 
 require 'fileutils'
 require 'yaml'
-require_relative 'framework_architecture_validator'
-
-DEFAULT_SIMULATOR_ARCHITECTURES = %w[arm64 x86_64].freeze
 
 # MARK: - Helpers
 
@@ -14,13 +11,6 @@ end
 
 def die(string)
   abort "[#{File.basename(__FILE__)}] [ERROR] #{string}"
-end
-
-def verify_architectures(binary_path, expected_architectures)
-  architectures = FrameworkArchitectureValidator.verify(binary_path, expected_architectures)
-  info "Verified architectures for #{binary_path}: #{architectures.join(', ')}"
-rescue FrameworkArchitectureValidator::VerificationError => error
-  die error.message
 end
 
 # Joins the given strings. If one or more arguments is nil or empty, an exception is raised.
@@ -119,21 +109,9 @@ Dir.chdir(root_dir) do
     scheme = m['scheme']
     framework_name = m['framework_name']
     supports_catalyst = m['supports_catalyst']
-    simulator_architectures = m.fetch('simulator_architectures', DEFAULT_SIMULATOR_ARCHITECTURES)
     platform_frameworks = []
     die 'Module is missing scheme' if scheme.nil? || scheme.empty?
     die 'Module is missing framework_name' if framework_name.nil? || framework_name.empty?
-
-    simulator_binary = File.join_if_safe(
-      build_dir,
-      'StripeFrameworks-sim.xcarchive',
-      'Products',
-      'Library',
-      'Frameworks',
-      "#{framework_name}.framework",
-      framework_name,
-    )
-    verify_architectures(simulator_binary, simulator_architectures)
 
     platform_frameworks.append("-framework \"#{build_dir}/StripeFrameworks-iOS.xcarchive/Products/Library/Frameworks/#{framework_name}.framework\"")
 

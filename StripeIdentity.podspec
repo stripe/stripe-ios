@@ -33,10 +33,7 @@ Pod::Spec.new do |s|
   s.private_header_files           = [
     'LocalPackages/MediaPipeSPM/Sources/MediaPipeSPMGraphReferences/**/*.h',
   ]
-  s.pod_target_xcconfig            = {
-    'OTHER_LDFLAGS' => '$(inherited) -ObjC',
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'x86_64',
-  }
+  s.pod_target_xcconfig            = { 'OTHER_LDFLAGS' => '$(inherited) -ObjC' }
   s.vendored_frameworks            = [
     'LocalPackages/MediaPipeSPM/Artifacts/MediaPipeCommonGraphLibraries.xcframework',
     'LocalPackages/MediaPipeSPM/Artifacts/MediaPipeTasksCommon.xcframework',
