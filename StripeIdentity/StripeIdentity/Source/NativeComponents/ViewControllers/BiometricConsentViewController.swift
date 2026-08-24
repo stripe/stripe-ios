@@ -244,7 +244,7 @@ extension BiometricConsentViewController: UIScrollViewDelegate {
 
 // MARK: - IdentityFlowViewDelegate
 extension BiometricConsentViewController: IdentityFlowViewDelegate {
-    func scrollViewFullyLaidOut(_ scrollView: UIScrollView) {
+    func scrollViewFullyLaiedOut(_ scrollView: UIScrollView) {
         guard scrolledToBottomYOffset == nil else {
             return
         }
