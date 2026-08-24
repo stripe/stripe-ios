@@ -350,10 +350,25 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper
-        ) { [weak self] confirmOption, _, _ in
+        ) { [weak self] confirmOption, shouldReturnToPaymentSheet, _ in
             guard let self else { return }
             self.linkConfirmOption = confirmOption
-            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+
+            // A Link payment method was selected — report it and close the FlowController sheet.
+            guard confirmOption == nil else {
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+                return
+            }
+
+            // The user left Link without selecting it (e.g. tapped "Continue another way") or dismissed the
+            // Link sheet. PayWithNativeLinkController re-presents this sheet automatically, so we must NOT
+            // close the flow here. Clear a lingering Link selection so Link doesn't stay selected after the
+            // user chose to pay another way (matches presentNativeLinkInPlaceOfFlowController).
+            if shouldReturnToPaymentSheet,
+               case .link(let option) = self.selectedPaymentOption,
+               case .wallet = option {
+                self.clearSelection()
+            }
         }
     }
 
@@ -680,10 +695,22 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
                 updateUI()
                 flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
-        case .applePay, .link:
+        case .applePay:
             error = nil
             updateUI()
             if isDismissable {
+                flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            }
+        case .link:
+            error = nil
+            updateUI()
+            guard isDismissable else { return }
+            if canPresentLinkOnWalletButton {
+                // RUX: present the native Link sheet in place (matches the wallet-header path),
+                // then close the FlowController sheet from presentLink()'s completion.
+                presentLink()
+            } else {
+                // Legacy: report Link (.wallet) as the selection and let the merchant confirm later.
                 flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
