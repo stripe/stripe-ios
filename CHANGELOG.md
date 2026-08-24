@@ -1,7 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
+
+## 26.8.0 2026-08-24
 ### Identity
 * [Added] Added a server-enabled 3D selfie capture flow with guided front, left, and right captures and MediaPipe face-pose detection. ([#6523](https://github.com/stripe/stripe-ios/pull/6523))
 * [Added] Added `IdentityVerificationSheet.Configuration.brandColor` to customize the native flow's primary action buttons.
