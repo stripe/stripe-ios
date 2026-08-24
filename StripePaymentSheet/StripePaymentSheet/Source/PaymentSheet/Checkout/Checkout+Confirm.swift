@@ -74,7 +74,7 @@ extension CheckoutController {
 
     // MARK: - Flow Construction
 
-    func confirmationFlow(
+    func makeConfirmationFlow(
         for paymentElement: PaymentElement,
         presentingViewController: UIViewController
     ) -> CheckoutConfirmationFlow? {
@@ -218,13 +218,13 @@ extension CheckoutController {
                 }
                 return result
             }
-            return mapConfirmationResult(result)
+            return Self.mapConfirmationResult(result)
         } catch {
             return .failed(error)
         }
     }
 
-    func mapConfirmationResult(_ result: InternalConfirmResult) -> ConfirmResult {
+    static func mapConfirmationResult(_ result: InternalConfirmResult) -> ConfirmResult {
         switch result {
         case .completed(let response):
             return .succeeded(paymentStatus: response.paymentStatus)
