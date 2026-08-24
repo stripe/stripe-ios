@@ -37,6 +37,9 @@ Pod::Spec.new do |s|
     'OTHER_LDFLAGS' => '$(inherited) -ObjC',
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'x86_64',
   }
+  s.user_target_xcconfig           = {
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'x86_64',
+  }
   s.vendored_frameworks            = [
     'LocalPackages/MediaPipeSPM/Artifacts/MediaPipeCommonGraphLibraries.xcframework',
     'LocalPackages/MediaPipeSPM/Artifacts/MediaPipeTasksCommon.xcframework',
