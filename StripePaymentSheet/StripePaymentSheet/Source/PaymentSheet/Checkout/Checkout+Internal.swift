@@ -18,8 +18,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
         let flow: CheckoutConfirmationFlow?
         switch paymentMethod {
         case .applePay:
-            // TODO: Use ECE-specific Apple Pay configuration once it is implemented.
-            guard let applePayConfiguration = configuration.applePayConfiguration else {
+            guard let applePayConfiguration = configuration.expressCheckoutElement.applePayConfiguration else {
                 flow = nil
                 break
             }

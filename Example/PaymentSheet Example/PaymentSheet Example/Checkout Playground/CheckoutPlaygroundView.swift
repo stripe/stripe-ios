@@ -54,7 +54,9 @@ struct CheckoutPlaygroundView: View {
 
                         CheckoutPlaygroundExpressCheckoutElementSection(
                             expressCheckoutElementOption: $viewModel.expressCheckoutElementOption,
-                            expressCheckoutElementShippingAddressRequired: $viewModel.expressCheckoutElementShippingAddressRequired
+                            expressCheckoutElementShippingAddressRequired: $viewModel.expressCheckoutElementShippingAddressRequired,
+                            applePayDisplay: $viewModel.applePayDisplay,
+                            linkDisplay: $viewModel.linkDisplay
                         )
 
                         currencySelectorAppearanceSection
@@ -95,6 +97,8 @@ struct CheckoutPlaygroundView: View {
                             integrationType: viewModel.integrationType,
                             showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
                             expressCheckoutElementShippingAddressRequired: viewModel.expressCheckoutElementShippingAddressRequired,
+                            applePayDisplay: viewModel.applePayDisplay,
+                            linkDisplay: viewModel.linkDisplay,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
@@ -107,6 +111,8 @@ struct CheckoutPlaygroundView: View {
                             integrationType: viewModel.integrationType,
                             showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
                             expressCheckoutElementShippingAddressRequired: viewModel.expressCheckoutElementShippingAddressRequired,
+                            applePayDisplay: viewModel.applePayDisplay,
+                            linkDisplay: viewModel.linkDisplay,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )

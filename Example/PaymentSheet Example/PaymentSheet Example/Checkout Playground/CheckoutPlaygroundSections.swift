@@ -4,6 +4,7 @@
 //
 //  Created by Nick Porter on 2/24/26.
 
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 struct CheckoutPlaygroundConfigurationSection: View {
@@ -236,6 +237,8 @@ struct CheckoutPlaygroundFeaturesSection: View {
 struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
     @Binding var expressCheckoutElementShippingAddressRequired: Bool
+    @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
+    @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -252,6 +255,20 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         title: "Requires Shipping Address",
                         isOn: $expressCheckoutElementShippingAddressRequired,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.shippingAddressRequired`. When on, wallets like Apple Pay require the customer to provide a shipping address."
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Apple Pay Display",
+                        icon: "apple.logo",
+                        selection: $applePayDisplay,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.applePayConfiguration.display`.",
+                        displayText: { $0.rawValue.capitalized }
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Link Display",
+                        icon: "link",
+                        selection: $linkDisplay,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.linkConfiguration.display`.",
+                        displayText: { $0.rawValue.capitalized }
                     )
                 }
             }

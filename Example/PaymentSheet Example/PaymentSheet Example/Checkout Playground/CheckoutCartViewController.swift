@@ -22,6 +22,8 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     let integrationType: CheckoutPlayground.IntegrationType
     let showExpressCheckoutElement: Bool
     let expressCheckoutElementShippingAddressRequired: Bool
+    let applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
+    let linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
     let currencySelectorAppearance: CurrencySelectorElement.Appearance
     let delayPaymentPagesRequests: Bool
 
@@ -34,6 +36,8 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
             integrationType: integrationType,
             showExpressCheckoutElement: showExpressCheckoutElement,
             expressCheckoutElementShippingAddressRequired: expressCheckoutElementShippingAddressRequired,
+            applePayDisplay: applePayDisplay,
+            linkDisplay: linkDisplay,
             currencySelectorAppearance: currencySelectorAppearance,
             delayPaymentPagesRequests: delayPaymentPagesRequests,
             closeAction: { dismiss() }
@@ -54,6 +58,8 @@ final class CheckoutCartViewController: UIViewController {
     private let integrationType: CheckoutPlayground.IntegrationType
     private let showExpressCheckoutElement: Bool
     private let expressCheckoutElementShippingAddressRequired: Bool
+    private let applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
+    private let linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
     private let currencySelectorAppearance: CurrencySelectorElement.Appearance
     private let delayPaymentPagesRequests: Bool
     private let closeAction: () -> Void
@@ -89,6 +95,8 @@ final class CheckoutCartViewController: UIViewController {
         integrationType: CheckoutPlayground.IntegrationType,
         showExpressCheckoutElement: Bool,
         expressCheckoutElementShippingAddressRequired: Bool,
+        applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display,
+        linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display,
         currencySelectorAppearance: CurrencySelectorElement.Appearance,
         delayPaymentPagesRequests: Bool,
         closeAction: @escaping () -> Void
@@ -100,6 +108,8 @@ final class CheckoutCartViewController: UIViewController {
         self.integrationType = integrationType
         self.showExpressCheckoutElement = showExpressCheckoutElement
         self.expressCheckoutElementShippingAddressRequired = expressCheckoutElementShippingAddressRequired
+        self.applePayDisplay = applePayDisplay
+        self.linkDisplay = linkDisplay
         self.currencySelectorAppearance = currencySelectorAppearance
         self.delayPaymentPagesRequests = delayPaymentPagesRequests
         self.closeAction = closeAction
@@ -221,6 +231,11 @@ final class CheckoutCartViewController: UIViewController {
             )
             configuration.currencySelectorElement.appearance = currencySelectorAppearance
             configuration.expressCheckoutElement.shippingAddressRequired = expressCheckoutElementShippingAddressRequired
+            configuration.expressCheckoutElement.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
+                merchantId: "merchant.com.stripe.paymentsheet.example",
+                display: applePayDisplay
+            )
+            configuration.expressCheckoutElement.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(display: linkDisplay)
             configuration.apiClient = diagnostics.makeAPIClient(
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
