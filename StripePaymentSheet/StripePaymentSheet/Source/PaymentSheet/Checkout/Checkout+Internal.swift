@@ -28,6 +28,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 returnURL: configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
                 billingDetailsCollectionConfiguration: configuration.expressCheckoutElement.billingDetailsCollectionConfiguration,
+                defaultBillingDetails: configuration.defaults.billingDetails,
                 presentationWindow: presentationWindow
             ))
         case .link:

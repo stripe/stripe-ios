@@ -19,6 +19,7 @@ extension CheckoutController {
         let returnURL: String
         let merchantDisplayName: String
         let billingDetailsCollectionConfiguration: any CheckoutBillingDetailsCollectionConfiguration
+        let defaultBillingDetails: Configuration.Defaults.BillingDetails?
         let presentationWindow: UIWindow?
     }
 
@@ -117,6 +118,7 @@ extension CheckoutController {
                 returnURL: self.configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
                 billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
+                defaultBillingDetails: self.configuration.defaults.billingDetails,
                 presentationWindow: presentingViewController.view.window
             ))
         case .link(let confirmOption):

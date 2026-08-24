@@ -6,6 +6,7 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
+import Contacts
 import Foundation
 import PassKit
 @_spi(STP) import StripeApplePay
@@ -31,6 +32,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let apiClient: STPAPIClient
     private let returnURL: String
     private let presentationWindow: UIWindow?
+    private let fallbackBillingDetails: StripeAPI.BillingDetails?
     let authorizationController: PKPaymentAuthorizationController
 
     // Internal state
@@ -52,6 +54,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         self.apiClient = applePayConfirmationParameters.apiClient
         self.returnURL = applePayConfirmationParameters.returnURL
         self.presentationWindow = applePayConfirmationParameters.presentationWindow
+        self.fallbackBillingDetails = Self.makeFallbackBillingDetails(
+            checkoutSession: checkoutSession,
+            applePayConfirmationParameters: applePayConfirmationParameters
+        )
         self.authorizationController = authorizationController
         super.init()
     }
@@ -98,17 +104,11 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     intent: .checkout(checkoutSession),
                     elementsSession: checkoutSession.elementsSession
                 )
-                var fallbackBillingDetails: StripeAPI.BillingDetails?
-                if let email = checkoutSession.email {
-                    var details = StripeAPI.BillingDetails()
-                    details.email = email
-                    fallbackBillingDetails = details
-                }
                 let paymentMethod = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<StripeAPI.PaymentMethod, Error>) in
                     StripeAPI.PaymentMethod.create(
                         apiClient: self.apiClient,
                         payment: payment,
-                        fallbackBillingDetails: fallbackBillingDetails,
+                        fallbackBillingDetails: self.fallbackBillingDetails,
                         clientAttributionMetadata: clientAttributionMetadata
                     ) { result in
                         continuation.resume(with: result)
@@ -308,7 +308,63 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         paymentRequest.requiredShippingContactFields = billingDetailsCollectionConfiguration.requiredShippingContactFields
         // TODO: Add postalAddress to requiredShippingContactFields when shipping address collection is implemented.
 
+        if let defaults = applePayConfirmationParameters.defaultBillingDetails,
+           defaults.address?.line1 != nil {
+            paymentRequest.billingContact = makeBillingContact(from: defaults)
+        }
+
         return paymentRequest
+    }
+
+    static func makeFallbackBillingDetails(
+        checkoutSession: CheckoutController.Session,
+        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
+    ) -> StripeAPI.BillingDetails? {
+        var details = StripeAPI.BillingDetails()
+        var hasDetails = false
+        if let email = checkoutSession.email {
+            details.email = email
+            hasDetails = true
+        }
+        guard applePayConfirmationParameters.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod,
+              let defaults = applePayConfirmationParameters.defaultBillingDetails else {
+            return hasDetails ? details : nil
+        }
+        if let name = defaults.name {
+            details.name = name
+            hasDetails = true
+        }
+        if let address = defaults.address {
+            details.address = .init(
+                city: address.city,
+                country: address.country,
+                line1: address.line1,
+                line2: address.line2,
+                postalCode: address.postalCode,
+                state: address.state
+            )
+            hasDetails = true
+        }
+        return hasDetails ? details : nil
+    }
+
+    static func makeBillingContact(
+        from billingDetails: CheckoutController.Configuration.Defaults.BillingDetails
+    ) -> PKContact {
+        let contact = PKContact()
+        if let name = billingDetails.name {
+            contact.name = PersonNameComponentsFormatter().personNameComponents(from: name)
+        }
+        if let address = billingDetails.address {
+            let postalAddress = CNMutablePostalAddress()
+            postalAddress.isoCountryCode = address.country
+            postalAddress.street = [address.line1, address.line2].compactMap { $0 }.joined(separator: "\n")
+            postalAddress.city = address.city ?? ""
+            postalAddress.state = address.state ?? ""
+            postalAddress.postalCode = address.postalCode ?? ""
+            contact.postalAddress = postalAddress
+        }
+        return contact
     }
 
     private func _end() {

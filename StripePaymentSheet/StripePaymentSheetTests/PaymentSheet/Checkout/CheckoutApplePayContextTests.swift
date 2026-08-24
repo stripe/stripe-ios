@@ -276,6 +276,83 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertFalse(paymentRequest.requiredBillingContactFields.contains(.emailAddress))
         XCTAssertFalse(paymentRequest.requiredBillingContactFields.contains(.phoneNumber))
     }
+
+    func testMakePaymentRequest_prefillsCompleteDefaultBillingAddress() {
+        // Given default billing details with a street address
+        let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
+        var defaults = CheckoutController.Configuration.Defaults.BillingDetails()
+        defaults.name = "Jane Doe"
+        defaults.address = .init(
+            country: "US",
+            line1: "510 Townsend St",
+            city: "San Francisco",
+            state: "CA",
+            postalCode: "94103"
+        )
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration(),
+            defaultBillingDetails: defaults
+        )
+
+        // When
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        // Then Apple Pay is prefilled with the default billing contact
+        XCTAssertEqual(paymentRequest.billingContact?.postalAddress?.street, "510 Townsend St")
+        XCTAssertEqual(paymentRequest.billingContact?.postalAddress?.postalCode, "94103")
+        XCTAssertEqual(paymentRequest.billingContact?.name?.givenName, "Jane")
+    }
+
+    func testMakeFallbackBillingDetails_attachesDefaultsOnlyWhenConfigured() {
+        // Given default billing details and attachment enabled
+        let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
+        var defaults = CheckoutController.Configuration.Defaults.BillingDetails()
+        defaults.name = "Jane Doe"
+        defaults.address = .init(country: "US", line1: "510 Townsend St")
+        var billingConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration()
+        billingConfiguration.attachDefaultsToPaymentMethod = true
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            billingDetailsCollectionConfiguration: billingConfiguration,
+            defaultBillingDetails: defaults
+        )
+
+        // When
+        let fallback = CheckoutApplePayContext.makeFallbackBillingDetails(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        // Then the defaults are attached to PaymentMethod creation
+        XCTAssertEqual(fallback?.name, "Jane Doe")
+        XCTAssertEqual(fallback?.address?.line1, "510 Townsend St")
+        XCTAssertEqual(fallback?.address?.country, "US")
+    }
+
+    func testMakeFallbackBillingDetails_doesNotAttachDefaultsByDefault() {
+        // Given default billing details with attachment disabled
+        let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
+        var defaults = CheckoutController.Configuration.Defaults.BillingDetails()
+        defaults.name = "Jane Doe"
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration(),
+            defaultBillingDetails: defaults
+        )
+
+        // When
+        let fallback = CheckoutApplePayContext.makeFallbackBillingDetails(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        // Then defaults are used only for prefill, not attached to the PaymentMethod
+        XCTAssertNil(fallback)
+    }
     // MARK: - presentationWindow
 
     func testPresentationWindowReturnsConfiguredWindow() {
