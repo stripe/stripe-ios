@@ -55,21 +55,15 @@ extension ExpressCheckoutElement {
         /// Defaults to `automatic`.
         public var name: CollectionMode = .automatic
 
-        /// How to collect the email field.
-        /// Defaults to `automatic`.
-        public var email: CollectionMode = .automatic
-
         /// How to collect the billing address.
         /// Defaults to `automatic`.
         public var address: AddressCollectionMode = .automatic
 
         public init(
             name: CollectionMode = .automatic,
-            email: CollectionMode = .automatic,
             address: AddressCollectionMode = .automatic
         ) {
             self.name = name
-            self.email = email
             self.address = address
         }
     }
@@ -144,10 +138,5 @@ extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration: Checkout
             requiredPKContactFields.insert(.name)
         }
         return requiredPKContactFields
-    }
-
-    /// ECE doesn't collect shipping contact fields for billing details.
-    var requiredShippingContactFields: Set<PKContactField> {
-        return []
     }
 }

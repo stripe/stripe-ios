@@ -41,6 +41,5 @@ extension CheckoutSessionBillingAddressUpdater {
 /// can accept either one without converting between them.
 protocol CheckoutBillingDetailsCollectionConfiguration {
     var requiredBillingContactFields: Set<PKContactField> { get }
-    var requiredShippingContactFields: Set<PKContactField> { get }
     var attachDefaultsToPaymentMethod: Bool { get }
 }

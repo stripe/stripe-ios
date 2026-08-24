@@ -256,22 +256,19 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertFalse(paymentRequest.requiredBillingContactFields.contains(.phoneNumber))
     }
 
-    func testMakePaymentRequest_ece_emailAlways_doesNotRequireShippingContactFields() {
-        // Given an ECE configuration that always collects email
+    func testMakePaymentRequest_ece_doesNotRequireShippingContactFields() {
+        // Given an ECE billing details collection configuration
         let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
-        var billingConfig = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
-        billingConfig.email = .always
         let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient(),
-            billingDetailsCollectionConfiguration: billingConfig
+            billingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
         )
 
         // When building the payment request
         let paymentRequest = CheckoutApplePayContext.makePaymentRequest(checkoutSession: session, applePayConfirmationParameters: parameters)
 
-        // Then Apple Pay does not collect the email as a shipping contact field
+        // Then ECE does not ask Apple Pay to collect contact details as shipping fields
         XCTAssertTrue(paymentRequest.requiredShippingContactFields.isEmpty)
-        XCTAssertFalse(paymentRequest.requiredBillingContactFields.contains(.emailAddress))
     }
 
     func testMakePaymentRequest_prefillsCompleteDefaultBillingAddress() {
