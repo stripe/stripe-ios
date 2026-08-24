@@ -122,9 +122,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     : checkoutSession.merchantWillSavePaymentMethod(STPPaymentMethodType.card) ? true : nil
 
                 // 2. Confirm
-                let response = try await self.apiClient.confirmCheckoutSession(
+                let requestParameters = CheckoutSessionConfirmationRequestParameters(
                     sessionId: checkoutSession.id,
-                    paymentMethod: paymentMethod.id,
+                    paymentMethodId: paymentMethod.id,
                     expectedAmount: checkoutSession.expectedAmount(),
                     expectedPaymentMethodType: paymentMethod.type?.rawValue ?? STPPaymentMethodType.card.identifier,
                     savePaymentMethod: savePaymentMethod,
@@ -132,6 +132,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     shipping: self.makeShippingDetailsParams(from: payment),
                     clientAttributionMetadata: clientAttributionMetadata
                 )
+                let response = try await self.apiClient.confirmCheckoutSession(with: requestParameters)
 
                 // We can't present a next action here (the Apple Pay sheet is still up), so fail fast
                 // instead of routing through `handleNextAction`

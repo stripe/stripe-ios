@@ -861,24 +861,12 @@ extension PaymentSheet {
         /// - paymentMethod: Pass this if you created a PaymentMethod already (e.g. for the deferred flow).
         /// - saveForFutureUseCheckboxState: The single source of truth for save consent when confirming with a new
         ///   payment method. It preserves whether the save checkbox was hidden, shown and deselected, or shown and
-        ///   selected so intent-based flows and Checkout Session flows can each derive the API parameters they need.
+        ///   selected so intent-based flows can derive the API parameters they need.
         case new(params: STPPaymentMethodParams, paymentOptions: STPConfirmPaymentMethodOptions, paymentMethod: STPPaymentMethod? = nil, saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState, shouldSetAsDefaultPM: Bool? = nil)
 
         /// Projects the unified checkbox state into intent save semantics.
         var shouldSaveForIntent: Bool {
             saveForFutureUseCheckboxState == .selected
-        }
-
-        /// Projects the unified checkbox state into Checkout Session `save_payment_method` semantics.
-        var savePaymentMethodForCheckoutSession: Bool? {
-            switch saveForFutureUseCheckboxState {
-            case .hidden:
-                return nil
-            case .deselected:
-                return false
-            case .selected:
-                return true
-            }
         }
 
         private var saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState {

@@ -1358,7 +1358,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         }
     }
 
-    func testConfirmPaymentMethodType_projectsUnifiedSaveCheckboxState() {
+    func testConfirmPaymentMethodTypeProjectsSaveCheckboxStateForIntent() {
         let paymentMethodParams = STPPaymentMethodParams(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil)
         let paymentOptions = STPConfirmPaymentMethodOptions()
 
@@ -1368,7 +1368,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             saveForFutureUseCheckboxState: .hidden
         )
         XCTAssertFalse(hidden.shouldSaveForIntent)
-        XCTAssertNil(hidden.savePaymentMethodForCheckoutSession)
 
         let deselected = PaymentSheet.ConfirmPaymentMethodType.new(
             params: paymentMethodParams,
@@ -1376,7 +1375,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             saveForFutureUseCheckboxState: .deselected
         )
         XCTAssertFalse(deselected.shouldSaveForIntent)
-        XCTAssertEqual(deselected.savePaymentMethodForCheckoutSession, false)
 
         let selected = PaymentSheet.ConfirmPaymentMethodType.new(
             params: paymentMethodParams,
@@ -1384,7 +1382,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             saveForFutureUseCheckboxState: .selected
         )
         XCTAssertTrue(selected.shouldSaveForIntent)
-        XCTAssertEqual(selected.savePaymentMethodForCheckoutSession, true)
     }
 
     func testMakeIntentParams_paypal_sets_mandate() {
