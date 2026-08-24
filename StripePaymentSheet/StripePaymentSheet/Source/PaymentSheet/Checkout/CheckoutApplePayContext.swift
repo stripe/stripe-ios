@@ -304,8 +304,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
 
         let billingDetailsCollectionConfiguration = applePayConfirmationParameters.billingDetailsCollectionConfiguration
-        paymentRequest.requiredBillingContactFields = billingDetailsCollectionConfiguration.requiredBillingContactFields
-        paymentRequest.requiredShippingContactFields = billingDetailsCollectionConfiguration.requiredShippingContactFields
+        paymentRequest.requiredBillingContactFields = billingDetailsCollectionConfiguration.applePayRequiredBillingContactFields
+        paymentRequest.requiredShippingContactFields = billingDetailsCollectionConfiguration.applePayRequiredShippingContactFields
         // TODO: Add postalAddress to requiredShippingContactFields when shipping address collection is implemented.
 
         if let defaults = applePayConfirmationParameters.defaultBillingDetails,

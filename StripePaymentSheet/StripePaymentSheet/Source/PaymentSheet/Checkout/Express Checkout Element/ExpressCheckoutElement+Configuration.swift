@@ -36,9 +36,6 @@ extension ExpressCheckoutElement {
         public enum CollectionMode: String, CaseIterable {
             /// The field will be collected depending on the Payment Method's requirements.
             case automatic
-            /// The field will never be collected.
-            /// If this field is required by the Payment Method, you must provide it as part of `defaultBillingDetails`.
-            case never
             /// The field will always be collected, even if it isn't required for the Payment Method.
             case always
         }
@@ -123,20 +120,14 @@ extension ExpressCheckoutElement {
     }
 }
 
-extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration: CheckoutBillingDetailsCollectionConfiguration {
-    var attachDefaultsToPaymentMethod: Bool { false }
-
-    /// Billing contact fields to require in the Apple Pay sheet.
-    var requiredBillingContactFields: Set<PKContactField> {
-        var requiredPKContactFields = Set<PKContactField>()
-        // By default, we always want to request the billing address (as it includes the postal code).
-        if address == .automatic || address == .full {
-            requiredPKContactFields.insert(.postalAddress)
-        }
-        // Email isn't collected by Apple Pay.
-        if name == .always {
-            requiredPKContactFields.insert(.name)
-        }
-        return requiredPKContactFields
+extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration {
+    func paymentSheetConfiguration() -> PaymentSheet.BillingDetailsCollectionConfiguration {
+        var configuration = PaymentSheet.BillingDetailsCollectionConfiguration()
+        configuration.name = .init(rawValue: name.rawValue)!
+        configuration.address = address == .full ? .full : .automatic
+        configuration.email = .never
+        configuration.phone = .never
+        configuration.attachDefaultsToPaymentMethod = false
+        return configuration
     }
 }

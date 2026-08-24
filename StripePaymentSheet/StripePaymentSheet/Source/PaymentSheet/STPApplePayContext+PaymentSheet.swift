@@ -554,11 +554,11 @@ private func makeFallbackBillingDetails(
 }
 
 private func makeRequiredBillingDetails(from configuration: PaymentElementConfiguration) -> Set<PKContactField> {
-    return configuration.billingDetailsCollectionConfiguration.requiredBillingContactFields
+    return configuration.billingDetailsCollectionConfiguration.applePayRequiredBillingContactFields
 }
 
 private func makeRequiredShippingDetails(from configuration: PaymentElementConfiguration) -> Set<PKContactField> {
-    return configuration.billingDetailsCollectionConfiguration.requiredShippingContactFields
+    return configuration.billingDetailsCollectionConfiguration.applePayRequiredShippingContactFields
 }
 
 extension PKPaymentNetwork {

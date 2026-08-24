@@ -209,7 +209,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
         let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient(),
-            billingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
+            billingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration().paymentSheetConfiguration()
         )
 
         // When building the payment request
@@ -220,14 +220,14 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertTrue(paymentRequest.requiredShippingContactFields.isEmpty)
     }
 
-    func testMakePaymentRequest_ece_addressFull_requiresPostalAddress() {
+    func testMakePaymentRequest_ece_addressAlways_requiresPostalAddress() {
         // Given a configuration that collects the full billing address
         let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
         var billingConfig = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
-        billingConfig.address = .full
+        billingConfig.address = .always
         let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient(),
-            billingDetailsCollectionConfiguration: billingConfig
+            billingDetailsCollectionConfiguration: billingConfig.paymentSheetConfiguration()
         )
 
         // When building the payment request
@@ -244,7 +244,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         billingConfig.name = .always
         let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient(),
-            billingDetailsCollectionConfiguration: billingConfig
+            billingDetailsCollectionConfiguration: billingConfig.paymentSheetConfiguration()
         )
 
         // When building the payment request
@@ -261,7 +261,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
         let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient(),
-            billingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
+            billingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration().paymentSheetConfiguration()
         )
 
         // When building the payment request
