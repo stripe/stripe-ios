@@ -203,4 +203,44 @@ extension STPStringUtils {
         }
         return formattedString
     }
+
+    /// Parses a string containing markdown-style links (e.g. `"...text [Learn more](https://example.com)."`)
+    /// and returns an `NSAttributedString` with the markdown syntax stripped and `.link` attributes applied
+    /// to the link text. Text without markdown links is returned unmodified. Links with a malformed URL are
+    /// rendered as plain, non-tappable text, since this is used for dynamic server-provided strings rather
+    /// than hardcoded templates.
+    class func attributedStringFromMarkdownLinks(in string: String) -> NSAttributedString {
+        guard let regex = try? NSRegularExpression(pattern: "\\[([^\\]]+)\\]\\(([^)]*)\\)") else {
+            return NSAttributedString(string: string)
+        }
+
+        let nsString = string as NSString
+        let matches = regex.matches(in: string, range: NSRange(location: 0, length: nsString.length))
+
+        let result = NSMutableAttributedString()
+        var lastIndex = 0
+
+        for match in matches {
+            let matchRange = match.range
+            guard matchRange.location >= lastIndex else { continue }
+
+            let precedingText = nsString.substring(with: NSRange(location: lastIndex, length: matchRange.location - lastIndex))
+            result.append(NSAttributedString(string: precedingText))
+
+            let linkText = nsString.substring(with: match.range(at: 1))
+            let urlString = nsString.substring(with: match.range(at: 2))
+
+            if let url = URL(string: urlString) {
+                result.append(NSAttributedString(string: linkText, attributes: [.link: url]))
+            } else {
+                result.append(NSAttributedString(string: linkText))
+            }
+
+            lastIndex = matchRange.location + matchRange.length
+        }
+
+        result.append(NSAttributedString(string: nsString.substring(from: lastIndex)))
+
+        return result
+    }
 }

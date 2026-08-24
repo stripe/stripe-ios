@@ -150,4 +150,48 @@ class STPStringUtilsTest: XCTestCase {
         XCTAssertEqual(STPStringUtils.sanitizedExpirationDateFromOCRString("Expiration date 01 35"), nil)
         XCTAssertEqual(STPStringUtils.sanitizedExpirationDateFromOCRString("AA/BB"), nil)
     }
+
+    func testAttributedStringFromMarkdownLinks_noLink() {
+        let result = STPStringUtils.attributedStringFromMarkdownLinks(in: "Plain text with no links.")
+        XCTAssertEqual(result.string, "Plain text with no links.")
+        XCTAssertNil(result.attribute(.link, at: 0, effectiveRange: nil))
+    }
+
+    func testAttributedStringFromMarkdownLinks_singleLink() {
+        let result = STPStringUtils.attributedStringFromMarkdownLinks(
+            in: "Acme can access your data. [Learn more](https://stripe.com/learn-more)."
+        )
+        XCTAssertEqual(result.string, "Acme can access your data. Learn more.")
+
+        let linkRange = (result.string as NSString).range(of: "Learn more")
+        XCTAssertEqual(
+            result.attribute(.link, at: linkRange.location, effectiveRange: nil) as? URL,
+            URL(string: "https://stripe.com/learn-more")
+        )
+    }
+
+    func testAttributedStringFromMarkdownLinks_multipleLinks() {
+        let result = STPStringUtils.attributedStringFromMarkdownLinks(
+            in: "See [these terms](https://stripe.com/terms) and [this policy](https://stripe.com/policy)."
+        )
+        XCTAssertEqual(result.string, "See these terms and this policy.")
+
+        let termsRange = (result.string as NSString).range(of: "these terms")
+        XCTAssertEqual(
+            result.attribute(.link, at: termsRange.location, effectiveRange: nil) as? URL,
+            URL(string: "https://stripe.com/terms")
+        )
+
+        let policyRange = (result.string as NSString).range(of: "this policy")
+        XCTAssertEqual(
+            result.attribute(.link, at: policyRange.location, effectiveRange: nil) as? URL,
+            URL(string: "https://stripe.com/policy")
+        )
+    }
+
+    func testAttributedStringFromMarkdownLinks_malformedURL() {
+        let result = STPStringUtils.attributedStringFromMarkdownLinks(in: "Broken [link]().")
+        XCTAssertEqual(result.string, "Broken link.")
+        XCTAssertNil(result.attribute(.link, at: 0, effectiveRange: nil))
+    }
 }
