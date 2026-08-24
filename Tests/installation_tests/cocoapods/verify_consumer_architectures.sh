@@ -38,23 +38,23 @@ cat > "${test_dir}/Podfile" <<EOF
 project 'CocoapodsTest.xcodeproj'
 use_frameworks!
 
-target 'CocoapodsTest' do
+abstract_target 'LocalPodspecs' do
   platform :ios, '15.0'
-  # Release branches use an unpublished version, so keep exact-version dependencies local.
-  pod 'Stripe', path: '${repo_root}'
-  pod 'StripeIdentity', path: '${repo_root}'
-  pod 'StripeFinancialConnections', path: '${repo_root}'
-  pod 'StripeCardScan', path: '${repo_root}'
+  # Resolve unpublished release versions locally without adding these pods to an asserted target.
   pod 'StripeApplePay', path: '${repo_root}'
   pod 'StripeCameraCore', path: '${repo_root}'
-  pod 'StripeConnect', path: '${repo_root}'
   pod 'StripeCore', path: '${repo_root}'
-  pod 'StripeUICore', path: '${repo_root}'
+  pod 'StripeFinancialConnectionsLite', path: '${repo_root}'
+  pod 'StripeIdentity', path: '${repo_root}'
+  pod 'StripePaymentSheet', path: '${repo_root}'
   pod 'StripePayments', path: '${repo_root}'
   pod 'StripePaymentsUI', path: '${repo_root}'
-  pod 'StripeFinancialConnectionsLite', path: '${repo_root}'
-  pod 'StripePaymentSheet', path: '${repo_root}'
-  pod 'StripeIssuing', path: '${repo_root}'
+  pod 'StripeUICore', path: '${repo_root}'
+end
+
+target 'CocoapodsTest' do
+  platform :ios, '15.0'
+  pod 'StripeIdentity', path: '${repo_root}'
 end
 
 target 'CocoapodsTestTests' do
