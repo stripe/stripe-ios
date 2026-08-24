@@ -129,6 +129,43 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(items[0].amount, .zero)
     }
 
+    // MARK: - makePaymentRequest
+
+    func testMakePaymentRequestRequiresShippingAddress() {
+        // Given Express Checkout Element is configured to require a shipping address
+        let session = CheckoutTestHelpers.makeSession().makePublicSession()
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            shippingAddressRequired: true
+        )
+
+        // When
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        // Then Apple Pay requires the customer's name and postal address
+        XCTAssertEqual(paymentRequest.requiredShippingContactFields, [.name, .postalAddress])
+    }
+
+    func testMakePaymentRequestDoesNotRequireShippingAddressByDefault() {
+        // Given Express Checkout Element uses its default shipping address configuration
+        let session = CheckoutTestHelpers.makeSession().makePublicSession()
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient()
+        )
+
+        // When
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        // Then Apple Pay does not require shipping contact fields
+        XCTAssertTrue(paymentRequest.requiredShippingContactFields.isEmpty)
+    }
+
     // MARK: - presentationWindow
 
     func testPresentationWindowReturnsConfiguredWindow() {

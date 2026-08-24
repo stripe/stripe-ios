@@ -223,8 +223,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
     ) throws -> CheckoutApplePayContext {
-        let applePayConfig = applePayConfirmationParameters.applePayConfiguration
-
         guard PKPaymentAuthorizationController.canMakePayments() else {
             let error = CheckoutError.unknown(debugDescription: "Apple Pay isn't set up on this device (e.g. no cards in wallet).")
             STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
@@ -233,21 +231,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
         // TODO: Product Usage
 
-        let countryCode = checkoutSession.elementsSession.merchantCountryCode ?? "US"
-        let paymentRequest = StripeAPI.paymentRequest(
-            withMerchantIdentifier: applePayConfig.merchantId,
-            country: countryCode,
-            currency: checkoutSession.currency ?? "USD"
+        let paymentRequest = makePaymentRequest(
+            checkoutSession: checkoutSession,
+            applePayConfirmationParameters: applePayConfirmationParameters
         )
-
-        assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `CheckoutController.ApplePayConfiguration`.")
-
-        let merchantLabel = applePayConfirmationParameters.merchantDisplayName
-        paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
-
-        if applePayConfirmationParameters.shippingAddressRequired {
-            paymentRequest.requiredShippingContactFields = [.postalAddress, .name]
-        }
 
         // PKPaymentAuthorizationController.init is non-nullable even for invalid requests.
         // Use PKPaymentAuthorizationViewController.init as a proxy — it IS nullable and
@@ -263,6 +250,28 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             applePayConfirmationParameters: applePayConfirmationParameters,
             authorizationController: authorizationController
         )
+    }
+
+    static func makePaymentRequest(
+        checkoutSession: CheckoutController.Session,
+        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
+    ) -> PKPaymentRequest {
+        let applePayConfig = applePayConfirmationParameters.applePayConfiguration
+        assert(!applePayConfig.merchantId.isBlank, "You must set `merchantId` on `CheckoutController.ApplePayConfiguration`.")
+        let countryCode = checkoutSession.elementsSession.merchantCountryCode ?? "US"
+        let paymentRequest = StripeAPI.paymentRequest(
+            withMerchantIdentifier: applePayConfig.merchantId,
+            country: countryCode,
+            currency: checkoutSession.currency ?? "USD"
+        )
+
+        let merchantLabel = applePayConfirmationParameters.merchantDisplayName
+        paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
+
+        if applePayConfirmationParameters.shippingAddressRequired {
+            paymentRequest.requiredShippingContactFields = [.postalAddress, .name]
+        }
+        return paymentRequest
     }
 
     // MARK: - Present
