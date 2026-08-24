@@ -16,8 +16,6 @@ enum IdentityMLModelLoaderError: Error, AnalyticLoggableErrorV2 {
     case malformedURL(String)
     /// The ML model never started loading on the client
     case mlModelNeverLoaded
-    /// MediaPipe face detection is not available.
-    case mediaPipeFaceDetectorUnavailable(String)
 
     func analyticLoggableSerializeForLogging() -> [String: Any] {
         switch self {
@@ -29,11 +27,6 @@ enum IdentityMLModelLoaderError: Error, AnalyticLoggableErrorV2 {
         case .mlModelNeverLoaded:
             return [
                 "type": "ml_model_never_loaded",
-            ]
-        case .mediaPipeFaceDetectorUnavailable(let reason):
-            return [
-                "type": "media_pipe_face_detector_unavailable",
-                "reason": reason,
             ]
         }
     }
@@ -48,7 +41,9 @@ protocol IdentityMLModelLoaderProtocol {
         with sheetController: VerificationSheetControllerProtocol
     )
 
-    func startLoadingFaceModels(from verificationPage: StripeAPI.VerificationPage)
+    func startLoadingFaceModels(
+        from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage
+    )
 }
 
 /// Loads the ML models used by Identity.
@@ -175,41 +170,9 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
 
     /// Starts loading the ML models needed for face scanning. When the models
     /// are done loading, they can be retrieved by observing `faceModelsFuture`.
-    func startLoadingFaceModels(from verificationPage: StripeAPI.VerificationPage) {
-        guard let selfiePageConfig = verificationPage.selfie else {
-            return
-        }
-
-        if verificationPage.enable3DFaceCapture {
-            let faceGeometryDetector: FaceGeometryDetector
-            do {
-                faceGeometryDetector = try FaceGeometryDetectorFactory.makeDefaultDetector()
-            } catch {
-                let error = IdentityMLModelLoaderError.mediaPipeFaceDetectorUnavailable(
-                    String(describing: error)
-                )
-                Self.logModelLoadingError(
-                    error,
-                    modelType: "face",
-                    stage: "media_pipe_detector"
-                )
-                faceMLModelsPromise.reject(with: error)
-                return
-            }
-
-            faceMLModelsPromise.fullfill(
-                with: .success(
-                    AnyFaceScanner(
-                        FaceScanner(
-                            faceGeometryDetector: faceGeometryDetector,
-                            configuration: .init(from: selfiePageConfig)
-                        )
-                    )
-                )
-            )
-            return
-        }
-
+    func startLoadingFaceModels(
+        from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage
+    ) {
         guard let faceDetectorURL = URL(string: selfiePageConfig.models.faceDetectorUrl) else {
             let error = IdentityMLModelLoaderError.malformedURL(
                 selfiePageConfig.models.faceDetectorUrl
