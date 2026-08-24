@@ -18,14 +18,14 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Properties
 
-    private let configuration: CheckoutController.Configuration
+    private let configuration: ExpressCheckoutElement.Configuration
     private let stackView = UIStackView()
     private var linkBrand: LinkBrand
     private weak var delegate: ExpressCheckoutElementDelegate?
 
     // MARK: - Init
 
-    init(session: CheckoutController.Session, configuration: CheckoutController.Configuration, delegate: ExpressCheckoutElementDelegate) {
+    init(session: CheckoutController.Session, configuration: ExpressCheckoutElement.Configuration, delegate: ExpressCheckoutElementDelegate) {
         self.configuration = configuration
         self.delegate = delegate
         self.linkBrand = session.elementsSession.linkBrand ?? .link
@@ -119,7 +119,7 @@ public final class ExpressCheckoutElementUIView: UIView {
                 paymentMethod,
                 presentationWindow: window
             ) else { return }
-            self.configuration.expressCheckoutElement.confirmHandler(result)
+            self.configuration.confirmHandler(result)
         }
     }
 }

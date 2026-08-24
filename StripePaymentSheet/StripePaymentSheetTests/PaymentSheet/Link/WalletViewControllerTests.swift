@@ -74,15 +74,73 @@ final class WalletViewControllerTests: XCTestCase {
         ])
         XCTAssertEqual(actions.map(\.style), [.destructive])
     }
+
+    @MainActor
+    func test_recordBankAccountConsentIfNeeded_firesForBankAccountWithConsentText() async {
+        let consentText = "Rocket Deliveries can access account and ownership details, balances, and transactions."
+        let spy = RecordConsentSpyLinkAccount()
+        let sut = makeSUT(linkAccount: spy, linkPaymentMethodBankAccountDataConsent: consentText)
+
+        let bankAccount = LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.bankAccount]
+        await sut.recordBankAccountConsentIfNeeded(for: bankAccount)
+
+        XCTAssertEqual(spy.recordedConsentText, consentText)
+    }
+
+    @MainActor
+    func test_recordBankAccountConsentIfNeeded_doesNotFireForCard() async {
+        let consentText = "Rocket Deliveries can access account and ownership details, balances, and transactions."
+        let spy = RecordConsentSpyLinkAccount()
+        let sut = makeSUT(linkAccount: spy, linkPaymentMethodBankAccountDataConsent: consentText)
+
+        let card = LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.card]
+        await sut.recordBankAccountConsentIfNeeded(for: card)
+
+        XCTAssertNil(spy.recordedConsentText)
+    }
+
+    @MainActor
+    func test_recordBankAccountConsentIfNeeded_doesNotFireWhenConsentTextMissing() async {
+        let spy = RecordConsentSpyLinkAccount()
+        let sut = makeSUT(linkAccount: spy, linkPaymentMethodBankAccountDataConsent: nil)
+
+        let bankAccount = LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.bankAccount]
+        await sut.recordBankAccountConsentIfNeeded(for: bankAccount)
+
+        XCTAssertNil(spy.recordedConsentText)
+    }
+}
+
+private final class RecordConsentSpyLinkAccount: PaymentSheetLinkAccount {
+    private(set) var recordedConsentText: String?
+
+    init() {
+        super.init(
+            email: "user@example.com",
+            session: LinkStubs.consumerSession(),
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+    }
+
+    override func recordConnectionsConsentAcquired(localizedConsentText: String) async throws -> EmptyResponse {
+        recordedConsentText = localizedConsentText
+        return try JSONDecoder().decode(EmptyResponse.self, from: Data("{}".utf8))
+    }
 }
 
 private extension WalletViewControllerTests {
     @MainActor
     func makeSUT(
-        paymentMethods: [ConsumerPaymentDetails] = LinkStubs.paymentMethods()
+        paymentMethods: [ConsumerPaymentDetails] = LinkStubs.paymentMethods(),
+        linkAccount: PaymentSheetLinkAccount = LinkStubs.account(),
+        linkPaymentMethodBankAccountDataConsent: String? = nil
     ) -> PayWithLinkViewController.WalletViewController {
-        let (intent, elementsSession) = try! PayWithLinkTestHelpers.makePaymentIntentAndElementsSession()
-        let linkAccount = LinkStubs.account()
+        let (intent, elementsSession) = try! PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(
+            linkPaymentMethodBankAccountDataConsent: linkPaymentMethodBankAccountDataConsent
+        )
         let configuration = PaymentSheet.Configuration()
 
         return PayWithLinkViewController.WalletViewController(
