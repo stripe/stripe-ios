@@ -111,9 +111,9 @@ final class CheckoutCartViewController: UIViewController {
         self.adaptivePricing = adaptivePricing
         self.integrationType = integrationType
         self.showExpressCheckoutElement = showExpressCheckoutElement
-        self.eceShippingAddressRequired = eceShippingAddressRequired
         self.applePayDisplay = applePayDisplay
         self.linkDisplay = linkDisplay
+        self.eceShippingAddressRequired = eceShippingAddressRequired
         self.eceBillingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
         self.currencySelectorAppearance = currencySelectorAppearance
         self.delayPaymentPagesRequests = delayPaymentPagesRequests
@@ -234,16 +234,14 @@ final class CheckoutCartViewController: UIViewController {
             configuration.applePayConfiguration = CheckoutController.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
-            var expressCheckoutElementConfig = ExpressCheckoutElement.Configuration()
-            expressCheckoutElementConfig.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
-            configuration.expressCheckoutElement = expressCheckoutElementConfig
-            configuration.currencySelectorElement.appearance = currencySelectorAppearance
-            configuration.expressCheckoutElement.shippingAddressRequired = eceShippingAddressRequired
             configuration.expressCheckoutElement.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example",
                 display: applePayDisplay
             )
             configuration.expressCheckoutElement.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(display: linkDisplay)
+            configuration.expressCheckoutElement.shippingAddressRequired = eceShippingAddressRequired
+            configuration.expressCheckoutElement.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
+            configuration.currencySelectorElement.appearance = currencySelectorAppearance
             configuration.apiClient = diagnostics.makeAPIClient(
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
