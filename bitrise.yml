@@ -28,16 +28,14 @@ trigger_map:
 pipelines:
   main-trigger-pipeline:
     workflows:
-      lint-tests:
-        abort_on_fail: true
       update-snapshots-and-lokalise: {}
       framework-tests: {}
-      lpm-confirm-flow-tests: {}
-      framework-tests-and-builds-xcode-26-1: {}
+      lpm-confirm-flow-tests:
+        abort_on_fail: true
       install-and-integration-tests: {}
       size-report: {}
       ui-tests-paymentsheet:
-        parallel: 4
+        parallel: 2
       ui-tests-connect-crypto: {}
 
   releases-trigger-pipeline:
@@ -51,7 +49,7 @@ pipelines:
       install-and-integration-tests: {}
       size-report: {}
       ui-tests-paymentsheet:
-        parallel: 4
+        parallel: 2
       ui-tests-connect-crypto: {}
       legacy-tests-15: {}
       legacy-tests-16: {}
@@ -60,6 +58,7 @@ pipelines:
   nightly-pipeline:
     workflows:
       framework-tests-no-mocks: {}
+      framework-tests-and-builds-xcode-26-1: {}
       check-docs: {}
       legacy-tests-15: {}
       legacy-tests-16: {}
@@ -423,6 +422,39 @@ workflows:
         machine_type_id: g2.mac.large
   lpm-confirm-flow-tests:
     steps:
+    - script@1:
+        title: Fetch full git history
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -euo pipefail
+            if [[ "$(git rev-parse --is-shallow-repository)" == "true" ]]; then
+              git fetch --unshallow origin
+            fi
+    - script@1: &lint_fetch_master
+        inputs:
+        - content: git fetch origin master
+        title: Fetch origin/master
+    - script@1: &lint_swift_files
+        inputs:
+        - content: ./ci_scripts/lint_modified_files.sh
+        title: Run swiftlint
+    - script@1: &lint_paymentsheet_sharding
+        inputs:
+        - content: ./ci_scripts/check_paymentsheet_test_sharding.rb
+        title: Check PaymentSheet test sharding
+    - script@1: &lint_image_format
+        inputs:
+        - content: ./ci_scripts/check_image_format.sh
+        title: Check png image format is 8-bit
+    - fastlane@3: &lint_build_extras
+        inputs:
+        - lane: build_extras
+        title: fastlane build_extras
+    - fastlane@3: &lint_analyze
+        inputs:
+        - lane: analyze
+        title: fastlane analyze
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -634,30 +666,12 @@ workflows:
         inputs:
         - merge_pr: "no"
         - clone_depth: -1
-    - script@1:
-        inputs:
-        - content: git fetch origin master
-        title: Fetch origin/master
-    - script@1:
-        inputs:
-        - content: ./ci_scripts/lint_modified_files.sh
-        title: Run swiftlint
-    - script@1:
-        inputs:
-        - content: ./ci_scripts/check_paymentsheet_test_sharding.rb
-        title: Check PaymentSheet test sharding
-    - script@1:
-        inputs:
-        - content: ./ci_scripts/check_image_format.sh
-        title: Check png image format is 8-bit
-    - fastlane@3:
-        inputs:
-        - lane: build_extras
-        title: fastlane build_extras
-    - fastlane@3:
-        inputs:
-        - lane: analyze
-        title: fastlane analyze
+    - script@1: *lint_fetch_master
+    - script@1: *lint_swift_files
+    - script@1: *lint_paymentsheet_sharding
+    - script@1: *lint_image_format
+    - fastlane@3: *lint_build_extras
+    - fastlane@3: *lint_analyze
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
@@ -800,7 +814,7 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: $TEST_PLAN_SHARD
         - log_formatter: xcbeautify
-        - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
+        - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 4
     - script@1:
         is_always_run: true
         title: Retry gate for test-runner hang
@@ -817,7 +831,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
-        machine_type_id: g2.mac.large
+        machine_type_id: g2.mac.4large
   ui-tests-connect-crypto:
     steps:
     - script@1:
