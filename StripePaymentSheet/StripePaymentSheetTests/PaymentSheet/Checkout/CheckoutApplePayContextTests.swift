@@ -164,6 +164,31 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertFalse(paymentRequest.requiredBillingContactFields.contains(.postalAddress))
     }
 
+    func testMakePaymentRequest_billingTaxRequiresPostalAddress() {
+        // Given automatic tax uses the billing address, even though address collection is .never
+        let session = CheckoutTestHelpers.makeSession([
+            "tax_context": [
+                "automatic_tax_enabled": true,
+                "automatic_tax_address_source": "session.billing",
+            ],
+        ]).makePublicSession()
+        var billingConfig = PaymentSheet.BillingDetailsCollectionConfiguration()
+        billingConfig.address = .never
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            billingDetailsCollectionConfiguration: billingConfig
+        )
+
+        // When
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        // Then Apple Pay collects the postal address needed to calculate tax
+        XCTAssertTrue(paymentRequest.requiredBillingContactFields.contains(.postalAddress))
+    }
+
     func testMakePaymentRequest_nameAlways_requiresBillingName() {
         // Given a configuration that always collects the billing name
         let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
@@ -224,7 +249,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         // Given a configuration that collects the full billing address
         let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
         var billingConfig = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
-        billingConfig.address = .always
+        billingConfig.address = .full
         let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient(),
             billingDetailsCollectionConfiguration: billingConfig.paymentSheetConfiguration()
