@@ -21,9 +21,9 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     let showExpressCheckoutElement: Bool
-    let expressCheckoutElementShippingAddressRequired: Bool
     let applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
     let linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
+    let eceShippingAddressRequired: Bool
     var eceBillingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration
     let currencySelectorAppearance: CurrencySelectorElement.Appearance
     let delayPaymentPagesRequests: Bool
@@ -36,7 +36,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
             adaptivePricing: adaptivePricing,
             integrationType: integrationType,
             showExpressCheckoutElement: showExpressCheckoutElement,
-            expressCheckoutElementShippingAddressRequired: expressCheckoutElementShippingAddressRequired,
+            eceShippingAddressRequired: eceShippingAddressRequired,
             applePayDisplay: applePayDisplay,
             linkDisplay: linkDisplay,
             eceBillingDetailsCollectionConfiguration: eceBillingDetailsCollectionConfiguration,
@@ -59,7 +59,7 @@ final class CheckoutCartViewController: UIViewController {
     private let adaptivePricing: Bool
     private let integrationType: CheckoutPlayground.IntegrationType
     private let showExpressCheckoutElement: Bool
-    private let expressCheckoutElementShippingAddressRequired: Bool
+    private let eceShippingAddressRequired: Bool
     private let applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
     private let linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
     private let eceBillingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration
@@ -97,7 +97,7 @@ final class CheckoutCartViewController: UIViewController {
         adaptivePricing: Bool,
         integrationType: CheckoutPlayground.IntegrationType,
         showExpressCheckoutElement: Bool,
-        expressCheckoutElementShippingAddressRequired: Bool,
+        eceShippingAddressRequired: Bool,
         applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display,
         linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display,
         eceBillingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration,
@@ -111,7 +111,7 @@ final class CheckoutCartViewController: UIViewController {
         self.adaptivePricing = adaptivePricing
         self.integrationType = integrationType
         self.showExpressCheckoutElement = showExpressCheckoutElement
-        self.expressCheckoutElementShippingAddressRequired = expressCheckoutElementShippingAddressRequired
+        self.eceShippingAddressRequired = eceShippingAddressRequired
         self.applePayDisplay = applePayDisplay
         self.linkDisplay = linkDisplay
         self.eceBillingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
@@ -238,7 +238,7 @@ final class CheckoutCartViewController: UIViewController {
             expressCheckoutElementConfig.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
             configuration.expressCheckoutElement = expressCheckoutElementConfig
             configuration.currencySelectorElement.appearance = currencySelectorAppearance
-            configuration.expressCheckoutElement.shippingAddressRequired = expressCheckoutElementShippingAddressRequired
+            configuration.expressCheckoutElement.shippingAddressRequired = eceShippingAddressRequired
             configuration.expressCheckoutElement.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example",
                 display: applePayDisplay

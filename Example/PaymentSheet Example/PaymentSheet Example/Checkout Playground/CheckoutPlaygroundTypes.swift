@@ -266,7 +266,7 @@ enum CheckoutPlayground {
 
         var uiFramework: UIFramework = .swiftUI
         var integrationType: IntegrationType = .flowController
-        var expressCheckoutElementOption: ExpressCheckoutElementOption = .show
+        var expressCheckoutElement = ExpressCheckoutElementSettings()
         var currency: Currency = .usd
         var customerType: CustomerType = .guest
         var lineItems: [LineItemConfig] = LineItemConfig.defaults

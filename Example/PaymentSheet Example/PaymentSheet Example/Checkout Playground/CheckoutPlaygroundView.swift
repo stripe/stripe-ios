@@ -58,7 +58,7 @@ struct CheckoutPlaygroundView: View {
                             expressCheckoutElementOption: $viewModel.expressCheckoutElement.option,
                             applePayDisplay: $viewModel.expressCheckoutElement.applePayDisplay,
                             linkDisplay: $viewModel.expressCheckoutElement.linkDisplay,
-                            expressCheckoutElementShippingAddressRequired: $viewModel.expressCheckoutElement.shippingAddressRequired,
+                            eceShippingAddressRequired: $viewModel.expressCheckoutElement.shippingAddressRequired,
                             onCustomizeBillingDetailsCollection: {
                                 showBillingDetailsCollection = true
                             }
@@ -103,7 +103,7 @@ struct CheckoutPlaygroundView: View {
                             showExpressCheckoutElement: viewModel.expressCheckoutElement.option == .show,
                             applePayDisplay: viewModel.expressCheckoutElement.applePayDisplay,
                             linkDisplay: viewModel.expressCheckoutElement.linkDisplay,
-                            expressCheckoutElementShippingAddressRequired: viewModel.expressCheckoutElement.shippingAddressRequired,
+                            eceShippingAddressRequired: viewModel.expressCheckoutElement.shippingAddressRequired,
                             eceBillingDetailsCollectionConfiguration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
@@ -118,7 +118,7 @@ struct CheckoutPlaygroundView: View {
                             showExpressCheckoutElement: viewModel.expressCheckoutElement.option == .show,
                             applePayDisplay: viewModel.expressCheckoutElement.applePayDisplay,
                             linkDisplay: viewModel.expressCheckoutElement.linkDisplay,
-                            expressCheckoutElementShippingAddressRequired: viewModel.expressCheckoutElement.shippingAddressRequired,
+                            eceShippingAddressRequired: viewModel.expressCheckoutElement.shippingAddressRequired,
                             eceBillingDetailsCollectionConfiguration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests

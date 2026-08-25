@@ -25,9 +25,9 @@ struct CheckoutCartView: View {
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     var showExpressCheckoutElement: Bool = false
-    var expressCheckoutElementShippingAddressRequired: Bool = false
     var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
     var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
+    var eceShippingAddressRequired: Bool = false
     var eceBillingDetailsCollectionConfiguration = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
     var delayPaymentPagesRequests = false
@@ -183,7 +183,7 @@ struct CheckoutCartView: View {
                 display: applePayDisplay
             )
             config.expressCheckoutElement.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(display: linkDisplay)
-            config.expressCheckoutElement.shippingAddressRequired = expressCheckoutElementShippingAddressRequired
+            config.expressCheckoutElement.shippingAddressRequired = eceShippingAddressRequired
             config.expressCheckoutElement.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
             config.expressCheckoutElement.confirmHandler = { result in
                 confirmResult = result

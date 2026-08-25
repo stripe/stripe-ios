@@ -243,9 +243,9 @@ struct CheckoutPlaygroundFeaturesSection: View {
 
 struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
-    @Binding var expressCheckoutElementShippingAddressRequired: Bool
     @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
     @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
+    @Binding var eceShippingAddressRequired: Bool
     var onCustomizeBillingDetailsCollection: () -> Void
 
     var body: some View {
@@ -261,7 +261,7 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                 if expressCheckoutElementOption == .show {
                     CheckoutPlayground.ToggleRow(
                         title: "Requires Shipping Address",
-                        isOn: $expressCheckoutElementShippingAddressRequired,
+                        isOn: $eceShippingAddressRequired,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.shippingAddressRequired`. When on, wallets like Apple Pay require the customer to provide a shipping address."
                     )
                     CheckoutPlayground.PickerRow(

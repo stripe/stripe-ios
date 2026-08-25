@@ -265,48 +265,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         )
     }
 
-    static func makePaymentRequest(
-        checkoutSession: CheckoutController.Session,
-        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
-    ) -> PKPaymentRequest {
-        let applePayConfig = applePayConfirmationParameters.applePayConfiguration
-        assert(!applePayConfig.merchantId.isBlank, "You must set `merchantId` on `CheckoutController.ApplePayConfiguration`.")
-        let countryCode = checkoutSession.elementsSession.merchantCountryCode ?? "US"
-        let paymentRequest = StripeAPI.paymentRequest(
-            withMerchantIdentifier: applePayConfig.merchantId,
-            country: countryCode,
-            currency: checkoutSession.currency ?? "USD"
-        )
-
-        let merchantLabel = applePayConfirmationParameters.merchantDisplayName
-        paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
-
-        if applePayConfirmationParameters.shippingAddressRequired {
-            paymentRequest.requiredShippingContactFields = [.postalAddress, .name]
-            if let shippingAddress = checkoutSession.shippingAddress {
-                paymentRequest.shippingContact = makeShippingContact(from: shippingAddress)
-            }
-        }
-        return paymentRequest
-    }
-
-    static func makeShippingContact(from shippingAddress: CheckoutController.Session.ShippingAddress) -> PKContact {
-        let contact = PKContact()
-        if let name = shippingAddress.name {
-            contact.name = PersonNameComponentsFormatter().personNameComponents(from: name)
-        }
-
-        let address = shippingAddress.address
-        let postalAddress = CNMutablePostalAddress()
-        postalAddress.isoCountryCode = address.country
-        postalAddress.street = [address.line1, address.line2].compactMap { $0 }.joined(separator: "\n")
-        postalAddress.city = address.city ?? ""
-        postalAddress.state = address.state ?? ""
-        postalAddress.postalCode = address.postalCode ?? ""
-        contact.postalAddress = postalAddress
-        return contact
-    }
-
     // MARK: - Present
 
     func presentApplePay() async -> CheckoutController.InternalConfirmResult {
@@ -341,6 +299,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
     ) -> PKPaymentRequest {
         let applePayConfig = applePayConfirmationParameters.applePayConfiguration
+        assert(!applePayConfig.merchantId.isBlank, "You must set `merchantId` on `CheckoutController.ApplePayConfiguration`.")
         let countryCode = checkoutSession.elementsSession.merchantCountryCode ?? "US"
         let paymentRequest = StripeAPI.paymentRequest(
             withMerchantIdentifier: applePayConfig.merchantId,
@@ -357,7 +316,14 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             paymentRequest.requiredBillingContactFields.insert(.postalAddress)
         }
         paymentRequest.requiredShippingContactFields = billingDetailsCollectionConfiguration.applePayRequiredShippingContactFields
-        // TODO: Add postalAddress to requiredShippingContactFields when shipping address collection is implemented.
+
+        if applePayConfirmationParameters.shippingAddressRequired {
+            paymentRequest.requiredShippingContactFields.insert(.postalAddress)
+            paymentRequest.requiredShippingContactFields.insert(.name)
+            if let shippingAddress = checkoutSession.shippingAddress {
+                paymentRequest.shippingContact = makeShippingContact(from: shippingAddress)
+            }
+        }
 
         if let defaults = applePayConfirmationParameters.defaultBillingDetails,
            defaults.address?.line1 != nil {
@@ -365,6 +331,23 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         }
 
         return paymentRequest
+    }
+
+    static func makeShippingContact(from shippingAddress: CheckoutController.Session.ShippingAddress) -> PKContact {
+        let contact = PKContact()
+        if let name = shippingAddress.name {
+            contact.name = PersonNameComponentsFormatter().personNameComponents(from: name)
+        }
+
+        let address = shippingAddress.address
+        let postalAddress = CNMutablePostalAddress()
+        postalAddress.isoCountryCode = address.country
+        postalAddress.street = [address.line1, address.line2].compactMap { $0 }.joined(separator: "\n")
+        postalAddress.city = address.city ?? ""
+        postalAddress.state = address.state ?? ""
+        postalAddress.postalCode = address.postalCode ?? ""
+        contact.postalAddress = postalAddress
+        return contact
     }
 
     static func makeFallbackBillingDetails(

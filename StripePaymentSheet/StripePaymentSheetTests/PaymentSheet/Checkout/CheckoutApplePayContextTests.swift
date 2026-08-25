@@ -258,7 +258,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(error?.domain, PKPaymentErrorDomain)
         XCTAssertEqual(error?.code, PKPaymentError.Code.shippingAddressUnserviceableError.rawValue)
     }
-      
+
     // MARK: - makePaymentRequest billing/shipping contact fields
 
     func testMakePaymentRequest_defaultConfig_requiresOnlyPostalAddress() {
@@ -502,6 +502,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         // Then defaults are used only for prefill, not attached to the PaymentMethod
         XCTAssertNil(fallback)
     }
+
     // MARK: - presentationWindow
 
     func testPresentationWindowReturnsConfiguredWindow() {
