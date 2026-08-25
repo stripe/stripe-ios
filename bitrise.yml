@@ -814,7 +814,7 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: $TEST_PLAN_SHARD
         - log_formatter: xcbeautify
-        - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 4
+        - xcodebuild_options: -parallel-testing-enabled YES -parallel-testing-worker-count 4
     - script@1:
         is_always_run: true
         title: Retry gate for test-runner hang
