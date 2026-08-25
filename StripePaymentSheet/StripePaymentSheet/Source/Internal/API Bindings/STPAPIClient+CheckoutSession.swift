@@ -85,11 +85,14 @@ extension STPAPIClient {
     /// Retrieves the small state object used to determine whether a Checkout
     /// Session transition is still in progress.
     func pollCheckoutSession(
-        checkoutSessionId: String
+        checkoutSessionId: String,
+        timeout: TimeInterval
     ) async throws -> PaymentPagePollResponse {
         return try await get(
             endpoint: "payment_pages/\(checkoutSessionId)/poll",
-            parameters: [:]
+            parameters: [:],
+            timeout: timeout,
+            retriesEnabled: false
         )
     }
 
@@ -254,11 +257,18 @@ extension STPAPIClient {
 
     private func get<T: Decodable>(
         endpoint: String,
-        parameters: [String: Any]
+        parameters: [String: Any],
+        timeout: TimeInterval? = nil,
+        retriesEnabled: Bool = true
     ) async throws -> T {
         do {
             return try await withCheckedThrowingContinuation { continuation in
-                get(resource: endpoint, parameters: parameters) { (result: Result<T, Error>) in
+                get(
+                    resource: endpoint,
+                    parameters: parameters,
+                    timeout: timeout,
+                    retriesEnabled: retriesEnabled
+                ) { (result: Result<T, Error>) in
                     continuation.resume(with: result)
                 }
             }
