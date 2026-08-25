@@ -93,6 +93,21 @@ final class CheckoutSessionPollerTests: XCTestCase {
         XCTAssertEqual(outcome, .requiresPaymentMethod)
     }
 
+    func testFailedAsyncPaymentReturnsDistinctOutcome() async {
+        // Given a failed asynchronous payment
+        let clock = TestClock()
+        let apiClient = MockAPIClient(clock: clock)
+        apiClient.pollResults = [.success(pollResponse(state: .failedAsyncPayment))]
+
+        // When polling
+        let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
+            checkoutSessionId: checkoutSessionId
+        )
+
+        // Then the failed asynchronous payment outcome is returned for the caller to handle
+        XCTAssertEqual(outcome, .failedAsyncPayment)
+    }
+
     func testRequestErrorsRetry() async {
         // Given a request failure followed by success
         let clock = TestClock()

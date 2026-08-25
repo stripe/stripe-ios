@@ -272,7 +272,7 @@ extension STPAPIClient {
     /// Make a GET request using the passed parameters.
     /// - Parameters:
     ///   - timeout: Optional timeout for each request attempt. The total request duration can be longer when retries are enabled.
-    ///   - retryCount: Number of times to retry an HTTP 429 response. Defaults to `StripeAPI.maxRetries`.
+    ///   - retriesEnabled: Whether to retry HTTP 429 responses using the standard retry policy.
     @_spi(STP) public func get<T: Decodable>(
         resource: String,
         parameters: [String: Any],
@@ -280,7 +280,7 @@ extension STPAPIClient {
         consumerPublishableKey: String? = nil,
         apiVersionOverride: String? = nil,
         timeout: TimeInterval? = nil,
-        retryCount: Int = StripeAPI.maxRetries,
+        retriesEnabled: Bool = true,
         completion: @escaping (
             Result<T, Error>
         ) -> Void
@@ -293,7 +293,7 @@ extension STPAPIClient {
             apiVersionOverride: apiVersionOverride,
             resource: resource,
             timeout: timeout,
-            retryCount: retryCount,
+            retryCount: retriesEnabled ? StripeAPI.maxRetries : 0,
             completion: completion
         )
     }

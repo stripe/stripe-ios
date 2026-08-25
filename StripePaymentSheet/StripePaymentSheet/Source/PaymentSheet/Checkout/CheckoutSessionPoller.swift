@@ -42,6 +42,9 @@ struct CheckoutSessionPoller {
         /// The payment object requires a new payment method.
         case requiresPaymentMethod
 
+        /// The Checkout Session's asynchronous payment failed.
+        case failedAsyncPayment
+
         /// The Checkout Session state is invalid or expired.
         case invalidOrExpired
     }
@@ -146,6 +149,8 @@ struct CheckoutSessionPoller {
                  .pendingAsyncCustomerAction:
                 // 3b. Checkout Session is client-complete, we're done!
                 return .completed
+            case .failedAsyncPayment:
+                return .failedAsyncPayment
             case .invalid,
                  .expired:
                 // Note: EwCS stops polling and ignores these unexpected states, allowing confirmation

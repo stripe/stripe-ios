@@ -92,7 +92,7 @@ extension STPAPIClient {
             endpoint: "payment_pages/\(checkoutSessionId)/poll",
             parameters: [:],
             timeout: timeout,
-            retryCount: 0
+            retriesEnabled: false
         )
     }
 
@@ -259,7 +259,7 @@ extension STPAPIClient {
         endpoint: String,
         parameters: [String: Any],
         timeout: TimeInterval? = nil,
-        retryCount: Int = StripeAPI.maxRetries
+        retriesEnabled: Bool = true
     ) async throws -> T {
         do {
             return try await withCheckedThrowingContinuation { continuation in
@@ -267,7 +267,7 @@ extension STPAPIClient {
                     resource: endpoint,
                     parameters: parameters,
                     timeout: timeout,
-                    retryCount: retryCount
+                    retriesEnabled: retriesEnabled
                 ) { (result: Result<T, Error>) in
                     continuation.resume(with: result)
                 }
@@ -280,5 +280,3 @@ extension STPAPIClient {
         }
     }
 }
-
-extension STPAPIClient: CheckoutSessionPollingAPIClient {}

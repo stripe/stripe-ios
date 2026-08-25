@@ -84,6 +84,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         }
     }
 
+    @MainActor
     final class Context {
         let intent: Intent
         let elementsSession: STPElementsSession
