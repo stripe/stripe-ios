@@ -6,6 +6,7 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
+import Contacts
 import OHHTTPStubs
 import OHHTTPStubsSwift
 import PassKit
@@ -227,6 +228,38 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(shipping?.address.country, "US")
     }
 
+    func testDidSelectShippingContactAllowsConfiguredCountry() {
+        // Given a Checkout Session that allows shipping to the US
+        let (context, controller) = makeShippingContext(allowedCountries: ["US"])
+        let contact = makeShippingContact(country: "US")
+
+        // When
+        var receivedUpdate: PKPaymentRequestShippingContactUpdate?
+        context.paymentAuthorizationController(controller, didSelectShippingContact: contact) {
+            receivedUpdate = $0
+        }
+
+        // Then Apple Pay accepts the contact
+        XCTAssertTrue(receivedUpdate?.errors?.isEmpty ?? true)
+    }
+
+    func testDidSelectShippingContactRejectsDisallowedCountry() {
+        // Given a Checkout Session that only allows shipping to the US
+        let (context, controller) = makeShippingContext(allowedCountries: ["US"])
+        let contact = makeShippingContact(country: "CA")
+
+        // When
+        var receivedUpdate: PKPaymentRequestShippingContactUpdate?
+        context.paymentAuthorizationController(controller, didSelectShippingContact: contact) {
+            receivedUpdate = $0
+        }
+
+        // Then Apple Pay rejects the unserviceable address before authorization
+        let error = receivedUpdate?.errors?.first as NSError?
+        XCTAssertEqual(error?.domain, PKPaymentErrorDomain)
+        XCTAssertEqual(error?.code, PKPaymentError.Code.shippingAddressUnserviceableError.rawValue)
+    }
+
     // MARK: - presentationWindow
 
     func testPresentationWindowReturnsConfiguredWindow() {
@@ -331,6 +364,31 @@ final class CheckoutApplePayContextTests: XCTestCase {
             authorizationController: mockController
         )
         return (context, mockController)
+    }
+
+    private func makeShippingContext(
+        allowedCountries: [String]
+    ) -> (CheckoutApplePayContext, MockPKPaymentAuthorizationController) {
+        let apiClient = APIStubbedTestCase.stubbedAPIClient()
+        let session = CheckoutTestHelpers.makeSession([
+            "shipping_address_collection": ["allowed_countries": allowedCountries],
+        ]).makePublicSession()
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(apiClient: apiClient)
+        let controller = MockPKPaymentAuthorizationController()
+        let context = CheckoutApplePayContext(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters,
+            authorizationController: controller
+        )
+        return (context, controller)
+    }
+
+    private func makeShippingContact(country: String) -> PKContact {
+        let address = CNMutablePostalAddress()
+        address.isoCountryCode = country
+        let contact = PKContact()
+        contact.postalAddress = address
+        return contact
     }
 
     private func makeConfirmResponseJSON() -> [String: Any] {

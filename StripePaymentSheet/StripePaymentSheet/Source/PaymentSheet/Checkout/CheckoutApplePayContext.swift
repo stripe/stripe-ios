@@ -197,7 +197,21 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         didSelectShippingContact contact: PKContact,
         handler: @escaping (PKPaymentRequestShippingContactUpdate) -> Void
     ) {
-        // TODO: Collect shipping address, update shipping/billing tax region, validate against allowedShippingCountries.
+        if let allowedShippingCountries = session.allowedShippingCountries,
+           let country = contact.postalAddress?.isoCountryCode,
+           !allowedShippingCountries.contains(country.uppercased()) {
+            let error = PKPaymentRequest.paymentShippingAddressUnserviceableError(
+                withLocalizedDescription: "Shipping is not available for the selected country."
+            )
+            handler(PKPaymentRequestShippingContactUpdate(
+                errors: [error],
+                paymentSummaryItems: summaryItems(),
+                shippingMethods: []
+            ))
+            return
+        }
+
+        // TODO: Update the shipping tax region.
         handler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: summaryItems()))
     }
 
