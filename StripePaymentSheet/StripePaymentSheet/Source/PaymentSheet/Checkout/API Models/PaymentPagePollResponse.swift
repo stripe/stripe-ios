@@ -16,6 +16,7 @@ struct PaymentPagePollResponse: Decodable, Equatable {
 
     enum State: String, Decodable {
         case active
+        case failedAsyncPayment = "failed_async_payment"
         case pendingAsyncCustomerAction = "pending_async_customer_action"
         case processingSubscription = "processing_subscription"
         case processingAsyncPayment = "processing_async_payment"

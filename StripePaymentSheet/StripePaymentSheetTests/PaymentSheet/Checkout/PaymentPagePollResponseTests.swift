@@ -13,6 +13,7 @@ final class PaymentPagePollResponseTests: XCTestCase {
     func testDecodesEveryState() throws {
         let cases: [(String, PaymentPagePollResponse.State)] = [
             ("active", .active),
+            ("failed_async_payment", .failedAsyncPayment),
             ("pending_async_customer_action", .pendingAsyncCustomerAction),
             ("processing_subscription", .processingSubscription),
             ("processing_async_payment", .processingAsyncPayment),
@@ -42,7 +43,9 @@ final class PaymentPagePollResponseTests: XCTestCase {
 
         for rawValue in [
             "canceled",
+            "expired",
             "processing",
+            "processing_sync",
             "requires_action",
             "requires_capture",
             "requires_confirmation",
