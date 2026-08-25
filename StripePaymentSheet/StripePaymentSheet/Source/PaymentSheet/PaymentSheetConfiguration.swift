@@ -792,6 +792,30 @@ extension PaymentSheet {
     }
 }
 
+extension PaymentSheet.BillingDetailsCollectionConfiguration {
+    var applePayRequiredBillingContactFields: Set<PKContactField> {
+        var fields = Set<PKContactField>()
+        if address == .automatic || address == .full {
+            fields.insert(.postalAddress)
+        }
+        if name == .always {
+            fields.insert(.name)
+        }
+        return fields
+    }
+
+    var applePayRequiredShippingContactFields: Set<PKContactField> {
+        var fields = Set<PKContactField>()
+        if email == .always {
+            fields.insert(.emailAddress)
+        }
+        if phone == .always {
+            fields.insert(.phoneNumber)
+        }
+        return fields
+    }
+}
+
 extension STPPaymentMethodBillingDetails {
     func toPaymentSheetBillingDetails() -> PaymentSheet.BillingDetails {
         let address = PaymentSheet.Address(city: self.address?.city,
