@@ -17,6 +17,7 @@ import UIKit
  This class creates a FormElement for a given payment method type and binds the FormElement's field values to an
  `IntentConfirmParams`.
  */
+@MainActor
 class PaymentSheetFormFactory {
     enum Error: Swift.Error {
         case unexpectedPaymentMethodType
@@ -616,7 +617,7 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    static func makeBankMandateText(
+    nonisolated static func makeBankMandateText(
         isSettingUp: Bool,
         merchantName: String,
         sellerName: String?,

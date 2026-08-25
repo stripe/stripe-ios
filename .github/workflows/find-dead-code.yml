@@ -16,6 +16,7 @@ jobs:
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
         with:
           fetch-depth: 1
+          persist-credentials: false
 
       - name: Setup Xcode
         run: sudo xcode-select -s /Applications/Xcode_26.4.1.app/Contents/Developer
@@ -44,7 +45,7 @@ jobs:
 
       - name: Compare Periphery output with master baseline
         run: |
-          git fetch --depth=1 origin ${{ github.base_ref }}
+          git fetch --depth=1 origin ${GITHUB_BASE_REF}
           git checkout FETCH_HEAD
           cp "$RUNNER_TEMP/.periphery.yml" .periphery.yml
           mkdir -p ci_scripts/dead_code/
