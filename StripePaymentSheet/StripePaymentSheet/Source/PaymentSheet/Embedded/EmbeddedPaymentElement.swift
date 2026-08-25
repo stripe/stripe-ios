@@ -105,9 +105,7 @@ public final class EmbeddedPaymentElement {
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Returns: A valid EmbeddedPaymentElement instance
     /// - Throws: An error if loading failed.
-    @_spi(STP)
-    @_spi(ReactNativeSDK)
-    public static func create(
+    static func create(
         checkout: CheckoutController,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
