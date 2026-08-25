@@ -380,5 +380,4 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
         return shippingDetailsParams
     }
-
 }
