@@ -9,51 +9,12 @@ import Combine
 import SwiftUI
 
 extension CheckoutPlayground {
-    struct ExpressCheckoutElementSettings: Codable {
+    struct ExpressCheckoutElementSettings {
         var option: ExpressCheckoutElementOption = .show
         var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
         var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
         var shippingAddressRequired: Bool = false
         var billingDetailsCollectionConfiguration = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
-
-        private enum CodingKeys: String, CodingKey {
-            case option
-            case applePayDisplay
-            case linkDisplay
-            case shippingAddressRequired
-            case billingDetailsCollectionName
-            case billingDetailsCollectionAddress
-        }
-
-        init(option: ExpressCheckoutElementOption = .show) {
-            self.option = option
-        }
-
-        init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            option = try container.decodeIfPresent(ExpressCheckoutElementOption.self, forKey: .option) ?? .show
-            let applePayDisplayRawValue = try container.decodeIfPresent(String.self, forKey: .applePayDisplay)
-            applePayDisplay = applePayDisplayRawValue.flatMap(ExpressCheckoutElement.ApplePayConfiguration.Display.init(rawValue:)) ?? .automatic
-            let linkDisplayRawValue = try container.decodeIfPresent(String.self, forKey: .linkDisplay)
-            linkDisplay = linkDisplayRawValue.flatMap(ExpressCheckoutElement.LinkConfiguration.Display.init(rawValue:)) ?? .automatic
-            shippingAddressRequired = try container.decodeIfPresent(Bool.self, forKey: .shippingAddressRequired) ?? false
-
-            let nameRawValue = try container.decodeIfPresent(String.self, forKey: .billingDetailsCollectionName)
-            let name = nameRawValue.flatMap(ExpressCheckoutElement.BillingDetailsCollectionConfiguration.CollectionMode.init(rawValue:)) ?? .automatic
-            let addressRawValue = try container.decodeIfPresent(String.self, forKey: .billingDetailsCollectionAddress)
-            let address = addressRawValue.flatMap(ExpressCheckoutElement.BillingDetailsCollectionConfiguration.AddressCollectionMode.init(rawValue:)) ?? .automatic
-            billingDetailsCollectionConfiguration = .init(name: name, address: address)
-        }
-
-        func encode(to encoder: Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(option, forKey: .option)
-            try container.encode(applePayDisplay.rawValue, forKey: .applePayDisplay)
-            try container.encode(linkDisplay.rawValue, forKey: .linkDisplay)
-            try container.encode(shippingAddressRequired, forKey: .shippingAddressRequired)
-            try container.encode(billingDetailsCollectionConfiguration.name.rawValue, forKey: .billingDetailsCollectionName)
-            try container.encode(billingDetailsCollectionConfiguration.address.rawValue, forKey: .billingDetailsCollectionAddress)
-        }
     }
 
     @MainActor
@@ -108,7 +69,7 @@ extension CheckoutPlayground {
             let settings = Self.settingsFromDefaults() ?? Settings()
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElement = settings.expressCheckoutElement
+            expressCheckoutElement = ExpressCheckoutElementSettings(option: settings.expressCheckoutElementOption)
             currency = settings.currency
             customerType = settings.customerType
             lineItems = settings.lineItems
@@ -231,7 +192,7 @@ extension CheckoutPlayground {
             Settings(
                 uiFramework: uiFramework,
                 integrationType: integrationType,
-                expressCheckoutElement: expressCheckoutElement,
+                expressCheckoutElementOption: expressCheckoutElement.option,
                 currency: currency,
                 customerType: customerType,
                 lineItems: lineItems,
@@ -255,7 +216,7 @@ extension CheckoutPlayground {
         private func apply(_ settings: Settings) {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElement = settings.expressCheckoutElement
+            expressCheckoutElement.option = settings.expressCheckoutElementOption
             currency = settings.currency
             customerType = settings.customerType
             lineItems = settings.lineItems
