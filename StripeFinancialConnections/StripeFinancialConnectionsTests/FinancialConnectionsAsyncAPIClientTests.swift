@@ -173,6 +173,93 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
         XCTAssertNotNil(updatedParameters["ios_assertion_object"])
     }
 
+    func testLinkAccountSignUpParametersIncludeSignedIncentiveAndMerchantContext() throws {
+        // Given the complete variable incentive returned by Elements Session
+        let incentive = try XCTUnwrap(LinkConsumerIncentive.decodedObject(fromAPIResponse: [
+            "incentive_campaign": "instant_debits_subscription",
+            "incentive_params": [
+                "amount_flat": 2_000,
+                "currency": "usd",
+                "payment_method": "link_instant_debits",
+            ],
+            "incentive_params_signature": "signed_params_123",
+        ]))
+
+        // When building Link signup parameters
+        let parameters = apiClient.linkAccountSignUpParameters(
+            emailAddress: " TEST@EXAMPLE.COM ",
+            phoneNumber: "+15555555555",
+            country: "US",
+            amount: 5_000,
+            currency: "usd",
+            incentiveEligibilitySession: .payment("pi_123"),
+            linkConsumerIncentive: incentive,
+            onBehalfOf: "acct_123"
+        )
+
+        // Then the signed amount and connected-account context are preserved
+        XCTAssertEqual(parameters["email_address"] as? String, "test@example.com")
+        XCTAssertEqual(parameters["amount"] as? Int, 5_000)
+        XCTAssertEqual(parameters["currency"] as? String, "usd")
+        XCTAssertEqual(parameters["on_behalf_of"] as? String, "acct_123")
+
+        let financialIncentive = try XCTUnwrap(parameters["financial_incentive"] as? [String: Any])
+        XCTAssertEqual(financialIncentive["payment_intent"] as? String, "pi_123")
+        let signedParams = try XCTUnwrap(financialIncentive["incentive_params"] as? [String: Any])
+        XCTAssertEqual(signedParams["amount_flat"] as? Int, 2_000)
+        XCTAssertEqual(signedParams["signature"] as? String, "signed_params_123")
+    }
+
+    func testLinkAccountSignUpParametersUseCorrectSessionDiscriminator() throws {
+        let sessions: [(ElementsSessionContext.IntentID, String, String)] = [
+            (.payment("pi_123"), "payment_intent", "pi_123"),
+            (.setup("seti_123"), "setup_intent", "seti_123"),
+            (.deferred("elements_session_123"), "elements_session_id", "elements_session_123"),
+            (.checkout("cs_123"), "checkout_session_id", "cs_123"),
+        ]
+
+        for (session, expectedKey, expectedValue) in sessions {
+            let parameters = apiClient.linkAccountSignUpParameters(
+                emailAddress: "test@example.com",
+                phoneNumber: "+15555555555",
+                country: "US",
+                amount: nil,
+                currency: nil,
+                incentiveEligibilitySession: session,
+                linkConsumerIncentive: nil,
+                onBehalfOf: nil
+            )
+
+            let financialIncentive = try XCTUnwrap(parameters["financial_incentive"] as? [String: Any])
+            XCTAssertEqual(financialIncentive[expectedKey] as? String, expectedValue)
+        }
+    }
+
+    func testLinkAccountSignUpParametersRequireAmountAndSignatureTogether() throws {
+        let incentiveWithoutSignature = try XCTUnwrap(LinkConsumerIncentive.decodedObject(fromAPIResponse: [
+            "incentive_params": [
+                "amount_flat": 2_000,
+                "payment_method": "link_instant_debits",
+            ],
+        ]))
+
+        let parameters = apiClient.linkAccountSignUpParameters(
+            emailAddress: "test@example.com",
+            phoneNumber: "+15555555555",
+            country: "US",
+            amount: nil,
+            currency: "usd",
+            incentiveEligibilitySession: .checkout("cs_123"),
+            linkConsumerIncentive: incentiveWithoutSignature,
+            onBehalfOf: nil
+        )
+
+        let financialIncentive = try XCTUnwrap(parameters["financial_incentive"] as? [String: Any])
+        XCTAssertNil(financialIncentive["incentive_params"])
+        XCTAssertNil(parameters["amount"])
+        XCTAssertEqual(parameters["currency"] as? String, "usd")
+    }
+
     func testUpdateAvailableIncentivesIncludesMerchantContextAndUsesValidForSession() async throws {
         // Given an incentive response that contains an offer that is invalid for the session
         var requestBody: String?

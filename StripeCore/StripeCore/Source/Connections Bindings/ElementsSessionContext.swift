@@ -13,10 +13,11 @@ import Foundation
         case payment(String)
         case setup(String)
         case deferred(String)
+        case checkout(String)
 
         @_spi(STP) public var id: String {
             switch self {
-            case let .payment(id), let .setup(id), let .deferred(id):
+            case let .payment(id), let .setup(id), let .deferred(id), let .checkout(id):
                 return id
             }
         }
@@ -61,6 +62,7 @@ import Foundation
     @_spi(STP) public let linkMode: LinkMode?
     @_spi(STP) public let billingDetails: BillingDetails?
     @_spi(STP) public let eligibleForIncentive: Bool
+    @_spi(STP) public let linkConsumerIncentive: LinkConsumerIncentive?
     @_spi(STP) public let onBehalfOf: String?
     @_spi(STP) public let allowRedisplay: String?
     @_spi(STP) public let linkSettings: LinkSettings?
@@ -85,7 +87,7 @@ import Foundation
         switch intentId {
         case .payment(let id), .setup(let id):
             return id
-        case .deferred, .none:
+        case .deferred, .checkout, .none:
             return nil
         }
     }
@@ -98,6 +100,7 @@ import Foundation
         linkMode: LinkMode? = nil,
         billingDetails: BillingDetails? = nil,
         eligibleForIncentive: Bool = false,
+        linkConsumerIncentive: LinkConsumerIncentive? = nil,
         onBehalfOf: String? = nil,
         allowRedisplay: String? = nil,
         linkSettings: LinkSettings? = nil,
@@ -110,6 +113,7 @@ import Foundation
         self.linkMode = linkMode
         self.billingDetails = billingDetails
         self.eligibleForIncentive = eligibleForIncentive
+        self.linkConsumerIncentive = linkConsumerIncentive
         self.onBehalfOf = onBehalfOf
         self.allowRedisplay = allowRedisplay
         self.linkSettings = linkSettings

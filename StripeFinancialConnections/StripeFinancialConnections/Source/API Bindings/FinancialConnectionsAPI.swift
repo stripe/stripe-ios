@@ -179,6 +179,8 @@ protocol FinancialConnectionsAPI {
         amount: Int?,
         currency: String?,
         incentiveEligibilitySession: ElementsSessionContext.IntentID?,
+        linkConsumerIncentive: LinkConsumerIncentive?,
+        onBehalfOf: String?,
         useMobileEndpoints: Bool,
         pane: FinancialConnectionsSessionManifest.NextPane
     ) -> Future<LinkSignUpResponse>

@@ -364,9 +364,7 @@ extension PaymentMethodFormViewController {
             case .deferredIntent:
                 return .deferred(elementsSession.sessionID)
             case .checkout(let session):
-                // This ID is used for financial incentive eligibility. Ideally we'd use the underlying
-                // paymentIntentId or setupIntentId, but those are not yet populated on CheckoutSession.
-                return .deferred(session.id)
+                return .checkout(session.id)
             }
         }()
 
@@ -388,6 +386,7 @@ extension PaymentMethodFormViewController {
         let isSettingUp = intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
         let allowRedisplay = elementsSession.computeAllowRedisplay(isSettingUp: isSettingUp)
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: analyticsHelper, intent: intent, elementsSession: elementsSession)
+        let eligibleForIncentive = instantDebitsFormElement?.displayableIncentive != nil
 
         return ElementsSessionContext(
             amount: intent.amount,
@@ -396,7 +395,8 @@ extension PaymentMethodFormViewController {
             intentId: intentId,
             linkMode: linkMode,
             billingDetails: billingDetails,
-            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil,
+            eligibleForIncentive: eligibleForIncentive,
+            linkConsumerIncentive: eligibleForIncentive ? elementsSession.linkSettings?.linkConsumerIncentive : nil,
             onBehalfOf: intent.intentConfig?.onBehalfOf,
             allowRedisplay: allowRedisplay?.stringValue,
             clientAttributionMetadata: clientAttributionMetadata

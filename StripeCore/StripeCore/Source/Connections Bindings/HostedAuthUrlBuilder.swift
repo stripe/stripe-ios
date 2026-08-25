@@ -32,6 +32,10 @@ import Foundation
             if let incentiveEligibilitySession = elementsSessionContext?.incentiveEligibilitySession {
                 parameters.append("instantDebitsIncentive=true")
                 parameters.append("incentiveEligibilitySession=\(incentiveEligibilitySession.id)")
+
+                if let linkConsumerIncentive = elementsSessionContext?.linkConsumerIncentive {
+                    parameters.append(contentsOf: hostedParameters(for: linkConsumerIncentive))
+                }
             }
 
             if let linkMode = elementsSessionContext?.linkMode {
@@ -104,5 +108,40 @@ import Foundation
             : "&"
         let updatedUrlString = urlString + joiningCharacter + joinedParameters
         return URL(string: updatedUrlString) ?? baseHostedAuthUrl
+    }
+
+    private static func hostedParameters(for incentive: LinkConsumerIncentive) -> [String] {
+        guard
+            let incentiveCampaign = incentive.incentiveCampaign,
+            let currency = incentive.incentiveParams.currency
+        else {
+            // The hosted flow requires these fields. Avoid sending a partial object that would make
+            // the entire launch payload fail validation.
+            return []
+        }
+
+        var parameters = [
+            "linkConsumerIncentive[incentive_campaign]=\(incentiveCampaign)",
+            "linkConsumerIncentive[incentive_params][payment_method]=\(incentive.incentiveParams.paymentMethod)",
+            "linkConsumerIncentive[incentive_params][currency]=\(currency)",
+        ]
+
+        if let amountFlat = incentive.incentiveParams.amountFlat {
+            parameters.append("linkConsumerIncentive[incentive_params][amount_flat]=\(amountFlat)")
+        }
+        if let amountPercent = incentive.incentiveParams.amountPercent {
+            parameters.append("linkConsumerIncentive[incentive_params][amount_percent]=\(amountPercent)")
+        }
+        if let minimumPaymentAmount = incentive.incentiveParams.minimumPaymentAmount {
+            parameters.append("linkConsumerIncentive[incentive_params][minimum_payment_amount]=\(minimumPaymentAmount)")
+        }
+        if let incentiveParamsSignature = incentive.incentiveParamsSignature {
+            parameters.append("linkConsumerIncentive[incentive_params_signature]=\(incentiveParamsSignature)")
+        }
+        if let validForSession = incentive.validForSession {
+            parameters.append("linkConsumerIncentive[valid_for_session]=\(validForSession)")
+        }
+
+        return parameters
     }
 }
