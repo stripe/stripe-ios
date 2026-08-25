@@ -77,6 +77,19 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertFalse(buttons.contains(.link))
     }
 
+    func testLinkButtonHiddenWhenShippingAddressIsRequired() {
+        // Given a session with Link and ECE configured to require a shipping address
+        let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
+        var configuration = ExpressCheckoutElement.Configuration()
+        configuration.shippingAddressRequired = true
+
+        // When
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
+
+        // Then Link is hidden because it cannot collect the required shipping address
+        XCTAssertFalse(buttons.contains(.link))
+    }
+
     func testApplePayButtonHiddenWhenDisabledOnSession() {
         // Given a session where Apple Pay is disabled server-side, but the merchant has configured applePayConfiguration
         let session = makeSessionWithWalletTypes(["apple_pay"], applePayPreference: "disabled").makePublicSession()

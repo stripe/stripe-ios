@@ -166,6 +166,67 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertTrue(paymentRequest.requiredShippingContactFields.isEmpty)
     }
 
+    func testMakePaymentRequestPrefillsExistingShippingAddress() {
+        // Given the Checkout Session already has a shipping address
+        let shippingAddress = CheckoutController.Session.ShippingAddress(
+            name: "Jane Doe",
+            address: .init(
+                country: "US",
+                line1: "510 Townsend St",
+                line2: "Apt 2",
+                city: "San Francisco",
+                state: "CA",
+                postalCode: "94103"
+            )
+        )
+        let session = CheckoutTestHelpers.makeSession().makePublicSession().makeCopyOverriding(
+            shippingAddress: .newValue(shippingAddress)
+        )
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            shippingAddressRequired: true
+        )
+
+        // When
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        // Then Apple Pay preselects the existing shipping address
+        XCTAssertEqual(paymentRequest.shippingContact?.name?.givenName, "Jane")
+        XCTAssertEqual(paymentRequest.shippingContact?.postalAddress?.street, "510 Townsend St\nApt 2")
+        XCTAssertEqual(paymentRequest.shippingContact?.postalAddress?.postalCode, "94103")
+        XCTAssertEqual(paymentRequest.shippingContact?.postalAddress?.isoCountryCode, "US")
+    }
+
+    func testMakeShippingDetailsParamsUsesSessionShippingAddress() {
+        // Given a shipping address stored locally on the Checkout Session
+        let shippingAddress = CheckoutController.Session.ShippingAddress(
+            name: "Jane Doe",
+            address: .init(
+                country: "US",
+                line1: "510 Townsend St",
+                line2: "Apt 2",
+                city: "San Francisco",
+                state: "CA",
+                postalCode: "94103"
+            )
+        )
+
+        // When
+        let shipping = CheckoutApplePayContext.makeShippingDetailsParams(from: shippingAddress)
+
+        // Then it can be sent when Apple Pay doesn't collect a shipping contact
+        XCTAssertEqual(shipping?.name, "Jane Doe")
+        XCTAssertEqual(shipping?.address.line1, "510 Townsend St")
+        XCTAssertEqual(shipping?.address.line2, "Apt 2")
+        XCTAssertEqual(shipping?.address.city, "San Francisco")
+        XCTAssertEqual(shipping?.address.state, "CA")
+        XCTAssertEqual(shipping?.address.postalCode, "94103")
+        XCTAssertEqual(shipping?.address.country, "US")
+    }
+
     // MARK: - presentationWindow
 
     func testPresentationWindowReturnsConfiguredWindow() {

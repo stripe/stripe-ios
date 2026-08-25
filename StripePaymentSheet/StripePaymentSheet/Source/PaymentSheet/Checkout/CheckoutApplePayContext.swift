@@ -6,6 +6,7 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
+import Contacts
 import Foundation
 import PassKit
 @_spi(STP) import StripeApplePay
@@ -129,7 +130,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     expectedPaymentMethodType: paymentMethod.type?.rawValue ?? STPPaymentMethodType.card.identifier,
                     savePaymentMethod: savePaymentMethod,
                     returnURL: self.returnURL,
-                    shipping: self.makeShippingDetailsParams(from: payment),
+                    shipping: self.makeShippingDetailsParams(from: payment)
+                        ?? Self.makeShippingDetailsParams(from: checkoutSession.shippingAddress),
                     clientAttributionMetadata: clientAttributionMetadata
                 )
 
@@ -270,8 +272,28 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
         if applePayConfirmationParameters.shippingAddressRequired {
             paymentRequest.requiredShippingContactFields = [.postalAddress, .name]
+            if let shippingAddress = checkoutSession.shippingAddress {
+                paymentRequest.shippingContact = makeShippingContact(from: shippingAddress)
+            }
         }
         return paymentRequest
+    }
+
+    static func makeShippingContact(from shippingAddress: CheckoutController.Session.ShippingAddress) -> PKContact {
+        let contact = PKContact()
+        if let name = shippingAddress.name {
+            contact.name = PersonNameComponentsFormatter().personNameComponents(from: name)
+        }
+
+        let address = shippingAddress.address
+        let postalAddress = CNMutablePostalAddress()
+        postalAddress.isoCountryCode = address.country
+        postalAddress.street = [address.line1, address.line2].compactMap { $0 }.joined(separator: "\n")
+        postalAddress.city = address.city ?? ""
+        postalAddress.state = address.state ?? ""
+        postalAddress.postalCode = address.postalCode ?? ""
+        contact.postalAddress = postalAddress
+        return contact
     }
 
     // MARK: - Present
@@ -357,5 +379,24 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         shippingDetailsParams.phone = shippingAddress.phone
 
         return shippingDetailsParams
+    }
+
+    static func makeShippingDetailsParams(
+        from shippingAddress: CheckoutController.Session.ShippingAddress?
+    ) -> STPPaymentIntentShippingDetailsParams? {
+        guard let shippingAddress,
+              let name = shippingAddress.name,
+              let line1 = shippingAddress.address.line1 else {
+            return nil
+        }
+
+        let address = shippingAddress.address
+        let addressParams = STPPaymentIntentShippingDetailsAddressParams(line1: line1)
+        addressParams.line2 = address.line2
+        addressParams.city = address.city
+        addressParams.state = address.state
+        addressParams.postalCode = address.postalCode
+        addressParams.country = address.country
+        return STPPaymentIntentShippingDetailsParams(address: addressParams, name: name)
     }
 }
