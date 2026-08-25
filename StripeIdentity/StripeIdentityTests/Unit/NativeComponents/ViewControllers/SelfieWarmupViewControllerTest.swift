@@ -5,12 +5,19 @@
 //  Created by Chen Cen on 8/15/23.
 //
 
+import Foundation
+@_spi(STP) import StripeCameraCoreTestUtils
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeCoreTestUtils
 import XCTest
+
+// swift-format-ignore
+@testable @_spi(STP) import StripeCameraCore
 
 @testable import StripeIdentity
 
 final class SelfieWarmupViewControllerTest: XCTestCase {
-    private static let mockVerificationPage = try! VerificationPageMock.response200.make()
+    static let mockVerificationPage = try! VerificationPageMock.response200.make()
 
     private var vc: SelfieWarmupViewController!
     private let mockSheetController = VerificationSheetControllerMock()
@@ -29,69 +36,150 @@ final class SelfieWarmupViewControllerTest: XCTestCase {
 
         // Verify transitioned to selfie capture
         XCTAssertTrue(mockSheetController.transitionedToSelfieCapture)
-        XCTAssertNil(mockSheetController.transitionedToSelfieCaptureTrainingConsent)
     }
 
-    func testTapAllowCapturesTrainingConsent() {
-        let vc = try! SelfieWarmupViewController(
-            sheetController: mockSheetController,
-            trainingConsentText: SelfieWarmupViewControllerTest.mockVerificationPage.selfie?
-                .trainingConsentText
+}
+
+final class SelfieCaptureViewControllerTest: XCTestCase {
+    private let mockCameraSession = MockTestCameraSession()
+    private let mockConcurrencyManager = ImageScanningConcurrencyManagerMock()
+    private let mockCameraPermissionsManager = MockCameraPermissionsManager()
+    private let mockAppSettingsHelper = MockAppSettingsHelper()
+    private let mockError = NSError(domain: "mock_error", code: 100)
+
+    private var mockAnalyticsClient: MockAnalyticsClientV2!
+    private var mockSheetController: VerificationSheetControllerMock!
+    private var mockFaceScanner: FaceScannerMock!
+    private var mockSelfieUploader: SelfieUploaderProtocol!
+
+    override func setUp() {
+        super.setUp()
+
+        mockAnalyticsClient = .init()
+        mockSheetController = .init(
+            analyticsClient: IdentityAnalyticsClient(
+                verificationSessionId: "",
+                analyticsClient: mockAnalyticsClient
+            )
         )
+        mockFaceScanner = .init()
+        mockSelfieUploader = SelfieUploaderMock()
+    }
 
-        XCTAssertEqual(vc.flowViewModel.buttons.count, 2)
+    func testRequestCameraAccessDeniedLogsAnalytics() {
+        let vc = makeViewController()
 
-        vc.flowViewModel.buttons.first?.didTap()
+        vc.viewWillAppear(false)
+        mockCameraPermissionsManager.respondToRequest(granted: false)
+        wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
 
-        XCTAssertTrue(mockSheetController.transitionedToSelfieCapture)
+        let analytic = mockAnalyticsClient.loggedAnalyticPayloads(
+            withEventName: "camera_permission_denied"
+        ).first
+        XCTAssert(analytic: analytic, hasMetadata: "screen_name", withValue: "selfie")
+        XCTAssert(
+            analytic: analytic,
+            hasMetadata: "camera_source",
+            withValue: "camera_session"
+        )
+        XCTAssert(analytic: analytic, hasMetadata: "camera_event_kind", withValue: "permission")
+        XCTAssert(analytic: analytic, hasMetadata: "camera_access_state", withValue: "denied")
+
+        let errorAnalytic = mockAnalyticsClient.loggedAnalyticPayloads(
+            withEventName: "camera_error"
+        ).first
+        XCTAssert(analytic: errorAnalytic, hasMetadata: "screen_name", withValue: "selfie")
+        XCTAssert(
+            analytic: errorAnalytic,
+            hasMetadata: "camera_source",
+            withValue: "camera_session"
+        )
+        XCTAssert(analytic: errorAnalytic, hasMetadata: "camera_event_kind", withValue: "permission")
+        XCTAssert(analytic: errorAnalytic, hasMetadata: "camera_access_state", withValue: "denied")
+        let error = (errorAnalytic?["event_metadata"] as? [String: Any])?["error"] as? [String: Any]
+        XCTAssertEqual(error?["type"] as? String, "cameraPermissionDenied")
+        XCTAssertEqual(error?["file"] as? String, "SelfieCaptureViewController.swift")
+    }
+
+    func testRequestCameraAccessGrantedLogsExistingAnalytic() {
+        let vc = makeViewController()
+
+        vc.viewWillAppear(false)
+        mockCameraPermissionsManager.respondToRequest(granted: true)
+        wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
+
         XCTAssertEqual(
-            mockSheetController.transitionedToSelfieCaptureTrainingConsent,
-            true
+            mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_granted")
+                .count,
+            1
         )
-    }
-
-    func testTapDeclineCapturesTrainingConsent() {
-        let vc = try! SelfieWarmupViewController(
-            sheetController: mockSheetController,
-            trainingConsentText: SelfieWarmupViewControllerTest.mockVerificationPage.selfie?
-                .trainingConsentText
-        )
-
-        XCTAssertEqual(vc.flowViewModel.buttons.count, 2)
-        XCTAssertEqual(vc.flowViewModel.buttons.last?.text, "Decline")
-        XCTAssertTrue(
-            vc.flowViewModel.buttonTopContentViewModel?.text.contains(
-                "Help us improve verifications"
-            ) == true
-        )
-
-        vc.flowViewModel.buttons.last?.didTap()
-
-        XCTAssertTrue(mockSheetController.transitionedToSelfieCapture)
         XCTAssertEqual(
-            mockSheetController.transitionedToSelfieCaptureTrainingConsent,
-            false
+            mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_denied")
+                .count,
+            0
+        )
+        XCTAssertEqual(
+            mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_error").count,
+            0
         )
     }
 
-    func testBiometricConsentLayoutUsesServerCopy() throws {
-        let trainingConsentText = try XCTUnwrap(
-            SelfieWarmupViewControllerTest.mockVerificationPage.selfie?
-                .trainingConsentText
+    func testCameraSessionFailedConfigureLogsAnalytics() {
+        let vc = makeViewController()
+
+        vc.viewWillAppear(false)
+        mockCameraPermissionsManager.respondToRequest(granted: true)
+        wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
+
+        mockCameraSession.respondToConfigureSession(setupResult: .failed(error: mockError))
+        wait(for: [mockCameraSession.configureSessionCompletionExp], timeout: 1)
+
+        let analytic = mockAnalyticsClient.loggedAnalyticPayloads(
+            withEventName: "camera_error"
+        ).first
+        XCTAssert(
+            analytic: analytic,
+            hasMetadataError: "error",
+            withDomain: "mock_error",
+            code: 100,
+            fileName: "SelfieCaptureViewController.swift"
         )
-        let declineAndContinueButtonText = try XCTUnwrap(
-            SelfieWarmupViewControllerTest.mockVerificationPage.selfie?
-                .declineAndContinueButtonText
+        XCTAssert(analytic: analytic, hasMetadata: "screen_name", withValue: "selfie")
+        XCTAssert(
+            analytic: analytic,
+            hasMetadata: "camera_source",
+            withValue: "camera_session"
         )
-        let vc = try SelfieWarmupViewController(
+        XCTAssert(analytic: analytic, hasMetadata: "camera_event_kind", withValue: "runtime_error")
+    }
+}
+
+private extension SelfieCaptureViewControllerTest {
+    func makeViewController(
+        initialState: SelfieCaptureViewController.State = .initial
+    ) -> SelfieCaptureViewController {
+        return SelfieCaptureViewController(
+            initialState: initialState,
+            apiConfig: SelfieWarmupViewControllerTest.mockVerificationPage.selfie!,
             sheetController: mockSheetController,
-            usesBiometricConsentLayout: true,
-            trainingConsentText: trainingConsentText,
-            declineAndContinueButtonText: declineAndContinueButtonText
+            cameraSession: mockCameraSession,
+            selfieUploader: mockSelfieUploader,
+            anyFaceScanner: .init(mockFaceScanner),
+            concurrencyManager: mockConcurrencyManager,
+            cameraPermissionsManager: mockCameraPermissionsManager,
+            appSettingsHelper: mockAppSettingsHelper
         )
+    }
+}
 
-        XCTAssertEqual(vc.flowViewModel.buttons.last?.text, "Decline and continue")
-        XCTAssertEqual(vc.flowViewModel.buttonTopContentViewModel?.text, trainingConsentText)
+private final class SelfieUploaderMock: SelfieUploaderProtocol {
+    var uploadFuture: Future<SelfieUploader.FileData>?
+
+    func uploadImages(_ capturedImages: FaceCaptureData) {
+        // no-op
     }
 
+    func reset() {
+        uploadFuture = nil
+    }
 }
