@@ -15,10 +15,6 @@
 # - supports_catalyst (required):
 #   Whether the framework supports macOS Catalyst.
 #
-# - simulator_architectures (optional):
-#   Architectures expected in the simulator framework exported by
-#   `export_builds.rb`. Defaults to arm64 and x86_64.
-#
 # - localization_dir (optional):
 #   The source directory to check for localized strings and where a
 #   `Resources/Localizations` directory will be generated.
@@ -144,8 +140,6 @@ modules:
 - podspec: StripeIdentity.podspec
   scheme: StripeIdentity
   framework_name: StripeIdentity
-  simulator_architectures:
-    - arm64
   localization_dir: StripeIdentity/StripeIdentity
   custom_string_convertible_dir: StripeIdentity/StripeIdentity/Source
   supports_catalyst: false
@@ -231,8 +225,6 @@ modules:
 - podspec: StripeCryptoOnramp.podspec
   scheme: StripeCryptoOnramp
   framework_name: StripeCryptoOnramp
-  simulator_architectures:
-    - arm64
   localization_dir: StripeCryptoOnramp/StripeCryptoOnramp
   supports_catalyst: false
   docs:
@@ -261,3 +253,4 @@ pod_push_order:
 - StripeFinancialConnections.podspec
 - StripeConnect.podspec
 - StripeCryptoOnramp.podspec
+

@@ -34,8 +34,6 @@ The Stripe Identity iOS SDK makes it quick and easy to verify your user's identi
 
 The Stripe Identity iOS SDK is compatible with apps targeting iOS 15.0 or above.
 
-Simulator builds require an arm64 destination on Apple silicon. Intel Macs and x86_64 simulator destinations are not supported.
-
 If you intend to use this SDK with Stripe's Identity service, you must not modify this SDK. Using a modified version of this SDK with Stripe's Identity service, without Stripe's written authorization, is a breach of your agreement with Stripe and may result in your Stripe account being shut down.
 
 

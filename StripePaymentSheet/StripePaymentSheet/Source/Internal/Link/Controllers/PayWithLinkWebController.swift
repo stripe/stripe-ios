@@ -58,6 +58,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     }
     var presentationVC: UIViewController?
 
+    @MainActor
     final class Context {
         let intent: Intent
         let elementsSession: STPElementsSession
