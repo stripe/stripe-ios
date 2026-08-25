@@ -422,19 +422,24 @@ workflows:
         machine_type_id: g2.mac.large
   lpm-confirm-flow-tests:
     steps:
-    - script@1:
-        title: Fetch full git history
+    - script@1: &lint_fetch_master
+        title: Fetch enough history to find origin/master
         inputs:
         - content: |-
             #!/usr/bin/env bash
             set -euo pipefail
             if [[ "$(git rev-parse --is-shallow-repository)" == "true" ]]; then
-              git fetch --unshallow origin
+              deepen_by=50
+              while true; do
+                git fetch --deepen="$deepen_by" origin master:refs/remotes/origin/master
+                if git merge-base origin/master HEAD >/dev/null 2>&1; then
+                  break
+                fi
+                deepen_by=$((deepen_by * 2))
+              done
+            else
+              git fetch origin master:refs/remotes/origin/master
             fi
-    - script@1: &lint_fetch_master
-        inputs:
-        - content: git fetch origin master
-        title: Fetch origin/master
     - script@1: &lint_swift_files
         inputs:
         - content: ./ci_scripts/lint_modified_files.sh
