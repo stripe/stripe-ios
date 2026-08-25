@@ -205,6 +205,7 @@ import Foundation
     // MARK: - Address Element
     case addressShow = "mc_address_show"
     case addressCompleted = "mc_address_completed"
+    case addressCanceled = "mc_address_canceled"
 
     // MARK: - Billing Address
     case mcbillingAddressCompleted = "mc_billing_address_completed"

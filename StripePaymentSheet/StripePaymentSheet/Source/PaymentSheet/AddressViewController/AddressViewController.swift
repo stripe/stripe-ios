@@ -91,6 +91,8 @@ public class AddressViewController: UIViewController {
         func didShow()
         /// Handles cancellation without saving the address.
         func didCancel()
+        /// Handles the customer choosing to discard changes.
+        func didDiscardChanges()
         /// Handles completion with the customer's collected address details.
         func save(addressDetails: AddressDetails) async throws
     }
@@ -458,6 +460,7 @@ extension AddressViewController {
     func discardChanges() {
         // Revert the form to its as-opened state so a reused instance doesn't keep the discarded
         // edits, then finish with the as-opened address (never the edited-but-abandoned values).
+        integrationDelegate?.didDiscardChanges()
         resetFormToInitialSnapshot()
         integrationDelegate?.didCancel()
         delegate?.addressViewControllerDidFinish(self, with: initialAddressDetails)
@@ -675,6 +678,13 @@ extension AddressViewController: AddressViewController.IntegrationDelegate {
     func didCancel() {
     }
 
+    func didDiscardChanges() {
+        STPAnalyticsClient.sharedClient.logAddressCanceled(
+            addressAnalyticData: currentAddressAnalyticData,
+            apiClient: configuration.apiClient
+        )
+    }
+
     func save(addressDetails: AddressDetails) async throws {
         logAddressCompleted()
     }
@@ -695,6 +705,7 @@ extension AddressViewController: AddressViewController.IntegrationDelegate {
 extension AddressViewController.IntegrationDelegate {
     func didShow() {}
     func didCancel() {}
+    func didDiscardChanges() {}
 }
 
 // MARK: - ElementDelegate

@@ -44,6 +44,15 @@ extension STPAnalyticsClient {
                                   apiClient: apiClient)
     }
 
+    func logAddressCanceled(addressAnalyticData: AddressAnalyticData, apiClient: STPAPIClient) {
+        assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
+        logAddressControllerEvent(
+            event: .addressCanceled,
+            addressAnalyticData: addressAnalyticData,
+            apiClient: apiClient
+        )
+    }
+
     func logBillingAddressCompleted(addressCountryCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountryCode,
