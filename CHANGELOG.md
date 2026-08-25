@@ -9,6 +9,9 @@ MINOR
 ### PaymentSheet
 * [Added] Added `financialConnectionsPermissions` to `LinkConfiguration`, allowing `LinkControllerPreview` users to request Financial Connections data permissions (private preview).
 
+### CryptoOnramp (Alpha)
+* [Added] Added Canada SIN, Colombia NIT, and Philippines TIN values to `IdType`, and added `idType` to the `KycInfo` initializer.
+
 ## 26.7.0 2026-08-17
 ### PaymentSheet
 * [Fixed] Fixed FlowController not presenting the Link sheet when tapping Link in the horizontal payment method layout.
