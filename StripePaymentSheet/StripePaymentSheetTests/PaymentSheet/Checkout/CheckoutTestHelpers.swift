@@ -384,14 +384,18 @@ extension CheckoutController.ApplePayConfirmationParameters {
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
         applePayConfiguration: CheckoutController.ApplePayConfiguration = CheckoutController.ApplePayConfiguration(merchantId: "merchant.com.test"),
-        presentationWindow: UIWindow? = nil
+        presentationWindow: UIWindow? = nil,
+        confirmationHandler: @escaping CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
+            .failed(CheckoutError.unknown(debugDescription: "Unexpected Apple Pay confirmation in test."))
+        }
     ) -> CheckoutController.ApplePayConfirmationParameters {
         CheckoutController.ApplePayConfirmationParameters(
             applePayConfiguration: applePayConfiguration,
             apiClient: apiClient,
             returnURL: returnURL,
             merchantDisplayName: merchantDisplayName,
-            presentationWindow: presentationWindow
+            presentationWindow: presentationWindow,
+            confirmationHandler: confirmationHandler
         )
     }
 }

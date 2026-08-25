@@ -20,11 +20,18 @@ extension CheckoutController {
 
     /// The parameters needed to confirm a Checkout Session with Apple Pay.
     struct ApplePayConfirmationParameters {
+        typealias ConfirmationHandler = @MainActor (
+            CheckoutSessionConfirmationRequestParameters
+        ) async -> InternalConfirmResult
+
         let applePayConfiguration: any CheckoutApplePayConfiguration
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
         let presentationWindow: UIWindow?
+        // TODO: This should probably live with the other methods that delegate to CheckoutController
+        // to update shipping, billing, etc., unless those methods end up living here too.
+        let confirmationHandler: ConfirmationHandler
     }
 
     /// The parameters needed to confirm a Checkout Session with Link.
@@ -121,7 +128,15 @@ extension CheckoutController {
                 apiClient: apiClient,
                 returnURL: self.configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
-                presentationWindow: presentingViewController.view.window
+                presentationWindow: presentingViewController.view.window,
+                confirmationHandler: { [apiClient, paymentHandler] requestParameters in
+                    await Self.confirmCheckoutSession(
+                        with: requestParameters,
+                        apiClient: apiClient,
+                        authenticationContext: authenticationContext,
+                        paymentHandler: paymentHandler
+                    )
+                }
             ))
         case .link(let confirmOption):
             let analyticsHelper = paymentElement.paymentOptionSourceOfTruthIsFlowController

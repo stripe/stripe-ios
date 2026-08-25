@@ -31,6 +31,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let apiClient: STPAPIClient
     private let returnURL: String
     private let presentationWindow: UIWindow?
+    private let confirmationHandler: CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler
     let authorizationController: PKPaymentAuthorizationController
 
     // Internal state
@@ -52,6 +53,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         self.apiClient = applePayConfirmationParameters.apiClient
         self.returnURL = applePayConfirmationParameters.returnURL
         self.presentationWindow = applePayConfirmationParameters.presentationWindow
+        self.confirmationHandler = applePayConfirmationParameters.confirmationHandler
         self.authorizationController = authorizationController
         super.init()
     }
@@ -69,14 +71,14 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
         Task {
             // Helpers to handle annoying logic around "Do I call completion block or dismiss + call delegate?"
-            // Helper 1: Handle failure
-            let handleFailure = { (error: Error) in
+            // Helper 1: Handle an unsuccessful result
+            let handleUnsuccessfulResult = { (result: CheckoutController.InternalConfirmResult, error: Error?) in
                 self.paymentState = .error
-                self.result = .failed(error)
+                self.result = result
                 if self.didCancelOrTimeoutWhilePending {
                     self.finishAndDismiss()
                 } else {
-                    let pkError = STPAPIClient.pkPaymentError(forStripeError: error)
+                    let pkError = error.flatMap(STPAPIClient.pkPaymentError(forStripeError:))
                     completion(PKPaymentAuthorizationResult(status: .failure, errors: [pkError].compactMap { $0 }))
                 }
             }
@@ -132,19 +134,17 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     shipping: self.makeShippingDetailsParams(from: payment),
                     clientAttributionMetadata: clientAttributionMetadata
                 )
-                let response = try await self.apiClient.confirmCheckoutSession(with: requestParameters)
-
-                // We can't present a next action here (the Apple Pay sheet is still up), so fail fast
-                // instead of routing through `handleNextAction`
-                if let responseStatus = self.responseStatus(response) {
-                    handleFailure(CheckoutError.unknown(debugDescription: "The Checkout Session's intent still requires action (status: \(responseStatus)) after confirming with Apple Pay."))
-                    return
+                let result = await self.confirmationHandler(requestParameters)
+                switch result {
+                case .completed(let response):
+                    handleSuccess(response)
+                case .canceled:
+                    handleUnsuccessfulResult(result, nil)
+                case .failed(let error, _):
+                    handleUnsuccessfulResult(result, error)
                 }
-
-                handleSuccess(response)
-
             } catch {
-                handleFailure(error)
+                handleUnsuccessfulResult(.failed(error), error)
             }
         }
     }
@@ -308,17 +308,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             self.resume(with: self.result ?? .canceled())
             self._end()
         }
-    }
-
-    private func responseStatus(_ response: PaymentPagesAPIResponse) -> String? {
-        if let paymentIntent = response.paymentIntent,
-           paymentIntent.status != .succeeded, paymentIntent.status != .requiresCapture {
-            return String(describing: paymentIntent.status)
-        }
-        if let setupIntent = response.setupIntent, setupIntent.status != .succeeded {
-            return String(describing: setupIntent.status)
-        }
-        return nil
     }
 
     private func makeShippingDetailsParams(from payment: PKPayment) -> STPPaymentIntentShippingDetailsParams? {
