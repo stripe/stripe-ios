@@ -129,11 +129,20 @@ extension CustomerInformationResponse {
             return .level2
         }
 
-        guard providedFieldSet.isSuperset(of: Self.level0RequiredFields) else {
+        let hasLevel1Fields = providedFieldSet.isSuperset(of: Self.level1AdditionalFields)
+        var level0RequiredFields = Self.level0RequiredFields
+
+        // CA, CO, and PH omit address state but always collect level 1 fields during initial KYC.
+        // TODO: Use the profile country directly if customer_info exposes it in the future.
+        if hasLevel1Fields {
+            level0RequiredFields.remove("address_state")
+        }
+
+        guard providedFieldSet.isSuperset(of: level0RequiredFields) else {
             return .none
         }
 
-        guard providedFieldSet.isSuperset(of: Self.level1AdditionalFields) else {
+        guard hasLevel1Fields else {
             return .level0
         }
 
