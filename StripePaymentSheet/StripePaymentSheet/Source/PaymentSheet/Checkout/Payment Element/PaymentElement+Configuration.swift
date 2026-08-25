@@ -143,7 +143,11 @@ extension PaymentElement {
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
-            configuration.defaultBillingDetails.set(defaults)
+            if let billingDetails = defaults.billingDetails {
+                configuration.defaultBillingDetails.set(billingDetails)
+            }
+            configuration.defaultBillingDetails.email = defaults.email
+            configuration.defaultBillingDetails.phone = defaults.phone
             return configuration
         }
 
@@ -164,7 +168,11 @@ extension PaymentElement {
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
-            configuration.defaultBillingDetails.set(defaults)
+            if let billingDetails = defaults.billingDetails {
+                configuration.defaultBillingDetails.set(billingDetails)
+            }
+            configuration.defaultBillingDetails.email = defaults.email
+            configuration.defaultBillingDetails.phone = defaults.phone
             return configuration
         }
     }
@@ -289,11 +297,9 @@ private extension PaymentElement.Configuration {
 }
 
 private extension PaymentSheet.BillingDetails {
-    mutating func set(_ defaults: CheckoutController.Configuration.Defaults) {
-        email = defaults.email
-        phone = defaults.phone
-        name = defaults.billingDetails?.name
-        if let billingAddress = defaults.billingDetails?.address {
+    mutating func set(_ billingDetails: CheckoutController.Configuration.Defaults.BillingDetails) {
+        name = billingDetails.name
+        if let billingAddress = billingDetails.address {
             address.set(billingAddress)
         }
     }
