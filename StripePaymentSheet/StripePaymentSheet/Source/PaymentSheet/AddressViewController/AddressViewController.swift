@@ -679,7 +679,7 @@ extension AddressViewController: AddressViewController.IntegrationDelegate {
     }
 
     func didDiscardChanges() {
-        STPAnalyticsClient.sharedClient.logAddressCanceled(
+        STPAnalyticsClient.sharedClient.logAddressDiscardChanges(
             addressAnalyticData: currentAddressAnalyticData,
             apiClient: configuration.apiClient
         )

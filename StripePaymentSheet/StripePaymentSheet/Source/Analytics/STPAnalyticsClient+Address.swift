@@ -44,10 +44,10 @@ extension STPAnalyticsClient {
                                   apiClient: apiClient)
     }
 
-    func logAddressCanceled(addressAnalyticData: AddressAnalyticData, apiClient: STPAPIClient) {
+    func logAddressDiscardChanges(addressAnalyticData: AddressAnalyticData, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         logAddressControllerEvent(
-            event: .addressCanceled,
+            event: .addressDiscardChanges,
             addressAnalyticData: addressAnalyticData,
             apiClient: apiClient
         )

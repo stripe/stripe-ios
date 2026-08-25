@@ -104,9 +104,9 @@ final class AddressViewControllerDismissalTests: XCTestCase {
         }
     }
 
-    private func addressCanceledWasLogged() -> Bool {
+    private func addressDiscardChangesWasLogged() -> Bool {
         STPAnalyticsClient.sharedClient._testLogHistory.contains {
-            $0["event"] as? String == "mc_address_canceled"
+            $0["event"] as? String == "mc_address_discard_changes"
         }
     }
 
@@ -189,8 +189,8 @@ final class AddressViewControllerDismissalTests: XCTestCase {
         XCTAssertNil(vc.presentedViewController)
         // ...and no completion analytic is logged (cancel is not a completion)
         XCTAssertFalse(addressCompletedWasLogged())
-        // ...and no cancellation analytic is logged because there were no changes to discard
-        XCTAssertFalse(addressCanceledWasLogged())
+        // ...and no discard analytic is logged because there were no changes to discard
+        XCTAssertFalse(addressDiscardChangesWasLogged())
     }
 
     func test_closeWithChanges_presentsDiscardAlertWithoutFinishing() throws {
@@ -390,8 +390,8 @@ final class AddressViewControllerDismissalTests: XCTestCase {
         // ...and the delegate finishes once with the as-opened address, not the edited value
         XCTAssertEqual(delegate.didFinishCallCount, 1)
         XCTAssertEqual(delegate.lastAddress?.address.line1, "510 Townsend St.")
-        // ...and cancellation, rather than completion, is logged
-        XCTAssertTrue(addressCanceledWasLogged())
+        // ...and discarding changes, rather than completion, is logged
+        XCTAssertTrue(addressDiscardChangesWasLogged())
         XCTAssertFalse(addressCompletedWasLogged())
     }
 
