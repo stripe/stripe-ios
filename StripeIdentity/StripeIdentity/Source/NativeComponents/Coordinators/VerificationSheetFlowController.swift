@@ -6,6 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import AVFoundation
 import SafariServices
 @_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCore
@@ -777,22 +778,24 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
     private func makeDocumentCaptureCameraSession() -> CameraSessionProtocol {
         #if targetEnvironment(simulator)
-        return MockSimulatorCameraSession(
-            images: IdentityVerificationSheet.simulatorDocumentCameraImages
-        )
-        #else
-        return CameraSession()
+        if AVCaptureDevice.default(for: .video) == nil {
+            return MockSimulatorCameraSession(
+                images: IdentityVerificationSheet.simulatorDocumentCameraImages
+            )
+        }
         #endif
+        return CameraSession()
     }
 
     private func makeSelfieCaptureCameraSession() -> CameraSessionProtocol {
         #if targetEnvironment(simulator)
-        return MockSimulatorCameraSession(
-            images: IdentityVerificationSheet.simulatorSelfieCameraImages
-        )
-        #else
-        return CameraSession()
+        if AVCaptureDevice.default(for: .video) == nil {
+            return MockSimulatorCameraSession(
+                images: IdentityVerificationSheet.simulatorSelfieCameraImages
+            )
+        }
         #endif
+        return CameraSession()
     }
 
     // MARK: - Collected Fields

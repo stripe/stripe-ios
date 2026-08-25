@@ -9,6 +9,9 @@ MINOR
 ### PaymentSheet
 * [Added] Added `financialConnectionsPermissions` to `LinkConfiguration`, allowing `LinkControllerPreview` users to request Financial Connections data permissions (private preview).
 
+### Identity
+* [Fixed] Use an available video camera in Simulator instead of always using mock images.
+
 ## 26.7.0 2026-08-17
 ### PaymentSheet
 * [Fixed] Fixed FlowController not presenting the Link sheet when tapping Link in the horizontal payment method layout.
