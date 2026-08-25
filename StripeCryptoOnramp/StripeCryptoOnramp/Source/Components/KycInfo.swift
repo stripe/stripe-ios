@@ -52,7 +52,7 @@ public struct KycInfo: Equatable {
     public var idNumber: String?
 
     /// The type of id provided by the customer.
-    public var idType: IdType = .socialSecurityNumber
+    public var idType: IdType
 
     /// The address of the customer, if collected.
     public var address: Address?
@@ -74,6 +74,7 @@ public struct KycInfo: Equatable {
     ///   - firstName: The customer’s first name, if collected.
     ///   - lastName: The customer’s last name, if collected.
     ///   - idNumber: The number associated with the customer’s id.
+    ///   - idType: The type of id provided by the customer.
     ///   - address: The address of the customer, if collected.
     ///   - dateOfBirth: The customer’s date of birth.
     ///   - birthCountry: The two-letter country code of the customer’s country of birth (ISO 3166-1 alpha-2), if collected. Required for EU customers.
@@ -83,6 +84,7 @@ public struct KycInfo: Equatable {
         firstName: String?,
         lastName: String?,
         idNumber: String?,
+        idType: IdType = .socialSecurityNumber,
         address: Address?,
         dateOfBirth: DateOfBirth?,
         birthCountry: String? = nil,
@@ -92,6 +94,7 @@ public struct KycInfo: Equatable {
         self.firstName = firstName
         self.lastName = lastName
         self.idNumber = idNumber
+        self.idType = idType
         self.address = address
         self.dateOfBirth = dateOfBirth
         self.birthCountry = birthCountry
