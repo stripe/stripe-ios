@@ -147,6 +147,12 @@ extension CheckoutController.Configuration {
         /// Default shipping details.
         public var shippingDetails: ShippingDetails?
 
+        /// The customer's phone number.
+        public var phone: String?
+
+        /// The customer's email address.
+        public var email: String?
+
         /// Creates default customer details.
         public init() {}
 

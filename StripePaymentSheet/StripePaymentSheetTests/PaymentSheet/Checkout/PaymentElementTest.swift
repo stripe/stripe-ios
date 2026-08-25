@@ -36,6 +36,8 @@ final class PaymentElementTest: XCTestCase {
     func testConfigurationSetsCheckoutDefaultBillingDetails() async throws {
         // Given Checkout billing defaults
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        checkoutConfiguration.defaults.email = "test@example.com"
+        checkoutConfiguration.defaults.phone = "+15555550123"
         var billingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
         billingDetails.name = "Jane Doe"
         billingDetails.address = .init(
@@ -58,6 +60,8 @@ final class PaymentElementTest: XCTestCase {
 
         // Then both configurations receive the same default billing details
         XCTAssertEqual(checkout.configuration.returnURL, "stripe-ios-test://checkout-return")
+        XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.email, "test@example.com")
+        XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.phone, "+15555550123")
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.name, "Jane Doe")
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.country, "US")
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.line1, "123 Main St")
