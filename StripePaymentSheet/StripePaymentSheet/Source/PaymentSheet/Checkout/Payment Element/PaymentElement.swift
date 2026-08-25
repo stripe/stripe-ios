@@ -95,7 +95,8 @@ public final class PaymentElement {
         )
         self.embeddedPaymentElement = try await EmbeddedPaymentElement.create(
             checkout: checkout,
-            configuration: embeddedConfiguration
+            configuration: embeddedConfiguration,
+            initialPaymentOption: paymentSheetFlowController.internalPaymentOption
         )
         self.embeddedPaymentElement.notifiesDelegateOnInitialHeight = true
         let uiView = PaymentElementUIView(contentView: embeddedPaymentElement.view)
