@@ -28,7 +28,7 @@ extension CheckoutController.Session {
 }
 
 extension CheckoutController.Session.ShippingAddress {
-    var paymentIntentShippingDetailsParams: STPPaymentIntentShippingDetailsParams? {
+    var shippingDetailsParams: STPPaymentIntentShippingDetailsParams? {
         guard let name,
               let line1 = address.line1 else {
             return nil

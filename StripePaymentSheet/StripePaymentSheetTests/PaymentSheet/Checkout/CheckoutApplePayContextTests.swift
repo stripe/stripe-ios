@@ -215,7 +215,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         )
 
         // When
-        let shipping = shippingAddress.paymentIntentShippingDetailsParams
+        let shipping = shippingAddress.shippingDetailsParams
 
         // Then it can be sent when Apple Pay doesn't collect a shipping contact
         XCTAssertEqual(shipping?.name, "Jane Doe")

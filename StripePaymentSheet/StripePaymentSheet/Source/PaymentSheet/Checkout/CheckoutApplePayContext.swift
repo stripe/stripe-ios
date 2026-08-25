@@ -131,7 +131,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     savePaymentMethod: savePaymentMethod,
                     returnURL: self.returnURL,
                     shipping: self.makeShippingDetailsParams(from: payment)
-                        ?? checkoutSession.shippingAddress?.paymentIntentShippingDetailsParams,
+                        ?? checkoutSession.shippingAddress?.shippingDetailsParams,
                     clientAttributionMetadata: clientAttributionMetadata
                 )
 
