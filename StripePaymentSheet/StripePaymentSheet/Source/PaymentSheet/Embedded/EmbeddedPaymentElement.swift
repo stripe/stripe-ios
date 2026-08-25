@@ -107,19 +107,8 @@ public final class EmbeddedPaymentElement {
     /// - Throws: An error if loading failed.
     static func create(
         checkout: CheckoutController,
-        configuration: Configuration
-    ) async throws -> EmbeddedPaymentElement {
-        try await create(
-            checkout: checkout,
-            configuration: configuration,
-            initialPaymentOption: nil
-        )
-    }
-
-    static func create(
-        checkout: CheckoutController,
         configuration: Configuration,
-        initialPaymentOption: PaymentOption?
+        initialPaymentOption: PaymentOption? = nil
     ) async throws -> EmbeddedPaymentElement {
         try await checkout.awaitPendingOperations()
         var config = configuration
