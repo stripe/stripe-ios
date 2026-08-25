@@ -200,7 +200,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(paymentRequest.shippingContact?.postalAddress?.isoCountryCode, "US")
     }
 
-    func testMakeShippingDetailsParamsUsesSessionShippingAddress() {
+    func testSessionShippingAddressMakesPaymentIntentShippingDetailsParams() {
         // Given a shipping address stored locally on the Checkout Session
         let shippingAddress = CheckoutController.Session.ShippingAddress(
             name: "Jane Doe",
@@ -215,7 +215,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         )
 
         // When
-        let shipping = CheckoutApplePayContext.makeShippingDetailsParams(from: shippingAddress)
+        let shipping = shippingAddress.paymentIntentShippingDetailsParams
 
         // Then it can be sent when Apple Pay doesn't collect a shipping contact
         XCTAssertEqual(shipping?.name, "Jane Doe")

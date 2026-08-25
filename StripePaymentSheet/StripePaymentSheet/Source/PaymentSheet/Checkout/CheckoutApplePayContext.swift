@@ -131,7 +131,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     savePaymentMethod: savePaymentMethod,
                     returnURL: self.returnURL,
                     shipping: self.makeShippingDetailsParams(from: payment)
-                        ?? Self.makeShippingDetailsParams(from: checkoutSession.shippingAddress),
+                        ?? checkoutSession.shippingAddress?.paymentIntentShippingDetailsParams,
                     clientAttributionMetadata: clientAttributionMetadata
                 )
 
@@ -381,22 +381,4 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         return shippingDetailsParams
     }
 
-    static func makeShippingDetailsParams(
-        from shippingAddress: CheckoutController.Session.ShippingAddress?
-    ) -> STPPaymentIntentShippingDetailsParams? {
-        guard let shippingAddress,
-              let name = shippingAddress.name,
-              let line1 = shippingAddress.address.line1 else {
-            return nil
-        }
-
-        let address = shippingAddress.address
-        let addressParams = STPPaymentIntentShippingDetailsAddressParams(line1: line1)
-        addressParams.line2 = address.line2
-        addressParams.city = address.city
-        addressParams.state = address.state
-        addressParams.postalCode = address.postalCode
-        addressParams.country = address.country
-        return STPPaymentIntentShippingDetailsParams(address: addressParams, name: name)
-    }
 }
