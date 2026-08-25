@@ -511,18 +511,38 @@ extension CheckoutController {
             return .failed(CheckoutError.unknown(debugDescription: "Checkout Session unexpectedly expired after confirmation."), sessionResponse: response)
         }
 
-        // 4. Return an updated Session based on the `/confirm` response and client-completed Intent.
+        // 4. Hackily update the PaymentPages response `status` and `payment_status` based on the `/confirm` response and client-completed Intent.
+        // Unfortunately, this logic has to live on the client today. The /retrieve endpoint 400s for completed Checkout Sessions.
         do {
+            var responseFields = response.allResponseFields
+
+            // PaymentHandler already verified that the Intent is client-complete. Only update
+            // Session fields we can derive from the newer Intent; otherwise preserve `/confirm`.
             switch clientCompletedIntent {
             case .paymentIntent(let paymentIntent):
-                return .completed(
-                    try response.mergingClientCompletedPaymentIntent(paymentIntent)
-                )
+                responseFields["payment_intent"] = paymentIntent.allResponseFields
+                switch paymentIntent.status {
+                case .succeeded:
+                    responseFields["status"] = "complete"
+                    responseFields["payment_status"] = "paid"
+                case .processing:
+                    responseFields["status"] = "complete"
+                default:
+                    break
+                }
             case .setupIntent(let setupIntent):
-                return .completed(
-                    try response.mergingClientCompletedSetupIntent(setupIntent)
-                )
+                responseFields["setup_intent"] = setupIntent.allResponseFields
+                switch setupIntent.status {
+                case .succeeded:
+                    responseFields["status"] = "complete"
+                default:
+                    break
+                }
             }
+
+            let data = try JSONSerialization.data(withJSONObject: responseFields)
+            let updatedResponse = try StripeJSONDecoder().decode(PaymentPagesAPIResponse.self, from: data)
+            return .completed(updatedResponse)
         } catch {
             return .failed(error, sessionResponse: response)
         }

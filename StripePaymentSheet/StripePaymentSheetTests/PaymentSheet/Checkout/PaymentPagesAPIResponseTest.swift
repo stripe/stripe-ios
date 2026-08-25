@@ -490,48 +490,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         )
     }
 
-    func testMergingClientCompletedPaymentIntentUpdatesSessionStatuses() throws {
-        let testCases: [(String, CheckoutController.Session.Status)] = [
-            ("succeeded", .complete(.paid)),
-            ("processing", .complete(.unpaid)),
-            ("requires_capture", .open),
-        ]
-
-        for (intentStatus, expectedSessionStatus) in testCases {
-            var paymentIntentJSON = STPTestUtils.jsonNamed("PaymentIntent")!
-            paymentIntentJSON["status"] = intentStatus
-            var sessionJSON = CheckoutTestHelpers.baseSessionJSON
-            sessionJSON["payment_intent"] = paymentIntentJSON
-            let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
-            let paymentIntent = try XCTUnwrap(response.paymentIntent)
-
-            let mergedResponse = try response.mergingClientCompletedPaymentIntent(paymentIntent)
-
-            XCTAssertEqual(mergedResponse.status, expectedSessionStatus, intentStatus)
-        }
-    }
-
-    func testMergingClientCompletedSetupIntentUpdatesSessionStatus() throws {
-        let testCases: [(String, CheckoutController.Session.Status)] = [
-            ("succeeded", .complete(.unpaid)),
-            ("processing", .complete(.unpaid)),
-            ("requires_action", .open),
-        ]
-
-        for (intentStatus, expectedSessionStatus) in testCases {
-            var setupIntentJSON = STPTestUtils.jsonNamed("SetupIntent")!
-            setupIntentJSON["status"] = intentStatus
-            var sessionJSON = CheckoutTestHelpers.baseSessionJSON
-            sessionJSON["setup_intent"] = setupIntentJSON
-            let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
-            let setupIntent = try XCTUnwrap(response.setupIntent)
-
-            let mergedResponse = try response.mergingClientCompletedSetupIntent(setupIntent)
-
-            XCTAssertEqual(mergedResponse.status, expectedSessionStatus, intentStatus)
-        }
-    }
-
     func testExpandedIntentsRejectMalformedObjects() {
         var paymentIntentJSON = CheckoutTestHelpers.baseSessionJSON
         paymentIntentJSON["payment_intent"] = ["id": "pi_invalid"]

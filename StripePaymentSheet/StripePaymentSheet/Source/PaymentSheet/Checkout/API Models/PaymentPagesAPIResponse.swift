@@ -203,56 +203,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
 }
 
 extension PaymentPagesAPIResponse {
-    func mergingClientCompletedPaymentIntent(
-        _ paymentIntent: STPPaymentIntent
-    ) throws -> PaymentPagesAPIResponse {
-        var responseFields = allResponseFields
-        responseFields["payment_intent"] = paymentIntent.allResponseFields
-
-        switch paymentIntent.status {
-        case .succeeded:
-            markComplete(responseFields: &responseFields, paymentStatus: .paid)
-        case .processing:
-            markComplete(responseFields: &responseFields, paymentStatus: paymentStatus)
-        default:
-            break
-        }
-
-        return try Self.decode(responseFields)
-    }
-
-    func mergingClientCompletedSetupIntent(
-        _ setupIntent: STPSetupIntent
-    ) throws -> PaymentPagesAPIResponse {
-        var responseFields = allResponseFields
-        responseFields["setup_intent"] = setupIntent.allResponseFields
-
-        switch setupIntent.status {
-        case .succeeded,
-             .processing:
-            markComplete(responseFields: &responseFields, paymentStatus: paymentStatus)
-        default:
-            break
-        }
-
-        return try Self.decode(responseFields)
-    }
-
-    private func markComplete(
-        responseFields: inout [String: Any],
-        paymentStatus: CheckoutController.Session.Status.PaymentStatus
-    ) {
-        responseFields["status"] = "complete"
-        responseFields["payment_status"] = paymentStatus.apiValue
-    }
-
-    private static func decode(
-        _ responseFields: [String: Any]
-    ) throws -> PaymentPagesAPIResponse {
-        let data = try JSONSerialization.data(withJSONObject: responseFields)
-        return try StripeJSONDecoder().decode(PaymentPagesAPIResponse.self, from: data)
-    }
-
     struct SubmissionAttempt: Decodable {
         enum State: String, Decodable {
             case processing
