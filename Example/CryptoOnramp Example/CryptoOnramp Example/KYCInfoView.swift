@@ -197,6 +197,7 @@ struct KYCInfoView: View {
                         Text(residence.displayName)
                     }
                     .pickerStyle(.menu)
+                    .accessibilityIdentifier("kyc_residence_picker")
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
