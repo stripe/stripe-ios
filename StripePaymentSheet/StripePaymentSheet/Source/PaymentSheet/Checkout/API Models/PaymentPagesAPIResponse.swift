@@ -365,19 +365,19 @@ extension PaymentPagesAPIResponse {
     }
 
     struct RecurringDetails: Decodable {
-        let totalDiscountAmounts: [DiscountAmount]?
-        let totalTaxAmounts: [TaxAmount]?
+        let totalDiscountAmounts: [DiscountAmount]
+        let totalTaxAmounts: [TaxAmount]
     }
 
     struct DiscountAmount: Decodable {
-        let amount: Int?
+        let amount: Int
         let displayName: String?
-        let coupon: Coupon?
+        let coupon: Coupon
         let promotionCode: PromotionCode?
     }
 
     struct Coupon: Decodable {
-        let id: String?
+        let code: String
         let name: String?
         let percentOff: Double?
     }
@@ -418,10 +418,28 @@ extension PaymentPagesAPIResponse {
         let enabled: Bool
         let maximum: Int?
         let minimum: Int?
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            enabled = try container.decode(Bool.self, forKey: .enabled)
+            if enabled {
+                maximum = try container.decode(Int.self, forKey: .maximum)
+                minimum = try container.decode(Int.self, forKey: .minimum)
+            } else {
+                maximum = try container.decodeIfPresent(Int.self, forKey: .maximum)
+                minimum = try container.decodeIfPresent(Int.self, forKey: .minimum)
+            }
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case enabled
+            case maximum
+            case minimum
+        }
     }
 
     struct ShippingAddressCollection: Decodable {
-        let allowedCountries: [String]?
+        let allowedCountries: [String]
     }
 
     struct AdaptivePricingInfo: Decodable {
@@ -439,18 +457,37 @@ extension PaymentPagesAPIResponse {
     }
 
     struct TaxContext: Decodable {
-        let automaticTaxEnabled: Bool?
+        let automaticTaxEnabled: Bool
         let automaticTaxAddressSource: String?
     }
 
     struct TaxMeta: Decodable {
-        let computationType: String?
-        let status: String?
+        enum ComputationType: String, SafeParsedEnumCodable {
+            case off = "Off"
+            case automatic
+            case extensionDefined = "extension_defined"
+            case manual
+            case userDefined = "user_defined"
+        }
+
+        enum Status: String, SafeParsedEnumCodable {
+            case complete
+            case failed
+            case requiresLocationInputs = "requires_location_inputs"
+        }
+
+        let computationType: ParsedEnum<ComputationType>
+        let status: ParsedEnum<Status>?
     }
 
     struct SavedPaymentMethodsOfferSave: Decodable {
-        let enabled: Bool?
-        let status: String?
+        enum Status: String, SafeParsedEnumCodable {
+            case accepted
+            case notAccepted = "not_accepted"
+        }
+
+        let enabled: Bool
+        let status: ParsedEnum<Status>
     }
 
     struct ElementsSession: Decodable {

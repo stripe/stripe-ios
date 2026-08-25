@@ -7,11 +7,26 @@
 
 import PassKit
 
+/// The merchant identity needed to build an Apple Pay payment request.
+///
+/// Bridges ``CheckoutController/ApplePayConfiguration`` (Payment Element) and
+/// ``ExpressCheckoutElement/ApplePayConfiguration`` (ExpressCheckoutElement) so Apple Pay
+/// confirmation code can accept either without caring which surface it came from.
+@_spi(STP)
+@_spi(ReactNativeSDK)
+public protocol CheckoutApplePayConfiguration {
+    /// The Apple Pay merchant identifier.
+    var merchantId: String { get }
+
+    /// The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
+    var buttonType: PKPaymentButtonType? { get }
+}
+
 @_spi(STP)
 @_spi(ReactNativeSDK)
 extension CheckoutController {
     /// Configuration for Apple Pay.
-    public struct ApplePayConfiguration {
+    public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
         /// The Apple Pay merchant identifier.
         public let merchantId: String
 

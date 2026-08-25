@@ -12,12 +12,14 @@ import Foundation
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
+@MainActor
 protocol PayWithLinkWalletViewModelDelegate: AnyObject {
     func viewModelDidChange(_ viewModel: PayWithLinkViewController.WalletViewModel)
 }
 
 extension PayWithLinkViewController {
 
+    @MainActor
     final class WalletViewModel {
         let context: Context
         let linkAccount: PaymentSheetLinkAccount
@@ -98,6 +100,23 @@ extension PayWithLinkViewController {
         /// Whether or not the view should show the mandate text.
         var shouldShowMandate: Bool {
             mandate != nil
+        }
+
+        /// The data-sharing consent message to show when a linked bank account is selected.
+        var bankAccountDataConsent: NSAttributedString? {
+            guard case .bankAccount = selectedPaymentMethod?.details,
+                  let consentText = context.elementsSession.linkPaymentMethodBankAccountDataConsent,
+                  !consentText.isEmpty
+            else {
+                return nil
+            }
+
+            return STPStringUtils.attributedStringFromMarkdownLinks(in: consentText)
+        }
+
+        /// Whether or not the view should show the data-sharing consent message.
+        var shouldShowBankAccountDataConsent: Bool {
+            bankAccountDataConsent != nil
         }
 
         /// Client attribution metadata for analytics

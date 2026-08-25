@@ -40,6 +40,25 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.status, .open)
     }
 
+    func testPaymentElementConfigurationsUseCheckoutReturnURL() async throws {
+        // Given a Checkout configuration with a return URL
+        let returnURL = "stripe-ios-test://custom-checkout-return"
+        let baseConfiguration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: returnURL
+        )
+
+        // When Checkout creates Payment Element's sheet and embedded integrations
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(configuration: baseConfiguration)
+        )
+        let paymentElement = checkout.getPaymentElement()
+
+        // Then both integrations use the Checkout return URL
+        XCTAssertEqual(paymentElement.paymentSheetFlowController.configuration.returnURL, returnURL)
+        XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.returnURL, returnURL)
+    }
+
     func testGetCurrencySelectorElementReturnsNilWhenAdaptivePricingIsNotAllowed() async throws {
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
 
@@ -418,6 +437,7 @@ final class CheckoutUnitTests: XCTestCase {
     func testTotalTaxExclusive_singleAmount() {
         var json = CheckoutTestHelpers.openSessionJSON
         json["recurring_details"] = [
+            "total_discount_amounts": [],
             "total_tax_amounts": [
                 [
                     "amount": 1185,
@@ -445,6 +465,7 @@ final class CheckoutUnitTests: XCTestCase {
     func testTotalTaxExclusive_multipleAmounts() {
         var json = CheckoutTestHelpers.openSessionJSON
         json["recurring_details"] = [
+            "total_discount_amounts": [],
             "total_tax_amounts": [
                 [
                     "amount": 500,
@@ -494,7 +515,10 @@ final class CheckoutUnitTests: XCTestCase {
     func testTotalTaxAmounts_presentButEmpty_isEmpty() {
         // Given a response with an explicitly empty total_tax_amounts array
         var json = CheckoutTestHelpers.openSessionJSON
-        json["recurring_details"] = ["total_tax_amounts": []]
+        json["recurring_details"] = [
+            "total_discount_amounts": [],
+            "total_tax_amounts": [],
+        ]
 
         // When decoding the public Session
         let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
@@ -531,6 +555,7 @@ final class CheckoutUnitTests: XCTestCase {
         json["recurring_details"] = [
             "subtotal": 12000,
             "total": 12000,
+            "total_discount_amounts": [],
             "total_summary": [
                 "due": 12000,
                 "subtotal": 12000,
@@ -583,11 +608,12 @@ final class CheckoutUnitTests: XCTestCase {
         ]
         let discountAmount: [String: Any] = [
             "amount": 500,
-            "coupon": ["id": "coupon_test", "name": "Summer sale"],
+            "coupon": ["code": "coupon_test", "name": "Summer sale"],
             "promotion_code": ["code": "SUMMER"],
         ]
         sessionJSON["recurring_details"] = [
             "total_discount_amounts": [discountAmount],
+            "total_tax_amounts": [],
         ]
         let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
             .makePublicSession()
@@ -685,7 +711,7 @@ final class CheckoutUnitTests: XCTestCase {
                 }
               ]
               taxStatus: nil
-              taxAmountCount: nil
+              taxAmountCount: 0
               totals: {
                 subtotal: "$10.00"
                 taxExclusive: "$0.00"
@@ -702,7 +728,10 @@ final class CheckoutUnitTests: XCTestCase {
         // Given sessions with absent and present-but-empty tax amounts
         let absent = CheckoutTestHelpers.makeOpenSession().makePublicSession()
         var emptyJSON = CheckoutTestHelpers.openSessionJSON
-        emptyJSON["recurring_details"] = ["total_tax_amounts": []]
+        emptyJSON["recurring_details"] = [
+            "total_discount_amounts": [],
+            "total_tax_amounts": [],
+        ]
         let empty = try! PaymentPagesAPIResponse.decode(fromAPIResponse: emptyJSON).makePublicSession()
 
         // Then their debug descriptions preserve the distinction
@@ -732,6 +761,7 @@ final class CheckoutUnitTests: XCTestCase {
         json["billing_address_collection"] = "required"
         json["shipping_address_collection"] = ["allowed_countries": ["US", "CA", "GB"]]
         json["recurring_details"] = [
+            "total_discount_amounts": [],
             "total_tax_amounts": [
                 [
                     "amount": 1000,
@@ -878,6 +908,39 @@ final class CheckoutUnitTests: XCTestCase {
     func testIsLoadingFalseAfterInit() async throws {
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
         XCTAssertFalse(checkout.isUpdating)
+    }
+
+    // MARK: - Confirmation Result Tests
+
+    func testMapCompletedConfirmationResultUsesResponsePaymentStatus() async throws {
+        // Given a completed Checkout Session response
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        var responseJSON = CheckoutTestHelpers.openSessionJSON
+        responseJSON["status"] = "complete"
+        responseJSON["payment_status"] = "paid"
+        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: responseJSON)
+
+        // When the internal result is mapped to the public result
+        let result = checkout.mapConfirmationResult(.completed(response))
+
+        // Then success preserves the Checkout Session payment status
+        guard case .succeeded(let paymentStatus) = result else {
+            return XCTFail("Expected confirmation to succeed")
+        }
+        XCTAssertEqual(paymentStatus, .paid)
+    }
+
+    func testMapCanceledConfirmationResult() async throws {
+        // Given a canceled internal confirmation
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+
+        // When the internal result is mapped to the public result
+        let result = checkout.mapConfirmationResult(.canceled())
+
+        // Then cancellation is preserved
+        guard case .canceled = result else {
+            return XCTFail("Expected confirmation to be canceled")
+        }
     }
 
     // MARK: - updatePaymentMethod Parameter Encoding Tests

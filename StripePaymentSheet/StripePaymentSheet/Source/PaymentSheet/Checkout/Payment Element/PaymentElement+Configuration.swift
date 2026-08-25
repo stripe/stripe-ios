@@ -128,6 +128,7 @@ extension PaymentElement {
 
         func makeEmbeddedConfiguration(
             apiClient: STPAPIClient,
+            returnURL: String,
             defaults: CheckoutController.Configuration.Defaults,
             linkConfiguration: CheckoutController.LinkConfiguration?,
             merchantDisplayName: String,
@@ -137,6 +138,7 @@ extension PaymentElement {
             configuration.allowsDelayedPaymentMethods = true
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.apiClient = apiClient
+            configuration.returnURL = returnURL
             configuration.apply(linkConfiguration: linkConfiguration)
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
@@ -149,6 +151,7 @@ extension PaymentElement {
 
         func makePaymentSheetConfiguration(
             apiClient: STPAPIClient,
+            returnURL: String,
             defaults: CheckoutController.Configuration.Defaults,
             linkConfiguration: CheckoutController.LinkConfiguration?,
             merchantDisplayName: String,
@@ -158,6 +161,7 @@ extension PaymentElement {
             configuration.allowsDelayedPaymentMethods = true
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.apiClient = apiClient
+            configuration.returnURL = returnURL
             configuration.apply(linkConfiguration: linkConfiguration)
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle

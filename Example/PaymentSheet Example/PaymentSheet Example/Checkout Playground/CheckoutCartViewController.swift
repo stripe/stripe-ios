@@ -21,6 +21,8 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     let showExpressCheckoutElement: Bool
+    let applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
+    let linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
     let currencySelectorAppearance: CurrencySelectorElement.Appearance
     let delayPaymentPagesRequests: Bool
 
@@ -32,6 +34,8 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
             adaptivePricing: adaptivePricing,
             integrationType: integrationType,
             showExpressCheckoutElement: showExpressCheckoutElement,
+            applePayDisplay: applePayDisplay,
+            linkDisplay: linkDisplay,
             currencySelectorAppearance: currencySelectorAppearance,
             delayPaymentPagesRequests: delayPaymentPagesRequests,
             closeAction: { dismiss() }
@@ -51,6 +55,8 @@ final class CheckoutCartViewController: UIViewController {
     private let adaptivePricing: Bool
     private let integrationType: CheckoutPlayground.IntegrationType
     private let showExpressCheckoutElement: Bool
+    private let applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
+    private let linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
     private let currencySelectorAppearance: CurrencySelectorElement.Appearance
     private let delayPaymentPagesRequests: Bool
     private let closeAction: () -> Void
@@ -73,6 +79,9 @@ final class CheckoutCartViewController: UIViewController {
 
     private let loadingOverlayView = UIView()
     private let loadingActivityIndicator = UIActivityIndicatorView(style: .medium)
+    private weak var checkoutButton: UIButton?
+    private weak var checkoutButtonContentView: UIStackView?
+    private weak var checkoutButtonActivityIndicator: UIActivityIndicatorView?
     private var errorMessage: String?
 
     init(
@@ -82,6 +91,8 @@ final class CheckoutCartViewController: UIViewController {
         adaptivePricing: Bool,
         integrationType: CheckoutPlayground.IntegrationType,
         showExpressCheckoutElement: Bool,
+        applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display,
+        linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display,
         currencySelectorAppearance: CurrencySelectorElement.Appearance,
         delayPaymentPagesRequests: Bool,
         closeAction: @escaping () -> Void
@@ -92,6 +103,8 @@ final class CheckoutCartViewController: UIViewController {
         self.adaptivePricing = adaptivePricing
         self.integrationType = integrationType
         self.showExpressCheckoutElement = showExpressCheckoutElement
+        self.applePayDisplay = applePayDisplay
+        self.linkDisplay = linkDisplay
         self.currencySelectorAppearance = currencySelectorAppearance
         self.delayPaymentPagesRequests = delayPaymentPagesRequests
         self.closeAction = closeAction
@@ -212,6 +225,11 @@ final class CheckoutCartViewController: UIViewController {
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             configuration.currencySelectorElement.appearance = currencySelectorAppearance
+            configuration.expressCheckoutElement.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
+                merchantId: "merchant.com.stripe.paymentsheet.example",
+                display: applePayDisplay
+            )
+            configuration.expressCheckoutElement.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(display: linkDisplay)
             configuration.apiClient = diagnostics.makeAPIClient(
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
@@ -601,6 +619,8 @@ final class CheckoutCartViewController: UIViewController {
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 14
         button.addTarget(self, action: #selector(checkoutButtonTapped), for: .touchUpInside)
+        button.isEnabled = !checkout.isUpdating
+        button.alpha = button.isEnabled ? 1 : 0.5
 
         let titleLabel = UILabel()
         titleLabel.text = "Checkout"
@@ -627,6 +647,19 @@ final class CheckoutCartViewController: UIViewController {
             stackView.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -16),
             stackView.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: -16),
         ])
+
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.color = .white
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        button.addSubview(activityIndicator)
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: button.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+        ])
+        checkoutButton = button
+        checkoutButtonContentView = stackView
+        checkoutButtonActivityIndicator = activityIndicator
+        updateCheckoutButtonLoadingState()
         return button
     }
 
@@ -736,9 +769,19 @@ final class CheckoutCartViewController: UIViewController {
     }
 
     private func updateLoadingOverlay() {
-        let isLoading = checkout?.isUpdating == true || isUpdatingShippingAddress
+        let isCheckoutUpdating = checkout?.isUpdating == true
+        let isLoading = isCheckoutUpdating || isUpdatingShippingAddress
         loadingOverlayView.isHidden = !isLoading
-        isLoading ? loadingActivityIndicator.startAnimating() : loadingActivityIndicator.stopAnimating()
+        loadingOverlayView.backgroundColor = isUpdatingShippingAddress ? UIColor.black.withAlphaComponent(0.1) : .clear
+        isUpdatingShippingAddress ? loadingActivityIndicator.startAnimating() : loadingActivityIndicator.stopAnimating()
+        updateCheckoutButtonLoadingState()
+    }
+
+    private func updateCheckoutButtonLoadingState() {
+        let isUpdating = checkout?.isUpdating == true
+        checkoutButton?.isEnabled = !isUpdating
+        checkoutButtonContentView?.isHidden = isUpdating
+        isUpdating ? checkoutButtonActivityIndicator?.startAnimating() : checkoutButtonActivityIndicator?.stopAnimating()
     }
 
     private func makeAddressViewController(checkout: CheckoutController) -> AddressViewController {
@@ -810,13 +853,38 @@ final class CheckoutCartViewController: UIViewController {
     }
 
     @objc private func checkoutButtonTapped() {
-        let alertController = UIAlertController(
-            title: "Confirm stubbed",
-            message: "Checkout confirm is not implemented yet.",
-            preferredStyle: .alert
-        )
-        alertController.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alertController, animated: true)
+        guard let checkout else { return }
+        Task { @MainActor in
+            let result = await checkout.confirm(from: self)
+            let title: String
+            let message: String
+            let dismissOnAcknowledgment: Bool
+            switch result {
+            case .succeeded(let paymentStatus):
+                title = "Success"
+                message = "Payment status: \(paymentStatus)"
+                dismissOnAcknowledgment = true
+            case .canceled:
+                title = "Canceled"
+                message = "The payment was canceled."
+                dismissOnAcknowledgment = false
+            case .failed(let error):
+                title = "Unable to complete checkout"
+                message = "Localized: \(error.localizedDescription)\n\nDebug: \(String(reflecting: error))"
+                dismissOnAcknowledgment = false
+            }
+            let alertController = UIAlertController(
+                title: title,
+                message: message,
+                preferredStyle: .alert
+            )
+            alertController.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                if dismissOnAcknowledgment {
+                    self?.closeAction()
+                }
+            })
+            present(alertController, animated: true)
+        }
     }
 
     @objc private func taxDetailsButtonTapped() {

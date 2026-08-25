@@ -112,10 +112,8 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     /// Override return result for testMode
     func overrideTestModeReturnValue(result: IdentityVerificationSheet.VerificationFlowResult)
 
-    /// Transition to SelfieCaptureViewController without any API request
-    func transitionToSelfieCapture(
-        trainingConsent: Bool?
-    )
+    /// Transition to DocumentCaptureViewController without any API request
+    func transitionToSelfieCapture()
 
     /// Transition to DocumentCaptureViewController without any API request
     func transitionToDocumentCapture()
@@ -231,8 +229,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             from: verificationPage.documentCapture,
             with: self
         )
-        if verificationPage.selfie != nil {
-            mlModelLoader.startLoadingFaceModels(from: verificationPage)
+        if let selfiePageConfig = verificationPage.selfie {
+            mlModelLoader.startLoadingFaceModels(from: selfiePageConfig)
         }
     }
 
@@ -269,7 +267,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         guard case .success(let updateData) = updateDataResult
         else {
             // Transition to generic error screen
-            transitionWithVerificationPageDataResult(
+            transitionWithVerificaionPageDataResult(
                 updateDataResult,
                 completion: completion
             )
@@ -286,7 +284,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 guard case .success(let resultData) = submittedData
                 else {
                     self.isVerificationPageSubmitted = false
-                    self.transitionWithVerificationPageDataResult(submittedData, completion: completion)
+                    self.transitionWithVerificaionPageDataResult(submittedData, completion: completion)
                     return
                 }
 
@@ -305,13 +303,13 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                     self.collectedData = StripeAPI.VerificationPageCollectedData()
 
                 }
-                self.transitionWithVerificationPageDataResult(
+                self.transitionWithVerificaionPageDataResult(
                     submittedData,
                     completion: completion
                 )
             }
         } else {
-            transitionWithVerificationPageDataResult(updateDataResult, completion: completion)
+            transitionWithVerificaionPageDataResult(updateDataResult, completion: completion)
         }
     }
 
@@ -401,7 +399,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }.observe(on: .main) { result in
             self.handleVerificationPageDataResult(collectedData: optionalCollectedData, updateDataResult: result) { successData in
                 guard successData.requirements.errors.isEmpty else {
-                    self.transitionWithVerificationPageDataResult(result)
+                    self.transitionWithVerificaionPageDataResult(result)
                     return
                 }
                 if successData.requirements.missing.contains(.idDocumentBack) {
@@ -453,7 +451,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             simulateDelay: simulateDelay
         ).observe(on: .main) { [weak self] result in
             self?.overrideTestModeReturnValue(result: .flowCompleted)
-            self?.transitionWithVerificationPageDataResult(result)
+            self?.transitionWithVerificaionPageDataResult(result)
             completion()
         }
     }
@@ -466,7 +464,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             simulateDelay: simulateDelay
         ).observe(on: .main) { [weak self] result in
             self?.overrideTestModeReturnValue(result: .flowCompleted)
-            self?.transitionWithVerificationPageDataResult(result)
+            self?.transitionWithVerificaionPageDataResult(result)
             completion()
         }
     }
@@ -523,9 +521,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         )
     }
 
-    func transitionToSelfieCapture(
-        trainingConsent: Bool?
-    ) {
+    func transitionToSelfieCapture() {
         guard let verificationPageResponse = verificationPageResponseOrLogMissing(
             .missingVerificationPageResponseForSelfieCaptureTransition,
             assertionMessage: "verificationPageResponse is nil"
@@ -535,8 +531,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
         flowController.transitionToSelfieCaptureScreen(
             staticContentResult: verificationPageResponse,
-            sheetController: self,
-            trainingConsent: trainingConsent
+            sheetController: self
         )
     }
 
@@ -555,7 +550,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     }
 
     /// * Assert verificationPageResponse to be correct, then transition with the PageDataResult.
-    private func transitionWithVerificationPageDataResult(
+    private func transitionWithVerificaionPageDataResult(
         _ result: Result<StripeAPI.VerificationPageData, Error>?,
         completion: @escaping () -> Void = {}
     ) {
@@ -585,12 +580,6 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         completion: @escaping () -> Void
     ) {
         analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
-        let shouldSubmit3DFaceCaptureData: Bool
-        if case .success(let verificationPage)? = verificationPageResponse {
-            shouldSubmit3DFaceCaptureData = verificationPage.shouldSubmit3DFaceCaptureData
-        } else {
-            shouldSubmit3DFaceCaptureData = false
-        }
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
         selfieUploader.uploadFuture?.chained {
             [weak self, apiClient] uploadedFiles -> Future<StripeAPI.VerificationPageData> in
@@ -599,8 +588,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                     uploadedFiles: uploadedFiles,
                     capturedImages: capturedImages,
                     bestFrameExifMetadata: capturedImages.bestMiddle.cameraExifMetadata,
-                    trainingConsent: trainingConsent,
-                    shouldSubmit3DFaceCaptureData: shouldSubmit3DFaceCaptureData
+                    trainingConsent: trainingConsent
                 )
             )
             optionalCollectedData = collectedData
@@ -660,7 +648,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     ) {
         guard case .success(let resultData) = updateDataResult
         else {
-            self.transitionWithVerificationPageDataResult(updateDataResult, completion: completion)
+            self.transitionWithVerificaionPageDataResult(updateDataResult, completion: completion)
             return
         }
 

@@ -559,6 +559,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
             "recurring_details": [
+                "total_discount_amounts": [],
                 "total_tax_amounts": [
                     ["amount": 186, "inclusive": false, "taxable_amount": 2000,
                      "tax_rate": ["percentage": 7.45, "display_name": "Sales Tax"], ],
@@ -589,7 +590,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                     ],
                 ],
                 "total_discount_amounts": [
-                    ["amount": 332, "coupon": ["id": "co_test", "name": "Welcome"]],
+                    ["amount": 332, "coupon": ["code": "co_test", "name": "Welcome"]],
                 ],
             ],
             "checkout_items": [
@@ -628,13 +629,18 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         ]).makePublicSession()
 
         XCTAssertEqual(session.orderSummaryItems.count, 1)
-        guard case .oneTimePrice(let oneTimePrice) = session.orderSummaryItems[0] else {
+        let orderSummaryItem = session.orderSummaryItems[0]
+        XCTAssertEqual(orderSummaryItem.id, "checkout_item_abc123")
+        guard case .oneTimePrice(let oneTimePrice) = orderSummaryItem else {
             return XCTFail("Expected one-time price order summary item")
         }
         XCTAssertEqual(oneTimePrice.key, "checkout_item_abc123")
+        XCTAssertEqual(oneTimePrice.id, "checkout_item_abc123")
         XCTAssertNil(oneTimePrice.description)
         XCTAssertEqual(oneTimePrice.items.count, 1)
         XCTAssertEqual(oneTimePrice.items[0].key, "checkout_item_inner_abc123")
+        XCTAssertEqual(oneTimePrice.items[0].id, "checkout_item_inner_abc123")
+        XCTAssertNotEqual(oneTimePrice.items[0].id, "price_test123")
         XCTAssertEqual(oneTimePrice.items[0].displayName, "Classic T-Shirt")
         XCTAssertEqual(oneTimePrice.items[0].images, ["https://example.com/shirt.png"])
         XCTAssertEqual(oneTimePrice.items[0].quantity, 2)
@@ -867,7 +873,11 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testUnifiedModeSessionMapsAdjustableQuantity() throws {
         let enabledJSON = modifyingOneTimePriceItem {
-            $0["adjustable_quantity"] = ["enabled": true]
+            $0["adjustable_quantity"] = [
+                "enabled": true,
+                "minimum": 2,
+                "maximum": 10,
+            ]
         }
         let enabledResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: enabledJSON)
         guard case .oneTimePrice(let enabledOneTimePrice) = enabledResponse.makePublicSession().orderSummaryItems.first else {
@@ -875,8 +885,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         }
         let enabledQuantity = try XCTUnwrap(enabledOneTimePrice.items.first?.adjustableQuantity)
         XCTAssertTrue(enabledQuantity.enabled)
-        XCTAssertEqual(enabledQuantity.minimum, 0)
-        XCTAssertEqual(enabledQuantity.maximum, 99)
+        XCTAssertEqual(enabledQuantity.minimum, 2)
+        XCTAssertEqual(enabledQuantity.maximum, 10)
 
         let disabledJSON = modifyingOneTimePriceItem {
             $0["adjustable_quantity"] = ["enabled": false]
@@ -886,6 +896,44 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             return XCTFail("Expected one-time Price order summary item")
         }
         XCTAssertNil(disabledOneTimePrice.items.first?.adjustableQuantity)
+    }
+
+    func testUnifiedModeSessionRejectsEnabledAdjustableQuantityWithoutBounds() {
+        for field in ["minimum", "maximum"] {
+            var adjustableQuantity: [String: Any] = [
+                "enabled": true,
+                "minimum": 0,
+                "maximum": 99,
+            ]
+            adjustableQuantity.removeValue(forKey: field)
+            let json = modifyingOneTimePriceItem {
+                $0["adjustable_quantity"] = adjustableQuantity
+            }
+
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected missing \(field) to fail decoding"
+            )
+        }
+    }
+
+    func testUnifiedModeSessionRejectsEnabledAdjustableQuantityWithNullBounds() {
+        for field in ["minimum", "maximum"] {
+            var adjustableQuantity: [String: Any] = [
+                "enabled": true,
+                "minimum": 0,
+                "maximum": 99,
+            ]
+            adjustableQuantity[field] = NSNull()
+            let json = modifyingOneTimePriceItem {
+                $0["adjustable_quantity"] = adjustableQuantity
+            }
+
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected null \(field) to fail decoding"
+            )
+        }
     }
 
     func testUnifiedModeSessionAllowsEmptyNestedItems() throws {
@@ -1031,11 +1079,17 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         // When decoding sessions that use shipping, billing, and no address source
         let shipping = CheckoutTestHelpers.makeSession([
             "tax_meta": taxMeta,
-            "tax_context": ["automatic_tax_address_source": "session.shipping"],
+            "tax_context": [
+                "automatic_tax_enabled": true,
+                "automatic_tax_address_source": "session.shipping",
+            ],
         ]).withCustomer().makePublicSession()
         let billing = CheckoutTestHelpers.makeSession([
             "tax_meta": taxMeta,
-            "tax_context": ["automatic_tax_address_source": "session.billing"],
+            "tax_context": [
+                "automatic_tax_enabled": true,
+                "automatic_tax_address_source": "session.billing",
+            ],
         ]).withCustomer().makePublicSession()
         let missingSource = CheckoutTestHelpers.makeSession(["tax_meta": taxMeta]).withCustomer().makePublicSession()
 
@@ -1073,7 +1127,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         // When creating the public Session
         let session = response.makePublicSession()
 
-        // Then the public Session has no tax state
+        // Then the unknown status doesn't prevent the Session from decoding
         XCTAssertNil(session.tax)
     }
 
@@ -1088,24 +1142,21 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNil(session.tax)
     }
 
-    func testTax_missingComputationType_isNil() {
+    func testTax_missingComputationType_isRejected() {
         // Given tax metadata without a computation type
-        let response = CheckoutTestHelpers.makeSession([
+        let json = CheckoutTestHelpers.makeSessionJSON([
             "tax_meta": ["status": "complete"],
-        ]).withCustomer()
+        ])
 
-        // When creating the public Session
-        let session = response.makePublicSession()
-
-        // Then the public Session has no tax state
-        XCTAssertNil(session.tax)
+        // Then decoding fails instead of silently dropping tax state
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
     func testTax_nonAutomaticComputationType_isReady() {
         // Given a non-automatic tax computation
         let response = CheckoutTestHelpers.makeSession([
             "tax_meta": [
-                "computation_type": "dynamic",
+                "computation_type": "manual",
                 "status": "requires_location_inputs",
             ],
         ]).withCustomer()
@@ -1115,6 +1166,38 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         // Then the public tax status is ready
         XCTAssertEqual(session.tax?.status, .ready)
+    }
+
+    func testTaxMetaUnknownComputationType_isReady() {
+        // Given a computation type added after this SDK version shipped
+        let response = CheckoutTestHelpers.makeSession([
+            "tax_meta": [
+                "computation_type": "future_type",
+                "status": "complete",
+            ],
+        ]).withCustomer()
+
+        // When creating the public Session
+        let session = response.makePublicSession()
+
+        // Then it behaves like the other non-automatic computation types
+        XCTAssertEqual(session.tax?.status, .ready)
+    }
+
+    func testTaxContextRejectsMissingAutomaticTaxEnabled() {
+        let json = CheckoutTestHelpers.makeSessionJSON([
+            "tax_context": ["automatic_tax_address_source": "session.billing"],
+        ])
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+    }
+
+    func testShippingAddressCollectionRejectsMissingAllowedCountries() {
+        let json = CheckoutTestHelpers.makeSessionJSON([
+            "shipping_address_collection": [:] as [String: Any],
+        ])
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
     // MARK: - Elements Session Tests

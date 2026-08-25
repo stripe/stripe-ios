@@ -12,7 +12,7 @@ import UIKit
 protocol ExpressCheckoutElementDelegate: AnyObject {
     func expressCheckoutElementShouldConfirm(
         _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
-        presentingViewController: UIViewController
+        presentationWindow: UIWindow?
     ) async -> CheckoutController.ConfirmResult
 }
 
@@ -37,7 +37,7 @@ public final class ExpressCheckoutElement {
 
     init(
         sessionSource: CheckoutSessionSource,
-        configuration: CheckoutController.Configuration,
+        configuration: ExpressCheckoutElement.Configuration,
         delegate: ExpressCheckoutElementDelegate
     ) {
         let uiView = ExpressCheckoutElementUIView(session: sessionSource.initialSession, configuration: configuration, delegate: delegate)

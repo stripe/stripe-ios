@@ -9,6 +9,7 @@ import XCTest
 @_spi(STP) @testable import StripePaymentSheet
 @testable @_spi(STP) import StripeUICore
 
+@MainActor
 final class RowButtonTests: XCTestCase {
     func testLoadingStatePreservesKeyContentAlpha() {
         let rowButton = SavedPaymentMethodRowButton(
