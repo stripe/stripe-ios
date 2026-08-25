@@ -27,6 +27,8 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 apiClient: apiClient,
                 returnURL: configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
+                billingDetailsCollectionConfiguration: configuration.expressCheckoutElement.billingDetailsCollectionConfiguration.paymentSheetConfiguration(),
+                defaultBillingDetails: configuration.defaults.billingDetails,
                 presentationWindow: presentationWindow
             ))
         case .link:
