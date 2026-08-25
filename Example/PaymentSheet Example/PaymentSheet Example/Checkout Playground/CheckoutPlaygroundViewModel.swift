@@ -68,7 +68,7 @@ extension CheckoutPlayground {
             let settings = Self.settingsFromDefaults() ?? Settings()
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElementOption = settings.expressCheckoutElementOption
+            expressCheckoutElement = ExpressCheckoutElementSettings(option: settings.expressCheckoutElementOption)
             currency = settings.currency
             customerType = settings.customerType
             lineItems = settings.lineItems
@@ -191,7 +191,7 @@ extension CheckoutPlayground {
             Settings(
                 uiFramework: uiFramework,
                 integrationType: integrationType,
-                expressCheckoutElementOption: expressCheckoutElementOption,
+                expressCheckoutElementOption: expressCheckoutElement.option,
                 currency: currency,
                 customerType: customerType,
                 lineItems: lineItems,
@@ -215,7 +215,7 @@ extension CheckoutPlayground {
         private func apply(_ settings: Settings) {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElementOption = settings.expressCheckoutElementOption
+            expressCheckoutElement.option = settings.expressCheckoutElementOption
             currency = settings.currency
             customerType = settings.customerType
             lineItems = settings.lineItems
