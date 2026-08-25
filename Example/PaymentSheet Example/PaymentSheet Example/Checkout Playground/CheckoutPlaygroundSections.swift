@@ -246,6 +246,7 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var expressCheckoutElementShippingAddressRequired: Bool
     @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
     @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
+    var onCustomizeBillingDetailsCollection: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -277,6 +278,26 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.linkConfiguration.display`.",
                         displayText: { $0.rawValue.capitalized }
                     )
+
+                    Button(action: onCustomizeBillingDetailsCollection) {
+                        HStack {
+                            Image(systemName: "person.text.rectangle.fill")
+                                .font(.system(size: 16))
+                                .frame(width: 24)
+                                .foregroundColor(.blue)
+                            Text("Billing Details Collection")
+                                .font(.subheadline)
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 16)
+                        .background(Color(uiColor: .secondarySystemGroupedBackground))
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))

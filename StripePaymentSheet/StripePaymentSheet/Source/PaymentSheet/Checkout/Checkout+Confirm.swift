@@ -18,6 +18,8 @@ extension CheckoutController {
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
+        let billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration
+        let defaultBillingDetails: Configuration.Defaults.BillingDetails?
         let presentationWindow: UIWindow?
         let shippingAddressRequired: Bool
     }
@@ -116,8 +118,10 @@ extension CheckoutController {
                 apiClient: apiClient,
                 returnURL: self.configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
-                presentationWindow: presentingViewController.view.window,
-                shippingAddressRequired: false
+                shippingAddressRequired: false,
+                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
+                defaultBillingDetails: self.configuration.defaults.billingDetails,
+                presentationWindow: presentingViewController.view.window
             ))
         case .link(let confirmOption):
             let analyticsHelper = paymentElement.paymentOptionSourceOfTruthIsFlowController

@@ -27,8 +27,10 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 apiClient: apiClient,
                 returnURL: configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
-                presentationWindow: presentationWindow,
-                shippingAddressRequired: configuration.expressCheckoutElement.shippingAddressRequired
+                shippingAddressRequired: configuration.expressCheckoutElement.shippingAddressRequired,
+                billingDetailsCollectionConfiguration: configuration.expressCheckoutElement.billingDetailsCollectionConfiguration.paymentSheetConfiguration(),
+                defaultBillingDetails: configuration.defaults.billingDetails,
+                presentationWindow: presentationWindow
             ))
         case .link:
             // ECE Link needs its own configuration and analytics lifecycle before it can build this flow.
