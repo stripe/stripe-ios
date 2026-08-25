@@ -2,6 +2,8 @@
 //  CheckoutSessionWalletUpdater.swift
 //  StripePaymentSheet
 //
+//  Created by Joyce Qin on 8/21/26.
+//
 
 /// Narrow Checkout interface for wallet flows (e.g. Apple Pay) that present their own sheet and
 /// must sync the billing tax region *while that sheet is up*.
