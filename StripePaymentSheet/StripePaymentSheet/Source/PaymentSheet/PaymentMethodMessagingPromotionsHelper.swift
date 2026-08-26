@@ -168,6 +168,11 @@ class PaymentMethodMessagingPromotionsHelper {
     ///   We could theoretically derive this from whether or not we have promotions data, but for safety/redundancy we require it to be explicitly passed.
     /// The duration reported is the time between when the fetch was initiated and when this display attempt occurs.
     func logDisplayedAnalytic(displayedSuccessfully: Bool) {
+        // A helper also exists in control so those call sites can render their existing fallback UI.
+        // Only treatment represents an attempt to display PMM content.
+        guard experiment.group == .treatment else {
+            return
+        }
         let duration = fetchStartDate.map { Date().timeIntervalSince($0) } ?? 0
         analyticsHelper.logPaymentMethodMessagingDisplayed(duration: duration, displayedSuccessfully: displayedSuccessfully)
     }
