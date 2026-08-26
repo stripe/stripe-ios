@@ -20,7 +20,7 @@ enum ExpressCheckoutElementUtilities {
                 }
             case .link:
                 if configuration.linkConfiguration.display != .never,
-                   !session.automaticTaxEnabled {
+                   !session.elementsSession.disableLinkForAutomaticTaxBilling {
                     buttons.append(.link)
                 }
             }
