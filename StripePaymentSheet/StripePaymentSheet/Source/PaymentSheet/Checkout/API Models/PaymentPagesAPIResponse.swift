@@ -529,19 +529,6 @@ extension PaymentPagesAPIResponse {
     }
 }
 
-private extension CheckoutController.Session.Status.PaymentStatus {
-    var apiValue: String {
-        switch self {
-        case .paid:
-            return "paid"
-        case .unpaid:
-            return "unpaid"
-        case .noPaymentRequired:
-            return "no_payment_required"
-        }
-    }
-}
-
 private extension Decoder {
     func dataCorrupted(_ description: String) -> DecodingError {
         return DecodingError.dataCorrupted(

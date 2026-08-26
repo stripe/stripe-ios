@@ -28,6 +28,8 @@ extension CheckoutController {
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
+        let billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration
+        let defaultBillingDetails: Configuration.Defaults.BillingDetails?
         let presentationWindow: UIWindow?
         // TODO: This should probably live with the other methods that delegate to CheckoutController
         // to update shipping, billing, etc., unless those methods end up living here too.
@@ -128,6 +130,8 @@ extension CheckoutController {
                 apiClient: apiClient,
                 returnURL: self.configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
+                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
+                defaultBillingDetails: self.configuration.defaults.billingDetails,
                 presentationWindow: presentingViewController.view.window,
                 confirmationHandler: { [apiClient, paymentHandler] requestParameters in
                     await Self.confirmCheckoutSession(

@@ -235,6 +235,7 @@ extension PaymentSheet {
         }
     }
 
+    @MainActor
     static fileprivate func confirmAfterHandlingLocalActions(
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
@@ -634,6 +635,7 @@ extension PaymentSheet {
         }
     }
 
+    @MainActor
     static func confirmLinkPaymentOption(
         confirmOption: LinkConfirmOption,
         configuration: PaymentElementConfiguration,

@@ -555,30 +555,11 @@ private func makeFallbackBillingDetails(
 }
 
 private func makeRequiredBillingDetails(from configuration: PaymentElementConfiguration) -> Set<PKContactField> {
-    var requiredPKContactFields = Set<PKContactField>()
-    let billingConfig = configuration.billingDetailsCollectionConfiguration
-    // By default, we always want to request the billing address (as it includes the postal code)
-    if billingConfig.address == .automatic || billingConfig.address == .full {
-        requiredPKContactFields.insert(.postalAddress)
-    }
-    // Only request name field - phone and email go into shipping contact fields
-    if billingConfig.name == .always {
-        requiredPKContactFields.insert(.name)
-    }
-    return requiredPKContactFields
+    return configuration.billingDetailsCollectionConfiguration.applePayRequiredBillingContactFields
 }
 
 private func makeRequiredShippingDetails(from configuration: PaymentElementConfiguration) -> Set<PKContactField> {
-    var requiredPKContactFields = Set<PKContactField>()
-    let billingConfig = configuration.billingDetailsCollectionConfiguration
-    // Phone and email are collected through shipping contact fields
-    if billingConfig.email == .always {
-        requiredPKContactFields.insert(.emailAddress)
-    }
-    if billingConfig.phone == .always {
-        requiredPKContactFields.insert(.phoneNumber)
-    }
-    return requiredPKContactFields
+    return configuration.billingDetailsCollectionConfiguration.applePayRequiredShippingContactFields
 }
 
 extension PKPaymentNetwork {
