@@ -29,10 +29,6 @@ let package = Package(
             targets: ["StripeApplePay"]
         ),
         .library(
-            name: "StripeIdentity",
-            targets: ["StripeIdentity"]
-        ),
-        .library(
             name: "StripeIssuing",
             targets: ["StripeIssuing"]
         ),
@@ -51,10 +47,6 @@ let package = Package(
         .library(
             name: "StripeConnect",
             targets: ["StripeConnect"]
-        ),
-        .library(
-            name: "StripeCryptoOnramp",
-            targets: ["StripeCryptoOnramp"]
         )
     ],
     targets: [
@@ -99,15 +91,6 @@ let package = Package(
             dependencies: ["StripeCore"],
             path: "StripeApplePay/StripeApplePay",
             exclude: ["Info.plist"]
-        ),
-        .target(
-            name: "StripeIdentity",
-            dependencies: ["StripeCore", "StripeUICore", "StripeCameraCore"],
-            path: "StripeIdentity/StripeIdentity",
-            exclude: ["Info.plist"],
-            resources: [
-                .process("Resources/Images")
-            ]
         ),
         .target(
             name: "StripeIssuing",
@@ -186,15 +169,6 @@ let package = Package(
             name: "StripeConnect",
             dependencies: ["StripeCore", "StripeUICore", "StripeFinancialConnections"],
             path: "StripeConnect/StripeConnect"
-        ),
-        .target(
-            name: "StripeCryptoOnramp",
-            dependencies: ["StripeApplePay", "StripeCore", "StripeIdentity", "StripePayments", "StripePaymentSheet", "StripePaymentsUI", "StripeUICore"],
-            path: "StripeCryptoOnramp/StripeCryptoOnramp",
-            exclude: ["StripeCryptoOnramp.h"],
-            resources: [
-                .process("Resources/StripeCryptoOnramp.xcassets")
-            ]
         )
     ]
 )
