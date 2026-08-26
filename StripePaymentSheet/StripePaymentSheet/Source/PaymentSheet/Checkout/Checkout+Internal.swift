@@ -35,22 +35,32 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 flow = nil
                 break
             }
-            let configuration: PaymentElementConfiguration
-            let analyticsHelper: PaymentSheetAnalyticsHelper
-            if paymentElement.paymentOptionSourceOfTruthIsFlowController {
-                configuration = paymentElement.paymentSheetFlowController.configuration
-                analyticsHelper = paymentElement.paymentSheetFlowController.analyticsHelper
-            } else {
-                configuration = paymentElement.embeddedPaymentElement.configuration
-                analyticsHelper = paymentElement.embeddedPaymentElement.analyticsHelper
+            var paymentElementConfiguration = PaymentSheet.Configuration()
+            paymentElementConfiguration.apiClient = apiClient
+            paymentElementConfiguration.returnURL = configuration.returnURL
+            paymentElementConfiguration.merchantDisplayName = effectiveMerchantDisplayName
+            paymentElementConfiguration.style = configuration.userInterfaceStyle
+            paymentElementConfiguration.billingDetailsCollectionConfiguration = configuration.expressCheckoutElement.billingDetailsCollectionConfiguration.paymentSheetConfiguration()
+            if let billingDetails = configuration.defaults.billingDetails {
+                paymentElementConfiguration.defaultBillingDetails.set(billingDetails)
             }
+            switch configuration.expressCheckoutElement.linkConfiguration.display {
+            case .automatic:
+                paymentElementConfiguration.link.display = .automatic
+            case .never:
+                paymentElementConfiguration.link.display = .never
+            }
+            let analyticsHelper = PaymentSheetAnalyticsHelper(
+                integrationShape: .complete,
+                configuration: paymentElementConfiguration
+            )
             let authenticationContext = AuthenticationContext(
                 presentingViewController: presentingViewController,
-                appearance: configuration.appearance
+                appearance: paymentElementConfiguration.appearance
             )
             flow = .link(.init(
                 confirmOption: .wallet(brand: session.elementsSession.linkBrand ?? .link),
-                configuration: configuration,
+                configuration: paymentElementConfiguration,
                 confirmationChallenge: ConfirmationChallenge(
                     elementsSession: session.elementsSession,
                     stripeAttest: apiClient.stripeAttest),
