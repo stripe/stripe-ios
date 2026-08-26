@@ -27,6 +27,7 @@ struct CheckoutCartView: View {
     var showExpressCheckoutElement: Bool = false
     var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
     var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
+    var eceBillingDetailsCollectionConfiguration = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
     var delayPaymentPagesRequests = false
 
@@ -184,6 +185,7 @@ struct CheckoutCartView: View {
             config.expressCheckoutElement.confirmHandler = { result in
                 confirmResult = result
             }
+            config.expressCheckoutElement.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
             config.shippingAddressElement.title = "Shipping Address"
             config.shippingAddressElement.buttonTitle = "Save Address"
             checkout = try await CheckoutController(configuration: config)

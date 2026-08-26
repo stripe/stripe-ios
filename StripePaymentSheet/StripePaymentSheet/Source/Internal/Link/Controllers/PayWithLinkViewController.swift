@@ -12,6 +12,7 @@ import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
+@MainActor
 protocol PayWithLinkViewControllerDelegate: AnyObject {
 
     func payWithLinkViewControllerDidConfirm(
@@ -43,6 +44,7 @@ protocol PayWithLinkViewControllerDelegate: AnyObject {
     )
 }
 
+@MainActor
 protocol PayWithLinkCoordinating: AnyObject {
     func confirm(
         with linkAccount: PaymentSheetLinkAccount,
@@ -68,6 +70,7 @@ protocol PayWithLinkCoordinating: AnyObject {
 /// Instantiate and present this controller when the user chooses to pay with Link.
 /// For internal SDK use only
 @objc(STP_Internal_PayWithLinkViewController)
+@MainActor
 final class PayWithLinkViewController: BottomSheetViewController {
 
     enum LinkAccountError: LocalizedError {
@@ -84,6 +87,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         }
     }
 
+    @MainActor
     final class Context {
         let intent: Intent
         let elementsSession: STPElementsSession
