@@ -42,7 +42,7 @@ public final class CheckoutController: ObservableObject {
 
     // MARK: - Internal Properties
 
-    /// The PaymentElement for this CheckoutController instance, when configured.
+    /// The PaymentElement for this CheckoutController instance
     private(set) var paymentElement: PaymentElement?
 
     /// The ExpressCheckoutElement for this CheckoutController instance.
@@ -317,7 +317,7 @@ public final class CheckoutController: ObservableObject {
 
     // MARK: - Element methods
 
-    /// Returns Payment Element when it was configured for this CheckoutController instance.
+    /// Returns the PaymentElement for this CheckoutController instance.
     public func getPaymentElement() -> PaymentElement? {
         return paymentElement
     }
