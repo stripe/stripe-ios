@@ -228,8 +228,13 @@ extension PaymentElement {
 
         /// A set of two-letter country codes representing countries the customers can select.
         /// If the set is empty (the default), we display all countries.
+        /// Country codes are automatically normalized to uppercase.
         /// - Note: Saved payment methods whose billing address country is not in this list are hidden.
-        public var allowedCountries: Set<String> = []
+        public var allowedCountries: Set<String> = [] {
+            didSet {
+                allowedCountries = Set(allowedCountries.map { $0.uppercased() })
+            }
+        }
     }
 }
 
