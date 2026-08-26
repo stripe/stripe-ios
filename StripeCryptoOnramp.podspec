@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '26.7.0'
+  s.version                        = '26.8.0'
 
   s.summary                        = 'Facilitates crypto onramp transactions with built-in KYC and identity verification.'
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }
@@ -16,7 +16,6 @@ Pod::Spec.new do |s|
   s.platform                       = :ios
   s.ios.deployment_target          = '15.0'
   s.swift_version                  = '5.0'
-  s.pod_target_xcconfig            = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'x86_64' }
   s.source_files                   = 'StripeCryptoOnramp/StripeCryptoOnramp/**/*.swift'
   s.ios.resource_bundle            = { 'StripeCryptoOnrampBundle' => 'StripeCryptoOnramp/StripeCryptoOnramp/Resources/**/*.{lproj,json,png,xcassets}' }
   s.dependency                     'StripeCore', "#{s.version}"

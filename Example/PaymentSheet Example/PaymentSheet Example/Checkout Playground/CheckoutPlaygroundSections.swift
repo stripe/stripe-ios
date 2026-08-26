@@ -15,10 +15,17 @@ struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var checkoutEndpointOption: CheckoutPlayground.EndpointOption
     @Binding var checkoutEndpoint: String
     @Binding var delayPaymentPagesRequests: Bool
+    let onReset: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
+            HStack {
+                CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
+                Spacer()
+                Button("Reset", action: onReset)
+                    .font(.callout.smallCaps())
+                    .buttonStyle(.bordered)
+            }
             VStack(spacing: 1) {
                 CheckoutPlayground.PickerRow(
                     title: "UI Framework",
@@ -238,6 +245,7 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
     @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
     @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
+    var onCustomizeBillingDetailsCollection: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -264,6 +272,26 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.linkConfiguration.display`.",
                         displayText: { $0.rawValue.capitalized }
                     )
+
+                    Button(action: onCustomizeBillingDetailsCollection) {
+                        HStack {
+                            Image(systemName: "person.text.rectangle.fill")
+                                .font(.system(size: 16))
+                                .frame(width: 24)
+                                .foregroundColor(.blue)
+                            Text("Billing Details Collection")
+                                .font(.subheadline)
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 16)
+                        .background(Color(uiColor: .secondarySystemGroupedBackground))
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
