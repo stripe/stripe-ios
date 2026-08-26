@@ -144,6 +144,7 @@ public final class CheckoutController: ObservableObject {
             self.expressCheckoutElement = ExpressCheckoutElement(
                 sessionSource: sessionSource,
                 configuration: configuration.expressCheckoutElement,
+                apiClient: configuration.apiClient,
                 delegate: self
             )
 
