@@ -59,13 +59,27 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.returnURL, returnURL)
     }
 
-    func testGetCurrencySelectorElementReturnsNilWhenAdaptivePricingIsNotAllowed() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+    func testCurrencySelectorElementConfigurationDefaultsToNil() {
+        let configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
 
+        XCTAssertNil(configuration.currencySelectorElement)
+    }
+
+    func testGetCurrencySelectorElementReturnsNilWhenNotConfigured() async throws {
+        // Given an Adaptive Pricing session without Currency Selector Element configuration
+        let session = CheckoutTestHelpers.makeAdaptivePricingSession()
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session)
+        )
+
+        // Then Currency Selector Element is disabled
         XCTAssertNil(checkout.getCurrencySelectorElement())
     }
 
-    func testGetCurrencySelectorElementReturnsStableInstanceWhenAdaptivePricingIsAllowed() async throws {
+    func testGetCurrencySelectorElementReturnsStableInstanceWhenConfigured() async throws {
         let session = CheckoutTestHelpers.makeAdaptivePricingSession()
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)

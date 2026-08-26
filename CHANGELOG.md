@@ -1,7 +1,10 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+
+### PaymentSheet
+* [Added] Added Currency Selector Element, a Checkout Element that lets customers choose an Adaptive Pricing currency. Provide `CurrencySelectorElement.Configuration` when configuring Checkout to enable the element.
 
 ## 26.8.0 2026-08-24
 ### Payments
