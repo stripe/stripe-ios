@@ -48,8 +48,6 @@ StripeCryptoOnramp helps you build a headless crypto onramp flow in your iOS app
 
 The StripeCryptoOnramp iOS SDK is compatible with apps targeting iOS 15.0 or above.
 
-Simulator builds require an arm64 destination on Apple silicon. Intel Macs and x86_64 simulator destinations are not supported.
-
 ## Getting started
 
 ### Integration

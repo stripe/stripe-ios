@@ -584,15 +584,12 @@ import UIKit
     }
 
     var clientSecret: String?
-    var checkout: CheckoutController?
-    var checkoutSession: CheckoutController.Session? { checkout?.session }
     var customerId: String?
     var ephemeralKey: String?
     var customerSessionClientSecret: String?
     var paymentMethodTypes: [String]?
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
-    var currencySelectorAppearance = CurrencySelectorElement.Appearance()
     var currentDataTask: URLSessionDataTask?
 
     var checkoutEndpoint: String {
@@ -657,14 +654,6 @@ import UIKit
         updateForcedConsumerLinkBrand(settings)
 
         $settings.removeDuplicates().sink { [weak self] newValue in
-            // PaymentSheet does not support checkout session; auto-correct to flow controller
-            if newValue.integrationType == .checkoutSession && newValue.uiStyle == .paymentSheet {
-                DispatchQueue.main.async {
-                    self?.settings.uiStyle = .flowController
-                }
-                return
-            }
-
             if newValue.autoreload == .on {
                 // This closure is called *before* `settings` is updated! Wait until the next run loop before calling `load`
                 DispatchQueue.main.async {
@@ -719,8 +708,6 @@ import UIKit
             }
         case .deferred_csc, .deferred_ssc, .deferred_mp, .deferred_mc:
             mc = PaymentSheet(intentConfiguration: intentConfig, configuration: configuration)
-        case .checkoutSession:
-            fatalError("PaymentSheet does not support checkout session initialization. Use FlowController or EmbeddedPaymentElement instead.")
         }
 
         self.paymentSheet = mc
@@ -776,23 +763,6 @@ import UIKit
         }))
         rootViewController.present(vc, animated: true, completion: nil)
     }
-    func checkoutSessionSettingsTapped() {
-        let appearanceBinding = Binding(
-            get: { self.currencySelectorAppearance },
-            set: { self.currencySelectorAppearance = $0 }
-        )
-        let vc = UIHostingController(rootView: CheckoutSessionPlaygroundView(
-            viewModel: settings,
-            currencySelectorAppearance: appearanceBinding,
-            doneAction: { updatedSettings in
-                self.settings = updatedSettings
-                self.rootViewController.dismiss(animated: true, completion: nil)
-                self.load(reinitializeControllers: true)
-            }
-        ))
-        rootViewController.present(vc, animated: true, completion: nil)
-    }
-
     // Completion
 
     func onOptionsCompletion() {
@@ -937,32 +907,12 @@ extension PlaygroundController {
                     STPAPIClient.shared.publishableKey = publishableKey
                 }
 
-                // Load checkout session using Checkout SDK if using CheckoutSession
-                if let checkoutSessionClientSecret = json["checkoutSessionClientSecret"] {
-                    do {
-                        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: checkoutSessionClientSecret, returnURL: "payments-example://stripe-redirect")
-                        checkoutConfiguration.adaptivePricing.allowed = settingsToLoad.csAdaptivePricing == .on
-                        checkoutConfiguration.currencySelectorElement.appearance = self.currencySelectorAppearance
-                        self.checkout = try await CheckoutController(configuration: checkoutConfiguration)
-                    } catch {
-                        self.checkout = nil
-                        print("Failed to load checkout session: \(error)")
-                    }
-                } else {
-                    self.checkout = nil
-                }
-
                 self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
                 self.addressDetails = nil
                 // Persist customerId / customerMode
                 self.serializeSettingsToNSUserDefaults()
-                let idDescription: String = {
-                    if let checkoutSessionId = self.checkoutSession?.id {
-                        return "checkout session id: \(checkoutSessionId)"
-                    }
-                    let intentID = STPPaymentIntent.id(fromClientSecret: self.clientSecret ?? "") ?? STPSetupIntent.id(fromClientSecret: self.clientSecret ?? "")
-                    return "intent id: \(intentID ?? "")"
-                }()
+                let intentID = STPPaymentIntent.id(fromClientSecret: self.clientSecret ?? "") ?? STPSetupIntent.id(fromClientSecret: self.clientSecret ?? "")
+                let idDescription = "intent id: \(intentID ?? "")"
                 print("✅ Test playground finished loading with \(idDescription) and customer id: \(self.customerId ?? "") ")
                 switch self.settings.uiStyle {
                 case .paymentSheet:
@@ -1019,12 +969,6 @@ extension PlaygroundController {
                             completion: completion
                         )
 
-                    case .checkoutSession:
-                        PaymentSheet.FlowController.create(
-                            checkout: self.checkout!,
-                            configuration: self.configuration,
-                            completion: completion
-                        )
                     }
                 case .embedded:
                     guard !shouldUpdateEmbeddedInsteadOfRecreating else {
@@ -1092,28 +1036,6 @@ extension PlaygroundController {
             body["use_manual_capture"] = true
         }
 
-        // Add CheckoutSession flag if using CheckoutSession integration type
-        if settings.integrationType == .checkoutSession {
-            body["use_checkout_session"] = true
-            body["checkout_session_payment_method_remove"] = settings.paymentMethodRemove.rawValue
-            body["checkout_session_payment_method_save"] = settings.paymentMethodSave.rawValue
-            body["allow_promotion_codes"] = settings.csAllowPromotionCodes == .on
-            body["automatic_tax"] = settings.csAutomaticTax == .on
-            body["adaptive_pricing"] = settings.csAdaptivePricing == .on
-            body["display_shipping_rates"] = settings.csDisplayShippingRates == .on
-            body["adjustable_quantity"] = settings.csAdjustableQuantity == .on
-            body["use_manual_capture"] = settings.csManualCapture == .on
-            let email = settings.csCustomerEmail ?? "test@example.com"
-            body["customer_email"] = email.isEmpty ? "test@example.com" : email
-            if let pmc = settings.csPaymentMethodConfiguration, !pmc.isEmpty {
-                body["payment_method_configuration"] = pmc
-            }
-            let sfuDict = settings.paymentMethodOptionsSetupFutureUsage.toDictionary()
-            if !sfuDict.isEmpty {
-                body["payment_method_options_setup_future_usage"] = sfuDict
-            }
-        }
-
         // Send custom keys to backend if provided
         if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
             body["custom_secret_key"] = customSecretKey
@@ -1131,7 +1053,7 @@ extension PlaygroundController {
         }
 
         // Only set PMO SFU on the Intent if we're Intent-first, never set it for deferred intents.
-        if settings.integrationType == .normal || settings.integrationType == .checkoutSession {
+        if settings.integrationType == .normal {
             body["payment_method_options_setup_future_usage"] = settings.paymentMethodOptionsSetupFutureUsage.toDictionary()
         }
         if shouldCreateCustomerKey {
@@ -1217,7 +1139,7 @@ extension PlaygroundController {
             return
         case .deferred_mc, .deferred_ssc:
             break
-        case .normal, .checkoutSession:
+        case .normal:
             assertionFailure()
         }
 
@@ -1423,8 +1345,7 @@ extension PlaygroundController {
     func makeEmbeddedPaymentElement() {
         embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(
             configuration: embeddedConfiguration,
-            intentConfig: settings.integrationType == .checkoutSession ? nil : intentConfig,
-            checkout: settings.integrationType == .checkoutSession ? checkout : nil,
+            intentConfig: intentConfig,
             playgroundController: self
         )
     }

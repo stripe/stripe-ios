@@ -1,12 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
-### Identity
-* [Added] Added a server-enabled 3D selfie capture flow with guided front, left, and right captures and MediaPipe face-pose detection. ([#6523](https://github.com/stripe/stripe-ios/pull/6523))
-* [Added] Added `IdentityVerificationSheet.Configuration.brandColor` to customize the native flow's primary action buttons.
-* [Changed] StripeIdentity and StripeCryptoOnramp now support arm64 simulator builds only. Intel Macs and x86_64 simulator destinations are no longer supported for these SDKs.
 
+## 26.8.0 2026-08-24
 ### Payments
 * [Added] Added support for the following FPX banks: Agrobank, Bank of China, and MBSB Bank.
 * [Fixed] Fixed an issue where card decline error messages became generic after 3DS authentication.

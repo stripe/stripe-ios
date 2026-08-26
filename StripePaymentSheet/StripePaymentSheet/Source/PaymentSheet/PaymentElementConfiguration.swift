@@ -64,6 +64,7 @@ extension PaymentElementConfiguration {
         || billingDetailsCollectionConfiguration.address == .full
     }
 
+    @MainActor
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
         var reqs = [PaymentMethodTypeRequirement]()
         if returnURL != nil { reqs.append(.returnURL) }
