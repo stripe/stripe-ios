@@ -32,7 +32,6 @@ pipelines:
       framework-tests: {}
       lpm-confirm-flow-tests:
         abort_on_fail: true
-      install-and-integration-tests: {}
       size-report: {}
       ui-tests-paymentsheet:
         parallel: 2
@@ -59,6 +58,7 @@ pipelines:
     workflows:
       framework-tests-no-mocks: {}
       framework-tests-and-builds-xcode-26-1: {}
+      install-and-integration-tests: {}
       check-docs: {}
       legacy-tests-15: {}
       legacy-tests-16: {}
