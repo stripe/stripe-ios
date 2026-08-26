@@ -17,7 +17,7 @@ extension PaymentElement {
         public init() {}
 
         /// Configuration for Apple Pay.
-        public var applePay: ApplePayConfiguration?
+        public var applePayConfiguration: ApplePayConfiguration?
 
         /// PaymentSheet offers users an option to save some payment methods for later use.
         /// Default value is `.automatic`.
@@ -144,7 +144,7 @@ extension PaymentElement {
             configuration.apiClient = apiClient
             configuration.returnURL = returnURL
             configuration.apply(linkConfiguration: linkConfiguration)
-            configuration.applePay = applePay?.paymentSheetConfiguration(
+            configuration.applePay = applePayConfiguration?.paymentSheetConfiguration(
                 merchantCountryCode: merchantCountryCode
             )
             configuration.merchantDisplayName = merchantDisplayName
@@ -173,7 +173,7 @@ extension PaymentElement {
             configuration.apiClient = apiClient
             configuration.returnURL = returnURL
             configuration.apply(linkConfiguration: linkConfiguration)
-            configuration.applePay = applePay?.paymentSheetConfiguration(
+            configuration.applePay = applePayConfiguration?.paymentSheetConfiguration(
                 merchantCountryCode: merchantCountryCode
             )
             configuration.merchantDisplayName = merchantDisplayName

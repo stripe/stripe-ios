@@ -120,7 +120,7 @@ final class PaymentElementTest: XCTestCase {
     func testConfigurationSetsApplePayFromCheckoutSessionMerchantCountry() async throws {
         // Given Apple Pay configured for a Checkout Session with a non-US merchant country
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        checkoutConfiguration.paymentElement.applePay = PaymentElement.ApplePayConfiguration(
+        checkoutConfiguration.paymentElement.applePayConfiguration = PaymentElement.ApplePayConfiguration(
             merchantId: "merchant.com.example",
             buttonType: .donate
         )

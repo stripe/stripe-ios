@@ -226,7 +226,7 @@ final class CheckoutCartViewController: UIViewController {
             )
             configuration.adaptivePricing.allowed = adaptivePricing
             configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
-            configuration.paymentElement.applePay = PaymentElement.ApplePayConfiguration(
+            configuration.paymentElement.applePayConfiguration = PaymentElement.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             var expressCheckoutElementConfig = ExpressCheckoutElement.Configuration()

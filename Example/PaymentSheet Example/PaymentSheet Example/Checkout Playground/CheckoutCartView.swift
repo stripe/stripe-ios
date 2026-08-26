@@ -173,7 +173,7 @@ struct CheckoutCartView: View {
             )
             config.adaptivePricing.allowed = adaptivePricing
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
-            config.paymentElement.applePay = PaymentElement.ApplePayConfiguration(
+            config.paymentElement.applePayConfiguration = PaymentElement.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             config.currencySelectorElement.appearance = currencySelectorAppearance
