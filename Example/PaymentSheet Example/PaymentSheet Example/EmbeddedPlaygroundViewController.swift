@@ -37,8 +37,6 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
     private let intentConfig: EmbeddedPaymentElement.IntentConfiguration?
 
-    private let checkout: CheckoutController?
-
     private(set) var embeddedPaymentElement: EmbeddedPaymentElement?
     private var paymentMethodsViewController: EmbeddedPaymentElementWrapperViewController?
 
@@ -104,12 +102,10 @@ class EmbeddedPlaygroundViewController: UIViewController {
     init(
         configuration: EmbeddedPaymentElement.Configuration,
         intentConfig: EmbeddedPaymentElement.IntentConfiguration?,
-        checkout: CheckoutController?,
         playgroundController: PlaygroundController
     ) {
         self.configuration = configuration
         self.intentConfig = intentConfig
-        self.checkout = checkout
         self.playgroundController = playgroundController
 
         super.init(nibName: nil, bundle: nil)
@@ -146,20 +142,13 @@ class EmbeddedPlaygroundViewController: UIViewController {
     }
 
     private func setupUI() async throws {
-        let embeddedPaymentElement: EmbeddedPaymentElement
-        if let checkout = checkout {
-            embeddedPaymentElement = try await EmbeddedPaymentElement.create(
-                checkout: checkout,
-                configuration: configuration
-            )
-        } else if let intentConfig = intentConfig {
-            embeddedPaymentElement = try await EmbeddedPaymentElement.create(
-                intentConfiguration: intentConfig,
-                configuration: configuration
-            )
-        } else {
-            throw PaymentSheetError.unknown(debugDescription: "Either checkoutSession or intentConfig must be provided")
+        guard let intentConfig else {
+            throw PaymentSheetError.unknown(debugDescription: "intentConfig must be provided")
         }
+        let embeddedPaymentElement = try await EmbeddedPaymentElement.create(
+            intentConfiguration: intentConfig,
+            configuration: configuration
+        )
         embeddedPaymentElement.delegate = self
         embeddedPaymentElement.presentingViewController = self
         self.embeddedPaymentElement = embeddedPaymentElement
