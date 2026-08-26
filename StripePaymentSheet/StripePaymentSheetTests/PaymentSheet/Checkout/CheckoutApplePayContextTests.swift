@@ -526,7 +526,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
         ])
         let session = response.makePublicSession()
         let applePayConfirmationParameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
-            apiClient: APIStubbedTestCase.stubbedAPIClient()
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration()
         )
         let mockController = MockPKPaymentAuthorizationController()
         let context = CheckoutApplePayContext(
