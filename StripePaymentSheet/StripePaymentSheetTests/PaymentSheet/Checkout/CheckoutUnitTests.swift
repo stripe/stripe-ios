@@ -928,14 +928,13 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testMapCompletedConfirmationResultUsesResponsePaymentStatus() async throws {
         // Given a completed Checkout Session response
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
         var responseJSON = CheckoutTestHelpers.openSessionJSON
         responseJSON["status"] = "complete"
         responseJSON["payment_status"] = "paid"
         let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: responseJSON)
 
         // When the internal result is mapped to the public result
-        let result = checkout.mapConfirmationResult(.completed(response))
+        let result = CheckoutController.mapConfirmationResult(.completed(response))
 
         // Then success preserves the Checkout Session payment status
         guard case .succeeded(let paymentStatus) = result else {
@@ -945,11 +944,8 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testMapCanceledConfirmationResult() async throws {
-        // Given a canceled internal confirmation
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
-
         // When the internal result is mapped to the public result
-        let result = checkout.mapConfirmationResult(.canceled())
+        let result = CheckoutController.mapConfirmationResult(.canceled())
 
         // Then cancellation is preserved
         guard case .canceled = result else {
