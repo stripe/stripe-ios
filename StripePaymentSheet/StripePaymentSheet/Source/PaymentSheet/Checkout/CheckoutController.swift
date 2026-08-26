@@ -344,7 +344,7 @@ public final class CheckoutController: ObservableObject {
             return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
 
-        guard let flow = confirmationFlow(
+        guard let flow = makeConfirmationFlow(
             for: paymentElement,
             presentingViewController: presentingViewController
         ) else {
