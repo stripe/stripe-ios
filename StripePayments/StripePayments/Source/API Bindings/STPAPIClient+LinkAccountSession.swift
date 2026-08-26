@@ -24,6 +24,7 @@ public extension STPAPIClient {
         paymentMethodType: STPPaymentMethodType,
         customerName: String?,
         customerEmailAddress: String?,
+        customerAddress: STPPaymentMethodAddress? = nil,
         linkMode: LinkMode?,
         additionalParameters: [String: Any] = [:],
         completion: @escaping STPLinkAccountSessionBlock
@@ -35,6 +36,7 @@ public extension STPAPIClient {
             paymentMethodType: paymentMethodType,
             customerName: customerName,
             customerEmailAddress: customerEmailAddress,
+            customerAddress: customerAddress,
             linkMode: linkMode,
             additionalParameters: additionalParameters,
             completion: completion
@@ -47,6 +49,7 @@ public extension STPAPIClient {
         paymentMethodType: STPPaymentMethodType,
         customerName: String?,
         customerEmailAddress: String?,
+        customerAddress: STPPaymentMethodAddress? = nil,
         linkMode: LinkMode?,
         additionalParameters: [String: Any] = [:],
         completion: @escaping STPLinkAccountSessionBlock
@@ -58,6 +61,7 @@ public extension STPAPIClient {
             paymentMethodType: paymentMethodType,
             customerName: customerName,
             customerEmailAddress: customerEmailAddress,
+            customerAddress: customerAddress,
             linkMode: linkMode,
             additionalParameters: additionalParameters,
             completion: completion
@@ -102,6 +106,7 @@ public extension STPAPIClient {
         paymentMethodType: STPPaymentMethodType,
         customerName: String?,
         customerEmailAddress: String?,
+        customerAddress: STPPaymentMethodAddress?,
         linkMode: LinkMode?,
         additionalParameters: [String: Any],
         completion: @escaping STPLinkAccountSessionBlock
@@ -117,6 +122,9 @@ public extension STPAPIClient {
         }
         if let customerEmailAddress = customerEmailAddress {
             parameters["payment_method_data[billing_details][email]"] = customerEmailAddress
+        }
+        if let customerAddress {
+            parameters["payment_method_data[billing_details][address]"] = STPFormEncoder.dictionary(forObject: customerAddress)
         }
         
         let hostedSurface = parameters["hosted_surface"]

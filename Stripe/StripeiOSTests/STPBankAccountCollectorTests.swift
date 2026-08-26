@@ -40,6 +40,26 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         XCTAssertEqual(STPBankAccountCollectorUserInterfaceStyle.alwaysDark.asFinancialConnectionsConfigurationStyle, .alwaysDark)
     }
 
+    func testUSBankAccountParamsWithAddress() {
+        let address = makeAddress()
+
+        let params = STPCollectBankAccountParams.collectUSBankAccountParams(
+            with: "Test Customer",
+            email: "customer@example.com",
+            address: address
+        )
+
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.name, "Test Customer")
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.email, "customer@example.com")
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.address?.line1, "123 Main Street")
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.address?.line2, "Unit 4")
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.address?.city, "Test City")
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.address?.state, "TS")
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.address?.postalCode, "12345")
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.address?.country, "US")
+        XCTAssertEqual(params.paymentMethodParams.type, .USBankAccount)
+    }
+
     func testCollectBankAccountForPaymentInvalidSecretReturnsError() {
         let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
         let expectation = expectation(description: "completion")
@@ -74,6 +94,75 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
             XCTAssertNotNil(nsError)
             XCTAssertEqual(nsError?.domain, "STPBankAccountCollectorErrorDomain")
             XCTAssertEqual(nsError?.code, STPCollectBankAccountError.invalidClientSecret.rawValue)
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 2.0)
+    }
+
+    func testCollectBankAccountForPaymentIncludesAddress() {
+        let paymentIntentID = "pi_address"
+        let clientSecret = "\(paymentIntentID)_secret_address"
+        let address = makeAddress()
+        stubCreateLinkAccountSession(paymentIntentID: paymentIntentID, expectedAddress: address)
+        stubAttachLinkAccountSession(paymentIntentID: paymentIntentID)
+
+        let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
+        let expectation = expectation(description: "completion")
+
+        collector.collectBankAccountForPayment(
+            clientSecret: clientSecret,
+            params: makeParams(address: address),
+            from: UIViewController()
+        ) { _, error in
+            XCTAssertNil(error)
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 2.0)
+    }
+
+    func testCollectBankAccountForSetupIncludesAddress() {
+        let setupIntentID = "seti_address"
+        let clientSecret = "\(setupIntentID)_secret_address"
+        let address = makeAddress()
+        stubCreateLinkAccountSessionForSetupIntent(setupIntentID: setupIntentID, expectedAddress: address)
+        stubAttachLinkAccountSessionToSetupIntent(setupIntentID: setupIntentID)
+
+        let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
+        let expectation = expectation(description: "completion")
+
+        collector.collectBankAccountForSetup(
+            clientSecret: clientSecret,
+            params: makeParams(address: address),
+            from: UIViewController()
+        ) { _, error in
+            XCTAssertNil(error)
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 2.0)
+    }
+
+    func testLegacyUSBankAccountParamsOmitsAddress() {
+        let paymentIntentID = "pi_without_address"
+        let clientSecret = "\(paymentIntentID)_secret_without_address"
+        stubCreateLinkAccountSession(paymentIntentID: paymentIntentID, expectedAddress: nil)
+        stubAttachLinkAccountSession(paymentIntentID: paymentIntentID)
+
+        let params = makeParams()
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.name, "Test Customer")
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.email, "customer@example.com")
+        XCTAssertNil(params.paymentMethodParams.billingDetails?.address)
+
+        let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
+        let expectation = expectation(description: "completion")
+        collector.collectBankAccountForPayment(
+            clientSecret: clientSecret,
+            params: params,
+            from: UIViewController()
+        ) { _, error in
+            XCTAssertNil(error)
             expectation.fulfill()
         }
 
@@ -386,16 +475,42 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
 
     // MARK: - Helpers
 
-    private func makeParams() -> STPCollectBankAccountParams {
-        return STPCollectBankAccountParams.collectUSBankAccountParams(with: "Jane Doe", email: "jane@example.com")
+    private func makeAddress() -> STPPaymentMethodAddress {
+        let address = STPPaymentMethodAddress()
+        address.line1 = "123 Main Street"
+        address.line2 = "Unit 4"
+        address.city = "Test City"
+        address.state = "TS"
+        address.postalCode = "12345"
+        address.country = "US"
+        return address
     }
 
-    private func stubCreateLinkAccountSession(paymentIntentID: String, linkAccountSessionID: String = "las_123") {
+    private func makeParams(address: STPPaymentMethodAddress? = nil) -> STPCollectBankAccountParams {
+        if let address {
+            return STPCollectBankAccountParams.collectUSBankAccountParams(
+                with: "Test Customer",
+                email: "customer@example.com",
+                address: address
+            )
+        }
+        return STPCollectBankAccountParams.collectUSBankAccountParams(
+            with: "Test Customer",
+            email: "customer@example.com"
+        )
+    }
+
+    private func stubCreateLinkAccountSession(
+        paymentIntentID: String,
+        linkAccountSessionID: String = "las_123",
+        expectedAddress: STPPaymentMethodAddress? = nil
+    ) {
         stub(condition:
                 isHost("api.stripe.com") &&
                 isPath("/v1/payment_intents/\(paymentIntentID)/link_account_sessions") &&
                 isMethodPOST()
-        ) { _ in
+        ) { request in
+            self.assertLinkAccountSessionRequest(request, expectedAddress: expectedAddress)
             let response: [String: Any] = [
                 "id": linkAccountSessionID,
                 "livemode": false,
@@ -421,18 +536,63 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         }
     }
 
-    private func stubCreateLinkAccountSessionForSetupIntent(setupIntentID: String, linkAccountSessionID: String = "las_123") {
+    private func stubCreateLinkAccountSessionForSetupIntent(
+        setupIntentID: String,
+        linkAccountSessionID: String = "las_123",
+        expectedAddress: STPPaymentMethodAddress? = nil
+    ) {
         stub(condition:
                 isHost("api.stripe.com") &&
                 isPath("/v1/setup_intents/\(setupIntentID)/link_account_sessions") &&
                 isMethodPOST()
-        ) { _ in
+        ) { request in
+            self.assertLinkAccountSessionRequest(request, expectedAddress: expectedAddress)
             let response: [String: Any] = [
                 "id": linkAccountSessionID,
                 "livemode": false,
                 "client_secret": "\(linkAccountSessionID)_secret_456",
             ]
             return HTTPStubsResponse(jsonObject: response, statusCode: 200, headers: nil)
+        }
+    }
+
+    private func assertLinkAccountSessionRequest(
+        _ request: URLRequest,
+        expectedAddress: STPPaymentMethodAddress?
+    ) {
+        guard let queryItems = request.queryItems else {
+            XCTFail("Expected request parameters")
+            return
+        }
+
+        XCTAssertTrue(queryItems.contains(URLQueryItem(
+            name: "payment_method_data[billing_details][name]",
+            value: "Test Customer"
+        )))
+        XCTAssertTrue(queryItems.contains(URLQueryItem(
+            name: "payment_method_data[billing_details][email]",
+            value: "customer@example.com"
+        )))
+
+        let addressKey = "payment_method_data[billing_details][address]"
+        guard let expectedAddress else {
+            XCTAssertFalse(queryItems.contains { $0.name.hasPrefix(addressKey) })
+            return
+        }
+
+        let expectedAddressFields: [(String, String?)] = [
+            ("line1", expectedAddress.line1),
+            ("line2", expectedAddress.line2),
+            ("city", expectedAddress.city),
+            ("state", expectedAddress.state),
+            ("postal_code", expectedAddress.postalCode),
+            ("country", expectedAddress.country),
+        ]
+        for (field, value) in expectedAddressFields {
+            XCTAssertTrue(queryItems.contains(URLQueryItem(
+                name: "\(addressKey)[\(field)]",
+                value: value
+            )))
         }
     }
 

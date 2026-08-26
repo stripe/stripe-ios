@@ -319,6 +319,7 @@ public class STPBankAccountCollector: NSObject {
             paymentMethodType: params.paymentMethodParams.type,
             customerName: params.paymentMethodParams.billingDetails?.name,
             customerEmailAddress: params.paymentMethodParams.billingDetails?.email,
+            customerAddress: params.paymentMethodParams.billingDetails?.address,
             linkMode: elementsSessionContext?.linkMode,
             additionalParameters: additionalParameters,
             completion: linkAccountSessionCallback
@@ -612,6 +613,7 @@ public class STPBankAccountCollector: NSObject {
             paymentMethodType: params.paymentMethodParams.type,
             customerName: params.paymentMethodParams.billingDetails?.name,
             customerEmailAddress: params.paymentMethodParams.billingDetails?.email,
+            customerAddress: params.paymentMethodParams.billingDetails?.address,
             linkMode: elementsSessionContext?.linkMode,
             additionalParameters: additionalParameters,
             completion: linkAccountSessionCallback

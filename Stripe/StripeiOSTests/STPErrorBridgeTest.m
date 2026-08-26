@@ -17,6 +17,22 @@
 
 @implementation STPErrorBridgeTest
 
+- (void)testCollectUSBankAccountParamsAddressSelector {
+    STPPaymentMethodAddress *address = [[STPPaymentMethodAddress alloc] init];
+    address.line1 = @"123 Main Street";
+    address.city = @"Test City";
+    address.state = @"TS";
+    address.postalCode = @"12345";
+    address.country = @"US";
+
+    STPCollectBankAccountParams *params = [STPCollectBankAccountParams
+                                           collectUSBankAccountParamsWithName:@"Test Customer"
+                                           email:@"customer@example.com"
+                                           address:address];
+
+    XCTAssertNotNil(params);
+}
+
 - (void)testSTPErrorBridge {
     // Grab a constant from each class, just to make sure we didn't forget to include the bridge:
     XCTAssertEqual(STPInvalidRequestError, 50);
