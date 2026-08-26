@@ -700,14 +700,13 @@ final class CheckoutUnitTests: XCTestCase {
                       unitAmount: "$10.00"
                       unitAmountDecimal: "$10.00"
                       adjustableQuantity: nil
+                      subtotal: "$10.00"
+                      taxExclusive: "$0.00"
+                      taxInclusive: "$0.00"
+                      taxAmountCount: nil
+                      total: "$10.00"
                     }
                   ]
-                  subtotal: "$10.00"
-                  discount: "$0.00"
-                  taxExclusive: "$0.00"
-                  taxInclusive: "$0.00"
-                  taxAmountCount: nil
-                  total: "$10.00"
                 }
               ]
               taxStatus: nil
