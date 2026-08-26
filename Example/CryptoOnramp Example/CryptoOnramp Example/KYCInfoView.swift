@@ -25,8 +25,7 @@ struct KYCInfoView: View {
         /// Original behavior where all fields are shown and date of birth + id number are required.
         case original
 
-        /// Level 0 collection where name/address fields are required and date of birth + id number are optional,
-        /// unless the selected KYC residence requires level 1 information during initial collection.
+        /// Level 0 collection where name/address fields are required and date of birth + id number are optional.
         case kycLevel0
 
         /// Level 1 step-up collection where required level 0 fields are already collected,
@@ -55,13 +54,13 @@ struct KYCInfoView: View {
     /// The coordinator to use to submit KYC information.
     let coordinator: CryptoOnrampCoordinator
 
-    /// Closure called when KYC submission succeeds with the collected level and whether the user selected EU residence.
-    let onCompleted: (_ collectedKYCLevel: KYCLevel, _ isEUCustomer: Bool) -> Void
+    /// Closure called when KYC submission succeeds with the collected level and selected residence.
+    let onCompleted: (_ collectedKYCLevel: KYCLevel, _ residence: KYCResidence) -> Void
 
     /// Controls which variant of KYC data collection this form performs.
     let collectionMode: CollectionMode
 
-    @State private var residence: KYCResidence = .unitedStates
+    @State private var residence: KYCResidence
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var idNumber: String = ""
@@ -70,7 +69,7 @@ struct KYCInfoView: View {
     @State private var city: String = ""
     @State private var state: String = ""
     @State private var postalCode: String = ""
-    @State private var country: String = "US"
+    @State private var country: String
     @State private var birthCountry: String = ""
     @State private var birthCity: String = ""
     @State private var nationalities: String = ""
@@ -90,11 +89,14 @@ struct KYCInfoView: View {
     init(
         coordinator: CryptoOnrampCoordinator,
         collectionMode: CollectionMode = .original,
-        onCompleted: @escaping (_ collectedKYCLevel: KYCLevel, _ isEUCustomer: Bool) -> Void
+        initialResidence: KYCResidence = .unitedStates,
+        onCompleted: @escaping (_ collectedKYCLevel: KYCLevel, _ residence: KYCResidence) -> Void
     ) {
         self.coordinator = coordinator
         self.onCompleted = onCompleted
         self.collectionMode = collectionMode
+        _residence = State(initialValue: initialResidence)
+        _country = State(initialValue: initialResidence.countryCode ?? "")
         _dateOfBirth = State(initialValue: collectionMode.requiresDateOfBirthAndIdNumber ? Self.today : nil)
     }
 
@@ -125,7 +127,7 @@ struct KYCInfoView: View {
     }
 
     private var requiresDateOfBirth: Bool {
-        collectionMode.requiresDateOfBirthAndIdNumber || residence.requiresLevel1DuringInitialCollection
+        collectionMode.requiresDateOfBirthAndIdNumber
     }
 
     private var requiresIdNumber: Bool {
@@ -155,6 +157,15 @@ struct KYCInfoView: View {
         case .kycLevel0:
             let hasRequiredIdNumber = residence.nationalIDConfiguration == nil || !idNumber.isEmpty
             return (dateOfBirth != nil && hasRequiredIdNumber) ? .level1 : .level0
+        }
+    }
+
+    private var availableResidences: [KYCResidence] {
+        switch collectionMode {
+        case .original:
+            return KYCResidence.allCases
+        case .kycLevel0, .kycLevel1StepUp:
+            return KYCResidence.allCases.filter(\.supportsLevel0KYC)
         }
     }
 
@@ -189,7 +200,7 @@ struct KYCInfoView: View {
 
                 FormField("Residence") {
                     Picker(selection: $residence) {
-                        ForEach(KYCResidence.allCases) { residence in
+                        ForEach(availableResidences) { residence in
                             Text(residence.displayName)
                                 .tag(residence)
                         }
@@ -425,7 +436,7 @@ struct KYCInfoView: View {
                 try await coordinator.attachKYCInfo(info: kycInfo)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    onCompleted(collectedKYCLevel, residence.followsEUFlow)
+                    onCompleted(collectedKYCLevel, residence)
                 }
             } catch {
                 await MainActor.run {

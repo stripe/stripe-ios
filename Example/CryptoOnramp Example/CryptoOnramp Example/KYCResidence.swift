@@ -13,8 +13,9 @@ import StripeCryptoOnramp
 /// Represents the residence modes selectable in `KYCInfoView`.
 ///
 /// `KYCInfoView` uses the selected residence to configure national ID collection, prefill the editable address country,
-/// determine whether initial collection must include level 1 fields, and preserve the existing EU-specific flow.
-enum KYCResidence: CaseIterable, Hashable, Identifiable {
+/// determine the local source currency, and preserve the existing EU-specific flow. Raw values match the values returned
+/// by `v1/customer_info` in `kyc_region`.
+enum KYCResidence: String, CaseIterable, Hashable, Identifiable {
 
     /// Describes a national ID field associated with a KYC residence in the example app.
     struct NationalIDConfiguration {
@@ -30,19 +31,19 @@ enum KYCResidence: CaseIterable, Hashable, Identifiable {
     }
 
     /// United States KYC behavior, including Social Security Number collection.
-    case unitedStates
+    case unitedStates = "US"
 
     /// European Union KYC behavior, including EU-specific personal information and subsequent compliance collection.
-    case europeanUnion
+    case europeanUnion = "EU"
 
     /// Canada KYC behavior, including Social Insurance Number collection.
-    case canada
+    case canada = "CA"
 
     /// Colombia KYC behavior, including Número de Identificación Tributaria collection.
-    case colombia
+    case colombia = "CO"
 
     /// Philippines KYC behavior, including Taxpayer Identification Number collection.
-    case philippines
+    case philippines = "PH"
 
     /// The name displayed in the residence picker.
     var displayName: String {
@@ -108,27 +109,40 @@ enum KYCResidence: CaseIterable, Hashable, Identifiable {
         }
     }
 
-    /// Whether initial KYC collection must include the date of birth and national ID number for this residence.
-    var requiresLevel1DuringInitialCollection: Bool {
-        // TODO: Confirm whether these identifiers should remain required during L0 KYC collection.
+    /// Whether the example app supports level 0 KYC collection and subsequent step-up for this residence.
+    var supportsLevel0KYC: Bool {
         switch self {
-        case .canada, .colombia, .philippines:
+        case .unitedStates:
             return true
-        case .unitedStates, .europeanUnion:
+        case .europeanUnion, .canada, .colombia, .philippines:
             return false
         }
     }
 
     /// Whether the address state or equivalent administrative area is required for this residence.
     var requiresState: Bool {
-        // TODO: Confirm whether an address state, province, or department is required for CA, CO, or PH.
         self == .unitedStates
     }
 
     /// Whether this residence follows the existing EU compliance and downstream flow.
     var followsEUFlow: Bool {
-        // TODO: Revisit this classification if CA, CO, or PH receive dedicated kycRegion or source_currency behavior.
         self == .europeanUnion
+    }
+
+    /// The default local source currency code for this residence.
+    var localCurrencyCode: String {
+        switch self {
+        case .unitedStates:
+            return "usd"
+        case .europeanUnion:
+            return "eur"
+        case .canada:
+            return "cad"
+        case .colombia:
+            return "cop"
+        case .philippines:
+            return "php"
+        }
     }
 
     // MARK: - Identifiable

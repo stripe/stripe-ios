@@ -102,7 +102,15 @@ extension CustomerInformationResponse {
     }
 
     var isEUCustomer: Bool {
-        kycRegion?.uppercased() == "EU"
+        kycResidence == .europeanUnion
+    }
+
+    var kycResidence: KYCResidence? {
+        guard let kycRegion else {
+            return nil
+        }
+
+        return KYCResidence(rawValue: kycRegion.uppercased())
     }
 
     var hasSubmittedIdentifiers: Bool {
@@ -129,12 +137,8 @@ extension CustomerInformationResponse {
             return .level2
         }
 
-        let hasLevel1Fields = providedFieldSet.isSuperset(of: Self.level1AdditionalFields)
         var level0RequiredFields = Self.level0RequiredFields
-
-        // CA, CO, and PH omit address state but always collect level 1 fields during initial KYC.
-        // TODO: Use the profile country directly if customer_info exposes it in the future.
-        if hasLevel1Fields {
+        if kycResidence?.requiresState == false {
             level0RequiredFields.remove("address_state")
         }
 
@@ -142,7 +146,7 @@ extension CustomerInformationResponse {
             return .none
         }
 
-        guard hasLevel1Fields else {
+        guard providedFieldSet.isSuperset(of: Self.level1AdditionalFields) else {
             return .level0
         }
 
