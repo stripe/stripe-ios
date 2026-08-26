@@ -46,6 +46,8 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             if let billingDetails = configuration.defaults.billingDetails {
                 paymentElementConfiguration.defaultBillingDetails.set(billingDetails)
             }
+            paymentElementConfiguration.defaultBillingDetails.email = configuration.defaults.email
+            paymentElementConfiguration.defaultBillingDetails.phone = configuration.defaults.phone
             switch configuration.expressCheckoutElement.linkConfiguration.display {
             case .automatic:
                 paymentElementConfiguration.link.display = .automatic
@@ -53,7 +55,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 paymentElementConfiguration.link.display = .never
             }
             let analyticsHelper = PaymentSheetAnalyticsHelper(
-                integrationShape: .complete,
+                integrationShape: .complete, // Wallet Link analytics don't log integrationShape, so it's not worth adding an .expressCheckout case.
                 configuration: paymentElementConfiguration
             )
             let authenticationContext = AuthenticationContext(

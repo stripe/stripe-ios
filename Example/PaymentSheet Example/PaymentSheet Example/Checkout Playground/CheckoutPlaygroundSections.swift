@@ -178,6 +178,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var checkoutSessionPaymentMethodSave: Bool
     @Binding var checkoutSessionPaymentMethodRemove: Bool
     @Binding var automaticPaymentMethods: Bool
+    @Binding var linkMode: CheckoutPlayground.LinkMode
 
     private var shouldShowAutomaticTax: Bool {
         return customerType != .new
@@ -216,6 +217,13 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     title: "Automatic Payment Methods",
                     isOn: $automaticPaymentMethods,
                     tooltip: "Sends `automatic_payment_methods: true` instead of an explicit `payment_method_types` array. Stripe selects the best payment methods for the session."
+                )
+                CheckoutPlayground.PickerRow(
+                    title: "Link Mode",
+                    icon: "link",
+                    selection: $linkMode,
+                    tooltip: "Forces Link to use its native or web flow.",
+                    displayText: { $0.displayName }
                 )
                 if shouldShowAutomaticTax {
                     CheckoutPlayground.ToggleRow(
@@ -272,7 +280,6 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.linkConfiguration.display`.",
                         displayText: { $0.rawValue.capitalized }
                     )
-
                     Button(action: onCustomizeBillingDetailsCollection) {
                         HStack {
                             Image(systemName: "person.text.rectangle.fill")

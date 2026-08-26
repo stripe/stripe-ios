@@ -105,6 +105,9 @@ extension PaymentSheet {
 
 /// Check if native Link is available on this device
 func deviceCanUseNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+    if let nativeLinkEnabledOverride = PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride {
+        return nativeLinkEnabledOverride
+    }
     return deviceCanUseNativeLink(
         useAttestationEndpoints: elementsSession.linkSettings?.useAttestationEndpoints,
         apiClient: configuration.apiClient
@@ -119,6 +122,9 @@ extension PaymentSheet {
 
         /// Decides whether Link inline verification is shown in the `WalletButtonsView`.
         @_spi(STP) public static var enableLinkInlineVerification: Bool = false
+
+        /// Overrides whether native Link is available. Intended for test playgrounds only.
+        @_spi(STP) public static var nativeLinkEnabledOverride: Bool?
     }
 }
 

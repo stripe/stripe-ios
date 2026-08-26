@@ -39,6 +39,11 @@ extension CheckoutPlayground {
                 }
             }
         }
+        @Published var linkMode: LinkMode {
+            didSet {
+                PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = linkMode == .native
+            }
+        }
         @Published var currency: Currency
         @Published var customerType: CustomerType
         @Published var lineItems: [LineItemConfig]
@@ -69,6 +74,7 @@ extension CheckoutPlayground {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
             expressCheckoutElement = ExpressCheckoutElementSettings(option: settings.expressCheckoutElementOption)
+            linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
             lineItems = settings.lineItems
@@ -86,6 +92,7 @@ extension CheckoutPlayground {
             checkoutEndpointOption = settings.checkoutEndpointOption
             checkoutEndpoint = settings.checkoutEndpoint
             delayPaymentPagesRequests = settings.delayPaymentPagesRequests
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = linkMode == .native
 
             settingsSaveSubscription = objectWillChange.sink { [weak self] _ in
                 guard let self else {
@@ -192,6 +199,7 @@ extension CheckoutPlayground {
                 uiFramework: uiFramework,
                 integrationType: integrationType,
                 expressCheckoutElementOption: expressCheckoutElement.option,
+                linkMode: linkMode,
                 currency: currency,
                 customerType: customerType,
                 lineItems: lineItems,
@@ -216,6 +224,7 @@ extension CheckoutPlayground {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
             expressCheckoutElement.option = settings.expressCheckoutElementOption
+            linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
             lineItems = settings.lineItems

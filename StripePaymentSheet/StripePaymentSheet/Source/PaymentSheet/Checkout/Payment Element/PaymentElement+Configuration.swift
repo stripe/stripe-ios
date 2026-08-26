@@ -296,7 +296,7 @@ private extension PaymentElement.Configuration {
     }
 }
 
-private extension PaymentSheet.BillingDetails {
+extension PaymentSheet.BillingDetails {
     mutating func set(_ billingDetails: CheckoutController.Configuration.Defaults.BillingDetails) {
         name = billingDetails.name
         if let billingAddress = billingDetails.address {
