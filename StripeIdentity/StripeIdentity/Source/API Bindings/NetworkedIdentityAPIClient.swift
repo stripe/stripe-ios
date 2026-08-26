@@ -58,27 +58,23 @@ final class NetworkedIdentityAPIClientImpl: NetworkedIdentityAPIClient {
     }
 
     private static let requestSurfaceParameter = "request_surface"
+    private static let requestSurface = "web_identity_product"
     private static let signUpConsentAction = "entered_phone_number_email_clicked_save_with_link_identity"
     private static let identityClientVersionHeader = "X-Stripe-Identity-Client-Version"
 
-    // #TODO - Networked Identity: Confirm whether native clients preserve or replace X-Requested-With: fetch.
     private static let requestedWithHeader = "X-Requested-With"
     private static let documentListRetryDelay: TimeInterval = 0.25
-
-    // #TODO - Networked Identity: Confirm whether "max 2 attempts" means two total attempts or two retries.
     private static let maximumDocumentListAttempts = 2
 
     private let apiClient: STPAPIClient
     private let merchantPublishableKey: String
     private let clientVersion: String
-    private let requestSurface: String
     private let retryScheduler: RetryScheduler
 
     init(
         apiClient: STPAPIClient,
         merchantPublishableKey: String,
         clientVersion: String,
-        requestSurface: String,
         retryScheduler: @escaping RetryScheduler = { delay, action in
             DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + delay) {
                 action()
@@ -88,7 +84,6 @@ final class NetworkedIdentityAPIClientImpl: NetworkedIdentityAPIClient {
         self.apiClient = apiClient
         self.merchantPublishableKey = merchantPublishableKey
         self.clientVersion = clientVersion
-        self.requestSurface = requestSurface
         self.retryScheduler = retryScheduler
     }
 
@@ -98,7 +93,7 @@ final class NetworkedIdentityAPIClientImpl: NetworkedIdentityAPIClient {
     ) -> Promise<NetworkedIdentityLookupResponse> {
         var parameters: [String: Any] = [
             "email_address": emailAddress,
-            Self.requestSurfaceParameter: requestSurface,
+            Self.requestSurfaceParameter: Self.requestSurface,
         ]
         addCookies(verificationSessionClientSecrets, to: &parameters)
 
@@ -119,7 +114,7 @@ final class NetworkedIdentityAPIClientImpl: NetworkedIdentityAPIClient {
             "country_inferring_method": request.countryInferringMethod.rawValue,
             "locale": request.locale,
             "consent_action": Self.signUpConsentAction,
-            Self.requestSurfaceParameter: requestSurface,
+            Self.requestSurfaceParameter: Self.requestSurface,
         ]
         parameters["default_opt_in_enabled"] = request.defaultOptInEnabled
         parameters["changed_phone_number"] = request.changedPhoneNumber
@@ -244,7 +239,7 @@ final class NetworkedIdentityAPIClientImpl: NetworkedIdentityAPIClient {
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret,
             ],
-            Self.requestSurfaceParameter: requestSurface,
+            Self.requestSurfaceParameter: Self.requestSurface,
         ]
     }
 

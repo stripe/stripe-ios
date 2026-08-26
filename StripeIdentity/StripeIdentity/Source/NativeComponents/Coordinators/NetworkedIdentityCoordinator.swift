@@ -32,6 +32,8 @@ final class NetworkedIdentityCoordinator {
     private let credentialStore: NetworkedIdentityCredentialStore
     private let currentTime: () -> TimeInterval
     private var emailAddress: String?
+    private var activeSMSVerificationSessionID: String?
+    private var knownSMSVerificationSessionIDs: Set<String> = []
 
     weak var delegate: NetworkedIdentityCoordinatorDelegate?
 
@@ -107,9 +109,13 @@ final class NetworkedIdentityCoordinator {
                 self.credentialStore.updateConsumerSessionClientSecret(
                     response.consumerSession.clientSecret
                 )
-                if response.consumerSession.verificationSessions.contains(where: {
-                    $0.type == .sms && $0.state == .verified
-                }) {
+                if let activeSMSVerificationSessionID = self.activeSMSVerificationSessionID,
+                   response.consumerSession.verificationSessions.contains(where: {
+                       $0.id == activeSMSVerificationSessionID
+                           && $0.type == .sms
+                           && $0.state == .verified
+                   }) {
+                    self.activeSMSVerificationSessionID = nil
                     self.loadIdentityDocuments()
                 } else {
                     self.fallBackToFullCapture(reason: .unavailable)
@@ -129,7 +135,7 @@ final class NetworkedIdentityCoordinator {
         self.selectedDocument = selectedDocument
         transition(to: .selectedDocument)
 
-        // #TODO - Networked Identity: Present recipient-specific reuse consent and define the clone contract before requesting an association token or completing the flow.
+        // #TODO - Networked Identity: Plumb recipient and requested-attribute metadata, present the documented explicit reuse consent, and define cloneConsumerIdentityDocument before requesting an association token or completing the flow.
     }
 
     func cancel() {
@@ -147,6 +153,8 @@ final class NetworkedIdentityCoordinator {
 
         credentialStore.clear()
         emailAddress = nil
+        activeSMSVerificationSessionID = nil
+        knownSMSVerificationSessionIDs = []
         lastOTPError = nil
         fallbackReason = nil
         availableDocuments = []
@@ -197,6 +205,9 @@ private extension NetworkedIdentityCoordinator {
                     publishableKey: response.publishableKey,
                     sessionClientSecret: response.consumerSession.clientSecret
                 )
+                self.knownSMSVerificationSessionIDs = self.smsVerificationSessionIDs(
+                    in: response.consumerSession
+                )
                 // Networked Identity always requires a fresh SMS verification, even if the
                 // returned consumer session contains an older VERIFIED entry.
                 self.beginFreshSMSVerification()
@@ -209,6 +220,8 @@ private extension NetworkedIdentityCoordinator {
     }
 
     func beginFreshSMSVerification() {
+        activeSMSVerificationSessionID = nil
+        let knownSMSVerificationSessionIDs = knownSMSVerificationSessionIDs
         guard let request = credentialStore.readConsumerCredentials({ credentials, verificationSessionClientSecrets in
             return (
                 NetworkedIdentityStartVerificationRequest(
@@ -248,6 +261,24 @@ private extension NetworkedIdentityCoordinator {
                 self.credentialStore.updateConsumerSessionClientSecret(
                     response.consumerSession.clientSecret
                 )
+                let startedSMSSessions = response.consumerSession.verificationSessions.filter {
+                    guard $0.type == .sms,
+                          $0.state == .started,
+                          let id = $0.id else {
+                        return false
+                    }
+                    return !knownSMSVerificationSessionIDs.contains(id)
+                }
+                self.knownSMSVerificationSessionIDs.formUnion(
+                    self.smsVerificationSessionIDs(in: response.consumerSession)
+                )
+                guard startedSMSSessions.count == 1,
+                      let verificationSessionID = startedSMSSessions[0].id,
+                      !verificationSessionID.isEmpty else {
+                    self.fallBackToFullCapture(reason: .unavailable)
+                    return
+                }
+                self.activeSMSVerificationSessionID = verificationSessionID
                 self.lastOTPError = nil
                 self.transition(to: .awaitingOTP)
             case .failure(let error):
@@ -316,8 +347,18 @@ private extension NetworkedIdentityCoordinator {
     }
 
     func fallBackToFullCapture(reason: NetworkedIdentityFallbackReason) {
+        let logout = credentialStore.readConsumerCredentials { credentials, verificationSessionClientSecrets in
+            apiClient.logOut(
+                consumerSessionClientSecret: credentials.sessionClientSecret,
+                verificationSessionClientSecrets: verificationSessionClientSecrets,
+                consumerPublishableKey: credentials.publishableKey
+            )
+        }
+
         credentialStore.clear()
         emailAddress = nil
+        activeSMSVerificationSessionID = nil
+        knownSMSVerificationSessionIDs = []
         fallbackReason = reason
         availableDocuments = []
         selectedDocument = nil
@@ -327,14 +368,19 @@ private extension NetworkedIdentityCoordinator {
         }
         delegate?.networkedIdentityCoordinatorDidRequestFullCaptureFallback(self)
 
+        // Logout is best effort. Local credentials have already been cleared.
+        logout?.observe { _ in }
+
         // #TODO - Networked Identity: Offering save-to-Link after manual capture is blocked on the missing write-back API contract.
-        // #TODO - Networked Identity: Define session extension/rotation before retaining an authenticated Link session through manual capture for Save ID.
+        // #TODO - Networked Identity: Define session extension/rotation before retaining, rather than logging out, an authenticated Link session through manual capture for Save ID.
     }
 
     func requireReauthentication() {
         lastOTPError = .sessionExpired
         fallbackReason = nil
         emailAddress = nil
+        activeSMSVerificationSessionID = nil
+        knownSMSVerificationSessionIDs = []
         credentialStore.clearConsumerCredentials()
         transition(to: .reauthenticationRequired)
     }
@@ -342,6 +388,19 @@ private extension NetworkedIdentityCoordinator {
     func transition(to state: NetworkedIdentityState) {
         self.state = state
         delegate?.networkedIdentityCoordinator(self, didTransitionTo: state)
+    }
+
+    func smsVerificationSessionIDs(
+        in consumerSession: NetworkedIdentityConsumerSession
+    ) -> Set<String> {
+        Set(
+            consumerSession.verificationSessions.compactMap { verificationSession in
+                guard verificationSession.type == .sms else {
+                    return nil
+                }
+                return verificationSession.id
+            }
+        )
     }
 
     func logOutIfCancelled(

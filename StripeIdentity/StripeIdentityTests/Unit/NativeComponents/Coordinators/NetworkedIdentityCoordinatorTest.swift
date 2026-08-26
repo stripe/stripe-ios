@@ -111,7 +111,7 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         XCTAssertEqual(apiClient.confirmVerification.requestHistory.count, 2)
     }
 
-    func testExpiredOTPRequestsOneFreshCode() {
+    func testExpiredOTPRequestsFreshSessionAndRejectsOldVerification() {
         // Given the coordinator is awaiting a fresh SMS code
         beginExistingConsumerFlow()
 
@@ -128,10 +128,34 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         XCTAssertEqual(apiClient.startVerification.requestHistory.count, 2)
         waitForTransition(to: .awaitingOTP) {
             apiClient.startVerification.respondToNext(
-                with: .success(consumerSessionResponse(clientSecret: "cs_refreshed_otp"))
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_refreshed_otp",
+                        verificationSessionID: "cvs_refreshed"
+                    )
+                )
             )
         }
         XCTAssertNil(coordinator.lastOTPError)
+
+        // When an old session is verified but the replacement session is not
+        coordinator.submitOTP("222222")
+        waitForTransition(to: .fullCaptureFallback) {
+            apiClient.confirmVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_confirmed_old_session",
+                        verificationSessions: [
+                            verificationSession(id: "cvs_fresh", state: .verified),
+                            verificationSession(id: "cvs_refreshed", state: .started),
+                        ]
+                    )
+                )
+            )
+        }
+
+        // Then the old verification cannot authenticate the replacement OTP request
+        XCTAssertEqual(apiClient.documentList.requestHistory.count, 0)
     }
 
     func testSessionExpiredRequiresExplicitReauthentication() {
@@ -201,6 +225,10 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         XCTAssertTrue(credentialStore.isEmpty)
         XCTAssertEqual(coordinator.fallbackReason, .noReusableDocuments)
         XCTAssertEqual(delegate.fullCaptureFallbackCount, 1)
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.first?.consumerSessionClientSecret,
+            "cs_confirmed"
+        )
     }
 
     func testUnverifiedOTPResponseFallsBackWithoutListingDocuments() {
@@ -218,6 +246,113 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         // Then document metadata is not requested without verified authentication
         XCTAssertEqual(coordinator.fallbackReason, .unavailable)
         XCTAssertEqual(apiClient.documentList.requestHistory.count, 0)
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.first?.consumerSessionClientSecret,
+            "cs_unverified"
+        )
+    }
+
+    func testHistoricalVerifiedSMSSessionDoesNotAuthenticateFreshSession() {
+        // Given the coordinator is awaiting the fresh SMS session returned by start verification
+        beginExistingConsumerFlow()
+        coordinator.submitOTP("123456")
+
+        // When confirmation returns an old verified SMS session but not the fresh one
+        waitForTransition(to: .fullCaptureFallback) {
+            apiClient.confirmVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_historical_verification",
+                        verificationSessions: [
+                            verificationSession(id: "cvs_old", state: .verified),
+                            verificationSession(id: "cvs_fresh", state: .started),
+                        ]
+                    )
+                )
+            )
+        }
+
+        // Then document metadata is not requested without proof of fresh authentication
+        XCTAssertEqual(coordinator.fallbackReason, .unavailable)
+        XCTAssertEqual(apiClient.documentList.requestHistory.count, 0)
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.first?.consumerSessionClientSecret,
+            "cs_historical_verification"
+        )
+    }
+
+    func testStartVerificationWithoutSessionIDFallsBack() {
+        // Given lookup found an existing consumer
+        beginExistingConsumerLookup()
+
+        // When start verification does not identify the fresh SMS session
+        waitForTransition(to: .fullCaptureFallback) {
+            apiClient.startVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_missing_session_id",
+                        verificationSessionID: nil
+                    )
+                )
+            )
+        }
+
+        // Then the coordinator fails closed instead of accepting an older verification
+        XCTAssertEqual(coordinator.fallbackReason, .unavailable)
+        XCTAssertEqual(apiClient.confirmVerification.requestHistory.count, 0)
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.first?.consumerSessionClientSecret,
+            "cs_missing_session_id"
+        )
+    }
+
+    func testStartVerificationDoesNotReuseHistoricalStartedSession() {
+        // Given lookup already returned a started SMS verification session
+        beginExistingConsumerLookup(verificationState: .started)
+
+        // When start verification echoes that same session instead of creating a fresh one
+        waitForTransition(to: .fullCaptureFallback) {
+            apiClient.startVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_reused_session",
+                        verificationSessionID: "cvs_old"
+                    )
+                )
+            )
+        }
+
+        // Then the historical session cannot be treated as fresh authentication
+        XCTAssertEqual(coordinator.fallbackReason, .unavailable)
+        XCTAssertEqual(apiClient.confirmVerification.requestHistory.count, 0)
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.first?.consumerSessionClientSecret,
+            "cs_reused_session"
+        )
+    }
+
+    func testStartVerificationWithAmbiguousSMSSessionsFallsBack() {
+        // Given lookup found an existing consumer
+        beginExistingConsumerLookup()
+
+        // When start verification returns more than one possible fresh SMS session
+        waitForTransition(to: .fullCaptureFallback) {
+            apiClient.startVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_ambiguous_sessions",
+                        verificationSessions: [
+                            verificationSession(id: "cvs_first", state: .started),
+                            verificationSession(id: "cvs_second", state: .started),
+                        ]
+                    )
+                )
+            )
+        }
+
+        // Then the coordinator cannot bind confirmation to the wrong session
+        XCTAssertEqual(coordinator.fallbackReason, .unavailable)
+        XCTAssertEqual(apiClient.confirmVerification.requestHistory.count, 0)
     }
 
     func testUnsupportedAndExpiredDocumentsFallBack() {
@@ -339,6 +474,82 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         )
     }
 
+    func testCancellationLogsOutSecretReturnedByPendingLookup() {
+        // Given consumer lookup is in flight when the user cancels
+        coordinator.start(emailAddress: "consumer@example.com")
+        let returnedSecretLoggedOut = expectation(
+            description: "Consumer session returned by lookup is logged out"
+        )
+        apiClient.logOut.callBackOnRequest {
+            returnedSecretLoggedOut.fulfill()
+        }
+
+        // When cancellation occurs before lookup returns a consumer session
+        coordinator.cancel()
+        apiClient.lookup.respondToNext(
+            with: .success(
+                .found(
+                    .init(
+                        consumerSession: consumerSession(
+                            clientSecret: "cs_lookup_after_cancel",
+                            verificationSessionID: "cvs_old",
+                            verificationState: .verified
+                        ),
+                        publishableKey: "pk_consumer_lookup",
+                        accountID: "acct_123",
+                        authSessionClientSecret: nil,
+                        emailOTPRequiresAdditionalInfo: nil,
+                        emailOTPVerifyPhoneDespiteSMSOTP: nil,
+                        experiments: []
+                    )
+                )
+            )
+        )
+        wait(for: [returnedSecretLoggedOut], timeout: 1)
+
+        // Then the stale response cannot reactivate the flow and its secret is logged out
+        XCTAssertEqual(coordinator.state, .cancelled)
+        XCTAssertEqual(apiClient.startVerification.requestHistory.count, 0)
+        XCTAssertEqual(apiClient.logOut.requestHistory.count, 1)
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.first?.consumerSessionClientSecret,
+            "cs_lookup_after_cancel"
+        )
+    }
+
+    func testCancellationLogsOutSecretReturnedByPendingStartVerification() {
+        // Given start verification is in flight when the user cancels
+        beginExistingConsumerLookup()
+        let rotatedSecretLoggedOut = expectation(
+            description: "Consumer session returned by start verification is logged out"
+        )
+        apiClient.logOut.callBackOnRequest {
+            if self.apiClient.logOut.requestHistory.count == 2 {
+                rotatedSecretLoggedOut.fulfill()
+            }
+        }
+
+        // When cancellation logs out the current secret and start verification returns a new one
+        coordinator.cancel()
+        apiClient.startVerification.respondToNext(
+            with: .success(
+                consumerSessionResponse(
+                    clientSecret: "cs_started_after_cancel",
+                    verificationSessionID: "cvs_fresh"
+                )
+            )
+        )
+        wait(for: [rotatedSecretLoggedOut], timeout: 1)
+
+        // Then the stale response cannot reactivate the flow and its secret is also logged out
+        XCTAssertEqual(coordinator.state, .cancelled)
+        XCTAssertEqual(apiClient.logOut.requestHistory.count, 2)
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.last?.consumerSessionClientSecret,
+            "cs_started_after_cancel"
+        )
+    }
+
     func testReentrantCancellationSuppressesFullCaptureRequest() {
         // Given the presentation delegate cancels as soon as fallback begins
         let cancelled = expectation(description: "Networked Identity is cancelled")
@@ -366,6 +577,23 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
 
 private extension NetworkedIdentityCoordinatorTest {
     func beginExistingConsumerFlow() {
+        beginExistingConsumerLookup()
+
+        waitForTransition(to: .awaitingOTP) {
+            apiClient.startVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_started",
+                        verificationSessionID: "cvs_fresh"
+                    )
+                )
+            )
+        }
+    }
+
+    func beginExistingConsumerLookup(
+        verificationState: NetworkedIdentityVerificationSessionState = .verified
+    ) {
         coordinator.start(emailAddress: "consumer@example.com")
         XCTAssertEqual(coordinator.state, .lookupPending)
         XCTAssertEqual(
@@ -383,7 +611,8 @@ private extension NetworkedIdentityCoordinatorTest {
                         .init(
                             consumerSession: consumerSession(
                                 clientSecret: "cs_lookup",
-                                verificationState: .verified
+                                verificationSessionID: "cvs_old",
+                                verificationState: verificationState
                             ),
                             publishableKey: "pk_consumer_lookup",
                             accountID: "acct_123",
@@ -409,12 +638,6 @@ private extension NetworkedIdentityCoordinatorTest {
                 consumerPublishableKey: "pk_consumer_lookup"
             )
         )
-
-        waitForTransition(to: .awaitingOTP) {
-            apiClient.startVerification.respondToNext(
-                with: .success(consumerSessionResponse(clientSecret: "cs_started"))
-            )
-        }
     }
 
     func waitForTransition(
@@ -441,7 +664,23 @@ private extension NetworkedIdentityCoordinatorTest {
 
     func consumerSession(
         clientSecret: String,
+        verificationSessionID: String? = "cvs_fresh",
         verificationState: NetworkedIdentityVerificationSessionState = .started
+    ) -> NetworkedIdentityConsumerSession {
+        consumerSession(
+            clientSecret: clientSecret,
+            verificationSessions: [
+                verificationSession(
+                    id: verificationSessionID,
+                    state: verificationState
+                ),
+            ]
+        )
+    }
+
+    func consumerSession(
+        clientSecret: String,
+        verificationSessions: [NetworkedIdentityVerificationSession]
     ) -> NetworkedIdentityConsumerSession {
         .init(
             clientSecret: clientSecret,
@@ -450,27 +689,48 @@ private extension NetworkedIdentityCoordinatorTest {
             redactedFormattedPhoneNumber: "+1 *** *** 0123",
             unredactedPhoneNumber: nil,
             phoneNumberCountry: "US",
-            verificationSessions: [
-                .init(
-                    id: "cvs_123",
-                    state: verificationState,
-                    type: .sms,
-                    verificationToken: nil
-                ),
-            ]
+            verificationSessions: verificationSessions
         )
     }
 
     func consumerSessionResponse(
         clientSecret: String,
+        verificationSessionID: String? = "cvs_fresh",
         verificationState: NetworkedIdentityVerificationSessionState = .started
     ) -> NetworkedIdentityConsumerSessionResponse {
         .init(
             consumerSession: consumerSession(
                 clientSecret: clientSecret,
+                verificationSessionID: verificationSessionID,
                 verificationState: verificationState
             ),
             authSessionClientSecret: nil
+        )
+    }
+
+    func consumerSessionResponse(
+        clientSecret: String,
+        verificationSessions: [NetworkedIdentityVerificationSession]
+    ) -> NetworkedIdentityConsumerSessionResponse {
+        .init(
+            consumerSession: consumerSession(
+                clientSecret: clientSecret,
+                verificationSessions: verificationSessions
+            ),
+            authSessionClientSecret: nil
+        )
+    }
+
+    func verificationSession(
+        id: String?,
+        state: NetworkedIdentityVerificationSessionState,
+        type: NetworkedIdentityVerificationSessionType = .sms
+    ) -> NetworkedIdentityVerificationSession {
+        .init(
+            id: id,
+            state: state,
+            type: type,
+            verificationToken: nil
         )
     }
 

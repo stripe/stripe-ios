@@ -14,7 +14,7 @@ final class NetworkedIdentityAPIClientTest: APIStubbedTestCase {
     private static let merchantPublishableKey = "pk_test_merchant"
     private static let consumerPublishableKey = "pk_test_consumer"
     private static let clientVersion = "identity-client-version"
-    private static let requestSurface = "injected_identity_surface"
+    private static let requestSurface = "web_identity_product"
     private static let consumerSessionClientSecret = "css_123"
 
     private static let consumerSessionJSON = """
@@ -465,7 +465,6 @@ final class NetworkedIdentityAPIClientTest: APIStubbedTestCase {
             apiClient: backingAPIClient,
             merchantPublishableKey: Self.merchantPublishableKey,
             clientVersion: Self.clientVersion,
-            requestSurface: Self.requestSurface,
             retryScheduler: retryScheduler
         )
     }
