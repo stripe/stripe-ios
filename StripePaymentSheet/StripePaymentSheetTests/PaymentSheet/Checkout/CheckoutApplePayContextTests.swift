@@ -255,8 +255,9 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
         // Then Apple Pay rejects the unserviceable address before authorization
         let error = receivedUpdate?.errors?.first as NSError?
-        XCTAssertEqual(error?.domain, PKPaymentErrorDomain)
-        XCTAssertEqual(error?.code, PKPaymentError.Code.shippingAddressUnserviceableError.rawValue)
+        let expectedError = CheckoutError.invalidShippingCountry(countryCode: "CA") as NSError
+        XCTAssertEqual(error?.domain, expectedError.domain)
+        XCTAssertEqual(error?.code, expectedError.code)
     }
 
     // MARK: - makePaymentRequest billing/shipping contact fields
@@ -617,7 +618,10 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([
             "shipping_address_collection": ["allowed_countries": allowedCountries],
         ]).makePublicSession()
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(apiClient: apiClient)
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: apiClient,
+            billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration()
+        )
         let controller = MockPKPaymentAuthorizationController()
         let context = CheckoutApplePayContext(
             checkoutSession: session,
