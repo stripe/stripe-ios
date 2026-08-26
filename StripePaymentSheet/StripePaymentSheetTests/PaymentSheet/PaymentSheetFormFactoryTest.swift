@@ -2523,6 +2523,88 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         return addressSpecProvider
     }
 
+    private func billingAddressElement(in element: Element) -> AddressSectionElement? {
+        if let addressElement = element as? PaymentMethodElementWrapper<AddressSectionElement> {
+            return addressElement.element
+        }
+        guard let containerElement = element as? ContainerElement else {
+            return nil
+        }
+        for childElement in containerElement.elements {
+            if let addressElement = billingAddressElement(in: childElement) {
+                return addressElement
+            }
+        }
+        return nil
+    }
+
+    private func makeUSBankAccountForm(
+        flagEnabled: Bool,
+        merchantOfRecordCountryCode: String?,
+        addressCollectionMode: PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode = .automatic,
+        allowedCountries: Set<String> = []
+    ) -> PaymentMethodElement {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = addressCollectionMode
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = allowedCountries
+        let elementsSession = STPElementsSession._testValue(
+            orderedPaymentMethodTypes: [.USBankAccount],
+            merchantOfRecordCountryCode: merchantOfRecordCountryCode,
+            flags: ["elements_us_bank_account_require_billing_address_for_non_us_merchant": flagEnabled]
+        )
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.USBankAccount]),
+            elementsSession: elementsSession,
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.USBankAccount)
+        )
+        return factory.makeUSBankAccount(merchantName: configuration.merchantDisplayName)
+    }
+
+    func testUSBankAccountForcesFullBillingAddressForNonUSMerchantOfRecord() {
+        let form = makeUSBankAccountForm(flagEnabled: true, merchantOfRecordCountryCode: "GB")
+
+        XCTAssertEqual(billingAddressElement(in: form)?.defaultFieldsToCollect, .all)
+    }
+
+    func testUSBankAccountDoesNotForceFullBillingAddressForUSMerchantOfRecord() {
+        let form = makeUSBankAccountForm(flagEnabled: true, merchantOfRecordCountryCode: "US")
+
+        XCTAssertNil(billingAddressElement(in: form))
+    }
+
+    func testUSBankAccountDoesNotForceFullBillingAddressWhenFlagIsDisabled() {
+        let form = makeUSBankAccountForm(flagEnabled: false, merchantOfRecordCountryCode: "GB")
+
+        XCTAssertNil(billingAddressElement(in: form))
+    }
+
+    func testUSBankAccountDoesNotForceFullBillingAddressWithoutMerchantOfRecordCountry() {
+        let form = makeUSBankAccountForm(flagEnabled: true, merchantOfRecordCountryCode: nil)
+
+        XCTAssertNil(billingAddressElement(in: form))
+    }
+
+    func testUSBankAccountForcedFullBillingAddressOverridesNever() {
+        let form = makeUSBankAccountForm(
+            flagEnabled: true,
+            merchantOfRecordCountryCode: "GB",
+            addressCollectionMode: .never
+        )
+
+        XCTAssertEqual(billingAddressElement(in: form)?.defaultFieldsToCollect, .all)
+    }
+
+    func testUSBankAccountForcedFullBillingAddressAppliesAllowedCountries() {
+        let form = makeUSBankAccountForm(
+            flagEnabled: true,
+            merchantOfRecordCountryCode: "GB",
+            allowedCountries: ["US", "CA"]
+        )
+
+        XCTAssertEqual(Set(billingAddressElement(in: form)?.countryCodes ?? []), ["US", "CA"])
+    }
+
     // MARK: - AllowedCountries Tests
 
     func testMakeBillingAddressSectionIfNecessary_withAllowedCountries_emptySet() {

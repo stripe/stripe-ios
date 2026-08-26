@@ -43,6 +43,7 @@ class PaymentSheetFormFactory {
     let allowsSetAsDefaultPM: Bool
     let allowsLinkDefaultOptIn: Bool
     let forceSaveFutureUseBehavior: Bool
+    let forceFullBillingAddressForUSBankAccount: Bool
     let signupOptInFeatureEnabled: Bool
     let signupOptInInitialValue: Bool
     let isFirstSavedPaymentMethod: Bool
@@ -134,6 +135,10 @@ class PaymentSheetFormFactory {
                 return .link
             }
         }()
+        let forceFullBillingAddressForUSBankAccount =
+            elementsSession.flags["elements_us_bank_account_require_billing_address_for_non_us_merchant"] == true
+            && elementsSession.merchantOfRecordCountryCode != nil
+            && elementsSession.merchantOfRecordCountryCode != "US"
         self.init(configuration: configuration,
                   paymentMethod: paymentMethod,
                   paymentMethodOrientation: paymentMethodOrientation,
@@ -152,6 +157,7 @@ class PaymentSheetFormFactory {
                   allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                   allowsLinkDefaultOptIn: elementsSession.allowsLinkDefaultOptIn,
                   forceSaveFutureUseBehavior: elementsSession.forceSaveFutureUseBehaviorAndNewMandateText,
+                  forceFullBillingAddressForUSBankAccount: forceFullBillingAddressForUSBankAccount,
                   signupOptInFeatureEnabled: elementsSession.linkSignupOptInFeatureEnabled,
                   signupOptInInitialValue: elementsSession.linkSignupOptInInitialValue,
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
@@ -185,6 +191,7 @@ class PaymentSheetFormFactory {
         allowsSetAsDefaultPM: Bool = false,
         allowsLinkDefaultOptIn: Bool = false,
         forceSaveFutureUseBehavior: Bool = false,
+        forceFullBillingAddressForUSBankAccount: Bool = false,
         signupOptInFeatureEnabled: Bool = false,
         signupOptInInitialValue: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
@@ -220,6 +227,7 @@ class PaymentSheetFormFactory {
         self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
         self.allowsLinkDefaultOptIn = allowsLinkDefaultOptIn
         self.forceSaveFutureUseBehavior = forceSaveFutureUseBehavior
+        self.forceFullBillingAddressForUSBankAccount = forceFullBillingAddressForUSBankAccount
         self.signupOptInFeatureEnabled = signupOptInFeatureEnabled
         self.signupOptInInitialValue = signupOptInInitialValue
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
@@ -734,8 +742,10 @@ extension PaymentSheetFormFactory {
             ? (configuration.savePaymentMethodOptInBehavior.isSelectedByDefault || isSettingUp) : isSettingUp
 
         let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
-        let addressElement = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
-            as? PaymentMethodElementWrapper<AddressSectionElement>
+        let addressElement = makeBillingAddressSectionIfNecessary(
+            requiredByPaymentMethod: false,
+            forceFull: forceFullBillingAddressForUSBankAccount
+        ) as? PaymentMethodElementWrapper<AddressSectionElement>
         connectBillingDetailsFields(
             addressElement: addressElement,
             phoneElement: phoneElement)
@@ -1024,9 +1034,13 @@ extension PaymentSheetFormFactory {
     }
 
     func makeBillingAddressSectionIfNecessary(
-        requiredByPaymentMethod: Bool
+        requiredByPaymentMethod: Bool,
+        forceFull: Bool = false
     ) -> Element? {
         let defaultFieldsToCollect: AddressSectionElement.FieldsToCollect? = {
+            if forceFull {
+                return .all
+            }
             switch (configuration.billingDetailsCollectionConfiguration.address, requiredByPaymentMethod) {
             case (.automatic, true):
                 return .all

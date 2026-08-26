@@ -56,6 +56,17 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.allResponseFields as NSDictionary, elementsSessionJson as NSDictionary)
     }
 
+    func testDecodedObjectFromAPIResponseMapping_merchantOfRecordCountry() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["merchant_country"] = "US"
+        elementsSessionJson["merchant_of_record_country"] = "GB"
+
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+
+        XCTAssertEqual(elementsSession.merchantCountryCode, "US")
+        XCTAssertEqual(elementsSession.merchantOfRecordCountryCode, "GB")
+    }
+
     func testDecodedObjectFromAPIResponseMapping_attestation() {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         elementsSessionJson["flags"] = ["elements_mobile_attest_on_intent_confirmation": true]
