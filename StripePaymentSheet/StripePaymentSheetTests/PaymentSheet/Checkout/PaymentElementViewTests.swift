@@ -16,9 +16,11 @@ final class PaymentElementViewTests: XCTestCase {
     func testSwiftUIViewUpdatesHeightWhenEmbeddedPaymentElementHeightChanges() async throws {
         // Given a PaymentElement SwiftUI view hosted in a window
         var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        configuration.paymentElement.displaysMandateText = true
+        var paymentElementConfiguration = PaymentElement.Configuration()
+        paymentElementConfiguration.displaysMandateText = true
+        configuration.paymentElement = paymentElementConfiguration
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(configuration: configuration))
-        let paymentElement = checkout.getPaymentElement()
+        let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
 
         let hostingController = UIHostingController(
             rootView: paymentElement.view.transaction { $0.animation = nil }

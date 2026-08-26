@@ -91,7 +91,7 @@ struct CheckoutCartPaymentButton: View {
 
     private func presentPaymentElement() {
         Task { @MainActor in
-            await checkout.getPaymentElement().present()
+            await checkout.getPaymentElement()?.present()
         }
     }
 }
