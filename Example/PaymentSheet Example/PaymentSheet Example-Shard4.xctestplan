@@ -31,36 +31,27 @@
     {
       "parallelizable" : true,
       "skippedTests" : [
-        "EmbeddedUITests",
-        "EmbeddedUITests\/testUpdate()",
+        "CustomerSheetSnapshotTests",
+        "CustomerSheetUITest",
         "FCLiteUITests",
         "FCLiteUITests\/testFCLiteInitialPaneAndDismiss()",
+        "InstantBankPaymentsControllerUITest",
+        "PaymentSheetBillingCollectionBankTests",
         "PaymentSheetBillingCollectionLPMUITests",
         "PaymentSheetBillingCollectionUICardTests",
         "PaymentSheetBillingCollectionUITestCase",
         "PaymentSheetCVCRecollectionUITests",
-        "PaymentSheetCardBrandFilteringUITests",
         "PaymentSheetCustomerSessionCBCUITests",
         "PaymentSheetCustomerSessionDedupeUITests",
-        "PaymentSheetDefaultSPMUITests",
-        "PaymentSheetDefaultSPMUITests\/testDefaultSPMHorizontalNavigation()",
-        "PaymentSheetDefaultSPMUITests\/testDefaultSPMNavigationFlagOff()",
-        "PaymentSheetDefaultSPMUITests\/testDefaultSPMVerticalNavigation()",
         "PaymentSheetDeferredServerSideUITests",
         "PaymentSheetDeferredUIBankAccountTests",
         "PaymentSheetDeferredUITests",
         "PaymentSheetExternalPMUITests",
         "PaymentSheetGDPRUITests",
         "PaymentSheetLinkUITests",
-        "PaymentSheetSnapshotTests",
-        "PaymentSheetStandardLPMUICBCTests",
-        "PaymentSheetStandardLPMUICase",
-        "PaymentSheetStandardLPMUIOneTests",
-        "PaymentSheetStandardLPMUITests",
-        "PaymentSheetStandardLPMUIThreeTests",
-        "PaymentSheetStandardLPMUITwoTests",
-        "PaymentSheetUITestCase",
-        "PaymentSheetVerticalUITests"
+        "PaymentSheetStandardUITests",
+        "PaymentSheetVerticalUITests",
+        "PaymentSheet_AddressTests"
       ],
       "target" : {
         "containerPath" : "container:PaymentSheet Example.xcodeproj",
@@ -69,6 +60,7 @@
       }
     },
     {
+      "enabled" : false,
       "target" : {
         "containerPath" : "container:PaymentSheet Example.xcodeproj",
         "identifier" : "5BBB41069612B9B628C5E65D",

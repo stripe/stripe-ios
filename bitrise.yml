@@ -34,7 +34,7 @@ pipelines:
         abort_on_fail: true
       size-report: {}
       ui-tests-paymentsheet:
-        parallel: 2
+        parallel: 4
       ui-tests-connect-crypto: {}
 
   releases-trigger-pipeline:
@@ -48,7 +48,7 @@ pipelines:
       install-and-integration-tests: {}
       size-report: {}
       ui-tests-paymentsheet:
-        parallel: 2
+        parallel: 4
       ui-tests-connect-crypto: {}
       legacy-tests-15: {}
       legacy-tests-16: {}
@@ -819,7 +819,7 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: $TEST_PLAN_SHARD
         - log_formatter: xcbeautify
-        - xcodebuild_options: -parallel-testing-enabled YES -parallel-testing-worker-count 4
+        - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
     - script@1:
         is_always_run: true
         title: Retry gate for test-runner hang
@@ -836,7 +836,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
-        machine_type_id: g2.mac.4large
+        machine_type_id: g2.mac.large
   ui-tests-connect-crypto:
     steps:
     - script@1:
