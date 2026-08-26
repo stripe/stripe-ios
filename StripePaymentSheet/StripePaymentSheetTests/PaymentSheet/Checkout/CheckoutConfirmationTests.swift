@@ -155,7 +155,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         let responseJSON = makeConfirmedSessionJSON(status: "open", paymentStatus: "unpaid")
 
         // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
+        let result = try await confirmCheckoutSession(
             checkout,
             responseJSON: responseJSON,
             poller: poller
@@ -177,7 +177,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         let responseJSON = makeConfirmedSessionJSON(status: "open", paymentStatus: "unpaid")
 
         // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
+        let result = try await confirmCheckoutSession(
             checkout,
             responseJSON: responseJSON,
             poller: poller
@@ -205,7 +205,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         responseJSON["payment_intent"] = paymentIntentJSON
 
         // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
+        let result = try await confirmCheckoutSession(
             checkout,
             responseJSON: responseJSON,
             poller: poller
@@ -230,7 +230,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         )
 
         // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
+        let result = try await confirmCheckoutSession(
             checkout,
             responseJSON: responseJSON,
             poller: poller
@@ -265,7 +265,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         responseJSON["payment_intent"] = paymentIntentJSON
 
         // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
+        let result = try await confirmCheckoutSession(
             checkout,
             responseJSON: responseJSON,
             poller: poller
@@ -291,7 +291,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         responseJSON["setup_intent"] = setupIntentJSON
 
         // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
+        let result = try await confirmCheckoutSession(
             checkout,
             responseJSON: responseJSON,
             poller: poller
@@ -318,7 +318,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         let retrieve = stubRetrieveCheckoutSession(responseJSON: latestSessionJSON)
 
         // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
+        let result = try await confirmCheckoutSession(
             checkout,
             responseJSON: confirmJSON,
             poller: poller
@@ -341,7 +341,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         let retrieve = stubRetrieveCheckoutSession(responseJSON: latestSessionJSON)
 
         // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
+        let result = try await confirmCheckoutSession(
             checkout,
             responseJSON: confirmJSON,
             poller: poller
@@ -364,7 +364,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         responseJSON["submission_attempt"] = ["state": "requires_approval"]
 
         // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
+        let result = try await confirmCheckoutSession(
             checkout,
             responseJSON: responseJSON,
             poller: poller
@@ -386,7 +386,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         responseJSON["submission_attempt"] = ["state": "failed"]
 
         // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
+        let result = try await confirmCheckoutSession(
             checkout,
             responseJSON: responseJSON,
             poller: poller
@@ -407,7 +407,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         responseJSON["route_to_orchestration_interface"] = true
 
         // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
+        let result = try await confirmCheckoutSession(
             checkout,
             responseJSON: responseJSON,
             poller: poller
@@ -532,7 +532,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         )
         let poll = stubPollCheckoutSession(sessionId: checkout.session.id)
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
-        let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
+        let configuration = try XCTUnwrap(checkout.getPaymentElement()).embeddedPaymentElement.configuration
         let flow = CheckoutController.CheckoutConfirmationFlow.link(.init(
             confirmOption: makeLinkConfirmOption(),
             configuration: configuration,
@@ -695,9 +695,9 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         _ checkout: CheckoutController,
         responseJSON: [AnyHashable: Any],
         poller: TestCheckoutSessionPoller
-    ) async -> CheckoutController.InternalConfirmResult {
+    ) async throws -> CheckoutController.InternalConfirmResult {
         stubConfirmation(responseJSON: responseJSON)
-        let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
+        let configuration = try XCTUnwrap(checkout.getPaymentElement()).embeddedPaymentElement.configuration
         let requestParameters = CheckoutSessionConfirmationRequestParameters(
             checkoutSession: checkout.session,
             paymentMethod: STPPaymentMethod._testCard(),
