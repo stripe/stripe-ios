@@ -31,7 +31,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.staticTexts["Enter shipping address to calculate"].exists)
 
         // When the customer selects a card in Payment Element
-        app.buttons["Select payment method"].forceTapWhenHittableInTestCase(self)
+        app.buttons["Select payment method"].scrollToAndTap(in: app)
         if !app.textFields["Card number"].waitForExistence(timeout: 2) {
             app.buttons["Card"].forceTapWhenHittableInTestCase(self)
         }
@@ -41,10 +41,10 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
 
         // Then the merchant surface reflects the selected payment method after Checkout updates.
         XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 10))
-        let checkoutButton = app.buttons.matching(
-            NSPredicate(format: "label BEGINSWITH %@", "Checkout")
+        let buyButton = app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "Buy")
         ).firstMatch
-        checkoutButton.forceTapWhenHittableInTestCase(self)
+        buyButton.scrollToAndTap(in: app)
 
         XCTAssertTrue(app.alerts["Success"].waitForExistence(timeout: 20))
     }

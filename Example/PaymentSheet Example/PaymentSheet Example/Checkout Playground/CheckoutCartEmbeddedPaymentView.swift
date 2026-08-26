@@ -104,7 +104,7 @@ struct CheckoutCartEmbeddedPaymentView: View {
 
 // MARK: - Embedded Payment Method Screen
 
-private struct CheckoutEmbeddedScreen: View {
+struct CheckoutEmbeddedScreen: View {
     @Environment(\.dismiss) private var dismiss
     let paymentElement: PaymentElement
 

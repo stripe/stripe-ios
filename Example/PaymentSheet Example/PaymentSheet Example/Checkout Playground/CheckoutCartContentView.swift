@@ -13,6 +13,9 @@ struct CheckoutCartContentView: View {
     @ObservedObject var checkout: CheckoutController
     var showsShippingAddressSection: Bool
     var errorMessage: String?
+    var showExpressCheckoutElement: Bool
+    var integrationType: CheckoutPlayground.IntegrationType
+    let onConfirm: (CheckoutController.ConfirmResult) -> Void
     @State private var showsTaxDetails = false
 
     var body: some View {
@@ -28,12 +31,23 @@ struct CheckoutCartContentView: View {
 
                 currencySelectorSection
                 lineItemsSection
+                expressCheckoutSection
                 if showsShippingAddressSection {
                     shippingAddressSection
                 }
+                if integrationType != .eceOnly {
+                    CheckoutCartPaymentMethodSection(
+                        checkout: checkout,
+                        integrationType: integrationType
+                    )
+                }
                 orderSummarySection
+                if integrationType != .eceOnly {
+                    CheckoutCartBuyButton(checkout: checkout, onConfirm: onConfirm)
+                }
             }
             .padding(.top, 20)
+            .padding(.bottom, 24)
         }
         .sheet(isPresented: $showsTaxDetails) {
             CheckoutTaxDetailsView(taxAmounts: checkout.session.taxAmounts ?? [])
@@ -198,6 +212,21 @@ struct CheckoutCartContentView: View {
     }
 
     @ViewBuilder
+    private var expressCheckoutSection: some View {
+        if showExpressCheckoutElement,
+           let expressCheckoutElement = checkout.getExpressCheckoutElement() {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Express Checkout")
+                    .font(.title2).bold()
+                    .padding(.horizontal)
+
+                expressCheckoutElement.view
+                    .padding(.horizontal)
+            }
+        }
+    }
+
+    @ViewBuilder
     private var orderSummarySection: some View {
         let totals = checkout.session.totals
         let hasTaxDetails = checkout.session.taxAmounts?.isEmpty == false
@@ -358,7 +387,10 @@ struct CheckoutCartSheet: View {
                 CheckoutCartContentView(
                     checkout: checkout,
                     showsShippingAddressSection: true,
-                    errorMessage: nil
+                    errorMessage: nil,
+                    showExpressCheckoutElement: false,
+                    integrationType: .flowController,
+                    onConfirm: { _ in }
                 )
             }
             .navigationTitle("Cart")

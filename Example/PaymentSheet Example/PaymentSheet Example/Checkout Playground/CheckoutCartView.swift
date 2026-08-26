@@ -41,36 +41,11 @@ struct CheckoutCartView: View {
                     CheckoutCartContentView(
                         checkout: checkout,
                         showsShippingAddressSection: shippingAddressCollection || checkout.session.shippingAddress != nil,
-                        errorMessage: errorMessage
-                    )
-                    .safeAreaInset(edge: .bottom, spacing: 0) {
-                        VStack(spacing: 0) {
-                            if showExpressCheckoutElement,
-                               let ece = checkout.getExpressCheckoutElement() {
-                                ece.view
-                                    .padding(.horizontal)
-                                    .padding(.top, 16)
-                            }
-                            switch integrationType {
-                            case .flowController:
-                                CheckoutCartPaymentButton(checkout: checkout) { result in
-                                    confirmResult = result
-                                }
-                                    .clipped()
-                            case .embedded:
-                                CheckoutCartEmbeddedPaymentView(checkout: checkout) { result in
-                                    confirmResult = result
-                                }
-                                    .clipped()
-                            case .eceOnly:
-                                EmptyView()
-                            }
-                        }
-                        .background(
-                            Color(UIColor.systemBackground)
-                                .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
-                                .ignoresSafeArea()
-                        )
+                        errorMessage: errorMessage,
+                        showExpressCheckoutElement: showExpressCheckoutElement,
+                        integrationType: integrationType
+                    ) { result in
+                        confirmResult = result
                     }
                 } else if isLoading {
                     ProgressView("Loading Cart...")
