@@ -298,6 +298,8 @@ extension PaymentPagesAPIResponse {
         let innerItemKey: String
         let price: Price
         let quantity: Int
+        let subtotal: Int
+        let total: Int
         let unitAmount: Int?
         let unitAmountDecimal: Double?
         let unitLabel: String?
@@ -310,6 +312,8 @@ extension PaymentPagesAPIResponse {
             case innerItemKey
             case price
             case quantity
+            case subtotal
+            case total
             case unitAmount
             case unitAmountDecimal
             case unitLabel
@@ -327,6 +331,8 @@ extension PaymentPagesAPIResponse {
             guard quantity >= 0 else {
                 throw decoder.dataCorrupted("quantity must not be negative")
             }
+            subtotal = try container.decode(Int.self, forKey: .subtotal)
+            total = try container.decode(Int.self, forKey: .total)
             unitAmount = try container.decodeIfPresent(Int.self, forKey: .unitAmount)
 
             if let rawUnitAmountDecimal = try container.decodeIfPresent(

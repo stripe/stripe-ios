@@ -24,7 +24,6 @@ extension PaymentPagesAPIResponse {
         }
         let publicOrderSummaryItems = Self.makeOrderSummaryItems(
             from: checkoutItems,
-            defaultCurrency: currency,
             locale: .autoupdatingCurrent
         )
         let publicTotals = Self.makeTotals(from: checkoutItems, currency: currency)
@@ -120,7 +119,6 @@ extension PaymentPagesAPIResponse {
 
     private static func makeOrderSummaryItems(
         from checkoutItems: [CheckoutItem],
-        defaultCurrency: String,
         locale: Locale
     ) -> [CheckoutController.Session.OrderSummaryItem] {
         checkoutItems.map { item in
@@ -144,6 +142,16 @@ extension PaymentPagesAPIResponse {
                     } else {
                         adjustableQuantity = nil
                     }
+                    let taxAmounts = item.taxAmounts.map {
+                        makeSessionTaxAmount(from: $0, currency: currency, locale: locale)
+                    }
+                    let amountDetails = CheckoutController.Session.OrderSummaryItem.OneTimePrice.Item.AmountDetails(
+                        total: makeAmount(Double(item.total), currency: currency, locale: locale),
+                        subtotal: makeAmount(Double(item.subtotal), currency: currency, locale: locale),
+                        taxAmounts: taxAmounts.isEmpty ? nil : taxAmounts,
+                        taxInclusive: makeAmount(Double(item.taxInclusive), currency: currency, locale: locale),
+                        taxExclusive: makeAmount(Double(item.taxExclusive), currency: currency, locale: locale)
+                    )
                     return CheckoutController.Session.OrderSummaryItem.OneTimePrice.Item(
                         key: item.innerItemKey,
                         displayName: product.name,
@@ -163,41 +171,16 @@ extension PaymentPagesAPIResponse {
                         },
                         unitLabel: item.unitLabel,
                         quantity: item.quantity,
-                        adjustableQuantity: adjustableQuantity
+                        adjustableQuantity: adjustableQuantity,
+                        amountDetails: amountDetails
                     )
                 }
 
-            let taxAmounts = oneTimePrice.items.flatMap(\.taxAmounts).map {
-                makeSessionTaxAmount(from: $0, currency: defaultCurrency, locale: locale)
-            }
-            let taxInclusive = oneTimePrice.items.reduce(0) { $0 + $1.taxInclusive }
-            let taxExclusive = oneTimePrice.items.reduce(0) { $0 + $1.taxExclusive }
-            let amountDetails = CheckoutController.Session.OrderSummaryItem.OneTimePrice.AmountDetails(
-                total: makeAmount(Double(oneTimePrice.total), currency: defaultCurrency, locale: locale),
-                subtotal: makeAmount(
-                    Double(oneTimePrice.subtotal),
-                    currency: defaultCurrency,
-                    locale: locale
-                ),
-                taxAmounts: taxAmounts.isEmpty ? nil : taxAmounts,
-                discount: makeAmount(0, currency: defaultCurrency, locale: locale),
-                taxInclusive: makeAmount(
-                    Double(taxInclusive),
-                    currency: defaultCurrency,
-                    locale: locale
-                ),
-                taxExclusive: makeAmount(
-                    Double(taxExclusive),
-                    currency: defaultCurrency,
-                    locale: locale
-                )
-            )
             return .oneTimePrice(
                 CheckoutController.Session.OrderSummaryItem.OneTimePrice(
                     key: item.key,
                     description: nil,
-                    items: publicItems,
-                    amountDetails: amountDetails
+                    items: publicItems
                 )
             )
         }
