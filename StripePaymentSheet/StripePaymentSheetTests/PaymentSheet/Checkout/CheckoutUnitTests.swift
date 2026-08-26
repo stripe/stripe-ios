@@ -52,11 +52,39 @@ final class CheckoutUnitTests: XCTestCase {
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(configuration: baseConfiguration)
         )
-        let paymentElement = checkout.getPaymentElement()
+        let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
 
         // Then both integrations use the Checkout return URL
         XCTAssertEqual(paymentElement.paymentSheetFlowController.configuration.returnURL, returnURL)
         XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.returnURL, returnURL)
+    }
+
+    func testPaymentElementConfigurationDefaultsToNil() {
+        let configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+
+        XCTAssertNil(configuration.paymentElement)
+    }
+
+    func testGetPaymentElementReturnsNilWhenNotConfigured() async throws {
+        // Given a Checkout configuration without Payment Element configuration
+        let configuration = CheckoutTestHelpers.makeConfiguration(includePaymentElement: false)
+
+        // When Checkout loads the session
+        let checkout = try await CheckoutController(configuration: configuration)
+
+        // Then Payment Element is not created
+        XCTAssertNil(checkout.getPaymentElement())
+    }
+
+    func testGetPaymentElementReturnsStableInstanceWhenConfigured() async throws {
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+
+        let firstElement = try XCTUnwrap(checkout.getPaymentElement())
+        let secondElement = try XCTUnwrap(checkout.getPaymentElement())
+        XCTAssertTrue(firstElement === secondElement)
     }
 
     func testCurrencySelectorElementConfigurationDefaultsToNil() {
@@ -114,7 +142,7 @@ final class CheckoutUnitTests: XCTestCase {
     func testSessionPaymentOptionUpdatesAndClears() async throws {
         // Given a Checkout with a PaymentElement and valid card payment option
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
-        let paymentElement = checkout.getPaymentElement()
+        let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
         let confirmParams = IntentConfirmParams(type: .stripe(.card))
         confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
         confirmParams.paymentMethodParams.card?.number = "4242424242424242"
@@ -862,7 +890,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testUpdateSessionCarriesOverAndClearsLocalPaymentOption() async throws {
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
-        let paymentElement = checkout.getPaymentElement()
+        let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
         let confirmParams = IntentConfirmParams(type: .stripe(.card))
         confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
         confirmParams.paymentMethodParams.card?.number = "4242424242424242"

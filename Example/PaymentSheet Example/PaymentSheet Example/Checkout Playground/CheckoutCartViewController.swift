@@ -224,6 +224,9 @@ final class CheckoutCartViewController: UIViewController {
                 clientSecret: clientSecret,
                 returnURL: "payments-example://stripe-redirect"
             )
+            if integrationType != .eceOnly {
+                configuration.paymentElement = .init()
+            }
             configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
             configuration.applePayConfiguration = CheckoutController.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
@@ -850,12 +853,13 @@ final class CheckoutCartViewController: UIViewController {
         switch integrationType {
         case .flowController:
             Task {
-                await checkout.getPaymentElement().present(from: self)
+                await checkout.getPaymentElement()?.present(from: self)
                 renderCheckout()
             }
         case .embedded:
+            guard let paymentElement = checkout.getPaymentElement() else { return }
             let viewController = CheckoutEmbeddedPaymentViewController(
-                paymentElement: checkout.getPaymentElement()
+                paymentElement: paymentElement
             )
             present(UINavigationController(rootViewController: viewController), animated: true)
         case .eceOnly:

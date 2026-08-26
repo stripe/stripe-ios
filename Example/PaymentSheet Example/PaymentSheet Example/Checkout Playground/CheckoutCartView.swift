@@ -171,6 +171,9 @@ struct CheckoutCartView: View {
             config.apiClient = diagnostics.makeAPIClient(
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
+            if integrationType != .eceOnly {
+                config.paymentElement = .init()
+            }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
             config.applePayConfiguration = CheckoutController.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
