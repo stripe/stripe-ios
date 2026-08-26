@@ -220,7 +220,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
                 )
                 CheckoutPlayground.PickerRow(
                     title: "Link Mode",
-                    icon: "link",
                     selection: $linkMode,
                     tooltip: "Forces Link to use its native or web flow.",
                     displayText: { $0.displayName }

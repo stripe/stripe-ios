@@ -128,7 +128,7 @@ extension CheckoutController {
                         option = .saved(paymentMethod, confirmParams)
                     case .link(let nestedConfirmOption):
                         // Link's own UI can recursively resolve to another Link confirm option
-                        // (e.g. completing a sign-up flow); confirm it the same way as the
+                        // (e.g. wallet -> withPaymentDetails); confirm it the same way as the
                         // original Link selection.
                         let nestedParameters = LinkConfirmationParameters(
                             confirmOption: nestedConfirmOption,
