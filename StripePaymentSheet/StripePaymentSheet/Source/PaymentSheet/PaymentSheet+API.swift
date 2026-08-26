@@ -14,6 +14,29 @@ import Foundation
 import SwiftUI
 import UIKit
 
+enum PaymentOrSetupIntent {
+    case paymentIntent(STPPaymentIntent)
+    case setupIntent(STPSetupIntent)
+
+    func isSetupFutureUsageSet(paymentMethodType: STPPaymentMethodType) -> Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.isSetupFutureUsageSet(for: paymentMethodType)
+        case .setupIntent:
+            return true
+        }
+    }
+
+    var paymentMethod: STPPaymentMethod? {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.paymentMethod
+        case .setupIntent(let setupIntent):
+            return setupIntent.paymentMethod
+        }
+    }
+}
+
 extension PaymentSheet {
     static var _preconfirmShim: ((UIViewController) -> Void)?
 
@@ -212,6 +235,7 @@ extension PaymentSheet {
         }
     }
 
+    @MainActor
     static fileprivate func confirmAfterHandlingLocalActions(
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
@@ -611,6 +635,7 @@ extension PaymentSheet {
         }
     }
 
+    @MainActor
     static func confirmLinkPaymentOption(
         confirmOption: LinkConfirmOption,
         configuration: PaymentElementConfiguration,
@@ -801,29 +826,6 @@ extension PaymentSheet {
 
     // MARK: - Helper methods
 
-    enum PaymentOrSetupIntent {
-        case paymentIntent(STPPaymentIntent)
-        case setupIntent(STPSetupIntent)
-
-        func isSetupFutureUsageSet(paymentMethodType: STPPaymentMethodType) -> Bool {
-            switch self {
-            case .paymentIntent(let paymentIntent):
-                return paymentIntent.isSetupFutureUsageSet(for: paymentMethodType)
-            case .setupIntent:
-                return true
-            }
-        }
-
-        var paymentMethod: STPPaymentMethod? {
-            switch self {
-            case .paymentIntent(let paymentIntent):
-                return paymentIntent.paymentMethod
-            case .setupIntent(let setupIntent):
-                return setupIntent.paymentMethod
-            }
-        }
-    }
-
     /// A helper method that sets the Customer's default payment method if necessary.
     /// - Parameter actionStatus: The final status returned by `STPPaymentHandler`'s completion block.
     static func setDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, configuration: PaymentElementConfiguration, paymentMethodSetAsDefault: Bool) {
@@ -861,24 +863,12 @@ extension PaymentSheet {
         /// - paymentMethod: Pass this if you created a PaymentMethod already (e.g. for the deferred flow).
         /// - saveForFutureUseCheckboxState: The single source of truth for save consent when confirming with a new
         ///   payment method. It preserves whether the save checkbox was hidden, shown and deselected, or shown and
-        ///   selected so intent-based flows and Checkout Session flows can each derive the API parameters they need.
+        ///   selected so intent-based flows can derive the API parameters they need.
         case new(params: STPPaymentMethodParams, paymentOptions: STPConfirmPaymentMethodOptions, paymentMethod: STPPaymentMethod? = nil, saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState, shouldSetAsDefaultPM: Bool? = nil)
 
         /// Projects the unified checkbox state into intent save semantics.
         var shouldSaveForIntent: Bool {
             saveForFutureUseCheckboxState == .selected
-        }
-
-        /// Projects the unified checkbox state into Checkout Session `save_payment_method` semantics.
-        var savePaymentMethodForCheckoutSession: Bool? {
-            switch saveForFutureUseCheckboxState {
-            case .hidden:
-                return nil
-            case .deselected:
-                return false
-            case .selected:
-                return true
-            }
         }
 
         private var saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState {

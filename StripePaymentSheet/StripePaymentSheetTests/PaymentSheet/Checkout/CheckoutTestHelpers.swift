@@ -176,7 +176,7 @@ enum CheckoutTestHelpers {
         return resolvedConfiguration
     }
 
-    /// Builds a stubbed Checkout configuration that opts into Adaptive Pricing.
+    /// Builds a stubbed Checkout configuration that enables Currency Selector Element.
     @MainActor
     static func makeCurrencySelectorConfiguration(
         apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
@@ -184,7 +184,9 @@ enum CheckoutTestHelpers {
     ) -> CheckoutController.Configuration {
         let clientSecret = configuration?.clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
         var resolvedConfiguration = configuration ?? CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        resolvedConfiguration.adaptivePricing.allowed = true
+        if resolvedConfiguration.currencySelectorElement == nil {
+            resolvedConfiguration.currencySelectorElement = .init()
+        }
         return makeConfiguration(apiResponse: apiResponse, configuration: resolvedConfiguration)
     }
 

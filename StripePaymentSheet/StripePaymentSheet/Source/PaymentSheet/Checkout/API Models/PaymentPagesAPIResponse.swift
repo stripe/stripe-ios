@@ -28,6 +28,8 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let livemode: Bool
     let status: CheckoutController.Session.Status
     let paymentStatus: CheckoutController.Session.Status.PaymentStatus
+    let submissionAttempt: SubmissionAttempt?
+    let routeToOrchestrationInterface: Bool?
     let customerEmail: String?
     let url: String?
     let savedPaymentMethodsOfferSave: SavedPaymentMethodsOfferSave?
@@ -84,6 +86,8 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case mode
         case status
         case paymentStatus
+        case submissionAttempt
+        case routeToOrchestrationInterface
         case customerEmail
         case url
         case savedPaymentMethodsOfferSave = "customer_managed_saved_payment_methods_offer_save"
@@ -155,6 +159,14 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         }
         self.status = status
 
+        submissionAttempt = try container.decodeIfPresent(
+            SubmissionAttempt.self,
+            forKey: .submissionAttempt
+        )
+        routeToOrchestrationInterface = try container.decodeIfPresent(
+            Bool.self,
+            forKey: .routeToOrchestrationInterface
+        )
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
         url = try container.decodeIfPresent(String.self, forKey: .url)
         savedPaymentMethodsOfferSave = try container.decodeIfPresent(
@@ -191,6 +203,17 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
 }
 
 extension PaymentPagesAPIResponse {
+    struct SubmissionAttempt: Decodable {
+        enum State: String, Decodable {
+            case processing
+            case requiresApproval = "requires_approval"
+            case complete
+            case failed
+        }
+
+        let state: State
+    }
+
     /// Adapts a dictionary-backed API model to `Decodable` while it is migrated.
     struct LegacyDecoded<Value: STPAPIResponseDecodable>: Decodable {
         let value: Value
