@@ -78,7 +78,8 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         let applePayConfirmationParameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: apiClient,
             returnURL: returnURL,
-            merchantDisplayName: "Functional Test Merchant"
+            merchantDisplayName: "Functional Test Merchant",
+            billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration()
         )
         let context = CheckoutApplePayContext(
             checkoutSession: session,

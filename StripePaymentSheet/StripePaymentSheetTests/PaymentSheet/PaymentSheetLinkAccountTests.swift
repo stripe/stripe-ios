@@ -63,6 +63,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         XCTAssertEqual(result?.allowRedisplay, .always)
     }
 
+    @MainActor
     func testRefreshesWhenNeeded() {
         let sut = makeSUT()
         let listedPaymentDetailsExp = expectation(description: "Lists payment details")
@@ -144,6 +145,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         return fields
     }
 
+    @MainActor
     func testRecordConnectionsConsentAcquired_retriesOnAuthError() async throws {
         let sut = makeSUT()
         let refreshExp = expectation(description: "Refreshes when needed")

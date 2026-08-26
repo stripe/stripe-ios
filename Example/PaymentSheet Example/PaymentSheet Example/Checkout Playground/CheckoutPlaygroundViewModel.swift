@@ -9,6 +9,13 @@ import Combine
 import SwiftUI
 
 extension CheckoutPlayground {
+    struct ExpressCheckoutElementSettings {
+        var option: ExpressCheckoutElementOption = .show
+        var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
+        var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
+        var billingDetailsCollectionConfiguration = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
+    }
+
     @MainActor
     final class ViewModel: ObservableObject {
 
@@ -20,20 +27,18 @@ extension CheckoutPlayground {
         @Published var uiFramework: UIFramework
         @Published var integrationType: IntegrationType {
             didSet {
-                if integrationType == .eceOnly && expressCheckoutElementOption == .hide {
-                    expressCheckoutElementOption = .show
+                if integrationType == .eceOnly && expressCheckoutElement.option == .hide {
+                    expressCheckoutElement.option = .show
                 }
             }
         }
-        @Published var expressCheckoutElementOption: ExpressCheckoutElementOption {
+        @Published var expressCheckoutElement = ExpressCheckoutElementSettings() {
             didSet {
-                if expressCheckoutElementOption == .hide && integrationType == .eceOnly {
+                if expressCheckoutElement.option == .hide && integrationType == .eceOnly {
                     integrationType = .flowController
                 }
             }
         }
-        @Published var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
-        @Published var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
         @Published var currency: Currency
         @Published var customerType: CustomerType
         @Published var lineItems: [LineItemConfig]
@@ -63,7 +68,7 @@ extension CheckoutPlayground {
             let settings = Self.settingsFromDefaults() ?? Settings()
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElementOption = settings.expressCheckoutElementOption
+            expressCheckoutElement = ExpressCheckoutElementSettings(option: settings.expressCheckoutElementOption)
             currency = settings.currency
             customerType = settings.customerType
             lineItems = settings.lineItems
@@ -186,7 +191,7 @@ extension CheckoutPlayground {
             Settings(
                 uiFramework: uiFramework,
                 integrationType: integrationType,
-                expressCheckoutElementOption: expressCheckoutElementOption,
+                expressCheckoutElementOption: expressCheckoutElement.option,
                 currency: currency,
                 customerType: customerType,
                 lineItems: lineItems,
@@ -210,7 +215,7 @@ extension CheckoutPlayground {
         private func apply(_ settings: Settings) {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElementOption = settings.expressCheckoutElementOption
+            expressCheckoutElement.option = settings.expressCheckoutElementOption
             currency = settings.currency
             customerType = settings.customerType
             lineItems = settings.lineItems
