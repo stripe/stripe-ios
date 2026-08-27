@@ -156,6 +156,15 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
+    func testDecodedObjectFromAPIResponseRequiresMerchantCountry() {
+        var json = STPTestUtils.jsonNamed("CheckoutSession")!
+        var elementsSession = json["elements_session"] as! [String: Any]
+        elementsSession.removeValue(forKey: "merchant_country")
+        json["elements_session"] = elementsSession
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+    }
+
     func testDecodingErrorIncludesNestedFieldPath() throws {
         let json = modifyingOneTimePriceItem { item in
             item.removeValue(forKey: "quantity")
@@ -353,6 +362,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "payment_method_types": ["card"],
             "elements_session": [
                 "session_id": "es_test",
+                "merchant_country": "US",
                 "payment_method_preference": ["ordered_payment_method_types": ["card"]],
             ],
         ]
@@ -1249,6 +1259,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([
             "elements_session": [
                 "session_id": "es_123",
+                "merchant_country": "US",
                 "payment_method_preference": ["ordered_payment_method_types": ["card"]],
             ],
             "tax_context": [
@@ -1261,6 +1272,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let sessionWithoutTax = CheckoutTestHelpers.makeSession([
             "elements_session": [
                 "session_id": "es_123",
+                "merchant_country": "US",
                 "payment_method_preference": ["ordered_payment_method_types": ["card"]],
             ],
         ]).withCustomer().makePublicSession()

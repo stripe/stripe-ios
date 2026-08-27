@@ -9,7 +9,7 @@ import PassKit
 
 /// The merchant identity needed to build an Apple Pay payment request.
 ///
-/// Bridges ``PaymentElement/ApplePayConfiguration`` and
+/// Bridges ``PaymentElement/ApplePayConfiguration`` (Payment Element) and
 /// ``ExpressCheckoutElement/ApplePayConfiguration`` (ExpressCheckoutElement) so Apple Pay
 /// confirmation code can accept either without caring which surface it came from.
 @_spi(STP)

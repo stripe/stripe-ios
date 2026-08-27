@@ -137,6 +137,7 @@ extension PaymentElement {
             returnURL: String,
             defaults: CheckoutController.Configuration.Defaults,
             merchantDisplayName: String,
+            merchantCountryCode: String,
             userInterfaceStyle: CheckoutController.UserInterfaceStyle
         ) -> EmbeddedPaymentElement.Configuration {
             var configuration = embeddedConfiguration
@@ -145,6 +146,9 @@ extension PaymentElement {
             configuration.apiClient = apiClient
             configuration.returnURL = returnURL
             configuration.apply(linkConfiguration: linkConfiguration)
+            configuration.applePay = applePayConfiguration?.paymentSheetConfiguration(
+                merchantCountryCode: merchantCountryCode
+            )
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
@@ -161,6 +165,7 @@ extension PaymentElement {
             returnURL: String,
             defaults: CheckoutController.Configuration.Defaults,
             merchantDisplayName: String,
+            merchantCountryCode: String,
             userInterfaceStyle: CheckoutController.UserInterfaceStyle
         ) -> PaymentSheet.Configuration {
             var configuration = paymentSheetConfiguration
@@ -169,6 +174,9 @@ extension PaymentElement {
             configuration.apiClient = apiClient
             configuration.returnURL = returnURL
             configuration.apply(linkConfiguration: linkConfiguration)
+            configuration.applePay = applePayConfiguration?.paymentSheetConfiguration(
+                merchantCountryCode: merchantCountryCode
+            )
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
@@ -179,6 +187,16 @@ extension PaymentElement {
             configuration.defaultBillingDetails.phone = defaults.phone
             return configuration
         }
+    }
+}
+
+private extension PaymentElement.ApplePayConfiguration {
+    func paymentSheetConfiguration(merchantCountryCode: String) -> PaymentSheet.ApplePayConfiguration {
+        return PaymentSheet.ApplePayConfiguration(
+            merchantId: merchantId,
+            merchantCountryCode: merchantCountryCode,
+            buttonType: buttonType ?? .plain
+        )
     }
 }
 

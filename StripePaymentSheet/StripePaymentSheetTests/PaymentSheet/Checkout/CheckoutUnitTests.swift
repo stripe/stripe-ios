@@ -965,8 +965,8 @@ final class CheckoutUnitTests: XCTestCase {
         let result = CheckoutController.mapConfirmationResult(.completed(response))
 
         // Then success preserves the Checkout Session payment status
-        guard case .succeeded(let paymentStatus) = result else {
-            return XCTFail("Expected confirmation to succeed")
+        guard case .completed(let paymentStatus) = result else {
+            return XCTFail("Expected confirmation to complete")
         }
         XCTAssertEqual(paymentStatus, .paid)
     }
