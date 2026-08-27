@@ -231,11 +231,12 @@ extension PaymentPagesAPIResponse {
         var taxInclusive = 0
         var total = 0
         for checkoutItem in checkoutItems {
-            let oneTimePrice = checkoutItem.oneTimePrice
-            subtotal += oneTimePrice.subtotal
-            taxExclusive += oneTimePrice.items.reduce(0) { $0 + $1.taxExclusive }
-            taxInclusive += oneTimePrice.items.reduce(0) { $0 + $1.taxInclusive }
-            total += oneTimePrice.total
+            for item in checkoutItem.oneTimePrice.items {
+                subtotal += item.subtotal
+                taxExclusive += item.taxExclusive
+                taxInclusive += item.taxInclusive
+                total += item.total
+            }
         }
         return CheckoutController.Session.Totals(
             subtotal: makeAmount(subtotal, currency: currency),

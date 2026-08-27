@@ -749,7 +749,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(secondAmountDetails.taxAmounts?.first?.displayName, "VAT")
     }
 
-    func testTotalsSumOneTimePrices() {
+    func testTotalsSumOneTimePriceItems() {
         let session = CheckoutTestHelpers.makeSession([
             "checkout_items": [
                 makeOneTimePriceCheckoutItem(
@@ -834,13 +834,11 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             )
         }
 
-        for field in ["items", "subtotal", "total"] {
-            let json = modifyingOneTimePrice { $0.removeValue(forKey: field) }
-            XCTAssertThrowsError(
-                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
-                "Expected missing one_time_price field \(field) to fail decoding"
-            )
-        }
+        let json = modifyingOneTimePrice { $0.removeValue(forKey: "items") }
+        XCTAssertThrowsError(
+            try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+            "Expected missing one_time_price items to fail decoding"
+        )
     }
 
     func testUnifiedModeSessionRejectsMissingRequiredNestedItemFields() {

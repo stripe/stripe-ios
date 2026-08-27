@@ -290,8 +290,6 @@ extension PaymentPagesAPIResponse {
 
     struct OneTimePrice: Decodable {
         let items: [OneTimePriceItem]
-        let subtotal: Int
-        let total: Int
     }
 
     struct OneTimePriceItem: Decodable {
