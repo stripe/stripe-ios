@@ -255,23 +255,38 @@ public final class CheckoutController: ObservableObject {
         name: String? = nil,
         address: Address?
     ) async throws {
-        if let address,
-           let allowedCountries = session.allowedShippingCountries,
+        guard let address else {
+            try await clearShippingAddress()
+            return
+        }
+        if let allowedCountries = session.allowedShippingCountries,
            !allowedCountries.contains(address.country) {
             throw CheckoutError.invalidShippingCountry(countryCode: address.country)
         }
-        let shippingAddress = address.map { Session.ShippingAddress(name: name, address: $0) }
+        let shippingAddress = Session.ShippingAddress(name: name, address: address)
         guard session.shippingAddress != shippingAddress else { return }
-        let taxRegionAddress = address ?? session.shippingAddress.map {
-            Address(country: $0.address.country)
-        }
-        if let taxRegionAddress, session.shouldSendTaxRegion(for: "shipping") {
+        if session.shouldSendTaxRegion(for: "shipping") {
             try await performUpdate(
-                .setTaxRegion(taxRegionAddress),
+                .setTaxRegion(address),
                 shippingAddress: .newValue(shippingAddress)
             )
         } else {
             try await performUpdate(shippingAddress: .newValue(shippingAddress))
+        }
+    }
+
+    private func clearShippingAddress() async throws {
+        guard let shippingAddress = session.shippingAddress else { return }
+        if session.shouldSendTaxRegion(for: "shipping") {
+            // The server requires a country, so keep the previous one when clearing the tax region.
+            let countryOnlyAddress = Address(country: shippingAddress.address.country)
+            try await performUpdate(
+                .setTaxRegion(countryOnlyAddress),
+                shippingAddress: .newValue(nil)
+            )
+        } else {
+            // No server update is needed when shipping isn't the tax address source.
+            try await performUpdate(shippingAddress: .newValue(nil))
         }
     }
 
