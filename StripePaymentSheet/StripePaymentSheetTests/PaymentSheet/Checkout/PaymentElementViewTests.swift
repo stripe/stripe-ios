@@ -20,7 +20,7 @@ final class PaymentElementViewTests: XCTestCase {
         paymentElementConfiguration.displaysMandateText = true
         configuration.paymentElement = paymentElementConfiguration
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(configuration: configuration))
-        let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
+        let paymentElement = checkout.getPaymentElement()
 
         let hostingController = UIHostingController(
             rootView: paymentElement.view.transaction { $0.animation = nil }

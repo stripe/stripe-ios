@@ -36,7 +36,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         let checkout = try await CheckoutController(configuration: configuration)
         let requests = requestRecorder.requests
 
-        XCTAssertNotNil(checkout.getPaymentElement())
+        XCTAssertNotNil(checkout.paymentElement)
         XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession])
         XCTAssertEqual(requests[1].params["tax_region[country]"], "US")
         XCTAssertEqual(requests[1].params["tax_region[line1]"], "123 Billing St")
@@ -64,10 +64,10 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         // When Checkout initializes
         let checkout = try await CheckoutController(configuration: configuration)
         let requests = requestRecorder.requests
-        let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
+        let paymentElement = checkout.getPaymentElement()
 
         // Then the shipping default is applied before PaymentElement loads
-        XCTAssertNotNil(checkout.getPaymentElement())
+        XCTAssertNotNil(checkout.paymentElement)
         XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession])
         XCTAssertEqual(requests[1].params["tax_region[country]"], "US")
         XCTAssertEqual(requests[1].params["tax_region[line1]"], "123 Shipping St")
@@ -107,7 +107,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         let checkout = try await CheckoutController(configuration: configuration)
 
         // Then the invalid shipping default remains in the SAE for correction but is not applied
-        XCTAssertNotNil(checkout.getPaymentElement())
+        XCTAssertNotNil(checkout.paymentElement)
         XCTAssertEqual(requestRecorder.requests.map(\.kind), [.initSession])
         XCTAssertNil(checkout.session.shippingAddress)
         XCTAssertEqual(
@@ -186,7 +186,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         let checkout = try await CheckoutController(configuration: configuration)
 
         // Then Checkout does not manufacture or apply a shipping default
-        XCTAssertNotNil(checkout.getPaymentElement())
+        XCTAssertNotNil(checkout.paymentElement)
         XCTAssertEqual(requestRecorder.requests.map(\.kind), [.initSession])
         XCTAssertNil(checkout.session.shippingAddress)
     }
@@ -210,7 +210,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
 
         // When Checkout initializes
         let checkout = try await CheckoutController(configuration: configuration)
-        let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
+        let paymentElement = checkout.getPaymentElement()
 
         // Then the shipping default is treated as nil
         XCTAssertEqual(requestRecorder.requests.map(\.kind), [.initSession])

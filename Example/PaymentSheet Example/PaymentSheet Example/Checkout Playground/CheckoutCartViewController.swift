@@ -853,13 +853,12 @@ final class CheckoutCartViewController: UIViewController {
         switch integrationType {
         case .flowController:
             Task {
-                await checkout.getPaymentElement()?.present(from: self)
+                await checkout.getPaymentElement().present(from: self)
                 renderCheckout()
             }
         case .embedded:
-            guard let paymentElement = checkout.getPaymentElement() else { return }
             let viewController = CheckoutEmbeddedPaymentViewController(
-                paymentElement: paymentElement
+                paymentElement: checkout.getPaymentElement()
             )
             present(UINavigationController(rootViewController: viewController), animated: true)
         case .eceOnly:

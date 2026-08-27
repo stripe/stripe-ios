@@ -318,8 +318,11 @@ public final class CheckoutController: ObservableObject {
     // MARK: - Element methods
 
     /// Returns the PaymentElement for this CheckoutController instance.
-    public func getPaymentElement() -> PaymentElement? {
-        return paymentElement
+    ///
+    /// You must set `Configuration.paymentElement` before initializing CheckoutController.
+    public func getPaymentElement() -> PaymentElement {
+        stpAssert(paymentElement != nil, "Set Configuration.paymentElement before calling getPaymentElement().")
+        return paymentElement!
     }
 
     /// Returns the ExpressCheckoutElement for this CheckoutController instance.

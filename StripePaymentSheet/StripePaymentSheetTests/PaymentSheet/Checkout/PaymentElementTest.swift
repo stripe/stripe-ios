@@ -54,7 +54,7 @@ final class PaymentElementTest: XCTestCase {
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
         )
-        let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
+        let paymentElement = checkout.getPaymentElement()
         let paymentSheetConfiguration = paymentElement.paymentSheetFlowController.configuration
         let embeddedConfiguration = paymentElement.embeddedPaymentElement.configuration
 
@@ -86,7 +86,7 @@ final class PaymentElementTest: XCTestCase {
                 configuration: checkoutConfiguration
             )
         )
-        let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
+        let paymentElement = checkout.getPaymentElement()
         let paymentSheetConfiguration = paymentElement.paymentSheetFlowController.configuration
         let embeddedConfiguration = paymentElement.embeddedPaymentElement.configuration
 
@@ -108,7 +108,7 @@ final class PaymentElementTest: XCTestCase {
                 configuration: checkoutConfiguration
             )
         )
-        let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
+        let paymentElement = checkout.getPaymentElement()
         let paymentSheetConfiguration = paymentElement.paymentSheetFlowController.configuration
         let embeddedConfiguration = paymentElement.embeddedPaymentElement.configuration
 
@@ -125,7 +125,7 @@ final class PaymentElementTest: XCTestCase {
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
         )
-        let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
+        let paymentElement = checkout.getPaymentElement()
         let paymentSheetConfiguration = paymentElement.paymentSheetFlowController.configuration
         let embeddedConfiguration = paymentElement.embeddedPaymentElement.configuration
 
@@ -154,7 +154,7 @@ final class PaymentElementTest: XCTestCase {
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
         )
-        let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
+        let paymentElement = checkout.getPaymentElement()
         let paymentSheetShipping = paymentElement.paymentSheetFlowController.configuration.shippingDetails()
         let embeddedShipping = paymentElement.embeddedPaymentElement.configuration.shippingDetails()
 
@@ -188,7 +188,7 @@ final class PaymentElementTest: XCTestCase {
                 configuration: checkoutConfiguration
             )
         )
-        let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
+        let paymentElement = checkout.getPaymentElement()
 
         // Then both configurations collect full billing address
         XCTAssertEqual(paymentElement.paymentSheetFlowController.configuration.billingDetailsCollectionConfiguration.address, .full)
@@ -206,7 +206,7 @@ final class PaymentElementTest: XCTestCase {
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
         )
-        let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
+        let paymentElement = checkout.getPaymentElement()
 
         // Then both configurations preserve full billing address collection
         XCTAssertEqual(paymentElement.paymentSheetFlowController.configuration.billingDetailsCollectionConfiguration.address, .full)
@@ -247,7 +247,7 @@ final class PaymentElementTest: XCTestCase {
                 configuration: configuration
             )
         )
-        let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
+        let paymentElement = checkout.getPaymentElement()
         let viewController = try XCTUnwrap(
             paymentElement.paymentSheetFlowController.viewController as? PaymentSheetVerticalViewController
         )
@@ -366,7 +366,7 @@ final class PaymentElementTest: XCTestCase {
                     apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card"])
                 )
             )
-            let paymentElement = try XCTUnwrap(checkout.getPaymentElement())
+            let paymentElement = checkout.getPaymentElement()
             let currencySelectorElement = checkout.getCurrencySelectorElement()
 
             weakCheckout = checkout
@@ -470,7 +470,7 @@ final class PaymentElementTest: XCTestCase {
         configuration.paymentElement = paymentElementConfiguration
 
         let checkout = try await CheckoutController(configuration: configuration)
-        let embeddedPaymentElement = try XCTUnwrap(checkout.getPaymentElement()).embeddedPaymentElement
+        let embeddedPaymentElement = checkout.getPaymentElement().embeddedPaymentElement
         let savedPaymentMethodRow = try XCTUnwrap(
             embeddedPaymentElement.embeddedPaymentMethodsView.rowButtons.first {
                 $0.type.isSaved

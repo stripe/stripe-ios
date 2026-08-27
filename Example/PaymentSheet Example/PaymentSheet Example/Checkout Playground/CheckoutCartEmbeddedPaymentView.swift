@@ -43,9 +43,7 @@ struct CheckoutCartEmbeddedPaymentView: View {
             }
             .padding(.horizontal)
             .sheet(isPresented: $showEmbeddedScreen) {
-                if let paymentElement = checkout.getPaymentElement() {
-                    CheckoutEmbeddedScreen(paymentElement: paymentElement)
-                }
+                CheckoutEmbeddedScreen(paymentElement: checkout.getPaymentElement())
             }
 
             Button {
