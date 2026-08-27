@@ -21,6 +21,16 @@ protocol CheckoutSessionBillingAddressUpdater: AnyObject {
     ) async throws -> CheckoutController.Session
 }
 
+/// Narrow Checkout interface for tax-region updates made while a wallet sheet is presented.
+@MainActor
+protocol CheckoutSessionWalletUpdater: AnyObject {
+    func updateTaxRegionWithoutEnqueueing(
+        address: CheckoutController.Address,
+        source: String,
+        canUpdateWhileSheetPresented: Bool
+    ) async throws -> CheckoutController.Session
+}
+
 extension CheckoutController: CheckoutSessionBillingAddressUpdater {
     func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
         try await commitSession(
@@ -39,5 +49,31 @@ extension CheckoutController: CheckoutSessionBillingAddressUpdater {
             canUpdateWhileSheetPresented: canUpdateWhileSheetPresented
         )
         return session
+    }
+}
+
+extension CheckoutController: CheckoutSessionWalletUpdater {
+    func updateTaxRegionWithoutEnqueueing(
+        address: Address,
+        source: String,
+        canUpdateWhileSheetPresented: Bool
+    ) async throws -> Session {
+        guard session.shouldSendTaxRegion(for: source) else {
+            return session
+        }
+        if !canUpdateWhileSheetPresented {
+            try requireSheetNotPresented()
+        }
+        do {
+            let sessionId = Self.extractSessionId(from: clientSecret)
+            let response = try await apiClient.updateCheckoutSession(
+                checkoutSessionId: sessionId,
+                parameters: SessionUpdate.setTaxRegion(address).parameters
+            )
+            try await commitSession(response)
+            return session
+        } catch {
+            throw CheckoutError.apiError(message: error.nonGenericDescription)
+        }
     }
 }

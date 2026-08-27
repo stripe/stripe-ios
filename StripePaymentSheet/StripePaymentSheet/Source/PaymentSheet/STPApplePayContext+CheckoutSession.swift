@@ -111,7 +111,7 @@ extension STPApplePayContext {
             .multiplying(by: NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency))
     }
 
-    // Partial billing address from the Apple Pay sheet (no street until authorization).
+    // Partial billing or shipping address from the Apple Pay sheet (no street until authorization).
     // Returns nil if there's no country to key tax on.
     static func makeCheckoutAddress(from postalAddress: CNPostalAddress) -> CheckoutController.Address? {
         guard let country = postalAddress.isoCountryCode.nonEmpty else {
