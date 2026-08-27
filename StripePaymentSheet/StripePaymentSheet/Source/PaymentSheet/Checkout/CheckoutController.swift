@@ -38,7 +38,7 @@ public final class CheckoutController: ObservableObject {
     @Published public private(set) var session: Session
 
     /// The configuration supplied at initialization.
-    public let configuration: Configuration
+    let configuration: Configuration
 
     // MARK: - Internal Properties
 

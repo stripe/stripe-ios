@@ -40,6 +40,7 @@ struct CheckoutCartView: View {
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
+                        showsCurrencySelectorElement: adaptivePricing,
                         showsShippingAddressSection: shippingAddressCollection || checkout.session.shippingAddress != nil,
                         errorMessage: errorMessage
                     )

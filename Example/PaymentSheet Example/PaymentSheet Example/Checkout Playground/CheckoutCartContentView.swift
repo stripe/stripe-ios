@@ -11,6 +11,7 @@ import SwiftUI
 
 struct CheckoutCartContentView: View {
     @ObservedObject var checkout: CheckoutController
+    var showsCurrencySelectorElement: Bool
     var showsShippingAddressSection: Bool
     var errorMessage: String?
     @State private var showsTaxDetails = false
@@ -191,7 +192,7 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var currencySelectorSection: some View {
-        if checkout.configuration.currencySelectorElement != nil,
+        if showsCurrencySelectorElement,
            let currencySelectorElement = checkout.getCurrencySelectorElement() {
             currencySelectorElement.view
                 .padding(.horizontal)
@@ -358,6 +359,7 @@ struct CheckoutCartSheet: View {
 
                 CheckoutCartContentView(
                     checkout: checkout,
+                    showsCurrencySelectorElement: false,
                     showsShippingAddressSection: true,
                     errorMessage: nil
                 )

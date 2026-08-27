@@ -290,7 +290,7 @@ final class CheckoutCartViewController: UIViewController {
             contentStackView.addArrangedSubview(makeErrorBanner(message: errorMessage))
         }
 
-        if checkout.configuration.currencySelectorElement != nil,
+        if adaptivePricing,
            let currencySelectorElement = checkout.getCurrencySelectorElement() {
             contentStackView.addArrangedSubview(currencySelectorElement.uiView)
         }
