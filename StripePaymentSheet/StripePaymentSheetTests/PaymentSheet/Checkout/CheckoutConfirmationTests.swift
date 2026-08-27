@@ -27,8 +27,8 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
 
         // Then it maps the result and commits the returned Checkout Session
-        guard case .succeeded(let paymentStatus) = result else {
-            XCTFail("Expected confirmation to succeed, got \(result)")
+        guard case .completed(let paymentStatus) = result else {
+            XCTFail("Expected confirmation to complete, got \(result)")
             return
         }
         XCTAssertEqual(paymentStatus, .paid)
@@ -857,8 +857,8 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        guard case .succeeded(let paymentStatus) = result else {
-            XCTFail("Expected confirmation to succeed, got \(result)", file: file, line: line)
+        guard case .completed(let paymentStatus) = result else {
+            XCTFail("Expected confirmation to complete, got \(result)", file: file, line: line)
             return
         }
         XCTAssertEqual(paymentStatus, .paid, file: file, line: line)
