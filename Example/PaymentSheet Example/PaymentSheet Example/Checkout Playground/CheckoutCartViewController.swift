@@ -229,7 +229,6 @@ final class CheckoutCartViewController: UIViewController {
                 clientSecret: clientSecret,
                 returnURL: "payments-example://stripe-redirect"
             )
-            configuration.adaptivePricing.allowed = adaptivePricing
             configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
             configuration.applePayConfiguration = CheckoutController.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
@@ -241,7 +240,11 @@ final class CheckoutCartViewController: UIViewController {
             configuration.expressCheckoutElement.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(display: linkDisplay)
             configuration.expressCheckoutElement.shippingAddressRequired = eceShippingAddressRequired
             configuration.expressCheckoutElement.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
-            configuration.currencySelectorElement.appearance = currencySelectorAppearance
+            if adaptivePricing {
+                var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
+                currencySelectorConfiguration.appearance = currencySelectorAppearance
+                configuration.currencySelectorElement = currencySelectorConfiguration
+            }
             configuration.apiClient = diagnostics.makeAPIClient(
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
