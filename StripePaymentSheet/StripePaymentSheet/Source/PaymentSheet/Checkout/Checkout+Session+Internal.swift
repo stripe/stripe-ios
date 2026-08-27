@@ -150,6 +150,7 @@ extension CheckoutController.Session {
             billingAddressCollection: billingAddressCollection,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
+            merchantCountryCode: merchantCountryCode,
             elementsSession: elementsSession
         )
     }

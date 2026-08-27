@@ -73,6 +73,7 @@ extension PaymentPagesAPIResponse {
             billingAddressCollection: billingAddressCollection.flatMap(CheckoutController.Session.BillingAddressCollection.init(rawValue:)) ?? .automatic,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
+            merchantCountryCode: elementsSession.merchantCountryCode,
             elementsSession: elementsSessionValue
         )
     }
