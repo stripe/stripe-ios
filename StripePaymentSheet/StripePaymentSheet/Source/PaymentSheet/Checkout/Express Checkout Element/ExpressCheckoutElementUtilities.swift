@@ -66,7 +66,7 @@ enum ExpressCheckoutElementUtilities {
         if requiresBillingDetails && !nativeLinkAvailable {
             reasons.append(.billingDetailsCollection)
         }
-        if session.automaticTaxEnabled {
+        if session.elementsSession.disableLinkForAutomaticTaxBilling {
             reasons.append(.automaticTaxAddress)
         }
 

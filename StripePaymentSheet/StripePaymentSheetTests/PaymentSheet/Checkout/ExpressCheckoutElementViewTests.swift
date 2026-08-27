@@ -139,28 +139,48 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertTrue(buttons.contains(.link))
     }
 
-    func testLinkButtonHiddenWhenAutomaticTaxUsesAnAddress() {
-        for addressSource in ["session.billing", "session.shipping"] {
-            // Given a session that calculates automatic tax from an address
-            let session = makeSessionWithWalletTypes(
-                ["link"],
-                automaticTaxAddressSource: addressSource
-            ).makePublicSession()
-            let configuration = ExpressCheckoutElement.Configuration()
+    func testLinkButtonHiddenWhenAutomaticTaxUsesBillingAddress() {
+        // Given a session that calculates automatic tax from the billing address
+        let session = makeSessionWithWalletTypes(
+            ["link"],
+            automaticTaxAddressSource: "session.billing"
+        ).makePublicSession()
+        let configuration = ExpressCheckoutElement.Configuration()
 
-            // When
-            let reasons = ExpressCheckoutElementUtilities.linkDisabledReasons(
-                for: session,
-                configuration: configuration
-            )
+        // When
+        let reasons = ExpressCheckoutElementUtilities.linkDisabledReasons(
+            for: session,
+            configuration: configuration
+        )
 
-            // Then Link is hidden regardless of which address automatic tax uses
-            XCTAssertTrue(reasons.contains(.automaticTaxAddress))
-            XCTAssertFalse(
-                ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
-                    .contains(.link)
-            )
-        }
+        // Then Link is hidden because it cannot update billing-based automatic tax
+        XCTAssertTrue(reasons.contains(.automaticTaxAddress))
+        XCTAssertFalse(
+            ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
+                .contains(.link)
+        )
+    }
+
+    func testLinkButtonShownWhenAutomaticTaxUsesShippingAddress() {
+        // Given a session whose shipping address is collected outside ECE and used for automatic tax
+        let session = makeSessionWithWalletTypes(
+            ["link"],
+            automaticTaxAddressSource: "session.shipping"
+        ).makePublicSession()
+        let configuration = ExpressCheckoutElement.Configuration()
+
+        // When
+        let reasons = ExpressCheckoutElementUtilities.linkDisabledReasons(
+            for: session,
+            configuration: configuration
+        )
+
+        // Then shipping-sourced automatic tax alone does not hide Link
+        XCTAssertFalse(reasons.contains(.automaticTaxAddress))
+        XCTAssertTrue(
+            ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
+                .contains(.link)
+        )
     }
 
     func testApplePayButtonHiddenWhenDisabledOnSession() {
