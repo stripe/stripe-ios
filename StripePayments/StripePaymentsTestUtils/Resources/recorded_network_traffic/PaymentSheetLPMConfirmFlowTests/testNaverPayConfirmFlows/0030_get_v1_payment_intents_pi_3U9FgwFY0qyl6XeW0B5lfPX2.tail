@@ -1,0 +1,100 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3U9FgwFY0qyl6XeW0B5lfPX2\?client_secret=pi_3U9FgwFY0qyl6XeW0B5lfPX2_secret_orKhzPK5t3pg1DNVri7ljFrpH&expand%5B0%5D=payment_method$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=FN0_TXlPsG-Xl1p5OEYRV6_Ow7Pg1AeB3EEIF70J5bgvJFyRi_3oxwhsgLn0UkK02ou0V_mhACq0Nb33; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=FN0_TXlPsG-Xl1p5OEYRV6_Ow7Pg1AeB3EEIF70J5bgvJFyRi_3oxwhsgLn0UkK02ou0V_mhACq0Nb33&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=FN0_TXlPsG-Xl1p5OEYRV6_Ow7Pg1AeB3EEIF70J5bgvJFyRi_3oxwhsgLn0UkK02ou0V_mhACq0Nb33&t=1"}],"include_subdomains":true}
+request-id: req_xGpYTlQ0to1Bvv
+Content-Length: 1823
+Vary: Origin
+Date: Fri, 28 Aug 2026 02:38:55 GMT
+stripe-version: 2020-08-27
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "krw",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_V9YoQAlP0xcCeIe1BGtYma4BTpulpk0"
+    }
+  },
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1U9FgvFY0qyl6XeWP6ktPEMn",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1787884733,
+    "allow_redisplay" : "unspecified",
+    "type" : "naver_pay",
+    "customer" : null,
+    "naver_pay" : {
+      "funding" : "points",
+      "buyer_id" : null
+    },
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3U9FgwFY0qyl6XeW0B5lfPX2_secret_orKhzPK5t3pg1DNVri7ljFrpH",
+  "id" : "pi_3U9FgwFY0qyl6XeW0B5lfPX2",
+  "allowed_payment_method_types" : null,
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "naver_pay"
+  ],
+  "setup_future_usage" : "off_session",
+  "created" : 1787884734,
+  "description" : null
+}

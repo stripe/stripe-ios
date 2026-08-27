@@ -300,6 +300,8 @@ extension STPPaymentMethodType {
                 return .pm_type_mbway
             case .multibanco:
                 return .pm_type_multibanco
+            case .naverPay:
+                return .pm_type_naverpay
             case .OXXO:
                 return .pm_type_oxxo
             case .payByBank:

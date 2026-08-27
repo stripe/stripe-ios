@@ -1364,6 +1364,48 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
     }
 
+    func testNaverPayFundingSelector() {
+        // Given
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.naverPay]),
+            elementsSession: ._testValue(paymentMethodTypes: [STPPaymentMethodType.naverPay.identifier]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.naverPay)
+        ).make()
+
+        // When
+        let funding: DropdownFieldElement = form.getDropdownFieldElement(String.Localized.naver_pay_funding_label)
+
+        // Then
+        XCTAssertEqual(funding.items.map(\.labelDisplayName.string), ["Naver Pay Card", "Naver Pay Money/Point"])
+        XCTAssertEqual(funding.items.map(\.rawData), ["card", "points"])
+        XCTAssertEqual(
+            form.updateParams(params: .init(type: .stripe(.naverPay)))?
+                .paymentMethodParams.naverPay?.funding,
+            .card
+        )
+
+        // When selecting Naver Pay Money/Point
+        funding.selectedIndex = 1
+
+        // Then
+        let updatedParams = form.updateParams(params: .init(type: .stripe(.naverPay)))
+        XCTAssertEqual(updatedParams?.paymentMethodParams.naverPay?.funding, .points)
+
+        // When rebuilding the form with the previous customer input
+        let restoredForm = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.naverPay]),
+            elementsSession: ._testValue(paymentMethodTypes: [STPPaymentMethodType.naverPay.identifier]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.naverPay),
+            previousCustomerInput: updatedParams
+        ).make()
+
+        // Then
+        let restoredFunding: DropdownFieldElement = restoredForm.getDropdownFieldElement(String.Localized.naver_pay_funding_label)
+        XCTAssertEqual(restoredFunding.selectedItem.rawData, "points")
+    }
+
     func testMBWayRequiresPhone() {
         // Given automatic billing detail collection
         // When building an MB WAY form
@@ -2439,6 +2481,43 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNil(paymentForm.getMandateElement())
         let expectedMandate = String(
             format: String.Localized.alipay_mandate_text,
+            configuration.merchantDisplayName
+        )
+        XCTAssertEqual(futureUsagePaymentForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
+        XCTAssertEqual(setupForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
+    }
+
+    func testNaverPayDisplaysMandateWhenSettingUp() {
+        // Given
+        let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+
+        func makeNaverPayForm(intent: Intent) -> PaymentMethodElement {
+            PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["naver_pay"]),
+                configuration: .paymentElement(configuration),
+                paymentMethod: .stripe(.naverPay)
+            ).make()
+        }
+
+        // When
+        let paymentForm = makeNaverPayForm(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.naverPay])
+        )
+        let futureUsagePaymentForm = makeNaverPayForm(
+            intent: ._testPaymentIntent(
+                paymentMethodTypes: [.naverPay],
+                setupFutureUsage: .offSession
+            )
+        )
+        let setupForm = makeNaverPayForm(
+            intent: ._testSetupIntent(paymentMethodTypes: [.naverPay])
+        )
+
+        // Then
+        XCTAssertNil(paymentForm.getMandateElement())
+        let expectedMandate = String(
+            format: String.Localized.korean_payment_method_mandate_text,
             configuration.merchantDisplayName
         )
         XCTAssertEqual(futureUsagePaymentForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)

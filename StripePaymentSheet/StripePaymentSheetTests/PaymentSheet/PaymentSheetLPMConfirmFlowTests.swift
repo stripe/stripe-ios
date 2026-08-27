@@ -639,6 +639,25 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.RevolutPay.settingUp) { _ in }
     }
 
+    func testNaverPayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "KRW",
+                               paymentMethodType: .naverPay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.NaverPay.paymentIntent) { form in
+            let funding: DropdownFieldElement = form.getDropdownFieldElement(String.Localized.naver_pay_funding_label)
+            funding.selectedIndex = 1
+        }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "KRW",
+                               paymentMethodType: .naverPay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.NaverPay.settingUp) { form in
+            let funding: DropdownFieldElement = form.getDropdownFieldElement(String.Localized.naver_pay_funding_label)
+            funding.selectedIndex = 1
+        }
+    }
+
     func testPayPalConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "EUR",
