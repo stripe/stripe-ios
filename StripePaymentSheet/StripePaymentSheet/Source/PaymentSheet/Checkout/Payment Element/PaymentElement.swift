@@ -95,7 +95,10 @@ public final class PaymentElement {
         )
         self.embeddedPaymentElement = try await EmbeddedPaymentElement.create(
             checkout: checkout,
-            configuration: embeddedConfiguration
+            configuration: embeddedConfiguration,
+            // FlowController and Embedded naturally have different default payment options (e.g. Apple Pay and Link).
+            // Keep them in sync by seeding Embedded's initial payment option with FlowController's.
+            initialPaymentOption: paymentSheetFlowController.internalPaymentOption
         )
         self.embeddedPaymentElement.notifiesDelegateOnInitialHeight = true
         let uiView = PaymentElementUIView(contentView: embeddedPaymentElement.view)
