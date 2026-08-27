@@ -500,7 +500,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
             returnURL: "stripe-ios-test://custom-return"
         )
         configuration.merchantDisplayName = "Test ECE Merchant"
-        configuration.userInterfaceStyle = .dark
+        configuration.userInterfaceStyle = .alwaysDark
         configuration.defaults.email = "jenny@example.com"
         configuration.defaults.phone = "+15555550123"
         var billingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
@@ -535,7 +535,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         XCTAssertIdentical(parameters.configuration.apiClient, checkout.configuration.apiClient)
         XCTAssertEqual(parameters.configuration.returnURL, "stripe-ios-test://custom-return")
         XCTAssertEqual(parameters.configuration.merchantDisplayName, "Test ECE Merchant")
-        XCTAssertEqual(parameters.configuration.style, .dark)
+        XCTAssertEqual(parameters.configuration.style, .alwaysDark)
         XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.name, .always)
         XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.address, .full)
         XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.email, .never)
