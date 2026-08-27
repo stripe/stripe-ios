@@ -388,7 +388,10 @@ extension CheckoutController.ApplePayConfirmationParameters {
         applePayConfiguration: CheckoutController.ApplePayConfiguration = CheckoutController.ApplePayConfiguration(merchantId: "merchant.com.test"),
         billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration,
         defaultBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? = nil,
-        presentationWindow: UIWindow? = nil
+        presentationWindow: UIWindow? = nil,
+        confirmationHandler: @escaping CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
+            .failed(CheckoutError.unknown(debugDescription: "Unexpected Apple Pay confirmation in test."))
+        }
     ) -> CheckoutController.ApplePayConfirmationParameters {
         CheckoutController.ApplePayConfirmationParameters(
             applePayConfiguration: applePayConfiguration,
@@ -397,7 +400,8 @@ extension CheckoutController.ApplePayConfirmationParameters {
             merchantDisplayName: merchantDisplayName,
             billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration,
             defaultBillingDetails: defaultBillingDetails,
-            presentationWindow: presentationWindow
+            presentationWindow: presentationWindow,
+            confirmationHandler: confirmationHandler
         )
     }
 }
