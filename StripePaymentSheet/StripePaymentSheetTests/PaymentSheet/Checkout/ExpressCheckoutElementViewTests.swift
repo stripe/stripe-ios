@@ -223,7 +223,10 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
             elementsSession["apple_pay_preference"] = applePayPreference
         }
         if let linkUseAttestation {
-            elementsSession["link_settings"] = ["link_use_attestation": linkUseAttestation]
+            elementsSession["link_settings"] = [
+                "link_funding_sources": ["CARD"],
+                "link_mobile_use_attestation_endpoints": linkUseAttestation,
+            ]
         }
         var session: [String: Any] = ["elements_session": elementsSession]
         if let automaticTaxAddressSource {
