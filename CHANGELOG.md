@@ -6,6 +6,9 @@ PATCH
 ### Payments
 * [Added] Added API bindings for Kakao Pay.
 
+### PaymentSheet
+* [Added] Added support for Kakao Pay.
+
 ## 26.8.0 2026-08-24
 ### Payments
 * [Added] Added support for the following FPX banks: Agrobank, Bank of China, and MBSB Bank.

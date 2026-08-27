@@ -639,6 +639,23 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.RevolutPay.settingUp) { _ in }
     }
 
+    func testKakaoPayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "KRW",
+                               paymentMethodType: .kakaoPay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.KakaoPay.paymentIntent) { form in
+            form.getTextFieldElement("Email").setText("foo@bar.com")
+        }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "KRW",
+                               paymentMethodType: .kakaoPay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.KakaoPay.settingUp) { form in
+            form.getTextFieldElement("Email").setText("foo@bar.com")
+        }
+    }
+
     func testPayPalConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "EUR",
