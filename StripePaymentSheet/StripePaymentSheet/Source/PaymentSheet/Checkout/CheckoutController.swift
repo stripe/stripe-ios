@@ -319,7 +319,8 @@ public final class CheckoutController: ObservableObject {
 
     /// Returns the PaymentElement for this CheckoutController instance.
     public func getPaymentElement() -> PaymentElement {
-        stpAssert(paymentElement != nil, "Set Configuration.paymentElement before calling getPaymentElement().")
+        assert(configuration.paymentElement != nil, "Set Configuration.paymentElement before calling getPaymentElement().")
+        stpAssert(paymentElement != nil, "PaymentElement should be initialized when Configuration.paymentElement is set.")
         return paymentElement!
     }
 
