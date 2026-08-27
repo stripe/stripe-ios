@@ -300,7 +300,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
     ) -> PKPaymentRequest {
         let applePayConfig = applePayConfirmationParameters.applePayConfiguration
-        let countryCode = checkoutSession.elementsSession.merchantCountryCode ?? "US"
         let paymentRequest = StripeAPI.paymentRequest(
             withMerchantIdentifier: applePayConfig.merchantId,
             country: checkoutSession.merchantCountryCode,
