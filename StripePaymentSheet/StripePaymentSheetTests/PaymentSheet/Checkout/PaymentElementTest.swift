@@ -117,6 +117,55 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(embeddedConfiguration.merchantDisplayName, "Dashboard Merchant")
     }
 
+    func testConfigurationMapsUseAutocompleteEndpoints() async throws {
+        // Given address autocomplete endpoints are enabled
+        var checkoutConfiguration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        checkoutConfiguration.paymentElement.useAutocompleteEndpoints = true
+
+        // When Checkout creates PaymentElement
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
+        )
+        let paymentElement = checkout.getPaymentElement()
+
+        // Then both presentations use the configured value
+        XCTAssertEqual(
+            paymentElement.paymentSheetFlowController.configuration.useAutocompleteEndpoints,
+            true
+        )
+        XCTAssertEqual(
+            paymentElement.embeddedPaymentElement.configuration.useAutocompleteEndpoints,
+            true
+        )
+    }
+
+    func testConfigurationDisablesAutocompleteEndpointsByDefault() async throws {
+        // Given the default PaymentElement configuration
+        let checkoutConfiguration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+
+        // When Checkout creates PaymentElement
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
+        )
+        let paymentElement = checkout.getPaymentElement()
+
+        // Then both presentations disable address autocomplete endpoints
+        XCTAssertEqual(
+            paymentElement.paymentSheetFlowController.configuration.useAutocompleteEndpoints,
+            false
+        )
+        XCTAssertEqual(
+            paymentElement.embeddedPaymentElement.configuration.useAutocompleteEndpoints,
+            false
+        )
+    }
+
     func testConfigurationAllowsAllCheckoutPaymentMethodRequirements() async throws {
         // Given a Checkout configuration
         let checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")

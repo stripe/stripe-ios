@@ -66,6 +66,14 @@ extension PaymentElement {
             }
         }
 
+        /// Whether to use Stripe's autocomplete endpoints when collecting an address. Defaults to `false`.
+        public var useAutocompleteEndpoints: Bool = false {
+            didSet {
+                paymentSheetConfiguration.useAutocompleteEndpoints = useAutocompleteEndpoints
+                embeddedConfiguration.useAutocompleteEndpoints = useAutocompleteEndpoints
+            }
+        }
+
         /// By default, the card form will provide a button to open the card scanner.
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false {
@@ -119,10 +127,15 @@ extension PaymentElement {
 
         // MARK: - Internal
 
-        private var paymentSheetConfiguration = PaymentSheet.Configuration()
+        private var paymentSheetConfiguration: PaymentSheet.Configuration = {
+            var configuration = PaymentSheet.Configuration()
+            configuration.useAutocompleteEndpoints = false
+            return configuration
+        }()
         private var embeddedConfiguration: EmbeddedPaymentElement.Configuration = {
             var configuration = EmbeddedPaymentElement.Configuration()
             configuration.embeddedViewDisplaysMandateText = false
+            configuration.useAutocompleteEndpoints = false
             return configuration
         }()
 

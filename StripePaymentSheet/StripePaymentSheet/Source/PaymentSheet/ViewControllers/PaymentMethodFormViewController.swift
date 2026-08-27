@@ -224,7 +224,8 @@ class PaymentMethodFormViewController: UIViewController {
             selectedCountry: addressSectionElement.selectedCountryCode,
             addressSpecProvider: AddressSpecProvider.shared,
             verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance),
-            useAutocompleteEndpoints: elementsSession.shouldUseAutocompleteProxyEndpoints
+            useAutocompleteEndpoints: configuration.useAutocompleteEndpoints
+                ?? elementsSession.shouldUseAutocompleteProxyEndpoints
         )
         autoCompleteViewController.delegate = self
 

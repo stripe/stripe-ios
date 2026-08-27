@@ -16,7 +16,7 @@ import UIKit
 @_spi(ReactNativeSDK)
 extension CheckoutController {
     /// A read-only representation of a Stripe Checkout Session.
-    public struct Session: Identifiable {
+    public struct Session: Identifiable, Hashable {
         // MARK: - Public Properties
 
         /// The ID of the Checkout Session.
@@ -97,6 +97,42 @@ extension CheckoutController {
 }
 
 extension CheckoutController.Session {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.id == rhs.id
+            && lhs.businessName == rhs.businessName
+            && lhs.currency == rhs.currency
+            && lhs.presentmentDetails == rhs.presentmentDetails
+            && lhs.discountAmounts == rhs.discountAmounts
+            && lhs.email == rhs.email
+            && lhs.orderSummaryItems == rhs.orderSummaryItems
+            && lhs.livemode == rhs.livemode
+            && lhs.minorUnitsAmountDivisor == rhs.minorUnitsAmountDivisor
+            && lhs.paymentOption == rhs.paymentOption
+            && lhs.shippingAddress == rhs.shippingAddress
+            && lhs.status == rhs.status
+            && lhs.tax == rhs.tax
+            && lhs.taxAmounts == rhs.taxAmounts
+            && lhs.totals == rhs.totals
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(businessName)
+        hasher.combine(currency)
+        hasher.combine(presentmentDetails)
+        hasher.combine(discountAmounts)
+        hasher.combine(email)
+        hasher.combine(orderSummaryItems)
+        hasher.combine(livemode)
+        hasher.combine(minorUnitsAmountDivisor)
+        hasher.combine(paymentOption)
+        hasher.combine(shippingAddress)
+        hasher.combine(status)
+        hasher.combine(tax)
+        hasher.combine(taxAmounts)
+        hasher.combine(totals)
+    }
+
     /// An item included in the order summary.
     @frozen
     public enum OrderSummaryItem: Identifiable, Sendable, Hashable {
@@ -225,7 +261,7 @@ extension CheckoutController.Session {
     }
 
     /// Display data for the currently selected payment option.
-    public struct PaymentOptionDisplayData: Equatable {
+    public struct PaymentOptionDisplayData: Hashable {
         /// An image representing a payment method, such as the Apple Pay logo or a card brand.
         public let image: UIImage
         /// A customer-facing label representing the payment option.
@@ -236,5 +272,29 @@ extension CheckoutController.Session {
         public let paymentMethodType: String
         /// Mandate text that must be displayed when the PaymentElement is configured not to display it.
         public let mandateText: NSAttributedString?
+
+        public static func == (lhs: Self, rhs: Self) -> Bool {
+            lhs.image.pngData() == rhs.image.pngData()
+                && lhs.label == rhs.label
+                && lhs.billingDetails == rhs.billingDetails
+                && lhs.paymentMethodType == rhs.paymentMethodType
+                && lhs.mandateText == rhs.mandateText
+        }
+
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(image.pngData())
+            hasher.combine(label)
+            hasher.combine(billingDetails?.address.city)
+            hasher.combine(billingDetails?.address.country)
+            hasher.combine(billingDetails?.address.line1)
+            hasher.combine(billingDetails?.address.line2)
+            hasher.combine(billingDetails?.address.postalCode)
+            hasher.combine(billingDetails?.address.state)
+            hasher.combine(billingDetails?.email)
+            hasher.combine(billingDetails?.name)
+            hasher.combine(billingDetails?.phone)
+            hasher.combine(paymentMethodType)
+            hasher.combine(mandateText)
+        }
     }
 }

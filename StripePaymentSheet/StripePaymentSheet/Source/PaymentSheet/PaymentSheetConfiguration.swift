@@ -96,6 +96,8 @@ extension PaymentSheet {
         /// Configuration related to Link
         public var link: LinkConfiguration = LinkConfiguration()
 
+        var useAutocompleteEndpoints: Bool?
+
         /// The color of the Buy or Add button. Defaults to `.systemBlue` when `nil`.
         public var primaryButtonColor: UIColor? {
             get {

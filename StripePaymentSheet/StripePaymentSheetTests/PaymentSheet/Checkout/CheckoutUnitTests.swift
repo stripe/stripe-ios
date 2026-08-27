@@ -18,6 +18,55 @@ import XCTest
 @MainActor
 final class CheckoutUnitTests: XCTestCase {
 
+    func testSessionHashableUsesPublicProperties() {
+        // Given two Session values with the same public properties
+        let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
+        let equalSession = session.makeCopyOverriding()
+
+        // Then they compare and hash equally
+        XCTAssertEqual(session, equalSession)
+        XCTAssertEqual(Set([session, equalSession]).count, 1)
+    }
+
+    func testSessionHashableDetectsChangedPublicProperty() {
+        // Given two Session values with different payment options
+        let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
+        let paymentOption = CheckoutController.Session.PaymentOptionDisplayData(
+            image: UIImage(),
+            label: "Card",
+            billingDetails: nil,
+            paymentMethodType: "card",
+            mandateText: nil
+        )
+        let changedSession = session.makeCopyOverriding(paymentOption: .newValue(paymentOption))
+
+        // Then they compare differently and remain distinct in a Set
+        XCTAssertNotEqual(session, changedSession)
+        XCTAssertEqual(Set([session, changedSession]).count, 2)
+    }
+
+    func testPaymentOptionDisplayDataHashableUsesDisplayProperties() {
+        // Given equivalent payment option display data
+        let first = CheckoutController.Session.PaymentOptionDisplayData(
+            image: UIImage(),
+            label: "Card",
+            billingDetails: .init(name: "Name"),
+            paymentMethodType: "card",
+            mandateText: NSAttributedString(string: "Mandate")
+        )
+        let second = CheckoutController.Session.PaymentOptionDisplayData(
+            image: UIImage(),
+            label: "Card",
+            billingDetails: .init(name: "Name"),
+            paymentMethodType: "card",
+            mandateText: NSAttributedString(string: "Mandate")
+        )
+
+        // Then they compare and hash equally
+        XCTAssertEqual(first, second)
+        XCTAssertEqual(Set([first, second]).count, 1)
+    }
+
     func testExtractSessionId() {
         XCTAssertEqual(
             CheckoutController.extractSessionId(from: "cs_test_abc123_secret_xyz789"),
