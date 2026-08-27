@@ -59,13 +59,27 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.returnURL, returnURL)
     }
 
-    func testGetCurrencySelectorElementReturnsNilWhenAdaptivePricingIsNotAllowed() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+    func testCurrencySelectorElementConfigurationDefaultsToNil() {
+        let configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
 
+        XCTAssertNil(configuration.currencySelectorElement)
+    }
+
+    func testGetCurrencySelectorElementReturnsNilWhenNotConfigured() async throws {
+        // Given an Adaptive Pricing session without Currency Selector Element configuration
+        let session = CheckoutTestHelpers.makeAdaptivePricingSession()
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session)
+        )
+
+        // Then Currency Selector Element is disabled
         XCTAssertNil(checkout.getCurrencySelectorElement())
     }
 
-    func testGetCurrencySelectorElementReturnsStableInstanceWhenAdaptivePricingIsAllowed() async throws {
+    func testGetCurrencySelectorElementReturnsStableInstanceWhenConfigured() async throws {
         let session = CheckoutTestHelpers.makeAdaptivePricingSession()
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
@@ -914,14 +928,13 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testMapCompletedConfirmationResultUsesResponsePaymentStatus() async throws {
         // Given a completed Checkout Session response
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
         var responseJSON = CheckoutTestHelpers.openSessionJSON
         responseJSON["status"] = "complete"
         responseJSON["payment_status"] = "paid"
         let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: responseJSON)
 
         // When the internal result is mapped to the public result
-        let result = checkout.mapConfirmationResult(.completed(response))
+        let result = CheckoutController.mapConfirmationResult(.completed(response))
 
         // Then success preserves the Checkout Session payment status
         guard case .succeeded(let paymentStatus) = result else {
@@ -931,11 +944,8 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testMapCanceledConfirmationResult() async throws {
-        // Given a canceled internal confirmation
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
-
         // When the internal result is mapped to the public result
-        let result = checkout.mapConfirmationResult(.canceled())
+        let result = CheckoutController.mapConfirmationResult(.canceled())
 
         // Then cancellation is preserved
         guard case .canceled = result else {

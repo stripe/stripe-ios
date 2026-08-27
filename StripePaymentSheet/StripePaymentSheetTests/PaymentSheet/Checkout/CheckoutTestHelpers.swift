@@ -176,7 +176,7 @@ enum CheckoutTestHelpers {
         return resolvedConfiguration
     }
 
-    /// Builds a stubbed Checkout configuration that opts into Adaptive Pricing.
+    /// Builds a stubbed Checkout configuration that enables Currency Selector Element.
     @MainActor
     static func makeCurrencySelectorConfiguration(
         apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
@@ -184,7 +184,9 @@ enum CheckoutTestHelpers {
     ) -> CheckoutController.Configuration {
         let clientSecret = configuration?.clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
         var resolvedConfiguration = configuration ?? CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        resolvedConfiguration.adaptivePricing.allowed = true
+        if resolvedConfiguration.currencySelectorElement == nil {
+            resolvedConfiguration.currencySelectorElement = .init()
+        }
         return makeConfiguration(apiResponse: apiResponse, configuration: resolvedConfiguration)
     }
 
@@ -416,7 +418,10 @@ extension CheckoutController.ApplePayConfirmationParameters {
         applePayConfiguration: CheckoutController.ApplePayConfiguration = CheckoutController.ApplePayConfiguration(merchantId: "merchant.com.test"),
         billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration,
         defaultBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? = nil,
-        presentationWindow: UIWindow? = nil
+        presentationWindow: UIWindow? = nil,
+        confirmationHandler: @escaping CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
+            .failed(CheckoutError.unknown(debugDescription: "Unexpected Apple Pay confirmation in test."))
+        }
     ) -> CheckoutController.ApplePayConfirmationParameters {
         CheckoutController.ApplePayConfirmationParameters(
             applePayConfiguration: applePayConfiguration,
@@ -425,7 +430,8 @@ extension CheckoutController.ApplePayConfirmationParameters {
             merchantDisplayName: merchantDisplayName,
             billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration,
             defaultBillingDetails: defaultBillingDetails,
-            presentationWindow: presentationWindow
+            presentationWindow: presentationWindow,
+            confirmationHandler: confirmationHandler
         )
     }
 }

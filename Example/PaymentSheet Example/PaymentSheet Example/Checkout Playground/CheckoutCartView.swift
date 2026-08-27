@@ -171,12 +171,15 @@ struct CheckoutCartView: View {
             config.apiClient = diagnostics.makeAPIClient(
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
-            config.adaptivePricing.allowed = adaptivePricing
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
             config.applePayConfiguration = CheckoutController.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
-            config.currencySelectorElement.appearance = currencySelectorAppearance
+            if adaptivePricing {
+                var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
+                currencySelectorConfiguration.appearance = currencySelectorAppearance
+                config.currencySelectorElement = currencySelectorConfiguration
+            }
             config.expressCheckoutElement.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example",
                 display: applePayDisplay
