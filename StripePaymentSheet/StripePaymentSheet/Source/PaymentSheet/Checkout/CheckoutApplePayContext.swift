@@ -45,6 +45,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     var didCancelOrTimeoutWhilePending = false
     /// Whether or not we fully completed the flow - if didFinish is `true`, that means `_end()` was called and this class is unusable.
     private var didFinish = false
+    private var paymentMethodUpdateTask: Task<Void, Never>?
 
     init(
         checkoutSession: CheckoutController.Session,
@@ -158,6 +159,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         switch paymentState {
         case .notStarted:
             Task {
+                await paymentMethodUpdateTask?.value
                 await controller.dismiss()
                 self.resume(with: .canceled())
                 self._end()
@@ -197,7 +199,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
             return
         }
-        Task { @MainActor in
+        paymentMethodUpdateTask = Task { @MainActor in
             if let updatedSession = try? await checkoutWalletUpdater.updateBillingTaxRegionWithoutEnqueueing(
                 address: address,
                 canUpdateWhileSheetPresented: true
@@ -392,6 +394,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
     private func _end() {
         authorizationController.delegate = nil
+        paymentMethodUpdateTask = nil
         didFinish = true
     }
 
