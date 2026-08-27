@@ -38,7 +38,7 @@ public final class CheckoutController: ObservableObject {
     @Published public private(set) var session: Session
 
     /// The configuration supplied at initialization.
-    let configuration: Configuration
+    public let configuration: Configuration
 
     // MARK: - Internal Properties
 
@@ -325,6 +325,9 @@ public final class CheckoutController: ObservableObject {
     /// Returns Currency Selector Element when it was configured and Adaptive
     /// Pricing is available for this Checkout instance.
     public func getCurrencySelectorElement() -> CurrencySelectorElement? {
+        if configuration.currencySelectorElement == nil {
+            stpAssertionFailure("Set Configuration.currencySelectorElement before calling getCurrencySelectorElement().")
+        }
         return currencySelectorElement
     }
 

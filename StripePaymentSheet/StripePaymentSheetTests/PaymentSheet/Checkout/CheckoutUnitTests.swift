@@ -68,15 +68,22 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertNil(configuration.currencySelectorElement)
     }
 
-    func testGetCurrencySelectorElementReturnsNilWhenNotConfigured() async throws {
+    func testGetCurrencySelectorElementAssertsWhenNotConfigured() async throws {
         // Given an Adaptive Pricing session without Currency Selector Element configuration
         let session = CheckoutTestHelpers.makeAdaptivePricingSession()
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session)
         )
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
 
-        // Then Currency Selector Element is disabled
+        // When Currency Selector Element is accessed
         XCTAssertNil(checkout.getCurrencySelectorElement())
+
+        // Then the missing configuration triggers an assertion
+        XCTAssertEqual(
+            STPAssertTestUtil.lastAssertMessage,
+            "Set Configuration.currencySelectorElement before calling getCurrencySelectorElement()."
+        )
     }
 
     func testGetCurrencySelectorElementReturnsStableInstanceWhenConfigured() async throws {

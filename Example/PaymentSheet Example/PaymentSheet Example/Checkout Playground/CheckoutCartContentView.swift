@@ -191,7 +191,8 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var currencySelectorSection: some View {
-        if let currencySelectorElement = checkout.getCurrencySelectorElement() {
+        if checkout.configuration.currencySelectorElement != nil,
+           let currencySelectorElement = checkout.getCurrencySelectorElement() {
             currencySelectorElement.view
                 .padding(.horizontal)
         }
