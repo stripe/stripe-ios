@@ -493,6 +493,72 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
 
     // MARK: - Link
 
+    func testExpressCheckoutLinkBuildsWalletConfirmationFlow() async throws {
+        // Given Checkout and ECE configuration containing values needed by Link
+        var configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://custom-return"
+        )
+        configuration.merchantDisplayName = "Test ECE Merchant"
+        configuration.userInterfaceStyle = .dark
+        configuration.defaults.email = "jenny@example.com"
+        configuration.defaults.phone = "+15555550123"
+        var billingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
+        billingDetails.name = "Jenny Rosen"
+        billingDetails.address = .init(country: "US", postalCode: "94107")
+        configuration.defaults.billingDetails = billingDetails
+        configuration.expressCheckoutElement.billingDetailsCollectionConfiguration = .init(
+            name: .always,
+            address: .full
+        )
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: CheckoutTestHelpers.makeSession(),
+            configuration: configuration
+        ))
+        let presentingViewController = UIViewController()
+        let window = UIWindow()
+        window.rootViewController = presentingViewController
+
+        // When ECE constructs its Link confirmation flow
+        let flow = checkout.makeExpressCheckoutConfirmationFlow(.link, presentationWindow: window)
+
+        // Then Link receives the ECE and Checkout configuration
+        guard case .link(let parameters) = flow else {
+            XCTFail("Expected a Link confirmation flow")
+            return
+        }
+        if case .wallet = parameters.confirmOption {
+            // Expected: ECE starts Link as a wallet flow.
+        } else {
+            XCTFail("Expected a Link wallet confirmation option")
+        }
+        XCTAssertIdentical(parameters.configuration.apiClient, checkout.configuration.apiClient)
+        XCTAssertEqual(parameters.configuration.returnURL, "stripe-ios-test://custom-return")
+        XCTAssertEqual(parameters.configuration.merchantDisplayName, "Test ECE Merchant")
+        XCTAssertEqual(parameters.configuration.style, .dark)
+        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.name, .always)
+        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.address, .full)
+        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.email, .never)
+        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.phone, .never)
+        XCTAssertFalse(parameters.configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod)
+        XCTAssertEqual(parameters.configuration.defaultBillingDetails.name, "Jenny Rosen")
+        XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.country, "US")
+        XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.postalCode, "94107")
+        XCTAssertEqual(parameters.configuration.defaultBillingDetails.email, "jenny@example.com")
+        XCTAssertEqual(parameters.configuration.defaultBillingDetails.phone, "+15555550123")
+    }
+
+    func testExpressCheckoutLinkRequiresPresentingViewController() async throws {
+        // Given an initialized Checkout controller
+        let checkout = try await makeCheckout()
+
+        // When ECE cannot resolve a view controller from its presentation window
+        let flow = checkout.makeExpressCheckoutConfirmationFlow(.link, presentationWindow: nil)
+
+        // Then it does not construct a Link confirmation flow
+        XCTAssertNil(flow)
+    }
+
     func testLinkPaymentDetailsCreatesPaymentMethodAndConfirmsCheckoutSession() async throws {
         // Given Link payment details in non-passthrough mode
         let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeSession().withCustomer())
