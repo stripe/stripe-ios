@@ -216,6 +216,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     ) -> PaymentPagesAPIResponse {
         var elementsSession: [String: Any] = [
             "session_id": "es_test",
+            "merchant_country": "US",
             "payment_method_preference": ["ordered_payment_method_types": ["card"]],
             "ordered_payment_method_types_and_wallets": walletTypes,
         ]

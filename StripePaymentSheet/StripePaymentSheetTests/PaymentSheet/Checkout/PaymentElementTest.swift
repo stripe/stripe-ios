@@ -117,6 +117,40 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(embeddedConfiguration.merchantDisplayName, "Dashboard Merchant")
     }
 
+    func testConfigurationSetsApplePayFromCheckoutSessionMerchantCountry() async throws {
+        // Given Apple Pay configured for a Checkout Session with a non-US merchant country
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        checkoutConfiguration.paymentElement.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+            merchantId: "merchant.com.example",
+            buttonType: .donate
+        )
+        var sessionJSON = Self.openSessionJSON(paymentMethodTypes: ["card"])
+        var elementsSessionJSON = sessionJSON["elements_session"] as! [String: Any]
+        elementsSessionJSON["merchant_country"] = "GB"
+        sessionJSON["elements_session"] = elementsSessionJSON
+
+        // When Checkout creates PaymentElement
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                apiResponse: try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON),
+                configuration: checkoutConfiguration
+            )
+        )
+        let paymentElement = checkout.getPaymentElement()
+        let paymentSheetApplePay = try XCTUnwrap(paymentElement.paymentSheetFlowController.configuration.applePay)
+        let embeddedApplePay = try XCTUnwrap(paymentElement.embeddedPaymentElement.configuration.applePay)
+
+        // Then both presentations use the merchant-provided settings and server-provided country
+        XCTAssertEqual(paymentSheetApplePay.merchantId, "merchant.com.example")
+        XCTAssertEqual(paymentSheetApplePay.buttonType, .donate)
+        XCTAssertEqual(paymentSheetApplePay.merchantCountryCode, "GB")
+        XCTAssertEqual(embeddedApplePay.merchantId, "merchant.com.example")
+        XCTAssertEqual(embeddedApplePay.buttonType, .donate)
+        XCTAssertEqual(embeddedApplePay.merchantCountryCode, "GB")
+        XCTAssertEqual(paymentElement.paymentSheetFlowController.paymentOption?.paymentMethodType, "apple_pay")
+        XCTAssertEqual(paymentElement.embeddedPaymentElement.paymentOption?.paymentMethodType, "apple_pay")
+    }
+
     func testConfigurationAllowsAllCheckoutPaymentMethodRequirements() async throws {
         // Given a Checkout configuration
         let checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")

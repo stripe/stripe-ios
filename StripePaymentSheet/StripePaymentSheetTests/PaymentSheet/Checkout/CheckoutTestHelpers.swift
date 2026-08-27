@@ -86,6 +86,7 @@ enum CheckoutTestHelpers {
 
     static let minimalElementsSessionJSON: [String: Any] = [
         "session_id": "es_test",
+        "merchant_country": "US",
         "payment_method_preference": ["ordered_payment_method_types": ["card"]],
     ]
 
