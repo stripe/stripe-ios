@@ -121,7 +121,12 @@ enum KYCResidence: String, CaseIterable, Hashable, Identifiable {
 
     /// Whether the address state or equivalent administrative area is required for this residence.
     var requiresState: Bool {
-        self == .unitedStates
+        switch self {
+        case .unitedStates, .canada, .colombia, .philippines:
+            return true
+        case .europeanUnion:
+            return false
+        }
     }
 
     /// Whether this residence follows the existing EU compliance and downstream flow.
