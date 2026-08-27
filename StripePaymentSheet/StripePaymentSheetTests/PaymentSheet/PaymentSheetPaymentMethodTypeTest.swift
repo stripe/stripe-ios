@@ -188,6 +188,52 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(result, .missingRequirements([.returnURL]))
     }
 
+    // MARK: - PAYCO
+
+    func testPaycoRequiresReturnURLAndDoesNotSupportSetup() {
+        // Given
+        let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.payco])
+        let setupIntents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.payco], setupFutureUsage: .offSession),
+            ._testPaymentIntent(
+                paymentMethodTypes: [.payco],
+                paymentMethodOptionsSetupFutureUsage: [.payco: "off_session"]
+            ),
+            ._testSetupIntent(paymentMethodTypes: [.payco]),
+        ]
+
+        // When
+        let paymentWithoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .payco,
+            configuration: makeConfiguration(),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.payco]
+        )
+        let paymentWithReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .payco,
+            configuration: makeConfiguration(hasReturnURL: true),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.payco]
+        )
+        // Then
+        XCTAssertEqual(paymentWithoutReturnURL, .missingRequirements([.returnURL]))
+        XCTAssertEqual(paymentWithReturnURL, .supported)
+        for intent in setupIntents {
+            XCTAssertEqual(
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: .payco,
+                    configuration: makeConfiguration(hasReturnURL: true),
+                    intent: intent,
+                    elementsSession: ._testValue(intent: intent),
+                    supportedPaymentMethods: [.payco]
+                ),
+                .missingRequirements([.unsupportedForSetup])
+            )
+        }
+    }
+
     /// Returns true, iDEAL in `supportedPaymentMethods` and URL and delayed payment method support requirements for setting up are met
     func testSupportsAdding_inSupportedList_urlConfiguredRequiredDelayedRequired() {
         var configuration = makeConfiguration(hasReturnURL: true)

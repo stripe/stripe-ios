@@ -304,6 +304,8 @@ extension STPPaymentMethodType {
                 return .pm_type_oxxo
             case .payByBank:
                 return .pm_type_paybybank
+            case .payco:
+                return .pm_type_payco
             case .paynow:
                 return .pm_type_paynow
             case .payPay:
