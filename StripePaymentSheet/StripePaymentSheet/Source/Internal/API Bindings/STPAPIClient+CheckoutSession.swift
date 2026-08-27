@@ -9,6 +9,88 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
+/// The parameters sent to the Checkout Session `/confirm` endpoint.
+struct CheckoutSessionConfirmationRequestParameters {
+    /// The ID of the Checkout Session (e.g., `cs_test_xxx`).
+    let sessionId: String
+
+    /// The ID of the PaymentMethod to use for confirmation. The PaymentMethod must have a billing email.
+    let paymentMethodId: String
+
+    /// The expected amount for validation. `nil` for setup-style Sessions.
+    let expectedAmount: Int?
+
+    /// The expected PaymentMethod type (e.g., `card`).
+    let expectedPaymentMethodType: String
+
+    /// The optional top-level `save_payment_method` value that controls whether confirmation
+    /// attaches the PaymentMethod to the Checkout Session's customer.
+    let savePaymentMethod: Bool?
+
+    /// The optional return URL for redirect-based payment methods.
+    let returnURL: String?
+
+    /// The optional shipping details.
+    let shipping: STPPaymentIntentShippingDetailsParams?
+
+    /// The optional PaymentMethod options. The BLIK code is extracted and passed as the
+    /// top-level `blik_code` parameter.
+    let paymentMethodOptions: STPConfirmPaymentMethodOptions?
+
+    /// The optional client attribution metadata for analytics.
+    let clientAttributionMetadata: STPClientAttributionMetadata?
+
+    /// The optional hCaptcha challenge response token.
+    let passiveCaptchaToken: String?
+
+    init(
+        sessionId: String,
+        paymentMethodId: String,
+        expectedAmount: Int?,
+        expectedPaymentMethodType: String,
+        savePaymentMethod: Bool? = nil,
+        returnURL: String? = nil,
+        shipping: STPPaymentIntentShippingDetailsParams? = nil,
+        paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
+        clientAttributionMetadata: STPClientAttributionMetadata? = nil,
+        passiveCaptchaToken: String? = nil
+    ) {
+        self.sessionId = sessionId
+        self.paymentMethodId = paymentMethodId
+        self.expectedAmount = expectedAmount
+        self.expectedPaymentMethodType = expectedPaymentMethodType
+        self.savePaymentMethod = savePaymentMethod
+        self.returnURL = returnURL
+        self.shipping = shipping
+        self.paymentMethodOptions = paymentMethodOptions
+        self.clientAttributionMetadata = clientAttributionMetadata
+        self.passiveCaptchaToken = passiveCaptchaToken
+    }
+}
+
+extension CheckoutSessionConfirmationRequestParameters {
+    init(
+        checkoutSession: CheckoutController.Session,
+        paymentMethod: STPPaymentMethod,
+        configuration: PaymentElementConfiguration,
+        paymentMethodOptions: STPConfirmPaymentMethodOptions?,
+        savePaymentMethod: Bool?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
+    ) {
+        self.init(
+            sessionId: checkoutSession.id,
+            paymentMethodId: paymentMethod.stripeId,
+            expectedAmount: checkoutSession.expectedAmount(),
+            expectedPaymentMethodType: paymentMethod.type.identifier,
+            savePaymentMethod: checkoutSession.noPaymentRequired ? nil : savePaymentMethod,
+            returnURL: configuration.returnURL,
+            shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
+            paymentMethodOptions: paymentMethodOptions,
+            clientAttributionMetadata: clientAttributionMetadata
+        )
+    }
+}
+
 extension STPAPIClient {
 
     /// Initializes a CheckoutSession, fetching payment configuration data.
@@ -165,34 +247,14 @@ extension STPAPIClient {
         return params
     }
 
-    /// Confirms a CheckoutSession with the provided payment method and parameters.
-    /// - Parameters:
-    ///   - sessionId: The ID of the checkout session (e.g., "cs_test_xxx")
-    ///   - paymentMethod: The ID of the payment method to use for confirmation (payment method must have billing email)
-    ///   - expectedAmount: The expected amount for validation. `nil` for setup-style sessions.
-    ///   - expectedPaymentMethodType: The expected payment method type (e.g., "card")
-    ///   - savePaymentMethod: Optional top-level save_payment_method value that controls whether confirmation attaches the payment method to the Checkout Session's customer.
-    ///   - returnURL: Optional return URL for redirect-based payment methods
-    ///   - shipping: Optional shipping details
-    ///   - paymentMethodOptions: Optional payment method options. BLIK code is extracted and passed as top-level `blik_code` parameter.
-    ///   - clientAttributionMetadata: Optional client attribution metadata for analytics
-    ///   - passiveCaptchaToken: Optional hCaptcha challenge response token
+    /// Confirms a Checkout Session with the provided request parameters.
     /// - Returns: Payment Pages API response containing the full confirmed session with expanded intents.
     func confirmCheckoutSession(
-        sessionId: String,
-        paymentMethod: String,
-        expectedAmount: Int?,
-        expectedPaymentMethodType: String,
-        savePaymentMethod: Bool? = nil,
-        returnURL: String? = nil,
-        shipping: STPPaymentIntentShippingDetailsParams? = nil,
-        paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
-        clientAttributionMetadata: STPClientAttributionMetadata? = nil,
-        passiveCaptchaToken: String? = nil
+        with requestParameters: CheckoutSessionConfirmationRequestParameters
     ) async throws -> PaymentPagesAPIResponse {
         var parameters: [String: Any] = [
-            "payment_method": paymentMethod,
-            "expected_payment_method_type": expectedPaymentMethodType,
+            "payment_method": requestParameters.paymentMethodId,
+            "expected_payment_method_type": requestParameters.expectedPaymentMethodType,
             "elements_session_client": ["is_aggregation_expected": true],
             "expand": [
                 "payment_intent",
@@ -202,37 +264,37 @@ extension STPAPIClient {
             ],
         ]
 
-        if let expectedAmount {
+        if let expectedAmount = requestParameters.expectedAmount {
             parameters["expected_amount"] = expectedAmount
         }
 
-        if let savePaymentMethod {
+        if let savePaymentMethod = requestParameters.savePaymentMethod {
             parameters["save_payment_method"] = savePaymentMethod
         }
 
-        if let returnURL {
+        if let returnURL = requestParameters.returnURL {
             parameters["return_url"] = returnURL
         }
 
-        if let shipping {
+        if let shipping = requestParameters.shipping {
             parameters["shipping"] = STPFormEncoder.dictionary(forObject: shipping)
         }
 
         // Checkout session confirm API uses top-level parameters for payment method specific options
-        if let blikCode = paymentMethodOptions?.blikOptions?.code {
+        if let blikCode = requestParameters.paymentMethodOptions?.blikOptions?.code {
             parameters["blik_code"] = blikCode
         }
 
-        if let clientAttributionMetadata {
+        if let clientAttributionMetadata = requestParameters.clientAttributionMetadata {
             parameters["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
         }
 
-        if let passiveCaptchaToken {
+        if let passiveCaptchaToken = requestParameters.passiveCaptchaToken {
             parameters["passive_captcha_token"] = passiveCaptchaToken
         }
 
         return try await post(
-            endpoint: "payment_pages/\(sessionId)/confirm",
+            endpoint: "payment_pages/\(requestParameters.sessionId)/confirm",
             parameters: parameters
         )
     }
@@ -280,3 +342,5 @@ extension STPAPIClient {
         }
     }
 }
+
+extension STPAPIClient: CheckoutSessionPollingAPIClient {}

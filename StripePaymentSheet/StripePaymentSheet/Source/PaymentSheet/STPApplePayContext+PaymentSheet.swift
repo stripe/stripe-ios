@@ -15,6 +15,7 @@ import PassKit
 typealias PaymentSheetResultCompletionBlock = ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
 
 /// A shim class; ApplePayContext expects a protocol/delegate, but PaymentSheet uses closures.
+@MainActor
 private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate {
     let completion: PaymentSheetResultCompletionBlock
     /// Retain this class until Apple Pay completes
@@ -204,9 +205,9 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         let shipping = makeShippingDetailsParams(from: paymentInformation)
 
         // 4. Call confirm API with the Apple Pay payment method
-        let response = try await context.apiClient.confirmCheckoutSession(
+        let requestParameters = CheckoutSessionConfirmationRequestParameters(
             sessionId: checkoutSession.id,
-            paymentMethod: paymentMethod.id,
+            paymentMethodId: paymentMethod.id,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: STPPaymentMethodType.card.identifier,
             returnURL: context.returnUrl,
@@ -214,6 +215,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             paymentMethodOptions: nil,
             clientAttributionMetadata: clientAttributionMetadata
         )
+        let response = try await context.apiClient.confirmCheckoutSession(with: requestParameters)
 
         // 5. Update the Checkout instance with the confirmed session response
         try await checkout.commitSession(response)
@@ -345,6 +347,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
 extension STPApplePayContext {
 
+    @MainActor
     static func create(
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -415,6 +418,7 @@ extension STPApplePayContext {
         }
     }
 
+    @MainActor
     static func createPaymentRequest(
         intent: Intent,
         configuration: PaymentElementConfiguration,
@@ -508,6 +512,7 @@ private func makeShippingDetails(from configuration: PaymentElementConfiguration
     )
 }
 
+@MainActor
 private func makeFallbackBillingDetails(
     intent: Intent,
     configuration: PaymentElementConfiguration
