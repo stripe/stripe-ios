@@ -228,7 +228,7 @@ final class CheckoutCartViewController: UIViewController {
                 configuration.paymentElement = .init()
             }
             configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
-            configuration.applePayConfiguration = CheckoutController.ApplePayConfiguration(
+            configuration.paymentElement.applePayConfiguration = PaymentElement.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             var expressCheckoutElementConfig = ExpressCheckoutElement.Configuration()
@@ -874,7 +874,7 @@ final class CheckoutCartViewController: UIViewController {
             let message: String
             let dismissOnAcknowledgment: Bool
             switch result {
-            case .succeeded(let paymentStatus):
+            case .completed(let paymentStatus):
                 title = "Success"
                 message = "Payment status: \(paymentStatus)"
                 dismissOnAcknowledgment = true

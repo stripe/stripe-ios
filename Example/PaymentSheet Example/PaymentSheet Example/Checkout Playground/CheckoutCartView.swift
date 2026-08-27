@@ -133,7 +133,7 @@ struct CheckoutCartView: View {
 
     private var confirmResultAlertTitle: String {
         switch confirmResult {
-        case .succeeded: return "Success"
+        case .completed: return "Success"
         case .canceled: return "Canceled"
         case .failed: return "Unable to complete checkout"
         case nil: return ""
@@ -142,7 +142,7 @@ struct CheckoutCartView: View {
 
     private var confirmResultAlertMessage: String {
         switch confirmResult {
-        case .succeeded(let paymentStatus): return "Payment status: \(paymentStatus)"
+        case .completed(let paymentStatus): return "Payment status: \(paymentStatus)"
         case .canceled: return "The payment was canceled."
         case .failed(let error):
             return "Localized: \(error.localizedDescription)\n\nDebug: \(String(reflecting: error))"
@@ -152,7 +152,7 @@ struct CheckoutCartView: View {
 
     private func acknowledgeConfirmResult() {
         let confirmationSucceeded: Bool
-        if case .succeeded = confirmResult {
+        if case .completed = confirmResult {
             confirmationSucceeded = true
         } else {
             confirmationSucceeded = false
@@ -175,7 +175,7 @@ struct CheckoutCartView: View {
                 config.paymentElement = .init()
             }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
-            config.applePayConfiguration = CheckoutController.ApplePayConfiguration(
+            config.paymentElement.applePayConfiguration = PaymentElement.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             if adaptivePricing {
