@@ -86,6 +86,7 @@ enum CheckoutTestHelpers {
 
     static let minimalElementsSessionJSON: [String: Any] = [
         "session_id": "es_test",
+        "merchant_country": "US",
         "payment_method_preference": ["ordered_payment_method_types": ["card"]],
     ]
 
@@ -385,10 +386,13 @@ extension CheckoutController.ApplePayConfirmationParameters {
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: CheckoutController.ApplePayConfiguration = CheckoutController.ApplePayConfiguration(merchantId: "merchant.com.test"),
+        applePayConfiguration: PaymentElement.ApplePayConfiguration = PaymentElement.ApplePayConfiguration(merchantId: "merchant.com.test"),
         billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration,
         defaultBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? = nil,
-        presentationWindow: UIWindow? = nil
+        presentationWindow: UIWindow? = nil,
+        confirmationHandler: @escaping CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
+            .failed(CheckoutError.unknown(debugDescription: "Unexpected Apple Pay confirmation in test."))
+        }
     ) -> CheckoutController.ApplePayConfirmationParameters {
         CheckoutController.ApplePayConfirmationParameters(
             applePayConfiguration: applePayConfiguration,
@@ -397,7 +401,8 @@ extension CheckoutController.ApplePayConfirmationParameters {
             merchantDisplayName: merchantDisplayName,
             billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration,
             defaultBillingDetails: defaultBillingDetails,
-            presentationWindow: presentationWindow
+            presentationWindow: presentationWindow,
+            confirmationHandler: confirmationHandler
         )
     }
 }
