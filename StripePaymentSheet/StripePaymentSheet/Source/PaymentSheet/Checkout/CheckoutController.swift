@@ -237,7 +237,7 @@ public final class CheckoutController: ObservableObject {
         try await performUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
     }
 
-    /// Sets the shipping address for this checkout.
+    /// Sets or clears the shipping address for this checkout.
     ///
     /// The address is stored locally and merged into PaymentSheet configuration
     /// when presenting payment UI. If automatic tax is enabled and the tax
@@ -246,21 +246,23 @@ public final class CheckoutController: ObservableObject {
     ///
     /// - Parameters:
     ///   - name: The customer's full name.
-    ///   - address: The shipping address to set. To reset tax computation
+    ///   - address: The shipping address to set, or `nil` to clear it. To reset tax computation
     ///     to a country-only region, pass a ``CheckoutController.Address`` with just the country.
     /// - Throws: ``CheckoutError`` if the session is not open, or if
     ///   the server request fails.
     public func updateShippingAddress(
         name: String? = nil,
-        address: Address
+        address: Address?
     ) async throws {
-        if let allowedCountries = session.allowedShippingCountries,
+        if let address,
+           let allowedCountries = session.allowedShippingCountries,
            !allowedCountries.contains(address.country) {
             throw CheckoutError.invalidShippingCountry(countryCode: address.country)
         }
-        let shippingAddress = Session.ShippingAddress(name: name, address: address)
-        guard session.shippingAddress != shippingAddress else { return }
-        if session.shouldSendTaxRegion(for: "shipping") {
+        let shippingAddress = address.map { Session.ShippingAddress(name: name, address: $0) }
+        let shouldSendTaxRegion = session.shouldSendTaxRegion(for: "shipping")
+        guard session.shippingAddress != shippingAddress || (address == nil && shouldSendTaxRegion) else { return }
+        if shouldSendTaxRegion {
             try await performUpdate(
                 .setTaxRegion(address),
                 shippingAddress: .newValue(shippingAddress)

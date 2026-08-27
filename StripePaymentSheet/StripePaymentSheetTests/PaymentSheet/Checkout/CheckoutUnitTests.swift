@@ -217,6 +217,48 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(recorder.loading, [true, false])
     }
 
+    func testUpdateShippingAddress_nilAddress_clearsLocally() async throws {
+        // Given
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        try await checkout.updateShippingAddress(address: .init(country: "US"))
+
+        // When
+        try await checkout.updateShippingAddress(address: nil)
+
+        // Then
+        XCTAssertNil(checkout.session.shippingAddress)
+    }
+
+    func testUpdateShippingAddress_nilAddress_clearsTaxRegion() async throws {
+        // Given
+        var sessionJSON = CheckoutTestHelpers.openSessionJSON
+        sessionJSON["tax_context"] = [
+            "automatic_tax_enabled": true,
+            "automatic_tax_address_source": "session.shipping",
+        ]
+        let requestRecorder = CheckoutSessionRequestRecorder()
+        CheckoutTestHelpers.stubCheckoutSessionRequests(
+            sessionId: "cs_test_123",
+            requestRecorder: requestRecorder,
+            sessionJSON: { sessionJSON }
+        )
+        var configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        let checkout = try await CheckoutController(configuration: configuration)
+
+        // When
+        try await checkout.updateShippingAddress(address: nil)
+
+        // Then
+        let requests = requestRecorder.requests
+        XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession])
+        XCTAssertEqual(requests[1].params["tax_region"], "")
+        XCTAssertNil(checkout.session.shippingAddress)
+    }
+
     func testShippingAddressElementSaveUpdatesCheckoutSession() async throws {
         // Given a ShippingAddressElement connected to its Checkout
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
