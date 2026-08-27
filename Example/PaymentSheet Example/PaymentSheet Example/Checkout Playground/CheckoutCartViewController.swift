@@ -224,6 +224,9 @@ final class CheckoutCartViewController: UIViewController {
                 clientSecret: clientSecret,
                 returnURL: "payments-example://stripe-redirect"
             )
+            if integrationType != .eceOnly {
+                configuration.paymentElement = .init()
+            }
             configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
             configuration.paymentElement.applePayConfiguration = PaymentElement.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"

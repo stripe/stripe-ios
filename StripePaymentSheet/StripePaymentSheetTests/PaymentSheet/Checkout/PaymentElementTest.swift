@@ -240,7 +240,9 @@ final class PaymentElementTest: XCTestCase {
     func testConfigurationPreservesFullBillingAddressCollectionWhenCheckoutBillingAddressCollectionIsAutomatic() async throws {
         // Given full billing address collection in PaymentElement
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        checkoutConfiguration.paymentElement.billingDetailsCollectionConfiguration.address = .full
+        var paymentElementConfiguration = PaymentElement.Configuration()
+        paymentElementConfiguration.billingDetailsCollectionConfiguration.address = .full
+        checkoutConfiguration.paymentElement = paymentElementConfiguration
 
         // When Checkout uses automatic billing address collection
         let checkout = try await CheckoutController(
@@ -278,7 +280,9 @@ final class PaymentElementTest: XCTestCase {
     func testCheckoutSessionUpdatePreservesFlowControllerPaymentOption() async throws {
         // Given a Checkout PaymentElement with PayNow available in the real FlowController sheet UI...
         var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        configuration.paymentElement.paymentMethodLayout = .vertical
+        var paymentElementConfiguration = PaymentElement.Configuration()
+        paymentElementConfiguration.paymentMethodLayout = .vertical
+        configuration.paymentElement = paymentElementConfiguration
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(
                 apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card", "paynow"]),
@@ -501,9 +505,11 @@ final class PaymentElementTest: XCTestCase {
 
         var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        configuration.paymentElement.rowSelectionBehavior = .immediateAction(
+        var paymentElementConfiguration = PaymentElement.Configuration()
+        paymentElementConfiguration.rowSelectionBehavior = .immediateAction(
             didSelectPaymentOption: didSelectPaymentOption
         )
+        configuration.paymentElement = paymentElementConfiguration
 
         let checkout = try await CheckoutController(configuration: configuration)
         let embeddedPaymentElement = checkout.getPaymentElement().embeddedPaymentElement

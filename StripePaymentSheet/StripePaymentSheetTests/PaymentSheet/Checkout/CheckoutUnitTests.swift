@@ -59,6 +59,34 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.returnURL, returnURL)
     }
 
+    func testPaymentElementConfigurationDefaultsToNil() {
+        let configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+
+        XCTAssertNil(configuration.paymentElement)
+    }
+
+    func testPaymentElementIsNotCreatedWhenNotConfigured() async throws {
+        // Given a Checkout configuration without Payment Element configuration
+        let configuration = CheckoutTestHelpers.makeConfiguration(includePaymentElement: false)
+
+        // When Checkout loads the session
+        let checkout = try await CheckoutController(configuration: configuration)
+
+        // Then Payment Element is not created
+        XCTAssertNil(checkout.paymentElement)
+    }
+
+    func testGetPaymentElementReturnsStableInstanceWhenConfigured() async throws {
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+
+        let firstElement = checkout.getPaymentElement()
+        let secondElement = checkout.getPaymentElement()
+        XCTAssertTrue(firstElement === secondElement)
+    }
+
     func testCurrencySelectorElementConfigurationDefaultsToNil() {
         let configuration = CheckoutController.Configuration(
             clientSecret: "cs_test_123_secret_abc",

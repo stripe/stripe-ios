@@ -42,8 +42,8 @@ public final class CheckoutController: ObservableObject {
 
     // MARK: - Internal Properties
 
-    /// The PaymentElement for this CheckoutController instance.
-    private(set) var paymentElement: PaymentElement!
+    /// The PaymentElement for this CheckoutController instance
+    private(set) var paymentElement: PaymentElement?
 
     /// The ExpressCheckoutElement for this CheckoutController instance.
     private var expressCheckoutElement: ExpressCheckoutElement?
@@ -134,7 +134,12 @@ public final class CheckoutController: ObservableObject {
             // initial payment option and may sync its billing address to recalculate tax. It must finish
             // before creating the session source so the remaining elements receive the resulting session
             // as their initial value.
-            self.paymentElement = try await PaymentElement(checkout: self)
+            if let paymentElementConfiguration = configuration.paymentElement {
+                self.paymentElement = try await PaymentElement(
+                    checkout: self,
+                    configuration: paymentElementConfiguration
+                )
+            }
 
             // Create the session source that we can pass to the reaminign elements, which do not need to mutate the session.
             // Elements past this point can be initialized in any order since they do not mutate the session.
@@ -314,7 +319,9 @@ public final class CheckoutController: ObservableObject {
 
     /// Returns the PaymentElement for this CheckoutController instance.
     public func getPaymentElement() -> PaymentElement {
-        return paymentElement
+        assert(configuration.paymentElement != nil, "Set Configuration.paymentElement before calling getPaymentElement().")
+        stpAssert(paymentElement != nil, "PaymentElement should be initialized when Configuration.paymentElement is set.")
+        return paymentElement!
     }
 
     /// Returns the ExpressCheckoutElement for this CheckoutController instance.
@@ -345,7 +352,8 @@ public final class CheckoutController: ObservableObject {
             return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
 
-        guard let flow = makeConfirmationFlow(
+        guard let paymentElement,
+              let flow = makeConfirmationFlow(
             for: paymentElement,
             presentingViewController: presentingViewController
         ) else {

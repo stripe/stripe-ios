@@ -60,6 +60,7 @@ public final class PaymentElement {
 
     let paymentSheetFlowController: PaymentSheet.FlowController
     let embeddedPaymentElement: EmbeddedPaymentElement
+    private let configuration: Configuration
     weak var checkout: CheckoutController?
     private var cancellables = Set<AnyCancellable>()
     var paymentOptionSourceOfTruthIsFlowController = false
@@ -67,9 +68,12 @@ public final class PaymentElement {
 
     // MARK: - Internal methods
 
-    init(checkout: CheckoutController) async throws {
+    init(
+        checkout: CheckoutController,
+        configuration: Configuration
+    ) async throws {
         // Note: PaymentElement is just nice user-facing packaging around the existing Embedded and FC classes
-        let configuration = checkout.configuration.paymentElement
+        self.configuration = configuration
 
         // Create FlowController
         let paymentSheetConfiguration = configuration.makePaymentSheetConfiguration(
@@ -141,7 +145,6 @@ extension PaymentElement {
         }
 
         // TODO: This should not be async or throws; we should not make any network requests or re-fetch things, just update the v1/e/s response.
-        let configuration = checkout.configuration.paymentElement
         paymentSheetFlowController.configuration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
             returnURL: checkout.configuration.returnURL,
