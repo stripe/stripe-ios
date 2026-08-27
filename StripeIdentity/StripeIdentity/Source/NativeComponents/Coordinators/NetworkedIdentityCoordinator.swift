@@ -92,12 +92,18 @@ final class NetworkedIdentityCoordinator {
             consumerPublishableKey: request.1
         )
         transition(to: .otpConfirmPending)
-        confirmation.observe(on: .main) { [weak self] result in
+        confirmation.observe(on: .main) { [weak self, apiClient] result in
             guard let self else {
+                Self.logOutSuccessfulResponse(
+                    result,
+                    using: apiClient,
+                    consumerPublishableKey: request.1,
+                    verificationSessionClientSecrets: request.0.verificationSessionClientSecrets
+                )
                 return
             }
             guard self.state == .otpConfirmPending else {
-                self.logOutIfCancelled(
+                self.logOutIfFlowEnded(
                     result,
                     consumerPublishableKey: request.1,
                     verificationSessionClientSecrets: request.0.verificationSessionClientSecrets
@@ -132,7 +138,7 @@ final class NetworkedIdentityCoordinator {
     // #TODO - Networked Identity: Add explicit OTP resend after the mobile contract defines whether start_verification requires is_resend_sms_code and whether it returns a replacement session ID.
 
     func selectDocument(_ document: NetworkedIdentityDocument) {
-        guard state == .selectDocument,
+        guard state == .selectDocument || state == .selectedDocument,
               let selectedDocument = availableDocuments.first(where: { $0.id == document.id }) else {
             return
         }
@@ -141,6 +147,13 @@ final class NetworkedIdentityCoordinator {
         transition(to: .selectedDocument)
 
         // #TODO - Networked Identity: Plumb recipient and requested-attribute metadata, present the documented explicit reuse consent, and define cloneConsumerIdentityDocument before requesting an association token or completing the flow.
+    }
+
+    func chooseManualCapture() {
+        guard state != .cancelled, state != .fullCaptureFallback else {
+            return
+        }
+        fallBackToFullCapture(reason: .userSelectedManualCapture)
     }
 
     func cancel() {
@@ -189,12 +202,20 @@ private extension NetworkedIdentityCoordinator {
         )
 
         transition(to: .lookupPending)
-        lookup.observe(on: .main) { [weak self] result in
+        lookup.observe(on: .main) { [weak self, apiClient] result in
             guard let self else {
+                if case .success(.found(let response)) = result {
+                    Self.bestEffortLogOut(
+                        using: apiClient,
+                        consumerSessionClientSecret: response.consumerSession.clientSecret,
+                        consumerPublishableKey: response.publishableKey,
+                        verificationSessionClientSecrets: verificationSessionClientSecrets
+                    )
+                }
                 return
             }
             guard self.state == .lookupPending else {
-                if self.state == .cancelled,
+                if self.flowHasEnded,
                    case .success(.found(let response)) = result {
                     self.bestEffortLogOut(
                         consumerSessionClientSecret: response.consumerSession.clientSecret,
@@ -251,12 +272,18 @@ private extension NetworkedIdentityCoordinator {
             consumerPublishableKey: request.1
         )
         transition(to: .otpStartPending)
-        startVerification.observe(on: .main) { [weak self] result in
+        startVerification.observe(on: .main) { [weak self, apiClient] result in
             guard let self else {
+                Self.logOutSuccessfulResponse(
+                    result,
+                    using: apiClient,
+                    consumerPublishableKey: request.1,
+                    verificationSessionClientSecrets: request.0.verificationSessionClientSecrets
+                )
                 return
             }
             guard self.state == .otpStartPending else {
-                self.logOutIfCancelled(
+                self.logOutIfFlowEnded(
                     result,
                     consumerPublishableKey: request.1,
                     verificationSessionClientSecrets: request.0.verificationSessionClientSecrets
@@ -279,6 +306,7 @@ private extension NetworkedIdentityCoordinator {
                     }
                     return !knownSMSVerificationSessionIDs.contains(id)
                 }
+                // #TODO - Networked Identity: Confirm start_verification always returns a newly created SMS verification session ID on mobile; this freshness check intentionally falls back if the backend reuses an existing ID.
                 self.knownSMSVerificationSessionIDs.formUnion(
                     self.smsVerificationSessionIDs(in: response.consumerSession)
                 )
@@ -415,15 +443,20 @@ private extension NetworkedIdentityCoordinator {
         )
     }
 
-    func logOutIfCancelled(
+    var flowHasEnded: Bool {
+        state == .cancelled || state == .fullCaptureFallback
+    }
+
+    func logOutIfFlowEnded(
         _ result: Result<NetworkedIdentityConsumerSessionResponse, Error>,
         consumerPublishableKey: String,
         verificationSessionClientSecrets: [String]?
     ) {
-        guard state == .cancelled, case .success(let response) = result else {
+        guard flowHasEnded, case .success(let response) = result else {
             return
         }
-        bestEffortLogOut(
+        Self.bestEffortLogOut(
+            using: apiClient,
             consumerSessionClientSecret: response.consumerSession.clientSecret,
             consumerPublishableKey: consumerPublishableKey,
             verificationSessionClientSecrets: verificationSessionClientSecrets
@@ -431,6 +464,37 @@ private extension NetworkedIdentityCoordinator {
     }
 
     func bestEffortLogOut(
+        consumerSessionClientSecret: String,
+        consumerPublishableKey: String,
+        verificationSessionClientSecrets: [String]?
+    ) {
+        Self.bestEffortLogOut(
+            using: apiClient,
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            consumerPublishableKey: consumerPublishableKey,
+            verificationSessionClientSecrets: verificationSessionClientSecrets
+        )
+    }
+
+    static func logOutSuccessfulResponse(
+        _ result: Result<NetworkedIdentityConsumerSessionResponse, Error>,
+        using apiClient: NetworkedIdentityAPIClient,
+        consumerPublishableKey: String,
+        verificationSessionClientSecrets: [String]?
+    ) {
+        guard case .success(let response) = result else {
+            return
+        }
+        bestEffortLogOut(
+            using: apiClient,
+            consumerSessionClientSecret: response.consumerSession.clientSecret,
+            consumerPublishableKey: consumerPublishableKey,
+            verificationSessionClientSecrets: verificationSessionClientSecrets
+        )
+    }
+
+    static func bestEffortLogOut(
+        using apiClient: NetworkedIdentityAPIClient,
         consumerSessionClientSecret: String,
         consumerPublishableKey: String,
         verificationSessionClientSecrets: [String]?

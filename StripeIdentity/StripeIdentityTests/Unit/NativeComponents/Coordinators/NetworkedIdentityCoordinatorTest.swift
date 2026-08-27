@@ -77,6 +77,38 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         XCTAssertEqual(apiClient.associationToken.requestHistory.count, 0)
     }
 
+    func testCanChangeSelectedDocumentBeforeConsent() {
+        // Given the consumer has two reusable documents
+        beginExistingConsumerFlow()
+        coordinator.submitOTP("123456")
+        waitForTransition(to: .documentsPending) {
+            apiClient.confirmVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_confirmed",
+                        verificationState: .verified
+                    )
+                )
+            )
+        }
+        let firstDocument = identityDocument(id: "id_doc_first")
+        let secondDocument = identityDocument(id: "id_doc_second", documentType: .passport)
+        waitForTransition(to: .selectDocument) {
+            apiClient.documentList.respondToNext(
+                with: .success(.init(data: [firstDocument, secondDocument]))
+            )
+        }
+
+        // When the consumer changes their selection before consent
+        coordinator.selectDocument(firstDocument)
+        coordinator.selectDocument(secondDocument)
+
+        // Then the latest reusable document is retained without making a reuse request
+        XCTAssertEqual(coordinator.state, .selectedDocument)
+        XCTAssertEqual(coordinator.selectedDocument, secondDocument)
+        XCTAssertEqual(apiClient.associationToken.requestHistory.count, 0)
+    }
+
     func testNotFoundConsumerFallsBackBeforeCreatingLinkAccount() {
         // Given lookup does not find a Link consumer
         coordinator.start(emailAddress: "new@example.com")
@@ -424,6 +456,179 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         XCTAssertEqual(coordinator.state, .otpConfirmPending)
         XCTAssertEqual(apiClient.confirmVerification.requestHistory.count, 1)
         XCTAssertEqual(apiClient.confirmVerification.pendingRequestCount, 1)
+    }
+
+    func testUserCanChooseManualCapture() {
+        // Given the consumer is waiting for SMS verification
+        beginExistingConsumerFlow()
+
+        // When they choose the manual verification path more than once
+        coordinator.chooseManualCapture()
+        coordinator.chooseManualCapture()
+
+        // Then the Link session is cleared and manual capture is requested once
+        XCTAssertEqual(coordinator.state, .fullCaptureFallback)
+        XCTAssertEqual(coordinator.fallbackReason, .userSelectedManualCapture)
+        XCTAssertTrue(credentialStore.isEmpty)
+        XCTAssertEqual(delegate.fullCaptureFallbackCount, 1)
+        XCTAssertEqual(apiClient.logOut.requestHistory.count, 1)
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.first?.consumerSessionClientSecret,
+            "cs_started"
+        )
+    }
+
+    func testManualCaptureLogsOutSecretReturnedByPendingLookup() {
+        // Given lookup is in flight when the consumer chooses manual verification
+        coordinator.start(emailAddress: "consumer@example.com")
+        let returnedSecretLoggedOut = expectation(
+            description: "Consumer session returned after manual fallback is logged out"
+        )
+        apiClient.logOut.callBackOnRequest {
+            returnedSecretLoggedOut.fulfill()
+        }
+
+        // When the stale lookup later returns a consumer session
+        coordinator.chooseManualCapture()
+        apiClient.lookup.respondToNext(
+            with: .success(
+                .found(
+                    .init(
+                        consumerSession: consumerSession(
+                            clientSecret: "cs_lookup_after_manual_fallback"
+                        ),
+                        publishableKey: "pk_consumer_lookup",
+                        accountID: "acct_123",
+                        authSessionClientSecret: nil,
+                        emailOTPRequiresAdditionalInfo: nil,
+                        emailOTPVerifyPhoneDespiteSMSOTP: nil,
+                        experiments: []
+                    )
+                )
+            )
+        )
+        wait(for: [returnedSecretLoggedOut], timeout: 1)
+
+        // Then the stale result cannot restart Link authentication and its secret is logged out
+        XCTAssertEqual(coordinator.state, .fullCaptureFallback)
+        XCTAssertEqual(coordinator.fallbackReason, .userSelectedManualCapture)
+        XCTAssertEqual(apiClient.startVerification.requestHistory.count, 0)
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.first?.consumerSessionClientSecret,
+            "cs_lookup_after_manual_fallback"
+        )
+    }
+
+    func testPendingLookupCleanupSurvivesCoordinatorRelease() {
+        // Given lookup is in flight when the host starts manual capture
+        coordinator.start(emailAddress: "consumer@example.com")
+        coordinator.chooseManualCapture()
+        weak var retainedForCleanup = coordinator
+        coordinator = nil
+        XCTAssertNil(retainedForCleanup)
+        let returnedSecretLoggedOut = expectation(
+            description: "Pending lookup cleanup survives coordinator release"
+        )
+        apiClient.logOut.callBackOnRequest {
+            returnedSecretLoggedOut.fulfill()
+        }
+
+        // When lookup returns a consumer secret after presentation has been released
+        apiClient.lookup.respondToNext(
+            with: .success(
+                .found(
+                    .init(
+                        consumerSession: consumerSession(
+                            clientSecret: "cs_lookup_after_release"
+                        ),
+                        publishableKey: "pk_consumer_lookup",
+                        accountID: "acct_123",
+                        authSessionClientSecret: nil,
+                        emailOTPRequiresAdditionalInfo: nil,
+                        emailOTPVerifyPhoneDespiteSMSOTP: nil,
+                        experiments: []
+                    )
+                )
+            )
+        )
+        wait(for: [returnedSecretLoggedOut], timeout: 1)
+
+        // Then the late secret is still logged out
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.first?.consumerSessionClientSecret,
+            "cs_lookup_after_release"
+        )
+    }
+
+    func testPendingStartVerificationCleanupSurvivesCoordinatorRelease() {
+        // Given start verification is in flight when the host starts manual capture
+        beginExistingConsumerLookup()
+        coordinator.chooseManualCapture()
+        weak var retainedForCleanup = coordinator
+        coordinator = nil
+        XCTAssertNil(retainedForCleanup)
+        let returnedSecretLoggedOut = expectation(
+            description: "Pending start-verification cleanup survives coordinator release"
+        )
+        apiClient.logOut.callBackOnRequest {
+            if self.apiClient.logOut.requestHistory.count == 2 {
+                returnedSecretLoggedOut.fulfill()
+            }
+        }
+
+        // When start verification rotates the secret after presentation has been released
+        apiClient.startVerification.respondToNext(
+            with: .success(
+                consumerSessionResponse(
+                    clientSecret: "cs_start_after_release",
+                    verificationSessionID: "cvs_fresh"
+                )
+            )
+        )
+        wait(for: [returnedSecretLoggedOut], timeout: 1)
+
+        // Then both the current and late secrets are logged out
+        XCTAssertEqual(apiClient.logOut.requestHistory.count, 2)
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.last?.consumerSessionClientSecret,
+            "cs_start_after_release"
+        )
+    }
+
+    func testPendingConfirmationCleanupSurvivesCoordinatorRelease() {
+        // Given OTP confirmation is in flight when the host starts manual capture
+        beginExistingConsumerFlow()
+        coordinator.submitOTP("123456")
+        coordinator.chooseManualCapture()
+        weak var retainedForCleanup = coordinator
+        coordinator = nil
+        XCTAssertNil(retainedForCleanup)
+        let returnedSecretLoggedOut = expectation(
+            description: "Pending confirmation cleanup survives coordinator release"
+        )
+        apiClient.logOut.callBackOnRequest {
+            if self.apiClient.logOut.requestHistory.count == 2 {
+                returnedSecretLoggedOut.fulfill()
+            }
+        }
+
+        // When confirmation rotates the secret after presentation has been released
+        apiClient.confirmVerification.respondToNext(
+            with: .success(
+                consumerSessionResponse(
+                    clientSecret: "cs_confirm_after_release",
+                    verificationState: .verified
+                )
+            )
+        )
+        wait(for: [returnedSecretLoggedOut], timeout: 1)
+
+        // Then both the current and late secrets are logged out
+        XCTAssertEqual(apiClient.logOut.requestHistory.count, 2)
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.last?.consumerSessionClientSecret,
+            "cs_confirm_after_release"
+        )
     }
 
     func testCancellationLogsOutWhenPossibleAndAlwaysClearsCredentials() {

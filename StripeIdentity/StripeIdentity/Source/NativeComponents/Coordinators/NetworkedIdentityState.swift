@@ -25,6 +25,7 @@ enum NetworkedIdentityState: Equatable {
 enum NetworkedIdentityFallbackReason: Equatable {
     case noLinkAccount
     case noReusableDocuments
+    case userSelectedManualCapture
     case unavailable
 }
 

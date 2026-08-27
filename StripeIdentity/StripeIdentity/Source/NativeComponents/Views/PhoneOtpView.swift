@@ -28,22 +28,24 @@ class PhoneOtpView: UIView {
     private let otpTextField: OneTimeCodeTextField
     private let otpBodyLabel = {
         let label = UILabel()
+        label.adjustsFontForContentSizeCategory = true
         label.font = IdentityUI.instructionsFont
         label.numberOfLines = 0
         return label
     }()
     private let otpErrorLabel = {
         let label = UILabel()
+        label.adjustsFontForContentSizeCategory = true
         label.font = IdentityUI.instructionsFont
         label.textColor = IdentityUI.identityElementsUITheme.colors.danger
-        label.numberOfLines = 1
+        label.numberOfLines = 0
         return label
     }()
 
     private let otpErrorField = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.alignment = .fill
+        stackView.alignment = .top
         stackView.distribution = .fill
         stackView.spacing = 8
         return stackView
@@ -164,6 +166,11 @@ extension PhoneOtpView {
 
     func reset() {
         configure(with: .InputtingOTP)
+        otpTextField.value = ""
+    }
+
+    func clear() {
+        otpTextField.resignFirstResponder()
         otpTextField.value = ""
     }
 }
