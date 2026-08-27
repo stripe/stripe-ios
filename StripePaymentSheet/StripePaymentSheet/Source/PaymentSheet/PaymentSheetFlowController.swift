@@ -432,10 +432,8 @@ extension PaymentSheet {
         /// - Parameter checkout: A fully loaded Checkout instance whose ``CheckoutController.session`` is non-nil.
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
-        @_spi(STP)
-        @_spi(ReactNativeSDK)
         @MainActor
-        public static func create(
+        static func create(
             checkout: CheckoutController,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void

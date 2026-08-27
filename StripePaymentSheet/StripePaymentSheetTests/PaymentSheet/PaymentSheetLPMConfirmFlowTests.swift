@@ -1757,11 +1757,33 @@ extension PaymentSheetLPMConfirmFlowTests {
                     authenticationContext: self,
                     paymentHandler: paymentHandler
                 )
-                result = await CheckoutController.confirmPaymentMethod(
+                let preconfirmResult = await CheckoutController.handlePaymentMethodPreconfirmActions(
                     checkoutSession: checkoutSession,
                     parameters: parameters,
                     preconfirmIntegrationShape: .complete
                 )
+                switch preconfirmResult {
+                case .succeeded(let intentConfirmParams):
+                    do {
+                        let confirmRequestParameters = try await CheckoutController.makeConfirmationRequestParameters(
+                            for: parameters,
+                            checkoutSession: checkoutSession,
+                            preconfirmedIntentParams: intentConfirmParams
+                        )
+                        result = await CheckoutController.confirmCheckoutSession(
+                            with: confirmRequestParameters,
+                            apiClient: configuration.apiClient,
+                            authenticationContext: self,
+                            paymentHandler: paymentHandler
+                        )
+                    } catch {
+                        result = .failed(error)
+                    }
+                case .canceled:
+                    result = .canceled()
+                case .failed(let error):
+                    result = .failed(error)
+                }
             case .saved(let paymentMethod, let confirmParams):
                 let parameters = CheckoutController.PaymentMethodConfirmationParameters(
                     option: .saved(paymentMethod, confirmParams),
@@ -1770,11 +1792,33 @@ extension PaymentSheetLPMConfirmFlowTests {
                     authenticationContext: self,
                     paymentHandler: paymentHandler
                 )
-                result = await CheckoutController.confirmPaymentMethod(
+                let preconfirmResult = await CheckoutController.handlePaymentMethodPreconfirmActions(
                     checkoutSession: checkoutSession,
                     parameters: parameters,
                     preconfirmIntegrationShape: .complete
                 )
+                switch preconfirmResult {
+                case .succeeded(let intentConfirmParams):
+                    do {
+                        let confirmRequestParameters = try await CheckoutController.makeConfirmationRequestParameters(
+                            for: parameters,
+                            checkoutSession: checkoutSession,
+                            preconfirmedIntentParams: intentConfirmParams
+                        )
+                        result = await CheckoutController.confirmCheckoutSession(
+                            with: confirmRequestParameters,
+                            apiClient: configuration.apiClient,
+                            authenticationContext: self,
+                            paymentHandler: paymentHandler
+                        )
+                    } catch {
+                        result = .failed(error)
+                    }
+                case .canceled:
+                    result = .canceled()
+                case .failed(let error):
+                    result = .failed(error)
+                }
             case .link(let confirmOption):
                 let parameters = CheckoutController.LinkConfirmationParameters(
                     confirmOption: confirmOption,

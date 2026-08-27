@@ -112,7 +112,7 @@ public final class CheckoutController: ObservableObject {
             // Call /init
             let apiResponse = try await configuration.apiClient.initCheckoutSession(
                 checkoutSessionId: sessionId,
-                adaptivePricingAllowed: configuration.adaptivePricing.allowed
+                adaptivePricingAllowed: configuration.currencySelectorElement != nil
             )
             let loadedSession = apiResponse.makePublicSession()
             self.session = loadedSession
@@ -148,10 +148,10 @@ public final class CheckoutController: ObservableObject {
             )
 
             // 4. CSE
-            if configuration.adaptivePricing.allowed {
+            if let currencySelectorConfiguration = configuration.currencySelectorElement {
                 self.currencySelectorElement = await CurrencySelectorElement(
                     sessionSource: sessionSource,
-                    configuration: configuration.currencySelectorElement,
+                    configuration: currencySelectorConfiguration,
                     delegate: self
                 )
             }
@@ -301,7 +301,7 @@ public final class CheckoutController: ObservableObject {
             do {
                 refreshedCheckoutSession = try await self.apiClient.initCheckoutSession(
                     checkoutSessionId: sessionId,
-                    adaptivePricingAllowed: self.configuration.adaptivePricing.allowed
+                    adaptivePricingAllowed: self.configuration.currencySelectorElement != nil
                 )
             } catch {
                 throw CheckoutError.apiError(message: error.nonGenericDescription)
@@ -322,7 +322,8 @@ public final class CheckoutController: ObservableObject {
         return expressCheckoutElement
     }
 
-    /// Returns the CurrencySelectorElement when Adaptive Pricing is available for this CheckoutController instance.
+    /// Returns Currency Selector Element when it was configured and Adaptive
+    /// Pricing is available for this Checkout instance.
     public func getCurrencySelectorElement() -> CurrencySelectorElement? {
         return currencySelectorElement
     }
@@ -344,7 +345,7 @@ public final class CheckoutController: ObservableObject {
             return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
 
-        guard let flow = confirmationFlow(
+        guard let flow = makeConfirmationFlow(
             for: paymentElement,
             presentingViewController: presentingViewController
         ) else {
