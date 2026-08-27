@@ -515,6 +515,7 @@ extension PaymentPagesAPIResponse {
 
     struct ElementsSession: Decodable {
         let businessName: String?
+        let merchantCountryCode: String
         let value: STPElementsSession
 
         private enum CodingKeys: String, CodingKey {
@@ -524,7 +525,13 @@ extension PaymentPagesAPIResponse {
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             businessName = try container.decodeIfPresent(String.self, forKey: .businessName)
-            value = try LegacyDecoded<STPElementsSession>(from: decoder).value
+            let value = try LegacyDecoded<STPElementsSession>(from: decoder).value
+            // TODO: Make merchant_country non-optional in CheckoutClient when Checkout migrates to it.
+            guard let merchantCountryCode = value.merchantCountryCode else {
+                throw decoder.dataCorrupted("Missing required elements_session.merchant_country")
+            }
+            self.merchantCountryCode = merchantCountryCode
+            self.value = value
         }
     }
 }
