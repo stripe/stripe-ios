@@ -267,6 +267,7 @@ public final class CheckoutController: ObservableObject {
         if session.shouldSendTaxRegion(for: "shipping") {
             // The Checkout Session update endpoint requires tax_region[country] and does not
             // support clearing tax_region, so keep the previous country.
+            // TODO(porter) When migrating to the CheckoutClient API, stop sending country only and send nil
             let countryOnlyAddress = Address(country: shippingAddress.address.country)
             try await performUpdate(
                 .setTaxRegion(countryOnlyAddress),
