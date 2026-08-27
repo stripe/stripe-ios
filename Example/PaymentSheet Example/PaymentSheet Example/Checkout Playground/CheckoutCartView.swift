@@ -172,7 +172,7 @@ struct CheckoutCartView: View {
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
-            config.applePayConfiguration = CheckoutController.ApplePayConfiguration(
+            config.paymentElement.applePayConfiguration = PaymentElement.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example"
             )
             if adaptivePricing {

@@ -87,6 +87,7 @@ extension CheckoutController {
         let billingAddressCollection: BillingAddressCollection
         let automaticTaxEnabled: Bool
         let automaticTaxAddressSource: String?
+        let merchantCountryCode: String
         let elementsSession: STPElementsSession
 
         enum BillingAddressCollection: String {
