@@ -53,6 +53,37 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
     }
 
+    func testOverlappingShippingAddressUpdateAndClearAreSerialized() async throws {
+        // Given a pending operation that prevents shipping updates from executing immediately
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let gate = CheckoutPendingOperationsTestGate()
+        let blockingTask = Task { @MainActor in
+            try await checkout.enqueueSessionUpdate {
+                await gate.wait()
+            }
+        }
+        defer { gate.open() }
+        try await waitUntil { checkout.pendingOperations.count == 1 && gate.isWaiting }
+
+        // When an address update and clear are queued in order
+        let updateTask = Task { @MainActor in
+            try await checkout.updateShippingAddress(address: .init(country: "US"))
+        }
+        try await waitUntil { checkout.pendingOperations.count == 2 }
+        let clearTask = Task { @MainActor in
+            try await checkout.updateShippingAddress(address: nil)
+        }
+        try await waitUntil { checkout.pendingOperations.count == 3 }
+        gate.open()
+        try await blockingTask.value
+        try await updateTask.value
+        try await clearTask.value
+
+        // Then the clear runs against the address committed by the earlier update
+        XCTAssertNil(checkout.session.shippingAddress)
+        XCTAssertTrue(checkout.pendingOperations.isEmpty)
+    }
+
     func testAwaitPendingOperationsWaitsForQueuedWork() async throws {
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
         let gate = CheckoutPendingOperationsTestGate()

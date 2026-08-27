@@ -261,14 +261,21 @@ public final class CheckoutController: ObservableObject {
         }
         let shippingAddress = address.map { Session.ShippingAddress(name: name, address: $0) }
         let shouldSendTaxRegion = session.shouldSendTaxRegion(for: "shipping")
-        guard session.shippingAddress != shippingAddress || (address == nil && shouldSendTaxRegion) else { return }
+        let shouldPerform: @MainActor () -> Bool = {
+            self.session.shippingAddress != shippingAddress || (address == nil && shouldSendTaxRegion)
+        }
+        if pendingOperations.isEmpty && !shouldPerform() { return }
         if shouldSendTaxRegion {
             try await performUpdate(
                 .setTaxRegion(address),
-                shippingAddress: .newValue(shippingAddress)
+                shippingAddress: .newValue(shippingAddress),
+                shouldPerform: shouldPerform
             )
         } else {
-            try await performUpdate(shippingAddress: .newValue(shippingAddress))
+            try await performUpdate(
+                shippingAddress: .newValue(shippingAddress),
+                shouldPerform: shouldPerform
+            )
         }
     }
 

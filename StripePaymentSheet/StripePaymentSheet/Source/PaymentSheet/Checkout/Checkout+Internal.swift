@@ -159,12 +159,15 @@ extension CheckoutController {
     ///   - update: The API mutation to perform, or nil for a local-only update.
     ///   - shippingAddress: A local shipping-address change to apply after the API call (or on its own).
     ///   - canUpdateWhileSheetPresented: Bypasses the sheet-presented guard (e.g. billing sync on dismiss).
+    ///   - shouldPerform: Evaluated after earlier updates finish; return false to skip this update.
     func performUpdate(
         _ update: SessionUpdate? = nil,
         shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
-        canUpdateWhileSheetPresented: Bool = false
+        canUpdateWhileSheetPresented: Bool = false,
+        shouldPerform: @MainActor @escaping () -> Bool = { true }
     ) async throws {
         try await enqueueSessionUpdate {
+            guard shouldPerform() else { return }
             if !canUpdateWhileSheetPresented {
                 try self.requireSheetNotPresented()
             }
