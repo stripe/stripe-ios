@@ -1,5 +1,5 @@
 //
-//  Checkout+ApplePayConfiguration.swift
+//  PaymentElement+ApplePayConfiguration.swift
 //  StripePaymentSheet
 //
 //  Created by Joyce Qin on 7/22/26.
@@ -9,7 +9,7 @@ import PassKit
 
 /// The merchant identity needed to build an Apple Pay payment request.
 ///
-/// Bridges ``CheckoutController/ApplePayConfiguration`` (Payment Element) and
+/// Bridges ``PaymentElement/ApplePayConfiguration`` and
 /// ``ExpressCheckoutElement/ApplePayConfiguration`` (ExpressCheckoutElement) so Apple Pay
 /// confirmation code can accept either without caring which surface it came from.
 @_spi(STP)
@@ -24,7 +24,7 @@ public protocol CheckoutApplePayConfiguration {
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension CheckoutController {
+extension PaymentElement {
     /// Configuration for Apple Pay.
     public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
         /// The Apple Pay merchant identifier.

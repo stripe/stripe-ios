@@ -16,6 +16,12 @@ extension PaymentElement {
         /// Initializes a Configuration with default values.
         public init() {}
 
+        /// Configuration for Apple Pay.
+        public var applePayConfiguration: ApplePayConfiguration?
+
+        /// Configuration for Link.
+        public var linkConfiguration: LinkConfiguration?
+
         /// PaymentSheet offers users an option to save some payment methods for later use.
         /// Default value is `.automatic`.
         public var savePaymentMethodOptInBehavior: SavePaymentMethodOptInBehavior = .automatic {
@@ -130,7 +136,6 @@ extension PaymentElement {
             apiClient: STPAPIClient,
             returnURL: String,
             defaults: CheckoutController.Configuration.Defaults,
-            linkConfiguration: CheckoutController.LinkConfiguration?,
             merchantDisplayName: String,
             userInterfaceStyle: CheckoutController.UserInterfaceStyle
         ) -> EmbeddedPaymentElement.Configuration {
@@ -155,7 +160,6 @@ extension PaymentElement {
             apiClient: STPAPIClient,
             returnURL: String,
             defaults: CheckoutController.Configuration.Defaults,
-            linkConfiguration: CheckoutController.LinkConfiguration?,
             merchantDisplayName: String,
             userInterfaceStyle: CheckoutController.UserInterfaceStyle
         ) -> PaymentSheet.Configuration {
@@ -179,7 +183,7 @@ extension PaymentElement {
 }
 
 private extension PaymentSheet.Configuration {
-    mutating func apply(linkConfiguration: CheckoutController.LinkConfiguration?) {
+    mutating func apply(linkConfiguration: PaymentElement.LinkConfiguration?) {
         switch linkConfiguration?.display {
         case .none, .automatic:
             link.display = .automatic
@@ -192,7 +196,7 @@ private extension PaymentSheet.Configuration {
 }
 
 private extension EmbeddedPaymentElement.Configuration {
-    mutating func apply(linkConfiguration: CheckoutController.LinkConfiguration?) {
+    mutating func apply(linkConfiguration: PaymentElement.LinkConfiguration?) {
         switch linkConfiguration?.display {
         case .none, .automatic:
             link.display = .automatic

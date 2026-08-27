@@ -33,6 +33,48 @@ final class PaymentElementTest: XCTestCase {
         super.tearDown()
     }
 
+    func testConfigurationSetsLinkDisplay() async throws {
+        // Given Payment Element configures Link to hide its wallet button
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        checkoutConfiguration.paymentElement.linkConfiguration = PaymentElement.LinkConfiguration(display: .walletButtonHidden)
+
+        // When Checkout creates Payment Element
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
+        )
+
+        // Then both Payment Element presentations use the nested Link configuration
+        let paymentElement = checkout.getPaymentElement()
+        XCTAssertEqual(paymentElement.paymentSheetFlowController.configuration.link.display, .walletButtonHidden)
+        XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.link.display, .walletButtonHidden)
+    }
+
+    func testConfirmationUsesPaymentElementApplePayConfiguration() async throws {
+        // Given Payment Element has an Apple Pay configuration and Apple Pay is selected
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        checkoutConfiguration.paymentElement.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+            merchantId: "merchant.com.test.payment-element"
+        )
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
+        )
+        let paymentElement = checkout.getPaymentElement()
+        paymentElement.embeddedPaymentElement._test_paymentOption = .applePay
+
+        // When Checkout creates the confirmation flow
+        let flow = checkout.makeConfirmationFlow(
+            for: paymentElement,
+            presentingViewController: UIViewController()
+        )
+
+        // Then it uses Apple Pay configuration from Payment Element
+        guard case .applePay(let parameters) = flow else {
+            XCTFail("Expected an Apple Pay confirmation flow")
+            return
+        }
+        XCTAssertEqual(parameters.applePayConfiguration.merchantId, "merchant.com.test.payment-element")
+    }
+
     func testConfigurationSetsCheckoutDefaultBillingDetails() async throws {
         // Given Checkout billing defaults
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")

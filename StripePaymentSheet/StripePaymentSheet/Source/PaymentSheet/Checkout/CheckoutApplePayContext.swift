@@ -237,7 +237,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             applePayConfirmationParameters: applePayConfirmationParameters
         )
 
-        assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `CheckoutController.ApplePayConfiguration`.")
+        assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `PaymentElement.ApplePayConfiguration`.")
 
         let merchantLabel = applePayConfirmationParameters.merchantDisplayName
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)

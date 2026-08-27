@@ -76,7 +76,6 @@ public final class PaymentElement {
             apiClient: checkout.apiClient,
             returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
-            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
@@ -89,7 +88,6 @@ public final class PaymentElement {
             apiClient: checkout.apiClient,
             returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
-            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
@@ -148,7 +146,6 @@ extension PaymentElement {
             apiClient: checkout.apiClient,
             returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
-            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
@@ -156,7 +153,6 @@ extension PaymentElement {
             apiClient: checkout.apiClient,
             returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
-            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
