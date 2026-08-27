@@ -36,7 +36,9 @@ final class PaymentElementTest: XCTestCase {
     func testConfigurationSetsLinkDisplay() async throws {
         // Given Payment Element configures Link to hide its wallet button
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        checkoutConfiguration.paymentElement.linkConfiguration = PaymentElement.LinkConfiguration(display: .walletButtonHidden)
+        var paymentElementConfiguration = PaymentElement.Configuration()
+        paymentElementConfiguration.linkConfiguration = PaymentElement.LinkConfiguration(display: .walletButtonHidden)
+        checkoutConfiguration.paymentElement = paymentElementConfiguration
 
         // When Checkout creates Payment Element
         let checkout = try await CheckoutController(
@@ -52,9 +54,11 @@ final class PaymentElementTest: XCTestCase {
     func testConfirmationUsesPaymentElementApplePayConfiguration() async throws {
         // Given Payment Element has an Apple Pay configuration and Apple Pay is selected
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        checkoutConfiguration.paymentElement.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+        var paymentElementConfiguration = PaymentElement.Configuration()
+        paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
             merchantId: "merchant.com.test.payment-element"
         )
+        checkoutConfiguration.paymentElement = paymentElementConfiguration
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
         )
