@@ -293,7 +293,7 @@ class PaymentSheetFormFactory {
                 )
             case .mbWay, .bizum:
                 return makeContactInformationAndBillingAddressForm(phoneRequired: true)
-            case .cashApp, .payPal, .revolutPay, .amazonPay, .satispay, .twint:
+            case .cashApp, .payPal, .revolutPay, .amazonPay, .satispay, .twint, .krCard:
                 return makeContactInformationAndBillingAddressForm(
                     additionalElements: makeSetupMandateElements(for: paymentMethod)
                 )
@@ -305,7 +305,7 @@ class PaymentSheetFormFactory {
                 return makeAUBECSDebit()
             case .FPX:
                 return makeFPX()
-            case .netBanking, .weChatPay, .link, .cardPresent, .krCard, .unknown:
+            case .netBanking, .weChatPay, .link, .cardPresent, .unknown:
                 return makeUnexpectedEmptyForm(for: paymentMethod)
             @unknown default:
                 return makeUnexpectedEmptyForm(for: paymentMethod)
@@ -340,6 +340,8 @@ class PaymentSheetFormFactory {
             return [makeSatispayMandate()]
         case .twint:
             return [makeTwintMandate()]
+        case .krCard:
+            return [makeKoreanPaymentMethodMandate()]
         default:
             return []
         }

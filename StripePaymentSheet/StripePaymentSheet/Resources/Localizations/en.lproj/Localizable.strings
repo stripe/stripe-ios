@@ -71,6 +71,9 @@
 /* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
 "Buy Now, Pay Later with Clearpay" = "Buy Now, Pay Later with Clearpay";
 
+/* Korean payment method mandate text */
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms.";
+
 /* Paypal mandate text */
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 

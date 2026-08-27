@@ -639,6 +639,19 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.RevolutPay.settingUp) { _ in }
     }
 
+    func testKoreanCardsConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "KRW",
+                               paymentMethodType: .krCard,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.KoreanCards.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "KRW",
+                               paymentMethodType: .krCard,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.KoreanCards.settingUp) { _ in }
+    }
+
     func testPayPalConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "EUR",
