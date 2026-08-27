@@ -1,7 +1,10 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+
+### CryptoOnramp (Alpha)
+* [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` to present and record acceptance of the current terms and conditions when required.
 
 ## 26.8.0 2026-08-24
 ### Payments
