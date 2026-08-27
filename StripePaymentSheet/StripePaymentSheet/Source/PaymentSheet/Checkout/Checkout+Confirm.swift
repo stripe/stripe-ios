@@ -124,7 +124,10 @@ extension CheckoutController {
         // Normalize Payment Element state here, then build the corresponding confirmation flow.
         switch paymentOption {
         case .applePay:
-            guard let applePayConfiguration = self.configuration.paymentElement.applePayConfiguration else { return nil }
+            guard let paymentElementConfiguration = self.configuration.paymentElement,
+                  let applePayConfiguration = paymentElementConfiguration.applePayConfiguration else {
+                return nil
+            }
             return .applePay(.init(
                 applePayConfiguration: applePayConfiguration,
                 apiClient: apiClient,
