@@ -73,6 +73,13 @@ import UIKit
         case canceled
     }
 
+    @frozen @_spi(STP) public enum TermsAndConditionsResult {
+        /// The user accepted the terms and conditions.
+        case accepted
+        /// The user dismissed the terms and conditions without accepting.
+        case canceled
+    }
+
     /// Errors specific incorrect integrations with LinkController
     @_spi(STP) public enum IntegrationError: LocalizedError {
         case noPaymentMethodSelected
@@ -868,18 +875,81 @@ import UIKit
         from viewController: UIViewController,
         onConfirm: @escaping (() async throws -> Void)
     ) async throws -> UserAttestationResult {
+        let result = try await presentHTMLConfirmation(
+            heading: String.Localized.user_attestation,
+            html: html,
+            confirmationButtonTitle: String.Localized.accept,
+            appearance: appearance,
+            from: viewController,
+            onConfirm: onConfirm
+        )
+
+        switch result {
+        case .confirmed:
+            return .confirmed
+        case .canceled:
+            return .canceled
+        }
+    }
+
+    /// Presents terms and conditions to the user.
+    ///
+    /// This method presents a bottom sheet displaying the provided terms and conditions HTML for user review.
+    /// The user can accept the terms and conditions or cancel.
+    ///
+    /// - Parameters:
+    ///   - html: The terms and conditions HTML to display to the user.
+    ///   - appearance: Appearance configuration for the terms and conditions UI.
+    ///   - viewController: The view controller from which to present the terms and conditions.
+    ///   - onAccept: An async closure called when the user accepts. This is called *before* dismissal, allowing the caller to complete any async operations before the sheet is dismissed.
+    /// - Returns: A `TermsAndConditionsResult` indicating whether the user accepted or canceled.
+    /// Throws any error thrown by the `onAccept` handler.
+    @_spi(STP) public func presentTermsAndConditions(
+        html: String,
+        appearance: LinkAppearance,
+        from viewController: UIViewController,
+        onAccept: @escaping (() async throws -> Void)
+    ) async throws -> TermsAndConditionsResult {
+        // TODO: Confirm the final terms and conditions title and button copy.
+        let result = try await presentHTMLConfirmation(
+            heading: String.Localized.terms_and_conditions,
+            html: html,
+            confirmationButtonTitle: String.Localized.accept,
+            appearance: appearance,
+            from: viewController,
+            onConfirm: onAccept
+        )
+
+        switch result {
+        case .confirmed:
+            return .accepted
+        case .canceled:
+            return .canceled
+        }
+    }
+
+    private func presentHTMLConfirmation(
+        heading: String,
+        html: String,
+        confirmationButtonTitle: String,
+        appearance: LinkAppearance,
+        from viewController: UIViewController,
+        onConfirm: @escaping (() async throws -> Void)
+    ) async throws -> HTMLConfirmationResult {
         return try await withCheckedThrowingContinuation { continuation in
             Task { @MainActor in
-                let attestationViewController = UserAttestationViewController(
+                let confirmationViewController = HTMLConfirmationViewController(
+                    heading: heading,
                     html: html,
+                    confirmationButtonTitle: confirmationButtonTitle,
                     appearance: appearance,
                     brand: resolvedLinkBrand
                 )
-                attestationViewController.onResult = { [weak attestationViewController] result in
-                    attestationViewController?.onResult = nil
+                confirmationViewController.onResult = { [weak confirmationViewController] result in
+                    confirmationViewController?.onResult = nil
 
-                    let dismissAndResumeWithResult = { continuationResult in
-                        attestationViewController?.dismiss(animated: true) {
+                    let dismissAndResumeWithResult: (Result<HTMLConfirmationResult, Swift.Error>) -> Void = { continuationResult in
+                        confirmationViewController?.dismiss(animated: true) {
                             continuation.resume(with: continuationResult)
                         }
                     }
@@ -899,7 +969,7 @@ import UIKit
                     }
                 }
 
-                viewController.presentAsBottomSheet(attestationViewController, appearance: .init())
+                viewController.presentAsBottomSheet(confirmationViewController, appearance: .init())
             }
         }
     }
