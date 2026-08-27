@@ -228,8 +228,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
     }
 
     func testDidSelectShippingContactAllowsConfiguredCountry() {
-        // Given a Checkout Session that allows shipping to the US
-        let (context, controller) = makeShippingContext(allowedCountries: ["US"])
+        // Given a Checkout Session with a lowercase country code that allows shipping to the US
+        let (context, controller) = makeShippingContext(allowedCountries: ["us"])
         let contact = makeShippingContact(country: "US")
 
         // When

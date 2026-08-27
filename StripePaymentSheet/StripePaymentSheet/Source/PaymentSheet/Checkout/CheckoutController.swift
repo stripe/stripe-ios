@@ -256,7 +256,7 @@ public final class CheckoutController: ObservableObject {
         address: Address
     ) async throws {
         if let allowedCountries = session.allowedShippingCountries,
-           !allowedCountries.contains(address.country) {
+           !allowedCountries.contains(address.country.uppercased()) {
             throw CheckoutError.invalidShippingCountry(countryCode: address.country)
         }
         let shippingAddress = Session.ShippingAddress(name: name, address: address)
