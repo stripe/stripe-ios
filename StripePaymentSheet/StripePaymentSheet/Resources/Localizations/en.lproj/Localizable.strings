@@ -494,6 +494,9 @@ is not supported by the merchant */
 /* Label for the tax row in an order summary. */
 "Tax" = "Tax";
 
+/* Title label for a screen showing terms and conditions */
+"Terms and Conditions" = "Terms and Conditions";
+
 /* An error message. */
 "The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
 
