@@ -267,7 +267,7 @@ extension CheckoutController {
     static func mapConfirmationResult(_ result: InternalConfirmResult) -> ConfirmResult {
         switch result {
         case .completed(let response):
-            return .succeeded(paymentStatus: response.paymentStatus)
+            return .completed(paymentStatus: response.paymentStatus)
         case .canceled:
             return .canceled
         case .failed(let error, _):
