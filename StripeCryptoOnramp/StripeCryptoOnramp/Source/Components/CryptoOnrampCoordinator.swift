@@ -107,6 +107,15 @@ protocol CryptoOnrampCoordinatorProtocol {
     @MainActor
     func presentUserAttestation(from viewController: UIViewController) async throws -> UserAttestationResult
 
+    /// Presents the current terms and conditions when acceptance is required.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter viewController: The view controller from which to present the terms and conditions.
+    /// - Returns: A `TermsAndConditionsResult` indicating whether the user accepted, canceled, or had already accepted the current terms.
+    /// Throws if an authenticated Link user is not available or an API error occurs.
+    @MainActor
+    func presentTermsAndConditionsIfNeeded(from viewController: UIViewController) async throws -> TermsAndConditionsResult
+
     /// Initiates the KYC verification flow, which displays the user’s currently collected KYC information with the ability to confirm or update the displayed address.
     ///
     /// - Parameters:
@@ -478,6 +487,42 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             }
         } catch {
             try logAndThrow(error, during: .presentUserAttestation)
+        }
+    }
+
+    @MainActor
+    public func presentTermsAndConditionsIfNeeded(from viewController: UIViewController) async throws -> TermsAndConditionsResult {
+        analyticsClient.log(.termsAndConditionsStarted)
+        do {
+            let linkAccountInfo = try await self.linkAccountInfo
+            let terms = try await apiClient.retrievePartnerTerms(linkAccountInfo: linkAccountInfo)
+
+            switch terms {
+            case .notRequired:
+                return .notRequired
+            case let .required(_, version, html):
+                let result = try await linkController.presentTermsAndConditions(
+                    html: html,
+                    appearance: appearance,
+                    from: viewController,
+                    onAccept: { [apiClient] in
+                        try await apiClient.confirmPartnerTerms(
+                            version: version,
+                            linkAccountInfo: linkAccountInfo
+                        )
+                    }
+                )
+
+                switch result {
+                case .accepted:
+                    analyticsClient.log(.termsAndConditionsCompleted)
+                    return .accepted
+                case .canceled:
+                    return .canceled
+                }
+            }
+        } catch {
+            try logAndThrow(error, during: .presentTermsAndConditionsIfNeeded)
         }
     }
 
