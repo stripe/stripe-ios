@@ -111,6 +111,25 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         XCTAssertEqual(apiClient.confirmVerification.requestHistory.count, 2)
     }
 
+    func testRetainsDisplayMetadataUntilFlowIsCleared() {
+        // Given an existing consumer is waiting for SMS verification
+        beginExistingConsumerFlow()
+
+        // Then UI-safe account details are available to the presentation layer
+        XCTAssertEqual(coordinator.emailAddress, "consumer@example.com")
+        XCTAssertEqual(
+            coordinator.redactedFormattedPhoneNumber,
+            "+1 *** *** 0123"
+        )
+
+        // When the flow is cancelled
+        coordinator.cancel()
+
+        // Then account details are cleared with the credentials
+        XCTAssertNil(coordinator.emailAddress)
+        XCTAssertNil(coordinator.redactedFormattedPhoneNumber)
+    }
+
     func testExpiredOTPRequestsFreshSessionAndRejectsOldVerification() {
         // Given the coordinator is awaiting a fresh SMS code
         beginExistingConsumerFlow()

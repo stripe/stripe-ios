@@ -31,7 +31,6 @@ final class NetworkedIdentityCoordinator {
     private let apiClient: NetworkedIdentityAPIClient
     private let credentialStore: NetworkedIdentityCredentialStore
     private let currentTime: () -> TimeInterval
-    private var emailAddress: String?
     private var activeSMSVerificationSessionID: String?
     private var knownSMSVerificationSessionIDs: Set<String> = []
 
@@ -42,6 +41,8 @@ final class NetworkedIdentityCoordinator {
     private(set) var fallbackReason: NetworkedIdentityFallbackReason?
     private(set) var availableDocuments: [NetworkedIdentityDocument] = []
     private(set) var selectedDocument: NetworkedIdentityDocument?
+    private(set) var emailAddress: String?
+    private(set) var redactedFormattedPhoneNumber: String?
 
     init(
         apiClient: NetworkedIdentityAPIClient,
@@ -106,6 +107,8 @@ final class NetworkedIdentityCoordinator {
 
             switch result {
             case .success(let response):
+                self.redactedFormattedPhoneNumber =
+                    response.consumerSession.redactedFormattedPhoneNumber
                 self.credentialStore.updateConsumerSessionClientSecret(
                     response.consumerSession.clientSecret
                 )
@@ -125,6 +128,8 @@ final class NetworkedIdentityCoordinator {
             }
         }
     }
+
+    // #TODO - Networked Identity: Add explicit OTP resend after the mobile contract defines whether start_verification requires is_resend_sms_code and whether it returns a replacement session ID.
 
     func selectDocument(_ document: NetworkedIdentityDocument) {
         guard state == .selectDocument,
@@ -153,6 +158,7 @@ final class NetworkedIdentityCoordinator {
 
         credentialStore.clear()
         emailAddress = nil
+        redactedFormattedPhoneNumber = nil
         activeSMSVerificationSessionID = nil
         knownSMSVerificationSessionIDs = []
         lastOTPError = nil
@@ -201,6 +207,8 @@ private extension NetworkedIdentityCoordinator {
 
             switch result {
             case .success(.found(let response)):
+                self.redactedFormattedPhoneNumber =
+                    response.consumerSession.redactedFormattedPhoneNumber
                 self.credentialStore.storeConsumerCredentials(
                     publishableKey: response.publishableKey,
                     sessionClientSecret: response.consumerSession.clientSecret
@@ -258,6 +266,8 @@ private extension NetworkedIdentityCoordinator {
 
             switch result {
             case .success(let response):
+                self.redactedFormattedPhoneNumber =
+                    response.consumerSession.redactedFormattedPhoneNumber
                 self.credentialStore.updateConsumerSessionClientSecret(
                     response.consumerSession.clientSecret
                 )
@@ -357,6 +367,7 @@ private extension NetworkedIdentityCoordinator {
 
         credentialStore.clear()
         emailAddress = nil
+        redactedFormattedPhoneNumber = nil
         activeSMSVerificationSessionID = nil
         knownSMSVerificationSessionIDs = []
         fallbackReason = reason
@@ -379,6 +390,7 @@ private extension NetworkedIdentityCoordinator {
         lastOTPError = .sessionExpired
         fallbackReason = nil
         emailAddress = nil
+        redactedFormattedPhoneNumber = nil
         activeSMSVerificationSessionID = nil
         knownSMSVerificationSessionIDs = []
         credentialStore.clearConsumerCredentials()
