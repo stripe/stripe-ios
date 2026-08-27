@@ -91,6 +91,49 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         }
     }
 
+    func testDecodesSubmissionAttemptStates() throws {
+        let testCases: [(String, PaymentPagesAPIResponse.SubmissionAttempt.State)] = [
+            ("processing", .processing),
+            ("requires_approval", .requiresApproval),
+            ("complete", .complete),
+            ("failed", .failed),
+        ]
+
+        for (rawValue, expectedState) in testCases {
+            var json = CheckoutTestHelpers.makeSessionJSON()
+            json["submission_attempt"] = [
+                "id": "ca_test_123",
+                "state": rawValue,
+            ]
+
+            let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+
+            let state = try XCTUnwrap(response.submissionAttempt?.state)
+            XCTAssertEqual(state, expectedState)
+        }
+    }
+
+    func testRejectsUnknownSubmissionAttemptState() {
+        var json = CheckoutTestHelpers.makeSessionJSON()
+        json["submission_attempt"] = [
+            "id": "ca_test_123",
+            "state": "future_state",
+        ]
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+    }
+
+    func testDecodesRouteToOrchestrationInterface() throws {
+        var json = CheckoutTestHelpers.makeSessionJSON()
+        json["route_to_orchestration_interface"] = true
+
+        let routedResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        let responseWithoutRouting = CheckoutTestHelpers.makeSession()
+
+        XCTAssertEqual(routedResponse.routeToOrchestrationInterface, true)
+        XCTAssertNil(responseWithoutRouting.routeToOrchestrationInterface)
+    }
+
     func testDecodedObjectFromAPIResponseRejectsUnknownSessionStatus() {
         var json = STPTestUtils.jsonNamed("CheckoutSession")!
         json["status"] = "future_status"

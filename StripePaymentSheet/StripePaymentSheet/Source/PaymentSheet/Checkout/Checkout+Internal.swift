@@ -23,6 +23,9 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 flow = nil
                 break
             }
+            // TODO: Should next actions use an authentication context tied to `presentationWindow`
+            // instead of `WindowAuthenticationContext` to avoid presenting in the wrong scene?
+            let authenticationContext = WindowAuthenticationContext()
             flow = .applePay(.init(
                 applePayConfiguration: applePayConfiguration,
                 apiClient: apiClient,
@@ -30,7 +33,15 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 merchantDisplayName: effectiveMerchantDisplayName,
                 billingDetailsCollectionConfiguration: configuration.expressCheckoutElement.billingDetailsCollectionConfiguration.paymentSheetConfiguration(),
                 defaultBillingDetails: configuration.defaults.billingDetails,
-                presentationWindow: presentationWindow
+                presentationWindow: presentationWindow,
+                confirmationHandler: { [apiClient, paymentHandler] requestParameters in
+                    await Self.confirmCheckoutSession(
+                        with: requestParameters,
+                        apiClient: apiClient,
+                        authenticationContext: authenticationContext,
+                        paymentHandler: paymentHandler
+                    )
+                }
             ))
         case .link:
             guard let presentingViewController = presentationWindow?.findTopMostPresentedViewController() else {

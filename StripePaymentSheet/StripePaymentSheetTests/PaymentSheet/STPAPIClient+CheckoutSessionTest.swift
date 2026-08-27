@@ -104,12 +104,13 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let paymentMethod = try await apiClient.createPaymentMethod(with: paymentMethodParams)
 
         // 4. Confirm the checkout session
-        let response = try await apiClient.confirmCheckoutSession(
+        let requestParameters = CheckoutSessionConfirmationRequestParameters(
             sessionId: sessionId,
-            paymentMethod: paymentMethod.stripeId,
+            paymentMethodId: paymentMethod.stripeId,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: "card"
         )
+        let response = try await apiClient.confirmCheckoutSession(with: requestParameters)
 
         // 5. Verify response
         XCTAssertEqual(response.makePublicSession().status, .complete(.paid))
@@ -329,12 +330,13 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let paymentMethod = try await apiClient.createPaymentMethod(with: paymentMethodParams)
 
         // 4. Confirm the checkout session (no expected amount for setup mode)
-        let response = try await apiClient.confirmCheckoutSession(
+        let requestParameters = CheckoutSessionConfirmationRequestParameters(
             sessionId: sessionId,
-            paymentMethod: paymentMethod.stripeId,
+            paymentMethodId: paymentMethod.stripeId,
             expectedAmount: nil,
             expectedPaymentMethodType: "card"
         )
+        let response = try await apiClient.confirmCheckoutSession(with: requestParameters)
 
         // 5. Verify response
         XCTAssertEqual(response.makePublicSession().status, .complete(.noPaymentRequired))
