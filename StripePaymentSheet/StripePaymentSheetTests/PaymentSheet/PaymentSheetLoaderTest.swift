@@ -939,7 +939,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         let privatePreviewPaymentMethodTypes: [STPPaymentMethodType] = [.wero, .payByBank]
         // Payment methods whose payment_method_options aren't recognized by /v1/elements/sessions yet
-        let unsupportedPMOPaymentMethodTypes: [STPPaymentMethodType] = [.ACSSDebit, .bizum, .vipps]
+        let unsupportedPMOPaymentMethodTypes: [STPPaymentMethodType] = [.ACSSDebit, .bizum, .payco, .vipps]
         // Test successful load with valid payment method options
         let all_payment_methods_pmo_sfu_values: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = STPPaymentMethodType.allCases.reduce([:]) { partialResult, type in
             // Skip unknown, payment methods in private preview, and payment methods with unsupported PMO (not yet recognized by /v1/elements/sessions)

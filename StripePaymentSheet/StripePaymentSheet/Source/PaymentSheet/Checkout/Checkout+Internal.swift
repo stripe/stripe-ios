@@ -176,31 +176,50 @@ extension CheckoutController {
         canUpdateWhileSheetPresented: Bool = false
     ) async throws {
         try await enqueueSessionUpdate {
-            if !canUpdateWhileSheetPresented {
-                try self.requireSheetNotPresented()
-            }
-            do {
-                let updatedSessionAPIResponse: PaymentPagesAPIResponse?
-                if let update {
-                    let sessionId = CheckoutController.extractSessionId(from: self.clientSecret)
-                    updatedSessionAPIResponse = try await self.apiClient.updateCheckoutSession(
-                        checkoutSessionId: sessionId,
-                        parameters: update.parameters
-                    )
-                } else {
-                    updatedSessionAPIResponse = nil
-                }
+            try await self.applySessionUpdate(
+                update,
+                shippingAddress: shippingAddress,
+                canUpdateWhileSheetPresented: canUpdateWhileSheetPresented
+            )
+        }
+    }
 
-                // Errors from here should still get wrapped in API errors since the only way
-                //  local session application throws is if the API returned a session state that
-                //  the UI can't handle.
-                try await self.commitSession(
-                    updatedSessionAPIResponse,
-                    shippingAddress: shippingAddress
+    /// Performs the API mutation (if any) and commits the resulting session, exactly like
+    /// `performUpdate`, but without enqueuing behind `pendingOperations`.
+    ///
+    /// - Warning: Only call this from a context that's already serialized behind
+    ///   `pendingOperations` (e.g. from within an in-flight `enqueueSessionUpdate` body). Calling
+    ///   `enqueueSessionUpdate`/`performUpdate` again from such a context would deadlock, since the
+    ///   nested operation's predecessor would be the still-running outer operation itself.
+    func applySessionUpdate(
+        _ update: SessionUpdate? = nil,
+        shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
+        canUpdateWhileSheetPresented: Bool = false
+    ) async throws {
+        if !canUpdateWhileSheetPresented {
+            try requireSheetNotPresented()
+        }
+        do {
+            let updatedSessionAPIResponse: PaymentPagesAPIResponse?
+            if let update {
+                let sessionId = CheckoutController.extractSessionId(from: clientSecret)
+                updatedSessionAPIResponse = try await apiClient.updateCheckoutSession(
+                    checkoutSessionId: sessionId,
+                    parameters: update.parameters
                 )
-            } catch {
-                throw CheckoutError.apiError(message: error.nonGenericDescription)
+            } else {
+                updatedSessionAPIResponse = nil
             }
+
+            // Errors from here should still get wrapped in API errors since the only way
+            //  local session application throws is if the API returned a session state that
+            //  the UI can't handle.
+            try await commitSession(
+                updatedSessionAPIResponse,
+                shippingAddress: shippingAddress
+            )
+        } catch {
+            throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
     }
 
