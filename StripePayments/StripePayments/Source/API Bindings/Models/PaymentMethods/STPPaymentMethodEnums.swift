@@ -104,6 +104,12 @@ import Foundation
     case bizum
     /// A Kakao Pay payment method
     case kakaoPay
+    /// A Korean cards payment method
+    case krCard
+    /// A Naver Pay payment method
+    case naverPay
+    /// A PAYCO payment method
+    case payco
     /// An unknown type.
     case unknown
 
@@ -206,6 +212,12 @@ import Foundation
             return "Bizum"
         case .kakaoPay:
             return "Kakao Pay"
+        case .krCard:
+            return "Korean cards"
+        case .naverPay:
+            return "Naver Pay"
+        case .payco:
+            return "PAYCO"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -311,6 +323,12 @@ import Foundation
             return "bizum"
         case .kakaoPay:
             return "kakao_pay"
+        case .krCard:
+            return "kr_card"
+        case .naverPay:
+            return "naver_pay"
+        case .payco:
+            return "payco"
         }
     }
 

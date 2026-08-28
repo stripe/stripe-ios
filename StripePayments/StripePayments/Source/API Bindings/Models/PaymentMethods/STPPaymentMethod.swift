@@ -104,6 +104,12 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var payByBank: STPPaymentMethodPayByBank?
     /// If this is a Kakao Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeKakaoPay`), this contains additional details.
     @objc private(set) public var kakaoPay: STPPaymentMethodKakaoPay?
+    /// If this is a Korean cards PaymentMethod (i.e. `self.type == STPPaymentMethodTypeKrCard`), this contains additional details.
+    @objc private(set) public var krCard: STPPaymentMethodKrCard?
+    /// If this is a Naver Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeNaverPay`), this contains additional details.
+    @objc private(set) public var naverPay: STPPaymentMethodNaverPay?
+    /// If this is a PAYCO PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayco`), this contains additional details.
+    @objc private(set) public var payco: STPPaymentMethodPayco?
 
     /// This field indicates whether this payment method can be shown again to its customer in a checkout flow
     @objc private(set) public var allowRedisplay: STPPaymentMethodAllowRedisplay
@@ -180,6 +186,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "wero = \(String(describing: wero))",
             "payByBank = \(String(describing: payByBank))",
             "kakaoPay = \(String(describing: kakaoPay))",
+            "krCard = \(String(describing: krCard))",
+            "naverPay = \(String(describing: naverPay))",
+            "payco = \(String(describing: payco))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "allowRedisplay = \(allResponseFields["allow_redisplay"] as? String ?? "")",
             "type = \(allResponseFields["type"] as? String ?? "")",
@@ -386,6 +395,15 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.kakaoPay = STPPaymentMethodKakaoPay.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "kakao_pay")
+        )
+        paymentMethod.krCard = STPPaymentMethodKrCard.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "kr_card")
+        )
+        paymentMethod.naverPay = STPPaymentMethodNaverPay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "naver_pay")
+        )
+        paymentMethod.payco = STPPaymentMethodPayco.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "payco")
         )
         return paymentMethod
     }
