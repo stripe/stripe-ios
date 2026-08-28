@@ -200,6 +200,8 @@ extension PaymentSheet {
         public var paymentMethodOrder: [String]?
 
         // MARK: Internal
+        var customerProviderOverride: CustomerProvider?
+
         // PaymentSheet components are only being used for Link.
         internal var linkPaymentMethodsOnly: Bool = false
 

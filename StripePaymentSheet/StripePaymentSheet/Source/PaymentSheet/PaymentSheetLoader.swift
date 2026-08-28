@@ -20,7 +20,7 @@ final class PaymentSheetLoader {
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
         let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
-        let paymentElementConfiguration: PaymentElementConfiguration?
+        let customerProvider: CustomerProvider
 
         init(
             intent: Intent,
@@ -29,7 +29,7 @@ final class PaymentSheetLoader {
             paymentMethodTypes: [PaymentSheet.PaymentMethodType],
             paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?,
             paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
-            paymentElementConfiguration: PaymentElementConfiguration? = nil
+            customerProvider: CustomerProvider = CustomerProvider(customer: nil)
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
@@ -37,7 +37,7 @@ final class PaymentSheetLoader {
             self.paymentMethodTypes = paymentMethodTypes
             self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
             self.paymentMethodOrientation = paymentMethodOrientation
-            self.paymentElementConfiguration = paymentElementConfiguration
+            self.customerProvider = customerProvider
         }
     }
 
@@ -84,7 +84,10 @@ final class PaymentSheetLoader {
         integrationShape: IntegrationShape,
         isUpdate: Bool = false
     ) async throws -> (LoadResult, ConfirmationChallenge) {
-        let configuration = mode.paymentElementConfiguration(basedOn: configuration)
+        var configuration = configuration
+        if case .checkout(let checkout) = mode {
+            configuration.customerProvider = CustomerProvider(checkoutSession: checkout.session)
+        }
         analyticsHelper.configuration = configuration
         let loadTimings: LoadTimings = .init(loadingStartDate: Date())
         loadTimings.logStart("logLoadStarted")
@@ -211,7 +214,7 @@ final class PaymentSheetLoader {
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
                 paymentMethodOrientation: paymentMethodOrientation,
-                paymentElementConfiguration: configuration
+                customerProvider: configuration.customerProvider
             )
             let confirmationChallenge = ConfirmationChallenge(
                 elementsSession: elementsSession,

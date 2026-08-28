@@ -176,6 +176,8 @@ extension EmbeddedPaymentElement {
         /// Controls whether to filter out wallet payment methods from the saved payment method list.
         @_spi(DashboardOnly) public var disableWalletPaymentMethodFiltering: Bool = false
 
+        var customerProviderOverride: CustomerProvider?
+
         internal var linkPaymentMethodsOnly: Bool = false
 
         /// Describes how you handle row selections in EmbeddedPaymentElement
