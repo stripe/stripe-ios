@@ -115,6 +115,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var wero: STPPaymentMethodWeroParams?
     /// If this is a Pay by Bank PaymentMethod, this contains additional details.
     @objc public var payByBank: STPPaymentMethodPayByBankParams?
+    /// If this is a PAYCO PaymentMethod, this contains additional details.
+    @objc public var payco: STPPaymentMethodPaycoParams?
 
     /// Radar options that may contain HCaptcha token
     @objc @_spi(STP) public var radarOptions: STPRadarOptions?
@@ -786,6 +788,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a PAYCO PaymentMethod.
+    /// - Parameters:
+    ///   - payco:          An object containing additional PAYCO details.
+    ///   - billingDetails: Billing information associated with the PaymentMethod.
+    ///   - metadata:       Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        payco: STPPaymentMethodPaycoParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .payco
+        self.payco = payco
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     // MARK: - STPFormEncodable
     @objc
     public class func rootObjectName() -> String? {
@@ -832,6 +852,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: twint)): "twint",
             NSStringFromSelector(#selector(getter: wero)): "wero",
             NSStringFromSelector(#selector(getter: payByBank)): "pay_by_bank",
+            NSStringFromSelector(#selector(getter: payco)): "payco",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
@@ -1281,6 +1302,8 @@ extension STPPaymentMethodParams {
             wero = STPPaymentMethodWeroParams()
         case .payByBank:
             payByBank = STPPaymentMethodPayByBankParams()
+        case .payco:
+            payco = STPPaymentMethodPaycoParams()
         case .cardPresent, .paynow, .zip, .konbini, .promptPay, .mbWay, .bizum:
             // These payment methods don't have any params
             break

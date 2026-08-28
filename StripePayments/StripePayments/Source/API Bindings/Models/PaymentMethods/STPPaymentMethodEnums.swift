@@ -102,6 +102,8 @@ import Foundation
     case mbWay
     /// A Bizum payment method
     case bizum
+    /// A PAYCO payment method
+    case payco
     /// An unknown type.
     case unknown
 
@@ -202,6 +204,8 @@ import Foundation
             return "MB WAY"
         case .bizum:
             return "Bizum"
+        case .payco:
+            return "PAYCO"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -305,6 +309,8 @@ import Foundation
             return "mb_way"
         case .bizum:
             return "bizum"
+        case .payco:
+            return "payco"
         }
     }
 
