@@ -126,7 +126,6 @@ import Foundation
             ? ""
             : "&"
         let updatedUrlString = urlString + joiningCharacter + joinedParameters
-        print("**** \(updatedUrlString)")
         return URL(string: updatedUrlString) ?? baseHostedAuthUrl
     }
 }
