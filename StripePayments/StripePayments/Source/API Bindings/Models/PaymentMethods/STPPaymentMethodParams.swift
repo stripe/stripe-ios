@@ -115,6 +115,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var wero: STPPaymentMethodWeroParams?
     /// If this is a Pay by Bank PaymentMethod, this contains additional details.
     @objc public var payByBank: STPPaymentMethodPayByBankParams?
+    /// If this is a Naver Pay PaymentMethod, this contains additional details.
+    @objc public var naverPay: STPPaymentMethodNaverPayParams?
     /// If this is a PAYCO PaymentMethod, this contains additional details.
     @objc public var payco: STPPaymentMethodPaycoParams?
 
@@ -788,6 +790,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a Naver Pay PaymentMethod.
+    /// - Parameters:
+    ///   - naverPay:      An object containing Naver Pay details.
+    ///   - billingDetails: Billing information associated with the PaymentMethod.
+    ///   - metadata:       Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        naverPay: STPPaymentMethodNaverPayParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .naverPay
+        self.naverPay = naverPay
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     /// Creates params for a PAYCO PaymentMethod.
     /// - Parameters:
     ///   - payco:          An object containing additional PAYCO details.
@@ -852,6 +872,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: twint)): "twint",
             NSStringFromSelector(#selector(getter: wero)): "wero",
             NSStringFromSelector(#selector(getter: payByBank)): "pay_by_bank",
+            NSStringFromSelector(#selector(getter: naverPay)): "naver_pay",
             NSStringFromSelector(#selector(getter: payco)): "payco",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
@@ -1302,6 +1323,8 @@ extension STPPaymentMethodParams {
             wero = STPPaymentMethodWeroParams()
         case .payByBank:
             payByBank = STPPaymentMethodPayByBankParams()
+        case .naverPay:
+            naverPay = STPPaymentMethodNaverPayParams()
         case .payco:
             payco = STPPaymentMethodPaycoParams()
         case .cardPresent, .paynow, .zip, .konbini, .promptPay, .mbWay, .bizum:

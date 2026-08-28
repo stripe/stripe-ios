@@ -868,6 +868,7 @@ public class STPPaymentHandler: NSObject {
             .payByBank,
             .mbWay,
             .bizum,
+            .naverPay,
             .payco:
             return false
 

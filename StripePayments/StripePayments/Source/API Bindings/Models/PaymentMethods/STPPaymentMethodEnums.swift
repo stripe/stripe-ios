@@ -102,6 +102,8 @@ import Foundation
     case mbWay
     /// A Bizum payment method
     case bizum
+    /// A Naver Pay payment method
+    case naverPay
     /// A PAYCO payment method
     case payco
     /// An unknown type.
@@ -204,6 +206,8 @@ import Foundation
             return "MB WAY"
         case .bizum:
             return "Bizum"
+        case .naverPay:
+            return "Naver Pay"
         case .payco:
             return "PAYCO"
         case .cardPresent,
@@ -309,6 +313,8 @@ import Foundation
             return "mb_way"
         case .bizum:
             return "bizum"
+        case .naverPay:
+            return "naver_pay"
         case .payco:
             return "payco"
         }
