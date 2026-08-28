@@ -870,7 +870,8 @@ public class STPPaymentHandler: NSObject {
             .bizum,
             .krCard,
             .naverPay,
-            .payco:
+            .payco,
+            .sequra:
             return false
 
         case .unknown:

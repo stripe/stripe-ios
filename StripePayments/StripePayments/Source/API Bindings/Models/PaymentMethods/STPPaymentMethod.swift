@@ -108,6 +108,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var naverPay: STPPaymentMethodNaverPay?
     /// If this is a PAYCO PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayco`), this contains additional details.
     @objc private(set) public var payco: STPPaymentMethodPayco?
+    /// If this is a SeQura PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSequra`), this contains additional details.
+    @objc private(set) public var sequra: STPPaymentMethodSequra?
 
     /// This field indicates whether this payment method can be shown again to its customer in a checkout flow
     @objc private(set) public var allowRedisplay: STPPaymentMethodAllowRedisplay
@@ -186,6 +188,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "krCard = \(String(describing: krCard))",
             "naverPay = \(String(describing: naverPay))",
             "payco = \(String(describing: payco))",
+            "sequra = \(String(describing: sequra))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "allowRedisplay = \(allResponseFields["allow_redisplay"] as? String ?? "")",
             "type = \(allResponseFields["type"] as? String ?? "")",
@@ -398,6 +401,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.payco = STPPaymentMethodPayco.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "payco")
+        )
+        paymentMethod.sequra = STPPaymentMethodSequra.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "sequra")
         )
         return paymentMethod
     }
