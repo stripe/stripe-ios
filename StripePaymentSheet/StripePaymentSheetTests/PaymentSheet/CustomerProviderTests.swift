@@ -131,7 +131,7 @@ final class CustomerProviderTests: XCTestCase {
         XCTAssertEqual(provider.source, .checkoutSession)
     }
 
-    func testConfigurationCustomerProviderCanBeOverriddenWithoutErasingConcreteType() {
+    func testConfigurationCustomerProviderCanBeReplacedWithoutErasingConcreteType() {
         var configuration: PaymentElementConfiguration = EmbeddedPaymentElement.Configuration()
         configuration.merchantDisplayName = "Example merchant"
         let session = CheckoutTestHelpers.makeSession()
