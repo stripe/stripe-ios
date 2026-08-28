@@ -33,6 +33,8 @@ struct CheckoutCartPaymentButton: View {
                 )
             }
             .padding(.horizontal)
+            .accessibilityLabel("Select payment method")
+            .accessibilityValue(session.paymentOption?.label ?? "No payment method selected")
 
             Button {
                 Task { @MainActor in

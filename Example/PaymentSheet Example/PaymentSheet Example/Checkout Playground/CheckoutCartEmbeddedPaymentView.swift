@@ -42,6 +42,8 @@ struct CheckoutCartEmbeddedPaymentView: View {
                 )
             }
             .padding(.horizontal)
+            .accessibilityLabel("Select payment method")
+            .accessibilityValue(session.paymentOption?.label ?? "No payment method selected")
             .sheet(isPresented: $showEmbeddedScreen) {
                 CheckoutEmbeddedScreen(paymentElement: checkout.getPaymentElement())
             }
