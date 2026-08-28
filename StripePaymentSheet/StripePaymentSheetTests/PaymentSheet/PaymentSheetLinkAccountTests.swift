@@ -131,6 +131,74 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         XCTAssertEqual(capturedFormFields["request_surface"], "ios_payment_element")
     }
 
+    func testCreateLinkAccountSessionOmitsMerchantTokenWithoutPermissions() {
+        let apiClient = APIStubbedTestCase.stubbedAPIClient()
+        var capturedFormFields: [String: String] = [:]
+        stub { request in
+            request.url?.absoluteString.contains("consumers/link_account_sessions") ?? false
+        } response: { request in
+            let body = String(data: request.httpBodyOrBodyStream ?? Data(), encoding: .utf8) ?? ""
+            capturedFormFields = Self.decodeFormFields(from: body)
+            return HTTPStubsResponse(
+                jsonObject: [
+                    "id": "fcsess_123",
+                    "livemode": false,
+                    "client_secret": "fcsess_123_secret_456",
+                    "permissions": [],
+                ],
+                statusCode: 200,
+                headers: nil
+            )
+        }
+        let expectation = expectation(description: "Creates Link Account Session")
+
+        apiClient.createLinkAccountSession(
+            for: "consumer_session_secret",
+            permissions: [],
+            merchantToken: "acct_123"
+        ) { result in
+            XCTAssertNotNil(try? result.get())
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+        XCTAssertNil(capturedFormFields["merchant_token"])
+    }
+
+    func testCreateLinkAccountSessionIncludesMerchantTokenWithPermissions() {
+        let apiClient = APIStubbedTestCase.stubbedAPIClient()
+        var capturedFormFields: [String: String] = [:]
+        stub { request in
+            request.url?.absoluteString.contains("consumers/link_account_sessions") ?? false
+        } response: { request in
+            let body = String(data: request.httpBodyOrBodyStream ?? Data(), encoding: .utf8) ?? ""
+            capturedFormFields = Self.decodeFormFields(from: body)
+            return HTTPStubsResponse(
+                jsonObject: [
+                    "id": "fcsess_123",
+                    "livemode": false,
+                    "client_secret": "fcsess_123_secret_456",
+                    "permissions": ["balances"],
+                ],
+                statusCode: 200,
+                headers: nil
+            )
+        }
+        let expectation = expectation(description: "Creates Link Account Session")
+
+        apiClient.createLinkAccountSession(
+            for: "consumer_session_secret",
+            permissions: ["balances"],
+            merchantToken: "acct_123"
+        ) { result in
+            XCTAssertNotNil(try? result.get())
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(capturedFormFields["merchant_token"], "acct_123")
+    }
+
     /// Decodes an `application/x-www-form-urlencoded` request body into a flat `[key: value]` map, keeping
     /// bracketed keys (e.g. `credentials[consumer_session_client_secret]`) as-is rather than nesting them.
     private static func decodeFormFields(from body: String) -> [String: String] {

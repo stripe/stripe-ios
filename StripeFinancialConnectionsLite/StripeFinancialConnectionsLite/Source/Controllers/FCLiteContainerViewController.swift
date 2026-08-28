@@ -13,6 +13,8 @@ class FCLiteContainerViewController: UIViewController {
     private let returnUrl: URL?
     private let apiClient: FCLiteAPIClient
     private let completion: ((FinancialConnectionsSDKResult) -> Void)
+    private let hostedAuthConsumerContext: HostedAuthUrlBuilder.ConsumerContext?
+    private let hasRequestedDataPermissions: Bool
 
     private let spinner = UIActivityIndicatorView(style: .large)
     private var errorView: ErrorView?
@@ -48,12 +50,16 @@ class FCLiteContainerViewController: UIViewController {
         returnUrl: URL?,
         apiClient: FCLiteAPIClient,
         elementsSessionContext: ElementsSessionContext?,
+        hostedAuthConsumerContext: HostedAuthUrlBuilder.ConsumerContext?,
+        hasRequestedDataPermissions: Bool,
         completion: @escaping ((FinancialConnectionsSDKResult) -> Void)
     ) {
         self.clientSecret = clientSecret
         self.returnUrl = returnUrl
         self.apiClient = apiClient
         self.elementsSessionContext = elementsSessionContext
+        self.hostedAuthConsumerContext = hostedAuthConsumerContext
+        self.hasRequestedDataPermissions = hasRequestedDataPermissions
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
     }
@@ -106,7 +112,9 @@ class FCLiteContainerViewController: UIViewController {
     private func completeFlow(result: FCLiteWebFlowResult) async {
         switch result {
         case .success(let returnUrl):
-            if isInstantDebits {
+            if hasRequestedDataPermissions {
+                await fetchSessionAndComplete()
+            } else if isInstantDebits {
                 do {
                     if let linkedBank = try createInstantDebitsLinkedBank(from: returnUrl) {
                         completion(.completed(.instantDebits(linkedBank)))
@@ -179,6 +187,7 @@ class FCLiteContainerViewController: UIViewController {
             authFlowVC = FCLiteSecureAuthFlowViewController(
                 manifest: manifest,
                 elementsSessionContext: elementsSessionContext,
+                hostedAuthConsumerContext: hostedAuthConsumerContext,
                 completion: { [weak self] result in
                     guard let self else { return }
                     DispatchQueue.main.async {
@@ -193,6 +202,7 @@ class FCLiteContainerViewController: UIViewController {
             authFlowVC = FCLiteAuthFlowViewController(
                 manifest: manifest,
                 elementsSessionContext: elementsSessionContext,
+                hostedAuthConsumerContext: hostedAuthConsumerContext,
                 returnUrl: returnUrl,
                 onLoad: {
                     DispatchQueue.main.async {

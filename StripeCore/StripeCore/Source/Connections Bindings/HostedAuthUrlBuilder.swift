@@ -8,6 +8,22 @@
 import Foundation
 
 @_spi(STP) public enum HostedAuthUrlBuilder {
+    @_spi(STP) public struct ConsumerContext {
+        let clientSecret: String
+        let publishableKey: String
+        let emailAddress: String
+
+        @_spi(STP) public init(
+            clientSecret: String,
+            publishableKey: String,
+            emailAddress: String
+        ) {
+            self.clientSecret = clientSecret
+            self.publishableKey = publishableKey
+            self.emailAddress = emailAddress
+        }
+    }
+
     /// Builds the Hosted Auth URL by appending various query parameters.
     @_spi(STP) public static func build(
         baseHostedAuthUrl: URL,
@@ -15,7 +31,8 @@ import Foundation
         hasExistingAccountholderToken: Bool,
         elementsSessionContext: ElementsSessionContext?,
         prefillDetailsOverride: PrefillData? = nil,
-        additionalQueryParameters: String? = nil
+        additionalQueryParameters: String? = nil,
+        consumerContext: ConsumerContext? = nil
     ) -> URL {
         var parameters: [String] = []
 
@@ -87,6 +104,12 @@ import Foundation
 
         if let allowRedisplay = elementsSessionContext?.allowRedisplay {
             parameters.append("allow_redisplay=\(allowRedisplay)")
+        }
+
+        if let consumerContext {
+            parameters.append("consumerSessionClientSecret=\(consumerContext.clientSecret)")
+            parameters.append("consumerPublishableKey=\(consumerContext.publishableKey)")
+            parameters.append("consumerEmailAddress=\(consumerContext.emailAddress)")
         }
 
         // Join all values with an &, and URL encode.
