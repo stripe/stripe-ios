@@ -59,20 +59,23 @@ final class STPPaymentMethodACSSDebitTest: XCTestCase {
         XCTAssertEqual(paymentMethod?.acssDebit?.transitNumber, "11000")
     }
 
-    func testDecodingRequiresBankDetails() {
-        let requiredFields = ["fingerprint", "institution_number", "last4", "transit_number"]
+    func testDecodingAllowsNullBankDetails() {
         let response: [AnyHashable: Any] = [
-            "fingerprint": "fingerprint",
-            "institution_number": "000",
-            "last4": "6789",
-            "transit_number": "11000",
+            "bank_name": NSNull(),
+            "fingerprint": NSNull(),
+            "institution_number": NSNull(),
+            "last4": NSNull(),
+            "transit_number": NSNull(),
         ]
 
-        for field in requiredFields {
-            var incompleteResponse = response
-            incompleteResponse.removeValue(forKey: field)
-            XCTAssertNil(STPPaymentMethodACSSDebit.decodedObject(fromAPIResponse: incompleteResponse))
-        }
+        let acssDebit = STPPaymentMethodACSSDebit.decodedObject(fromAPIResponse: response)
+
+        XCTAssertNotNil(acssDebit)
+        XCTAssertNil(acssDebit?.bankName)
+        XCTAssertNil(acssDebit?.fingerprint)
+        XCTAssertNil(acssDebit?.institutionNumber)
+        XCTAssertNil(acssDebit?.last4)
+        XCTAssertNil(acssDebit?.transitNumber)
     }
 
     func testDecodesMicrodepositVerificationWithoutType() {

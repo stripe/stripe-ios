@@ -773,7 +773,7 @@ public class STPPaymentHandler: NSObject {
                    error == nil,
                    setupIntent.status == .succeeded
                     || (setupIntent.status == .requiresAction
-                        && setupIntent.nextAction?.type == .verifyWithMicrodeposits)
+                        && strongSelf.isNextActionSuccessState(nextAction: setupIntent.nextAction))
                 {
                     completion(.succeeded, setupIntent, nil)
                 } else {
