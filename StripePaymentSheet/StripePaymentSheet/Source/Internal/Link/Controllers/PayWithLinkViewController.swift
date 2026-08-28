@@ -598,6 +598,8 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             switch sessionResult {
             case .success(let session):
                 let permissions = self?.context.linkConfiguration?.financialConnectionsPermissions
+                // The LAS response includes the default `payment_method` permission even when the merchant did not
+                // request data permissions. Use the normalized request to determine the session's authentication mode.
                 let requestedPermissions = (permissions?.isEmpty ?? true) ? nil : permissions
                 session.createLinkAccountSession(
                     linkMode: self?.context.elementsSession.linkSettings?.linkMode,
@@ -712,13 +714,11 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                         }
                         createPaymentDetails(linkedAccountId: id)
                     case .financialConnections(let linkedBank):
-                        guard !hasRequestedDataPermissions else {
-                            completion(.failed(error: PaymentSheetError.unknown(
-                                debugDescription: "Permissioned Link Account Session completed without generated payment details."
-                            )))
-                            return
+                        if hasRequestedDataPermissions {
+                            completion(.completed)
+                        } else {
+                            createPaymentDetails(linkedAccountId: linkedBank.accountId)
                         }
-                        createPaymentDetails(linkedAccountId: linkedBank.accountId)
                     case .instantDebits(let linkedBank):
                         guard !hasRequestedDataPermissions else {
                             completion(.failed(error: PaymentSheetError.unknown(
