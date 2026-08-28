@@ -85,9 +85,13 @@ final class PaymentSheetLoader {
         isUpdate: Bool = false
     ) async throws -> (LoadResult, ConfirmationChallenge) {
         var configuration = configuration
+        let customerProvider: CustomerProvider
         if case .checkout(let checkout) = mode {
-            configuration.customerProvider = CustomerProvider(checkoutSession: checkout.session)
+            customerProvider = CustomerProvider(checkoutSession: checkout.session)
+        } else {
+            customerProvider = configuration.customerProvider
         }
+        configuration.customerProvider = customerProvider
         analyticsHelper.configuration = configuration
         let loadTimings: LoadTimings = .init(loadingStartDate: Date())
         loadTimings.logStart("logLoadStarted")
